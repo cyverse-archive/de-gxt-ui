@@ -49,19 +49,6 @@ public class AppTileCellDefaultAppearance implements AppTileCell.AppTileCellAppe
     }
 
     @Override
-    public void render(Cell.Context context, App value, SafeHtmlBuilder sb) {
-//        if (value.getStepCount() > 1) {
-//            sb.append(templates.mod(style.workFlow()));
-//            sb.appendHtmlConstant("</div>");
-//        }
-//
-//        if (!value.isPublic()) {
-//            sb.append(templates.mod(style.privateApp()));
-//            sb.appendHtmlConstant("</div>");
-//        }
-    }
-
-    @Override
     public <X> void render(Cell.Context context,
                            App value,
                            SafeHtmlBuilder sb,

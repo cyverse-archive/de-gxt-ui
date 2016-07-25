@@ -17,8 +17,6 @@ import java.util.List;
 public class AppTileCell extends CompositeCell<App> {
 
     public interface AppTileCellAppearance {
-        void render(Context context, App value, SafeHtmlBuilder sb);
-
         <X> void render(Context context, App value, SafeHtmlBuilder sb, HasCell<App, X> hasCell);
     }
 
@@ -66,12 +64,6 @@ public class AppTileCell extends CompositeCell<App> {
         cellList.add(appCardCell);
 
         return cellList;
-    }
-
-    @Override
-    public void render(Context context, App value, SafeHtmlBuilder sb) {
-        super.render(context, value, sb);
-        appearance.render(context, value, sb);
     }
 
     @Override
