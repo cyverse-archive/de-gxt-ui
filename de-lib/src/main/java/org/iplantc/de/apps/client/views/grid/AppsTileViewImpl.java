@@ -14,6 +14,7 @@ import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
 import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
+import org.iplantc.de.apps.client.models.AppProperties;
 import org.iplantc.de.apps.client.views.grid.cells.AppTileCell;
 import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.models.apps.App;
@@ -21,17 +22,21 @@ import org.iplantc.de.theme.base.client.apps.grid.TileListDefaultAppearance;
 
 import com.google.common.base.Joiner;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
+import com.sencha.gxt.data.shared.SortDir;
+import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.data.shared.StringLabelProvider;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.ListView;
@@ -39,6 +44,7 @@ import com.sencha.gxt.widget.core.client.form.SimpleComboBox;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * @author aramsey
@@ -52,21 +58,42 @@ public class AppsTileViewImpl extends ContentPanel
     private static final AppsGridViewImplUiBinder ourUiBinder =
             GWT.create(AppsGridViewImplUiBinder.class);
 
+    class AppRatingComparator implements Comparator<App> {
+
+        @Override
+        public int compare(App o1, App o2) {
+            if (o1.getRating().getAverageRating() < o2.getRating().getAverageRating()) return -1;
+            if (o1.getRating().getAverageRating() > o2.getRating().getAverageRating()) return 1;
+            return 0;
+        }
+    }
+
+    enum SortChoice {
+        Name,
+        Rating,
+        Integrator
+    }
+
     ListStore<App> listStore;
     @UiField ListView<App, App> listView;
+    @UiField SimpleComboBox<SortChoice> sortBox;
     @UiField(provided = true) AppsListView.AppsListAppearance appearance;
     private TileListDefaultAppearance<App> listAppearance;
     private AppTileCell appTileCell;
+    private AppProperties properties;
 
     @Inject
     AppsTileViewImpl(final AppsListView.AppsListAppearance appearance,
                      @Assisted final ListStore<App> listStore,
                      TileListDefaultAppearance<App> listAppearance,
-                     AppTileCell appTileCell) {
+                     AppTileCell appTileCell,
+                     AppProperties properties) {
         this.appearance = appearance;
         this.listStore = listStore;
         this.listAppearance = listAppearance;
         this.appTileCell = appTileCell;
+        this.properties = properties;
+
         appTileCell.setHasHandlers(this);
 
         setWidget(ourUiBinder.createAndBindUi(this));
@@ -76,18 +103,41 @@ public class AppsTileViewImpl extends ContentPanel
     }
 
     @UiFactory
-    SimpleComboBox<String> createSortBox() {
-        SimpleComboBox<String> comboBox = new SimpleComboBox<>(new StringLabelProvider<>());
-        comboBox.add(Arrays.asList(appearance.nameColumnLabel(),
-                                   appearance.integratedByColumnLabel(),
-                                   appearance.ratingColumnLabel()));
-        comboBox.setValue(appearance.nameColumnLabel());
+    SimpleComboBox<SortChoice> createSortBox() {
+        SimpleComboBox<SortChoice> comboBox = new SimpleComboBox<>(new StringLabelProvider<>());
+        comboBox.add(Arrays.asList(SortChoice.Name,
+                                   SortChoice.Integrator,
+                                   SortChoice.Rating));
+        comboBox.setValue(SortChoice.Name);
         return comboBox;
     }
 
     @UiFactory
     ListView<App, App> createListView() {
         return new ListView<>(listStore, new IdentityValueProvider<App>(), listAppearance);
+    }
+
+    @UiHandler("sortBox")
+    void onSortBoxSelection(SelectionEvent<SortChoice> event) {
+        mask();
+        listStore.clearSortInfo();
+        listStore.addSortInfo(getSortInfo());
+        unmask();
+    }
+
+    public Store.StoreSortInfo<App> getSortInfo() {
+        SortChoice sortField = sortBox.getCurrentValue();
+
+        switch(sortField) {
+            case Name:
+                return new Store.StoreSortInfo<>(properties.name(), SortDir.ASC);
+            case Integrator:
+                return new Store.StoreSortInfo<>(properties.integratorName(), SortDir.ASC);
+            case Rating:
+                return new Store.StoreSortInfo<>(new AppRatingComparator(), SortDir.DESC);
+            default:
+                return null;
+        }
     }
 
     @Override
