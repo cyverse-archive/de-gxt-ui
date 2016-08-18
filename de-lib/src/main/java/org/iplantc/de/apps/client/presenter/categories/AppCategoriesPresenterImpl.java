@@ -98,6 +98,7 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
     private final EventBus eventBus;
     List<AppCategory> workspaceCategories = Lists.newArrayList();
     List<AppCategory> hpcCategories = Lists.newArrayList();
+    List<Tree<AppCategory, String>> trees = Lists.newArrayList();
     DETabPanel viewTabPanel;
     AppCategoriesViewFactory viewFactory;
     HandlerManager handlerManager;
@@ -114,6 +115,8 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
         this.viewFactory = viewFactory;
         this.workspaceView = viewFactory.create(new AppCategoryTreeStoreProvider().get(), this);
         this.hpcView = viewFactory.create(new AppCategoryTreeStoreProvider().get(), this);
+        this.trees.add(workspaceView.getTree());
+        this.trees.add(hpcView.getTree());
 
         initConstants(props, jsonUtil);
 
@@ -134,12 +137,16 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
 
     @Override
     public AppCategory getSelectedAppCategory() {
-        AppCategory selectedCategory = null;
-        Tree<AppCategory, String> tree = workspaceView.getTree();
-        if (tree != null) {
-            selectedCategory = tree.getSelectionModel().getSelectedItem();
+        AppCategory selectedCategory;
+        for (Tree<AppCategory, String> tree : trees) {
+            if (tree != null) {
+                selectedCategory = tree.getSelectionModel().getSelectedItem();
+                if (selectedCategory != null) {
+                    return selectedCategory;
+                }
+            }
         }
-        return selectedCategory;
+        return null;
     }
 
     @Override
@@ -148,7 +155,7 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
     }
 
     @Override
-    public void go(final HasId selectedAppCategory, final DETabPanel tabPanel) {
+    public void go(final HasId selectedAppCategory, final boolean selectDefaultCategory, final DETabPanel tabPanel) {
         this.viewTabPanel = tabPanel;
 
         viewTabPanel.add(workspaceView.getTree(), new TabItemConfig(appearance.workspaceTab()), baseId + AppsModule.Ids.WORKSPACE_TAB);
@@ -167,14 +174,34 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
             @Override
             public void onSuccess(List<AppCategory> result) {
                 filterCategories(result);
-                addCategoriesToWorkspaceTree(selectedAppCategory);
+                addCategoriesToWorkspaceTree();
                 addCategoriesToHPCTree();
+                selectDesiredCategory(selectedAppCategory, selectDefaultCategory);
                 addHPCTabSelectionHandler();
                 workspaceView.getTree().unmask();
                 hpcView.getTree().unmask();
             }
         });
 
+    }
+
+    void selectDesiredCategory(HasId selectedAppCategory, boolean selectDefaultCategory) {
+        if (selectedAppCategory == null) {
+            if (selectDefaultCategory) {
+                Tree<AppCategory, String> tree = workspaceView.getTree();
+                viewTabPanel.setActiveWidget(tree);
+                tree.getSelectionModel().select(tree.getStore().getRootItems().get(0), false);
+            }
+        } else {
+            for (Tree<AppCategory, String> tree : trees) {
+                AppCategory category = tree.getStore().findModelWithKey(selectedAppCategory.getId());
+                Tree.TreeNode<AppCategory> node = tree.findNode(category);
+                if (node != null) {
+                    viewTabPanel.setActiveWidget(tree);
+                    tree.getSelectionModel().select(node.getModel(), true);
+                }
+            }
+        }
     }
 
     void addHPCTabSelectionHandler() {
@@ -186,7 +213,6 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
                 }
             }
         });
-
     }
 
     @Override
@@ -201,20 +227,13 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
         addAppCategories(hpcView.getTree().getStore(), null, hpcCategories);
     }
 
-    void addCategoriesToWorkspaceTree(HasId selectedAppCategory) {
+    void addCategoriesToWorkspaceTree() {
         TreeStore<AppCategory> treeStore = workspaceView.getTree().getStore();
         final Store.StoreSortInfo<AppCategory> info = new Store.StoreSortInfo<>(new AppCategoryComparator(treeStore),
                                                                                 SortDir.ASC);
         treeStore.addSortInfo(info);
         workspaceView.addAppCategorySelectedEventHandler(this);
         addAppCategories(treeStore, null, workspaceCategories);
-        if (selectedAppCategory != null) {
-            AppCategory desiredCategory = treeStore.findModelWithKey(selectedAppCategory.getId());
-            workspaceView.getTree().getSelectionModel().select(desiredCategory, false);
-        } else {
-            workspaceView.getTree().getSelectionModel().selectNext();
-            workspaceView.getTree().getSelectionModel().select(treeStore.getRootItems().get(0), false);
-        }
     }
 
     void filterCategories(List<AppCategory> result) {

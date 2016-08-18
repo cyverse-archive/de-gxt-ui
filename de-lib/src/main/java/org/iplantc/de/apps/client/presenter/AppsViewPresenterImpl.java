@@ -5,10 +5,13 @@ import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.AppsToolbarView;
 import org.iplantc.de.apps.client.AppsView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
+import org.iplantc.de.apps.client.events.selection.RefreshAppsSelectedEvent;
 import org.iplantc.de.apps.client.gin.factory.AppsViewFactory;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
+import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
+import org.iplantc.de.client.util.OntologyUtil;
 import org.iplantc.de.commons.client.widgets.DETabPanel;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -24,12 +27,14 @@ import java.util.List;
  *
  * @author jstroot
  */
-public class AppsViewPresenterImpl implements AppsView.Presenter {
+public class AppsViewPresenterImpl implements AppsView.Presenter,
+                                              RefreshAppsSelectedEvent.RefreshAppsSelectedEventHandler {
 
     protected final AppsView view;
     private final AppCategoriesView.Presenter categoriesPresenter;
     private final AppsListView.Presenter appsListPresenter;
     private final OntologyHierarchiesView.Presenter hierarchiesPresenter;
+    OntologyUtil ontologyUtil;
 
     @Inject
     protected AppsViewPresenterImpl(final AppsViewFactory viewFactory,
@@ -43,6 +48,7 @@ public class AppsViewPresenterImpl implements AppsView.Presenter {
         this.view = viewFactory.create(categoriesPresenter,
                                        hierarchiesPresenter, appsListPresenter,
                                        toolbarPresenter);
+        this.ontologyUtil = OntologyUtil.getInstance();
 
         categoriesPresenter.addAppCategorySelectedEventHandler(appsListPresenter);
         categoriesPresenter.addAppCategorySelectedEventHandler(toolbarPresenter.getView());
@@ -62,7 +68,7 @@ public class AppsViewPresenterImpl implements AppsView.Presenter {
         toolbarPresenter.getView().addAppSearchResultLoadEventHandler(hierarchiesPresenter);
         toolbarPresenter.getView().addAppSearchResultLoadEventHandler(appsListPresenter);
         toolbarPresenter.getView().addSwapViewButtonClickedEventHandler(appsListPresenter);
-
+        toolbarPresenter.getView().addRefreshAppsSelectedEventHandler(this);
     }
 
     @Override
@@ -86,8 +92,8 @@ public class AppsViewPresenterImpl implements AppsView.Presenter {
                    final HasId selectedApp) {
         DETabPanel tabPanel = view.getCategoryTabPanel();
         if (isEmpty(tabPanel)) {
-            categoriesPresenter.go(selectedAppCategory, tabPanel);
-            hierarchiesPresenter.go(tabPanel);
+            categoriesPresenter.go(selectedAppCategory, true, tabPanel);
+            hierarchiesPresenter.go(null, tabPanel);
         }
         container.setWidget(view);
     }
@@ -113,4 +119,16 @@ public class AppsViewPresenterImpl implements AppsView.Presenter {
         view.asWidget().ensureDebugId(baseId);
     }
 
+    @Override
+    public void onRefreshAppsSelected(RefreshAppsSelectedEvent event) {
+        AppCategory selectedAppCategory = categoriesPresenter.getSelectedAppCategory();
+        OntologyHierarchy selectedHierarchy = hierarchiesPresenter.getSelectedHierarchy();
+        boolean useDefaultSelection = selectedHierarchy == null;
+
+        view.clearTabPanel();
+        DETabPanel categoryTabPanel = view.getCategoryTabPanel();
+
+        categoriesPresenter.go(selectedAppCategory, useDefaultSelection, categoryTabPanel);
+        hierarchiesPresenter.go(selectedHierarchy, categoryTabPanel);
+    }
 }
