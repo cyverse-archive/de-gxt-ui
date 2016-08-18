@@ -71,7 +71,7 @@ public interface AppCategoriesView extends IsWidget,
 
         AppCategoriesView getWorkspaceView();
 
-        void go(HasId selectedAppCategory, DETabPanel tabPanel);
+        void go(HasId selectedAppCategory, boolean selectDefaultCategory, DETabPanel tabPanel);
 
         void setViewDebugId(String baseID);
     }
