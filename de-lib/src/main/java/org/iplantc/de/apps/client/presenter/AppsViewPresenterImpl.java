@@ -46,25 +46,22 @@ public class AppsViewPresenterImpl implements AppsView.Presenter {
                                        toolbarPresenter);
 
         categoriesPresenter.addAppCategorySelectedEventHandler(appsGridPresenter);
-        categoriesPresenter.addAppCategorySelectedEventHandler(appsGridPresenter.getView());
         categoriesPresenter.addAppCategorySelectedEventHandler(toolbarPresenter.getView());
 
         hierarchiesPresenter.addOntologyHierarchySelectionChangedEventHandler(appsGridPresenter);
-        hierarchiesPresenter.addOntologyHierarchySelectionChangedEventHandler(appsGridPresenter.getView());
         hierarchiesPresenter.addOntologyHierarchySelectionChangedEventHandler(toolbarPresenter.getView());
 
-        appsGridPresenter.getView().addAppSelectionChangedEventHandler(toolbarPresenter.getView());
-        appsGridPresenter.getView().addAppInfoSelectedEventHandler(hierarchiesPresenter);
+        appsGridPresenter.addAppSelectionChangedEventHandler(toolbarPresenter.getView());
+        appsGridPresenter.addAppInfoSelectedEventHandler(hierarchiesPresenter);
 
         toolbarPresenter.getView().addDeleteAppsSelectedHandler(appsGridPresenter);
         toolbarPresenter.getView().addCopyAppSelectedHandler(categoriesPresenter);
         toolbarPresenter.getView().addCopyWorkflowSelectedHandler(categoriesPresenter);
         toolbarPresenter.getView().addRunAppSelectedHandler(appsGridPresenter);
-        toolbarPresenter.getView().addBeforeAppSearchEventHandler(appsGridPresenter.getView());
+        toolbarPresenter.getView().addBeforeAppSearchEventHandler(appsGridPresenter);
         toolbarPresenter.getView().addAppSearchResultLoadEventHandler(categoriesPresenter);
         toolbarPresenter.getView().addAppSearchResultLoadEventHandler(hierarchiesPresenter);
         toolbarPresenter.getView().addAppSearchResultLoadEventHandler(appsGridPresenter);
-        toolbarPresenter.getView().addAppSearchResultLoadEventHandler(appsGridPresenter.getView());
         toolbarPresenter.getView().addSwapViewButtonClickedEventHandler(appsGridPresenter);
 
     }

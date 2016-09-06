@@ -1,7 +1,6 @@
 package org.iplantc.de.apps.client.views.grid;
 
 import org.iplantc.de.apps.client.AppsListView;
-import org.iplantc.de.apps.client.AppsTileView;
 import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
@@ -54,7 +53,7 @@ import java.util.List;
  * @author aramsey
  */
 public class AppsTileViewImpl extends ContentPanel
-        implements AppsTileView, SelectionChangedEvent.SelectionChangedHandler<App>, HasHandlers {
+        implements AppsListView, SelectionChangedEvent.SelectionChangedHandler<App>, HasHandlers {
 
     interface AppsGridViewImplUiBinder extends UiBinder<Widget, AppsTileViewImpl> {
     }
@@ -254,10 +253,5 @@ public class AppsTileViewImpl extends ContentPanel
     @Override
     public void setSearchPattern(String searchPattern) {
         appTileCell.setSearchRegexPattern(searchPattern);
-    }
-
-    @Override
-    public void switchActiveView() {
-        //do nothing
     }
 }

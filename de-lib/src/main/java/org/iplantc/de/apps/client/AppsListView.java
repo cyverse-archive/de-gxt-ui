@@ -26,6 +26,7 @@ import com.sencha.gxt.data.shared.event.StoreClearEvent;
 import com.sencha.gxt.data.shared.event.StoreRemoveEvent;
 import com.sencha.gxt.data.shared.event.StoreUpdateEvent;
 import com.sencha.gxt.dnd.core.client.DragSource;
+import com.sencha.gxt.widget.core.client.container.CardLayoutContainer;
 
 import java.util.List;
 
@@ -46,6 +47,9 @@ public interface AppsListView extends IsWidget,
                                       AppFavoritedEvent.HasAppFavoritedEventHandlers,
                                       BeforeAppSearchEvent.BeforeAppSearchEventHandler,
                                       OntologyHierarchySelectionChangedEvent.OntologyHierarchySelectionChangedEventHandler {
+    String GRID_VIEW = "grid";
+    String TILE_VIEW = "tile";
+
     interface AppsListAppearance {
 
         String appLaunchWithoutToolError();
@@ -86,16 +90,20 @@ public interface AppsListView extends IsWidget,
                                 StoreRemoveEvent.HasStoreRemoveHandler<App>,
                                 StoreUpdateEvent.HasStoreUpdateHandlers<App>,
                                 StoreClearEvent.HasStoreClearHandler<App>,
-                                AppFavoritedEvent.HasAppFavoritedEventHandlers,
                                 DeleteAppsSelected.DeleteAppsSelectedHandler,
                                 RunAppSelected.RunAppSelectedHandler,
+                                BeforeAppSearchEvent.BeforeAppSearchEventHandler,
                                 OntologyHierarchySelectionChangedEvent.OntologyHierarchySelectionChangedEventHandler,
-                                SwapViewButtonClickedEvent.SwapViewButtonClickedEventHandler {
+                                SwapViewButtonClickedEvent.SwapViewButtonClickedEventHandler,
+                                AppSelectionChangedEvent.HasAppSelectionChangedEventHandlers,
+                                AppInfoSelectedEvent.HasAppInfoSelectedEventHandlers {
         App getSelectedApp();
 
-        AppsListView getView();
-
         List<DragSource> getAppsDragSources();
+
+        void go(CardLayoutContainer container);
+
+        void setViewDebugId(String baseID);
     }
 
     List<DragSource> getAppsDragSources();
@@ -109,6 +117,4 @@ public interface AppsListView extends IsWidget,
     void setSearchPattern(String searchPattern);
 
     void setHeadingText(String text);
-
-    void switchActiveView();
 }

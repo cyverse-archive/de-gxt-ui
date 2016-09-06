@@ -19,6 +19,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.widget.core.client.Composite;
+import com.sencha.gxt.widget.core.client.container.CardLayoutContainer;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
 /**
@@ -33,8 +34,9 @@ public class AppsViewImpl extends Composite implements AppsView {
     @UiField DETabPanel categoryTabs;
     AppCategoriesView.Presenter categoriesPresenter;
     OntologyHierarchiesView.Presenter hierarchiesPresenter;
+    AppsListView.Presenter gridPresenter;
 
-    @UiField(provided = true) final AppsListView appsGridView;
+    @UiField CardLayoutContainer cardContainer;
 
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
@@ -45,7 +47,7 @@ public class AppsViewImpl extends Composite implements AppsView {
                            @Assisted final AppsToolbarView.Presenter toolbarPresenter) {
         this.categoriesPresenter = categoriesPresenter;
         this.hierarchiesPresenter = hierarchiesPresenter;
-        this.appsGridView = gridPresenter.getView();
+        this.gridPresenter = gridPresenter;
         this.toolBar = toolbarPresenter.getView();
 
         initWidget(uiBinder.createAndBindUi(this));
@@ -60,6 +62,8 @@ public class AppsViewImpl extends Composite implements AppsView {
                 }
             }
         });
+
+        gridPresenter.go(cardContainer);
     }
 
     @Override
@@ -81,7 +85,7 @@ public class AppsViewImpl extends Composite implements AppsView {
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
         toolBar.asWidget().ensureDebugId(baseID + Ids.MENU_BAR);
-        appsGridView.asWidget().ensureDebugId(baseID);
+        gridPresenter.setViewDebugId(baseID);
         categoriesPresenter.setViewDebugId(baseID);
         hierarchiesPresenter.setViewDebugId(baseID);
     }

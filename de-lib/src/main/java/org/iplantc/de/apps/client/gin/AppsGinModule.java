@@ -2,18 +2,14 @@ package org.iplantc.de.apps.client.gin;
 
 import org.iplantc.de.apps.client.AppCategoriesView;
 import org.iplantc.de.apps.client.AppDetailsView;
-import org.iplantc.de.apps.client.AppsGridView;
 import org.iplantc.de.apps.client.AppsListView;
-import org.iplantc.de.apps.client.AppsTileView;
 import org.iplantc.de.apps.client.AppsToolbarView;
 import org.iplantc.de.apps.client.AppsView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
 import org.iplantc.de.apps.client.SubmitAppForPublicUseView;
 import org.iplantc.de.apps.client.gin.factory.AppCategoriesViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppDetailsViewFactory;
-import org.iplantc.de.apps.client.gin.factory.AppsGridViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppsListViewFactory;
-import org.iplantc.de.apps.client.gin.factory.AppsTileViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppsToolbarViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppsViewFactory;
 import org.iplantc.de.apps.client.gin.factory.OntologyHierarchiesViewFactory;
@@ -29,7 +25,6 @@ import org.iplantc.de.apps.client.views.categories.AppCategoriesViewImpl;
 import org.iplantc.de.apps.client.views.details.AppDetailsViewImpl;
 import org.iplantc.de.apps.client.views.details.dialogs.AppDetailsDialog;
 import org.iplantc.de.apps.client.views.grid.AppsGridViewImpl;
-import org.iplantc.de.apps.client.views.grid.AppsListViewImpl;
 import org.iplantc.de.apps.client.views.grid.AppsTileViewImpl;
 import org.iplantc.de.apps.client.views.hierarchies.OntologyHierarchiesViewImpl;
 import org.iplantc.de.apps.client.views.submit.SubmitAppForPublicUseViewImpl;
@@ -45,6 +40,7 @@ import org.iplantc.de.client.services.impl.OntologyServiceFacadeImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.inject.TypeLiteral;
+import com.google.inject.name.Names;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.TreeStore;
@@ -87,18 +83,12 @@ public class AppsGinModule extends AbstractGinModule {
         bind(OntologyHierarchiesView.Presenter.class).to(OntologyHierarchiesPresenterImpl.class);
 
         // List View
-        install(new GinFactoryModuleBuilder()
-                    .implement(AppsListView.class, AppsListViewImpl.class)
-                    .build(AppsListViewFactory.class));
         bind(AppsListView.Presenter.class).to(AppsGridPresenterImpl.class);
 
         install(new GinFactoryModuleBuilder()
-                        .implement(AppsGridView.class, AppsGridViewImpl.class)
-                        .build(AppsGridViewFactory.class));
-
-        install(new GinFactoryModuleBuilder()
-                        .implement(AppsTileView.class, AppsTileViewImpl.class)
-                        .build(AppsTileViewFactory.class));
+                        .implement(AppsListView.class, Names.named(AppsListView.GRID_VIEW), AppsGridViewImpl.class)
+                        .implement(AppsListView.class, Names.named(AppsListView.TILE_VIEW), AppsTileViewImpl.class)
+                        .build(AppsListViewFactory.class));
 
         // Toolbar View
         install(new GinFactoryModuleBuilder()

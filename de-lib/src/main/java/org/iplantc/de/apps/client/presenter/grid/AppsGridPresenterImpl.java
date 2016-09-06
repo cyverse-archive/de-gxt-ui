@@ -4,14 +4,17 @@ import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
+import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
 import org.iplantc.de.apps.client.events.RunAppEvent;
 import org.iplantc.de.apps.client.events.SwapViewButtonClickedEvent;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.AppCommentSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppFavoriteSelectedEvent;
+import org.iplantc.de.apps.client.events.selection.AppInfoSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppNameSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
 import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
+import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
 import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.RunAppSelected;
@@ -38,7 +41,9 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.exceptions.HttpRedirectException;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -50,6 +55,7 @@ import com.sencha.gxt.data.shared.event.StoreRemoveEvent;
 import com.sencha.gxt.data.shared.event.StoreUpdateEvent;
 import com.sencha.gxt.dnd.core.client.DragSource;
 import com.sencha.gxt.widget.core.client.Dialog;
+import com.sencha.gxt.widget.core.client.container.CardLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
 import java.util.List;
@@ -63,7 +69,9 @@ public class AppsGridPresenterImpl implements AppsListView.Presenter,
                                               AppRatingDeselected.AppRatingDeselectedHandler,
                                               AppCommentSelectedEvent.AppCommentSelectedEventHandler,
                                               AppFavoriteSelectedEvent.AppFavoriteSelectedEventHandler,
-                                              AppUpdatedEvent.AppUpdatedEventHandler {
+                                              AppUpdatedEvent.AppUpdatedEventHandler,
+                                              AppSelectionChangedEvent.AppSelectionChangedEventHandler,
+                                              AppInfoSelectedEvent.AppInfoSelectedEventHandler {
 
     private class AppListCallback implements AsyncCallback<List<App>> {
         @Override
@@ -76,14 +84,15 @@ public class AppsGridPresenterImpl implements AppsListView.Presenter,
                     public void onDialogHide(DialogHideEvent event) {
                         if (event.getHideButton() == Dialog.PredefinedButton.NO) {
                             listStore.clear();
-                            view.setHeadingText(appearance.agaveAuthRequiredTitle());
+                            gridView.setHeadingText(appearance.agaveAuthRequiredTitle());
+                            tileView.setHeadingText(appearance.agaveAuthRequiredTitle());
                         }
                     }
                 });
             } else {
                 ErrorHandler.post(caught);
             }
-            view.unmask();
+            activeView.unmask();
         }
 
         @Override
@@ -93,14 +102,14 @@ public class AppsGridPresenterImpl implements AppsListView.Presenter,
 
             if (getDesiredSelectedApp() != null) {
 
-                view.select(getDesiredSelectedApp(), false);
+                activeView.select(getDesiredSelectedApp(), false);
 
             } else if (listStore.size() > 0) {
                 // Select first app
-                view.select(listStore.get(0), false);
+                activeView.select(listStore.get(0), false);
             }
             setDesiredSelectedApp(null);
-            view.unmask();
+            activeView.unmask();
         }
     }
 
@@ -114,9 +123,11 @@ public class AppsGridPresenterImpl implements AppsListView.Presenter,
     @Inject UserInfo userInfo;
     OntologyServiceFacade ontologyService;
     OntologyUtil ontologyUtil;
+    HandlerManager handlerManager;
     private final EventBus eventBus;
-    private final AppsListView view;
+    private AppsListView gridView, tileView, activeView;
     private App desiredSelectedApp;
+    private CardLayoutContainer cards;
 
     @Inject
     AppsGridPresenterImpl(final AppsListViewFactory viewFactory,
@@ -127,20 +138,42 @@ public class AppsGridPresenterImpl implements AppsListView.Presenter,
         this.eventBus = eventBus;
         this.ontologyService = ontologyService;
         this.ontologyUtil = OntologyUtil.getInstance();
-        this.view = viewFactory.create(listStore);
+        this.gridView = viewFactory.createGridView(listStore);
+        this.tileView = viewFactory.createTileView(listStore);
 
-        this.view.addAppNameSelectedEventHandler(this);
-        this.view.addAppRatingDeselectedHandler(this);
-        this.view.addAppRatingSelectedHandler(this);
-        this.view.addAppCommentSelectedEventHandlers(this);
-        this.view.addAppFavoriteSelectedEventHandlers(this);
+        this.gridView.addAppNameSelectedEventHandler(this);
+        this.gridView.addAppRatingDeselectedHandler(this);
+        this.gridView.addAppRatingSelectedHandler(this);
+        this.gridView.addAppCommentSelectedEventHandlers(this);
+        this.gridView.addAppFavoriteSelectedEventHandlers(this);
+        this.gridView.addAppSelectionChangedEventHandler(this);
+        this.gridView.addAppInfoSelectedEventHandler(this);
+
+        this.tileView.addAppNameSelectedEventHandler(this);
+        this.tileView.addAppRatingDeselectedHandler(this);
+        this.tileView.addAppRatingSelectedHandler(this);
+        this.tileView.addAppCommentSelectedEventHandlers(this);
+        this.tileView.addAppFavoriteSelectedEventHandlers(this);
+        this.tileView.addAppSelectionChangedEventHandler(this);
+        this.tileView.addAppInfoSelectedEventHandler(this);
+
+        activeView = tileView;
 
         eventBus.addHandler(AppUpdatedEvent.TYPE, this);
     }
 
     @Override
-    public HandlerRegistration addAppFavoritedEventHandler(AppFavoritedEvent.AppFavoritedEventHandler eventHandler) {
-        return view.addAppFavoritedEventHandler(eventHandler);
+    public void go(CardLayoutContainer container) {
+        this.cards = container;
+
+        cards.add(tileView);
+        cards.add(gridView);
+    }
+
+    @Override
+    public void setViewDebugId(String baseID) {
+        tileView.asWidget().ensureDebugId(baseID);
+        gridView.asWidget().ensureDebugId(baseID);
     }
 
     @Override
@@ -164,8 +197,28 @@ public class AppsGridPresenterImpl implements AppsListView.Presenter,
     }
 
     @Override
-    public void fireEvent(GwtEvent<?> event) {
-        throw new UnsupportedOperationException("Firing events on this presenter is not allowed.");
+    public HandlerRegistration addAppInfoSelectedEventHandler(AppInfoSelectedEvent.AppInfoSelectedEventHandler handler) {
+        return ensureHandlers().addHandler(AppInfoSelectedEvent.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addAppSelectionChangedEventHandler(AppSelectionChangedEvent.AppSelectionChangedEventHandler handler) {
+        return ensureHandlers().addHandler(AppSelectionChangedEvent.TYPE, handler);
+    }
+
+    @Override
+    public void onAppInfoSelected(AppInfoSelectedEvent event) {
+        fireEvent(event);
+    }
+
+    @Override
+    public void onAppSelectionChanged(AppSelectionChangedEvent event) {
+        fireEvent(event);
+    }
+
+    @Override
+    public void onBeforeAppSearch(BeforeAppSearchEvent event) {
+        activeView.mask(appearance.beforeAppSearchLoadingMask());
     }
 
     public App getDesiredSelectedApp() {
@@ -174,26 +227,27 @@ public class AppsGridPresenterImpl implements AppsListView.Presenter,
 
     @Override
     public App getSelectedApp() {
-        return view.getSelectedItem();
-    }
-
-    @Override
-    public AppsListView getView() {
-        return view;
+        return activeView.getSelectedItem();
     }
 
     @Override
     public List<DragSource> getAppsDragSources() {
-        return view.getAppsDragSources();
+        List<DragSource> sources = Lists.newArrayList();
+        sources.addAll(gridView.getAppsDragSources());
+        sources.addAll(tileView.getAppsDragSources());
+        return sources;
     }
 
     @Override
     public void onAppCategorySelectionChanged(AppCategorySelectionChangedEvent event) {
+        tileView.onAppCategorySelectionChanged(event);
+        gridView.onAppCategorySelectionChanged(event);
+
         if (event.getAppCategorySelection().isEmpty()) {
             return;
         }
         Preconditions.checkArgument(event.getAppCategorySelection().size() == 1);
-        view.mask(appearance.getAppsLoadingMask());
+        activeView.mask(appearance.getAppsLoadingMask());
 
         final AppCategory appCategory = event.getAppCategorySelection().iterator().next();
         appService.getApps(appCategory, new AppListCallback());
@@ -201,9 +255,12 @@ public class AppsGridPresenterImpl implements AppsListView.Presenter,
 
     @Override
     public void onOntologyHierarchySelectionChanged(OntologyHierarchySelectionChangedEvent event) {
+        tileView.onOntologyHierarchySelectionChanged(event);
+        gridView.onOntologyHierarchySelectionChanged(event);
+
         OntologyHierarchy selectedHierarchy = event.getSelectedHierarchy();
         if (selectedHierarchy != null) {
-            view.mask(appearance.getAppsLoadingMask());
+            activeView.mask(appearance.getAppsLoadingMask());
             Avu avu = ontologyUtil.convertHierarchyToAvu(selectedHierarchy);
             String iri = selectedHierarchy.getIri();
             if (ontologyUtil.isUnclassified(selectedHierarchy)) {
@@ -273,7 +330,10 @@ public class AppsGridPresenterImpl implements AppsListView.Presenter,
 
     @Override
     public void onAppSearchResultLoad(AppSearchResultLoadEvent event) {
-        view.setSearchPattern(event.getSearchPattern());
+        tileView.onAppSearchResultLoad(event);
+        gridView.onAppSearchResultLoad(event);
+
+        activeView.setSearchPattern(event.getSearchPattern());
         listStore.clear();
         listStore.addAll(event.getResults());
     }
@@ -325,6 +385,26 @@ public class AppsGridPresenterImpl implements AppsListView.Presenter,
 
     @Override
     public void onSwapViewButtonClicked(SwapViewButtonClickedEvent event) {
-        view.switchActiveView();
+        activeView.deselectAll();
+        if (activeView == gridView) {
+            activeView = tileView;
+        } else {
+            activeView = gridView;
+        }
+        cards.setActiveWidget(activeView);
+    }
+
+    HandlerManager createHandlerManager() {
+        return new HandlerManager(this);
+    }
+
+    HandlerManager ensureHandlers() {
+        return handlerManager == null ? handlerManager = createHandlerManager() : handlerManager;
+    }
+
+    public void fireEvent(GwtEvent<?> event) {
+        if (handlerManager != null) {
+            handlerManager.fireEvent(event);
+        }
     }
 }

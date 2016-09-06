@@ -1,6 +1,5 @@
 package org.iplantc.de.apps.client.views.grid;
 
-import org.iplantc.de.apps.client.AppsGridView;
 import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
@@ -45,7 +44,7 @@ import java.util.List;
  *
  * @author jstroot
  */
-public class AppsGridViewImpl extends ContentPanel implements AppsGridView,
+public class AppsGridViewImpl extends ContentPanel implements AppsListView,
                                                               SelectionChangedEvent.SelectionChangedHandler<App> {
     interface AppsGridViewImplUiBinder extends UiBinder<Widget, AppsGridViewImpl> { }
 
@@ -61,7 +60,7 @@ public class AppsGridViewImpl extends ContentPanel implements AppsGridView,
     private String searchRegexPattern;
 
     @Inject
-    AppsGridViewImpl(final AppsListView.AppsListAppearance appearance,
+    AppsGridViewImpl(AppsListView.AppsListAppearance appearance,
                      @Assisted final ListStore<App> listStore) {
         this.appearance = appearance;
         this.listStore = listStore;
@@ -179,11 +178,6 @@ public class AppsGridViewImpl extends ContentPanel implements AppsGridView,
     public void setSearchPattern(final String searchPattern) {
         this.searchRegexPattern = searchPattern;
         acm.setSearchRegexPattern(searchRegexPattern);
-    }
-
-    @Override
-    public void switchActiveView() {
-        //do nothing
     }
 
     @Override
