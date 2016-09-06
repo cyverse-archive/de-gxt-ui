@@ -9,6 +9,7 @@ import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent
 import org.iplantc.de.analysis.client.gin.factory.AnalysisToolBarFactory;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
+import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.analysis.shared.AnalysisModule;
 import org.iplantc.de.client.models.analysis.Analysis;
 
@@ -65,6 +66,8 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     @UiField Status selectionStatus;
     private final AnalysesView.Presenter presenter;
 
+    AnalysisSearchField searchField;
+
     @Inject
     AnalysesViewImpl(final AnalysisColumnModel cm,
                      final AnalysisToolBarFactory toolBarFactory,
@@ -96,6 +99,7 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
         grid.getSelectionModel().addSelectionChangedHandler(this);
         grid.getSelectionModel().addSelectionChangedHandler(toolBar);
         cm.addAnalysisCommentSelectedEventHandler(this);
+        this.searchField = toolBar.getSearchField();
 
     }
 
@@ -174,6 +178,11 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     @Override
     public String getParentAnalysisId() {
         return parentAnalysisId;
+    }
+
+    @Override
+    public AnalysisSearchField getSearchField() {
+        return searchField;
     }
 
 

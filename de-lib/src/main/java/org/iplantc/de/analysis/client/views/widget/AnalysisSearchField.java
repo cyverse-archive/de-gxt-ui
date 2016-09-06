@@ -91,4 +91,8 @@ public class AnalysisSearchField extends SearchField<Analysis> {
 
         return filters;
     }
+
+    public void refreshSearch() {
+       loader.load(loader.getLastLoadConfig());
+    }
 }

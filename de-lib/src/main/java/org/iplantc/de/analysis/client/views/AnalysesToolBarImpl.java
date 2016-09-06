@@ -471,6 +471,11 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         filterCombo.setValue(filter);
     }
 
+    @Override
+    public AnalysisSearchField getSearchField() {
+        return searchField;
+    }
+
     @UiHandler("shareCollabMI")
     void onShareSelected(SelectionEvent<Item> event) {
        presenter.onShareSelected(currentSelection);
