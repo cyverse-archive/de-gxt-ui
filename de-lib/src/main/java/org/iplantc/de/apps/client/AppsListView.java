@@ -25,6 +25,9 @@ import com.sencha.gxt.data.shared.event.StoreAddEvent;
 import com.sencha.gxt.data.shared.event.StoreClearEvent;
 import com.sencha.gxt.data.shared.event.StoreRemoveEvent;
 import com.sencha.gxt.data.shared.event.StoreUpdateEvent;
+import com.sencha.gxt.dnd.core.client.DragSource;
+
+import java.util.List;
 
 /**
  * @author aramsey
@@ -91,7 +94,11 @@ public interface AppsListView extends IsWidget,
         App getSelectedApp();
 
         AppsListView getView();
+
+        List<DragSource> getAppsDragSources();
     }
+
+    List<DragSource> getAppsDragSources();
 
     App getSelectedItem();
 

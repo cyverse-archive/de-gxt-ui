@@ -20,6 +20,7 @@ import org.iplantc.de.apps.client.gin.factory.AppsGridViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppsTileViewFactory;
 import org.iplantc.de.client.models.apps.App;
 
+import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.user.client.ui.Widget;
@@ -27,9 +28,12 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.data.shared.ListStore;
+import com.sencha.gxt.dnd.core.client.DragSource;
 import com.sencha.gxt.widget.core.client.container.CardLayoutContainer;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
+
+import java.util.List;
 
 /**
  * @author aramsey
@@ -211,6 +215,14 @@ public class AppsListViewImpl extends CardLayoutContainer implements AppsListVie
     @Override
     public void onSelectionChanged(SelectionChangedEvent<App> event) {
        //do nothing
+    }
+
+    @Override
+    public List<DragSource> getAppsDragSources() {
+        List<DragSource> sources = Lists.newArrayList();
+        sources.addAll(gridView.getAppsDragSources());
+        sources.addAll(tileView.getAppsDragSources());
+        return sources;
     }
 
     @Override

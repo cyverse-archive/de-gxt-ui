@@ -14,8 +14,10 @@ import org.iplantc.de.commons.client.widgets.DETabPanel;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.dnd.core.client.DragSource;
 import com.sencha.gxt.widget.core.client.TabPanel;
-import com.sencha.gxt.widget.core.client.grid.Grid;
+
+import java.util.List;
 
 /**
  * The presenter for the AppsView.
@@ -68,9 +70,8 @@ public class AppsViewPresenterImpl implements AppsView.Presenter {
     }
 
     @Override
-    public Grid<App> getAppsGrid() {
-        // FIXME Too many levels of misdirection
-        return null;
+    public List<DragSource> getAppsDragSources() {
+        return appsGridPresenter.getAppsDragSources();
     }
 
     @Override

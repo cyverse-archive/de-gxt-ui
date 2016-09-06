@@ -18,6 +18,7 @@ import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.models.apps.App;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -28,12 +29,16 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.data.shared.ListStore;
+import com.sencha.gxt.dnd.core.client.DragSource;
+import com.sencha.gxt.dnd.core.client.GridDragSource;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.grid.GridView;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import com.sencha.gxt.widget.core.client.tips.QuickTip;
+
+import java.util.List;
 
 /**
  * Created by jstroot on 3/5/15.
@@ -146,6 +151,13 @@ public class AppsGridViewImpl extends ContentPanel implements AppsGridView,
     @Override
     public void onSelectionChanged(SelectionChangedEvent<App> event) {
         fireEvent(new AppSelectionChangedEvent(event.getSelection()));
+    }
+
+    @Override
+    public List<DragSource> getAppsDragSources() {
+        List<DragSource> sources = Lists.newArrayList();
+        sources.add(new GridDragSource<>(grid));
+        return sources;
     }
 
     @Override

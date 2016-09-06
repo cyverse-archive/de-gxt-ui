@@ -48,6 +48,7 @@ import com.sencha.gxt.data.shared.event.StoreAddEvent;
 import com.sencha.gxt.data.shared.event.StoreClearEvent;
 import com.sencha.gxt.data.shared.event.StoreRemoveEvent;
 import com.sencha.gxt.data.shared.event.StoreUpdateEvent;
+import com.sencha.gxt.dnd.core.client.DragSource;
 import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
@@ -179,6 +180,11 @@ public class AppsGridPresenterImpl implements AppsListView.Presenter,
     @Override
     public AppsListView getView() {
         return view;
+    }
+
+    @Override
+    public List<DragSource> getAppsDragSources() {
+        return view.getAppsDragSources();
     }
 
     @Override

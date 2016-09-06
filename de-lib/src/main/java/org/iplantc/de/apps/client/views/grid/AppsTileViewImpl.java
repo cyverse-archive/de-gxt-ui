@@ -21,6 +21,7 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.theme.base.client.apps.grid.TileListDefaultAppearance;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -38,6 +39,8 @@ import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.SortDir;
 import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.data.shared.StringLabelProvider;
+import com.sencha.gxt.dnd.core.client.DragSource;
+import com.sencha.gxt.dnd.core.client.ListViewDragSource;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.ListView;
 import com.sencha.gxt.widget.core.client.form.SimpleComboBox;
@@ -45,6 +48,7 @@ import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author aramsey
@@ -223,6 +227,13 @@ public class AppsTileViewImpl extends ContentPanel
         super.onEnsureDebugId(baseID);
         listView.ensureDebugId(baseID + AppsModule.Ids.APP_TILES);
         appTileCell.setDebugBaseId(baseID + AppsModule.Ids.APP_TILES);
+    }
+
+    @Override
+    public List<DragSource> getAppsDragSources() {
+        List<DragSource> sources = Lists.newArrayList();
+        sources.add(new ListViewDragSource<>(listView));
+        return sources;
     }
 
     @Override
