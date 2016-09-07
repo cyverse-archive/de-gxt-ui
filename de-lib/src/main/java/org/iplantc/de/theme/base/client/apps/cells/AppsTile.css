@@ -1,9 +1,9 @@
 .tileCell {
     /*gwt-image: 'miniLogo';*/
     /*border: double #185DA2;*/
-    width: 225px;
+    width: 260px;
     height: 100px;
-    margin: 10px 0 0 10px;
+    margin: 15px 0 0 15px;
     position: relative;
     float: left;
     background-size: 70px;
@@ -30,8 +30,8 @@
 
 .infoMod {
     position: absolute;
-    top: 2px;
-    right: 10px;
+    bottom: 2px;
+    left: 10px;
 }
 
 .infoMod:hover {
@@ -41,8 +41,8 @@
 
 .commentMod {
     position: absolute;
-    bottom: 4px;
-    left: 50px;
+    bottom: 5px;
+    left: 35px;
 }
 
 .commentMod:hover {
@@ -52,11 +52,11 @@
 
 .nameMod {
     position: absolute;
-    top: 20px;
+    top: 10px;
     left: 85px;
     float: left;
     word-break: break-word;
-    width: 130px;
+    width: 160px;
     /*transform: translate(-50%, -50%);*/
 }
 
@@ -67,7 +67,7 @@
 .favoriteMod {
     position: absolute;
     bottom: 4px;
-    left: 15px;
+    left: 58px;
 }
 
 .favoriteMod:hover {
@@ -77,20 +77,20 @@
 
 .integratorMod {
     position: absolute;
-    bottom: 2px;
-    left: 5px;
+    bottom: 26px;
+    left: 85px;
     max-width: 170px;
     text-overflow: ellipsis;
-    overflow: hidden;
-    white-space:nowrap;
-    visibility: hidden;
+    white-space: nowrap;
+    font-size: 11px;
+    font-style: italic;
 }
 
 .ratingMod {
     position: absolute;
     cursor: pointer;
-    right: 10px;
-    bottom: 5px;
+    left: 85px;
+    bottom: 4px;
 }
 
 @sprite .workFlow {
