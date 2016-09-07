@@ -26,11 +26,6 @@ public interface TileListResources extends ClientBundle {
         String integratorMod();
 
         String ratingMod();
-
-        String workFlow();
-
-        String privateApp();
-
     }
 
     @Source("org/iplantc/de/theme/base/client/apps/cells/AppsTile.css")

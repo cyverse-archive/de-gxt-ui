@@ -69,6 +69,7 @@ public class AppTileCellDefaultAppearance implements AppTileCell.AppTileCellAppe
         }
         hasCell.getCell().render(context, hasCell.getValue(value), sb);
         sb.appendHtmlConstant("</div>");
+
     }
 
 

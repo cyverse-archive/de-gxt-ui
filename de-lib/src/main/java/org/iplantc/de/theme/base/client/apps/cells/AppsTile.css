@@ -1,6 +1,15 @@
+@def marginLeft 10px;
+@def cardWidth 60px;
+
+@def fontSize 12px;
+@def lineHeight 1.4;
+@def linesToShow 3;
+/* The above values are used to calculate the height of the app name's area */
+@eval nameBoxHeight 12*1.4*3+"px";
+/* The card width plus its 10px margin on both sides*/
+@eval centerMargin 10*2+60+"px";
+
 .tileCell {
-    /*gwt-image: 'miniLogo';*/
-    /*border: double #185DA2;*/
     width: 260px;
     height: 100px;
     margin: 15px 0 0 15px;
@@ -13,7 +22,6 @@
 }
 
 .tileCell:hover {
-    /*background-color: #2989E6;*/
     background-color: rgb(238,238,238);
     outline: rgb(208,208,208) solid 2px;
 }
@@ -23,15 +31,10 @@
     outline: rgb(208,208,208) solid 2px;
 }
 
-.tileCell h2 {
-    color: black;
-    margin-top:30px;
-}
-
 .infoMod {
     position: absolute;
     bottom: 2px;
-    left: 10px;
+    left: marginLeft;
 }
 
 .infoMod:hover {
@@ -53,10 +56,17 @@
 .nameMod {
     position: absolute;
     top: 10px;
-    left: 85px;
+    left: centerMargin;
     float: left;
     word-break: break-word;
     width: 160px;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    height: nameBoxHeight;
+    text-overflow: ellipsis;
+    line-height: lineHeight;
+    display: -webkit-box;
     /*transform: translate(-50%, -50%);*/
 }
 
@@ -78,9 +88,10 @@
 .integratorMod {
     position: absolute;
     bottom: 26px;
-    left: 85px;
-    max-width: 170px;
+    left: centerMargin;
+    width: 160px;
     text-overflow: ellipsis;
+    overflow: hidden;
     white-space: nowrap;
     font-size: 11px;
     font-style: italic;
@@ -89,20 +100,6 @@
 .ratingMod {
     position: absolute;
     cursor: pointer;
-    left: 85px;
+    left: centerMargin;
     bottom: 4px;
-}
-
-@sprite .workFlow {
-    gwt-image: 'listItems';
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-}
-
-@sprite .privateApp {
-    gwt-image: 'link';
-    position: absolute;
-    top: 5px;
-    left: 15px;
 }
