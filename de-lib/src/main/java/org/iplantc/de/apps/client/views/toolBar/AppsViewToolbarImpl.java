@@ -356,6 +356,7 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
         deleteWf.ensureDebugId(baseID + Ids.MENU_ITEM_WF + Ids.MENU_ITEM_DELETE_WF);
 
         appSearch.ensureDebugId(baseID + Ids.MENU_ITEM_SEARCH);
+        swapViewBtn.ensureDebugId(baseID + Ids.SWAP_VIEW_BTN);
     }
 
     boolean containsSharableApps(List<App> apps) {

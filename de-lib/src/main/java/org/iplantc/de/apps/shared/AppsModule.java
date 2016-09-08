@@ -45,6 +45,7 @@ public interface AppsModule {
         String HPC_TAB = ".hpcTab";
         String APP_TILES = ".tiles";
         String APP_CARD_CELL = ".card";
+        String SWAP_VIEW_BTN = ".swapBtn";
     }
 }
 

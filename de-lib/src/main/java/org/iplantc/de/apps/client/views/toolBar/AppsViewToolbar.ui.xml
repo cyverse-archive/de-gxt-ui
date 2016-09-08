@@ -94,7 +94,6 @@
 		<toolbar:child>
 			<button:TextButton
 					ui:field="swapViewBtn"
-					debugId="idBtnSwitchView"
 					text="{strings.swapView}"
 					icon="{icons.copy}" />
 		</toolbar:child>
