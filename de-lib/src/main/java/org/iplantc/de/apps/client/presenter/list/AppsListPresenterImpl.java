@@ -125,9 +125,9 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     OntologyUtil ontologyUtil;
     HandlerManager handlerManager;
     private final EventBus eventBus;
-    private AppsListView gridView, tileView, activeView;
+    AppsListView gridView, tileView, activeView;
     private App desiredSelectedApp;
-    private CardLayoutContainer cards;
+    CardLayoutContainer cards;
 
     @Inject
     AppsListPresenterImpl(final AppsListViewFactory viewFactory,
