@@ -7,4 +7,6 @@ import com.google.gwt.i18n.client.Messages;
  */
 public interface AppLaunchViewDisplayStrings extends Messages {
     String deprecatedAppMask();
+
+    String hpcAppWaitTimes();
 }

@@ -23,4 +23,9 @@ public class AppLaunchViewDefaultAppearance implements AppLaunchView.AppLaunchVi
     public String deprecatedAppMask() {
         return displayStrings.deprecatedAppMask();
     }
+
+    @Override
+    public String hpcAppWaitTimes() {
+        return displayStrings.hpcAppWaitTimes();
+    }
 }
