@@ -1,4 +1,4 @@
-package org.iplantc.de.apps.client.views.grid;
+package org.iplantc.de.apps.client.views.list;
 
 import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.events.AppFavoritedEvent;

@@ -1,14 +1,14 @@
 package org.iplantc.de.theme.base.client.apps.cells;
 
-import org.iplantc.de.apps.client.views.grid.cells.AppCommentCell;
-import org.iplantc.de.apps.client.views.grid.cells.AppFavoriteCell;
-import org.iplantc.de.apps.client.views.grid.cells.AppInfoCell;
-import org.iplantc.de.apps.client.views.grid.cells.AppIntegratorCell;
-import org.iplantc.de.apps.client.views.grid.cells.AppNameCell;
-import org.iplantc.de.apps.client.views.grid.cells.AppRatingCell;
-import org.iplantc.de.apps.client.views.grid.cells.AppTileCell;
+import org.iplantc.de.apps.client.views.list.cells.AppCommentCell;
+import org.iplantc.de.apps.client.views.list.cells.AppFavoriteCell;
+import org.iplantc.de.apps.client.views.list.cells.AppInfoCell;
+import org.iplantc.de.apps.client.views.list.cells.AppIntegratorCell;
+import org.iplantc.de.apps.client.views.list.cells.AppNameCell;
+import org.iplantc.de.apps.client.views.list.cells.AppRatingCell;
+import org.iplantc.de.apps.client.views.list.cells.AppTileCell;
 import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.theme.base.client.apps.grid.TileListResources;
+import org.iplantc.de.theme.base.client.apps.list.TileListResources;
 
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.HasCell;

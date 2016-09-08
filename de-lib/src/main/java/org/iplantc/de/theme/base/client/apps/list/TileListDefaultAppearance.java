@@ -1,4 +1,4 @@
-package org.iplantc.de.theme.base.client.apps.grid;
+package org.iplantc.de.theme.base.client.apps.list;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;

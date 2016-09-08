@@ -1,4 +1,4 @@
-package org.iplantc.de.apps.client.presenter.grid;
+package org.iplantc.de.apps.client.presenter.list;
 
 import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.events.AppFavoritedEvent;
@@ -63,7 +63,7 @@ import java.util.List;
 /**
  * @author jstroot
  */
-public class AppsGridPresenterImpl implements AppsListView.Presenter,
+public class AppsListPresenterImpl implements AppsListView.Presenter,
                                               AppNameSelectedEvent.AppNameSelectedEventHandler,
                                               AppRatingSelected.AppRatingSelectedHandler,
                                               AppRatingDeselected.AppRatingDeselectedHandler,
@@ -130,7 +130,7 @@ public class AppsGridPresenterImpl implements AppsListView.Presenter,
     private CardLayoutContainer cards;
 
     @Inject
-    AppsGridPresenterImpl(final AppsListViewFactory viewFactory,
+    AppsListPresenterImpl(final AppsListViewFactory viewFactory,
                           final ListStore<App> listStore,
                           final EventBus eventBus,
                           OntologyServiceFacade ontologyService) {

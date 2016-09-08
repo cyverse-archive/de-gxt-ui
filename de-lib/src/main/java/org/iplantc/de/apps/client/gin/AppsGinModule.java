@@ -16,7 +16,7 @@ import org.iplantc.de.apps.client.gin.factory.OntologyHierarchiesViewFactory;
 import org.iplantc.de.apps.client.presenter.AppsViewPresenterImpl;
 import org.iplantc.de.apps.client.presenter.categories.AppCategoriesPresenterImpl;
 import org.iplantc.de.apps.client.presenter.details.AppDetailsViewPresenterImpl;
-import org.iplantc.de.apps.client.presenter.grid.AppsGridPresenterImpl;
+import org.iplantc.de.apps.client.presenter.list.AppsListPresenterImpl;
 import org.iplantc.de.apps.client.presenter.hierarchies.OntologyHierarchiesPresenterImpl;
 import org.iplantc.de.apps.client.presenter.submit.SubmitAppForPublicPresenter;
 import org.iplantc.de.apps.client.presenter.toolBar.AppsToolbarPresenterImpl;
@@ -24,8 +24,8 @@ import org.iplantc.de.apps.client.views.AppsViewImpl;
 import org.iplantc.de.apps.client.views.categories.AppCategoriesViewImpl;
 import org.iplantc.de.apps.client.views.details.AppDetailsViewImpl;
 import org.iplantc.de.apps.client.views.details.dialogs.AppDetailsDialog;
-import org.iplantc.de.apps.client.views.grid.AppsGridViewImpl;
-import org.iplantc.de.apps.client.views.grid.AppsTileViewImpl;
+import org.iplantc.de.apps.client.views.list.AppsGridViewImpl;
+import org.iplantc.de.apps.client.views.list.AppsTileViewImpl;
 import org.iplantc.de.apps.client.views.hierarchies.OntologyHierarchiesViewImpl;
 import org.iplantc.de.apps.client.views.submit.SubmitAppForPublicUseViewImpl;
 import org.iplantc.de.apps.client.views.toolBar.AppsViewToolbarImpl;
@@ -83,7 +83,7 @@ public class AppsGinModule extends AbstractGinModule {
         bind(OntologyHierarchiesView.Presenter.class).to(OntologyHierarchiesPresenterImpl.class);
 
         // List View
-        bind(AppsListView.Presenter.class).to(AppsGridPresenterImpl.class);
+        bind(AppsListView.Presenter.class).to(AppsListPresenterImpl.class);
 
         install(new GinFactoryModuleBuilder()
                         .implement(AppsListView.class, Names.named(AppsListView.GRID_VIEW), AppsGridViewImpl.class)

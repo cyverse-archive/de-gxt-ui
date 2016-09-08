@@ -1,4 +1,4 @@
-package org.iplantc.de.apps.client.views.grid;
+package org.iplantc.de.apps.client.views.list;
 
 import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.events.AppFavoritedEvent;
@@ -14,10 +14,10 @@ import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
 import org.iplantc.de.apps.client.models.AppProperties;
-import org.iplantc.de.apps.client.views.grid.cells.AppTileCell;
+import org.iplantc.de.apps.client.views.list.cells.AppTileCell;
 import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.theme.base.client.apps.grid.TileListDefaultAppearance;
+import org.iplantc.de.theme.base.client.apps.list.TileListDefaultAppearance;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;

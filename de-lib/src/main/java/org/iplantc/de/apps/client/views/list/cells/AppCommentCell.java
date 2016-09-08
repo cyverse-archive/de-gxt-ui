@@ -1,4 +1,4 @@
-package org.iplantc.de.apps.client.views.grid.cells;
+package org.iplantc.de.apps.client.views.list.cells;
 
 import static com.google.gwt.dom.client.BrowserEvents.CLICK;
 import static com.google.gwt.dom.client.BrowserEvents.MOUSEOUT;

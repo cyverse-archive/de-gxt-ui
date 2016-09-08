@@ -1,4 +1,4 @@
-package org.iplantc.de.theme.base.client.apps.grid;
+package org.iplantc.de.theme.base.client.apps.list;
 
 import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;

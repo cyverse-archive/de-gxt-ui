@@ -1,4 +1,4 @@
-package org.iplantc.de.theme.base.client.apps.grid;
+package org.iplantc.de.theme.base.client.apps.list;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;

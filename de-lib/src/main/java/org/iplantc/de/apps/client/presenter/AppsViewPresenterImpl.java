@@ -28,52 +28,51 @@ public class AppsViewPresenterImpl implements AppsView.Presenter {
 
     protected final AppsView view;
     private final AppCategoriesView.Presenter categoriesPresenter;
-    private final AppsListView.Presenter appsGridPresenter;
+    private final AppsListView.Presenter appsListPresenter;
     private final OntologyHierarchiesView.Presenter hierarchiesPresenter;
 
     @Inject
     protected AppsViewPresenterImpl(final AppsViewFactory viewFactory,
                                     final AppCategoriesView.Presenter categoriesPresenter,
-                                    final AppsListView.Presenter appsGridPresenter,
+                                    final AppsListView.Presenter appsListPresenter,
                                     final AppsToolbarView.Presenter toolbarPresenter,
                                     final OntologyHierarchiesView.Presenter hierarchiesPresenter) {
         this.categoriesPresenter = categoriesPresenter;
-        this.appsGridPresenter = appsGridPresenter;
+        this.appsListPresenter = appsListPresenter;
         this.hierarchiesPresenter = hierarchiesPresenter;
         this.view = viewFactory.create(categoriesPresenter,
-                                       hierarchiesPresenter,
-                                       appsGridPresenter,
+                                       hierarchiesPresenter, appsListPresenter,
                                        toolbarPresenter);
 
-        categoriesPresenter.addAppCategorySelectedEventHandler(appsGridPresenter);
+        categoriesPresenter.addAppCategorySelectedEventHandler(appsListPresenter);
         categoriesPresenter.addAppCategorySelectedEventHandler(toolbarPresenter.getView());
 
-        hierarchiesPresenter.addOntologyHierarchySelectionChangedEventHandler(appsGridPresenter);
+        hierarchiesPresenter.addOntologyHierarchySelectionChangedEventHandler(appsListPresenter);
         hierarchiesPresenter.addOntologyHierarchySelectionChangedEventHandler(toolbarPresenter.getView());
 
-        appsGridPresenter.addAppSelectionChangedEventHandler(toolbarPresenter.getView());
-        appsGridPresenter.addAppInfoSelectedEventHandler(hierarchiesPresenter);
+        appsListPresenter.addAppSelectionChangedEventHandler(toolbarPresenter.getView());
+        appsListPresenter.addAppInfoSelectedEventHandler(hierarchiesPresenter);
 
-        toolbarPresenter.getView().addDeleteAppsSelectedHandler(appsGridPresenter);
+        toolbarPresenter.getView().addDeleteAppsSelectedHandler(appsListPresenter);
         toolbarPresenter.getView().addCopyAppSelectedHandler(categoriesPresenter);
         toolbarPresenter.getView().addCopyWorkflowSelectedHandler(categoriesPresenter);
-        toolbarPresenter.getView().addRunAppSelectedHandler(appsGridPresenter);
-        toolbarPresenter.getView().addBeforeAppSearchEventHandler(appsGridPresenter);
+        toolbarPresenter.getView().addRunAppSelectedHandler(appsListPresenter);
+        toolbarPresenter.getView().addBeforeAppSearchEventHandler(appsListPresenter);
         toolbarPresenter.getView().addAppSearchResultLoadEventHandler(categoriesPresenter);
         toolbarPresenter.getView().addAppSearchResultLoadEventHandler(hierarchiesPresenter);
-        toolbarPresenter.getView().addAppSearchResultLoadEventHandler(appsGridPresenter);
-        toolbarPresenter.getView().addSwapViewButtonClickedEventHandler(appsGridPresenter);
+        toolbarPresenter.getView().addAppSearchResultLoadEventHandler(appsListPresenter);
+        toolbarPresenter.getView().addSwapViewButtonClickedEventHandler(appsListPresenter);
 
     }
 
     @Override
     public List<DragSource> getAppsDragSources() {
-        return appsGridPresenter.getAppsDragSources();
+        return appsListPresenter.getAppsDragSources();
     }
 
     @Override
     public App getSelectedApp() {
-        return appsGridPresenter.getSelectedApp();
+        return appsListPresenter.getSelectedApp();
     }
 
     @Override

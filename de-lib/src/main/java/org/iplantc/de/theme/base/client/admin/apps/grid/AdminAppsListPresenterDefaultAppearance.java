@@ -4,7 +4,7 @@ import org.iplantc.de.admin.apps.client.AdminAppsGridView;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.theme.base.client.admin.BelphegorDisplayStrings;
 import org.iplantc.de.theme.base.client.admin.BelphegorErrorStrings;
-import org.iplantc.de.theme.base.client.apps.grid.AppsListViewDefaultAppearance;
+import org.iplantc.de.theme.base.client.apps.list.AppsListViewDefaultAppearance;
 
 import com.google.gwt.core.client.GWT;
 
