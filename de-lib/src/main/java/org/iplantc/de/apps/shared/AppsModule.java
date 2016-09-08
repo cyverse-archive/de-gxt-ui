@@ -44,6 +44,7 @@ public interface AppsModule {
         String WORKSPACE_TAB = ".workspaceTab";
         String HPC_TAB = ".hpcTab";
         String APP_TILES = ".tiles";
+        String APP_CARD_CELL = ".card";
     }
 }
 

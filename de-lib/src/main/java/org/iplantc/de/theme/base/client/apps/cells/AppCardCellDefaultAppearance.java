@@ -15,11 +15,11 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 /**
  * @author aramsey
  */
-public class AppCardCellDefaultAppearance implements AppCardCell.AppCardCellAppearance {
+public class AppCardCellDefaultAppearance extends AppNameCellDefaultAppearance implements AppCardCell.AppCardCellAppearance {
 
     interface Templates extends SafeHtmlTemplates {
-        @SafeHtmlTemplates.Template("<img class='{0}' src='{1}'/>")
-        SafeHtml img(String className, String gravatar);
+        @SafeHtmlTemplates.Template("<img class='{0}' src='{1}' qtip='{2}' id='{3}'/>")
+        SafeHtml img(String className, String gravatar, String textToolTip, String debugId);
     }
 
     public interface AppCardCellStyles extends CssResource {
@@ -48,9 +48,9 @@ public class AppCardCellDefaultAppearance implements AppCardCell.AppCardCellAppe
     }
 
     @Override
-    public void render(Cell.Context context, App value, SafeHtmlBuilder sb) {
+    public void render(Cell.Context context, App value, SafeHtmlBuilder sb, String textToolTip, String debugID) {
         String code = MD5Util.md5Hex(value.getId());
         String hash = "https://www.gravatar.com/avatar/" + code + "?d=identicon&s=60";
-        sb.append(templates.img(styles.icon(), hash));
+        sb.append(templates.img(styles.icon(), hash, textToolTip, debugID));
     }
 }

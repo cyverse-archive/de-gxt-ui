@@ -77,6 +77,7 @@ public class AppTileCell extends CompositeCell<App> {
         appInfoCell.setHasHandlers(hasHandlers);
         appCommentCell.setHasHandlers(hasHandlers);
         appRatingCell.setHasHandlers(hasHandlers);
+        appCardCell.setHasHandlers(hasHandlers);
     }
 
     public void setSearchRegexPattern(String pattern) {
@@ -87,5 +88,6 @@ public class AppTileCell extends CompositeCell<App> {
     public void setDebugBaseId(String baseID) {
         appNameCell.setBaseDebugId(baseID);
         appInfoCell.setBaseDebugId(baseID);
+        appCardCell.setBaseDebugId(baseID);
     }
 }
