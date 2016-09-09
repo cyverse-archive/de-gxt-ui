@@ -3,6 +3,7 @@ package org.iplantc.de.client.models.apps.integration;
 import org.iplantc.de.client.models.HasDescription;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasLabel;
+import org.iplantc.de.client.models.HasSystemId;
 import org.iplantc.de.client.models.tool.Tool;
 
 import com.google.gwt.user.client.ui.HasName;
@@ -20,7 +21,7 @@ import java.util.List;
  * @author jstroot
  * 
  */
-public interface AppTemplate extends HasId, HasLabel, HasName, HasDescription {
+public interface AppTemplate extends HasId, HasSystemId, HasLabel, HasName, HasDescription {
 
     String GROUPS_KEY = "groups";
 

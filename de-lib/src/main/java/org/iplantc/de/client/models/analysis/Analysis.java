@@ -4,8 +4,9 @@ import org.iplantc.de.client.models.HasId;
 
 import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
+import org.iplantc.de.client.models.HasSystemId;
 
-public interface Analysis extends HasId, HasName {
+public interface Analysis extends HasId, HasSystemId, HasName {
 
     @PropertyName("description")
     String getComments();

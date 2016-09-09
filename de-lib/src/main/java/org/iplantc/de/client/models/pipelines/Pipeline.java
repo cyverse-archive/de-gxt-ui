@@ -1,6 +1,7 @@
 package org.iplantc.de.client.models.pipelines;
 
 import com.google.gwt.user.client.ui.HasName;
+import org.iplantc.de.client.models.HasSystemId;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * @author psarando
  *
  */
-public interface Pipeline extends HasName {
+public interface Pipeline extends HasName, HasSystemId {
 
     public String getId();
 

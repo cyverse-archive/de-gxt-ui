@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.HasId;
 
 import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
+import org.iplantc.de.client.models.HasSystemId;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * @author psarando
  * 
  */
-public interface ServicePipeline extends HasId, HasName, HasDescription {
+public interface ServicePipeline extends HasId, HasSystemId, HasName, HasDescription {
 
     public List<ServicePipelineStep> getSteps();
 
