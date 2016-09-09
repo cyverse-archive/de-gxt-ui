@@ -1,6 +1,15 @@
-FROM openjdk
+FROM openjdk:alpine
+
+RUN apk add --update \
+    bash \
+    git \
+    gcc \
+    && \
+    rm -rf /var/cache/apk/*
 
 COPY . /usr/src/app
 WORKDIR /usr/src/app
+
+RUN ./gradlew --help
 
 CMD ["./builder.sh"]
