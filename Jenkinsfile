@@ -11,7 +11,7 @@ node {
 
     dockerRepoBuild = "build-${repo}-${env.BRANCH_NAME}"
     sh "docker build --rm -f Dockerfile-build -t ${dockerRepoBuild} ."
-    sh "mkdir target/"
+    sh "mkdir -p target/"
     sh """docker run --rm -v \$HOME/.gradle:/root/.gradle ${dockerRepoBuild} > target/de-copy.war"""
 
     dockerRepo = "${dockerUser}/${repo}:${env.BRANCH_NAME}"
