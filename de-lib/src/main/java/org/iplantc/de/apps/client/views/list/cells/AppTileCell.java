@@ -90,4 +90,8 @@ public class AppTileCell extends CompositeCell<App> {
         appInfoCell.setBaseDebugId(baseID);
         appCardCell.setBaseDebugId(baseID);
     }
+
+    public void setCardUrl(String appsCardUrl, String appsCardUrlOptions) {
+        appCardCell.setCardUrl(appsCardUrl, appsCardUrlOptions);
+    }
 }

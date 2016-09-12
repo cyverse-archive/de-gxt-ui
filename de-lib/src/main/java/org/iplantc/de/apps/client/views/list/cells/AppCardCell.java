@@ -6,6 +6,7 @@ import org.iplantc.de.apps.client.events.selection.AppNameSelectedEvent;
 import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.models.apps.App;
 
+import com.google.common.base.Strings;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.FieldUpdater;
@@ -24,12 +25,13 @@ import com.google.gwt.user.client.Event;
 public class AppCardCell extends AbstractCell<App> implements HasCell<App, App> {
 
     public interface AppCardCellAppearance extends AppNameCell.AppNameCellAppearance {
-        void render(Context context, App value, SafeHtmlBuilder sb, String textToolTip, String debugId);
+        void render(Context context, App value, SafeHtmlBuilder sb, String cardUrl, String cardUrlOptions, String textToolTip, String debugId);
     }
 
     private AppCardCellAppearance appearance;
     private HasHandlers hasHandlers;
     private String baseDebugId;
+    private String cardUrl, cardUrlOptions;
 
     public AppCardCell() {
         this(GWT.<AppCardCellAppearance>create(AppCardCellAppearance.class));
@@ -41,20 +43,22 @@ public class AppCardCell extends AbstractCell<App> implements HasCell<App, App> 
     }
     @Override
     public void render(Context context, App value, SafeHtmlBuilder sb) {
-        String debugId = baseDebugId + "." + value.getId() + AppsModule.Ids.APP_CARD_CELL;
+        if (!Strings.isNullOrEmpty(cardUrl)) {
+            String debugId = baseDebugId + "." + value.getId() + AppsModule.Ids.APP_CARD_CELL;
 
-        String textToolTip;
-        if (value.isDisabled()) {
-            textToolTip = appearance.appUnavailable();
-        } else if (value.isBeta() != null && value.isBeta()) {
-            textToolTip = appearance.appBeta();
-        } else if (!value.isPublic()) {
-            textToolTip = appearance.appPrivate();
-        } else {
-            textToolTip = appearance.run();
+            String textToolTip;
+            if (value.isDisabled()) {
+                textToolTip = appearance.appUnavailable();
+            } else if (value.isBeta() != null && value.isBeta()) {
+                textToolTip = appearance.appBeta();
+            } else if (!value.isPublic()) {
+                textToolTip = appearance.appPrivate();
+            } else {
+                textToolTip = appearance.run();
+            }
+
+            appearance.render(context, value, sb, cardUrl, cardUrlOptions, textToolTip, debugId);
         }
-
-        appearance.render(context, value, sb, textToolTip, debugId);
     }
 
     @Override
@@ -99,5 +103,10 @@ public class AppCardCell extends AbstractCell<App> implements HasCell<App, App> 
 
     public void setBaseDebugId(String baseDebugId) {
         this.baseDebugId = baseDebugId;
+    }
+
+    public void setCardUrl(String appsCardUrl, String appsCardUrlOptions) {
+        this.cardUrl = appsCardUrl;
+        this.cardUrlOptions = appsCardUrlOptions;
     }
 }

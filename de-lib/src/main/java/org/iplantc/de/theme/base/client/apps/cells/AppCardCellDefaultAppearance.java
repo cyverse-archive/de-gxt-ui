@@ -48,9 +48,9 @@ public class AppCardCellDefaultAppearance extends AppNameCellDefaultAppearance i
     }
 
     @Override
-    public void render(Cell.Context context, App value, SafeHtmlBuilder sb, String textToolTip, String debugID) {
-        String code = MD5Util.md5Hex(value.getId());
-        String hash = "https://www.gravatar.com/avatar/" + code + "?d=identicon&s=60";
-        sb.append(templates.img(styles.icon(), hash, textToolTip, debugID));
+    public void render(Cell.Context context, App value, SafeHtmlBuilder sb, String cardUrl, String cardUrlOptions, String textToolTip, String debugID) {
+        String hash = MD5Util.md5Hex(value.getId());
+        String gravatar = cardUrl + hash + cardUrlOptions;
+        sb.append(templates.img(styles.icon(), gravatar, textToolTip, debugID));
     }
 }

@@ -17,6 +17,7 @@ import org.iplantc.de.apps.client.models.AppProperties;
 import org.iplantc.de.apps.client.views.list.cells.AppTileCell;
 import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.models.apps.App;
+import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.theme.base.client.apps.list.TileListDefaultAppearance;
 
 import com.google.common.base.Joiner;
@@ -84,6 +85,7 @@ public class AppsTileViewImpl extends ContentPanel
     private TileListDefaultAppearance<App> listAppearance;
     private AppTileCell appTileCell;
     private AppProperties properties;
+    @Inject DEProperties deProperties;
 
     @Inject
     AppsTileViewImpl(final AppsListView.AppsListAppearance appearance,
@@ -96,8 +98,10 @@ public class AppsTileViewImpl extends ContentPanel
         this.listAppearance = listAppearance;
         this.appTileCell = appTileCell;
         this.properties = properties;
+        this.deProperties = DEProperties.getInstance();
 
         appTileCell.setHasHandlers(this);
+        appTileCell.setCardUrl(deProperties.getAppsCardUrl(), deProperties.getAppsCardUrlOptions());
 
         setWidget(ourUiBinder.createAndBindUi(this));
 
