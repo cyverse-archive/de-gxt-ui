@@ -12,13 +12,10 @@ import org.iplantc.de.diskResource.client.views.metadata.DiskResourceMetadataVie
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 import org.iplantc.de.resources.client.messages.I18N;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
-import com.sencha.gxt.widget.core.client.button.ToolButton;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
@@ -89,6 +86,8 @@ public class ManageMetadataDialog extends IPlantDialog {
         writable = diskResourceUtil.isWritable(resource);
         if (writable) {
             setHideOnButtonClick(false);
+        } else {
+            getOkButton().disable();
         }
         super.show();
         ensureDebugId(DiskResourceModule.MetadataIds.METADATA_WINDOW);

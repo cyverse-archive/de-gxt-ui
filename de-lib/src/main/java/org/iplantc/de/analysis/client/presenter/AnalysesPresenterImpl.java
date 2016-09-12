@@ -26,6 +26,7 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
@@ -50,14 +51,13 @@ import java.util.List;
 
 /**
  * A presenter for analyses view
- * 
+ *
  * @author sriram, jstroot
  */
-public class AnalysesPresenterImpl implements
-                                  AnalysesView.Presenter,
-                                  AnalysisNameSelectedEvent.AnalysisNameSelectedEventHandler,
-                                  AnalysisAppSelectedEvent.AnalysisAppSelectedEventHandler,
-                                  HTAnalysisExpandEvent.HTAnalysisExpandEventHandler {
+public class AnalysesPresenterImpl implements AnalysesView.Presenter,
+                                              AnalysisNameSelectedEvent.AnalysisNameSelectedEventHandler,
+                                              AnalysisAppSelectedEvent.AnalysisAppSelectedEventHandler,
+                                              HTAnalysisExpandEvent.HTAnalysisExpandEventHandler {
 
     private final class CancelAnalysisServiceCallback implements AsyncCallback<String> {
         private final Analysis ae;
@@ -88,18 +88,16 @@ public class AnalysesPresenterImpl implements
     /**
      * A LoadHandler needed to set selected analyses after the initial view load, since settings like
      * page size are only set in the reused config by the loader after an initial grid load, which may be
-     * by-passed by the
-     * {@link org.iplantc.de.analysis.client.views.widget.AnalysisSearchField#filterByAnalysisId} call in
-     * {@link AnalysesPresenterImpl#setSelectedAnalyses}.
-     * 
+     * by-passed by the {@link org.iplantc.de.analysis.client.views.widget.AnalysisSearchField#filterByAnalysisId}
+     * call in {@link AnalysesPresenterImpl#setSelectedAnalyses}.
+     *
      * A benefit of selecting analyses with this LoadHandler is if the analysis to select has already
      * loaded when this handler is called, then it can be selected immediately without filtering.
-     * 
+     *
      * @author psarando
-     * 
      */
-    private class FirstLoadHandler implements
-                                  LoadHandler<FilterPagingLoadConfig, PagingLoadResult<Analysis>> {
+    private class FirstLoadHandler
+            implements LoadHandler<FilterPagingLoadConfig, PagingLoadResult<Analysis>> {
 
         private final List<Analysis> selectedAnalyses;
 
@@ -215,11 +213,11 @@ public class AnalysesPresenterImpl implements
         this.view.addHTAnalysisExpandEventHandler(this);
 
         //Set default filter to ALL
-      currentFilter = AnalysisFilter.ALL;
+        currentFilter = AnalysisFilter.ALL;
     }
 
     @Override
-    public void onShareSupportSelected(List<Analysis> currentSelection,boolean shareWithInput) {
+    public void onShareSupportSelected(List<Analysis> currentSelection, boolean shareWithInput) {
 
     }
 
@@ -285,6 +283,11 @@ public class AnalysesPresenterImpl implements
 
     @Override
     public void loadAnalyses(AnalysisFilter filter) {
+        if (!Strings.isNullOrEmpty(view.getSearchField().getCurrentValue())) {
+            view.getSearchField().refreshSearch();
+            return;
+        }
+
         FilterPagingLoadConfig config = loader.getLastLoadConfig();
         config.getFilters().clear();
 
@@ -303,7 +306,7 @@ public class AnalysesPresenterImpl implements
                 case SHARED_WITH_ME:
                     filterCb.setValue("theirs");
                     break;
-               case MY_ANALYSES:
+                case MY_ANALYSES:
                     filterCb.setValue("mine");
                     break;
             }
@@ -316,7 +319,6 @@ public class AnalysesPresenterImpl implements
         config.setLimit(200);
         config.setOffset(0);
         loader.load(config);
-
     }
 
     @Override
@@ -344,10 +346,10 @@ public class AnalysesPresenterImpl implements
     public void onShareSelected(List<Analysis> selected) {
         AnalysisSharingViewImpl sharingView = new AnalysisSharingViewImpl();
         AnalysisSharingPresenter sharingPresenter = new AnalysisSharingPresenter(analysisService,
-                                                        selected,
-                                                        sharingView,
-                                                        collaboratorsUtil,
-                                                        jsonUtil);
+                                                                                 selected,
+                                                                                 sharingView,
+                                                                                 collaboratorsUtil,
+                                                                                 jsonUtil);
         AnalysisSharingDialog asd = aSharingDialogProvider.get();
         asd.setPresenter(sharingPresenter);
         asd.show();
@@ -355,10 +357,10 @@ public class AnalysesPresenterImpl implements
 
     @Override
     public void setCurrentFilter(AnalysisFilter filter) {
-        if(filter == null) {
+        if (filter == null) {
             currentFilter = filter;
             return;
-        } else if(!(filter.equals(this.currentFilter))) {
+        } else if (!(filter.equals(this.currentFilter))) {
             currentFilter = filter;
             loadAnalyses(currentFilter);
         }
@@ -402,9 +404,9 @@ public class AnalysesPresenterImpl implements
 
     @Override
     public void updateAnalysisComment(final Analysis value, final String comment) {
-        analysisService.updateAnalysisComments(value, comment, new UpdateCommentsCallback(value,
-                                                                                          comment,
-                                                                                          listStore));
+        analysisService.updateAnalysisComments(value,
+                                               comment,
+                                               new UpdateCommentsCallback(value, comment, listStore));
     }
 
     @Override

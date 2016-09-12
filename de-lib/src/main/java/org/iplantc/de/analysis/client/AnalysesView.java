@@ -4,6 +4,7 @@ import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
+import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.theme.base.client.analyses.AnalysesViewDefaultAppearance.AnalysisInfoStyle;
 
@@ -202,4 +203,6 @@ public interface AnalysesView extends IsWidget,
     void setFilterInView(AnalysisFilter filter);
 
     String getParentAnalysisId();
+
+    AnalysisSearchField getSearchField();
 }

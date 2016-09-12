@@ -1,6 +1,7 @@
 package org.iplantc.de.analysis.client;
 
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
+import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.client.models.analysis.Analysis;
 
 import com.google.gwt.user.client.ui.IsWidget;
@@ -18,4 +19,6 @@ public interface AnalysisToolBarView extends IsWidget,
     void filterByParentAnalysisId(String id);
 
     void setFilterInView(AnalysisFilter filter);
+
+    AnalysisSearchField getSearchField();
 }
