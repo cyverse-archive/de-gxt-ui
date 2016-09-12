@@ -9,4 +9,8 @@ public interface AppLaunchViewDisplayStrings extends Messages {
     String deprecatedAppMask();
 
     String hpcAppWaitTimes();
+
+    String waitTimes();
+
+    String dontShow();
 }
