@@ -1,5 +1,5 @@
 #!/bin/sh
-./gradlew clean test createProdWar \
+./gradlew createProdWar \
     -PGIT_COMMIT=$(git rev-parse HEAD) \
     -PGIT_BRANCH=${BRANCH_NAME} \
     -PBUILD_TAG=${BUILD_TAG} \

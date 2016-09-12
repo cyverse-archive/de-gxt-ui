@@ -22,6 +22,7 @@ target
 .gradle
 .metadata
 ucdetector_reports
+sencha_gradle.properties
 
 # the Mac .DS_Store directory
 .DS_Store

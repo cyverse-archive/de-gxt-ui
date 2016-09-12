@@ -10,6 +10,9 @@ RUN apk add --update \
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 
-RUN ./gradlew --help
+RUN mkdir -p /root/.gradle && \
+    mv sencha_gradle.properties /root/.gradle/gradle.properties
+
+RUN ./gradlew clean test
 
 CMD ["./builder.sh"]
