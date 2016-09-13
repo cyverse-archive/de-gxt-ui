@@ -74,4 +74,14 @@ public interface DEClientConstants extends Constants {
      * @return
      */
     String mdTemplateDownloadServlet();
+
+    /**
+     * The execution system name for DE apps.
+     */
+    String deSystemId();
+
+    /**
+     * The execution system name for HPC apps.
+     */
+    String hpcSystemId();
 }
