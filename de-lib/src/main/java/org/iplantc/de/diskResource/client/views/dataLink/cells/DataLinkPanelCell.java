@@ -1,18 +1,21 @@
 package org.iplantc.de.diskResource.client.views.dataLink.cells;
 
+import static com.google.gwt.dom.client.BrowserEvents.CLICK;
+
 import org.iplantc.de.client.models.dataLink.DataLink;
 import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.diskResource.client.DataLinkView;
 
-import static com.google.gwt.dom.client.BrowserEvents.CLICK;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Event;
+import com.google.inject.Inject;
 
 /**
  * @author jstroot
@@ -23,17 +26,16 @@ public final class DataLinkPanelCell extends AbstractCell<DiskResource> {
         void render(SafeHtmlBuilder sb, DiskResource value);
     }
 
-    private final DataLinkView.Presenter presenter;
     private final Appearance appearance;
+    private HandlerManager handlerManager;
 
-    public DataLinkPanelCell(final DataLinkView.Presenter presenter) {
-        this(presenter,
-             GWT.<Appearance> create(Appearance.class));
+    public DataLinkPanelCell() {
+        this(GWT.<Appearance> create(Appearance.class));
     }
-    public DataLinkPanelCell(final DataLinkView.Presenter presenter,
-                             final Appearance appearance) {
+
+    @Inject
+    public DataLinkPanelCell(final Appearance appearance) {
         super(CLICK);
-        this.presenter = presenter;
         this.appearance = appearance;
     }
 
@@ -70,4 +72,15 @@ public final class DataLinkPanelCell extends AbstractCell<DiskResource> {
         }
     }
 
+    HandlerManager createHandlerManager() {
+        return new HandlerManager(this);
+    }
+
+    HandlerManager ensureHandlers() {
+        return handlerManager == null ? handlerManager = createHandlerManager() : handlerManager;
+    }
+
+    HandlerManager getHandlerManager() {
+        return handlerManager;
+    }
 }
