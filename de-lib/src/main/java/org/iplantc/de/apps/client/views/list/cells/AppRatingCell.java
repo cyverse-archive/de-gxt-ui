@@ -114,7 +114,7 @@ public class AppRatingCell extends AbstractCell<App> implements HasCell<App, App
     }
 
     private void onRatingClicked(final Element eventTarget, final App value) {
-        if (!value.getAppType().equalsIgnoreCase(App.EXTERNAL_APP)) {
+        if (!value.getAppType().equalsIgnoreCase(App.EXTERNAL_APP) && value.isPublic()) {
             if (appearance.isRatingCell(eventTarget)) {
                 final int score = appearance.getRatingScore(eventTarget);
                 if (hasHandlers != null) {
