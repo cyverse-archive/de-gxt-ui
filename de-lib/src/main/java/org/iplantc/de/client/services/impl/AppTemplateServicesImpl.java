@@ -9,6 +9,7 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PATCH;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PUT;
 
+import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
@@ -56,7 +57,6 @@ import java.util.logging.Logger;
 public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderMetadataServiceFacade {
 
     private final String APPS = "org.iplantc.services.apps";
-    private final String ARG_PREVIEW = "org.iplantc.services.apps.argPreview";
     private final String DATA_SOURCES = "org.iplantc.services.apps.elements.dataSources";
     private final String FILE_INFO_TYPES = "org.iplantc.services.apps.elements.infoTypes";
     private final String REFERENCE_GENOMES = "org.iplantc.services.referenceGenomes";
@@ -73,6 +73,7 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
     private final DiscEnvApiService deServiceFacade;
     private final DEProperties deProperties;
     private final AppTemplateUtils appTemplateUtils;
+    private final DEClientConstants deClientConstants;
     private final JsonUtil jsonUtil;
 
     private static final Logger LOG = Logger.getLogger(AppTemplateServicesImpl.class.getName());
@@ -82,17 +83,19 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
                                    final DEProperties deProperties,
                                    final AppTemplateAutoBeanFactory factory,
                                    final AppTemplateUtils appTemplateUtils,
+                                   final DEClientConstants deClientConstants,
                                    final JsonUtil jsonUtil) {
         this.deServiceFacade = deServiceFacade;
         this.deProperties = deProperties;
         this.factory = factory;
         this.appTemplateUtils = appTemplateUtils;
+        this.deClientConstants = deClientConstants;
         this.jsonUtil = jsonUtil;
     }
 
     @Override
     public void cmdLinePreview(AppTemplate at, AsyncCallback<String> callback) {
-        String address = ARG_PREVIEW;
+        String address = APPS + "/" + deClientConstants.deSystemId() + "/arg-preview";
 
         AppTemplate cleaned = doCmdLinePreviewCleanup(at);
         // SS: Service wont accept string values for dates
@@ -211,7 +214,7 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
 
     @Override
     public void createAppTemplate(AppTemplate at, AsyncCallback<AppTemplate> callback) {
-        String address = APPS;
+        String address = APPS + "/" + deClientConstants.deSystemId();
         Splittable split = appTemplateToSplittable(at);
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, split.getPayload());
         deServiceFacade.getServiceData(wrapper, new AppTemplateCallbackConverter(factory, callback));
