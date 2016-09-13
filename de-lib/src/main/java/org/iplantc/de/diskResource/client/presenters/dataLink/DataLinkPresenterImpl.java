@@ -7,6 +7,7 @@ import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.util.WindowUtil;
+import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelected;
 import org.iplantc.de.diskResource.client.presenters.callbacks.CreateDataLinkCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DeleteDataLinksCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.ListDataLinksCallback;
@@ -60,13 +61,11 @@ public class DataLinkPresenterImpl implements DataLinkView.Presenter {
                 view.getTree(),dlFactory));
     }
 
-
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public void deleteDataLink(DataLink value) {
-        drService.deleteDataLinks(Lists.newArrayList(value.getId()),
-                new DeleteDataLinksCallback(view));
+    public void onDeleteDataLinkSelected(DeleteDataLinkSelected event) {
+        DataLink link = event.getLink();
+        drService.deleteDataLinks(Lists.newArrayList(link.getId()),
+                                  new DeleteDataLinksCallback(view));
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})

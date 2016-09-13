@@ -4,6 +4,7 @@ import static com.google.gwt.dom.client.BrowserEvents.CLICK;
 
 import org.iplantc.de.client.models.dataLink.DataLink;
 import org.iplantc.de.client.models.diskResources.DiskResource;
+import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelected;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
@@ -20,7 +21,7 @@ import com.google.inject.Inject;
 /**
  * @author jstroot
  */
-public final class DataLinkPanelCell extends AbstractCell<DiskResource> {
+public final class DataLinkPanelCell extends AbstractCell<DiskResource> implements DeleteDataLinkSelected.HasDeleteDataLinkSelectedHandlers {
 
     public interface Appearance {
         void render(SafeHtmlBuilder sb, DiskResource value);
@@ -37,6 +38,11 @@ public final class DataLinkPanelCell extends AbstractCell<DiskResource> {
     public DataLinkPanelCell(final Appearance appearance) {
         super(CLICK);
         this.appearance = appearance;
+    }
+
+    @Override
+    public HandlerRegistration addDeleteDataLinkSelectedHandler(DeleteDataLinkSelected.DeleteDataLinkSelectedHandler handler) {
+        return ensureHandlers().addHandler(DeleteDataLinkSelected.TYPE, handler);
     }
 
     @Override
@@ -68,7 +74,7 @@ public final class DataLinkPanelCell extends AbstractCell<DiskResource> {
 
     private void doOnClick(Element eventTarget, DiskResource value) {
         if (eventTarget.getAttribute("name").equalsIgnoreCase("del")) {
-            presenter.deleteDataLink((DataLink) value);
+            ensureHandlers().fireEvent(new DeleteDataLinkSelected((DataLink) value));
         }
     }
 

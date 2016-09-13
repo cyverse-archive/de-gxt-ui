@@ -1,7 +1,7 @@
 package org.iplantc.de.diskResource.client;
 
-import org.iplantc.de.client.models.dataLink.DataLink;
 import org.iplantc.de.client.models.diskResources.DiskResource;
+import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelected;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -60,11 +60,10 @@ public interface DataLinkView extends IsWidget {
         String dataLinkWarningClass();
     }
 
-    public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
+    public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter,
+                                       DeleteDataLinkSelected.DeleteDataLinkSelectedHandler {
 
         void createDataLinks(List<DiskResource> selectedItems);
-
-        void deleteDataLink(DataLink dataLink);
 
         String getSelectedDataLinkDownloadUrl();
 
