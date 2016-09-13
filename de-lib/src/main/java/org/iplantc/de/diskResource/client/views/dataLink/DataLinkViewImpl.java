@@ -128,6 +128,7 @@ public class DataLinkViewImpl implements DataLinkView,
 
     @Override
     public void onDeleteDataLinkSelected(DeleteDataLinkSelected event) {
+        copyDataLinkButton.setEnabled(false);
     }
 
     //<editor-fold desc="UI Handlers">
