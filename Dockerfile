@@ -1,7 +1,10 @@
 FROM openjdk:alpine
 
 ARG git_commit=unknown
-LABEL org.iplantc.de.ui.git-ref="$git_commit"
+ARG version="2.8.1"
+
+LABEL org.cyverse.git-ref="$git_commit"
+LABEL org.cyverse.version="$version"
 
 ADD target/de-copy.war /de.war
 
