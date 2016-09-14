@@ -63,6 +63,11 @@
                                    debugId="cboSaveSession"
                                    boxLabel="{appearance.saveSession}"/>
                 </container:child>
+                <container:child layoutData="{preferenceLayoutData}">
+                    <form:CheckBox ui:field="enableWaitTimeMessage"
+                                   debugId="cboWaitTime"
+                                   boxLabel="{appearance.WaitTime}"/>
+                </container:child>
                 <container:child layoutData="{fileSelLabel}">
                     <g:HTML HTML="{appearance.defaultOutputFolder}"/>
                 </container:child>

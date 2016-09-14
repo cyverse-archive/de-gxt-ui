@@ -35,6 +35,7 @@ public class UserSettings {
     private String closeShortCut;
     private Folder systemDefaultOutputFolder;
     private String lastPath;
+    private boolean enableWaitTimeMessage;
     
     
     public static final String EMAIL_ANALYSIS_NOTIFCATOIN = "enableAnalysisEmailNotification";
@@ -50,6 +51,7 @@ public class UserSettings {
     public static final String CLOSE_KB_SHORTCUT_STRING = "closeKBShortcut";
     public static final String SYSTEM_DEFAULT_OUTPUT_DIR = "systemDefaultOutputDir";
     public static final String LAST_PATH = "lastPathId";
+    public static final String WAIT_TIME_MESSAGE = "enableWaitTimeMessage";
 
 
     private static UserSettings instance;
@@ -123,7 +125,13 @@ public class UserSettings {
             setLastPath(split.get(LAST_PATH).asString());
         }
 
-        parseKeyboardShortcuts(split);
+        if (split.get(WAIT_TIME_MESSAGE) != null) {
+            setEnableWaitTimeMessage(split.get(WAIT_TIME_MESSAGE).asBoolean());
+        } else {
+            setEnableWaitTimeMessage(true);
+        }
+
+       parseKeyboardShortcuts(split);
     }
 
     private void parseKeyboardShortcuts(Splittable split) {
@@ -241,6 +249,7 @@ public class UserSettings {
         Splittable ret = StringQuoter.createSplittable();
         StringQuoter.create(isEnableAnalysisEmailNotification()).assign(ret, EMAIL_ANALYSIS_NOTIFCATOIN);
         StringQuoter.create(isEnableImportEmailNotification()).assign(ret, EMAIL_IMPORT_NOTIFICATION);
+        StringQuoter.create(isEnableWaitTimeMessage()).assign(ret, WAIT_TIME_MESSAGE);
         StringQuoter.create(getDefaultFileSelectorPath()).assign(ret, DEFAULT_FILE_SELECTOR_PATH);
         StringQuoter.create(isRememberLastPath()).assign(ret, REMEMBER_LAST_PATH);
         StringQuoter.create(isSaveSession()).assign(ret, SAVE_SESSION);
@@ -356,5 +365,13 @@ public class UserSettings {
 
     public void setEnableImportEmailNotification(boolean enableImportEmailNotification) {
         this.enableImportEmailNotification = enableImportEmailNotification;
+    }
+
+    public boolean isEnableWaitTimeMessage() {
+        return enableWaitTimeMessage;
+    }
+
+    public void setEnableWaitTimeMessage(boolean enableWaitTimeMessage) {
+        this.enableWaitTimeMessage = enableWaitTimeMessage;
     }
 }

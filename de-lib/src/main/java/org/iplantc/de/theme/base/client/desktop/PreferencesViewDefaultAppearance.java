@@ -141,4 +141,9 @@ public class PreferencesViewDefaultAppearance implements PreferencesDialog.Prefe
     public String notifyEmail() {
         return help.notifyEmail();
     }
+
+    @Override
+    public String WaitTime() {
+        return desktopMessages.waitTime();
+    }
 }
