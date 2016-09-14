@@ -79,6 +79,7 @@ public class DesktopWindowManager {
                     window.setContainer(desktopContainer);
                 }
                 window.show(config, constructWindowId(config), true);
+                resizeOversizeWindow(window);
                 if (sticky != null) {
                     windowManager.bringToFront(sticky);
                 }
@@ -164,12 +165,26 @@ public class DesktopWindowManager {
                 }
 
                 window.show(config, constructWindowId(config), true);
+                resizeOversizeWindow(window);
                 moveOutOfBoundsWindow(window);
                 if (sticky != null) {
                     windowManager.bringToFront(sticky);
                 }
             }
         });
+    }
+
+    private void resizeOversizeWindow(IPlantWindowInterface window) {
+        int desktopWidth = desktopContainer.getClientWidth();
+        int desktopHeight = desktopContainer.getClientHeight();
+        int windowWidth = window.asWindow().getOffsetWidth();
+        int windowHeight = window.asWindow().getOffsetHeight();
+        if (windowWidth > desktopWidth) {
+            window.asWindow().setWidth(desktopWidth);
+        }
+        if (windowHeight > desktopHeight) {
+            window.asWindow().setHeight(desktopHeight);
+        }
     }
 
     private void moveOutOfBoundsWindow(IPlantWindowInterface window) {
