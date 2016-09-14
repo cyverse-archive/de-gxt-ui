@@ -19,6 +19,7 @@ public class ShareResourceLinkDialog extends IPlantDialog {
     @Inject
     ShareResourceLinkDialog(final GridView.Presenter.Appearance appearance) {
         setHeadingText(appearance.copy());
+        setPredefinedButtons(PredefinedButton.OK);
         setHideOnButtonClick(true);
         setResizable(false);
         setSize(appearance.shareLinkDialogWidth(), appearance.shareLinkDialogHeight());
