@@ -21,6 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.json.JSONException;
+
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -132,159 +135,159 @@ public class DataSearchQueryBuilderTest {
     //     assertTrue(result.contains(expectedSharedWith));
     // }
 
-    // @Test public void testOwnedBy() {
-    //     final String expectedValue = setOwnedBy("someuser");
+    @Test public void testOwnedBy() throws JSONException {
+        final String expectedValue = setOwnedBy("someuser");
 
-    //     String result = new DataSearchQueryBuilder(dsf, userInfoMock).ownedBy().toString();
-    //     assertEquals(wrappedQuery(expectedValue), result);
-    // }
+        String result = new DataSearchQueryBuilder(dsf, userInfoMock).ownedBy().toString();
+        JSONAssert.assertEquals(wrappedQuery(expectedValue), result, true);
+    }
 
-    // @Test public void testCreatedWithin() {
-    //     final String expectedValue = setCreatedWithin(new Date(), new DateWrapper().addDays(1).asDate());
+    @Test public void testCreatedWithin() throws JSONException {
+        final String expectedValue = setCreatedWithin(new Date(), new DateWrapper().addDays(1).asDate());
 
-    //     String result = new DataSearchQueryBuilder(dsf, userInfoMock).createdWithin().toString();
-    //     assertEquals(wrappedQuery(expectedValue), result);
-    // }
-    // 
-    // @Test public void testCreatedWithinFromNull() {
-    //     final String expectedValue = setCreatedWithin(null, new DateWrapper().addDays(1).asDate());
+        String result = new DataSearchQueryBuilder(dsf, userInfoMock).createdWithin().toString();
+        JSONAssert.assertEquals(wrappedQuery(expectedValue), result, true);
+    }
+    
+    @Test public void testCreatedWithinFromNull() throws JSONException {
+        final String expectedValue = setCreatedWithin(null, new DateWrapper().addDays(1).asDate());
 
-    //     String result = new DataSearchQueryBuilder(dsf, userInfoMock).createdWithin().toString();
-    //     assertEquals(wrappedQuery(expectedValue), result);
-    // }
+        String result = new DataSearchQueryBuilder(dsf, userInfoMock).createdWithin().toString();
+        JSONAssert.assertEquals(wrappedQuery(expectedValue), result, true);
+    }
 
-    // @Test public void testCreatedWithinToNull() {
-    //     final String expectedValue = setCreatedWithin(new Date(), null);
+    @Test public void testCreatedWithinToNull() throws JSONException {
+        final String expectedValue = setCreatedWithin(new Date(), null);
 
-    //     String result = new DataSearchQueryBuilder(dsf, userInfoMock).createdWithin().toString();
-    //     assertEquals(wrappedQuery(expectedValue), result);
-    // }
+        String result = new DataSearchQueryBuilder(dsf, userInfoMock).createdWithin().toString();
+        JSONAssert.assertEquals(wrappedQuery(expectedValue), result, true);
+    }
 
-    // @Test public void testFile() {
-    //     final String expectedValue = setFileQuery("some* words* in* query*");
+    @Test public void testFile() throws JSONException {
+        final String expectedValue = setFileQuery("some* words* in* query*");
 
-    //     String result = new DataSearchQueryBuilder(dsf, userInfoMock).file().toString();
-    //     assertEquals(wrappedQuery(expectedValue), result);
-    // }
+        String result = new DataSearchQueryBuilder(dsf, userInfoMock).file().toString();
+        JSONAssert.assertEquals(wrappedQuery(expectedValue), result, true);
+    }
 
-    // @Test public void testFileSizeRange() {
-    //     final String expectedValue = setFileSizeRange(1.0, 100.0);
+    @Test public void testFileSizeRange() throws JSONException {
+        final String expectedValue = setFileSizeRange(1.0, 100.0);
 
-    //     String result = new DataSearchQueryBuilder(dsf, userInfoMock).fileSizeRange().toString();
-    //     assertEquals(wrappedQuery(expectedValue), result);
-    // }
+        String result = new DataSearchQueryBuilder(dsf, userInfoMock).fileSizeRange().toString();
+        JSONAssert.assertEquals(wrappedQuery(expectedValue), result, true);
+    }
 
-    // @Test public void testFileSizeRangeMinNull() {
-    //     final String expectedValue = setFileSizeRange(null, 100.0);
+    @Test public void testFileSizeRangeMinNull() throws JSONException {
+        final String expectedValue = setFileSizeRange(null, 100.0);
 
-    //     String result = new DataSearchQueryBuilder(dsf, userInfoMock).fileSizeRange().toString();
-    //     assertEquals(wrappedQuery(expectedValue), result);
-    // }
+        String result = new DataSearchQueryBuilder(dsf, userInfoMock).fileSizeRange().toString();
+        JSONAssert.assertEquals(wrappedQuery(expectedValue), result, true);
+    }
 
-    // @Test public void testFileSizeRangeMaxNul() {
-    //     final String expectedValue = setFileSizeRange(1.0, null);
+    @Test public void testFileSizeRangeMaxNul() throws JSONException {
+        final String expectedValue = setFileSizeRange(1.0, null);
 
-    //     String result = new DataSearchQueryBuilder(dsf, userInfoMock).fileSizeRange().toString();
-    //     assertEquals(wrappedQuery(expectedValue), result);
-    // }
+        String result = new DataSearchQueryBuilder(dsf, userInfoMock).fileSizeRange().toString();
+        JSONAssert.assertEquals(wrappedQuery(expectedValue), result, true);
+    }
 
-    // @Test public void testMetadataAttribute() {
-    //     final String expectedValue = setMetadataAttributeQuery("some* metadata* to* search* for*");
+    @Test public void testMetadataAttribute() throws JSONException {
+        final String expectedValue = setMetadataAttributeQuery("some* metadata* to* search* for*");
 
-    //     String result = new DataSearchQueryBuilder(dsf, userInfoMock).metadataAttribute().toString();
-    //     assertEquals(wrappedQuery(expectedValue), result);
-    // }
+        String result = new DataSearchQueryBuilder(dsf, userInfoMock).metadataAttribute().toString();
+        JSONAssert.assertEquals(wrappedQuery(expectedValue), result, true);
+    }
 
-    // @Test public void testMetadataValue() {
-    //     final String expectedValue = setMetadataValueQuery("some* metadata* to* search* for*");
+    @Test public void testMetadataValue() throws JSONException {
+        final String expectedValue = setMetadataValueQuery("some* metadata* to* search* for*");
 
-    //     String result = new DataSearchQueryBuilder(dsf, userInfoMock).metadataValue().toString();
-    //     assertEquals(wrappedQuery(expectedValue), result);
-    // }
+        String result = new DataSearchQueryBuilder(dsf, userInfoMock).metadataValue().toString();
+        JSONAssert.assertEquals(wrappedQuery(expectedValue), result, true);
+    }
 
-    // @Test public void testModifiedWithin() {
-    //     final Date fromDate = new Date();
-    //     final Date toDate = new DateWrapper(fromDate).addDays(2).asDate();
-    //     final String expectedValue = setModifiedWithin(fromDate, toDate);
+    @Test public void testModifiedWithin() throws JSONException {
+        final Date fromDate = new Date();
+        final Date toDate = new DateWrapper(fromDate).addDays(2).asDate();
+        final String expectedValue = setModifiedWithin(fromDate, toDate);
 
-    //     String result = new DataSearchQueryBuilder(dsf, userInfoMock).modifiedWithin().toString();
-    //     assertEquals(wrappedQuery(expectedValue), result);
-    // }
+        String result = new DataSearchQueryBuilder(dsf, userInfoMock).modifiedWithin().toString();
+        JSONAssert.assertEquals(wrappedQuery(expectedValue), result, true);
+    }
 
-    // @Test public void testModifiedWithinFromNull() {
-    //     final Date fromDate = null;
-    //     final Date toDate = new DateWrapper(new Date()).addDays(2).asDate();
-    //     final String expectedValue = setModifiedWithin(fromDate, toDate);
+    @Test public void testModifiedWithinFromNull() throws JSONException {
+        final Date fromDate = null;
+        final Date toDate = new DateWrapper(new Date()).addDays(2).asDate();
+        final String expectedValue = setModifiedWithin(fromDate, toDate);
 
-    //     String result = new DataSearchQueryBuilder(dsf, userInfoMock).modifiedWithin().toString();
-    //     assertEquals(wrappedQuery(expectedValue), result);
-    // }
+        String result = new DataSearchQueryBuilder(dsf, userInfoMock).modifiedWithin().toString();
+        JSONAssert.assertEquals(wrappedQuery(expectedValue), result, true);
+    }
 
-    // @Test public void testModifiedWithinToNull() {
-    //     final Date fromDate = new Date();
-    //     final Date toDate = null;
-    //     final String expectedValue = setModifiedWithin(fromDate, toDate);
+    @Test public void testModifiedWithinToNull() throws JSONException {
+        final Date fromDate = new Date();
+        final Date toDate = null;
+        final String expectedValue = setModifiedWithin(fromDate, toDate);
 
-    //     String result = new DataSearchQueryBuilder(dsf, userInfoMock).modifiedWithin().toString();
-    //     assertEquals(wrappedQuery(expectedValue), result);
-    // }
+        String result = new DataSearchQueryBuilder(dsf, userInfoMock).modifiedWithin().toString();
+        JSONAssert.assertEquals(wrappedQuery(expectedValue), result, true);
+    }
 
-    // @Test public void testNegatedFile() {
-    //     final String term1 = "term1*";
-    //     final String term2 = "term2*";
-    //     final String term3 = "term3*";
-    //     final String expectedValue = setNegatedFileQuery(term1 + " " + term2 + " " + term3);
+    @Test public void testNegatedFile() throws JSONException {
+        final String term1 = "term1*";
+        final String term2 = "term2*";
+        final String term3 = "term3*";
+        final String expectedValue = setNegatedFileQuery(term1 + " " + term2 + " " + term3);
 
-    //     String result = new DataSearchQueryBuilder(dsf, userInfoMock).negatedFile().toString();
-    //     assertEquals(wrappedNegatedQuery(expectedValue), result);
-    // }
+        String result = new DataSearchQueryBuilder(dsf, userInfoMock).negatedFile().toString();
+        JSONAssert.assertEquals(wrappedNegatedQuery(expectedValue), result, true);
+    }
 
-    // @Test public void testSharedWith() {
-    //     final String retVal = "user that are shared with";
-    //     final String expectedValue = setSharedWith(retVal);
+    @Test public void testSharedWith() throws JSONException {
+        final String retVal = "user that are shared with";
+        final String expectedValue = setSharedWith(retVal);
 
-    //     String result = new DataSearchQueryBuilder(dsf, userInfoMock).sharedWith().toString();
-    //     assertEquals(wrappedQuery(expectedValue), result);
-    // }
+        String result = new DataSearchQueryBuilder(dsf, userInfoMock).sharedWith().toString();
+        JSONAssert.assertEquals(wrappedQuery(expectedValue), result, true);
+    }
 
-    // @Test public void testFileExcludingTrash() {
-    //     when(dsf.isIncludeTrashItems()).thenReturn(false);
+    @Test public void testFileExcludingTrash() throws JSONException {
+        when(dsf.isIncludeTrashItems()).thenReturn(false);
 
-    //     final String expectedValue = setFileQuery("*query*");
+        final String expectedValue = setFileQuery("*query*");
 
-    //     String result = new DataSearchQueryBuilder(dsf, userInfoMock).file().toString();
-    //     assertEquals(wrappedQueryExcludingTrash(expectedValue), result);
-    // }
+        String result = new DataSearchQueryBuilder(dsf, userInfoMock).file().toString();
+        JSONAssert.assertEquals(wrappedQueryExcludingTrash(expectedValue), result, true);
+    }
 
-    // @Test public void testTaggedWith() {
-    //     when(dsf.isIncludeTrashItems()).thenReturn(false);
-    //     Set<Tag> tags = new LinkedHashSet<>();
+    @Test public void testTaggedWith() {
+        when(dsf.isIncludeTrashItems()).thenReturn(false);
+        Set<Tag> tags = new LinkedHashSet<>();
 
-    //     final String expectedValue = setTaggedWithQuery(tags, dsf);
-    //     assertEquals("", expectedValue);
+        final String expectedValue = setTaggedWithQuery(tags, dsf);
+        assertEquals("", expectedValue);
 
-    //     Tag mock1 = mock(Tag.class);
-    //     mock1.setId("id1");
-    //     mock1.setValue("tag1");
-    //     
-    //     when(mock1.getId()).thenReturn("id1");
+        Tag mock1 = mock(Tag.class);
+        mock1.setId("id1");
+        mock1.setValue("tag1");
+        
+        when(mock1.getId()).thenReturn("id1");
 
-    //     Tag mock2 = mock(Tag.class);
-    //     mock1.setId("id2");
-    //     mock1.setValue("tag2");
-    //     
-    //     when(mock2.getId()).thenReturn("id2");
+        Tag mock2 = mock(Tag.class);
+        mock1.setId("id2");
+        mock1.setValue("tag2");
+        
+        when(mock2.getId()).thenReturn("id2");
 
-    //     tags.add(mock1);
-    //     final String expectedValue1 = setTaggedWithQuery(tags, dsf);
-    //     assertEquals("id1", expectedValue1);
+        tags.add(mock1);
+        final String expectedValue1 = setTaggedWithQuery(tags, dsf);
+        assertEquals("id1", expectedValue1);
 
-    //     tags.add(mock2);
+        tags.add(mock2);
 
-    //     final String expectedValue2 = setTaggedWithQuery(tags, dsf);
-    //     assertEquals("id1,id2", expectedValue2);
+        final String expectedValue2 = setTaggedWithQuery(tags, dsf);
+        assertEquals("id1,id2", expectedValue2);
 
-    // }
+    }
 
     /**
      * @return the expected value
