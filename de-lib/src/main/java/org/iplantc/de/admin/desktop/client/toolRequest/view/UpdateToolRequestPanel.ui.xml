@@ -27,7 +27,7 @@
         <container:child layoutData="{layoutData}">
             <form:FieldLabel text="{appearance.setStatusLabel}">
                 <form:widget>
-                    <form:SimpleComboBox ui:field="statusCombo"/>
+                    <form:SimpleComboBox ui:field="statusCombo" triggerAction="ALL" editable="false"/>
                 </form:widget>
             </form:FieldLabel>
         </container:child>
