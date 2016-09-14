@@ -20,7 +20,6 @@ node {
         sh "mkdir -p target/"
         sh """docker run --rm ${dockerRepoBuild} > target/de-copy.war"""
     } finally {
-        stage "Clean"
         sh "rm sencha_gradle.properties"
         sh "docker rmi ${dockerRepoBuild}"
     }
