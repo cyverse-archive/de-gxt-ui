@@ -6,12 +6,7 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PATCH;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
 import org.iplantc.de.client.models.HasId;
-import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.client.models.apps.AppCategory;
-import org.iplantc.de.client.models.apps.AppDoc;
-import org.iplantc.de.client.models.apps.AppFeedback;
-import org.iplantc.de.client.models.apps.AppList;
-import org.iplantc.de.client.models.apps.PublishAppRequest;
+import org.iplantc.de.client.models.apps.*;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
@@ -46,6 +41,7 @@ import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import com.sencha.gxt.data.shared.SortDir;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -83,6 +79,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     @Inject AppUserServiceBeanFactory factory;
     @Inject AppServiceAutoBeanFactory svcFactory;
     @Inject AppTemplateAutoBeanFactory templateAutoBeanFactory;
+    @Inject AppAutoBeanFactory appAutoBeanFactory;
 
     @Inject
     public AppUserServiceFacadeImpl(final DiscEnvApiService deServiceFacade,
@@ -293,17 +290,30 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
         deServiceFacade.getServiceData(wrapper, new AppTemplateCallbackConverter(templateAutoBeanFactory, callback));
     }
 
+    private AutoBean<AppDeletionRequest> appsToAppDeletionRequest(final List<App> apps) {
+        final AutoBean<AppDeletionRequest> request = appAutoBeanFactory.appDeletionRequest();
+
+        final List<QualifiedAppId> appIds = new ArrayList<>();
+        for (App app : apps) {
+            final QualifiedAppId qualifiedAppId = appAutoBeanFactory.qualifiedAppId().as();
+            qualifiedAppId.setAppId(app.getId());
+            qualifiedAppId.setSystemId(app.getSystemId());
+            appIds.add(qualifiedAppId);
+        }
+        request.as().setAppIds(appIds);
+
+        return request;
+    }
+
     @Override
     public void deleteAppsFromWorkspace(final List<App> apps,
                                         final AsyncCallback<Void> callback) {
         String address = APPS + "/" + "shredder"; //$NON-NLS-1$
-        List<String> appIds = Lists.newArrayList();
-        for (App app : apps) {
-            appIds.add(app.getId());
-        }
-        JSONObject body = new JSONObject();
-        body.put("app_ids", jsonUtil.buildArrayFromStrings(appIds)); //$NON-NLS-1$
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, body.toString());
+
+        final AutoBean<AppDeletionRequest> request = appsToAppDeletionRequest(apps);
+        final Splittable encode = AutoBeanCodex.encode(request);
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
         deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
     }
 
