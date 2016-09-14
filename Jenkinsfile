@@ -10,18 +10,26 @@ node {
     }
 
     stage "Create Build Image"
-    dockerRepoBuild = "build-${repo}-${env.BRANCH_NAME}"
+    dockerRepoBuild = "build-${repo}-${env.BUILD_TAG}"
     sh "docker build --rm -f Dockerfile-build -t ${dockerRepoBuild} ."
+
+    dockerTestRunner = "test-${repo}-${env.BUILD_TAG}"
+    dockerWarBuilder = "war-${repo}-${env.BUILD_TAG}"
     try {
         stage "Test"
-        sh "docker run --rm ${dockerRepoBuild} ./gradlew test"
+        sh "docker run --name ${dockerTestRunner} --rm ${dockerRepoBuild} ./gradlew test"
 
         stage "Build WAR"
         sh "mkdir -p target/"
-        sh """docker run --rm -e BRANCH_NAME -e BUILD_TAG -e BUILD_ID -e BUILD_NUMBER ${dockerRepoBuild} > target/de-copy.war"""
+        sh """docker run --name ${dockerWarBuilder} --rm -e BRANCH_NAME -e BUILD_TAG -e BUILD_ID -e BUILD_NUMBER ${dockerRepoBuild} > target/de-copy.war"""
     } finally {
-        sh "rm sencha_gradle.properties"
-        sh "docker rmi ${dockerRepoBuild}"
+        // using returnStatus so if these are gone it doesn't error
+        sh returnStatus: true, script: "rm sencha_gradle.properties"
+        sh returnStatus: true, script: "docker kill ${dockerTestRunner}"
+        sh returnStatus: true, script: "docker rm ${dockerTestRunner}"
+        sh returnStatus: true, script: "docker kill ${dockerWarBuilder}"
+        sh returnStatus: true, script: "docker rm ${dockerWarBuilder}"
+        sh returnStatus: true, script: "docker rmi ${dockerRepoBuild}"
     }
 
     stage "Package Public Image"
