@@ -18,7 +18,7 @@ node {
 
         stage "Build WAR"
         sh "mkdir -p target/"
-        sh """docker run --rm ${dockerRepoBuild} > target/de-copy.war"""
+        sh """docker run --rm -e GIT_BRANCH -e BUILD_TAG -e BUILD_ID -e BUILD_NUMBER ${dockerRepoBuild} > target/de-copy.war"""
     } finally {
         sh "rm sencha_gradle.properties"
         sh "docker rmi ${dockerRepoBuild}"

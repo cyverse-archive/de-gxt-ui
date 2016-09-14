@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 ./gradlew createProdWar \
     -PGIT_COMMIT=$(git rev-parse HEAD) \
     -PGIT_BRANCH=${BRANCH_NAME} \
