@@ -99,7 +99,6 @@
 
 .ratingMod {
     position: absolute;
-    cursor: pointer;
     left: centerMargin;
     bottom: 4px;
 }

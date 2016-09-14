@@ -27,6 +27,8 @@ public class AppRatingCellDefaultAppearance implements AppRatingCell.AppRatingCe
         @ClassName("apps_icon")
         String appsIcon();
 
+        String disabledRating();
+
         @ClassName("disabled_unrate_button")
         String disabledUnrateButton();
     }
@@ -144,6 +146,11 @@ public class AppRatingCellDefaultAppearance implements AppRatingCell.AppRatingCe
             return;
         }
 
+        if (!app.isPublic()) {
+            eventTarget.setTitle(appMsgs.privateAppRatingNotSupported());
+            return;
+        }
+
         boolean setWhiteStar = false;
         if (eventTarget.getAttribute("name").startsWith("Rating")) {
             for (int i = 0; i < parent.getChildCount(); i++) {
@@ -181,6 +188,13 @@ public class AppRatingCellDefaultAppearance implements AppRatingCell.AppRatingCe
         int total = app.getRating().getTotal();
         // Build five rating stars
         for (int i = 0; i < ratings.size(); i++) {
+            if (!app.isPublic() || app.getAppType().equalsIgnoreCase(App.EXTERNAL_APP)) {
+                sb.append(templates.imgCell("Rating-" + i,
+                                            ratings.get(i),
+                                            resources.css().disabledRating(),
+                                            resources.whiteStar().getSafeUri()));
+                continue;
+            }
             if (i < rating) {
                 if (app.getRating().getUserRating() != 0) {
                     sb.append(templates.imgCell("Rating-" + i,

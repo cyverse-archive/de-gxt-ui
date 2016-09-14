@@ -139,4 +139,6 @@ public interface AppsMessages extends Messages {
     String privateToolTip();
 
     String sortLabel();
+
+    String privateAppRatingNotSupported();
 }

@@ -1,5 +1,11 @@
 .apps_icon {
 	float: left;
+	cursor: pointer;
+}
+
+.disabledRating {
+	float: left;
+	cursor: hand;
 }
 
 .disabled_unrate_button {
