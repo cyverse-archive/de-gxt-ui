@@ -11,9 +11,7 @@ import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.models.diskResources.TYPE;
-import org.iplantc.de.client.models.errorHandling.ServiceErrorCode;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
-import org.iplantc.de.client.models.errors.diskResources.ErrorDiskResource;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
@@ -71,12 +69,9 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
@@ -85,11 +80,8 @@ import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.event.StoreUpdateEvent;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
-import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
-import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent.DialogHideHandler;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 
@@ -656,9 +648,18 @@ public class GridViewPresenterImpl implements
                 if (next.getId().equals(diskResource.getId())) {
                     next.setFavorite(fav);
                     updateDiskResource(next);
+                    if (!fav && isViewingFavoritesFolder()) {
+                        listStore.remove(next);
+                    }
                 }
             }
         }
+    }
+
+    private boolean isViewingFavoritesFolder() {
+        return navigationPresenter.getSelectedFolder()
+                                  .getName()
+                                  .equalsIgnoreCase(NavigationView.FAVORITES_FOLDER_NAME);
     }
 
     private void doCopyMetadata(final DiskResource selected,

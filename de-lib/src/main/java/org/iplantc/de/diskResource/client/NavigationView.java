@@ -36,6 +36,9 @@ import java.util.List;
 public interface NavigationView extends IsWidget,
                                         HasFolderSelectionEventHandlers,
                                         HasDeleteSavedSearchClickedEventHandlers {
+
+    String FAVORITES_FOLDER_NAME = "Favorites";
+
     interface Appearance {
 
         String dataDragDropStatusText(int size);
