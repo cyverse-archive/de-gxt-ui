@@ -235,6 +235,8 @@ public class AppDetailsViewImpl extends Composite implements
                     ipd.show();
                 }
             });
+        } else {
+            helpLink.setVisible(false);
         }
     }
 
