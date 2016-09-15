@@ -196,7 +196,7 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
             @Override
             public void onSuccess(String result) {
                     IplantAnnouncer.getInstance()
-                                   .schedule(new SuccessAnnouncementConfig(appearance.addTemplateError()));
+                                   .schedule(new SuccessAnnouncementConfig(appearance.addTemplateSuccess()));
                 d.hide();
                     loadTemplates();
             }
