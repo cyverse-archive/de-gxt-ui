@@ -1,7 +1,7 @@
 FROM openjdk:alpine
 
 ARG git_commit=unknown
-ARG version="2.8.1"
+ARG version="2.9.0"
 
 LABEL org.cyverse.git-ref="$git_commit"
 LABEL org.cyverse.version="$version"
