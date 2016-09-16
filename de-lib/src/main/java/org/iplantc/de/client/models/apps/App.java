@@ -1,14 +1,12 @@
 package org.iplantc.de.client.models.apps;
 
+import com.google.gwt.user.client.ui.HasName;
+import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 import org.iplantc.de.client.models.HasDescription;
-import org.iplantc.de.client.models.HasId;
-import org.iplantc.de.client.models.HasSystemId;
+import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.models.tool.Tool;
-
-import com.google.gwt.user.client.ui.HasName;
-import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 
 import java.util.Date;
 import java.util.List;
@@ -16,8 +14,7 @@ import java.util.List;
 /**
  * @author jstroot
  */
-public interface App extends HasId,
-                             HasSystemId,
+public interface App extends HasQualifiedId,
                              HasName,
                              HasDescription {
 
@@ -107,8 +104,6 @@ public interface App extends HasId,
 
     @PropertyName(IS_FAVORITE_KEY)
     void setFavorite(boolean favorite);
-
-    void setId(String id);
 
     void setInputs(List<AppFileParameters> inputs);
 

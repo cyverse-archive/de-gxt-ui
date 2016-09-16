@@ -1,24 +1,21 @@
 package org.iplantc.de.client.models.diskResources;
 
-import org.iplantc.de.client.models.HasId;
-import org.iplantc.de.client.models.HasPath;
-
 import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
+import org.iplantc.de.client.models.HasPath;
+import org.iplantc.de.client.models.HasSettableId;
 
 import java.util.Date;
 
 /**
  * @author jstroot
  */
-public interface DiskResource extends HasId, HasName, HasPath {
+public interface DiskResource extends HasSettableId, HasName, HasPath {
 
     String INFO_TYPE_KEY = "infoType";
     String NAME_KEY = "name";
 
     String getInfoType();
-
-    void setId(String id);
 
     void setPath(String path);
 

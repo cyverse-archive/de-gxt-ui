@@ -4,6 +4,7 @@
 package org.iplantc.de.client.models.notifications.payload;
 
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
+import org.iplantc.de.client.models.HasSettableId;
 
 import java.util.Date;
 
@@ -11,7 +12,7 @@ import java.util.Date;
  * @author sriram
  * 
  */
-public interface PayloadAnalysis {
+public interface PayloadAnalysis extends HasSettableId {
 
     /**
      * XXX JDS This could be turned into an enum
@@ -53,12 +54,6 @@ public interface PayloadAnalysis {
 
     @PropertyName("enddate")
     void setEndDate(Date date);
-
-    @PropertyName("id")
-    void setId(String id);
-
-    @PropertyName("id")
-    String getId();
 
     @PropertyName("name")
     void setName(String name);

@@ -3,16 +3,14 @@ package org.iplantc.de.client.models.groups;
 import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.HasSettableId;
 
 import java.util.List;
 
 /**
  * @author dennis
  */
-public interface Member extends HasId, HasName {
-
-    @AutoBean.PropertyName("id")
-    void setId(String id);
+public interface Member extends HasSettableId, HasName {
 
     @AutoBean.PropertyName("first_name")
     String getFirstName();
