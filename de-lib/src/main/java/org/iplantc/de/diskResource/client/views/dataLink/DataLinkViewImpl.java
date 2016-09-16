@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.dataLink.DataLink;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.diskResource.client.DataLinkView;
+import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelected;
 import org.iplantc.de.diskResource.client.views.dataLink.cells.DataLinkPanelCell;
 
 import com.google.gwt.core.client.GWT;
@@ -38,7 +39,8 @@ import java.util.List;
 /**
  * @author jstroot
  */
-public class DataLinkViewImpl implements DataLinkView {
+public class DataLinkViewImpl implements DataLinkView,
+                                         DeleteDataLinkSelected.DeleteDataLinkSelectedHandler {
 
     /**
      * A handler who controls this widgets button visibility based on tree check selection.
@@ -116,9 +118,17 @@ public class DataLinkViewImpl implements DataLinkView {
                                                                               copyDataLinkButton,
                                                                               advancedDataLinkButton,
                                                                               tree));
-        tree.setCell(new DataLinkPanelCell(this.presenter));
+        DataLinkPanelCell dataLinkPanelCell = new DataLinkPanelCell();
+        dataLinkPanelCell.addDeleteDataLinkSelectedHandler(this);
+        dataLinkPanelCell.addDeleteDataLinkSelectedHandler(presenter);
+        tree.setCell(dataLinkPanelCell);
         new QuickTip(widget);
 
+    }
+
+    @Override
+    public void onDeleteDataLinkSelected(DeleteDataLinkSelected event) {
+        copyDataLinkButton.setEnabled(false);
     }
 
     //<editor-fold desc="UI Handlers">
