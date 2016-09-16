@@ -181,6 +181,7 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
         eventBus.addHandler(AppPublishedEvent.TYPE, this);
         init(presenter, (AppsIntegrationWindowConfig)windowConfig);
         super.show(windowConfig, tag, isMaximizable);
+        setMaximized(true);
 
         ensureDebugId(DeModule.WindowIds.APP_EDITOR_WINDOW);
     }
@@ -206,11 +207,6 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
         presenter.setViewDebugId(baseID + AppIntegrationModule.Ids.APP_EDITOR_VIEW);
-    }
-
-    @Override
-    protected void onShow() {
-        setMaximized(true);
     }
 
     private AppsIntegrationWindowConfig getUpdatedConfig() {
