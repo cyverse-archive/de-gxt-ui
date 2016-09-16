@@ -135,7 +135,9 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
     @Override
     public void onRequestOpenAppForRelaunch(OpenAppForRelaunchEvent event) {
         final Analysis analysisForRelaunch = event.getAnalysisForRelaunch();
-        AppWizardConfig config = ConfigFactory.appWizardConfig(analysisForRelaunch.getAppId());
+        final String systemId = analysisForRelaunch.getSystemId();
+        final String appId = analysisForRelaunch.getAppId();
+        AppWizardConfig config = ConfigFactory.appWizardConfig(systemId, appId);
         config.setAnalysisId(analysisForRelaunch);
         config.setRelaunchAnalysis(true);
 
@@ -219,7 +221,7 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
 
     @Override
     public void onRunAppActionInitiated(RunAppEvent event) {
-        AppWizardConfig config = ConfigFactory.appWizardConfig(event.getAppToRun().getId());
+        AppWizardConfig config = ConfigFactory.appWizardConfig(event.getAppToRun());
         presenter.show(config);
     }
 

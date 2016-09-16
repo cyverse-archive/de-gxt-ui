@@ -1,5 +1,6 @@
 package org.iplantc.de.commons.client.views.window.configs;
 
+import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.diskResources.File;
@@ -48,11 +49,20 @@ public class ConfigFactory {
         return awc;
     }
 
-    public static AppWizardConfig appWizardConfig(String appId) {
+    public static AppWizardConfig appWizardConfig(String systemId, String appId) {
         AutoBean<AppWizardConfig> awc = applyWindowType(WindowType.APP_WIZARD, factory.appWizardConfig());
-        applyTag(appId, awc);
+        applyTag(systemId + ":" + appId, awc);
+        awc.as().setSystemId(systemId);
         awc.as().setAppId(appId);
         return awc.as();
+    }
+
+    public static AppWizardConfig appWizardConfig(String appId) {
+        return appWizardConfig(null, appId);
+    }
+
+    public static AppWizardConfig appWizardConfig(HasQualifiedId qualifiedId) {
+        return appWizardConfig(qualifiedId.getSystemId(), qualifiedId.getId());
     }
 
     public static DiskResourceWindowConfig diskResourceWindowConfig(boolean newWindowRequested) {

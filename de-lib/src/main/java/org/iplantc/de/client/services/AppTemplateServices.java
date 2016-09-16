@@ -1,12 +1,12 @@
 package org.iplantc.de.client.services;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.integration.JobExecution;
 import org.iplantc.de.client.services.impl.models.AnalysisSubmissionResponse;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface AppTemplateServices {
 
@@ -24,7 +24,7 @@ public interface AppTemplateServices {
      * @param appId the <code>App</code> id.
      * @param callback
      */
-    void getAppTemplate(HasId appId, AsyncCallback<AppTemplate> callback);
+    void getAppTemplate(HasQualifiedId appId, AsyncCallback<AppTemplate> callback);
 
     AppTemplateAutoBeanFactory getAppTemplateFactory();
 

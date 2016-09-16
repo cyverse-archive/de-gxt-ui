@@ -1,14 +1,14 @@
 package org.iplantc.de.client.util;
 
-import org.iplantc.de.client.models.CommonModelAutoBeanFactory;
-import org.iplantc.de.client.models.HasId;
-import org.iplantc.de.client.models.HasPath;
-
 import com.google.common.base.Strings;
 import com.google.gwt.core.shared.GWT;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
+import org.iplantc.de.client.models.CommonModelAutoBeanFactory;
+import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.HasPath;
+import org.iplantc.de.client.models.HasQualifiedId;
 
 @SuppressWarnings("nls")
 public class CommonModelUtils {
@@ -57,6 +57,18 @@ public class CommonModelUtils {
             return null;
 
         return AutoBeanCodex.decode(factory, HasId.class, value).as();
+    }
+
+    public HasQualifiedId createHasQualifiedId(String systemId, String id) {
+        if (Strings.isNullOrEmpty(systemId) || Strings.isNullOrEmpty(id)) {
+            return null;
+        }
+
+        HasQualifiedId qualifiedId = factory.hasQualifiedId().as();
+        qualifiedId.setSystemId(systemId);
+        qualifiedId.setId(id);
+
+        return qualifiedId;
     }
 
     public HasPath createHasPathFromString(String path) {

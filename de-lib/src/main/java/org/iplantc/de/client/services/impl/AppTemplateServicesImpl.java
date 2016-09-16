@@ -1,43 +1,5 @@
 package org.iplantc.de.client.services.impl;
 
-import static org.iplantc.de.shared.ServiceFacadeLoggerConstants.ANALYSIS_ID;
-import static org.iplantc.de.shared.ServiceFacadeLoggerConstants.APP_EVENT;
-import static org.iplantc.de.shared.ServiceFacadeLoggerConstants.APP_ID;
-import static org.iplantc.de.shared.ServiceFacadeLoggerConstants.METRIC_TYPE_KEY;
-import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
-import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PATCH;
-import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
-import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PUT;
-
-import org.iplantc.de.client.DEClientConstants;
-import org.iplantc.de.shared.DEProperties;
-import org.iplantc.de.client.models.HasId;
-import org.iplantc.de.client.models.apps.integration.AppTemplate;
-import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
-import org.iplantc.de.client.models.apps.integration.Argument;
-import org.iplantc.de.client.models.apps.integration.ArgumentGroup;
-import org.iplantc.de.client.models.apps.integration.ArgumentType;
-import org.iplantc.de.client.models.apps.integration.DataSource;
-import org.iplantc.de.client.models.apps.integration.DataSourceList;
-import org.iplantc.de.client.models.apps.integration.FileInfoType;
-import org.iplantc.de.client.models.apps.integration.FileInfoTypeList;
-import org.iplantc.de.client.models.apps.integration.JobExecution;
-import org.iplantc.de.client.models.apps.integration.SelectionItem;
-import org.iplantc.de.client.models.apps.integration.SelectionItemGroup;
-import org.iplantc.de.client.models.apps.refGenome.ReferenceGenome;
-import org.iplantc.de.client.models.apps.refGenome.ReferenceGenomeList;
-import org.iplantc.de.client.models.tool.Tool;
-import org.iplantc.de.client.services.AppBuilderMetadataServiceFacade;
-import org.iplantc.de.client.services.AppTemplateServices;
-import org.iplantc.de.client.services.converters.AppTemplateCallbackConverter;
-import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
-import org.iplantc.de.client.services.impl.models.AnalysisSubmissionResponse;
-import org.iplantc.de.client.util.AppTemplateUtils;
-import org.iplantc.de.client.util.JsonUtil;
-import org.iplantc.de.shared.ServiceFacadeLoggerConstants;
-import org.iplantc.de.shared.services.DiscEnvApiService;
-import org.iplantc.de.shared.services.ServiceCallWrapper;
-
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -48,11 +10,32 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
+import org.iplantc.de.client.DEClientConstants;
+import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.HasQualifiedId;
+import org.iplantc.de.client.models.apps.integration.*;
+import org.iplantc.de.client.models.apps.refGenome.ReferenceGenome;
+import org.iplantc.de.client.models.apps.refGenome.ReferenceGenomeList;
+import org.iplantc.de.client.models.tool.Tool;
+import org.iplantc.de.client.services.AppBuilderMetadataServiceFacade;
+import org.iplantc.de.client.services.AppTemplateServices;
+import org.iplantc.de.client.services.converters.AppTemplateCallbackConverter;
+import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
+import org.iplantc.de.client.services.impl.models.AnalysisSubmissionResponse;
+import org.iplantc.de.client.util.AppTemplateUtils;
+import org.iplantc.de.client.util.JsonUtil;
+import org.iplantc.de.shared.DEProperties;
+import org.iplantc.de.shared.ServiceFacadeLoggerConstants;
+import org.iplantc.de.shared.services.DiscEnvApiService;
+import org.iplantc.de.shared.services.ServiceCallWrapper;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
 import java.util.logging.Logger;
+
+import static org.iplantc.de.shared.ServiceFacadeLoggerConstants.*;
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.*;
 
 public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderMetadataServiceFacade {
 
@@ -107,8 +90,8 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
     }
 
     @Override
-    public void getAppTemplate(HasId appId, AsyncCallback<AppTemplate> callback) {
-        String address = APPS + "/" + appId.getId();
+    public void getAppTemplate(HasQualifiedId appId, AsyncCallback<AppTemplate> callback) {
+        String address = APPS + "/" + appId.getSystemId() + "/" + appId.getId();
         HashMap<String, String> mdcMap = Maps.newHashMap();
         mdcMap.put(METRIC_TYPE_KEY, APP_EVENT);
         mdcMap.put(APP_ID, appId.getId());

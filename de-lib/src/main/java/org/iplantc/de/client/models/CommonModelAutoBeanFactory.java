@@ -11,6 +11,8 @@ public interface CommonModelAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<HasId> hasId();
 
+    AutoBean<HasQualifiedId> hasQualifiedId();
+
     AutoBean<HasPath> hasPath();
 
     AutoBean<HasPaths> hasPaths();
