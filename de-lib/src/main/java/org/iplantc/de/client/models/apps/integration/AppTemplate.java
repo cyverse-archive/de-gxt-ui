@@ -1,13 +1,11 @@
 package org.iplantc.de.client.models.apps.integration;
 
-import org.iplantc.de.client.models.HasDescription;
-import org.iplantc.de.client.models.HasId;
-import org.iplantc.de.client.models.HasLabel;
-import org.iplantc.de.client.models.HasSystemId;
-import org.iplantc.de.client.models.tool.Tool;
-
 import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
+import org.iplantc.de.client.models.HasDescription;
+import org.iplantc.de.client.models.HasLabel;
+import org.iplantc.de.client.models.HasQualifiedId;
+import org.iplantc.de.client.models.tool.Tool;
 
 import java.util.Date;
 import java.util.List;
@@ -21,7 +19,7 @@ import java.util.List;
  * @author jstroot
  * 
  */
-public interface AppTemplate extends HasId, HasSystemId, HasLabel, HasName, HasDescription {
+public interface AppTemplate extends HasQualifiedId, HasLabel, HasName, HasDescription {
 
     String GROUPS_KEY = "groups";
 
@@ -47,8 +45,6 @@ public interface AppTemplate extends HasId, HasSystemId, HasLabel, HasName, HasD
     @PropertyName("integration_date")
     void setPublishedDate(Date published_date);
 
-    void setId(String id);
-    
     @PropertyName("disabled")
     public boolean isAppDisabled();
 

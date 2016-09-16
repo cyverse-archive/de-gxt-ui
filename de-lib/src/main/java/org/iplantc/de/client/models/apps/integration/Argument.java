@@ -1,13 +1,12 @@
 package org.iplantc.de.client.models.apps.integration;
 
-import org.iplantc.de.client.models.HasDescription;
-import org.iplantc.de.client.models.HasId;
-import org.iplantc.de.client.models.HasLabel;
-
 import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 import com.google.web.bindery.autobean.shared.Splittable;
+import org.iplantc.de.client.models.HasDescription;
+import org.iplantc.de.client.models.HasLabel;
+import org.iplantc.de.client.models.HasSettableId;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ import java.util.List;
  * 
  * @author jstroot
  */
-public interface Argument extends HasId, HasName, HasLabel, HasDescription {
+public interface Argument extends HasSettableId, HasName, HasLabel, HasDescription {
     /**
      * A constant for annotating autobeans as newly created or not. Typically used via
      * {@link AutoBean#setTag(String, Object)}.
@@ -85,7 +84,4 @@ public interface Argument extends HasId, HasName, HasLabel, HasDescription {
 
     @PropertyName(FILE_PARAMETERS_KEY)
     void setFileParameters(FileParameters dataObject);
-
-    void setId(String id);
-
 }

@@ -3,11 +3,12 @@ package org.iplantc.de.client.models.comments;
 import org.iplantc.de.client.models.HasId;
 
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
+import org.iplantc.de.client.models.HasSettableId;
 
 /**
  * @author jstroot
  */
-public interface Comment extends HasId {
+public interface Comment extends HasSettableId {
     String COMMENT_TEXT_KEY = "comment";
 
     @PropertyName("post_time")
@@ -33,8 +34,4 @@ public interface Comment extends HasId {
 
     @PropertyName("retracted")
     boolean isRetracted();
-
-    @PropertyName("id")
-    void setId(String id);
-
 }
