@@ -8,6 +8,10 @@ public interface AppWizardConfig extends WindowConfig {
     
     Splittable getAppTemplate();
 
+    String getSystemId();
+
+    void setSystemId(String systemId);
+
     String getAppId();
 
     void setAppId(String appId);

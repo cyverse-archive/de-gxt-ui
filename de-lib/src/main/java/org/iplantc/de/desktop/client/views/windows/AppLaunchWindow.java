@@ -1,9 +1,13 @@
 package org.iplantc.de.desktop.client.views.windows;
 
+import com.google.common.base.Strings;
 import org.iplantc.de.apps.widgets.client.events.AnalysisLaunchEvent;
 import org.iplantc.de.apps.widgets.client.events.AnalysisLaunchEvent.AnalysisLaunchEventHandler;
 import org.iplantc.de.apps.widgets.client.view.AppLaunchView;
+import org.iplantc.de.client.DEClientConstants;
+import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.apps.QualifiedAppId;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.services.AppTemplateServices;
@@ -69,6 +73,8 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
     private final AppTemplateAutoBeanFactory factory;
     private final AppLaunchView.Presenter presenter;
     private final AppTemplateServices templateService;
+    private final DEClientConstants deClientConstants;
+    private String systemId;
     private String appId;
 
     @Inject
@@ -76,12 +82,14 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
                     final AppTemplateServices templateService,
                     final AppTemplateAutoBeanFactory factory,
                     final IplantDisplayStrings displayStrings,
-                    final IplantErrorStrings errorStrings) {
+                    final IplantErrorStrings errorStrings,
+                    final DEClientConstants deClientConstants) {
         this.presenter = presenter;
         this.templateService = templateService;
         this.factory = factory;
         this.displayStrings = displayStrings;
         this.errorStrings = errorStrings;
+        this.deClientConstants = deClientConstants;
 
         setSize("640", "375");
         setMinWidth(300);
@@ -94,16 +102,28 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
 
     @Override
     public WindowState getWindowState() {
-        AppWizardConfig config = ConfigFactory.appWizardConfig(appId);
+        AppWizardConfig config = ConfigFactory.appWizardConfig(systemId, appId);
         config.setAppTemplate(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(presenter.getAppTemplate())));
         return createWindowState(config);
     }
 
+    private boolean isMatchingId(HasQualifiedId id) {
+        return id.getSystemId().equalsIgnoreCase(systemId) && id.getId().equalsIgnoreCase(appId);
+    }
+
     @Override
     public void onAnalysisLaunch(AnalysisLaunchEvent analysisLaunchEvent) {
-        if (analysisLaunchEvent.getAppTemplateId().getId().equalsIgnoreCase(appId)) {
+        if (isMatchingId(analysisLaunchEvent.getAppTemplateId())) {
             hide();
         }
+    }
+
+    private HasQualifiedId getQualifiedIdFromConfig(AppWizardConfig config) {
+        final String systemId = Strings.isNullOrEmpty(config.getSystemId())
+                ? deClientConstants.deSystemId()
+                : config.getSystemId();
+        final String appId = config.getAppId();
+        return CommonModelUtils.getInstance().createHasQualifiedId(systemId, appId);
     }
 
     @Override
@@ -111,6 +131,9 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
                                               final String tag,
                                               final boolean isMaximizable) {
         final AppWizardConfig config1 = (AppWizardConfig) windowConfig;
+        systemId = Strings.isNullOrEmpty(config1.getSystemId())
+                ? deClientConstants.deSystemId()
+                : config1.getSystemId();
         appId = config1.getAppId();
         init(presenter, config1);
         super.show(windowConfig, tag, isMaximizable);
@@ -122,24 +145,25 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
 
         sc.mask(displayStrings.loadingMask());
         if (config.getAppTemplate() != null) {
-            AppTemplateCallbackConverter cnvt = new AppTemplateCallbackConverter(factory,
-                                                                                 new AsyncCallback<AppTemplate>() {
+            AppTemplateCallbackConverter cnvt = new AppTemplateCallbackConverter(
+                    factory,
+                    new AsyncCallback<AppTemplate>() {
 
-                                                                                     @Override
-                                                                                     public void onFailure(Throwable caught) {
+                        @Override
+                        public void onFailure(Throwable caught) {
                             /*
                              * JDS Do nothing since this this callback converter is called manually below
                              * (i.e. no over-the-wire integration)
                              */
-                                                                                     }
+                        }
 
-                                                                                     @Override
-                                                                                     public void onSuccess(AppTemplate result) {
-                                                                                         setHeadingText(result.getLabel());
-                                                                                         AppLaunchWindow.this.clear();
-                                                                                         presenter.go(AppLaunchWindow.this, result);
-                                                                                     }
-                                                                                 });
+                        @Override
+                        public void onSuccess(AppTemplate result) {
+                            setHeadingText(result.getLabel());
+                            AppLaunchWindow.this.clear();
+                            presenter.go(AppLaunchWindow.this, result);
+                        }
+                    });
             cnvt.onSuccess(config.getAppTemplate().getPayload());
 
             // KLUDGE JDS This call to forceLayout should not be necessary.
@@ -149,9 +173,8 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
                                           config.getAppId(),
                                           new AppTemplateCallback(presenter, errorStrings));
         } else {
-            templateService.getAppTemplate(CommonModelUtils.getInstance().createHasIdFromString(config.getAppId()),
-                                           new AppTemplateCallback(presenter, errorStrings));
+            final HasQualifiedId id = getQualifiedIdFromConfig(config);
+            templateService.getAppTemplate(id, new AppTemplateCallback(presenter, errorStrings));
         }
     }
-
 }
