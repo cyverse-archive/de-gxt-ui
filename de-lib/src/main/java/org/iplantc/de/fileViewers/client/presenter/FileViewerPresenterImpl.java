@@ -66,7 +66,7 @@ import java.util.logging.Logger;
  * @author sriram, jstroot
  */
 public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedEvent.FileSavedEventHandler {
-    private class GetManifestCallback implements AsyncCallback<Manifest> {
+    class GetManifestCallback implements AsyncCallback<Manifest> {
         private final AsyncCallback<String> asyncCallback;
         private final FileViewer.FileViewerPresenterAppearance presenterAppearance;
         private final boolean editing;
@@ -74,7 +74,7 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
         private final File file;
         private final boolean isVizTabFirst;
         private final Folder parentFolder;
-        private final FileViewerPresenterImpl presenter;
+        final FileViewerPresenterImpl presenter;
 
         public GetManifestCallback(final FileViewerPresenterImpl presenter,
                                    final SimpleContainer simpleContainer,
@@ -142,12 +142,12 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
     /**
      * The file shown in the window.
      */
-    private File file;
-    private boolean isDirty;
-    private Folder parentFolder;
-    private final PlainTabPanel tabPanel;
-    private String title;
-    private final SimpleContainer simpleContainer;
+    File file;
+    boolean isDirty;
+    Folder parentFolder;
+    final PlainTabPanel tabPanel;
+    String title;
+    final SimpleContainer simpleContainer;
     /**
      * A presenter can handle more than one view of the same data at a time
      */
@@ -156,9 +156,9 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
 
     @Inject
     public FileViewerPresenterImpl() {
-        viewers = Lists.newArrayList();
-        tabPanel = new PlainTabPanel();
-        simpleContainer = new SimpleContainer();
+        viewers = getFileViewers();
+        tabPanel = getPlainTabPanel();
+        simpleContainer = getSimpleContainer();
         simpleContainer.setWidget(tabPanel);
     }
 
@@ -235,11 +235,6 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
                     }
                 }
                 simpleContainer.unmask();
-            }
-
-            private StructuredText getStructuredText(String result) {
-                AutoBean<StructuredText> textAutoBean = AutoBeanCodex.decode(factory, StructuredText.class, result);
-                return textAutoBean.as();
             }
         });
     }
@@ -325,7 +320,7 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
 
     @Override
     public void onFileSaved(FileSavedEvent event) {
-        FileViewer currentView = (FileViewer)tabPanel.getActiveWidget();
+        FileViewer currentView = getActiveFileViewer();
         if (file == null) {
             file = event.getFile();
             // Update tab panel names
@@ -403,7 +398,7 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
         }
     }
 
-    private IsMaskable asMaskable(final Component component) {
+    IsMaskable asMaskable(final Component component) {
         IsMaskable ret = new IsMaskable() {
             @Override
             public void mask(String loadingMask) {
@@ -464,17 +459,7 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
      */
     void callTreeCreateService(final FileViewer viewer, File file) {
         simpleContainer.mask(appearance.retrieveTreeUrlsMask());
-        IsMaskable maskable = new IsMaskable() {
-            @Override
-            public void mask(String loadingMask) {
-                simpleContainer.mask(loadingMask);
-            }
-
-            @Override
-            public void unmask() {
-                simpleContainer.unmask();
-            }
-        };
+        IsMaskable maskable = asMaskable(simpleContainer);
         fileEditorService.getTreeUrl(file.getPath(),
                                      false,
                                      new TreeUrlCallback(file,
@@ -534,4 +519,24 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
         this.contentType = contentType;
     }
 
+    PlainTabPanel getPlainTabPanel() {
+        return new PlainTabPanel();
+    }
+
+    SimpleContainer getSimpleContainer() {
+        return new SimpleContainer();
+    }
+
+    List<FileViewer> getFileViewers() {
+        return Lists.newArrayList();
+    }
+
+    StructuredText getStructuredText(String result) {
+        AutoBean<StructuredText> textAutoBean = AutoBeanCodex.decode(factory, StructuredText.class, result);
+        return textAutoBean.as();
+    }
+
+    FileViewer getActiveFileViewer() {
+        return (FileViewer)tabPanel.getActiveWidget();
+    }
 }
