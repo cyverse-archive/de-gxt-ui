@@ -9,12 +9,13 @@ import static org.iplantc.de.client.services.FileEditorServiceFacade.TAB_DELIMIT
 import org.iplantc.de.client.events.FileSavedEvent;
 import org.iplantc.de.client.models.CommonModelAutoBeanFactory;
 import org.iplantc.de.client.models.IsMaskable;
-import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
 import org.iplantc.de.client.models.errors.diskResources.ErrorGetManifest;
+import org.iplantc.de.client.models.viewer.FileViewerAutoBeanFactory;
 import org.iplantc.de.client.models.viewer.InfoType;
+import org.iplantc.de.client.models.viewer.Manifest;
 import org.iplantc.de.client.models.viewer.MimeType;
 import org.iplantc.de.client.models.viewer.StructuredText;
 import org.iplantc.de.client.models.viewer.VizUrl;
@@ -22,7 +23,6 @@ import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
-import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -44,9 +44,6 @@ import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.json.client.JSONNumber;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -69,7 +66,7 @@ import java.util.logging.Logger;
  * @author sriram, jstroot
  */
 public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedEvent.FileSavedEventHandler {
-    private class GetManifestCallback implements AsyncCallback<String> {
+    private class GetManifestCallback implements AsyncCallback<Manifest> {
         private final AsyncCallback<String> asyncCallback;
         private final FileViewer.FileViewerPresenterAppearance presenterAppearance;
         private final boolean editing;
@@ -115,16 +112,15 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
         }
 
         @Override
-        public void onSuccess(String result) {
+        public void onSuccess(Manifest result) {
             asyncCallback.onSuccess(null);
 
-            JSONObject manifest = jsonUtil.getObject(result);
-            String infoType = jsonUtil.getString(manifest, DiskResource.INFO_TYPE_KEY);
-            MimeType contentType = MimeType.fromTypeString(jsonUtil.getString(manifest, "content-type"));
+            String infoType = result.getInfoType();
+            MimeType contentType = MimeType.fromTypeString(result.getContentType());
             checkNotNull(contentType);
             presenter.setTitle(file.getName());
             presenter.setContentType(contentType);
-            presenter.composeView(file, parentFolder, manifest, contentType, infoType, editing, isVizTabFirst);
+            presenter.composeView(file, parentFolder, result, contentType, infoType, editing, isVizTabFirst);
             LOG.info("Manifest retrieved: " + file.getName());
             simpleContainer.unmask();
         }
@@ -133,13 +129,13 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
     Logger LOG = Logger.getLogger(FileViewerPresenterImpl.class.getName());
     @Inject MimeTypeViewerResolverFactory mimeFactory;
     @Inject CommonModelAutoBeanFactory factory;
+    @Inject FileViewerAutoBeanFactory viewerFactory;
     @Inject FileEditorServiceFacade fileEditorService;
     @Inject FileViewer.FileViewerPresenterAppearance appearance;
     @Inject AsyncProviderWrapper<SaveAsDialog> saveAsDialogProvider;
     @Inject UserSessionServiceFacade userSessionService;
     @Inject DiskResourceServiceFacade diskResourceServiceFacade;
     @Inject DiskResourceUtil diskResourceUtil;
-    @Inject JsonUtil jsonUtil;
     @Inject IplantAnnouncer announcer;
 
     private MimeType contentType;
@@ -294,8 +290,8 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
         this.vizTabFirst = vizTabFirst;
 
         // Assemble manifest
-        JSONObject manifest = new JSONObject();
-        manifest.put("content-type", new JSONString(contentType.toString()));
+        Manifest manifest = createNewManifest();
+        manifest.setContentType(contentType.toString());
 
         if (isTabularFile) {
             checkArgument(!Strings.isNullOrEmpty(delimiter), "Must specify a delimiter.");
@@ -303,24 +299,28 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
             checkNotNull(columns, "Number of columns must be specified for new tabular files.");
             checkArgument(columns >= 1, "Must specify a non-zero, positive number of columns.");
 
-            JSONString infoType = null;
+            String infoType = null;
             if (COMMA_DELIMITER.equals(delimiter)) {
-                infoType = new JSONString(InfoType.CSV.toString());
+                infoType = InfoType.CSV.toString();
             } else if (TAB_DELIMITER.equals(delimiter)) {
-                infoType = new JSONString(InfoType.TSV.toString());
+                infoType = InfoType.TSV.toString();
             }
-            manifest.put(DiskResource.INFO_TYPE_KEY, infoType);
+            manifest.setInfoType(infoType);
 
-            manifest.put(FileViewer.COLUMNS_KEY, new JSONNumber(columns));
+            manifest.setColumns(columns);
         }
         if(isPathListFile){
-            manifest.put(DiskResource.INFO_TYPE_KEY, new JSONString(InfoType.HT_ANALYSIS_PATH_LIST.toString()));
-            manifest.put(FileViewer.PATH_LIST_KEY, new JSONString("true"));
+            manifest.setInfoType(InfoType.HT_ANALYSIS_PATH_LIST.toString());
+            manifest.setPathList(true);
         }
         setTitle(title);
         setContentType(contentType);
-        String infoType = jsonUtil.getString(manifest, DiskResource.INFO_TYPE_KEY);
+        String infoType = manifest.getInfoType();
         composeView(null, parentFolder, manifest, contentType, infoType, editing, vizTabFirst);
+    }
+
+    Manifest createNewManifest() {
+        return viewerFactory.manifest().as();
     }
 
     @Override
@@ -484,7 +484,7 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
 
     void composeView(final File file,
                      final Folder parentFolder,
-                     final JSONObject manifest,
+                     final Manifest manifest,
                      final MimeType contentType,
                      final String infoType,
                      final boolean editing,
@@ -502,7 +502,7 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
 
         if (treeViewer || cogeViewer || ensembleViewer) {
             FileViewer vizViewer = new ExternalVisualizationURLViewerImpl(file, infoType, fileEditorService, diskResourceServiceFacade);
-            List<VizUrl> urls = getManifestVizUrls(manifest);
+            List<VizUrl> urls = manifest.getUrls();
 
             if (urls != null && !urls.isEmpty()) {
                 vizViewer.setData(urls);
@@ -532,16 +532,6 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
 
     void setContentType(MimeType contentType) {
         this.contentType = contentType;
-    }
-
-    /**
-     * Gets the tree-urls json array from the manifest.
-     *
-     * @param manifest the file manifest.
-     * @return A json array of at least one tree URL, or null otherwise.
-     */
-    private List<VizUrl> getManifestVizUrls(JSONObject manifest) {
-        return TreeUrlCallback.getTreeUrls(manifest.toString());
     }
 
 }

@@ -3,11 +3,13 @@ package org.iplantc.de.client.services.impl;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
 import org.iplantc.de.client.DEClientConstants;
-import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.diskResources.File;
+import org.iplantc.de.client.models.viewer.FileViewerAutoBeanFactory;
+import org.iplantc.de.client.models.viewer.Manifest;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
+import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.services.BaseServiceCallWrapper.Type;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
@@ -35,6 +37,7 @@ public class FileEditorServiceFacadeImpl implements FileEditorServiceFacade {
     private final DiscEnvApiService deServiceFacade;
     private final UserInfo userInfo;
     @Inject FileEditorServiceAutoBeanFactory factory;
+    @Inject FileViewerAutoBeanFactory viewerFactory;
 
     interface FileEditorServiceAutoBeanFactory extends AutoBeanFactory {
         AutoBean<File> file();
@@ -52,12 +55,18 @@ public class FileEditorServiceFacadeImpl implements FileEditorServiceFacade {
     }
 
     @Override
-    public void getManifest(File file, AsyncCallback<String> callback) {
+    public void getManifest(File file, AsyncCallback<Manifest> callback) {
         String address = deProperties.getDataMgmtBaseUrl() + "file/manifest?path=" //$NON-NLS-1$
                 + URL.encodeQueryString(file.getPath());
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
-        callService(wrapper, callback);
+        callService(wrapper, new AsyncCallbackConverter<String, Manifest>(callback) {
+            @Override
+            protected Manifest convertFrom(String object) {
+                final AutoBean<Manifest> manifest = AutoBeanCodex.decode(viewerFactory, Manifest.class, object);
+                return manifest.as();
+            }
+        });
     }
 
     @Override
