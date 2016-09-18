@@ -20,6 +20,7 @@ public class AMQPConnectionManager {
     public static AMQPConnectionManager instance;
 
     private final Logger LOG = LoggerFactory.getLogger(AMQPConnectionManager.class);
+    private final String vhost;
 
     private String amqpHost;
 
@@ -36,11 +37,13 @@ public class AMQPConnectionManager {
         amqpHost = deprops.getProperty("org.iplantc.discoveryenvironment.notification.amqp.host");
         amqpPort = deprops.getProperty("org.iplantc.discoveryenvironment.notification.amqp.port");
         user = deprops.getProperty("org.iplantc.discoveryenvironment.notification.amqp.user");
+        vhost = deprops.getProperty("org.iplantc.discoveryenvironment.notification.amqp.exchange.vhost");
         password = deprops.getProperty("org.iplantc.discoveryenvironment.notification.amqp.password");
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(amqpHost);
         factory.setPort(Integer.parseInt(amqpPort));
         factory.setUsername(user);
+        factory.setVirtualHost(vhost);
         factory.setPassword(password);
         try {
             connection = factory.newConnection();
