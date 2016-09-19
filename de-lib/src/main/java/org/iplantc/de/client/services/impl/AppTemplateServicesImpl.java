@@ -205,7 +205,7 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
 
     @Override
     public void updateAppLabels(AppTemplate at, AsyncCallback<AppTemplate> callback) {
-        String address = APPS +  "/" + at.getId();
+        String address = APPS +  "/" + at.getSystemId() + "/" + at.getId();
         Splittable split = appTemplateToSplittable(at);
         ServiceCallWrapper wrapper = new ServiceCallWrapper(PATCH, address, split.getPayload());
         deServiceFacade.getServiceData(wrapper, new AppTemplateCallbackConverter(factory, callback));
