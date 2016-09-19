@@ -1,12 +1,13 @@
 package org.iplantc.de.client.models.apps;
 
-import com.google.gwt.user.client.ui.HasName;
-import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 import org.iplantc.de.client.models.HasDescription;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.models.tool.Tool;
+
+import com.google.gwt.user.client.ui.HasName;
+import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 
 import java.util.Date;
 import java.util.List;
