@@ -325,6 +325,7 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
 
     @Override
     public void onFileSaved(FileSavedEvent event) {
+        FileViewer currentView = (FileViewer)tabPanel.getActiveWidget();
         if (file == null) {
             file = event.getFile();
             // Update tab panel names
@@ -337,6 +338,11 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
                 viewer.refresh();
             }
         } else {
+            for(FileViewer viewer : viewers){
+                if (viewer != currentView) {
+                    viewer.refresh();
+                }
+            }
             simpleContainer.unmask();
         }
 
