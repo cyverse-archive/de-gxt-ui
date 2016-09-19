@@ -2,7 +2,6 @@ package org.iplantc.de.diskResource.client.views.toolbar;
 
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.viewer.InfoType;
@@ -79,8 +78,6 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     final DiskResourceSearchField searchField;
     @Inject
     DiskResourceUtil diskResourceUtil;
-    @Inject
-    DiskResourceAutoBeanFactory drAbFactory;
     @UiField
     TextButton downloadMenu;
     @UiField
@@ -498,13 +495,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("newFolderMi")
     void onNewFolderClicked(SelectionEvent<Item> event) {
-        if(selectedFolder == null) {
-            Folder parent = drAbFactory.folder().as();
-            parent.setPath(UserInfo.getInstance().getHomePath());
-            presenter.onCreateNewFolderSelected(parent);
-        } else {
-            presenter.onCreateNewFolderSelected(selectedFolder);
-        }
+        presenter.onCreateNewFolderSelected(selectedFolder);
     }
 
     @UiHandler("createNcbiSraMi")
