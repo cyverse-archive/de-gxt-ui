@@ -185,8 +185,12 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
             parent.setPath(UserInfo.getInstance().getHomePath());
             selectedFolder = parent;
         }
-        final CreateFolderDialog dlg = new CreateFolderDialog(selectedFolder, parentPresenter);
+        final CreateFolderDialog dlg = getCreateFolderDialog(selectedFolder);
         dlg.show();
+    }
+
+    protected CreateFolderDialog getCreateFolderDialog(Folder selectedFolder) {
+        return new CreateFolderDialog(selectedFolder, parentPresenter);
     }
 
     @Override
