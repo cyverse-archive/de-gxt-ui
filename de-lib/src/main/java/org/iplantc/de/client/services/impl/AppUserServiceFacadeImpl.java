@@ -6,6 +6,7 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PATCH;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
 import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.*;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
@@ -280,9 +281,9 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void copyApp(final HasId app,
+    public void copyApp(final HasQualifiedId app,
                         final AsyncCallback<AppTemplate> callback) {
-        String address = APPS + "/" + app.getId() + "/copy";
+        String address = APPS + "/" + app.getSystemId() + "/" + app.getId() + "/copy";
 
         // KLUDGE Have to send empty JSON body with POST request
         Splittable split = StringQuoter.createSplittable();

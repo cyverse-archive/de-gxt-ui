@@ -1,6 +1,7 @@
 package org.iplantc.de.client.services;
 
 import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.apps.AppFeedback;
@@ -58,7 +59,7 @@ public interface AppUserServiceFacade extends AppServiceFacade {
      */
     void copyWorkflow(String workflowId, AsyncCallback<String> callback);
 
-    void copyApp(HasId app, AsyncCallback<AppTemplate> callback);
+    void copyApp(HasQualifiedId app, AsyncCallback<AppTemplate> callback);
 
     void deleteAppsFromWorkspace(List<App> apps,
                                  AsyncCallback<Void> callback);
