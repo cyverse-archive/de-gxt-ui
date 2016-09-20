@@ -74,7 +74,7 @@ public interface AppUserServiceFacade extends AppServiceFacade {
      */
     void getAppDetails(App app, AsyncCallback<App> callback);
 
-    void getAppDoc(HasId app, AsyncCallback<AppDoc> callback);
+    void getAppDoc(HasQualifiedId app, AsyncCallback<AppDoc> callback);
 
     void saveAppDoc(HasId appId, String doc, AsyncCallback<AppDoc> callback);
 

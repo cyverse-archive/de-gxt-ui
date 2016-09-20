@@ -4,6 +4,7 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.*;
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.admin.desktop.client.services.model.AppCategorizeRequest;
 import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppDoc;
@@ -200,9 +201,9 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
     }
 
     @Override
-    public void getAppDoc(final HasId app,
+    public void getAppDoc(final HasQualifiedId app,
                           final AsyncCallback<AppDoc> callback) {
-        String address = APPS + "/" + app.getId() + "/documentation";
+        String address = APPS + "/" + app.getSystemId() + "/" + app.getId() + "/documentation";
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new AsyncCallbackConverter<String, AppDoc>(callback) {
             @Override

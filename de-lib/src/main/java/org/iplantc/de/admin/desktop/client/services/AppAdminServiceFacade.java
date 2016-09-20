@@ -2,6 +2,7 @@ package org.iplantc.de.admin.desktop.client.services;
 
 import org.iplantc.de.admin.desktop.client.services.model.AppCategorizeRequest;
 import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppDoc;
@@ -64,7 +65,7 @@ public interface AppAdminServiceFacade {
 
     void getAppDetails(HasId app, AsyncCallback<App> callback);
 
-    void getAppDoc(HasId app, AsyncCallback<AppDoc> callback);
+    void getAppDoc(HasQualifiedId app, AsyncCallback<AppDoc> callback);
 
     void saveAppDoc(HasId app, AppDoc doc, AsyncCallback<AppDoc> callback);
 

@@ -365,8 +365,8 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void getAppDoc(HasId app, AsyncCallback<AppDoc> callback) {
-        String address = APPS + "/" + app.getId() + "/documentation";
+    public void getAppDoc(HasQualifiedId app, AsyncCallback<AppDoc> callback) {
+        String address = APPS + "/" + app.getSystemId() + "/" + app.getId() + "/documentation";
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deServiceFacade.getServiceData(wrapper, new AppDocCallbackConverter(callback));
     }
