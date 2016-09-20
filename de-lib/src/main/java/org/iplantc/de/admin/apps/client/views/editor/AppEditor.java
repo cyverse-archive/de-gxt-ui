@@ -8,6 +8,7 @@ import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.util.RegExp;
 import org.iplantc.de.commons.client.validators.BasicEmailValidator3;
+import org.iplantc.de.commons.client.validators.UrlValidator;
 import org.iplantc.de.commons.client.widgets.IPlantAnchor;
 
 import com.google.common.base.Strings;
@@ -158,6 +159,7 @@ public class AppEditor extends Window implements Editor<App>, IsWidget, SaveAppS
                                                                                               appearance.appNameRestrictedChars()));
         name.addValidator(regExValidator);
         integratorEmail.addValidator(new BasicEmailValidator3());
+        wikiUrl.addValidator(new UrlValidator());
         wikiUrlFieldLabel.setHTML(appearance.wikiUrlFieldLabel());
         appDocLbl.setHTML(appearance.appDocumentationLabel());
         window.setHeadingText(app.getName());
