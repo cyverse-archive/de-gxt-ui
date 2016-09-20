@@ -216,7 +216,7 @@ public class GridViewPresenterImpl implements
                           @Assisted final TYPE entityType) {
         this.appearance = appearance;
         this.navigationPresenter = navigationPresenter;
-        this.listStore = new ListStore<>(new DiskResourceModelKeyProvider());
+        this.listStore = getDiskResourceListStore();
         GridView.FolderContentsRpcProxy folderContentsRpcProxy = folderContentsProxyFactory.createWithEntityType(infoTypeFilters,
                                                                                                                  entityType);
 
@@ -239,7 +239,6 @@ public class GridViewPresenterImpl implements
         this.view.addDiskResourceSelectionChangedEventHandler(this);
     }
 
-    // <editor-fold desc="Handler Registrations">
     @Override
     public HandlerRegistration
             addStoreUpdateHandler(StoreUpdateEvent.StoreUpdateHandler<DiskResource> handler) {
@@ -357,7 +356,7 @@ public class GridViewPresenterImpl implements
 
             @Override
             public void onSuccess(CommentsDialog result) {
-                result.show(dr, PermissionValue.own.equals(dr.getPermission()), metadataService);
+                result.show(dr, hasOwnPermissions(dr), metadataService);
             }
         });
     }
@@ -385,7 +384,7 @@ public class GridViewPresenterImpl implements
         copyMetadata(selected);
     }
 
-    private void copyMetadata(final DiskResource selected) {
+    void copyMetadata(final DiskResource selected) {
         mCopyDialog.clearHandlers();
         mCopyDialog.addOkButtonSelectHandler(new SelectHandler() {
 
@@ -589,7 +588,7 @@ public class GridViewPresenterImpl implements
         listStore.update(updated);
     }
 
-    private void fetchDetails(final DiskResource resource) {
+    void fetchDetails(final DiskResource resource) {
         diskResourceService.getStat(diskResourceUtil.asStringPathTypeMap(Arrays.asList(resource),
                                                                          resource instanceof File ? TYPE.FILE
                                                                                                  : TYPE.FOLDER),
@@ -624,7 +623,7 @@ public class GridViewPresenterImpl implements
 
     }
 
-    private void setInfoType(final DiskResource dr, String newType) {
+    void setInfoType(final DiskResource dr, String newType) {
         diskResourceService.setFileType(dr.getPath(), newType, new AsyncCallback<String>() {
 
             @Override
@@ -640,7 +639,7 @@ public class GridViewPresenterImpl implements
         });
     }
 
-    private void updateFav(final DiskResource diskResource, boolean fav) {
+    void updateFav(final DiskResource diskResource, boolean fav) {
         if (getSelectedDiskResources().size() > 0) {
             Iterator<DiskResource> it = getSelectedDiskResources().iterator();
             if (it.hasNext()) {
@@ -656,7 +655,7 @@ public class GridViewPresenterImpl implements
         }
     }
 
-    private boolean isViewingFavoritesFolder() {
+    boolean isViewingFavoritesFolder() {
         return navigationPresenter.getSelectedFolder()
                                   .getName()
                                   .equalsIgnoreCase(NavigationView.FAVORITES_FOLDER_NAME);
@@ -742,6 +741,14 @@ public class GridViewPresenterImpl implements
                view.show();
            }
        });
+    }
+
+    ListStore<DiskResource> getDiskResourceListStore() {
+        return new ListStore<>(new DiskResourceModelKeyProvider());
+    }
+
+    boolean hasOwnPermissions(DiskResource dr) {
+        return PermissionValue.own.equals(dr.getPermission());
     }
 
 }
