@@ -156,7 +156,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
 
     @Override
     public void getAppDetails(final App app, AsyncCallback<App> callback) {
-        String address = APPS + "/" + app.getId() + "/details";
+        String address = APPS + "/" + app.getSystemId() + "/" + app.getId() + "/details";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
 
