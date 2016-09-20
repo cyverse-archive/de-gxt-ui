@@ -13,11 +13,11 @@ import static org.iplantc.de.client.models.viewer.InfoType.TSV;
 import static org.iplantc.de.client.models.viewer.InfoType.VCF;
 
 import org.iplantc.de.client.models.diskResources.File;
+import org.iplantc.de.client.models.viewer.Manifest;
 import org.iplantc.de.client.models.viewer.MimeType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
-import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.util.WindowUtil;
@@ -32,7 +32,6 @@ import org.iplantc.de.fileViewers.client.views.TextViewerImpl;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.gwt.json.client.JSONObject;
 import com.google.inject.Inject;
 
 import java.util.HashMap;
@@ -49,7 +48,6 @@ public class MimeTypeViewerResolverFactory {
     Logger LOG = Logger.getLogger(MimeTypeViewerResolverFactory.class.getName());
     @Inject IplantAnnouncer announcer;
     @Inject FileEditorServiceFacade fileEditorService;
-    @Inject JsonUtil jsonUtil;
     @Inject DiskResourceUtil diskResourceUtil;
     @Inject DiskResourceServiceFacade diskResourceServiceFacade;
 
@@ -65,7 +63,7 @@ public class MimeTypeViewerResolverFactory {
     public List<? extends FileViewer> getViewerCommand(final File file,
                                         final String infoType,
                                         final boolean editing,
-                                        final JSONObject manifest,
+                                        final Manifest manifest,
                                         final FileViewer.Presenter presenter,
                                         MimeType type) {
 
@@ -144,8 +142,8 @@ public class MimeTypeViewerResolverFactory {
             case PREVIEW:
             default:
                 Integer columns = null;
-                if(manifest.containsKey(FileViewer.COLUMNS_KEY)){
-                    columns = jsonUtil.getNumber(manifest, FileViewer.COLUMNS_KEY).intValue();
+                if(manifest.getColumns() != null){
+                    columns = manifest.getColumns();
                     LOG.fine("Columns are defined: " + columns);
                 }
                 if(CSV.toString().equals(infoType)
