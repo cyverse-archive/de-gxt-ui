@@ -2,6 +2,7 @@ package org.iplantc.de.client.models.apps;
 
 import org.iplantc.de.client.models.HasDescription;
 import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.HasSettableId;
 import org.iplantc.de.client.models.avu.Avu;
 
 import com.google.gwt.user.client.ui.HasName;
@@ -12,9 +13,7 @@ import java.util.List;
 /**
  * @author aramsey
  */
-public interface PublishAppRequest extends HasId, HasName, HasDescription {
-
-    void setId(String id);
+public interface PublishAppRequest extends HasSettableId, HasName, HasDescription {
 
     @PropertyName("integration_date")
     String getIntegrationDate();

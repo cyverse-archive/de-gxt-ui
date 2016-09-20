@@ -1,8 +1,7 @@
 package org.iplantc.de.client.models.apps;
 
 import org.iplantc.de.client.models.HasDescription;
-import org.iplantc.de.client.models.HasId;
-import org.iplantc.de.client.models.HasSystemId;
+import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.models.tool.Tool;
@@ -16,8 +15,7 @@ import java.util.List;
 /**
  * @author jstroot
  */
-public interface App extends HasId,
-                             HasSystemId,
+public interface App extends HasQualifiedId,
                              HasName,
                              HasDescription {
 
@@ -107,8 +105,6 @@ public interface App extends HasId,
 
     @PropertyName(IS_FAVORITE_KEY)
     void setFavorite(boolean favorite);
-
-    void setId(String id);
 
     void setInputs(List<AppFileParameters> inputs);
 

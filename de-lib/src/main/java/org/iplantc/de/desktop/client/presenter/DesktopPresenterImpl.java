@@ -130,6 +130,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         String APP_CATEGORY = "app-category";
         String FOLDER = "folder";
         String TYPE = "type";
+        String SYSTEM_ID = "system-id";
         String APP_ID = "app-id";
     }
 
@@ -724,12 +725,13 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                     if (TypeQueryValues.APPS.equalsIgnoreCase(paramValue)) {
                         final AppsWindowConfig appsConfig = ConfigFactory.appsWindowConfig();
                         final String appCategoryId = Window.Location.getParameter(QueryStrings.APP_CATEGORY);
+                        final String systemId = Window.Location.getParameter(QueryStrings.SYSTEM_ID);
                         final String appId = Window.Location.getParameter(QueryStrings.APP_ID);
                         if (!Strings.isNullOrEmpty(appCategoryId)) {
                             appsConfig.setSelectedAppCategory(CommonModelUtils.getInstance().createHasIdFromString(appCategoryId));
                             windowConfig = appsConfig;
                         } else if (!Strings.isNullOrEmpty(appId)) {
-                            AppWizardConfig config = ConfigFactory.appWizardConfig(appId);
+                            AppWizardConfig config = ConfigFactory.appWizardConfig(systemId, appId);
                             show(config);
                         }
                         

@@ -1,18 +1,15 @@
 package org.iplantc.de.client.models.toolRequest;
 
-import org.iplantc.de.client.models.HasId;
-
 import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
+import org.iplantc.de.client.models.HasSettableId;
 
 import java.util.Date;
 
 /**
  * @author jstroot
  */
-public interface ToolRequest extends HasName, HasId {
-    @PropertyName("id")
-    void setId(String id);
+public interface ToolRequest extends HasName, HasSettableId {
 
     @PropertyName("date_submitted")
     Date getDateSubmitted();
@@ -35,5 +32,4 @@ public interface ToolRequest extends HasName, HasId {
     String getId();
 
     String getVersion();
-
 }

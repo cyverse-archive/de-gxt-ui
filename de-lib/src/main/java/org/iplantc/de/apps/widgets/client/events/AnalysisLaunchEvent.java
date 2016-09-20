@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.HasId;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
+import org.iplantc.de.client.models.HasQualifiedId;
 
 public class AnalysisLaunchEvent extends GwtEvent<AnalysisLaunchEventHandler> {
 
@@ -13,13 +14,13 @@ public class AnalysisLaunchEvent extends GwtEvent<AnalysisLaunchEventHandler> {
     }
 
     public static GwtEvent.Type<AnalysisLaunchEventHandler> TYPE = new GwtEvent.Type<AnalysisLaunchEvent.AnalysisLaunchEventHandler>();
-    private final HasId at;
+    private final HasQualifiedId at;
 
-    public AnalysisLaunchEvent(HasId at) {
+    public AnalysisLaunchEvent(HasQualifiedId at) {
         this.at = at;
     }
 
-    public HasId getAppTemplateId() {
+    public HasQualifiedId getAppTemplateId() {
         return at;
     }
 

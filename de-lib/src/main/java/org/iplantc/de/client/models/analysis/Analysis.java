@@ -1,12 +1,10 @@
 package org.iplantc.de.client.models.analysis;
 
-import org.iplantc.de.client.models.HasId;
-
 import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
-import org.iplantc.de.client.models.HasSystemId;
+import org.iplantc.de.client.models.HasQualifiedId;
 
-public interface Analysis extends HasId, HasSystemId, HasName {
+public interface Analysis extends HasQualifiedId, HasName {
 
     @PropertyName("description")
     String getComments();
@@ -53,8 +51,6 @@ public interface Analysis extends HasId, HasSystemId, HasName {
     public void setAppDescription(String analysis_details);
 
     public void setStatus(String status);
-
-    public void setId(String id);
 
     @PropertyName("resultfolderid")
     public void setResultFolderId(String resultfolderid);
