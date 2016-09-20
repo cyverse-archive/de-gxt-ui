@@ -6,14 +6,14 @@ import static com.sencha.gxt.widget.core.client.Dialog.PredefinedButton.OK;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.events.diskResources.OpenFolderEvent;
 import org.iplantc.de.client.gin.ServicesInjector;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.diskResources.DiskResource;
+import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
-import org.iplantc.de.client.models.errorHandling.ServiceErrorCode;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
-import org.iplantc.de.client.models.errors.diskResources.ErrorDiskResource;
 import org.iplantc.de.client.models.genomes.GenomeAutoBeanFactory;
 import org.iplantc.de.client.models.genomes.GenomeList;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestType;
@@ -56,11 +56,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
-import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
-import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.box.MessageBox;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent.DialogHideHandler;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 
@@ -108,6 +104,9 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     EventBus eventBus;
     @Inject
     DiskResourceServiceFacade drFacade;
+
+    @Inject
+    DiskResourceAutoBeanFactory drAbFactory;
 
     PermIdRequestUserServiceFacade prFacade =
             ServicesInjector.INSTANCE.getPermIdRequestUserServiceFacade();
@@ -179,16 +178,19 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     }
 
     @Override
-    public void onCreateNewFolderSelected(final Folder selectedFolder) {
+    public void onCreateNewFolderSelected(Folder selectedFolder) {
         // FIXME Do not fire dialog from presenter. Do so from the view.
-        final CreateFolderDialog dlg = new CreateFolderDialog(selectedFolder);
-        dlg.addOkButtonSelectHandler(new SelectEvent.SelectHandler() {
-            @Override
-            public void onSelect(SelectEvent event) {
-                parentPresenter.doCreateNewFolder(selectedFolder, dlg.getFieldText());
-            }
-        });
+        if(selectedFolder == null) {
+            Folder parent = drAbFactory.folder().as();
+            parent.setPath(UserInfo.getInstance().getHomePath());
+            selectedFolder = parent;
+        }
+        final CreateFolderDialog dlg = getCreateFolderDialog(selectedFolder);
         dlg.show();
+    }
+
+    protected CreateFolderDialog getCreateFolderDialog(Folder selectedFolder) {
+        return new CreateFolderDialog(selectedFolder, parentPresenter);
     }
 
     @Override
