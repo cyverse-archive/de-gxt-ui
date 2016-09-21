@@ -153,7 +153,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
 
     @Override
     public void publishToWorld(PublishAppRequest request, DECallback<Void> callback) {
-        String address = APPS + "/" + request.getId() + "/publish"; //$NON-NLS-1$
+        String address = APPS + "/" + request.getSystemId() + "/" + request.getId() + "/publish";
 
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());

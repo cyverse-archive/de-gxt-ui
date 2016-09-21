@@ -2,6 +2,7 @@ package org.iplantc.de.client.models.apps;
 
 import org.iplantc.de.client.models.HasDescription;
 import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.HasSettableId;
 import org.iplantc.de.client.models.avu.Avu;
 
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * @author aramsey
  */
-public interface PublishAppRequest extends HasSettableId, HasName, HasDescription {
+public interface PublishAppRequest extends HasQualifiedId, HasName, HasDescription {
 
     @PropertyName("integration_date")
     String getIntegrationDate();
