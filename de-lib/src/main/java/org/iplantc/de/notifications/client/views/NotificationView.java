@@ -26,6 +26,10 @@ public interface NotificationView extends IsWidget,
 
         String notificationDeleteFail();
 
+        String notificationMarkAsSeenFail();
+
+        String notificationMarkAsSeenSuccess();
+
         String category();
 
         int categoryColumnWidth();

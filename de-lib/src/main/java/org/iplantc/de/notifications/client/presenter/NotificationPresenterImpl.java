@@ -286,13 +286,13 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
             public void onFailure(Throwable caught) {
                 IplantAnnouncer.getInstance()
                                .schedule(new ErrorAnnouncementConfig(
-                                       "Unable to mark notifications as seen!"));
+                                       appearance.notificationMarkAsSeenFail()));
             }
 
             @Override
             public void onSuccess(String result) {
                 IplantAnnouncer.getInstance()
-                               .schedule(new SuccessAnnouncementConfig("Notifications marked as seen!"));
+                               .schedule(new SuccessAnnouncementConfig(appearance.notificationMarkAsSeenSuccess()));
                 for (NotificationMessage nm : notifications) {
                     nm.setSeen(true);
                     view.updateStore(nm);
