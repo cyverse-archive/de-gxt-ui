@@ -464,7 +464,6 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
 
         String context = selectedItem.getContext();
         switch(selectedItem.getCategory()){
-
             case APPS:
                 final AppsWindowConfig appsConfig = ConfigFactory.appsWindowConfig();
                 final PayloadAppsList pal = AutoBeanCodex.decode(notificationFactory,
@@ -482,9 +481,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                     EventBus.getInstance()
                             .fireEvent(new WindowShowRequestEvent(appsConfig, true));
                 }
-
-                break;
-
+               break;
             case DATA:
                 // execute data context
                 File file = AutoBeanCodex.decode(diskResourceFactory, File.class, context).as();
@@ -496,9 +493,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                 dataWindowConfig.setSelectedFolder(folder);
                 dataWindowConfig.setSelectedDiskResources(selectedResources);
                 show(dataWindowConfig, true);
-
                 break;
-
             case ANALYSIS:
                 AutoBean<Analysis> hAb = AutoBeanCodex.decode(analysesFactory, Analysis.class, context);
 
@@ -506,7 +501,6 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                 analysisWindowConfig.setSelectedAnalyses(Lists.newArrayList(hAb.as()));
                 show(analysisWindowConfig, true);
                 break;
-
             case PERMANENTIDREQUEST:
                 PayloadRequest request = AutoBeanCodex.decode(notificationFactory,
                                                               PayloadRequest.class,
@@ -523,13 +517,14 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                 RequestHistoryDialog dlg = new RequestHistoryDialog(NotificationCategory.TOOLREQUEST.toString(),
                                                                     history);
                 dlg.show();
-
                 break;
-
             default:
                 break;
         }
+       markAsSeen(selectedItem);
+    }
 
+    public void markAsSeen(final NotificationMessage selectedItem) {
         messageServiceFacade.markAsSeen(selectedItem, new AsyncCallback<String>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -539,14 +534,15 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
             @Override
             public void onSuccess(String result) {
                 selectedItem.setSeen(true);
-                view.getNotificationStore().update(selectedItem);
-
+                ListStore<NotificationMessage> notificationStore = view.getNotificationStore();
+                if(notificationStore.findModel(selectedItem)!=null) {
+                    notificationStore.update(selectedItem);
+                }
                 final String asString = StringQuoter.split(result).get("count").asString();
                 final int count = Integer.parseInt(asString);
                 view.setUnseenNotificationCount(count);
             }
         });
-
     }
 
     private void getRequestStatusHistory(String id, NotificationCategory cat) {

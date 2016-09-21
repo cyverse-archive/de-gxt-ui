@@ -21,6 +21,10 @@ public class NotificationMessageCellDefaultAppearance implements NotificationMes
             style += "cursor:pointer; text-decoration:underline;"; //$NON-NLS-1$
         }
 
+        if(!value.isSeen()) {
+            style += "background-color:#DFE8F6";
+        }
+
         sb.appendHtmlConstant(Format.substitute("<div style=\"{0}\">{1}</div>", style, //$NON-NLS-1$
                                                 value.getMessage()));
     }
