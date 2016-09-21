@@ -264,10 +264,10 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void favoriteApp(final HasId appId,
+    public void favoriteApp(final HasQualifiedId appId,
                             final boolean fav,
                             final AsyncCallback<Void> callback) {
-        String address = APPS + "/" + appId.getId() + "/favorite";
+        String address = APPS + "/" + appId.getSystemId() + "/" + appId.getId() + "/favorite";
 
         JSONObject body = new JSONObject();
         ServiceCallWrapper wrapper;

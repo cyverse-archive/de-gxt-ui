@@ -19,7 +19,7 @@ import java.util.List;
  */
 public interface AppUserServiceFacade extends AppServiceFacade {
 
-    void favoriteApp(HasId appId, boolean fav, AsyncCallback<Void> callback);
+    void favoriteApp(HasQualifiedId appId, boolean fav, AsyncCallback<Void> callback);
 
     /**
      * Retrieves the name and a list of inputs and outputs for the given app. The response JSON will be
