@@ -22,6 +22,7 @@ import org.iplantc.de.notifications.client.model.NotificationMessageProperties;
 import org.iplantc.de.notifications.client.views.NotificationToolbarView;
 import org.iplantc.de.notifications.client.views.NotificationView;
 
+import com.google.common.collect.Lists;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GxtMockitoTestRunner;
@@ -117,17 +118,37 @@ public class NotificationPresenterImplTest {
         uut.onNotificationSelection(eventMock);
 
         verify(toolbarViewMock).setDeleteButtonEnabled(eq(false));
+        verify(toolbarViewMock).setMarkAsSeenButtonEnabled(eq(false));
     }
 
     @Test
     public void testOnNotificationSelection_nonEmptyListStore() {
         NotificationSelectionEvent eventMock = mock(NotificationSelectionEvent.class);
-        when(eventMock.getNotifications()).thenReturn(listMock);
-        when(listMock.size()).thenReturn(5);
+        final NotificationMessage mockNm1 = mock(NotificationMessage.class);
+        final NotificationMessage mockNm2 = mock(NotificationMessage.class);
+        when(mockNm1.isSeen()).thenReturn(false);
+        when(mockNm2.isSeen()).thenReturn(false);
+
+        when(eventMock.getNotifications()).thenReturn(Lists.newArrayList(mockNm1, mockNm2));
 
         uut.onNotificationSelection(eventMock);
 
         verify(toolbarViewMock).setDeleteButtonEnabled(eq(true));
+        verify(toolbarViewMock).setMarkAsSeenButtonEnabled(eq(true));
+    }
+
+    @Test
+    public void testOnNotificationSelection_seenItemSelected() {
+        NotificationSelectionEvent eventMock = mock(NotificationSelectionEvent.class);
+        final NotificationMessage mockNm1 = mock(NotificationMessage.class);
+        final NotificationMessage mockNm2 = mock(NotificationMessage.class);
+        when(mockNm1.isSeen()).thenReturn(false);
+        when(mockNm2.isSeen()).thenReturn(true);
+
+        when(eventMock.getNotifications()).thenReturn(Lists.newArrayList(mockNm1, mockNm2));
+        uut.onNotificationSelection(eventMock);
+        verify(toolbarViewMock).setMarkAsSeenButtonEnabled(eq(false));
+
     }
 
 
