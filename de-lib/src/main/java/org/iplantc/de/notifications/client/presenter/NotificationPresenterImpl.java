@@ -199,8 +199,14 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
             toolbar.setMarkAsSeenButtonEnabled(false);
         } else {
             toolbar.setDeleteButtonEnabled(true);
+            for(NotificationMessage nm :event.getNotifications()) {
+                   if(nm.isSeen()) {
+                       toolbar.setMarkAsSeenButtonEnabled(false);
+                       return;
+                   }
+            }
             toolbar.setMarkAsSeenButtonEnabled(true);
-        }
+      }
     }
 
     @Override
