@@ -11,8 +11,9 @@ import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
  *
  */
 public interface HasId {
-    
-    @PropertyName("id")
-    String getId();
 
+    String ID_KEY = "id";
+
+    @PropertyName(ID_KEY)
+    String getId();
 }

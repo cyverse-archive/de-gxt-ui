@@ -1,10 +1,8 @@
 package org.iplantc.de.client.models.apps;
 
-import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.HasSettableId;
 
-public interface AppRefLink extends HasId {
-
-    void setId(String id);
+public interface AppRefLink extends HasSettableId {
 
     void setRefLink(String refLink);
 

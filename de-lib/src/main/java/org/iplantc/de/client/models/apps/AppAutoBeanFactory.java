@@ -41,4 +41,7 @@ public interface AppAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<PublishAppRequest> publishAppRequest();
 
+    AutoBean<QualifiedAppId> qualifiedAppId();
+
+    AutoBean<AppDeletionRequest> appDeletionRequest();
 }

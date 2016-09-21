@@ -1,6 +1,7 @@
 package org.iplantc.de.client.services;
 
 import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.apps.AppFeedback;
@@ -18,7 +19,7 @@ import java.util.List;
  */
 public interface AppUserServiceFacade extends AppServiceFacade {
 
-    void favoriteApp(HasId appId, boolean fav, AsyncCallback<Void> callback);
+    void favoriteApp(HasQualifiedId appId, boolean fav, AsyncCallback<Void> callback);
 
     /**
      * Retrieves the name and a list of inputs and outputs for the given app. The response JSON will be
@@ -58,7 +59,7 @@ public interface AppUserServiceFacade extends AppServiceFacade {
      */
     void copyWorkflow(String workflowId, AsyncCallback<String> callback);
 
-    void copyApp(HasId app, AsyncCallback<AppTemplate> callback);
+    void copyApp(HasQualifiedId app, AsyncCallback<AppTemplate> callback);
 
     void deleteAppsFromWorkspace(List<App> apps,
                                  AsyncCallback<Void> callback);
@@ -73,7 +74,7 @@ public interface AppUserServiceFacade extends AppServiceFacade {
      */
     void getAppDetails(App app, AsyncCallback<App> callback);
 
-    void getAppDoc(HasId app, AsyncCallback<AppDoc> callback);
+    void getAppDoc(HasQualifiedId app, AsyncCallback<AppDoc> callback);
 
     void saveAppDoc(HasId appId, String doc, AsyncCallback<AppDoc> callback);
 

@@ -1,16 +1,13 @@
 package org.iplantc.de.client.models.diskResources;
 
-import org.iplantc.de.client.models.HasDescription;
-import org.iplantc.de.client.models.HasId;
-
 import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
+import org.iplantc.de.client.models.HasDescription;
+import org.iplantc.de.client.models.HasSettableId;
 
 import java.util.Date;
 
-public interface MetadataTemplateInfo  extends HasId, HasName, HasDescription {
-
-    void setId(String id);
+public interface MetadataTemplateInfo  extends HasSettableId, HasName, HasDescription {
 
     @PropertyName("last_modified_on")
     Date getLastModifiedDate();

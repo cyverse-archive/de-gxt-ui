@@ -1,8 +1,7 @@
 package org.iplantc.de.client.models.notifications;
 
-import org.iplantc.de.client.models.HasId;
-
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
+import org.iplantc.de.client.models.HasSettableId;
 
 /**
  * 
@@ -11,13 +10,7 @@ import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
  * @author sriram
  * 
  */
-public interface NotificationMessage extends HasId{
-
-    @PropertyName("id")
-    void setId(String id);
-
-    @PropertyName("id")
-    String getId();
+public interface NotificationMessage extends HasSettableId {
 
     @PropertyName("text")
     String getMessage();
