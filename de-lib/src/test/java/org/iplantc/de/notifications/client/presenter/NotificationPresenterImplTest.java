@@ -11,10 +11,12 @@ import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.services.MessageServiceFacade;
 import org.iplantc.de.notifications.client.events.DeleteNotificationsUpdateEvent;
+import org.iplantc.de.notifications.client.events.NotificationCountUpdateEvent;
 import org.iplantc.de.notifications.client.events.NotificationGridRefreshEvent;
 import org.iplantc.de.notifications.client.events.NotificationSelectionEvent;
 import org.iplantc.de.notifications.client.events.NotificationToolbarDeleteAllClickedEvent;
 import org.iplantc.de.notifications.client.events.NotificationToolbarDeleteClickedEvent;
+import org.iplantc.de.notifications.client.events.NotificationToolbarMarkAsSeenClickedEvent;
 import org.iplantc.de.notifications.client.gin.factory.NotificationViewFactory;
 import org.iplantc.de.notifications.client.model.NotificationMessageProperties;
 import org.iplantc.de.notifications.client.views.NotificationToolbarView;
@@ -57,6 +59,7 @@ public class NotificationPresenterImplTest {
     @Mock Iterator<NotificationMessage> iteratorMock;
 
     @Captor ArgumentCaptor<AsyncCallback<String>> asyncCallbackStringCaptor;
+    @Mock NotificationCountUpdateEvent mockCountUpdateEvent;
 
     private NotificationPresenterImpl uut;
 
@@ -74,6 +77,11 @@ public class NotificationPresenterImplTest {
             @Override
             ListStore<NotificationMessage> createListStore(NotificationMessageProperties messageProperties) {
                 return listStoreMock;
+            }
+
+            @Override
+            protected void fireCountUpdateEvent(String result) {
+                eventBus.fireEvent(mockCountUpdateEvent);
             }
         };
         uut.currentCategory = currentCategoryMock;
@@ -160,4 +168,24 @@ public class NotificationPresenterImplTest {
         verify(eventBusMock).fireEvent(isA(DeleteNotificationsUpdateEvent.class));
 
     }
+
+    @Test
+    public void testOnNotificationToolbarMarkAsReadClicked() {
+        NotificationToolbarMarkAsSeenClickedEvent eventMock = mock(NotificationToolbarMarkAsSeenClickedEvent.class);
+
+        when(listMock.isEmpty()).thenReturn(false);
+        when(listMock.size()).thenReturn(1);
+        when(iteratorMock.hasNext()).thenReturn(true, false);
+        when(iteratorMock.next()).thenReturn(notificationMessageMock);
+        when(listMock.iterator()).thenReturn(iteratorMock);
+        when(viewMock.getSelectedItems()).thenReturn(listMock);
+
+        uut.onNotificationToolbarMarkAsSeenClicked(eventMock);
+
+        verify(messageServiceFacadeMock).markAsSeen(isA(List.class), asyncCallbackStringCaptor.capture());
+
+        asyncCallbackStringCaptor.getValue().onSuccess("result");
+        verify(eventBusMock).fireEvent(isA(NotificationCountUpdateEvent.class));
+
+   }
 }

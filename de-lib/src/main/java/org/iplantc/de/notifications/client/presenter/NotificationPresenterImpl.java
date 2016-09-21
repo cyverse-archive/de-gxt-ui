@@ -292,15 +292,23 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
                     view.updateStore(nm);
                 }
 
-                final String asString = StringQuoter.split(result).get("count").asString();
-                final int count = Integer.parseInt(asString);
-                eventBus.fireEvent(new NotificationCountUpdateEvent(count));
+                fireCountUpdateEvent(result);
 
             }
         });
     }
 
-    @Override
+     protected void fireCountUpdateEvent(String result) {
+         final String asString =
+                 StringQuoter.split(result)
+                             .get("count")
+                             .asString();
+         final int count = Integer.parseInt(asString);
+         eventBus.fireEvent(new NotificationCountUpdateEvent(
+                 count));
+     }
+
+                                                     @Override
     public void onNotificationToolbarSelection(NotificationToolbarSelectionEvent event) {
         filterBy(event.getNotificationCategory());
     }
