@@ -34,7 +34,7 @@ node {
             sh returnStatus: true, script: "docker rmi ${dockerRepoBuild}"
         }
 
-        stage "Package Public Image"
+        stage "Package Public Image and Push"
         sh 'git rev-parse HEAD > GIT_COMMIT'
         git_commit = readFile('GIT_COMMIT').trim()
         echo git_commit
@@ -42,14 +42,8 @@ node {
         dockerRepo = "${dockerUser}/${repo}:${env.BRANCH_NAME}"
         sh "docker build --rm --build-arg git_commit=${git_commit} -t ${dockerRepo} ."
 
-
-        stage "Docker Push"
         sh "docker push ${dockerRepo}"
     } catch (InterruptedException e) {
-        currentBuild.result = "ABORTED"
-        slackSend color: 'warning', message: "ABORTED: ${slackJobDescription}"
-        throw e
-    } catch (hudson.AbortException e) {
         currentBuild.result = "ABORTED"
         slackSend color: 'warning', message: "ABORTED: ${slackJobDescription}"
         throw e
