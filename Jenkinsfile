@@ -23,7 +23,7 @@ node('docker') {
 
             stage "Build WAR"
             sh "mkdir -p target/"
-            sh """docker run --name ${dockerWarBuilder} --rm -e BRANCH_NAME -e BUILD_TAG -e BUILD_ID -e BUILD_NUMBER ${dockerRepoBuild} > target/de-copy.war"""
+            sh """docker run -v /tmp:/tmp --name ${dockerWarBuilder} --rm -e BRANCH_NAME -e BUILD_TAG -e BUILD_ID -e BUILD_NUMBER ${dockerRepoBuild} > target/de-copy.war"""
         } finally {
             // using returnStatus so if these are gone it doesn't error
             sh returnStatus: true, script: "rm sencha_gradle.properties"
