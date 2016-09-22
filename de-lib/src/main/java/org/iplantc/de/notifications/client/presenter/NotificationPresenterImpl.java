@@ -146,7 +146,6 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
     public void onNotificationGridRefresh(NotificationGridRefreshEvent event) {
         if (listStore.size() > 0) {
             toolbar.setDeleteAllButtonEnabled(true);
-            toolbar.setMarkAsSeenButtonEnabled(true);
         } else {
             toolbar.setDeleteAllButtonEnabled(false);
         }
