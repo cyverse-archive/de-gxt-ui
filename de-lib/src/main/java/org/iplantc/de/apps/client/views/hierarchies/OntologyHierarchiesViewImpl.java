@@ -35,6 +35,7 @@ public class OntologyHierarchiesViewImpl extends ContentPanel implements Ontolog
     private TreeStore<OntologyHierarchy> treeStore;
     private OntologyHierarchiesAppearance appearance;
     private OntologyUtil ontologyUtil;
+    private OntologyHierarchy root;
 
     @Inject
     OntologyHierarchiesViewImpl(final OntologyHierarchiesAppearance appearance,
@@ -48,6 +49,16 @@ public class OntologyHierarchiesViewImpl extends ContentPanel implements Ontolog
     @Override
     public Tree<OntologyHierarchy, String> getTree() {
         return tree;
+    }
+
+    @Override
+    public void setRoot(OntologyHierarchy hierarchy) {
+        this.root = hierarchy;
+    }
+
+    @Override
+    public OntologyHierarchy getRoot() {
+        return root;
     }
 
     @Override
