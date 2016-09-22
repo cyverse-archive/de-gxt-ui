@@ -6,6 +6,7 @@ import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
 import org.iplantc.de.apps.client.events.EditAppEvent;
 import org.iplantc.de.apps.client.events.EditWorkflowEvent;
+import org.iplantc.de.apps.client.events.SelectedHierarchyNotFound;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.CopyAppSelected;
 import org.iplantc.de.apps.client.events.selection.CopyWorkflowSelected;
@@ -188,20 +189,42 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
     void selectDesiredCategory(HasId selectedAppCategory, boolean selectDefaultCategory) {
         if (selectedAppCategory == null) {
             if (selectDefaultCategory) {
-                Tree<AppCategory, String> tree = workspaceView.getTree();
-                viewTabPanel.setActiveWidget(tree);
-                tree.getSelectionModel().select(tree.getStore().getRootItems().get(0), false);
+                selectDefaultCategory();
             }
         } else {
+            boolean desiredCategoryFound = false;
             for (Tree<AppCategory, String> tree : trees) {
                 AppCategory category = tree.getStore().findModelWithKey(selectedAppCategory.getId());
-                Tree.TreeNode<AppCategory> node = tree.findNode(category);
-                if (node != null) {
-                    viewTabPanel.setActiveWidget(tree);
-                    tree.getSelectionModel().select(node.getModel(), true);
+                desiredCategoryFound = doSelectCategory(tree, category);
+                if (desiredCategoryFound) {
+                    break;
                 }
             }
+            if (!desiredCategoryFound) {
+                selectDefaultCategory();
+            }
         }
+    }
+
+    boolean doSelectCategory(Tree<AppCategory, String> tree, AppCategory category) {
+        Tree.TreeNode<AppCategory> node = tree.findNode(category);
+        if (node != null) {
+            viewTabPanel.setActiveWidget(tree);
+            tree.getSelectionModel().select(node.getModel(), true);
+            return true;
+        }
+        return false;
+    }
+
+    void selectDefaultCategory() {
+        Tree<AppCategory, String> tree = workspaceView.getTree();
+        viewTabPanel.setActiveWidget(tree);
+        tree.getSelectionModel().select(tree.getStore().getRootItems().get(0), true);
+    }
+
+    @Override
+    public void onSelectedHierarchyNotFound(SelectedHierarchyNotFound event) {
+        selectDefaultCategory();
     }
 
     void addHPCTabSelectionHandler() {
