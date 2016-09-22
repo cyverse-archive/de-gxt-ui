@@ -6,6 +6,7 @@ package org.iplantc.de.notifications.client.views;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.notifications.client.events.NotificationToolbarDeleteAllClickedEvent;
 import org.iplantc.de.notifications.client.events.NotificationToolbarDeleteClickedEvent;
+import org.iplantc.de.notifications.client.events.NotificationToolbarMarkAsSeenClickedEvent;
 import org.iplantc.de.notifications.client.events.NotificationToolbarSelectionEvent;
 
 import com.google.gwt.core.client.GWT;
@@ -34,6 +35,8 @@ public class NotificationToolbarViewImpl extends Composite implements Notificati
 
     private static NotificationToolbarUiBinder uiBinder = GWT.create(NotificationToolbarUiBinder.class);
 
+
+
     @UiTemplate("NotificationToolbarView.ui.xml")
     interface NotificationToolbarUiBinder extends UiBinder<Widget, NotificationToolbarViewImpl> {
     }
@@ -46,6 +49,9 @@ public class NotificationToolbarViewImpl extends Composite implements Notificati
 
     @UiField
     ToolBar menuToolBar;
+
+    @UiField
+    TextButton btnSeen;
 
     @UiField(provided = true)
     SimpleComboBox<NotificationCategory> cboFilter = new SimpleComboBox<NotificationCategory>(
@@ -76,6 +82,13 @@ public class NotificationToolbarViewImpl extends Composite implements Notificati
     public HandlerRegistration addNotificationToolbarSelectionEventHandler(
             NotificationToolbarSelectionEvent.NotificationToolbarSelectionEventHandler handler) {
         return addHandler(handler, NotificationToolbarSelectionEvent.TYPE);
+    }
+
+
+    @Override
+    public HandlerRegistration addNotificationToolbarMarkAsSeenClickedEventHandler(
+            NotificationToolbarMarkAsSeenClickedEvent.NotificationToolbarMarkAsSeenClickedEventHandler handler) {
+        return addHandler(handler, NotificationToolbarMarkAsSeenClickedEvent.TYPE);
     }
 
     private void initFilters() {
@@ -123,10 +136,20 @@ public class NotificationToolbarViewImpl extends Composite implements Notificati
         fireEvent(new NotificationToolbarDeleteAllClickedEvent());
     }
 
+    @UiHandler("btnSeen")
+    public void markAsSeenClicked(SelectEvent event) {
+        fireEvent(new NotificationToolbarMarkAsSeenClickedEvent());
+    }
+
     @Override
     public void setRefreshButton(TextButton refreshBtn) {
         refreshBtn.setText(appearance.refresh());
         menuToolBar.insert(refreshBtn, 1);
+    }
+
+    @Override
+    public void setMarkAsSeenButtonEnabled(boolean enabled) {
+        btnSeen.setEnabled(enabled);
     }
 
     @Override

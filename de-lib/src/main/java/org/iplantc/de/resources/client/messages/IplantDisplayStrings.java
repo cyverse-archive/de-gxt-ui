@@ -2976,4 +2976,8 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
     @DefaultMessage("Publish")
     @Key("publish")
     String publish();
+
+    String markAsSeen();
+
+    String markAsSeenSuccess();
 }

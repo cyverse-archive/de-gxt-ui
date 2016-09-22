@@ -9,19 +9,22 @@ import org.iplantc.de.client.services.MessageServiceFacade;
 import org.iplantc.de.client.services.callbacks.NotificationCallback;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.notifications.client.events.DeleteNotificationsUpdateEvent;
 import org.iplantc.de.notifications.client.events.NotificationCountUpdateEvent;
 import org.iplantc.de.notifications.client.events.NotificationGridRefreshEvent;
 import org.iplantc.de.notifications.client.events.NotificationSelectionEvent;
 import org.iplantc.de.notifications.client.events.NotificationToolbarDeleteAllClickedEvent;
 import org.iplantc.de.notifications.client.events.NotificationToolbarDeleteClickedEvent;
+import org.iplantc.de.notifications.client.events.NotificationToolbarMarkAsSeenClickedEvent;
 import org.iplantc.de.notifications.client.events.NotificationToolbarSelectionEvent;
 import org.iplantc.de.notifications.client.gin.factory.NotificationViewFactory;
 import org.iplantc.de.notifications.client.model.NotificationMessageProperties;
 import org.iplantc.de.notifications.client.views.NotificationToolbarView;
 import org.iplantc.de.notifications.client.views.NotificationView;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -62,7 +65,9 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
                                                   NotificationSelectionEvent.NotificationSelectionEventHandler,
                                                   NotificationToolbarSelectionEvent.NotificationToolbarSelectionEventHandler,
                                                   NotificationToolbarDeleteClickedEvent.NotificationToolbarDeleteClickedEventHandler,
-                                                  NotificationToolbarDeleteAllClickedEvent.NotificationToolbarDeleteAllClickedEventHandler {
+                                                  NotificationToolbarDeleteAllClickedEvent.NotificationToolbarDeleteAllClickedEventHandler,
+                                                  NotificationToolbarMarkAsSeenClickedEvent.NotificationToolbarMarkAsSeenClickedEventHandler
+                                                 {
 
     private final class NotificationServiceCallback extends NotificationCallback {
         private final AsyncCallback<PagingLoadResult<NotificationMessage>> callback;
@@ -97,36 +102,16 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
             PagingLoadResult<NotificationMessage> callbackResult =
                     new PagingLoadResultBean<>(messages, total, loadConfig.getOffset());
             callback.onSuccess(callbackResult);
-
-            List<HasId> hasIds = Lists.newArrayList();
-            for (NotificationMessage nm : messages) {
-                hasIds.add(nm);
-            }
-            messageServiceFacade.markAsSeen(hasIds, new AsyncCallback<String>() {
-
-                @Override
-                public void onFailure(Throwable caught) {
-                    ErrorHandler.post(caught);
-                }
-
-                @Override
-                public void onSuccess(String result1) {
-                    JSONObject obj = jsonUtil.getObject(result1);
-                    int new_count = Integer.parseInt(jsonUtil.getString(obj, "count"));
-                    // fire update of the new unseen count;
-                    eventBus.fireEvent(new NotificationCountUpdateEvent(new_count));
-                }
-            });
-        }
+       }
     }
     private final ListStore<NotificationMessage> listStore;
     private final NotificationToolbarView toolbar;
     private final NotificationView view;
     private NotificationView.NotificationViewAppearance appearance;
     NotificationCategory currentCategory;
-    @Inject EventBus eventBus;
     @Inject MessageServiceFacade messageServiceFacade;
     @Inject JsonUtil jsonUtil;
+    @Inject EventBus eventBus;
 
     @Inject
     public NotificationPresenterImpl(final NotificationViewFactory viewFactory,
@@ -150,6 +135,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
         toolbar.addNotificationToolbarDeleteAllClickedEventHandler(this);
         toolbar.addNotificationToolbarDeleteClickedEventHandler(this);
         toolbar.addNotificationToolbarSelectionEventHandler(this);
+        toolbar.addNotificationToolbarMarkAsSeenClickedEventHandler(this);
     }
 
     ListStore<NotificationMessage> createListStore(NotificationMessageProperties messageProperties) {
@@ -209,9 +195,17 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
     public void onNotificationSelection(NotificationSelectionEvent event) {
         if (event.getNotifications() == null || event.getNotifications().size() == 0) {
             toolbar.setDeleteButtonEnabled(false);
+            toolbar.setMarkAsSeenButtonEnabled(false);
         } else {
             toolbar.setDeleteButtonEnabled(true);
-        }
+            for(NotificationMessage nm :event.getNotifications()) {
+                   if(nm.isSeen()) {
+                       toolbar.setMarkAsSeenButtonEnabled(false);
+                       return;
+                   }
+            }
+            toolbar.setMarkAsSeenButtonEnabled(true);
+      }
     }
 
     @Override
@@ -278,6 +272,48 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
     }
 
     @Override
+    public void onNotificationToolbarMarkAsSeenClicked(NotificationToolbarMarkAsSeenClickedEvent event) {
+        final List<NotificationMessage> notifications = view.getSelectedItems();
+        List<HasId> ids = new ArrayList<>();
+        //StringQuoter.create("max").assign(hasChild, "score_mode");
+        for (NotificationMessage n : notifications) {
+            ids.add(n);
+        }
+
+        messageServiceFacade.markAsSeen(ids, new AsyncCallback<String>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                IplantAnnouncer.getInstance()
+                               .schedule(new ErrorAnnouncementConfig(
+                                       appearance.notificationMarkAsSeenFail()));
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                IplantAnnouncer.getInstance()
+                               .schedule(new SuccessAnnouncementConfig(appearance.notificationMarkAsSeenSuccess()));
+                for (NotificationMessage nm : notifications) {
+                    nm.setSeen(true);
+                    view.updateStore(nm);
+                }
+
+                fireCountUpdateEvent(result);
+
+            }
+        });
+    }
+
+     protected void fireCountUpdateEvent(String result) {
+         final String asString =
+                 StringQuoter.split(result)
+                             .get("count")
+                             .asString();
+         final int count = Integer.parseInt(asString);
+         eventBus.fireEvent(new NotificationCountUpdateEvent(
+                 count));
+     }
+
+                                                     @Override
     public void onNotificationToolbarSelection(NotificationToolbarSelectionEvent event) {
         filterBy(event.getNotificationCategory());
     }
@@ -290,38 +326,34 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
     }
 
     @Override
+    public void markAsRead(NotificationMessage nm) {
+        nm.setSeen(true);
+        view.updateStore(nm);
+    }
+
+    @Override
     public NotificationCategory getCurrentCategory() {
         return currentCategory;
     }
 
     private PagingLoader<FilterPagingLoadConfig, PagingLoadResult<NotificationMessage>> initProxyLoader() {
-
-        RpcProxy<FilterPagingLoadConfig, PagingLoadResult<NotificationMessage>> proxy = new RpcProxy<FilterPagingLoadConfig, PagingLoadResult<NotificationMessage>>() {
+     RpcProxy<FilterPagingLoadConfig, PagingLoadResult<NotificationMessage>> proxy = new RpcProxy<FilterPagingLoadConfig, PagingLoadResult<NotificationMessage>>() {
             @Override
             public void load(final FilterPagingLoadConfig loadConfig,
                              final AsyncCallback<PagingLoadResult<NotificationMessage>> callback) {
-                // for 'NEW' filter always set offset to 0
-                List<FilterConfig> fc_list = loadConfig.getFilters();
-                if (fc_list != null) {
-                    String cat = (fc_list.get(0).getField() != null ? fc_list.get(0).getField()
-                                                                             .toLowerCase() : null);
-                    if ((!Strings.isNullOrEmpty(cat))) {
-                        if (cat.equalsIgnoreCase(NotificationCategory.NEW.toString())) {
-                            loadConfig.setOffset(0);
-                        }
-                    }
-                }
-                messageServiceFacade.getNotifications(loadConfig.getLimit(),
-                                                      loadConfig.getOffset(),
-                                                      (loadConfig.getFilters().get(0).getField()) == null ? ""
-                                                          : loadConfig.getFilters().get(0).getField().toLowerCase(),
-                                                      loadConfig.getSortInfo().get(0).getSortDir().toString(),
-                                                      new NotificationServiceCallback(loadConfig, callback));
+        messageServiceFacade.getNotifications(loadConfig.getLimit(),
+                                              loadConfig.getOffset(),
+                                              (loadConfig.getFilters().get(0).getField()) == null ?
+                                              "" :
+                                              loadConfig.getFilters().get(0).getField().toLowerCase(),
+                                              loadConfig.getSortInfo().get(0).getSortDir().toString(),
+                                              new NotificationServiceCallback(loadConfig, callback));
             }
 
-        };
+     };
 
-        final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<NotificationMessage>> loader = new PagingLoader<>(proxy);
+        final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<NotificationMessage>> loader =
+                new PagingLoader<>(proxy);
         loader.setRemoteSort(true);
         loader.addLoadHandler(new LoadResultListStoreBinding<FilterPagingLoadConfig, NotificationMessage, PagingLoadResult<NotificationMessage>>(
                 listStore));

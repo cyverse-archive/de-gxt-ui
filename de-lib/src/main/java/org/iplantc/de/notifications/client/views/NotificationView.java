@@ -17,6 +17,7 @@ import java.util.List;
 public interface NotificationView extends IsWidget,
                                           NotificationGridRefreshEvent.HasNotificationGridRefreshEventHandlers,
                                           NotificationSelectionEvent.HasNotificationSelectionEventHandlers {
+
     interface NotificationViewAppearance {
 
         String notifications();
@@ -24,6 +25,10 @@ public interface NotificationView extends IsWidget,
         String refresh();
 
         String notificationDeleteFail();
+
+        String notificationMarkAsSeenFail();
+
+        String notificationMarkAsSeenSuccess();
 
         String category();
 
@@ -57,6 +62,8 @@ public interface NotificationView extends IsWidget,
         void setRefreshButton(TextButton refreshBtn);
 
         NotificationCategory getCurrentCategory();
+
+        public void markAsRead(NotificationMessage nm);
     }
 
     /**
@@ -91,4 +98,5 @@ public interface NotificationView extends IsWidget,
 
     public TextButton getRefreshButton();
 
+    public void updateStore(NotificationMessage nm);
 }

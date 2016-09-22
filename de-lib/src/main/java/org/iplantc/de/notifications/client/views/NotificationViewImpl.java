@@ -178,6 +178,13 @@ public class NotificationViewImpl extends Composite implements NotificationView 
         return toolBar.getRefreshButton();
     }
 
+    @Override
+    public void updateStore(NotificationMessage nm) {
+        if(listStore.findModel(nm)!=null) {
+            listStore.update(nm);
+        }
+    }
+
 
     @UiFactory
     ColumnModel<NotificationMessage> createColumnModel() {

@@ -14,6 +14,9 @@
 
 			<form:SimpleComboBox debugId="idCboFilter" ui:field="cboFilter"
 				allowBlank="true" forceSelection="true" triggerAction="ALL" />
+			<button:TextButton debugId="idBtnMarkAsSeenSelect" icon="{icons.tick}" text="{strings.markAsSeen}"
+							   ui:field="btnSeen" enabled="false" />
+			<toolbar:SeparatorToolItem></toolbar:SeparatorToolItem>
 			<button:TextButton debugId="idBtnDeleteSelect" icon="{icons.deleteIcon}" text="{strings.deleteSelected}"
 				ui:field="btnDelete" enabled="false" />
 				<toolbar:FillToolItem></toolbar:FillToolItem>
