@@ -19,7 +19,11 @@ import org.iplantc.de.commons.client.views.window.configs.AnalysisWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConfig;
+import org.iplantc.de.desktop.client.presenter.util.NotificationUtil;
+import org.iplantc.de.notifications.client.events.NotificationClickedEvent;
+import org.iplantc.de.notifications.client.events.NotificationCountUpdateEvent;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
+import org.iplantc.de.notifications.client.views.NotificationView;
 import org.iplantc.de.notifications.client.views.dialogs.RequestHistoryDialog;
 
 import com.google.common.collect.Lists;
@@ -74,10 +78,13 @@ public class NotificationMessageCell extends AbstractCell<NotificationMessage> {
         if ("click".equals(event.getType())) { //$NON-NLS-1$
             if (value.getContext() != null
                 && value.getCategory() != null) {
-
                 NotificationCategory category = value.getCategory();
                 String context1 = value.getContext();
 
+                //mark this message as seen
+                EventBus.getInstance().fireEvent(new NotificationClickedEvent(value));
+                value.setSeen(true);
+                valueUpdater.update(value);
                 switch (category) {
 
                     case APPS:

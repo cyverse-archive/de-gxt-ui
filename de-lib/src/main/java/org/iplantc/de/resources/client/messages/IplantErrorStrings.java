@@ -781,4 +781,5 @@ public interface IplantErrorStrings extends com.google.gwt.i18n.client.Messages,
 
     String tagRetrieveError();
 
+    String markAsSeenFailed();
 }
