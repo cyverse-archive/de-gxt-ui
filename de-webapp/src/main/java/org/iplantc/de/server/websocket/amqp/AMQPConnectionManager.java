@@ -14,38 +14,25 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * Created by sriram on 4/7/16.
+ * @author <a href="mailto:sriram@cyverse.org">Sriram Srinivasan</a>
+ * @author <a href="mailto:jstroot@cyverse.org">Jonathan Strootman</a>
  */
 public class AMQPConnectionManager {
 
     public static AMQPConnectionManager instance;
 
     private final Logger LOG = LoggerFactory.getLogger(AMQPConnectionManager.class);
-    private final String vhost;
 
-    private String amqpHost;
-
-    private String amqpPort;
-
-    private String user;
-
-    private String password;
+    private String amqpUri;
 
     Properties deprops = PropertiesUtil.getDEProperties();
     private Connection connection;
 
     private AMQPConnectionManager() {
-        amqpHost = deprops.getProperty("org.iplantc.discoveryenvironment.notification.amqp.host");
-        amqpPort = deprops.getProperty("org.iplantc.discoveryenvironment.notification.amqp.port");
-        user = deprops.getProperty("org.iplantc.discoveryenvironment.notification.amqp.user");
-        vhost = deprops.getProperty("org.iplantc.discoveryenvironment.notification.amqp.exchange.vhost");
-        password = deprops.getProperty("org.iplantc.discoveryenvironment.notification.amqp.password");
+        amqpUri = deprops.getProperty("org.iplantc.discoveryenvironment.notification.amqp.uri");
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost(amqpHost);
-        factory.setPort(Integer.parseInt(amqpPort));
-        factory.setUsername(user);
-        factory.setVirtualHost(vhost);
-        factory.setPassword(password);
         try {
+            factory.setUri(amqpUri);
             connection = factory.newConnection();
             LOG.info("amqp connection created!");
         } catch (IOException e) {
