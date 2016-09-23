@@ -1,5 +1,7 @@
 package org.iplantc.de.apps.client.presenter.hierarchies;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
@@ -19,6 +21,7 @@ import org.iplantc.de.apps.client.OntologyHierarchiesView;
 import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
+import org.iplantc.de.apps.client.events.SelectedHierarchyNotFound;
 import org.iplantc.de.apps.client.events.selection.AppFavoriteSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppInfoSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
@@ -104,6 +107,8 @@ public class OntologyHierarchiesPresenterImplTest {
     @Mock List<AppCategory> appCategoryListMock;
     @Mock List<OntologyHierarchy> unclassifiedHierarchiesMock;
     @Mock OntologyHierarchy unclassifiedMock;
+    @Mock List<Tree<OntologyHierarchy, String>> treesMock;
+    @Mock Tree.TreeNode<OntologyHierarchy> treeNodeMock;
 
     @Captor ArgumentCaptor<AsyncCallback<List<OntologyHierarchy>>> hierarchyListCallback;
     @Captor ArgumentCaptor<AsyncCallback<OntologyHierarchy>> hierarchyCallback;
@@ -151,6 +156,8 @@ public class OntologyHierarchiesPresenterImplTest {
         when(unclassifiedHierarchiesMock.size()).thenReturn(2);
         when(unclassifiedHierarchiesMock.iterator()).thenReturn(hierarchyListIterator);
         when(ontologyUtilMock.addUnclassifiedChild(hierarchyMock)).thenReturn(unclassifiedMock);
+        when(hierarchyTreeMock.findNode(hierarchyMock)).thenReturn(treeNodeMock);
+        when(treeNodeMock.getModel()).thenReturn(hierarchyMock);
 
         uut = new OntologyHierarchiesPresenterImpl(factoryMock,
                                                    ontologyServiceMock,
@@ -175,6 +182,7 @@ public class OntologyHierarchiesPresenterImplTest {
         uut.searchRegexPattern = "test";
         uut.viewTabPanel = tabPanelMock;
         uut.unclassifiedHierarchies = unclassifiedHierarchiesMock;
+        uut.trees = treesMock;
     }
 
 
@@ -186,9 +194,11 @@ public class OntologyHierarchiesPresenterImplTest {
                                                    ontologyServiceMock,
                                                    eventBusMock,
                                                    appearanceMock) {
+
             @Override
-            void createViewTabs(List<OntologyHierarchy> results) {
+            void createViewTabs(OntologyHierarchy selectedHierarchy, List<OntologyHierarchy> results) {
             }
+
         };
         uut.ontologyUtil = ontologyUtilMock;
         uut.announcer = announcerMock;
@@ -198,7 +208,7 @@ public class OntologyHierarchiesPresenterImplTest {
         uut.iriToHierarchyMap = iriToHierarchyMapMock;
 
         /** CALL METHOD UNDER TEST **/
-        uut.go(tabPanelMock);
+        uut.go(hierarchyMock, tabPanelMock);
         verify(ontologyServiceMock).getRootHierarchies(hierarchyListCallback.capture());
 
         hierarchyListCallback.getValue().onSuccess(hierarchyListMock);
@@ -215,7 +225,7 @@ public class OntologyHierarchiesPresenterImplTest {
                                                    eventBusMock,
                                                    appearanceMock) {
             @Override
-            void createViewTabs(List<OntologyHierarchy> results) {
+            void createViewTabs(OntologyHierarchy selectedHierarchy, List<OntologyHierarchy> results) {
             }
         };
         uut.ontologyUtil = ontologyUtilMock;
@@ -226,7 +236,7 @@ public class OntologyHierarchiesPresenterImplTest {
         uut.iriToHierarchyMap = iriToHierarchyMapMock;
 
         /** CALL METHOD UNDER TEST **/
-        uut.go(tabPanelMock);
+        uut.go(hierarchyMock, tabPanelMock);
         verify(ontologyServiceMock).getRootHierarchies(hierarchyListCallback.capture());
 
         hierarchyListCallback.getValue().onSuccess(hierarchyListMock);
@@ -339,11 +349,13 @@ public class OntologyHierarchiesPresenterImplTest {
     @Test
     public void testCreateViewTabs() throws Exception {
         when(hierarchyListMock.iterator()).thenReturn(hierarchyListIterator);
+        OntologyHierarchy selectedHierarchy = mock(OntologyHierarchy.class);
 
         OntologyHierarchiesPresenterImpl spy = spy(uut);
 
         /** CALL METHOD UNDER TEST **/
-        spy.createViewTabs(hierarchyListMock);
+        spy.createViewTabs(selectedHierarchy, hierarchyListMock);
+        verify(treesMock).add(hierarchyTreeMock);
         verify(viewMock).addOntologyHierarchySelectionChangedEventHandler(spy);
         verify(tabPanelMock).insert(eq(hierarchyTreeMock),
                                     anyInt(),
@@ -452,11 +464,12 @@ public class OntologyHierarchiesPresenterImplTest {
     @Test
     public void testGetFilteredHierarchies() {
         when(ontologyUtilMock.convertHierarchyToAvu(hierarchyMock)).thenReturn(avuMock);
+        OntologyHierarchy selectedHierarchy = mock(OntologyHierarchy.class);
 
         OntologyHierarchiesPresenterImpl spy = spy(uut);
 
         /*** CALL METHOD UNDER TEST ***/
-        spy.getFilteredHierarchies(hierarchyMock, hierarchyTreeMock);
+        spy.getFilteredHierarchies(hierarchyMock, selectedHierarchy, hierarchyTreeMock, 2);
         verify(ontologyServiceMock).getFilteredHierarchies(anyString(), eq(avuMock), hierarchyCallback.capture());
 
         hierarchyCallback.getValue().onSuccess(hierarchyMock);
@@ -465,5 +478,60 @@ public class OntologyHierarchiesPresenterImplTest {
         verify(ontologyUtilMock).getOrCreateHierarchyPathTag(hierarchyMock);
         verify(spy).addHierarchies(eq(hierarchyTreeStoreMock), isNull(OntologyHierarchy.class), eq(hierarchyListMock));
         verify(hierarchyTreeMock).unmask();
+    }
+
+    @Test
+    public void testSelectDesiredHierarchy_notFoundOnLastCallback() {
+        uut.desiredHierarchyFound = false;
+        OntologyHierarchy selectedHierarchyMock = mock(OntologyHierarchy.class);
+
+        OntologyHierarchiesPresenterImpl spy = spy(uut);
+
+        /*** CALL METHOD UNDER TEST ***/
+        spy.selectDesiredHierarchy(hierarchyTreeMock, selectedHierarchyMock, true);
+        verify(spy).doSelectHierarchy(hierarchyTreeMock, selectedHierarchyMock);
+        verify(spy).fireEvent(isA(SelectedHierarchyNotFound.class));
+    }
+
+    @Test
+    public void testSelectDesiredHierarchy_notFoundOnAnyCallback() {
+        uut.desiredHierarchyFound = false;
+        OntologyHierarchy selectedHierarchyMock = mock(OntologyHierarchy.class);
+
+        OntologyHierarchiesPresenterImpl spy = spy(uut);
+
+        /*** CALL METHOD UNDER TEST ***/
+        spy.selectDesiredHierarchy(hierarchyTreeMock, selectedHierarchyMock, false);
+        verify(spy).doSelectHierarchy(hierarchyTreeMock, selectedHierarchyMock);
+        verify(spy, times(0)).fireEvent(isA(SelectedHierarchyNotFound.class));
+    }
+
+    @Test
+    public void testSelectDesiredHierarchy_foundOnAnyCallback() {
+        uut.desiredHierarchyFound = true;
+        OntologyHierarchy selectedHierarchyMock = mock(OntologyHierarchy.class);
+
+        OntologyHierarchiesPresenterImpl spy = spy(uut);
+
+        /*** CALL METHOD UNDER TEST ***/
+        spy.selectDesiredHierarchy(hierarchyTreeMock, selectedHierarchyMock, false);
+        verify(spy, times(0)).doSelectHierarchy(hierarchyTreeMock, selectedHierarchyMock);
+    }
+
+    @Test
+    public void testDoSelectHierarchy_hierarchyNotFound() {
+        OntologyHierarchy selectedHierarchyMock = mock(OntologyHierarchy.class);
+        OntologyHierarchiesPresenterImpl spy = spy(uut);
+
+        /*** CALL METHOD UNDER TEST ***/
+        assertFalse(spy.doSelectHierarchy(hierarchyTreeMock, selectedHierarchyMock));
+    }
+
+    @Test
+    public void testDoSelectHierarchy_hierarchyFound() {
+        OntologyHierarchiesPresenterImpl spy = spy(uut);
+
+        /*** CALL METHOD UNDER TEST ***/
+        assertTrue(spy.doSelectHierarchy(hierarchyTreeMock, hierarchyMock));
     }
 }
