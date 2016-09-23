@@ -192,7 +192,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     public void rateApp(final App app,
                         final int rating,
                         final DECallback<AppFeedback> callback) {
-        String address = APPS + "/" + app.getId() + "/rating";
+        String address = APPS + "/" + app.getSystemId() + "/" + app.getId() + "/rating";
 
         Splittable payload = StringQuoter.createSplittable();
         StringQuoter.create(rating).assign(payload, "rating");
@@ -208,20 +208,28 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
                     sendRatingEmail(appName, app.getIntegratorEmail());
                 }
 
-                final AppFeedback appFeedback = app.getRating();
-                appFeedback.setUserRating(0);
-                appFeedback.setCommentId(0);
-                appFeedback.setUserRating(rating);
-                if(Strings.isNullOrEmpty(object)){
-                    appFeedback.setAverageRating(0);
-                } else {
-                    final Splittable split = StringQuoter.split(object);
-                    appFeedback.setAverageRating(split.get("average").asNumber());
-                    appFeedback.setTotal((int)split.get("total").asNumber());
-                }
-                return appFeedback;
+                return updateAppFeedback(object, app, rating);
             }
         });
+    }
+
+    private AppFeedback updateAppFeedback(String object, App app, Integer rating) {
+        final AppFeedback appFeedback = app.getRating();
+        appFeedback.setUserRating(0);
+        appFeedback.setCommentId(0);
+
+        if (rating != null) {
+            appFeedback.setUserRating(rating);
+        }
+
+        if(Strings.isNullOrEmpty(object)){
+            appFeedback.setAverageRating(0);
+        } else {
+            final Splittable split = StringQuoter.split(object);
+            appFeedback.setAverageRating(split.get("average").asNumber());
+            appFeedback.setTotal((int)split.get("total").asNumber());
+        }
+        return appFeedback;
     }
 
     private void sendRatingEmail(final String appName, final String emailAddress) {
@@ -244,7 +252,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     @Override
     public void deleteRating(final App app, final DECallback<AppFeedback> callback) {
         // call rating service, then delete comment from wiki page
-        String address = APPS + "/" + app.getId() + "/rating";
+        String address = APPS + "/" + app.getSystemId() + "/" + app.getId() + "/rating";
 
         // KLUDGE Have to send empty JSON body with POST request
         Splittable body = StringQuoter.createSplittable();
@@ -252,17 +260,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
         deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, AppFeedback>(callback) {
             @Override
             protected AppFeedback convertFrom(String object) {
-                final AppFeedback appFeedback = app.getRating();
-                appFeedback.setUserRating(0);
-                appFeedback.setCommentId(0);
-                if(Strings.isNullOrEmpty(object)){
-                    appFeedback.setAverageRating(0);
-                } else {
-                    final Splittable split = StringQuoter.split(object);
-                    appFeedback.setAverageRating(split.get("average").asNumber());
-                    appFeedback.setTotal((int)split.get("total").asNumber());
-                }
-                return appFeedback;
+                return updateAppFeedback(object, app, null);
             }
         });
     }
