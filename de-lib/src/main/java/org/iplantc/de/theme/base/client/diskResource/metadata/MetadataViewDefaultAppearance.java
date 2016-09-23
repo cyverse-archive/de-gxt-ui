@@ -227,4 +227,14 @@ public class MetadataViewDefaultAppearance implements MetadataView.Appearance {
     public String importMdTooltip() {
         return displayStrings.importMdTooltip();
     }
+
+    @Override
+    public String metadataLink() {
+        return displayStrings.metadataLink();
+    }
+
+    @Override
+    public String readMore() {
+        return displayStrings.readMore();
+    }
 }

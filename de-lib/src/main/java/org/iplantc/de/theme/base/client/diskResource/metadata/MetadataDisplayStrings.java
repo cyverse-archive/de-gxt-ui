@@ -48,4 +48,8 @@ public interface MetadataDisplayStrings extends Messages{
 	String importMdMsg();
 
 	String importMdTooltip();
+
+	String metadataLink();
+
+	String readMore();
 }

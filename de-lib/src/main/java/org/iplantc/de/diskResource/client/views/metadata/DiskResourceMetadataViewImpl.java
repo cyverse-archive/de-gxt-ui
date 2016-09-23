@@ -1,6 +1,7 @@
 package org.iplantc.de.diskResource.client.views.metadata;
 
 import org.iplantc.de.client.models.avu.Avu;
+import org.iplantc.de.commons.client.widgets.IPlantAnchor;
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.model.DiskResourceMetadataProperties;
 import org.iplantc.de.diskResource.client.presenters.metadata.MetadataPresenterImpl;
@@ -10,12 +11,15 @@ import com.google.common.collect.Lists;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
@@ -140,6 +144,8 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
     ColumnModel<Avu> ucm;
     @UiField(provided = true)
     ColumnModel<Avu> acm;
+    @UiField
+    IPlantAnchor infoLink;
 
 
     private HashSet<Avu> selectedSet;
@@ -171,6 +177,12 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
         additionalMdgrid.setSelectionModel(addChxBoxModel);
         additionalMdgrid.getSelectionModel()
                         .addSelectionChangedHandler(new DiskResourceAdditionalMetadataSelectionChangedHandler());
+        infoLink.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Window.open(appearance.metadataLink(),"","_blank");
+            }
+        });
     }
 
     @Override
