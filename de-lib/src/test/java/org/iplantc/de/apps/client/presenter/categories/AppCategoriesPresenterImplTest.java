@@ -1,13 +1,16 @@
 package org.iplantc.de.apps.client.presenter.categories;
 
 import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import org.iplantc.de.apps.client.AppCategoriesView;
@@ -50,6 +53,7 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -71,6 +75,11 @@ public class AppCategoriesPresenterImplTest {
     @Mock Tree<AppCategory, String> treeMock;
     @Mock TreeSelectionModel<AppCategory> selectionModelMock;
     @Mock DETabPanel tabPanelMock;
+    @Mock List<Tree<AppCategory, String>> treesMock;
+    @Mock Iterator<Tree<AppCategory, String>> treesIteratorMock;
+    @Mock AppCategory categoryMock;
+    @Mock AppCategory secondCategoryMock;
+    @Mock Tree.TreeNode<AppCategory> treeNodeMock;
 
     // Event mocks
     @Mock StoreAddEvent<App> mockAddEvent;
@@ -99,6 +108,16 @@ public class AppCategoriesPresenterImplTest {
         when(treeMock.getSelectionModel()).thenReturn(selectionModelMock);
         when(treeStoreMock.getRootItems()).thenReturn(Lists.newArrayList(mock(AppCategory.class),
                                                                          mock(AppCategory.class)));
+        when(treeStoreMock.findModelWithKey("id")).thenReturn(categoryMock);
+        when(treesMock.size()).thenReturn(2);
+        when(treesMock.iterator()).thenReturn(treesIteratorMock);
+        when(treesIteratorMock.hasNext()).thenReturn(true, true, false);
+        when(treesIteratorMock.next()).thenReturn(treeMock, treeMock);
+        when(categoryMock.getId()).thenReturn("id");
+        when(treeMock.findNode(categoryMock)).thenReturn(treeNodeMock);
+        when(treeMock.findNode(secondCategoryMock)).thenReturn(null);
+        when(secondCategoryMock.getId()).thenReturn("id2");
+
         uut = new AppCategoriesPresenterImpl(propsMock,
                                              jsonUtilMock,
                                              eventBusMock,
@@ -108,6 +127,8 @@ public class AppCategoriesPresenterImplTest {
         uut.appService = appServiceMock;
         uut.workspaceView = workspaceViewMock;
         uut.hpcView = hpcViewMock;
+        uut.trees = treesMock;
+        uut.viewTabPanel = tabPanelMock;
     }
 
     @Test public void testConstructorEventHandlerWiring() {
@@ -146,7 +167,7 @@ public class AppCategoriesPresenterImplTest {
         /*** CALL METHOD UNDER TEST ***/
         uut.getSelectedAppCategory();
 
-        verify(selectionModelMock).getSelectedItem();
+        verify(selectionModelMock, times(2)).getSelectedItem();
         verifyNoMoreInteractions(selectionModelMock);
     }
 
@@ -203,9 +224,59 @@ public class AppCategoriesPresenterImplTest {
         verify(appUserServiceMock).copyWorkflow(eq(mockApp.getId()), Matchers.<AsyncCallback<String>>any());
     }
 
+    @Test
+    public void testSelectDesiredCategory_selectDefault() {
+        AppCategoriesPresenterImpl spy = spy(uut);
+
+        /*** CALL METHOD UNDER TEST ***/
+        spy.selectDesiredCategory(null, true);
+        verify(spy).selectDefaultCategory();
+    }
+
+    @Test
+    public void testSelectDesiredCategory_noCategoryNoDefault() {
+
+        /*** CALL METHOD UNDER TEST ***/
+        uut.selectDesiredCategory(null, false);
+        verifyZeroInteractions(treesMock);
+    }
+
+    @Test
+    public void testSelectDesiredCategory_selectCategory() {
+        AppCategoriesPresenterImpl spy = spy(uut);
+
+        /*** CALL METHOD UNDER TEST ***/
+        spy.selectDesiredCategory(categoryMock, false);
+        verify(treeStoreMock).findModelWithKey(eq("id"));
+        verify(spy).doSelectCategory(treeMock, categoryMock);
+        verify(spy, times(0)).selectDefaultCategory();
+    }
+
+    @Test
+    public void testSelectDesiredCategory_selectCategoryNotFound() {
+        AppCategoriesPresenterImpl spy = spy(uut);
+
+        /*** CALL METHOD UNDER TEST ***/
+        spy.selectDesiredCategory(secondCategoryMock, false);
+        verify(treeStoreMock, times(2)).findModelWithKey(eq("id2"));
+        verify(spy, times(2)).doSelectCategory(treeMock, null);
+        verify(spy).selectDefaultCategory();
+    }
+
+    @Test
+    public void testSelectDefaultCategory() {
+
+        /*** CALL METHOD UNDER TEST ***/
+        uut.selectDefaultCategory();
+        verify(tabPanelMock).setActiveWidget(treeMock);
+        verify(selectionModelMock).select(isA(AppCategory.class), eq(true));
+    }
+
 
     private void verifyConstructor() {
         verify(viewFactoryMock, times(2)).create(Matchers.<TreeStore<AppCategory>> any(), eq(uut));
+        verify(workspaceViewMock).getTree();
+        verify(hpcViewMock).getTree();
         verify(eventBusMock, times(2)).addHandler(Matchers.<GwtEvent.Type<AppCategoriesPresenterImpl>>any(), eq(uut));
     }
 

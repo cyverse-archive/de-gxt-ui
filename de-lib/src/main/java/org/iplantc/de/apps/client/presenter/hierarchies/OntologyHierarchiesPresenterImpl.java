@@ -39,6 +39,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.inject.client.AsyncProvider;
 import com.google.gwt.query.client.Function;
 import com.google.gwt.query.client.GQuery;
+import com.google.gwt.query.client.Promise;
 import com.google.gwt.query.client.plugins.deferred.PromiseRPC;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
@@ -109,7 +110,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
         }
     }
 
-    class FilteredHierarchyCallback extends PromiseRPC<OntologyHierarchy> {
+    public class FilteredHierarchyCallback extends PromiseRPC<OntologyHierarchy> {
         private final Tree<OntologyHierarchy, String> tree;
         private final OntologyHierarchy root;
 
@@ -259,8 +260,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
 
     void populateViewTabs(final OntologyHierarchy selectedHierarchy) {
         //Create all the callbacks I'll need
-        List<FilteredHierarchyCallback> childCallbacks = Lists.newArrayList();
-
+        List<FilteredHierarchyCallback> childCallbacks = createFilteredHierarchyList();
         for (OntologyHierarchiesView view: views) {
 
             FilteredHierarchyCallback callback =
@@ -273,7 +273,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
                                                  callback);
         }
 
-        GQuery.when(childCallbacks.toArray()).done(new Function() {
+        whenCallbackPromises(childCallbacks).done(new Function() {
             public void f() {
                 for (OntologyHierarchiesView view : views) {
                     selectDesiredHierarchy(view.getTree(), selectedHierarchy);
@@ -453,5 +453,13 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
         if (handlerManager != null) {
             handlerManager.fireEvent(event);
         }
+    }
+
+    List<FilteredHierarchyCallback> createFilteredHierarchyList() {
+        return Lists.newArrayList();
+    }
+
+    Promise whenCallbackPromises(List<FilteredHierarchyCallback> childCallbacks) {
+        return GQuery.when(childCallbacks.toArray());
     }
 }
