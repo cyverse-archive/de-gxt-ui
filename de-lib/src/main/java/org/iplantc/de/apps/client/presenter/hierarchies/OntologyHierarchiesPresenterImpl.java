@@ -261,7 +261,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
 
     void populateViewTabs(final OntologyHierarchy selectedHierarchy) {
         //Create all the callbacks I'll need
-        List<FilteredHierarchyCallback> childCallbacks = Lists.newArrayList();
+        List<FilteredHierarchyCallback> childCallbacks = createFilteredHierarchyList();
         for (OntologyHierarchiesView view: views) {
             FilteredHierarchyCallback callback =
                     new FilteredHierarchyCallback(view.getTree(), view.getRoot());
@@ -276,7 +276,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
         //Create a parent callback that will run handleSuccess when all the callbacks complete
         new ParentFilteredHierarchyCallback(childCallbacks) {
             @Override
-            protected void handleSuccess() {
+            public void handleSuccess() {
                 for (OntologyHierarchiesView view : views) {
                     selectDesiredHierarchy(view.getTree(), selectedHierarchy);
                 }
@@ -455,5 +455,9 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
         if (handlerManager != null) {
             handlerManager.fireEvent(event);
         }
+    }
+
+    List<FilteredHierarchyCallback> createFilteredHierarchyList() {
+        return Lists.newArrayList();
     }
 }

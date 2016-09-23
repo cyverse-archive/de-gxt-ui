@@ -17,7 +17,7 @@ public abstract class ParentFilteredHierarchyCallback {
 
     public ParentFilteredHierarchyCallback(List<FilteredHierarchyCallback> childCallbacks) {
         if (childCallbacks == null || childCallbacks.size() == 0) {
-            throw new RuntimeException("No callbacks passed to parent");
+            return;
         }
 
         this.childCallbacks = childCallbacks;
@@ -35,5 +35,5 @@ public abstract class ParentFilteredHierarchyCallback {
         }
     }
 
-    protected abstract void handleSuccess();
+    public abstract void handleSuccess();
 }
