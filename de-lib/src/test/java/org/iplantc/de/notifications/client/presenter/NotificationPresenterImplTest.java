@@ -10,6 +10,8 @@ import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.services.MessageServiceFacade;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.notifications.client.events.DeleteNotificationsUpdateEvent;
 import org.iplantc.de.notifications.client.events.NotificationCountUpdateEvent;
 import org.iplantc.de.notifications.client.events.NotificationGridRefreshEvent;
@@ -58,6 +60,8 @@ public class NotificationPresenterImplTest {
     @Mock List<NotificationMessage> listMock;
     @Mock NotificationMessage notificationMessageMock;
     @Mock Iterator<NotificationMessage> iteratorMock;
+    @Mock
+    IplantAnnouncer iplantAnnouncerMock;
 
     @Captor ArgumentCaptor<AsyncCallback<String>> asyncCallbackStringCaptor;
     @Mock NotificationCountUpdateEvent mockCountUpdateEvent;
@@ -88,6 +92,7 @@ public class NotificationPresenterImplTest {
         uut.currentCategory = currentCategoryMock;
         uut.messageServiceFacade = messageServiceFacadeMock;
         uut.eventBus = eventBusMock;
+        uut.announcer = iplantAnnouncerMock;
     }
 
     @Test
@@ -200,12 +205,14 @@ public class NotificationPresenterImplTest {
         when(iteratorMock.next()).thenReturn(notificationMessageMock);
         when(listMock.iterator()).thenReturn(iteratorMock);
         when(viewMock.getSelectedItems()).thenReturn(listMock);
+        when(appearanceMock.notificationMarkAsSeenSuccess()).thenReturn("Notifications marked as seen!");
 
         uut.onNotificationToolbarMarkAsSeenClicked(eventMock);
 
         verify(messageServiceFacadeMock).markAsSeen(isA(List.class), asyncCallbackStringCaptor.capture());
 
         asyncCallbackStringCaptor.getValue().onSuccess("result");
+        verify(iplantAnnouncerMock).schedule(isA(SuccessAnnouncementConfig.class));
         verify(eventBusMock).fireEvent(isA(NotificationCountUpdateEvent.class));
 
    }

@@ -1,7 +1,12 @@
 package org.iplantc.de.desktop.client.presenter;
 
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.iplantc.de.client.events.EventBus;
-import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.notifications.NotificationList;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
@@ -12,6 +17,7 @@ import org.iplantc.de.desktop.client.presenter.util.MessagePoller;
 import org.iplantc.de.desktop.client.views.widgets.UnseenNotificationsView;
 import org.iplantc.de.notifications.client.utils.NotifyInfo;
 import org.iplantc.de.resources.client.messages.IplantNewUserTourStrings;
+import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.systemMessages.client.view.NewMessageView;
 
 import com.google.common.collect.Lists;
@@ -25,8 +31,6 @@ import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.WindowManager;
 
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +38,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+
+import java.util.Arrays;
 
 /**
  * @author jstroot
@@ -114,7 +120,8 @@ public class DesktopNotifications_PresenterTest {
         uut.onNotificationSelected(mockMsg);
 
         when(viewMock.getNotificationStore()).thenReturn(msgStoreMock);
-        when(msgStoreMock.getAll()).thenReturn(Lists.<NotificationMessage>newArrayList());
+        when(msgStoreMock.getAll()).thenReturn(Arrays.asList(mockMsg));
+        when(msgStoreMock.findModel(mockMsg)).thenReturn(mockMsg);
         verify(uut.messageServiceFacade).markAsSeen(eq(mockMsg), stringAsyncCaptor.capture());
         Splittable parent = StringQuoter.createSplittable();
         StringQuoter.create("1").assign(parent, "count");

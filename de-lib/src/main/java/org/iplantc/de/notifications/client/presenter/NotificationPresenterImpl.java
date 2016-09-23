@@ -112,6 +112,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
     @Inject MessageServiceFacade messageServiceFacade;
     @Inject JsonUtil jsonUtil;
     @Inject EventBus eventBus;
+    @Inject IplantAnnouncer announcer;
 
     @Inject
     public NotificationPresenterImpl(final NotificationViewFactory viewFactory,
@@ -283,15 +284,13 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
         messageServiceFacade.markAsSeen(ids, new AsyncCallback<String>() {
             @Override
             public void onFailure(Throwable caught) {
-                IplantAnnouncer.getInstance()
-                               .schedule(new ErrorAnnouncementConfig(
+               announcer.schedule(new ErrorAnnouncementConfig(
                                        appearance.notificationMarkAsSeenFail()));
             }
 
             @Override
             public void onSuccess(String result) {
-                IplantAnnouncer.getInstance()
-                               .schedule(new SuccessAnnouncementConfig(appearance.notificationMarkAsSeenSuccess()));
+               announcer.schedule(new SuccessAnnouncementConfig(appearance.notificationMarkAsSeenSuccess()));
                 for (NotificationMessage nm : notifications) {
                     nm.setSeen(true);
                     view.updateStore(nm);

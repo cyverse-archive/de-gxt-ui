@@ -42,12 +42,12 @@ public class NotificationViewDefaultAppearance implements NotificationView.Notif
 
     @Override
     public String notificationMarkAsSeenFail() {
-        return iplantDisplayStrings.markAsSeenSuccess();
+        return iplantErrorStrings.markAsSeenFailed();
     }
 
     @Override
     public String notificationMarkAsSeenSuccess() {
-        return iplantErrorStrings.markAsSeenFailed();
+        return iplantDisplayStrings.markAsSeenSuccess();
     }
 
     @Override
