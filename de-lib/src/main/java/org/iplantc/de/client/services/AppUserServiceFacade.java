@@ -33,10 +33,10 @@ public interface AppUserServiceFacade extends AppServiceFacade, AppSearchFacade 
      * }
      * </pre>
      * 
-     * @param appId unique identifier of the app.
+     * @param app the app identifier information.
      * @param callback called when the RPC call is complete.
      */
-    void getDataObjectsForApp(String appId, DECallback<String> callback);
+    void getDataObjectsForApp(HasQualifiedId app, DECallback<String> callback);
 
     /**
      * Publishes a workflow / pipeline to user's workspace

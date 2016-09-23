@@ -144,8 +144,8 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void getDataObjectsForApp(String appId, DECallback<String> callback) {
-        String address = APPS + "/" + appId + "/tasks";
+    public void getDataObjectsForApp(HasQualifiedId app, DECallback<String> callback) {
+        String address = APPS + "/" + app.getSystemId() + "/" + app.getId() + "/tasks";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
         deServiceFacade.getServiceData(wrapper, callback);
