@@ -36,10 +36,11 @@ public class ConfigFactory {
         return awc;
     }
 
-    public static AppsIntegrationWindowConfig appsIntegrationWindowConfig(String appId) {
+    public static AppsIntegrationWindowConfig appsIntegrationWindowConfig(HasQualifiedId app) {
         AppsIntegrationWindowConfig aiwc = applyWindowType(WindowType.APP_INTEGRATION,
                 factory.appsIntegrationWindowConfig()).as();
-        aiwc.setAppId(appId);
+        aiwc.setSystemId(app == null ? "" : app.getSystemId());
+        aiwc.setAppId(app == null ? "" : app.getId());
         aiwc.setOnlyLabelEditMode(false);
         return aiwc;
     }
