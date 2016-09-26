@@ -52,8 +52,15 @@ public class SelectMetadataTemplateDialog extends IPlantDialog implements IsWidg
 
     private MetadataView.Presenter.Appearance appearance;
 
+    private String BASE_ID = "select_metadata_template";
+
+    private String OK_BTN_ID =".okbtn";
+
     public SelectMetadataTemplateDialog(List<MetadataTemplateInfo> templates, Appearance appearance, boolean showDownloadCell) {
         super();
+        onEnsureDebugId(BASE_ID);
+        getOkButton().ensureDebugId(BASE_ID + OK_BTN_ID);
+
         getOkButton().disable();
         listStore = new ListStore<>(new ModelKeyProvider<MetadataTemplateInfo>() {
             @Override
