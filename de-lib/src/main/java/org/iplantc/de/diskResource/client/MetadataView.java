@@ -78,6 +78,10 @@ public interface MetadataView extends IsWidget {
         String edit();
 
         String importMdTooltip();
+
+        String metadataLink();
+
+        String readMore();
     }
 
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {

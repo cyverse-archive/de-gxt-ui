@@ -4,7 +4,8 @@
              xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
              xmlns:toolbar="urn:import:com.sencha.gxt.widget.core.client.toolbar"
              xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
-             xmlns:grid="urn:import:com.sencha.gxt.widget.core.client.grid">
+             xmlns:grid="urn:import:com.sencha.gxt.widget.core.client.grid"
+             xmlns:widget="urn:import:org.iplantc.de.commons.client.widgets">
 
     <ui:with field="appearance"
              type="org.iplantc.de.diskResource.client.MetadataView.Appearance"/>
@@ -96,6 +97,9 @@
                                                    text="{appearance.importMd}"
                                                    icon="{appearance.addIcon}"
                                                     enabled="false"/>
+                            </toolbar:child>
+                            <toolbar:child>
+                                <widget:IPlantAnchor ui:field="infoLink" text="{appearance.readMore}"></widget:IPlantAnchor>
                             </toolbar:child>
                         </toolbar:ToolBar>
                     </container:child>
