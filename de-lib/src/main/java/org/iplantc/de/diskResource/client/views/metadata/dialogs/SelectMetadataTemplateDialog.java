@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.MetadataView.Presenter.Appearance;
+import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -79,6 +80,14 @@ public class SelectMetadataTemplateDialog extends IPlantDialog implements IsWidg
             });
         listStore.clear();
         listStore.addAll(templates);
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        onEnsureDebugId(DiskResourceModule.MetadataIds.SELECT_TEMPLATE_BASE_ID);
+        getOkButton().ensureDebugId(DiskResourceModule.MetadataIds.SELECT_TEMPLATE_BASE_ID
+                                    + DiskResourceModule.MetadataIds.SELECT_TEMPLATE_OK_BTN_ID);
     }
 
     @Override
