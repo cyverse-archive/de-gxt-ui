@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.MetadataView.Presenter.Appearance;
+import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -52,15 +53,8 @@ public class SelectMetadataTemplateDialog extends IPlantDialog implements IsWidg
 
     private MetadataView.Presenter.Appearance appearance;
 
-    private String BASE_ID = "select_metadata_template";
-
-    private String OK_BTN_ID =".okbtn";
-
     public SelectMetadataTemplateDialog(List<MetadataTemplateInfo> templates, Appearance appearance, boolean showDownloadCell) {
         super();
-        onEnsureDebugId(BASE_ID);
-        getOkButton().ensureDebugId(BASE_ID + OK_BTN_ID);
-
         getOkButton().disable();
         listStore = new ListStore<>(new ModelKeyProvider<MetadataTemplateInfo>() {
             @Override
@@ -86,6 +80,14 @@ public class SelectMetadataTemplateDialog extends IPlantDialog implements IsWidg
             });
         listStore.clear();
         listStore.addAll(templates);
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        onEnsureDebugId(DiskResourceModule.MetadataIds.SELECT_TEMPLATE_BASE_ID);
+        getOkButton().ensureDebugId(DiskResourceModule.MetadataIds.SELECT_TEMPLATE_BASE_ID
+                                    + DiskResourceModule.MetadataIds.SELECT_TEMPLATE_OK_BTN_ID);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package org.iplantc.de.diskResource.client.presenters.metadata;
 
-import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
@@ -12,8 +11,6 @@ import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.diskResource.client.MetadataView;
-import org.iplantc.de.diskResource.client.events.TemplateDownloadEvent;
-import org.iplantc.de.diskResource.client.events.selection.DownloadTemplateSelectedEvent;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetadataUpdateCallback;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.MetadataTemplateViewDialog;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.SelectMetadataTemplateDialog;
@@ -29,7 +26,6 @@ import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent.DialogHideHandler;
-import com.sencha.gxt.widget.core.client.event.HideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 import java.util.ArrayList;
@@ -171,7 +167,8 @@ public class MetadataPresenterImpl implements MetadataView.Presenter{
         view.addDialogHideHandler(new DialogHideHandler() {
             @Override
             public void onDialogHide(DialogHideEvent event) {
-                if(event.getHideButton().equals(PredefinedButton.OK)) {
+                PredefinedButton hideButton = event.getHideButton();
+                if(hideButton!=null && hideButton.equals(PredefinedButton.OK)) {
                     MetadataTemplateInfo selectedTemplate = view.getSelectedTemplate();
                     if (selectedTemplate != null) {
                         onTemplateSelected(selectedTemplate.getId());
