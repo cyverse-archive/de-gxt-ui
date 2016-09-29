@@ -10,7 +10,6 @@ import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.presenters.metadata.MetadataPresenterImpl;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -78,7 +77,7 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
         loadTemplateAttributes();
         add(widget);
     }
-    
+
     public ArrayList<Avu> getMetadataFromTemplate() {
         ArrayList<Avu> avus =new ArrayList<>();
         for (String attr : templateAttrFieldMap.keySet()) {

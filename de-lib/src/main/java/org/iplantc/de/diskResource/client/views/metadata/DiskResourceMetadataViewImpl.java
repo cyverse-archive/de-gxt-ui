@@ -33,6 +33,7 @@ import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.button.ToolButton;
 import com.sencha.gxt.widget.core.client.container.AccordionLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.AccordionLayoutContainer.AccordionLayoutAppearance;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
@@ -183,6 +184,18 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
                 Window.open(appearance.metadataLink(),"","_blank");
             }
         });
+        addAdditionalMetadataInfo();
+    }
+
+    private void addAdditionalMetadataInfo() {
+        final ToolButton tool_help_ref = new ToolButton(ToolButton.QUESTION);
+        additionalMetadataPanel.getHeader().addTool(tool_help_ref);
+        tool_help_ref.addSelectHandler(new SelectEvent.SelectHandler() {
+            @Override
+            public void onSelect(SelectEvent event) {
+                Window.open(appearance.metadataLink(),"","_blank");
+            }
+        });
     }
 
     @Override
@@ -209,6 +222,11 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
 
     @Override
     public void loadMetadata(final List<Avu> metadataList) {
+/*        if(metadataList ==null || metadataList.size() == 0) {
+            alc.remove(additionalMetadataPanel);
+            alc.forceLayout();
+            return;
+        }*/
         additionalMdListStore.clear();
         additionalMdListStore.commitChanges();
         for (Avu avu : metadataList) {
