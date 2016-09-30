@@ -589,8 +589,10 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         final RuntimeCallbacks.SaveUserSettingsCallback callback = new RuntimeCallbacks.SaveUserSettingsCallback(value,
                                                                                userSettings,
                                                                                announcer,
+                                                                               this,
                                                                                appearance,
-                                                                               updateSilently);
+                                                                               updateSilently,
+                                                                               userSessionService);
         userSessionService.saveUserPreferences(value.asSplittable(), callback);
     }
 

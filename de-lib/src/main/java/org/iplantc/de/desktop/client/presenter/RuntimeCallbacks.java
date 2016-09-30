@@ -3,27 +3,18 @@ package org.iplantc.de.desktop.client.presenter;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.WindowState;
-import org.iplantc.de.client.models.notifications.Notification;
-import org.iplantc.de.client.models.notifications.NotificationAutoBeanFactory;
-import org.iplantc.de.client.models.notifications.NotificationCategory;
-import org.iplantc.de.client.models.notifications.NotificationList;
-import org.iplantc.de.client.models.notifications.NotificationMessage;
-import org.iplantc.de.client.models.notifications.payload.PayloadAnalysis;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.desktop.client.DesktopView;
-import org.iplantc.de.notifications.client.utils.NotifyInfo;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
-import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.box.AutoProgressMessageBox;
 
 import java.util.List;
@@ -137,17 +128,23 @@ class RuntimeCallbacks {
         private final boolean updateSilently;
         private final UserSettings newValue;
         private final UserSettings userSettings;
+        private final DesktopView.Presenter presenter;
+        private final UserSessionServiceFacade userSessionService;
 
         public SaveUserSettingsCallback(final UserSettings newValue,
                                         final UserSettings userSettings,
                                         final IplantAnnouncer announcer,
+                                        final DesktopView.Presenter presenter,
                                         final DesktopView.Presenter.DesktopPresenterAppearance appearance,
-                                        final boolean updateSilently) {
+                                        final boolean updateSilently,
+                                        final UserSessionServiceFacade userSessionService) {
             this.newValue = newValue;
             this.userSettings = userSettings;
+            this.presenter = presenter;
             this.announcer = announcer;
             this.appearance = appearance;
             this.updateSilently = updateSilently;
+            this.userSessionService =  userSessionService;
         }
 
         @Override
@@ -160,6 +157,19 @@ class RuntimeCallbacks {
             userSettings.setValues(newValue.asSplittable());
             if(!updateSilently){
                 announcer.schedule(new SuccessAnnouncementConfig(appearance.saveSettings(), true, 3000));
+            }
+            if(userSettings.isSaveSession()) {
+                userSessionService.saveUserSession(presenter.getOrderedWindowStates(), new AsyncCallback<Void>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                      announcer.schedule(new ErrorAnnouncementConfig(appearance.saveSessionFailed()));
+                    }
+
+                    @Override
+                    public void onSuccess(Void result) {
+                      //Do nothing. Session saved as per user request.
+                    }
+                });
             }
         }
     }
