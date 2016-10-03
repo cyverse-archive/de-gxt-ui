@@ -185,6 +185,7 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
         });
     }
 
+
     @Override
     public void mask() {
         con.mask(appearance.loadingMask());
@@ -209,6 +210,11 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
 
     @Override
     public void loadMetadata(final List<Avu> metadataList) {
+        if (metadataList == null || metadataList.size() == 0) {
+            alc.remove(additionalMetadataPanel);
+            alc.forceLayout();
+            return;
+        }
         additionalMdListStore.clear();
         additionalMdListStore.commitChanges();
         for (Avu avu : metadataList) {
