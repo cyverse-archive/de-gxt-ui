@@ -15,6 +15,7 @@ import org.iplantc.de.apps.client.views.list.cells.AppInfoCell;
 import org.iplantc.de.apps.client.views.list.cells.AppIntegratorCell;
 import org.iplantc.de.apps.client.views.list.cells.AppNameCell;
 import org.iplantc.de.apps.client.views.list.cells.AppRatingCell;
+import org.iplantc.de.apps.client.views.list.cells.AppStatusCell;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppNameComparator;
 import org.iplantc.de.client.models.apps.AppRatingComparator;
@@ -68,6 +69,9 @@ public class AppColumnModel extends ColumnModel<App> implements AppInfoSelectedE
         ColumnConfig<App, App> info = new ColumnConfig<>(new IdentityValueProvider<App>(""), 20);
         info.setHeader("");
 
+        ColumnConfig<App, App> status = new ColumnConfig<>(new IdentityValueProvider<App>(""), 25);
+        status.setHeader("");
+
         ColumnConfig<App, App> name = new ColumnConfig<>(new IdentityValueProvider<App>("name"), //$NON-NLS-1$
                                                          180,
                                                          appearance.nameColumnLabel());
@@ -85,21 +89,27 @@ public class AppColumnModel extends ColumnModel<App> implements AppInfoSelectedE
         name.setComparator(new AppNameComparator());
         rating.setComparator(new AppRatingComparator());
         info.setSortable(false);
+        status.setSortable(false);
         comment.setSortable(false);
 
         info.setMenuDisabled(true);
         info.setHideable(false);
         info.setResizable(false);
+        status.setMenuDisabled(true);
+        status.setHideable(false);
+        status.setResizable(false);
         name.setResizable(true);
         // rating.setResizable(false);
         comment.setResizable(false);
 
         info.setFixed(true);
+        status.setFixed(true);
         rating.setFixed(true);
         comment.setFixed(true);
         comment.setHideable(false);
 
         info.setCell(new AppInfoCell());
+        status.setCell(new AppStatusCell());
         name.setCell(new AppNameCell());
         integrator.setCell(new AppIntegratorCell());
         rating.setCell(new AppRatingCell());
@@ -108,6 +118,7 @@ public class AppColumnModel extends ColumnModel<App> implements AppInfoSelectedE
         rating.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
         list.add(info);
+        list.add(status);
         list.add(name);
         list.add(integrator);
         list.add(rating);
@@ -150,10 +161,13 @@ public class AppColumnModel extends ColumnModel<App> implements AppInfoSelectedE
 
     public void ensureDebugId(String baseID) {
         for (ColumnConfig<App, ?> cc : configs) {
-            if (cc.getCell() instanceof AppInfoCell) {
-                ((AppInfoCell)cc.getCell()).setBaseDebugId(baseID);
-            } else if (cc.getCell() instanceof AppNameCell) {
-                ((AppNameCell)cc.getCell()).setBaseDebugId(baseID);
+            Cell<?> cell = cc.getCell();
+            if (cell instanceof AppInfoCell) {
+                ((AppInfoCell)cell).setBaseDebugId(baseID);
+            } else if (cell instanceof AppNameCell) {
+                ((AppNameCell)cell).setBaseDebugId(baseID);
+            } else if (cell instanceof AppStatusCell) {
+                ((AppStatusCell)cell).setBaseDebugId(baseID);
             }
         }
 

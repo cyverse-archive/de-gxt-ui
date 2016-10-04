@@ -52,14 +52,6 @@ public class AppNameCell extends AbstractCell<App> implements HasCell<App, App> 
 
         String appUnavailable();
 
-        String appBeta();
-
-        String appBetaNameClass();
-
-        String appPrivate();
-
-        String appPrivateNameClass();
-
         void render(SafeHtmlBuilder sb, App value, String textClassName, String searchPattern,
                     String textToolTip, boolean separateFavoriteCell, String debugId);
 
@@ -92,19 +84,12 @@ public class AppNameCell extends AbstractCell<App> implements HasCell<App, App> 
             favoriteCell.render(context, value, sb);
         }
         String textClassName, textToolTip;
+        textToolTip = appearance.run();
 
         if (value.isDisabled()) {
             textClassName = appearance.appDisabledClass();
-            textToolTip = appearance.appUnavailable();
-        } else if (value.isBeta() != null && value.isBeta()) {
-            textClassName = appearance.appBetaNameClass();
-            textToolTip = appearance.appBeta();
-        } else if (!value.isPublic()) {
-            textClassName = appearance.appPrivateNameClass();
-            textToolTip = appearance.appPrivate();
         } else {
             textClassName = appearance.appHyperlinkNameClass();
-            textToolTip = appearance.run();
         }
 
         String debugId = baseID + "." + value.getId() + AppsModule.Ids.APP_NAME_CELL;

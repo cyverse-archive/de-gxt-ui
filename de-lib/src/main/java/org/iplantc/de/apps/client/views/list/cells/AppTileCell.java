@@ -23,6 +23,7 @@ public class AppTileCell extends CompositeCell<App> {
     private static AppNameCell appNameCell;
     private static AppFavoriteCell appFavoriteCell;
     private static AppInfoCell appInfoCell;
+    private static AppStatusCell appStatusCell;
     private static AppCommentCell appCommentCell;
     private static AppRatingCell appRatingCell;
     private static AppIntegratorCell appIntegratorCell;
@@ -50,6 +51,7 @@ public class AppTileCell extends CompositeCell<App> {
         appNameCell.setSeparateFavoriteCell(true);
         appFavoriteCell = new AppFavoriteCell();
         appInfoCell = new AppInfoCell();
+        appStatusCell = new AppStatusCell();
         appCommentCell = new AppCommentCell();
         appRatingCell = new AppRatingCell();
         appIntegratorCell = new AppIntegratorCell();
@@ -58,6 +60,7 @@ public class AppTileCell extends CompositeCell<App> {
         cellList.add(appNameCell);
         cellList.add(appFavoriteCell);
         cellList.add(appInfoCell);
+        cellList.add(appStatusCell);
         cellList.add(appCommentCell);
         cellList.add(appRatingCell);
         cellList.add(appIntegratorCell);
@@ -89,6 +92,7 @@ public class AppTileCell extends CompositeCell<App> {
         appNameCell.setBaseDebugId(baseID);
         appInfoCell.setBaseDebugId(baseID);
         appCardCell.setBaseDebugId(baseID);
+        appStatusCell.setBaseDebugId(baseID);
     }
 
     public void setCardUrl(String appsCardUrl, String appsCardUrlOptions) {

@@ -45,17 +45,7 @@ public class AppCardCell extends AbstractCell<App> implements HasCell<App, App> 
     public void render(Context context, App value, SafeHtmlBuilder sb) {
         if (!Strings.isNullOrEmpty(cardUrl)) {
             String debugId = baseDebugId + "." + value.getId() + AppsModule.Ids.APP_CARD_CELL;
-
-            String textToolTip;
-            if (value.isDisabled()) {
-                textToolTip = appearance.appUnavailable();
-            } else if (value.isBeta() != null && value.isBeta()) {
-                textToolTip = appearance.appBeta();
-            } else if (!value.isPublic()) {
-                textToolTip = appearance.appPrivate();
-            } else {
-                textToolTip = appearance.run();
-            }
+            String textToolTip = appearance.run();
 
             appearance.render(context, value, sb, cardUrl, cardUrlOptions, textToolTip, debugId);
         }

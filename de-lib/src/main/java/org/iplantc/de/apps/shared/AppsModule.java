@@ -46,6 +46,7 @@ public interface AppsModule {
         String APP_TILES = ".tiles";
         String APP_CARD_CELL = ".card";
         String SWAP_VIEW_BTN = ".swapBtn";
+        String APP_STATUS_CELL = ".status";
     }
 }
 
