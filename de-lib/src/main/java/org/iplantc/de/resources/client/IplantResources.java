@@ -452,6 +452,15 @@ public interface IplantResources extends ClientBundle,
     
     @Source("forums.png")
     ImageResource forums();
+
+    @Source("x_red.png")
+    ImageResource xred();
+
+    @Source("beta.png")
+    ImageResource beta();
+
+    @Source("lock.png")
+    ImageResource lock();
     
     @Source("ToolRequestStatusHelp.css")
     ToolRequestStatusHelpStyle getToolRequestStatusHelpCss();
