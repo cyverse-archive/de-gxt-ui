@@ -161,10 +161,13 @@ public class AppColumnModel extends ColumnModel<App> implements AppInfoSelectedE
 
     public void ensureDebugId(String baseID) {
         for (ColumnConfig<App, ?> cc : configs) {
-            if (cc.getCell() instanceof AppInfoCell) {
-                ((AppInfoCell)cc.getCell()).setBaseDebugId(baseID);
-            } else if (cc.getCell() instanceof AppNameCell) {
-                ((AppNameCell)cc.getCell()).setBaseDebugId(baseID);
+            Cell<?> cell = cc.getCell();
+            if (cell instanceof AppInfoCell) {
+                ((AppInfoCell)cell).setBaseDebugId(baseID);
+            } else if (cell instanceof AppNameCell) {
+                ((AppNameCell)cell).setBaseDebugId(baseID);
+            } else if (cell instanceof AppStatusCell) {
+                ((AppStatusCell)cell).setBaseDebugId(baseID);
             }
         }
 
