@@ -31,6 +31,12 @@
     outline: rgb(208,208,208) solid 2px;
 }
 
+.statusMod {
+    position: absolute;
+    bottom: 2px;
+    right: 5px;
+}
+
 .infoMod {
     position: absolute;
     bottom: 2px;
@@ -68,10 +74,6 @@
     line-height: lineHeight;
     display: -webkit-box;
     /*transform: translate(-50%, -50%);*/
-}
-
-.nameMod:hover {
-    text-decoration: underline;
 }
 
 .favoriteMod {

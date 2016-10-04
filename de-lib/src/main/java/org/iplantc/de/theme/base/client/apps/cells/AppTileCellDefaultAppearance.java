@@ -6,6 +6,7 @@ import org.iplantc.de.apps.client.views.list.cells.AppInfoCell;
 import org.iplantc.de.apps.client.views.list.cells.AppIntegratorCell;
 import org.iplantc.de.apps.client.views.list.cells.AppNameCell;
 import org.iplantc.de.apps.client.views.list.cells.AppRatingCell;
+import org.iplantc.de.apps.client.views.list.cells.AppStatusCell;
 import org.iplantc.de.apps.client.views.list.cells.AppTileCell;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.theme.base.client.apps.list.TileListResources;
@@ -56,6 +57,8 @@ public class AppTileCellDefaultAppearance implements AppTileCell.AppTileCellAppe
 
         if (hasCell instanceof AppInfoCell) {
             sb.append(templates.mod(style.infoMod()));
+        } else if (hasCell instanceof AppStatusCell) {
+            sb.append(templates.mod(style.statusMod()));
         } else if (hasCell instanceof AppCommentCell) {
             sb.append(templates.mod(style.commentMod()));
         } else if (hasCell instanceof AppFavoriteCell) {

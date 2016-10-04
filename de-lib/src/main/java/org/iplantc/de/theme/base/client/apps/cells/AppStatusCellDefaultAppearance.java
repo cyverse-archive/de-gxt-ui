@@ -75,7 +75,7 @@ public class AppStatusCellDefaultAppearance implements AppStatusCell.AppStatusCe
         if (!value.isPublic()) {
             safeUri = iplantResources.lock().getSafeUri();
             tooltip = appsMessages.privateToolTip();
-        } else if(value.isDisabled()) {
+        } else if (value.isDisabled()) {
             safeUri = iplantResources.xred().getSafeUri();
             tooltip = iplantDisplayStrings.appUnavailable();
         } else if (value.isBeta() != null && value.isBeta()) {
@@ -85,9 +85,9 @@ public class AppStatusCellDefaultAppearance implements AppStatusCell.AppStatusCe
             return;
         }
 
-        if(!Strings.isNullOrEmpty(debugId)){
+        if (!Strings.isNullOrEmpty(debugId)) {
             sb.append(templates.debugCell(safeUri, tooltip, debugId));
-        }else {
+        } else {
             sb.append(templates.cell(safeUri, tooltip));
         }
     }
