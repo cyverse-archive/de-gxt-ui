@@ -6,6 +6,7 @@ import org.iplantc.de.apps.client.events.selection.AppInfoSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppNameSelectedEvent;
 import org.iplantc.de.apps.client.models.AppProperties;
 import org.iplantc.de.apps.client.views.list.cells.AppInfoCell;
+import org.iplantc.de.apps.client.views.list.cells.AppStatusCell;
 import org.iplantc.de.client.models.apps.App;
 
 import com.google.gwt.cell.client.Cell;
@@ -57,7 +58,9 @@ public class AdminAppsColumnModel extends ColumnModel<App> implements AppNameSel
                                                                   appearance.integratedBy());
 
         ColumnConfig<App, App> info = new ColumnConfig<>(new IdentityValueProvider<App>(""), 20);
+        ColumnConfig<App, App> status = new ColumnConfig<>(new IdentityValueProvider<App>(""), 25);
         info.setHeader("");
+        status.setHeader("");
 
         name.setComparator(new AppStringNameComparator());
         name.setCell(new AdminAppNameCell());
@@ -65,15 +68,19 @@ public class AdminAppsColumnModel extends ColumnModel<App> implements AppNameSel
         name.setSortable(true);
         integrator.setSortable(true);
         info.setSortable(false);
+        status.setSortable(false);
 
         name.setResizable(true);
         info.setResizable(false);
+        status.setSortable(false);
 
         info.setCell(new AppInfoCell());
+        status.setCell(new AppStatusCell());
 
         list.add(name);
         list.add(integrator);
         list.add(info);
+        list.add(status);
         return list;
     }
 
