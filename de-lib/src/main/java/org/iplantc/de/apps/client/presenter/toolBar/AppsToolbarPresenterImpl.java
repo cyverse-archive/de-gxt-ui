@@ -94,6 +94,11 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
     }
 
     @Override
+    public void reloadSearchResults() {
+        loader.load(loader.getLastLoadConfig());
+    }
+
+    @Override
     public void onCreateNewAppSelected(CreateNewAppSelected event) {
         eventBus.fireEvent(new CreateNewAppEvent());
     }

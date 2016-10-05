@@ -109,9 +109,13 @@ public interface AppsToolbarView extends IsWidget,
                                 AppSearchResultLoadEvent.HasAppSearchResultLoadEventHandlers {
 
         AppsToolbarView getView();
+
+        void reloadSearchResults();
     }
 
     void hideAppMenu();
 
     void hideWorkflowMenu();
+
+    boolean hasSearchPhrase();
 }

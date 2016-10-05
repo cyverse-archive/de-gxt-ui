@@ -34,6 +34,7 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
     private final AppCategoriesView.Presenter categoriesPresenter;
     private final AppsListView.Presenter appsListPresenter;
     private final OntologyHierarchiesView.Presenter hierarchiesPresenter;
+    private final AppsToolbarView.Presenter toolbarPresenter;
     OntologyUtil ontologyUtil;
 
     @Inject
@@ -45,6 +46,7 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
         this.categoriesPresenter = categoriesPresenter;
         this.appsListPresenter = appsListPresenter;
         this.hierarchiesPresenter = hierarchiesPresenter;
+        this.toolbarPresenter = toolbarPresenter;
         this.view = viewFactory.create(categoriesPresenter,
                                        hierarchiesPresenter, appsListPresenter,
                                        toolbarPresenter);
@@ -124,12 +126,16 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
     public void onRefreshAppsSelected(RefreshAppsSelectedEvent event) {
         AppCategory selectedAppCategory = categoriesPresenter.getSelectedAppCategory();
         OntologyHierarchy selectedHierarchy = hierarchiesPresenter.getSelectedHierarchy();
-        boolean useDefaultSelection = selectedHierarchy == null;
+        boolean hasSearchPhrase = toolbarPresenter.getView().hasSearchPhrase();
+        boolean useDefaultSelection = !hasSearchPhrase && selectedHierarchy == null;
 
         view.clearTabPanel();
         DETabPanel categoryTabPanel = view.getCategoryTabPanel();
 
         categoriesPresenter.go(selectedAppCategory, useDefaultSelection, categoryTabPanel);
         hierarchiesPresenter.go(selectedHierarchy, categoryTabPanel);
+        if (hasSearchPhrase) {
+            toolbarPresenter.reloadSearchResults();
+        }
     }
 }

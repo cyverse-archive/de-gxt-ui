@@ -212,6 +212,11 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
         boxData.setFlex(0);
     }
 
+    @Override
+    public boolean hasSearchPhrase() {
+        return appSearch.getCurrentValue() != null;
+    }
+
     // <editor-fold desc="Selection Handlers">
     @Override
     public void onAppCategorySelectionChanged(AppCategorySelectionChangedEvent event) {
