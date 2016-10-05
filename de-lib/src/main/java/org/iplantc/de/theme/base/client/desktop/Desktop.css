@@ -136,6 +136,17 @@
     background-size: contain;
 }
 
+@sprite .help {
+    gwt-image: 'helpImg';
+    height: userMenuIconHeight !important;
+    width: userMenuIconWidth !important;
+    display: inline-block;
+    padding-right: userMenuIconPaddingRight;
+    opacity: userMenuIconOpacity;
+    position: relative;
+    background-size: contain;
+}
+
 .forums:hover {
     opacity: userMenuIconOpacityHover;
 }
@@ -188,16 +199,6 @@
 }
 @sprite .data:hover {
     gwt-image: 'dataBtnHover';
-    background-size: contain;
-}
-
-@sprite .feedback {
-    gwt-image: 'feedbackImg';
-    position: fixed;
-    bottom: footerHeight10;
-    right: 100px;
-    height: 37px !important;
-    width: 115px !important;
     background-size: contain;
 }
 

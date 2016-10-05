@@ -33,11 +33,9 @@ import com.google.inject.Provider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
 import com.sencha.gxt.widget.core.client.WindowManager;
-import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 import com.sencha.gxt.widget.core.client.button.IconButton;
 import com.sencha.gxt.widget.core.client.event.RegisterEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 import com.sencha.gxt.widget.core.client.event.ShowContextMenuEvent;
 import com.sencha.gxt.widget.core.client.event.UnregisterEvent;
 
@@ -52,8 +50,7 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
     @UiField IconButton analysisWinBtn;
     @UiField IconButton appsWinBtn;
     @UiField IconButton dataWinBtn;
-    @UiField IconButton feedbackBtn;
-    @UiField IconButton forumsBtn;
+    @UiField IconButton helpBtn;
     @UiField IconButton notificationsBtn;
     @UiField TaskBar taskBar;
     @UiField DesktopIconButton userSettingsBtn;
@@ -62,7 +59,7 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
     @UiField IPlantAnchor systemMsgsBtn;
     @UiField IPlantAnchor documentationBtn;
     @UiField IPlantAnchor introBtn;
-    @UiField IPlantAnchor contactSupportBtn;
+ //   @UiField IPlantAnchor contactSupportBtn;
     @UiField IPlantAnchor aboutBtn;
     @UiField IPlantAnchor logoutBtn;
     @UiField(provided = true) UnseenNotificationsView notificationsListView;
@@ -155,9 +152,9 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
     private void initIntroAttributes(IplantNewUserTourStrings tourStrings) {
         // FIXME Need to move intro to themes
         // Feedback Btn
-        feedbackBtn.getElement().setAttribute("data-intro", tourStrings.introFeedback());
+       /* feedbackBtn.getElement().setAttribute("data-intro", tourStrings.introFeedback());
         feedbackBtn.getElement().setAttribute("data-position", "top");
-        feedbackBtn.getElement().setAttribute("data-step", "6");
+        feedbackBtn.getElement().setAttribute("data-step", "6"); */
 
         // Window Btns
         dataWinBtn.getElement().setAttribute("data-intro", tourStrings.introDataWindow());
@@ -179,9 +176,9 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
         userSettingsBtn.getElement().setAttribute("data-position", "left");
         userSettingsBtn.getElement().setAttribute("data-step", "5");
 
-        forumsBtn.getElement().setAttribute("data-intro", tourStrings.introAsk());
+/*        forumsBtn.getElement().setAttribute("data-intro", tourStrings.introAsk());
         forumsBtn.getElement().setAttribute("data-position", "left");
-        forumsBtn.getElement().setAttribute("data-step", "7");
+        forumsBtn.getElement().setAttribute("data-step", "7");*/
     }
 
     @Override
@@ -193,11 +190,11 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
     public void ensureDebugId(String baseID) {
         notificationsBtn.ensureDebugId(baseID + DeModule.Ids.NOTIFICATION_BUTTON);
         userSettingsBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU);
-        forumsBtn.ensureDebugId(baseID + DeModule.Ids.FORUMS_BUTTON);
+   //     forumsBtn.ensureDebugId(baseID + DeModule.Ids.FORUMS_BUTTON);
         dataWinBtn.ensureDebugId(baseID + DeModule.Ids.DATA_BTN);
         appsWinBtn.ensureDebugId(baseID + DeModule.Ids.APPS_BTN);
         analysisWinBtn.ensureDebugId(baseID + DeModule.Ids.ANALYSES_BTN);
-        feedbackBtn.ensureDebugId(baseID + DeModule.Ids.FEEDBACK_BTN);
+   //     feedbackBtn.ensureDebugId(baseID + DeModule.Ids.FEEDBACK_BTN);
         taskBar.ensureDebugId(baseID + DeModule.Ids.TASK_BAR);
 
 
@@ -207,7 +204,7 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
         systemMsgsBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.SYS_MSGS_BTN);
         documentationBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.USER_MANUAL_BTN);
         introBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.INTRO_BTN);
-        contactSupportBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.SUPPORT_BTN);
+    //    contactSupportBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.SUPPORT_BTN);
         aboutBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.ABOUT_BTN);
         logoutBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.LOGOUT_BTN);
     }
@@ -277,7 +274,7 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
         presenter.onDataWinBtnSelect();
     }
 
-    @UiHandler("feedbackBtn")
+   /* @UiHandler("feedbackBtn")
     void onFeedbackBtnSelect(SelectEvent event) {
         final DEFeedbackDialog feedbackDialog = deFeedbackDialogProvider.get();
         feedbackDialog.show();
@@ -304,15 +301,15 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
             }
         });
 
-    }
+    }*/
 
-    @UiHandler("forumsBtn")
+  /*  @UiHandler("forumsBtn")
     void onForumsSelect(SelectEvent event) {
         presenter.onForumsBtnSelect();
-    }
+    }  */
 
     @UiHandler({"preferencesBtn", "collaboratorsBtn", "systemMsgsBtn",
-                   "documentationBtn", "introBtn", "contactSupportBtn", "aboutBtn", "logoutBtn"})
+                   "documentationBtn", "introBtn", /*"contactSupportBtn",*/ "aboutBtn", "logoutBtn"})
     void onAnyUserSettingsItemClick(ClickEvent event){
         userSettingsBtn.hideMenu();
     }
@@ -343,10 +340,10 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
         presenter.onIntroClick();
     }
 
-    @UiHandler("contactSupportBtn")
-    void onContactSupportClick(ClickEvent event){
+/*    @UiHandler("contactSupportBtn")
+    void onContactSupportClick(ClickEvent event) {
         presenter.onContactSupportClick();
-    }
+    }*/
 
     @UiHandler("aboutBtn")
     void onAboutClick(ClickEvent event){

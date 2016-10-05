@@ -47,9 +47,6 @@ public class BaseDesktopAppearance implements DesktopView.DesktopAppearance {
         @ImageOptions(repeatStyle = ImageResource.RepeatStyle.Both)
         ImageResource desktopBackgroundRepeat();
 
-        @Source("org/iplantc/de/theme/base/client/desktop/de_feedback.png")
-        ImageResource feedbackImg();
-
         @Source("org/iplantc/de/theme/base/client/desktop/forum.png")
         ImageResource forumsImg();
 
@@ -61,6 +58,9 @@ public class BaseDesktopAppearance implements DesktopView.DesktopAppearance {
 
         @Source("org/iplantc/de/theme/base/client/desktop/notification.png")
         ImageResource notificationsImg();
+
+        @Source("org/iplantc/de/theme/base/client/desktop/help-24.png")
+        ImageResource helpImg();
 
         @Source("org/iplantc/de/theme/base/client/desktop/user.png")
         ImageResource userPrefImg();
@@ -117,11 +117,6 @@ public class BaseDesktopAppearance implements DesktopView.DesktopAppearance {
     }
 
     @Override
-    public IconConfig feedbackBtnConfig() {
-        return new IconConfig(style.feedback());
-    }
-
-    @Override
     public IconConfig forumsConfig() {
         return new IconConfig(style.forums());
     }
@@ -129,6 +124,11 @@ public class BaseDesktopAppearance implements DesktopView.DesktopAppearance {
     @Override
     public IconConfig notificationsConfig() {
         return new IconConfig(style.notification());
+    }
+
+    @Override
+    public IconConfig helpConfig() {
+        return new IconConfig(style.help());
     }
 
     @Override

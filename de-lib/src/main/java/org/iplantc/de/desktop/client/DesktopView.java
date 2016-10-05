@@ -48,8 +48,6 @@ public interface DesktopView extends IsWidget {
 
             String desktopBackground();
 
-            String feedback();
-
             String forums();
 
             String iplantHeader();
@@ -59,6 +57,8 @@ public interface DesktopView extends IsWidget {
             String logoContainer();
 
             String notification();
+
+            String help();
 
             String notificationCount();
 
@@ -85,11 +85,11 @@ public interface DesktopView extends IsWidget {
 
         String feedbackAlertValidationWarning();
 
-        IconButton.IconConfig feedbackBtnConfig();
-
         IconButton.IconConfig forumsConfig();
 
         IconButton.IconConfig notificationsConfig();
+
+        IconButton.IconConfig helpConfig();
 
         String completeRequiredFieldsError();
 
