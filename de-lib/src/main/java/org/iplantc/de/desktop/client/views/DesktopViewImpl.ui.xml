@@ -35,14 +35,14 @@
                                               config="{appearance.userPrefsConfig}">
                     <desktopBtn:contextmenu>
                         <menu:Menu styleName="{appearance.styles.userContextMenu}">
-                            <anchors:IPlantAnchor ui:field="preferencesBtn"
+                            <anchors:IPlantAnchor ui:field="preferencesLink"
                                                   text="{appearance.preferences}"/>
-                            <anchors:IPlantAnchor ui:field="collaboratorsBtn"
+                            <anchors:IPlantAnchor ui:field="collaboratorsLink"
                                                   text="{appearance.collaborators}"/>
-                            <anchors:IPlantAnchor ui:field="systemMsgsBtn"
+                            <anchors:IPlantAnchor ui:field="systemMsgsLink"
                                                   text="{appearance.systemMessagesLabel}"/>
                             <menu:SeparatorMenuItem/>
-                            <anchors:IPlantAnchor ui:field="documentationBtn"
+                            <anchors:IPlantAnchor ui:field="documentationLink"
                                                   text="{appearance.documentation}"/>
                             <anchors:IPlantAnchor ui:field="introBtn"
                                                   text="{appearance.introduction}"/>
@@ -60,9 +60,9 @@
                                               toolTip="Help">
                     <desktopBtn:contextmenu>
                     <menu:Menu styleName="{appearance.styles.userContextMenu}">
-                        <anchors:IPlantAnchor ui:field="faqBtn" text="FAQs"/>
-                        <anchors:IPlantAnchor ui:field="forumsBtn" text="{appearance.forums}"/>
-                        <anchors:IPlantAnchor ui:field="feedbackBtn" text="Feedback"/>
+                        <anchors:IPlantAnchor ui:field="faqLink" text="{appearance.faqs}"/>
+                        <anchors:IPlantAnchor ui:field="forumsLink" text="{appearance.forum}"/>
+                        <anchors:IPlantAnchor ui:field="feedbackLink" text="{appearance.feedback}"/>
                     </menu:Menu>
                     </desktopBtn:contextmenu>
                 </desktopBtn:DesktopIconButton>

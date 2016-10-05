@@ -21,6 +21,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -33,6 +34,7 @@ import com.google.inject.Provider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
 import com.sencha.gxt.widget.core.client.WindowManager;
+import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 import com.sencha.gxt.widget.core.client.button.IconButton;
 import com.sencha.gxt.widget.core.client.event.RegisterEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -50,14 +52,14 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
     @UiField IconButton analysisWinBtn;
     @UiField IconButton appsWinBtn;
     @UiField IconButton dataWinBtn;
-    @UiField IconButton helpBtn;
+    @UiField DesktopIconButton helpBtn;
     @UiField IconButton notificationsBtn;
     @UiField TaskBar taskBar;
     @UiField DesktopIconButton userSettingsBtn;
-    @UiField IPlantAnchor preferencesBtn;
-    @UiField IPlantAnchor collaboratorsBtn;
-    @UiField IPlantAnchor systemMsgsBtn;
-    @UiField IPlantAnchor documentationBtn;
+    @UiField IPlantAnchor preferencesLink;
+    @UiField IPlantAnchor collaboratorsLink;
+    @UiField IPlantAnchor systemMsgsLink;
+    @UiField IPlantAnchor documentationLink;
     @UiField IPlantAnchor introBtn;
  //   @UiField IPlantAnchor contactSupportBtn;
     @UiField IPlantAnchor aboutBtn;
@@ -65,6 +67,9 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
     @UiField(provided = true) UnseenNotificationsView notificationsListView;
     @UiField DivElement desktopContainer;
     @UiField DesktopAppearance appearance;
+    @UiField IPlantAnchor faqLink;
+    @UiField IPlantAnchor forumsLink;
+    @UiField IPlantAnchor feedbackLink;
 
     @Inject Provider<PreferencesDialog> preferencesDialogProvider;
     @Inject Provider<DEFeedbackDialog> deFeedbackDialogProvider;
@@ -92,6 +97,24 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
         windowManager.addRegisterHandler(this);
         windowManager.addUnregisterHandler(this);
         initIntroAttributes(tourStrings);
+        feedbackLink.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                  onFeedbackBtnSelect();
+            }
+        });
+        forumsLink.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                 onForumsSelect();
+            }
+        });
+        faqLink.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                onFaqSelect();
+            }
+        });
     }
 
     @UiHandler("notificationsBtn")
@@ -190,23 +213,30 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
     public void ensureDebugId(String baseID) {
         notificationsBtn.ensureDebugId(baseID + DeModule.Ids.NOTIFICATION_BUTTON);
         userSettingsBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU);
-   //     forumsBtn.ensureDebugId(baseID + DeModule.Ids.FORUMS_BUTTON);
+        helpBtn.ensureDebugId(baseID + DeModule.Ids.HELP_MENU);
+   //   forumsBtn.ensureDebugId(baseID + DeModule.Ids.FORUMS_BUTTON);
         dataWinBtn.ensureDebugId(baseID + DeModule.Ids.DATA_BTN);
         appsWinBtn.ensureDebugId(baseID + DeModule.Ids.APPS_BTN);
         analysisWinBtn.ensureDebugId(baseID + DeModule.Ids.ANALYSES_BTN);
-   //     feedbackBtn.ensureDebugId(baseID + DeModule.Ids.FEEDBACK_BTN);
+   //   feedbackBtn.ensureDebugId(baseID + DeModule.Ids.FEEDBACK_BTN);
         taskBar.ensureDebugId(baseID + DeModule.Ids.TASK_BAR);
 
 
         // User Settings Menu Items
-        preferencesBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.PREFERENCES_BTN);
-        collaboratorsBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.COLLABORATORS_BTN);
-        systemMsgsBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.SYS_MSGS_BTN);
-        documentationBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.USER_MANUAL_BTN);
-        introBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.INTRO_BTN);
-    //    contactSupportBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.SUPPORT_BTN);
-        aboutBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.ABOUT_BTN);
-        logoutBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.LOGOUT_BTN);
+        preferencesLink.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.PREFERENCES_LINK);
+        collaboratorsLink.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.COLLABORATORS_LINK);
+        systemMsgsLink.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.SYS_MSGS_LINK);
+        documentationLink.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.USER_MANUAL_LINK);
+        introBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.INTRO_LINK);
+    //  contactSupportBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.SUPPORT_BTN);
+        aboutBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.ABOUT_LINK);
+        logoutBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.LOGOUT_LINK);
+
+        //Help Menu Items
+        faqLink.ensureDebugId(baseID + DeModule.Ids.HELP_MENU + DeModule.Ids.FAQS_LINK);
+        forumsLink.ensureDebugId(baseID + DeModule.Ids.HELP_MENU + DeModule.Ids.FORUMS_LINK);
+        feedbackLink.ensureDebugId(baseID + DeModule.Ids.HELP_MENU + DeModule.Ids.FEEDBACK_LINK);
+
     }
 
     @Override
@@ -251,7 +281,7 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
         if(count > 0) {
             labelText += " (" + count + ")";
         }
-        systemMsgsBtn.setText(labelText);
+        systemMsgsLink.setText(labelText);
     }
 
     @UiHandler("notificationsListView")
@@ -274,8 +304,9 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
         presenter.onDataWinBtnSelect();
     }
 
-   /* @UiHandler("feedbackBtn")
-    void onFeedbackBtnSelect(SelectEvent event) {
+
+    void onFeedbackBtnSelect() {
+        helpBtn.hideMenu();
         final DEFeedbackDialog feedbackDialog = deFeedbackDialogProvider.get();
         feedbackDialog.show();
         feedbackDialog.getButton(PredefinedButton.OK).addSelectHandler(new SelectEvent.SelectHandler() {
@@ -292,45 +323,48 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
             }
         });
 
-        feedbackDialog.getButton(PredefinedButton.CANCEL).addSelectHandler(new SelectHandler() {
-
+        feedbackDialog.getButton(PredefinedButton.CANCEL).addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
                 feedbackDialog.hide();
-
             }
         });
+   }
 
-    }*/
 
-  /*  @UiHandler("forumsBtn")
-    void onForumsSelect(SelectEvent event) {
+    void onFaqSelect() {
+        helpBtn.hideMenu();
+        presenter.onFaqSelect();
+    }
+
+    void onForumsSelect() {
+        helpBtn.hideMenu();
         presenter.onForumsBtnSelect();
-    }  */
+    }
 
-    @UiHandler({"preferencesBtn", "collaboratorsBtn", "systemMsgsBtn",
-                   "documentationBtn", "introBtn", /*"contactSupportBtn",*/ "aboutBtn", "logoutBtn"})
+    @UiHandler({ "preferencesLink", "collaboratorsLink", "systemMsgsLink",
+                 "documentationLink", "introBtn", /*"contactSupportBtn",*/ "aboutBtn", "logoutBtn"})
     void onAnyUserSettingsItemClick(ClickEvent event){
         userSettingsBtn.hideMenu();
     }
 
-    @UiHandler("preferencesBtn")
+    @UiHandler("preferencesLink")
     void onPreferencesClick(ClickEvent event){
         PreferencesDialog dialog = preferencesDialogProvider.get();
         dialog.show(presenter, userSettings);
     }
 
-    @UiHandler("collaboratorsBtn")
+    @UiHandler("collaboratorsLink")
     void onCollaboratorsClick(ClickEvent event){
         presenter.onCollaboratorsClick();
     }
 
-    @UiHandler("systemMsgsBtn")
+    @UiHandler("systemMsgsLink")
     void onSystemMessagesClick(ClickEvent event){
         presenter.onSystemMessagesClick();
     }
 
-    @UiHandler("documentationBtn")
+    @UiHandler("documentationLink")
     void onDocumentationClick(ClickEvent event){
         presenter.onDocumentationClick();
     }

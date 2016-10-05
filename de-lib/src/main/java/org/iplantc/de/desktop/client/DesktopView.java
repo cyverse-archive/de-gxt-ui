@@ -37,6 +37,7 @@ import java.util.List;
 public interface DesktopView extends IsWidget {
 
     interface DesktopAppearance {
+
         interface DesktopStyles extends CssResource {
             String analyses();
 
@@ -47,8 +48,6 @@ public interface DesktopView extends IsWidget {
             String deBody();
 
             String desktopBackground();
-
-            String forums();
 
             String iplantHeader();
 
@@ -85,8 +84,6 @@ public interface DesktopView extends IsWidget {
 
         String feedbackAlertValidationWarning();
 
-        IconButton.IconConfig forumsConfig();
-
         IconButton.IconConfig notificationsConfig();
 
         IconButton.IconConfig helpConfig();
@@ -121,7 +118,11 @@ public interface DesktopView extends IsWidget {
 
         String iconHomepageDataTip();
 
-        String forums();
+        String forum();
+
+        String faqs();
+
+        String feedback();
 
         String iconHomepageAnalysesTip();
 
@@ -216,6 +217,9 @@ public interface DesktopView extends IsWidget {
         void restoreWindows(List<WindowState> windowStates);
 
         void setPeriodicSessionFailFlags();
+
+        void onFaqSelect();
+
     }
 
     interface UserSettingsMenuPresenter {

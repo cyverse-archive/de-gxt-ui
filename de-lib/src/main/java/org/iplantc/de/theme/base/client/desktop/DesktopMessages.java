@@ -27,8 +27,8 @@ public interface DesktopMessages extends Messages {
     @Key("feedbackSubmitted")
     String feedbackSubmitted();
 
-    @Key("forums")
-    String forums();
+    @Key("forum")
+    String forum();
 
     @Key("introduction")
     String introduction();
@@ -106,4 +106,8 @@ public interface DesktopMessages extends Messages {
     String retrySessionConnection();
 
     String sessionConnectionFailed();
+
+    String faqs();
+
+    String feedback();
 }

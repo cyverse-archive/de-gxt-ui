@@ -633,6 +633,11 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }
 
     @Override
+    public void onFaqSelect() {
+        WindowUtil.open(commonUiConstants.faqUrl());
+    }
+
+    @Override
     public void doPeriodicSessionSave() {
         if (userSettings.isSaveSession()) {
             ssp.run();

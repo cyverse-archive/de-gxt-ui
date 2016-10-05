@@ -47,9 +47,6 @@ public class BaseDesktopAppearance implements DesktopView.DesktopAppearance {
         @ImageOptions(repeatStyle = ImageResource.RepeatStyle.Both)
         ImageResource desktopBackgroundRepeat();
 
-        @Source("org/iplantc/de/theme/base/client/desktop/forum.png")
-        ImageResource forumsImg();
-
         @Source("org/iplantc/de/theme/base/client/desktop/header_bg.png")
         ImageResource headerBg();
 
@@ -114,11 +111,6 @@ public class BaseDesktopAppearance implements DesktopView.DesktopAppearance {
     @Override
     public String feedbackAlertValidationWarning() {
         return displayStrings.warning();
-    }
-
-    @Override
-    public IconConfig forumsConfig() {
-        return new IconConfig(style.forums());
     }
 
     @Override
@@ -207,8 +199,18 @@ public class BaseDesktopAppearance implements DesktopView.DesktopAppearance {
     }
 
     @Override
-    public String forums() {
-        return desktopMessages.forums();
+    public String forum() {
+        return desktopMessages.forum();
+    }
+
+    @Override
+    public String faqs() {
+        return desktopMessages.faqs();
+    }
+
+    @Override
+    public String feedback() {
+        return desktopMessages.feedback();
     }
 
     @Override
