@@ -4,6 +4,7 @@ import org.iplantc.de.apps.client.AppsView;
 import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.dialogs.AgaveAuthPrompt;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
@@ -13,11 +14,14 @@ import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.inject.Inject;
 
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
+
 /**
  * @author jstroot
  */
 public class DEAppsWindow extends IplantWindowBase {
 
+    public static final String APPS = "#apps";
     @Inject UserInfo userInfo;
     private final AppsView.Presenter presenter;
 
@@ -38,6 +42,14 @@ public class DEAppsWindow extends IplantWindowBase {
         final AppsWindowConfig appsWindowConfig = (AppsWindowConfig)windowConfig;
         presenter.go(this, appsWindowConfig.getSelectedAppCategory(), appsWindowConfig.getSelectedApp());
         super.show(windowConfig, tag, isMaximizable);
+        btnHelp = createHelpButton();
+        getHeader().insertTool(btnHelp,0);
+        btnHelp.addSelectHandler(new SelectEvent.SelectHandler() {
+            @Override
+            public void onSelect(SelectEvent event) {
+                WindowUtil.open(constants.faqUrl() + APPS);
+            }
+        });
     }
 
     @Override

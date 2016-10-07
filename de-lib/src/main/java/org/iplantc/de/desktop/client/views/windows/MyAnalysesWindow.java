@@ -4,6 +4,7 @@ import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.shared.AnalysisModule;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.analysis.Analysis;
+import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.window.configs.AnalysisWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
@@ -13,6 +14,8 @@ import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
+
 import java.util.List;
 
 /**
@@ -20,6 +23,7 @@ import java.util.List;
  */
 public class MyAnalysesWindow extends IplantWindowBase {
 
+    public static final String ANALYSES = "#analyses";
     private final AnalysesView.Presenter presenter;
 
     @Inject
@@ -31,7 +35,6 @@ public class MyAnalysesWindow extends IplantWindowBase {
         setHeadingText(displayStrings.analyses());
         setSize("670", "375");
         setMinWidth(400);
-
     }
 
     @Override
@@ -39,6 +42,14 @@ public class MyAnalysesWindow extends IplantWindowBase {
                                               boolean isMaximizable) {
         presenter.go(this, ((AnalysisWindowConfig)windowConfig).getSelectedAnalyses());
         super.show(windowConfig, tag, isMaximizable);
+        btnHelp = createHelpButton();
+        getHeader().insertTool(btnHelp,0);
+        btnHelp.addSelectHandler(new SelectEvent.SelectHandler() {
+            @Override
+            public void onSelect(SelectEvent event) {
+                WindowUtil.open(constants.faqUrl() + ANALYSES);
+            }
+        });
     }
 
     @Override
