@@ -128,7 +128,7 @@ public class AppCategoriesPresenterImplTest {
         when(appearanceMock.getAppCategoriesLoadingMask()).thenReturn("mask");
 
         /*** CALL METHOD UNDER TEST ***/
-        uut.go(null, tabPanelMock);
+        uut.go(null, false, tabPanelMock);
 
         verify(treeMock, times(2)).mask(anyString());
         verify(appServiceMock).getAppCategories(anyBoolean(), appCategoriesCaptor.capture());

@@ -12,12 +12,13 @@ import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.services.OntologyServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.AvuListCallbackConverter;
-import org.iplantc.de.client.services.converters.OntologyHierarchyCallbackConverter;
 import org.iplantc.de.client.services.converters.OntologyHierarchyListCallbackConverter;
+import org.iplantc.de.client.services.converters.PromiseConverter;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
 import com.google.gwt.http.client.URL;
+import com.google.gwt.query.client.plugins.deferred.PromiseRPC;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
@@ -45,11 +46,17 @@ public class OntologyServiceFacadeImpl implements OntologyServiceFacade {
     }
 
     @Override
-    public void getFilteredHierarchies(String rootIri, Avu avu, AsyncCallback<OntologyHierarchy> callback) {
+    public void getFilteredHierarchies(String rootIri, Avu avu, PromiseRPC<OntologyHierarchy> callback) {
         String address = APPS_HIERARCHIES + "/" + URL.encodeQueryString(rootIri) + "?attr=" + URL.encodeQueryString(avu.getAttribute());
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, new OntologyHierarchyCallbackConverter(callback, factory));
+        deService.getServiceData(wrapper, new PromiseConverter<String, OntologyHierarchy>(callback) {
+
+            @Override
+            protected OntologyHierarchy convertFrom(String object) {
+                return AutoBeanCodex.decode(svcFactory, OntologyHierarchy.class, object).as().getHierarchy();
+            }
+        });
     }
 
     @Override

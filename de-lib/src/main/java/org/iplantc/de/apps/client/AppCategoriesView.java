@@ -2,6 +2,7 @@ package org.iplantc.de.apps.client;
 
 import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
+import org.iplantc.de.apps.client.events.SelectedHierarchyNotFound;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.AppInfoSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.CopyAppSelected;
@@ -65,7 +66,8 @@ public interface AppCategoriesView extends IsWidget,
     interface Presenter extends AppSearchResultLoadEvent.AppSearchResultLoadEventHandler,
                                 CopyAppSelected.CopyAppSelectedHandler,
                                 CopyWorkflowSelected.CopyWorkflowSelectedHandler,
-                                AppCategorySelectionChangedEvent.HasAppCategorySelectionChangedEventHandlers {
+                                AppCategorySelectionChangedEvent.HasAppCategorySelectionChangedEventHandlers,
+                                SelectedHierarchyNotFound.SelectedHierarchyNotFoundHandler {
 
         AppCategory getSelectedAppCategory();
 
