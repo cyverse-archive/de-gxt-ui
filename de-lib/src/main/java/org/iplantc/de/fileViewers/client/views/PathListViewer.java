@@ -93,19 +93,20 @@ public class PathListViewer extends AbstractStructuredTextViewer implements Stor
                                                                      5000));
             }
 
+
         }
 
         @Override
         protected void onDragEnter(DndDragEnterEvent event) {
-            handleDropStatus(event.getDragSource().getData(),
+         /*   handleDropStatus(,
                              event,
-                             event.getStatusProxy());
+                             event.getStatusProxy());*/
         }
 
         @Override
         protected void onDragMove(DndDragMoveEvent event) {
             super.onDragMove(event);
-            handleDropStatus(event.getDragSource().getData(),
+            handleDropStatus(event.getData(),
                              event,
                              event.getStatusProxy());
         }
@@ -143,10 +144,11 @@ public class PathListViewer extends AbstractStructuredTextViewer implements Stor
             Iterable<DiskResource> iterable = (Iterable<DiskResource>) o;
             for(DiskResource dr : iterable){
                 InfoType infoType1 = InfoType.fromTypeString(dr.getInfoType());
-                if(InfoType.HT_ANALYSIS_PATH_LIST.equals(infoType1) || dr.isFilter()){
+                if(InfoType.HT_ANALYSIS_PATH_LIST.equals(infoType1)){
                     cancellableEvent.setCancelled(true);
                     statusProxy.update(appearance.preventPathListDrop());
                     statusProxy.setStatus(false);
+
                     return;
                 }
             }
@@ -155,10 +157,11 @@ public class PathListViewer extends AbstractStructuredTextViewer implements Stor
         }
 
         boolean hasCorrectData(Object data){
-
-            boolean isCollection = data instanceof Collection<?>;
+           boolean isCollection = data instanceof Collection<?>;
             boolean isEmpty = ((Collection<?>) data).isEmpty();
             boolean hasDiskResources = ((Collection<?>) data).iterator().next() instanceof DiskResource;
+            boolean filteredData = false;
+            Iterable<DiskResource> iterable = (Iterable<DiskResource>) data;
             return isCollection
                        && !isEmpty
                        && hasDiskResources;

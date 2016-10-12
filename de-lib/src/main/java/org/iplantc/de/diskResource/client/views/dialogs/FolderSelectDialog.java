@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.models.viewer.InfoType;
+import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.diskResource.client.DiskResourceView;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent;
@@ -18,6 +19,7 @@ import com.google.inject.Inject;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.TextField;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -105,6 +107,8 @@ public class FolderSelectDialog extends IPlantDialog implements TakesValue<Folde
     private DiskResourceView.Presenter presenter;
     private Folder selectedFolder;
     private final TextField selectedFolderTextField;
+    @Inject
+    DiskResourceUtil diskResourceUtil;
 
     @Inject
     FolderSelectDialog(final DiskResourcePresenterFactory presenterFactory,
@@ -163,7 +167,7 @@ public class FolderSelectDialog extends IPlantDialog implements TakesValue<Folde
     @Override
     public void setValue(Folder value) {
         this.selectedFolder = value;
-        if(value == null){
+        if(value == null || diskResourceUtil.containsFilteredItems(Arrays.asList(value))){
             selectedFolderTextField.clear();
             getOkButton().setEnabled(false);
             return;

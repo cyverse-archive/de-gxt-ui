@@ -276,6 +276,11 @@ public class GridViewPresenterImpl implements
             // Only call get stat for single selections
             return;
         }
+
+        if(selection.size() > 0 && selection.iterator().next().isFilter()) {
+            return;
+        }
+
         fetchDetails(selection.iterator().next());
     }
 
@@ -447,7 +452,9 @@ public class GridViewPresenterImpl implements
                         if (selection != null && selection.size() == 1) {
                             Iterator<DiskResource> it = selection.iterator();
                             DiskResource next = it.next();
-                            fetchDetails(next);
+                            if(!next.isFilter()) {
+                                fetchDetails(next);
+                            }
                         }
                     }
                 });

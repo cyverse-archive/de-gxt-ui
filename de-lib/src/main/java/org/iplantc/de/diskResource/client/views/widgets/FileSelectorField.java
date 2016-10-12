@@ -27,6 +27,7 @@ import com.sencha.gxt.dnd.core.client.StatusProxy;
 import com.sencha.gxt.widget.core.client.event.HideEvent;
 import com.sencha.gxt.widget.core.client.event.HideEvent.HideHandler;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -51,10 +52,11 @@ public class FileSelectorField extends AbstractDiskResourceSelector<File> {
 
         @Override
         public void onHide(HideEvent event) {
-            if ((takesValue.getValue() == null) || takesValue.getValue().isEmpty())
+            if ((takesValue.getValue() == null) || takesValue.getValue().isEmpty()
+                || diskResourceUtil.containsFilteredItems(takesValue.getValue())) {
                 return;
-
-            // This class is single select, so only grab first element
+            }
+           // This class is single select, so only grab first element
             File selectedResource = takesValue.getValue().get(0);
             setSelectedResource(selectedResource);
             // cache the last used path
@@ -109,7 +111,7 @@ public class FileSelectorField extends AbstractDiskResourceSelector<File> {
 
         DiskResource value = getValue();
         final List<DiskResource> selected = (value == null) ? null : Lists.<DiskResource>newArrayList();
-        if (value != null) {
+        if (value != null && !diskResourceUtil.containsFilteredItems(selected)) {
             selected.add(value);
         }
 
@@ -153,7 +155,8 @@ public class FileSelectorField extends AbstractDiskResourceSelector<File> {
     @Override
     protected boolean validateDropStatus(Set<DiskResource> dropData, StatusProxy status) {
         // Only allow 1 file to be dropped in this field.
-        if (dropData == null || dropData.size() != 1 || !(diskResourceUtil.containsFile(dropData))) {
+        if (dropData == null || dropData.size() != 1 || !(diskResourceUtil.containsFile(dropData))
+            || diskResourceUtil.containsFilteredItems(new ArrayList<>(dropData))) {
             status.setStatus(false);
             return false;
         }

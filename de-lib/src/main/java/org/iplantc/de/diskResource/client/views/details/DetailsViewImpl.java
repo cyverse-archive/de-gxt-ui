@@ -179,7 +179,7 @@ public class DetailsViewImpl extends Composite implements DetailsView,
     @Override
     public void onDiskResourceSelectionChanged(DiskResourceSelectionChangedEvent event) {
         if (event.getSelection().isEmpty()
-                || event.getSelection().size() != 1) {
+                || event.getSelection().size() != 1 || event.getSelection().get(0).isFilter()) {
             bind(null);
             // Hide table
             table.addClassName(appearance.css().hidden());
@@ -221,7 +221,9 @@ public class DetailsViewImpl extends Composite implements DetailsView,
         }
 
         bind(singleSelection);
-        tagsPresenter.fetchTagsForResource(singleSelection);
+        if(!singleSelection.isFilter())  {
+            tagsPresenter.fetchTagsForResource(singleSelection);
+        }
     }
 
     @Override

@@ -270,6 +270,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
         boolean restoreMiEnabled;
 
         selectedDiskResources = event.getSelection();
+        final boolean containsFilteredItems = diskResourceUtil.containsFilteredItems(selectedDiskResources);
         final boolean isSelectionEmpty = selectedDiskResources.isEmpty();
         final boolean isSingleSelection = selectedDiskResources.size() == 1;
         final boolean isOwner = isOwnerList(selectedDiskResources);
@@ -280,45 +281,48 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
         final boolean isFolderSelect = !isSelectionEmpty
                                        && firstItem instanceof Folder;
 
-        duplicateMiEnabled = !isSelectionEmpty && isOwner && !isSelectionInTrash;
-        moveToTrashMiEnabled = !isSelectionEmpty && isOwner && !isSelectionInTrash;
+        duplicateMiEnabled = !isSelectionEmpty && isOwner && !isSelectionInTrash && !containsFilteredItems;
+        moveToTrashMiEnabled = !isSelectionEmpty && isOwner && !isSelectionInTrash && !containsFilteredItems;
 
-        renameMiEnabled = !isSelectionEmpty && isSingleSelection && isOwner && !isSelectionInTrash;
-        moveMiEnabled = !isSelectionEmpty && isOwner && !isSelectionInTrash;
-        deleteMiEnabled = !isSelectionEmpty && isOwner;
+        renameMiEnabled = !isSelectionEmpty && isSingleSelection && isOwner && !isSelectionInTrash && !containsFilteredItems;
+        moveMiEnabled = !isSelectionEmpty && isOwner && !isSelectionInTrash && !containsFilteredItems;
+        deleteMiEnabled = !isSelectionEmpty && isOwner && !containsFilteredItems;
         editFileMiEnabled = !isSelectionEmpty && isSingleSelection
-                && containsFile(selectedDiskResources) && isOwner && !isSelectionInTrash;
+                && containsFile(selectedDiskResources) && isOwner && !isSelectionInTrash && !containsFilteredItems;
         editCommentsMiEnabled = !isSelectionEmpty && isSingleSelection && !isSelectionInTrash
-                && isReadable;
+                && isReadable && !containsFilteredItems;
         editInfoTypeMiEnabled = !isSelectionEmpty && isSingleSelection && !isSelectionInTrash
-                && containsFile(selectedDiskResources) && isOwner;
-        metadataMiEnabled = !isSelectionEmpty && isSingleSelection && !isSelectionInTrash;
+                && containsFile(selectedDiskResources) && isOwner && !containsFilteredItems;
+        metadataMiEnabled = !isSelectionEmpty && isSingleSelection && !isSelectionInTrash && !containsFilteredItems;
 
-        simpleDownloadMiEnabled = !isSelectionEmpty && containsFile(selectedDiskResources);
-        bulkDownloadMiEnabled = !isSelectionEmpty;
+        simpleDownloadMiEnabled = !isSelectionEmpty && containsFile(selectedDiskResources) && !containsFilteredItems;
+        bulkDownloadMiEnabled = !isSelectionEmpty && !containsFilteredItems;
         sendToCogeMiEnabled = !isSelectionEmpty
                 && isSingleSelection
                 && containsFile(selectedDiskResources)
                 && !isSelectionInTrash
-                && diskResourceUtil.isGenomeVizInfoType(getInfoTypeFromSingletonCollection(selectedDiskResources));
+                && diskResourceUtil.isGenomeVizInfoType(getInfoTypeFromSingletonCollection(selectedDiskResources))
+                && !containsFilteredItems;
         sendToEnsemblMiEnabled = !isSelectionEmpty
                 && isSingleSelection
                 && containsFile(selectedDiskResources)
                 && !isSelectionInTrash
-                && diskResourceUtil.isEnsemblInfoType(getInfoTypeFromSingletonCollection(selectedDiskResources));
+                && diskResourceUtil.isEnsemblInfoType(getInfoTypeFromSingletonCollection(selectedDiskResources))
+                && !containsFilteredItems;
         sendToTreeViewerMiEnabled = !isSelectionEmpty
                 && isSingleSelection
                 && containsFile(selectedDiskResources)
                 && !isSelectionInTrash
-                && diskResourceUtil.isTreeInfoType(getInfoTypeFromSingletonCollection(selectedDiskResources));
+                && diskResourceUtil.isTreeInfoType(getInfoTypeFromSingletonCollection(selectedDiskResources))
+                && !containsFilteredItems;
 
-        shareWithCollaboratorsMiEnabled = !isSelectionEmpty && isOwner && !isSelectionInTrash;
+        shareWithCollaboratorsMiEnabled = !isSelectionEmpty && isOwner && !isSelectionInTrash && !containsFilteredItems;
         createPublicLinkMiEnabled = !isSelectionEmpty && isOwner && !isSelectionInTrash
-                && containsFile(selectedDiskResources);
+                && containsFile(selectedDiskResources) && !containsFilteredItems;
         shareFolderLocationMiEnabled = !isSelectionEmpty && isSingleSelection && !isSelectionInTrash
-                && containsOnlyFolders(selectedDiskResources);
+                && containsOnlyFolders(selectedDiskResources) && !containsFilteredItems;
 
-        restoreMiEnabled = !isSelectionEmpty && isSelectionInTrash && isOwner;
+        restoreMiEnabled = !isSelectionEmpty && isSelectionInTrash && isOwner && !containsFilteredItems;
 
         duplicateMi.setEnabled(duplicateMiEnabled);
         moveToTrashMi.setEnabled(moveToTrashMiEnabled);
@@ -363,24 +367,25 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     @Override
     public void onFolderSelected(FolderSelectionEvent event) {
         boolean simpleUploadMiEnabled, bulkUploadMiEnabled, importFromUrlMiEnabled;
-
         boolean newFolderMiEnabled, newPlainTextFileMiEnabled, newTabularDataFileMiEnabled;
         boolean refreshButtonEnabled;
 
         selectedFolder = event.getSelectedFolder();
+        final boolean containsFilteredItems = diskResourceUtil.containsFilteredItems(selectedDiskResources);
         final boolean isFolderInTrash = isSelectionInTrash(Lists.<DiskResource> newArrayList(selectedFolder));
         final boolean isNull = selectedFolder == null;
-        final boolean canUploadTo = canUploadTo(selectedFolder);
+        final boolean canUploadTo = canUploadTo(selectedFolder) && !containsFilteredItems;
 
-        simpleUploadMiEnabled = !isFolderInTrash && (isNull || canUploadTo);
-        bulkUploadMiEnabled = !isFolderInTrash && (isNull || canUploadTo);
-        importFromUrlMiEnabled = !isFolderInTrash && (isNull || canUploadTo);
+
+        simpleUploadMiEnabled = !isFolderInTrash && (isNull || canUploadTo) && !containsFilteredItems;
+        bulkUploadMiEnabled = !isFolderInTrash && (isNull || canUploadTo) && !containsFilteredItems;
+        importFromUrlMiEnabled = !isFolderInTrash && (isNull || canUploadTo) && !containsFilteredItems;
 
         newFolderMiEnabled = isNull || canUploadTo;
         newPlainTextFileMiEnabled = isNull || canUploadTo;
         newTabularDataFileMiEnabled = isNull || canUploadTo;
 
-        refreshButtonEnabled = !isNull;
+        refreshButtonEnabled = !isNull && !containsFilteredItems;
 
         simpleUploadMi.setEnabled(simpleUploadMiEnabled);
         bulkUploadMi.setEnabled(bulkUploadMiEnabled);
