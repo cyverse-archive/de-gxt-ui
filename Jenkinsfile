@@ -31,19 +31,23 @@ node('docker') {
             git_commit = readFile('GIT_COMMIT').trim()
             echo git_commit
 
+            milestone 100
             dockerRepo = "${dockerUser}/${repo}:${env.BRANCH_NAME}"
-            sh "docker build --rm --build-arg git_commit=${git_commit} -t ${dockerRepo} ."
+            lock("docker-push-${dockerRepo}") {
+              milestone 101
+              sh "docker build --rm --build-arg git_commit=${git_commit} -t ${dockerRepo} ."
 
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'jenkins-docker-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME']]) {
-                sh """docker run -e DOCKER_USERNAME -e DOCKER_PASSWORD \\
-                                 -v /var/run/docker.sock:/var/run/docker.sock \\
-                                 --rm --name ${dockerPusher} \\
-                                 docker:\$(docker version --format '{{ .Server.Version }}') \\
-                                 sh -e -c \\
-                      'docker login -u \"\$DOCKER_USERNAME\" -p \"\$DOCKER_PASSWORD\" && \\
-                       docker push ${dockerRepo} && \\
-                       docker logout'"""
-            }
+              withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'jenkins-docker-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME']]) {
+                  sh """docker run -e DOCKER_USERNAME -e DOCKER_PASSWORD \\
+                                   -v /var/run/docker.sock:/var/run/docker.sock \\
+                                   --rm --name ${dockerPusher} \\
+                                   docker:\$(docker version --format '{{ .Server.Version }}') \\
+                                   sh -e -c \\
+                        'docker login -u \"\$DOCKER_USERNAME\" -p \"\$DOCKER_PASSWORD\" && \\
+                         docker push ${dockerRepo} && \\
+                         docker logout'"""
+              }
+          }
         } finally {
             // using returnStatus so if these are gone it doesn't error
             sh returnStatus: true, script: "rm sencha_gradle.properties"
