@@ -102,10 +102,6 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
                      searchRegexPattern,
                      hierarchyTreeStore,
                      categoryTreeStore,
-                     OntologyHierarchiesPresenterImpl.this,
-                     OntologyHierarchiesPresenterImpl.this,
-                     OntologyHierarchiesPresenterImpl.this,
-                     OntologyHierarchiesPresenterImpl.this,
                      OntologyHierarchiesPresenterImpl.this);
         }
     }

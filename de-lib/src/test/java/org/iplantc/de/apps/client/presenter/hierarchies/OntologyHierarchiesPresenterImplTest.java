@@ -43,6 +43,7 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.widgets.DETabPanel;
 
+import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.inject.client.AsyncProvider;
 import com.google.gwt.query.client.Function;
@@ -290,11 +291,7 @@ public class OntologyHierarchiesPresenterImplTest {
                                           anyString(),
                                           eq(hierarchyTreeStoreMock),
                                           eq(categoryTreeStoreMock),
-                                          Matchers.<AppFavoriteSelectedEvent.AppFavoriteSelectedEventHandler>any(),
-                                          Matchers.<AppRatingSelected.AppRatingSelectedHandler>any(),
-                                          Matchers.<AppRatingDeselected.AppRatingDeselectedHandler>any(),
-                                          Matchers.<DetailsHierarchyClicked.DetailsHierarchyClickedHandler>any(),
-                                          Matchers.<DetailsCategoryClicked.DetailsCategoryClickedHandler>any());
+                                          Matchers.<EventHandler>any());
 
         verifyNoMoreInteractions(ontologyServiceMock, appUserServiceMock, ontologyUtilMock);
 
@@ -325,11 +322,7 @@ public class OntologyHierarchiesPresenterImplTest {
                                           anyString(),
                                           eq(hierarchyTreeStoreMock),
                                           eq(categoryTreeStoreMock),
-                                          Matchers.<AppFavoriteSelectedEvent.AppFavoriteSelectedEventHandler>any(),
-                                          Matchers.<AppRatingSelected.AppRatingSelectedHandler>any(),
-                                          Matchers.<AppRatingDeselected.AppRatingDeselectedHandler>any(),
-                                          Matchers.<DetailsHierarchyClicked.DetailsHierarchyClickedHandler>any(),
-                                          Matchers.<DetailsCategoryClicked.DetailsCategoryClickedHandler>any());
+                                          Matchers.<EventHandler>any());
 
         verifyNoMoreInteractions(ontologyServiceMock, appUserServiceMock, ontologyUtilMock);
     }
@@ -356,11 +349,7 @@ public class OntologyHierarchiesPresenterImplTest {
                                           anyString(),
                                           eq(hierarchyTreeStoreMock),
                                           eq(categoryTreeStoreMock),
-                                          Matchers.<AppFavoriteSelectedEvent.AppFavoriteSelectedEventHandler>any(),
-                                          Matchers.<AppRatingSelected.AppRatingSelectedHandler>any(),
-                                          Matchers.<AppRatingDeselected.AppRatingDeselectedHandler>any(),
-                                          Matchers.<DetailsHierarchyClicked.DetailsHierarchyClickedHandler>any(),
-                                          Matchers.<DetailsCategoryClicked.DetailsCategoryClickedHandler>any());
+                                          Matchers.<EventHandler>any());
 
         verifyNoMoreInteractions(ontologyServiceMock, appUserServiceMock, ontologyUtilMock);
 
