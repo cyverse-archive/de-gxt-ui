@@ -39,11 +39,13 @@ public class DeController {
          * Sometimes a login attempt will redirect to "/".
          * If there is a "referer" header, redirect to its path. Otherwise, default to redirecting
          * to "/de/".
+	 *
+	 * Ignore a referer path of "/" since it produces a redirect loop.
          */
         if(!Strings.isNullOrEmpty(referer)){
                 url = new URL(referer);
-            if(!Strings.isNullOrEmpty(url.getPath())){
-                return "redirect:" + url.getPath();
+            if(!Strings.isNullOrEmpty(url.getFile()) && url.getPath() != "/"){
+                return "redirect:" + url.getFile();
             }
         }
         return "redirect:de/";
