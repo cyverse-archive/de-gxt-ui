@@ -44,7 +44,7 @@ public class DeController {
          */
         if(!Strings.isNullOrEmpty(referer)){
                 url = new URL(referer);
-            if(!Strings.isNullOrEmpty(url.getFile()) && url.getPath() != "/"){
+            if(!Strings.isNullOrEmpty(url.getFile()) && !url.getPath().equals("/")){
                 return "redirect:" + url.getFile();
             }
         }
