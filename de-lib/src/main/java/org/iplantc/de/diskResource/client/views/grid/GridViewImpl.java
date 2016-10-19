@@ -171,8 +171,7 @@ public class GridViewImpl extends ContentPanel implements GridView,
     @Override
     public void onFolderSelected(FolderSelectionEvent event) {
         final Folder selectedItem = event.getSelectedFolder();
-        if (selectedItem == null
-                || selectedItem.isFilter()) {
+        if (selectedItem == null || selectedItem.isFilter()) {
             return;
         }
 

@@ -111,9 +111,6 @@ public class LiveGridCheckBoxSelectionModel extends CheckBoxSelectionModel<DiskR
 
     @Override
     public boolean isSelected(final DiskResource item) {
-/*        if (item.isFilter()) {
-            return false;
-        }*/
         // It is selected if it is in the selection or select all is checked
         final ModelKeyProvider<? super DiskResource> keyProvider = store.getKeyProvider();
         final String itemKey = keyProvider.getKey(item);
@@ -171,9 +168,6 @@ public class LiveGridCheckBoxSelectionModel extends CheckBoxSelectionModel<DiskR
             doDeselect(new ArrayList<>(selected), true);
         }
         for (DiskResource m : models) {
-/*            if (m.isFilter()) {
-                continue;
-            }*/
             boolean isSelected = isSelected(m);
             if (!suppressEvent && !isSelected) {
                 BeforeSelectionEvent<DiskResource> evt = BeforeSelectionEvent.fire(this, m);
@@ -206,12 +200,9 @@ public class LiveGridCheckBoxSelectionModel extends CheckBoxSelectionModel<DiskR
 
     @Override
     protected void doSingleSelect(DiskResource model, boolean suppressEvent) {
-        if (locked)
+        if (locked) {
             return;
-
-/*        if (model.isFilter())
-            return;*/
-
+        }
         int index = -1;
         if (store instanceof ListStore) {
             ListStore<DiskResource> ls = (ListStore<DiskResource>) store;
@@ -270,32 +261,16 @@ public class LiveGridCheckBoxSelectionModel extends CheckBoxSelectionModel<DiskR
 
     @Override
     protected void onRowClick(RowClickEvent event) {
-        // Prevent selections of filtered items
-        DiskResource model = listStore.get(event.getRowIndex());
-/*        if ((model != null) && model.isFilter()) {
-            return;
-        }*/
-
         super.onRowClick(event);
     }
 
     @Override
     protected void onRowMouseDown(RowMouseDownEvent event) {
-        // Prevent selections of filtered items
-        DiskResource model = listStore.get(event.getRowIndex());
-/*        if ((model != null) && model.isFilter()) {
-            return;
-        }*/
-
         super.onRowMouseDown(event);
     }
 
     @Override
     protected void onSelectChange(DiskResource model, boolean select) {
-        // Prevent selections of filtered items
-/*        if (model.isFilter()) {
-            return;
-        }*/
         super.onSelectChange(model, select);
     }
 
