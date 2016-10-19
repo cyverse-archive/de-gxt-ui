@@ -39,7 +39,7 @@ public class UserSettings {
     private boolean enableWaitTimeMessage;
     
     
-    public static final String EMAIL_ANALYSIS_NOTIFCATOIN = "enableAnalysisEmailNotification";
+    public static final String EMAIL_ANALYSIS_NOTIFICATION = "enableAnalysisEmailNotification";
     public static final String EMAIL_IMPORT_NOTIFICATION = "enableImportEmailNotification";
     public static final String DEFAULT_FILE_SELECTOR_PATH = "defaultFileSelectorPath";
     public static final String REMEMBER_LAST_PATH = "rememberLastPath";
@@ -88,8 +88,8 @@ public class UserSettings {
             return;
         }
 
-        if (split.get(EMAIL_ANALYSIS_NOTIFCATOIN) != null) {
-            setEnableAnalysisEmailNotification(split.get(EMAIL_ANALYSIS_NOTIFCATOIN).asBoolean());
+        if (split.get(EMAIL_ANALYSIS_NOTIFICATION) != null) {
+            setEnableAnalysisEmailNotification(split.get(EMAIL_ANALYSIS_NOTIFICATION).asBoolean());
         } else {
             setEnableAnalysisEmailNotification(true);
         }
@@ -252,7 +252,7 @@ public class UserSettings {
      */
     public Splittable asSplittable() {
         Splittable ret = StringQuoter.createSplittable();
-        StringQuoter.create(isEnableAnalysisEmailNotification()).assign(ret, EMAIL_ANALYSIS_NOTIFCATOIN);
+        StringQuoter.create(isEnableAnalysisEmailNotification()).assign(ret, EMAIL_ANALYSIS_NOTIFICATION);
         StringQuoter.create(isEnableImportEmailNotification()).assign(ret, EMAIL_IMPORT_NOTIFICATION);
         StringQuoter.create(isEnableWaitTimeMessage()).assign(ret, WAIT_TIME_MESSAGE);
         StringQuoter.create(getDefaultFileSelectorPath()).assign(ret, DEFAULT_FILE_SELECTOR_PATH);
