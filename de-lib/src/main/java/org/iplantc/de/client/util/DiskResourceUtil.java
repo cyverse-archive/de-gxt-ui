@@ -456,6 +456,9 @@ public class DiskResourceUtil {
     }
 
     public boolean containsFilteredItems(List<? extends DiskResource> diskResources) {
+        if(diskResources == null || diskResources.size() == 0) {
+            return false;
+        }
         for (DiskResource dr : diskResources) {
             if (dr.isFilter()) {
                 return true;
