@@ -61,7 +61,6 @@ import org.iplantc.de.notifications.client.views.dialogs.RequestHistoryDialog;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.services.PropertyServiceAsync;
 import org.iplantc.de.systemMessages.client.events.NewSystemMessagesEvent;
-import org.iplantc.de.systemMessages.client.view.NewMessageView;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
@@ -162,7 +161,6 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     private final EventBus eventBus;
     private final MessagePoller messagePoller;
     private final SaveSessionPeriodic ssp;
-    private final NewMessageView.Presenter systemMsgPresenter;
     private final DesktopView view;
     private final WindowManager windowManager;
     private NotificationWebSocketManager notificationWebSocketManager;
@@ -176,13 +174,11 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                                 final DesktopPresenterEventHandler globalEventHandler,
                                 final DesktopPresenterWindowEventHandler windowEventHandler,
                                 final EventBus eventBus,
-                                final NewMessageView.Presenter systemMsgPresenter,
                                 final WindowManager windowManager,
                                 final DesktopWindowManager desktopWindowManager,
                                 final MessagePoller messagePoller) {
         this.view = view;
         this.eventBus = eventBus;
-        this.systemMsgPresenter = systemMsgPresenter;
         this.windowManager = windowManager;
         this.messagePoller = messagePoller;
         this.desktopWindowManager = desktopWindowManager;
