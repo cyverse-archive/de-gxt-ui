@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.diskResources.Folder;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
@@ -269,6 +270,20 @@ public class UserSettings {
         StringQuoter.create(getLastPath()).assign(ret, LAST_PATH);
 
         return ret;
+    }
+
+    public void useDefaultValues(UserInfo instance) {
+        JSONObject defaults = new JSONObject();
+        JSONObject defaultHomeDir = new JSONObject();
+
+        JSONString id = new JSONString(instance.getHomePath());
+        JSONString path = new JSONString(instance.getHomePath());
+        defaultHomeDir.put("id", id);
+        defaultHomeDir.put("path", path);
+
+        defaults.put(DEFAULT_OUTPUT_FOLDER, defaultHomeDir);
+
+        setValues(defaults);
     }
 
     /**

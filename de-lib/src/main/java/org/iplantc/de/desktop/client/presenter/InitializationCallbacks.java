@@ -14,8 +14,10 @@ import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.shared.DEProperties;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
@@ -131,6 +133,7 @@ class InitializationCallbacks {
         private final UserInfo userInfo;
         private final UserSessionServiceFacade userSessionService;
         private final UserSettings userSettings;
+        private final IplantAnnouncer announcer;
 
         public PropertyServiceCallback(DEProperties deProperties,
                                        UserInfo userInfo,
@@ -138,6 +141,7 @@ class InitializationCallbacks {
                                        UserSessionServiceFacade userSessionService,
                                        Provider<ErrorHandler> errorHandlerProvider,
                                        DesktopView.Presenter.DesktopPresenterAppearance appearance,
+                                       IplantAnnouncer announcer,
                                        Panel panel,
                                        DesktopPresenterImpl presenter) {
             this.deProps = deProperties;
@@ -146,6 +150,7 @@ class InitializationCallbacks {
             this.userSessionService = userSessionService;
             this.errorHandlerProvider = errorHandlerProvider;
             this.appearance = appearance;
+            this.announcer = announcer;
             this.panel = panel;
             this.presenter = presenter;
         }
@@ -161,7 +166,7 @@ class InitializationCallbacks {
             final UserPreferencesCallback userPreferencesCallback = new UserPreferencesCallback(presenter,
                                                                                                 panel,
                                                                                                 userSettings,
-                                                                                                errorHandlerProvider,
+                                                                                                announcer,
                                                                                                 appearance);
             userSessionService.bootstrap(new BootstrapCallback(presenter,
                                                                userInfo,
@@ -175,25 +180,30 @@ class InitializationCallbacks {
     private static class UserPreferencesCallback implements AsyncCallback<String> {
         private final DesktopPresenterImpl presenter;
         private final Panel panel;
-        private final Provider<ErrorHandler> errorHandlerProvider;
         private final DesktopView.Presenter.DesktopPresenterAppearance appearance;
         private final UserSettings userSettings;
+        private IplantAnnouncer announcer;
 
+        @Inject
         public UserPreferencesCallback(DesktopPresenterImpl presenter,
                                        Panel panel,
                                        UserSettings userSettings,
-                                       Provider<ErrorHandler> errorHandlerProvider,
+                                       IplantAnnouncer announcer,
                                        DesktopView.Presenter.DesktopPresenterAppearance appearance) {
             this.presenter = presenter;
             this.panel = panel;
             this.userSettings = userSettings;
-            this.errorHandlerProvider = errorHandlerProvider;
+            this.announcer = announcer;
             this.appearance = appearance;
         }
 
         @Override
         public void onFailure(Throwable caught) {
-            errorHandlerProvider.get().post(appearance.systemInitializationError(), caught);
+            announcer.schedule(new ErrorAnnouncementConfig(SafeHtmlUtils.fromString(appearance.userPreferencesLoadError()),
+                                                           false,
+                                                           5000));
+            userSettings.useDefaultValues(UserInfo.getInstance());
+            presenter.postBootstrap(panel);
         }
 
         @Override
