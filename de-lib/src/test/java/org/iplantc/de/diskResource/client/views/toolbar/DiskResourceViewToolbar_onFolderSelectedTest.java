@@ -406,7 +406,6 @@ public class DiskResourceViewToolbar_onFolderSelectedTest {
         uut.newWindowMi = mockNewWindow;
         uut.newWindowAtLocMi = mockNewWindowAtLoc;
         uut.newFolderMi = mockNewFolder;
-        uut.duplicateMi = mockDuplicate;
         uut.newFileMi = mockNewFileMi;
         uut.moveToTrashMi = mockMoveToTrash;
 
