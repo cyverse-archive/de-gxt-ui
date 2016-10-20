@@ -89,7 +89,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     @UiField
     MenuItem newPathListMi;
     @UiField
-    MenuItem newWindowMi, newWindowAtLocMi, newFolderMi, duplicateMi, newPlainTextFileMi,
+    MenuItem newWindowMi, newWindowAtLocMi, newFolderMi, newPlainTextFileMi,
             newTabularDataFileMi, moveToTrashMi, newRFileMi, newPerlFileMi, newPythonFileMi,
             newShellScriptFileMi, newMdFileMi;
     @UiField
@@ -257,7 +257,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     @Override
     public void onDiskResourceSelectionChanged(DiskResourceSelectionChangedEvent event) {
 
-        boolean duplicateMiEnabled, addToSideBarMiEnabled, moveToTrashMiEnabled;
+        boolean addToSideBarMiEnabled, moveToTrashMiEnabled;
 
         boolean renameMiEnabled, moveMiEnabled, deleteMiEnabled, editFileMiEnabled, editCommentsMiEnabled
                 ,editInfoTypeMiEnabled, metadataMiEnabled;
@@ -281,7 +281,6 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
         final boolean isFolderSelect = !isSelectionEmpty
                                        && firstItem instanceof Folder;
 
-        duplicateMiEnabled = !isSelectionEmpty && isOwner && !isSelectionInTrash && !containsFilteredItems;
         moveToTrashMiEnabled = !isSelectionEmpty && isOwner && !isSelectionInTrash && !containsFilteredItems;
 
         renameMiEnabled = !isSelectionEmpty && isSingleSelection && isOwner && !isSelectionInTrash && !containsFilteredItems;
@@ -324,9 +323,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
         restoreMiEnabled = !isSelectionEmpty && isSelectionInTrash && isOwner && !containsFilteredItems;
 
-        duplicateMi.setEnabled(duplicateMiEnabled);
         moveToTrashMi.setEnabled(moveToTrashMiEnabled);
-
         renameMi.setEnabled(renameMiEnabled);
         moveMi.setEnabled(moveMiEnabled);
         deleteMi.setEnabled(deleteMiEnabled);
@@ -428,10 +425,6 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     @UiHandler("deleteMi")
     void onDeleteClicked(SelectionEvent<Item> event) {
         fireEvent(new DeleteDiskResourcesSelected(selectedDiskResources));
-    }
-
-    @UiHandler("duplicateMi")
-    void onDuplicateClicked(SelectionEvent<Item> event) {/* Do Nothing */
     }
 
     @UiHandler("editCommentsMi")
@@ -726,7 +719,6 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
         newWindowMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_NEW_WINDOW);
         newWindowAtLocMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_NEW_WINDOW_AT_LOC);
         newFolderMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_NEW_FOLDER);
-        duplicateMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_DUPLICATE);
         newPlainTextFileMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_NEW_PLAIN_TEXT);
         newTabularDataFileMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_NEW_TABULAR_DATA);
         createNcbiSraMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_NCBI_SRA);
