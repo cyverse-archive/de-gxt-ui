@@ -181,6 +181,7 @@ public class PipelineAutoBeanUtil {
      */
     private ServicePipelineStep getServiceStep(PipelineTask app) {
         ServicePipelineStep step = serviceFactory.servicePipelineStep().as();
+        step.setSystemId(app.getSystemId());
         step.setTaskId(app.getTaskId());
         step.setAppType(app.getAppType());
         step.setName(app.getName());
