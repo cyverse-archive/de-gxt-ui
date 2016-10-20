@@ -12,6 +12,7 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.views.dialogs.AgaveAuthPrompt;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.shared.DEProperties;
+import org.iplantc.de.shared.exceptions.HttpException;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -27,6 +28,7 @@ import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent.DialogHideHandler;
 
 import java.util.HashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -60,7 +62,12 @@ class InitializationCallbacks {
 
         @Override
         public void onFailure(Throwable caught) {
-            errorHandlerProvider.get().post(appearance.systemInitializationError(), caught);
+            LOG.log(Level.SEVERE, caught.getMessage());
+            Integer statusCode = null;
+            if (caught instanceof HttpException) {
+                statusCode = ((HttpException)caught).getStatusCode();
+            }
+            presenter.onBootstrapError(statusCode);
         }
 
         @Override
@@ -134,6 +141,7 @@ class InitializationCallbacks {
         private final UserSessionServiceFacade userSessionService;
         private final UserSettings userSettings;
         private final IplantAnnouncer announcer;
+        Logger LOG = Logger.getLogger(PropertyServiceCallback.class.getName());
 
         public PropertyServiceCallback(DEProperties deProperties,
                                        UserInfo userInfo,
@@ -157,7 +165,12 @@ class InitializationCallbacks {
 
         @Override
         public void onFailure(Throwable caught) {
-            errorHandlerProvider.get().post(appearance.systemInitializationError(), caught);
+            LOG.log(Level.SEVERE, caught.getMessage());
+            Integer statusCode = null;
+            if (caught instanceof HttpException) {
+                statusCode = ((HttpException)caught).getStatusCode();
+            }
+            presenter.onBootstrapError(statusCode);
         }
 
         @Override

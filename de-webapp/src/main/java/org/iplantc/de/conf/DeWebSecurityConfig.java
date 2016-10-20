@@ -1,12 +1,13 @@
 package org.iplantc.de.conf;
 
+import static org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN;
+
 import org.iplantc.de.server.CacheControlFilter;
 import org.iplantc.de.server.DeCasAuthenticationEntryPoint;
 import org.iplantc.de.server.DeLandingPage;
 import org.iplantc.de.server.MDCFilter;
 import org.iplantc.de.server.auth.CasLogoutSuccessHandler;
 
-import static org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
 import org.slf4j.Logger;
@@ -142,7 +143,7 @@ public class DeWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.antMatcher("/de/**")
             .authorizeRequests()
-            .antMatchers("/applets/**", "/**/logout", "/**/logged-out", "/*.css", "/*.png").permitAll()
+            .antMatchers("/applets/**", "/**/logout", "/**/logged-out", "/**/error", "/**/error-**", "/*.css", "/*.png").permitAll()
             .anyRequest().authenticated().and()
             .exceptionHandling().authenticationEntryPoint(deCasAuthenticationEntryPoint());
 

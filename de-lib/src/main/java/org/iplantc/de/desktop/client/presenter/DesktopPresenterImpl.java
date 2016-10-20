@@ -333,6 +333,14 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         }
     }
 
+    public void onBootstrapError(Integer statusCode) {
+        String redirectUrl = GWT.getHostPageBaseURL() + deClientConstants.errorUrl();
+        if (statusCode != null) {
+            redirectUrl += "-" + statusCode.toString();
+        }
+        Window.Location.assign(redirectUrl);
+    }
+
     private void cleanUp() {
         loggedOut = true;
         messagePoller.stop();
