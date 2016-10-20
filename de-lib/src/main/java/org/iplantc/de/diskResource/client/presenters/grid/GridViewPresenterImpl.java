@@ -272,15 +272,10 @@ public class GridViewPresenterImpl implements
     @Override
     public void onDiskResourceSelectionChanged(DiskResourceSelectionChangedEvent event) {
         final List<DiskResource> selection = event.getSelection();
-        if (selection.size() != 1) {
+        if (selection == null || selection.size() != 1 || selection.iterator().next().isFilter()) {
             // Only call get stat for single selections
             return;
         }
-
-        if(selection.size() > 0 && selection.iterator().next().isFilter()) {
-            return;
-        }
-
         fetchDetails(selection.iterator().next());
     }
 

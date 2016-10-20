@@ -52,7 +52,7 @@ public class FolderSelectorField extends AbstractDiskResourceSelector<Folder> {
         public void onHide(HideEvent event) {
             Folder value = takesValue.getValue();
             if (value == null
-                || diskResourceUtil.containsFilteredItems(Arrays.asList(takesValue.getValue()))) {
+                || diskResourceUtil.containsFilteredItems(Arrays.asList(value))) {
                 return;
             }
             setSelectedResource(value);

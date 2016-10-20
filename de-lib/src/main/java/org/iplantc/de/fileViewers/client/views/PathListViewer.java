@@ -98,9 +98,10 @@ public class PathListViewer extends AbstractStructuredTextViewer implements Stor
 
         @Override
         protected void onDragEnter(DndDragEnterEvent event) {
-         /*   handleDropStatus(,
+           super.onDragEnter(event);
+           handleDropStatus(event.getDragSource().getData(),
                              event,
-                             event.getStatusProxy());*/
+                             event.getStatusProxy());
         }
 
         @Override
@@ -160,8 +161,6 @@ public class PathListViewer extends AbstractStructuredTextViewer implements Stor
            boolean isCollection = data instanceof Collection<?>;
             boolean isEmpty = ((Collection<?>) data).isEmpty();
             boolean hasDiskResources = ((Collection<?>) data).iterator().next() instanceof DiskResource;
-            boolean filteredData = false;
-            Iterable<DiskResource> iterable = (Iterable<DiskResource>) data;
             return isCollection
                        && !isEmpty
                        && hasDiskResources;
