@@ -1,10 +1,15 @@
 package org.iplantc.de.desktop.client.presenter;
 
-import org.iplantc.de.desktop.client.DesktopView;
-import org.iplantc.de.desktop.client.presenter.util.MessagePoller;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
+import org.iplantc.de.desktop.client.DesktopView;
+import org.iplantc.de.desktop.client.presenter.util.MessagePoller;
 import org.iplantc.de.systemMessages.client.view.NewMessageView;
 
 import com.google.gwt.dom.client.Element;
@@ -13,10 +18,6 @@ import com.google.gwtmockito.WithClassesToStub;
 
 import com.sencha.gxt.widget.core.client.WindowManager;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +43,6 @@ public class DesktopPresenterImplTest {
                                           globalEventHandlerMock,
                                           windowEventHandlerMock,
                                           eventBusMock,
-                                          sysMsgPresenterMock,
                                           windowManagerMock,
                                           desktopWindowManagerMock,
                                           messagePollerMock);
