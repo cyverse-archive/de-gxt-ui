@@ -147,4 +147,7 @@ public interface App extends HasQualifiedId,
     List<OntologyHierarchy> getHierarchies();
 
     void setHierarchies(List<OntologyHierarchy> hierarchies);
+
+    @PropertyName("job_stats")
+    AppStats getAppStats();
 }
