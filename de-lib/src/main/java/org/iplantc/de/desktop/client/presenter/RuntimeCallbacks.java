@@ -155,9 +155,6 @@ class RuntimeCallbacks {
         @Override
         public void onSuccess(Void result) {
             userSettings.setValues(newValue.asSplittable());
-            if(!updateSilently){
-                announcer.schedule(new SuccessAnnouncementConfig(appearance.saveSettings(), true, 3000));
-            }
             if(userSettings.isSaveSession()) {
                 userSessionService.saveUserSession(presenter.getOrderedWindowStates(), new AsyncCallback<Void>() {
                     @Override
@@ -167,9 +164,17 @@ class RuntimeCallbacks {
 
                     @Override
                     public void onSuccess(Void result) {
-                      //Do nothing. Session saved as per user request.
+                        showSaveSettingSuccess();
                     }
                 });
+            } else {
+                showSaveSettingSuccess();
+            }
+        }
+
+        void showSaveSettingSuccess() {
+            if (!updateSilently) {
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.saveSettings(), true, 3000));
             }
         }
     }
