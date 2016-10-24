@@ -45,7 +45,7 @@ class RuntimeCallbacks {
         public void onFailure(Throwable caught) {
             final SafeHtml message = SafeHtmlUtils.fromTrustedString(appearance.loadSessionFailed());
             announcer.schedule(new ErrorAnnouncementConfig(message, true, 5000));
-            presenter.doPeriodicSessionSave();
+            presenter.setPeriodicSessionSave(false);
             progressMessageBox.hide();
         }
 
