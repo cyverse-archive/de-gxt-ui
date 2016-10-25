@@ -4,13 +4,14 @@ import org.iplantc.de.client.models.HasDescription;
 
 import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
+import org.iplantc.de.client.models.HasSystemId;
 
 /**
  * 
  * @author jstroot
  * 
  */
-public interface JobExecution extends HasName, HasDescription {
+public interface JobExecution extends HasName, HasDescription, HasSystemId {
 
     @PropertyName("app_id")
     String getAppTemplateId();
