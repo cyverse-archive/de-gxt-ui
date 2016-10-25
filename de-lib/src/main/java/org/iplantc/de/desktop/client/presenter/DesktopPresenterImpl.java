@@ -791,7 +791,9 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
 		};
     }-*/;
 
-    public void setPeriodicSessionSave(boolean saveEnabled) {
-        userSettings.setSaveSession(saveEnabled);
+    @Override
+    public void setPeriodicSessionFailFlags() {
+        userSettings.setSaveSession(false);
+        userSettings.setSessionConnectionFailed(true);
     }
 }

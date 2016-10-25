@@ -323,6 +323,7 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
         final PreferencesDialog preferencesDialog = preferencesDialogProvider.get();
         final UserSettings userSettingsCopy = new UserSettings(userSettings.asSplittable());
         preferencesDialog.initAndShow(userSettingsCopy);
+        userSettingsCopy.setSessionConnectionFailed(userSettings.sessionConnectionFailed());
         preferencesDialog.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
             @Override
             public void onDialogHide(DialogHideEvent event) {

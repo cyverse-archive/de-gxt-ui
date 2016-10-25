@@ -45,7 +45,7 @@ class RuntimeCallbacks {
         public void onFailure(Throwable caught) {
             final SafeHtml message = SafeHtmlUtils.fromTrustedString(appearance.loadSessionFailed());
             announcer.schedule(new ErrorAnnouncementConfig(message, true, 5000));
-            presenter.setPeriodicSessionSave(false);
+            presenter.setPeriodicSessionFailFlags();
             progressMessageBox.hide();
         }
 
@@ -159,7 +159,8 @@ class RuntimeCallbacks {
                 userSessionService.saveUserSession(presenter.getOrderedWindowStates(), new AsyncCallback<Void>() {
                     @Override
                     public void onFailure(Throwable caught) {
-                      announcer.schedule(new ErrorAnnouncementConfig(appearance.saveSessionFailed()));
+                        announcer.schedule(new ErrorAnnouncementConfig(appearance.saveSessionFailed()));
+                        presenter.setPeriodicSessionFailFlags();
                     }
 
                     @Override

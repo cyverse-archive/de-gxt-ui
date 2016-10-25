@@ -209,6 +209,7 @@ public interface DesktopView extends IsWidget {
 
         void stickWindowToTop(Window window);
 
+        void setPeriodicSessionFailFlags();
     }
 
     interface UserSettingsMenuPresenter {
