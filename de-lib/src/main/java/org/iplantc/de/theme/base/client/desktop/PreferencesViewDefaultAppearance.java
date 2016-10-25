@@ -146,4 +146,13 @@ public class PreferencesViewDefaultAppearance implements PreferencesDialog.Prefe
     public String waitTime() {
         return desktopMessages.waitTime();
     }
+
+    public String retrySessionConnection() {
+        return desktopMessages.retrySessionConnection();
+    }
+
+    @Override
+    public String sessionConnectionFailed() {
+        return desktopMessages.sessionConnectionFailed();
+    }
 }

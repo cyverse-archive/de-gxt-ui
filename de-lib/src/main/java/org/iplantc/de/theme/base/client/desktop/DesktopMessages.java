@@ -102,4 +102,8 @@ public interface DesktopMessages extends Messages {
     String requestHistoryError();
 
     String waitTime();
+
+    String retrySessionConnection();
+
+    String sessionConnectionFailed();
 }

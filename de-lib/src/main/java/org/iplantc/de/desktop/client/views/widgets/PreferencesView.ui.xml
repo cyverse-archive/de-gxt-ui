@@ -3,6 +3,7 @@
              xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:selector="urn:import:org.iplantc.de.diskResource.client.views.widgets"
+             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
              xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form">
 
     <ui:with field="appearance" type="org.iplantc.de.desktop.client.views.widgets.PreferencesDialog.PreferencesViewAppearance" />
@@ -59,9 +60,14 @@
                                    boxLabel="{appearance.rememberFileSectorPath}"/>
                 </container:child>
                 <container:child layoutData="{preferenceLayoutData}">
-                    <form:CheckBox ui:field="saveSession"
+                    <g:HorizontalPanel>
+                        <form:CheckBox ui:field="saveSession"
                                    debugId="cboSaveSession"
                                    boxLabel="{appearance.saveSession}"/>
+                        <button:TextButton ui:field="retrySession"
+                                        text="{appearance.retrySessionConnection}"
+                                        visible="false"/>
+                    </g:HorizontalPanel>
                 </container:child>
                 <container:child layoutData="{preferenceLayoutData}">
                     <form:CheckBox ui:field="enableWaitTimeMessage"

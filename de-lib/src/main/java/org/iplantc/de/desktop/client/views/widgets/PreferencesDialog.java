@@ -93,6 +93,10 @@ public class PreferencesDialog extends IPlantDialog implements Editor<UserSettin
         String notifyEmail();
 
         String waitTime();
+
+        String retrySessionConnection();
+
+        String sessionConnectionFailed();
     }
 
     public interface HtmlLayoutContainerTemplate extends XTemplates {
@@ -116,6 +120,7 @@ public class PreferencesDialog extends IPlantDialog implements Editor<UserSettin
     @UiField CheckBox enableImportEmailNotification;
     @UiField CheckBox enableWaitTimeMessage;
     @UiField CheckBox saveSession;
+    @UiField @Ignore TextButton retrySession;
     @UiField TextField closeShortCut;
     @UiField TextField dataShortCut;
     @UiField(provided = true) FolderSelectorField defaultOutputFolder;
@@ -188,6 +193,10 @@ public class PreferencesDialog extends IPlantDialog implements Editor<UserSettin
     public void initAndShow(final UserSettings userSettings) {
         this.usValue = userSettings;
         editorDriver.edit(userSettings);
+        if (userSettings.sessionConnectionFailed()) {
+            retrySession.setVisible(true);
+            saveSession.setBoxLabel(appearance.sessionConnectionFailed());
+        }
         show();
         ensureDebugId(DeModule.PreferenceIds.PREFERENCES_DLG);
     }
@@ -296,6 +305,12 @@ public class PreferencesDialog extends IPlantDialog implements Editor<UserSettin
             event.preventDefault();
         }
 
+    }
+
+    @UiHandler("retrySession")
+    void onRetrySessionClicked(SelectEvent event) {
+        saveSession.setBoxLabel(appearance.saveSession());
+        retrySession.setVisible(false);
     }
 
     private Widget constructHelpView() {
