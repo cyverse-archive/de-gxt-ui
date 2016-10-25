@@ -35,7 +35,6 @@ import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
 import com.sencha.gxt.widget.core.client.WindowManager;
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 import com.sencha.gxt.widget.core.client.button.IconButton;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.event.RegisterEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
@@ -320,19 +319,8 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
 
     @UiHandler("preferencesBtn")
     void onPreferencesClick(ClickEvent event){
-        final PreferencesDialog preferencesDialog = preferencesDialogProvider.get();
-        final UserSettings userSettingsCopy = new UserSettings(userSettings.asSplittable());
-        preferencesDialog.initAndShow(userSettingsCopy);
-        userSettingsCopy.setSessionConnectionFailed(userSettings.sessionConnectionFailed());
-        preferencesDialog.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
-            @Override
-            public void onDialogHide(DialogHideEvent event) {
-                if(PredefinedButton.OK.equals(event.getHideButton())){
-                    presenter.saveUserSettings(preferencesDialog.getValue(), false);
-                    preferencesDialog.hide();
-                }
-            }
-        });
+        PreferencesDialog dialog = preferencesDialogProvider.get();
+        dialog.show(presenter, userSettings);
     }
 
     @UiHandler("collaboratorsBtn")

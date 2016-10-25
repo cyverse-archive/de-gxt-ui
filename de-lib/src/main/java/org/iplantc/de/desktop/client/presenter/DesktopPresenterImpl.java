@@ -631,7 +631,8 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         desktopWindowManager.stickWindowToTop(window);
     }
 
-    void doPeriodicSessionSave() {
+    @Override
+    public void doPeriodicSessionSave() {
         if (userSettings.isSaveSession()) {
             ssp.run();
             messagePoller.addTask(ssp);
@@ -654,7 +655,8 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
    
    }
 
-    void restoreWindows(List<WindowState> windowStates) {
+   @Override
+   public void restoreWindows(List<WindowState> windowStates) {
         if (windowStates != null && windowStates.size() > 0) {
             for (WindowState ws : windowStates) {
                 desktopWindowManager.show(ws);

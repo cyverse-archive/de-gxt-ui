@@ -6,7 +6,7 @@
              xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
              xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form">
 
-    <ui:with field="appearance" type="org.iplantc.de.desktop.client.views.widgets.PreferencesDialog.PreferencesViewAppearance" />
+    <ui:with field="appearance" type="org.iplantc.de.preferences.client.PreferencesView.PreferencesViewAppearance" />
 
     <ui:style>
         .user_pref {
@@ -64,6 +64,8 @@
                         <form:CheckBox ui:field="saveSession"
                                    debugId="cboSaveSession"
                                    boxLabel="{appearance.saveSession}"/>
+                        <g:HTML ui:field="savedSessionFailed"
+                                        visible="false"/>
                         <button:TextButton ui:field="retrySession"
                                         text="{appearance.retrySessionConnection}"
                                         visible="false"/>
