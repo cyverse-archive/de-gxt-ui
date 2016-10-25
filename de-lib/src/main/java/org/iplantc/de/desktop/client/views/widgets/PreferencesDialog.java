@@ -165,18 +165,7 @@ public class PreferencesDialog extends IPlantDialog implements Editor<UserSettin
         defaultsBtn.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
-                enableAnalysisEmailNotification.setValue(true);
-                enableImportEmailNotification.setValue(true);
-                enableWaitTimeMessage.setValue(true);
-                rememberLastPath.setValue(true);
-                saveSession.setValue(true);
-                appsShortCut.setValue(KB_CONSTANTS.appsKeyShortCut());
-                dataShortCut.setValue(KB_CONSTANTS.dataKeyShortCut());
-                analysesShortCut.setValue(KB_CONSTANTS.analysisKeyShortCut());
-                notifyShortCut.setValue(KB_CONSTANTS.notifyKeyShortCut());
-                closeShortCut.setValue(KB_CONSTANTS.closeKeyShortCut());
-                final Folder systemDefaultOutputFolder = usValue.getSystemDefaultOutputFolder();
-                defaultOutputFolder.setValue(systemDefaultOutputFolder);
+                setDefaultValues();
             }
         });
         getButtonBar().insert(defaultsBtn, 0);
@@ -239,17 +228,7 @@ public class PreferencesDialog extends IPlantDialog implements Editor<UserSettin
 
 
         } else if (button == defaultsBtn) {
-            enableAnalysisEmailNotification.setValue(true);
-            enableImportEmailNotification.setValue(true);
-            enableWaitTimeMessage.setValue(true);
-            rememberLastPath.setValue(true);
-            saveSession.setValue(true);
-            appsShortCut.setValue(KB_CONSTANTS.appsKeyShortCut());
-            dataShortCut.setValue(KB_CONSTANTS.dataKeyShortCut());
-            analysesShortCut.setValue(KB_CONSTANTS.analysisKeyShortCut());
-            notifyShortCut.setValue(KB_CONSTANTS.notifyKeyShortCut());
-            closeShortCut.setValue(KB_CONSTANTS.closeKeyShortCut());
-            defaultOutputFolder.setValue(us.getSystemDefaultOutputFolder());
+            setDefaultValues();
             if (isValid()) {
                 super.onButtonPressed(button);
             }
@@ -257,6 +236,20 @@ public class PreferencesDialog extends IPlantDialog implements Editor<UserSettin
             super.onButtonPressed(button);
         }
 
+    }
+
+    void setDefaultValues() {
+        enableAnalysisEmailNotification.setValue(true);
+        enableImportEmailNotification.setValue(true);
+        enableWaitTimeMessage.setValue(true);
+        rememberLastPath.setValue(true);
+        saveSession.setValue(true);
+        appsShortCut.setValue(KB_CONSTANTS.appsKeyShortCut());
+        dataShortCut.setValue(KB_CONSTANTS.dataKeyShortCut());
+        analysesShortCut.setValue(KB_CONSTANTS.analysisKeyShortCut());
+        notifyShortCut.setValue(KB_CONSTANTS.notifyKeyShortCut());
+        closeShortCut.setValue(KB_CONSTANTS.closeKeyShortCut());
+        defaultOutputFolder.setValue(us.getSystemDefaultOutputFolder());
     }
 
     @Override
