@@ -4,7 +4,7 @@ import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
-import org.iplantc.de.client.services.AppServiceFacade;
+import org.iplantc.de.client.services.AppSearchFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 
 import com.google.common.base.Strings;
@@ -12,6 +12,7 @@ import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import com.sencha.gxt.data.client.loader.RpcProxy;
+import com.sencha.gxt.data.shared.SortDir;
 import com.sencha.gxt.data.shared.loader.FilterConfig;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
@@ -29,9 +30,9 @@ import java.util.List;
  */
 public class AppSearchRpcProxy extends RpcProxy<FilterPagingLoadConfig, PagingLoadResult<App>> {
     private HasHandlers hasHandlers;
-    private final AppServiceFacade appService;
+    private final AppSearchFacade appService;
 
-    public AppSearchRpcProxy(final AppServiceFacade appService) {
+    public AppSearchRpcProxy(final AppSearchFacade appService) {
         this.appService = appService;
     }
 
@@ -63,7 +64,7 @@ public class AppSearchRpcProxy extends RpcProxy<FilterPagingLoadConfig, PagingLo
         }
 
         // Call the searchApp service with this proxy's query.
-        appService.searchApp(lastQueryText, new AsyncCallback<AppListLoadResult>() {
+        appService.searchApp(lastQueryText, SortDir.ASC, null, new AsyncCallback<AppListLoadResult>() {
             @Override
             public void onSuccess(final AppListLoadResult loadResult) {
                 List<App> apps = loadResult.getData();

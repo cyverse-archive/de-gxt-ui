@@ -26,6 +26,7 @@ import org.iplantc.de.apps.client.gin.factory.AppCategoriesViewFactory;
 import org.iplantc.de.apps.client.views.categories.AppCategoriesViewImpl;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
+import org.iplantc.de.client.services.AppSearchFacade;
 import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.services.impl.AppUserServiceFacadeImpl;
 
@@ -50,9 +51,9 @@ public class AdminAppsGinModule extends AbstractGinModule {
 
         bind(AppAdminServiceFacade.class).to(AppAdminServiceFacadeImpl.class);
         bind(AppServiceFacade.class).to(AppUserServiceFacadeImpl.class);
+        bind(AppSearchFacade.class).to(AppAdminServiceFacadeImpl.class);
 
-
-        // Main view
+       // Main view
         install(new GinFactoryModuleBuilder()
                     .implement(AdminAppsView.class, AdminAppViewImpl.class)
                     .build(AdminAppsViewFactory.class));

@@ -32,6 +32,7 @@ import org.iplantc.de.client.models.avu.AvuList;
 import org.iplantc.de.client.models.ontologies.Ontology;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.models.ontologies.OntologyVersionDetail;
+import org.iplantc.de.client.services.AppSearchFacade;
 import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.client.util.OntologyUtil;
@@ -179,6 +180,7 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
     @Inject IplantAnnouncer announcer;
     @Inject JsonUtil jsonUtil;
     @Inject AppServiceFacade appService;
+    @Inject AppSearchFacade appSearchService;
     OntologyUtil ontologyUtil;
     AppSearchRpcProxy proxy;
     PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader;
@@ -195,6 +197,7 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
 
     @Inject
     public OntologiesPresenterImpl(OntologyServiceFacade serviceFacade,
+                                   AppSearchFacade appSearchService,
                                    AppServiceFacade appService,
                                    final TreeStore<OntologyHierarchy> editorTreeStore,
                                    final TreeStore<OntologyHierarchy> previewTreeStore,
@@ -205,6 +208,7 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
                                    AdminAppsGridView.Presenter editorGridPresenter,
                                    AppCategorizeView categorizeView) {
         this.serviceFacade = serviceFacade;
+        this.appSearchService = appSearchService;
         this.avuFactory = avuFactory;
         this.editorTreeStore = editorTreeStore;
         this.previewTreeStore = previewTreeStore;
@@ -215,9 +219,8 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
         this.editorGridPresenter = editorGridPresenter;
         this.categorizeView = categorizeView;
 
-        proxy = getProxy(appService);
+        proxy = getProxy(appSearchService);
         loader = getPagingLoader();
-
         this.view = factory.create(editorTreeStore,
                                    previewTreeStore,
                                    loader,
@@ -267,7 +270,7 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
         return new PagingLoader<>(proxy);
     }
 
-    AppSearchRpcProxy getProxy(AppServiceFacade appService) {
+    AppSearchRpcProxy getProxy(AppSearchFacade appService) {
         return new AppSearchRpcProxy(appService);
     }
 

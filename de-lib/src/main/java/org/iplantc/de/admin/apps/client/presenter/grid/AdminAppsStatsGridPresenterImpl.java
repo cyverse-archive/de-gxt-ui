@@ -2,7 +2,7 @@ package org.iplantc.de.admin.apps.client.presenter.grid;
 
 import org.iplantc.de.admin.apps.client.AdminAppStatsGridView;
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
-import org.iplantc.de.client.models.apps.AppList;
+import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
 import org.iplantc.de.commons.client.ErrorHandler;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -29,16 +29,16 @@ public class AdminAppsStatsGridPresenterImpl implements AdminAppStatsGridView.Pr
     public void go(HasOneWidget container) {
        view.mask("Loading...");
        container.setWidget(view);
-       appService.searchApp("gen", null, null, new AsyncCallback<AppList>() {
+       appService.searchApp("gen", null, null, new AsyncCallback<AppListLoadResult>() {
            @Override
            public void onFailure(Throwable caught) {
                ErrorHandler.post("unable to get app list", caught);
            }
 
            @Override
-           public void onSuccess(AppList result) {
+           public void onSuccess(AppListLoadResult result) {
               view.clear();
-              view.addAll(result.getApps());
+              view.addAll(result.getData());
               view.unmask();
            }
        });

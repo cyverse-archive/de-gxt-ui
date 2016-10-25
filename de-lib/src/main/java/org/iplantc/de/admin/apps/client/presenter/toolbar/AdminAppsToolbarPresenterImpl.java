@@ -4,7 +4,7 @@ import org.iplantc.de.admin.apps.client.AdminAppsToolbarView;
 import org.iplantc.de.admin.apps.client.gin.factory.AdminAppsToolbarFactory;
 import org.iplantc.de.apps.client.presenter.toolBar.proxy.AppSearchRpcProxy;
 import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.client.services.AppServiceFacade;
+import org.iplantc.de.client.services.AppSearchFacade;
 
 import com.google.inject.Inject;
 
@@ -20,7 +20,7 @@ public class AdminAppsToolbarPresenterImpl implements AdminAppsToolbarView.Prese
     private final AdminAppsToolbarView view;
 
     @Inject
-    AdminAppsToolbarPresenterImpl(final AppServiceFacade appService,
+    AdminAppsToolbarPresenterImpl(final AppSearchFacade appService,
                                   final AdminAppsToolbarFactory viewFactory) {
         AppSearchRpcProxy proxy = new AppSearchRpcProxy(appService);
         PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader = new PagingLoader<>(proxy);

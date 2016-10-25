@@ -13,6 +13,7 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.apps.AppList;
+import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
 import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.services.converters.AppCategoryListCallbackConverter;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
@@ -262,15 +263,19 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
     }
 
     @Override
-    public void searchApp(String term, SortDir dir, String field, AsyncCallback<AppList> callback) {
+    public void searchApp(String term, SortDir dir, String field, AsyncCallback<AppListLoadResult> callback) {
         String address = APPS_ADMIN + "?search=" + URL.encodeQueryString(term);
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper,  new AsyncCallbackConverter<String, AppList>(callback) {
+        deService.getServiceData(wrapper,  new AsyncCallbackConverter<String, AppListLoadResult>(callback) {
             @Override
-            protected AppList convertFrom(String object) {
-                AppList apps = AutoBeanCodex.decode(svcFactory, AppList.class, object).as();
-                return apps;
+            protected AppListLoadResult convertFrom(String object) {
+                List<App> apps = AutoBeanCodex.decode(svcFactory, AppList.class, object).as().getApps();
+                AutoBean<AppListLoadResult> loadResultAutoBean = svcFactory.loadResult();
+
+                final AppListLoadResult loadResult = loadResultAutoBean.as();
+                loadResult.setData(apps);
+                return loadResult;
             }
         });
     }

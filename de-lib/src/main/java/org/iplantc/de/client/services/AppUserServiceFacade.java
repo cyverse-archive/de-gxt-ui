@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * @author jstroot
  */
-public interface AppUserServiceFacade extends AppServiceFacade {
+public interface AppUserServiceFacade extends AppServiceFacade, AppSearchFacade {
 
     void favoriteApp(HasQualifiedId appId, boolean fav, AsyncCallback<Void> callback);
 

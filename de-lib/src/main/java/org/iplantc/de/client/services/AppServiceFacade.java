@@ -64,12 +64,5 @@ public interface AppServiceFacade {
      */
     void getAppCategories(boolean privateOnly, AsyncCallback<List<AppCategory>> callback);
 
-    /**
-     * Searches for all active Apps with a name or description that contains the given search term.
-     *
-     * @param search the search query
-     * @param callback called when the RPC call is complete.
-     */
-    void searchApp(String search, AsyncCallback<AppListLoadResult> callback);
 
 }
