@@ -99,4 +99,18 @@ public interface BelphegorDisplayStrings extends Messages {
     String betaTagAddedSuccess();
 
     String betaTagRemovedSuccess();
+
+    String appStats();
+
+    String appName();
+
+    String total();
+
+    String completed();
+
+    String failed();
+
+    String lastComplted();
+
+    String lastUsed();
 }

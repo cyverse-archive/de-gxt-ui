@@ -42,5 +42,9 @@
         <when-type-is class="org.iplantc.de.admin.apps.client.views.grid.cells.AdminAppNameCell.AdminAppNameCellAppearance" />
     </replace-with>
 
+    <!-- App Stats -->
+    <replace-with class="org.iplantc.de.theme.base.client.admin.apps.AdminAppsStatsGridViewDefaultAppearance">
+        <when-type-is class="org.iplantc.de.admin.apps.client.AdminAppStatsGridView.Appearance" />
+    </replace-with>
 
 </module>

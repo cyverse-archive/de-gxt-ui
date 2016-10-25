@@ -20,7 +20,7 @@ public interface AppStats {
     @AutoBean.PropertyName("job_last_completed")
     Date getLastCompletedDate();
 
-    @AutoBean.PropertyName("job_last_used")
+    @AutoBean.PropertyName("last_used")
     Date getLastUsedDate();
 
 }

@@ -8,6 +8,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
@@ -49,9 +50,9 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
     @UiField
     ListStore<App> store;
 
+    @Inject
     public AdminAppStatsGridViewImpl() {
-     initWidget(ourUiBinder.createAndBindUi(this));
-
+         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     @UiFactory
@@ -144,7 +145,7 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
         ColumnConfig<App, Date> lastUsed = new ColumnConfig<>(new ValueProvider<App, Date>() {
             @Override
             public Date getValue(App object) {
-                return null;
+                return object.getAppStats().getLastUsedDate();
             }
 
             @Override

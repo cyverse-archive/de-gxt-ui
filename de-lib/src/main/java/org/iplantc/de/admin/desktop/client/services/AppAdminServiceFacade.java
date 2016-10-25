@@ -6,10 +6,13 @@ import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppDoc;
+import org.iplantc.de.client.models.apps.AppList;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
+
+import com.sencha.gxt.data.shared.SortDir;
 
 import java.util.List;
 
@@ -70,4 +73,6 @@ public interface AppAdminServiceFacade {
     void saveAppDoc(HasId app, AppDoc doc, AsyncCallback<AppDoc> callback);
 
     void updateAppDoc(HasId app, AppDoc doc, AsyncCallback<AppDoc> callback);
+
+    void searchApp(String term, SortDir dir, String field, AsyncCallback<AppList> callback);
 }

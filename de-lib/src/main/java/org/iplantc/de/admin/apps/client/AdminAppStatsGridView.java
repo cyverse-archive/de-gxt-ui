@@ -1,7 +1,5 @@
 package org.iplantc.de.admin.apps.client;
 
-import org.iplantc.de.apps.client.AppsListView;
-import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.apps.App;
 
@@ -20,12 +18,21 @@ public interface AdminAppStatsGridView extends IsWidget, IsMaskable {
 
     void addAll(List<App> apps);
 
-    interface  Appearance extends AppsListView.AppsListAppearance {
+    interface  Appearance {
+        String name();
 
+        String total();
+
+        String completed();
+
+        String failed();
+
+        String lastCompleted();
+
+        String lastUsed();
     }
 
     interface Presenter {
         void go(HasOneWidget container);
-        void onAppCategorySelectionChanged(AppCategorySelectionChangedEvent event);
     }
 }

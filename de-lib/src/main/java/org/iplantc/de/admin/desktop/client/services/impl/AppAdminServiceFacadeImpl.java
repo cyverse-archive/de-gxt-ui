@@ -1,6 +1,10 @@
 package org.iplantc.de.admin.desktop.client.services.impl;
 
-import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.*;
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.DELETE;
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PATCH;
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
+
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.admin.desktop.client.services.model.AppCategorizeRequest;
 import org.iplantc.de.client.models.HasId;
@@ -8,12 +12,15 @@ import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppDoc;
+import org.iplantc.de.client.models.apps.AppList;
+import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.services.converters.AppCategoryListCallbackConverter;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
+import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -23,6 +30,8 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
+
+import com.sencha.gxt.data.shared.SortDir;
 
 import java.util.List;
 
@@ -37,6 +46,8 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
 
     @Inject private DiscEnvApiService deService;
     @Inject private AdminServiceAutoBeanFactory factory;
+    @Inject
+    AppServiceFacade.AppServiceAutoBeanFactory svcFactory;
 
     @Inject
     AppAdminServiceFacadeImpl() { }
@@ -246,6 +257,20 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
             protected AppDoc convertFrom(String object) {
                 AutoBean<AppDoc> appDocAutoBean = AutoBeanCodex.decode(factory, AppDoc.class, object);
                 return appDocAutoBean.as();
+            }
+        });
+    }
+
+    @Override
+    public void searchApp(String term, SortDir dir, String field, AsyncCallback<AppList> callback) {
+        String address = APPS_ADMIN + "?search=" + URL.encodeQueryString(term);
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
+        deService.getServiceData(wrapper,  new AsyncCallbackConverter<String, AppList>(callback) {
+            @Override
+            protected AppList convertFrom(String object) {
+                AppList apps = AutoBeanCodex.decode(svcFactory, AppList.class, object).as();
+                return apps;
             }
         });
     }
