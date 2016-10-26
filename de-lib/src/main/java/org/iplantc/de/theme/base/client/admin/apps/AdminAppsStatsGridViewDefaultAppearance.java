@@ -41,4 +41,9 @@ public class AdminAppsStatsGridViewDefaultAppearance implements AdminAppStatsGri
     public String lastUsed() {
         return bds.lastUsed();
     }
+
+    @Override
+    public String rating() {
+        return bds.rating();
+    }
 }

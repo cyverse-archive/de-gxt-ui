@@ -30,6 +30,8 @@ public interface AdminAppStatsGridView extends IsWidget, IsMaskable {
         String lastCompleted();
 
         String lastUsed();
+
+        String rating();
     }
 
     interface Presenter {

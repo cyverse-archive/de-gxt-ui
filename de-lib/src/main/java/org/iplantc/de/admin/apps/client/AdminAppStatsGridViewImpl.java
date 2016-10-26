@@ -50,6 +50,9 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
     @UiField
     ListStore<App> store;
 
+    @UiField
+    Appearance appearance;
+
     @Inject
     public AdminAppStatsGridViewImpl() {
          initWidget(ourUiBinder.createAndBindUi(this));
@@ -72,7 +75,24 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
             public String getPath() {
                 return null;
             }
-        }, 200, "Name");
+        }, 200, appearance.name());
+
+        ColumnConfig<App, Double> rating = new ColumnConfig<App, Double>(new ValueProvider<App, Double>() {
+            @Override
+            public Double getValue(App object) {
+                return object.getRating().getAverageRating();
+            }
+
+            @Override
+            public void setValue(App object, Double value) {
+
+            }
+
+            @Override
+            public String getPath() {
+                return null;
+            }
+        }, 100, appearance.rating());
 
         ColumnConfig<App, Integer> total = new ColumnConfig<>(new ValueProvider<App, Integer>() {
             @Override
@@ -89,7 +109,7 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
             public String getPath() {
                 return null;
             }
-        },100, "Total");
+        },100, appearance.total());
 
         ColumnConfig<App,Integer> totalCompleted = new ColumnConfig<>(new ValueProvider<App, Integer>() {
             @Override
@@ -106,7 +126,7 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
             public String getPath() {
                 return null;
             }
-        },100, "Completed");
+        },100, appearance.completed());
 
         ColumnConfig<App, Integer> totalFailed = new ColumnConfig<>(new ValueProvider<App, Integer>() {
             @Override
@@ -123,7 +143,7 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
             public String getPath() {
                 return null;
             }
-        }, 100, "Failed");
+        }, 100, appearance.failed());
 
         ColumnConfig<App, Date> lastCompleted = new ColumnConfig<>(new ValueProvider<App, Date>() {
             @Override
@@ -140,7 +160,7 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
             public String getPath() {
                 return null;
             }
-        }, 200, "Last Completed Date");
+        }, 200, appearance.lastCompleted());
 
         ColumnConfig<App, Date> lastUsed = new ColumnConfig<>(new ValueProvider<App, Date>() {
             @Override
@@ -157,10 +177,10 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
             public String getPath() {
                 return null;
             }
-        },200, "Last Used");
+        },200, appearance.lastUsed());
 
 
-        return new ColumnModel<>(Arrays.<ColumnConfig<App, ?>>asList(appName,total, totalCompleted, totalFailed, lastCompleted, lastUsed));
+        return new ColumnModel<>(Arrays.<ColumnConfig<App, ?>>asList(appName, rating, total, totalCompleted, totalFailed, lastCompleted, lastUsed));
     }
 
     @UiFactory
