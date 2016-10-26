@@ -100,4 +100,6 @@ public interface DesktopMessages extends Messages {
     String welcome();
 
     String requestHistoryError();
+
+    String waitTime();
 }

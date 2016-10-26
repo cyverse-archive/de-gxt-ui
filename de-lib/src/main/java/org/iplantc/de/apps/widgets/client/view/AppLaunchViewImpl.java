@@ -2,6 +2,8 @@ package org.iplantc.de.apps.widgets.client.view;
 
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent;
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent.RequestAnalysisLaunchEventHandler;
+import org.iplantc.de.client.models.UserSettings;
+import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.JobExecution;
 import org.iplantc.de.client.util.AppTemplateUtils;
@@ -16,11 +18,14 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.Composite;
+import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 import java.util.List;
@@ -88,10 +93,9 @@ public class AppLaunchViewImpl extends Composite implements AppLaunchView {
 
     @UiHandler("launchButton")
     void onLaunchButtonClicked(SelectEvent event) {
-
-        // Flush the editor driver to perform validations before calling back to presenter.
-        AppTemplate cleaned = appTemplateUtils.removeEmptyGroupArguments(editorDriver.flush());
-        JobExecution je = law.flushJobExecution();
+      // Flush the editor driver to perform validations before calling back to presenter.
+        final AppTemplate cleaned = appTemplateUtils.removeEmptyGroupArguments(editorDriver.flush());
+        final JobExecution je = law.flushJobExecution();
         if (editorDriver.hasErrors() || law.hasErrors()) {
             GWT.log("Editor has errors");
             List<EditorError> errors = Lists.newArrayList();
@@ -101,11 +105,37 @@ public class AppLaunchViewImpl extends Composite implements AppLaunchView {
                 GWT.log("\t-- " + ": " + error.getMessage());
             }
         } else {
-            // If there are no errors, fire event.
-            fireEvent(new RequestAnalysisLaunchEvent(cleaned, je));
-            mask();
-            launchButton.setEnabled(false);
+            if(cleaned.getAppType().equalsIgnoreCase(App.EXTERNAL_APP)
+               && UserSettings.getInstance().isEnableWaitTimeMessage()) {
+                showWaitTimeNotice(cleaned, je);
+            } else {
+                launch(cleaned, je);
+            }
+
         }
+    }
+
+    private void showWaitTimeNotice(final AppTemplate cleaned, final JobExecution je) {
+            Dialog id = new Dialog();
+            id.setHideOnButtonClick(true);
+            id.setHeadingText(appearance.waitTimes());
+            HTML htm = new HTML();
+            htm.setHTML(appearance.hpcAppWaitTimes());
+            id.add(htm);
+            id.setPredefinedButtons(Dialog.PredefinedButton.OK);
+            id.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
+                @Override
+                public void onDialogHide(DialogHideEvent event) {
+                    launch(cleaned, je);
+                }
+            });
+            id.show();
+    }
+
+    private void launch(AppTemplate cleaned, JobExecution je) {
+        fireEvent(new RequestAnalysisLaunchEvent(cleaned, je));
+        mask();
+        launchButton.setEnabled(false);
     }
 
     @Override

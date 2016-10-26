@@ -91,6 +91,8 @@ public class PreferencesDialog extends IPlantDialog implements Editor<UserSettin
         String saveSessionHelp();
 
         String notifyEmail();
+
+        String waitTime();
     }
 
     public interface HtmlLayoutContainerTemplate extends XTemplates {
@@ -112,6 +114,7 @@ public class PreferencesDialog extends IPlantDialog implements Editor<UserSettin
     @UiField CheckBox rememberLastPath;
     @UiField CheckBox enableAnalysisEmailNotification;
     @UiField CheckBox enableImportEmailNotification;
+    @UiField CheckBox enableWaitTimeMessage;
     @UiField CheckBox saveSession;
     @UiField TextField closeShortCut;
     @UiField TextField dataShortCut;
@@ -157,8 +160,6 @@ public class PreferencesDialog extends IPlantDialog implements Editor<UserSettin
             }
         });
         populateKbMap();
-
-
         getButton(PredefinedButton.OK).setText(appearance.done());
         defaultsBtn = new TextButton(appearance.restoreDefaults());
         defaultsBtn.addSelectHandler(new SelectEvent.SelectHandler() {
@@ -166,6 +167,7 @@ public class PreferencesDialog extends IPlantDialog implements Editor<UserSettin
             public void onSelect(SelectEvent event) {
                 enableAnalysisEmailNotification.setValue(true);
                 enableImportEmailNotification.setValue(true);
+                enableWaitTimeMessage.setValue(true);
                 rememberLastPath.setValue(true);
                 saveSession.setValue(true);
                 appsShortCut.setValue(KB_CONSTANTS.appsKeyShortCut());
@@ -239,6 +241,7 @@ public class PreferencesDialog extends IPlantDialog implements Editor<UserSettin
         } else if (button == defaultsBtn) {
             enableAnalysisEmailNotification.setValue(true);
             enableImportEmailNotification.setValue(true);
+            enableWaitTimeMessage.setValue(true);
             rememberLastPath.setValue(true);
             saveSession.setValue(true);
             appsShortCut.setValue(KB_CONSTANTS.appsKeyShortCut());

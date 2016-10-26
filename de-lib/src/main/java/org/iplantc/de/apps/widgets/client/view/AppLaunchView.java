@@ -24,6 +24,12 @@ public interface AppLaunchView extends IsWidget, Editor<AppTemplate>, HasRequest
 
     interface AppLaunchViewAppearance {
         String deprecatedAppMask();
+
+        String hpcAppWaitTimes();
+
+        String waitTimes();
+
+        String dontShow();
     }
 
     /**
