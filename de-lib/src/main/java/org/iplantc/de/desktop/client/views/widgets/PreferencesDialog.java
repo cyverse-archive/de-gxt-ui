@@ -92,7 +92,7 @@ public class PreferencesDialog extends IPlantDialog implements Editor<UserSettin
 
         String notifyEmail();
 
-        String WaitTime();
+        String waitTime();
     }
 
     public interface HtmlLayoutContainerTemplate extends XTemplates {

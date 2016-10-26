@@ -143,7 +143,7 @@ public class PreferencesViewDefaultAppearance implements PreferencesDialog.Prefe
     }
 
     @Override
-    public String WaitTime() {
+    public String waitTime() {
         return desktopMessages.waitTime();
     }
 }
