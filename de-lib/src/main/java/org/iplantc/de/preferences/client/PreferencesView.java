@@ -93,5 +93,7 @@ public interface PreferencesView extends IsWidget,
         void saveUserSettings();
 
         PreferencesView getView();
+
+        void setViewDebugId(String baseId);
     }
 }

@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.preferences.client.PreferencesView;
+import org.iplantc.de.preferences.shared.Preferences;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -59,6 +60,8 @@ public class PreferencesDialog extends IPlantDialog implements DialogHideEvent.D
     public void show(DesktopView.Presenter desktopPresenter, UserSettings settings) {
         presenter.go(desktopPresenter, settings);
         super.show();
+
+        ensureDebugId(Preferences.Ids.PREFERENCES_DLG);
     }
 
     @Override
@@ -100,5 +103,15 @@ public class PreferencesDialog extends IPlantDialog implements DialogHideEvent.D
             presenter.saveUserSettings();
             hide();
         }
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        presenter.setViewDebugId(baseID);
+        getButton(PredefinedButton.OK).ensureDebugId(baseID + Preferences.Ids.DONE);
+        getButton(PredefinedButton.CANCEL).ensureDebugId(baseID + Preferences.Ids.CANCEL);
+        defaultsBtn.ensureDebugId(baseID + Preferences.Ids.DEFAULTS_BTN);
     }
 }

@@ -6,11 +6,11 @@ import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
-import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
 import org.iplantc.de.diskResource.client.views.widgets.FolderSelectorField;
 import org.iplantc.de.preferences.client.PreferencesView;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
+import org.iplantc.de.preferences.shared.Preferences;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;
@@ -125,7 +125,7 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
             userSessionFail();
         }
         show();
-        ensureDebugId(DeModule.PreferenceIds.PREFERENCES_DLG);
+        ensureDebugId(Preferences.Ids.PREFERENCES_DLG);
     }
 
     public boolean isValid() {
@@ -184,19 +184,19 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
 
-        enableAnalysisEmailNotification.ensureDebugId(baseID + DeModule.PreferenceIds.EMAIL_ANALYSIS_NOTIFICATION);
-        enableImportEmailNotification.ensureDebugId(baseID + DeModule.PreferenceIds.EMAIL_IMPORT_NOTIFICATION);
-        rememberLastPath.ensureDebugId(baseID + DeModule.PreferenceIds.REMEMBER_LAST_PATH);
-        saveSession.ensureDebugId(baseID + DeModule.PreferenceIds.SAVE_SESSION);
-        defaultOutputFolder.ensureDebugId(baseID + DeModule.PreferenceIds.DEFAULT_OUTPUT_FOLDER);
-        defaultOutputFolder.setInputFieldId(baseID + DeModule.PreferenceIds.DEFAULT_OUTPUT_FOLDER + DeModule.PreferenceIds.DEFAULT_OUTPUT_FIELD);
-        defaultOutputFolder.setBrowseButtonId(baseID + DeModule.PreferenceIds.DEFAULT_OUTPUT_FOLDER + DeModule.PreferenceIds.BROWSE_OUTPUT_FOLDER);
+        enableAnalysisEmailNotification.ensureDebugId(baseID + Preferences.Ids.EMAIL_ANALYSIS_NOTIFICATION);
+        enableImportEmailNotification.ensureDebugId(baseID + Preferences.Ids.EMAIL_IMPORT_NOTIFICATION);
+        rememberLastPath.ensureDebugId(baseID + Preferences.Ids.REMEMBER_LAST_PATH);
+        saveSession.ensureDebugId(baseID + Preferences.Ids.SAVE_SESSION);
+        defaultOutputFolder.ensureDebugId(baseID + Preferences.Ids.DEFAULT_OUTPUT_FOLDER);
+        defaultOutputFolder.setInputFieldId(baseID + Preferences.Ids.DEFAULT_OUTPUT_FOLDER + Preferences.Ids.DEFAULT_OUTPUT_FIELD);
+        defaultOutputFolder.setBrowseButtonId(baseID + Preferences.Ids.DEFAULT_OUTPUT_FOLDER + Preferences.Ids.BROWSE_OUTPUT_FOLDER);
 
-        appsShortCut.ensureDebugId(baseID + DeModule.PreferenceIds.APPS_SC);
-        dataShortCut.ensureDebugId(baseID + DeModule.PreferenceIds.DATA_SC);
-        analysesShortCut.ensureDebugId(baseID + DeModule.PreferenceIds.ANALYSES_SC);
-        notifyShortCut.ensureDebugId(baseID + DeModule.PreferenceIds.NOTIFICATION_SC);
-        closeShortCut.ensureDebugId(baseID + DeModule.PreferenceIds.CLOSE_SC);
+        appsShortCut.ensureDebugId(baseID + Preferences.Ids.APPS_SC);
+        dataShortCut.ensureDebugId(baseID + Preferences.Ids.DATA_SC);
+        analysesShortCut.ensureDebugId(baseID + Preferences.Ids.ANALYSES_SC);
+        notifyShortCut.ensureDebugId(baseID + Preferences.Ids.NOTIFICATION_SC);
+        closeShortCut.ensureDebugId(baseID + Preferences.Ids.CLOSE_SC);
 
     }
 

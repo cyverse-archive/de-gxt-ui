@@ -70,4 +70,9 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
     public PreferencesView getView() {
         return view;
     }
+
+    @Override
+    public void setViewDebugId(String baseId) {
+        view.asWidget().ensureDebugId(baseId);
+    }
 }
