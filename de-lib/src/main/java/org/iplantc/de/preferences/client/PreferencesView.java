@@ -61,6 +61,8 @@ public interface PreferencesView extends IsWidget,
 
         String notifyEmail();
 
+        String waitTime();
+
         String retrySessionConnection();
 
         SafeHtml sessionConnectionFailed();

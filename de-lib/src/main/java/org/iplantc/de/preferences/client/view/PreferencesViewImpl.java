@@ -58,6 +58,7 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @UiField CheckBox rememberLastPath;
     @UiField CheckBox enableAnalysisEmailNotification;
     @UiField CheckBox enableImportEmailNotification;
+    @UiField CheckBox enableWaitTimeMessage;
     @UiField CheckBox saveSession;
     @UiField @Ignore HTML savedSessionFailed;
     @UiField @Ignore TextButton retrySession;
@@ -170,6 +171,7 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     public void setDefaultValues() {
         enableAnalysisEmailNotification.setValue(true);
         enableImportEmailNotification.setValue(true);
+        enableWaitTimeMessage.setValue(true);
         rememberLastPath.setValue(true);
         saveSession.setValue(true);
         appsShortCut.setValue(KB_CONSTANTS.appsKeyShortCut());
