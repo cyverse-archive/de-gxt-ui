@@ -3,9 +3,10 @@
              xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:selector="urn:import:org.iplantc.de.diskResource.client.views.widgets"
+             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
              xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form">
 
-    <ui:with field="appearance" type="org.iplantc.de.desktop.client.views.widgets.PreferencesDialog.PreferencesViewAppearance" />
+    <ui:with field="appearance" type="org.iplantc.de.preferences.client.PreferencesView.PreferencesViewAppearance" />
 
     <ui:style>
         .user_pref {
@@ -40,7 +41,7 @@
         <form:FieldSet headingText="{appearance.preferences}"
                        collapsible="true">
             <container:VerticalLayoutContainer ui:field="prefContainer"
-                                               height="150">
+                                               height="170">
                 <container:child layoutData="{preferenceLayoutData}">
                     <form:CheckBox ui:field="enableAnalysisEmailNotification"
                                    debugId="idCboAnalysisNotifyEmail"
@@ -59,9 +60,16 @@
                                    boxLabel="{appearance.rememberFileSectorPath}"/>
                 </container:child>
                 <container:child layoutData="{preferenceLayoutData}">
-                    <form:CheckBox ui:field="saveSession"
+                    <g:HorizontalPanel>
+                        <form:CheckBox ui:field="saveSession"
                                    debugId="cboSaveSession"
                                    boxLabel="{appearance.saveSession}"/>
+                        <g:HTML ui:field="savedSessionFailed"
+                                        visible="false"/>
+                        <button:TextButton ui:field="retrySession"
+                                        text="{appearance.retrySessionConnection}"
+                                        visible="false"/>
+                    </g:HorizontalPanel>
                 </container:child>
                 <container:child layoutData="{preferenceLayoutData}">
                     <form:CheckBox ui:field="enableWaitTimeMessage"

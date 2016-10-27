@@ -45,7 +45,7 @@ class RuntimeCallbacks {
         public void onFailure(Throwable caught) {
             final SafeHtml message = SafeHtmlUtils.fromTrustedString(appearance.loadSessionFailed());
             announcer.schedule(new ErrorAnnouncementConfig(message, true, 5000));
-            presenter.doPeriodicSessionSave();
+            presenter.setPeriodicSessionFailFlags();
             progressMessageBox.hide();
         }
 
@@ -155,21 +155,27 @@ class RuntimeCallbacks {
         @Override
         public void onSuccess(Void result) {
             userSettings.setValues(newValue.asSplittable());
-            if(!updateSilently){
-                announcer.schedule(new SuccessAnnouncementConfig(appearance.saveSettings(), true, 3000));
-            }
             if(userSettings.isSaveSession()) {
                 userSessionService.saveUserSession(presenter.getOrderedWindowStates(), new AsyncCallback<Void>() {
                     @Override
                     public void onFailure(Throwable caught) {
-                      announcer.schedule(new ErrorAnnouncementConfig(appearance.saveSessionFailed()));
+                        announcer.schedule(new ErrorAnnouncementConfig(appearance.saveSessionFailed()));
+                        presenter.setPeriodicSessionFailFlags();
                     }
 
                     @Override
                     public void onSuccess(Void result) {
-                      //Do nothing. Session saved as per user request.
+                        showSaveSettingSuccess();
                     }
                 });
+            } else {
+                showSaveSettingSuccess();
+            }
+        }
+
+        void showSaveSettingSuccess() {
+            if (!updateSilently) {
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.saveSettings(), true, 3000));
             }
         }
     }

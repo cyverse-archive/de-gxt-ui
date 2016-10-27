@@ -1,30 +1,43 @@
 package org.iplantc.de.theme.base.client.desktop;
 
-import org.iplantc.de.desktop.client.views.widgets.PreferencesDialog;
+import org.iplantc.de.preferences.client.PreferencesView;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtml;
+
+import com.sencha.gxt.core.client.XTemplates;
 
 /**
  * @author jstroot
  */
-public class PreferencesViewDefaultAppearance implements PreferencesDialog.PreferencesViewAppearance {
+public class PreferencesViewDefaultAppearance implements PreferencesView.PreferencesViewAppearance {
+
+    interface Templates extends XTemplates {
+        @XTemplates.XTemplate("<span style='color: red;'>{label}</span>")
+        SafeHtml redText(String label);
+    }
+
     private final IplantDisplayStrings displayStrings;
     private final DesktopContextualHelpMessages help;
     private final DesktopMessages desktopMessages;
+    private Templates templates;
 
     PreferencesViewDefaultAppearance(final IplantDisplayStrings displayStrings,
                                      final DesktopContextualHelpMessages help,
-                                     final DesktopMessages desktopMessages) {
+                                     final DesktopMessages desktopMessages,
+                                     Templates templates) {
         this.displayStrings = displayStrings;
         this.help = help;
         this.desktopMessages = desktopMessages;
+        this.templates = templates;
     }
 
     PreferencesViewDefaultAppearance() {
         this(GWT.<IplantDisplayStrings> create(IplantDisplayStrings.class),
              GWT.<DesktopContextualHelpMessages> create(DesktopContextualHelpMessages.class),
-             GWT.<DesktopMessages> create(DesktopMessages.class));
+             GWT.<DesktopMessages> create(DesktopMessages.class),
+             GWT.<Templates> create(Templates.class));
     }
 
     @Override
@@ -145,5 +158,14 @@ public class PreferencesViewDefaultAppearance implements PreferencesDialog.Prefe
     @Override
     public String waitTime() {
         return desktopMessages.waitTime();
+    }
+
+    public String retrySessionConnection() {
+        return desktopMessages.retrySessionConnection();
+    }
+
+    @Override
+    public SafeHtml sessionConnectionFailed() {
+        return templates.redText(desktopMessages.sessionConnectionFailed());
     }
 }

@@ -27,6 +27,7 @@ public class UserSettings {
     private String defaultFileSelectorPath;
     private boolean rememberLastPath;
     private boolean saveSession;
+    private boolean sessionConnectionFailed;
     private Folder defaultOutputFolder;
     private String dataShortCut;
     private String appShortCut;
@@ -240,6 +241,10 @@ public class UserSettings {
         return (defaultFileSelectorPath == null) ? "" : defaultFileSelectorPath;
     }
 
+    public boolean sessionConnectionFailed() {
+        return sessionConnectionFailed;
+    }
+
     /**
      * Get Splittable representation
      * 
@@ -287,6 +292,10 @@ public class UserSettings {
      */
     public void setSaveSession(boolean saveSession) {
         this.saveSession = saveSession;
+    }
+
+    public void setSessionConnectionFailed(boolean failedConnection) {
+        this.sessionConnectionFailed = failedConnection;
     }
 
     public boolean isSaveSession() {
