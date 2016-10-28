@@ -14,8 +14,9 @@ public class BootstrapErrorController {
 
     @Value("${org.iplantc.discoveryenvironment.cas.app-name}") private String appName;
     @Value("${org.iplantc.discoveryenvironment.twitter-url}") private String twitterUrl;
+    @Value("${org.iplantc.discoveryenvironment.facebook-url}") private String facebookUrl;
     @Value("${org.iplantc.discoveryenvironment.newsletter-url}") private String newsletterUrl;
-    @Value("${org.iplantc.discoveryenvironment.status-url}") private String statusUrl;
+    @Value("${org.iplantc.discoveryenvironment.ask-url}") private String askUrl;
 
     @RequestMapping("/de/error-{statusCode:\\d+}")
     public ModelAndView deError(@PathVariable Integer statusCode) {
@@ -36,8 +37,9 @@ public class BootstrapErrorController {
         modelAndView.addObject("app_name", appName);
         modelAndView.addObject("login_url", appNamePathPart);
         modelAndView.addObject("twitter_url", twitterUrl);
+        modelAndView.addObject("facebook_url", facebookUrl);
         modelAndView.addObject("newsletter_url", newsletterUrl);
-        modelAndView.addObject("status_url", statusUrl);
+        modelAndView.addObject("ask_url", askUrl);
         modelAndView.addObject("status_code", statusCode);
 
         return modelAndView;

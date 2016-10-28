@@ -40,6 +40,59 @@ h1 {
     color: #0971AB;
 }
 
+.darkBlueButton {
+    color: #FFF;
+    background-color: #185DA2;
+    cursor: pointer;
+    padding: 5px 5px;
+    border-radius: 5px;
+    border: 1px solid #424142;
+    background-image: linear-gradient(bottom, #185DA2 0%, #2989E6 100%);
+    background-image: -o-linear-gradient(bottom, #185DA2 0%, #2989E6 100%);
+    background-image: -moz-linear-gradient(bottom, #185DA2 0%, #2989E6 100%);
+    background-image: -webkit-linear-gradient(bottom, #185DA2 0%, #2989E6 100%);
+    background-image: -ms-linear-gradient(bottom, #185DA2 0%, #2989E6 100%);
+    font-family: Verdana;
+    font-size: 11px;
+    background-image: -webkit-gradient(
+            linear,
+            left bottom,
+            left top,
+            color-stop(0, #185DA2),
+            color-stop(1, #2989E6)
+    );
+    text-decoration: none;
+}
+.darkBlueButton:hover {
+    background-image: linear-gradient(bottom, #2989E6 0%, #185DA2 100%);
+    background-image: -o-linear-gradient(bottom, #2989E6 0%, #185DA2 100%);
+    background-image: -moz-linear-gradient(bottom, #2989E6 0%, #185DA2 100%);
+    background-image: -webkit-linear-gradient(bottom, #2989E6 0%, #185DA2 100%);
+    background-image: -ms-linear-gradient(bottom, #2989E6 0%, #185DA2 100%);
+    background-image: -webkit-gradient(
+            linear,
+            left bottom,
+            left top,
+            color-stop(0, #2989E6),
+            color-stop(1, #185DA2)
+    );
+}
+.darkBlueButton:active {
+    background-image: linear-gradient(bottom, #2989E6 0%, #246EBE 87%, #185DA2 100%);
+    background-image: -o-linear-gradient(bottom, #2989E6 0%, #246EBE 87%, #185DA2 100%);
+    background-image: -moz-linear-gradient(bottom, #2989E6 0%, #246EBE 87%, #185DA2 100%);
+    background-image: -webkit-linear-gradient(bottom, #2989E6 0%, #246EBE 87%, #185DA2 100%);
+    background-image: -ms-linear-gradient(bottom, #2989E6 0%, #246EBE 87%, #185DA2 100%);
+    background-image: -webkit-gradient(
+            linear,
+            left bottom,
+            left top,
+            color-stop(0, #2989E6),
+            color-stop(0.87, #246EBE),
+            color-stop(1, #185DA2)
+    );
+}
+
 a {
     color: #0971AB;
     text-decoration: none;
@@ -51,7 +104,7 @@ a:hover {
 .container {
     position: relative;
     top: 100px;
-    min-height: 220px;
+    min-height: 320px;
     margin-left: auto;
     margin-right: auto;
     padding: 10px;
@@ -74,32 +127,56 @@ a:hover {
 }
 </style>
 
+<script type="text/javascript">
+    <%--If the user refreshes their browser, redirect to /de --%>
+    if (sessionStorage.getItem("is_reloaded")) {
+        window.location.replace('${login_url}');
+        sessionStorage.removeItem("is_reloaded");
+    } else {
+        sessionStorage.setItem("is_reloaded", 1);
+    }
+
+</script>
+
 </head>
 <body>
 
 <img src="../cyverse_logo.png" height="107px" width="500px"/>
 
-    <div class="container">
+<div class="container">
 
-    <c:if test="${not empty status_code}">
-        <h1 class="redHeader">${status_code} Error</h1>
-    </c:if>
-    <h1 class="blueHeader">Oops... That wasn't supposed to happen</h1>
+    <h1 class="blueHeader" style="text-align: center">Oops... That wasn't supposed to happen</h1>
 
-    <p>
-    The CyVerse team tracks these errors automatically, but feel free to <a href="mailto:support@cyverse.org">contact support</a> if the error persists.
-        In the meantime, you can:
-        <li>Check out our <a href="${status_url}">status</a> page </li>
-        <li>Subscribe to our <a href="${newsletter_url}">newsletter</a></li>
-        <li>Follow us on <a href="${twitter_url}">Twitter</a></li>
+    <p style="text-align: center">
+        An unexpected error seems to have occurred. Try refreshing your page.
+    </p>
+    <p style="text-align: center">
+        <button class="darkBlueButton" onclick="sessionStorage.removeItem('is_reloaded');window.location.replace('${login_url}')">Refresh</button>
     </p>
 
-    <hr />
+    <p>
+        If the error persists and you want to learn more about what's going on
+        and when it may be resolved, you can:
+    <ul>
+        <li>Contact Support at <a href="mailto:support@cyverse.org">support@cyverse.org</a></li>
+        <li>Check <a href="${ask_url}">Ask CyVerse</a></li>
+    </ul>
+
+    </p>
+
+    <p>
+        You can also learn more about goings-on at CyVerse, as well as scheduled maintenance events, upcoming
+        workshops, and more by checking our <a href="${facebook_url}">CyVerse Facebook</a> page,
+        following us on <a href="${twitter_url}">CyVerse Twitter</a>, and making sure you're subscribed
+        to our newsletter, <a href="${newsletter_url}">The Node</a>.
+    </p>
+
+    <hr/>
 
     <div style="float: left"><a href="${login_url}">Go back to ${app_name}</a></div>
     <div style="float: right"><a href="http://www.cyverse.org">CyVerse Home Page</a></div>
 
-    </div>
+</div>
 
 </body>
 </html>
