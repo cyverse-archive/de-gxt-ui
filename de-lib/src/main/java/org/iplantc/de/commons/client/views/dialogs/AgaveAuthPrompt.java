@@ -38,7 +38,7 @@ public class AgaveAuthPrompt extends ConfirmMessageBox {
     static AgaveAuthAppearance appearance = GWT.create(AgaveAuthAppearance.class);
     UserInfo userInfo;
 
-    private AgaveAuthPrompt(String title, String message) {
+    private AgaveAuthPrompt(String title, String message, final String uri) {
         super(title, message);
 
         this.userInfo = UserInfo.getInstance();
@@ -46,7 +46,7 @@ public class AgaveAuthPrompt extends ConfirmMessageBox {
             @Override
             public void onDialogHide(DialogHideEvent event) {
                 if (event.getHideButton() == Dialog.PredefinedButton.YES) {
-                    Window.Location.replace(userInfo.getAgaveRedirect());
+                    Window.Location.replace(uri == null ? userInfo.getAgaveRedirect() : uri);
                 }
             }
         });
@@ -61,6 +61,10 @@ public class AgaveAuthPrompt extends ConfirmMessageBox {
     }
 
     private AgaveAuthPrompt() {
-        this(appearance.agaveRedirectTitle(), appearance.agaveRedirectMessage());
+        this(appearance.agaveRedirectTitle(), appearance.agaveRedirectMessage(), null);
+    }
+
+    public AgaveAuthPrompt(String uri) {
+        this(appearance.agaveRedirectTitle(), appearance.agaveRedirectMessage(), uri);
     }
 }

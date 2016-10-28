@@ -77,7 +77,8 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         @Override
         public void onFailure(Throwable caught) {
             if (caught instanceof HttpRedirectException) {
-                AgaveAuthPrompt prompt = AgaveAuthPrompt.getInstance();
+                final String uri = ((HttpRedirectException)caught).getLocation();
+                AgaveAuthPrompt prompt = new AgaveAuthPrompt(uri);
                 prompt.show();
                 prompt.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
                     @Override
