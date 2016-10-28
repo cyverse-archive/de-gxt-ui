@@ -6,6 +6,7 @@ import org.iplantc.de.apps.client.OntologyHierarchiesView;
 import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
+import org.iplantc.de.apps.client.events.SelectedHierarchyNotFound;
 import org.iplantc.de.apps.client.events.selection.AppFavoriteSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppInfoSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
@@ -36,6 +37,10 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.inject.client.AsyncProvider;
+import com.google.gwt.query.client.Function;
+import com.google.gwt.query.client.GQuery;
+import com.google.gwt.query.client.Promise;
+import com.google.gwt.query.client.plugins.deferred.PromiseRPC;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -97,11 +102,43 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
                      searchRegexPattern,
                      hierarchyTreeStore,
                      categoryTreeStore,
-                     OntologyHierarchiesPresenterImpl.this,
-                     OntologyHierarchiesPresenterImpl.this,
-                     OntologyHierarchiesPresenterImpl.this,
-                     OntologyHierarchiesPresenterImpl.this,
                      OntologyHierarchiesPresenterImpl.this);
+        }
+    }
+
+    public class FilteredHierarchyCallback extends PromiseRPC<OntologyHierarchy> {
+        private final Tree<OntologyHierarchy, String> tree;
+        private final OntologyHierarchy root;
+
+        public FilteredHierarchyCallback(Tree<OntologyHierarchy, String> tree,
+                                         OntologyHierarchy root) {
+            this.tree = tree;
+            this.root = root;
+        }
+
+        @Override
+        public void onFailure(Throwable caught) {
+            ErrorHandler.post(caught);
+            tree.unmask();
+            super.onFailure(caught);
+        }
+
+        @Override
+        public void onSuccess(OntologyHierarchy result) {
+
+            if (result == null || result.getSubclasses() == null) {
+                result = root;
+                result.setSubclasses(Lists.<OntologyHierarchy>newArrayList());
+            }
+            OntologyHierarchy unclassifiedChild = ontologyUtil.addUnclassifiedChild(result);
+            unclassifiedHierarchies.add(unclassifiedChild);
+            //Set the key for the current root (which won't appear in the tree, but will be the name of the tab)
+            // which will allow the children to know the full path from its parent to node
+            ontologyUtil.getOrCreateHierarchyPathTag(result);
+            addHierarchies(tree.getStore(), null, result.getSubclasses());
+
+            tree.unmask();
+            super.onSuccess(result);
         }
     }
 
@@ -119,6 +156,8 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
     private OntologyHierarchiesViewFactory viewFactory;
     String baseID;
     List<OntologyHierarchy> unclassifiedHierarchies = Lists.newArrayList();
+    List<OntologyHierarchiesView> views;
+    boolean desiredHierarchyFound = false;
     Logger LOG = Logger.getLogger("OntologyHierarchiesPresenterImpl");
 
     @Inject
@@ -136,7 +175,9 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
     }
 
     @Override
-    public void go(final DETabPanel tabPanel) {
+    public void go(final OntologyHierarchy selectedHierarchy, final DETabPanel tabPanel) {
+        desiredHierarchyFound = false;
+        views = Lists.newArrayList();
         viewTabPanel = tabPanel;
         serviceFacade.getRootHierarchies(new AsyncCallback<List<OntologyHierarchy>>() {
             @Override
@@ -152,7 +193,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
                         announcer.schedule(new ErrorAnnouncementConfig(appearance.ontologyAttrMatchingFailure()));
                         LOG.log(Level.SEVERE, "ERROR UI's ontology configs do not exist or do not match published ontology!");
                     } else {
-                        createViewTabs(result);
+                        createViewTabs(selectedHierarchy, result);
                     }
                 }
             }
@@ -162,6 +203,20 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
     @Override
     public void setViewDebugId(String baseID) {
         this.baseID = baseID;
+    }
+
+    @Override
+    public OntologyHierarchy getSelectedHierarchy() {
+        OntologyHierarchy hierarchy;
+        for (OntologyHierarchiesView view : views) {
+            if (view.getTree() != null) {
+                hierarchy = view.getTree().getSelectionModel().getSelectedItem();
+                if (hierarchy != null) {
+                    return hierarchy;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
@@ -181,20 +236,49 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
         });
     }
 
-    void createViewTabs(List<OntologyHierarchy> results) {
+    void createViewTabs(final OntologyHierarchy selectedHierarchy, List<OntologyHierarchy> results) {
         for (OntologyHierarchy hierarchy : results) {
             TreeStore<OntologyHierarchy> treeStore = getHierarchyTreeStore();
             OntologyHierarchiesView view = viewFactory.create(treeStore);
             Tree<OntologyHierarchy, String> tree = view.getTree();
+            view.setRoot(hierarchy);
+            views.add(view);
 
-            tree.mask(appearance.getAppCategoriesLoadingMask());
-            getFilteredHierarchies(hierarchy, tree);
             String hierarchyDebugId = baseID + "." + hierarchy.getIri();
             view.asWidget().ensureDebugId(hierarchyDebugId);
             view.addOntologyHierarchySelectionChangedEventHandler(this);
             //As a preference, insert the hierarchy tabs before the HPC tab which is last
             viewTabPanel.insert(tree, viewTabPanel.getWidgetCount() - 1, new TabItemConfig(appearance.hierarchyLabelName(hierarchy)), hierarchyDebugId);
         }
+
+        populateViewTabs(selectedHierarchy);
+    }
+
+    void populateViewTabs(final OntologyHierarchy selectedHierarchy) {
+        //Create all the callbacks I'll need
+        List<FilteredHierarchyCallback> childCallbacks = createFilteredHierarchyList();
+        for (OntologyHierarchiesView view: views) {
+
+            FilteredHierarchyCallback callback =
+                    new FilteredHierarchyCallback(view.getTree(), view.getRoot());
+            childCallbacks.add(callback);
+
+            view.getTree().mask(appearance.getAppCategoriesLoadingMask());
+            serviceFacade.getFilteredHierarchies(view.getRoot().getIri(),
+                                                 ontologyUtil.convertHierarchyToAvu(view.getRoot()),
+                                                 callback);
+        }
+
+        whenCallbackPromises(childCallbacks).done(new Function() {
+            public void f() {
+                for (OntologyHierarchiesView view : views) {
+                    selectDesiredHierarchy(view.getTree(), selectedHierarchy);
+                }
+                if (selectedHierarchy != null && !desiredHierarchyFound) {
+                    fireEvent(new SelectedHierarchyNotFound());
+                }
+            }
+        });
     }
 
     @Override
@@ -218,32 +302,22 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
         return new AppCategoryTreeStoreProvider().get();
     }
 
-    void getFilteredHierarchies(final OntologyHierarchy root, final Tree<OntologyHierarchy, String> tree) {
-        serviceFacade.getFilteredHierarchies(root.getIri(),
-                                             ontologyUtil.convertHierarchyToAvu(root),
-                                             new AsyncCallback<OntologyHierarchy>() {
-                                                 @Override
-                                                 public void onFailure(Throwable caught) {
-                                                     ErrorHandler.post(caught);
-                                                     tree.unmask();
-                                                 }
+    void selectDesiredHierarchy(Tree<OntologyHierarchy, String> tree, OntologyHierarchy selectedHierarchy) {
+        if (selectedHierarchy == null || desiredHierarchyFound) {
+            return;
+        }
+        desiredHierarchyFound = doSelectHierarchy(tree, selectedHierarchy);
+    }
 
-                                                 @Override
-                                                 public void onSuccess(OntologyHierarchy result) {
-                                                     if (result == null || result.getSubclasses() == null) {
-                                                         result = root;
-                                                         result.setSubclasses(Lists.<OntologyHierarchy>newArrayList());
-                                                     }
-                                                     OntologyHierarchy unclassifiedChild =
-                                                             ontologyUtil.addUnclassifiedChild(result);
-                                                     unclassifiedHierarchies.add(unclassifiedChild);
-                                                     //Set the key for the current root (which won't appear in the tree, but will be the name of the tab)
-                                                     // which will allow the children to know the full path from its parent to node
-                                                     ontologyUtil.getOrCreateHierarchyPathTag(result);
-                                                     addHierarchies(tree.getStore(), null, result.getSubclasses());
-                                                     tree.unmask();
-                                                 }
-                                             });
+    boolean doSelectHierarchy(Tree<OntologyHierarchy, String> tree,
+                              OntologyHierarchy selectedHierarchy) {
+        Tree.TreeNode<OntologyHierarchy> node = tree.findNode(selectedHierarchy);
+        if (node != null) {
+            viewTabPanel.setActiveWidget(tree);
+            tree.getSelectionModel().select(node.getModel(), true);
+            return true;
+        }
+        return false;
     }
 
     void addHierarchies(TreeStore<OntologyHierarchy> treeStore, OntologyHierarchy parent, List<OntologyHierarchy> children) {
@@ -358,6 +432,11 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
         return ensureHandlers().addHandler(OntologyHierarchySelectionChangedEvent.TYPE, handler);
     }
 
+    @Override
+    public HandlerRegistration addSelectedHierarchyNotFoundHandler(SelectedHierarchyNotFound.SelectedHierarchyNotFoundHandler handler) {
+        return ensureHandlers().addHandler(SelectedHierarchyNotFound.TYPE, handler);
+    }
+
     HandlerManager createHandlerManager() {
         return new HandlerManager(this);
     }
@@ -370,5 +449,13 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
         if (handlerManager != null) {
             handlerManager.fireEvent(event);
         }
+    }
+
+    List<FilteredHierarchyCallback> createFilteredHierarchyList() {
+        return Lists.newArrayList();
+    }
+
+    Promise whenCallbackPromises(List<FilteredHierarchyCallback> childCallbacks) {
+        return GQuery.when(childCallbacks.toArray());
     }
 }

@@ -13,6 +13,7 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
+import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
@@ -37,11 +38,7 @@ public class AppDetailsDialog extends IPlantDialog {
                      final String searchRegexPattern,
                      final TreeStore<OntologyHierarchy> hierarchyTreeStore,
                      final TreeStore<AppCategory> categoryTreeStore,
-                     final AppFavoriteSelectedEvent.AppFavoriteSelectedEventHandler favoriteSelectedHandler,
-                     final AppRatingSelected.AppRatingSelectedHandler ratingSelectedHandler,
-                     final AppRatingDeselected.AppRatingDeselectedHandler ratingDeselectedHandler,
-                     final DetailsHierarchyClicked.DetailsHierarchyClickedHandler hierarchySelectionHandler,
-                     final DetailsCategoryClicked.DetailsCategoryClickedHandler categoryClickedHandler) {
+                     final EventHandler eventHandler) {
 
         setHeadingText(app.getName());
         presenterProvider.get(new AsyncCallback<AppDetailsView.Presenter>() {
@@ -53,20 +50,12 @@ public class AppDetailsDialog extends IPlantDialog {
             @Override
             public void onSuccess(final AppDetailsView.Presenter result) {
                 result.go(AppDetailsDialog.this, app, searchRegexPattern, hierarchyTreeStore, categoryTreeStore);
-                if(favoriteSelectedHandler != null){
-                    result.addAppFavoriteSelectedEventHandlers(favoriteSelectedHandler);
-                }
-                if(ratingSelectedHandler != null){
-                    result.addAppRatingSelectedHandler(ratingSelectedHandler);
-                }
-                if(ratingDeselectedHandler != null){
-                    result.addAppRatingDeselectedHandler(ratingDeselectedHandler);
-                }
-                if (hierarchySelectionHandler != null) {
-                    result.addDetailsHierarchyClickedHandler(hierarchySelectionHandler);
-                }
-                if (categoryClickedHandler != null) {
-                    result.addDetailsCategoryClickedHandler(categoryClickedHandler);
+                if (eventHandler != null) {
+                    result.addAppFavoriteSelectedEventHandlers((AppFavoriteSelectedEvent.AppFavoriteSelectedEventHandler)eventHandler);
+                    result.addAppRatingSelectedHandler((AppRatingSelected.AppRatingSelectedHandler)eventHandler);
+                    result.addAppRatingDeselectedHandler((AppRatingDeselected.AppRatingDeselectedHandler)eventHandler);
+                    result.addDetailsHierarchyClickedHandler((DetailsHierarchyClicked.DetailsHierarchyClickedHandler)eventHandler);
+                    result.addDetailsCategoryClickedHandler((DetailsCategoryClicked.DetailsCategoryClickedHandler)eventHandler);
                 }
             }
         });

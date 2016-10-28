@@ -51,6 +51,7 @@ public class AppsViewImpl extends Composite implements AppsView {
         this.toolBar = toolbarPresenter.getView();
 
         initWidget(uiBinder.createAndBindUi(this));
+
         categoryTabs.addSelectionHandler(new SelectionHandler<Widget>() {
             @Override
             public void onSelection(SelectionEvent<Widget> event) {
@@ -79,6 +80,15 @@ public class AppsViewImpl extends Composite implements AppsView {
     @Override
     public void hideWorkflowMenu() {
         toolBar.hideWorkflowMenu();
+    }
+
+    public void clearTabPanel() {
+        categoryTabs.disableEvents();
+        int tabCount = categoryTabs.getWidgetCount();
+        for (int i = 0 ; i < tabCount ; i++) {
+            categoryTabs.close(categoryTabs.getWidget(0));
+        }
+        categoryTabs.enableEvents();
     }
 
     @Override
