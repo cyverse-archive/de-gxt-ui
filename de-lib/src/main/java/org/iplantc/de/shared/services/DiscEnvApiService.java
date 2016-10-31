@@ -1,6 +1,8 @@
 package org.iplantc.de.shared.services;
 
 import org.iplantc.de.shared.AsyncCallbackWrapper;
+import org.iplantc.de.shared.DECallback;
+import org.iplantc.de.shared.DECallbackWrapper;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -27,6 +29,20 @@ public class DiscEnvApiService {
                                   AsyncCallback<String> callback) {
         return deService.getServiceData(wrapper,
                                         new AsyncCallbackWrapper<>(callback));
+    }
+
+    public Request getServiceData(ServiceCallWrapper wrapper,
+                                  DECallback<String> callback) {
+        DECallbackWrapper<String> deCallbackWrapper = new DECallbackWrapper<>(callback, this);
+        deCallbackWrapper.setRetryVars(wrapper, deCallbackWrapper);
+        return deService.getServiceData(wrapper,
+                                        deCallbackWrapper);
+    }
+
+    public Request getServiceData(ServiceCallWrapper wrapper,
+                                  DECallbackWrapper<String> callback) {
+        return deService.getServiceData(wrapper,
+                                        callback);
     }
 
     public Request getServiceData(ServiceCallWrapper wrapper,
