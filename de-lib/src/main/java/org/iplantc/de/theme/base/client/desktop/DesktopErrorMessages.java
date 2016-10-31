@@ -29,4 +29,6 @@ public interface DesktopErrorMessages extends Messages {
     String systemInitializationError();
 
 	String checkSysMessageError();
+
+    String userPreferencesLoadError();
 }

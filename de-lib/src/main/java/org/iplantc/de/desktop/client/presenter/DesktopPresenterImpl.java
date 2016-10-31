@@ -407,6 +407,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                                                                         userSessionService,
                                                                         errorHandlerProvider,
                                                                         appearance,
+                                                                        announcer,
                                                                         panel,
                                                                         this));
     }

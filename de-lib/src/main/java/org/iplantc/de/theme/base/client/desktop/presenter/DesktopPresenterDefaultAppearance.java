@@ -127,4 +127,9 @@ public class DesktopPresenterDefaultAppearance implements DesktopView.Presenter.
 	public String checkSysMessageError() {
 		return desktopErrorMessages.checkSysMessageError();
 	}
+
+    @Override
+    public String userPreferencesLoadError() {
+        return desktopErrorMessages.userPreferencesLoadError();
+    }
 }

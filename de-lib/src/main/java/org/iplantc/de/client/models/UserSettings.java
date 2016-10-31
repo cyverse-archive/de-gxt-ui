@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.diskResources.Folder;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
@@ -39,7 +40,7 @@ public class UserSettings {
     private boolean enableWaitTimeMessage;
     
     
-    public static final String EMAIL_ANALYSIS_NOTIFCATOIN = "enableAnalysisEmailNotification";
+    public static final String EMAIL_ANALYSIS_NOTIFICATION = "enableAnalysisEmailNotification";
     public static final String EMAIL_IMPORT_NOTIFICATION = "enableImportEmailNotification";
     public static final String DEFAULT_FILE_SELECTOR_PATH = "defaultFileSelectorPath";
     public static final String REMEMBER_LAST_PATH = "rememberLastPath";
@@ -88,8 +89,8 @@ public class UserSettings {
             return;
         }
 
-        if (split.get(EMAIL_ANALYSIS_NOTIFCATOIN) != null) {
-            setEnableAnalysisEmailNotification(split.get(EMAIL_ANALYSIS_NOTIFCATOIN).asBoolean());
+        if (split.get(EMAIL_ANALYSIS_NOTIFICATION) != null) {
+            setEnableAnalysisEmailNotification(split.get(EMAIL_ANALYSIS_NOTIFICATION).asBoolean());
         } else {
             setEnableAnalysisEmailNotification(true);
         }
@@ -252,7 +253,7 @@ public class UserSettings {
      */
     public Splittable asSplittable() {
         Splittable ret = StringQuoter.createSplittable();
-        StringQuoter.create(isEnableAnalysisEmailNotification()).assign(ret, EMAIL_ANALYSIS_NOTIFCATOIN);
+        StringQuoter.create(isEnableAnalysisEmailNotification()).assign(ret, EMAIL_ANALYSIS_NOTIFICATION);
         StringQuoter.create(isEnableImportEmailNotification()).assign(ret, EMAIL_IMPORT_NOTIFICATION);
         StringQuoter.create(isEnableWaitTimeMessage()).assign(ret, WAIT_TIME_MESSAGE);
         StringQuoter.create(getDefaultFileSelectorPath()).assign(ret, DEFAULT_FILE_SELECTOR_PATH);
@@ -269,6 +270,20 @@ public class UserSettings {
         StringQuoter.create(getLastPath()).assign(ret, LAST_PATH);
 
         return ret;
+    }
+
+    public void useDefaultValues(UserInfo instance) {
+        JSONObject defaults = new JSONObject();
+        JSONObject defaultHomeDir = new JSONObject();
+
+        JSONString id = new JSONString(instance.getHomePath());
+        JSONString path = new JSONString(instance.getHomePath());
+        defaultHomeDir.put("id", id);
+        defaultHomeDir.put("path", path);
+
+        defaults.put(DEFAULT_OUTPUT_FOLDER, defaultHomeDir);
+
+        setValues(defaults);
     }
 
     /**
