@@ -37,4 +37,5 @@ public interface AdminAppStatsGridView extends IsWidget, IsMaskable {
     interface Presenter {
         void go(HasOneWidget container);
     }
+
 }

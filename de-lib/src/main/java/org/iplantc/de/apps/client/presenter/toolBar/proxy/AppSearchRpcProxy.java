@@ -12,7 +12,6 @@ import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import com.sencha.gxt.data.client.loader.RpcProxy;
-import com.sencha.gxt.data.shared.SortDir;
 import com.sencha.gxt.data.shared.loader.FilterConfig;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
@@ -64,7 +63,7 @@ public class AppSearchRpcProxy extends RpcProxy<FilterPagingLoadConfig, PagingLo
         }
 
         // Call the searchApp service with this proxy's query.
-        appService.searchApp(lastQueryText, SortDir.ASC, null, new AsyncCallback<AppListLoadResult>() {
+        appService.searchApp(lastQueryText, new AsyncCallback<AppListLoadResult>() {
             @Override
             public void onSuccess(final AppListLoadResult loadResult) {
                 List<App> apps = loadResult.getData();

@@ -21,6 +21,7 @@ import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
+import com.google.common.base.Strings;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -31,8 +32,6 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
-
-import com.sencha.gxt.data.shared.SortDir;
 
 import java.util.List;
 
@@ -263,18 +262,23 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
     }
 
     @Override
-    public void searchApp(String term, SortDir dir, String field, AsyncCallback<AppListLoadResult> callback) {
-        String address = APPS_ADMIN + "?search=" + URL.encodeQueryString(term);
+    public void searchApp(String term, AsyncCallback<AppListLoadResult> callback) {
+        StringBuilder address = new StringBuilder(APPS_ADMIN);
+        if(!Strings.isNullOrEmpty(term)) {
+            address.append("?search=" + URL.encodeQueryString(term));
+        }
 
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address.toString());
         deService.getServiceData(wrapper,  new AsyncCallbackConverter<String, AppListLoadResult>(callback) {
             @Override
             protected AppListLoadResult convertFrom(String object) {
                 List<App> apps = AutoBeanCodex.decode(svcFactory, AppList.class, object).as().getApps();
+                Splittable payload = StringQuoter.split(object);
                 AutoBean<AppListLoadResult> loadResultAutoBean = svcFactory.loadResult();
 
                 final AppListLoadResult loadResult = loadResultAutoBean.as();
                 loadResult.setData(apps);
+                loadResult.setTotal(Integer.parseInt(payload.get("total").toString()));
                 return loadResult;
             }
         });

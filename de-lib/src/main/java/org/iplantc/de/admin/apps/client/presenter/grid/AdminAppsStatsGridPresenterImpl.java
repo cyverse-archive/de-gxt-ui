@@ -4,6 +4,7 @@ import org.iplantc.de.admin.apps.client.AdminAppStatsGridView;
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -12,7 +13,7 @@ import com.google.inject.Inject;
 /**
  * Created by sriram on 10/21/16.
  */
-public class AdminAppsStatsGridPresenterImpl implements AdminAppStatsGridView.Presenter{
+public class AdminAppsStatsGridPresenterImpl implements AdminAppStatsGridView.Presenter {
 
     AdminAppStatsGridView view;
 
@@ -22,26 +23,30 @@ public class AdminAppsStatsGridPresenterImpl implements AdminAppStatsGridView.Pr
     @Inject
     public AdminAppsStatsGridPresenterImpl(AdminAppStatsGridView view) {
         this.view = view;
-
     }
 
     @Override
     public void go(HasOneWidget container) {
-       view.mask("Loading...");
-       container.setWidget(view);
-       appService.searchApp("gen", null, null, new AsyncCallback<AppListLoadResult>() {
-           @Override
-           public void onFailure(Throwable caught) {
-               ErrorHandler.post("unable to get app list", caught);
-           }
+        container.setWidget(view);
+        load();
+    }
 
-           @Override
-           public void onSuccess(AppListLoadResult result) {
-              view.clear();
-              view.addAll(result.getData());
-              view.unmask();
-           }
-       });
+    void load() {
+        view.mask(I18N.DISPLAY.loadingMask());
+        appService.searchApp(null, new AsyncCallback<AppListLoadResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                view.unmask();
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(AppListLoadResult result) {
+                view.clear();
+                view.addAll(result.getData());
+                view.unmask();
+            }
+        });
     }
 
 }

@@ -8,16 +8,6 @@
     <ui:with field="appearance"
              type="org.iplantc.de.admin.apps.client.AdminAppStatsGridView.Appearance" />
 
-    <ui:with field="northData"
-             type="com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData">
-        <ui:attributes size="30"
-                       maxSize="30"/>
-    </ui:with>
-    <ui:with field="centerData"
-             type="com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData">
-        <ui:attributes size="1"/>
-    </ui:with>
-
     <ui:with type="com.sencha.gxt.widget.core.client.grid.ColumnModel"
              field="cm"/>
     <ui:with type="com.sencha.gxt.data.shared.ListStore"
@@ -27,17 +17,23 @@
         <ui:attributes stripeRows="true" forceFit="true" autoFill="true"/>
     </ui:with>
 
+    <ui:with field="centerMargins"
+             type="com.sencha.gxt.core.client.util.Margins">
+        <ui:attributes top="0" right="0" bottom="0" left="0"/>
+    </ui:with>
+    <ui:with field="centerLayoutData"
+             type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
+        <ui:attributes height="1" width="1" margins="{centerMargins}"/>
+    </ui:with>
 
-    <container:BorderLayoutContainer borders="true">
-        <container:north layoutData="{northData}">
-            <toolbar:ToolBar>
-            </toolbar:ToolBar>
-        </container:north>
-        <container:center layoutData="{centerData}">
+
+    <container:VerticalLayoutContainer ui:field="container">
+        <container:child layoutData="{centerLayoutData}">
             <grid:Grid ui:field="grid"
                        cm="{cm}"
                        store="{store}"
-                       view="{view}"/>
-        </container:center>
-    </container:BorderLayoutContainer>
+                       view="{view}"
+                       loadMask="true"/>
+        </container:child>
+    </container:VerticalLayoutContainer>
 </ui:UiBinder>

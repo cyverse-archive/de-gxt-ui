@@ -326,10 +326,11 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void searchApp(String term, SortDir dir, String field, AsyncCallback<AppListLoadResult> callback) {
-        String address = APPS + "?search=" + URL.encodeQueryString(term);
+    public void searchApp(String term, AsyncCallback<AppListLoadResult> callback) {
+        StringBuilder address = new StringBuilder(APPS);
+        address.append( "?search=" + URL.encodeQueryString(term));
 
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address.toString());
         deServiceFacade.getServiceData(wrapper,  new AsyncCallbackConverter<String, AppListLoadResult>(callback) {
             @Override
             protected AppListLoadResult convertFrom(String object) {

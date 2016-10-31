@@ -10,12 +10,15 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
+import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
+import com.sencha.gxt.widget.core.client.grid.GridView;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -25,16 +28,6 @@ import java.util.List;
  * Created by sriram on 10/21/16.
  */
 public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStatsGridView{
-
-    @Override
-    public void clear() {
-        store.clear();
-    }
-
-    @Override
-    public void addAll(List<App> apps) {
-       store.addAll(apps);
-    }
 
     interface AdminAppStatsGridViewUiBinder
             extends UiBinder<Widget, AdminAppStatsGridViewImpl> {
@@ -49,14 +42,21 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
     ColumnModel<App> cm;
     @UiField
     ListStore<App> store;
-
     @UiField
     Appearance appearance;
+    @UiField
+    GridView<App> view;
+
+    @UiField
+    VerticalLayoutContainer container;
 
     @Inject
     public AdminAppStatsGridViewImpl() {
-         initWidget(ourUiBinder.createAndBindUi(this));
+        initWidget(ourUiBinder.createAndBindUi(this));
+        view.setAutoExpandColumn(cm.getColumn(0));
+        grid.getSelectionModel().setSelectionMode(Style.SelectionMode.SINGLE);
     }
+
 
     @UiFactory
     ColumnModel<App> createColumnModel() {
@@ -186,5 +186,16 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
     @UiFactory
     ListStore<App> createListStore() {
         return new ListStore<>(new AppModelKeyProvider());
+    }
+
+
+    @Override
+    public void clear() {
+        store.clear();
+    }
+
+    @Override
+    public void addAll(List<App> apps) {
+        store.addAll(apps);
     }
 }
