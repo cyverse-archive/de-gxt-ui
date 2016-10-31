@@ -10,6 +10,7 @@ import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppCategory;
+import org.iplantc.de.client.models.apps.AppCategoryList;
 import org.iplantc.de.client.models.apps.AppDeletionRequest;
 import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.apps.AppFeedback;
@@ -25,10 +26,12 @@ import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.services.converters.AppCategoryListCallbackConverter;
 import org.iplantc.de.client.services.converters.AppTemplateCallbackConverter;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
+import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
+import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.services.BaseServiceCallWrapper.Type;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.EmailServiceAsync;
@@ -111,6 +114,22 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
         }
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
         deServiceFacade.getServiceData(wrapper, new AppCategoryListCallbackConverter(callback));
+    }
+
+    @Override
+    public void getAppCategories(boolean privateOnly, AppsCallback<List<AppCategory>> callback) {
+        String address = CATEGORIES;
+        if (privateOnly) {
+            address += "?public=false";
+        }
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
+        deServiceFacade.getServiceData(wrapper,
+                                       new DECallbackConverter<String, List<AppCategory>>(callback) {
+                                           @Override
+                                           protected List<AppCategory> convertFrom(String object) {
+                                               return AutoBeanCodex.decode(svcFactory, AppCategoryList.class, object).as().getCategories();
+                                           }
+                                       });
     }
 
     @Override

@@ -4,8 +4,10 @@ package org.iplantc.de.client.services;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
+import org.iplantc.de.client.models.apps.AppCategoryList;
 import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -26,6 +28,8 @@ public interface AppServiceFacade {
         AutoBean<AppListLoadResult> loadResult();
 
         AutoBean<HasId> hasId();
+
+        AutoBean<AppCategoryList> appCategoryList();
     }
 
     /**
@@ -62,7 +66,17 @@ public interface AppServiceFacade {
      *
      * @param callback
      */
+
     void getAppCategories(boolean privateOnly, AsyncCallback<List<AppCategory>> callback);
 
+    void getAppCategories(boolean privateOnly, AppsCallback<List<AppCategory>> callback);
+
+    /**
+     * Searches for all active Apps with a name or description that contains the given search term.
+     *
+     * @param search the search query
+     * @param callback called when the RPC call is complete.
+     */
+    void searchApp(String search, AsyncCallback<AppListLoadResult> callback);
 
 }

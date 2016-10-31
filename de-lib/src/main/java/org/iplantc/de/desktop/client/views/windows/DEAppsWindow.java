@@ -12,6 +12,7 @@ import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -24,6 +25,7 @@ public class DEAppsWindow extends IplantWindowBase {
     public static final String APPS = "#apps";
     @Inject UserInfo userInfo;
     private final AppsView.Presenter presenter;
+    private Widget currentWidget;
 
     @Inject
     DEAppsWindow(final AppsView.Presenter presenter, final IplantDisplayStrings displayStrings) {
@@ -80,4 +82,15 @@ public class DEAppsWindow extends IplantWindowBase {
         presenter.setViewDebugId(baseID + AppsModule.Ids.APPS_VIEW);
     }
 
+    public void serviceDown(SelectEvent.SelectHandler handler) {
+        if (currentWidget == null) {
+            currentWidget = getWidget();
+            this.setWidget(new ServiceDownPanel(handler));
+        }
+    }
+
+    public void restoreWindow() {
+        this.setWidget(currentWidget);
+        currentWidget = null;
+    }
 }
