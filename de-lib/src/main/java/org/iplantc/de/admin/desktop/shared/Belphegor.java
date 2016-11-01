@@ -25,6 +25,8 @@ public interface Belphegor {
         String METADATA_TAB = ".metadataTab";
         String PERMID_TAB = ".permIdTab";
         String WORKSHOP_ADMIN_TAB = ".workshopAdminTab";
+        String STATS_TAB = ".statsTab";
+        String STATS = ".stats";
     }
 
     interface AppIds {
@@ -65,6 +67,12 @@ public interface Belphegor {
         String CLOSE_BTN = ".closeBtn";
         String BETA = ".beta";
         String COL_HEADER = ".colHeader";
+    }
+
+    interface AppStatIds {
+       String VIEW = ".view" ;
+       String COL_HEADER = ".colHeader";
+       String GRID = ".grid";
     }
 
     interface RefGenomeIds {

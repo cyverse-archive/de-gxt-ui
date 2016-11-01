@@ -152,6 +152,10 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
         ontologiesPanel.ensureDebugId(baseID + Belphegor.Ids.CATALOG);
         ontologiesPresenter.setViewDebugId(baseID + Belphegor.Ids.CATALOG);
 
+        deTabPanel.setTabDebugId(statsPanel, baseID + Belphegor.Ids.STATS_TAB);
+        statsPanel.ensureDebugId(baseID + Belphegor.Ids.STATS);
+        appStatsPresenter.setViewDebugId(baseID + Belphegor.Ids.STATS);
+
         deTabPanel.setTabDebugId(refGenomePanel, baseID + Belphegor.Ids.REFERENCE_GENOME_TAB);
         refGenomePanel.ensureDebugId(baseID + Belphegor.Ids.REFERENCE_GENOME);
         refGenPresenter.setViewDebugId(baseID + Belphegor.Ids.REFERENCE_GENOME);

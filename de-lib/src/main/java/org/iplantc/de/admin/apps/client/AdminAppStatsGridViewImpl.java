@@ -1,7 +1,9 @@
 package org.iplantc.de.admin.apps.client;
 
+import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.apps.client.models.AppModelKeyProvider;
 import org.iplantc.de.client.models.apps.App;
+import org.iplantc.de.client.util.StaticIdHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -15,6 +17,7 @@ import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
+import com.sencha.gxt.widget.core.client.event.ViewReadyEvent;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
@@ -197,5 +200,21 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
     @Override
     public void addAll(List<App> apps) {
         store.addAll(apps);
+    }
+
+    @Override
+    protected void onEnsureDebugId(final String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        container.ensureDebugId(baseID);
+        grid.asWidget().ensureDebugId(baseID + Belphegor.AppStatIds.GRID);
+        grid.addViewReadyHandler(new ViewReadyEvent.ViewReadyHandler() {
+            @Override
+            public void onViewReady(ViewReadyEvent event) {
+                StaticIdHelper.getInstance()
+                              .gridColumnHeaders(baseID + Belphegor.AppStatIds.GRID
+                                                 + Belphegor.AppStatIds.COL_HEADER, grid);
+            }
+        });
     }
 }

@@ -46,4 +46,9 @@ public class AdminAppsStatsGridViewDefaultAppearance implements AdminAppStatsGri
     public String rating() {
         return bds.rating();
     }
+
+    @Override
+    public String loading() {
+        return bds.loading();
+    }
 }

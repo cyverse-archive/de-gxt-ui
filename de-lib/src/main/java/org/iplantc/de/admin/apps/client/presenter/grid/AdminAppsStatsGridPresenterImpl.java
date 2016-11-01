@@ -2,9 +2,9 @@ package org.iplantc.de.admin.apps.client.presenter.grid;
 
 import org.iplantc.de.admin.apps.client.AdminAppStatsGridView;
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
+import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
 import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -15,13 +15,14 @@ import com.google.inject.Inject;
  */
 public class AdminAppsStatsGridPresenterImpl implements AdminAppStatsGridView.Presenter {
 
-    AdminAppStatsGridView view;
-
+    public AdminAppStatsGridView view;
     @Inject
     AppAdminServiceFacade appService;
+    @Inject
+    AdminAppStatsGridView.Appearance appearance;
 
     @Inject
-    public AdminAppsStatsGridPresenterImpl(AdminAppStatsGridView view) {
+    AdminAppsStatsGridPresenterImpl(AdminAppStatsGridView view) {
         this.view = view;
     }
 
@@ -32,8 +33,8 @@ public class AdminAppsStatsGridPresenterImpl implements AdminAppStatsGridView.Pr
     }
 
     void load() {
-        view.mask(I18N.DISPLAY.loadingMask());
-        appService.searchApp(null, new AsyncCallback<AppListLoadResult>() {
+        view.mask(appearance.loading());
+        appService.searchApp("", new AsyncCallback<AppListLoadResult>() {
             @Override
             public void onFailure(Throwable caught) {
                 view.unmask();
@@ -47,6 +48,11 @@ public class AdminAppsStatsGridPresenterImpl implements AdminAppStatsGridView.Pr
                 view.unmask();
             }
         });
+    }
+
+    @Override
+    public void setViewDebugId(String baseId) {
+        view.asWidget().ensureDebugId(baseId + Belphegor.AppStatIds.VIEW);
     }
 
 }

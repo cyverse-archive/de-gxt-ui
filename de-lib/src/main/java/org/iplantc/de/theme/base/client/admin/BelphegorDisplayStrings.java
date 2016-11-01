@@ -115,4 +115,6 @@ public interface BelphegorDisplayStrings extends Messages {
     String lastUsed();
 
     String rating();
+
+    String loading();
 }
