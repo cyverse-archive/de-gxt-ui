@@ -9,8 +9,11 @@ import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import java.util.List;
 
 public interface AppListLoadResult extends PagingLoadResult {
+
+    @PropertyName("apps")
     void setData(List<App> data);
 
+    @PropertyName("apps")
     List<App> getData();
 
     @PropertyName("total")

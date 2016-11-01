@@ -12,7 +12,6 @@ import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppDoc;
-import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
 import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.services.converters.AppCategoryListCallbackConverter;
@@ -272,13 +271,8 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
         deService.getServiceData(wrapper,  new AsyncCallbackConverter<String, AppListLoadResult>(callback) {
             @Override
             protected AppListLoadResult convertFrom(String object) {
-                List<App> apps = AutoBeanCodex.decode(svcFactory, AppList.class, object).as().getApps();
-                Splittable payload = StringQuoter.split(object);
-                AutoBean<AppListLoadResult> loadResultAutoBean = svcFactory.loadResult();
-
-                final AppListLoadResult loadResult = loadResultAutoBean.as();
-                loadResult.setData(apps);
-                loadResult.setTotal(Integer.parseInt(payload.get("total").toString()));
+                AppListLoadResult loadResult =
+                        AutoBeanCodex.decode(svcFactory, AppListLoadResult.class, object).as();
                 return loadResult;
             }
         });
