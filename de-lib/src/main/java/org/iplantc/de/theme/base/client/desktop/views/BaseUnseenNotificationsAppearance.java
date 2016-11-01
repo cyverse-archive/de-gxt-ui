@@ -113,4 +113,14 @@ public class BaseUnseenNotificationsAppearance implements UnseenNotificationsVie
         return "220px";
     }
 
+    @Override
+    public String retryNotificationsText() {
+        return strings.retryNotificationsText();
+    }
+
+    @Override
+    public String retryButtonText() {
+        return strings.retryButtonText();
+    }
+
 }

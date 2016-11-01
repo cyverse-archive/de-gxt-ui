@@ -2,6 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:container='urn:import:com.sencha.gxt.widget.core.client.container'
              xmlns:widget='urn:import:com.sencha.gxt.widget.core.client'
+             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
              xmlns:anchor='urn:import:org.iplantc.de.commons.client.widgets'>
 
     <ui:with field="appearance"
@@ -11,6 +12,17 @@
         <container:child>
             <g:HTML ui:field="emptyNotificationsText"
                     text="{appearance.noNewNotifications}"/>
+        </container:child>
+        <container:child>
+            <g:HTML ui:field="retryNotificationsText"
+                    visible="false"
+                    text="{appearance.retryNotificationsText}"/>
+        </container:child>
+        <container:child>
+            <button:TextButton ui:field="retryButton"
+                               visible="false"
+                               text="{appearance.retryButtonText}"
+            />
         </container:child>
         <container:child>
             <widget:ListView ui:field="listView"

@@ -651,9 +651,13 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         initKBShortCuts();
         panel.add(view);
         processQueryStrings();
-        messageServiceFacade.getRecentMessages(new InitializationCallbacks.GetInitialNotificationsCallback(view, appearance, announcer));
-        messageServiceFacade.getMessageCounts(new NewSysMessageCountCallback());
-   
+        getNotifications();
+   }
+
+   @Override
+   public void getNotifications() {
+       messageServiceFacade.getRecentMessages(new InitializationCallbacks.GetInitialNotificationsCallback(view, appearance, announcer));
+       messageServiceFacade.getMessageCounts(new NewSysMessageCountCallback());
    }
 
    @Override

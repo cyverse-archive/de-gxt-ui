@@ -108,11 +108,13 @@ class InitializationCallbacks {
         public void onFailure(Throwable caught) {
             announcer.schedule(new ErrorAnnouncementConfig(appearance.fetchNotificationsError(),
                                                            true,
-                                                           3000));
+                                                           5000));
+            view.setNotificationConnection(false);
         }
 
         @Override
         public void onSuccess(NotificationList result) {
+            view.setNotificationConnection(true);
             if(result != null) {
                 GWT.log("unseen count ^^^^^^" + result.getUnseenTotal());
                 view.setUnseenNotificationCount(Integer.parseInt(result.getUnseenTotal()));
