@@ -126,6 +126,11 @@ public class BelphegorViewDefaultAppearance implements BelphegorView.BelphegorVi
     }
 
     @Override
+    public String appStats() {
+        return belphegorDisplayStrings.appStats();
+    }
+
+    @Override
     public String systemMessages() {
         return belphegorDisplayStrings.systemMessages();
     }

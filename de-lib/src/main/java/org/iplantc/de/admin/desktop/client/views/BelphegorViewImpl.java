@@ -1,5 +1,6 @@
 package org.iplantc.de.admin.desktop.client.views;
 
+import org.iplantc.de.admin.apps.client.AdminAppStatsGridView;
 import org.iplantc.de.admin.desktop.client.metadata.view.TemplateListingView;
 import org.iplantc.de.admin.desktop.client.ontologies.OntologiesView;
 import org.iplantc.de.admin.desktop.client.permIdRequest.views.PermanentIdRequestView;
@@ -44,7 +45,7 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
     @UiField HtmlLayoutContainer northCon;
     @UiField DETabPanel deTabPanel;
     @UiField SimpleContainer ontologiesPanel, refGenomePanel, toolRequestPanel, systemMessagesPanel, metadataPanel,
-            permIdPanel, toolAdminPanel, workshopAdminPanel;
+            permIdPanel, toolAdminPanel, workshopAdminPanel, statsPanel;
     @UiField(provided = true) BelphegorViewAppearance appearance;
     private TextButton menuButton;
     private RefGenomeView.Presenter refGenPresenter;
@@ -55,6 +56,7 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
     private PermanentIdRequestView.Presenter permIdPresenter;
     private OntologiesView.Presenter ontologiesPresenter;
     private WorkshopAdminView.Presenter workshopAdminPresenter;
+    private AdminAppStatsGridView.Presenter appStatsPresenter;
 
     @Inject
     public BelphegorViewImpl(final OntologiesView.Presenter ontologiesPresenter,
@@ -65,6 +67,7 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
                              final TemplateListingView.Presenter tempPresenter,
                              final PermanentIdRequestView.Presenter permIdPresenter,
                              final WorkshopAdminView.Presenter workshopAdminPresenter,
+                             final AdminAppStatsGridView.Presenter appStatsPresenter,
                              final BelphegorViewAppearance appearance) {
         this.appearance = appearance;
         this.ontologiesPresenter = ontologiesPresenter;
@@ -75,6 +78,7 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
         this.tempPresenter = tempPresenter;
         this.permIdPresenter = permIdPresenter;
         this.workshopAdminPresenter = workshopAdminPresenter;
+        this.appStatsPresenter = appStatsPresenter;
 
         initWidget(uiBinder.createAndBindUi(this));
         init(ontologiesPresenter,
@@ -84,7 +88,7 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
              sysMsgPresenter,
              tempPresenter,
              permIdPresenter,
-             workshopAdminPresenter);
+             workshopAdminPresenter, appStatsPresenter);
         ensureDebugId(Belphegor.Ids.BELPHEGOR);
     }
 
@@ -100,7 +104,8 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
                       final SystemMessageView.Presenter sysMsgPresenter,
                       final TemplateListingView.Presenter tempPresenter,
                       final PermanentIdRequestView.Presenter permIdPresenter,
-                      final WorkshopAdminView.Presenter workshopAdminPresenter) {
+                      final WorkshopAdminView.Presenter workshopAdminPresenter,
+                      final AdminAppStatsGridView.Presenter appStatsPresenter) {
         buildUserMenu();
 
         ontologiesPresenter.go(ontologiesPanel);
@@ -111,6 +116,7 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
         tempPresenter.go(metadataPanel);
         permIdPresenter.go(permIdPanel);
         workshopAdminPresenter.go(workshopAdminPanel);
+        appStatsPresenter.go(statsPanel);
     }
 
     private void buildUserMenu() {
@@ -145,6 +151,10 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
         deTabPanel.setTabDebugId(ontologiesPanel, baseID + Belphegor.Ids.CATALOG_TAB);
         ontologiesPanel.ensureDebugId(baseID + Belphegor.Ids.CATALOG);
         ontologiesPresenter.setViewDebugId(baseID + Belphegor.Ids.CATALOG);
+
+        deTabPanel.setTabDebugId(statsPanel, baseID + Belphegor.Ids.STATS_TAB);
+        statsPanel.ensureDebugId(baseID + Belphegor.Ids.STATS);
+        appStatsPresenter.setViewDebugId(baseID + Belphegor.Ids.STATS);
 
         deTabPanel.setTabDebugId(refGenomePanel, baseID + Belphegor.Ids.REFERENCE_GENOME_TAB);
         refGenomePanel.ensureDebugId(baseID + Belphegor.Ids.REFERENCE_GENOME);

@@ -31,6 +31,7 @@ import org.iplantc.de.admin.desktop.client.ontologies.views.OntologyHierarchyToA
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
 import org.iplantc.de.apps.client.presenter.toolBar.proxy.AppSearchRpcProxy;
+import org.iplantc.de.client.services.AppSearchFacade;
 import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.client.models.apps.App;
@@ -111,6 +112,7 @@ public class OntologiesPresenterImplTest {
     @Mock App appMock;
     @Mock AppAdminServiceFacade adminAppServiceMock;
     @Mock AppServiceFacade appServiceMock;
+    @Mock AppSearchFacade appSearchServiceMock;
     @Mock AppSearchRpcProxy proxyMock;
     @Mock PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loaderMock;
     @Mock OntologyHierarchy trashHierarchyMock;
@@ -183,6 +185,7 @@ public class OntologiesPresenterImplTest {
                                 isA(AppToOntologyHierarchyDND.class))).thenReturn(viewMock);
 
         uut = new OntologiesPresenterImpl(serviceFacadeMock,
+                                          appSearchServiceMock,
                                           appServiceMock,
                                           editorStoreMock,
                                           previewStoreMock,
@@ -192,7 +195,7 @@ public class OntologiesPresenterImplTest {
                                           editorGridPresenterMock,
                                           categorizeViewMock) {
             @Override
-            AppSearchRpcProxy getProxy(AppServiceFacade appService) {
+            AppSearchRpcProxy getProxy(AppSearchFacade appService) {
                 return proxyMock;
             }
 
@@ -298,6 +301,7 @@ public class OntologiesPresenterImplTest {
         when(targetAppMock.getName()).thenReturn("name");
 
         uut = new OntologiesPresenterImpl(serviceFacadeMock,
+                                          appSearchServiceMock,
                                           appServiceMock,
                                           editorStoreMock,
                                           previewStoreMock,
@@ -341,6 +345,7 @@ public class OntologiesPresenterImplTest {
         when(targetAppMock.getName()).thenReturn("name");
 
         uut = new OntologiesPresenterImpl(serviceFacadeMock,
+                                          appSearchServiceMock,
                                           appServiceMock,
                                           editorStoreMock, previewStoreMock,
                                           factoryMock,
@@ -407,6 +412,7 @@ public class OntologiesPresenterImplTest {
         when(ontologyHierarchyListMock.size()).thenReturn(1);
 
         uut = new OntologiesPresenterImpl(serviceFacadeMock,
+                                          appSearchServiceMock,
                                           appServiceMock,
                                           editorStoreMock,
                                           previewStoreMock,
@@ -455,6 +461,7 @@ public class OntologiesPresenterImplTest {
         when(iriListMock.iterator()).thenReturn(iriIteratorMock);
 
         uut = new OntologiesPresenterImpl(serviceFacadeMock,
+                                          appSearchServiceMock,
                                           appServiceMock,
                                           editorStoreMock,
                                           previewStoreMock,
@@ -568,6 +575,7 @@ public class OntologiesPresenterImplTest {
         when(utilMock.isUnclassified(hierarchyMock)).thenReturn(true);
 
         uut = new OntologiesPresenterImpl(serviceFacadeMock,
+                                          appSearchServiceMock,
                                           appServiceMock,
                                           editorStoreMock,
                                           previewStoreMock,

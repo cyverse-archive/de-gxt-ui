@@ -1,6 +1,10 @@
 package org.iplantc.de.admin.desktop.client.services.impl;
 
-import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.*;
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.DELETE;
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PATCH;
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
+
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.admin.desktop.client.services.model.AppCategorizeRequest;
 import org.iplantc.de.client.models.HasId;
@@ -8,12 +12,16 @@ import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppDoc;
+import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
+import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.services.converters.AppCategoryListCallbackConverter;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
+import com.google.common.base.Strings;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -37,6 +45,8 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
 
     @Inject private DiscEnvApiService deService;
     @Inject private AdminServiceAutoBeanFactory factory;
+    @Inject
+    AppServiceFacade.AppServiceAutoBeanFactory svcFactory;
 
     @Inject
     AppAdminServiceFacadeImpl() { }
@@ -246,6 +256,24 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
             protected AppDoc convertFrom(String object) {
                 AutoBean<AppDoc> appDocAutoBean = AutoBeanCodex.decode(factory, AppDoc.class, object);
                 return appDocAutoBean.as();
+            }
+        });
+    }
+
+    @Override
+    public void searchApp(String term, AsyncCallback<AppListLoadResult> callback) {
+        StringBuilder address = new StringBuilder(APPS_ADMIN);
+        if(!Strings.isNullOrEmpty(term)) {
+            address.append("?search=" + URL.encodeQueryString(term));
+        }
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address.toString());
+        deService.getServiceData(wrapper,  new AsyncCallbackConverter<String, AppListLoadResult>(callback) {
+            @Override
+            protected AppListLoadResult convertFrom(String object) {
+                AppListLoadResult loadResult =
+                        AutoBeanCodex.decode(svcFactory, AppListLoadResult.class, object).as();
+                return loadResult;
             }
         });
     }

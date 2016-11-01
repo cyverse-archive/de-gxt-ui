@@ -7,7 +7,15 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasQualifiedId;
-import org.iplantc.de.client.models.apps.*;
+import org.iplantc.de.client.models.apps.App;
+import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
+import org.iplantc.de.client.models.apps.AppCategory;
+import org.iplantc.de.client.models.apps.AppDeletionRequest;
+import org.iplantc.de.client.models.apps.AppDoc;
+import org.iplantc.de.client.models.apps.AppFeedback;
+import org.iplantc.de.client.models.apps.AppList;
+import org.iplantc.de.client.models.apps.PublishAppRequest;
+import org.iplantc.de.client.models.apps.QualifiedAppId;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
@@ -27,7 +35,6 @@ import org.iplantc.de.shared.services.EmailServiceAsync;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
@@ -319,10 +326,11 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void searchApp(String search, AsyncCallback<AppListLoadResult> callback) {
-        String address = APPS + "?search=" + URL.encodeQueryString(search);
+    public void searchApp(String term, AsyncCallback<AppListLoadResult> callback) {
+        StringBuilder address = new StringBuilder(APPS);
+        address.append( "?search=" + URL.encodeQueryString(term));
 
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address.toString());
         deServiceFacade.getServiceData(wrapper,  new AsyncCallbackConverter<String, AppListLoadResult>(callback) {
             @Override
             protected AppListLoadResult convertFrom(String object) {

@@ -37,6 +37,8 @@ public interface BelphegorView extends IsWidget {
         String workshopAdmin();
 
         String ontologies();
+
+        String appStats();
     }
 
     public interface Presenter {

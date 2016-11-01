@@ -8,15 +8,18 @@ import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 
 import java.util.List;
 
-public interface AppListLoadResult extends PagingLoadResult<App> {
+public interface AppListLoadResult extends PagingLoadResult {
+
+    @PropertyName("apps")
     void setData(List<App> data);
 
-    @Override
-    @PropertyName("start")
-    public int getOffset();
+    @PropertyName("apps")
+    List<App> getData();
 
-    @Override
-    @PropertyName("start")
-    public void setOffset(int offset);
+    @PropertyName("total")
+    int getTotal();
 
+    @PropertyName("total")
+    void setTotal(int total);
 }
+

@@ -4,7 +4,7 @@ import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
-import org.iplantc.de.client.services.AppServiceFacade;
+import org.iplantc.de.client.services.AppSearchFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 
 import com.google.common.base.Strings;
@@ -29,9 +29,9 @@ import java.util.List;
  */
 public class AppSearchRpcProxy extends RpcProxy<FilterPagingLoadConfig, PagingLoadResult<App>> {
     private HasHandlers hasHandlers;
-    private final AppServiceFacade appService;
+    private final AppSearchFacade appService;
 
-    public AppSearchRpcProxy(final AppServiceFacade appService) {
+    public AppSearchRpcProxy(final AppSearchFacade appService) {
         this.appService = appService;
     }
 

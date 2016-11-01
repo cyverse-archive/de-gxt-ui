@@ -1,5 +1,7 @@
 package org.iplantc.de.admin.apps.client.gin;
 
+import org.iplantc.de.admin.apps.client.AdminAppStatsGridView;
+import org.iplantc.de.admin.apps.client.AdminAppStatsGridViewImpl;
 import org.iplantc.de.admin.apps.client.AdminAppsGridView;
 import org.iplantc.de.admin.apps.client.AdminAppsToolbarView;
 import org.iplantc.de.admin.apps.client.AdminAppsView;
@@ -10,6 +12,7 @@ import org.iplantc.de.admin.apps.client.gin.factory.AdminAppsViewFactory;
 import org.iplantc.de.admin.apps.client.presenter.AdminAppsViewPresenterImpl;
 import org.iplantc.de.admin.apps.client.presenter.categories.AdminAppsCategoriesPresenterImpl;
 import org.iplantc.de.admin.apps.client.presenter.grid.AdminAppsGridPresenterImpl;
+import org.iplantc.de.admin.apps.client.presenter.grid.AdminAppsStatsGridPresenterImpl;
 import org.iplantc.de.admin.apps.client.presenter.toolbar.AdminAppsToolbarPresenterImpl;
 import org.iplantc.de.admin.apps.client.views.AdminAppViewImpl;
 import org.iplantc.de.admin.apps.client.views.grid.AdminAppsGridImpl;
@@ -23,6 +26,7 @@ import org.iplantc.de.apps.client.gin.factory.AppCategoriesViewFactory;
 import org.iplantc.de.apps.client.views.categories.AppCategoriesViewImpl;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
+import org.iplantc.de.client.services.AppSearchFacade;
 import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.services.impl.AppUserServiceFacadeImpl;
 
@@ -47,9 +51,9 @@ public class AdminAppsGinModule extends AbstractGinModule {
 
         bind(AppAdminServiceFacade.class).to(AppAdminServiceFacadeImpl.class);
         bind(AppServiceFacade.class).to(AppUserServiceFacadeImpl.class);
+        bind(AppSearchFacade.class).to(AppAdminServiceFacadeImpl.class);
 
-
-        // Main view
+       // Main view
         install(new GinFactoryModuleBuilder()
                     .implement(AdminAppsView.class, AdminAppViewImpl.class)
                     .build(AdminAppsViewFactory.class));
@@ -72,6 +76,9 @@ public class AdminAppsGinModule extends AbstractGinModule {
                     .implement(AdminAppsToolbarView.class, AdminAppsToolbarViewImpl.class)
                     .build(AdminAppsToolbarFactory.class));
         bind(AdminAppsToolbarView.Presenter.class).to(AdminAppsToolbarPresenterImpl.class);
+
+        bind(AdminAppStatsGridView.class).to(AdminAppStatsGridViewImpl.class);
+        bind(AdminAppStatsGridView.Presenter.class).to(AdminAppsStatsGridPresenterImpl.class);
 
 
     }
