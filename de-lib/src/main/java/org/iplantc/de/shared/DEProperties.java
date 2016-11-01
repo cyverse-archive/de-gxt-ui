@@ -108,6 +108,8 @@ public class DEProperties {
      */
     private static final String COMMUNITY_DATA_PATH = "org.iplantc.communitydata.path";
 
+    private static final String IRODS_HOME_PATH = "org.iplantc.irodshome.path";
+
     /**
      * The single instance of this class.
      */
@@ -208,6 +210,8 @@ public class DEProperties {
      */
     private String communityDataPath;
 
+    private String irodsHomePath;
+
     private String dataMgmtAdminBaseUrl;
 
     /**
@@ -236,6 +240,7 @@ public class DEProperties {
     public List<String> getPropertyList() {
         List<String> keys = new ArrayList<>();
         keys.add(COMMUNITY_DATA_PATH);
+        keys.add(IRODS_HOME_PATH);
         keys.add(PATH_LIST_FILE_IDENTIFIER);
         keys.add(MULE_SERVICE_BASE_URL);
         keys.add(DATA_MGMT_BASE_URL);
@@ -280,6 +285,7 @@ public class DEProperties {
         notificationPollInterval = getInt(properties, NOTIFICATION_POLL_INTERVAL, 60);
         pathListFileIdentifier = properties.get(PATH_LIST_FILE_IDENTIFIER);
         communityDataPath = properties.get(COMMUNITY_DATA_PATH);
+        irodsHomePath = properties.get(IRODS_HOME_PATH);
         permIdBaseUrl = properties.get(PERM_ID_BASE_URL);
         betaAvuIri = properties.get(BETA_AVU_IRI);
         betaAvuLabel = properties.get(BETA_AVU_LABEL);
@@ -397,6 +403,10 @@ public class DEProperties {
 
     public String getCommunityDataPath() {
         return communityDataPath;
+    }
+
+    public String getIrodsHomePath() {
+        return irodsHomePath;
     }
 
     /**
