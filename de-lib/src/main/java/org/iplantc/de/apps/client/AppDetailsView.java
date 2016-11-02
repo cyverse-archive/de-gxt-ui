@@ -102,6 +102,10 @@ public interface AppDetailsView extends IsWidget,
         String copyAppUrl();
 
         void setTreeIcons(TreeStyle style);
+
+        String completedRun();
+
+        String completedDate();
     }
 
     interface Presenter extends AppFavoriteSelectedEvent.HasAppFavoriteSelectedEventHandlers,

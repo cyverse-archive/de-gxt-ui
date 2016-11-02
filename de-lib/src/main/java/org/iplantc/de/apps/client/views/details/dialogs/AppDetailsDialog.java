@@ -29,7 +29,7 @@ public class AppDetailsDialog extends IPlantDialog {
     AppDetailsDialog() {
         setModal(true);
         setResizable(false);
-        setPixelSize(450, 300);
+        setPixelSize(600, 350);
         getButtonBar().clear();
     }
 

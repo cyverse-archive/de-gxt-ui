@@ -50,6 +50,16 @@ public class AppDetailsDefaultAppearance implements AppDetailsView.AppDetailsApp
     }
 
     @Override
+    public String completedRun() {
+        return appsMessages.completedRun() + ": ";
+    }
+
+    @Override
+    public String completedDate() {
+        return appsMessages.completedDate() + ": ";
+    }
+
+    @Override
     public String descriptionLabel() {
         return iplantDisplayStrings.description() + ": ";
     }

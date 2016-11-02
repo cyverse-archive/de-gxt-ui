@@ -141,4 +141,8 @@ public interface AppsMessages extends Messages {
     String sortLabel();
 
     String privateAppRatingNotSupported();
+
+    String completedDate();
+
+    String completedRun();
 }
