@@ -76,7 +76,8 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
 
             @Override
             public String getPath() {
-                return null;
+                return "name";
+
             }
         }, 200, appearance.name());
 
@@ -93,7 +94,7 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
 
             @Override
             public String getPath() {
-                return null;
+                return  "rating.averageRating";
             }
         }, 100, appearance.rating());
 
@@ -110,7 +111,7 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
 
             @Override
             public String getPath() {
-                return null;
+                return "appStats.total";
             }
         },100, appearance.total());
 
@@ -127,7 +128,7 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
 
             @Override
             public String getPath() {
-                return null;
+                return "appStats.totalCompleted";
             }
         },100, appearance.completed());
 
@@ -144,7 +145,8 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
 
             @Override
             public String getPath() {
-                return null;
+                return "appStats.totalFailed";
+
             }
         }, 100, appearance.failed());
 
@@ -161,7 +163,7 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
 
             @Override
             public String getPath() {
-                return null;
+                return "appStats.lastCompletedDate";
             }
         }, 200, appearance.lastCompleted());
 
@@ -178,7 +180,7 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
 
             @Override
             public String getPath() {
-                return null;
+                return "appStats.lastUsedDate";
             }
         },200, appearance.lastUsed());
 
