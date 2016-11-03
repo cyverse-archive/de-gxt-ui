@@ -16,6 +16,7 @@ import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
 import org.iplantc.de.apps.client.events.selection.EditAppSelected;
 import org.iplantc.de.apps.client.events.selection.EditWorkflowSelected;
 import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
+import org.iplantc.de.apps.client.events.selection.RefreshAppsSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.RequestToolSelected;
 import org.iplantc.de.apps.client.events.selection.RunAppSelected;
 import org.iplantc.de.apps.client.events.selection.ShareAppsSelected;
@@ -73,6 +74,7 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
     Menu sharingMenu;
     @UiField
     TextButton shareMenuButton;
+    @UiField TextButton refreshButton;
     @UiField
     MenuItem appRun;
     @UiField
@@ -190,6 +192,10 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
         return addHandler(handler, SwapViewButtonClickedEvent.TYPE);
     }
 
+    public HandlerRegistration addRefreshAppsSelectedEventHandler(RefreshAppsSelectedEvent.RefreshAppsSelectedEventHandler handler) {
+        return addHandler(handler, RefreshAppsSelectedEvent.TYPE);
+    }
+
     // </editor-fold>
 
     @Override
@@ -204,6 +210,11 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
         wf_menu.setVisible(false);
         // KLUDGE:for CORE-5761 set flex to 0 so that search box shows up
         boxData.setFlex(0);
+    }
+
+    @Override
+    public boolean hasSearchPhrase() {
+        return appSearch.getCurrentValue() != null;
     }
 
     // <editor-fold desc="Selection Handlers">
@@ -347,6 +358,8 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
         shareMenuButton.ensureDebugId(baseID + Ids.MENU_ITEM_SHARE_APP);
         sharePublic.ensureDebugId(baseID + Ids.MENU_ITEM_SHARE_APP + Ids.MENU_ITEM_SHARE_APP_PUBLIC);
         shareCollab.ensureDebugId(baseID + Ids.MENU_ITEM_SHARE_APP + Ids.MENU_ITEM_SHARE_APP_COLLAB);
+
+        refreshButton.ensureDebugId(baseID + Ids.MENU_ITEM_REFRESH);
 
         wf_menu.ensureDebugId(baseID + Ids.MENU_ITEM_WF);
         wfRun.ensureDebugId(baseID + Ids.MENU_ITEM_WF + Ids.MENU_ITEM_USE_WF);
@@ -494,5 +507,10 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
     @UiHandler("swapViewBtn")
     public void onSwapViewClick(SelectEvent e) {
         fireEvent(new SwapViewButtonClickedEvent());
+    }
+
+    @UiHandler("refreshButton")
+    void refreshButtonClicked(SelectEvent event) {
+        fireEvent(new RefreshAppsSelectedEvent());
     }
 }

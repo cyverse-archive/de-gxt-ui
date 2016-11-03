@@ -36,4 +36,9 @@ public class DETabPanel extends TabPanel {
         XElement item = findItem(getWidgetIndex(widget));
         item.setId(debugId);
     }
+
+    @Override
+    public void close(Widget item) {
+        super.close(item);
+    }
 }

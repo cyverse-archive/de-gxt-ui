@@ -1,5 +1,6 @@
 package org.iplantc.de.apps.client.presenter;
 
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -76,8 +77,9 @@ public class AppsViewPresenterImplTest {
         verify(toolbarViewMock).addAppSearchResultLoadEventHandler(hierarchiesPresenter);
         verify(toolbarViewMock).addBeforeAppSearchEventHandler(listPresenterMock);
         verify(toolbarViewMock).addSwapViewButtonClickedEventHandler(listPresenterMock);
+        verify(toolbarViewMock).addRefreshAppsSelectedEventHandler(isA(AppsViewPresenterImpl.class));
 
-        verify(toolbarPresenterMock, times(12)).getView();
+        verify(toolbarPresenterMock, times(13)).getView();
 
 
         verifyNoMoreInteractions(viewFactoryMock,
