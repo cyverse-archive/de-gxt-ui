@@ -246,6 +246,8 @@ public interface DesktopView extends IsWidget {
         void doSeeAllNotifications();
 
         void doSeeNewNotifications();
+
+        void getNotifications();
     }
 
     void ensureDebugId(String baseID);
@@ -266,4 +268,6 @@ public interface DesktopView extends IsWidget {
     void setUnseenSystemMessageCount(int count);
 
     void hideNotificationMenu();
+
+    void setNotificationConnection(boolean visible);
 }

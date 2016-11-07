@@ -13,4 +13,8 @@ public interface UnseenNotificationsStrings extends Messages {
     String newNotificationsLink(int unseenCount);
 
     String noNewNotifications();
+
+    String retryNotificationsText();
+
+    String retryButtonText();
 }

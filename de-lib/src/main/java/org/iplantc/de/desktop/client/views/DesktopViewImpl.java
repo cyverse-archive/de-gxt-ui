@@ -129,6 +129,11 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
     }
 
     @Override
+    public void setNotificationConnection(boolean connected) {
+        notificationsListView.setNotificationConnection(connected);
+    }
+
+    @Override
     public void onRegister(RegisterEvent<Widget> event) {
         final Widget eventItem = event.getItem();
 

@@ -1,9 +1,13 @@
 package org.iplantc.de.desktop.client.views.widgets;
 
-import org.iplantc.de.desktop.client.DesktopView;
+import static com.sencha.gxt.core.client.Style.SelectionMode.SINGLE;
+import static com.sencha.gxt.data.shared.SortDir.DESC;
+
 import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.commons.client.widgets.IPlantAnchor;
+import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.notifications.client.model.NotificationMessageProperties;
+import org.iplantc.de.notifications.shared.Notifications;
 
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.core.client.GWT;
@@ -18,8 +22,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.HTML;
 
-import static com.sencha.gxt.core.client.Style.SelectionMode.SINGLE;
-import static com.sencha.gxt.data.shared.SortDir.DESC;
 import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
@@ -29,7 +31,9 @@ import com.sencha.gxt.data.shared.event.StoreClearEvent;
 import com.sencha.gxt.data.shared.event.StoreRemoveEvent;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.ListView;
+import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 /**
  * Presenter will have to listen for deletes and update the store
@@ -57,6 +61,10 @@ public class UnseenNotificationsView extends Composite implements StoreClearEven
         String unseenNotificationsViewWidth();
 
         String unseenNotificationsViewHeight();
+
+        String retryNotificationsText();
+
+        String retryButtonText();
     }
 
     interface UnseenNotificationsViewUiBinder extends UiBinder<VerticalLayoutContainer, UnseenNotificationsView> { }
@@ -65,7 +73,10 @@ public class UnseenNotificationsView extends Composite implements StoreClearEven
     @UiField ListView<NotificationMessage, NotificationMessage> listView;
     @UiField IPlantAnchor markAllSeenLink;
     @UiField IPlantAnchor notificationsLink;
+    @UiField HTML retryNotificationsText;
+    @UiField TextButton retryButton;
     ListStore<NotificationMessage> store;
+    private boolean notificationConnection = true;
 
     @UiField(provided = true) UnseenNotificationsAppearance appearance;
     private DesktopView.UnseenNotificationsPresenter presenter;
@@ -76,6 +87,8 @@ public class UnseenNotificationsView extends Composite implements StoreClearEven
     public UnseenNotificationsView(final UnseenNotificationsAppearance appearance) {
         this.appearance = appearance;
         initWidget(ourUiBinder.createAndBindUi(this));
+
+        ensureDebugId(Notifications.UnseenIds.NOTIFICATIONS_MENU);
     }
 
     public UnseenNotificationsView() {
@@ -93,12 +106,13 @@ public class UnseenNotificationsView extends Composite implements StoreClearEven
 
     @Override
     public void onAdd(StoreAddEvent<NotificationMessage> event) {
-        emptyNotificationsText.setVisible(false);
+        notificationConnection = true;
+        updateWidgets();
     }
 
     @Override
     public void onClear(StoreClearEvent<NotificationMessage> event) {
-        emptyNotificationsText.setVisible(true);
+        updateWidgets();
     }
 
     @Override
@@ -129,6 +143,20 @@ public class UnseenNotificationsView extends Composite implements StoreClearEven
 
     public void setPresenter(DesktopView.UnseenNotificationsPresenter presenter) {
         this.presenter = presenter;
+    }
+
+    public void setNotificationConnection(boolean connected) {
+        notificationConnection = connected;
+        updateWidgets();
+    }
+
+    void updateWidgets() {
+        boolean hasNotifications = notificationConnection && store.size() > 0;
+        emptyNotificationsText.setVisible(notificationConnection && store.size() == 0);
+        notificationsLink.setVisible(hasNotifications);
+        markAllSeenLink.setVisible(hasNotifications);
+        retryButton.setVisible(!notificationConnection);
+        retryNotificationsText.setVisible(!notificationConnection);
     }
 
     @UiFactory
@@ -164,5 +192,22 @@ public class UnseenNotificationsView extends Composite implements StoreClearEven
     @UiHandler("markAllSeenLink")
     public void onMarkAllSeenClicked(ClickEvent event) {
         presenter.doMarkAllSeen(true);
+    }
+
+    @UiHandler("retryButton")
+    void onRetryButtonClicked(SelectEvent event) {
+        presenter.getNotifications();
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        emptyNotificationsText.ensureDebugId(baseID + Notifications.UnseenIds.EMPTY_NOTIFICATION);
+        markAllSeenLink.ensureDebugId(baseID + Notifications.UnseenIds.MARK_ALL_SEEN);
+        notificationsLink.ensureDebugId(baseID + Notifications.UnseenIds.SEE_ALL_NOTIFICATIONS);
+        retryNotificationsText.ensureDebugId(baseID + Notifications.UnseenIds.RETRY_NOTIFICATIONS);
+        retryButton.ensureDebugId(baseID + Notifications.UnseenIds.RETRY_BTN);
+        listView.ensureDebugId(baseID + Notifications.UnseenIds.NOTIFICATION_LIST);
     }
 }
