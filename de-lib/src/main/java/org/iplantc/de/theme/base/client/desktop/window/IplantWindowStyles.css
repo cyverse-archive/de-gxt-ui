@@ -53,6 +53,17 @@
     gwt-image: 'layoutBtnHoverImage';
 }
 
+@sprite .helpBtn {
+    gwt-image: 'helpBtnImage';
+    position: relative;
+    top: 2px;
+    padding-right: 2px;
+}
+
+@sprite .helpBtn:hover {
+    gwt-image: 'helpBtnHoverImage';
+}
+
 @sprite .closeBtn {
     gwt-image: 'closeBtnImage';
     height: 15px;

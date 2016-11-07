@@ -20,4 +20,6 @@ public interface IplantWindowStrings extends Messages {
     String snapLeft();
 
     String snapRight();
+
+    String helpBtnToolTip();
 }

@@ -1,6 +1,7 @@
 package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.commons.client.CommonUiConstants;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.shared.DeModule;
 
@@ -92,6 +93,11 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
         String snapLeftMenuItem();
 
         String snapRightMenuItem();
+
+        IconButton.IconConfig helpBtnConfig() ;
+
+        String helpBtnToolTip() ;
+
     }
     interface WindowStateFactory extends AutoBeanFactory {
         AutoBean<WindowState> windowState();
@@ -109,7 +115,9 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
     private ToolButton btnLayout;
     private ToolButton btnMaximize;
     private ToolButton btnMinimize;
+    protected ToolButton btnHelp;
     private IplantWindowAppearance windowAppearance;
+    protected CommonUiConstants constants = GWT.create(CommonUiConstants.class);
 
     public IplantWindowBase() {
         this(GWT.<IplantWindowAppearance> create(IplantWindowAppearance.class));
@@ -127,14 +135,12 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
         setBorders(false);
 
         windowAppearance.setHeaderStyle(getHeader());
-
-        // Add Layout, minimize, and close buttons
+       // Add help, Layout, minimize, and close buttons
         btnLayout = createLayoutButton();
         btnMinimize = createMinimizeButton();
         btnClose = createCloseButton();
         getHeader().addTool(btnLayout);
         getHeader().addTool(btnMinimize);
-
         getHeader().addTool(btnClose);
 
         final MaximizeRestoreHandler maximizeRestoreHandler = new MaximizeRestoreHandler();
@@ -249,6 +255,14 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
             }
         });
         return newCloseBtn;
+    }
+
+
+    protected ToolButton createHelpButton() {
+        final ToolButton helpBtn = new ToolButton(windowAppearance.helpBtnConfig());
+        // Remove tool tip, it gets in the way of the menu.
+        helpBtn.setToolTip(windowAppearance.helpBtnToolTip());
+        return helpBtn;
     }
 
     private ToolButton createLayoutButton() {

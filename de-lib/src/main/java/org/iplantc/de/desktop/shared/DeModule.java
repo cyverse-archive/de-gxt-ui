@@ -16,6 +16,7 @@ public interface DeModule {
          */
         String NOTIFICATION_BUTTON = ".notificationButton";
         String USER_PREF_MENU = ".userPrefMenu";
+        String HELP_MENU =".helpMenu";
         String FORUMS_BUTTON = ".forumsButton";
 
         /**
@@ -33,14 +34,17 @@ public interface DeModule {
         String ANALYSES_BTN = ".analysesBtn";
         String FEEDBACK_BTN = ".feedbackBtn";
         String TASK_BAR = ".deTaskBar";
-        String PREFERENCES_BTN = ".preferences";
-        String COLLABORATORS_BTN = ".collaborators";
-        String SYS_MSGS_BTN = ".systemMessages";
-        String USER_MANUAL_BTN = ".userManual";
-        String INTRO_BTN = ".introduction";
-        String ABOUT_BTN = ".about";
-        String LOGOUT_BTN = ".logout";
+        String PREFERENCES_LINK = ".preferences";
+        String COLLABORATORS_LINK = ".collaborators";
+        String SYS_MSGS_LINK = ".systemMessages";
+        String USER_MANUAL_LINK = ".userManual";
+        String INTRO_LINK = ".introduction";
+        String ABOUT_LINK = ".about";
+        String LOGOUT_LINK = ".logout";
         String SUPPORT_BTN = ".support";
+        String FAQS_LINK = ".faqs";
+        String FORUMS_LINK = ".forum";
+        String FEEDBACK_LINK = ".feedback";
     }
 
     interface WindowIds {

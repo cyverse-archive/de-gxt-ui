@@ -13,10 +13,14 @@
         <!--Header-->
         <div class="{appearance.styles.iplantHeader}">
             <div class="{appearance.styles.logoContainer}">
-                <a href="http://cyverse.org" target="_blank"><div class="{appearance.styles.logo}"/></a>
+                <a href="http://cyverse.org" target="_blank">
+                    <div class="{appearance.styles.logo}"/>
+                </a>
                 <span class="{appearance.styles.logoText}">Discovery Environment</span>
             </div>
             <nav class="{appearance.styles.userMenuContainer}">
+
+
                 <desktopBtn:DesktopIconButton ui:field="notificationsBtn"
                                               toolTip="{appearance.notifications}"
                                               config="{appearance.notificationsConfig}">
@@ -31,35 +35,45 @@
                                               config="{appearance.userPrefsConfig}">
                     <desktopBtn:contextmenu>
                         <menu:Menu styleName="{appearance.styles.userContextMenu}">
-                            <anchors:IPlantAnchor ui:field="preferencesBtn"
+                            <anchors:IPlantAnchor ui:field="preferencesLink"
                                                   text="{appearance.preferences}"/>
-                            <anchors:IPlantAnchor ui:field="collaboratorsBtn"
+                            <anchors:IPlantAnchor ui:field="collaboratorsLink"
                                                   text="{appearance.collaborators}"/>
-                            <anchors:IPlantAnchor ui:field="systemMsgsBtn"
+                            <anchors:IPlantAnchor ui:field="systemMsgsLink"
                                                   text="{appearance.systemMessagesLabel}"/>
-                            <menu:SeparatorMenuItem />
-                            <anchors:IPlantAnchor ui:field="documentationBtn"
+                            <menu:SeparatorMenuItem/>
+                            <anchors:IPlantAnchor ui:field="documentationLink"
                                                   text="{appearance.documentation}"/>
                             <anchors:IPlantAnchor ui:field="introBtn"
                                                   text="{appearance.introduction}"/>
-                            <anchors:IPlantAnchor ui:field="contactSupportBtn"
-                                                  text="{appearance.contactSupport}"/>
+                         <!--<anchors:IPlantAnchor ui:field="contactSupportBtn"
+                                                  text="{appearance.contactSupport}"/> -->
                             <anchors:IPlantAnchor ui:field="aboutBtn"
                                                   text="{appearance.about}"/>
-                            <menu:SeparatorMenuItem />
+                            <menu:SeparatorMenuItem/>
                             <anchors:IPlantAnchor ui:field="logoutBtn"
                                                   text="{appearance.logout}"/>
                         </menu:Menu>
                     </desktopBtn:contextmenu>
                 </desktopBtn:DesktopIconButton>
-                <button:IconButton ui:field="forumsBtn"
-                                   toolTip="{appearance.forums}"
-                                   config="{appearance.forumsConfig}"/>
+                <desktopBtn:DesktopIconButton ui:field="helpBtn" config="{appearance.helpConfig}"
+                                              toolTip="Help">
+                    <desktopBtn:contextmenu>
+                    <menu:Menu styleName="{appearance.styles.userContextMenu}">
+                        <anchors:IPlantAnchor ui:field="faqLink" text="{appearance.faqs}"/>
+                        <anchors:IPlantAnchor ui:field="forumsLink" text="{appearance.forum}"/>
+                        <anchors:IPlantAnchor ui:field="feedbackLink" text="{appearance.feedback}"/>
+                    </menu:Menu>
+                    </desktopBtn:contextmenu>
+                </desktopBtn:DesktopIconButton>
+                <!--    <button:IconButton ui:field="forumsBtn"
+                                       toolTip="{appearance.forums}"
+                                       config="{appearance.forumsConfig}"/>  -->
             </nav>
         </div>
         <!--Body-->
         <div ui:field="desktopContainer"
-             class="{appearance.styles.desktopBackgroundRepeat}" />
+             class="{appearance.styles.desktopBackgroundRepeat}"/>
         <div class="{appearance.styles.desktopBackground}">
             <nav class="{appearance.styles.windowBtnNav}">
                 <button:IconButton ui:field="dataWinBtn"
@@ -72,8 +86,6 @@
                                    toolTip="{appearance.iconHomepageAnalysesTip}"
                                    config="{appearance.analysisConfig}"/>
             </nav>
-            <button:IconButton ui:field="feedbackBtn"
-                               config="{appearance.feedbackBtnConfig}"/>
         </div>
         <!--Footer-->
         <widget:TaskBar ui:field="taskBar"

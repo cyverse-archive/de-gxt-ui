@@ -18,8 +18,7 @@ public interface IplantResources extends ClientBundle,
                                          AppResources,
                                          DiskResourceResources,
                                          AppIntegrationPaletteImages,
-                                         DEHeaderResources,
-                                         DEFeedbackResources {
+                                         DEHeaderResources {
 
     public static IplantResources RESOURCES = GWT.create(IplantResources.class);
 
@@ -446,10 +445,6 @@ public interface IplantResources extends ClientBundle,
     @Source("warning_mini.png")
     ImageResource warningMini();
 
-    @Override
-    @Source("de_feedback.png")
-    ImageResource feedback();
-    
     @Source("forums.png")
     ImageResource forums();
 
@@ -465,9 +460,6 @@ public interface IplantResources extends ClientBundle,
     @Source("ToolRequestStatusHelp.css")
     ToolRequestStatusHelpStyle getToolRequestStatusHelpCss();
 
-    @Source("Feedback.css")
-    DEFeedbackStyle getFeedbackStyle();
-    
     @Source("IplantContextualHelpAccess.css")
     IplantContextualHelpAccessStyle getContxtualHelpStyle();
 

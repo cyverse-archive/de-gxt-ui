@@ -26,6 +26,8 @@ public class IplantBaseWindowAppearance implements IplantWindowBase.IplantWindow
         String minimizeBtn();
 
         String restoreBtn();
+
+        String helpBtn();
     }
 
     interface IplantWindowResources extends ClientBundle {
@@ -64,6 +66,12 @@ public class IplantBaseWindowAppearance implements IplantWindowBase.IplantWindow
 
         @Source("org/iplantc/de/theme/base/client/desktop/window/button_restore_hover.png")
         ImageResource restoreBtnHoverImage();
+
+        @Source("org/iplantc/de/theme/base/client/desktop/window/help.png")
+        ImageResource helpBtnImage();
+
+        @Source("org/iplantc/de/theme/base/client/desktop/window/help-hover.png")
+        ImageResource helpBtnHoverImage();
 
         @DataResource.MimeType("font/opentype")
         @Source("org/iplantc/de/theme/base/client/desktop/Texta_Font/Texta-Bold.otf")
@@ -153,5 +161,15 @@ public class IplantBaseWindowAppearance implements IplantWindowBase.IplantWindow
     @Override
     public String snapRightMenuItem() {
         return strings.snapRight();
+    }
+
+    @Override
+    public IconButton.IconConfig helpBtnConfig() {
+        return new IconButton.IconConfig(resources.css().helpBtn());
+    }
+
+    @Override
+    public String helpBtnToolTip() {
+        return strings.helpBtnToolTip();
     }
 }

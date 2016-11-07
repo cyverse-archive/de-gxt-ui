@@ -47,12 +47,6 @@ public class BaseDesktopAppearance implements DesktopView.DesktopAppearance {
         @ImageOptions(repeatStyle = ImageResource.RepeatStyle.Both)
         ImageResource desktopBackgroundRepeat();
 
-        @Source("org/iplantc/de/theme/base/client/desktop/de_feedback.png")
-        ImageResource feedbackImg();
-
-        @Source("org/iplantc/de/theme/base/client/desktop/forum.png")
-        ImageResource forumsImg();
-
         @Source("org/iplantc/de/theme/base/client/desktop/header_bg.png")
         ImageResource headerBg();
 
@@ -61,6 +55,9 @@ public class BaseDesktopAppearance implements DesktopView.DesktopAppearance {
 
         @Source("org/iplantc/de/theme/base/client/desktop/notification.png")
         ImageResource notificationsImg();
+
+        @Source("org/iplantc/de/theme/base/client/desktop/help-24.png")
+        ImageResource helpImg();
 
         @Source("org/iplantc/de/theme/base/client/desktop/user.png")
         ImageResource userPrefImg();
@@ -117,18 +114,13 @@ public class BaseDesktopAppearance implements DesktopView.DesktopAppearance {
     }
 
     @Override
-    public IconConfig feedbackBtnConfig() {
-        return new IconConfig(style.feedback());
-    }
-
-    @Override
-    public IconConfig forumsConfig() {
-        return new IconConfig(style.forums());
-    }
-
-    @Override
     public IconConfig notificationsConfig() {
         return new IconConfig(style.notification());
+    }
+
+    @Override
+    public IconConfig helpConfig() {
+        return new IconConfig(style.help());
     }
 
     @Override
@@ -207,8 +199,18 @@ public class BaseDesktopAppearance implements DesktopView.DesktopAppearance {
     }
 
     @Override
-    public String forums() {
-        return desktopMessages.forums();
+    public String forum() {
+        return desktopMessages.forum();
+    }
+
+    @Override
+    public String faqs() {
+        return desktopMessages.faqs();
+    }
+
+    @Override
+    public String feedback() {
+        return desktopMessages.feedback();
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.iplantc.de.desktop.client.views.windows;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.diskResources.Folder;
+import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.events.WindowHeadingUpdatedEvent;
@@ -20,6 +21,7 @@ import com.sencha.gxt.widget.core.client.event.MaximizeEvent;
 import com.sencha.gxt.widget.core.client.event.MaximizeEvent.MaximizeHandler;
 import com.sencha.gxt.widget.core.client.event.RestoreEvent;
 import com.sencha.gxt.widget.core.client.event.RestoreEvent.RestoreHandler;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.ShowEvent;
 import com.sencha.gxt.widget.core.client.event.ShowEvent.ShowHandler;
 
@@ -30,16 +32,17 @@ import java.util.List;
  */
 public class DeDiskResourceWindow extends IplantWindowBase implements FolderSelectionEvent.FolderSelectionEventHandler {
 
+    public static final String DATA = "#data";
     private final DiskResourcePresenterFactory presenterFactory;
     private final IplantDisplayStrings displayStrings;
     private DiskResourceView.Presenter presenter;
+
 
     @Inject
     DeDiskResourceWindow(final DiskResourcePresenterFactory presenterFactory,
                          final IplantDisplayStrings displayStrings) {
         this.presenterFactory = presenterFactory;
         this.displayStrings = displayStrings;
-
         setHeadingText(displayStrings.data());
         setSize("900", "480");
         setMinWidth(900);
@@ -65,9 +68,16 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
         final String uniqueWindowTag = (diskResourceWindowConfig.getTag() == null) ? "" : "." + diskResourceWindowConfig.getTag();
         ensureDebugId(DeModule.WindowIds.DISK_RESOURCE_WINDOW + uniqueWindowTag);
         presenter.go(this);
-
         initHandlers();
         super.show(windowConfig, tag, isMaximizable);
+        btnHelp = createHelpButton();
+        getHeader().insertTool(btnHelp,0);
+        btnHelp.addSelectHandler(new SelectEvent.SelectHandler() {
+            @Override
+            public void onSelect(SelectEvent event) {
+                WindowUtil.open(constants.faqUrl() + DATA);
+            }
+        });
     }
 
     @Override
