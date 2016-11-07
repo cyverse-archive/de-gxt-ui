@@ -26,7 +26,6 @@ public interface DiskResourceModule {
         String MENU_ITEM_NEW_WINDOW = ".newWindow";
         String MENU_ITEM_NEW_WINDOW_AT_LOC = ".newWindowLoc";
         String MENU_ITEM_NEW_FOLDER = ".newFolder";
-        String MENU_ITEM_DUPLICATE = ".duplicate";
         String MENU_ITEM_NEW_PLAIN_TEXT = ".newPlainText";
         String MENU_ITEM_NEW_TABULAR_DATA = ".newTabularData";
         String MENU_ITEM_NEW_R_DATA = ".newRData";

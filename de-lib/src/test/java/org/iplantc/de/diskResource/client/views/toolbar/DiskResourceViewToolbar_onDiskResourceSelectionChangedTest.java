@@ -1,6 +1,15 @@
 package org.iplantc.de.diskResource.client.views.toolbar;
 
-import static org.iplantc.de.client.models.diskResources.PermissionValue.*;
+import static org.iplantc.de.client.models.diskResources.PermissionValue.own;
+import static org.iplantc.de.client.models.diskResources.PermissionValue.read;
+import static org.iplantc.de.client.models.diskResources.PermissionValue.write;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.File;
@@ -17,8 +26,6 @@ import com.google.gwtmockito.GxtMockitoTestRunner;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.menu.MenuItem;
 
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +41,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
     @Mock public MenuItem mockNewWindow,
             mockNewWindowAtLoc,
             mockNewFolder,
-            mockDuplicate,
             mockNewPlainTextFile,
             mockNewTabularFile,
             mockMoveToTrash;
@@ -139,7 +145,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -193,7 +198,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -251,7 +255,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -307,7 +310,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(true);
         verify(mockMoveToTrash).setEnabled(true);
 
         // Edit Menu Items
@@ -363,7 +365,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -419,7 +420,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -475,7 +475,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -532,7 +531,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -588,7 +586,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -645,7 +642,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(true);
         verify(mockMoveToTrash).setEnabled(true);
 
         // Edit Menu Items
@@ -700,7 +696,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -757,7 +752,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -814,7 +808,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -875,7 +868,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -934,7 +926,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -994,7 +985,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(true);
         verify(mockMoveToTrash).setEnabled(true);
 
         // Edit Menu Items
@@ -1062,7 +1052,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -1121,7 +1110,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -1180,7 +1168,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -1246,7 +1233,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -1305,7 +1291,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -1364,7 +1349,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(true);
         verify(mockMoveToTrash).setEnabled(true);
 
         // Edit Menu Items
@@ -1389,6 +1373,165 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
 
         // Share Menu Items
         verify(mockShareWithCollabs).setEnabled(true);
+        verify(mockCreatePublicLink).setEnabled(false);
+        verify(mockShareFolderLocation).setEnabled(false);
+        verify(mockSendToCoge).setEnabled(false);
+        verify(mockSendToEnsembl).setEnabled(false);
+        verify(mockSendToTreeViewer).setEnabled(false);
+
+        // Trash Menu Items
+        verify(mockRestore).setEnabled(false);
+    }
+
+    @Test public void testOnDiskResourceSelectionChanged_redFolderSelected() {
+        this.isSelectionInTrash = false;
+        Folder redMockFolder1 = mock(Folder.class);
+        redMockFolder1.setFilter(true);
+        // Setup mock event
+        DiskResourceSelectionChangedEvent mockEvent = mock(DiskResourceSelectionChangedEvent.class);
+        final ArrayList<DiskResource> selection = Lists.newArrayList();
+        selection.add(redMockFolder1);
+        when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFilteredItems(selection)).thenReturn(true);
+          /*=================== Own ====================*/
+        this.isSelectionOwner = true;
+        this.containsOnlyFolders = true;
+        when(redMockFolder1.getPermission()).thenReturn(own);
+        uut.onDiskResourceSelectionChanged(mockEvent);
+        verifyOnDiskResourceSelectionChangedNeverUsedItems();
+
+        // File Menu Items
+        verify(mockMoveToTrash).setEnabled(false);
+
+        // Edit Menu Items
+        verify(mockRename).setEnabled(false);
+        verify(mockMove).setEnabled(false);
+        verify(mockDelete).setEnabled(false);
+        verify(mockEditFile).setEnabled(false);
+        verify(mockEditComments).setEnabled(false);
+        verify(mockEditInfoType).setEnabled(false);
+
+        //  verify(mockMetadata).setEnabled(false);
+        verify(mockSavemetadatami).setEnabled(false);
+        verify(mockCopymetadataMi).setEnabled(false);
+        verify(mockEditmetadataMi).setEnabled(false);
+        verify(mockBulkmetadataMi).setEnabled(false);
+        verify(mockSelectmetadataMi).setEnabled(false);
+        verify(mockDoiMi).setEnabled(false);
+
+        // Download Menu Items
+        verify(mockSimpleDownload).setEnabled(false);
+        verify(mockBulkDownload).setEnabled(false);
+
+        // Share Menu Items
+        verify(mockShareWithCollabs).setEnabled(false);
+        verify(mockCreatePublicLink).setEnabled(false);
+        verify(mockShareFolderLocation).setEnabled(false);
+        verify(mockSendToCoge).setEnabled(false);
+        verify(mockSendToEnsembl).setEnabled(false);
+        verify(mockSendToTreeViewer).setEnabled(false);
+
+        // Trash Menu Items
+        verify(mockRestore).setEnabled(false);
+    }
+
+    @Test public void testOnDiskResourceSelectionChanged_redFileSelected() {
+        this.isSelectionInTrash = false;
+        File redMockFile1 = mock(File.class);
+        redMockFile1.setFilter(true);
+        // Setup mock event
+        DiskResourceSelectionChangedEvent mockEvent = mock(DiskResourceSelectionChangedEvent.class);
+        final ArrayList<DiskResource> selection = Lists.newArrayList();
+        selection.add(redMockFile1);
+        when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFilteredItems(selection)).thenReturn(true);
+          /*=================== Own ====================*/
+        this.isSelectionOwner = true;
+        this.containsOnlyFolders = false;
+        when(redMockFile1.getPermission()).thenReturn(own);
+        uut.onDiskResourceSelectionChanged(mockEvent);
+        verifyOnDiskResourceSelectionChangedNeverUsedItems();
+
+        // File Menu Items
+        verify(mockMoveToTrash).setEnabled(false);
+
+        // Edit Menu Items
+        verify(mockRename).setEnabled(false);
+        verify(mockMove).setEnabled(false);
+        verify(mockDelete).setEnabled(false);
+        verify(mockEditFile).setEnabled(false);
+        verify(mockEditComments).setEnabled(false);
+        verify(mockEditInfoType).setEnabled(false);
+
+        //  verify(mockMetadata).setEnabled(false);
+        verify(mockSavemetadatami).setEnabled(false);
+        verify(mockCopymetadataMi).setEnabled(false);
+        verify(mockEditmetadataMi).setEnabled(false);
+        verify(mockBulkmetadataMi).setEnabled(false);
+        verify(mockSelectmetadataMi).setEnabled(false);
+        verify(mockDoiMi).setEnabled(false);
+
+        // Download Menu Items
+        verify(mockSimpleDownload).setEnabled(false);
+        verify(mockBulkDownload).setEnabled(false);
+
+        // Share Menu Items
+        verify(mockShareWithCollabs).setEnabled(false);
+        verify(mockCreatePublicLink).setEnabled(false);
+        verify(mockShareFolderLocation).setEnabled(false);
+        verify(mockSendToCoge).setEnabled(false);
+        verify(mockSendToEnsembl).setEnabled(false);
+        verify(mockSendToTreeViewer).setEnabled(false);
+
+        // Trash Menu Items
+        verify(mockRestore).setEnabled(false);
+    }
+
+    @Test public void testOnDiskResourceSelectionChanged_redFileMixedSelected() {
+        this.isSelectionInTrash = false;
+        File redMockFile1 = mock(File.class);
+        redMockFile1.setFilter(true);
+        File mockFile2 = mock(File.class);
+        mockFile2.setFilter(false);
+        // Setup mock event
+        DiskResourceSelectionChangedEvent mockEvent = mock(DiskResourceSelectionChangedEvent.class);
+        final ArrayList<DiskResource> selection = Lists.newArrayList();
+        selection.add(redMockFile1);
+        selection.add(mockFile2);
+        when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFilteredItems(selection)).thenReturn(true);
+          /*=================== Own ====================*/
+        this.isSelectionOwner = true;
+        this.containsOnlyFolders = false;
+        when(redMockFile1.getPermission()).thenReturn(own);
+        uut.onDiskResourceSelectionChanged(mockEvent);
+        verifyOnDiskResourceSelectionChangedNeverUsedItems();
+
+        // File Menu Items
+        verify(mockMoveToTrash).setEnabled(false);
+
+        // Edit Menu Items
+        verify(mockRename).setEnabled(false);
+        verify(mockMove).setEnabled(false);
+        verify(mockDelete).setEnabled(false);
+        verify(mockEditFile).setEnabled(false);
+        verify(mockEditComments).setEnabled(false);
+        verify(mockEditInfoType).setEnabled(false);
+
+        //  verify(mockMetadata).setEnabled(false);
+        verify(mockSavemetadatami).setEnabled(false);
+        verify(mockCopymetadataMi).setEnabled(false);
+        verify(mockEditmetadataMi).setEnabled(false);
+        verify(mockBulkmetadataMi).setEnabled(false);
+        verify(mockSelectmetadataMi).setEnabled(false);
+        verify(mockDoiMi).setEnabled(false);
+
+        // Download Menu Items
+        verify(mockSimpleDownload).setEnabled(false);
+        verify(mockBulkDownload).setEnabled(false);
+
+        // Share Menu Items
+        verify(mockShareWithCollabs).setEnabled(false);
         verify(mockCreatePublicLink).setEnabled(false);
         verify(mockShareFolderLocation).setEnabled(false);
         verify(mockSendToCoge).setEnabled(false);
@@ -1429,7 +1572,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -1488,7 +1630,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -1547,7 +1688,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -1614,7 +1754,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -1670,7 +1809,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
 
         // File Menu Items
-        verify(mockDuplicate).setEnabled(false);
         verify(mockMoveToTrash).setEnabled(false);
 
         // Edit Menu Items
@@ -1746,7 +1884,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         uut.newWindowMi = mockNewWindow;
         uut.newWindowAtLocMi = mockNewWindowAtLoc;
         uut.newFolderMi = mockNewFolder;
-        uut.duplicateMi = mockDuplicate;
         uut.newPlainTextFileMi = mockNewPlainTextFile;
         uut.newTabularDataFileMi = mockNewTabularFile;
         uut.moveToTrashMi = mockMoveToTrash;

@@ -104,7 +104,7 @@ public class FileFolderSelectDialog extends IPlantDialog implements TakesValue<L
         final FieldLabel fl = new FieldLabel(selectedItemTextField, appearance.selectorFieldLabel());
         presenter = presenterFactory.filtered(true,
                                               true,
- singleSelect,// Single select
+                                              singleSelect,// Single select
                                               true,
                                               folderToSelect,
                                               infoTypeFilters,

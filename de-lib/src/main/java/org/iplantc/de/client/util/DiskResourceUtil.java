@@ -454,4 +454,17 @@ public class DiskResourceUtil {
         StringQuoter.create(infoType).assign(s, DiskResource.INFO_TYPE_KEY);
         return s;
     }
+
+    public boolean containsFilteredItems(List<? extends DiskResource> diskResources) {
+        if(diskResources == null || diskResources.size() == 0) {
+            return false;
+        }
+        for (DiskResource dr : diskResources) {
+            if (dr.isFilter()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

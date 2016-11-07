@@ -92,7 +92,7 @@ class GridViewDnDHandler implements DndDragStartHandler,
         List<? extends DiskResource> dragData = getDragSources(dragStartEl);
 
         if (dragData.isEmpty()
-                || containsFilteredItems(dragData)) {
+               || diskResourceUtil.containsFilteredItems(dragData)) {
             // Cancel drag
             event.setCancelled(true);
         } else {
@@ -156,15 +156,6 @@ class GridViewDnDHandler implements DndDragStartHandler,
         return true;
     }
 
-    private boolean containsFilteredItems(List<? extends DiskResource> dragData) {
-        for (DiskResource dr : dragData) {
-            if (dr.isFilter()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     private void doMoveDiskResources(Folder targetFolder, List<DiskResource> resources) {
         presenter.doMoveDiskResources(targetFolder, resources);

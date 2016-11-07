@@ -26,6 +26,7 @@ import com.sencha.gxt.dnd.core.client.StatusProxy;
 import com.sencha.gxt.widget.core.client.event.HideEvent;
 import com.sencha.gxt.widget.core.client.event.HideEvent.HideHandler;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -50,9 +51,10 @@ public class FolderSelectorField extends AbstractDiskResourceSelector<Folder> {
         @Override
         public void onHide(HideEvent event) {
             Folder value = takesValue.getValue();
-            if (value == null)
+            if (value == null
+                || diskResourceUtil.containsFilteredItems(Arrays.asList(value))) {
                 return;
-
+            }
             setSelectedResource(value);
             // cache the last used path
             if (userSettings.isRememberLastPath()) {

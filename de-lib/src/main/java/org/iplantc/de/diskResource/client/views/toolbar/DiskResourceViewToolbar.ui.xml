@@ -50,9 +50,6 @@
                         <menu:MenuItem ui:field="newFolderMi"
                                        text="{appearance.newFolderMenuItem}"
                                        icon="{appearance.newFolderIcon}"/>
-                        <menu:MenuItem ui:field="duplicateMi"
-                                       text="{appearance.duplicateMenuItem}" enabled="false"
-                                       visible="false"/>
                         <menu:MenuItem ui:field="newFileMi" text="{appearance.newFileMenu}"
                                        icon="{appearance.newFileMenuIcon}">
                             <menu:submenu>

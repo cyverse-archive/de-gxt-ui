@@ -1,5 +1,7 @@
 package org.iplantc.de.diskResource.client.views.grid;
 
+import static com.sencha.gxt.core.client.Style.SelectionMode.SINGLE;
+
 import org.iplantc.de.client.models.HasPath;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceFavorite;
@@ -30,7 +32,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import static com.sencha.gxt.core.client.Style.SelectionMode.SINGLE;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.loader.BeforeLoadEvent;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
@@ -170,8 +171,7 @@ public class GridViewImpl extends ContentPanel implements GridView,
     @Override
     public void onFolderSelected(FolderSelectionEvent event) {
         final Folder selectedItem = event.getSelectedFolder();
-        if (selectedItem == null
-                || selectedItem.isFilter()) {
+        if (selectedItem == null || selectedItem.isFilter()) {
             return;
         }
 
@@ -201,7 +201,6 @@ public class GridViewImpl extends ContentPanel implements GridView,
     @Override
     public void onSelectionChanged(SelectionChangedEvent<DiskResource> event) {
         updateSelectionCount(sm.getSelectedCount());
-
         fireEvent(new DiskResourceSelectionChangedEvent(event.getSelection()));
     }
 

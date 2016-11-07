@@ -1,5 +1,8 @@
 package org.iplantc.de.fileViewers.client.views;
 
+import static com.sencha.gxt.dnd.core.client.DND.Feedback.INSERT;
+import static com.sencha.gxt.dnd.core.client.DND.Operation.MOVE;
+
 import org.iplantc.de.client.events.FileSavedEvent;
 import org.iplantc.de.client.models.HasPath;
 import org.iplantc.de.client.models.diskResources.DiskResource;
@@ -11,7 +14,6 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.fileViewers.client.FileViewer;
 import org.iplantc.de.fileViewers.client.events.DeleteSelectedPathsSelectedEvent;
-import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -21,12 +23,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
-
-import static com.sencha.gxt.dnd.core.client.DND.Feedback.INSERT;
-import static com.sencha.gxt.dnd.core.client.DND.Operation.MOVE;
 
 import com.sencha.gxt.core.shared.event.CancellableEvent;
 import com.sencha.gxt.data.shared.event.StoreAddEvent;
@@ -95,11 +93,13 @@ public class PathListViewer extends AbstractStructuredTextViewer implements Stor
                                                                      5000));
             }
 
+
         }
 
         @Override
         protected void onDragEnter(DndDragEnterEvent event) {
-            handleDropStatus(event.getDragSource().getData(),
+           super.onDragEnter(event);
+           handleDropStatus(event.getDragSource().getData(),
                              event,
                              event.getStatusProxy());
         }
@@ -107,7 +107,7 @@ public class PathListViewer extends AbstractStructuredTextViewer implements Stor
         @Override
         protected void onDragMove(DndDragMoveEvent event) {
             super.onDragMove(event);
-            handleDropStatus(event.getDragSource().getData(),
+            handleDropStatus(event.getData(),
                              event,
                              event.getStatusProxy());
         }
@@ -149,6 +149,7 @@ public class PathListViewer extends AbstractStructuredTextViewer implements Stor
                     cancellableEvent.setCancelled(true);
                     statusProxy.update(appearance.preventPathListDrop());
                     statusProxy.setStatus(false);
+
                     return;
                 }
             }
@@ -157,8 +158,7 @@ public class PathListViewer extends AbstractStructuredTextViewer implements Stor
         }
 
         boolean hasCorrectData(Object data){
-
-            boolean isCollection = data instanceof Collection<?>;
+           boolean isCollection = data instanceof Collection<?>;
             boolean isEmpty = ((Collection<?>) data).isEmpty();
             boolean hasDiskResources = ((Collection<?>) data).iterator().next() instanceof DiskResource;
             return isCollection

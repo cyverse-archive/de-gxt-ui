@@ -153,7 +153,7 @@ public class FileSelectDialog extends IPlantDialog implements TakesValue<List<Fi
     @Override
     public void setValue(List<File> value) {
         this.selectedFileIds = value;
-        if(value.isEmpty()){
+        if(value.isEmpty() || diskResourceUtil.containsFilteredItems(value)) {
             selectedFileField.clear();
             getOkButton().setEnabled(false);
             return;
