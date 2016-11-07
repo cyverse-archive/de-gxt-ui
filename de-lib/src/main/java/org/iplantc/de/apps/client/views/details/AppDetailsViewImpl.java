@@ -45,6 +45,7 @@ import com.google.gwt.user.client.ui.DateLabel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.NumberLabel;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -175,6 +176,13 @@ public class AppDetailsViewImpl extends Composite implements
     @UiField
     @Ignore
     HTMLPanel panel;
+
+    @Path("appStats.totalCompleted")
+    @UiField
+    NumberLabel<Integer> completedRun;
+
+    @Path("appStats.lastCompletedDate")
+    @UiField DateLabel completedDate;
 
     final ListEditor<Tool, ToolDetailsView> tools;
     private final App app;
