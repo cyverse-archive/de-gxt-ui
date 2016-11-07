@@ -84,4 +84,6 @@ public interface DEClientConstants extends Constants {
      * The execution system name for HPC apps.
      */
     String hpcSystemId();
+
+    String errorUrl();
 }
