@@ -31,7 +31,7 @@ public class DEAppsWindow extends IplantWindowBase {
 
         // This must be set before we render view
         ensureDebugId(DeModule.WindowIds.APPS_WINDOW);
-        setSize("600", "375");
+        setSize("820", "400");
         setHeadingText(displayStrings.applications());
     }
 
