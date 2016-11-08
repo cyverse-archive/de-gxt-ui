@@ -120,14 +120,33 @@ public class UserInfo {
      * @return the path to the user's trash.
      */
     public String getTrashPath() {
-        return userInfo == null ? null : userInfo.getTrashPath();
+        if (userInfo == null || Strings.isNullOrEmpty(userInfo.getTrashPath())) {
+            String baseTrashPath = getBaseTrashPath();
+            String username = userInfo.getUsername();
+
+            if (Strings.isNullOrEmpty(baseTrashPath) || Strings.isNullOrEmpty(username)) {
+                return "";
+            }
+
+            return baseTrashPath + "/" + username;
+        }
+        return userInfo.getTrashPath();
     }
 
     /**
      * @return the base trash path of the data store for all users.
      */
     public String getBaseTrashPath() {
-        return userInfo == null ? null : userInfo.getBaseTrashPath();
+        if (userInfo == null || Strings.isNullOrEmpty(userInfo.getBaseTrashPath())) {
+            String baseTrashPath = DEProperties.getInstance().getBaseTrashPath();
+
+            if (Strings.isNullOrEmpty(baseTrashPath)) {
+                return "";
+            }
+
+            return baseTrashPath;
+        }
+        return userInfo.getBaseTrashPath();
     }
 
     /**
