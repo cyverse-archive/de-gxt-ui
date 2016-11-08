@@ -16,6 +16,7 @@ import org.iplantc.de.client.models.pipelines.ServicePipelineTask;
 import org.iplantc.de.client.models.pipelines.ServiceSaveResponse;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.resources.client.messages.I18N;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.shared.GWT;
@@ -71,7 +72,7 @@ public class PipelineAutoBeanUtil {
         }
 
         ServicesInjector.INSTANCE.getAppUserServiceFacade()
-                                 .getDataObjectsForApp(app.getId(), new AsyncCallback<String>() {
+                                 .getDataObjectsForApp(app.getId(), new AppsCallback<String>() {
 
                                      @Override
                                      public void onSuccess(String result) {
@@ -87,7 +88,7 @@ public class PipelineAutoBeanUtil {
                                      }
 
                                      @Override
-                                     public void onFailure(Throwable caught) {
+                                     public void onFailure(Integer statusCode, Throwable caught) {
                                          ErrorHandler.post(I18N.ERROR.dataObjectsRetrieveError(), caught);
                                          callback.onFailure(caught);
                                      }

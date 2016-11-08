@@ -26,6 +26,7 @@ import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
@@ -42,7 +43,7 @@ import java.util.List;
 
 public class AppSharingPresenter implements SharingPresenter {
 
-    private final class LoadPermissionsCallback implements AsyncCallback<String> {
+    private final class LoadPermissionsCallback extends AppsCallback<String> {
         private final class GetUserInfoCallback implements AsyncCallback<FastMap<Collaborator>> {
             private final List<String> usernames;
 
@@ -82,7 +83,7 @@ public class AppSharingPresenter implements SharingPresenter {
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             permissionsPanel.unmask();
             ErrorHandler.post(caught);
         }
@@ -304,10 +305,10 @@ public class AppSharingPresenter implements SharingPresenter {
     }
 
     private void callSharingService(AppSharingRequestList obj) {
-        appService.shareApp(obj, new AsyncCallback<String>() {
+        appService.shareApp(obj, new AppsCallback<String>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
 
             }
@@ -320,10 +321,10 @@ public class AppSharingPresenter implements SharingPresenter {
     }
 
     private void callUnshareService(AppUnSharingRequestList obj) {
-        appService.unshareApp(obj, new AsyncCallback<String>() {
+        appService.unshareApp(obj, new AppsCallback<String>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
 
             }

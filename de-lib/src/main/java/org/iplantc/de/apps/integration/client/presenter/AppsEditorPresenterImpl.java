@@ -44,6 +44,7 @@ import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.resources.client.messages.IplantErrorStrings;
 import org.iplantc.de.resources.client.uiapps.integration.AppIntegrationErrorMessages;
 import org.iplantc.de.resources.client.uiapps.integration.AppIntegrationMessages;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -82,7 +83,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
                                                 ArgumentAddedEventHandler,
                                                 ArgumentGroupAddedEventHandler {
 
-    class DoSaveCallback implements AsyncCallback<AppTemplate> {
+    class DoSaveCallback extends AppsCallback<AppTemplate> {
         private final AsyncCallback<Void> onSaveCallback;
         private final IplantAnnouncer announcer1;
         private final EventBus eventBus1;
@@ -113,7 +114,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             announcer.schedule(new ErrorAnnouncementConfig(failedSaveMsg));
             if (onSaveCallback != null) {
                 onSaveCallback.onFailure(caught);

@@ -3,6 +3,7 @@ package org.iplantc.de.client.services;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
+import org.iplantc.de.shared.DECallback;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -13,13 +14,13 @@ import java.util.List;
  */
 public interface OntologyServiceFacade {
 
-    void getRootHierarchies(AsyncCallback<List<OntologyHierarchy>> callback);
+    void getRootHierarchies(DECallback<List<OntologyHierarchy>> callback);
 
-    void getFilteredHierarchies(String rootIri, Avu avu, AsyncCallback<OntologyHierarchy> callback);
+    void getFilteredHierarchies(String rootIri, Avu avu, DECallback<OntologyHierarchy> callback);
 
-    void getAppsInCategory(String iri, Avu avu, AsyncCallback<List<App>> callback);
+    void getAppsInCategory(String iri, Avu avu, DECallback<List<App>> callback);
 
-    void getUnclassifiedAppsInCategory(String iri, Avu avu, AsyncCallback<List<App>> callback);
+    void getUnclassifiedAppsInCategory(String iri, Avu avu, DECallback<List<App>> callback);
 
     void getAppAVUs(App app, AsyncCallback<List<Avu>> callback);
 }

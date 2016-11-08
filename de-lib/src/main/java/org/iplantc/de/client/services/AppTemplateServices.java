@@ -1,12 +1,14 @@
 package org.iplantc.de.client.services;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.integration.JobExecution;
 import org.iplantc.de.client.services.impl.models.AnalysisSubmissionResponse;
+import org.iplantc.de.shared.DECallback;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface AppTemplateServices {
 
@@ -24,7 +26,7 @@ public interface AppTemplateServices {
      * @param appId the <code>App</code> id.
      * @param callback
      */
-    void getAppTemplate(HasQualifiedId appId, AsyncCallback<AppTemplate> callback);
+    void getAppTemplate(HasQualifiedId appId, DECallback<AppTemplate> callback);
 
     AppTemplateAutoBeanFactory getAppTemplateFactory();
 
@@ -34,7 +36,7 @@ public interface AppTemplateServices {
      * @param appId the <code>App</code> id.
      * @param callback
      */
-    void getAppTemplateForEdit(HasId appId, AsyncCallback<AppTemplate> callback);
+    void getAppTemplateForEdit(HasId appId, DECallback<AppTemplate> callback);
 
     /**
      * Retrieves a UI preview of the given <code>AppTemplate</code>.
@@ -69,7 +71,7 @@ public interface AppTemplateServices {
      * @param at the <code>AppTemplate</code> to be saved/published.
      * @param callback
      */
-    void saveAndPublishAppTemplate(AppTemplate at, AsyncCallback<AppTemplate> callback);
+    void saveAndPublishAppTemplate(AppTemplate at, DECallback<AppTemplate> callback);
 
     /**
      * Create a new App template
@@ -77,7 +79,7 @@ public interface AppTemplateServices {
      * @param at
      * @param callback
      */
-    void createAppTemplate(AppTemplate at, AsyncCallback<AppTemplate> callback);
+    void createAppTemplate(AppTemplate at, DECallback<AppTemplate> callback);
 
     /**
      * Submits a published app template with non-functional changes.
@@ -85,5 +87,5 @@ public interface AppTemplateServices {
      * @param at
      * @param callback
      */
-    void updateAppLabels(AppTemplate at, AsyncCallback<AppTemplate> callback);
+    void updateAppLabels(AppTemplate at, DECallback<AppTemplate> callback);
 }

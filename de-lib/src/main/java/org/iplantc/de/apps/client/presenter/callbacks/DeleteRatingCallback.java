@@ -5,13 +5,12 @@ import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppFeedback;
 import org.iplantc.de.commons.client.ErrorHandler;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.iplantc.de.shared.AppsCallback;
 
 /**
  * @author jstroot
  */
-public class DeleteRatingCallback implements AsyncCallback<AppFeedback> {
+public class DeleteRatingCallback extends AppsCallback<AppFeedback> {
     private final App appToUnRate;
     private final EventBus eventBus;
 
@@ -22,7 +21,7 @@ public class DeleteRatingCallback implements AsyncCallback<AppFeedback> {
     }
 
     @Override
-    public void onFailure(Throwable caught) {
+    public void onFailure(Integer statusCode, Throwable caught) {
         ErrorHandler.post(caught);
     }
 

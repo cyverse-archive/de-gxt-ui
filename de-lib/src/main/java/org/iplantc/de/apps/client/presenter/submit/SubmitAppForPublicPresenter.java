@@ -11,6 +11,7 @@ import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.services.OntologyServiceFacade;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -36,9 +37,9 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
         AutoBean<AppRefLink> appRefLink();
     }
 
-    private class HierarchiesCallback implements AsyncCallback<List<OntologyHierarchy>> {
+    private class HierarchiesCallback extends AppsCallback<List<OntologyHierarchy>> {
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             ErrorHandler.post(appearance.publishFailureDefaultMessage(), caught);
         }
 
@@ -121,10 +122,10 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
     }
 
     private void getAppDetails() {
-        appService.getAppDetails(view.getSelectedApp(), new AsyncCallback<App>() {
+        appService.getAppDetails(view.getSelectedApp(), new AppsCallback<App>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(appearance.publishFailureDefaultMessage(), caught);
             }
 
@@ -156,9 +157,9 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
         pmb.auto();
         pmb.show();
 
-        appService.publishToWorld(publishAppRequest, new AsyncCallback<Void>() {
+        appService.publishToWorld(publishAppRequest, new AppsCallback<Void>() {
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 pmb.hide();
                 callback.onFailure(caught);
             }

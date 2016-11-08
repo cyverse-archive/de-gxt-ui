@@ -37,6 +37,7 @@ import org.iplantc.de.commons.client.comments.view.dialogs.CommentsDialog;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.views.dialogs.AgaveAuthPrompt;
+import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.exceptions.HttpRedirectException;
 
@@ -73,9 +74,9 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
                                               AppSelectionChangedEvent.AppSelectionChangedEventHandler,
                                               AppInfoSelectedEvent.AppInfoSelectedEventHandler {
 
-    private class AppListCallback implements AsyncCallback<List<App>> {
+    private class AppListCallback extends AppsCallback<List<App>> {
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             if (caught instanceof HttpRedirectException) {
                 final String uri = ((HttpRedirectException)caught).getLocation();
                 AgaveAuthPrompt prompt = new AgaveAuthPrompt(uri);
@@ -296,9 +297,9 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     @Override
     public void onAppFavoriteSelected(AppFavoriteSelectedEvent event) {
         final App app = event.getApp();
-        appUserService.favoriteApp(app, !app.isFavorite(), new AsyncCallback<Void>() {
+        appUserService.favoriteApp(app, !app.isFavorite(), new AppsCallback<Void>() {
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 announcer.schedule(new ErrorAnnouncementConfig(appearance.favServiceFailure()));
             }
 
@@ -353,9 +354,9 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     @Override
     public void onDeleteAppsSelected(final DeleteAppsSelected event) {
         appUserService.deleteAppsFromWorkspace(event.getAppsToBeDeleted(),
-                                               new AsyncCallback<Void>() {
+                                               new AppsCallback<Void>() {
                                                    @Override
-                                                   public void onFailure(Throwable caught) {
+                                                   public void onFailure(Integer statusCode, Throwable caught) {
                                                        ErrorHandler.post(appearance.appRemoveFailure(), caught);
                                                    }
 

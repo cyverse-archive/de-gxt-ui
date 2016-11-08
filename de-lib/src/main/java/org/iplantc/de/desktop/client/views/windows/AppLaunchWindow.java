@@ -1,17 +1,15 @@
 package org.iplantc.de.desktop.client.views.windows;
 
-import com.google.common.base.Strings;
 import org.iplantc.de.apps.widgets.client.events.AnalysisLaunchEvent;
 import org.iplantc.de.apps.widgets.client.events.AnalysisLaunchEvent.AnalysisLaunchEventHandler;
 import org.iplantc.de.apps.widgets.client.view.AppLaunchView;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.WindowState;
-import org.iplantc.de.client.models.apps.QualifiedAppId;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.services.AppTemplateServices;
-import org.iplantc.de.client.services.converters.AppTemplateCallbackConverter;
+import org.iplantc.de.client.services.converters.AppTemplateDECallbackConverter;
 import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -23,7 +21,9 @@ import org.iplantc.de.desktop.client.events.WindowHeadingUpdatedEvent;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.resources.client.messages.IplantErrorStrings;
+import org.iplantc.de.shared.AppsCallback;
 
+import com.google.common.base.Strings;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
@@ -48,6 +48,39 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
 
         @Override
         public void onFailure(Throwable caught) {
+            AppLaunchWindow.this.clear();
+            ErrorHandler.post(errorStrings.unableToRetrieveWorkflowGuide(), caught);
+        }
+
+        @Override
+        public void onSuccess(AppTemplate result) {
+            if (result.isAppDisabled()) {
+                ErrorAnnouncementConfig config = new ErrorAnnouncementConfig(displayStrings.appUnavailable());
+                IplantAnnouncer.getInstance().schedule(config);
+                AppLaunchWindow.this.hide();
+                return;
+            }
+            AppLaunchWindow.this.clear();
+            presenter1.go(AppLaunchWindow.this, result);
+            AppLaunchWindow.this.setHeadingText(presenter1.getAppTemplate().getLabel());
+            AppLaunchWindow.this.fireEvent(new WindowHeadingUpdatedEvent());
+            // KLUDGE JDS This call to forceLayout should not be necessary.
+            AppLaunchWindow.this.forceLayout();
+        }
+    }
+
+    private final class AppTemplateDECallback extends AppsCallback<AppTemplate> {
+        private final IplantErrorStrings errorStrings;
+        private final AppLaunchView.Presenter presenter1;
+
+        private AppTemplateDECallback(AppLaunchView.Presenter presenter,
+                                      final IplantErrorStrings errorStrings) {
+            this.presenter1 = presenter;
+            this.errorStrings = errorStrings;
+        }
+
+        @Override
+        public void onFailure(Integer statusCode, Throwable caught) {
             AppLaunchWindow.this.clear();
             ErrorHandler.post(errorStrings.unableToRetrieveWorkflowGuide(), caught);
         }
@@ -145,12 +178,12 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
 
         sc.mask(displayStrings.loadingMask());
         if (config.getAppTemplate() != null) {
-            AppTemplateCallbackConverter cnvt = new AppTemplateCallbackConverter(
+            AppTemplateDECallbackConverter cnvt = new AppTemplateDECallbackConverter(
                     factory,
-                    new AsyncCallback<AppTemplate>() {
+                    new AppsCallback<AppTemplate>() {
 
                         @Override
-                        public void onFailure(Throwable caught) {
+                        public void onFailure(Integer statusCode, Throwable caught) {
                             /*
                              * JDS Do nothing since this this callback converter is called manually below
                              * (i.e. no over-the-wire integration)
@@ -174,7 +207,7 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
                                           new AppTemplateCallback(presenter, errorStrings));
         } else {
             final HasQualifiedId id = getQualifiedIdFromConfig(config);
-            templateService.getAppTemplate(id, new AppTemplateCallback(presenter, errorStrings));
+            templateService.getAppTemplate(id, new AppTemplateDECallback(presenter, errorStrings));
         }
     }
 }

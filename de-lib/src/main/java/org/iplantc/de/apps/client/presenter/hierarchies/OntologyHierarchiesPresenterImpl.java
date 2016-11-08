@@ -32,6 +32,7 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.widgets.DETabPanel;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.GwtEvent;
@@ -65,7 +66,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
                                                          DetailsHierarchyClicked.DetailsHierarchyClickedHandler,
                                                          DetailsCategoryClicked.DetailsCategoryClickedHandler {
 
-    class AppDetailsCallback implements AsyncCallback<App> {
+    class AppDetailsCallback extends AppsCallback<App> {
 
         private final AppDetailsDialog dlg;
         private App app;
@@ -76,7 +77,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
         }
 
         @Override
-        public void onFailure(final Throwable caught) {
+        public void onFailure(Integer statusCode, final Throwable caught) {
             announcer.schedule(new ErrorAnnouncementConfig(appearance.fetchAppDetailsError(caught)));
         }
 
@@ -107,7 +108,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
         }
     }
 
-    public class FilteredHierarchyCallback implements AsyncCallback<OntologyHierarchy> {
+    public class FilteredHierarchyCallback extends AppsCallback<OntologyHierarchy> {
         private final Tree<OntologyHierarchy, String> tree;
         private final OntologyHierarchy root;
         private ParentFilteredHierarchyCallback parent;
@@ -119,7 +120,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             ErrorHandler.post(caught);
             tree.unmask();
             parent.done();
@@ -184,9 +185,9 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
         desiredHierarchyFound = false;
         views = Lists.newArrayList();
         viewTabPanel = tabPanel;
-        serviceFacade.getRootHierarchies(new AsyncCallback<List<OntologyHierarchy>>() {
+        serviceFacade.getRootHierarchies(new AppsCallback<List<OntologyHierarchy>>() {
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
             }
 
@@ -381,9 +382,9 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
     @Override
     public void onAppFavoriteSelected(AppFavoriteSelectedEvent event) {
         final App app = event.getApp();
-        appUserService.favoriteApp(app, !app.isFavorite(), new AsyncCallback<Void>() {
+        appUserService.favoriteApp(app, !app.isFavorite(), new AppsCallback<Void>() {
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 announcer.schedule(new ErrorAnnouncementConfig(appearance.favServiceFailure()));
             }
 

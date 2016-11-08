@@ -39,7 +39,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -307,10 +306,10 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
         Preconditions.checkArgument(event.getApps().size() == 1);
         // JDS For now, assume only one app
         final App appToBeCopied = event.getApps().iterator().next();
-        appUserService.copyApp(appToBeCopied, new AsyncCallback<AppTemplate>() {
+        appUserService.copyApp(appToBeCopied, new AppsCallback<AppTemplate>() {
             @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
+            public void onFailure(Integer statusCode, Throwable exception) {
+                ErrorHandler.post(exception);
             }
 
             @Override
@@ -336,10 +335,10 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
         Preconditions.checkArgument(event.getApps().size() == 1);
         // JDS For now, assume only one app
         final App appToBeCopied = event.getApps().iterator().next();
-        appUserService.copyWorkflow(appToBeCopied.getId(), new AsyncCallback<String>() {
+        appUserService.copyWorkflow(appToBeCopied.getId(), new AppsCallback<String>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 // TODO Add error message for the user.
                 ErrorHandler.post(caught);
             }
