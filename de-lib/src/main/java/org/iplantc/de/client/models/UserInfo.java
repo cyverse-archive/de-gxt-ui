@@ -1,5 +1,8 @@
 package org.iplantc.de.client.models;
 
+import org.iplantc.de.shared.DEProperties;
+
+import com.google.common.base.Strings;
 import com.google.gwt.core.shared.GWT;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
@@ -82,7 +85,17 @@ public class UserInfo {
      * @return the path to the user's home directory.
      */
     public String getHomePath() {
-        return userInfo == null ? null : userInfo.getHomePath();
+        if (userInfo == null || Strings.isNullOrEmpty(userInfo.getHomePath())) {
+            String irodsHome = DEProperties.getInstance().getIrodsHomePath();
+            String username = userInfo.getUsername();
+
+            if (Strings.isNullOrEmpty(irodsHome) || Strings.isNullOrEmpty(username)) {
+                return "";
+            }
+
+            return irodsHome + "/" + username;
+        }
+        return userInfo.getHomePath();
     }
 
     /**

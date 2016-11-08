@@ -3,9 +3,7 @@ package org.iplantc.de.client.models;
 import org.iplantc.de.client.KeyBoardShortcutConstants;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.Folder;
-import org.iplantc.de.shared.DEProperties;
 
-import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -278,7 +276,7 @@ public class UserSettings {
         JSONObject defaults = new JSONObject();
         JSONObject defaultHomeDir = new JSONObject();
 
-        String homeDir = getHomeDir(userInfo);
+        String homeDir = userInfo.getHomePath();
 
         JSONString id = new JSONString(homeDir);
         JSONString path = new JSONString(homeDir);
@@ -288,23 +286,6 @@ public class UserSettings {
         defaults.put(DEFAULT_OUTPUT_FOLDER, defaultHomeDir);
 
         setValues(defaults);
-    }
-
-    String getHomeDir(UserInfo userInfo) {
-        String userHomePath = userInfo.getHomePath();
-
-        if (!Strings.isNullOrEmpty(userHomePath)) {
-            return userHomePath;
-        }
-
-        String irodsHome = DEProperties.getInstance().getIrodsHomePath();
-        String username = userInfo.getUsername();
-
-        if (Strings.isNullOrEmpty(irodsHome) || Strings.isNullOrEmpty(username)) {
-            return "";
-        }
-
-        return irodsHome + "/" + username;
     }
 
     /**
