@@ -1,11 +1,13 @@
 package org.iplantc.de.desktop.client.presenter;
 
-import org.iplantc.de.client.models.CommonModelAutoBeanFactory;
-import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.client.gin.ServicesInjector;
+import org.iplantc.de.client.models.CommonModelAutoBeanFactory;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.UserSession;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.desktop.client.DesktopView;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -19,9 +21,18 @@ public class SaveSessionPeriodic implements Runnable {
 
     private final DesktopView.Presenter presenter;
     private final CommonModelAutoBeanFactory factory = GWT.create(CommonModelAutoBeanFactory.class);
+    private IplantAnnouncer announcer;
+    private final DesktopView.Presenter.DesktopPresenterAppearance appearance;
+    private final int maxRetries;
+    private int count;
 
-    public SaveSessionPeriodic(DesktopView.Presenter presenter) {
+    public SaveSessionPeriodic(DesktopView.Presenter presenter,
+                               DesktopView.Presenter.DesktopPresenterAppearance appearance,
+                               int maxRetries) {
         this.presenter = presenter;
+        this.appearance = appearance;
+        this.maxRetries = maxRetries;
+        this.announcer = IplantAnnouncer.getInstance();
     }
 
     @Override
@@ -37,6 +48,8 @@ public class SaveSessionPeriodic implements Runnable {
                 @Override
                 public void onSuccess(Void result) {
                     // cache the update
+                    presenter.setUserSessionConnection(true);
+                    count = 0;
                     UserInfo info = UserInfo.getInstance();
                     info.setSavedOrderedWindowStates(orderedWindowStates);
                 }
@@ -44,6 +57,15 @@ public class SaveSessionPeriodic implements Runnable {
                 @Override
                 public void onFailure(Throwable caught) {
                     GWT.log("Session periodic save failed");
+                    count++;
+                    if (count >= maxRetries) {
+                        count = 0;
+                        announcer.schedule(new ErrorAnnouncementConfig(appearance.saveSessionFailed(),
+                                                                       true,
+                                                                       5000));
+                        presenter.setUserSessionConnection(false);
+                        presenter.doPeriodicSessionSave();
+                    }
                 }
             });
         }
