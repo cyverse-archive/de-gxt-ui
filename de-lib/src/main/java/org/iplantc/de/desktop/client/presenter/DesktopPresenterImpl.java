@@ -808,7 +808,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }-*/;
 
     @Override
-    public void setPeriodicSessionFailFlags() {
-        userSettings.setSessionConnectionFailed(true);
+    public void setUserSessionConnection(boolean connected) {
+        userSettings.setUserSessionConnection(connected);
     }
 }

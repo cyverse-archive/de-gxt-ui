@@ -216,7 +216,7 @@ public interface DesktopView extends IsWidget {
 
         void restoreWindows(List<WindowState> windowStates);
 
-        void setPeriodicSessionFailFlags();
+        void setUserSessionConnection(boolean connected);
 
         void onFaqSelect();
 

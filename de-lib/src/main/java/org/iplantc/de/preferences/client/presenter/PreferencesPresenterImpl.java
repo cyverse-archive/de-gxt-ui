@@ -49,11 +49,13 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
 
             @Override
             public void onFailure(Throwable caught) {
+                desktopPresenter.setUserSessionConnection(false);
                 view.userSessionFail();
             }
 
             @Override
             public void onSuccess(List<WindowState> result) {
+                desktopPresenter.setUserSessionConnection(true);
                 view.userSessionSuccess();
                 desktopPresenter.restoreWindows(result);
                 desktopPresenter.doPeriodicSessionSave();
