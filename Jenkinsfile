@@ -2,7 +2,7 @@
 def repo = "de"
 def dockerUser = "discoenv"
 
-node('docker') {
+node('docker && gwtbuild') {
     slackJobDescription = "job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"
     try {
         stage "Prepare"
