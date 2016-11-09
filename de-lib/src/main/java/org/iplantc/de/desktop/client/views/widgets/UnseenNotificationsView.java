@@ -153,7 +153,7 @@ public class UnseenNotificationsView extends Composite implements StoreClearEven
     void updateWidgets() {
         boolean hasNotifications = notificationConnection && store.size() > 0;
         emptyNotificationsText.setVisible(notificationConnection && store.size() == 0);
-        notificationsLink.setVisible(hasNotifications);
+        notificationsLink.setVisible(notificationConnection);
         markAllSeenLink.setVisible(hasNotifications);
         retryButton.setVisible(!notificationConnection);
         retryNotificationsText.setVisible(!notificationConnection);
