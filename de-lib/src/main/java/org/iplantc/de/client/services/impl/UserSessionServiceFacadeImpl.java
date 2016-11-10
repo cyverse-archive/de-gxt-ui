@@ -2,6 +2,8 @@ package org.iplantc.de.client.services.impl;
 
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.*;
 import org.iplantc.de.client.models.CommonModelAutoBeanFactory;
+import org.iplantc.de.client.models.userSettings.UserSetting;
+import org.iplantc.de.client.models.userSettings.UserSettingAutoBeanFactory;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.UserSession;
@@ -18,6 +20,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
@@ -36,16 +39,19 @@ public class UserSessionServiceFacadeImpl implements UserSessionServiceFacade {
     private final UserInfo userInfo;
     private final CommonModelAutoBeanFactory factory;
     private final DiscEnvApiService deServiceFacade;
+    private final UserSettingAutoBeanFactory settingFactory;
 
     @Inject
     public UserSessionServiceFacadeImpl(final DiscEnvApiService deServiceFacade,
                                         final DEProperties deProperties,
                                         final UserInfo userInfo,
-                                        final CommonModelAutoBeanFactory factory) {
+                                        final CommonModelAutoBeanFactory factory,
+                                        final UserSettingAutoBeanFactory settingFactory) {
         this.deServiceFacade = deServiceFacade;
         this.deProperties = deProperties;
         this.userInfo = userInfo;
         this.factory = factory;
+        this.settingFactory = settingFactory;
     }
 
     @Override
@@ -72,16 +78,22 @@ public class UserSessionServiceFacadeImpl implements UserSessionServiceFacade {
     }
 
     @Override
-    public Request getUserPreferences(AsyncCallback<String> callback) {
+    public Request getUserPreferences(AsyncCallback<UserSetting> callback) {
         String address = deProperties.getMuleServiceBaseUrl() + "preferences"; //$NON-NLS-1$
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        return deServiceFacade.getServiceData(wrapper, callback);
+        return deServiceFacade.getServiceData(wrapper, new AsyncCallbackConverter<String, UserSetting>(callback) {
+            @Override
+            protected UserSetting convertFrom(String object) {
+                return AutoBeanCodex.decode(settingFactory, UserSetting.class, object).as();
+            }
+        });
     }
 
     @Override
-    public void saveUserPreferences(Splittable json, AsyncCallback<Void> callback) {
+    public void saveUserPreferences(UserSetting setting, AsyncCallback<Void> callback) {
         String address = deProperties.getMuleServiceBaseUrl() + "preferences"; //$NON-NLS-1$
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, json.getPayload());
+        final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(setting));
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
         deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
     }
 

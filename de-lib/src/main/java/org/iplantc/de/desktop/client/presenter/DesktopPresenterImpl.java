@@ -600,7 +600,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                                                                                appearance,
                                                                                updateSilently,
                                                                                userSessionService);
-        userSessionService.saveUserPreferences(value.asSplittable(), callback);
+        userSessionService.saveUserPreferences(value.getUserSetting(), callback);
     }
 
     @Override
