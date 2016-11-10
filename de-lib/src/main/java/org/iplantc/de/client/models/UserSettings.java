@@ -3,68 +3,35 @@ package org.iplantc.de.client.models;
 import org.iplantc.de.client.KeyBoardShortcutConstants;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.Folder;
+import org.iplantc.de.client.models.userSettings.UserSetting;
+import org.iplantc.de.client.models.userSettings.UserSettingAutoBeanFactory;
 
+import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONObject;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
-import com.google.web.bindery.autobean.shared.Splittable;
-import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 /**
- * 
  * A singleton hold user general settings
- * 
+ *
  * @author sriram
- * 
  */
 public class UserSettings {
 
     private final KeyBoardShortcutConstants SHORTCUTS = GWT.create(KeyBoardShortcutConstants.class);
-    private boolean enableAnalysisEmailNotification;
-    private boolean enableImportEmailNotification;
-    private String defaultFileSelectorPath;
-    private boolean rememberLastPath;
-    private boolean saveSession;
-    private boolean userSessionConnection;
-    private Folder defaultOutputFolder;
-    private String dataShortCut;
-    private String appShortCut;
-    private String analysesShortCut;
-    private String notifyShortCut;
-    private String closeShortCut;
-    private Folder systemDefaultOutputFolder;
-    private String lastPath;
-    private boolean enableWaitTimeMessage;
-    
-    
-    public static final String EMAIL_ANALYSIS_NOTIFICATION = "enableAnalysisEmailNotification";
-    public static final String EMAIL_IMPORT_NOTIFICATION = "enableImportEmailNotification";
-    public static final String DEFAULT_FILE_SELECTOR_PATH = "defaultFileSelectorPath";
-    public static final String REMEMBER_LAST_PATH = "rememberLastPath";
-    public static final String SAVE_SESSION = "saveSession";
-    public static final String DEFAULT_OUTPUT_FOLDER = "defaultOutputFolder";
-    public static final String DATA_KB_SHORTCUT = "dataKBShortcut";
-    public static final String APPS_KB_SHORTCUT = "appsKBShortcut";
-    public static final String ANALYSIS_KB_SHORTCUT = "analysisKBShortcut";
-    public static final String NOTIFICATION_KB_SHORTCUT = "notificationKBShortcut";
-    public static final String CLOSE_KB_SHORTCUT_STRING = "closeKBShortcut";
-    public static final String SYSTEM_DEFAULT_OUTPUT_DIR = "systemDefaultOutputDir";
-    public static final String LAST_PATH = "lastPathId";
-    public static final String WAIT_TIME_MESSAGE = "enableWaitTimeMessage";
+    private final DiskResourceAutoBeanFactory diskResourceFactory =
+            GWT.create(DiskResourceAutoBeanFactory.class);
+    private final UserSettingAutoBeanFactory factory = GWT.create(UserSettingAutoBeanFactory.class);
+    private UserInfo userInfo;
 
-
+    private UserSetting userSetting;
     private static UserSettings instance;
+    private boolean userSessionConnection;
 
-    public UserSettings(final Splittable userSettingsSplit){
-        setValues(userSettingsSplit);
+    public UserSettings(final UserSetting userSetting) {
+        setUserSettings(userSetting);
     }
 
     private UserSettings() {
-        this.enableAnalysisEmailNotification = false;
-        this.rememberLastPath = false;
-        this.saveSession = true;
+        this.userInfo = UserInfo.getInstance();
     }
 
     public static UserSettings getInstance() {
@@ -75,170 +42,140 @@ public class UserSettings {
         return instance;
     }
 
-    public void setValues(JSONObject obj) {
-        if (obj == null) {
-            return;
-        }
-
-        setValues(StringQuoter.split(obj.toString()));
+    public void setUserSettings(UserSetting userSetting) {
+        this.userSetting = userSetting;
+        setUserSettings();
     }
 
-    public void setValues(Splittable split) {
-        if ((split == null) || (split == Splittable.NULL)) {
-            return;
+    public UserSetting getUserSetting() {
+        return userSetting;
+    }
+
+    void setUserSettings() {
+        if (userSetting == null) {
+            userSetting = factory.getUserSetting().as();
         }
 
-        if (split.get(EMAIL_ANALYSIS_NOTIFICATION) != null) {
-            setEnableAnalysisEmailNotification(split.get(EMAIL_ANALYSIS_NOTIFICATION).asBoolean());
-        } else {
+        if (userSetting.isEnableAnalysisEmailNotification() == null) {
             setEnableAnalysisEmailNotification(true);
         }
-        if (split.get(EMAIL_IMPORT_NOTIFICATION) != null) {
-            setEnableImportEmailNotification(split.get(EMAIL_IMPORT_NOTIFICATION).asBoolean());
-        } else {
+        if (userSetting.isEnableImportEmailNotification() == null) {
             setEnableImportEmailNotification(true);
         }
 
-        if (split.get(DEFAULT_FILE_SELECTOR_PATH) != null) {
-            setDefaultFileSelectorPath(split.get(DEFAULT_FILE_SELECTOR_PATH).asString());
+        if (Strings.isNullOrEmpty(userSetting.getDefaultFileSelectorPath())) {
+            String homePath = userInfo.getHomePath();
+            setDefaultFileSelectorPath(homePath);
         }
-        if (split.get(REMEMBER_LAST_PATH) != null) {
-            setRememberLastPath(split.get(REMEMBER_LAST_PATH).asBoolean());
-        } else {
+        if (userSetting.isRememberLastPath() == null) {
             setRememberLastPath(true);
         }
 
-        if (split.get(SAVE_SESSION) != null) {
-            setSaveSession(split.get(SAVE_SESSION).asBoolean());
-        } else {
+        if (userSetting.isSaveSession() == null) {
             setSaveSession(true);
         }
 
-        if (split.get(DEFAULT_OUTPUT_FOLDER) != null) {
-            setDefaultOutputFolder(buildFolder(split.get(DEFAULT_OUTPUT_FOLDER)));
+        if (userSetting.getDefaultOutputFolder() == null) {
+            String homePath = userInfo.getHomePath();
+            setDefaultOutputFolder(buildFolder(homePath));
         }
 
-        if (split.get(SYSTEM_DEFAULT_OUTPUT_DIR) != null) {
-            setSystemDefaultOutputFolder(buildFolder(split.get(SYSTEM_DEFAULT_OUTPUT_DIR)));
+        if (userSetting.getSystemDefaultOutputDir() == null) {
+            setSystemDefaultOutputFolder(userSetting.getDefaultOutputFolder());
         }
 
-        if (split.get(LAST_PATH) != null) {
-            setLastPath(split.get(LAST_PATH).asString());
+        if (Strings.isNullOrEmpty(userSetting.getLastFolder())) {
+            String homePath = userInfo.getHomePath();
+            setLastPath(homePath);
         }
 
-        if (split.get(WAIT_TIME_MESSAGE) != null) {
-            setEnableWaitTimeMessage(split.get(WAIT_TIME_MESSAGE).asBoolean());
-        } else {
+        if (userSetting.isEnableWaitTimeMessage() == null) {
             setEnableWaitTimeMessage(true);
         }
 
-       parseKeyboardShortcuts(split);
+        parseKeyboardShortcuts();
     }
 
-    private void parseKeyboardShortcuts(Splittable split) {
-        if ((split == null) || (split == Splittable.NULL)) {
+    void parseKeyboardShortcuts() {
+        if (Strings.isNullOrEmpty(userSetting.getDataKBShortcut())) {
             setDataShortCut(SHORTCUTS.dataKeyShortCut());
+        }
+
+        if (Strings.isNullOrEmpty(userSetting.getAppsKBShortcut())) {
             setAppsShortCut(SHORTCUTS.appsKeyShortCut());
+        }
+
+        if (Strings.isNullOrEmpty(userSetting.getAnalysisKBShortcut())) {
             setAnalysesShortCut(SHORTCUTS.analysisKeyShortCut());
+        }
+
+        if (Strings.isNullOrEmpty(userSetting.getNotificationKBShortcut())) {
             setNotifyShortCut(SHORTCUTS.notifyKeyShortCut());
+        }
+
+        if (Strings.isNullOrEmpty(userSetting.getCloseKBShortcut())) {
             setCloseShortCut(SHORTCUTS.closeKeyShortCut());
-            return;
-        }
-
-        final Splittable dataShortcutSplit = split.get(DATA_KB_SHORTCUT);
-        if ((dataShortcutSplit == null) || !dataShortcutSplit.isString()) {
-            setDataShortCut(SHORTCUTS.dataKeyShortCut());
-        } else {
-            setDataShortCut(dataShortcutSplit.asString());
-        }
-
-        final Splittable appsShortcutSplit = split.get(APPS_KB_SHORTCUT);
-        if ((appsShortcutSplit == null) || !appsShortcutSplit.isString()) {
-            setAppsShortCut(SHORTCUTS.appsKeyShortCut());
-        } else {
-            setAppsShortCut(appsShortcutSplit.asString());
-        }
-
-        final Splittable analysesShortcutSplit = split.get(ANALYSIS_KB_SHORTCUT);
-        if ((analysesShortcutSplit == null) || !analysesShortcutSplit.isString()) {
-            setAnalysesShortCut(SHORTCUTS.analysisKeyShortCut());
-        } else {
-            setAnalysesShortCut(analysesShortcutSplit.asString());
-        }
-
-        final Splittable notifyShortcutSplit = split.get(NOTIFICATION_KB_SHORTCUT);
-        if ((notifyShortcutSplit == null) || !notifyShortcutSplit.isString()) {
-            setNotifyShortCut(SHORTCUTS.notifyKeyShortCut());
-        } else {
-            setNotifyShortCut(notifyShortcutSplit.asString());
-        }
-
-        final Splittable closeShortcutSplit = split.get(CLOSE_KB_SHORTCUT_STRING);
-        if ((closeShortcutSplit == null) || !closeShortcutSplit.isString()) {
-            setCloseShortCut(SHORTCUTS.closeKeyShortCut());
-        } else {
-            setCloseShortCut(closeShortcutSplit.asString());
         }
     }
 
     public void setDataShortCut(String c) {
-        this.dataShortCut = c;
-        
+        userSetting.setDataKBShortcut(c);
     }
 
     public String getDataShortCut() {
-        return dataShortCut;
+        return userSetting.getDataKBShortcut();
     }
 
     public void setAppsShortCut(String c) {
-        this.appShortCut = c;
+        userSetting.setAppsKBShortcut(c);
     }
 
     public String getAppsShortCut() {
-        return appShortCut;
+        return userSetting.getAppsKBShortcut();
     }
 
     public void setAnalysesShortCut(String c) {
-        this.analysesShortCut = c;
+        userSetting.setAnalysisKBShortcut(c);
     }
 
     public String getAnalysesShortCut() {
-        return analysesShortCut;
+        return userSetting.getAnalysisKBShortcut();
     }
 
     public void setNotifyShortCut(String c) {
-        this.notifyShortCut = c;
+        userSetting.setNotificationKBShortcut(c);
     }
 
     public String getNotifyShortCut() {
-        return notifyShortCut;
+        return userSetting.getNotificationKBShortcut();
     }
+
     /**
      * @param enableAnalysisEmailNotification the enableAnalysisEmailNotification to set
      */
     public void setEnableAnalysisEmailNotification(boolean enableAnalysisEmailNotification) {
-        this.enableAnalysisEmailNotification = enableAnalysisEmailNotification;
+        userSetting.setEnableAnalysisEmailNotification(enableAnalysisEmailNotification);
     }
 
     /**
      * @return the enableAnalysisEmailNotification
      */
     public boolean isEnableAnalysisEmailNotification() {
-        return enableAnalysisEmailNotification;
+        return userSetting.isEnableAnalysisEmailNotification();
     }
 
     /**
      * @param defaultFileSelectorPath the defaultFileSelectorPath to set
      */
     public void setDefaultFileSelectorPath(String defaultFileSelectorPath) {
-        this.defaultFileSelectorPath = defaultFileSelectorPath;
+        userSetting.setDefaultFileSelectorPath(defaultFileSelectorPath);
     }
 
     /**
      * @return the defaultFileSelectorPath
      */
     public String getDefaultFileSelectorPath() {
-        return (defaultFileSelectorPath == null) ? "" : defaultFileSelectorPath;
+        return userSetting.getDefaultFileSelectorPath();
     }
 
     public boolean hasUserSessionConnection() {
@@ -246,65 +183,24 @@ public class UserSettings {
     }
 
     /**
-     * Get Splittable representation
-     * 
-     * @return
-     */
-    public Splittable asSplittable() {
-        Splittable ret = StringQuoter.createSplittable();
-        StringQuoter.create(isEnableAnalysisEmailNotification()).assign(ret, EMAIL_ANALYSIS_NOTIFICATION);
-        StringQuoter.create(isEnableImportEmailNotification()).assign(ret, EMAIL_IMPORT_NOTIFICATION);
-        StringQuoter.create(isEnableWaitTimeMessage()).assign(ret, WAIT_TIME_MESSAGE);
-        StringQuoter.create(getDefaultFileSelectorPath()).assign(ret, DEFAULT_FILE_SELECTOR_PATH);
-        StringQuoter.create(isRememberLastPath()).assign(ret, REMEMBER_LAST_PATH);
-        StringQuoter.create(isSaveSession()).assign(ret, SAVE_SESSION);
-        AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(getDefaultOutputFolder())).assign(ret, DEFAULT_OUTPUT_FOLDER);
-        StringQuoter.create(getAppsShortCut()).assign(ret, APPS_KB_SHORTCUT);
-        StringQuoter.create(getAnalysesShortCut()).assign(ret, ANALYSIS_KB_SHORTCUT);
-        StringQuoter.create(getDataShortCut()).assign(ret, DATA_KB_SHORTCUT);
-        StringQuoter.create(getNotifyShortCut()).assign(ret, NOTIFICATION_KB_SHORTCUT);
-        StringQuoter.create(getCloseShortCut()).assign(ret, CLOSE_KB_SHORTCUT_STRING);
-        Splittable sysDefFolder = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(getSystemDefaultOutputFolder()));
-        sysDefFolder.assign(ret, SYSTEM_DEFAULT_OUTPUT_DIR);
-        StringQuoter.create(getLastPath()).assign(ret, LAST_PATH);
-
-        return ret;
-    }
-
-    public void useDefaultValues(UserInfo userInfo) {
-        Splittable defaults = StringQuoter.createSplittable();
-        Splittable defaultHomeDir = StringQuoter.createSplittable();
-
-        String homeDir = userInfo.getHomePath();
-
-        StringQuoter.create(homeDir).assign(defaultHomeDir, "id");
-        StringQuoter.create(homeDir).assign(defaultHomeDir, "path");
-        defaultHomeDir.assign(defaults, DEFAULT_OUTPUT_FOLDER);
-
-        setValues(defaults);
-    }
-
-    /**
      * @param rememberLastPath the rememberLastPath to set
      */
     public void setRememberLastPath(boolean rememberLastPath) {
-        this.rememberLastPath = rememberLastPath;
+        userSetting.setRememberLastPath(rememberLastPath);
     }
 
     /**
      * @return the rememberLastPath
      */
     public boolean isRememberLastPath() {
-        return rememberLastPath;
+        return userSetting.isRememberLastPath();
     }
 
     /**
-     * 
-     * 
      * @param saveSession
      */
     public void setSaveSession(boolean saveSession) {
-        this.saveSession = saveSession;
+        userSetting.setSaveSession(saveSession);
     }
 
     public void setUserSessionConnection(boolean connected) {
@@ -312,22 +208,20 @@ public class UserSettings {
     }
 
     public boolean isSaveSession() {
-        return saveSession;
+        return userSetting.isSaveSession();
     }
 
     /**
      * @param defaultOutputFolder the new default output folder.
      */
     public void setDefaultOutputFolder(Folder defaultOutputFolder) {
-        this.defaultOutputFolder = defaultOutputFolder;
+        userSetting.setDefaultOutputFolder(defaultOutputFolder);
     }
 
-    private Folder buildFolder(Splittable defaultOutputFolder) {
-        DiskResourceAutoBeanFactory factory = GWT.create(DiskResourceAutoBeanFactory.class);
-        AutoBean<Folder> FolderBean = factory.folder();
-        Folder folder = FolderBean.as();
-        folder.setId(defaultOutputFolder.get("id").asString());
-        folder.setPath(defaultOutputFolder.get("path").asString());
+    private Folder buildFolder(String defaultOutputFolder) {
+        Folder folder = diskResourceFactory.folder().as();
+        folder.setId(defaultOutputFolder);
+        folder.setPath(defaultOutputFolder);
         return folder;
     }
 
@@ -335,35 +229,35 @@ public class UserSettings {
      * @return the default output folder.
      */
     public Folder getDefaultOutputFolder() {
-        return defaultOutputFolder;
+        return userSetting.getDefaultOutputFolder();
     }
 
     /**
      * @return the closeShortCut
      */
     public String getCloseShortCut() {
-        return closeShortCut;
+        return userSetting.getCloseKBShortcut();
     }
 
     /**
      * @param closeShortCut the closeShortCut to set
      */
     public void setCloseShortCut(String closeShortCut) {
-        this.closeShortCut = closeShortCut;
+        userSetting.setCloseKBShortcut(closeShortCut);
     }
 
     /**
      * @return the systemDefaultOutputFolder
      */
     public Folder getSystemDefaultOutputFolder() {
-        return systemDefaultOutputFolder;
+        return userSetting.getSystemDefaultOutputDir();
     }
 
     /**
      * @param systemDefaultOutputFolder the systemDefaultOutputFolder to set
      */
     public void setSystemDefaultOutputFolder(Folder systemDefaultOutputFolder) {
-        this.systemDefaultOutputFolder = systemDefaultOutputFolder;
+        userSetting.setSystemDefaultOutputDir(systemDefaultOutputFolder);
         GWT.log("System Default Output folder set: path = " + systemDefaultOutputFolder.getPath());
     }
 
@@ -371,29 +265,29 @@ public class UserSettings {
      * @return the lastPath
      */
     public String getLastPath() {
-        return lastPath;
+        return userSetting.getLastFolder();
     }
 
     /**
      * @param lastPath the lastPath to set
      */
     public void setLastPath(String lastPath) {
-        this.lastPath = lastPath;
+        userSetting.setLastFolder(lastPath);
     }
 
     public boolean isEnableImportEmailNotification() {
-        return enableImportEmailNotification;
+        return userSetting.isEnableImportEmailNotification();
     }
 
     public void setEnableImportEmailNotification(boolean enableImportEmailNotification) {
-        this.enableImportEmailNotification = enableImportEmailNotification;
+        userSetting.setEnableImportEmailNotification(enableImportEmailNotification);
     }
 
     public boolean isEnableWaitTimeMessage() {
-        return enableWaitTimeMessage;
+        return userSetting.isEnableWaitTimeMessage();
     }
 
     public void setEnableWaitTimeMessage(boolean enableWaitTimeMessage) {
-        this.enableWaitTimeMessage = enableWaitTimeMessage;
+        userSetting.setEnableWaitTimeMessage(enableWaitTimeMessage);
     }
 }
