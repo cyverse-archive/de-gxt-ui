@@ -312,12 +312,11 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
 		var introjs = $wnd.introJs();
 		introjs.setOption("showStepNumbers", false);
 		introjs.setOption("skipLabel", "Exit");
-		introjs.setOption("overlayOpacity", .5);
+		introjs.setOption("overlayOpacity", .2);
 		introjs.start();
     }-*/;
 
-
-    @Override
+   @Override
     public void doLogout(boolean sessionTimeout) {
        cleanUp();
         //session is timed-out, following rpc call will fail and cause 401.
