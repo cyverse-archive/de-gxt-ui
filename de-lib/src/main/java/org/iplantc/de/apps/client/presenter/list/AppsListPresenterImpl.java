@@ -91,7 +91,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
                     }
                 });
             } else {
-                ErrorHandler.post(caught);
+                postToErrorHandler(caught);
                 listStore.clear();
                 gridView.setHeadingText(appearance.appLoadError());
                 tileView.setHeadingText(appearance.appLoadError());
@@ -410,5 +410,9 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         if (handlerManager != null) {
             handlerManager.fireEvent(event);
         }
+    }
+
+    void postToErrorHandler(Throwable caught) {
+        ErrorHandler.post(caught);
     }
 }

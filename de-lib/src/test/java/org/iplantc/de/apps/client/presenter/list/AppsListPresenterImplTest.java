@@ -100,10 +100,16 @@ public class AppsListPresenterImplTest {
         when(viewFactoryMock.createGridView(Matchers.<ListStore<App>>any())).thenReturn(gridViewMock);
         when(viewFactoryMock.createTileView(Matchers.<ListStore<App>>any())).thenReturn(tileViewMock);
         when(gridMock.getSelectionModel()).thenReturn(selectionModelMock);
+        when(appearanceMock.appLoadError()).thenReturn("error");
         uut = new AppsListPresenterImpl(viewFactoryMock,
                                         listStoreMock,
                                         eventBusMock,
-                                        ontologyServiceMock);
+                                        ontologyServiceMock) {
+            @Override
+            void postToErrorHandler(Throwable caught) {
+                return;
+            }
+        };
         uut.appService = appServiceMock;
         uut.appUserService = appUserServiceMock;
         uut.appearance = appearanceMock;
@@ -193,6 +199,39 @@ public class AppsListPresenterImplTest {
 
         verifyNoMoreInteractions(appServiceMock,
                                  appearanceMock);
+    }
+
+    @Test public void verifyAppServiceCalled_onAppCategorySelected_Fail() {
+
+        AppCategorySelectionChangedEvent eventMock = mock(AppCategorySelectionChangedEvent.class);
+        final AppCategory appCategoryMock = mock(AppCategory.class);
+        when(appCategoryMock.getId()).thenReturn("mock category id");
+        List<AppCategory> selection = Lists.newArrayList(appCategoryMock);
+        when(eventMock.getAppCategorySelection()).thenReturn(selection);
+
+        when(appearanceMock.getAppsLoadingMask()).thenReturn("loading mask");
+
+        /*** CALL METHOD UNDER TEST ***/
+        uut.onAppCategorySelectionChanged(eventMock);
+
+        verify(tileViewMock).onAppCategorySelectionChanged(eq(eventMock));
+        verify(gridViewMock).onAppCategorySelectionChanged(eq(eventMock));
+
+        verify(activeViewMock).mask(anyString());
+        verify(appearanceMock).getAppsLoadingMask();
+        verify(appServiceMock).getApps(eq(appCategoryMock), appListCallbackCaptor.capture());
+
+        List<App> resultList = Lists.newArrayList(mock(App.class));
+
+        /*** CALL METHOD UNDER TEST ***/
+        appListCallbackCaptor.getValue().onFailure(null);
+
+        verify(listStoreMock).clear();
+        verify(gridViewMock).setHeadingText(eq(appearanceMock.appLoadError()));
+        verify(tileViewMock).setHeadingText(eq(appearanceMock.appLoadError()));
+        verify(activeViewMock).unmask();
+
+        verifyNoMoreInteractions(appServiceMock);
     }
 
     @Test public void doNothingIfSelectionIsEmpty_onAppCategorySelected() {
