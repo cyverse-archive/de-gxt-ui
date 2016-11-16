@@ -1,6 +1,14 @@
 package org.iplantc.de.client.models;
 
 import org.iplantc.de.shared.DEProperties;
+import org.iplantc.de.client.models.bootstrap.DataInfo;
+import org.iplantc.de.client.models.bootstrap.DataInfoError;
+import org.iplantc.de.client.models.bootstrap.Preferences;
+import org.iplantc.de.client.models.bootstrap.Session;
+import org.iplantc.de.client.models.bootstrap.UserBootstrap;
+import org.iplantc.de.client.models.bootstrap.UserProfile;
+import org.iplantc.de.client.models.bootstrap.Workspace;
+import org.iplantc.de.client.models.bootstrap.WorkspaceError;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.shared.GWT;
@@ -22,7 +30,7 @@ public class UserInfo {
     private static UserInfo instance;
 
     /**
-     * Get an instance of UserInfo.
+     * Get an instance of UserProfile.
      *
      * @return a singleton instance of the object.
      */
@@ -35,7 +43,12 @@ public class UserInfo {
     }
 
     private final CommonModelAutoBeanFactory factory = GWT.create(CommonModelAutoBeanFactory.class);
-    private UserBootstrap userInfo;
+    private UserBootstrap userBootstrap;
+    private UserProfile userProfile;
+    private DataInfo dataInfo;
+    private Preferences preferences;
+    private Session session;
+    private Workspace workspace;
     private List<WindowState> savedOrderedWindowStates;
     private static String AGAVE_AUTH_KEY = "agave";
 
@@ -46,14 +59,68 @@ public class UserInfo {
     }
 
     /**
-     * Initializes UserInfo object.
+     * Initializes UserProfile object.
      *
      * This method must be called before using any other member functions of this class
      *
      * @param userInfoJson json to initialize user info.
      */
     public void init(String userInfoJson) {
-        userInfo = AutoBeanCodex.decode(factory, UserBootstrap.class, userInfoJson).as();
+        userBootstrap = AutoBeanCodex.decode(factory, UserBootstrap.class, userInfoJson).as();
+
+        userProfile = userBootstrap.getUserProfile();
+        dataInfo = userBootstrap.getDataInfo();
+        preferences = userBootstrap.getPreferences();
+        session = userBootstrap.getSession();
+        workspace = userBootstrap.getWorkspace();
+    }
+
+    public boolean hasErrors() {
+        return hasUserProfileError() ||
+               hasDataInfoError() ||
+               hasPreferencesError() ||
+               hasSessionError() ||
+               hasWorkspaceError();
+    }
+
+    public boolean hasUserProfileError() {
+        return Strings.isNullOrEmpty(userProfile.getEmail()) ||
+               Strings.isNullOrEmpty(userProfile.getFirstName()) ||
+               Strings.isNullOrEmpty(userProfile.getFullUsername()) ||
+               Strings.isNullOrEmpty(userProfile.getLastName()) ||
+               Strings.isNullOrEmpty(userProfile.getUsername());
+    }
+
+    public boolean hasDataInfoError() {
+        return dataInfo != null && dataInfo.getError() != null;
+    }
+
+    public boolean hasPreferencesError() {
+        return preferences != null && preferences.getError() != null;
+    }
+
+    public boolean hasSessionError() {
+        return session != null && session.getError() != null;
+    }
+
+    public boolean hasWorkspaceError() {
+        return workspace != null && workspace.getError() != null;
+    }
+
+    public DataInfoError getDataInfoError() {
+        return hasDataInfoError() ? dataInfo.getError() : null;
+    }
+
+    public String getPreferencesError() {
+        return hasPreferencesError() ? preferences.getError() : null;
+    }
+
+    public String getSessionsError() {
+        return hasSessionError() ? session.getError() : null;
+    }
+
+    public WorkspaceError getWorkspaceError() {
+        return hasWorkspaceError() ? workspace.getError() : null;
     }
 
     /**
@@ -62,14 +129,14 @@ public class UserInfo {
      * @return email address.
      */
     public String getEmail() {
-        return userInfo == null ? null : userInfo.getEmail();
+        return userProfile == null ? null : userProfile.getEmail();
     }
 
     /**
      * @return the firstName
      */
     public String getFirstName() {
-        return userInfo == null ? null : userInfo.getFirstName();
+        return userProfile == null ? null : userProfile.getFirstName();
     }
 
     /**
@@ -78,16 +145,16 @@ public class UserInfo {
      * @return the fully qualified username.
      */
     public String getFullUsername() {
-        return userInfo == null ? null : userInfo.getFullUsername();
+        return userProfile == null ? null : userProfile.getFullUsername();
     }
 
     /**
      * @return the path to the user's home directory.
      */
     public String getHomePath() {
-        if (userInfo == null || Strings.isNullOrEmpty(userInfo.getHomePath())) {
+        if (hasDataInfoError()) {
             String irodsHome = DEProperties.getInstance().getIrodsHomePath();
-            String username = userInfo.getUsername();
+            String username = userProfile.getUsername();
 
             if (Strings.isNullOrEmpty(irodsHome) || Strings.isNullOrEmpty(username)) {
                 return "";
@@ -95,18 +162,18 @@ public class UserInfo {
 
             return irodsHome + "/" + username;
         }
-        return userInfo.getHomePath();
+        return dataInfo.getHomePath();
     }
 
     /**
      * @return the lastName
      */
     public String getLastName() {
-        return userInfo == null ? null : userInfo.getLastName();
+        return userProfile == null ? null : userProfile.getLastName();
     }
 
     public String getLoginTime() {
-        return userInfo == null ? null : userInfo.getLoginTime();
+        return session == null ? null : session.getLoginTime();
     }
 
     /**
@@ -120,9 +187,9 @@ public class UserInfo {
      * @return the path to the user's trash.
      */
     public String getTrashPath() {
-        if (userInfo == null || Strings.isNullOrEmpty(userInfo.getTrashPath())) {
+        if (hasDataInfoError()) {
             String baseTrashPath = getBaseTrashPath();
-            String username = userInfo.getUsername();
+            String username = userProfile.getUsername();
 
             if (Strings.isNullOrEmpty(baseTrashPath) || Strings.isNullOrEmpty(username)) {
                 return "";
@@ -130,14 +197,14 @@ public class UserInfo {
 
             return baseTrashPath + "/" + username;
         }
-        return userInfo.getTrashPath();
+        return dataInfo.getTrashPath();
     }
 
     /**
      * @return the base trash path of the data store for all users.
      */
     public String getBaseTrashPath() {
-        if (userInfo == null || Strings.isNullOrEmpty(userInfo.getBaseTrashPath())) {
+        if (hasDataInfoError()) {
             String baseTrashPath = DEProperties.getInstance().getBaseTrashPath();
 
             if (Strings.isNullOrEmpty(baseTrashPath)) {
@@ -146,7 +213,7 @@ public class UserInfo {
 
             return baseTrashPath;
         }
-        return userInfo.getBaseTrashPath();
+        return dataInfo.getBaseTrashPath();
     }
 
     /**
@@ -157,7 +224,7 @@ public class UserInfo {
      * @return a string representing the username for the user.
      */
     public String getUsername() {
-        return userInfo == null ? null : userInfo.getUsername();
+        return userProfile == null ? null : userProfile.getUsername();
     }
 
     /**
@@ -166,14 +233,14 @@ public class UserInfo {
      * @return a string representing the identifier for workspace.
      */
     public String getWorkspaceId() {
-        return userInfo == null ? null : userInfo.getWorkspaceId();
+        return workspace == null ? null : workspace.getWorkspaceId();
     }
 
     /**
      * @return the newUser
      */
     public boolean isNewUser() {
-        return userInfo == null ? false : userInfo.isNewUser();
+        return workspace == null ? false : workspace.isNewUser();
     }
 
     /**
@@ -184,15 +251,15 @@ public class UserInfo {
     }
 
     public Map<String, String> getAuthRedirects() {
-        return userInfo == null ? null : userInfo.getAuthRedirects();
+        return session == null ? null : session.getAuthRedirects();
     }
 
     public boolean hasAgaveRedirect() {
-        return getAuthRedirects() != null && userInfo.getAuthRedirects().containsKey(AGAVE_AUTH_KEY);
+        return getAuthRedirects() != null && session.getAuthRedirects().containsKey(AGAVE_AUTH_KEY);
     }
 
     public String getAgaveRedirect() {
-        return !hasAgaveRedirect() ? null : userInfo.getAuthRedirects().get(AGAVE_AUTH_KEY);
+        return !hasAgaveRedirect() ? null : session.getAuthRedirects().get(AGAVE_AUTH_KEY);
     }
 }
 

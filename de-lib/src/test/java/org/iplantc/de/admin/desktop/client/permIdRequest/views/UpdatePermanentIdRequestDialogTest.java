@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.iplantc.de.client.models.UserBootstrap;
+import org.iplantc.de.client.models.bootstrap.UserBootstrap;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequest;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestAutoBeanFactory;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestDetails;
