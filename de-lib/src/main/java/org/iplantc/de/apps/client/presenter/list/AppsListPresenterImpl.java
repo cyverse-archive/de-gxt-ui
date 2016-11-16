@@ -92,6 +92,9 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
                 });
             } else {
                 ErrorHandler.post(caught);
+                listStore.clear();
+                gridView.setHeadingText(appearance.appLoadError());
+                tileView.setHeadingText(appearance.appLoadError());
             }
             activeView.unmask();
         }

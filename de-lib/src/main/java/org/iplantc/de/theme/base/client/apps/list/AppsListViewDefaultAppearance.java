@@ -83,4 +83,9 @@ public class AppsListViewDefaultAppearance implements AppsListView.AppsListAppea
     public String sortLabel() {
         return appsMessages.sortLabel();
     }
+
+    @Override
+    public String appLoadError() {
+        return appsMessages.appLoadError();
+    }
 }
