@@ -119,6 +119,9 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
         this.trees.add(workspaceView.getTree());
         this.trees.add(hpcView.getTree());
 
+        workspaceView.addAppCategorySelectedEventHandler(this);
+        hpcView.addAppCategorySelectedEventHandler(this);
+
         initConstants(props, jsonUtil);
 
         eventBus.addHandler(AppUpdatedEvent.TYPE, this);
@@ -246,7 +249,6 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
     }
 
     void addCategoriesToHPCTree() {
-        hpcView.addAppCategorySelectedEventHandler(this);
         addAppCategories(hpcView.getTree().getStore(), null, hpcCategories);
     }
 
@@ -255,7 +257,6 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
         final Store.StoreSortInfo<AppCategory> info = new Store.StoreSortInfo<>(new AppCategoryComparator(treeStore),
                                                                                 SortDir.ASC);
         treeStore.addSortInfo(info);
-        workspaceView.addAppCategorySelectedEventHandler(this);
         addAppCategories(treeStore, null, workspaceCategories);
     }
 
