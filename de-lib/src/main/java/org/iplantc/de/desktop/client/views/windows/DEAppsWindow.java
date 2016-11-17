@@ -26,6 +26,7 @@ public class DEAppsWindow extends IplantWindowBase {
     @Inject UserInfo userInfo;
     private final AppsView.Presenter presenter;
     private Widget currentWidget;
+    private ServiceDownPanel serviceDownPanel;
 
     @Inject
     DEAppsWindow(final AppsView.Presenter presenter, final IplantDisplayStrings displayStrings) {
@@ -85,12 +86,17 @@ public class DEAppsWindow extends IplantWindowBase {
     public void serviceDown(SelectEvent.SelectHandler handler) {
         if (currentWidget == null) {
             currentWidget = getWidget();
-            this.setWidget(new ServiceDownPanel(handler));
+            serviceDownPanel = new ServiceDownPanel();
+            this.setWidget(serviceDownPanel);
         }
+
+        serviceDownPanel.addHandler(handler);
     }
 
     public void restoreWindow() {
-        this.setWidget(currentWidget);
-        currentWidget = null;
+        if (currentWidget != null) {
+            this.setWidget(currentWidget);
+            currentWidget = null;
+        }
     }
 }
