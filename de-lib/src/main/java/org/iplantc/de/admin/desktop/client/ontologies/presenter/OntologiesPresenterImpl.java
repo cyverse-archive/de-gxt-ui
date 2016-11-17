@@ -40,6 +40,7 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
+import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.base.Joiner;
@@ -114,7 +115,7 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
         }
     }
 
-    class SaveHierarchyAsyncCallback implements AsyncCallback<OntologyHierarchy> {
+    class SaveHierarchyAsyncCallback extends AppsCallback<OntologyHierarchy> {
         private final String iri;
         private final String ontologyVersion;
 
@@ -124,7 +125,7 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             ErrorHandler.post(caught);
             view.unmaskTree(OntologiesView.ViewType.EDITOR);
         }
@@ -141,7 +142,7 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
         }
     }
 
-    class HierarchiesCallback implements AsyncCallback<List<OntologyHierarchy>> {
+    class HierarchiesCallback extends AppsCallback<List<OntologyHierarchy>> {
 
         final String version;
 
@@ -150,7 +151,7 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             ErrorHandler.post(caught);
             view.unmaskTree(OntologiesView.ViewType.EDITOR);
         }
@@ -425,9 +426,9 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
             if (Strings.isNullOrEmpty(attr)) {
                 continue;
             }
-            serviceFacade.getFilteredOntologyHierarchy(version, hierarchy.getIri(), attr, new AsyncCallback<OntologyHierarchy>() {
+            serviceFacade.getFilteredOntologyHierarchy(version, hierarchy.getIri(), attr, new AppsCallback<OntologyHierarchy>() {
                 @Override
-                public void onFailure(Throwable caught) {
+                public void onFailure(Integer statusCode, Throwable caught) {
                     ErrorHandler.post(caught);
                     view.unmaskTree(OntologiesView.ViewType.PREVIEW);
                 }
@@ -639,9 +640,9 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
         final OntologyHierarchy deletedHierarchy = event.getDeletedHierarchy();
         serviceFacade.deleteRootHierarchy(event.getEditedOntology().getVersion(),
                                           deletedHierarchy.getIri(),
-                                          new AsyncCallback<List<OntologyHierarchy>>() {
+                                          new AppsCallback<List<OntologyHierarchy>>() {
                                               @Override
-                                              public void onFailure(Throwable caught) {
+                                              public void onFailure(Integer statusCode, Throwable caught) {
                                                   ErrorHandler.post(caught);
                                               }
 
@@ -747,9 +748,9 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
         String id = properties.getDefaultTrashAppCategoryId();
         Preconditions.checkNotNull(id);
         view.maskGrid(OntologiesView.ViewType.EDITOR);
-        appService.getApps(id, new AsyncCallback<List<App>>() {
+        appService.getApps(id, new AppsCallback<List<App>>() {
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
                 view.unmaskGrid(OntologiesView.ViewType.EDITOR);
             }

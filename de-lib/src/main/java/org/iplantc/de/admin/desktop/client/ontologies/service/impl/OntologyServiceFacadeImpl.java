@@ -23,6 +23,7 @@ import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.AvuListCallbackConverter;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
+import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
@@ -56,7 +57,7 @@ public class OntologyServiceFacadeImpl implements OntologyServiceFacade {
     @Override
     public void saveOntologyHierarchy(String version,
                                       String root,
-                                      AsyncCallback<OntologyHierarchy> callback) {
+                                      DECallback<OntologyHierarchy> callback) {
         String address = ONTOLOGY_ADMIN + "/" + URL.encodeQueryString(version) + "/" + URL.encodeQueryString(root);
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(PUT, address, "{}");
@@ -126,7 +127,7 @@ public class OntologyServiceFacadeImpl implements OntologyServiceFacade {
 
     @Override
     public void getOntologyHierarchies(String version,
-                                       AsyncCallback<List<OntologyHierarchy>> callback) {
+                                       DECallback<List<OntologyHierarchy>> callback) {
 
         String address = ONTOLOGY_ADMIN + "/" + URL.encodeQueryString(version);
 
@@ -139,7 +140,7 @@ public class OntologyServiceFacadeImpl implements OntologyServiceFacade {
     public void getFilteredOntologyHierarchy(String version,
                                              String iri,
                                              String attr,
-                                             AsyncCallback<OntologyHierarchy> callback) {
+                                             DECallback<OntologyHierarchy> callback) {
         String address = ONTOLOGY_ADMIN + "/" + URL.encodeQueryString(version) + "/" + URL.encodeQueryString(iri);
         address += "?attr=" + URL.encodeQueryString(attr);
 
@@ -173,7 +174,7 @@ public class OntologyServiceFacadeImpl implements OntologyServiceFacade {
     @Override
     public void deleteRootHierarchy(String version,
                                     String root,
-                                    AsyncCallback<List<OntologyHierarchy>> callback) {
+                                    DECallback<List<OntologyHierarchy>> callback) {
         String address = ONTOLOGY_ADMIN + "/" + URL.encodeQueryString(version) + "/" + URL.encodeQueryString(root);
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address);

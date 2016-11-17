@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.avu.AvuList;
 import org.iplantc.de.client.models.ontologies.Ontology;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.models.ontologies.OntologyVersionDetail;
+import org.iplantc.de.shared.DECallback;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -22,7 +23,7 @@ public interface OntologyServiceFacade {
      * @param root
      * @param callback
      */
-    void saveOntologyHierarchy(String version, String root, AsyncCallback<OntologyHierarchy> callback);
+    void saveOntologyHierarchy(String version, String root, DECallback<OntologyHierarchy> callback);
 
     /**
      * Get a list of all ontology versions that are available
@@ -35,9 +36,9 @@ public interface OntologyServiceFacade {
      * Get the saved hierarchy at the given root IRI for the specified version of the ontology
      * @param callback
      */
-    void getOntologyHierarchies(String version, AsyncCallback<List<OntologyHierarchy>> callback);
+    void getOntologyHierarchies(String version, DECallback<List<OntologyHierarchy>> callback);
 
-    void getFilteredOntologyHierarchy(String version, String root, String attr, AsyncCallback<OntologyHierarchy> callback);
+    void getFilteredOntologyHierarchy(String version, String root, String attr, DECallback<OntologyHierarchy> callback);
 
     /**
      * Get the list of apps that are not tagged with the given root for the specified Ontology version
@@ -93,5 +94,5 @@ public interface OntologyServiceFacade {
     /**
      * Deletes a saved ontology root hierarchy
      */
-    void deleteRootHierarchy(String version, String root, AsyncCallback<List<OntologyHierarchy>> callback);
+    void deleteRootHierarchy(String version, String root, DECallback<List<OntologyHierarchy>> callback);
 }

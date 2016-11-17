@@ -15,6 +15,7 @@ import org.iplantc.de.admin.desktop.client.services.model.AppCategorizeRequest;
 import org.iplantc.de.apps.client.AppCategoriesView;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.gin.factory.AppCategoriesViewFactory;
+import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.apps.App;
@@ -429,9 +430,9 @@ public class AdminAppsCategoriesPresenterImpl implements AdminCategoriesView.Pre
     void clearAndRetrieveAppCategories(final HasId selectedAppCategory) {
         view.mask(appearance.getAppCategoriesLoadingMask());
         treeStore.clear();
-        adminAppService.getPublicAppCategories(new AsyncCallback<List<AppCategory>>() {
+        adminAppService.getPublicAppCategories(new AppsCallback<List<AppCategory>>() {
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
                 view.unmask();
             }
