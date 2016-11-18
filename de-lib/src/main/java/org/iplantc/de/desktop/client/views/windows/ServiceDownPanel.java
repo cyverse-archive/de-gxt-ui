@@ -1,11 +1,11 @@
 package org.iplantc.de.desktop.client.views.windows;
 
-import org.iplantc.de.shared.services.DEServiceAsync;
-
 import com.google.common.collect.Lists;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.ui.Label;
-import com.google.inject.Inject;
 
+import com.sencha.gxt.widget.core.client.Window;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.CenterLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
@@ -18,16 +18,26 @@ import java.util.List;
  */
 public class ServiceDownPanel extends CenterLayoutContainer {
 
-    @Inject DEServiceAsync deService;
+    public interface ServiceDownPanelAppearance {
+        String serviceDownText();
+
+        String retryBtnText();
+    }
+
     private List<SelectEvent.SelectHandler> handlers = Lists.newArrayList();
 
     public ServiceDownPanel() {
+        this(GWT.<ServiceDownPanelAppearance>create(ServiceDownPanelAppearance.class));
+    }
+
+    public ServiceDownPanel(ServiceDownPanelAppearance appearance) {
+
         VerticalLayoutContainer vlc = new VerticalLayoutContainer();
         Label label = new Label();
-        label.setText("This service currently appears to be down.");
+        label.setText(appearance.serviceDownText());
 
         TextButton retry = new TextButton();
-        retry.setText("Try Again");
+        retry.setText(appearance.retryBtnText());
         retry.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
@@ -41,6 +51,14 @@ public class ServiceDownPanel extends CenterLayoutContainer {
         vlc.add(retry);
 
         add(vlc);
+
+        //KLUDGE to get the panel to center properly
+        addAttachHandler(new AttachEvent.Handler() {
+            @Override
+            public void onAttachOrDetach(AttachEvent event) {
+                ((Window)getParent()).forceLayout();
+            }
+        });
     }
 
     public void addHandler(SelectEvent.SelectHandler handler) {

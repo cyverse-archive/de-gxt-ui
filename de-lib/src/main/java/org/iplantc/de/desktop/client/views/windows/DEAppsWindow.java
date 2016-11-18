@@ -26,7 +26,7 @@ public class DEAppsWindow extends IplantWindowBase {
     @Inject UserInfo userInfo;
     private final AppsView.Presenter presenter;
     private Widget currentWidget;
-    private ServiceDownPanel serviceDownPanel;
+    ServiceDownPanel serviceDownPanel;
 
     @Inject
     DEAppsWindow(final AppsView.Presenter presenter, final IplantDisplayStrings displayStrings) {
