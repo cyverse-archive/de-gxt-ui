@@ -300,6 +300,7 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
 
                 @Override
                 public void onSuccess(App result) {
+                    result.setBeta(app.isBeta());
                     view.unmask();
                     listStore.update(result);
                     updateBetaStatus(app);

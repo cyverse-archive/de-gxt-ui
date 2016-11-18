@@ -72,10 +72,7 @@ public class AppStatusCellDefaultAppearance implements AppStatusCell.AppStatusCe
     public void render(Cell.Context context, App value, SafeHtmlBuilder sb, String debugId) {
         String tooltip;
         final SafeUri safeUri;
-        if (!value.isPublic()) {
-            safeUri = iplantResources.lock().getSafeUri();
-            tooltip = appsMessages.privateToolTip();
-        } else if (value.isDisabled()) {
+        if (value.isDisabled()) {
             safeUri = iplantResources.xred().getSafeUri();
             tooltip = iplantDisplayStrings.appUnavailable();
         } else if (value.isBeta() != null && value.isBeta()) {
