@@ -15,6 +15,10 @@
         <when-type-is class="org.iplantc.de.analysis.client.views.cells.AnalysisCommentCell.AnalysisCommentCellAppearance"/>
     </replace-with>
 
+    <replace-with class="org.iplantc.de.theme.base.client.analyses.cells.AnalysisUserSupportCellDefaultAppearance">
+        <when-type-is class="org.iplantc.de.analysis.client.views.cells.AnalysisUserSupportCell.AnalysisUserSupportCellAppearance"/>
+    </replace-with>
+
     <replace-with class="org.iplantc.de.theme.base.client.analyses.cells.AnalysisAppNameCellDefaultAppearance">
         <when-type-is class="org.iplantc.de.analysis.client.views.cells.AnalysisAppNameCell.AnalysisAppNameCellAppearance"/>
     </replace-with>

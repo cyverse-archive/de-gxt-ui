@@ -1,0 +1,20 @@
+<h3>Failed</h3>
+<p>There are several common causes for&nbsp;failed analysis.</span></p>
+<p>When there is scheduled DE maintenance, all submitted analyses will be killed. If your analysis failed on a day there was maintenance, please relaunch.</p>
+<p>Problem with the input file(s)</p>
+<ul>
+    <li>Special characters in the file name. Rename the file, excluding any of the <a href="https://wiki.cyverse.org/wiki/display/DEmanual/Using+Special+Characters+in+the+DE" target="_blank">special characters </a> and relaunch ananlysis.</li>
+    <li>Incorrect input file format. Read the app documentation and reformat input file. Relaunch analysis.</li>
+    <li>Corrupted input file. Try to run the app again using another input file. Start with the example file supplied with the app. You may need to return to your original data source (e.g., sequencing center) and request a new copy of the input data.</li>
+</ul>
+<p>Other common reasons for analysis failure:</p>
+<ul>
+    <li>Invalid parameters. Each tool will report errors differently. You will need to search the log files for an error message. Start by searching the (stdout) file, which lists all of the output from the tool. Also check the app documentation, including the original documentation for the tool.</li>
+    <li>Problem with app or with the source code. Which of the following applies?&nbsp;
+        <ul>
+            <li>The app is public and no longer in beta. A problem with the code is unlikely for a public, non-beta app. Please post comment.</li>
+            <li>The app is public but still in beta. If it is not your app, and it is in the beta category, please add a comment to the app, which will go to the app creator.;</li>
+            <li>The app is private. If it is your app, be sure to validate with a real dataset or two, not just the example data that comes with the code. There may be a code bug in executable that drives the app. Check the discussion list or issue tracker for the tool, and email the list or file a ticket if necessary. CyVerse staff cannot help with troubleshooting of externally generated code.</li>
+        </ul>
+    </li>
+</ul>

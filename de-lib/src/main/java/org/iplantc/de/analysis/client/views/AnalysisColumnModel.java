@@ -8,6 +8,7 @@ import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent
 import org.iplantc.de.analysis.client.views.cells.AnalysisAppNameCell;
 import org.iplantc.de.analysis.client.views.cells.AnalysisCommentCell;
 import org.iplantc.de.analysis.client.views.cells.AnalysisNameCell;
+import org.iplantc.de.analysis.client.views.cells.AnalysisUserSupportCell;
 import org.iplantc.de.analysis.client.views.cells.EndDateTimeCell;
 import org.iplantc.de.analysis.client.views.cells.StartDateTimeCell;
 import org.iplantc.de.client.models.analysis.Analysis;
@@ -107,6 +108,7 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
                                                                          }
                                                                      },
                                                                      125);
+        ColumnConfig<Analysis, Analysis> support = new ColumnConfig<Analysis, Analysis>(new IdentityValueProvider<Analysis>("support"),30);
 
         name.setHeader(appearance.name());
         name.setCell(new AnalysisNameCell());
@@ -130,6 +132,12 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
 
         status.setHeader(appearance.status());
 
+        support.setMenuDisabled(true);
+        support.setCell(new AnalysisUserSupportCell());
+        support.setSortable(false);
+        support.setHeader("");
+        support.setHideable(false);
+
         List<ColumnConfig<Analysis, ?>> ret = Lists.newArrayList();
         ret.add(colCheckBox);
         ret.add(name);
@@ -139,6 +147,7 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
         ret.add(startDate);
         ret.add(endDate);
         ret.add(status);
+        ret.add(support);
         return ret;
     }
 
