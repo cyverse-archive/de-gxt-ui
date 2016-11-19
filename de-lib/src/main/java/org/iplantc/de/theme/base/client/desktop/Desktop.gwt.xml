@@ -46,7 +46,7 @@
     </replace-with>
 
     <replace-with class="org.iplantc.de.theme.base.client.desktop.window.ServiceDownPanelDefaultAppearance">
-        <when-type-is class="org.iplantc.de.desktop.client.views.windows.ServiceDownPanel.ServiceDownPanelAppearance"/>
+        <when-type-is class="org.iplantc.de.desktop.client.views.widgets.ServiceDownPanel.ServiceDownPanelAppearance"/>
     </replace-with>
 
 </module>

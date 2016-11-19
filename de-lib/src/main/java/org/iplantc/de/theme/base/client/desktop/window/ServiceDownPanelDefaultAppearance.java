@@ -1,6 +1,6 @@
 package org.iplantc.de.theme.base.client.desktop.window;
 
-import org.iplantc.de.desktop.client.views.windows.ServiceDownPanel;
+import org.iplantc.de.desktop.client.views.widgets.ServiceDownPanel;
 
 import com.google.gwt.core.client.GWT;
 
