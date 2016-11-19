@@ -1,6 +1,6 @@
 package org.iplantc.de.theme.base.client.analyses.cells;
 
-import org.iplantc.de.analysis.client.views.cells.AnalysisCommentCell;
+import org.iplantc.de.analysis.client.views.cells.AnalysisUserSupportCell;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
@@ -9,24 +9,28 @@ import com.google.gwt.cell.client.Cell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeUri;
 
 /**
- * @author jstroot
+ * Created by sriram on 11/17/16.
  */
-public class AnalysisCommentCellDefaultAppearance implements AnalysisCommentCell.AnalysisCommentCellAppearance{
+public class AnalysisUserSupportCellDefaultAppearance implements AnalysisUserSupportCell.AnalysisUserSupportCellAppearance {
 
-    public interface AnalysisCommentCellStyles extends CssResource {
-        @ClassName("comment_icon")
-        String commentIcon();
+    public interface AnalysisUserCellStyles extends CssResource {
+        @ClassName("support_icon")
+        String supportIcon();
     }
 
-    public interface AnalysisCommentCellResources extends ClientBundle {
-        @Source("AnalysisCommentCell.css")
-        AnalysisCommentCellStyles css();
+    public interface AnalysisUserSupportCellResources extends ClientBundle {
+        @Source("AnalysisUserSupportCell.css")
+        AnalysisUserCellStyles css();
+
+        @ClientBundle.Source("../support_icon.png")
+        ImageResource supportIcon();
     }
 
     interface Templates extends SafeHtmlTemplates {
@@ -36,17 +40,17 @@ public class AnalysisCommentCellDefaultAppearance implements AnalysisCommentCell
 
     private final IplantDisplayStrings displayStrings;
     private final IplantResources iplantResources;
-    private final AnalysisCommentCellResources resources;
+    private final AnalysisUserSupportCellResources resources;
     private final Templates template;
 
-    public AnalysisCommentCellDefaultAppearance() {
-        this(GWT.<AnalysisCommentCellResources> create(AnalysisCommentCellResources.class),
+    public AnalysisUserSupportCellDefaultAppearance() {
+        this(GWT.<AnalysisUserSupportCellResources> create(AnalysisUserSupportCellResources.class),
              GWT.<Templates> create(Templates.class),
              GWT.<IplantDisplayStrings> create(IplantDisplayStrings.class),
              GWT.<IplantResources> create(IplantResources.class));
     }
 
-    AnalysisCommentCellDefaultAppearance (final AnalysisCommentCellResources resources,
+    AnalysisUserSupportCellDefaultAppearance (final AnalysisUserSupportCellResources resources,
                                           final Templates template,
                                           final IplantDisplayStrings displayStrings,
                                           final IplantResources iplantResources){
@@ -59,10 +63,11 @@ public class AnalysisCommentCellDefaultAppearance implements AnalysisCommentCell
 
     @Override
     public void render(Cell.Context context, Analysis value, SafeHtmlBuilder sb) {
-        sb.append(template.imgCell(displayStrings.comments(),
-                                          displayStrings.comments(),
-                                          resources.css().commentIcon(),
-                                          iplantResources.userComment().getSafeUri()));
-
+        sb.append(template.imgCell(displayStrings.userSupport(),
+                                   displayStrings.userSupport(),
+                                   resources.css().supportIcon(),
+                                   iplantResources.help().getSafeUri()));
     }
+
+
 }
