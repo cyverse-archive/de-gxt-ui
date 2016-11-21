@@ -145,4 +145,6 @@ public interface AppsMessages extends Messages {
     String completedDate();
 
     String completedRun();
+
+    String appLoadError();
 }

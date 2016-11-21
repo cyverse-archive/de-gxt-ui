@@ -277,6 +277,8 @@ public class AppCategoriesPresenterImplTest {
         verify(viewFactoryMock, times(2)).create(Matchers.<TreeStore<AppCategory>> any(), eq(uut));
         verify(workspaceViewMock).getTree();
         verify(hpcViewMock).getTree();
+        verify(workspaceViewMock).addAppCategorySelectedEventHandler(eq(uut));
+        verify(hpcViewMock).addAppCategorySelectedEventHandler(eq(uut));
         verify(eventBusMock, times(2)).addHandler(Matchers.<GwtEvent.Type<AppCategoriesPresenterImpl>>any(), eq(uut));
     }
 
