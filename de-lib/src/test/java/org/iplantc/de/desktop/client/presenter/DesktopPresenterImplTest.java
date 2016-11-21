@@ -36,6 +36,7 @@ public class DesktopPresenterImplTest {
     DesktopView viewMock;
     @Mock DesktopPresenterWindowEventHandler windowEventHandlerMock;
     @Mock WindowManager windowManagerMock;
+    @Mock DesktopView.Presenter.DesktopPresenterAppearance appearanceMock;
 
     private DesktopPresenterImpl uut;
     @Before public void setUp() {
@@ -45,7 +46,8 @@ public class DesktopPresenterImplTest {
                                           eventBusMock,
                                           windowManagerMock,
                                           desktopWindowManagerMock,
-                                          messagePollerMock);
+                                          messagePollerMock,
+                                          appearanceMock);
 
     }
 

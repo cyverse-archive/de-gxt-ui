@@ -59,6 +59,7 @@ public class DesktopNotifications_PresenterTest {
     @Mock DesktopWindowManager desktopWindowManagerMock;
     @Mock MessagePoller msgPollerMock;
     @Mock NotifyInfo notifyInfoMock;
+    @Mock DesktopView.Presenter.DesktopPresenterAppearance appearanceMock;
 
     @Mock ListStore<NotificationMessage> msgStoreMock;
 
@@ -76,7 +77,8 @@ public class DesktopNotifications_PresenterTest {
                                                                   eventBusMock,
                                                                   windowMangerMock,
                                                                   desktopWindowManagerMock,
-                                                                  msgPollerMock){
+                                                                  msgPollerMock,
+                                                                  appearanceMock){
             @Override
             void setBrowserContextMenuEnabled(boolean enabled) {
                 // Test stub, Do nothing
@@ -108,7 +110,8 @@ public class DesktopNotifications_PresenterTest {
                                                                   eventBusMock,
                                                                   windowMangerMock,
                                                                   desktopWindowManagerMock,
-                                                                  msgPollerMock);
+                                                                  msgPollerMock,
+                                                                  appearanceMock);
         uut.messageServiceFacade = mock(MessageServiceFacade.class);
 
         final NotificationMessage mockMsg = mock(NotificationMessage.class);
@@ -135,11 +138,11 @@ public class DesktopNotifications_PresenterTest {
                                                                             eventBusMock,
                                                                             windowMangerMock,
                                                                             desktopWindowManagerMock,
-                                                                            msgPollerMock));
+                                                                            msgPollerMock,
+                                                                            appearanceMock));
         testPresenter.messageServiceFacade = mock(MessageServiceFacade.class);
         testPresenter.announcer = mock(IplantAnnouncer.class);
-        testPresenter.appearance = mock(DesktopView.Presenter.DesktopPresenterAppearance.class);
-        when(testPresenter.appearance.markAllAsSeenSuccess()).thenReturn("Mock success");
+        when(appearanceMock.markAllAsSeenSuccess()).thenReturn("Mock success");
 
         when(viewMock.getNotificationStore()).thenReturn(msgStoreMock);
         when(msgStoreMock.getAll()).thenReturn(Lists.<NotificationMessage>newArrayList());
