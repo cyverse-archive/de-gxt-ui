@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.iplantc.de.client.models.bootstrap.UserBootstrap;
+import org.iplantc.de.client.models.bootstrap.UserProfile;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequest;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestAutoBeanFactory;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestDetails;
@@ -60,12 +61,15 @@ public class UpdatePermanentIdRequestDialogTest {
     @Mock
     UserBootstrap mockStrap;
 
+    @Mock UserProfile mockProfile;
+
     private UpdatePermanentIdRequestDialog dialog;
 
     @Before
     public void setUp() {
-       when(mockDetails.getRequestor()).thenReturn(mockStrap);
-        when(mockStrap.getEmail()).thenReturn("foo@bar.com");
+        when(mockDetails.getRequestor()).thenReturn(mockStrap);
+        when(mockStrap.getUserProfile()).thenReturn(mockProfile);
+        when(mockProfile.getEmail()).thenReturn("foo@bar.com");
         dialog = new UpdatePermanentIdRequestDialog(PermanentIdRequestStatus.Submitted.toString(),
                                                     mockDetails,
                                                     mockPrfactory);

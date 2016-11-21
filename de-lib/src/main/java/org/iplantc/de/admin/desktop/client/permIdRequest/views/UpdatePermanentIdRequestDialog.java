@@ -59,12 +59,12 @@ public class UpdatePermanentIdRequestDialog extends IPlantDialog {
             @Override
             public void onClick(ClickEvent event) {
                 RequestHistoryDialog dlg = new RequestHistoryDialog(
-                        details.getRequestor().getUsername() + "-" + details.getType(),
+                        details.getRequestor().getUserProfile().getUsername() + "-" + details.getType(),
                         details.getHistory());
                 dlg.show();
             }
         });
-        userEmail.setText(details.getRequestor().getEmail());
+        userEmail.setText(details.getRequestor().getUserProfile().getEmail());
 
         ensureDebugId(Belphegor.PermIds.UPDATE_PERMID_DIALOG + Belphegor.PermIds.VIEW);
     }
