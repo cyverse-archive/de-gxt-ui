@@ -156,7 +156,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     @Inject UserSettings userSettings;
     @Inject NotifyInfo notifyInfo;
     @Inject DiskResourceUtil diskResourceUtil;
-    @Inject DesktopPresenterAppearance appearance;
+    private DesktopPresenterAppearance appearance;
 
     private final EventBus eventBus;
     private final MessagePoller messagePoller;
@@ -176,14 +176,16 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                                 final EventBus eventBus,
                                 final WindowManager windowManager,
                                 final DesktopWindowManager desktopWindowManager,
-                                final MessagePoller messagePoller) {
+                                final MessagePoller messagePoller,
+                                final DesktopPresenterAppearance appearance) {
         this.view = view;
         this.eventBus = eventBus;
         this.windowManager = windowManager;
         this.messagePoller = messagePoller;
         this.desktopWindowManager = desktopWindowManager;
         this.desktopWindowManager.setDesktopContainer(view.getDesktopContainer());
-        this.ssp = new SaveSessionPeriodic(this);
+        this.appearance = appearance;
+        this.ssp = new SaveSessionPeriodic(this, appearance, 8);
         this.loggedOut = false;
         this.view.setPresenter(this);
         globalEventHandler.setPresenter(this, this.view);
@@ -643,7 +645,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
 
     @Override
     public void doPeriodicSessionSave() {
-        if (userSettings.isSaveSession()) {
+        if (userSettings.hasUserSessionConnection() && userSettings.isSaveSession()) {
             ssp.run();
             messagePoller.addTask(ssp);
             // start if not started...
@@ -808,8 +810,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }-*/;
 
     @Override
-    public void setPeriodicSessionFailFlags() {
-        userSettings.setSaveSession(false);
-        userSettings.setSessionConnectionFailed(true);
+    public void setUserSessionConnection(boolean connected) {
+        userSettings.setUserSessionConnection(connected);
     }
 }

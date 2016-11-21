@@ -122,7 +122,7 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     public void initAndShow(final UserSettings userSettings) {
         this.usValue = userSettings;
         editorDriver.edit(userSettings);
-        if (userSettings.sessionConnectionFailed()) {
+        if (!userSettings.hasUserSessionConnection()) {
             userSessionFail();
         }
         show();
