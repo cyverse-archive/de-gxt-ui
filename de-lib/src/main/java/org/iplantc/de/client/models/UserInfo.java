@@ -1,5 +1,8 @@
 package org.iplantc.de.client.models;
 
+import org.iplantc.de.shared.DEProperties;
+
+import com.google.common.base.Strings;
 import com.google.gwt.core.shared.GWT;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
@@ -82,7 +85,17 @@ public class UserInfo {
      * @return the path to the user's home directory.
      */
     public String getHomePath() {
-        return userInfo == null ? null : userInfo.getHomePath();
+        if (userInfo == null || Strings.isNullOrEmpty(userInfo.getHomePath())) {
+            String irodsHome = DEProperties.getInstance().getIrodsHomePath();
+            String username = userInfo.getUsername();
+
+            if (Strings.isNullOrEmpty(irodsHome) || Strings.isNullOrEmpty(username)) {
+                return "";
+            }
+
+            return irodsHome + "/" + username;
+        }
+        return userInfo.getHomePath();
     }
 
     /**
@@ -107,14 +120,33 @@ public class UserInfo {
      * @return the path to the user's trash.
      */
     public String getTrashPath() {
-        return userInfo == null ? null : userInfo.getTrashPath();
+        if (userInfo == null || Strings.isNullOrEmpty(userInfo.getTrashPath())) {
+            String baseTrashPath = getBaseTrashPath();
+            String username = userInfo.getUsername();
+
+            if (Strings.isNullOrEmpty(baseTrashPath) || Strings.isNullOrEmpty(username)) {
+                return "";
+            }
+
+            return baseTrashPath + "/" + username;
+        }
+        return userInfo.getTrashPath();
     }
 
     /**
      * @return the base trash path of the data store for all users.
      */
     public String getBaseTrashPath() {
-        return userInfo == null ? null : userInfo.getBaseTrashPath();
+        if (userInfo == null || Strings.isNullOrEmpty(userInfo.getBaseTrashPath())) {
+            String baseTrashPath = DEProperties.getInstance().getBaseTrashPath();
+
+            if (Strings.isNullOrEmpty(baseTrashPath)) {
+                return "";
+            }
+
+            return baseTrashPath;
+        }
+        return userInfo.getBaseTrashPath();
     }
 
     /**
