@@ -104,6 +104,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     EventBus eventBus;
     @Inject
     DiskResourceServiceFacade drFacade;
+    @Inject UserInfo userInfo;
 
     @Inject
     DiskResourceAutoBeanFactory drAbFactory;
@@ -182,7 +183,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
         // FIXME Do not fire dialog from presenter. Do so from the view.
         if(selectedFolder == null) {
             Folder parent = drAbFactory.folder().as();
-            parent.setPath(UserInfo.getInstance().getHomePath());
+            parent.setPath(userInfo.getHomePath());
             selectedFolder = parent;
         }
         final CreateFolderDialog dlg = getCreateFolderDialog(selectedFolder);

@@ -67,6 +67,7 @@ public class ToolbarViewPresenterImplTest {
 
     @Before public void setUp() {
         when(viewFactoryMock.create(Matchers.<ToolbarView.Presenter>any())).thenReturn(viewMock);
+        when(userInfoMock.getUsername()).thenReturn("username");
         uut = new ToolbarViewPresenterImpl(viewFactoryMock,
                                            genomeSearchView,
                                            bulkMetadataViewFactor,
@@ -79,6 +80,7 @@ public class ToolbarViewPresenterImplTest {
         };
         uut.eventBus = eventBusMock;
         uut.drAbFactory = drAbFactory;
+        uut.userInfo = userInfoMock;
     }
 
     @Test public void onSimpleDownloadSelected_firesEvent() {
@@ -115,6 +117,8 @@ public class ToolbarViewPresenterImplTest {
         when(drAbFactory.folder()).thenReturn(folderAb);
         when(folderAb.as()).thenReturn(parentMock);
         uut.onCreateNewFolderSelected(null);
+
+        verify(userInfoMock).getHomePath();
 
         verifyNoMoreInteractions(userInfoMock);
     }
