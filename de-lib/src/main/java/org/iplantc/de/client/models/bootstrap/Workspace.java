@@ -15,5 +15,5 @@ public interface Workspace extends HasStatus {
     @PropertyName("workspace_id")
     String getWorkspaceId();
 
-    WorkspaceError getError();
+    String getError();
 }

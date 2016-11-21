@@ -1,14 +1,12 @@
 package org.iplantc.de.client.models;
 
-import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.client.models.bootstrap.DataInfo;
-import org.iplantc.de.client.models.bootstrap.DataInfoError;
 import org.iplantc.de.client.models.bootstrap.Preferences;
 import org.iplantc.de.client.models.bootstrap.Session;
 import org.iplantc.de.client.models.bootstrap.UserBootstrap;
 import org.iplantc.de.client.models.bootstrap.UserProfile;
 import org.iplantc.de.client.models.bootstrap.Workspace;
-import org.iplantc.de.client.models.bootstrap.WorkspaceError;
+import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.shared.GWT;
@@ -107,7 +105,7 @@ public class UserInfo {
         return workspace != null && workspace.getError() != null;
     }
 
-    public DataInfoError getDataInfoError() {
+    public String getDataInfoError() {
         return hasDataInfoError() ? dataInfo.getError() : null;
     }
 
@@ -119,7 +117,7 @@ public class UserInfo {
         return hasSessionError() ? session.getError() : null;
     }
 
-    public WorkspaceError getWorkspaceError() {
+    public String getWorkspaceError() {
         return hasWorkspaceError() ? workspace.getError() : null;
     }
 

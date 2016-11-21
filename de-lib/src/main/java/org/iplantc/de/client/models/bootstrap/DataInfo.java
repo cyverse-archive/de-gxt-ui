@@ -18,5 +18,5 @@ public interface DataInfo extends HasStatus {
     @PropertyName("base_trash_path")
     String getBaseTrashPath();
 
-    DataInfoError getError();
+    String getError();
 }
