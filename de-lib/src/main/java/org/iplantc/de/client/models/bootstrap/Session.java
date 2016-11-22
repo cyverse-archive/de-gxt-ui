@@ -13,7 +13,7 @@ public interface Session {
     @PropertyName("login_time")
     Long getLoginTime();
 
-    @PropertyName("auth-redirect")
+    @PropertyName("auth_redirect")
     Map<String, String> getAuthRedirects();
 
     Splittable getError();
