@@ -91,12 +91,11 @@ class RuntimeCallbacks {
             logout();
         }
 
-        private void logout() {
+        void logout() {
             final String redirectUrl = GWT.getHostPageBaseURL() + constants.logoutUrl();
             LOG.warning("RedirectUrl = " + redirectUrl);
             if (userSettings.isSaveSession()) {
-                final AutoProgressMessageBox progressMessageBox = new AutoProgressMessageBox(appearance.savingSession(),
-                                                                                             appearance.savingSessionWaitNotice());
+                final AutoProgressMessageBox progressMessageBox = getProgressMessage();
                 progressMessageBox.getProgressBar().setDuration(1000);
                 progressMessageBox.getProgressBar().setInterval(100);
                 progressMessageBox.auto();
@@ -119,6 +118,11 @@ class RuntimeCallbacks {
             } else {
                 Window.Location.assign(redirectUrl);
             }
+        }
+
+        AutoProgressMessageBox getProgressMessage() {
+            return new AutoProgressMessageBox(appearance.savingSession(),
+                                              appearance.savingSessionWaitNotice());
         }
 
     }
