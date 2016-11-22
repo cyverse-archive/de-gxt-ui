@@ -134,10 +134,11 @@ class InitializationCallbacks {
             if(result != null) {
                 GWT.log("unseen count ^^^^^^" + result.getUnseenTotal());
                 view.setUnseenNotificationCount(Integer.parseInt(result.getUnseenTotal()));
-            }
-            ListStore<NotificationMessage> store = view.getNotificationStore();
-            for (Notification n : result.getNotifications()) {
-                store.add(n.getMessage());
+
+                ListStore<NotificationMessage> store = view.getNotificationStore();
+                for (Notification n : result.getNotifications()) {
+                    store.add(n.getMessage());
+                }
             }
         }
     }
