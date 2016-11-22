@@ -1,11 +1,11 @@
 package org.iplantc.de.client.services;
 
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.userSettings.UserSetting;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
 
@@ -15,9 +15,9 @@ public interface UserSessionServiceFacade {
 
     Request saveUserSession(List<WindowState> windowStates, AsyncCallback<Void> callback);
 
-    Request getUserPreferences(AsyncCallback<String> callback);
+    Request getUserPreferences(AsyncCallback<UserSetting> callback);
 
-    void saveUserPreferences(Splittable json, AsyncCallback<Void> callback);
+    void saveUserPreferences(UserSetting setting, AsyncCallback<Void> callback);
 
     void postClientNotification(JSONObject notification, AsyncCallback<String> callback);
 

@@ -155,7 +155,7 @@ class RuntimeCallbacks {
 
         @Override
         public void onSuccess(Void result) {
-            userSettings.setValues(newValue.asSplittable());
+            userSettings.setUserSettings(newValue.getUserSetting());
             if(userSettings.isSaveSession()) {
                 userSessionService.saveUserSession(presenter.getOrderedWindowStates(), new AsyncCallback<Void>() {
                     @Override

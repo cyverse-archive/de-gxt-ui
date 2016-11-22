@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.notifications.NotificationList;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
+import org.iplantc.de.client.models.userSettings.UserSetting;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -20,7 +21,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
@@ -192,7 +192,7 @@ class InitializationCallbacks {
         }
     }
 
-    private static class UserPreferencesCallback implements AsyncCallback<String> {
+    private static class UserPreferencesCallback implements AsyncCallback<UserSetting> {
         private final DesktopPresenterImpl presenter;
         private final Panel panel;
         private final DesktopView.Presenter.DesktopPresenterAppearance appearance;
@@ -217,13 +217,13 @@ class InitializationCallbacks {
             announcer.schedule(new ErrorAnnouncementConfig(SafeHtmlUtils.fromString(appearance.userPreferencesLoadError()),
                                                            false,
                                                            5000));
-            userSettings.useDefaultValues(UserInfo.getInstance());
+            userSettings.setUserSettings(null);
             presenter.postBootstrap(panel);
         }
 
         @Override
-        public void onSuccess(String result) {
-            userSettings.setValues(StringQuoter.split(result));
+        public void onSuccess(UserSetting result) {
+            userSettings.setUserSettings(result);
             presenter.postBootstrap(panel);
         }
     }
