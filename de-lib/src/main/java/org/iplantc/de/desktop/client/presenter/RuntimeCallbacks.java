@@ -130,7 +130,7 @@ class RuntimeCallbacks {
     static class SaveUserSettingsCallback implements AsyncCallback<Void> {
         private final IplantAnnouncer announcer;
         private final DesktopView.Presenter.DesktopPresenterAppearance appearance;
-        private final boolean updateSilently;
+        boolean updateSilently;
         private final UserSettings newValue;
         private final UserSettings userSettings;
         private final DesktopView.Presenter presenter;
