@@ -1,5 +1,6 @@
 package org.iplantc.de.client.models;
 
+import org.iplantc.de.client.models.bootstrap.UserBootstrap;
 import org.iplantc.de.client.models.viewer.StructuredText;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
