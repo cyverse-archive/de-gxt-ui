@@ -69,7 +69,7 @@ public interface IplantNewUserTourStrings extends com.google.gwt.i18n.client.Mes
   @Key("introWelcome")
   String introWelcome();
   
-  @DefaultMessage("<p>The Ask icon opens Ask CyVerse, the CyVerse community's question and answer forum.</p><br/><p>Both CyVerse staff and community members alike come together and help each other get the answers they need.</p><br/><p>Look here first for any questions you may have, or ask a new question.</p>\n")
-  @Key("introAsk")
-  String introAsk();
+  @DefaultMessage("<p>Click (Help) at the top right of the screen.</p><br/><li> To view the list of commonly asked questions within the DE, click FAQs.</li><li>To view and ask questions in the Ask CyVerse forum, click Forum.</li><li>To contact Support or provide feedback about the Discovery Environment, click Feedback and complete the form.</li>")
+  @Key("introHelp")
+  String introHelp();
 }

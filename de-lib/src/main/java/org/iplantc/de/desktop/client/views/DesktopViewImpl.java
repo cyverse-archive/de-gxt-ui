@@ -61,7 +61,6 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
     @UiField IPlantAnchor systemMsgsLink;
     @UiField IPlantAnchor documentationLink;
     @UiField IPlantAnchor introBtn;
- //   @UiField IPlantAnchor contactSupportBtn;
     @UiField IPlantAnchor aboutBtn;
     @UiField IPlantAnchor logoutBtn;
     @UiField(provided = true) UnseenNotificationsView notificationsListView;
@@ -179,11 +178,6 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
 
     private void initIntroAttributes(IplantNewUserTourStrings tourStrings) {
         // FIXME Need to move intro to themes
-        // Feedback Btn
-       /* feedbackBtn.getElement().setAttribute("data-intro", tourStrings.introFeedback());
-        feedbackBtn.getElement().setAttribute("data-position", "top");
-        feedbackBtn.getElement().setAttribute("data-step", "6"); */
-
         // Window Btns
         dataWinBtn.getElement().setAttribute("data-intro", tourStrings.introDataWindow());
         dataWinBtn.getElement().setAttribute("data-position", "dataWinBtn");
@@ -204,9 +198,9 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
         userSettingsBtn.getElement().setAttribute("data-position", "left");
         userSettingsBtn.getElement().setAttribute("data-step", "5");
 
-/*        forumsBtn.getElement().setAttribute("data-intro", tourStrings.introAsk());
-        forumsBtn.getElement().setAttribute("data-position", "left");
-        forumsBtn.getElement().setAttribute("data-step", "7");*/
+        helpBtn.getElement().setAttribute("data-intro", tourStrings.introHelp());
+        helpBtn.getElement().setAttribute("data-position", "left");
+        helpBtn.getElement().setAttribute("data-step", "6");
     }
 
     @Override
