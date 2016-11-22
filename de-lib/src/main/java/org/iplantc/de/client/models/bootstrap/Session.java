@@ -11,7 +11,7 @@ import java.util.Map;
 public interface Session {
 
     @PropertyName("login_time")
-    String getLoginTime();
+    Long getLoginTime();
 
     @PropertyName("auth-redirect")
     Map<String, String> getAuthRedirects();

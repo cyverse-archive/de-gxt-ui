@@ -171,7 +171,7 @@ public class UserInfo {
         return userProfile == null ? null : userProfile.getLastName();
     }
 
-    public String getLoginTime() {
+    public Long getLoginTime() {
         return session == null ? null : session.getLoginTime();
     }
 
