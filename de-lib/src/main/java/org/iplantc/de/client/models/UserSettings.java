@@ -25,6 +25,7 @@ public class UserSettings {
     private UserSetting userSetting;
     private static UserSettings instance;
     private boolean userSessionConnection;
+    private static String ANALYSES_DIR = "analyses";
 
     public UserSettings(final UserSetting userSetting) {
         setUserSettings(userSetting);
@@ -77,7 +78,8 @@ public class UserSettings {
 
         if (userSetting.getDefaultOutputFolder() == null) {
             String homePath = userInfo.getHomePath();
-            setDefaultOutputFolder(buildFolder(homePath));
+            String outputDir = homePath + "/" + ANALYSES_DIR;
+            setDefaultOutputFolder(buildFolder(outputDir));
         }
 
         if (userSetting.getSystemDefaultOutputDir() == null) {
