@@ -11,6 +11,7 @@ import org.iplantc.de.shared.DEProperties;
 import com.google.common.base.Strings;
 import com.google.gwt.core.shared.GWT;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
 import java.util.Map;
@@ -105,19 +106,19 @@ public class UserInfo {
         return workspace != null && workspace.getError() != null;
     }
 
-    public String getDataInfoError() {
+    public Splittable getDataInfoError() {
         return hasDataInfoError() ? dataInfo.getError() : null;
     }
 
-    public String getPreferencesError() {
+    public Splittable getPreferencesError() {
         return hasPreferencesError() ? preferences.getError() : null;
     }
 
-    public String getSessionsError() {
+    public Splittable getSessionsError() {
         return hasSessionError() ? session.getError() : null;
     }
 
-    public String getWorkspaceError() {
+    public Splittable getWorkspaceError() {
         return hasWorkspaceError() ? workspace.getError() : null;
     }
 

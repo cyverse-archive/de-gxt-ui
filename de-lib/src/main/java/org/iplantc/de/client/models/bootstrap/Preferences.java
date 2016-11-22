@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.HasStatus;
 import org.iplantc.de.client.models.diskResources.Folder;
 
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 /**
  *
@@ -17,6 +18,6 @@ public interface Preferences extends HasStatus {
     @PropertyName("default_output_folder")
     Folder getDefaultOutputDir();
 
-    String getError();
+    Splittable getError();
 
 }
