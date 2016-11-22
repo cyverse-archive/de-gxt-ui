@@ -24,7 +24,7 @@ public class UserSettings {
 
     private UserSetting userSetting;
     private static UserSettings instance;
-    private boolean userSessionConnection;
+    private boolean userSessionConnection = true;
     private static String ANALYSES_DIR = "analyses";
 
     public UserSettings(final UserSetting userSetting) {
