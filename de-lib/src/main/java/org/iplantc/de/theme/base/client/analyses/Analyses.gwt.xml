@@ -10,6 +10,9 @@
         <when-type-is class="org.iplantc.de.analysis.client.AnalysisParametersView.Appearance"/>
     </replace-with>
 
+    <replace-with class="org.iplantc.de.theme.base.client.analyses.AnalysisUserSupportDefaultAppearance">
+      <when-type-is class="org.iplantc.de.analysis.client.views.dialogs.AnalysisUserSupportDialog.AnalysisUserSupportAppearance"/>
+    </replace-with>
     <!-- Cells -->
     <replace-with class="org.iplantc.de.theme.base.client.analyses.cells.AnalysisCommentCellDefaultAppearance">
         <when-type-is class="org.iplantc.de.analysis.client.views.cells.AnalysisCommentCell.AnalysisCommentCellAppearance"/>
