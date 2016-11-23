@@ -36,7 +36,7 @@ import java.util.logging.Logger;
  * @author jstroot
  */
 class InitializationCallbacks {
-    private static class BootstrapCallback implements AsyncCallback<String> {
+    static class BootstrapCallback implements AsyncCallback<String> {
         private final Provider<ErrorHandler> errorHandlerProvider;
         private final DesktopView.Presenter.DesktopPresenterAppearance appearance;
         private final UserInfo userInfo;
@@ -74,7 +74,7 @@ class InitializationCallbacks {
         public void onSuccess(String result) {
             userInfo.init(result);
             if (userInfo.isNewUser()) {
-                ConfirmMessageBox box = new ConfirmMessageBox(appearance.welcome(), appearance.introWelcome());
+                ConfirmMessageBox box = getIntroConfirmation();
                 box.addDialogHideHandler(new DialogHideHandler() {
 
                     @Override
@@ -89,13 +89,22 @@ class InitializationCallbacks {
                 box.show();
             } else {
                 if (userInfo.hasAgaveRedirect()) {
-                    AgaveAuthPrompt prompt = AgaveAuthPrompt.getInstance();
+                    AgaveAuthPrompt prompt = getAgavePrompt();
                     prompt.show();
                     presenter.stickWindowToTop(prompt);
                 }
             }
             userSessionService.getUserPreferences(userPreferencesCallback);
         }
+
+        ConfirmMessageBox getIntroConfirmation() {
+            return new ConfirmMessageBox(appearance.welcome(), appearance.introWelcome());
+        }
+
+        AgaveAuthPrompt getAgavePrompt() {
+            return AgaveAuthPrompt.getInstance();
+        }
+
     }
 
     static class GetInitialNotificationsCallback implements AsyncCallback<NotificationList> {
@@ -125,10 +134,11 @@ class InitializationCallbacks {
             if(result != null) {
                 GWT.log("unseen count ^^^^^^" + result.getUnseenTotal());
                 view.setUnseenNotificationCount(Integer.parseInt(result.getUnseenTotal()));
-            }
-            ListStore<NotificationMessage> store = view.getNotificationStore();
-            for (Notification n : result.getNotifications()) {
-                store.add(n.getMessage());
+
+                ListStore<NotificationMessage> store = view.getNotificationStore();
+                for (Notification n : result.getNotifications()) {
+                    store.add(n.getMessage());
+                }
             }
         }
     }
@@ -192,7 +202,7 @@ class InitializationCallbacks {
         }
     }
 
-    private static class UserPreferencesCallback implements AsyncCallback<UserSetting> {
+    static class UserPreferencesCallback implements AsyncCallback<UserSetting> {
         private final DesktopPresenterImpl presenter;
         private final Panel panel;
         private final DesktopView.Presenter.DesktopPresenterAppearance appearance;

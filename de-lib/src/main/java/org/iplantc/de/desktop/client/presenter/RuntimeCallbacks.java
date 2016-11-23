@@ -91,12 +91,11 @@ class RuntimeCallbacks {
             logout();
         }
 
-        private void logout() {
+        void logout() {
             final String redirectUrl = GWT.getHostPageBaseURL() + constants.logoutUrl();
             LOG.warning("RedirectUrl = " + redirectUrl);
             if (userSettings.isSaveSession()) {
-                final AutoProgressMessageBox progressMessageBox = new AutoProgressMessageBox(appearance.savingSession(),
-                                                                                             appearance.savingSessionWaitNotice());
+                final AutoProgressMessageBox progressMessageBox = getProgressMessage();
                 progressMessageBox.getProgressBar().setDuration(1000);
                 progressMessageBox.getProgressBar().setInterval(100);
                 progressMessageBox.auto();
@@ -121,12 +120,17 @@ class RuntimeCallbacks {
             }
         }
 
+        AutoProgressMessageBox getProgressMessage() {
+            return new AutoProgressMessageBox(appearance.savingSession(),
+                                              appearance.savingSessionWaitNotice());
+        }
+
     }
 
     static class SaveUserSettingsCallback implements AsyncCallback<Void> {
         private final IplantAnnouncer announcer;
         private final DesktopView.Presenter.DesktopPresenterAppearance appearance;
-        private final boolean updateSilently;
+        boolean updateSilently;
         private final UserSettings newValue;
         private final UserSettings userSettings;
         private final DesktopView.Presenter presenter;
