@@ -87,4 +87,10 @@ public interface AnalysesMessages extends Messages {
     String shareWithInput();
 
     String shareOutputOnly();
+
+    String outputUnexpected();
+
+    String noOutput();
+
+    String selectCondition();
 }
