@@ -239,7 +239,7 @@ public class UserInfo {
      * @return the newUser
      */
     public boolean isNewUser() {
-        return workspace == null ? false : workspace.isNewUser();
+        return workspace == null || hasWorkspaceError() ? true : workspace.isNewUser();
     }
 
     /**
