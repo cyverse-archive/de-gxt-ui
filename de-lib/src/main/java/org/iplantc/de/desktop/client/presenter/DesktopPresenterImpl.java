@@ -60,6 +60,7 @@ import org.iplantc.de.notifications.client.utils.NotifyInfo;
 import org.iplantc.de.notifications.client.views.dialogs.RequestHistoryDialog;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.events.ServiceDown;
+import org.iplantc.de.shared.events.ServiceRestored;
 import org.iplantc.de.shared.services.PropertyServiceAsync;
 import org.iplantc.de.systemMessages.client.events.NewSystemMessagesEvent;
 
@@ -418,12 +419,12 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                                                                         this));
     }
 
-    public void disableWindow(ServiceDown event) {
-        desktopWindowManager.disable(event);
+    public void serviceDown(ServiceDown event) {
+        desktopWindowManager.serviceDown(event);
     }
 
-    public void restoreWindow(WindowType windowType) {
-        desktopWindowManager.restoreWindow(windowType);
+    public void serviceUp(ServiceRestored event) {
+        desktopWindowManager.serviceUp(event.getWindowType());
     }
 
     @Override

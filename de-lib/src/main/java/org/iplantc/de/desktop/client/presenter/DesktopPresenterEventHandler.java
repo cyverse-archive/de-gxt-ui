@@ -110,11 +110,11 @@ public class DesktopPresenterEventHandler implements LastSelectedPathChangedEven
 
     @Override
     public void onServiceDown(ServiceDown event) {
-        presenter.disableWindow(event);
+        presenter.serviceDown(event);
     }
 
     @Override
     public void onServiceRestored(ServiceRestored event) {
-        presenter.restoreWindow(event.getWindowType());
+        presenter.serviceUp(event);
     }
 }
