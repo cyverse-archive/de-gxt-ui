@@ -73,6 +73,12 @@ class InitializationCallbacks {
         @Override
         public void onSuccess(String result) {
             userInfo.init(result);
+
+            if (userInfo.hasUserProfileError()) {
+                presenter.onBootstrapError(null);
+                return;
+            }
+
             if (userInfo.isNewUser()) {
                 ConfirmMessageBox box = getIntroConfirmation();
                 box.addDialogHideHandler(new DialogHideHandler() {
