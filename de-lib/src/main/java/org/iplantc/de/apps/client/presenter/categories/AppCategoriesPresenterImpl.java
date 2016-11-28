@@ -26,6 +26,7 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.widgets.DETabPanel;
+import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
 
@@ -168,9 +169,9 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
         workspaceView.getTree().mask(appearance.getAppCategoriesLoadingMask());
         hpcView.getTree().mask(appearance.getAppCategoriesLoadingMask());
 
-        appService.getAppCategories(true, new AsyncCallback<List<AppCategory>>() {
+        appService.getAppCategories(true, new AppsCallback<List<AppCategory>>() {
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
                 viewTabPanel.unmask();
             }

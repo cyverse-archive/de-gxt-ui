@@ -10,6 +10,8 @@ import org.iplantc.de.diskResource.client.events.DefaultUploadCompleteHandler;
 import org.iplantc.de.diskResource.client.events.FileUploadedEvent;
 import org.iplantc.de.notifications.client.events.NotificationClickedEvent;
 import org.iplantc.de.notifications.client.events.NotificationCountUpdateEvent;
+import org.iplantc.de.shared.events.ServiceDown;
+import org.iplantc.de.shared.events.ServiceRestored;
 import org.iplantc.de.shared.events.UserLoggedOutEvent;
 
 import com.google.common.collect.Lists;
@@ -30,7 +32,9 @@ public class DesktopPresenterEventHandler implements LastSelectedPathChangedEven
                                                      NotificationCountUpdateEvent.NotificationCountUpdateEventHandler,
                                                      FileUploadedEvent.FileUploadedEventHandler,
                                                      UserLoggedOutEvent.UserLoggedOutEventHandler,
-                                                     NotificationClickedEvent.NotificationClickedEventHandler {
+                                                     NotificationClickedEvent.NotificationClickedEventHandler,
+                                                     ServiceDown.ServiceDownHandler,
+                                                     ServiceRestored.ServiceRestoredHandler {
 
     @Inject EventBus eventBus;
     @Inject UserSessionServiceFacade userSessionService;
@@ -86,6 +90,10 @@ public class DesktopPresenterEventHandler implements LastSelectedPathChangedEven
         handlerRegistrations.add(handlerRegistration);
         handlerRegistration = eventBus.addHandler(NotificationClickedEvent.TYPE,this);
         handlerRegistrations.add(handlerRegistration);
+        handlerRegistration = eventBus.addHandler(ServiceDown.TYPE, this);
+        handlerRegistrations.add(handlerRegistration);
+        handlerRegistration = eventBus.addHandler(ServiceRestored.TYPE, this);
+        handlerRegistrations.add(handlerRegistration);
     }
 
     @Override
@@ -98,5 +106,15 @@ public class DesktopPresenterEventHandler implements LastSelectedPathChangedEven
     @Override
     public void onNotificationClicked(NotificationClickedEvent event) {
         presenter.markAsSeen(event.getMessage());
+    }
+
+    @Override
+    public void onServiceDown(ServiceDown event) {
+        presenter.disableWindow(event);
+    }
+
+    @Override
+    public void onServiceRestored(ServiceRestored event) {
+        presenter.restoreWindow(event.getWindowType());
     }
 }

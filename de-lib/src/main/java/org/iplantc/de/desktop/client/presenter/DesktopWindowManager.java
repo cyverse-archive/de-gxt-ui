@@ -5,9 +5,11 @@ import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
+import org.iplantc.de.desktop.client.views.windows.DEAppsWindow;
 import org.iplantc.de.desktop.client.views.windows.IPlantWindowInterface;
 import org.iplantc.de.desktop.client.views.windows.util.WindowFactory;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.events.ServiceDown;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -172,6 +174,27 @@ public class DesktopWindowManager {
                 }
             }
         });
+    }
+
+    public void disable(ServiceDown event) {
+        WindowType type = event.getWindowType();
+        for (Widget w : windowManager.getStack()) {
+            Window window = (Window) w;
+            if (Strings.nullToEmpty(window.getStateId()).startsWith(type.toString())) {
+                DEAppsWindow appsWindow = (DEAppsWindow)window;
+                appsWindow.serviceDown(event.getSelectionHandler());
+            }
+        }
+    }
+
+    public void restoreWindow(WindowType windowType) {
+        for (Widget w : windowManager.getStack()) {
+            Window window = (Window) w;
+            if (Strings.nullToEmpty(window.getStateId()).startsWith(windowType.toString())) {
+                DEAppsWindow appsWindow = (DEAppsWindow)window;
+                appsWindow.restoreWindow();
+            }
+        }
     }
 
     private void resizeOversizeWindow(IPlantWindowInterface window) {
