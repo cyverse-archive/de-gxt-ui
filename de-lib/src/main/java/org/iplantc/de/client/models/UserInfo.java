@@ -215,6 +215,10 @@ public class UserInfo {
         return dataInfo.getBaseTrashPath();
     }
 
+    public void setDataInfo(DataInfo dataInfo) {
+        this.dataInfo = dataInfo;
+    }
+
     /**
      * Gets the username for the user.
      *
