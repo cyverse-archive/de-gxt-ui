@@ -44,6 +44,7 @@ public class UserInfo {
 
     private final CommonModelAutoBeanFactory factory = GWT.create(CommonModelAutoBeanFactory.class);
     private UserBootstrap userBootstrap;
+
     private UserProfile userProfile;
     private DataInfo dataInfo;
     private Preferences preferences;
@@ -278,5 +279,10 @@ public class UserInfo {
     public String getAgaveRedirect() {
         return !hasAgaveRedirect() ? null : session.getAuthRedirects().get(AGAVE_AUTH_KEY);
     }
+
+    public UserProfile getUserProfile() {
+        return userProfile;
+    }
+
 }
 

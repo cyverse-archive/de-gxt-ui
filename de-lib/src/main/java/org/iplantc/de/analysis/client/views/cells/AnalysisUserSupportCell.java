@@ -71,7 +71,7 @@ public class AnalysisUserSupportCell extends AbstractCell<Analysis> {
     private void doOnClick(Analysis value) {
        AnalysisUserSupportDialog ausd = new AnalysisUserSupportDialog(value);
        ausd.setHeadingHtml(value.getName());
-       ausd.setSize("600px", "300px");
+       ausd.setSize("600px", "400px");
        ausd.show();
    }
 }

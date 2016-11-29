@@ -93,4 +93,16 @@ public interface AnalysesMessages extends Messages {
     String noOutput();
 
     String selectCondition();
+
+    String comments();
+
+    String needHelp();
+
+    String submit();
+
+    String agreeToShare();
+
+    String disclaimer();
+
+    String termsOfSupport();
 }
