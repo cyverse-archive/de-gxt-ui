@@ -15,6 +15,7 @@ import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetad
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.MetadataTemplateViewDialog;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.SelectMetadataTemplateDialog;
 import org.iplantc.de.resources.client.messages.I18N;
+import org.iplantc.de.shared.DataCallback;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -140,7 +141,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter{
 
     @Override
     public void setDiskResourceMetadata(final DiskResourceMetadataUpdateCallback callback) {
-        AsyncCallback<String> batchAvuCallback = new AsyncCallback<String>() {
+        DataCallback<String> batchAvuCallback = new DataCallback<String>() {
 
             @Override
             public void onSuccess(String result) {
@@ -148,8 +149,8 @@ public class MetadataPresenterImpl implements MetadataView.Presenter{
             }
 
             @Override
-            public void onFailure(Throwable caught) {
-                callback.onFailure(caught);
+            public void onFailure(Integer statusCode, Throwable caught) {
+                callback.onFailure(statusCode, caught);
             }
         };
 
@@ -258,7 +259,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter{
 
 
     private class DiskResourceMetadataListAsyncCallback
-            implements AsyncCallback<DiskResourceMetadataList> {
+            extends DataCallback<DiskResourceMetadataList> {
         @Override
         public void onSuccess(final DiskResourceMetadataList result) {
             view.loadMetadata(result.getOtherMetadata());
@@ -275,7 +276,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter{
 
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             view.unmask();
             ErrorHandler.post(caught);
         }

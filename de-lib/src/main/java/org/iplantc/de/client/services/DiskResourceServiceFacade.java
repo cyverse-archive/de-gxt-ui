@@ -1,7 +1,5 @@
 package org.iplantc.de.client.services;
 
-import java.util.List;
-
 import org.iplantc.de.client.models.HasPaths;
 import org.iplantc.de.client.models.dataLink.DataLink;
 import org.iplantc.de.client.models.diskResources.DiskResource;
@@ -16,12 +14,16 @@ import org.iplantc.de.client.models.diskResources.RootFolders;
 import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.models.services.DiskResourceMove;
 import org.iplantc.de.client.models.viewer.InfoType;
+import org.iplantc.de.shared.DECallback;
 
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.Splittable;
+
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
+
+import java.util.List;
 
 /**
  * @author jstroot
@@ -36,7 +38,7 @@ public interface DiskResourceServiceFacade {
      * @param folder The parent of the subfolders to refresh from the service.
      * @param callback executed when RPC call completes.
      */
-    void refreshFolder(Folder folder, final AsyncCallback<List<Folder>> callback);
+    void refreshFolder(Folder folder, final DECallback<List<Folder>> callback);
 
     DiskResource combineDiskResources(DiskResource from, DiskResource into);
 
@@ -47,7 +49,7 @@ public interface DiskResourceServiceFacade {
      * 
      * @param callback executed when RPC call completes.
      */
-    void getRootFolders(AsyncCallback<RootFolders> callback);
+    void getRootFolders(DECallback<RootFolders> callback);
 
     /**
      * Called to retrieve the entire contents of a folder.
@@ -64,7 +66,7 @@ public interface DiskResourceServiceFacade {
                            List<InfoType> infoTypeFilterList,
                            TYPE entityType,
                            FilterPagingLoadConfigBean loadConfig,
-                           AsyncCallback<Folder> callback);
+                           DECallback<Folder> callback);
 
     /**
      * Called to retrieve the contents of a folder without its file contents.
@@ -72,7 +74,7 @@ public interface DiskResourceServiceFacade {
      * @param parent requested folder.
      * @param callback executed when RPC call completes.
      */
-    void getSubFolders(final Folder parent, final AsyncCallback<List<Folder>> callback);
+    void getSubFolders(final Folder parent, final DECallback<List<Folder>> callback);
 
     /**
      * Call service to create a new folder
@@ -80,7 +82,7 @@ public interface DiskResourceServiceFacade {
      * @param parentFolder parent folder where the new folder will be created
      * @param callback executed when RPC call completes.
      */
-    void createFolder(Folder parentFolder, final String newFolderName, AsyncCallback<Folder> callback);
+    void createFolder(Folder parentFolder, final String newFolderName, DECallback<Folder> callback);
 
     /**
      * Check if a list of files or folders exist.
@@ -89,7 +91,7 @@ public interface DiskResourceServiceFacade {
      * @param callback callback executed when RPC call completes. On success, a map that maps resource
      *            paths to whether or not they exist.
      */
-    void diskResourcesExist(HasPaths diskResourcePaths, AsyncCallback<DiskResourceExistMap> callback);
+    void diskResourcesExist(HasPaths diskResourcePaths, DECallback<DiskResourceExistMap> callback);
 
     /**
      * Calls the move folder and move file services for the list of given disk resource ids.
@@ -101,7 +103,7 @@ public interface DiskResourceServiceFacade {
     void moveDiskResources(final Folder sourceFolder,
                            final Folder destFolder,
                            final List<DiskResource> diskResources,
-                           AsyncCallback<DiskResourceMove> callback);
+                           DECallback<DiskResourceMove> callback);
 
     /**
      * Calls the move folder and move file services for moving contents of a given folder.
@@ -111,7 +113,7 @@ public interface DiskResourceServiceFacade {
      */
     void moveContents(final Folder sourceFolder,
                       final Folder destFolder,
-                      AsyncCallback<DiskResourceMove> callback);
+                      DECallback<DiskResourceMove> callback);
 
     /**
      * Call service rename a file or folder.
@@ -120,7 +122,7 @@ public interface DiskResourceServiceFacade {
      * @param destName the new name.
      * @param callback service success/failure callback
      */
-    void renameDiskResource(DiskResource src, String destName, AsyncCallback<DiskResource> callback);
+    void renameDiskResource(DiskResource src, String destName, DECallback<DiskResource> callback);
 
     /**
      * Call service to upload a file from a given URL.
@@ -129,7 +131,7 @@ public interface DiskResourceServiceFacade {
      * @param dest id of the destination folder.
      * @param callback service success/failure callback
      */
-    void importFromUrl(String url, DiskResource dest, AsyncCallback<String> callback);
+    void importFromUrl(String url, DiskResource dest, DECallback<String> callback);
 
     /**
      * @param path the path of the file to download.
@@ -144,14 +146,14 @@ public interface DiskResourceServiceFacade {
      * @param callback callback executed when service call completes.
      */
     <T extends DiskResource> void deleteDiskResources(List<T> diskResources,
-                                                      AsyncCallback<HasPaths> callback);
+                                                      DECallback<HasPaths> callback);
 
     /**
      * Call service to delete disk resources in case user selects all items
      * 
      * @param selectedFolderId the folder whose contents will be deleted.
      */
-    void deleteContents(String selectedFolderId, AsyncCallback<HasPaths> callback);
+    void deleteContents(String selectedFolderId, DECallback<HasPaths> callback);
 
     /**
      * Call service to delete disk resources (i.e. {@link File}s and {@link Folder}s)
@@ -159,14 +161,13 @@ public interface DiskResourceServiceFacade {
      * @param diskResources a set of <code>DiskResource</code>s to be deleted
      * @param callback callback executed when service call completes.
      */
-    void deleteDiskResources(HasPaths diskResources, AsyncCallback<HasPaths> callback);
+    void deleteDiskResources(HasPaths diskResources, DECallback<HasPaths> callback);
 
     /**
      * @param resource the <code>DiskResource</code> for which metadata will be retrieved.
      * @param callback callback executed when service call completes.
      */
-    void getDiskResourceMetaData(DiskResource resource,
-                                 AsyncCallback<DiskResourceMetadataList> callback);
+    void getDiskResourceMetaData(DiskResource resource, DECallback<DiskResourceMetadataList> callback);
 
     /**
      * Calls service to set disk resource metadata.
@@ -176,8 +177,8 @@ public interface DiskResourceServiceFacade {
      * @param callback executed when the service call completes.
      */
     void setDiskResourceMetaData(DiskResource resource,
-                                DiskResourceMetadataList mdList,
-                                AsyncCallback<String> callback);
+                                 DiskResourceMetadataList mdList,
+                                 DECallback<String> callback);
 
     /**
      * 
@@ -203,7 +204,7 @@ public interface DiskResourceServiceFacade {
      * @param body - Post body in JSONObject format
      * @param callback callback object
      */
-    void getPermissions(JSONObject body, AsyncCallback<String> callback);
+    void getPermissions(JSONObject body, DECallback<String> callback);
 
     /**
      * search users irods directory structure
@@ -221,47 +222,47 @@ public interface DiskResourceServiceFacade {
      * @param paths the paths to query
      * @param callback callback which returns a map of {@code DiskResource}s keyed by their paths
      */
-    void getStat(final FastMap<TYPE> paths, final AsyncCallback<FastMap<DiskResource>> callback);
+    void getStat(final FastMap<TYPE> paths, final DECallback<FastMap<DiskResource>> callback);
 
     /**
      * empty user's trash
      * 
      * @param user the user whose trash will be emptied.
      */
-    public void emptyTrash(String user, AsyncCallback<String> callback);
+    public void emptyTrash(String user, DECallback<String> callback);
 
     /**
      * Restore deleted disk resources.
      * 
      * @param request the disk resources to be restored.
      */
-    public void restoreDiskResource(HasPaths request, AsyncCallback<String> callback);
+    public void restoreDiskResource(HasPaths request, DECallback<String> callback);
 
     /**
      * Creates a set of public data links for the given disk resources.
      * 
      * @param ticketIdList the id of the disk resource for which the ticket will be created.
      */
-    public void createDataLinks(List<String> ticketIdList, AsyncCallback<List<DataLink>> callback);
+    public void createDataLinks(List<String> ticketIdList, DECallback<List<DataLink>> callback);
 
     /**
      * Requests a listing of all the tickets for the given disk resources.
      * 
      * @param diskResourceIds the disk resources whose tickets will be listed.
      */
-    public void listDataLinks(List<String> diskResourceIds, AsyncCallback<String> callback);
+    public void listDataLinks(List<String> diskResourceIds, DECallback<String> callback);
 
     /**
      * Requests that the given Kif Share tickets will be deleted.
      * 
      * @param dataLinkIds the tickets which will be deleted.
      */
-    public void deleteDataLinks(List<String> dataLinkIds, AsyncCallback<String> callback);
+    public void deleteDataLinks(List<String> dataLinkIds, DECallback<String> callback);
 
     /**
      * Get a list of files types recognized
      */
-    void getInfoTypes(AsyncCallback<List<InfoType>> callback);
+    void getInfoTypes(DECallback<List<InfoType>> callback);
 
     /**
      * Set type to a file
@@ -269,7 +270,7 @@ public interface DiskResourceServiceFacade {
      * @param filePath the path of the file whose type will be set
      * @param type the type the file will be set to.
      */
-    void setFileType(String filePath, String type, AsyncCallback<String> callback);
+    void setFileType(String filePath, String type, DECallback<String> callback);
 
     /**
      * Convenience method which returns a valid {@link DiskResourceAutoBeanFactory} instance.
@@ -282,7 +283,7 @@ public interface DiskResourceServiceFacade {
      * Restore all items in trash to its original location.
      * 
      */
-    void restoreAll(AsyncCallback<String> callback);
+    void restoreAll(DECallback<String> callback);
 
     /**
      * Method used to retrieve list of metadata templates
@@ -302,7 +303,7 @@ public interface DiskResourceServiceFacade {
      * @param diskResourcePaths the paths to query
      * @param callback callback object
      */
-    void shareWithAnonymous(final HasPaths diskResourcePaths, final AsyncCallback<String> callback);
+    void shareWithAnonymous(final HasPaths diskResourcePaths, final DECallback<String> callback);
 
     /**
      * Copy metadata to list of files / folders
@@ -311,10 +312,10 @@ public interface DiskResourceServiceFacade {
      * @param paths destination DR's path to which metadata will be copied.
      * @param callback callback object
      */
-            void
-            copyMetadata(final String srcUUID,
-                         final Splittable paths,
-                         final AsyncCallback<String> callback);
+
+    void copyMetadata(final String srcUUID,
+                      final Splittable paths,
+                      final DECallback<String> callback);
             
             /**
      * save metadata to a file
@@ -327,7 +328,7 @@ public interface DiskResourceServiceFacade {
     void saveMetadata(final String srcUUID,
                       final String path,
                       boolean recursive,
-                      final AsyncCallback<String> callback);
+                      final DECallback<String> callback);
 
     /**
      * 
@@ -337,7 +338,7 @@ public interface DiskResourceServiceFacade {
      */
     void createNcbiSraFolderStructure(Folder parentFolder,
                                       String[] foldersToCreate,
-                                      AsyncCallback<String> callback);
+                                      DECallback<String> callback);
 
     /**
      * 
@@ -347,7 +348,7 @@ public interface DiskResourceServiceFacade {
      */
     void setBulkMetadataFromFile(String metadataFilePath,
                                  String destFolder,
-                                 AsyncCallback<String> callback);
+                                 DECallback<String> callback);
 
     /**
      * @param uuid

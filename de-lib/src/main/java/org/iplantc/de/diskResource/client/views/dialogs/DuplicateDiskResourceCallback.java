@@ -50,7 +50,7 @@ public abstract class DuplicateDiskResourceCallback extends DiskResourceServiceC
     }
 
     @Override
-    public void onFailure(Throwable caught) {
+    public void onFailure(Integer statusCode, Throwable caught) {
         unmaskCaller();
         DiskResourceErrorAutoBeanFactory factory = GWT.create(DiskResourceErrorAutoBeanFactory.class);
         AutoBean<ErrorDuplicateDiskResource> errorBean = AutoBeanCodex.decode(factory, ErrorDuplicateDiskResource.class,

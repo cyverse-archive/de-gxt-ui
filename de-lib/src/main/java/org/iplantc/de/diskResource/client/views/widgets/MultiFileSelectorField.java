@@ -22,6 +22,7 @@ import org.iplantc.de.diskResource.client.views.dialogs.FileFolderSelectDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.FileSelectDialog;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -60,11 +61,9 @@ import com.sencha.gxt.dnd.core.client.StatusProxy;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
 import com.sencha.gxt.widget.core.client.button.TextButton;
-import com.sencha.gxt.widget.core.client.event.HideEvent;
-import com.sencha.gxt.widget.core.client.event.HideEvent.HideHandler;
-import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent.DialogHideHandler;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.IsField;
 import com.sencha.gxt.widget.core.client.form.error.DefaultEditorError;
 import com.sencha.gxt.widget.core.client.form.error.SideErrorHandler;
@@ -528,10 +527,10 @@ public class MultiFileSelectorField extends Composite implements
         permissionErrors.clear();
         existsErrors.clear();
         drServiceFacade.getStat(diskResourceUtil.asStringPathTypeMap(value, TYPE.FILE),
-                                new AsyncCallback<FastMap<DiskResource>>() {
+                                new DataCallback<FastMap<DiskResource>>() {
 
                                     @Override
-                                    public void onFailure(Throwable caught) {
+                                    public void onFailure(Integer statusCode, Throwable caught) {
                                         // Assuming that if there are any non-existent files, that this
                                         // will kick off.
                                         SimpleServiceError serviceError = AutoBeanCodex.decode(factory,

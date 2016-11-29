@@ -2,8 +2,7 @@ package org.iplantc.de.diskResource.client.presenters.callbacks;
 
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.commons.client.ErrorHandler;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.iplantc.de.shared.DataCallback;
 
 /**
  * A common callback for disk resource service calls that implements a common onFailure method that will
@@ -12,7 +11,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * @author psarando
  * 
  */
-public abstract class DiskResourceServiceCallback<T> implements AsyncCallback<T> {
+public abstract class DiskResourceServiceCallback<T> extends DataCallback<T> {
 
     private IsMaskable maskedCaller;
 
@@ -44,7 +43,7 @@ public abstract class DiskResourceServiceCallback<T> implements AsyncCallback<T>
      * {@inheritDoc}
      */
     @Override
-    public void onFailure(Throwable caught) {
+    public void onFailure(Integer statusCode, Throwable caught) {
         unmaskCaller();
 
         ErrorHandler.post(caught);

@@ -1,6 +1,5 @@
 package org.iplantc.de.diskResource.client.presenters.callbacks;
 
-import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
 import org.iplantc.de.client.models.errors.diskResources.ErrorUpdateMetadata;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -37,7 +36,7 @@ public class DiskResourceMetadataUpdateCallback extends DiskResourceServiceCallb
     }
 
     @Override
-    public void onFailure(Throwable caught) {
+    public void onFailure(Integer statusCode, Throwable caught) {
         unmaskCaller();
         DiskResourceErrorAutoBeanFactory factory = GWT.create(DiskResourceErrorAutoBeanFactory.class);
         AutoBean<ErrorUpdateMetadata> errorBean = AutoBeanCodex.decode(factory,

@@ -33,7 +33,7 @@ public class RenameDiskResourceCallback extends DiskResourceServiceCallback<Disk
     }
 
     @Override
-    public void onFailure(Throwable caught) {
+    public void onFailure(Integer statusCode, Throwable caught) {
         unmaskCaller();
         DiskResourceErrorAutoBeanFactory factory = GWT.create(DiskResourceErrorAutoBeanFactory.class);
         String errMessage = caught.getMessage();

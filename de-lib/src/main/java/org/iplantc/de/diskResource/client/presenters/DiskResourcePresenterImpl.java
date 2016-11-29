@@ -58,6 +58,8 @@ import org.iplantc.de.diskResource.client.views.dialogs.RenameFolderDialog;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.DECallback;
+import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.base.Strings;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -420,14 +422,14 @@ public class DiskResourcePresenterImpl implements
     private void refreshFolder(final Folder selectedFolder) {
         checkState(selectedFolder != null, "Selected folder should not be null");
         view.mask(appearance.loadingMask());
-        diskResourceService.refreshFolder(selectedFolder, new AsyncCallback<List<Folder>>() {
+        diskResourceService.refreshFolder(selectedFolder, new DataCallback<List<Folder>>() {
             @Override
             public void onSuccess(List<Folder> result) {
                 view.unmask();
             }
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 view.unmask();
                 announcer.schedule(new ErrorAnnouncementConfig(appearance.folderRefreshFailed(selectedFolder.getName())));
             }
@@ -706,10 +708,10 @@ public class DiskResourcePresenterImpl implements
 
     void doEmptyTrash() {
         view.mask(appearance.loadingMask());
-        diskResourceService.emptyTrash(userInfo.getUsername(), new AsyncCallback<String>() {
+        diskResourceService.emptyTrash(userInfo.getUsername(), new DataCallback<String>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
                 view.unmask();
             }
@@ -740,10 +742,10 @@ public class DiskResourcePresenterImpl implements
     private void delete(List<DiskResource> drSet, String announce) {
         view.mask(appearance.loadingMask());
         Folder selectedFolder = navigationPresenter.getSelectedFolder();
-        final AsyncCallback<HasPaths> callback = new DiskResourceDeleteCallback(drSet,
-                                                                                selectedFolder,
-                                                                                view,
-                                                                                announce);
+        final DECallback<HasPaths> callback = new DiskResourceDeleteCallback(drSet,
+                                                                             selectedFolder,
+                                                                             view,
+                                                                             announce);
 
         if (gridViewPresenter.isSelectAllChecked() && selectedFolder != null) {
             diskResourceService.deleteContents(selectedFolder.getPath(), callback);

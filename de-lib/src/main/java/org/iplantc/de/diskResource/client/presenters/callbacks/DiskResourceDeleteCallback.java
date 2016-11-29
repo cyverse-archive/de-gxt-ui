@@ -44,7 +44,7 @@ public class DiskResourceDeleteCallback extends DiskResourceServiceCallback<HasP
     }
 
     @Override
-    public void onFailure(Throwable caught) {
+    public void onFailure(Integer statusCode, Throwable caught) {
         unmaskCaller();
 
         if(caught instanceof HttpException) {

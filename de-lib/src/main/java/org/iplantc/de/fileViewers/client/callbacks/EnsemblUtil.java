@@ -11,10 +11,10 @@ import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.views.dialogs.IplantInfoBox;
+import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import com.sencha.gxt.core.shared.FastMap;
 
@@ -87,10 +87,10 @@ public class EnsemblUtil {
         }
 
         diskResourceServiceFacade.getStat(diskResourceUtil.asStringPathTypeMap(list, TYPE.FILE),
-                                          new AsyncCallback<FastMap<DiskResource>>() {
+                                          new DataCallback<FastMap<DiskResource>>() {
 
                                               @Override
-                                              public void onFailure(Throwable caught) {
+                                              public void onFailure(Integer statusCode, Throwable caught) {
                                                   IplantInfoBox info = new IplantInfoBox(appearance.indexFileMissing(),
                                                                                          appearance.indexFileMissingError());
                                                   info.show();

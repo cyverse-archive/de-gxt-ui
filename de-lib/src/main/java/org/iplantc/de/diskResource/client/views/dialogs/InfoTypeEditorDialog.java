@@ -7,8 +7,8 @@ import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
+import org.iplantc.de.shared.DataCallback;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell.TriggerAction;
@@ -65,10 +65,10 @@ public class InfoTypeEditorDialog extends IPlantDialog {
     }
 
     private void loadInfoTypes(final InfoType currentType) {
-        diskResourceService.getInfoTypes(new AsyncCallback<List<InfoType>>() {
+        diskResourceService.getInfoTypes(new DataCallback<List<InfoType>>() {
 
             @Override
-            public void onFailure(Throwable arg0) {
+            public void onFailure(Integer statusCode, Throwable arg0) {
                 ErrorHandler.post(arg0);
             }
 

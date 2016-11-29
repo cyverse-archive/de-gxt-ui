@@ -17,6 +17,7 @@ import org.iplantc.de.diskResource.client.events.RootFoldersRetrievedEvent;
 import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.SubmitDiskResourceQueryEventHandler;
+import org.iplantc.de.shared.DataCallback;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -59,7 +60,7 @@ public class FolderRpcProxyImpl extends RpcProxy<Folder, List<Folder>> implement
         }
     }
 
-    class RootFolderCallback implements AsyncCallback<RootFolders> {
+    class RootFolderCallback extends DataCallback<RootFolders> {
 
         final AsyncCallback<List<Folder>> callback;
         final IplantAnnouncer ipAnnouncer;
@@ -83,7 +84,7 @@ public class FolderRpcProxyImpl extends RpcProxy<Folder, List<Folder>> implement
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             ErrorHandler.post(appearance.retrieveFolderInfoFailed(), caught);
 
             if (callback != null) {
@@ -116,7 +117,7 @@ public class FolderRpcProxyImpl extends RpcProxy<Folder, List<Folder>> implement
         }
     }
 
-    class SubFoldersCallback implements AsyncCallback<List<Folder>> {
+    class SubFoldersCallback extends DataCallback<List<Folder>> {
         final AsyncCallback<List<Folder>> callback;
         private final NavigationView.Presenter.Appearance appearance;
 
@@ -127,7 +128,7 @@ public class FolderRpcProxyImpl extends RpcProxy<Folder, List<Folder>> implement
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             ErrorHandler.post(appearance.retrieveFolderInfoFailed(), caught);
             if (callback != null) {
                 callback.onFailure(caught);

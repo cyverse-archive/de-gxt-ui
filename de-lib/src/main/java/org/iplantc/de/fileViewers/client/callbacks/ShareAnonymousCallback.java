@@ -5,11 +5,11 @@ import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
+import org.iplantc.de.shared.DataCallback;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Label;
 
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
@@ -19,7 +19,7 @@ import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.tips.QuickTip;
 
 
-public class ShareAnonymousCallback implements AsyncCallback<String> {
+public class ShareAnonymousCallback extends DataCallback<String> {
 
     public interface ShareAnonymousCallbackAppearance {
 
@@ -47,7 +47,7 @@ public class ShareAnonymousCallback implements AsyncCallback<String> {
     }
 
     @Override
-    public void onFailure(Throwable caught) {
+    public void onFailure(Integer statusCode, Throwable caught) {
         if (container != null) {
             container.unmask();
         }

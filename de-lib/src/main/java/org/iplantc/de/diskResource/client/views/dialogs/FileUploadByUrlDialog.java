@@ -8,6 +8,7 @@ import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.validators.ImportUrlValidator;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
+import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -18,7 +19,6 @@ import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
@@ -247,7 +247,7 @@ public class FileUploadByUrlDialog extends IPlantDialog implements HasPending<En
         }
     }
 
-    private final class ImportFromUrlCallback <D extends UIObject & IsHideable & HasPending<Entry<Field<String>, Status>>> implements AsyncCallback<String> {
+    private final class ImportFromUrlCallback <D extends UIObject & IsHideable & HasPending<Entry<Field<String>, Status>>> extends DataCallback<String> {
         private final D dlg;
         private final Entry<Field<String>, Status> pending;
 
@@ -266,7 +266,7 @@ public class FileUploadByUrlDialog extends IPlantDialog implements HasPending<En
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             // TODO JDS Determine how to update the UI
             if (dlg.getNumPending() == 1) {
                 // ErrorHandler.post(caught);
