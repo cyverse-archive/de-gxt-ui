@@ -30,4 +30,34 @@ public class AnalysisUserSupportDefaultAppearance implements AnalysisUserSupport
     public String selectCondition() {
         return messages.selectCondition();
     }
+
+    @Override
+    public String comments() {
+        return messages.comments();
+    }
+
+    @Override
+    public String needHelp() {
+        return messages.needHelp();
+    }
+
+    @Override
+    public String submit() {
+        return messages.submit();
+    }
+
+    @Override
+    public String agreeToShare() {
+        return messages.agreeToShare();
+    }
+
+    @Override
+    public String disclaimer() {
+        return messages.disclaimer();
+    }
+
+    @Override
+    public String termsOfSupport() {
+        return messages.termsOfSupport();
+    }
 }
