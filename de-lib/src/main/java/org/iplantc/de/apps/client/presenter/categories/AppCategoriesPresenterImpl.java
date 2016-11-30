@@ -16,15 +16,19 @@ import org.iplantc.de.apps.client.views.details.dialogs.AppDetailsDialog;
 import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.services.AppUserServiceFacade;
+import org.iplantc.de.client.services.OauthServiceFacade;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
+import org.iplantc.de.commons.client.views.dialogs.AgaveAuthPrompt;
 import org.iplantc.de.commons.client.widgets.DETabPanel;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
@@ -55,6 +59,7 @@ import com.sencha.gxt.widget.core.client.tree.Tree;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author jstroot
@@ -95,7 +100,9 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
     @Inject AsyncProviderWrapper<AppDetailsDialog> appDetailsDlgAsyncProvider;
     @Inject AppServiceFacade appService;
     @Inject AppUserServiceFacade appUserService;
+    @Inject OauthServiceFacade oauthServiceFacade;
     @Inject AppCategoriesView.AppCategoriesAppearance appearance;
+    @Inject UserInfo userInfo;
     private final EventBus eventBus;
     List<AppCategory> workspaceCategories = Lists.newArrayList();
     List<AppCategory> hpcCategories = Lists.newArrayList();
@@ -187,6 +194,30 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
             }
         });
 
+    }
+
+    @Override
+    public void checkForAgaveRedirect() {
+        if (!userInfo.hasSessionError()) {
+            return;
+        }
+
+        oauthServiceFacade.getRedirectUris(new AsyncCallback<Map<String, String>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.agaveRedirectCheckFail()));
+            }
+
+            @Override
+            public void onSuccess(Map<String, String> result) {
+                userInfo.setAuthRedirects(result);
+
+                if (userInfo.hasAgaveRedirect()) {
+                    AgaveAuthPrompt prompt = AgaveAuthPrompt.getInstance();
+                    prompt.show();
+                }
+            }
+        });
     }
 
     void selectDesiredCategory(HasId selectedAppCategory, boolean selectDefaultCategory) {

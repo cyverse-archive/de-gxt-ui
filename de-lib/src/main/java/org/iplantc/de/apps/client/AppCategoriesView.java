@@ -46,6 +46,8 @@ public interface AppCategoriesView extends IsWidget,
         String workspaceTab();
 
         String hpcTab();
+
+        String agaveRedirectCheckFail();
     }
 
     /**
@@ -76,6 +78,8 @@ public interface AppCategoriesView extends IsWidget,
         void go(HasId selectedAppCategory, boolean selectDefaultCategory, DETabPanel tabPanel);
 
         void setViewDebugId(String baseID);
+
+        void checkForAgaveRedirect();
     }
 
     interface AppCategoryHierarchyProvider {

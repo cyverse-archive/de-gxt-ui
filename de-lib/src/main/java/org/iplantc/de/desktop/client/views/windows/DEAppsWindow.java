@@ -2,10 +2,8 @@ package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.apps.client.AppsView;
 import org.iplantc.de.apps.shared.AppsModule;
-import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.commons.client.util.WindowUtil;
-import org.iplantc.de.commons.client.views.dialogs.AgaveAuthPrompt;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
@@ -22,7 +20,6 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
 public class DEAppsWindow extends IplantWindowBase {
 
     public static final String APPS = "#apps";
-    @Inject UserInfo userInfo;
     private final AppsView.Presenter presenter;
 
     @Inject
@@ -55,10 +52,7 @@ public class DEAppsWindow extends IplantWindowBase {
     @Override
     protected void afterShow() {
         super.afterShow();
-        if (userInfo.hasAgaveRedirect()) {
-            AgaveAuthPrompt prompt = AgaveAuthPrompt.getInstance();
-            prompt.show();
-        }
+        presenter.checkForAgaveRedirect();
     }
 
     @Override

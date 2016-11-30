@@ -253,6 +253,17 @@ public class UserInfo {
         this.savedOrderedWindowStates = savedOrderedWindowStates;
     }
 
+    public void setAuthRedirects(Map<String, String> redirects) {
+        if (session == null) {
+            Session newSession = factory.session().as();
+            newSession.setAuthRedirects(redirects);
+            session = newSession;
+        } else {
+            session.setAuthRedirects(redirects);
+            session.setError(null);
+        }
+    }
+
     public Map<String, String> getAuthRedirects() {
         return session == null || hasSessionError() ? null : session.getAuthRedirects();
     }

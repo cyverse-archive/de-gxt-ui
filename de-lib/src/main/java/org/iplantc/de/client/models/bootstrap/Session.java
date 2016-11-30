@@ -16,5 +16,9 @@ public interface Session {
     @PropertyName("auth_redirect")
     Map<String, String> getAuthRedirects();
 
+    @PropertyName("auth_redirect")
+    void setAuthRedirects(Map<String, String> redirects);
+
     Splittable getError();
+    void setError(Splittable error);
 }
