@@ -198,26 +198,29 @@ public class AppCategoriesPresenterImpl implements AppCategoriesView.Presenter,
 
     @Override
     public void checkForAgaveRedirect() {
-        if (!userInfo.hasSessionError()) {
-            return;
-        }
-
-        oauthServiceFacade.getRedirectUris(new AsyncCallback<Map<String, String>>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                announcer.schedule(new ErrorAnnouncementConfig(appearance.agaveRedirectCheckFail()));
-            }
-
-            @Override
-            public void onSuccess(Map<String, String> result) {
-                userInfo.setAuthRedirects(result);
-
-                if (userInfo.hasAgaveRedirect()) {
-                    AgaveAuthPrompt prompt = AgaveAuthPrompt.getInstance();
-                    prompt.show();
+        if (userInfo.hasSessionError()){
+            oauthServiceFacade.getRedirectUris(new AsyncCallback<Map<String, String>>() {
+                @Override
+                public void onFailure(Throwable caught) {
+                    announcer.schedule(new ErrorAnnouncementConfig(appearance.agaveRedirectCheckFail()));
                 }
-            }
-        });
+
+                @Override
+                public void onSuccess(Map<String, String> result) {
+                    userInfo.setAuthRedirects(result);
+                    showAgaveAuth();
+                }
+            });
+        } else {
+            showAgaveAuth();
+        }
+    }
+
+    void showAgaveAuth() {
+        if (userInfo.hasAgaveRedirect()) {
+            AgaveAuthPrompt prompt = AgaveAuthPrompt.getInstance();
+            prompt.show();
+        }
     }
 
     void selectDesiredCategory(HasId selectedAppCategory, boolean selectDefaultCategory) {

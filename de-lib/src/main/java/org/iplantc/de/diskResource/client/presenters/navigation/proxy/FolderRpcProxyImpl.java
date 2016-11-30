@@ -66,11 +66,12 @@ public class FolderRpcProxyImpl extends RpcProxy<Folder, List<Folder>> implement
         final IsMaskable maskable;
         private final NavigationView.Presenter.Appearance appearance;
         final SearchServiceFacade searchSvc;
-        UserInfo userInfo;
+        final UserInfo userInfo;
 
         public RootFolderCallback(final SearchServiceFacade searchService,
                                   final AsyncCallback<List<Folder>> callback,
-                                  final IplantAnnouncer announcer, UserInfo userInfo,
+                                  final IplantAnnouncer announcer,
+                                  final UserInfo userInfo,
                                   final IsMaskable isMaskable,
                                   final NavigationView.Presenter.Appearance appearance) {
             this.searchSvc = searchService;

@@ -255,13 +255,11 @@ public class UserInfo {
 
     public void setAuthRedirects(Map<String, String> redirects) {
         if (session == null) {
-            Session newSession = factory.session().as();
-            newSession.setAuthRedirects(redirects);
-            session = newSession;
+            session = factory.session().as();
         } else {
-            session.setAuthRedirects(redirects);
             session.setError(null);
         }
+        session.setAuthRedirects(redirects);
     }
 
     public Map<String, String> getAuthRedirects() {
