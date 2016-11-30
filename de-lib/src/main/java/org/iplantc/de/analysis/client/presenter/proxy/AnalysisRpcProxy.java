@@ -4,6 +4,7 @@ import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.shared.AnalysisCallback;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -20,7 +21,7 @@ import com.sencha.gxt.data.shared.loader.PagingLoadResultBean;
  * 
  */
 public class AnalysisRpcProxy extends RpcProxy<FilterPagingLoadConfig, PagingLoadResult<Analysis>> {
-    private class GetAnalysesCallback implements AsyncCallback<PagingLoadResultBean<Analysis>> {
+    private class GetAnalysesCallback extends AnalysisCallback<PagingLoadResultBean<Analysis>> {
         private final AsyncCallback<PagingLoadResult<Analysis>> callback;
 
         public GetAnalysesCallback(AsyncCallback<PagingLoadResult<Analysis>> callback) {
@@ -33,7 +34,7 @@ public class AnalysisRpcProxy extends RpcProxy<FilterPagingLoadConfig, PagingLoa
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             ErrorHandler.post(appearance.analysesRetrievalFailure(), caught);
             callback.onFailure(caught);
         }

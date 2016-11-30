@@ -16,10 +16,10 @@ import org.iplantc.de.client.models.analysis.sharing.AnalysisUnsharingRequestLis
 import org.iplantc.de.client.models.apps.integration.ArgumentType;
 import org.iplantc.de.client.models.apps.integration.SelectionItem;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
-import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
-import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
+import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.util.AppTemplateUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.BaseServiceCallWrapper;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
@@ -32,7 +32,6 @@ import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
@@ -57,10 +56,10 @@ import java.util.Set;
  */
 public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
 
-    private class StringListAsyncCallbackConverter extends AsyncCallbackConverter<String, List<AnalysisParameter>> {
+    private class StringListAsyncCallbackConverter extends DECallbackConverter<String, List<AnalysisParameter>> {
         private final AnalysesAutoBeanFactory factory;
 
-        public StringListAsyncCallbackConverter(AsyncCallback<List<AnalysisParameter>> callback, AnalysesAutoBeanFactory factory) {
+        public StringListAsyncCallbackConverter(DECallback<List<AnalysisParameter>> callback, AnalysesAutoBeanFactory factory) {
             super(callback);
             this.factory = factory;
         }
@@ -131,11 +130,11 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
     }
     
     private class StringAnalaysisStepInfoConverter extends
-                                                  AsyncCallbackConverter<String, AnalysisStepsInfo> {
+                                                  DECallbackConverter<String, AnalysisStepsInfo> {
 
         private final AnalysesAutoBeanFactory factory;
 
-        public StringAnalaysisStepInfoConverter(AsyncCallback<AnalysisStepsInfo> callback,
+        public StringAnalaysisStepInfoConverter(DECallback<AnalysisStepsInfo> callback,
                                                 AnalysesAutoBeanFactory factory) {
             super(callback);
             this.factory = factory;
@@ -173,7 +172,7 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
      * @param callback executed when RPC call completes.
      */
     @Override
-    public void getAnalyses(final FilterPagingLoadConfig loadConfig, AsyncCallback<PagingLoadResultBean<Analysis>> callback) {
+    public void getAnalyses(final FilterPagingLoadConfig loadConfig, DECallback<PagingLoadResultBean<Analysis>> callback) {
         StringBuilder address = new StringBuilder(ANALYSES);
 
 
@@ -228,7 +227,7 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
         }
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address.toString());
-        deServiceFacade.getServiceData(wrapper, new AsyncCallbackConverter<String, PagingLoadResultBean<Analysis>>(callback) {
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, PagingLoadResultBean<Analysis>>(callback) {
 
             @Override
             protected PagingLoadResultBean<Analysis> convertFrom(String object) {
@@ -240,7 +239,7 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
     }
 
     @Override
-    public void deleteAnalyses(List<Analysis> analysesToBeDeleted, AsyncCallback<String> callback) {
+    public void deleteAnalyses(List<Analysis> analysesToBeDeleted, DECallback<String> callback) {
         String address = ANALYSES + "/shredder"; //$NON-NLS-1$ //$NON-NLS-2$
         final Splittable stringIdListSplittable = diskResourceUtil.createStringIdListSplittable(analysesToBeDeleted);
         final Splittable payload = StringQuoter.createSplittable();
@@ -251,17 +250,22 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
     }
 
     @Override
-    public void renameAnalysis(Analysis analysis, String newName, AsyncCallback<Void> callback) {
+    public void renameAnalysis(Analysis analysis, String newName, DECallback<Void> callback) {
         String address = ANALYSES + "/" + analysis.getId();
         Splittable body = StringQuoter.createSplittable();
         StringQuoter.create(newName).assign(body, "name");
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(PATCH, address, body.getPayload());
-        deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, Void>(callback) {
+            @Override
+            protected Void convertFrom(String object) {
+                return null;
+            }
+        });
     }
 
     @Override
-    public void stopAnalysis(Analysis analysis, AsyncCallback<String> callback) {
+    public void stopAnalysis(Analysis analysis, DECallback<String> callback) {
         String address = ANALYSES + "/" + analysis.getId() + "/stop";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, "{}");
@@ -270,7 +274,7 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
     }
 
     @Override
-    public void getAnalysisParams(Analysis analysis, AsyncCallback<List<AnalysisParameter>> callback) {
+    public void getAnalysisParams(Analysis analysis, DECallback<List<AnalysisParameter>> callback) {
         String address = ANALYSES + "/" + analysis.getId() + "/parameters";
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
 
@@ -278,17 +282,22 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
     }
 
     @Override
-    public void updateAnalysisComments(final Analysis analysis, final String newComment, AsyncCallback<Void> callback) {
+    public void updateAnalysisComments(final Analysis analysis, final String newComment, DECallback<Void> callback) {
         String address = ANALYSES + "/" + analysis.getId();
         Splittable body = StringQuoter.createSplittable();
         StringQuoter.create(newComment).assign(body, "description");
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(PATCH, address, body.getPayload());
-        deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, Void>(callback) {
+            @Override
+            protected Void convertFrom(String object) {
+                return null;
+            }
+        });
     }
 
     @Override
-    public void getAnalysisSteps(Analysis analysis, AsyncCallback<AnalysisStepsInfo> callback) {
+    public void getAnalysisSteps(Analysis analysis, DECallback<AnalysisStepsInfo> callback) {
         String address = ANALYSES + "/" + analysis.getId() + "/steps";
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deServiceFacade.getServiceData(wrapper, new StringAnalaysisStepInfoConverter(callback, factory));
@@ -296,7 +305,7 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
     }
 
     @Override
-    public void shareAnalyses(AnalysisSharingRequestList request, AsyncCallback<String> callback) {
+    public void shareAnalyses(AnalysisSharingRequestList request, DECallback<String> callback) {
         final String payload = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request)).getPayload();
         GWT.log("analyis sharing request:" + payload);
         String address = ANALYSES + "/" + "sharing";
@@ -305,7 +314,7 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
     }
 
     @Override
-    public void unshareAnalyses(AnalysisUnsharingRequestList request, AsyncCallback<String> callback) {
+    public void unshareAnalyses(AnalysisUnsharingRequestList request, DECallback<String> callback) {
         final String payload = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request)).getPayload();
         GWT.log("analysis un-sharing request:" + payload);
         String address = ANALYSES + "/" + "unsharing";
@@ -314,7 +323,7 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
     }
 
     @Override
-    public void getPermissions(List<Analysis> analyses, AsyncCallback<String> callback) {
+    public void getPermissions(List<Analysis> analyses, DECallback<String> callback) {
         Splittable anaObj = StringQuoter.createSplittable();
         Splittable idArr = StringQuoter.createIndexed();
 
