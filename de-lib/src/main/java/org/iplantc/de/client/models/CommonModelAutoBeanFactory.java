@@ -23,4 +23,6 @@ public interface CommonModelAutoBeanFactory extends AutoBeanFactory {
     AutoBean<UserSession> userSession();
 
     AutoBean<StructuredText> getStructuredText();
+
+    AutoBean<RootLevelMap> rootLevelMap();
 }

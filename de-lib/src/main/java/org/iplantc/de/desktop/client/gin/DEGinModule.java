@@ -95,6 +95,11 @@ public class DEGinModule extends AbstractGinModule {
         return ServicesInjector.INSTANCE.getDeployedComponentServices();
     }
 
+    @Provides
+    public OauthServiceFacade createOauthServices() {
+        return ServicesInjector.INSTANCE.getOauthService();
+    }
+
     //</editor-fold>
 
     @Provides @Singleton public NotifyInfo createNotifyInfo() {
