@@ -78,6 +78,15 @@ public class DECallbackWrapper<T> implements AsyncCallback<T>, SelectEvent.Selec
 
         LOG.log(Level.SEVERE, "Status code: " + statusCode + "; Response : " + response, caught);
 
+        if (statusCode == HttpStatus.SC_BAD_GATEWAY ||
+            statusCode == HttpStatus.SC_SERVICE_UNAVAILABLE) {
+            retry = true;
+            EventBus.getInstance().fireEvent(new ServiceDown(callback.getWindowType(), this));
+            return;
+        }
+
+        EventBus.getInstance().fireEvent(new ServiceRestored(callback.getWindowType()));
+
         if (statusCode >= 300 && statusCode <= 399 && !Strings.isNullOrEmpty(uri)) {
             if (statusCode == HttpStatus.SC_MOVED_TEMPORARILY) {
                 EventBus.getInstance().fireEvent(new UserLoggedOutEvent());
@@ -90,12 +99,7 @@ public class DECallbackWrapper<T> implements AsyncCallback<T>, SelectEvent.Selec
             EventBus.getInstance().fireEvent(new UserLoggedOutEvent());
             return;
         }
-        if (statusCode == HttpStatus.SC_BAD_GATEWAY ||
-            statusCode == HttpStatus.SC_SERVICE_UNAVAILABLE) {
-            retry = true;
-            EventBus.getInstance().fireEvent(new ServiceDown(callback.getWindowType(), this));
-            return;
-        }
+
         callback.onFailure(statusCode, caught);
 
     }
