@@ -30,7 +30,6 @@ import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.services.AppBuilderMetadataServiceFacade;
 import org.iplantc.de.client.services.AppTemplateServices;
 import org.iplantc.de.client.services.converters.AppTemplateCallbackConverter;
-import org.iplantc.de.client.services.converters.AppTemplateDECallbackConverter;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.impl.models.AnalysisSubmissionResponse;
 import org.iplantc.de.client.util.AppTemplateUtils;
@@ -118,7 +117,7 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
         deServiceFacade.getServiceData(wrapper,
                                        mdcMap,
-                                       new AppTemplateDECallbackConverter(factory, callback));
+                                       new AppTemplateCallbackConverter(factory, callback));
     }
 
     @Override
@@ -135,7 +134,7 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
         deServiceFacade.getServiceData(wrapper,
                                        mdcMap,
-                                       new AppTemplateDECallbackConverter(factory, callback));
+                                       new AppTemplateCallbackConverter(factory, callback));
     }
 
     @Override
@@ -185,7 +184,7 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
     }
 
     @Override
-    public void rerunAnalysis(HasId analysisId, String appId, AsyncCallback<AppTemplate> callback) {
+    public void rerunAnalysis(HasId analysisId, String appId, DECallback<AppTemplate> callback) {
         String address = ANALYSES + "/" + analysisId.getId() + "/relaunch-info";
         HashMap<String, String> mdcMap = Maps.newHashMap();
         mdcMap.put(METRIC_TYPE_KEY, APP_EVENT);
@@ -204,7 +203,7 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
         String address = APPS + "/" + at.getSystemId() + "/" + at.getId();
         Splittable split = appTemplateToSplittable(at);
         ServiceCallWrapper wrapper = new ServiceCallWrapper(PUT, address, split.getPayload());
-        deServiceFacade.getServiceData(wrapper, new AppTemplateDECallbackConverter(factory, callback));
+        deServiceFacade.getServiceData(wrapper, new AppTemplateCallbackConverter(factory, callback));
     }
 
     @Override
@@ -212,7 +211,7 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
         String address = APPS + "/" + deClientConstants.deSystemId();
         Splittable split = appTemplateToSplittable(at);
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, split.getPayload());
-        deServiceFacade.getServiceData(wrapper, new AppTemplateDECallbackConverter(factory, callback));
+        deServiceFacade.getServiceData(wrapper, new AppTemplateCallbackConverter(factory, callback));
     }
 
     @Override
@@ -220,7 +219,7 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
         String address = APPS +  "/" + at.getSystemId() + "/" + at.getId();
         Splittable split = appTemplateToSplittable(at);
         ServiceCallWrapper wrapper = new ServiceCallWrapper(PATCH, address, split.getPayload());
-        deServiceFacade.getServiceData(wrapper, new AppTemplateDECallbackConverter(factory, callback));
+        deServiceFacade.getServiceData(wrapper, new AppTemplateCallbackConverter(factory, callback));
     }
 
     Splittable appTemplateToSplittable(AppTemplate at) {

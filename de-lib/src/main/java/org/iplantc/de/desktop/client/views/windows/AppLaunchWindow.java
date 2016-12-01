@@ -9,7 +9,7 @@ import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.services.AppTemplateServices;
-import org.iplantc.de.client.services.converters.AppTemplateDECallbackConverter;
+import org.iplantc.de.client.services.converters.AppTemplateCallbackConverter;
 import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -24,7 +24,6 @@ import org.iplantc.de.resources.client.messages.IplantErrorStrings;
 import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.base.Strings;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
@@ -36,7 +35,7 @@ import com.sencha.gxt.widget.core.client.container.SimpleContainer;
  */
 public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchEventHandler {
 
-    private final class AppTemplateCallback implements AsyncCallback<AppTemplate> {
+    private final class AppTemplateCallback extends AppsCallback<AppTemplate> {
         private final IplantErrorStrings errorStrings;
         private final AppLaunchView.Presenter presenter1;
 
@@ -47,7 +46,7 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             AppLaunchWindow.this.clear();
             ErrorHandler.post(errorStrings.unableToRetrieveWorkflowGuide(), caught);
         }
@@ -178,7 +177,7 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
 
         sc.mask(displayStrings.loadingMask());
         if (config.getAppTemplate() != null) {
-            AppTemplateDECallbackConverter cnvt = new AppTemplateDECallbackConverter(
+            AppTemplateCallbackConverter cnvt = new AppTemplateCallbackConverter(
                     factory,
                     new AppsCallback<AppTemplate>() {
 

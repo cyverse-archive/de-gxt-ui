@@ -9,9 +9,9 @@ import org.iplantc.de.client.models.apps.integration.ArgumentValidator;
 import org.iplantc.de.client.models.apps.integration.SelectionItem;
 import org.iplantc.de.client.models.apps.integration.SelectionItemGroup;
 import org.iplantc.de.client.util.AppTemplateUtils;
+import org.iplantc.de.shared.DECallback;
 
 import com.google.common.collect.Lists;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
@@ -23,13 +23,13 @@ import java.util.List;
 /**
  * @author jstroot
  */
-public class AppTemplateCallbackConverter extends AsyncCallbackConverter<String, AppTemplate> {
+public class AppTemplateCallbackConverter extends DECallbackConverter<String, AppTemplate> {
 
     private final AppTemplateAutoBeanFactory factory;
     private final AppTemplateUtils appTemplateUtils;
 
     public AppTemplateCallbackConverter(AppTemplateAutoBeanFactory factory,
-                                        AsyncCallback<AppTemplate> callback) {
+                                        DECallback<AppTemplate> callback) {
         super(callback);
         this.factory = factory;
         appTemplateUtils = AppTemplateUtils.getInstance();

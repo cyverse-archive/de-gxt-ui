@@ -23,12 +23,11 @@ import org.iplantc.de.client.models.apps.sharing.AppSharingRequestList;
 import org.iplantc.de.client.models.apps.sharing.AppUnSharingRequestList;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.services.converters.AppCategoryListCallbackConverter;
-import org.iplantc.de.client.services.converters.AppTemplateDECallbackConverter;
+import org.iplantc.de.client.services.converters.AppTemplateCallbackConverter;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
-import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.BaseServiceCallWrapper.Type;
 import org.iplantc.de.shared.services.DiscEnvApiService;
@@ -306,7 +305,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
         // KLUDGE Have to send empty JSON body with POST request
         Splittable split = StringQuoter.createSplittable();
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, split.getPayload());
-        deServiceFacade.getServiceData(wrapper, new AppTemplateDECallbackConverter(templateAutoBeanFactory, callback));
+        deServiceFacade.getServiceData(wrapper, new AppTemplateCallbackConverter(templateAutoBeanFactory, callback));
     }
 
     private AutoBean<AppDeletionRequest> appsToAppDeletionRequest(final List<App> apps) {

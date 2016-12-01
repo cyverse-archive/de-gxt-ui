@@ -15,7 +15,7 @@ import org.iplantc.de.client.models.apps.integration.ArgumentGroup;
 import org.iplantc.de.client.models.errorHandling.SimpleServiceError;
 import org.iplantc.de.client.services.AppTemplateServices;
 import org.iplantc.de.client.services.ToolServices;
-import org.iplantc.de.client.services.converters.AppTemplateDECallbackConverter;
+import org.iplantc.de.client.services.converters.AppTemplateCallbackConverter;
 import org.iplantc.de.client.util.AppTemplateUtils;
 import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -221,8 +221,8 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
             init(final AppsEditorView.Presenter presenter, final AppsIntegrationWindowConfig config) {
         if (config.getAppTemplate() != null) {
             // JDS Use converter for convenience.
-            AppTemplateDECallbackConverter at = new AppTemplateDECallbackConverter(factory,
-                                                                                 new AppsCallback<AppTemplate>() {
+            AppTemplateCallbackConverter at = new AppTemplateCallbackConverter(factory,
+                                                                               new AppsCallback<AppTemplate>() {
 
                                                                                    @Override
                                                                                    public void

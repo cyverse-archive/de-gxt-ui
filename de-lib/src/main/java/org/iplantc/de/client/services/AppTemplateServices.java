@@ -54,7 +54,7 @@ public interface AppTemplateServices {
      * @param appId
      * @param callback
      */
-    void rerunAnalysis(HasId analysisId, String appId, AsyncCallback<AppTemplate> callback);
+    void rerunAnalysis(HasId analysisId, String appId, DECallback<AppTemplate> callback);
 
     /**
      * Performs an initial publishing of new AppTemplates to the database, or updates of existing ones
