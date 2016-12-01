@@ -139,14 +139,6 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
     }
 
     @Override
-    public void getAppTemplatePreview(AppTemplate at, AsyncCallback<AppTemplate> callback) {
-        String address = deProperties.getUnproctedMuleServiceBaseUrl() + "preview-template";
-        Splittable split = appTemplateToSplittable(at);
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, split.getPayload());
-        deServiceFacade.getServiceData(wrapper, new AppTemplateCallbackConverter(factory, callback));
-    }
-
-    @Override
     public void getDataSources(AsyncCallback<List<DataSource>> callback) {
         if (!dataSourceList.isEmpty()) {
             callback.onSuccess(dataSourceList);

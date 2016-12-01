@@ -37,15 +37,7 @@ public interface AppTemplateServices {
      * @param callback
      */
     void getAppTemplateForEdit(HasId appId, DECallback<AppTemplate> callback);
-
-    /**
-     * Retrieves a UI preview of the given <code>AppTemplate</code>.
-     * 
-     * @param at the <code>AppTemplate</code> for which the preview should be produced.
-     * @param callback
-     */
-    void getAppTemplatePreview(AppTemplate at, AsyncCallback<AppTemplate> callback);
-
+    
     /**
      * Launches an analysis using the given <code>AppTemplate</code> and <code>JobExecution</code>
      * objects. The service call will construct the expected JSON using the two objects.
