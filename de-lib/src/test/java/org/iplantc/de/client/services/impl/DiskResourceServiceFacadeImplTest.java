@@ -1,27 +1,36 @@
 package org.iplantc.de.client.services.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
+
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.events.diskResources.FolderRefreshedEvent;
-import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.Folder;
-import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
+import org.iplantc.de.client.services.converters.DECallbackConverter;
+import org.iplantc.de.shared.DECallback;
+import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
 import com.google.common.collect.Lists;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 
@@ -40,7 +49,9 @@ public class DiskResourceServiceFacadeImplTest {
     @Mock DiskResourceAutoBeanFactory drAutoBeanFactoryMock;
     @Mock UserInfo userInfoMock;
     @Mock EventBus eventBusMock;
-    @Mock AsyncCallback<List<Folder>> folderListCallbackMock;
+    @Mock DECallback<List<Folder>> folderListCallbackMock;
+
+    @Captor ArgumentCaptor<DECallback<List<Folder>>> folderListCallbackCaptor;
 
 
     @Before public void setup() {
@@ -60,7 +71,7 @@ public class DiskResourceServiceFacadeImplTest {
             public void removeChildren(Folder parent){
 
             }
-            public void getSubFolders(Folder parent, AsyncCallback<List<Folder>> callback){
+            public void getSubFolders(Folder parent, DECallback<List<Folder>> callback){
                 callback.onSuccess(Lists.<Folder>newArrayList());
             }
         });
@@ -95,8 +106,8 @@ public class DiskResourceServiceFacadeImplTest {
 
             public void removeChildren(Folder parent){ }
 
-            public void getSubFolders(Folder parent, AsyncCallback<List<Folder>> callback){
-                callback.onFailure(throwableMock);
+            public void getSubFolders(Folder parent, DECallback<List<Folder>> callback){
+                callback.onFailure(500, throwableMock);
             }
         });
         spy.eventBus = eventBusMock;
@@ -108,7 +119,9 @@ public class DiskResourceServiceFacadeImplTest {
         verify(spy).removeChildren(eq(folderMock));
         verify(folderMock).setFolders(Matchers.<List<Folder>>eq(null));
 
-        verify(folderListCallbackMock).onFailure(eq(throwableMock));
+        verify(spy).getSubFolders(eq(folderMock), folderListCallbackCaptor.capture());
+
+        verify(folderListCallbackMock).onFailure(anyInt(), eq(throwableMock));
         verifyZeroInteractions(eventBusMock);
     }
 
@@ -155,7 +168,7 @@ public class DiskResourceServiceFacadeImplTest {
         spy.getSubFolders(folderMock, folderListCallbackMock);
 
         verify(spy).callService(any(ServiceCallWrapper.class),
-                                Matchers.<AsyncCallbackConverter<String, List<Folder>>>any());
+                                Matchers.<DECallbackConverter<String, List<Folder>>>any());
         verify(folderListCallbackMock, never()).onSuccess(Matchers.<List<Folder>>any());
     }
 }
