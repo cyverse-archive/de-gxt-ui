@@ -185,7 +185,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Inject
     JsonUtil jsonUtil;
 
-    private AnalysisFilter currentFilter;
+    AnalysisFilter currentFilter;
 
     private final ListStore<Analysis> listStore;
 
@@ -201,7 +201,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                           final EventBus eventBus) {
         this.listStore = listStore;
         this.eventBus = eventBus;
-        loader = new PagingLoader<>(proxy);
+        loader = getPagingLoader(proxy);
         loader.useLoadConfig(new FilterPagingLoadConfigBean());
         loader.setRemoteSort(true);
         loader.setReuseLoadConfig(true);
@@ -219,6 +219,10 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Override
     public void onShareSupportSelected(List<Analysis> currentSelection, boolean shareWithInput) {
 
+    }
+
+    PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> getPagingLoader(AnalysisRpcProxy proxy) {
+        return new PagingLoader<>(proxy);
     }
 
     @Override
@@ -255,7 +259,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
             return;
         }
 
-        ArrayList<Analysis> selectNow = Lists.newArrayList();
+        ArrayList<Analysis> selectNow = getNewAnalysisList();
 
         for (Analysis select : selectedAnalyses) {
             Analysis storeModel = listStore.findModel(select);
@@ -270,6 +274,10 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         } else {
             view.setSelectedAnalyses(selectNow);
         }
+    }
+
+    ArrayList<Analysis> getNewAnalysisList() {
+        return Lists.newArrayList();
     }
 
     @Override
@@ -291,8 +299,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         FilterPagingLoadConfig config = loader.getLastLoadConfig();
         config.getFilters().clear();
 
-        FilterConfigBean idParentFilter = new FilterConfigBean();
-        FilterConfigBean filterCb = new FilterConfigBean();
+        FilterConfigBean idParentFilter = getFilterConfigBean();
+        FilterConfigBean filterCb = getFilterConfigBean();
 
         idParentFilter.setField(AnalysisSearchField.PARENT_ID);
         filterCb.setField("ownership");
@@ -319,6 +327,10 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         config.setLimit(200);
         config.setOffset(0);
         loader.load(config);
+    }
+
+    FilterConfigBean getFilterConfigBean() {
+        return new FilterConfigBean();
     }
 
     @Override
@@ -427,12 +439,16 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
             @Override
             public void onSuccess(AnalysisStepsInfo result) {
-                AnalysisStepsInfoDialog asid = new AnalysisStepsInfoDialog(analysisStepView);
+                AnalysisStepsInfoDialog asid = getAnalysisStepsDialog();
                 asid.show();
                 analysisStepView.clearData();
                 analysisStepView.setData(result.getSteps());
             }
         });
 
+    }
+
+    AnalysisStepsInfoDialog getAnalysisStepsDialog() {
+        return new AnalysisStepsInfoDialog(analysisStepView);
     }
 }
