@@ -5,15 +5,17 @@ import org.iplantc.de.client.models.WindowType;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 
+import java.util.List;
+
 /**
  * @author aramsey
  */
 public class ServiceRestored extends GwtEvent<ServiceRestored.ServiceRestoredHandler> {
     public static Type<ServiceRestoredHandler> TYPE = new Type<ServiceRestoredHandler>();
-    private WindowType windowType;
+    private List<WindowType> windowTypes;
 
-    public ServiceRestored(WindowType windowType) {
-        this.windowType = windowType;
+    public ServiceRestored(List<WindowType> windowTypes) {
+        this.windowTypes = windowTypes;
     }
 
     public Type<ServiceRestoredHandler> getAssociatedType() {
@@ -24,8 +26,8 @@ public class ServiceRestored extends GwtEvent<ServiceRestored.ServiceRestoredHan
         handler.onServiceRestored(this);
     }
 
-    public WindowType getWindowType() {
-        return windowType;
+    public List<WindowType> getWindowTypes() {
+        return windowTypes;
     }
 
     public static interface ServiceRestoredHandler extends EventHandler {

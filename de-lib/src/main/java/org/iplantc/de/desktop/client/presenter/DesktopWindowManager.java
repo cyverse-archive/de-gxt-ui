@@ -176,22 +176,26 @@ public class DesktopWindowManager {
     }
 
     public void serviceDown(ServiceDown event) {
-        WindowType type = event.getWindowType();
+        List<WindowType> types = event.getWindowTypes();
         for (Widget w : windowManager.getStack()) {
-            Window window = (Window) w;
-            if (Strings.nullToEmpty(window.getStateId()).startsWith(type.toString())) {
-                IPlantWindowInterface windowInterface = (IPlantWindowInterface)window;
-                windowInterface.serviceDown(event.getSelectionHandler());
+            Window window = (Window)w;
+            for (WindowType type : types) {
+                if (Strings.nullToEmpty(window.getStateId()).startsWith(type.toString())) {
+                    IPlantWindowInterface windowInterface = (IPlantWindowInterface)window;
+                    windowInterface.serviceDown(event.getSelectionHandler());
+                }
             }
         }
     }
 
-    public void serviceUp(WindowType windowType) {
+    public void serviceUp(List<WindowType> windowTypes) {
         for (Widget w : windowManager.getStack()) {
-            Window window = (Window) w;
-            if (Strings.nullToEmpty(window.getStateId()).startsWith(windowType.toString())) {
-                IPlantWindowInterface windowInterface = (IPlantWindowInterface)window;
-                windowInterface.serviceUp();
+            Window window = (Window)w;
+            for (WindowType type : windowTypes) {
+                if (Strings.nullToEmpty(window.getStateId()).startsWith(type.toString())) {
+                    IPlantWindowInterface windowInterface = (IPlantWindowInterface)window;
+                    windowInterface.serviceUp();
+                }
             }
         }
     }

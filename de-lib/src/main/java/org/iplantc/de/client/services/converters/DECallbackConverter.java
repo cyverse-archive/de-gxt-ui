@@ -3,6 +3,8 @@ package org.iplantc.de.client.services.converters;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.shared.DECallback;
 
+import java.util.List;
+
 /**
  * @author aramsey
  */
@@ -25,8 +27,8 @@ public abstract class DECallbackConverter<F, T> implements DECallback<F> {
     }
 
     @Override
-    public WindowType getWindowType() {
-        return callback.getWindowType();
+    public List<WindowType> getWindowTypes() {
+        return callback.getWindowTypes();
     }
 
     /**

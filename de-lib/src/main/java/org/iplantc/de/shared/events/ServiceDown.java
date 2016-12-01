@@ -7,16 +7,18 @@ import com.google.gwt.event.shared.GwtEvent;
 
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
+import java.util.List;
+
 /**
  * @author aramsey
  */
 public class ServiceDown extends GwtEvent<ServiceDown.ServiceDownHandler> {
     public static Type<ServiceDownHandler> TYPE = new Type<ServiceDownHandler>();
-    private WindowType windowType;
+    private List<WindowType> windowTypes;
     private SelectEvent.SelectHandler handler;
 
-    public ServiceDown(WindowType windowType, SelectEvent.SelectHandler handler) {
-        this.windowType = windowType;
+    public ServiceDown(List<WindowType> windowTypes, SelectEvent.SelectHandler handler) {
+        this.windowTypes = windowTypes;
         this.handler = handler;
     }
 
@@ -28,8 +30,8 @@ public class ServiceDown extends GwtEvent<ServiceDown.ServiceDownHandler> {
         handler.onServiceDown(this);
     }
 
-    public WindowType getWindowType() {
-        return windowType;
+    public List<WindowType> getWindowTypes() {
+        return windowTypes;
     }
 
     public SelectEvent.SelectHandler getSelectionHandler() {

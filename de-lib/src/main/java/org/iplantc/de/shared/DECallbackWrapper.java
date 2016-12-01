@@ -81,11 +81,11 @@ public class DECallbackWrapper<T> implements AsyncCallback<T>, SelectEvent.Selec
         if (statusCode == HttpStatus.SC_BAD_GATEWAY ||
             statusCode == HttpStatus.SC_SERVICE_UNAVAILABLE) {
             retry = true;
-            EventBus.getInstance().fireEvent(new ServiceDown(callback.getWindowType(), this));
+            EventBus.getInstance().fireEvent(new ServiceDown(callback.getWindowTypes(), this));
             return;
         }
 
-        EventBus.getInstance().fireEvent(new ServiceRestored(callback.getWindowType()));
+        EventBus.getInstance().fireEvent(new ServiceRestored(callback.getWindowTypes()));
 
         if (statusCode >= 300 && statusCode <= 399 && !Strings.isNullOrEmpty(uri)) {
             if (statusCode == HttpStatus.SC_MOVED_TEMPORARILY) {
@@ -107,7 +107,7 @@ public class DECallbackWrapper<T> implements AsyncCallback<T>, SelectEvent.Selec
     @Override
     public void onSuccess(T result) {
         if (retry) {
-            EventBus.getInstance().fireEvent(new ServiceRestored(callback.getWindowType()));
+            EventBus.getInstance().fireEvent(new ServiceRestored(callback.getWindowTypes()));
         }
         callback.onSuccess(result);
     }

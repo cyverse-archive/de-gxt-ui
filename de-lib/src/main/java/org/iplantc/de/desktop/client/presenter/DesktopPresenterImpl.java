@@ -424,7 +424,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }
 
     public void serviceUp(ServiceRestored event) {
-        desktopWindowManager.serviceUp(event.getWindowType());
+        desktopWindowManager.serviceUp(event.getWindowTypes());
     }
 
     @Override
