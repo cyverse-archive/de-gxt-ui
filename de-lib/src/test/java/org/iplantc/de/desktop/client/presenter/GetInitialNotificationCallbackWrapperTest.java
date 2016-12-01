@@ -30,7 +30,7 @@ import java.util.List;
  * @author aramsey
  */
 @RunWith(GwtMockitoTestRunner.class)
-public class GetInitialNotificationsCallbackTest {
+public class GetInitialNotificationCallbackWrapperTest {
 
     @Mock DesktopView viewMock;
     @Mock DesktopView.Presenter.DesktopPresenterAppearance appearanceMock;

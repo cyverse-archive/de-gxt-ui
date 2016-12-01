@@ -6,7 +6,7 @@ import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.services.MessageServiceFacade;
-import org.iplantc.de.client.services.callbacks.NotificationCallback;
+import org.iplantc.de.client.services.callbacks.NotificationCallbackWrapper;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -24,6 +24,7 @@ import org.iplantc.de.notifications.client.gin.factory.NotificationViewFactory;
 import org.iplantc.de.notifications.client.model.NotificationMessageProperties;
 import org.iplantc.de.notifications.client.views.NotificationToolbarView;
 import org.iplantc.de.notifications.client.views.NotificationView;
+import org.iplantc.de.shared.NotificationCallback;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.json.client.JSONArray;
@@ -69,18 +70,18 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
                                                   NotificationToolbarMarkAsSeenClickedEvent.NotificationToolbarMarkAsSeenClickedEventHandler
                                                  {
 
-    private final class NotificationServiceCallback extends NotificationCallback {
+    private final class NotificationsServiceCallback extends NotificationCallbackWrapper {
         private final AsyncCallback<PagingLoadResult<NotificationMessage>> callback;
         private final PagingLoadConfig loadConfig;
 
-        private NotificationServiceCallback(PagingLoadConfig loadConfig,
-                                            AsyncCallback<PagingLoadResult<NotificationMessage>> callback) {
+        private NotificationsServiceCallback(PagingLoadConfig loadConfig,
+                                             AsyncCallback<PagingLoadResult<NotificationMessage>> callback) {
             this.loadConfig = loadConfig;
             this.callback = callback;
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             ErrorHandler.post(caught);
         }
 
@@ -219,10 +220,10 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
     @Override
     public void onNotificationToolbarDeleteAllClicked(NotificationToolbarDeleteAllClickedEvent event) {
         view.mask();
-        messageServiceFacade.deleteAll(currentCategory, new AsyncCallback<String>() {
+        messageServiceFacade.deleteAll(currentCategory, new NotificationCallback<String>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
                 view.unmask();
             }
@@ -256,9 +257,9 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
             }
             obj.put("uuids", arr);
 
-            messageServiceFacade.deleteMessages(obj, new AsyncCallback<String>() {
+            messageServiceFacade.deleteMessages(obj, new NotificationCallback<String>() {
                 @Override
-                public void onFailure(Throwable caught) {
+                public void onFailure(Integer statusCode, Throwable caught) {
                     ErrorHandler.post(appearance.notificationDeleteFail(), caught);
                 }
 
@@ -281,9 +282,9 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
             ids.add(n);
         }
 
-        messageServiceFacade.markAsSeen(ids, new AsyncCallback<String>() {
+        messageServiceFacade.markAsSeen(ids, new NotificationCallback<String>() {
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                announcer.schedule(new ErrorAnnouncementConfig(
                                        appearance.notificationMarkAsSeenFail()));
             }
@@ -346,7 +347,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
                                               "" :
                                               loadConfig.getFilters().get(0).getField().toLowerCase(),
                                               loadConfig.getSortInfo().get(0).getSortDir().toString(),
-                                              new NotificationServiceCallback(loadConfig, callback));
+                                              new NotificationsServiceCallback(loadConfig, callback));
             }
 
      };

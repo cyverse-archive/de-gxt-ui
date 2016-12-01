@@ -59,6 +59,7 @@ import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
 import org.iplantc.de.notifications.client.utils.NotifyInfo;
 import org.iplantc.de.notifications.client.views.dialogs.RequestHistoryDialog;
 import org.iplantc.de.shared.DEProperties;
+import org.iplantc.de.shared.NotificationCallback;
 import org.iplantc.de.shared.events.ServiceDown;
 import org.iplantc.de.shared.events.ServiceRestored;
 import org.iplantc.de.shared.services.PropertyServiceAsync;
@@ -108,9 +109,9 @@ import java.util.Map;
  */
 public class DesktopPresenterImpl implements DesktopView.Presenter {
 
-    private final class NewSysMessageCountCallback implements AsyncCallback<Counts> {
+    private final class NewSysMessageCountCallback extends NotificationCallback<Counts> {
 		@Override
-		public void onFailure(Throwable caught) {
+		public void onFailure(Integer statusCode, Throwable caught) {
 			IplantAnnouncer.getInstance().schedule(new ErrorAnnouncementConfig(appearance.checkSysMessageError()));
 		}
 
@@ -357,9 +358,9 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
 
     @Override
     public void doMarkAllSeen(final boolean announce) {
-       messageServiceFacade.markAllNotificationsSeen(new AsyncCallback<Void>() {
+       messageServiceFacade.markAllNotificationsSeen(new NotificationCallback<Void>() {
            @Override
-           public void onFailure(Throwable caught) {
+           public void onFailure(Integer statusCode, Throwable caught) {
                errorHandlerProvider.get().post(caught);
            }
 
@@ -546,9 +547,9 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }
 
     public void markAsSeen(final NotificationMessage selectedItem) {
-        messageServiceFacade.markAsSeen(selectedItem, new AsyncCallback<String>() {
+        messageServiceFacade.markAsSeen(selectedItem, new NotificationCallback<String>() {
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 errorHandlerProvider.get().post(caught);
             }
 
@@ -568,10 +569,10 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
 
     private void getRequestStatusHistory(String id, NotificationCategory cat) {
         if (cat.equals(NotificationCategory.PERMANENTIDREQUEST)) {
-            messageServiceFacade.getPermanentIdRequestStatusHistory(id, new AsyncCallback<String>() {
+            messageServiceFacade.getPermanentIdRequestStatusHistory(id, new NotificationCallback<String>() {
 
                 @Override
-                public void onFailure(Throwable caught) {
+                public void onFailure(Integer statusCode, Throwable caught) {
                     IplantAnnouncer.getInstance()
                                    .schedule(new ErrorAnnouncementConfig(appearance.requestHistoryError()));
                 }

@@ -7,13 +7,12 @@ import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.notifications.NotificationList;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.models.notifications.payload.PayloadAnalysis;
-import org.iplantc.de.client.models.notifications.payload.PayloadApps;
 import org.iplantc.de.client.models.notifications.payload.PayloadAppsList;
 import org.iplantc.de.client.models.notifications.payload.PayloadData;
 import org.iplantc.de.client.util.CommonModelUtils;
+import org.iplantc.de.shared.NotificationCallback;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
@@ -26,7 +25,7 @@ import java.util.List;
  * @author jstroot
  *
  */
-public abstract class NotificationCallback implements AsyncCallback<String> {
+public abstract class NotificationCallbackWrapper extends NotificationCallback<String> {
 
     private final NotificationAutoBeanFactory notFactory = GWT.create(NotificationAutoBeanFactory.class);
     private List<Notification> notifications;

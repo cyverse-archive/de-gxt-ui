@@ -28,7 +28,7 @@ import java.util.List;
  * @author jstroot
  */
 @RunWith(GwtMockitoTestRunner.class)
-public class GetRecentNotificationsCallbackTest {
+public class GetRecentNotificationCallbackWrapperTest {
 
     @Mock IplantDisplayStrings displayStringsMock;
     @Mock NotificationAutoBeanFactory factoryMock;
