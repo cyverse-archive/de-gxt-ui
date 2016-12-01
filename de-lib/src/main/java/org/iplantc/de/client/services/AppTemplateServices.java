@@ -8,8 +8,6 @@ import org.iplantc.de.client.models.apps.integration.JobExecution;
 import org.iplantc.de.client.services.impl.models.AnalysisSubmissionResponse;
 import org.iplantc.de.shared.DECallback;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
 public interface AppTemplateServices {
 
     /**
@@ -18,7 +16,7 @@ public interface AppTemplateServices {
      * @param at the <code>AppTemplate</code> for which the command line preview will be generated.
      * @param callback
      */
-    void cmdLinePreview(AppTemplate at, AsyncCallback<String> callback);
+    void cmdLinePreview(AppTemplate at, DECallback<String> callback);
 
     /**
      * Retrieves an <code>AppTemplate</code> from the database for viewing.
@@ -46,7 +44,7 @@ public interface AppTemplateServices {
      * @param je contains necessary information for job submission
      * @param callback
      */
-    void launchAnalysis(AppTemplate at, JobExecution je, AsyncCallback<AnalysisSubmissionResponse> callback);
+    void launchAnalysis(AppTemplate at, JobExecution je, DECallback<AnalysisSubmissionResponse> callback);
 
     /**
      * Retrieves an <code>AppTemplate</code> with all of the values from the given analysisId.

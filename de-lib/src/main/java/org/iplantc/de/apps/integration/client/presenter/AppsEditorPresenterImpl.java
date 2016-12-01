@@ -732,10 +732,10 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
         // do not send integration dates
         cleaned.setPublishedDate(null);
 
-        atService.cmdLinePreview(cleaned, new AsyncCallback<String>() {
+        atService.cmdLinePreview(cleaned, new AppsCallback<String>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
             }
 

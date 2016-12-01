@@ -21,11 +21,11 @@ import org.iplantc.de.resources.client.constants.IplantValidationConstants;
 import org.iplantc.de.resources.client.messages.I18N;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsDisplayMessages;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsErrorMessages;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.base.Joiner;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
@@ -119,10 +119,10 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter, RequestA
     }
 
     private void launchAnalysis(final AppTemplate at, final JobExecution je) {
-        atServices.launchAnalysis(at, je, new AsyncCallback<AnalysisSubmissionResponse>() {
+        atServices.launchAnalysis(at, je, new AppsCallback<AnalysisSubmissionResponse>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 IplantAnnouncer.getInstance().schedule(new ErrorAnnouncementConfig(appsWidgetsErrMessages.launchAnalysisFailure(je.getName())));
                 ErrorHandler.post(I18N.ERROR.analysisFailedToLaunch(at.getName()), caught);
                 view.analysisLaunchFailed();

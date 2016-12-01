@@ -3,7 +3,23 @@ package org.iplantc.de.apps.widgets.client.view.editors;
 import org.iplantc.de.apps.widgets.client.gin.factory.ArgumentEditorGinFactory;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.ArgumentEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.*;
+import org.iplantc.de.apps.widgets.client.view.editors.arguments.DoubleInputEditor;
+import org.iplantc.de.apps.widgets.client.view.editors.arguments.DoubleSelectionEditor;
+import org.iplantc.de.apps.widgets.client.view.editors.arguments.EnvironmentVariableEditor;
+import org.iplantc.de.apps.widgets.client.view.editors.arguments.FileOutputEditor;
+import org.iplantc.de.apps.widgets.client.view.editors.arguments.FlagEditor;
+import org.iplantc.de.apps.widgets.client.view.editors.arguments.FolderOutputEditor;
+import org.iplantc.de.apps.widgets.client.view.editors.arguments.InfoEditor;
+import org.iplantc.de.apps.widgets.client.view.editors.arguments.IntegerInputEditor;
+import org.iplantc.de.apps.widgets.client.view.editors.arguments.IntegerSelectionEditor;
+import org.iplantc.de.apps.widgets.client.view.editors.arguments.MultiFileOutputEditor;
+import org.iplantc.de.apps.widgets.client.view.editors.arguments.MultiLineTextEditor;
+import org.iplantc.de.apps.widgets.client.view.editors.arguments.ReferenceAnnotationEditor;
+import org.iplantc.de.apps.widgets.client.view.editors.arguments.ReferenceGenomeEditor;
+import org.iplantc.de.apps.widgets.client.view.editors.arguments.ReferenceSequenceEditor;
+import org.iplantc.de.apps.widgets.client.view.editors.arguments.SampleArgumentEditor;
+import org.iplantc.de.apps.widgets.client.view.editors.arguments.TextInputEditor;
+import org.iplantc.de.apps.widgets.client.view.editors.arguments.TextSelectionEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.tree.TreeSelectionEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.client.models.apps.integration.Argument;
@@ -11,9 +27,9 @@ import org.iplantc.de.client.models.apps.refGenome.ReferenceGenome;
 import org.iplantc.de.client.services.AppBuilderMetadataServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.gwt.editor.client.EditorDelegate;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -177,10 +193,10 @@ public class ArgumentEditorFactoryImpl implements AppTemplateForm.ArgumentEditor
         if (refGenomeListStore == null) {
             refGenomeListStore = new ListStore<>(referenceGenomeProperties.id());
 
-            appMetadataService.getReferenceGenomes(new AsyncCallback<List<ReferenceGenome>>() {
+            appMetadataService.getReferenceGenomes(new AppsCallback<List<ReferenceGenome>>() {
 
                 @Override
-                public void onFailure(Throwable caught) {
+                public void onFailure(Integer statusCode, Throwable caught) {
                     ErrorHandler.post(caught);
                 }
 

@@ -30,10 +30,11 @@ import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.services.AppBuilderMetadataServiceFacade;
 import org.iplantc.de.client.services.AppTemplateServices;
 import org.iplantc.de.client.services.converters.AppTemplateCallbackConverter;
-import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
+import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.services.impl.models.AnalysisSubmissionResponse;
 import org.iplantc.de.client.util.AppTemplateUtils;
 import org.iplantc.de.client.util.JsonUtil;
+import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.ServiceFacadeLoggerConstants;
@@ -43,7 +44,6 @@ import org.iplantc.de.shared.services.ServiceCallWrapper;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
@@ -65,9 +65,9 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
     private final String ANALYSES = "org.iplantc.services.analyses";
 
     private final AppTemplateAutoBeanFactory factory;
-    private static final Queue<AsyncCallback<List<DataSource>>> dataSourceQueue = Lists.newLinkedList();
-    private static final Queue<AsyncCallback<List<FileInfoType>>> fileInfoTypeQueue = Lists.newLinkedList();
-    private static final Queue<AsyncCallback<List<ReferenceGenome>>> refGenQueue = Lists.newLinkedList();
+    private static final Queue<DECallback<List<DataSource>>> dataSourceQueue = Lists.newLinkedList();
+    private static final Queue<DECallback<List<FileInfoType>>> fileInfoTypeQueue = Lists.newLinkedList();
+    private static final Queue<DECallback<List<ReferenceGenome>>> refGenQueue = Lists.newLinkedList();
     private final List<DataSource> dataSourceList = Lists.newArrayList();
     private final List<FileInfoType> fileInfoTypeList = Lists.newArrayList();
 
@@ -96,7 +96,7 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
     }
 
     @Override
-    public void cmdLinePreview(AppTemplate at, AsyncCallback<String> callback) {
+    public void cmdLinePreview(AppTemplate at, DECallback<String> callback) {
         String address = APPS + "/" + deClientConstants.deSystemId() + "/arg-preview";
 
         AppTemplate cleaned = doCmdLinePreviewCleanup(at);
@@ -138,7 +138,7 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
     }
 
     @Override
-    public void getDataSources(AsyncCallback<List<DataSource>> callback) {
+    public void getDataSources(DECallback<List<DataSource>> callback) {
         if (!dataSourceList.isEmpty()) {
             callback.onSuccess(dataSourceList);
         } else {
@@ -147,7 +147,7 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
     }
 
     @Override
-    public void getFileInfoTypes(AsyncCallback<List<FileInfoType>> callback) {
+    public void getFileInfoTypes(DECallback<List<FileInfoType>> callback) {
         if (!fileInfoTypeList.isEmpty()) {
             callback.onSuccess(fileInfoTypeList);
         } else {
@@ -156,7 +156,7 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
     }
 
     @Override
-    public void getReferenceGenomes(AsyncCallback<List<ReferenceGenome>> callback) {
+    public void getReferenceGenomes(DECallback<List<ReferenceGenome>> callback) {
         if (!refGenList.isEmpty()) {
             callback.onSuccess(refGenList);
         } else {
@@ -165,7 +165,7 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
     }
 
     @Override
-    public void launchAnalysis(AppTemplate at, JobExecution je, AsyncCallback<AnalysisSubmissionResponse> callback) {
+    public void launchAnalysis(AppTemplate at, JobExecution je, DECallback<AnalysisSubmissionResponse> callback) {
         String address = ANALYSES;
         Splittable assembledPayload = doAssembleLaunchAnalysisPayload(at, je);
         HashMap<String, String> mdcMap = Maps.newHashMap();
@@ -175,7 +175,7 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
         mdcMap.put(ServiceFacadeLoggerConstants.ANALYSIS_OUTPUT_DIR, je.getOutputDirectory());
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, assembledPayload.getPayload());
-        deServiceFacade.getServiceData(wrapper, mdcMap, new AsyncCallbackConverter<String, AnalysisSubmissionResponse>(callback) {
+        deServiceFacade.getServiceData(wrapper, mdcMap, new DECallbackConverter<String, AnalysisSubmissionResponse>(callback) {
             @Override
             protected AnalysisSubmissionResponse convertFrom(String payload) {
                 return AutoBeanCodex.decode(factory, AnalysisSubmissionResponse.class, payload).as();
@@ -378,14 +378,14 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
         return copy;
     }
 
-    private void enqueueDataSourceCallback(final AsyncCallback<List<DataSource>> callback) {
+    private void enqueueDataSourceCallback(final DECallback<List<DataSource>> callback) {
         if (dataSourceQueue.isEmpty()) {
             String address = DATA_SOURCES;
             ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
-            deServiceFacade.getServiceData(wrapper, new AsyncCallback<String>() {
+            deServiceFacade.getServiceData(wrapper, new AppsCallback<String>() {
                 @Override
-                public void onFailure(Throwable caught) {
-                    callback.onFailure(caught);
+                public void onFailure(Integer statusCode, Throwable caught) {
+                    callback.onFailure(statusCode, caught);
                 }
 
                 @Override
@@ -404,16 +404,16 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
         dataSourceQueue.add(callback);
     }
 
-    private void enqueueFileInfoTypeCallback(final AsyncCallback<List<FileInfoType>> callback) {
+    private void enqueueFileInfoTypeCallback(final DECallback<List<FileInfoType>> callback) {
         if (fileInfoTypeQueue.isEmpty()) {
             String address = FILE_INFO_TYPES;
             ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
 
-            deServiceFacade.getServiceData(wrapper, new AsyncCallback<String>() {
+            deServiceFacade.getServiceData(wrapper, new AppsCallback<String>() {
 
                 @Override
-                public void onFailure(Throwable caught) {
-                    callback.onFailure(caught);
+                public void onFailure(Integer statusCode, Throwable caught) {
+                    callback.onFailure(statusCode, caught);
                 }
 
                 @Override
@@ -433,14 +433,14 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
 
     }
 
-    private void enqueueRefGenomeCallback(final AsyncCallback<List<ReferenceGenome>> callback) {
+    private void enqueueRefGenomeCallback(final DECallback<List<ReferenceGenome>> callback) {
         if (refGenQueue.isEmpty()) {
             String address = REFERENCE_GENOMES;
             ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
-            deServiceFacade.getServiceData(wrapper, new AsyncCallback<String>() {
+            deServiceFacade.getServiceData(wrapper, new AppsCallback<String>() {
                 @Override
-                public void onFailure(Throwable caught) {
-                    callback.onFailure(caught);
+                public void onFailure(Integer statusCode, Throwable caught) {
+                    callback.onFailure(statusCode, caught);
                 }
 
                 @Override

@@ -15,6 +15,7 @@ import org.iplantc.de.client.models.apps.integration.FileInfoType;
 import org.iplantc.de.client.models.apps.refGenome.ReferenceGenome;
 import org.iplantc.de.client.services.AppBuilderMetadataServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.editor.client.Editor;
@@ -214,9 +215,9 @@ public abstract class AbstractArgumentPropertyEditor extends Composite implement
                 updateDataSourceSelection(model);
             }
         });
-        appMetadataService.getDataSources(new AsyncCallback<List<DataSource>>() {
+        appMetadataService.getDataSources(new AppsCallback<List<DataSource>>() {
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
             }
     
@@ -253,10 +254,10 @@ public abstract class AbstractArgumentPropertyEditor extends Composite implement
                 updateFileInfoTypeSelection(model);
             }
         });
-        appMetadataService.getFileInfoTypes(new AsyncCallback<List<FileInfoType>>() {
+        appMetadataService.getFileInfoTypes(new AppsCallback<List<FileInfoType>>() {
     
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
             }
     
@@ -283,10 +284,10 @@ public abstract class AbstractArgumentPropertyEditor extends Composite implement
     protected ComboBox<ReferenceGenome> createReferenceGenomeStore(AppBuilderMetadataServiceFacade appMetadataService) {
         final ListStore<ReferenceGenome> refGenomeListStore = new ListStore<>(referenceGenomeProperties.id());
 
-        appMetadataService.getReferenceGenomes(new AsyncCallback<List<ReferenceGenome>>() {
+        appMetadataService.getReferenceGenomes(new AppsCallback<List<ReferenceGenome>>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
             }
 
