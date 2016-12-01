@@ -3,6 +3,7 @@ package org.iplantc.de.analysis.client.views.dialogs;
 
 import org.iplantc.de.analysis.client.views.status.HelpRendererTemplates;
 import org.iplantc.de.client.models.UserInfo;
+import org.iplantc.de.client.models.analysis.AnalysesAutoBeanFactory;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisExecutionStatus;
 
@@ -34,6 +35,9 @@ import java.util.Date;
  */
 public class AnalysisUserSupportDialog extends Window {
 
+    private TextArea comments;
+    private TextButton submitBtn;
+
     public interface AnalysisUserSupportAppearance {
 
         String outputUnexpected();
@@ -63,6 +67,8 @@ public class AnalysisUserSupportDialog extends Window {
     private AnalysisUserSupportAppearance appearance = GWT.create(AnalysisUserSupportAppearance.class);
     private VerticalLayoutContainer vlc;
     private TextButton needHelpButton;
+    private AnalysesAutoBeanFactory factory = GWT.create(AnalysesAutoBeanFactory.class);
+
 
     public AnalysisUserSupportDialog(Analysis selectedAnalysis) {
         needHelpButton = new TextButton(appearance.needHelp());
@@ -73,6 +79,7 @@ public class AnalysisUserSupportDialog extends Window {
             }
         });
         this.selectedAnalysis = selectedAnalysis;
+        submitBtn = new TextButton(appearance.submit());
         vlc = new VerticalLayoutContainer();
         vlc.getElement().getStyle().setBackgroundColor(appearance.backgroudColor());
         vlc.setScrollMode(ScrollSupport.ScrollMode.AUTO);
@@ -185,7 +192,7 @@ public class AnalysisUserSupportDialog extends Window {
                                                         new Date(selectedAnalysis.getStartDate()),
                                                         new Date(selectedAnalysis.getEndDate()),
                                                         UserInfo.getInstance().getUserProfile())));
-        TextArea comments = new TextArea();
+        comments = new TextArea();
         FieldLabel commentsLbl = new FieldLabel(comments, appearance.comments());
         commentsLbl.setLabelAlign(FormPanel.LabelAlign.TOP);
         vlc.add(commentsLbl, new VerticalLayoutContainer.VerticalLayoutData(1, 100, new Margins(10)));
@@ -195,7 +202,6 @@ public class AnalysisUserSupportDialog extends Window {
         approvalChkBox.setBoxLabel(appearance.agreeToShare());
         vlc.add(approvalChkBox, new VerticalLayoutContainer.VerticalLayoutData(1, -1, new Margins(10)));
 
-        TextButton submitBtn = new TextButton(appearance.submit());
         submitBtn.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
@@ -212,6 +218,15 @@ public class AnalysisUserSupportDialog extends Window {
                 new VerticalLayoutContainer.VerticalLayoutData(-1, -1, new Margins(20, 0, 0, 300)));
 
         add(vlc);
+
+    }
+
+    public String getComment() {
+        return comments.getCurrentValue();
+    }
+
+    public void addSubmitSelectHandler(SelectEvent.SelectHandler handler) {
+        submitBtn.addSelectHandler(handler);
 
     }
 

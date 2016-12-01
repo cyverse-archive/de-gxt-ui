@@ -5,6 +5,7 @@ import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisCommentSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
+import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
 import org.iplantc.de.analysis.client.views.cells.AnalysisAppNameCell;
 import org.iplantc.de.analysis.client.views.cells.AnalysisCommentCell;
 import org.iplantc.de.analysis.client.views.cells.AnalysisNameCell;
@@ -32,7 +33,8 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
                                                               AnalysisNameSelectedEvent.HasAnalysisNameSelectedEventHandlers,
                                                               AnalysisAppSelectedEvent.HasAnalysisAppSelectedEventHandlers,
                                                               AnalysisCommentSelectedEvent.HasAnalysisCommentSelectedEventHandlers,
-                                                              HTAnalysisExpandEvent.HasHTAnalysisExpandEventHandlers {
+                                                              HTAnalysisExpandEvent.HasHTAnalysisExpandEventHandlers,
+                                                              AnalysisUserSupportRequestedEvent.HasAnalysisUserSupportRequestedEventHandlers{
 
     @Inject
     AnalysisColumnModel(final CheckBoxSelectionModel<Analysis> checkBoxSelectionModel,
@@ -47,6 +49,8 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
                 ((AnalysisAppNameCell)cc.getCell()).setHasHandlers(ensureHandlers());
             } else if (cc.getCell() instanceof AnalysisCommentCell) {
                 ((AnalysisCommentCell)cc.getCell()).setHasHandlers(ensureHandlers());
+            } else if(cc.getCell() instanceof  AnalysisUserSupportCell) {
+                ((AnalysisUserSupportCell)cc.getCell()).setHasHandlers(ensureHandlers());
             }
         }
     }
@@ -173,5 +177,11 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
     public HandlerRegistration
             addHTAnalysisExpandEventHandler(HTAnalysisExpandEvent.HTAnalysisExpandEventHandler handler) {
         return ensureHandlers().addHandler(HTAnalysisExpandEvent.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addAnalysisUserSupportRequestedEventHandler(
+            AnalysisUserSupportRequestedEvent.AnalysisUserSupportRequestedEventHandler handler) {
+        return ensureHandlers().addHandler(AnalysisUserSupportRequestedEvent.TYPE, handler);
     }
 }

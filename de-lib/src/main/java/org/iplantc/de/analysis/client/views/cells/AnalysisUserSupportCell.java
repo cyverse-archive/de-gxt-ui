@@ -4,7 +4,7 @@ import static com.google.gwt.dom.client.BrowserEvents.CLICK;
 import static com.google.gwt.dom.client.BrowserEvents.MOUSEOUT;
 import static com.google.gwt.dom.client.BrowserEvents.MOUSEOVER;
 
-import org.iplantc.de.analysis.client.views.dialogs.AnalysisUserSupportDialog;
+import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
 import org.iplantc.de.client.models.analysis.Analysis;
 
 import com.google.gwt.cell.client.AbstractCell;
@@ -38,8 +38,6 @@ public class AnalysisUserSupportCell extends AbstractCell<Analysis> {
         this.appearance = appearance;
     }
 
-
-
     @Override
     public void render(Context context, Analysis value, SafeHtmlBuilder sb) {
         appearance.render(context, value, sb);
@@ -69,9 +67,9 @@ public class AnalysisUserSupportCell extends AbstractCell<Analysis> {
     }
 
     private void doOnClick(Analysis value) {
-       AnalysisUserSupportDialog ausd = new AnalysisUserSupportDialog(value);
-       ausd.setHeadingHtml(value.getName());
-       ausd.setSize("600px", "400px");
-       ausd.show();
+        if (hasHandlers != null) {
+            hasHandlers.fireEvent(new AnalysisUserSupportRequestedEvent(value));
+        }
+
    }
 }

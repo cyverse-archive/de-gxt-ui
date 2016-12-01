@@ -3,6 +3,7 @@ package org.iplantc.de.analysis.client;
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
+import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.client.models.analysis.Analysis;
@@ -21,7 +22,8 @@ import java.util.List;
 public interface AnalysesView extends IsWidget,
                                       AnalysisAppSelectedEvent.HasAnalysisAppSelectedEventHandlers,
                                       AnalysisNameSelectedEvent.HasAnalysisNameSelectedEventHandlers,
-                                      HTAnalysisExpandEvent.HasHTAnalysisExpandEventHandlers {
+                                      HTAnalysisExpandEvent.HasHTAnalysisExpandEventHandlers,
+                                      AnalysisUserSupportRequestedEvent.HasAnalysisUserSupportRequestedEventHandlers {
 
     interface Appearance {
 
