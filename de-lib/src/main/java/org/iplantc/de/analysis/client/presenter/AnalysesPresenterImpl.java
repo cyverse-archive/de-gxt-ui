@@ -5,6 +5,7 @@ import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
 import org.iplantc.de.analysis.client.events.OpenAppForRelaunchEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
+import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
 import org.iplantc.de.analysis.client.gin.factory.AnalysesViewFactory;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.presenter.proxy.AnalysisRpcProxy;
@@ -12,10 +13,12 @@ import org.iplantc.de.analysis.client.presenter.sharing.AnalysisSharingPresenter
 import org.iplantc.de.analysis.client.views.AnalysisStepsView;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisSharingDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisStepsInfoDialog;
+import org.iplantc.de.analysis.client.views.dialogs.AnalysisUserSupportDialog;
 import org.iplantc.de.analysis.client.views.sharing.AnalysisSharingViewImpl;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.events.diskResources.OpenFolderEvent;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisStepsInfo;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
@@ -29,6 +32,7 @@ import org.iplantc.de.shared.AnalysisCallback;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -36,6 +40,8 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.web.bindery.autobean.shared.Splittable;
+import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.loader.FilterConfigBean;
@@ -45,8 +51,10 @@ import com.sencha.gxt.data.shared.loader.LoadEvent;
 import com.sencha.gxt.data.shared.loader.LoadHandler;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,7 +65,8 @@ import java.util.List;
 public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               AnalysisNameSelectedEvent.AnalysisNameSelectedEventHandler,
                                               AnalysisAppSelectedEvent.AnalysisAppSelectedEventHandler,
-                                              HTAnalysisExpandEvent.HTAnalysisExpandEventHandler {
+                                              HTAnalysisExpandEvent.HTAnalysisExpandEventHandler,
+                                              AnalysisUserSupportRequestedEvent.AnalysisUserSupportRequestedEventHandler{
 
     private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
         private final Analysis ae;
@@ -211,6 +220,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         this.view.addAnalysisNameSelectedEventHandler(this);
         this.view.addAnalysisAppSelectedEventHandler(this);
         this.view.addHTAnalysisExpandEventHandler(this);
+        this.view.addAnalysisUserSupportRequestedEventHandler(this);
 
         //Set default filter to ALL
         currentFilter = AnalysisFilter.ALL;
@@ -450,5 +460,40 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     AnalysisStepsInfoDialog getAnalysisStepsDialog() {
         return new AnalysisStepsInfoDialog(analysisStepView);
+    }
+    @Override
+    public void onUserSupportRequested(AnalysisUserSupportRequestedEvent event) {
+        final Analysis value = event.getValue();
+        final AnalysisUserSupportDialog ausd = new AnalysisUserSupportDialog(value);
+        ausd.setHeadingHtml(value.getName());
+        ausd.setSize("600px", "400px");
+        ausd.addSubmitSelectHandler(new SelectEvent.SelectHandler() {
+            @Override
+            public void onSelect(SelectEvent event) {
+                Splittable parent = StringQuoter.createSplittable();
+                Splittable sp = StringQuoter.createSplittable();
+                StringQuoter.create(value.getName()).assign(sp, "Name");
+                StringQuoter.create(value.getAppName()).assign(sp, "App");
+                StringQuoter.create(value.getResultFolderId()).assign(sp, "Output Folder");
+                StringQuoter.create(new Date(value.getStartDate()).toString()).assign(sp, "Start Date");
+                StringQuoter.create(new Date(value.getEndDate()).toString()).assign(sp, "End Date");
+                StringQuoter.create(ausd.getComment()).assign(sp, "Comment");
+                StringQuoter.create(value.getStatus()).assign(sp, "Status");
+                StringQuoter.create(UserInfo.getInstance().getEmail()).assign(sp, "Email");
+
+                StringQuoter.create(UserInfo.getInstance().getFirstName() + " " + UserInfo.getInstance()
+                                                                                          .getLastName())
+                            .assign(sp, "User");
+                sp.assign(parent, "fields");
+
+                StringQuoter.create(UserInfo.getInstance().getFullUsername()).assign(parent, "from");
+
+                GWT.log("splittable -->" + parent.getPayload());
+                ausd.hide();
+            }
+        });
+
+        ausd.show();
+
     }
 }
