@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.bootstrap.Session;
 import org.iplantc.de.client.models.bootstrap.UserBootstrap;
 import org.iplantc.de.client.models.bootstrap.UserProfile;
 import org.iplantc.de.client.models.bootstrap.Workspace;
+import org.iplantc.de.client.models.userSettings.UserSetting;
 import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.base.Strings;
@@ -145,6 +146,10 @@ public class UserInfo {
      */
     public String getFullUsername() {
         return userProfile == null || hasUserProfileError() ? null : userProfile.getFullUsername();
+    }
+
+    public UserSetting getUserPreferences() {
+        return preferences;
     }
 
     /**

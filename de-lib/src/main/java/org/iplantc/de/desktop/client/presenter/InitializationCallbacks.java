@@ -5,7 +5,6 @@ import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.notifications.NotificationList;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
-import org.iplantc.de.client.models.userSettings.UserSetting;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -19,7 +18,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import com.sencha.gxt.data.shared.ListStore;
@@ -37,27 +35,27 @@ import java.util.logging.Logger;
  */
 class InitializationCallbacks {
     static class BootstrapCallback implements AsyncCallback<String> {
-        private final Provider<ErrorHandler> errorHandlerProvider;
+        private UserSettings userSettings;
+        private IplantAnnouncer announcer;
         private final DesktopView.Presenter.DesktopPresenterAppearance appearance;
+        private Panel panel;
         private final UserInfo userInfo;
         private final DesktopPresenterImpl presenter;
-        private final UserSessionServiceFacade userSessionService;
-        private final UserPreferencesCallback userPreferencesCallback;
         Logger LOG = Logger.getLogger(BootstrapCallback.class.getName());
 
         public BootstrapCallback(DesktopPresenterImpl presenter,
+                                 Panel panel,
                                  UserInfo userInfo,
-                                 Provider<ErrorHandler> errorHandlerProvider,
-                                 DesktopView.Presenter.DesktopPresenterAppearance appearance,
-                                 UserSessionServiceFacade userSessionService,
-                                 UserPreferencesCallback userPreferencesCallback) {
+                                 UserSettings userSettings,
+                                 IplantAnnouncer announcer,
+                                 DesktopView.Presenter.DesktopPresenterAppearance appearance) {
 
             this.presenter = presenter;
+            this.panel = panel;
             this.userInfo = userInfo;
-            this.errorHandlerProvider = errorHandlerProvider;
+            this.userSettings = userSettings;
+            this.announcer = announcer;
             this.appearance = appearance;
-            this.userSessionService = userSessionService;
-            this.userPreferencesCallback = userPreferencesCallback;
         }
 
         @Override
@@ -100,7 +98,7 @@ class InitializationCallbacks {
                     presenter.stickWindowToTop(prompt);
                 }
             }
-            userSessionService.getUserPreferences(userPreferencesCallback);
+            checkUserPreferences(presenter, panel, userInfo, userSettings, announcer, appearance);
         }
 
         ConfirmMessageBox getIntroConfirmation() {
@@ -194,53 +192,29 @@ class InitializationCallbacks {
         @Override
         public void onSuccess(HashMap<String, String> result) {
             deProps.initialize(result);
-            final UserPreferencesCallback userPreferencesCallback = new UserPreferencesCallback(presenter,
-                                                                                                panel,
-                                                                                                userSettings,
-                                                                                                announcer,
-                                                                                                appearance);
             userSessionService.bootstrap(new BootstrapCallback(presenter,
+                                                               panel,
                                                                userInfo,
-                                                               errorHandlerProvider,
-                                                               appearance,
-                                                               userSessionService,
-                                                               userPreferencesCallback));
+                                                               userSettings,
+                                                               announcer,
+                                                               appearance));
         }
     }
 
-    static class UserPreferencesCallback implements AsyncCallback<UserSetting> {
-        private final DesktopPresenterImpl presenter;
-        private final Panel panel;
-        private final DesktopView.Presenter.DesktopPresenterAppearance appearance;
-        private final UserSettings userSettings;
-        private IplantAnnouncer announcer;
-
-        @Inject
-        public UserPreferencesCallback(DesktopPresenterImpl presenter,
-                                       Panel panel,
-                                       UserSettings userSettings,
-                                       IplantAnnouncer announcer,
-                                       DesktopView.Presenter.DesktopPresenterAppearance appearance) {
-            this.presenter = presenter;
-            this.panel = panel;
-            this.userSettings = userSettings;
-            this.announcer = announcer;
-            this.appearance = appearance;
-        }
-
-        @Override
-        public void onFailure(Throwable caught) {
+    static void checkUserPreferences(DesktopPresenterImpl presenter,
+                                     Panel panel,
+                                     UserInfo userInfo,
+                                     UserSettings userSettings,
+                                     IplantAnnouncer announcer,
+                                     DesktopView.Presenter.DesktopPresenterAppearance appearance) {
+        if (userInfo.hasPreferencesError()) {
             announcer.schedule(new ErrorAnnouncementConfig(SafeHtmlUtils.fromString(appearance.userPreferencesLoadError()),
                                                            false,
                                                            5000));
             userSettings.setUserSettings(null);
-            presenter.postBootstrap(panel);
+        } else {
+            userSettings.setUserSettings(userInfo.getUserPreferences());
         }
-
-        @Override
-        public void onSuccess(UserSetting result) {
-            userSettings.setUserSettings(result);
-            presenter.postBootstrap(panel);
-        }
+        presenter.postBootstrap(panel);
     }
 }
