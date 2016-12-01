@@ -168,4 +168,14 @@ public class PreferencesViewDefaultAppearance implements PreferencesView.Prefere
     public SafeHtml sessionConnectionFailed() {
         return templates.redText(desktopMessages.sessionConnectionFailed());
     }
+
+    @Override
+    public String preferencesFailure() {
+        return desktopMessages.preferencesFailure();
+    }
+
+    @Override
+    public String preferencesSuccess() {
+        return desktopMessages.preferencesSuccess();
+    }
 }
