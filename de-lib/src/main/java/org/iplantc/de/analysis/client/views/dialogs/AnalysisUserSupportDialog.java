@@ -80,6 +80,7 @@ public class AnalysisUserSupportDialog extends Window {
         });
         this.selectedAnalysis = selectedAnalysis;
         submitBtn = new TextButton(appearance.submit());
+        submitBtn.disable();
         vlc = new VerticalLayoutContainer();
         vlc.getElement().getStyle().setBackgroundColor(appearance.backgroudColor());
         vlc.setScrollMode(ScrollSupport.ScrollMode.AUTO);
@@ -198,6 +199,16 @@ public class AnalysisUserSupportDialog extends Window {
         vlc.add(commentsLbl, new VerticalLayoutContainer.VerticalLayoutData(1, 100, new Margins(10)));
 
         final CheckBox approvalChkBox = new CheckBox();
+        approvalChkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                   if(approvalChkBox.getValue()) {
+                       submitBtn.enable();
+                   } else {
+                       submitBtn.disable();
+                   }
+            }
+        });
 
         approvalChkBox.setBoxLabel(appearance.agreeToShare());
         vlc.add(approvalChkBox, new VerticalLayoutContainer.VerticalLayoutData(1, -1, new Margins(10)));
