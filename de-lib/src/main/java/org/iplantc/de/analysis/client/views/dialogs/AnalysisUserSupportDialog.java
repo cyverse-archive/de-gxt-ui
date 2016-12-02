@@ -59,6 +59,10 @@ public class AnalysisUserSupportDialog extends Window {
         String disclaimer();
 
         String termsOfSupport();
+
+        String supportRequestFailed();
+
+        String supportRequestSuccess();
     }
 
 
@@ -100,7 +104,7 @@ public class AnalysisUserSupportDialog extends Window {
                 vlc.add(needHelpButton,
                         new VerticalLayoutContainer.VerticalLayoutData(-1,
                                                                        -1,
-                                                                       new Margins(20, 0, 0, 300)));
+                                                                       new Margins(20, 0, 10, 300)));
                 add(vlc);
                 break;
             case RUNNING:
@@ -113,7 +117,7 @@ public class AnalysisUserSupportDialog extends Window {
                 vlc.add(needHelpButton,
                         new VerticalLayoutContainer.VerticalLayoutData(-1,
                                                                        -1,
-                                                                       new Margins(20, 0, 0, 300)));
+                                                                       new Margins(20, 0, 10, 300)));
                 add(vlc);
                 break;
             case FAILED:
@@ -123,7 +127,7 @@ public class AnalysisUserSupportDialog extends Window {
                 vlc.add(needHelpButton,
                         new VerticalLayoutContainer.VerticalLayoutData(-1,
                                                                        -1,
-                                                                       new Margins(20, 0, 0, 300)));
+                                                                       new Margins(20, 0, 10, 300)));
                 break;
             case COMPLETED:
                 remove(vlc);
@@ -226,7 +230,7 @@ public class AnalysisUserSupportDialog extends Window {
             }
         });
         vlc.add(submitBtn,
-                new VerticalLayoutContainer.VerticalLayoutData(-1, -1, new Margins(20, 0, 0, 300)));
+                new VerticalLayoutContainer.VerticalLayoutData(-1, -1, new Margins(20, 0, 10, 300)));
 
         add(vlc);
 

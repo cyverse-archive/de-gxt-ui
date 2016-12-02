@@ -22,6 +22,7 @@ import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisStepsInfo;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
+import org.iplantc.de.client.services.DEUserSupportServiceFacade;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -37,6 +38,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -181,6 +183,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Inject
     AnalysisServiceFacade analysisService;
     @Inject
+    DEUserSupportServiceFacade supportService;
+    @Inject
     IplantAnnouncer announcer;
     @Inject
     AnalysesView.Presenter.Appearance appearance;
@@ -196,8 +200,10 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     AnalysisFilter currentFilter;
 
-    private final ListStore<Analysis> listStore;
+    @Inject
+    AnalysisUserSupportDialog.AnalysisUserSupportAppearance userSupportAppearance;
 
+    private final ListStore<Analysis> listStore;
     private final AnalysesView view;
     private final HasHandlers eventBus;
     private HandlerRegistration handlerFirstLoad;
@@ -487,9 +493,24 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                 sp.assign(parent, "fields");
 
                 StringQuoter.create(UserInfo.getInstance().getFullUsername()).assign(parent, "from");
-                StringQuoter.create(UserInfo.getInstance().getUsername() + " requesting help with Analysis").assign(parent,"Subject");
+                StringQuoter.create(
+                        UserInfo.getInstance().getUsername() + " requesting help with Analysis")
+                            .assign(parent, "Subject");
                 GWT.log("splittable -->" + parent.getPayload());
                 ausd.hide();
+                supportService.submitSupportRequest(parent, new AsyncCallback<Void>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        announcer.schedule(new ErrorAnnouncementConfig(
+                                userSupportAppearance.supportRequestFailed()));
+                    }
+
+                    @Override
+                    public void onSuccess(Void result) {
+                        announcer.schedule(new SuccessAnnouncementConfig(
+                                userSupportAppearance.supportRequestSuccess()));
+                    }
+                });
             }
         });
 

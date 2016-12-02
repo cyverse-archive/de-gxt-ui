@@ -60,4 +60,14 @@ public class AnalysisUserSupportDefaultAppearance implements AnalysisUserSupport
     public String termsOfSupport() {
         return messages.termsOfSupport();
     }
+
+    @Override
+    public String supportRequestFailed() {
+        return messages.supportRequestFailed();
+    }
+
+    @Override
+    public String supportRequestSuccess() {
+        return messages.supportRequestSuccess();
+    }
 }
