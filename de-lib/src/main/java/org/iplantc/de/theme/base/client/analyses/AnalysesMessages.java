@@ -105,4 +105,8 @@ public interface AnalysesMessages extends Messages {
     String disclaimer();
 
     String termsOfSupport();
+
+    String supportRequestFailed();
+
+    String supportRequestSuccess();
 }

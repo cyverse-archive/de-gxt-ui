@@ -27,6 +27,7 @@ final class ServicesModule extends AbstractGinModule {
         bind(AppServiceFacade.class).to(AppUserServiceFacadeImpl.class);
         bind(CollaboratorsServiceFacade.class).to(CollaboratorsServiceFacadeImpl.class);
         bind(DEFeedbackServiceFacade.class).to(DEFeedbackServiceFacadeImpl.class);
+        bind(DEUserSupportServiceFacade.class).to(DEUserSupportServiceFacadeImpl.class);
         bind(ToolServices.class).to(ToolServicesImpl.class);
         bind(FileEditorServiceFacade.class).to(FileEditorServiceFacadeImpl.class);
         bind(MessageServiceFacade.class).to(MessageServiceFacadeImpl.class);
