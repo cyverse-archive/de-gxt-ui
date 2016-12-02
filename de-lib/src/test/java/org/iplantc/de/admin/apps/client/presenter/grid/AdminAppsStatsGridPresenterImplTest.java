@@ -10,9 +10,9 @@ import org.iplantc.de.admin.apps.client.AdminAppStatsGridView;
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
+import org.iplantc.de.shared.DECallback;
 
 import com.google.common.collect.Lists;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 
 import org.junit.Before;
@@ -34,7 +34,7 @@ public class AdminAppsStatsGridPresenterImplTest {
     @Mock AdminAppStatsGridView.Appearance mockApppearance;
 
     @Captor
-    ArgumentCaptor<AsyncCallback<AppListLoadResult>> appListCallbackCaptor;
+    ArgumentCaptor<DECallback<AppListLoadResult>> appListCallbackCaptor;
 
     private AdminAppsStatsGridPresenterImpl uut;
 

@@ -1,0 +1,38 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:container='urn:import:com.sencha.gxt.widget.core.client.container'
+             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
+             xmlns:gwt="urn:import:com.google.gwt.user.client.ui"
+>
+
+    <ui:with field="appearance"
+             type="org.iplantc.de.desktop.client.views.widgets.ServiceDownPanel.ServiceDownPanelAppearance"/>
+
+    <ui:with field="margins0050"
+             type="com.sencha.gxt.core.client.util.Margins">
+        <ui:attributes top="0"
+                       right="0"
+                       bottom="5"
+                       left="0"/>
+    </ui:with>
+
+    <ui:with field="boxLayoutDataMargins0050"
+             type="com.sencha.gxt.widget.core.client.container.BoxLayoutContainer.BoxLayoutData">
+        <ui:attributes margins="{margins0050}"/>
+    </ui:with>
+
+    <ui:with field="padding5"
+             type="com.sencha.gxt.core.client.util.Padding">
+        <ui:attributes top="5" right="5" bottom="5" left="5"/>
+    </ui:with>
+
+    <container:VBoxLayoutContainer padding="{padding5}" VBoxLayoutAlign="CENTER" pack="CENTER">
+        <container:child layoutData="{boxLayoutDataMargins0050}">
+            <gwt:Label ui:field="label"
+                       text="{appearance.serviceDownText}"/>
+        </container:child>
+        <container:child layoutData="{boxLayoutDataMargins0050}">
+            <button:TextButton ui:field="retry"
+                               text="{appearance.retryBtnText}"/>
+        </container:child>
+    </container:VBoxLayoutContainer>
+</ui:UiBinder>

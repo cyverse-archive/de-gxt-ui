@@ -29,6 +29,7 @@ import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.widgets.DETabPanel;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.collect.Lists;
@@ -87,9 +88,9 @@ public class AppCategoriesPresenterImplTest {
     @Mock StoreClearEvent<App> mockClearEvent;
     @Mock Store<App> mockStore;
 
-    @Captor ArgumentCaptor<AsyncCallback<List<AppCategory>>> appCategoriesCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<App>> appCallbackCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
+    @Captor ArgumentCaptor<DECallback<List<AppCategory>>> appCategoriesCaptor;
+    @Captor ArgumentCaptor<DECallback<App>> appCallbackCaptor;
+    @Captor ArgumentCaptor<DECallback<Void>> voidCallbackCaptor;
 
 
     @Mock AsyncProviderWrapper<AppDetailsDialog> mockDetailsProvider;
@@ -155,7 +156,7 @@ public class AppCategoriesPresenterImplTest {
         verify(appServiceMock).getAppCategories(anyBoolean(), appCategoriesCaptor.capture());
 
         // Call failure with arbitrary exception
-        appCategoriesCaptor.getValue().onFailure(null);
+        appCategoriesCaptor.getValue().onFailure(500, null);
         verify(tabPanelMock).unmask();
 
         appCategoriesCaptor.getValue().onSuccess(Collections.<AppCategory>emptyList());
@@ -210,7 +211,7 @@ public class AppCategoriesPresenterImplTest {
         when(eventMock.getApps()).thenReturn(Lists.newArrayList(mockApp));
         uut.onCopyAppSelected(eventMock);
 
-        verify(appUserServiceMock).copyApp(eq(mockApp), Matchers.<AsyncCallback<AppTemplate>>any());
+        verify(appUserServiceMock).copyApp(eq(mockApp), Matchers.<DECallback<AppTemplate>>any());
     }
 
     @Test public void testOnCopyWorkflowSelected() {
@@ -221,7 +222,7 @@ public class AppCategoriesPresenterImplTest {
         when(eventMock.getApps()).thenReturn(Lists.newArrayList(mockApp));
         uut.onCopyWorkflowSelected(eventMock);
 
-        verify(appUserServiceMock).copyWorkflow(eq(mockApp.getId()), Matchers.<AsyncCallback<String>>any());
+        verify(appUserServiceMock).copyWorkflow(eq(mockApp.getId()), Matchers.<DECallback<String>>any());
     }
 
     @Test

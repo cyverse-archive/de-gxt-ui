@@ -16,7 +16,9 @@ import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
 import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.services.converters.AppCategoryListCallbackConverter;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
+import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
+import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
@@ -72,7 +74,7 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
     }
 
     @Override
-    public void getPublicAppCategories(final AsyncCallback<List<AppCategory>> callback,
+    public void getPublicAppCategories(final DECallback<List<AppCategory>> callback,
                                        final boolean loadHpc) {
                 String address = CATEGORIES_ADMIN + "?public=true&hpc=" + loadHpc;
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
@@ -261,14 +263,14 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
     }
 
     @Override
-    public void searchApp(String term, AsyncCallback<AppListLoadResult> callback) {
+    public void searchApp(String term, DECallback<AppListLoadResult> callback) {
         StringBuilder address = new StringBuilder(APPS_ADMIN);
         if(!Strings.isNullOrEmpty(term)) {
             address.append("?search=" + URL.encodeQueryString(term));
         }
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address.toString());
-        deService.getServiceData(wrapper,  new AsyncCallbackConverter<String, AppListLoadResult>(callback) {
+        deService.getServiceData(wrapper,  new DECallbackConverter<String, AppListLoadResult>(callback) {
             @Override
             protected AppListLoadResult convertFrom(String object) {
                 AppListLoadResult loadResult =

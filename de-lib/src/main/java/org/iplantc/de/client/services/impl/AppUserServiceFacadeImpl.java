@@ -24,11 +24,11 @@ import org.iplantc.de.client.models.apps.sharing.AppUnSharingRequestList;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.services.converters.AppCategoryListCallbackConverter;
 import org.iplantc.de.client.services.converters.AppTemplateCallbackConverter;
-import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
-import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
+import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
+import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.BaseServiceCallWrapper.Type;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.EmailServiceAsync;
@@ -59,8 +59,8 @@ import java.util.List;
  */
 public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
 
-    private class AppDocCallbackConverter extends AsyncCallbackConverter<String, AppDoc> {
-        public AppDocCallbackConverter(AsyncCallback<AppDoc> callback) {
+    private class AppDocCallbackConverter extends DECallbackConverter<String, AppDoc> {
+        public AppDocCallbackConverter(DECallback<AppDoc> callback) {
             super(callback);
         }
 
@@ -97,14 +97,14 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void getPublicAppCategories(AsyncCallback<List<AppCategory>> callback, boolean loadHpc) {
+    public void getPublicAppCategories(DECallback<List<AppCategory>> callback, boolean loadHpc) {
         String address = CATEGORIES + "?public=true&hpc=" + loadHpc;
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
         deServiceFacade.getServiceData(wrapper, new AppCategoryListCallbackConverter(callback));
     }
 
     @Override
-    public void getAppCategories(boolean privateOnly, AsyncCallback<List<AppCategory>> callback) {
+    public void getAppCategories(boolean privateOnly, DECallback<List<AppCategory>> callback) {
         String address = CATEGORIES;
         if (privateOnly) {
             address += "?public=false";
@@ -114,14 +114,14 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void getApps(HasId appCategory, AsyncCallback<List<App>> callback) {
+    public void getApps(HasId appCategory, DECallback<List<App>> callback) {
         getApps(appCategory.getId(), callback);
     }
 
-    public void getApps(String id, AsyncCallback<List<App>> callback) {
+    public void getApps(String id, DECallback<List<App>> callback) {
         String address = CATEGORIES + "/" + id;
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
-        deServiceFacade.getServiceData(wrapper, new AsyncCallbackConverter<String, List<App>>(callback) {
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, List<App>>(callback) {
             @Override
             protected List<App> convertFrom(String object) {
                 List<App> apps = AutoBeanCodex.decode(svcFactory, AppList.class, object).as().getApps();
@@ -136,7 +136,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
                              String sortField,
                              int offset,
                              SortDir sortDir,
-                             AsyncCallback<String> asyncCallback) {
+                             DECallback<String> asyncCallback) {
         String address = CATEGORIES + "/" + appCategoryId + "?limit=" + limit + "&sort-field="
                 + sortField + "&sort-dir=" + sortDir.toString() + "&offset=" + offset;
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
@@ -144,7 +144,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void getDataObjectsForApp(String appId, AsyncCallback<String> callback) {
+    public void getDataObjectsForApp(String appId, DECallback<String> callback) {
         String address = APPS + "/" + appId + "/tasks";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
@@ -152,22 +152,27 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void publishToWorld(PublishAppRequest request, AsyncCallback<Void> callback) {
+    public void publishToWorld(PublishAppRequest request, DECallback<Void> callback) {
         String address = APPS + "/" + request.getId() + "/publish"; //$NON-NLS-1$
 
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
 
-        deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, Void>(callback) {
+            @Override
+            protected Void convertFrom(String object) {
+                return null;
+            }
+        });
     }
 
     @Override
-    public void getAppDetails(final App app, AsyncCallback<App> callback) {
+    public void getAppDetails(final App app, DECallback<App> callback) {
         String address = APPS + "/" + app.getSystemId() + "/" + app.getId() + "/details";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
 
-        deServiceFacade.getServiceData(wrapper, new AsyncCallbackConverter<String, App>(callback) {
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, App>(callback) {
             @Override
             protected App convertFrom(String object) {
                 Splittable split = StringQuoter.split(object);
@@ -186,7 +191,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     @Override
     public void rateApp(final App app,
                         final int rating,
-                        final AsyncCallback<AppFeedback> callback) {
+                        final DECallback<AppFeedback> callback) {
         String address = APPS + "/" + app.getId() + "/rating";
 
         Splittable payload = StringQuoter.createSplittable();
@@ -194,7 +199,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
         StringQuoter.create(app.getRating().getCommentId()).assign(payload, "comment_id");
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, payload.getPayload());
-        deServiceFacade.getServiceData(wrapper, new AsyncCallbackConverter<String, AppFeedback>(callback) {
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, AppFeedback>(callback) {
             @Override
             protected AppFeedback convertFrom(String object) {
                 // Send email
@@ -237,14 +242,14 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
 
 
     @Override
-    public void deleteRating(final App app, final AsyncCallback<AppFeedback> callback) {
+    public void deleteRating(final App app, final DECallback<AppFeedback> callback) {
         // call rating service, then delete comment from wiki page
         String address = APPS + "/" + app.getId() + "/rating";
 
         // KLUDGE Have to send empty JSON body with POST request
         Splittable body = StringQuoter.createSplittable();
         ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address, body.toString());
-        deServiceFacade.getServiceData(wrapper, new AsyncCallbackConverter<String, AppFeedback>(callback) {
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, AppFeedback>(callback) {
             @Override
             protected AppFeedback convertFrom(String object) {
                 final AppFeedback appFeedback = app.getRating();
@@ -273,7 +278,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     @Override
     public void favoriteApp(final HasQualifiedId appId,
                             final boolean fav,
-                            final AsyncCallback<Void> callback) {
+                            final DECallback<Void> callback) {
         String address = APPS + "/" + appId.getSystemId() + "/" + appId.getId() + "/favorite";
 
         JSONObject body = new JSONObject();
@@ -284,12 +289,17 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
         } else {
             wrapper = new ServiceCallWrapper(DELETE, address, body.toString());
         }
-        deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, Void>(callback) {
+            @Override
+            protected Void convertFrom(String object) {
+                return null;
+            }
+        });
     }
 
     @Override
     public void copyApp(final HasQualifiedId app,
-                        final AsyncCallback<AppTemplate> callback) {
+                        final DECallback<AppTemplate> callback) {
         String address = APPS + "/" + app.getSystemId() + "/" + app.getId() + "/copy";
 
         // KLUDGE Have to send empty JSON body with POST request
@@ -315,23 +325,28 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
 
     @Override
     public void deleteAppsFromWorkspace(final List<App> apps,
-                                        final AsyncCallback<Void> callback) {
+                                        final DECallback<Void> callback) {
         String address = APPS + "/" + "shredder"; //$NON-NLS-1$
 
         final AutoBean<AppDeletionRequest> request = appsToAppDeletionRequest(apps);
         final Splittable encode = AutoBeanCodex.encode(request);
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
-        deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, Void>(callback) {
+            @Override
+            protected Void convertFrom(String object) {
+                return null;
+            }
+        });
     }
 
     @Override
-    public void searchApp(String term, AsyncCallback<AppListLoadResult> callback) {
+    public void searchApp(String term, DECallback<AppListLoadResult> callback) {
         StringBuilder address = new StringBuilder(APPS);
         address.append( "?search=" + URL.encodeQueryString(term));
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address.toString());
-        deServiceFacade.getServiceData(wrapper,  new AsyncCallbackConverter<String, AppListLoadResult>(callback) {
+        deServiceFacade.getServiceData(wrapper,  new DECallbackConverter<String, AppListLoadResult>(callback) {
             @Override
             protected AppListLoadResult convertFrom(String object) {
                 List<App> apps = AutoBeanCodex.decode(svcFactory, AppList.class, object).as().getApps();
@@ -345,35 +360,35 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void publishWorkflow(String workflowId, String body, AsyncCallback<String> callback) {
+    public void publishWorkflow(String workflowId, String body, DECallback<String> callback) {
         String address = PIPELINES + "/" + workflowId;
         ServiceCallWrapper wrapper = new ServiceCallWrapper(Type.PUT, address, body);
         deServiceFacade.getServiceData(wrapper, callback);
     }
 
     @Override
-    public void createWorkflows(String body, AsyncCallback<String> callback) {
+    public void createWorkflows(String body, DECallback<String> callback) {
         String address = PIPELINES;
         ServiceCallWrapper wrapper = new ServiceCallWrapper(Type.POST, address, body);
         deServiceFacade.getServiceData(wrapper, callback);
     }
 
     @Override
-    public void editWorkflow(HasId workflowId, AsyncCallback<String> callback) {
+    public void editWorkflow(HasId workflowId, DECallback<String> callback) {
         String address = PIPELINES + "/" + workflowId.getId() + "/ui";
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
         deServiceFacade.getServiceData(wrapper, callback);
     }
 
     @Override
-    public void copyWorkflow(String workflowId, AsyncCallback<String> callback) {
+    public void copyWorkflow(String workflowId, DECallback<String> callback) {
         String address = PIPELINES + "/" + workflowId + "/copy";
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, "{}");
         deServiceFacade.getServiceData(wrapper, callback);
     }
 
     @Override
-    public void getAppDoc(HasQualifiedId app, AsyncCallback<AppDoc> callback) {
+    public void getAppDoc(HasQualifiedId app, DECallback<AppDoc> callback) {
         String address = APPS + "/" + app.getSystemId() + "/" + app.getId() + "/documentation";
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deServiceFacade.getServiceData(wrapper, new AppDocCallbackConverter(callback));
@@ -382,7 +397,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     @Override
     public void saveAppDoc(final HasId app,
                            final String doc,
-                           final AsyncCallback<AppDoc> callback) {
+                           final DECallback<AppDoc> callback) {
         String address = APPS + "/" + app.getId() + "/documentation";
         Splittable payload = StringQuoter.createSplittable();
         StringQuoter.create(doc).assign(payload, "documentation");
@@ -392,7 +407,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void getPermissions(List<App> apps, AsyncCallback<String> callback) {
+    public void getPermissions(List<App> apps, DECallback<String> callback) {
         Splittable appsObj = StringQuoter.createSplittable();
         Splittable idArr = StringQuoter.createIndexed();
 
@@ -408,7 +423,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
      }
 
     @Override
-    public void shareApp(AppSharingRequestList request, AsyncCallback<String> callback) {
+    public void shareApp(AppSharingRequestList request, DECallback<String> callback) {
         final String payload = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request)).getPayload();
         GWT.log("app sharing request:" + payload);
         String address = APPS + "/" + "sharing";
@@ -417,7 +432,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
    }
 
     @Override
-    public void unshareApp(AppUnSharingRequestList request, AsyncCallback<String> callback) {
+    public void unshareApp(AppUnSharingRequestList request, DECallback<String> callback) {
         final String payload = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request)).getPayload();
         GWT.log("app un-sharing request:" + payload);
         String address = APPS + "/" + "unsharing";

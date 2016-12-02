@@ -36,6 +36,7 @@ import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.services.OntologyServiceFacade;
 import org.iplantc.de.commons.client.comments.view.dialogs.CommentsDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.DECallback;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.GwtEvent;
@@ -88,9 +89,9 @@ public class AppsListPresenterImplTest {
     @Mock AsyncProviderWrapper<CommentsDialog> commentsProviderMock;
     @Captor ArgumentCaptor<AsyncCallback<CommentsDialog>> commentsDlgCaptor;
 
-    @Captor ArgumentCaptor<AsyncCallback<String>> stringCallbackCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<List<App>>> appListCallbackCaptor;
+    @Captor ArgumentCaptor<DECallback<String>> stringCallbackCaptor;
+    @Captor ArgumentCaptor<DECallback<Void>> voidCallbackCaptor;
+    @Captor ArgumentCaptor<DECallback<List<App>>> appListCallbackCaptor;
     @Mock EventBus eventBusMock;
 
 
@@ -202,7 +203,7 @@ public class AppsListPresenterImplTest {
     }
 
     @Test public void verifyAppServiceCalled_onAppCategorySelected_Fail() {
-
+        Throwable throwableMock = mock(Throwable.class);
         AppCategorySelectionChangedEvent eventMock = mock(AppCategorySelectionChangedEvent.class);
         final AppCategory appCategoryMock = mock(AppCategory.class);
         when(appCategoryMock.getId()).thenReturn("mock category id");
@@ -224,7 +225,7 @@ public class AppsListPresenterImplTest {
         List<App> resultList = Lists.newArrayList(mock(App.class));
 
         /*** CALL METHOD UNDER TEST ***/
-        appListCallbackCaptor.getValue().onFailure(null);
+        appListCallbackCaptor.getValue().onFailure(500, throwableMock);
 
         verify(listStoreMock).clear();
         verify(gridViewMock).setHeadingText(eq(appearanceMock.appLoadError()));
@@ -433,7 +434,7 @@ public class AppsListPresenterImplTest {
         verify(eventMock).getAppsToBeDeleted();
 
         verify(appUserServiceMock).deleteAppsFromWorkspace(eq(appsToBeDeleted),
-                                                           Matchers.<AsyncCallback<Void>>any());
+                                                           Matchers.<DECallback<Void>>any());
         verifyNoMoreInteractions(appServiceMock,
                                  eventMock,
                                  eventBusMock,

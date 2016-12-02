@@ -2,9 +2,8 @@ package org.iplantc.de.client.services.converters;
 
 import org.iplantc.de.client.models.ontologies.OntologyAutoBeanFactory;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
-import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
+import org.iplantc.de.shared.DECallback;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
@@ -12,11 +11,11 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
  * @author aramsey
  */
 public class OntologyHierarchyCallbackConverter
-        extends AsyncCallbackConverter<String, OntologyHierarchy> {
+        extends DECallbackConverter<String, OntologyHierarchy> {
 
     private final OntologyAutoBeanFactory factory;
 
-    public OntologyHierarchyCallbackConverter(AsyncCallback<OntologyHierarchy> callback,
+    public OntologyHierarchyCallbackConverter(DECallback<OntologyHierarchy> callback,
                                               OntologyAutoBeanFactory factory) {
         super(callback);
         this.factory = factory;

@@ -12,6 +12,7 @@ import com.sencha.gxt.widget.core.client.event.ActivateEvent.HasActivateHandlers
 import com.sencha.gxt.widget.core.client.event.DeactivateEvent.HasDeactivateHandlers;
 import com.sencha.gxt.widget.core.client.event.HideEvent.HasHideHandlers;
 import com.sencha.gxt.widget.core.client.event.MinimizeEvent.HasMinimizeHandlers;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.ShowEvent.HasShowHandlers;
 
 /**
@@ -45,5 +46,8 @@ public interface IPlantWindowInterface extends HasActivateHandlers<Window>,
     <C extends WindowConfig> void update(C config);
 
     WindowState getWindowState();
-    
+
+    void serviceDown(SelectEvent.SelectHandler handler);
+
+    void serviceUp();
 }

@@ -22,10 +22,10 @@ import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.tools.requests.client.views.dialogs.NewToolRequestDialog;
 
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.autobean.shared.Splittable;
@@ -121,10 +121,10 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
     @Override
     public void onEditWorkflowSelected(final EditWorkflowSelected event) {
         final App workFlow = event.getWorkFlow();
-        appService.editWorkflow(workFlow, new AsyncCallback<String>() {
+        appService.editWorkflow(workFlow, new AppsCallback<String>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(appearance.failToRetrieveApp(), caught);
                 announcer.schedule(new ErrorAnnouncementConfig(appearance.failToRetrieveApp()));
             }

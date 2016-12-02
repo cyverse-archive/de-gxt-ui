@@ -44,4 +44,9 @@
     <replace-with class="org.iplantc.de.theme.base.client.desktop.presenter.DesktopPresenterDefaultAppearance">
         <when-type-is class="org.iplantc.de.desktop.client.DesktopView.Presenter.DesktopPresenterAppearance" />
     </replace-with>
+
+    <replace-with class="org.iplantc.de.theme.base.client.desktop.window.ServiceDownPanelDefaultAppearance">
+        <when-type-is class="org.iplantc.de.desktop.client.views.widgets.ServiceDownPanel.ServiceDownPanelAppearance"/>
+    </replace-with>
+
 </module>

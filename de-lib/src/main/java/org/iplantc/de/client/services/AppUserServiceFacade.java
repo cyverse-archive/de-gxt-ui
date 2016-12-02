@@ -9,8 +9,7 @@ import org.iplantc.de.client.models.apps.PublishAppRequest;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.sharing.AppSharingRequestList;
 import org.iplantc.de.client.models.apps.sharing.AppUnSharingRequestList;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.iplantc.de.shared.DECallback;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ import java.util.List;
  */
 public interface AppUserServiceFacade extends AppServiceFacade, AppSearchFacade {
 
-    void favoriteApp(HasQualifiedId appId, boolean fav, AsyncCallback<Void> callback);
+    void favoriteApp(HasQualifiedId appId, boolean fav, DECallback<Void> callback);
 
     /**
      * Retrieves the name and a list of inputs and outputs for the given app. The response JSON will be
@@ -37,7 +36,7 @@ public interface AppUserServiceFacade extends AppServiceFacade, AppSearchFacade 
      * @param appId unique identifier of the app.
      * @param callback called when the RPC call is complete.
      */
-    void getDataObjectsForApp(String appId, AsyncCallback<String> callback);
+    void getDataObjectsForApp(String appId, DECallback<String> callback);
 
     /**
      * Publishes a workflow / pipeline to user's workspace
@@ -45,52 +44,52 @@ public interface AppUserServiceFacade extends AppServiceFacade, AppSearchFacade 
      * @param body post body json
      * @param callback called when the RPC call is complete
      */
-    void publishWorkflow(String workflowId, String body, AsyncCallback<String> callback);
+    void publishWorkflow(String workflowId, String body, DECallback<String> callback);
 
     /**
      * Retrieves a workflow from the database for editing in the client.
      *  @param workflowId unique identifier for the workflow.
      * @param callback called when the RPC call is complete.
      */
-    void editWorkflow(HasId workflowId, AsyncCallback<String> callback);
+    void editWorkflow(HasId workflowId, DECallback<String> callback);
 
     /**
      * Retrieves a new copy of a workflow from the database for editing in the client.
      */
-    void copyWorkflow(String workflowId, AsyncCallback<String> callback);
+    void copyWorkflow(String workflowId, DECallback<String> callback);
 
-    void copyApp(HasQualifiedId app, AsyncCallback<AppTemplate> callback);
+    void copyApp(HasQualifiedId app, DECallback<AppTemplate> callback);
 
     void deleteAppsFromWorkspace(List<App> apps,
-                                 AsyncCallback<Void> callback);
+                                 DECallback<Void> callback);
 
     /**
      * Adds an app to the given public categories.
      */
-    void publishToWorld(PublishAppRequest req, AsyncCallback<Void> callback);
+    void publishToWorld(PublishAppRequest req, DECallback<Void> callback);
 
     /**
      * Get app details
      */
-    void getAppDetails(App app, AsyncCallback<App> callback);
+    void getAppDetails(App app, DECallback<App> callback);
 
-    void getAppDoc(HasQualifiedId app, AsyncCallback<AppDoc> callback);
+    void getAppDoc(HasQualifiedId app, DECallback<AppDoc> callback);
 
-    void saveAppDoc(HasId appId, String doc, AsyncCallback<AppDoc> callback);
+    void saveAppDoc(HasId appId, String doc, DECallback<AppDoc> callback);
 
-    void createWorkflows(String body, AsyncCallback<String> callback);
+    void createWorkflows(String body, DECallback<String> callback);
 
     void rateApp(App app,
                  int rating,
-                 AsyncCallback<AppFeedback> callback);
+                 DECallback<AppFeedback> callback);
 
-    void deleteRating(App app, AsyncCallback<AppFeedback> callback);
+    void deleteRating(App app, DECallback<AppFeedback> callback);
 
-    void getPermissions(List<App> apps, AsyncCallback<String> callback);
+    void getPermissions(List<App> apps, DECallback<String> callback);
 
-    void shareApp(AppSharingRequestList request, AsyncCallback<String> callback);
+    void shareApp(AppSharingRequestList request, DECallback<String> callback);
     
-    void unshareApp(AppUnSharingRequestList request, AsyncCallback<String> callback);
+    void unshareApp(AppUnSharingRequestList request, DECallback<String> callback);
 
 
 }

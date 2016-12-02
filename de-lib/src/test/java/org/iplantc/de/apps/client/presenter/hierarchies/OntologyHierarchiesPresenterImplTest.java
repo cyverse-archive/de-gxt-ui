@@ -43,6 +43,7 @@ import org.iplantc.de.client.util.OntologyUtil;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.widgets.DETabPanel;
+import org.iplantc.de.shared.DECallback;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.inject.client.AsyncProvider;
@@ -113,12 +114,12 @@ public class OntologyHierarchiesPresenterImplTest {
     @Mock List<OntologyHierarchiesPresenterImpl.FilteredHierarchyCallback> childCallbacksMock;
     @Mock ParentFilteredHierarchyCallback parentCallbackMock;
 
-    @Captor ArgumentCaptor<AsyncCallback<List<OntologyHierarchy>>> hierarchyListCallback;
+    @Captor ArgumentCaptor<DECallback<List<OntologyHierarchy>>> hierarchyListCallback;
     @Captor ArgumentCaptor<OntologyHierarchiesPresenterImpl.FilteredHierarchyCallback> hierarchyCallback;
     @Captor ArgumentCaptor<AsyncCallback<AppDetailsDialog>> appDetailsDialogCallback;
-    @Captor ArgumentCaptor<AsyncCallback<App>> appDetailsCallback;
-    @Captor ArgumentCaptor<AsyncCallback<List<Avu>>> appAvuCallbackCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
+    @Captor ArgumentCaptor<DECallback<App>> appDetailsCallback;
+    @Captor ArgumentCaptor<DECallback<List<Avu>>> appAvuCallbackCaptor;
+    @Captor ArgumentCaptor<DECallback<Void>> voidCallbackCaptor;
     @Captor ArgumentCaptor<ParentFilteredHierarchyCallback> parentCallbackCaptor;
 
 
@@ -425,7 +426,7 @@ public class OntologyHierarchiesPresenterImplTest {
         /*** CALL METHOD UNDER TEST ***/
         uut.onAppRatingDeselected(eventMock);
 
-        verify(appUserServiceMock).deleteRating(eq(appMock), Matchers.<AsyncCallback<AppFeedback>>any());
+        verify(appUserServiceMock).deleteRating(eq(appMock), Matchers.<DECallback<AppFeedback>>any());
 
         verifyNoMoreInteractions(appUserServiceMock);
         verifyZeroInteractions(ontologyServiceMock);
@@ -444,7 +445,7 @@ public class OntologyHierarchiesPresenterImplTest {
 
         verify(appUserServiceMock).rateApp(eq(appMock),
                                            eq(mockScore),
-                                           Matchers.<AsyncCallback<AppFeedback>>any());
+                                           Matchers.<DECallback<AppFeedback>>any());
 
         verifyNoMoreInteractions(appUserServiceMock);
         verifyZeroInteractions(ontologyServiceMock);

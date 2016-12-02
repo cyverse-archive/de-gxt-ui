@@ -24,6 +24,7 @@ import org.iplantc.de.pipelines.client.views.PipelineView;
 import org.iplantc.de.pipelines.client.views.widgets.PipelineViewToolbar;
 import org.iplantc.de.pipelines.client.views.widgets.PipelineViewToolbarImpl;
 import org.iplantc.de.resources.client.messages.I18N;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.base.Strings;
 import com.google.gwt.editor.client.EditorError;
@@ -58,7 +59,7 @@ import java.util.Map;
 public class PipelineViewPresenter implements Presenter, PipelineView.Presenter, PipelineViewToolbar.Presenter, PipelineBuilderDNDHandler.Presenter, PipelineAppOrderView.Presenter,
         PipelineAppMappingView.Presenter, AppSelectionDialog.Presenter {
 
-    private final class PipelineSaveCallback implements AsyncCallback<String> {
+    private final class PipelineSaveCallback extends AppsCallback<String> {
         private final Pipeline pipeline;
 
         private PipelineSaveCallback(Pipeline pipeline) {
@@ -88,7 +89,7 @@ public class PipelineViewPresenter implements Presenter, PipelineView.Presenter,
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             ErrorHandler.post(I18N.ERROR.workflowPublishError(), caught);
             toolbar.setPublishButtonEnabled(true);
         }

@@ -1,12 +1,12 @@
 package org.iplantc.de.client.services;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.integration.JobExecution;
 import org.iplantc.de.client.services.impl.models.AnalysisSubmissionResponse;
+import org.iplantc.de.shared.DECallback;
 
 public interface AppTemplateServices {
 
@@ -16,7 +16,7 @@ public interface AppTemplateServices {
      * @param at the <code>AppTemplate</code> for which the command line preview will be generated.
      * @param callback
      */
-    void cmdLinePreview(AppTemplate at, AsyncCallback<String> callback);
+    void cmdLinePreview(AppTemplate at, DECallback<String> callback);
 
     /**
      * Retrieves an <code>AppTemplate</code> from the database for viewing.
@@ -24,7 +24,7 @@ public interface AppTemplateServices {
      * @param appId the <code>App</code> id.
      * @param callback
      */
-    void getAppTemplate(HasQualifiedId appId, AsyncCallback<AppTemplate> callback);
+    void getAppTemplate(HasQualifiedId appId, DECallback<AppTemplate> callback);
 
     AppTemplateAutoBeanFactory getAppTemplateFactory();
 
@@ -34,16 +34,8 @@ public interface AppTemplateServices {
      * @param appId the <code>App</code> id.
      * @param callback
      */
-    void getAppTemplateForEdit(HasId appId, AsyncCallback<AppTemplate> callback);
-
-    /**
-     * Retrieves a UI preview of the given <code>AppTemplate</code>.
-     * 
-     * @param at the <code>AppTemplate</code> for which the preview should be produced.
-     * @param callback
-     */
-    void getAppTemplatePreview(AppTemplate at, AsyncCallback<AppTemplate> callback);
-
+    void getAppTemplateForEdit(HasId appId, DECallback<AppTemplate> callback);
+    
     /**
      * Launches an analysis using the given <code>AppTemplate</code> and <code>JobExecution</code>
      * objects. The service call will construct the expected JSON using the two objects.
@@ -52,7 +44,7 @@ public interface AppTemplateServices {
      * @param je contains necessary information for job submission
      * @param callback
      */
-    void launchAnalysis(AppTemplate at, JobExecution je, AsyncCallback<AnalysisSubmissionResponse> callback);
+    void launchAnalysis(AppTemplate at, JobExecution je, DECallback<AnalysisSubmissionResponse> callback);
 
     /**
      * Retrieves an <code>AppTemplate</code> with all of the values from the given analysisId.
@@ -60,7 +52,7 @@ public interface AppTemplateServices {
      * @param appId
      * @param callback
      */
-    void rerunAnalysis(HasId analysisId, String appId, AsyncCallback<AppTemplate> callback);
+    void rerunAnalysis(HasId analysisId, String appId, DECallback<AppTemplate> callback);
 
     /**
      * Performs an initial publishing of new AppTemplates to the database, or updates of existing ones
@@ -69,7 +61,7 @@ public interface AppTemplateServices {
      * @param at the <code>AppTemplate</code> to be saved/published.
      * @param callback
      */
-    void saveAndPublishAppTemplate(AppTemplate at, AsyncCallback<AppTemplate> callback);
+    void saveAndPublishAppTemplate(AppTemplate at, DECallback<AppTemplate> callback);
 
     /**
      * Create a new App template
@@ -77,7 +69,7 @@ public interface AppTemplateServices {
      * @param at
      * @param callback
      */
-    void createAppTemplate(AppTemplate at, AsyncCallback<AppTemplate> callback);
+    void createAppTemplate(AppTemplate at, DECallback<AppTemplate> callback);
 
     /**
      * Submits a published app template with non-functional changes.
@@ -85,5 +77,5 @@ public interface AppTemplateServices {
      * @param at
      * @param callback
      */
-    void updateAppLabels(AppTemplate at, AsyncCallback<AppTemplate> callback);
+    void updateAppLabels(AppTemplate at, DECallback<AppTemplate> callback);
 }

@@ -3,6 +3,7 @@ package org.iplantc.de.desktop.client.views.windows;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.commons.client.CommonUiConstants;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
+import org.iplantc.de.desktop.client.views.widgets.ServiceDownPanel;
 import org.iplantc.de.desktop.shared.DeModule;
 
 import com.google.common.base.Strings;
@@ -12,6 +13,7 @@ import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
@@ -118,6 +120,8 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
     protected ToolButton btnHelp;
     private IplantWindowAppearance windowAppearance;
     protected CommonUiConstants constants = GWT.create(CommonUiConstants.class);
+    protected Widget currentWidget;
+    protected ServiceDownPanel serviceDownPanel;
 
     public IplantWindowBase() {
         this(GWT.<IplantWindowAppearance> create(IplantWindowAppearance.class));
@@ -382,6 +386,25 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
         final int indexOf = getHeader().getTools().indexOf(btnRestore);
         getHeader().removeTool(btnRestore);
         getHeader().insertTool(btnMaximize, indexOf);
+    }
+
+    @Override
+    public void serviceDown(SelectEvent.SelectHandler handler) {
+        if (currentWidget == null) {
+            currentWidget = getWidget();
+            serviceDownPanel = new ServiceDownPanel();
+            this.setWidget(serviceDownPanel);
+        }
+
+        serviceDownPanel.addHandler(handler);
+    }
+
+    @Override
+    public void serviceUp() {
+        if (currentWidget != null) {
+            this.setWidget(currentWidget);
+            currentWidget = null;
+        }
     }
 
 }

@@ -8,6 +8,7 @@ import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.views.windows.IPlantWindowInterface;
 import org.iplantc.de.desktop.client.views.windows.util.WindowFactory;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.events.ServiceDown;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -172,6 +173,31 @@ public class DesktopWindowManager {
                 }
             }
         });
+    }
+
+    public void serviceDown(ServiceDown event) {
+        List<WindowType> types = event.getWindowTypes();
+        for (Widget w : windowManager.getStack()) {
+            Window window = (Window)w;
+            for (WindowType type : types) {
+                if (Strings.nullToEmpty(window.getStateId()).startsWith(type.toString())) {
+                    IPlantWindowInterface windowInterface = (IPlantWindowInterface)window;
+                    windowInterface.serviceDown(event.getSelectionHandler());
+                }
+            }
+        }
+    }
+
+    public void serviceUp(List<WindowType> windowTypes) {
+        for (Widget w : windowManager.getStack()) {
+            Window window = (Window)w;
+            for (WindowType type : windowTypes) {
+                if (Strings.nullToEmpty(window.getStateId()).startsWith(type.toString())) {
+                    IPlantWindowInterface windowInterface = (IPlantWindowInterface)window;
+                    windowInterface.serviceUp();
+                }
+            }
+        }
     }
 
     private void resizeOversizeWindow(IPlantWindowInterface window) {

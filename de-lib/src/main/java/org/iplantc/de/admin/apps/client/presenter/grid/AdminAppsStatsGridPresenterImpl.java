@@ -5,8 +5,8 @@ import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.shared.AppsCallback;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
@@ -34,9 +34,9 @@ public class AdminAppsStatsGridPresenterImpl implements AdminAppStatsGridView.Pr
 
     void load() {
         view.mask(appearance.loading());
-        appService.searchApp("", new AsyncCallback<AppListLoadResult>() {
+        appService.searchApp("", new AppsCallback<AppListLoadResult>() {
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 view.unmask();
                 ErrorHandler.post(caught);
             }

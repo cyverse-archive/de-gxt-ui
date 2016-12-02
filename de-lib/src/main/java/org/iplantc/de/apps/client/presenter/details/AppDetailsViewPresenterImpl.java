@@ -19,12 +19,12 @@ import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -111,9 +111,9 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter,
             return;
         }
         // Prefetch Docs
-        appUserService.getAppDoc(app, new AsyncCallback<AppDoc>() {
+        appUserService.getAppDoc(app, new AppsCallback<AppDoc>() {
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 // warn only for public app
                 if (app.isPublic()) {
                     announcer.schedule(new ErrorAnnouncementConfig(appearance.getAppDocError(caught)));
@@ -142,9 +142,9 @@ public class AppDetailsViewPresenterImpl implements AppDetailsView.Presenter,
         Preconditions.checkArgument(!Strings.isNullOrEmpty(event.getEditorContent()));
 
         appUserService.saveAppDoc(event.getApp(),
-                                  event.getEditorContent(), new AsyncCallback<AppDoc>() {
+                                  event.getEditorContent(), new AppsCallback<AppDoc>() {
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 event.getMaskable().unmask();
                 announcer.schedule(new ErrorAnnouncementConfig(appearance.saveAppDocError(caught)));
                 ErrorHandler.post(caught);

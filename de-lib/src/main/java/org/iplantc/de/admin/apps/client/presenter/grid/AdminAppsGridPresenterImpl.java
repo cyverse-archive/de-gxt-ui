@@ -24,6 +24,7 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
@@ -171,9 +172,9 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
         view.mask(appearance.getAppsLoadingMask());
 
         final AppCategory appCategory = event.getAppCategorySelection().iterator().next();
-        appService.getApps(appCategory, new AsyncCallback<List<App>>() {
+        appService.getApps(appCategory, new AppsCallback<List<App>>() {
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
                 view.unmask();
             }

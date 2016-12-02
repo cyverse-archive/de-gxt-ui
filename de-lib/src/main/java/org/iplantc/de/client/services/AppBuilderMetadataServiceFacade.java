@@ -3,8 +3,7 @@ package org.iplantc.de.client.services;
 import org.iplantc.de.client.models.apps.integration.DataSource;
 import org.iplantc.de.client.models.apps.integration.FileInfoType;
 import org.iplantc.de.client.models.apps.refGenome.ReferenceGenome;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.iplantc.de.shared.DECallback;
 
 import java.util.List;
 
@@ -13,10 +12,10 @@ import java.util.List;
  */
 public interface AppBuilderMetadataServiceFacade {
 
-    void getDataSources(AsyncCallback<List<DataSource>> callback);
+    void getDataSources(DECallback<List<DataSource>> callback);
 
-    void getFileInfoTypes(AsyncCallback<List<FileInfoType>> callback);
+    void getFileInfoTypes(DECallback<List<FileInfoType>> callback);
     
-    void getReferenceGenomes(AsyncCallback<List<ReferenceGenome>> callback);
+    void getReferenceGenomes(DECallback<List<ReferenceGenome>> callback);
 
 }

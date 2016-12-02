@@ -30,6 +30,7 @@ import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.util.OntologyUtil;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
+import org.iplantc.de.shared.DECallback;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -73,7 +74,7 @@ public class AdminAppsListPresenterImplTest {
     @Mock App appMock;
     @Mock OntologyServiceFacade ontologyServiceFacadeMock;
 
-    @Captor ArgumentCaptor<AsyncCallback<List<App>>> appListCallbackCaptor;
+    @Captor ArgumentCaptor<DECallback<List<App>>> appListCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<App>> appCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Avu>>> avuListCallbackCaptor;

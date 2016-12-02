@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
 import org.iplantc.de.client.services.AppSearchFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.base.Strings;
 import com.google.gwt.event.shared.HasHandlers;
@@ -63,7 +64,7 @@ public class AppSearchRpcProxy extends RpcProxy<FilterPagingLoadConfig, PagingLo
         }
 
         // Call the searchApp service with this proxy's query.
-        appService.searchApp(lastQueryText, new AsyncCallback<AppListLoadResult>() {
+        appService.searchApp(lastQueryText, new AppsCallback<AppListLoadResult>() {
             @Override
             public void onSuccess(final AppListLoadResult loadResult) {
                 List<App> apps = loadResult.getData();
@@ -82,7 +83,7 @@ public class AppSearchRpcProxy extends RpcProxy<FilterPagingLoadConfig, PagingLo
             }
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 // TODO Add user error message or remove post here?
                 ErrorHandler.post(caught);
                 if(hasHandlers != null){

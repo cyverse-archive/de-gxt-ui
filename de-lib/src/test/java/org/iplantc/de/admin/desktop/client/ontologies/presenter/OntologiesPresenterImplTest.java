@@ -33,6 +33,7 @@ import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
 import org.iplantc.de.apps.client.presenter.toolBar.proxy.AppSearchRpcProxy;
 import org.iplantc.de.client.services.AppSearchFacade;
 import org.iplantc.de.client.services.AppServiceFacade;
+import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.avu.Avu;
@@ -118,10 +119,11 @@ public class OntologiesPresenterImplTest {
     @Mock OntologyHierarchy trashHierarchyMock;
 
     @Captor ArgumentCaptor<AsyncCallback<List<Ontology>>> asyncCallbackOntologyListCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<List<OntologyHierarchy>>> asyncOntologyHierarchyListCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<OntologyHierarchy>> asyncOntologyHierarchyCaptor;
+    @Captor ArgumentCaptor<DECallback<List<OntologyHierarchy>>> asyncOntologyHierarchyListCaptor;
+    @Captor ArgumentCaptor<DECallback<OntologyHierarchy>> asyncOntologyHierarchyCaptor;
     @Captor ArgumentCaptor<AsyncCallback<OntologyVersionDetail>> asyncOntologyDetailCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<App>>> asyncAppListCaptor;
+    @Captor ArgumentCaptor<DECallback<List<App>>> deAppListCaptor;
     @Captor ArgumentCaptor<AsyncCallback<App>> asyncAppCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Avu>>> asyncAvuListCaptor;
     @Captor ArgumentCaptor<AsyncCallback<Void>> asyncVoidCaptor;
@@ -720,9 +722,9 @@ public class OntologiesPresenterImplTest {
         uut.getTrashItems();
 
         verify(viewMock).maskGrid(eq(OntologiesView.ViewType.EDITOR));
-        verify(appServiceMock).getApps(anyString(), asyncAppListCaptor.capture());
+        verify(appServiceMock).getApps(anyString(), deAppListCaptor.capture());
 
-        asyncAppListCaptor.getValue().onSuccess(appListMock);
+        deAppListCaptor.getValue().onSuccess(appListMock);
         verify(editorGridViewMock).clearAndAdd(eq(appListMock));
         verify(viewMock).unmaskGrid(OntologiesView.ViewType.EDITOR);
     }

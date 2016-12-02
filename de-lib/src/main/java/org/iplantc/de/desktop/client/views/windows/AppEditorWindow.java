@@ -28,6 +28,7 @@ import org.iplantc.de.commons.client.widgets.ContextualHelpToolButton;
 import org.iplantc.de.desktop.client.events.WindowHeadingUpdatedEvent;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -35,7 +36,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
@@ -222,11 +222,11 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
         if (config.getAppTemplate() != null) {
             // JDS Use converter for convenience.
             AppTemplateCallbackConverter at = new AppTemplateCallbackConverter(factory,
-                                                                               new AsyncCallback<AppTemplate>() {
+                                                                               new AppsCallback<AppTemplate>() {
 
                                                                                    @Override
                                                                                    public void
-                                                                                           onFailure(Throwable caught) {
+                                                                                           onFailure(Integer statusCode, Throwable caught) {
                                                                                        /*
                                                                                         * JDS Do nothing
                                                                                         * since this this
@@ -287,9 +287,9 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
             mask(appearance.loadingMask());
             templateService.getAppTemplateForEdit(CommonModelUtils.getInstance()
                                                                   .createHasIdFromString(config.getAppId()),
-                                                  new AsyncCallback<AppTemplate>() {
+                                                  new AppsCallback<AppTemplate>() {
                                                       @Override
-                                                      public void onFailure(Throwable caught) {
+                                                      public void onFailure(Integer statusCode, Throwable caught) {
                                                           SimpleServiceError serviceError = AutoBeanCodex.decode(factory,
                                                                                                                  SimpleServiceError.class,
                                                                                                                  caught.getMessage())

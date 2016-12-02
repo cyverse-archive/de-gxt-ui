@@ -7,6 +7,7 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.services.AppSearchFacade;
+import org.iplantc.de.shared.DECallback;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -30,7 +31,7 @@ public interface AppAdminServiceFacade extends  AppSearchFacade {
      */
     void addCategory(String newCategoryName, HasId parentCategory, AsyncCallback<AppCategory> callback);
 
-    void getPublicAppCategories(AsyncCallback<List<AppCategory>> asyncCallback, boolean loadHpc);
+    void getPublicAppCategories(DECallback<List<AppCategory>> asyncCallback, boolean loadHpc);
 
     /**
      * Renames a Category with the given category ID to the given name.

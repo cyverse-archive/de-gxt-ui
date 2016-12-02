@@ -1,5 +1,16 @@
 package org.iplantc.de.admin.apps.client.presenter.categories;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
+
 import org.iplantc.de.admin.apps.client.AdminCategoriesView;
 import org.iplantc.de.admin.apps.client.events.selection.AddCategorySelected;
 import org.iplantc.de.admin.apps.client.events.selection.CategorizeAppSelected;
@@ -9,11 +20,12 @@ import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.apps.client.AppCategoriesView;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.gin.factory.AppCategoriesViewFactory;
-import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.shared.DECallback;
+import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -23,8 +35,6 @@ import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 import com.sencha.gxt.widget.core.client.tree.TreeSelectionModel;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,7 +64,7 @@ public class AdminAppsCategoriesPresenterImplTest {
     @Mock DEProperties propertiesMock;
     @Mock IplantAnnouncer announcerMock;
 
-    @Captor ArgumentCaptor<AsyncCallback<List<AppCategory>>> appCatListCallbackCaptor;
+    @Captor ArgumentCaptor<DECallback<List<AppCategory>>> appCatListCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<AppCategory>> appCatCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<App>> appCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
