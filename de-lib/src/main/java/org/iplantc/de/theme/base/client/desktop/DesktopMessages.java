@@ -110,4 +110,8 @@ public interface DesktopMessages extends Messages {
     String faqs();
 
     String feedback();
+
+    String preferencesFailure();
+
+    String preferencesSuccess();
 }

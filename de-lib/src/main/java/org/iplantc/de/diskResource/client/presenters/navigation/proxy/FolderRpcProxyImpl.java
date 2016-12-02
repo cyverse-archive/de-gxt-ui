@@ -1,6 +1,7 @@
 package org.iplantc.de.diskResource.client.presenters.navigation.proxy;
 
 import org.iplantc.de.client.models.IsMaskable;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.diskResources.DiskResourceFavorite;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.diskResources.RootFolders;
@@ -65,15 +66,18 @@ public class FolderRpcProxyImpl extends RpcProxy<Folder, List<Folder>> implement
         final IsMaskable maskable;
         private final NavigationView.Presenter.Appearance appearance;
         final SearchServiceFacade searchSvc;
+        final UserInfo userInfo;
 
         public RootFolderCallback(final SearchServiceFacade searchService,
                                   final AsyncCallback<List<Folder>> callback,
                                   final IplantAnnouncer announcer,
+                                  final UserInfo userInfo,
                                   final IsMaskable isMaskable,
                                   final NavigationView.Presenter.Appearance appearance) {
             this.searchSvc = searchService;
             this.callback = callback;
             this.ipAnnouncer = announcer;
+            this.userInfo = userInfo;
             this.maskable = isMaskable;
             this.appearance = appearance;
         }
@@ -90,6 +94,10 @@ public class FolderRpcProxyImpl extends RpcProxy<Folder, List<Folder>> implement
 
         @Override
         public void onSuccess(final RootFolders rootFolders) {
+            if (userInfo.hasDataInfoError() && rootFolders.getBasePaths() != null) {
+                userInfo.setDataInfo(rootFolders.getBasePaths());
+            }
+
             if (callback != null) {
                 List<Folder> roots = rootFolders.getRoots();
                 callback.onSuccess(roots);
@@ -140,6 +148,7 @@ public class FolderRpcProxyImpl extends RpcProxy<Folder, List<Folder>> implement
     private final HandlerManager handlerManager;
     private final SearchServiceFacade searchService;
     private IsMaskable isMaskable;
+    @Inject UserInfo userInfo;
 
     @Inject
     FolderRpcProxyImpl(final DiskResourceServiceFacade drService,
@@ -178,6 +187,7 @@ public class FolderRpcProxyImpl extends RpcProxy<Folder, List<Folder>> implement
             drService.getRootFolders(new RootFolderCallback(searchService,
                                                             callback,
                                                             announcer,
+                                                            userInfo,
                                                             isMaskable,
                                                             appearance));
         } else if (parentFolder.isFilter() || parentFolder instanceof DiskResourceFavorite) {

@@ -46,6 +46,8 @@ public interface AppsView extends IsWidget,
         Presenter hideWorkflowMenu();
 
         void setViewDebugId(String baseId);
+
+        void checkForAgaveRedirect();
     }
 
     DETabPanel getCategoryTabPanel();

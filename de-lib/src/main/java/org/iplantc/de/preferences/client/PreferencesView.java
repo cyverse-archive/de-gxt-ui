@@ -66,6 +66,10 @@ public interface PreferencesView extends IsWidget,
         String retrySessionConnection();
 
         SafeHtml sessionConnectionFailed();
+
+        String preferencesFailure();
+
+        String preferencesSuccess();
     }
 
     void userSessionSuccess();

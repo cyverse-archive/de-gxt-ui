@@ -2,10 +2,14 @@ package org.iplantc.de.preferences.client.presenter;
 
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.userSettings.UserSetting;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.desktop.client.DesktopView;
-import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
 import org.iplantc.de.preferences.client.PreferencesView;
+import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -21,13 +25,18 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
 
     private final PreferencesView view;
     private final UserSessionServiceFacade serviceFacade;
+    private final PreferencesView.PreferencesViewAppearance appearance;
     DesktopView.Presenter desktopPresenter;
+    UserSettings userSettings;
+    @Inject IplantAnnouncer announcer;
 
     @Inject
     public PreferencesPresenterImpl(PreferencesView view,
-                                    UserSessionServiceFacade serviceFacade) {
+                                    UserSessionServiceFacade serviceFacade,
+                                    PreferencesView.PreferencesViewAppearance appearance) {
         this.view = view;
         this.serviceFacade = serviceFacade;
+        this.appearance = appearance;
 
         this.view.addPrefDlgRetryUserSessionClickedHandlers(this);
     }
@@ -35,6 +44,16 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
     @Override
     public void go(DesktopView.Presenter presenter, UserSettings userSettings) {
         this.desktopPresenter = presenter;
+        this.userSettings = userSettings;
+
+        if (userSettings.isUsingDefaults()) {
+            retryUserPreferences();
+        } else {
+            setUpView();
+        }
+    }
+
+    void setUpView() {
         view.initAndShow(userSettings);
     }
 
@@ -59,6 +78,23 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
                 view.userSessionSuccess();
                 desktopPresenter.restoreWindows(result);
                 desktopPresenter.doPeriodicSessionSave();
+            }
+        });
+    }
+
+    void retryUserPreferences() {
+        serviceFacade.getUserPreferences(new AsyncCallback<UserSetting>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.preferencesFailure()));
+                setUpView();
+            }
+
+            @Override
+            public void onSuccess(UserSetting result) {
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.preferencesSuccess()));
+                userSettings.setUserSettings(result);
+                setUpView();
             }
         });
     }

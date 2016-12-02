@@ -147,4 +147,6 @@ public interface AppsMessages extends Messages {
     String completedRun();
 
     String appLoadError();
+
+    String agaveRedirectCheckFail();
 }

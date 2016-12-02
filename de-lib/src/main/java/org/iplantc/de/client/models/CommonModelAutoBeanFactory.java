@@ -1,5 +1,6 @@
 package org.iplantc.de.client.models;
 
+import org.iplantc.de.client.models.bootstrap.Session;
 import org.iplantc.de.client.models.bootstrap.UserBootstrap;
 import org.iplantc.de.client.models.viewer.StructuredText;
 
@@ -23,4 +24,8 @@ public interface CommonModelAutoBeanFactory extends AutoBeanFactory {
     AutoBean<UserSession> userSession();
 
     AutoBean<StructuredText> getStructuredText();
+
+    AutoBean<Session> session();
+
+    AutoBean<RootLevelMap> rootLevelMap();
 }

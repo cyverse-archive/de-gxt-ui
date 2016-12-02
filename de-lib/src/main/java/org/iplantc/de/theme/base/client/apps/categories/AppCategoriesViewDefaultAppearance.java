@@ -87,4 +87,9 @@ public class AppCategoriesViewDefaultAppearance implements AppCategoriesView.App
     public String hpcTab() {
         return appsMessages.hpcTab();
     }
+
+    @Override
+    public String agaveRedirectCheckFail() {
+        return appsMessages.agaveRedirectCheckFail();
+    }
 }

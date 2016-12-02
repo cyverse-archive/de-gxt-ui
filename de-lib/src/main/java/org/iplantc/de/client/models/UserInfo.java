@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.bootstrap.Session;
 import org.iplantc.de.client.models.bootstrap.UserBootstrap;
 import org.iplantc.de.client.models.bootstrap.UserProfile;
 import org.iplantc.de.client.models.bootstrap.Workspace;
+import org.iplantc.de.client.models.userSettings.UserSetting;
 import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.base.Strings;
@@ -128,14 +129,14 @@ public class UserInfo {
      * @return email address.
      */
     public String getEmail() {
-        return userProfile == null ? null : userProfile.getEmail();
+        return userProfile == null || hasUserProfileError() ? null : userProfile.getEmail();
     }
 
     /**
      * @return the firstName
      */
     public String getFirstName() {
-        return userProfile == null ? null : userProfile.getFirstName();
+        return userProfile == null || hasUserProfileError() ? null : userProfile.getFirstName();
     }
 
     /**
@@ -144,14 +145,18 @@ public class UserInfo {
      * @return the fully qualified username.
      */
     public String getFullUsername() {
-        return userProfile == null ? null : userProfile.getFullUsername();
+        return userProfile == null || hasUserProfileError() ? null : userProfile.getFullUsername();
+    }
+
+    public UserSetting getUserPreferences() {
+        return preferences;
     }
 
     /**
      * @return the path to the user's home directory.
      */
     public String getHomePath() {
-        if (hasDataInfoError()) {
+        if (dataInfo == null || hasDataInfoError()) {
             String irodsHome = DEProperties.getInstance().getIrodsHomePath();
             String username = userProfile.getUsername();
 
@@ -168,11 +173,11 @@ public class UserInfo {
      * @return the lastName
      */
     public String getLastName() {
-        return userProfile == null ? null : userProfile.getLastName();
+        return userProfile == null || hasUserProfileError() ? null : userProfile.getLastName();
     }
 
     public Long getLoginTime() {
-        return session == null ? null : session.getLoginTime();
+        return session == null || hasSessionError() ? null : session.getLoginTime();
     }
 
     /**
@@ -186,7 +191,7 @@ public class UserInfo {
      * @return the path to the user's trash.
      */
     public String getTrashPath() {
-        if (hasDataInfoError()) {
+        if (dataInfo == null || hasDataInfoError()) {
             String baseTrashPath = getBaseTrashPath();
             String username = userProfile.getUsername();
 
@@ -203,7 +208,7 @@ public class UserInfo {
      * @return the base trash path of the data store for all users.
      */
     public String getBaseTrashPath() {
-        if (hasDataInfoError()) {
+        if (dataInfo == null || hasDataInfoError()) {
             String baseTrashPath = DEProperties.getInstance().getBaseTrashPath();
 
             if (Strings.isNullOrEmpty(baseTrashPath)) {
@@ -215,6 +220,10 @@ public class UserInfo {
         return dataInfo.getBaseTrashPath();
     }
 
+    public void setDataInfo(DataInfo dataInfo) {
+        this.dataInfo = dataInfo;
+    }
+
     /**
      * Gets the username for the user.
      *
@@ -223,7 +232,7 @@ public class UserInfo {
      * @return a string representing the username for the user.
      */
     public String getUsername() {
-        return userProfile == null ? null : userProfile.getUsername();
+        return userProfile == null || hasUserProfileError() ? null : userProfile.getUsername();
     }
 
     /**
@@ -239,7 +248,7 @@ public class UserInfo {
      * @return the newUser
      */
     public boolean isNewUser() {
-        return workspace == null ? false : workspace.isNewUser();
+        return workspace == null || hasWorkspaceError() ? true : workspace.isNewUser();
     }
 
     /**
@@ -249,8 +258,17 @@ public class UserInfo {
         this.savedOrderedWindowStates = savedOrderedWindowStates;
     }
 
+    public void setAuthRedirects(Map<String, String> redirects) {
+        if (session == null) {
+            session = factory.session().as();
+        } else {
+            session.setError(null);
+        }
+        session.setAuthRedirects(redirects);
+    }
+
     public Map<String, String> getAuthRedirects() {
-        return session == null ? null : session.getAuthRedirects();
+        return session == null || hasSessionError() ? null : session.getAuthRedirects();
     }
 
     public boolean hasAgaveRedirect() {

@@ -25,6 +25,7 @@ public class UserSettings {
     private UserSetting userSetting;
     private static UserSettings instance;
     private boolean userSessionConnection = true;
+    private boolean isDefaults;
     private static String ANALYSES_DIR = "analyses";
 
     public UserSettings(final UserSetting userSetting) {
@@ -54,7 +55,10 @@ public class UserSettings {
 
     void setUserSettings() {
         if (userSetting == null) {
+            isDefaults = true;
             userSetting = factory.getUserSetting().as();
+        } else {
+            isDefaults = false;
         }
 
         if (userSetting.isEnableAnalysisEmailNotification() == null) {
@@ -291,5 +295,9 @@ public class UserSettings {
 
     public void setEnableWaitTimeMessage(boolean enableWaitTimeMessage) {
         userSetting.setEnableWaitTimeMessage(enableWaitTimeMessage);
+    }
+
+    public boolean isUsingDefaults() {
+        return isDefaults;
     }
 }

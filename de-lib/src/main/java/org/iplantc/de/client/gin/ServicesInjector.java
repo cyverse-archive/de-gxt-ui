@@ -12,6 +12,7 @@ import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
 import org.iplantc.de.client.services.MessageServiceFacade;
+import org.iplantc.de.client.services.OauthServiceFacade;
 import org.iplantc.de.client.services.PermIdRequestUserServiceFacade;
 import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.client.services.SystemMessageServiceFacade;
@@ -69,4 +70,6 @@ public interface ServicesInjector extends Ginjector {
     AppMetadataServiceFacade getAppMetadataServiceFacade();
 
     PermIdRequestUserServiceFacade getPermIdRequestUserServiceFacade();
+
+    OauthServiceFacade getOauthService();
 }

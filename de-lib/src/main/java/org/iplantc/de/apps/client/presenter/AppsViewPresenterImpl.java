@@ -8,6 +8,7 @@ import org.iplantc.de.apps.client.OntologyHierarchiesView;
 import org.iplantc.de.apps.client.events.selection.RefreshAppsSelectedEvent;
 import org.iplantc.de.apps.client.gin.factory.AppsViewFactory;
 import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
@@ -35,6 +36,7 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
     private final AppsListView.Presenter appsListPresenter;
     private final OntologyHierarchiesView.Presenter hierarchiesPresenter;
     private final AppsToolbarView.Presenter toolbarPresenter;
+    @Inject UserInfo userInfo;
     OntologyUtil ontologyUtil;
 
     @Inject
@@ -120,6 +122,11 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
     @Override
     public void setViewDebugId(String baseId) {
         view.asWidget().ensureDebugId(baseId);
+    }
+
+    @Override
+    public void checkForAgaveRedirect() {
+        categoriesPresenter.checkForAgaveRedirect();
     }
 
     @Override
