@@ -6,12 +6,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.iplantc.de.client.models.UserInfo;
+import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.views.dialogs.AgaveAuthPrompt;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.shared.exceptions.HttpException;
 
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwtmockito.GxtMockitoTestRunner;
 import com.google.inject.Provider;
 
@@ -33,9 +36,11 @@ public class BootstrapCallbackTest {
     @Mock Provider<ErrorHandler> errorHandlerProviderMock;
     @Mock DesktopView.Presenter.DesktopPresenterAppearance appearanceMock;
     @Mock UserSessionServiceFacade userSessionServiceMock;
-    @Mock InitializationCallbacks.UserPreferencesCallback userPreferencesCallbackMock;
     @Mock ConfirmMessageBox introBoxMock;
     @Mock AgaveAuthPrompt agaveAuthPromptMock;
+    @Mock Panel panelMock;
+    @Mock UserSettings userSettingsMock;
+    @Mock IplantAnnouncer announcerMock;
 
     private InitializationCallbacks.BootstrapCallback uut;
 
@@ -43,11 +48,11 @@ public class BootstrapCallbackTest {
     public void setup() {
 
         uut = new InitializationCallbacks.BootstrapCallback(presenterMock,
+                                                            panelMock,
                                                             userInfoMock,
-                                                            errorHandlerProviderMock,
-                                                            appearanceMock,
-                                                            userSessionServiceMock,
-                                                            userPreferencesCallbackMock) {
+                                                            userSettingsMock,
+                                                            announcerMock,
+                                                            appearanceMock) {
             @Override
             ConfirmMessageBox getIntroConfirmation() {
                 return introBoxMock;
@@ -89,8 +94,6 @@ public class BootstrapCallbackTest {
         /** CALL METHOD UNDER TEST **/
         uut.onSuccess(result);
         verify(userInfoMock).init(eq(result));
-
-        verify(userSessionServiceMock).getUserPreferences(eq(userPreferencesCallbackMock));
     }
 
     @Test
@@ -106,7 +109,6 @@ public class BootstrapCallbackTest {
         verify(userInfoMock).init(eq(result));
         verify(userInfoMock).isNewUser();
 
-        verify(userSessionServiceMock).getUserPreferences(eq(userPreferencesCallbackMock));
     }
 
     @Test
@@ -122,8 +124,6 @@ public class BootstrapCallbackTest {
         verify(userInfoMock).hasAgaveRedirect();
         verify(agaveAuthPromptMock).show();
         verify(presenterMock).stickWindowToTop(agaveAuthPromptMock);
-
-        verify(userSessionServiceMock).getUserPreferences(eq(userPreferencesCallbackMock));
     }
 
 }

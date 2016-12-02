@@ -1,6 +1,18 @@
 package org.iplantc.de.diskResource.client.presenters.navigation.proxy;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
+
 import org.iplantc.de.client.models.IsMaskable;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.diskResources.RootFolders;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
@@ -19,11 +31,6 @@ import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GxtMockitoTestRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,6 +55,7 @@ public class FolderRpcProxyTest {
     @Mock IsMaskable maskableMock;
     @Mock SearchView.Presenter searchPresenterMock;
     @Mock NavigationView.Presenter.Appearance appearanceMock;
+    @Mock UserInfo userInfoMock;
 
     @Mock AsyncCallback<List<Folder>> folderCallbackMock;
     
@@ -61,7 +69,9 @@ public class FolderRpcProxyTest {
                                                 announcerMock,
                                                 appearanceMock);
         proxyUnderTest.setMaskable(maskableMock);
+        proxyUnderTest.userInfo = userInfoMock;
         when(appearanceMock.savedFiltersRetrievalFailure()).thenReturn("sample");
+        when(userInfoMock.hasDataInfoError()).thenReturn(false);
     }
 
     /**
@@ -180,6 +190,7 @@ public class FolderRpcProxyTest {
      * onSuccess callback !null
      */
     @Test public void testRootFolderCallbackOnSuccess_Case1() {
+
         proxyUnderTest.load(null, folderCallbackMock);
 
         verify(maskableMock).mask(any(String.class));

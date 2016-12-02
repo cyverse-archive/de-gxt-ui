@@ -35,6 +35,7 @@ public class PreferencesPresenterImplTest {
     @Mock DesktopView.Presenter desktopPresenterMock;
     @Mock UserSettings userSettingsMock;
     @Mock List<WindowState> windowStatesMock;
+    @Mock PreferencesView.PreferencesViewAppearance appearanceMock;
 
     @Captor ArgumentCaptor<AsyncCallback<List<WindowState>>> userSessionCaptor;
 
@@ -45,7 +46,8 @@ public class PreferencesPresenterImplTest {
         when(viewMock.getValue()).thenReturn(userSettingsMock);
 
         uut = new PreferencesPresenterImpl(viewMock,
-                                           serviceFacadeMock);
+                                           serviceFacadeMock,
+                                           appearanceMock);
 
         uut.desktopPresenter = desktopPresenterMock;
     }
