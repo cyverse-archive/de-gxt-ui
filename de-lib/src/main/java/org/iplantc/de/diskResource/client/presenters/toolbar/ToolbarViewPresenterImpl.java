@@ -375,10 +375,10 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
     @Override
     public void onDoiRequest(String uuid) {
-        prFacade.requestPermId(uuid, PermanentIdRequestType.DOI, new AsyncCallback<String>() {
+        prFacade.requestPermId(uuid, PermanentIdRequestType.DOI, new DataCallback<String>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 IplantAnnouncer.getInstance()
                                .schedule(new ErrorAnnouncementConfig(appearance.doiRequestFail()));
                 ErrorHandler.post(appearance.doiRequestFail(),caught);
