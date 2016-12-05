@@ -100,7 +100,7 @@ public class GridViewPresenterImpl implements
                                   DiskResourceSelectionChangedEvent.DiskResourceSelectionChangedEventHandler
                                   {
 
-    private final class SaveMetadataCallback extends DataCallback<String> {
+    private final class SaveMetadataCallback implements AsyncCallback<String> {
         private final SaveAsDialog save_dialog;
 
         private SaveMetadataCallback(SaveAsDialog save_dialog) {
@@ -108,7 +108,7 @@ public class GridViewPresenterImpl implements
         }
 
         @Override
-         public void onFailure(Integer statusCode, Throwable caught) {
+         public void onFailure(Throwable caught) {
              save_dialog.hide();
              announcer.schedule(new ErrorAnnouncementConfig("Unable to save your file. Please try again or contact support."));
          }
@@ -124,7 +124,7 @@ public class GridViewPresenterImpl implements
          }
     }
 
-    private final class CopyMetadataCallback extends DataCallback<String> {
+    private final class CopyMetadataCallback implements AsyncCallback<String> {
         private final DiskResource selected;
         private final IPlantDialog win;
         private final List<HasPath> paths;
@@ -136,7 +136,7 @@ public class GridViewPresenterImpl implements
         }
 
         @Override
-        public void onFailure(Integer statusCode, Throwable caught) {
+        public void onFailure(Throwable caught) {
             win.unmask();
             ErrorHandler.post(appearance.copyMetadataFailure(), caught);
 

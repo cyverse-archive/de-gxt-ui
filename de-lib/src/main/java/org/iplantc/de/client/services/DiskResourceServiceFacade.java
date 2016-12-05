@@ -167,7 +167,7 @@ public interface DiskResourceServiceFacade {
      * @param resource the <code>DiskResource</code> for which metadata will be retrieved.
      * @param callback callback executed when service call completes.
      */
-    void getDiskResourceMetaData(DiskResource resource, DECallback<DiskResourceMetadataList> callback);
+    void getDiskResourceMetaData(DiskResource resource, AsyncCallback<DiskResourceMetadataList> callback);
 
     /**
      * Calls service to set disk resource metadata.
@@ -178,7 +178,7 @@ public interface DiskResourceServiceFacade {
      */
     void setDiskResourceMetaData(DiskResource resource,
                                  DiskResourceMetadataList mdList,
-                                 DECallback<String> callback);
+                                 AsyncCallback<String> callback);
 
     /**
      * 
@@ -305,7 +305,7 @@ public interface DiskResourceServiceFacade {
 
     void copyMetadata(final String srcUUID,
                       final Splittable paths,
-                      final DECallback<String> callback);
+                      final AsyncCallback<String> callback);
             
             /**
      * save metadata to a file
@@ -318,7 +318,7 @@ public interface DiskResourceServiceFacade {
     void saveMetadata(final String srcUUID,
                       final String path,
                       boolean recursive,
-                      final DECallback<String> callback);
+                      final AsyncCallback<String> callback);
 
     /**
      * 

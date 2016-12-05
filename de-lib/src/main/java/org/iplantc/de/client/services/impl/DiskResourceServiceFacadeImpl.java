@@ -639,12 +639,12 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
     }
 
     @Override
-    public void getDiskResourceMetaData(DiskResource resource, DECallback<DiskResourceMetadataList> callback) {
+    public void getDiskResourceMetaData(DiskResource resource, AsyncCallback<DiskResourceMetadataList> callback) {
         String fullAddress = deProperties.getDataMgmtBaseUrl() + resource.getId()
                 + "/metadata";
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, fullAddress);
 
-        callService(wrapper, new DECallbackConverter<String, DiskResourceMetadataList>(callback) {
+        callService(wrapper, new AsyncCallbackConverter<String, DiskResourceMetadataList>(callback) {
             @Override
             protected DiskResourceMetadataList convertFrom(String object) {
                 DiskResourceMetadataList metadata = AutoBeanCodex.decode(factory, DiskResourceMetadataList.class, object).as();
@@ -656,7 +656,7 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
     @Override
     public void setDiskResourceMetaData(DiskResource resource,
                                         DiskResourceMetadataList mdList,
-                                        DECallback<String> callback) {
+                                        AsyncCallback<String> callback) {
         String address = deProperties.getDataMgmtBaseUrl() + resource.getId() + "/metadata"; //$NON-NLS-1$
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode(mdList));
@@ -973,7 +973,7 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
     @Override
     public void copyMetadata(String srcUUID,
                               Splittable paths,
-                              DECallback<String> callback) {
+                              AsyncCallback<String> callback) {
         String address = null;
         address = deProperties.getDataMgmtBaseUrl() + srcUUID + "/metadata/copy";
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, paths.getPayload());
@@ -984,7 +984,7 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
     public void saveMetadata(String srcUUID,
                              String path,
                              boolean recursive,
-                             DECallback<String> callback) {
+                             AsyncCallback<String> callback) {
         Splittable body = StringQuoter.createSplittable();
         String address = deProperties.getDataMgmtBaseUrl() + srcUUID + "/metadata/save";
         Splittable sppath = StringQuoter.create(path);
