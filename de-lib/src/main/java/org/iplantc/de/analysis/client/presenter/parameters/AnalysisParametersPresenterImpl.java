@@ -84,7 +84,7 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
         }
     }
 
-    private static class SaveAnalysisParametersCallback implements AsyncCallback<File> {
+    private static class SaveAnalysisParametersCallback extends DataCallback<File> {
         private final  IplantAnnouncer announcer;
         private final AnalysisParametersView.Appearance appearance;
         private final DiskResourceUtil diskResourceUtil;
@@ -113,7 +113,7 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             ErrorHandler.post(caught);
         }
 

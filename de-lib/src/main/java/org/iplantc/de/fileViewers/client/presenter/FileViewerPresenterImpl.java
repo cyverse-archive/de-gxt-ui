@@ -37,6 +37,7 @@ import org.iplantc.de.fileViewers.client.views.SaveAsDialogCancelSelectHandler;
 import org.iplantc.de.fileViewers.client.views.SaveAsDialogOkSelectHandler;
 import org.iplantc.de.fileViewers.client.views.TextViewerImpl;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -66,7 +67,7 @@ import java.util.logging.Logger;
  * @author sriram, jstroot
  */
 public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedEvent.FileSavedEventHandler {
-    class GetManifestCallback implements AsyncCallback<Manifest> {
+    class GetManifestCallback extends DataCallback<Manifest> {
         private final AsyncCallback<String> asyncCallback;
         private final FileViewer.FileViewerPresenterAppearance presenterAppearance;
         private final boolean editing;
@@ -96,7 +97,7 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             asyncCallback.onFailure(caught);
             DiskResourceErrorAutoBeanFactory factory = GWT.create(DiskResourceErrorAutoBeanFactory.class);
             String message = caught.getMessage();
@@ -217,9 +218,9 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
         Preconditions.checkNotNull(file, "Cannot have null file if attempting to load its contents");
 
         simpleContainer.mask(appearance.retrievingFileContentsMask());
-        fileEditorService.readCsvChunk(file, separator, pageNumber, pageSize, new AsyncCallback<String>() {
+        fileEditorService.readCsvChunk(file, separator, pageNumber, pageSize, new DataCallback<String>() {
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 simpleContainer.unmask();
                 ErrorHandler.post(appearance.unableToRetrieveFileData(file.getName()));
             }
@@ -245,9 +246,9 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
 
         simpleContainer.mask(appearance.retrievingFileContentsMask());
         long chunkPosition = pageSize * (pageNumber - 1);
-        fileEditorService.readChunk(file, chunkPosition, pageSize, new AsyncCallback<String>() {
+        fileEditorService.readChunk(file, chunkPosition, pageSize, new DataCallback<String>() {
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 simpleContainer.unmask();
                 ErrorHandler.post(appearance.unableToRetrieveFileData(file.getName()));
             }

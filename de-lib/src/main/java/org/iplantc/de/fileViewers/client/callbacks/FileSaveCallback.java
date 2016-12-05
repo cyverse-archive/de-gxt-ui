@@ -1,6 +1,7 @@
 package org.iplantc.de.fileViewers.client.callbacks;
 
 import static org.iplantc.de.resources.client.messages.I18N.ERROR;
+
 import org.iplantc.de.client.events.FileSavedEvent;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.diskResources.File;
@@ -9,17 +10,17 @@ import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.diskResource.client.events.DefaultUploadCompleteHandler;
 import org.iplantc.de.resources.client.messages.IplantErrorStrings;
+import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HasHandlers;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 /**
  * @author jstroot
  */
-public class FileSaveCallback implements AsyncCallback<File> {
+public class FileSaveCallback extends DataCallback<File> {
 
     private final IplantErrorStrings errorStrings;
     private final HasHandlers hasHandlers;
@@ -56,7 +57,7 @@ public class FileSaveCallback implements AsyncCallback<File> {
     }
 
     @Override
-    public void onFailure(Throwable caught) {
+    public void onFailure(Integer statusCode, Throwable caught) {
         maskingContainer.unmask();
         ErrorHandler.post(errorStrings.fileUploadsFailed(Lists.newArrayList(fileName)),
                           caught);

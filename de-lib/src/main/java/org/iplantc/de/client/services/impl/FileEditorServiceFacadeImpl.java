@@ -8,7 +8,8 @@ import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.viewer.FileViewerAutoBeanFactory;
 import org.iplantc.de.client.models.viewer.Manifest;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
-import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
+import org.iplantc.de.client.services.converters.DECallbackConverter;
+import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.services.BaseServiceCallWrapper.Type;
 import org.iplantc.de.shared.services.DiscEnvApiService;
@@ -55,12 +56,12 @@ public class FileEditorServiceFacadeImpl implements FileEditorServiceFacade {
     }
 
     @Override
-    public void getManifest(File file, AsyncCallback<Manifest> callback) {
+    public void getManifest(File file, DECallback<Manifest> callback) {
         String address = deProperties.getDataMgmtBaseUrl() + "file/manifest?path=" //$NON-NLS-1$
                 + URL.encodeQueryString(file.getPath());
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
-        callService(wrapper, new AsyncCallbackConverter<String, Manifest>(callback) {
+        callService(wrapper, new DECallbackConverter<String, Manifest>(callback) {
             @Override
             protected Manifest convertFrom(String object) {
                 final AutoBean<Manifest> manifest = AutoBeanCodex.decode(viewerFactory, Manifest.class, object);
@@ -83,7 +84,7 @@ public class FileEditorServiceFacadeImpl implements FileEditorServiceFacade {
     }
 
     @Override
-    public void readChunk(final File file, final long chunkPosition, final long chunkSize, final AsyncCallback<String> callback){
+    public void readChunk(final File file, final long chunkPosition, final long chunkSize, final DECallback<String> callback){
         Preconditions.checkNotNull(file);
         Preconditions.checkNotNull(file.getPath());
         String address = deProperties.getDataMgmtBaseUrl() + "read-chunk";
@@ -101,7 +102,7 @@ public class FileEditorServiceFacadeImpl implements FileEditorServiceFacade {
 
     @Override
     public void readCsvChunk(File file, String delimiter, int pageNumber, long chunkSize,
-                             AsyncCallback<String> callback) {
+                             DECallback<String> callback) {
         Preconditions.checkNotNull(file);
         Preconditions.checkNotNull(file.getPath());
         Preconditions.checkArgument(COMMA_DELIMITER.equals(delimiter)
@@ -131,7 +132,7 @@ public class FileEditorServiceFacadeImpl implements FileEditorServiceFacade {
 
     @Override
     public void uploadTextAsFile(String destination, String fileContents, boolean newFile,
-            AsyncCallback<File> callback) {
+            DECallback<File> callback) {
 
         String fullAddress = deProperties.getFileIoBaseUrl()
                 + (newFile ? "saveas" : "save"); //$NON-NLS-1$
@@ -140,7 +141,7 @@ public class FileEditorServiceFacadeImpl implements FileEditorServiceFacade {
         obj.put("content", new JSONString(fileContents));
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, fullAddress,
                 obj.toString());
-        callService(wrapper, new AsyncCallbackConverter<String, File>(callback) {
+        callService(wrapper, new DECallbackConverter<String, File>(callback) {
             @Override
             protected File convertFrom(String object) {
                 Splittable split = StringQuoter.split(object);
@@ -157,6 +158,10 @@ public class FileEditorServiceFacadeImpl implements FileEditorServiceFacade {
      * @param callback executed when RPC call completes.
      */
     private void callService(ServiceCallWrapper wrapper, AsyncCallback<String> callback) {
+        deServiceFacade.getServiceData(wrapper, callback);
+    }
+
+    private void callService(ServiceCallWrapper wrapper, DECallback<String> callback) {
         deServiceFacade.getServiceData(wrapper, callback);
     }
 
