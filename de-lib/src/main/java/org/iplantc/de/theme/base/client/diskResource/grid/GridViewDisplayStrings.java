@@ -74,4 +74,7 @@ public interface GridViewDisplayStrings extends Messages {
     String md5Checksum();
 
     String checksum();
+
+    String metadataSaveError();
+
 }

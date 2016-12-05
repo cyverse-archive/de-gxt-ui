@@ -1,5 +1,6 @@
 package org.iplantc.de.diskResource.client.views.metadata.dialogs;
 
+import org.iplantc.de.admin.desktop.client.permIdRequest.views.MetadataDialog;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
@@ -16,6 +17,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
+import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
@@ -55,8 +57,17 @@ public class ManageMetadataDialog extends IPlantDialog {
             @Override
             public void onSelect(SelectEvent event) {
                 canHide = true;
-                mdPresenter.setDiskResourceMetadata(new DiskResourceMetadataUpdateCallback(
-                        ManageMetadataDialog.this));
+                if (!mdView.isValid()) {
+                    AlertMessageBox cmb = new AlertMessageBox(I18N.DISPLAY.error(),
+                                                                  appearance.metadataSaveError());
+
+                    cmb.show();
+                } else {
+                    mask(I18N.DISPLAY.loadingMask());
+                    mdPresenter.setDiskResourceMetadata(new DiskResourceMetadataUpdateCallback(
+                            ManageMetadataDialog.this));
+                }
+
             }
         });
 
