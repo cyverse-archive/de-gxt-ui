@@ -8,7 +8,7 @@ import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.validators.ImportUrlValidator;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
-import org.iplantc.de.shared.DataCallback;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -247,7 +247,8 @@ public class FileUploadByUrlDialog extends IPlantDialog implements HasPending<En
         }
     }
 
-    private final class ImportFromUrlCallback <D extends UIObject & IsHideable & HasPending<Entry<Field<String>, Status>>> extends DataCallback<String> {
+    private final class ImportFromUrlCallback <D extends UIObject & IsHideable & HasPending<Entry<Field<String>, Status>>> extends
+                                                                                                                           AppsCallback<String> {
         private final D dlg;
         private final Entry<Field<String>, Status> pending;
 
