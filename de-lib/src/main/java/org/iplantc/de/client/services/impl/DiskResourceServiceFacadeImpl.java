@@ -573,19 +573,6 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
     }
 
     @Override
-    public void search(String term, int size, String type, AsyncCallback<String> callback) {
-        String fullAddress = deProperties.getMuleServiceBaseUrl() + "search?search-term="
-                + URL.encodeQueryString(term) + "&size=" + size;
-
-        if (type != null && !type.isEmpty()) {
-            fullAddress = fullAddress + "&type=" + type;
-        }
-
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, fullAddress);
-        deServiceFacade.getServiceData(wrapper, callback);
-    }
-
-    @Override
     public void importFromUrl(final String url, final DiskResource dest, DECallback<String> callback) {
         String fullAddress = deProperties.getFileIoBaseUrl() + "urlupload"; //$NON-NLS-1$
         JSONObject body = new JSONObject();
@@ -1022,21 +1009,6 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address.toString(), "{}");
         callService(wrapper, callback);
-    }
-
-    @Override
-    public void requestIdentifier(String uuid, String path, AsyncCallback<String> callback) {
-        StringBuilder address = new StringBuilder(deProperties.getPermIdBaseUrl());
-
-        Splittable body = StringQuoter.createSplittable();
-        Splittable sppath = StringQuoter.create(uuid);
-        sppath.assign(body, "folder");
-        Splittable sprec = StringQuoter.create("DOI");
-        sprec.assign(body, "type");
-
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address.toString(), body.getPayload());
-        callService(wrapper, callback);
-
     }
 
     @Override

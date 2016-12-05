@@ -207,16 +207,6 @@ public interface DiskResourceServiceFacade {
     void getPermissions(JSONObject body, DECallback<String> callback);
 
     /**
-     * search users irods directory structure
-     * 
-     * @param term search term
-     * @param size limit for results to return
-     * @param type file or folder
-     * @param callback callback object
-     */
-    void search(String term, int size, String type, AsyncCallback<String> callback);
-
-    /**
      * Get info about a selected file or folder
      * 
      * @param paths the paths to query
@@ -349,13 +339,6 @@ public interface DiskResourceServiceFacade {
     void setBulkMetadataFromFile(String metadataFilePath,
                                  String destFolder,
                                  DECallback<String> callback);
-
-    /**
-     * @param uuid
-     * @param path
-     * @param callback
-     */
-    void requestIdentifier(String uuid, String path, AsyncCallback<String> callback);
 
     /**
      *
