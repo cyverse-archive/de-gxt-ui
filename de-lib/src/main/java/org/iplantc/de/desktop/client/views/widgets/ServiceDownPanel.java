@@ -5,7 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.HTML;
 
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.Window;
@@ -24,13 +24,15 @@ public class ServiceDownPanel extends Composite {
     }
 
     @UiField TextButton retry;
-    @UiField Label label;
+    @UiField HTML serviceDownMsg;
     @UiField ServiceDownPanelAppearance appearance;
 
     public interface ServiceDownPanelAppearance {
         String serviceDownText();
 
         String retryBtnText();
+
+        String loadingMask();
     }
 
     private List<SelectEvent.SelectHandler> handlers = Lists.newArrayList();
@@ -38,9 +40,11 @@ public class ServiceDownPanel extends Composite {
     public ServiceDownPanel() {
         ServiceDownPanelUiBinder uiBinder = GWT.create(ServiceDownPanelUiBinder.class);
         initWidget(uiBinder.createAndBindUi(this));
+        serviceDownMsg.setHTML(appearance.serviceDownText());
         retry.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
+                mask(appearance.loadingMask());
                 for (SelectEvent.SelectHandler handler : handlers) {
                     handler.onSelect(event);
                 }

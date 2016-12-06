@@ -27,8 +27,7 @@
 
     <container:VBoxLayoutContainer padding="{padding5}" VBoxLayoutAlign="CENTER" pack="CENTER">
         <container:child layoutData="{boxLayoutDataMargins0050}">
-            <gwt:Label ui:field="label"
-                       text="{appearance.serviceDownText}"/>
+            <gwt:HTML ui:field="serviceDownMsg"/>
         </container:child>
         <container:child layoutData="{boxLayoutDataMargins0050}">
             <button:TextButton ui:field="retry"

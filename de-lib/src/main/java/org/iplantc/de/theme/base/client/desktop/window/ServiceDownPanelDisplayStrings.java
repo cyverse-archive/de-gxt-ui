@@ -9,4 +9,6 @@ public interface ServiceDownPanelDisplayStrings extends Messages {
     String serviceDownText();
 
     String retryBtnText();
+
+    String loadingMask();
 }
