@@ -397,6 +397,7 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
         }
 
         serviceDownPanel.addHandler(handler);
+        serviceDownPanel.unmask();
     }
 
     @Override
@@ -405,6 +406,7 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
             this.setWidget(currentWidget);
             currentWidget = null;
         }
+        serviceDownPanel.unmask();
     }
 
 }

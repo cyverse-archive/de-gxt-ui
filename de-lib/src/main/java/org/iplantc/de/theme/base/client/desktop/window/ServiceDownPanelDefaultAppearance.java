@@ -28,4 +28,9 @@ public class ServiceDownPanelDefaultAppearance implements ServiceDownPanel.Servi
     public String retryBtnText() {
         return displayStrings.retryBtnText();
     }
+
+    @Override
+    public String loadingMask() {
+        return displayStrings.loadingMask();
+    }
 }
