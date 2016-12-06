@@ -406,7 +406,6 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
             this.setWidget(currentWidget);
             currentWidget = null;
         }
-        serviceDownPanel.unmask();
     }
 
 }
