@@ -11,7 +11,6 @@ import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
 import com.google.common.base.Strings;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.inject.Inject;
@@ -88,13 +87,9 @@ public class DECallbackWrapper<T> implements AsyncCallback<T>, SelectEvent.Selec
         EventBus.getInstance().fireEvent(new ServiceRestored(callback.getWindowTypes()));
 
         if (statusCode >= 300 && statusCode <= 399 && !Strings.isNullOrEmpty(uri)) {
-            if (statusCode == HttpStatus.SC_MOVED_TEMPORARILY) {
-                EventBus.getInstance().fireEvent(new UserLoggedOutEvent());
-                return;
-            }
-            Window.Location.replace(uri);
-            return;
+            //TODO?
         }
+
         if (statusCode == HttpStatus.SC_UNAUTHORIZED) {
             EventBus.getInstance().fireEvent(new UserLoggedOutEvent());
             return;
