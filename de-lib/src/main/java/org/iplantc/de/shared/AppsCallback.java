@@ -15,7 +15,6 @@ public abstract class AppsCallback<T> implements DECallback<T> {
     public List<WindowType> getWindowTypes() {
         return Lists.newArrayList(WindowType.APPS,
                                   WindowType.APP_INTEGRATION,
-                                  WindowType.APP_WIZARD,
                                   WindowType.WORKFLOW_INTEGRATION);
     }
 }
