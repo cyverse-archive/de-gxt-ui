@@ -29,7 +29,7 @@ public interface AppsEditorView extends IsWidget, Editor<AppTemplate>, ArgumentS
     interface EditorDriver extends SimpleBeanEditorDriver<AppTemplate, AppsEditorView> {
     }
 
-    public interface Presenter extends org.iplantc.de.apps.widgets.client.view.AppLaunchView.BasePresenter, AppEditorToolbar.Presenter, BeforeHideHandler, UpdateCommandLinePreviewEventHandler,
+    public interface Presenter extends AppEditorToolbar.Presenter, BeforeHideHandler, UpdateCommandLinePreviewEventHandler,
             HasLabelOnlyEditMode, DeleteArgumentGroupEventHandler {
 
         /**
@@ -49,6 +49,14 @@ public interface AppsEditorView extends IsWidget, Editor<AppTemplate>, ArgumentS
         boolean orderingRequired(Argument arg);
 
         void setBeforeHideHandlerRegistration(HandlerRegistration hr);
+
+        AppTemplate getAppTemplate();
+
+        void go(final HasOneWidget container, final AppTemplate appTemplate);
+
+        void go(final HasOneWidget container);
+
+        void setViewDebugId(String baseID);
 
     }
 

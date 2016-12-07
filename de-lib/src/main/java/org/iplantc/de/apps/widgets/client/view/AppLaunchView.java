@@ -32,22 +32,10 @@ public interface AppLaunchView extends IsWidget, Editor<AppTemplate>, HasRequest
         String dontShow();
     }
 
-    /**
-     * FIXME JDS Re-evaluate necessity for two different presenters.
-     * 
-     * @author jstroot
-     * 
-     */
-    public interface BasePresenter extends org.iplantc.de.commons.client.presenter.Presenter{
-    
-        AppTemplate getAppTemplate();
 
-        void go(final HasOneWidget container, final AppTemplate appTemplate);
 
         void setViewDebugId(String baseID);
-    }
 
-    public interface Presenter extends BasePresenter {
         void addAnalysisLaunchHandler(AnalysisLaunchEventHandler handler);
 
     }
