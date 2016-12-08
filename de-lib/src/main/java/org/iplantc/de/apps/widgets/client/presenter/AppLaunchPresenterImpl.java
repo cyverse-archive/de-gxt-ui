@@ -67,10 +67,9 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
         }
     }
 
-    @Inject
-    private AppsWidgetsDisplayMessages appsWidgetsDisplayMessages;
-    @Inject
-    private AppsWidgetsErrorMessages appsWidgetsErrMessages;
+    @Inject AppsWidgetsDisplayMessages appsWidgetsDisplayMessages;
+    @Inject AppsWidgetsErrorMessages appsWidgetsErrMessages;
+    @Inject IplantAnnouncer announcer;
     AppTemplate appTemplate;
     private final AppTemplateServices atServices;
     HandlerManager handlerManager;
@@ -124,7 +123,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
         }
     }
 
-    private HasQualifiedId getQualifiedIdFromConfig(AppWizardConfig config) {
+    HasQualifiedId getQualifiedIdFromConfig(AppWizardConfig config) {
         final String systemId = Strings.isNullOrEmpty(config.getSystemId())
                                 ? deClientConstants.deSystemId()
                                 : config.getSystemId();
@@ -138,14 +137,12 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
     }
 
     void createJobExecution() {
-        final JobExecution je = factory.jobExecution().as();
+        final JobExecution je = getJobExecution();
         je.setSystemId(appTemplate.getSystemId());
         je.setAppTemplateId(appTemplate.getId());
         je.setEmailNotificationEnabled(userSettings.isEnableAnalysisEmailNotification());
         // JDS Replace all Cmd Line restricted chars with underscores
-        String regex = Format.substitute("[{0}]",
-                                         RegExp.escapeCharacterClassSet(valConstants.restrictedCmdLineChars()
-                                                 + " "));
+        String regex = getRestrictedCharRegEx();
         String newName = appTemplate.getName().replaceAll(regex, "_");
         je.setName(newName + "_" + appsWidgetsDisplayMessages.defaultAnalysisName()); //$NON-NLS-1$
 
@@ -157,6 +154,16 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
         view.edit(appTemplate, je);
         container.setWidget(view);
         ensureHandlers().fireEvent(new AppTemplateFetched(appTemplate));
+    }
+
+    String getRestrictedCharRegEx() {
+        return Format.substitute("[{0}]",
+                                 RegExp.escapeCharacterClassSet(valConstants.restrictedCmdLineChars()
+                                                                + " "));
+    }
+
+    JobExecution getJobExecution() {
+        return factory.jobExecution().as();
     }
 
     @Override
@@ -177,19 +184,19 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
         return new HandlerManager(this);
     }
 
-    private void launchAnalysis(final AppTemplate at, final JobExecution je) {
+    void launchAnalysis(final AppTemplate at, final JobExecution je) {
         atServices.launchAnalysis(at, je, new AppLaunchCallback<AnalysisSubmissionResponse>() {
 
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
-                IplantAnnouncer.getInstance().schedule(new ErrorAnnouncementConfig(appsWidgetsErrMessages.launchAnalysisFailure(je.getName())));
+                announcer.schedule(new ErrorAnnouncementConfig(appsWidgetsErrMessages.launchAnalysisFailure(je.getName())));
                 ErrorHandler.post(I18N.ERROR.analysisFailedToLaunch(at.getName()), caught);
                 view.analysisLaunchFailed();
             }
 
             @Override
             public void onSuccess(AnalysisSubmissionResponse result) {
-                IplantAnnouncer.getInstance().schedule(new SuccessAnnouncementConfig(appsWidgetsDisplayMessages.launchAnalysisSuccess(je.getName())));
+                announcer.schedule(new SuccessAnnouncementConfig(appsWidgetsDisplayMessages.launchAnalysisSuccess(je.getName())));
                 ensureHandlers().fireEvent(new AnalysisLaunchEvent(at));
 
                 if (result != null) {
