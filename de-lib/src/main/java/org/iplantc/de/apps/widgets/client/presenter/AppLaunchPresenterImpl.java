@@ -2,9 +2,11 @@ package org.iplantc.de.apps.widgets.client.presenter;
 
 import org.iplantc.de.apps.widgets.client.events.AnalysisLaunchEvent;
 import org.iplantc.de.apps.widgets.client.events.AnalysisLaunchEvent.AnalysisLaunchEventHandler;
+import org.iplantc.de.apps.widgets.client.events.AppTemplateFetched;
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent.RequestAnalysisLaunchEventHandler;
 import org.iplantc.de.apps.widgets.client.view.AppLaunchView;
-import org.iplantc.de.client.models.UserInfo;
+import org.iplantc.de.client.DEClientConstants;
+import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
@@ -12,20 +14,24 @@ import org.iplantc.de.client.models.apps.integration.JobExecution;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.services.AppTemplateServices;
 import org.iplantc.de.client.services.impl.models.AnalysisSubmissionResponse;
+import org.iplantc.de.client.util.AppTemplateUtils;
+import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.util.RegExp;
+import org.iplantc.de.commons.client.views.window.configs.AppWizardConfig;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
 import org.iplantc.de.resources.client.messages.I18N;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsDisplayMessages;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsErrorMessages;
-import org.iplantc.de.shared.AppsCallback;
+import org.iplantc.de.shared.AppLaunchCallback;
 
 import com.google.common.base.Joiner;
-import com.google.gwt.core.client.GWT;
+import com.google.common.base.Strings;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
@@ -38,25 +44,61 @@ import java.util.List;
  * @author jstroot
  *
  */
-public class AppLaunchPresenterImpl implements AppLaunchView.Presenter, RequestAnalysisLaunchEventHandler {
+public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
+                                               RequestAnalysisLaunchEventHandler {
+
+    private final class AppTemplateCallback extends AppLaunchCallback<AppTemplate> {
+
+        @Override
+        public void onFailure(Integer statusCode, Throwable caught) {
+            ensureHandlers().fireEvent(new AppTemplateFetched(null));
+            ErrorHandler.post(appearance.unableToRetrieveWorkflowGuide(), caught);
+        }
+
+        @Override
+        public void onSuccess(AppTemplate result) {
+            if (result.isAppDisabled()) {
+                ErrorAnnouncementConfig config = new ErrorAnnouncementConfig(appearance.appUnavailable());
+                IplantAnnouncer.getInstance().schedule(config);
+                return;
+            }
+            appTemplate = result;
+            createJobExecution();
+        }
+    }
 
     @Inject
     private AppsWidgetsDisplayMessages appsWidgetsDisplayMessages;
     @Inject
     private AppsWidgetsErrorMessages appsWidgetsErrMessages;
-    private AppTemplate appTemplate;
+    AppTemplate appTemplate;
     private final AppTemplateServices atServices;
-    private HandlerManager handlerManager;
+    HandlerManager handlerManager;
     private final UserSettings userSettings;
+    private AppTemplateAutoBeanFactory factory;
+    private DEClientConstants deClientConstants;
+    private AppTemplateUtils appTemplateUtils;
+    private AppLaunchView.AppLaunchViewAppearance appearance;
+    HasOneWidget container;
 
     @Inject
     private IplantValidationConstants valConstants;
     private final AppLaunchView view;
 
     @Inject
-    public AppLaunchPresenterImpl(final AppLaunchView view, final UserSettings userSettings, final UserInfo userInfo, final AppTemplateServices atServices) {
+    public AppLaunchPresenterImpl(final AppLaunchView view,
+                                  final UserSettings userSettings,
+                                  final AppTemplateServices atServices,
+                                  AppTemplateAutoBeanFactory factory,
+                                  DEClientConstants deClientConstants,
+                                  AppTemplateUtils appTemplateUtils,
+                                  AppLaunchView.AppLaunchViewAppearance appearance) {
         this.view = view;
         this.userSettings = userSettings;
+        this.factory = factory;
+        this.deClientConstants = deClientConstants;
+        this.appTemplateUtils = appTemplateUtils;
+        this.appearance = appearance;
         this.view.addRequestAnalysisLaunchEventHandler(this);
         this.atServices = atServices;
     }
@@ -67,14 +109,35 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter, RequestA
     }
 
     @Override
+    public void go(final HasOneWidget container, AppWizardConfig config) {
+        this.container = container;
+        if (config.getAppTemplate() != null) {
+            this.appTemplate = appTemplateUtils.convertConfigToTemplate(config);
+            createJobExecution();
+        } else if (config.isRelaunchAnalysis()) {
+            atServices.rerunAnalysis(config.getAnalysisId(),
+                                          config.getAppId(),
+                                          new AppTemplateCallback());
+        } else {
+            final HasQualifiedId id = getQualifiedIdFromConfig(config);
+            atServices.getAppTemplate(id, new AppTemplateCallback());
+        }
+    }
+
+    private HasQualifiedId getQualifiedIdFromConfig(AppWizardConfig config) {
+        final String systemId = Strings.isNullOrEmpty(config.getSystemId())
+                                ? deClientConstants.deSystemId()
+                                : config.getSystemId();
+        final String appId = config.getAppId();
+        return CommonModelUtils.getInstance().createHasQualifiedId(systemId, appId);
+    }
+
+    @Override
     public AppTemplate getAppTemplate() {
         return appTemplate;
     }
 
-    @Override
-    public void go(final HasOneWidget container) {
-
-        final AppTemplateAutoBeanFactory factory = GWT.create(AppTemplateAutoBeanFactory.class);
+    void createJobExecution() {
         final JobExecution je = factory.jobExecution().as();
         je.setSystemId(appTemplate.getSystemId());
         je.setAppTemplateId(appTemplate.getId());
@@ -93,12 +156,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter, RequestA
 
         view.edit(appTemplate, je);
         container.setWidget(view);
-    }
-
-    @Override
-    public void go(HasOneWidget container, AppTemplate appTemplate) {
-        this.appTemplate = appTemplate;
-        go(container);
+        ensureHandlers().fireEvent(new AppTemplateFetched(appTemplate));
     }
 
     @Override
@@ -120,7 +178,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter, RequestA
     }
 
     private void launchAnalysis(final AppTemplate at, final JobExecution je) {
-        atServices.launchAnalysis(at, je, new AppsCallback<AnalysisSubmissionResponse>() {
+        atServices.launchAnalysis(at, je, new AppLaunchCallback<AnalysisSubmissionResponse>() {
 
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
@@ -143,5 +201,10 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter, RequestA
                 }
             }
         });
+    }
+
+    @Override
+    public HandlerRegistration addAppTemplateFetchedHandler(AppTemplateFetched.AppTemplateFetchedHandler handler) {
+        return ensureHandlers().addHandler(AppTemplateFetched.TYPE, handler);
     }
 }

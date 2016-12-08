@@ -8,6 +8,7 @@ import org.iplantc.de.client.models.apps.integration.ArgumentType;
 import org.iplantc.de.client.models.apps.integration.SelectionItem;
 import org.iplantc.de.client.models.apps.integration.SelectionItemGroup;
 import org.iplantc.de.client.services.converters.AppTemplateCallbackConverter;
+import org.iplantc.de.commons.client.views.window.configs.AppWizardConfig;
 import org.iplantc.de.resources.client.messages.I18N;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsDisplayMessages;
 
@@ -79,6 +80,10 @@ public class AppTemplateUtils {
 
         final String payload = AutoBeanCodex.encode(argAb).getPayload();
         return new AppTemplateCallbackConverter(factory, null).convertFrom(payload, false);
+    }
+
+    public AppTemplate convertConfigToTemplate(AppWizardConfig config) {
+        return new AppTemplateCallbackConverter(factory, null).convertFrom(config.getAppTemplate().getPayload(), true);
     }
 
     public ArgumentGroup copyArgumentGroup(ArgumentGroup value) {
