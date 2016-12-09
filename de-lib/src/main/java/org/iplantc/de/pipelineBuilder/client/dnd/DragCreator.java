@@ -183,6 +183,7 @@ public class DragCreator {
         app.setName(json.getName());
         app.setDescription(json.getDescription());
         app.setId(1);
+        app.setSystemId(json.getSystemId());
         app.setTemplateId(json.getTaskId());
         app.setAppType(json.getAppType());
 
