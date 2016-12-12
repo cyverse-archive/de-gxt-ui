@@ -670,23 +670,27 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }
 
 
-   void postBootstrap(final Panel panel) {
+    void postBootstrap(final Panel panel) {
         setBrowserContextMenuEnabled(deProperties.isContextClickEnabled());
         messagePoller.start();
         initKBShortCuts();
         panel.add(view);
         processQueryStrings();
         getNotifications();
-   }
+        getSystemMessages();
+    }
 
-   @Override
-   public void getNotifications() {
-       messageServiceFacade.getRecentMessages(new InitializationCallbacks.GetInitialNotificationsCallback(view, appearance, announcer));
-       messageServiceFacade.getMessageCounts(new NewSysMessageCountCallback());
-   }
+    private void getSystemMessages() {
+        messageServiceFacade.getMessageCounts(new NewSysMessageCountCallback());
+    }
 
-   @Override
-   public void restoreWindows(List<WindowState> windowStates) {
+    @Override
+    public void getNotifications() {
+        messageServiceFacade.getRecentMessages(new InitializationCallbacks.GetInitialNotificationsCallback(view, appearance, announcer));
+    }
+
+    @Override
+    public void restoreWindows(List<WindowState> windowStates) {
         if (windowStates != null && windowStates.size() > 0) {
             for (WindowState ws : windowStates) {
                 desktopWindowManager.show(ws);
@@ -704,9 +708,9 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
             progressMessageBox.getProgressBar().setInterval(100);
             progressMessageBox.auto();
             final Request req = userSessionService.getUserSession(new RuntimeCallbacks.GetUserSessionCallback(progressMessageBox,
-                                                                                             appearance,
-                                                                                             announcer,
-                                                                                             this));
+                                                                                                              appearance,
+                                                                                                              announcer,
+                                                                                                              this));
             progressMessageBox.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
                 @Override
                 public void onDialogHide(DialogHideEvent event) {
@@ -727,7 +731,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
             @Override
             public void handleEvent(NativeEvent event) {
                 if (event.getCtrlKey() && event.getShiftKey()) {
-                    final String keycode = String.valueOf((char) event.getKeyCode());
+                    final String keycode = String.valueOf((char)event.getKeyCode());
                     if (userSettings.getDataShortCut().equals(keycode)) {
                         show(ConfigFactory.diskResourceWindowConfig(true));
                     } else if (userSettings.getAnalysesShortCut().equals(keycode)) {
