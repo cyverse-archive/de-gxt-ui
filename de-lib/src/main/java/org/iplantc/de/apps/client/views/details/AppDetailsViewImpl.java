@@ -10,6 +10,7 @@ import org.iplantc.de.apps.client.events.selection.DetailsCategoryClicked;
 import org.iplantc.de.apps.client.events.selection.DetailsHierarchyClicked;
 import org.iplantc.de.apps.client.events.selection.SaveMarkdownSelected;
 import org.iplantc.de.apps.client.views.details.doc.AppDocMarkdownDialog;
+import org.iplantc.de.apps.client.views.ReactAppDetailsView;
 import org.iplantc.de.apps.client.views.list.cells.AppFavoriteCellWidget;
 import org.iplantc.de.apps.client.views.list.cells.AppRatingCellWidget;
 import org.iplantc.de.apps.shared.AppsModule;
@@ -27,6 +28,7 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 import com.google.common.base.Strings;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.editor.client.LeafValueEditor;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
@@ -51,6 +53,9 @@ import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.NumberLabel;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.core.client.ValueProvider;
@@ -154,6 +159,9 @@ public class AppDetailsViewImpl extends Composite implements
     @UiField (provided = true)
     @Ignore
     Tree<OntologyHierarchy, SafeHtml> hierarchyTree;
+    @UiField
+    @Ignore
+    HTMLPanel hierarchyWidget;
     @UiField(provided = true) @Ignore TreeStore<OntologyHierarchy> hierarchyTreeStore;
     @UiField(provided = true) @Ignore Tree<AppCategory, String> categoryTree;
     @UiField(provided = true) @Ignore TreeStore<AppCategory> categoryTreeStore;
@@ -246,6 +254,30 @@ public class AppDetailsViewImpl extends Composite implements
         } else {
             helpLink.setVisible(false);
         }
+
+        Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                final Splittable appJson = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(app));
+
+                ReactAppDetailsView.renderToolDetails(toolsContainer.getId(),
+                                                      appearance,
+                                                      appJson);
+                ReactAppDetailsView.renderCategoryTree(hierarchyWidget.getElement().getId(),
+                                                       appJson,
+                                                       AppDetailsViewImpl.this,
+                                                       appearance);
+            }
+        });
+    }
+
+    @Override
+    public void onDetailsCategoryClicked(String modelKey) {
+        OntologyHierarchy hierarchy = hierarchyTreeStore.findModelWithKey(modelKey);
+        if (hierarchy != null) {
+            fireEvent(new DetailsHierarchyClicked(hierarchy));
+        }
     }
 
     @Override
@@ -255,6 +287,7 @@ public class AppDetailsViewImpl extends Composite implements
         favIcon.setBaseDebugId(baseID);
         toolsContainer.ensureDebugId(baseID + AppsModule.Ids.APP_TOOLS);
         toolEditorSource.setBaseDebugId(baseID);
+        hierarchyWidget.ensureDebugId(baseID + AppsModule.Ids.CATEGORIES_TREE);
     }
 
     @Override

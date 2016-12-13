@@ -72,6 +72,7 @@ module.exports = {
       path
         .relative(paths.appSrc, info.absoluteResourcePath)
         .replace(/\\/g, '/'),
+    library: "CyVerseReactComponents",
   },
   resolve: {
     // This allows you to set a fallback for where Webpack should look for modules.
@@ -217,7 +218,7 @@ module.exports = {
             // it's runtime that would otherwise processed through "file" loader.
             // Also exclude `html` and `json` extensions so they get processed
             // by webpacks internal loaders.
-            exclude: [/\.js$/, /\.html$/, /\.json$/],
+            exclude: [/\.ejs$/, /\.js$/, /\.html$/, /\.json$/],
             options: {
               name: 'static/media/[name].[hash:8].[ext]',
             },
@@ -237,8 +238,9 @@ module.exports = {
     new InterpolateHtmlPlugin(env.raw),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
-      inject: true,
+      inject: false,
       template: paths.appHtml,
+      filename: "../WEB-INF/jsp/react_include.jsp",
       minify: {
         removeComments: true,
         collapseWhitespace: true,

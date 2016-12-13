@@ -24,10 +24,14 @@ import com.sencha.gxt.widget.core.client.tree.TreeStyle;
 
 import java.util.List;
 
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
+
 /**
  * Created by jstroot on 3/2/15.
  * @author jstroot
  */
+@JsType
 public interface AppDetailsView extends IsWidget,
                                         Editor<App>,
                                         AppUpdatedEvent.AppUpdatedEventHandler,
@@ -39,8 +43,10 @@ public interface AppDetailsView extends IsWidget,
                                         DetailsHierarchyClicked.HasDetailsHierarchyClickedHandlers,
                                         DetailsCategoryClicked.HasDetailsCategoryClickedHandlers {
 
+    @JsType
     interface AppDetailsAppearance {
 
+        @JsType
         interface AppDetailsStyle extends CssResource {
 
             String label();
@@ -62,10 +68,13 @@ public interface AppDetailsView extends IsWidget,
 
         String detailsLabel();
 
+        @JsIgnore
         SafeHtml getAppDocError(Throwable caught);
 
+        @JsIgnore
         SafeHtml getCategoriesHtml(List<List<String>> appGroupHierarchies);
 
+        @JsIgnore
         SafeHtml highlightText(String value, String searchRegexPattern);
 
         String publishedOnLabel();
@@ -82,6 +91,7 @@ public interface AppDetailsView extends IsWidget,
 
         String informationTabLabel();
 
+        @JsIgnore
         SafeHtml saveAppDocError(Throwable caught);
 
         String toolInformationTabLabel();
@@ -100,6 +110,7 @@ public interface AppDetailsView extends IsWidget,
 
         String copyAppUrl();
 
+        @JsIgnore
         void setTreeIcons(TreeStyle style);
 
         String completedRun();
@@ -126,5 +137,8 @@ public interface AppDetailsView extends IsWidget,
     /**
      * Displays the documentation window
      */
+    @JsIgnore
     void showDoc(AppDoc appDoc);
+
+    void onDetailsCategoryClicked(String modelKey);
 }

@@ -1,8 +1,10 @@
+/**
+ * @author psarando
+ */
 import React, { Component } from 'react';
-import {hasClipboardAPI, copySelection} from './clipboardFunctions'
-import './App.css';
+import {hasClipboardAPI, copySelection} from '../../clipboardFunctions'
 
-class App extends Component {
+class CopyTextArea extends Component {
     constructor(props) {
         super(props);
 
@@ -14,9 +16,9 @@ class App extends Component {
         return <textArea ref="copyTextArea" value={text} readOnly="readonly" />;
     }
 
-    renderCopyButton() {
+    renderCopyButton(btnText) {
         if (hasClipboardAPI()) {
-            return <button ref="copyTextBtn" type="button" onClick={this.onCopyText}>Copy</button>;
+            return <button ref="copyTextBtn" type="button" onClick={this.onCopyText}>{btnText}</button>;
         }
     }
 
@@ -37,10 +39,10 @@ class App extends Component {
 
     render() {
         let copyTextArea = this.renderCopyTextArea(this.props.text),
-            copyButton = this.renderCopyButton();
+            copyButton = this.renderCopyButton(this.props.btnText);
 
         return (
-            <div className="App">
+            <div>
                 {copyTextArea}
                 {copyButton}
             </div>
@@ -48,4 +50,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default CopyTextArea;
