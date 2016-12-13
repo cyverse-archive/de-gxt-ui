@@ -1,5 +1,7 @@
 package org.iplantc.de.client.models.pipelines;
 
+import org.iplantc.de.client.models.HasSystemId;
+
 import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 
@@ -11,13 +13,7 @@ import java.util.List;
  * @author psarando
  *
  */
-public interface PipelineTask extends HasName {
-
-    @PropertyName("system_id")
-    String getSystemId();
-
-    @PropertyName("system_id")
-    void setSystemId(String systemId);
+public interface PipelineTask extends HasName, HasSystemId {
 
     @PropertyName("id")
     String getTaskId();

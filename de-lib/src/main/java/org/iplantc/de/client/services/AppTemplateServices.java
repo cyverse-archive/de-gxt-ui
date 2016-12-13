@@ -35,14 +35,6 @@ public interface AppTemplateServices {
      * @param callback
      */
     void getAppTemplateForEdit(HasQualifiedId appId, DECallback<AppTemplate> callback);
-    
-    /**
-     * Retrieves a UI preview of the given <code>AppTemplate</code>.
-     * 
-     * @param at the <code>AppTemplate</code> for which the preview should be produced.
-     * @param callback
-     */
-    void getAppTemplatePreview(AppTemplate at, DECallback<AppTemplate> callback);
 
     /**
      * Launches an analysis using the given <code>AppTemplate</code> and <code>JobExecution</code>
