@@ -126,7 +126,7 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
     }
 
     @Override
-    public void getAppTemplateForEdit(HasId appId, DECallback<AppTemplate> callback) {
+    public void getAppTemplateForEdit(HasQualifiedId appId, DECallback<AppTemplate> callback) {
         String address = APPS + "/" + appId.getId() + "/ui";
         HashMap<String, String> mdcMap = Maps.newHashMap();
         mdcMap.put(METRIC_TYPE_KEY, APP_EVENT);

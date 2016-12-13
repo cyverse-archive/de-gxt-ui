@@ -119,7 +119,7 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
 
     @Override
     public void onEditApp(EditAppEvent event) {
-        AppsIntegrationWindowConfig config = ConfigFactory.appsIntegrationWindowConfig(event.getAppToEdit().getId());
+        AppsIntegrationWindowConfig config = ConfigFactory.appsIntegrationWindowConfig(event.getAppToEdit());
         config.setOnlyLabelEditMode(event.isUserIntegratorAndAppPublic());
         presenter.show(config, false);
     }

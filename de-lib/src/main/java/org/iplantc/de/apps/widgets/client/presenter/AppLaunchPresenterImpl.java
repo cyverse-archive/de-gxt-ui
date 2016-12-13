@@ -76,6 +76,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter, RequestA
 
         final AppTemplateAutoBeanFactory factory = GWT.create(AppTemplateAutoBeanFactory.class);
         final JobExecution je = factory.jobExecution().as();
+        je.setSystemId(appTemplate.getSystemId());
         je.setAppTemplateId(appTemplate.getId());
         je.setEmailNotificationEnabled(userSettings.isEnableAnalysisEmailNotification());
         // JDS Replace all Cmd Line restricted chars with underscores

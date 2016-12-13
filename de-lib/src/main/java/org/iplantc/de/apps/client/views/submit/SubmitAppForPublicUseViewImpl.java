@@ -420,6 +420,7 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
     public PublishAppRequest getPublishAppRequest() {
         PublishAppRequest appRequest = factory.publishAppRequest().as();
 
+        appRequest.setSystemId(selectedApp.getSystemId());
         appRequest.setId(selectedApp.getId());
         appRequest.setName(appName.getValue());
         appRequest.setDescription(appDesc.getValue());

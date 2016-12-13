@@ -137,6 +137,7 @@ public class PipelineCreator extends Composite {
             App app = ((PipeApp)step).getApp();
 
             PipelineTask jsonApp = factory.app().as();
+            jsonApp.setSystemId(app.getSystemId());
             jsonApp.setTaskId(app.getTemplateId());
             jsonApp.setAppType(app.getAppType());
             jsonApp.setName(app.getName());

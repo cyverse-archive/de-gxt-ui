@@ -14,6 +14,7 @@ import org.iplantc.de.client.models.pipelines.ServicePipelineMapping;
 import org.iplantc.de.client.models.pipelines.ServicePipelineStep;
 import org.iplantc.de.client.models.pipelines.ServicePipelineTask;
 import org.iplantc.de.client.models.pipelines.ServiceSaveResponse;
+import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.resources.client.messages.I18N;
 import org.iplantc.de.shared.AppsCallback;
@@ -72,7 +73,7 @@ public class PipelineAutoBeanUtil {
         }
 
         ServicesInjector.INSTANCE.getAppUserServiceFacade()
-                                 .getDataObjectsForApp(app.getId(), new AppsCallback<String>() {
+                                 .getDataObjectsForApp(app, new AppsCallback<String>() {
 
                                      @Override
                                      public void onSuccess(String result) {
@@ -180,6 +181,7 @@ public class PipelineAutoBeanUtil {
      */
     private ServicePipelineStep getServiceStep(PipelineTask app) {
         ServicePipelineStep step = serviceFactory.servicePipelineStep().as();
+        step.setSystemId(app.getSystemId());
         step.setTaskId(app.getTaskId());
         step.setAppType(app.getAppType());
         step.setName(app.getName());

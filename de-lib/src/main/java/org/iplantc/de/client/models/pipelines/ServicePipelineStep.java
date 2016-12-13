@@ -1,6 +1,7 @@
 package org.iplantc.de.client.models.pipelines;
 
 import org.iplantc.de.client.models.HasDescription;
+import org.iplantc.de.client.models.HasSystemId;
 
 import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
@@ -11,18 +12,18 @@ import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
  * @author psarando
  * 
  */
-public interface ServicePipelineStep extends HasName, HasDescription {
+public interface ServicePipelineStep extends HasName, HasDescription, HasSystemId {
 
     @PropertyName("task_id")
-    public String getTaskId();
+    String getTaskId();
 
     @PropertyName("task_id")
-    public void setTaskId(String task_id);
+    void setTaskId(String task_id);
 
     @PropertyName("app_type")
-    public String getAppType();
+    String getAppType();
 
     @PropertyName("app_type")
-    public void setAppType(String appType);
+    void setAppType(String appType);
 
 }

@@ -6,6 +6,7 @@ import org.iplantc.de.apps.integration.client.view.AppsEditorView;
 import org.iplantc.de.apps.integration.shared.AppIntegrationModule;
 import org.iplantc.de.apps.widgets.client.view.AppLaunchView.RenameWindowHeaderCommand;
 import org.iplantc.de.client.events.EventBus;
+import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
@@ -167,7 +168,7 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
                 // JDS If the editor has unsaved changes, inform user that they will be thrown away.
                 announcer.schedule(new ErrorAnnouncementConfig(appearance.appPublishedError()));
             }
-            AppsIntegrationWindowConfig appIntConfig = ConfigFactory.appsIntegrationWindowConfig(publishedApp.getId());
+            AppsIntegrationWindowConfig appIntConfig = ConfigFactory.appsIntegrationWindowConfig(publishedApp);
             appIntConfig.setOnlyLabelEditMode(true);
             update(appIntConfig);
         }
@@ -210,55 +211,53 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
     }
 
     private AppsIntegrationWindowConfig getUpdatedConfig() {
-        AppTemplate appTemplate = presenter.getAppTemplate();
-        AppsIntegrationWindowConfig config = ConfigFactory.appsIntegrationWindowConfig(appTemplate == null ? ""
-                                                                                                          : Strings.nullToEmpty(appTemplate.getId()));
+        final AppTemplate appTemplate
+                = presenter.getAppTemplate() == null
+                ? factory.appTemplate().as()
+                : presenter.getAppTemplate();
+        AppsIntegrationWindowConfig config = ConfigFactory.appsIntegrationWindowConfig(appTemplate);
         config.setAppTemplate(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(appTemplate)));
         return config;
     }
 
-    private void
-            init(final AppsEditorView.Presenter presenter, final AppsIntegrationWindowConfig config) {
+    private HasQualifiedId qualifiedIdFromConfig(AppsIntegrationWindowConfig config) {
+        final String systemId = Strings.nullToEmpty(config.getSystemId());
+        final String appId = Strings.nullToEmpty(config.getAppId());
+        return CommonModelUtils.getInstance().createHasQualifiedId(systemId, appId);
+    }
+
+    private void init(final AppsEditorView.Presenter presenter,
+                      final AppsIntegrationWindowConfig config) {
         if (config.getAppTemplate() != null) {
             // JDS Use converter for convenience.
-            AppTemplateCallbackConverter at = new AppTemplateCallbackConverter(factory,
-                                                                               new AppsCallback<AppTemplate>() {
+            AppTemplateCallbackConverter at =
+                    new AppTemplateCallbackConverter(factory, new AppsCallback<AppTemplate>() {
 
-                                                                                   @Override
-                                                                                   public void
-                                                                                           onFailure(Integer statusCode, Throwable caught) {
-                                                                                       /*
-                                                                                        * JDS Do nothing
-                                                                                        * since this this
-                                                                                        * callback
-                                                                                        * converter is
-                                                                                        * called manually
-                                                                                        * below (i.e. no
-                                                                                        * over-the-wire
-                                                                                        * integration)
-                                                                                        */
-                                                                                   }
+                        @Override
+                        public void onFailure(Integer statusCode, Throwable caught) {
+                            /*
+                             * JDS Do nothing since this this callback converter is called manually
+                             * below (i.e. no over-the-wire integration)
+                             */
+                        }
 
-                                                                                   @Override
-                                                                                   public void
-                                                                                           onSuccess(AppTemplate result) {
-                                                                                       // KLUDGE until
-                                                                                       // service returns
-                                                                                       // this value in
-                                                                                       // JSON response.
-                                                                                       if (result.isPublic() != null) {
-                                                                                           result.setPublic(result.isPublic());
-                                                                                       } else if (config != null) {
-                                                                                           result.setPublic(config.isOnlyLabelEditMode());
-                                                                                       }
-                                                                                       renameCmd.setAppTemplate(result);
-                                                                                       presenter.go(AppEditorWindow.this,
-                                                                                                    result,
-                                                                                                    renameCmd);
-                                                                                       AppEditorWindow.this.forceLayout();
-                                                                                       AppEditorWindow.this.center();
-                                                                                   }
-                                                                               });
+                        @Override
+                        public void onSuccess(AppTemplate result) {
+                            // KLUDGE until
+                            // service returns
+                            // this value in
+                            // JSON response.
+                            if (result.isPublic() != null) {
+                                result.setPublic(result.isPublic());
+                            } else if (config != null) {
+                                result.setPublic(config.isOnlyLabelEditMode());
+                            }
+                            renameCmd.setAppTemplate(result);
+                            presenter.go(AppEditorWindow.this, result, renameCmd);
+                            AppEditorWindow.this.forceLayout();
+                            AppEditorWindow.this.center();
+                        }
+                    });
             at.onSuccess(config.getAppTemplate().getPayload());
         } else if (Strings.isNullOrEmpty(config.getAppId())) {
             setHeadingText(appearance.headingText());
@@ -285,40 +284,36 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
             AppEditorWindow.this.forceLayout();
         } else {
             mask(appearance.loadingMask());
-            templateService.getAppTemplateForEdit(CommonModelUtils.getInstance()
-                                                                  .createHasIdFromString(config.getAppId()),
-                                                  new AppsCallback<AppTemplate>() {
-                                                      @Override
-                                                      public void onFailure(Integer statusCode, Throwable caught) {
-                                                          SimpleServiceError serviceError = AutoBeanCodex.decode(factory,
-                                                                                                                 SimpleServiceError.class,
-                                                                                                                 caught.getMessage())
-                                                                                                         .as();
-                                                          announcer.schedule(new ErrorAnnouncementConfig(appearance.unableToRetrieveWorkflowGuide()
-                                                                  + ": " + serviceError.getReason()));
-                                                          ErrorHandler.post(appearance.unableToRetrieveWorkflowGuide(),
-                                                                            caught);
-                                                          AppEditorWindow.this.hide();
-                                                      }
+            templateService.getAppTemplateForEdit(
+                    qualifiedIdFromConfig(config), new AppsCallback<AppTemplate>() {
+                        @Override
+                        public void onFailure(Integer statusCode, Throwable caught) {
+                            SimpleServiceError serviceError = AutoBeanCodex
+                                    .decode(factory, SimpleServiceError.class, caught.getMessage())
+                                    .as();
+                            announcer.schedule(new ErrorAnnouncementConfig(
+                                    appearance.unableToRetrieveWorkflowGuide() + ": "
+                                    + serviceError.getReason()));
+                            ErrorHandler.post(appearance.unableToRetrieveWorkflowGuide(), caught);
+                            AppEditorWindow.this.hide();
+                        }
 
-                                                      @Override
-                                                      public void onSuccess(AppTemplate result) {
-                                                          // KLUDGE until service returns this value in
-                                                          // JSON response.
-                                                          if (result.isPublic() != null) {
-                                                              result.setPublic(result.isPublic());
-                                                          } else if (config != null) {
-                                                              result.setPublic(config.isOnlyLabelEditMode());
-                                                          }
-                                                          renameCmd.setAppTemplate(result);
-                                                          presenter.go(AppEditorWindow.this,
-                                                                       result,
-                                                                       renameCmd);
-                                                          AppEditorWindow.this.unmask();
-                                                          AppEditorWindow.this.forceLayout();
-                                                          AppEditorWindow.this.center();
-                                                      }
-                                                  });
+                        @Override
+                        public void onSuccess(AppTemplate result) {
+                            // KLUDGE until service returns this value in
+                            // JSON response.
+                            if (result.isPublic() != null) {
+                                result.setPublic(result.isPublic());
+                            } else if (config != null) {
+                                result.setPublic(config.isOnlyLabelEditMode());
+                            }
+                            renameCmd.setAppTemplate(result);
+                            presenter.go(AppEditorWindow.this, result, renameCmd);
+                            AppEditorWindow.this.unmask();
+                            AppEditorWindow.this.forceLayout();
+                            AppEditorWindow.this.center();
+                        }
+                    });
         }
     }
 

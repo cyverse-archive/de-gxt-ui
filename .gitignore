@@ -43,3 +43,6 @@ applications/config*
 bin/
 #ignore logs
 log/
+
+# Ignore test Dockerfiles.
+Dockerfile.local

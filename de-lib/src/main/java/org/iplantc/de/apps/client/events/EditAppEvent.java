@@ -1,7 +1,7 @@
 package org.iplantc.de.apps.client.events;
 
 import org.iplantc.de.apps.client.events.EditAppEvent.EditAppEventHandler;
-import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.HasQualifiedId;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -14,10 +14,10 @@ public class EditAppEvent extends GwtEvent<EditAppEventHandler> {
     }
 
     public static final GwtEvent.Type<EditAppEventHandler> TYPE = new GwtEvent.Type<>();
-    private final HasId appToEdit;
+    private final HasQualifiedId appToEdit;
     private final boolean isUserIntegratorAndAppPublic;
 
-    public EditAppEvent(HasId appToEdit, boolean isUserIntegratorAndAppPublic) {
+    public EditAppEvent(HasQualifiedId appToEdit, boolean isUserIntegratorAndAppPublic) {
         this.appToEdit = appToEdit;
         this.isUserIntegratorAndAppPublic = isUserIntegratorAndAppPublic;
     }
@@ -32,7 +32,7 @@ public class EditAppEvent extends GwtEvent<EditAppEventHandler> {
         return TYPE;
     }
 
-    public HasId getAppToEdit() {
+    public HasQualifiedId getAppToEdit() {
         return appToEdit;
     }
 
