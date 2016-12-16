@@ -19,6 +19,7 @@ import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
 import org.iplantc.de.shared.DECallback;
+import org.iplantc.de.shared.services.BaseServiceCallWrapper;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
@@ -99,18 +100,18 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
     }
 
     @Override
-    public void deleteApp(final HasId app,
+    public void deleteApp(final HasQualifiedId app,
                           final AsyncCallback<Void> callback) {
-        String address = APPS_ADMIN + "/" + app.getId();
+        String address = APPS_ADMIN + "/" + app.getSystemId() + "/" + app.getId();
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address);
         deService.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
     }
 
     @Override
-    public void getAppDetails(final HasId app,
+    public void getAppDetails(final HasQualifiedId app,
                               final AsyncCallback<App> callback) {
-        String address = APPS_ADMIN + "/" + app.getId() + "/details";
+        String address = APPS_ADMIN + "/" + app.getSystemId() + "/" + app.getId() + "/details";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new AsyncCallbackConverter<String, App>(callback) {
@@ -156,9 +157,9 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
     }
 
     @Override
-    public void restoreApp(final HasId app,
+    public void restoreApp(final HasQualifiedId app,
                            final AsyncCallback<App> callback) {
-        String address = APPS_ADMIN + "/" + app.getId();
+        String address = APPS_ADMIN + "/" + app.getSystemId() + "/" + app.getId();
 
         Splittable payload = StringQuoter.createSplittable();
         StringQuoter.create(false).assign(payload, "deleted");
@@ -177,7 +178,7 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
     @Override
     public void updateApp(final App app, AsyncCallback<App> callback) {
 
-        String address = APPS_ADMIN + "/" + app.getId();
+        String address = APPS_ADMIN + "/" + app.getSystemId() + "/" + app.getId();
 
         final App appClone = AutoBeanCodex.decode(factory, App.class, "{}").as();
 
@@ -227,32 +228,28 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
     }
 
     @Override
-    public void saveAppDoc(final HasId app,
+    public void saveAppDoc(final HasQualifiedId app,
                            final AppDoc doc,
                            final AsyncCallback<AppDoc> callback) {
-        String address = APPS_ADMIN + "/" + app.getId() + "/documentation";
-
-        Splittable payload = StringQuoter.createSplittable();
-        StringQuoter.create(doc.getDocumentation()).assign(payload, "documentation");
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, payload.getPayload());
-        deService.getServiceData(wrapper, new AsyncCallbackConverter<String, AppDoc>(callback) {
-            @Override
-            protected AppDoc convertFrom(String object) {
-                AutoBean<AppDoc> appDocAutoBean = AutoBeanCodex.decode(factory, AppDoc.class, object);
-                return appDocAutoBean.as();
-            }
-        });
+        sendAppDocUpdate(app, doc, callback, POST);
     }
 
     @Override
-    public void updateAppDoc(final HasId app,
+    public void updateAppDoc(final HasQualifiedId app,
                              final AppDoc doc,
                              final AsyncCallback<AppDoc> callback) {
-        String address = APPS_ADMIN + "/" + app.getId() + "/documentation";
+        sendAppDocUpdate(app, doc, callback, PATCH);
+    }
+
+    private void sendAppDocUpdate(HasQualifiedId app,
+                                  AppDoc doc,
+                                  final AsyncCallback<AppDoc> callback,
+                                  BaseServiceCallWrapper.Type method) {
+        String address = APPS_ADMIN + "/" + app.getSystemId() + "/" + app.getId() + "/documentation";
 
         Splittable payload = StringQuoter.createSplittable();
         StringQuoter.create(doc.getDocumentation()).assign(payload, "documentation");
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(PATCH, address, payload.getPayload());
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(method, address, payload.getPayload());
         deService.getServiceData(wrapper, new AsyncCallbackConverter<String, AppDoc>(callback) {
             @Override
             protected AppDoc convertFrom(String object) {

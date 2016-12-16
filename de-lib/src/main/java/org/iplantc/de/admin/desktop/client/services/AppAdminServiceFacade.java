@@ -53,7 +53,7 @@ public interface AppAdminServiceFacade extends  AppSearchFacade {
      * Updates an app with the given values in application.
      *
      */
-    void restoreApp(HasId app,
+    void restoreApp(HasQualifiedId app,
                     AsyncCallback<App> callback);
 
     void updateApp(App app, AsyncCallback<App> callback);
@@ -61,16 +61,16 @@ public interface AppAdminServiceFacade extends  AppSearchFacade {
     /**
      * Deletes an App with the given applicationId.
      */
-    void deleteApp(HasId app, AsyncCallback<Void> callback);
+    void deleteApp(HasQualifiedId app, AsyncCallback<Void> callback);
 
     void categorizeApp(AppCategorizeRequest request, AsyncCallback<String> callback);
 
-    void getAppDetails(HasId app, AsyncCallback<App> callback);
+    void getAppDetails(HasQualifiedId app, AsyncCallback<App> callback);
 
     void getAppDoc(HasQualifiedId app, AsyncCallback<AppDoc> callback);
 
-    void saveAppDoc(HasId app, AppDoc doc, AsyncCallback<AppDoc> callback);
+    void saveAppDoc(HasQualifiedId app, AppDoc doc, AsyncCallback<AppDoc> callback);
 
-    void updateAppDoc(HasId app, AppDoc doc, AsyncCallback<AppDoc> callback);
+    void updateAppDoc(HasQualifiedId app, AppDoc doc, AsyncCallback<AppDoc> callback);
 
 }
