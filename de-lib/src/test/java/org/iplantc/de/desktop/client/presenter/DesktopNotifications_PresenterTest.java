@@ -74,6 +74,7 @@ public class DesktopNotifications_PresenterTest {
                                                                   globalEvntHndlrMock,
                                                                   windowEvntHndlrMock,
                                                                   eventBusMock,
+                                                                  sysMsgPresenterMock,
                                                                   windowMangerMock,
                                                                   desktopWindowManagerMock,
                                                                   msgPollerMock){
@@ -106,6 +107,7 @@ public class DesktopNotifications_PresenterTest {
                                                                   globalEvntHndlrMock,
                                                                   windowEvntHndlrMock,
                                                                   eventBusMock,
+                                                                  sysMsgPresenterMock,
                                                                   windowMangerMock,
                                                                   desktopWindowManagerMock,
                                                                   msgPollerMock);
@@ -133,6 +135,7 @@ public class DesktopNotifications_PresenterTest {
                                                                             globalEvntHndlrMock,
                                                                             windowEvntHndlrMock,
                                                                             eventBusMock,
+                                                                            sysMsgPresenterMock,
                                                                             windowMangerMock,
                                                                             desktopWindowManagerMock,
                                                                             msgPollerMock));
