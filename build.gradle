@@ -9,27 +9,11 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.3.RELEASE")
         classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
-        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.4.0"
-
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'idea'
-apply plugin: "com.jfrog.artifactory"
-
-artifactory {
-    contextUrl = "https://maven.sencha.com/repo"
-    resolve {
-        repository {
-            repoKey = 'support-commercial-release'
-            username = "${sencha_support_user}"
-            password = "${sencha_support_password}"
-            maven = true
-        }
-    }
-}
-
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
