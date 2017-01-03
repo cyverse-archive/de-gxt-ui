@@ -25,7 +25,7 @@ import org.iplantc.de.client.models.notifications.payload.PayloadApps;
 import org.iplantc.de.client.models.notifications.payload.PayloadAppsList;
 import org.iplantc.de.client.models.notifications.payload.PayloadRequest;
 import org.iplantc.de.client.models.requestStatus.RequestHistory;
-import org.iplantc.de.client.services.DEFeedbackServiceFacade;
+import org.iplantc.de.client.services.DEUserSupportServiceFacade;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.services.MessageServiceFacade;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
@@ -150,7 +150,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     @Inject DEClientConstants deClientConstants;
     @Inject DEProperties deProperties;
     @Inject Provider<ErrorHandler> errorHandlerProvider;
-    @Inject Provider<DEFeedbackServiceFacade> feedbackServiceProvider;
+    @Inject Provider<DEUserSupportServiceFacade> userSupportServiceProvider;
     @Inject Provider<FileEditorServiceFacade> fileEditorServiceProvider;
     @Inject MessageServiceFacade messageServiceFacade;
     @Inject NotificationAutoBeanFactory notificationFactory;
@@ -648,9 +648,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
 
     @Override
     public void submitUserFeedback(Splittable splittable, final IsHideable isHideable) {
-        StringQuoter.create(userInfo.getUsername()).assign(splittable, "username");
-        StringQuoter.create(Window.Navigator.getUserAgent()).assign(splittable, "User-agent");
-        feedbackServiceProvider.get().submitFeedback(splittable, new AsyncCallback<Void>() {
+       userSupportServiceProvider.get().submitSupportRequest(splittable, new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
                 errorHandlerProvider.get().post(appearance.feedbackServiceFailure(), caught);

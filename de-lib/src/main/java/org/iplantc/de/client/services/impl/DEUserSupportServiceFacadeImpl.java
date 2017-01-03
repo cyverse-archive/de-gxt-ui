@@ -1,6 +1,6 @@
 package org.iplantc.de.client.services.impl;
 
-import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PUT;
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
 import org.iplantc.de.client.services.DEUserSupportServiceFacade;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
@@ -31,7 +31,7 @@ public class DEUserSupportServiceFacadeImpl implements DEUserSupportServiceFacad
     @Override
     public void submitSupportRequest(Splittable request, AsyncCallback<Void> callback) {
         String addr = deProperties.getMuleServiceBaseUrl() + SUPPORT_SERVICE_PATH;
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(PUT, addr, request.getPayload());
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, addr, request.getPayload());
         deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
     }
 }
