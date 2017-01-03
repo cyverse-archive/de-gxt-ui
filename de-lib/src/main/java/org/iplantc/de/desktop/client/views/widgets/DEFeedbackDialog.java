@@ -1,5 +1,6 @@
 package org.iplantc.de.desktop.client.views.widgets;
 
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
 import com.google.gwt.core.client.GWT;
@@ -207,21 +208,30 @@ public class DEFeedbackDialog extends IPlantDialog {
     }
 
     public Splittable toJson() {
-        Splittable split = StringQuoter.createSplittable();
-        getAnswer1().assign(split, appearance.displayStrings().reason().asString());
-        getAnswer2().assign(split, appearance.displayStrings().complete().asString());
+        Splittable parent = StringQuoter.createSplittable();
+        StringQuoter.create(UserInfo.getInstance().getFullUsername()).assign(parent, "from");
+        StringQuoter.create(
+                UserInfo.getInstance().getUsername() + " has submitted DE Feedback.")
+                    .assign(parent, "Subject");
+
+
+        Splittable sp = StringQuoter.createSplittable();
+        getAnswer1().assign(sp, appearance.displayStrings().reason().asString());
+        getAnswer2().assign(sp, appearance.displayStrings().complete().asString());
 
         if (getAnswer3() != null) {
-            getAnswer3().assign(split, appearance.displayStrings().satisfy().asString());
+            getAnswer3().assign(sp, appearance.displayStrings().satisfy().asString());
         }
         if (featureTextArea.getValue() != null) {
-            StringQuoter.create(featureTextArea.getValue()).assign(split, appearance.displayStrings().featuresAndImprovements());
+            StringQuoter.create(featureTextArea.getValue()).assign(sp, appearance.displayStrings().featuresAndImprovements());
         }
 
         if (otherTextArea.getValue() != null) {
-            StringQuoter.create(otherTextArea.getValue()).assign(split, appearance.displayStrings().anythingElse());
+            StringQuoter.create(otherTextArea.getValue()).assign(sp, appearance.displayStrings().anythingElse());
         }
-        return split;
+        sp.assign(parent, "fields");
+        GWT.log("splittable feedback -->" + parent.getPayload());
+        return parent;
     }
 
     private Splittable getAnswer1() {
