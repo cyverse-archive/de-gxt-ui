@@ -64,7 +64,7 @@ public class AnalysisUserSupportCellDefaultAppearance implements AnalysisUserSup
     @Override
     public void render(Cell.Context context, Analysis value, SafeHtmlBuilder sb) {
         sb.append(template.imgCell(displayStrings.userSupport(),
-                                   displayStrings.userSupport(),
+                                   displayStrings.analysisHelp(),
                                    resources.css().supportIcon(),
                                    iplantResources.help().getSafeUri()));
     }
