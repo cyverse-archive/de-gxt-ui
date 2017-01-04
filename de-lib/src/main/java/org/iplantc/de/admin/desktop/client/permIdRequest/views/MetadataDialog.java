@@ -34,7 +34,6 @@ public class MetadataDialog extends IPlantDialog {
     private class OkSelectHandler implements SelectEvent.SelectHandler {
         @Override
         public void onSelect(SelectEvent event) {
-
             if (!metadataView.isValid()) {
                 ConfirmMessageBox cmb = new ConfirmMessageBox(I18N.DISPLAY.error(),
                                                               appearance.metadataSaveError());

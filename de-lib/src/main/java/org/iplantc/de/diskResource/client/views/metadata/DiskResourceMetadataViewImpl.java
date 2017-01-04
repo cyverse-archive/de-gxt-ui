@@ -7,6 +7,7 @@ import org.iplantc.de.diskResource.client.model.DiskResourceMetadataProperties;
 import org.iplantc.de.diskResource.client.presenters.metadata.MetadataPresenterImpl;
 import org.iplantc.de.diskResource.share.DiskResourceModule.MetadataIds;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
@@ -70,6 +71,8 @@ import java.util.List;
  * @author jstroot sriram
  */
 public class DiskResourceMetadataViewImpl extends Composite implements MetadataView {
+
+    private DiskResourceMetadataProperties props;
 
     private final class AttributeValidationHandler implements ValidHandler, InvalidHandler {
         public AttributeValidationHandler() {
@@ -163,6 +166,7 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
         valid = true;
         userChxBoxModel = new CellSelectionModel<>();
         addChxBoxModel = new CheckBoxSelectionModel<Avu>();
+        props = GWT.create(DiskResourceMetadataProperties.class);
         init();
         initWidget(uiBinder.createAndBindUi(this));
         alc.setActiveWidget(userMetadataPanel);
@@ -262,7 +266,6 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
         presenter.setAvuModelKey(md);
         userMdListStore.add(0, md);
         userGridRowEditing.startEditing(new GridCell(0, 1));
-        userGridRowEditing.getEditor(userMdGrid.getColumnModel().getColumn(1)).validate(false);
     }
 
     @UiHandler("deleteMetadataButton")
@@ -317,7 +320,7 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
 
     void createColumnModel() {
         List<ColumnConfig<Avu, ?>> columns = Lists.newArrayList();
-        DiskResourceMetadataProperties props = GWT.create(DiskResourceMetadataProperties.class);
+
 
         ColumnConfig<Avu, Boolean> selectColumn = new ColumnConfig<>(new ValueProvider<Avu, Boolean>() {
            @Override
@@ -429,6 +432,9 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
     private void initUserMdGridEditor() {
         userGridRowEditing = new GridRowEditing<>(userMdGrid);
         userGridRowEditing.setClicksToEdit(ClicksToEdit.TWO);
+        userGridRowEditing.setErrorSummary(true);
+
+        userMdListStore.setAutoCommit(true);
 
         ColumnConfig<Avu,Boolean> column0 = userMdGrid.getColumnModel().getColumn(0);
         ColumnConfig<Avu, String> column1 = userMdGrid.getColumnModel().getColumn(1);
@@ -439,20 +445,9 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
         cxb.setEnabled(false);
 
         TextField field1 = new TextField();
+        field1.setEmptyText("Required");
         TextField field2 = new TextField();
         TextField field3 = new TextField();
-
-        field1.setAutoValidate(true);
-        field2.setAutoValidate(true);
-        field3.setAutoValidate(true);
-
-        field1.setAllowBlank(false);
-        field2.setAllowBlank(false);
-        field3.setAllowBlank(true);
-
-        AttributeValidationHandler validationHandler = new AttributeValidationHandler();
-        field1.addInvalidHandler(validationHandler);
-        field1.addValidHandler(validationHandler);
 
         userGridRowEditing.addEditor(column0, cxb);
         userGridRowEditing.addEditor(column1, field1);
@@ -462,8 +457,14 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
 
             @Override
             public void onCompleteEdit(CompleteEditEvent<Avu> event) {
-                dirty = true;
-                userMdListStore.commitChanges();
+              dirty = true;
+              for (Avu avu : userMdListStore.getAll()) {
+                  if(Strings.isNullOrEmpty(avu.getAttribute())) {
+                      valid = false;
+                      return;
+                  }
+              }
+              valid = true;
             }
         });
     }

@@ -173,4 +173,9 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     public String checksum() {
         return displayStrings.checksum();
     }
+
+    @Override
+    public String metadataSaveError() {
+        return displayStrings.metadataSaveError();
+    }
 }
