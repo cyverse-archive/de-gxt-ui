@@ -235,7 +235,10 @@ public class AppDetailsViewImpl extends Composite implements
                                                                     GWT.getHostPageBaseURL()
                                                                             + "?type="
                                                                             + DesktopPresenterImpl.TypeQueryValues.APPS
-                                                                            + "&app-id=" + app.getId(),
+                                                                            + "&app-id=" + app.getId()
+                                                                            + "&"
+                                                                            + DesktopPresenterImpl.QueryStrings.SYSTEM_ID
+                                                                            + "=" + app.getSystemId(),
                                                                     null);
                     ipd.setHeadingHtml(appearance.copyAppUrl());
                     ipd.setWidth("500px");
