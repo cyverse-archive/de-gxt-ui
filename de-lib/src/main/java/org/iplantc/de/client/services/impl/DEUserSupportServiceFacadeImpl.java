@@ -30,7 +30,7 @@ public class DEUserSupportServiceFacadeImpl implements DEUserSupportServiceFacad
 
     @Override
     public void submitSupportRequest(Splittable request, AsyncCallback<Void> callback) {
-        String addr = deProperties.getMuleServiceBaseUrl() + SUPPORT_SERVICE_PATH;
+        String addr = deProperties.getUnproctedMuleServiceBaseUrl() + SUPPORT_SERVICE_PATH;
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, addr, request.getPayload());
         deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
     }

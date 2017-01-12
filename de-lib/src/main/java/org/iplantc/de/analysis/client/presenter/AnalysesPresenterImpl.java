@@ -21,6 +21,11 @@ import org.iplantc.de.client.events.diskResources.OpenFolderEvent;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisStepsInfo;
+import org.iplantc.de.client.models.analysis.sharing.AnalysisPermission;
+import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingAutoBeanFactory;
+import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingRequest;
+import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingRequestList;
+import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
 import org.iplantc.de.client.services.DEUserSupportServiceFacade;
 import org.iplantc.de.client.util.JsonUtil;
@@ -56,6 +61,7 @@ import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -208,6 +214,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     private final HasHandlers eventBus;
     private HandlerRegistration handlerFirstLoad;
     private final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader;
+    private AnalysisSharingAutoBeanFactory shareFactory = GWT.create(AnalysisSharingAutoBeanFactory.class);
 
     @Inject
     AnalysesPresenterImpl(final AnalysesViewFactory viewFactory,
@@ -464,9 +471,34 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     }
 
+
     AnalysisStepsInfoDialog getAnalysisStepsDialog() {
         return new AnalysisStepsInfoDialog(analysisStepView);
     }
+
+    private void shareWithSupport(Analysis selectedAnalysis, final Splittable parent) {
+        AnalysisPermission ap = shareFactory.analysisPermission().as();
+        ap.setId(selectedAnalysis.getId());
+        ap.setPermission(PermissionValue.read.toString());
+        AnalysisSharingRequest asr = shareFactory.AnalysisSharingRequest().as();
+        asr.setUser("siuser");
+        asr.setAnalysisPermissions(Arrays.asList(ap));
+        AnalysisSharingRequestList listRequest = shareFactory.AnalysisSharingRequestList().as();
+        listRequest.setAnalysisSharingRequestList(Arrays.asList(asr));
+        analysisService.shareAnalyses(listRequest, new AnalysisCallback<String>() {
+            @Override
+            public void onFailure(Integer statusCode, Throwable exception) {
+                announcer.schedule(new ErrorAnnouncementConfig(
+                        "Unable to share your analysis with support. Please email support@cyverse.org!"));
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                emailSupport(parent);
+            }
+        });
+    }
+
     @Override
     public void onUserSupportRequested(AnalysisUserSupportRequestedEvent event) {
         final Analysis value = event.getValue();
@@ -477,7 +509,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
             @Override
             public void onSelect(SelectEvent event) {
                 Splittable parent = StringQuoter.createSplittable();
-                Splittable sp = StringQuoter.createSplittable();
+                final Splittable sp = StringQuoter.createSplittable();
                 StringQuoter.create(value.getName()).assign(sp, "Name");
                 StringQuoter.create(value.getAppName()).assign(sp, "App");
                 StringQuoter.create(value.getResultFolderId()).assign(sp, "Output Folder");
@@ -498,23 +530,25 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                             .assign(parent, "Subject");
                 GWT.log("splittable -->" + parent.getPayload());
                 ausd.hide();
-                supportService.submitSupportRequest(parent, new AsyncCallback<Void>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        announcer.schedule(new ErrorAnnouncementConfig(
-                                userSupportAppearance.supportRequestFailed()));
-                    }
-
-                    @Override
-                    public void onSuccess(Void result) {
-                        announcer.schedule(new SuccessAnnouncementConfig(
-                                userSupportAppearance.supportRequestSuccess()));
-                    }
-                });
+                shareWithSupport(value, parent);
             }
         });
 
         ausd.show();
 
+    }
+
+    protected void emailSupport(Splittable parent) {
+        supportService.submitSupportRequest(parent, new AsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                announcer.schedule(new ErrorAnnouncementConfig(userSupportAppearance.supportRequestFailed()));
+            }
+
+            @Override
+            public void onSuccess(Void result) {
+                announcer.schedule(new SuccessAnnouncementConfig(userSupportAppearance.supportRequestSuccess()));
+            }
+        });
     }
 }

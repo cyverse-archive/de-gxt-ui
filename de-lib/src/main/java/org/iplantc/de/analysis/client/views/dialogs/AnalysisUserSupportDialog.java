@@ -12,12 +12,12 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextArea;
 
 import com.sencha.gxt.core.client.dom.ScrollSupport;
 import com.sencha.gxt.core.client.util.Margins;
 import com.sencha.gxt.core.client.util.ToggleGroup;
 import com.sencha.gxt.widget.core.client.Window;
-import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -25,7 +25,6 @@ import com.sencha.gxt.widget.core.client.form.CheckBox;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.FormPanel;
 import com.sencha.gxt.widget.core.client.form.Radio;
-import com.sencha.gxt.widget.core.client.form.TextArea;
 
 import java.util.Date;
 
@@ -37,6 +36,7 @@ public class AnalysisUserSupportDialog extends Window {
 
     private TextArea comments;
     private TextButton submitBtn;
+    private String commentText;
 
     public interface AnalysisUserSupportAppearance {
 
@@ -206,6 +206,7 @@ public class AnalysisUserSupportDialog extends Window {
         approvalChkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
             @Override
             public void onValueChange(ValueChangeEvent<Boolean> event) {
+
                    if(approvalChkBox.getValue()) {
                        submitBtn.enable();
                    } else {
@@ -216,19 +217,6 @@ public class AnalysisUserSupportDialog extends Window {
 
         approvalChkBox.setBoxLabel(appearance.agreeToShare());
         vlc.add(approvalChkBox, new VerticalLayoutContainer.VerticalLayoutData(1, -1, new Margins(10)));
-
-        submitBtn.addSelectHandler(new SelectEvent.SelectHandler() {
-            @Override
-            public void onSelect(SelectEvent event) {
-                if (approvalChkBox.getValue()) {
-                    //do submit here
-                } else {
-                    AlertMessageBox amb = new AlertMessageBox(appearance.disclaimer(),
-                                                              appearance.termsOfSupport());
-                    amb.show();
-                }
-            }
-        });
         vlc.add(submitBtn,
                 new VerticalLayoutContainer.VerticalLayoutData(-1, -1, new Margins(20, 0, 10, 300)));
 
@@ -237,7 +225,7 @@ public class AnalysisUserSupportDialog extends Window {
     }
 
     public String getComment() {
-        return comments.getCurrentValue();
+        return comments.getValue();
     }
 
     public void addSubmitSelectHandler(SelectEvent.SelectHandler handler) {

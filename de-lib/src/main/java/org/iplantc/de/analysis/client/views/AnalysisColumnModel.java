@@ -69,27 +69,6 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
                                                                         125);
         ColumnConfig<Analysis, Analysis> endDate = new ColumnConfig<>(new IdentityValueProvider<Analysis>("enddate"),
                                                                       125);
-        ColumnConfig<Analysis, String> status = new ColumnConfig<>(new ValueProvider<Analysis, String>() {
-
-                                                                       @Override
-                                                                       public String
-                                                                               getValue(Analysis object) {
-                                                                           return object.getStatus();
-                                                                       }
-
-                                                                       @Override
-                                                                       public void
-                                                                               setValue(Analysis object,
-                                                                                        String value) {
-                                                                           object.setStatus(value);
-                                                                       }
-
-                                                                       @Override
-                                                                       public String getPath() {
-                                                                           return "status";
-                                                                       }
-                                                                   },
-                                                                   75);
 
         ColumnConfig<Analysis, String> username = new ColumnConfig<>(new ValueProvider<Analysis, String>() {
 
@@ -112,7 +91,7 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
                                                                          }
                                                                      },
                                                                      125);
-        ColumnConfig<Analysis, Analysis> support = new ColumnConfig<Analysis, Analysis>(new IdentityValueProvider<Analysis>("support"),30);
+        ColumnConfig<Analysis, Analysis> status = new ColumnConfig<Analysis, Analysis>(new IdentityValueProvider<Analysis>("status"),75);
 
         name.setHeader(appearance.name());
         name.setCell(new AnalysisNameCell());
@@ -135,12 +114,10 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
         endDate.setHeader(appearance.endDate());
 
         status.setHeader(appearance.status());
-
-        support.setMenuDisabled(true);
-        support.setCell(new AnalysisUserSupportCell());
-        support.setSortable(false);
-        support.setHeader("");
-        support.setHideable(false);
+        status.setMenuDisabled(true);
+        status.setCell(new AnalysisUserSupportCell());
+        status.setSortable(false);
+        status.setHideable(false);
 
         List<ColumnConfig<Analysis, ?>> ret = Lists.newArrayList();
         ret.add(colCheckBox);
@@ -151,7 +128,6 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
         ret.add(startDate);
         ret.add(endDate);
         ret.add(status);
-        ret.add(support);
         return ret;
     }
 
