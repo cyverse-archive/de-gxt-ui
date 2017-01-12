@@ -23,7 +23,12 @@ import com.google.gwt.user.client.Event;
 public class AnalysisUserSupportCell extends AbstractCell<Analysis> {
 
     public interface AnalysisUserSupportCellAppearance {
+        String ELEMENT_NAME = "support";
         void render(Context context, Analysis value, SafeHtmlBuilder sb);
+
+        void doOnMouseOut(Element eventTarget, Analysis value);
+
+        void doOnMouseOver(Element eventTarget, Analysis value);
     }
 
     private final AnalysisUserSupportCellAppearance appearance;
@@ -55,6 +60,12 @@ public class AnalysisUserSupportCell extends AbstractCell<Analysis> {
             switch (Event.as(event).getTypeInt()) {
                 case Event.ONCLICK:
                     doOnClick(value);
+                    break;
+                case Event.ONMOUSEOVER:
+                    appearance.doOnMouseOver(eventTarget, value);
+                    break;
+                case Event.ONMOUSEOUT:
+                    appearance.doOnMouseOut(eventTarget, value);
                     break;
                 default:
                     break;

@@ -1,9 +1,12 @@
 package org.iplantc.de.analysis.client.views.cells;
 
+import static com.google.gwt.dom.client.BrowserEvents.CLICK;
+import static com.google.gwt.dom.client.BrowserEvents.MOUSEOUT;
+import static com.google.gwt.dom.client.BrowserEvents.MOUSEOVER;
+
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.client.models.analysis.Analysis;
 
-import static com.google.gwt.dom.client.BrowserEvents.*;
 import com.google.common.base.Strings;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
