@@ -320,7 +320,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
 		var introjs = $wnd.introJs();
 		introjs.setOption("showStepNumbers", false);
 		introjs.setOption("skipLabel", "Exit");
-		introjs.setOption("overlayOpacity", .2);
+		introjs.setOption("overlayOpacity",0);
 		introjs.start();
     }-*/;
 
