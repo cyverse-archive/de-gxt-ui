@@ -19,6 +19,6 @@ public class HierarchyTree<O, S> extends DETree<OntologyHierarchy, String> {
 
     @Override
     public java.lang.String generateDebugId(OntologyHierarchy ontologyHierarchy) {
-        return getBaseId() + "." + ontologyHierarchy.getIri() + Belphegor.CatalogIds.TREE_NODE;
+        return getBaseId() + "." + ontologyHierarchy.getIri().replace(":", "_") + Belphegor.CatalogIds.TREE_NODE;
     }
 }
