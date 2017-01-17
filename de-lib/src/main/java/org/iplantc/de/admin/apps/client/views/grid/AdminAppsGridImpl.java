@@ -88,17 +88,17 @@ public class AdminAppsGridImpl extends ContentPanel implements AdminAppsGridView
     @Override
     public void onAppCategorySelectionChanged(AppCategorySelectionChangedEvent event) {
         // FIXME Move to appearance
-        setHeadingText(Joiner.on(" >> ").join(event.getGroupHierarchy()));
+        setHeading(Joiner.on(" >> ").join(event.getGroupHierarchy()));
     }
 
     @Override
     public void onHierarchySelected(HierarchySelectedEvent event) {
-        setHeadingText(Joiner.on(" >> ").join(event.getPath()));
+        setHeading(Joiner.on(" >> ").join(event.getPath()));
     }
 
     @Override
     public void onPreviewHierarchySelected(PreviewHierarchySelectedEvent event) {
-        setHeadingText(Joiner.on(" >> ").join(event.getPath()));
+        setHeading(Joiner.on(" >> ").join(event.getPath()));
     }
 
     @Override
@@ -108,7 +108,7 @@ public class AdminAppsGridImpl extends ContentPanel implements AdminAppsGridView
 //        acm.setSearchRegexPattern(searchRegexPattern);
 
         int total = event.getResults() == null ? 0 : event.getResults().size();
-        setHeadingText(appearance.searchAppResultsHeader(event.getSearchText(), total));
+        setHeading(appearance.searchAppResultsHeader(event.getSearchText(), total));
     }
 
     @Override
@@ -169,6 +169,6 @@ public class AdminAppsGridImpl extends ContentPanel implements AdminAppsGridView
 
     @Override
     public void onSelectOntologyVersion(SelectOntologyVersionEvent event) {
-        setHeadingHtml("&nbsp;");
+        setHeading("&nbsp;");
     }
 }

@@ -240,7 +240,7 @@ public class AppDetailsViewImpl extends Composite implements
                                                                             + DesktopPresenterImpl.QueryStrings.SYSTEM_ID
                                                                             + "=" + app.getSystemId(),
                                                                     null);
-                    ipd.setHeadingHtml(appearance.copyAppUrl());
+                    ipd.setHeading(appearance.copyAppUrl());
                     ipd.setWidth("500px");
                     ipd.setPredefinedButtons(PredefinedButton.OK);
                     ipd.show();

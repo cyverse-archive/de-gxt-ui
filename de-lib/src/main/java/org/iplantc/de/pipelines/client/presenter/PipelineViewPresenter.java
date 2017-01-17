@@ -231,7 +231,7 @@ public class PipelineViewPresenter implements Presenter, PipelineView.Presenter,
 
         Dialog d = new Dialog();
         d.setModal(true);
-        d.setHeadingText(I18N.DISPLAY.error());
+        d.setHeading(I18N.DISPLAY.error());
         VerticalLayoutContainer vlc = new VerticalLayoutContainer();
 
         d.setWidget(vlc);
@@ -366,21 +366,21 @@ public class PipelineViewPresenter implements Presenter, PipelineView.Presenter,
     @Override
     public void onInfoClick() {
         view.getStepPanel().setActiveWidget(view.getInfoPanel());
-        view.getHelpContainer().setHTML(I18N.DISPLAY.infoPnlTip());
+        view.getHelpContainer().setHTML((SafeHtml)() -> I18N.DISPLAY.infoPnlTip());
         updateErrors();
     }
 
     @Override
     public void onAppOrderClick() {
         view.getStepPanel().setActiveWidget(view.getAppOrderPanel());
-        view.getHelpContainer().setHTML(I18N.DISPLAY.selectOrderPnlTip());
+        view.getHelpContainer().setHTML((SafeHtml)() -> I18N.DISPLAY.selectOrderPnlTip());
         updateErrors();
     }
 
     @Override
     public void onMappingClick() {
         view.getStepPanel().setActiveWidget(view.getMappingPanel());
-        view.getHelpContainer().setHTML(I18N.DISPLAY.inputsOutputsPnlTip());
+        view.getHelpContainer().setHTML((SafeHtml)() -> I18N.DISPLAY.inputsOutputsPnlTip());
         updateErrors();
     }
 
