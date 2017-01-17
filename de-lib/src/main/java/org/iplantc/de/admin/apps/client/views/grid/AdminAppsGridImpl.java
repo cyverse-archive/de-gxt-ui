@@ -169,6 +169,6 @@ public class AdminAppsGridImpl extends ContentPanel implements AdminAppsGridView
 
     @Override
     public void onSelectOntologyVersion(SelectOntologyVersionEvent event) {
-        setHeading("&nbsp;");
+        getHeader().setHTML("&nbsp;");
     }
 }
