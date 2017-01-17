@@ -128,7 +128,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         String ERROR_DESCRIPTION = "error_description";
     }
 
-    interface QueryStrings {
+    public interface QueryStrings {
         String APP_CATEGORY = "app-category";
         String FOLDER = "folder";
         String TYPE = "type";
