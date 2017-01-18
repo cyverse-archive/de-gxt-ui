@@ -6,6 +6,7 @@ public enum InfoType {
     BAM("bam"),
     BASH("bash"),
     BED("bed"),
+    BIGBED("bigbed"),
     BLAST("blast"),
     BOWTIE("bowtie"),
     CLUSTALW("clustalw"),
