@@ -1,5 +1,19 @@
 package org.iplantc.de.diskResource.client.presenters.grid.proxy;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.anyList;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
+
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.diskResources.TYPE;
@@ -23,15 +37,6 @@ import com.sencha.gxt.data.shared.SortInfoBean;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoadResultBean;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyDouble;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.anyList;
-import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -219,7 +224,7 @@ public class FolderContentsRpcProxyTest {
             = ArgumentCaptor.forClass(FolderContentsRpcProxyImpl.FolderContentsCallback.class);
         verify(diskResourceService).getFolderContents(any(Folder.class), anyList(), any(TYPE.class), eq(loadConfigMock), callBackCaptor.capture());
 
-        callBackCaptor.getValue().onFailure(mock(Throwable.class));
+        callBackCaptor.getValue().onFailure(500, mock(Throwable.class));
         verify(pagingAsyncMock).onFailure(any(Throwable.class));
     }
 

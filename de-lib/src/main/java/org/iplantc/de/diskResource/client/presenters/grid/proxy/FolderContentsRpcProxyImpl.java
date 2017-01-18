@@ -12,6 +12,7 @@ import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.GridView;
+import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
@@ -111,7 +112,7 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FolderContentsLoadConfi
      * @author jstroot
      * 
      */
-    static class FolderContentsCallback implements AsyncCallback<Folder> {
+    static class FolderContentsCallback extends DataCallback<Folder> {
         private final FolderContentsLoadConfig loadConfig;
         private final AsyncCallback<PagingLoadResult<DiskResource>> callback;
         private final IplantAnnouncer announcer;
@@ -133,7 +134,7 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FolderContentsLoadConfi
         @Override
         public void onSuccess(Folder result) {
             if (callback == null || result == null) {
-                onFailure(null);
+                onFailure(null, null);
                 return;
             }
             // Create list of all items within the result folder
@@ -149,7 +150,7 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FolderContentsLoadConfi
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             if (loadConfig.getFolder() instanceof DiskResourceQueryTemplate) {
                 announcer.schedule(new ErrorAnnouncementConfig(SafeHtmlUtils.fromString(appearance.searchFailure()), true));
             }

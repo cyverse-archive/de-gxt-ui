@@ -30,6 +30,7 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.diskResource.client.events.ShowFilePreviewEvent;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -54,7 +55,7 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
                                                         SaveAnalysisParametersEvent.SaveAnalysisParametersEventHandler,
                                                         AnalysisParamValueSelectedEvent.AnalysisParamValueSelectedEventHandler {
 
-    private static class GetStatCallback implements AsyncCallback<FastMap<DiskResource>> {
+    private static class GetStatCallback extends DataCallback<FastMap<DiskResource>> {
         private final AnalysisParameter value;
         private final EventBus eventBus;
         private final IplantAnnouncer announcer;
@@ -71,7 +72,7 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             final SafeHtml message = SafeHtmlUtils.fromTrustedString(appearance.diskResourceDoesNotExist(value.getDisplayValue()));
             announcer.schedule(new ErrorAnnouncementConfig(message, true, 3000));
         }
@@ -83,7 +84,7 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
         }
     }
 
-    private static class SaveAnalysisParametersCallback implements AsyncCallback<File> {
+    private static class SaveAnalysisParametersCallback extends DataCallback<File> {
         private final  IplantAnnouncer announcer;
         private final AnalysisParametersView.Appearance appearance;
         private final DiskResourceUtil diskResourceUtil;
@@ -112,7 +113,7 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             ErrorHandler.post(caught);
         }
 

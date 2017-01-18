@@ -2,12 +2,12 @@ package org.iplantc.de.client.services.impl;
 
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestType;
 import org.iplantc.de.client.services.PermIdRequestUserServiceFacade;
+import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.BaseServiceCallWrapper.Type;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
@@ -22,7 +22,7 @@ public class PermIdRequestUserServiceFacadeImpl implements PermIdRequestUserServ
     }
 
     @Override
-    public void requestPermId(String uuid, PermanentIdRequestType type, AsyncCallback<String> callback) {
+    public void requestPermId(String uuid, PermanentIdRequestType type, DECallback<String> callback) {
         String address = PERMID_REQUEST;
         Splittable s = StringQuoter.createSplittable();
         StringQuoter.create(uuid).assign(s, "folder");

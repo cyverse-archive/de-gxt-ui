@@ -9,6 +9,7 @@ import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.widgets.IPlantSideErrorHandler;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
+import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -30,7 +31,6 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
@@ -491,10 +491,10 @@ public abstract class AbstractDiskResourceSelector<R extends DiskResource> exten
 
         // FIXME No service calls in widgets!!
         drServiceFacade.getStat(asStringPathTypeMap,
-                                new AsyncCallback<FastMap<DiskResource>>() {
+                                new DataCallback<FastMap<DiskResource>>() {
 
                                     @Override
-                                    public void onFailure(Throwable caught) {
+                                    public void onFailure(Integer statusCode, Throwable caught) {
 
                                         SimpleServiceError serviceError = AutoBeanCodex.decode(drServiceFacade.getDiskResourceFactory(),
                                                                                                SimpleServiceError.class,

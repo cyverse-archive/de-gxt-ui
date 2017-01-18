@@ -16,8 +16,8 @@ import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.diskResource.client.DataLinkView;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelected;
 import org.iplantc.de.diskResource.client.gin.factory.DataLinkViewFactory;
+import org.iplantc.de.shared.DECallback;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 
 import org.junit.Before;
@@ -48,8 +48,8 @@ public class DataLinkPresenterImplTest {
     @Mock List<String> stringListMock;
     @Mock DataLink dataLinkMock;
 
-    @Captor ArgumentCaptor<AsyncCallback<String>> stringCallbackCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<List<DataLink>>> dataLinkCallbackCaptor;
+    @Captor ArgumentCaptor<DECallback<String>> stringCallbackCaptor;
+    @Captor ArgumentCaptor<DECallback<List<DataLink>>> dataLinkCallbackCaptor;
 
 
     private DataLinkPresenterImpl uut;

@@ -32,7 +32,7 @@ public class DiskResourceMoveCallback extends DiskResourceServiceCallback<DiskRe
     }
 
     @Override
-    public void onFailure(Throwable caught){
+    public void onFailure(Integer statusCode, Throwable caught){
         unmaskCaller();
         DiskResourceErrorAutoBeanFactory factory = GWT.create(DiskResourceErrorAutoBeanFactory.class);
         AutoBean<ErrorDiskResourceMove> errorBean = AutoBeanCodex.decode(factory, ErrorDiskResourceMove.class, caught.getMessage());

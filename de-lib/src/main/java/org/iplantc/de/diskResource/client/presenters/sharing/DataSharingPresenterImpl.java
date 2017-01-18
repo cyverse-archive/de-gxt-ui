@@ -14,6 +14,7 @@ import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.DataSharingView;
+import org.iplantc.de.shared.DataCallback;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
@@ -35,7 +36,7 @@ import java.util.List;
  */
 public class DataSharingPresenterImpl implements SharingPresenter {
 
-    private final class LoadPermissionsCallback implements AsyncCallback<String> {
+    private final class LoadPermissionsCallback extends DataCallback<String> {
         private final class GetUserInfoCallback implements AsyncCallback<FastMap<Collaborator>> {
             private final List<String> usernames;
 
@@ -78,7 +79,7 @@ public class DataSharingPresenterImpl implements SharingPresenter {
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             permissionsPanel.unmask();
             ErrorHandler.post(caught);
         }

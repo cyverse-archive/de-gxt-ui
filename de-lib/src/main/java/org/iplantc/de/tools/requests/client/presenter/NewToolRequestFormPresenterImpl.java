@@ -16,6 +16,7 @@ import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.ToolRequestServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.resources.client.messages.I18N;
+import org.iplantc.de.shared.DataCallback;
 import org.iplantc.de.tools.requests.client.views.NewToolRequestFormView;
 import org.iplantc.de.tools.requests.client.views.NewToolRequestFormView.Presenter;
 import org.iplantc.de.tools.requests.client.views.Uploader;
@@ -196,9 +197,9 @@ public class NewToolRequestFormPresenterImpl implements Presenter {
     private void getDiskResourceExistMap(final Iterable<String> files, final Continuation<DiskResourceExistMap> checkExistence) {
         final HasPaths dto = FS_FACTORY.pathsList().as();
         dto.setPaths(Lists.newArrayList(files));
-        fsServices.diskResourcesExist(dto, new AsyncCallback<DiskResourceExistMap>() {
+        fsServices.diskResourcesExist(dto, new DataCallback<DiskResourceExistMap>() {
             @Override
-            public void onFailure(final Throwable caught) {
+            public void onFailure(Integer statusCode, final Throwable caught) {
                 view.indicateSubmissionFailure(I18N.ERROR.newToolRequestError());
             }
             @Override
@@ -364,9 +365,9 @@ public class NewToolRequestFormPresenterImpl implements Presenter {
         if (!filesToDelete.isEmpty()) {
             final HasPaths dto = FS_FACTORY.pathsList().as();
             dto.setPaths(filesToDelete);
-            fsServices.deleteDiskResources(dto, new AsyncCallback<HasPaths>() {
+            fsServices.deleteDiskResources(dto, new DataCallback<HasPaths>() {
                 @Override
-                public void onFailure(final Throwable unused) {}
+                public void onFailure(Integer statusCode, final Throwable unused) {}
                 @Override
                 public void onSuccess(final HasPaths unused) {}
             });

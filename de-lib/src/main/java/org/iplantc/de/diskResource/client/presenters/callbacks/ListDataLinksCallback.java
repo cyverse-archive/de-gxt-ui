@@ -6,11 +6,11 @@ import org.iplantc.de.client.models.dataLink.DataLinkList;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.shared.DataCallback;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.Splittable;
@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * @author jstroot
  */
-public class ListDataLinksCallback<M> implements AsyncCallback<String> {
+public class ListDataLinksCallback<M> extends DataCallback<String> {
 
     private final Tree<M, M> tree;
     private final DataLinkFactory dlFactory;
@@ -79,7 +79,7 @@ public class ListDataLinksCallback<M> implements AsyncCallback<String> {
     }
 
     @Override
-    public void onFailure(Throwable caught) {
+    public void onFailure(Integer statusCode, Throwable caught) {
         ErrorHandler.post(appearance.listDataLinksError(), caught);
     }
 }

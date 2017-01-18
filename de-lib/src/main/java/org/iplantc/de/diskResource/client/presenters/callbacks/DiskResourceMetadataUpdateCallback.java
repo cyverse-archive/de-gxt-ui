@@ -1,6 +1,5 @@
 package org.iplantc.de.diskResource.client.presenters.callbacks;
 
-import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
 import org.iplantc.de.client.models.errors.diskResources.ErrorUpdateMetadata;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -15,7 +14,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 /**
  * @author jstroot
  */
-public class DiskResourceMetadataUpdateCallback extends DiskResourceServiceCallback<String> {
+public class DiskResourceMetadataUpdateCallback extends DiskResourceServiceAsyncCallback<String> {
 
     private final IPlantDialog dialog;
     private final DiskResourceCallbackAppearance appearance = GWT.create(DiskResourceCallbackAppearance.class);
@@ -39,11 +38,17 @@ public class DiskResourceMetadataUpdateCallback extends DiskResourceServiceCallb
     @Override
     public void onFailure(Throwable caught) {
         unmaskCaller();
-        DiskResourceErrorAutoBeanFactory factory = GWT.create(DiskResourceErrorAutoBeanFactory.class);
-        AutoBean<ErrorUpdateMetadata> errorBean = AutoBeanCodex.decode(factory,
-                ErrorUpdateMetadata.class, caught.getMessage());
+        try {
+            DiskResourceErrorAutoBeanFactory factory = GWT.create(DiskResourceErrorAutoBeanFactory.class);
+            AutoBean<ErrorUpdateMetadata> errorBean =
+                    AutoBeanCodex.decode(factory, ErrorUpdateMetadata.class, caught.getMessage());
+            ErrorHandler.post(errorBean.as(), caught);
+        }
+        catch (Exception e) {
+            ErrorHandler.post(caught);
+        }
 
-       ErrorHandler.post(errorBean.as(), caught);
+
     }
 
     @Override

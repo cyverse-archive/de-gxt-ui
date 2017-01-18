@@ -34,6 +34,7 @@ import org.iplantc.de.fileViewers.client.views.SaveAsDialogOkSelectHandler;
 import org.iplantc.de.fileViewers.client.views.StructuredTextViewer;
 import org.iplantc.de.fileViewers.client.views.TextViewerImpl;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.DECallback;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -96,9 +97,10 @@ public class FileViewerPresenterImplTest {
     @Mock OngoingStubbing<? extends FileViewer> extendedViewersMock;
 
     @Captor ArgumentCaptor<FileViewerPresenterImpl.GetManifestCallback> manifestCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<String>> stringCaptor;
+    @Captor ArgumentCaptor<DECallback<String>> stringDECaptor;
+    @Captor ArgumentCaptor<AsyncCallback<String>> stringAsyncCaptor;
     @Captor ArgumentCaptor<AsyncCallback<SaveAsDialog>> saveAsDialogCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<File>> fileCaptor;
+    @Captor ArgumentCaptor<DECallback<File>> fileCaptor;
 
     private FileViewerPresenterImpl uut;
 
@@ -196,9 +198,9 @@ public class FileViewerPresenterImplTest {
                                                    anyString(),
                                                    anyInt(),
                                                    anyLong(),
-                                                   stringCaptor.capture());
+                                                   stringDECaptor.capture());
 
-        stringCaptor.getValue().onSuccess("result");
+        stringDECaptor.getValue().onSuccess("result");
         verify(structuredTextViewerMock).setData(structuredTextMock);
         verify(simpleContainerMock).unmask();
     }
@@ -213,9 +215,9 @@ public class FileViewerPresenterImplTest {
         verify(fileEditorServiceMock).readChunk(eq(fileMock),
                                                 anyLong(),
                                                 anyInt(),
-                                                stringCaptor.capture());
+                                                stringDECaptor.capture());
 
-        stringCaptor.getValue().onSuccess("{chunk:test}");
+        stringDECaptor.getValue().onSuccess("{chunk:test}");
         verify(textViewerMock).setData(anyString());
         verify(simpleContainerMock).unmask();
     }
@@ -346,7 +348,7 @@ public class FileViewerPresenterImplTest {
         uut.callTreeCreateService(fileViewerMock, fileMock);
 
         verify(simpleContainerMock).mask(eq(appearanceMock.retrieveTreeUrlsMask()));
-        verify(fileEditorServiceMock).getTreeUrl(eq("path"), eq(false), stringCaptor.capture());
+        verify(fileEditorServiceMock).getTreeUrl(eq("path"), eq(false), stringAsyncCaptor.capture());
     }
 
     @Test

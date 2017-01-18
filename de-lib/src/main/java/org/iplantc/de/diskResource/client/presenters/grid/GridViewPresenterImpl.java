@@ -61,6 +61,7 @@ import org.iplantc.de.diskResource.client.views.metadata.dialogs.SelectMetadataT
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.DataSharingDialog;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.ShareResourceLinkDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
@@ -149,10 +150,10 @@ public class GridViewPresenterImpl implements
         }
     }
 
-    private class CreateDataLinksCallback implements AsyncCallback<List<DataLink>> {
+    private class CreateDataLinksCallback extends DataCallback<List<DataLink>> {
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             ErrorHandler.post(appearance.createDataLinksError(), caught);
         }
 
@@ -594,9 +595,9 @@ public class GridViewPresenterImpl implements
         diskResourceService.getStat(diskResourceUtil.asStringPathTypeMap(Arrays.asList(resource),
                                                                          resource instanceof File ? TYPE.FILE
                                                                                                  : TYPE.FOLDER),
-                                    new AsyncCallback<FastMap<DiskResource>>() {
+                                    new DataCallback<FastMap<DiskResource>>() {
                                         @Override
-                                        public void onFailure(Throwable caught) {
+                                        public void onFailure(Integer statusCode, Throwable caught) {
                                             ErrorHandler.post(appearance.retrieveStatFailed(), caught);
                                             // This unmasks the sendTo.. toolbar buttons
                                             // presenter.unmaskVizMenuOptions();
@@ -626,10 +627,10 @@ public class GridViewPresenterImpl implements
     }
 
     void setInfoType(final DiskResource dr, String newType) {
-        diskResourceService.setFileType(dr.getPath(), newType, new AsyncCallback<String>() {
+        diskResourceService.setFileType(dr.getPath(), newType, new DataCallback<String>() {
 
             @Override
-            public void onFailure(Throwable arg0) {
+            public void onFailure(Integer statusCode, Throwable arg0) {
                 ErrorHandler.post(arg0);
             }
 

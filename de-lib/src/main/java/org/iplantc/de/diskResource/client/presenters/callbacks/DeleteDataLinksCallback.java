@@ -4,18 +4,18 @@ import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.diskResource.client.DataLinkView;
+import org.iplantc.de.shared.DataCallback;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
 /**
  * @author jstroot
  */
-public class DeleteDataLinksCallback implements AsyncCallback<String> {
+public class DeleteDataLinksCallback extends DataCallback<String> {
 
     private final Tree<DiskResource, DiskResource> tree;
     private final DataLinkView view;
@@ -29,7 +29,7 @@ public class DeleteDataLinksCallback implements AsyncCallback<String> {
     }
 
     @Override
-    public void onFailure(Throwable caught) {
+    public void onFailure(Integer statusCode, Throwable caught) {
         ErrorHandler.post(appearance.deleteDataLinksError(), caught);
         view.unmask();
     }

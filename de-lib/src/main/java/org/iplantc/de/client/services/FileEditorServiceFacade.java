@@ -2,6 +2,7 @@ package org.iplantc.de.client.services;
 
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.viewer.Manifest;
+import org.iplantc.de.shared.DECallback;
 
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -17,7 +18,7 @@ public interface FileEditorServiceFacade {
      *  @param file desired manifest's file ID (path).
      * @param callback executes when RPC call is complete.
      */
-    void getManifest(File file, AsyncCallback<Manifest> callback);
+    void getManifest(File file, DECallback<Manifest> callback);
 
     /**
      * @return the file identifier string for path-list files.
@@ -41,7 +42,7 @@ public interface FileEditorServiceFacade {
      * @param callback Where you will find your stuff.
      *                 FIXME improve callback to return a data type. Clients currently have to parse content themselves.
      */
-    void readCsvChunk(File file, String delimiter, int pageNumber, long chunkSize, AsyncCallback<String> callback);
+    void readCsvChunk(File file, String delimiter, int pageNumber, long chunkSize, DECallback<String> callback);
 
     /**
      * Reads a chunk of the given file.
@@ -50,7 +51,7 @@ public interface FileEditorServiceFacade {
      * @param chunkSize the size of the chunk to be read
      * @param callback Where you will find your stuff.
      */
-    void readChunk(File file, long chunkPosition, long chunkSize, AsyncCallback<String> callback);
+    void readChunk(File file, long chunkPosition, long chunkSize, DECallback<String> callback);
 
     /**
      * Get Tree URLs for the given tree's file ID.
@@ -72,7 +73,7 @@ public interface FileEditorServiceFacade {
 
     void searchGenomesInCoge(String searchTxt, AsyncCallback<String> callback);
 
-    void uploadTextAsFile(String destination, String fileContents, boolean newFile, AsyncCallback<File> callback);
+    void uploadTextAsFile(String destination, String fileContents, boolean newFile, DECallback<File> callback);
     
     void importGenomeFromCoge(Integer id, boolean notify, AsyncCallback<String> callback);
 

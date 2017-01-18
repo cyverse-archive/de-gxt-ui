@@ -47,6 +47,7 @@ import org.iplantc.de.diskResource.client.views.dialogs.CreateFolderDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.CreateNcbiSraFolderStructureDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
 import org.iplantc.de.diskResource.client.views.toolbar.dialogs.TabFileConfigDialog;
+import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.base.Preconditions;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -69,7 +70,7 @@ import java.util.logging.Logger;
 public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDownloadSelectedHandler {
 
 
-    private final class BulkMetadataCallback implements AsyncCallback<String> {
+    private final class BulkMetadataCallback extends DataCallback<String> {
 
 
         private final String filePath;
@@ -81,7 +82,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
                 IplantAnnouncer.getInstance()
                                .schedule(new ErrorAnnouncementConfig(appearance.bulkMetadataError()));
         }
@@ -374,10 +375,10 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
     @Override
     public void onDoiRequest(String uuid) {
-        prFacade.requestPermId(uuid, PermanentIdRequestType.DOI, new AsyncCallback<String>() {
+        prFacade.requestPermId(uuid, PermanentIdRequestType.DOI, new DataCallback<String>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 IplantAnnouncer.getInstance()
                                .schedule(new ErrorAnnouncementConfig(appearance.doiRequestFail()));
                 ErrorHandler.post(appearance.doiRequestFail(),caught);
