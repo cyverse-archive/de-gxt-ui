@@ -25,6 +25,7 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
+import org.iplantc.de.shared.AnalysisCallback;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -32,7 +33,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -59,7 +59,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               AnalysisAppSelectedEvent.AnalysisAppSelectedEventHandler,
                                               HTAnalysisExpandEvent.HTAnalysisExpandEventHandler {
 
-    private final class CancelAnalysisServiceCallback implements AsyncCallback<String> {
+    private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
         private final Analysis ae;
 
         public CancelAnalysisServiceCallback(final Analysis ae) {
@@ -67,7 +67,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             /*
              * JDS Send generic error message. In the future, the "error_code" string should be parsed
              * from the JSON to provide more detailed user feedback.
@@ -112,7 +112,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         }
     }
 
-    private class RenameAnalysisCallback implements AsyncCallback<Void> {
+    private class RenameAnalysisCallback extends AnalysisCallback<Void> {
 
         private final Analysis selectedAnalysis;
         private final String newName;
@@ -127,7 +127,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             final SafeHtml message = appearance.analysisRenameFailed();
             announcer.schedule(new ErrorAnnouncementConfig(message, true, 5000));
         }
@@ -141,7 +141,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         }
     }
 
-    private class UpdateCommentsCallback implements AsyncCallback<Void> {
+    private class UpdateCommentsCallback extends AnalysisCallback<Void> {
         private final Analysis selectedAnalysis;
         private final String newComment;
         private final ListStore<Analysis> listStore;
@@ -155,7 +155,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             SafeHtml message = appearance.analysisCommentUpdateFailed();
             announcer.schedule(new ErrorAnnouncementConfig(message, true, 5000));
         }
@@ -185,7 +185,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Inject
     JsonUtil jsonUtil;
 
-    private AnalysisFilter currentFilter;
+    AnalysisFilter currentFilter;
 
     private final ListStore<Analysis> listStore;
 
@@ -201,7 +201,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                           final EventBus eventBus) {
         this.listStore = listStore;
         this.eventBus = eventBus;
-        loader = new PagingLoader<>(proxy);
+        loader = getPagingLoader(proxy);
         loader.useLoadConfig(new FilterPagingLoadConfigBean());
         loader.setRemoteSort(true);
         loader.setReuseLoadConfig(true);
@@ -221,6 +221,10 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     }
 
+    PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> getPagingLoader(AnalysisRpcProxy proxy) {
+        return new PagingLoader<>(proxy);
+    }
+
     @Override
     public void cancelSelectedAnalyses(final List<Analysis> analysesToCancel) {
         for (Analysis analysis : analysesToCancel) {
@@ -230,10 +234,10 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     @Override
     public void deleteSelectedAnalyses(final List<Analysis> analysesToDelete) {
-        analysisService.deleteAnalyses(analysesToDelete, new AsyncCallback<String>() {
+        analysisService.deleteAnalyses(analysesToDelete, new AnalysisCallback<String>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(appearance.deleteAnalysisError(), caught);
             }
 
@@ -255,7 +259,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
             return;
         }
 
-        ArrayList<Analysis> selectNow = Lists.newArrayList();
+        ArrayList<Analysis> selectNow = getNewAnalysisList();
 
         for (Analysis select : selectedAnalyses) {
             Analysis storeModel = listStore.findModel(select);
@@ -270,6 +274,10 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         } else {
             view.setSelectedAnalyses(selectNow);
         }
+    }
+
+    ArrayList<Analysis> getNewAnalysisList() {
+        return Lists.newArrayList();
     }
 
     @Override
@@ -291,8 +299,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         FilterPagingLoadConfig config = loader.getLastLoadConfig();
         config.getFilters().clear();
 
-        FilterConfigBean idParentFilter = new FilterConfigBean();
-        FilterConfigBean filterCb = new FilterConfigBean();
+        FilterConfigBean idParentFilter = getFilterConfigBean();
+        FilterConfigBean filterCb = getFilterConfigBean();
 
         idParentFilter.setField(AnalysisSearchField.PARENT_ID);
         filterCb.setField("ownership");
@@ -319,6 +327,10 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         config.setLimit(200);
         config.setOffset(0);
         loader.load(config);
+    }
+
+    FilterConfigBean getFilterConfigBean() {
+        return new FilterConfigBean();
     }
 
     @Override
@@ -416,10 +428,10 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     @Override
     public void getAnalysisStepInfo(Analysis value) {
-        analysisService.getAnalysisSteps(value, new AsyncCallback<AnalysisStepsInfo>() {
+        analysisService.getAnalysisSteps(value, new AnalysisCallback<AnalysisStepsInfo>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 IplantAnnouncer.getInstance()
                                .schedule(new ErrorAnnouncementConfig(appearance.analysisStepInfoError()));
 
@@ -427,12 +439,16 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
             @Override
             public void onSuccess(AnalysisStepsInfo result) {
-                AnalysisStepsInfoDialog asid = new AnalysisStepsInfoDialog(analysisStepView);
+                AnalysisStepsInfoDialog asid = getAnalysisStepsDialog();
                 asid.show();
                 analysisStepView.clearData();
                 analysisStepView.setData(result.getSteps());
             }
         });
 
+    }
+
+    AnalysisStepsInfoDialog getAnalysisStepsDialog() {
+        return new AnalysisStepsInfoDialog(analysisStepView);
     }
 }

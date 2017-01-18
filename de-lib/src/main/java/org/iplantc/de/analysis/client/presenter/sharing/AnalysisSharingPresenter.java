@@ -26,6 +26,7 @@ import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.shared.AnalysisCallback;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
@@ -43,7 +44,7 @@ import java.util.List;
 public class AnalysisSharingPresenter implements SharingPresenter {
 
 
-    private final class LoadPermissionsCallback implements AsyncCallback<String> {
+    private final class LoadPermissionsCallback extends AnalysisCallback<String> {
         private final class GetUserInfoCallback implements AsyncCallback<FastMap<Collaborator>> {
             private final List<String> usernames;
 
@@ -83,7 +84,7 @@ public class AnalysisSharingPresenter implements SharingPresenter {
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(Integer statusCode, Throwable caught) {
             permissionsPanel.unmask();
             ErrorHandler.post(caught);
         }
@@ -302,10 +303,10 @@ public class AnalysisSharingPresenter implements SharingPresenter {
 
 
     private void callSharingService(AnalysisSharingRequestList obj) {
-        aService.shareAnalyses(obj, new AsyncCallback<String>() {
+        aService.shareAnalyses(obj, new AnalysisCallback<String>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
 
             }
@@ -318,10 +319,10 @@ public class AnalysisSharingPresenter implements SharingPresenter {
     }
 
     private void callUnshareService(AnalysisUnsharingRequestList obj) {
-        aService.unshareAnalyses(obj, new AsyncCallback<String>() {
+        aService.unshareAnalyses(obj, new AnalysisCallback<String>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
 
             }

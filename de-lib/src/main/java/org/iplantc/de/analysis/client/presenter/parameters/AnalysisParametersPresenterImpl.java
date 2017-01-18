@@ -29,6 +29,7 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.diskResource.client.events.ShowFilePreviewEvent;
+import org.iplantc.de.shared.AnalysisCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DataCallback;
 
@@ -195,9 +196,9 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
     @Override
     public void fetchAnalysisParameters(Analysis analysis) {
         view.mask(appearance.retrieveParametersLoadingMask());
-        analysisService.getAnalysisParams(analysis, new AsyncCallback<List<AnalysisParameter>>() {
+        analysisService.getAnalysisParams(analysis, new AnalysisCallback<List<AnalysisParameter>>() {
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
             }
 
