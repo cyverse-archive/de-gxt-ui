@@ -77,7 +77,7 @@ public class ViewerPagingToolBar extends Composite {
     }
 
     public int getPageNumber() {
-        return pageNumber.getCurrentValue();
+        return pageNumber.getValue();
     }
 
     /**
