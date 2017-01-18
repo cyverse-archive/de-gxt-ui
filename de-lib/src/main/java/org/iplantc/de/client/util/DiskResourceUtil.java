@@ -409,7 +409,8 @@ public class DiskResourceUtil {
 
     public boolean isEnsemblInfoType(InfoType infoType) {
         return InfoType.BAM.equals(infoType) || InfoType.VCF.equals(infoType)
-                || InfoType.GFF.equals(infoType) || InfoType.BED.equals(infoType);
+                || InfoType.GFF.equals(infoType) || InfoType.BED.equals(infoType)
+		|| InfoType.BIGBED.equals(infoType);
     }
 
     private String getInfoType(Splittable obj) {
@@ -440,7 +441,7 @@ public class DiskResourceUtil {
         String infoType = getInfoType(obj);
         return (infoType != null) && infoType.equals(InfoType.BAM.toString())
                 || infoType.equals(InfoType.VCF.toString()) || infoType.equals(InfoType.GFF.toString())
-                || infoType.equals(InfoType.BED.toString());
+                || infoType.equals(InfoType.BED.toString()) || infoType.equals(InfoType.BIGBED.toString());
     }
 
     public Splittable createStringPathListSplittable(List<HasPath> hasPathList) {

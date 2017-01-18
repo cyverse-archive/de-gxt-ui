@@ -68,7 +68,7 @@ public class EnsemblUtil {
             indexFile = filename + ".bai";
         } else if (infoType.equals(InfoType.VCF.toString())) {
             indexFile = filename + ".tbi";
-        } else if (infoType.equals(InfoType.GFF.toString()) || infoType.equals(InfoType.BED.toString())) {
+        } else if (infoType.equals(InfoType.GFF.toString()) || infoType.equals(InfoType.BED.toString()) || infotype.equals(InfoType.BIGBED.toString())) {
             indexFile = null;
         }
 
