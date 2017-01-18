@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.apps.PublishAppRequest;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -32,6 +33,8 @@ public interface SubmitAppForPublicUseView extends IsWidget {
         String makePublicSuccessMessage(String appName);
 
         String publicNameNote();
+
+        SafeHtml publicNameHTML();
 
         String publicName();
 
@@ -75,17 +78,17 @@ public interface SubmitAppForPublicUseView extends IsWidget {
 
         ImageResource deleteIcon();
 
-        String publicDescription();
+        SafeHtml publicDescription();
 
         String publicAttach();
 
-        String describeInputLbl();
+        SafeHtml describeInputLbl();
 
-        String describeParamLbl();
+        SafeHtml describeParamLbl();
 
-        String describeOutputLbl();
+        SafeHtml describeOutputLbl();
 
-        String publicCategories();
+        SafeHtml publicCategories();
 
         String testDataWarn();
 

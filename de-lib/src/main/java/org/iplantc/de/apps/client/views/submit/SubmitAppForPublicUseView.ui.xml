@@ -53,7 +53,6 @@
         </con:child>
         <con:child layoutData="{layoutData}">
             <form:FieldLabel ui:field="appField"
-                             HTML="{appearance.publicName}"
                              labelAlign="TOP"
                              toolTip="{appearance.publicNameNote}">
                 <form:widget>
@@ -67,7 +66,6 @@
         </con:child>
         <con:child layoutData="{layoutData}">
             <form:FieldLabel ui:field="descField"
-                             HTML="{appearance.publicDescription}"
                              labelAlign="TOP"
                              toolTip="{appearance.publicDescriptionNote}">
                 <form:widget>
@@ -82,7 +80,6 @@
         </con:child>
         <con:child layoutData="{layoutData}">
             <cp:ContentPanel ui:field="catPanel"
-                             heading="{appearance.publicCategories}"
                              height="200">
                 <tree:Tree ui:field="tree"/>
             </cp:ContentPanel>
@@ -98,7 +95,6 @@
         </con:child>
         <con:child layoutData="{layoutData}">
             <form:FieldLabel ui:field="descInputField"
-                             HTML="{appearance.describeInputLbl}"
                              labelAlign="TOP">
                 <form:widget>
                     <form:TextArea ui:field="inputDesc"
@@ -113,7 +109,6 @@
 
         <con:child layoutData="{layoutData}">
             <form:FieldLabel ui:field="descParamField"
-                             HTML="{appearance.describeParamLbl}"
                              labelAlign="TOP">
                 <form:widget>
                     <form:TextArea ui:field="paramDesc"
@@ -128,7 +123,6 @@
 
         <con:child layoutData="{layoutData}">
             <form:FieldLabel ui:field="descOutputField"
-                             HTML="{appearance.describeOutputLbl}"
                              labelAlign="TOP">
                 <form:widget>
                     <form:TextArea ui:field="outputDesc"

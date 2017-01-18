@@ -142,11 +142,22 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
             }
         });
         addHelp();
+
+        setFieldLabelHTML();
+    }
+
+    private void setFieldLabelHTML() {
+        appField.setHTML(appearance.publicNameHTML());
+        descField.setHTML(appearance.publicDescription());
+        descInputField.setHTML(appearance.describeInputLbl());
+        descParamField.setHTML(appearance.describeParamLbl());
+        descOutputField.setHTML(appearance.describeOutputLbl());
+        catPanel.setHeading(appearance.publicCategories());
     }
 
     @UiFactory
     HtmlLayoutContainer buildIntroContainer() {
-        return new HtmlLayoutContainer(SafeHtmlUtils.fromString(appearance.submitForPublicUseIntro()));
+        return new HtmlLayoutContainer(SafeHtmlUtils.fromTrustedString(appearance.submitForPublicUseIntro()));
     }
 
     @Override
