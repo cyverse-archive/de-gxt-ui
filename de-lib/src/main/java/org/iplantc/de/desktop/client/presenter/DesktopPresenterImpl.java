@@ -264,6 +264,9 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }
 
     private void processSystemMessage(String msg){
+        if (msg.equals("X")) {
+            return;
+        }
         JSONObject obj = null;
         try {
             obj = JSONParser.parseStrict(msg).isObject();
@@ -274,6 +277,9 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }
 
     private void processNotification(String msg) {
+        if (msg.equals("X")) {
+            return;
+        }
         JSONObject obj = null;
         try {
              obj = JSONParser.parseStrict(msg).isObject();
