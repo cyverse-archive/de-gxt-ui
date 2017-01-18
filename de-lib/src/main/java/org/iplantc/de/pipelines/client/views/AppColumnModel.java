@@ -47,7 +47,7 @@ public class AppColumnModel extends ColumnModel<PipelineTask> {
                                                                                                    // Auto-generated
                                                                                                    // method
                                                                                                    // stub
-                                                                                                   return null;
+                                                                                                   return "";
                                                                                                }
                                                                                            },
                                                                                            50,
