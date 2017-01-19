@@ -59,6 +59,7 @@ import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
 import org.iplantc.de.notifications.client.utils.NotifyInfo;
 import org.iplantc.de.notifications.client.views.dialogs.RequestHistoryDialog;
 import org.iplantc.de.shared.DEProperties;
+import org.iplantc.de.shared.NotificationCallback;
 import org.iplantc.de.shared.events.ServiceDown;
 import org.iplantc.de.shared.events.ServiceRestored;
 import org.iplantc.de.shared.services.PropertyServiceAsync;
@@ -108,9 +109,9 @@ import java.util.Map;
  */
 public class DesktopPresenterImpl implements DesktopView.Presenter {
 
-    private final class NewSysMessageCountCallback implements AsyncCallback<Counts> {
+    private final class NewSysMessageCountCallback extends NotificationCallback<Counts> {
 		@Override
-		public void onFailure(Throwable caught) {
+		public void onFailure(Integer statusCode, Throwable caught) {
 			IplantAnnouncer.getInstance().schedule(new ErrorAnnouncementConfig(appearance.checkSysMessageError()));
 		}
 
@@ -357,9 +358,9 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
 
     @Override
     public void doMarkAllSeen(final boolean announce) {
-       messageServiceFacade.markAllNotificationsSeen(new AsyncCallback<Void>() {
+       messageServiceFacade.markAllNotificationsSeen(new NotificationCallback<Void>() {
            @Override
-           public void onFailure(Throwable caught) {
+           public void onFailure(Integer statusCode, Throwable caught) {
                errorHandlerProvider.get().post(caught);
            }
 
@@ -546,9 +547,9 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }
 
     public void markAsSeen(final NotificationMessage selectedItem) {
-        messageServiceFacade.markAsSeen(selectedItem, new AsyncCallback<String>() {
+        messageServiceFacade.markAsSeen(selectedItem, new NotificationCallback<String>() {
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(Integer statusCode, Throwable caught) {
                 errorHandlerProvider.get().post(caught);
             }
 
@@ -568,10 +569,10 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
 
     private void getRequestStatusHistory(String id, NotificationCategory cat) {
         if (cat.equals(NotificationCategory.PERMANENTIDREQUEST)) {
-            messageServiceFacade.getPermanentIdRequestStatusHistory(id, new AsyncCallback<String>() {
+            messageServiceFacade.getPermanentIdRequestStatusHistory(id, new NotificationCallback<String>() {
 
                 @Override
-                public void onFailure(Throwable caught) {
+                public void onFailure(Integer statusCode, Throwable caught) {
                     IplantAnnouncer.getInstance()
                                    .schedule(new ErrorAnnouncementConfig(appearance.requestHistoryError()));
                 }
@@ -669,23 +670,27 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }
 
 
-   void postBootstrap(final Panel panel) {
+    void postBootstrap(final Panel panel) {
         setBrowserContextMenuEnabled(deProperties.isContextClickEnabled());
         messagePoller.start();
         initKBShortCuts();
         panel.add(view);
         processQueryStrings();
         getNotifications();
-   }
+        getSystemMessageCounts();
+    }
 
-   @Override
-   public void getNotifications() {
-       messageServiceFacade.getRecentMessages(new InitializationCallbacks.GetInitialNotificationsCallback(view, appearance, announcer));
-       messageServiceFacade.getMessageCounts(new NewSysMessageCountCallback());
-   }
+    private void getSystemMessageCounts() {
+        messageServiceFacade.getMessageCounts(new NewSysMessageCountCallback());
+    }
 
-   @Override
-   public void restoreWindows(List<WindowState> windowStates) {
+    @Override
+    public void getNotifications() {
+        messageServiceFacade.getRecentMessages(new InitializationCallbacks.GetInitialNotificationsCallback(view, appearance, announcer));
+    }
+
+    @Override
+    public void restoreWindows(List<WindowState> windowStates) {
         if (windowStates != null && windowStates.size() > 0) {
             for (WindowState ws : windowStates) {
                 desktopWindowManager.show(ws);
@@ -703,9 +708,9 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
             progressMessageBox.getProgressBar().setInterval(100);
             progressMessageBox.auto();
             final Request req = userSessionService.getUserSession(new RuntimeCallbacks.GetUserSessionCallback(progressMessageBox,
-                                                                                             appearance,
-                                                                                             announcer,
-                                                                                             this));
+                                                                                                              appearance,
+                                                                                                              announcer,
+                                                                                                              this));
             progressMessageBox.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
                 @Override
                 public void onDialogHide(DialogHideEvent event) {
@@ -726,7 +731,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
             @Override
             public void handleEvent(NativeEvent event) {
                 if (event.getCtrlKey() && event.getShiftKey()) {
-                    final String keycode = String.valueOf((char) event.getKeyCode());
+                    final String keycode = String.valueOf((char)event.getKeyCode());
                     if (userSettings.getDataShortCut().equals(keycode)) {
                         show(ConfigFactory.diskResourceWindowConfig(true));
                     } else if (userSettings.getAnalysesShortCut().equals(keycode)) {

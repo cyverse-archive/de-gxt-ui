@@ -17,6 +17,7 @@ import org.iplantc.de.desktop.client.presenter.util.MessagePoller;
 import org.iplantc.de.desktop.client.views.widgets.UnseenNotificationsView;
 import org.iplantc.de.notifications.client.utils.NotifyInfo;
 import org.iplantc.de.resources.client.messages.IplantNewUserTourStrings;
+import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.systemMessages.client.view.NewMessageView;
 
@@ -63,8 +64,8 @@ public class DesktopNotifications_PresenterTest {
 
     @Mock ListStore<NotificationMessage> msgStoreMock;
 
-    @Captor ArgumentCaptor<AsyncCallback<String>> stringAsyncCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<Void>> voidAsyncCaptor;
+    @Captor ArgumentCaptor<DECallback<String>> stringAsyncCaptor;
+    @Captor ArgumentCaptor<DECallback<Void>> voidAsyncCaptor;
 
     @Before public void setup(){
 

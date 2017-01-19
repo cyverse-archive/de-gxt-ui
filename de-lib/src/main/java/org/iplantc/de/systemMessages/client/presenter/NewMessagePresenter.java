@@ -8,6 +8,7 @@ import org.iplantc.de.commons.client.info.AnnouncementId;
 import org.iplantc.de.commons.client.info.AnnouncementRemovedEvent;
 import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.shared.NotificationCallback;
 import org.iplantc.de.systemMessages.client.events.NewSystemMessagesEvent;
 import org.iplantc.de.systemMessages.client.events.ShowSystemMessagesEvent;
 import org.iplantc.de.systemMessages.client.view.Factory;
@@ -15,7 +16,6 @@ import org.iplantc.de.systemMessages.client.view.NewMessageView;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 
@@ -107,9 +107,9 @@ public final class NewMessagePresenter implements NewMessageView.Presenter {
     private void handleAnnouncementRemovalEvent(final AnnouncementRemovedEvent event) {
         if (event.getAnnouncement().equals(currentAnnId)) {
             if (event.wasAnnounced()) {
-                SERVICES.markAllReceived(new AsyncCallback<Void>() {
+                SERVICES.markAllReceived(new NotificationCallback<Void>() {
                     @Override
-                    public void onFailure(final Throwable cause) {
+                    public void onFailure(Integer statusCode, final Throwable cause) {
                         ErrorHandler.post(org.iplantc.de.resources.client.messages.I18N.ERROR.markMessageReceivedFailed(), cause);
                         finishRemoval();
                     }

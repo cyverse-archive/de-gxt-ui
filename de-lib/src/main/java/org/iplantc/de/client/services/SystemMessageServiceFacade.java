@@ -2,8 +2,7 @@ package org.iplantc.de.client.services;
 
 import org.iplantc.de.client.models.sysMsgs.IdList;
 import org.iplantc.de.client.models.sysMsgs.MessageList;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.iplantc.de.shared.DECallback;
 
 /**
  * This is the service layer interface for system messages.
@@ -15,28 +14,28 @@ public interface SystemMessageServiceFacade {
      *
      * @param callback called on RPC completion.
      */
-    void getAllMessages(AsyncCallback<MessageList> callback);
+    void getAllMessages(DECallback<MessageList> callback);
 
     /**
      * Retrieves the new active system messages for a given user.
      * 
      * @param callback called on RPC completion.
      */
-    void getNewMessages(AsyncCallback<MessageList> callback);
+    void getNewMessages(DECallback<MessageList> callback);
 
     /**
      * Retrieves the unseen active system messages for a given user.
      * 
      * @param callback called on RPC completion.
      */
-    void getUnseenMessages(AsyncCallback<MessageList> callback);
+    void getUnseenMessages(DECallback<MessageList> callback);
 
     /**
      * Marks a all system messages as received by the user
      * 
      * @param callback called on RPC completion
      */
-    void markAllReceived(AsyncCallback<Void> callback);
+    void markAllReceived(DECallback<Void> callback);
 
     /**
      * Marks a list of system messages as received by the user
@@ -44,7 +43,7 @@ public interface SystemMessageServiceFacade {
      * @param msgIds the Ids of the messages to be marked
      * @param callback called on RPC completion
      */
-    void markReceived(IdList msgIds, AsyncCallback<Void> callback);
+    void markReceived(IdList msgIds, DECallback<Void> callback);
 
     /**
      * Marks s list of system messages as seen by the user.
@@ -52,7 +51,7 @@ public interface SystemMessageServiceFacade {
      * @param msgIds the Ids of the messages to be marked
      * @param callback called on RPC completion.
      */
-    void acknowledgeMessages(IdList msgIds, AsyncCallback<Void> callback);
+    void acknowledgeMessages(IdList msgIds, DECallback<Void> callback);
 
     /**
      * Hides a list of active system messages from a user
@@ -60,6 +59,6 @@ public interface SystemMessageServiceFacade {
      * @param msgIds the Ids of the messages to hide
      * @param callback called on RPC completion.
      */
-    void hideMessages(IdList msgIds, AsyncCallback<Void> callback);
+    void hideMessages(IdList msgIds, DECallback<Void> callback);
 
 }

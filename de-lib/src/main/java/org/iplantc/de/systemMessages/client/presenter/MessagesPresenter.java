@@ -8,6 +8,7 @@ import org.iplantc.de.client.models.sysMsgs.MessageFactory;
 import org.iplantc.de.client.models.sysMsgs.MessageList;
 import org.iplantc.de.client.services.SystemMessageServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.shared.NotificationCallback;
 import org.iplantc.de.systemMessages.client.events.NewSystemMessagesEvent;
 import org.iplantc.de.systemMessages.client.view.Factory;
 import org.iplantc.de.systemMessages.client.view.MessagesView;
@@ -17,7 +18,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import com.sencha.gxt.data.shared.ListStore;
@@ -52,7 +52,7 @@ public final class MessagesPresenter implements MessagesView.Presenter<Message> 
     }
 
     /**
-     * @see MessageView.Presenter<T>#handleDismissMessage(T)
+     * @see MessagesView.Presenter#handleDismissMessage(Object)
      */
     @Override
     public void handleDismissMessage(final Message message) {
@@ -66,7 +66,7 @@ public final class MessagesPresenter implements MessagesView.Presenter<Message> 
     }
 
     /**
-     * @see MessageView.Presenter<T>#handleSelectMessage(T)
+     * @see MessagesView.Presenter#handleSelectMessage(Object)
      */
     @Override
     public void handleSelectMessage(final Message message) {
@@ -129,21 +129,21 @@ public final class MessagesPresenter implements MessagesView.Presenter<Message> 
     }
 
     private void loadAllMessages() {
-        services.getAllMessages(new AsyncCallback<MessageList>() {
+        services.getAllMessages(new NotificationCallback<MessageList>() {
             @Override
             public void onSuccess(final MessageList messages) {
                 markReceived(messages);
                 replaceMessages(messages);
             }
             @Override
-            public void onFailure(final Throwable cause) {
+            public void onFailure(Integer statusCode, final Throwable cause) {
                 ErrorHandler.post(org.iplantc.de.resources.client.messages.I18N.ERROR.loadMessagesFailed(), cause);
             }
         });
     }
 
     private void loadUnseenMessages() {
-        services.getUnseenMessages(new AsyncCallback<MessageList>() {
+        services.getUnseenMessages(new NotificationCallback<MessageList>() {
             @Override
             public void onSuccess(final MessageList messages) {
                 markReceived(messages);
@@ -151,7 +151,7 @@ public final class MessagesPresenter implements MessagesView.Presenter<Message> 
             }
 
             @Override
-            public void onFailure(Throwable caught) {}
+            public void onFailure(Integer statusCode, Throwable caught) {}
         });
     }
 
@@ -162,11 +162,11 @@ public final class MessagesPresenter implements MessagesView.Presenter<Message> 
         }
         final IdList idsDTO = MessageFactory.INSTANCE.makeIdList().as();
         idsDTO.setIds(ids);
-        services.markReceived(idsDTO, new AsyncCallback<Void>() {
+        services.markReceived(idsDTO, new NotificationCallback<Void>() {
             @Override
             public void onSuccess(Void unused) {}
             @Override
-            public void onFailure(final Throwable cause) {
+            public void onFailure(Integer statusCode, final Throwable cause) {
                 ErrorHandler.post(org.iplantc.de.resources.client.messages.I18N.ERROR.markMessageReceivedFailed(), cause);
             }
         });
@@ -175,13 +175,13 @@ public final class MessagesPresenter implements MessagesView.Presenter<Message> 
     private void markSeen(final Message message) {
         final IdList idsDTO = MessageFactory.INSTANCE.makeIdList().as();
         idsDTO.setIds(Arrays.asList(message.getId()));
-        services.acknowledgeMessages(idsDTO, new AsyncCallback<Void>() {
+        services.acknowledgeMessages(idsDTO, new NotificationCallback<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 markLocalSeen(message);
             }
             @Override
-            public void onFailure(final Throwable cause) {
+            public void onFailure(Integer statusCode, final Throwable cause) {
                 ErrorHandler.post(org.iplantc.de.resources.client.messages.I18N.ERROR.markMessageSeenFailed(), cause);
             }
         });
@@ -194,14 +194,14 @@ public final class MessagesPresenter implements MessagesView.Presenter<Message> 
         final IdList idsDTO = MessageFactory.INSTANCE.makeIdList().as();
         idsDTO.setIds(Arrays.asList(selectedMsgId));
         view.mask(org.iplantc.de.resources.client.messages.I18N.DISPLAY.messageDismissing());
-        services.hideMessages(idsDTO, new AsyncCallback<Void>() {
+        services.hideMessages(idsDTO, new NotificationCallback<Void>() {
             @Override
             public void onSuccess(final Void unused) {
                 removeSelectedMessage();
                 view.unmask();
             }
             @Override
-            public void onFailure(final Throwable cause) {
+            public void onFailure(Integer statusCode, final Throwable cause) {
                 view.unmask();
                 ErrorHandler.post(org.iplantc.de.resources.client.messages.I18N.ERROR.dismissMessageFailed(), cause);
             }
