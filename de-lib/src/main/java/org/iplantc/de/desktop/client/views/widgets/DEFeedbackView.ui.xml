@@ -21,8 +21,7 @@
         <con:child layoutData="{layoutData}">
             <form:FieldLabel ui:field="reasonField"
                              labelAlign="TOP"
-                             labelSeparator=""
-                             HTML="{appearance.displayStrings.reason.asString}">
+                             labelSeparator="">
                 <form:widget>
                     <g:VerticalPanel>
                         <form:CheckBox ui:field="expField"
@@ -47,8 +46,7 @@
         <con:child layoutData="{layoutData}">
             <form:FieldLabel ui:field="completeField"
                              labelAlign="TOP"
-                             labelSeparator=""
-                             HTML="{appearance.displayStrings.complete.asString}">
+                             labelSeparator="">
                 <form:widget>
                     <g:VerticalPanel>
                         <form:CheckBox ui:field="yesField"
@@ -71,8 +69,7 @@
         <con:child layoutData="{layoutData}">
             <form:FieldLabel ui:field="satisfyField"
                              labelAlign="TOP"
-                             labelSeparator=""
-                             HTML="{appearance.displayStrings.satisfy.asString}">
+                             labelSeparator="">
                 <form:widget>
                     <g:VerticalPanel>
                         <form:Radio ui:field="vastField"

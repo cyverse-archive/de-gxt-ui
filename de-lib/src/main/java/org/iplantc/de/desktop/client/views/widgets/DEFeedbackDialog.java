@@ -135,6 +135,9 @@ public class DEFeedbackDialog extends IPlantDialog {
         setSize(appearance.dialogWidth(), appearance.dialogHeight());
 
         Widget widget = uiBinder.createAndBindUi(this);
+
+        initHTMLLabels();
+
         group = new ToggleGroup();
         group.add(vastField);
         group.add(swsatField);
@@ -143,6 +146,12 @@ public class DEFeedbackDialog extends IPlantDialog {
         group.add(nsField);
         group.add(otsatField);
         add(widget);
+    }
+
+    private void initHTMLLabels() {
+        reasonField.setHTML(appearance.displayStrings().reason());
+        completeField.setHTML(appearance.displayStrings().complete());
+        satisfyField.setHTML(appearance.displayStrings().satisfy());
     }
 
 
