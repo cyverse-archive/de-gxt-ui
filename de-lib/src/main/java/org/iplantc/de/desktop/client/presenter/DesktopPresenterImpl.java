@@ -677,10 +677,10 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         panel.add(view);
         processQueryStrings();
         getNotifications();
-        getSystemMessages();
+        getSystemMessageCounts();
     }
 
-    private void getSystemMessages() {
+    private void getSystemMessageCounts() {
         messageServiceFacade.getMessageCounts(new NewSysMessageCountCallback());
     }
 
