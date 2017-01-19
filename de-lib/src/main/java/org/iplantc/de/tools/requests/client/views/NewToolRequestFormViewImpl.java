@@ -14,6 +14,7 @@ import org.iplantc.de.resources.client.messages.I18N;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -55,12 +56,12 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
     private static final NewToolRequestFormViewUiBinder uiBinder = GWT.create(NewToolRequestFormViewUiBinder.class);
     private final IplantValidationConstants validationConstants;
 
-    private static String buildRequiredFieldLabel(final String label) {
+    private static SafeHtml buildRequiredFieldLabel(final String label) {
         if (label == null) {
             return null;
         }
 
-        return "<span style='color:red; top:-5px;' >*</span> " + label; //$NON-NLS-1$
+        return SafeHtmlUtils.fromTrustedString("<span style='color:red; top:-5px;' >*</span> " + label); //$NON-NLS-1$
     }
 
     @UiField VerticalLayoutContainer container;
