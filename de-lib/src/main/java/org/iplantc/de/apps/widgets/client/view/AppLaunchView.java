@@ -1,9 +1,11 @@
 package org.iplantc.de.apps.widgets.client.view;
 
 import org.iplantc.de.apps.widgets.client.events.AnalysisLaunchEvent.AnalysisLaunchEventHandler;
+import org.iplantc.de.apps.widgets.client.events.AppTemplateFetched;
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent.HasRequestAnalysisLaunchHandlers;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.JobExecution;
+import org.iplantc.de.commons.client.views.window.configs.AppWizardConfig;
 
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.user.client.Command;
@@ -30,26 +32,23 @@ public interface AppLaunchView extends IsWidget, Editor<AppTemplate>, HasRequest
         String waitTimes();
 
         String dontShow();
+
+        String appUnavailable();
+
+        String unableToRetrieveWorkflowGuide();
+
+        String loadingMask();
     }
 
-    /**
-     * FIXME JDS Re-evaluate necessity for two different presenters.
-     * 
-     * @author jstroot
-     * 
-     */
-    public interface BasePresenter extends org.iplantc.de.commons.client.presenter.Presenter{
-    
+    public interface Presenter extends AppTemplateFetched.HasAppTemplateFetchedHandlers {
+
         AppTemplate getAppTemplate();
 
-        void go(final HasOneWidget container, final AppTemplate appTemplate);
-
         void setViewDebugId(String baseID);
-    }
 
-    public interface Presenter extends BasePresenter {
         void addAnalysisLaunchHandler(AnalysisLaunchEventHandler handler);
 
+        void go(HasOneWidget container, AppWizardConfig config);
     }
 
     public interface RenameWindowHeaderCommand extends Command {
