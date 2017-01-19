@@ -10,6 +10,7 @@ import org.iplantc.de.shared.DataCallback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.ui.Label;
 
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
@@ -74,7 +75,7 @@ public class ShareAnonymousCallback extends DataCallback<String> {
         dlg.setSize("535", "175");
 
         FieldLabel fl = new FieldLabel();
-        fl.setHTML(appearance.ensemblUrl());
+        fl.setHTML(SafeHtmlUtils.fromTrustedString(appearance.ensemblUrl()));
         TextField textBox = new TextField();
         textBox.setWidth(500);
         textBox.setReadOnly(true);
