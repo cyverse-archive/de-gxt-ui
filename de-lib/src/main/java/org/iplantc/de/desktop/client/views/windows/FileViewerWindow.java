@@ -12,6 +12,7 @@ import org.iplantc.de.commons.client.views.window.configs.TabularFileViewerWindo
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
@@ -124,8 +125,8 @@ public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
     @Override
     public void onEditorDirtyStateChanged(DirtyStateChangedEvent event) {
         if (event.isDirty()) {
-            setHeading(getHeader().getHTML()
-                    + "<span style='color:red; vertical-align: super'> * </span>");
+            setHeading(SafeHtmlUtils.fromTrustedString(getHeader().getHTML()
+                                     + "<span style='color:red; vertical-align: super'> * </span>"));
         } else {
             setHeading(presenter.getTitle());
         }
