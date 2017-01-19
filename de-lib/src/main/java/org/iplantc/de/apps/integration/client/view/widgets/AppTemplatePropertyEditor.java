@@ -60,8 +60,7 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
     @UiField TextArea description;
     @UiField TextField name;
 
-    @Path("name")
-    HasHTMLEditor nameEditor;
+    @Path("name") HeaderEditor nameEditor;
     @Ignore
     @UiField TextButton searchBtn;
     @Ignore
@@ -82,7 +81,7 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
         this.appearance = appearance;
 
         initWidget(BINDER.createAndBindUi(this));
-        nameEditor = new HasHTMLEditor(cp.getHeader(), appearance);
+        nameEditor = new HeaderEditor(cp.getHeader(), appearance);
 
         name.addKeyDownHandler(new PreventEntryAfterLimitHandler(name));
         name.addValidator(new MaxLengthValidator(PreventEntryAfterLimitHandler.DEFAULT_LIMIT));
