@@ -15,7 +15,11 @@
 
     <!-- Turn on CssResource pretty printing -->
     <set-configuration-property name="CssResource.style" value="pretty"/>
-    <set-configuration-property name="CssResource.conversionMode"    value="strict" />
+
+    <!--Enable GSS and turn off CSS conversion mode-->
+    <set-configuration-property name="CssResource.enableGss" value="true" />
+    <set-configuration-property name="CssResource.gssDefaultInUiBinder" value="true" />
+    <set-configuration-property name="CssResource.conversionMode" value="off" />
 
     <replace-with class="org.iplantc.de.theme.base.client.desktop.window.AboutApplicationDevAppearance">
         <when-type-is class="org.iplantc.de.desktop.client.views.windows.AboutApplicationWindow.AboutApplicationAppearance" />
