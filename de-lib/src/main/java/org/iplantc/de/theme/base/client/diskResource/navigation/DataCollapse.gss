@@ -1,0 +1,7 @@
+.collapse {
+	gwt-sprite: "treeCollapse";
+}
+
+.collapseHover {
+	gwt-sprite: "treeCollapseHover";
+}

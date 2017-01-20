@@ -24,7 +24,7 @@ public class AppInfoCellDefaultAppearance implements AppInfoCell.AppInfoCellAppe
     }
 
     interface Resources extends ClientBundle {
-        @Source("AppInfoCell.css")
+        @Source("AppInfoCell.gss")
         MyCss css();
     }
 

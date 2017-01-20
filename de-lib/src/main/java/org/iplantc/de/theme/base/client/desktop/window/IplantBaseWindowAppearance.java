@@ -31,7 +31,7 @@ public class IplantBaseWindowAppearance implements IplantWindowBase.IplantWindow
     }
 
     interface IplantWindowResources extends ClientBundle {
-        @Source("org/iplantc/de/theme/base/client/desktop/window/IplantWindowStyles.css")
+        @Source("org/iplantc/de/theme/base/client/desktop/window/IplantWindowStyles.gss")
         Styles css();
 
         @Source("org/iplantc/de/theme/base/client/desktop/window/cyverse_tiny.png")

@@ -1,6 +1,6 @@
 /* Header Styles */
-@sprite .header {
-	gwt-image: "headerBg" ;	/* Edit these locations based on where you save images */
+.header {
+	gwt-sprite: "headerBg" ;	/* Edit these locations based on where you save images */
 	background-color: #009bad;
 	height: 39px;
 	width: 100%;
@@ -8,8 +8,8 @@
 	background-size: contain;
 }
 
-@sprite .logo {
-	gwt-image: "headerLogo";
+.logo {
+	gwt-sprite: "headerLogo";
 	height: 30px;
 	width: 30px;
 	background-size: contain;

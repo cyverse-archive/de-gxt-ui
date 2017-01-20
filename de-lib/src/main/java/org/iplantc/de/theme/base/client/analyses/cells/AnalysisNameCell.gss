@@ -1,5 +1,5 @@
-@sprite .htList {
-    gwt-image: "htList";
+.htList {
+    gwt-sprite: "htList";
     cursor: pointer;
     float: left;
  }

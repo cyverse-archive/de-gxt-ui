@@ -30,7 +30,7 @@ public class BaseDesktopAppearance implements DesktopView.DesktopAppearance {
         @Source("org/iplantc/de/theme/base/client/desktop/apps_hover.png")
         ImageResource appBtnHover();
 
-        @Source("org/iplantc/de/theme/base/client/desktop/Desktop.css")
+        @Source("org/iplantc/de/theme/base/client/desktop/Desktop.gss")
         DesktopStyles css();
 
         @Source("org/iplantc/de/theme/base/client/desktop/data.png")

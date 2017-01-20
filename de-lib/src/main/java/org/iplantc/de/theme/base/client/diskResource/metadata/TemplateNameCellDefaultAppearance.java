@@ -27,7 +27,7 @@ public class TemplateNameCellDefaultAppearance implements TemplateNameCell.Templ
     }
 
     interface Resources extends ClientBundle {
-        @Source("TemplateNameCell.css")
+        @Source("TemplateNameCell.gss")
         MyCss css();
     }
 

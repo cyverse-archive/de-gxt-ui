@@ -36,7 +36,7 @@ public class DCNameHyperlinkCell extends AbstractCell<Tool> {
     }
 
     interface Resources extends ClientBundle {
-        @Source("DCNameHyperlinkCell.css")
+        @Source("DCNameHyperlinkCell.gss")
         MyCss css();
     }
 

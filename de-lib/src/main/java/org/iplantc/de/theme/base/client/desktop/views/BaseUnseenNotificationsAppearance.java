@@ -32,7 +32,7 @@ public class BaseUnseenNotificationsAppearance implements UnseenNotificationsVie
     }
     public interface UnseenNotificationResources extends ClientBundle {
 
-        @Source("org/iplantc/de/theme/base/client/desktop/views/UnseenNotifications.css")
+        @Source("org/iplantc/de/theme/base/client/desktop/views/UnseenNotifications.gss")
         UnseenNotificationStyles style();
     }
 

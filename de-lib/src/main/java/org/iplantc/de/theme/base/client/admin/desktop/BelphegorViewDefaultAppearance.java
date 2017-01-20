@@ -28,7 +28,7 @@ public class BelphegorViewDefaultAppearance implements BelphegorView.BelphegorVi
     }
 
     interface Resources extends ClientBundle {
-        @Source("BelphegorStyle.css")
+        @Source("BelphegorStyle.gss")
         BelphegorView.BelphegorStyle style();
 
         @Source("headerlogo.png")

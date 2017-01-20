@@ -94,7 +94,7 @@ public class MarkDownRendererViewImpl extends AbstractFileViewer {
     HtmlLayoutContainer buildHtmlContainer() {
         // FIXME Roll into appearance
         renderHtml = render(previewData);
-        return new HtmlLayoutContainer((SafeHtml)() -> "<link href=\"./markdown.css\" rel=\"stylesheet\"></link><div class=\"markdown\">"
+        return new HtmlLayoutContainer((SafeHtml)() -> "<link href=\"./markdown.gss\" rel=\"stylesheet\"></link><div class=\"markdown\">"
                                                        + renderHtml + "</div>");
     }
 

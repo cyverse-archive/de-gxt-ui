@@ -224,7 +224,7 @@ public interface IplantResources extends ClientBundle,
 
     /** Begin App resources **/
 
-    @Source("FavoriteCell.css")
+    @Source("FavoriteCell.gss")
     FavoriteCellStyle favoriteCss();
 
     /**
@@ -303,7 +303,7 @@ public interface IplantResources extends ClientBundle,
 
     /** begin Disk resource **/
 
-    @Source("DiskResourceNameCell.css")
+    @Source("DiskResourceNameCell.gss")
     DiskResourceNameCellStyle diskResourceNameCss();
 
     /**
@@ -436,7 +436,7 @@ public interface IplantResources extends ClientBundle,
     @Source("help.png")
     ImageResource help();
 
-    @Source("DEHeader.css")
+    @Source("DEHeader.gss")
     DEHeaderStyle getHeaderStyle();
 
     @Source("tree_collapse_hover.png")
@@ -457,10 +457,10 @@ public interface IplantResources extends ClientBundle,
     @Source("lock.png")
     ImageResource lock();
     
-    @Source("ToolRequestStatusHelp.css")
+    @Source("ToolRequestStatusHelp.gss")
     ToolRequestStatusHelpStyle getToolRequestStatusHelpCss();
 
-    @Source("IplantContextualHelpAccess.css")
+    @Source("IplantContextualHelpAccess.gss")
     IplantContextualHelpAccessStyle getContxtualHelpStyle();
 
     @Source("user_comment.png")

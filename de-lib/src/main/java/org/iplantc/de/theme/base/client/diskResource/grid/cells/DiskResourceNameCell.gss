@@ -1,23 +1,23 @@
-@sprite .drFile {
-    gwt-image: "file";
+.drFile {
+    gwt-sprite: "file";
     cursor: pointer;
     float: left;
 }
 
-@sprite .drFolder {
-    gwt-image: "folder";
+.drFolder {
+    gwt-sprite: "folder";
     cursor: pointer;
     float: left;
 }
 
-@sprite .drFileTrash {
-    gwt-image: "fileDelete";
+.drFileTrash {
+    gwt-sprite: "fileDelete";
     cursor: pointer;
     float: left;
 }
 
-@sprite .drFolderTrash {
-    gwt-image: "folderDelete";
+.drFolderTrash {
+    gwt-sprite: "folderDelete";
     cursor: pointer;
     float: left;
 }
@@ -56,9 +56,8 @@
     color: black;
 }
 
-@sprite .pathList {
-    gwt-image: "pathList";
+.pathList {
+    gwt-sprite: "pathList";
     cursor: pointer;
     float: left;
 }
-

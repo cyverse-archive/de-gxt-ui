@@ -210,7 +210,7 @@ body,html{
 	background: -moz-linear-gradient(top, rgba(89, 147, 212, 0.99) 0%,
 		rgba(255, 252, 252, 0.99) 50%, rgba(89, 147, 212, 0.99) 100% );
 	/* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(89,
+	/* @alternate */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(89,
 		147, 212, 0.99) ), color-stop(50%, rgba(255, 252, 252, 0.99) ),
 		color-stop(100%, rgba(89, 147, 212, 0.99) ) ); /* Chrome,Safari4+ */
 	width: 1px;
@@ -250,7 +250,7 @@ body,html{
 .eta-sep-button {
 	background: -moz-linear-gradient(left, #004D6A 0%, rgba(255, 252, 252, 0.99)
 		50%, #004D6A 100% ); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, right top, color-stop(0%, #004D6A),
+	/* @alternate */ background: -webkit-gradient(linear, left top, right top, color-stop(0%, #004D6A),
 		color-stop(50%, rgba(255, 252, 252, 0.99) ), color-stop(100%, #004D6A)
 		); /* Chrome,Safari4+ */
 	height: 1px;
@@ -599,7 +599,7 @@ body,html{
 	color: #1D508A;
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff),
 		to(#ccc) );
-	background: -moz-linear-gradient(top, #fff, #ccc);
+	/* @alternate */ background: -moz-linear-gradient(top, #fff, #ccc);
 	-webkit-user-select: none;
 	-khtml-user-select: none;
 	-moz-user-select: none;

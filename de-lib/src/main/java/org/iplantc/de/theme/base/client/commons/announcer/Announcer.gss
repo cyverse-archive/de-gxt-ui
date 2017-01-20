@@ -1,16 +1,14 @@
-@CHARSET "UTF-8";
-
 /* The Announcer widget styling */
 
 /* This is the style for an active close button when the mouse cursor is not over it. */
-@sprite .closeButton {
-	gwt-image: "close";
+.closeButton {
+	gwt-sprite: "close";
 }
 
 /* This is the style for an active close button when the mouse cursor is over it. */
-@sprite .closeButtonOver {
+.closeButtonOver {
 	cursor: pointer;
-	gwt-image: "closeHover";
+	gwt-sprite: "closeHover";
 }
 
 /* Makes the subject solidify and push off the desktop a bit*/

@@ -1,5 +1,5 @@
-@sprite .pasteIcon {
-    gwt-image: "paste";
+.pasteIcon {
+    gwt-sprite: "paste";
     display: block;
     float: left;
 }

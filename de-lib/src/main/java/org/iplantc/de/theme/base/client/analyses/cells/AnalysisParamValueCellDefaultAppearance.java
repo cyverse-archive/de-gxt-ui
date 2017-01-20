@@ -25,7 +25,7 @@ public class AnalysisParamValueCellDefaultAppearance implements AnalysisParamVal
     }
 
     public interface AnalysisParamValueCellResources extends ClientBundle {
-        @Source("AnalysisParamValueCell.css")
+        @Source("AnalysisParamValueCell.gss")
         AnalysisParamValueCellStyles styles();
     }
 

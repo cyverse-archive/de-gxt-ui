@@ -34,7 +34,7 @@ public interface AnchorDefaultResources extends ClientBundle {
 
 	AnchorDefaultResources INSTANCE = GWT.create(AnchorDefaultResources.class);
 	
-    @Source("AnchorDefaultStyle.css")
+    @Source("AnchorDefaultStyle.gss")
     Style style();
     
 }

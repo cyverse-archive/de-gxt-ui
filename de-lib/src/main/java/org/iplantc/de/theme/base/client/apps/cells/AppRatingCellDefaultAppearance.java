@@ -34,7 +34,7 @@ public class AppRatingCellDefaultAppearance implements AppRatingCell.AppRatingCe
     }
 
     interface Resources extends ClientBundle {
-        @Source("AppRatingCell.css")
+        @Source("AppRatingCell.gss")
         MyCss css();
 
         @Source("../delete_rating.png")

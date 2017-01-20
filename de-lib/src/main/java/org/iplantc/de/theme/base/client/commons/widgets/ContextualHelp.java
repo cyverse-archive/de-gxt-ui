@@ -24,7 +24,7 @@ public interface ContextualHelp {
         @Source("help.png")
         ImageResource help();
 
-        @Source("ContextualHelp.css")
+        @Source("ContextualHelp.gss")
         Style css();
     }
 }

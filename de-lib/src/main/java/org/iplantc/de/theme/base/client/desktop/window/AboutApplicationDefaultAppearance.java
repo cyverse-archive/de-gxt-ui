@@ -25,7 +25,7 @@ public class AboutApplicationDefaultAppearance implements AboutApplicationWindow
     }
 
     interface AboutApplicationWindowResources extends ClientBundle {
-        @Source("org/iplantc/de/theme/base/client/desktop/window/AboutApplicationWindowStyles.css")
+        @Source("org/iplantc/de/theme/base/client/desktop/window/AboutApplicationWindowStyles.gss")
         AboutApplicationWindowStyles css();
 
         @Source("org/iplantc/de/theme/base/client/desktop/window/cyverse_about.png")

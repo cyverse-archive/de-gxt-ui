@@ -22,7 +22,7 @@ public class DiskResourcePathCellDefaultAppearance implements DiskResourcePathCe
 
     public interface Resources extends ClientBundle {
 
-        @Source("PathCellStyle.css")
+        @Source("PathCellStyle.gss")
         PathCellStyle css();
     }
 

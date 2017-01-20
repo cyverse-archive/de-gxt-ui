@@ -88,7 +88,7 @@ public class AbstractDiskResourceSelectorDefaultAppearance implements AbstractDi
         @Source("org/iplantc/de/resources/client/arrow_undo.png")
         ImageResource arrowUndo();
 
-        @Source("AbstractDiskResourceSelector.css")
+        @Source("AbstractDiskResourceSelector.gss")
         FileFolderSelectorStyle style();
     }
 

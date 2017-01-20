@@ -18,7 +18,7 @@ import com.sencha.gxt.core.client.dom.XElement;
 public class PushButtonDefaultAppearance implements PushButton.PushButtonAppearance {
 
     public interface Resources extends ClientBundle {
-        @Source("PushButtonDefaultAppearance.css")
+        @Source("PushButtonDefaultAppearance.gss")
         Style style();
     }
 

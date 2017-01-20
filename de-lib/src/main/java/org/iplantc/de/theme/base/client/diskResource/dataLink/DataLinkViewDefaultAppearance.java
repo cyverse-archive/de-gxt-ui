@@ -25,7 +25,7 @@ public class DataLinkViewDefaultAppearance implements DataLinkView.Appearance {
     }
 
     public interface DataLinkResources extends ClientBundle {
-        @Source("DataLinkPanelCell.css")
+        @Source("DataLinkPanelCell.gss")
         DataLinkPanelCellStyle css();
 
         @Source("../link_add.png")

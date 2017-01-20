@@ -22,7 +22,7 @@ import java.util.List;
 public class AppDetailsDefaultAppearance implements AppDetailsView.AppDetailsAppearance {
 
     public interface AppDetailsAppearanceResources extends AppCategoriesViewDefaultAppearance.AppCategoryViewResources {
-        @Source("AppDetailsStyle.css")
+        @Source("AppDetailsStyle.gss")
         AppDetailsStyle css();
     }
 

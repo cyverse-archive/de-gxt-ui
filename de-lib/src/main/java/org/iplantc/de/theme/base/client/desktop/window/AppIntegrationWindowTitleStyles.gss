@@ -2,11 +2,11 @@
 	color: red;
 }
 
-@if user.agent gecko gecko1_8 gecko1_9 {
+@if (is("gecko") || is("gecko1_8") || is("gecko1_9")) {
 	.warning {
 		position: absolute;
 	}
-} 
+}
 
 .title {
 	float: left;

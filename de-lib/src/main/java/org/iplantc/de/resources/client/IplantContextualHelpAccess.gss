@@ -1,0 +1,6 @@
+.contextualHelp {
+	gwt-sprite: "help";
+	height: 15px;
+	width: 15px;
+	padding-right: 3px;
+}

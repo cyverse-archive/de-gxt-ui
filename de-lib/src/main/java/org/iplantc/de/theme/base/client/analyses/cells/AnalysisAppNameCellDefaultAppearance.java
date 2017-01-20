@@ -28,7 +28,7 @@ public class AnalysisAppNameCellDefaultAppearance implements AnalysisAppNameCell
     }
 
     public interface AnalysisAppNameCellResources extends ClientBundle {
-        @Source("AnalysisAppNameCell.css")
+        @Source("AnalysisAppNameCell.gss")
         AnalysisAppNameCellStyles styles();
     }
 

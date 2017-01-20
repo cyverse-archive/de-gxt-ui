@@ -52,7 +52,7 @@ public class AppFavoriteCellDefaultAppearance implements AppFavoriteCell.AppFavo
         @Source("../fav.png")
         ImageResource favIcon();
 
-        @Source("FavoriteCellStyle.css")
+        @Source("FavoriteCellStyle.gss")
         FavoriteCellStyle css();
     }
 

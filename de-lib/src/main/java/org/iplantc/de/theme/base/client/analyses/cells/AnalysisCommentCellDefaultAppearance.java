@@ -25,7 +25,7 @@ public class AnalysisCommentCellDefaultAppearance implements AnalysisCommentCell
     }
 
     public interface AnalysisCommentCellResources extends ClientBundle {
-        @Source("AnalysisCommentCell.css")
+        @Source("AnalysisCommentCell.gss")
         AnalysisCommentCellStyles css();
     }
 

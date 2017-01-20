@@ -26,7 +26,7 @@ public class ErrorDialogDefaultAppearance implements ErrorDialog.ErrorDialogAppe
         @Source("icon-error.gif")
         ImageResource errorIcon();
 
-        @Source("ErrorStyle.css")
+        @Source("ErrorStyle.gss")
         Style css();
 
     }

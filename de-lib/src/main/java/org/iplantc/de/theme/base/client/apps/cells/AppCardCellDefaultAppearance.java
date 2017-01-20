@@ -28,7 +28,7 @@ public class AppCardCellDefaultAppearance extends AppNameCellDefaultAppearance i
     }
 
     public interface AppCardCellResources extends ClientBundle {
-        @Source("AppCardCell.css")
+        @Source("AppCardCell.gss")
         AppCardCellStyles css();
     }
 

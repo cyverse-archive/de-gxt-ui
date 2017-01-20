@@ -1,13 +1,13 @@
-@def marginLeft 10px;
-@def cardWidth 60px;
+@def MARGIN_LEFT 10px;
+@def CARD_WIDTH 60px;
 
-@def fontSize 12px;
-@def lineHeight 1.4;
-@def linesToShow 3;
+@def FONT_SIZE 12px;
+@def LINE_HEIGHT 1.4;
+@def LINES_TO_SHOW 3;
 /* The above values are used to calculate the height of the app name's area */
-@eval nameBoxHeight 12*1.4*3+"px";
+@def NAME_BOX_HEIGHT eval('12*1.4*3+"px"');
 /* The card width plus its 10px margin on both sides*/
-@eval centerMargin 10*2+60+"px";
+@def CENTER_MARGIN eval('10*2+60+"px"');
 
 .tileCell {
     width: 260px;
@@ -40,7 +40,7 @@
 .infoMod {
     position: absolute;
     bottom: 2px;
-    left: marginLeft;
+    left: MARGIN_LEFT;
 }
 
 .infoMod:hover {
@@ -62,16 +62,16 @@
 .nameMod {
     position: absolute;
     top: 10px;
-    left: centerMargin;
+    left: CENTER_MARGIN;
     float: left;
     word-break: break-word;
     width: 160px;
     overflow: hidden;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
-    height: nameBoxHeight;
+    height: NAME_BOX_HEIGHT;
     text-overflow: ellipsis;
-    line-height: lineHeight;
+    line-height: LINE_HEIGHT;
     display: -webkit-box;
     /*transform: translate(-50%, -50%);*/
 }
@@ -90,7 +90,7 @@
 .integratorMod {
     position: absolute;
     bottom: 26px;
-    left: centerMargin;
+    left: CENTER_MARGIN;
     width: 160px;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -101,6 +101,6 @@
 
 .ratingMod {
     position: absolute;
-    left: centerMargin;
+    left: CENTER_MARGIN;
     bottom: 4px;
 }

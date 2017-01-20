@@ -24,7 +24,7 @@ public interface Resources extends ClientBundle {
 	public static final Resources INSTANCE = GWT.create(Resources.class);
 
 	@NotStrict
-	@Source("css/PipelineBuilder.css")
+	@Source("gss/PipelineBuilder.gss")
 	public CssResource css();
 	
 }

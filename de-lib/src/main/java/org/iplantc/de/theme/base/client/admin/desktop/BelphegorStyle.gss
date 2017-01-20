@@ -1,10 +1,10 @@
-@sprite .iplantcLogo {
-	gwt-image: "headerLogo";
+.iplantcLogo {
+	gwt-sprite: "headerLogo";
 	cursor: pointer;
 }
 
-@sprite .iplantcHeader {
-	gwt-image: "headerLogoFill";
+.iplantcHeader {
+	gwt-sprite: "headerLogoFill";
 }
 
 .headerMenu {

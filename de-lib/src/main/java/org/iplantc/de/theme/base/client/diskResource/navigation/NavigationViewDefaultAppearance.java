@@ -26,7 +26,7 @@ import com.sencha.gxt.widget.core.client.tree.TreeView;
  */
 public class NavigationViewDefaultAppearance implements NavigationView.Appearance {
     public interface NavigationViewResources extends ClientBundle {
-        @Source("DataCollapse.css")
+        @Source("DataCollapse.gss")
         DataCollapseStyle dataCollapseStyle();
 
         @Source("folder_view.gif")

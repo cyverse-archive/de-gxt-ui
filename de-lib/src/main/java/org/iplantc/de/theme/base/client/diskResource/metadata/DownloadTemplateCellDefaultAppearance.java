@@ -2,8 +2,6 @@ package org.iplantc.de.theme.base.client.diskResource.metadata;
 
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.DownloadTemplateCell;
 import org.iplantc.de.resources.client.IplantResources;
-import org.iplantc.de.theme.base.client.admin.metadata.*;
-import org.iplantc.de.theme.base.client.apps.AppsMessages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.debug.client.DebugInfo;
@@ -25,7 +23,7 @@ public class DownloadTemplateCellDefaultAppearance implements DownloadTemplateCe
     }
 
     interface Resources extends ClientBundle {
-        @Source("DownloadTemplateCell.css")
+        @Source("DownloadTemplateCell.gss")
         MyCss css();
     }
 
