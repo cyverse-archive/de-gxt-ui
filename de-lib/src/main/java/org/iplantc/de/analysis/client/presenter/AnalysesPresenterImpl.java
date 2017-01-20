@@ -504,7 +504,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         final Analysis value = event.getValue();
         final AnalysisUserSupportDialog ausd = new AnalysisUserSupportDialog(value);
         ausd.setHeadingHtml(value.getName());
-        ausd.setSize("600px", "500px");
+        ausd.setSize("800px", "500px");
         ausd.addSubmitSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
