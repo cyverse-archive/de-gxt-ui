@@ -35,6 +35,8 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.shared.AnalysisCallback;
+import org.iplantc.de.shared.DEProperties;
+
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -208,6 +210,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     @Inject
     AnalysisUserSupportDialog.AnalysisUserSupportAppearance userSupportAppearance;
+    @Inject
+    DEProperties deProperties;
 
     private final ListStore<Analysis> listStore;
     private final AnalysesView view;
@@ -481,7 +485,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         ap.setId(selectedAnalysis.getId());
         ap.setPermission(PermissionValue.read.toString());
         AnalysisSharingRequest asr = shareFactory.AnalysisSharingRequest().as();
-        asr.setUser("siuser");
+        asr.setUser(deProperties.getSupportUser());
         asr.setAnalysisPermissions(Arrays.asList(ap));
         AnalysisSharingRequestList listRequest = shareFactory.AnalysisSharingRequestList().as();
         listRequest.setAnalysisSharingRequestList(Arrays.asList(asr));

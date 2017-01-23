@@ -52,6 +52,12 @@ public class DEProperties {
     private static final String CONTEXT_CLICK_ENABLED =
             "org.iplantc.discoveryenvironment.contextMenu.enabled";
 
+
+    /**
+     * Cyverse support user
+     */
+    private static final String CYVERSE_SUPPORT_USER = "org.iplantc.discoveryenvironment.analysis.support.user";
+
     /**
      * The prefix used in each of the private workspace property names.
      */
@@ -177,7 +183,6 @@ public class DEProperties {
 
     private String cardUrlOptions;
 
-
     public String getPathListFileIdentifier() {
         return pathListFileIdentifier;
     }
@@ -217,6 +222,8 @@ public class DEProperties {
     private String baseTrashPath;
 
     private String dataMgmtAdminBaseUrl;
+
+    private String supportUser;
 
     /**
      * Force the constructor to be private.
@@ -267,6 +274,7 @@ public class DEProperties {
         keys.add(ONTOLOGY_ATTRS);
         keys.add(APPS_CARD_URL);
         keys.add(APPS_CARD_URL_OPTIONS);
+        keys.add(CYVERSE_SUPPORT_USER);
         return keys;
     }
 
@@ -300,6 +308,7 @@ public class DEProperties {
         ontologyAttrs = properties.get(ONTOLOGY_ATTRS);
         cardUrl = properties.get(APPS_CARD_URL);
         cardUrlOptions = properties.get(APPS_CARD_URL_OPTIONS);
+        supportUser = properties.get(CYVERSE_SUPPORT_USER);
     }
 
     /**
@@ -452,5 +461,9 @@ public class DEProperties {
 
     public String getAppsCardUrlOptions() {
         return cardUrlOptions;
+    }
+
+    public String getSupportUser() {
+        return supportUser;
     }
 }
