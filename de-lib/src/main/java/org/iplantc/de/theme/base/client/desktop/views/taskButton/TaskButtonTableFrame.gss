@@ -16,160 +16,160 @@
 }
 
 .content {
-  gwt-image: 'background';	
+  gwt-sprite: 'background';	
   height: 28px;
   width: 100%;
   background-size: cover;
 }
 
 .topLeft {
-  gwt-image: 'topLeftBorder';
+  gwt-sprite: 'topLeftBorder';
   height: 0px;
   width: 0px;
 }
 
 .top {
-  gwt-image: 'topBorder';
+  gwt-sprite: 'topBorder';
   height: 0px;
   width: 0px;
 }
 
 .topRight {
-  gwt-image: 'topRightBorder';
+  gwt-sprite: 'topRightBorder';
   height: 0px;
   width: 0px;
 }
 
 .bottomLeft {
-  gwt-image: 'bottomLeftBorder';
+  gwt-sprite: 'bottomLeftBorder';
   height: 0px;
   width: 0px;
 }
 
 .bottom {
-  gwt-image: 'bottomBorder';
+  gwt-sprite: 'bottomBorder';
   height: 0px;
   width: 0px;
 }
 
 .bottomRight {
-  gwt-image: 'bottomRightBorder';
+  gwt-sprite: 'bottomRightBorder';
   height: 0px;
   width: 0px;
 }
 
 .left {
-  gwt-image: 'leftBorder';
+  gwt-sprite: 'leftBorder';
   width: 1px;
 }
 
 .right {
-  gwt-image: 'rightBorder';
+  gwt-sprite: 'rightBorder';
 }
 
 
 /* over style */
 
 .over .content {
-  gwt-image: 'backgroundOverBorder';
+  gwt-sprite: 'backgroundOverBorder';
   height: 28px;
   width: 100%;
 }
 
 .over .topLeft {
-  gwt-image: 'topLeftOverBorder';
+  gwt-sprite: 'topLeftOverBorder';
   height: 0px;
   width: 0px;
 }
 
 .over .top {
-  gwt-image: 'topOverBorder';
+  gwt-sprite: 'topOverBorder';
   height: 0px;
   width: 0px;
 }
 
 .over .topRight {
-  gwt-image: 'topRightOverBorder';
+  gwt-sprite: 'topRightOverBorder';
   height: 0px;
   width: 0px;
 }
 
 .over .bottomLeft {
-  gwt-image: 'bottomLeftOverBorder';
+  gwt-sprite: 'bottomLeftOverBorder';
   height: 0px;
   width: 0px;
 }
 
 .over .bottom {
-  gwt-image: 'bottomOverBorder';
+  gwt-sprite: 'bottomOverBorder';
   height: 0px;
   width: 0px;
 }
 
 .over .right {
-  gwt-image: 'rightOverBorder';
+  gwt-sprite: 'rightOverBorder';
 }
 
 .over .bottomRight {
-  gwt-image: 'bottomRightOverBorder';
+  gwt-sprite: 'bottomRightOverBorder';
   height: 0px;
   width: 0px;
 }
 
 .over .left {
-  gwt-image: 'leftOverBorder';
+  gwt-sprite: 'leftOverBorder';
   width: 1px;
 }
 
 /* pressed style */
 
 .pressed .content {
-  gwt-image: 'backgroundPressedBorder';
+  gwt-sprite: 'backgroundPressedBorder';
   height: 28px;
   width: 100%;
 }
 
 .pressed .topLeft {
-  gwt-image: 'topLeftPressedBorder';
+  gwt-sprite: 'topLeftPressedBorder';
   height: 0px;
   width: 0px;
 }
 
 .pressed .top {
-  gwt-image: 'topPressedBorder';
+  gwt-sprite: 'topPressedBorder';
   height: 0px;
   width: 0px;
 }
 
 .pressed .topRight {
-  gwt-image: 'topRightPressedBorder';
+  gwt-sprite: 'topRightPressedBorder';
   height: 0px;
   width: 0px;
 }
 
 .pressed .bottomLeft {
-  gwt-image: 'bottomLeftPressedBorder';
+  gwt-sprite: 'bottomLeftPressedBorder';
   height: 0px;
   width: 0px;
 }
 
 .pressed .bottom {
-  gwt-image: 'bottomPressedBorder';
+  gwt-sprite: 'bottomPressedBorder';
   height: 0px;
   width: 0px;
 }
 
 .pressed .right {
-  gwt-image: 'rightPressedBorder';
+  gwt-sprite: 'rightPressedBorder';
 }
 
 .pressed .bottomRight {
-  gwt-image: 'bottomRightPressedBorder';
+  gwt-sprite: 'bottomRightPressedBorder';
   height: 0px;
   width: 0px;
 }
 
 .pressed .left {
-  gwt-image: 'leftPressedBorder';
+  gwt-sprite: 'leftPressedBorder';
   width: 1px;
 }
