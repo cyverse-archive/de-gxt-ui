@@ -180,7 +180,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         final boolean canCancelSelection = canCancelSelection(currentSelection);
         final boolean canDeleteSelection = canDeleteSelection(currentSelection);
         boolean isOwner = isOwner(currentSelection);
-        boolean can_share = isShareable(currentSelection);
+        boolean can_share = isOwner(currentSelection);
 
         boolean goToFolderEnabled, viewParamsEnabled, relaunchEnabled, cancelEnabled, deleteEnabled;
         boolean renameEnabled, updateCommentsEnabled, shareEnabled;
@@ -242,15 +242,6 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         }
 
         return true;
-    }
-
-     boolean isShareable(List<Analysis> selection) {
-        boolean shareable = true;
-        for (Analysis a : selection) {
-            shareable = shareable && a.isShareable();
-        }
-
-        return shareable;
     }
 
     @Override
