@@ -286,7 +286,7 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
                 // Wf run menu item is left enabled so user can get error announcement
                 wfRunEnabled = isMultiStep && !isAppDisabled;
                 GWT.log(selectedApp.getPermission() + "&&--&&");
-                shareWithCollaboratorsMiEnabled = containsSharableApps(Arrays.asList(selectedApp));
+                shareWithCollaboratorsMiEnabled = containsShareableApps(Arrays.asList(selectedApp));
 
                 break;
             default:
@@ -304,7 +304,7 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
                 editWfEnabled = false;
                 copyWfEnabled = false;
                 wfRunEnabled = false;
-                shareWithCollaboratorsMiEnabled = containsSharableApps(currentSelection);
+                shareWithCollaboratorsMiEnabled = containsShareableApps(currentSelection);
         }
 
         shareMenuButton.setEnabled(submitAppEnabled || shareWithCollaboratorsMiEnabled);
@@ -372,7 +372,7 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
         swapViewBtn.ensureDebugId(baseID + Ids.SWAP_VIEW_BTN);
     }
 
-    boolean containsSharableApps(List<App> apps) {
+    boolean containsShareableApps(List<App> apps) {
         if(apps!=null && apps.size() > 0) {
             for (App a : apps) {
                 System.out.println(a.getAppType());

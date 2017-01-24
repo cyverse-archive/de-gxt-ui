@@ -1,8 +1,9 @@
 package org.iplantc.de.client.models.analysis;
 
+import org.iplantc.de.client.models.HasQualifiedId;
+
 import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
-import org.iplantc.de.client.models.HasQualifiedId;
 
 public interface Analysis extends HasQualifiedId, HasName {
 
@@ -80,7 +81,6 @@ public interface Analysis extends HasQualifiedId, HasName {
     String getUserName();
 
     // key to determine whether share menu is enabled or not
-
     @PropertyName("can_share")
-    public boolean isSharable();
+    public boolean isShareable();
 }
