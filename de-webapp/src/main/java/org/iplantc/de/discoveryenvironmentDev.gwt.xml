@@ -19,4 +19,10 @@
     <replace-with class="org.iplantc.de.theme.base.client.desktop.window.AboutApplicationDevAppearance">
         <when-type-is class="org.iplantc.de.desktop.client.views.windows.AboutApplicationWindow.AboutApplicationAppearance" />
     </replace-with>
+
+    <inherits name="com.sencha.gxt.ui.GXT" />
+    <!-- only compile permutations for FireFox and Chrome -->
+    <set-property name="gxt.user.agent" value="gecko1_9, chrome" />
+    <!-- merge all operating system and browser agents into one permutation -->
+    <collapse-all-properties />
 </module>

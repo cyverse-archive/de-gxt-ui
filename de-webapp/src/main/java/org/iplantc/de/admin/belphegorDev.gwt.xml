@@ -14,4 +14,10 @@
 
     <!-- Turn on CssResource pretty printing -->
     <set-configuration-property name="CssResource.style" value="pretty"/>
+
+    <inherits name="com.sencha.gxt.ui.GXT" />
+    <!-- only compile permutations for FireFox and Chrome -->
+    <set-property name="gxt.user.agent" value="gecko1_9, chrome" />
+    <!-- merge all operating system and browser agents into one permutation -->
+    <collapse-all-properties />
 </module>
