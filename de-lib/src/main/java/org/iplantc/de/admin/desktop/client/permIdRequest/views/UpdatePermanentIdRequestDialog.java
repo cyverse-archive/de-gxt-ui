@@ -1,8 +1,8 @@
 package org.iplantc.de.admin.desktop.client.permIdRequest.views;
 
 import org.iplantc.de.admin.desktop.shared.Belphegor;
-import org.iplantc.de.client.models.identifiers.PermanentIdRequestDetails;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestAutoBeanFactory;
+import org.iplantc.de.client.models.identifiers.PermanentIdRequestDetails;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestStatus;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestUpdate;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
@@ -59,13 +59,14 @@ public class UpdatePermanentIdRequestDialog extends IPlantDialog {
             @Override
             public void onClick(ClickEvent event) {
                 RequestHistoryDialog dlg = new RequestHistoryDialog(
-                        details.getRequestor().getUserProfile().getUsername() + "-" + details.getType(),
+                        details.getRequestor().getUsername() + "-" + details.getType(),
                         details.getHistory());
                 dlg.show();
             }
         });
-        userEmail.setText(details.getRequestor().getUserProfile().getEmail());
-
+        if(details.getRequestor()!= null ){
+            userEmail.setText(details.getRequestor().getEmail());
+        }
         ensureDebugId(Belphegor.PermIds.UPDATE_PERMID_DIALOG + Belphegor.PermIds.VIEW);
     }
 
@@ -85,6 +86,8 @@ public class UpdatePermanentIdRequestDialog extends IPlantDialog {
         cb.add(PermanentIdRequestStatus.Approved);
         cb.add(PermanentIdRequestStatus.Completion);
         cb.add(PermanentIdRequestStatus.Failed);
+        cb.add(PermanentIdRequestStatus.Rejected);
+        cb.add(PermanentIdRequestStatus.Test);
         cb.setAllowBlank(false);
         cb.setEditable(false);
         cb.setTriggerAction(TriggerAction.ALL);

@@ -1,6 +1,6 @@
 package org.iplantc.de.client.models.identifiers;
 
-import org.iplantc.de.client.models.bootstrap.UserBootstrap;
+import org.iplantc.de.client.models.bootstrap.UserProfile;
 import org.iplantc.de.client.models.requestStatus.RequestHistory;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -22,7 +22,7 @@ public interface PermanentIdRequestDetails {
     String getFolder();
 
     @AutoBean.PropertyName("requested_by")
-    UserBootstrap getRequestor();
+    UserProfile getRequestor();
 
     @AutoBean.PropertyName("history")
     List<RequestHistory> getHistory();
