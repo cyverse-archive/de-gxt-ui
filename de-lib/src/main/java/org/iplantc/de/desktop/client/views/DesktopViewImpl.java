@@ -72,7 +72,6 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
     @UiField IPlantAnchor forumsLink;
     @UiField IPlantAnchor feedbackLink;
 
-    @Inject AsyncProviderWrapper<PreferencesDialog> preferencesDialogProvider;
     @Inject AsyncProviderWrapper<DEFeedbackDialog> deFeedbackDialogProvider;
     @Inject UserSettings userSettings;
 
@@ -360,17 +359,7 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
 
     @UiHandler("preferencesLink")
     void onPreferencesClick(ClickEvent event){
-        preferencesDialogProvider.get(new AsyncCallback<PreferencesDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(final PreferencesDialog dialog) {
-                dialog.show(presenter, userSettings);
-            }
-	});
+        presenter.onPreferencesClick();
     }
 
     @UiHandler("collaboratorsLink")

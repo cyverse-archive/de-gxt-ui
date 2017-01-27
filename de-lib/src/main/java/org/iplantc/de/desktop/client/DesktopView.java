@@ -228,6 +228,8 @@ public interface DesktopView extends IsWidget {
 
         void onCollaboratorsClick();
 
+        void onPreferencesClick();
+
         void onContactSupportClick();
 
         void onDocumentationClick();

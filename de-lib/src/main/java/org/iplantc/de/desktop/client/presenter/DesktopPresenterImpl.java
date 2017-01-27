@@ -53,11 +53,13 @@ import org.iplantc.de.desktop.client.presenter.util.NotificationUtil;
 import org.iplantc.de.desktop.client.presenter.util.NotificationWebSocketManager;
 import org.iplantc.de.desktop.client.presenter.util.SystemMessageWebSocketManager;
 import org.iplantc.de.desktop.client.views.windows.IPlantWindowInterface;
+import org.iplantc.de.desktop.client.views.widgets.PreferencesDialog;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.fileViewers.client.callbacks.LoadGenomeInCoGeCallback;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
 import org.iplantc.de.notifications.client.utils.NotifyInfo;
 import org.iplantc.de.notifications.client.views.dialogs.RequestHistoryDialog;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.NotificationCallback;
 import org.iplantc.de.shared.events.ServiceDown;
@@ -160,6 +162,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     @Inject UserSettings userSettings;
     @Inject NotifyInfo notifyInfo;
     @Inject DiskResourceUtil diskResourceUtil;
+    @Inject AsyncProviderWrapper<PreferencesDialog> preferencesDialogProvider;
     private DesktopPresenterAppearance appearance;
 
     private final EventBus eventBus;
@@ -453,6 +456,22 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     @Override
     public void onCollaboratorsClick() {
         new ManageCollaboratorsDialog(ManageCollaboratorsView.MODE.MANAGE).show();
+    }
+
+    @Override
+    public void onPreferencesClick() {
+	final DesktopView.Presenter presenter = this;
+        preferencesDialogProvider.get(new AsyncCallback<PreferencesDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(final PreferencesDialog dialog) {
+                dialog.show(presenter, userSettings);
+            }
+	});
     }
 
     @Override
