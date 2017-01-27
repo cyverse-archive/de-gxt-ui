@@ -460,7 +460,6 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
 
     @Override
     public void onPreferencesClick() {
-	final DesktopView.Presenter presenter = this;
         preferencesDialogProvider.get(new AsyncCallback<PreferencesDialog>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -469,7 +468,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
 
             @Override
             public void onSuccess(final PreferencesDialog dialog) {
-                dialog.show(presenter, userSettings);
+                dialog.show(DesktopPresenterImpl.this, userSettings);
             }
 	});
     }
