@@ -3,6 +3,7 @@ package org.iplantc.de.desktop.client.views;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.commons.client.widgets.IPlantAnchor;
+import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.desktop.client.views.widgets.DEFeedbackDialog;
 import org.iplantc.de.desktop.client.views.widgets.DesktopIconButton;
@@ -13,6 +14,7 @@ import org.iplantc.de.desktop.client.views.widgets.UnseenNotificationsView;
 import org.iplantc.de.desktop.client.views.windows.IPlantWindowInterface;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.resources.client.messages.IplantNewUserTourStrings;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Preconditions;
 import com.google.gwt.core.client.GWT;
@@ -27,9 +29,9 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
@@ -70,8 +72,7 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
     @UiField IPlantAnchor forumsLink;
     @UiField IPlantAnchor feedbackLink;
 
-    @Inject Provider<PreferencesDialog> preferencesDialogProvider;
-    @Inject Provider<DEFeedbackDialog> deFeedbackDialogProvider;
+    @Inject AsyncProviderWrapper<DEFeedbackDialog> deFeedbackDialogProvider;
     @Inject UserSettings userSettings;
 
     private static DesktopViewImplUiBinder ourUiBinder = GWT.create(DesktopViewImplUiBinder.class);
@@ -306,26 +307,35 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
 
     void onFeedbackBtnSelect() {
         helpBtn.hideMenu();
-        final DEFeedbackDialog feedbackDialog = deFeedbackDialogProvider.get();
-        feedbackDialog.show();
-        feedbackDialog.getButton(PredefinedButton.OK).addSelectHandler(new SelectEvent.SelectHandler() {
+        deFeedbackDialogProvider.get(new AsyncCallback<DEFeedbackDialog>() {
             @Override
-            public void onSelect(SelectEvent event) {
-                if(feedbackDialog.validate()){
-                    presenter.submitUserFeedback(feedbackDialog.toJson(), feedbackDialog);
-                } else {
-                    AlertMessageBox amb = new AlertMessageBox(appearance.feedbackAlertValidationWarning(),
-                                                              appearance.completeRequiredFieldsError());
-                    amb.setModal(true);
-                    amb.show();
-                }
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
             }
-        });
 
-        feedbackDialog.getButton(PredefinedButton.CANCEL).addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
-            public void onSelect(SelectEvent event) {
-                feedbackDialog.hide();
+            public void onSuccess(final DEFeedbackDialog feedbackDialog) {
+                feedbackDialog.show();
+                feedbackDialog.getButton(PredefinedButton.OK).addSelectHandler(new SelectEvent.SelectHandler() {
+                    @Override
+                    public void onSelect(SelectEvent event) {
+                        if(feedbackDialog.validate()){
+                            presenter.submitUserFeedback(feedbackDialog.toJson(), feedbackDialog);
+                        } else {
+                            AlertMessageBox amb = new AlertMessageBox(appearance.feedbackAlertValidationWarning(),
+                                                                      appearance.completeRequiredFieldsError());
+                            amb.setModal(true);
+                            amb.show();
+                        }
+                    }
+                });
+
+                feedbackDialog.getButton(PredefinedButton.CANCEL).addSelectHandler(new SelectEvent.SelectHandler() {
+                    @Override
+                    public void onSelect(SelectEvent event) {
+                        feedbackDialog.hide();
+                    }
+                });
             }
         });
    }
@@ -349,8 +359,7 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
 
     @UiHandler("preferencesLink")
     void onPreferencesClick(ClickEvent event){
-        PreferencesDialog dialog = preferencesDialogProvider.get();
-        dialog.show(presenter, userSettings);
+        presenter.onPreferencesClick();
     }
 
     @UiHandler("collaboratorsLink")
