@@ -393,10 +393,10 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void saveAppDoc(final HasId app,
+    public void saveAppDoc(final HasQualifiedId app,
                            final String doc,
                            final DECallback<AppDoc> callback) {
-        String address = APPS + "/" + app.getId() + "/documentation";
+        String address = APPS + "/" + app.getSystemId() + "/" + app.getId() + "/documentation";
         Splittable payload = StringQuoter.createSplittable();
         StringQuoter.create(doc).assign(payload, "documentation");
         ServiceCallWrapper wrapper = new ServiceCallWrapper(PATCH, address, payload.getPayload());

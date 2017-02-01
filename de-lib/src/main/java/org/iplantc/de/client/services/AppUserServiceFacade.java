@@ -75,7 +75,7 @@ public interface AppUserServiceFacade extends AppServiceFacade, AppSearchFacade 
 
     void getAppDoc(HasQualifiedId app, DECallback<AppDoc> callback);
 
-    void saveAppDoc(HasId appId, String doc, DECallback<AppDoc> callback);
+    void saveAppDoc(HasQualifiedId appId, String doc, DECallback<AppDoc> callback);
 
     void createWorkflows(String body, DECallback<String> callback);
 
