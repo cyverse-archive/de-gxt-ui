@@ -114,12 +114,8 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void getApps(HasId appCategory, DECallback<List<App>> callback) {
-        getApps(appCategory.getId(), callback);
-    }
-
-    public void getApps(String id, DECallback<List<App>> callback) {
-        String address = CATEGORIES + "/" + id;
+    public void getApps(HasQualifiedId appCategory, DECallback<List<App>> callback) {
+        String address = CATEGORIES + "/" + appCategory.getSystemId() + "/" + appCategory.getId();
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
         deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, List<App>>(callback) {
             @Override
@@ -128,6 +124,9 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
                 return apps;
             }
         });
+    }
+
+    public void getApps(String id, DECallback<List<App>> callback) {
     }
 
     @Override
