@@ -273,35 +273,20 @@ public class AnalysesToolBarImplTest {
         Analysis mock1 = mock(Analysis.class);
         Analysis mock2 = mock(Analysis.class);
 
-        when(mock1.getStatus()).thenReturn(SUBMITTED.toString());
-        when(mock2.getStatus()).thenReturn(RUNNING.toString());
-        when(mock1.isSharable()).thenReturn(true);
-        when(mock2.isSharable()).thenReturn(true);
-        assertFalse("Selection should not be sharable", uut.isSharable(Lists.newArrayList(mock1, mock2)));
+        when(mock1.isShareable()).thenReturn(false);
+        when(mock2.isShareable()).thenReturn(false);
+        assertFalse("Selection should not be shareable", uut.isShareable(Lists.newArrayList(mock1, mock2)));
 
-        when(mock1.getStatus()).thenReturn(COMPLETED.toString());
-        when(mock2.getStatus()).thenReturn(RUNNING.toString());
-        when(mock1.isSharable()).thenReturn(true);
-        when(mock2.isSharable()).thenReturn(true);
-        assertFalse("Selection should not be sharable", uut.isSharable(Lists.newArrayList(mock1, mock2)));
+        when(mock1.isShareable()).thenReturn(true);
+        when(mock2.isShareable()).thenReturn(false);
+        assertFalse("Selection should not be shareable", uut.isShareable(Lists.newArrayList(mock1, mock2)));
 
-        when(mock1.getStatus()).thenReturn(COMPLETED.toString());
-        when(mock2.getStatus()).thenReturn(FAILED.toString());
-        when(mock1.isSharable()).thenReturn(false);
-        when(mock2.isSharable()).thenReturn(false);
-        assertFalse("Selection should not be sharable", uut.isSharable(Lists.newArrayList(mock1, mock2)));
+        when(mock1.isShareable()).thenReturn(false);
+        when(mock2.isShareable()).thenReturn(true);
+        assertFalse("Selection should not be shareable", uut.isShareable(Lists.newArrayList(mock1, mock2)));
 
-        when(mock1.getStatus()).thenReturn(COMPLETED.toString());
-        when(mock2.getStatus()).thenReturn(FAILED.toString());
-        when(mock1.isSharable()).thenReturn(false);
-        when(mock2.isSharable()).thenReturn(true);
-        assertFalse("Selection should not be sharable", uut.isSharable(Lists.newArrayList(mock1, mock2)));
-
-        when(mock1.getStatus()).thenReturn(COMPLETED.toString());
-        when(mock2.getStatus()).thenReturn(FAILED.toString());
-        when(mock1.isSharable()).thenReturn(true);
-        when(mock2.isSharable()).thenReturn(true);
-        assertTrue("Selection should  be sharable", uut.isSharable(Lists.newArrayList(mock1, mock2)));
-
+        when(mock1.isShareable()).thenReturn(true);
+        when(mock2.isShareable()).thenReturn(true);
+        assertTrue("Selection should be shareable", uut.isShareable(Lists.newArrayList(mock1, mock2)));
     }
 }
