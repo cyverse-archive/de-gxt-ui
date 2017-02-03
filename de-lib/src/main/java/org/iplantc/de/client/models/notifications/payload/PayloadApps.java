@@ -7,6 +7,9 @@ import com.google.web.bindery.autobean.shared.AutoBean;
  */
 public interface PayloadApps {
 
+    @AutoBean.PropertyName("system_id")
+    String getSystemId();
+
     @AutoBean.PropertyName("app_id")
     String getId();
 

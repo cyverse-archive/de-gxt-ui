@@ -7,6 +7,7 @@ import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasPath;
 import org.iplantc.de.client.models.IsHideable;
+import org.iplantc.de.client.models.QualifiedId;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.WindowState;
@@ -511,13 +512,11 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                                                                  context).as();
                 if (pal != null && pal.getApps() != null && pal.getApps().size() > 0) {
                     PayloadApps payload = pal.getApps().get(0);
+                    final String systemId = payload.getSystemId();
                     final String appCategoryId = payload.getCategoryId();
                     final String appId = payload.getId();
-                    appsConfig.setSelectedAppCategory(CommonModelUtils.getInstance()
-                                                                      .createHasIdFromString(
-                                                                              appCategoryId));
-                    appsConfig.setSelectedApp(CommonModelUtils.getInstance()
-                                                              .createHasIdFromString(appId));
+                    appsConfig.setSelectedAppCategory(new QualifiedId(systemId, appCategoryId));
+                    appsConfig.setSelectedApp(new QualifiedId(systemId, appId));
                     EventBus.getInstance()
                             .fireEvent(new WindowShowRequestEvent(appsConfig, true));
                 }
@@ -766,6 +765,10 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         };
     }
 
+    private String getSystemId(final String systemId) {
+        return Strings.isNullOrEmpty(systemId) ? deClientConstants.deSystemId() : systemId;
+    }
+
     void processQueryStrings() {
         boolean hasError = false;
         boolean hasDataTypeParameter = false;
@@ -779,10 +782,10 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                     if (TypeQueryValues.APPS.equalsIgnoreCase(paramValue)) {
                         final AppsWindowConfig appsConfig = ConfigFactory.appsWindowConfig();
                         final String appCategoryId = Window.Location.getParameter(QueryStrings.APP_CATEGORY);
-                        final String systemId = Window.Location.getParameter(QueryStrings.SYSTEM_ID);
+                        final String systemId = getSystemId(Window.Location.getParameter(QueryStrings.SYSTEM_ID));
                         final String appId = Window.Location.getParameter(QueryStrings.APP_ID);
                         if (!Strings.isNullOrEmpty(appCategoryId)) {
-                            appsConfig.setSelectedAppCategory(CommonModelUtils.getInstance().createHasIdFromString(appCategoryId));
+                            appsConfig.setSelectedAppCategory(new QualifiedId(systemId, appCategoryId));
                             windowConfig = appsConfig;
                         } else if (!Strings.isNullOrEmpty(appId)) {
                             AppWizardConfig config = ConfigFactory.appWizardConfig(systemId, appId);
