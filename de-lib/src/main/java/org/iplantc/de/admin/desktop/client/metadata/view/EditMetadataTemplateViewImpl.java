@@ -46,6 +46,7 @@ import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
+import com.sencha.gxt.widget.core.client.event.CompleteEditEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 import com.sencha.gxt.widget.core.client.form.CheckBox;
@@ -261,6 +262,12 @@ public class EditMetadataTemplateViewImpl extends Composite implements IsWidget,
         editing.addEditor(descCol, new TextArea());
         editing.addEditor(reqCol, new CheckBox());
         editing.addEditor(typeCol, setUpTypeEditing());
+        editing.addCompleteEditHandler(new CompleteEditEvent.CompleteEditHandler<MetadataTemplateAttribute>() {
+            @Override
+            public void onCompleteEdit(CompleteEditEvent<MetadataTemplateAttribute> event) {
+                store.commitChanges();
+            }
+        });
     }
 
     private SimpleComboBox<String> setUpTypeEditing() {
