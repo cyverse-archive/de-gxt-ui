@@ -29,6 +29,7 @@ import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -370,17 +371,32 @@ public class AdminAppsCategoriesPresenterImpl implements AdminCategoriesView.Pre
                                      });
     }
 
+    private AppCategorizeRequest.CategoryId categoryIdFromCategory(AppCategory category) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(category.getSystemId()));
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(category.getId()));
+
+        AppCategorizeRequest.CategoryId categoryId = serviceFactory.categoryId().as();
+        categoryId.setSystemId(category.getSystemId());
+        categoryId.setId(category.getId());
+
+        return categoryId;
+    }
+
     private AppCategorizeRequest buildAppCategorizeRequest(App selectedApp,
                                                            List<AppCategory> appCategories) {
-        HasId appId = CommonModelUtils.getInstance().createHasIdFromString(selectedApp.getId());
+
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(selectedApp.getSystemId()));
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(selectedApp.getId()));
+
         List<AppCategorizeRequest.CategoryRequest> categories = Lists.newArrayList();
-        List<String> cat_ids = Lists.newArrayList();
+        List<AppCategorizeRequest.CategoryId> cat_ids = Lists.newArrayList();
         for (AppCategory group : appCategories) {
-            cat_ids.add(group.getId());
+            cat_ids.add(categoryIdFromCategory(group));
         }
 
         AppCategorizeRequest.CategoryRequest categoryRequest = serviceFactory.categoryRequest().as();
-        categoryRequest.setAppId(appId.getId());
+        categoryRequest.setSystemId(selectedApp.getSystemId());
+        categoryRequest.setAppId(selectedApp.getId());
         categoryRequest.setCategories(cat_ids);
 
         categories.add(categoryRequest);
