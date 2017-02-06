@@ -15,6 +15,7 @@ import org.iplantc.de.admin.desktop.client.services.model.AppCategorizeRequest;
 import org.iplantc.de.apps.client.AppCategoriesView;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.gin.factory.AppCategoriesViewFactory;
+import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.client.models.HasId;
@@ -56,6 +57,7 @@ public class AdminAppsCategoriesPresenterImpl implements AdminCategoriesView.Pre
     @Inject AppServiceFacade appService;
     @Inject AdminCategoriesView.Presenter.Appearance appearance;
     @Inject DEProperties properties;
+    @Inject DEClientConstants constants;
     @Inject AppAdminServiceRequestAutoBeanFactory serviceFactory;
 
     private final TreeStore<AppCategory> treeStore;
@@ -124,7 +126,8 @@ public class AdminAppsCategoriesPresenterImpl implements AdminCategoriesView.Pre
 
         final String newCategoryName = event.getNewCategoryName();
         view.mask(appearance.addCategoryLoadingMask());
-        adminAppService.addCategory(newCategoryName,
+        adminAppService.addCategory(constants.deSystemId(),
+                                    newCategoryName,
                                     selectedParentCategory,
                                     new AsyncCallback<AppCategory>() {
 

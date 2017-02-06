@@ -29,7 +29,10 @@ public interface AppAdminServiceFacade extends  AppSearchFacade {
     /**
      * Adds a new Category with the given category name.
      */
-    void addCategory(String newCategoryName, HasId parentCategory, AsyncCallback<AppCategory> callback);
+    void addCategory(String systemId,
+                     String newCategoryName,
+                     HasId parentCategory,
+                     AsyncCallback<AppCategory> callback);
 
     void getPublicAppCategories(DECallback<List<AppCategory>> asyncCallback, boolean loadHpc);
 

@@ -55,7 +55,8 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
     AppAdminServiceFacadeImpl() { }
 
     @Override
-    public void addCategory(final String newCategoryName,
+    public void addCategory(final String systemId,
+                            final String newCategoryName,
                             final HasId parentCategory,
                             final AsyncCallback<AppCategory> callback) {
         String address = CATEGORIES_ADMIN;
@@ -77,7 +78,7 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
     @Override
     public void getPublicAppCategories(final DECallback<List<AppCategory>> callback,
                                        final boolean loadHpc) {
-                String address = CATEGORIES_ADMIN + "?public=true&hpc=" + loadHpc;
+        String address = CATEGORIES_ADMIN + "?public=true&hpc=" + loadHpc;
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
         deService.getServiceData(wrapper, new AppCategoryListCallbackConverter(callback));
     }

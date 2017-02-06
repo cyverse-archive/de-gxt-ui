@@ -20,6 +20,7 @@ import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.apps.client.AppCategoriesView;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.gin.factory.AppCategoriesViewFactory;
+import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.services.AppServiceFacade;
@@ -62,6 +63,7 @@ public class AdminAppsCategoriesPresenterImplTest {
     @Mock Tree<AppCategory, String> treeMock;
     @Mock TreeSelectionModel<AppCategory> selectionModelMock;
     @Mock DEProperties propertiesMock;
+    @Mock DEClientConstants constantsMock;
     @Mock IplantAnnouncer announcerMock;
 
     @Captor ArgumentCaptor<DECallback<List<AppCategory>>> appCatListCallbackCaptor;
@@ -90,9 +92,11 @@ public class AdminAppsCategoriesPresenterImplTest {
         uut.adminAppService = adminAppServiceMock;
         uut.properties = propertiesMock;
         uut.announcer = announcerMock;
+        uut.constants = constantsMock;
         when(propertiesMock.getDefaultTrashAppCategoryId()).thenReturn(mockTrashCategoryId);
         when(propertiesMock.getDefaultBetaCategoryId()).thenReturn(mockBetaCategoryId);
         when(appearanceMock.addCategoryPermissionError()).thenReturn("permission error");
+        when(constantsMock.deSystemId()).thenReturn("system-id");
     }
 
     @Test public void verifyCorrectView_getView() {
@@ -234,7 +238,8 @@ public class AdminAppsCategoriesPresenterImplTest {
         verify(eventMock, times(2)).getAppCategories();
         verify(eventMock).getNewCategoryName();
         verify(viewMock).mask(anyString());
-        verify(adminAppServiceMock).addCategory(eq(mockNewCategoryName),
+        verify(adminAppServiceMock).addCategory(eq(constantsMock.deSystemId()),
+                                                eq(mockNewCategoryName),
                                                 eq(selectedParentCategoryMock),
                                                 appCatCallbackCaptor.capture());
 
