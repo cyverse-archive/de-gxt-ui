@@ -9,11 +9,13 @@ import com.google.gwt.i18n.client.Messages;
 public interface DataLinkMessages extends Messages{
     String advancedSharing();
 
-    String copyLink();
+    String showLink();
 
     String dataLinkWarning();
 
     String deleteDataLinkToolTip();
 
     String expandAll();
+
+    String dataLinkTitle();
 }

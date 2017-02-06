@@ -125,7 +125,7 @@ public interface GridView extends IsWidget,
 
             String comments();
 
-            String copy();
+            String dataLinkTitle();
 
             String copyPasteInstructions();
 

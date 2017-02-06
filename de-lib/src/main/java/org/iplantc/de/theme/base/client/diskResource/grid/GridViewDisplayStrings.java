@@ -77,4 +77,5 @@ public interface GridViewDisplayStrings extends Messages {
 
     String metadataSaveError();
 
+    String dataLinkTitle();
 }

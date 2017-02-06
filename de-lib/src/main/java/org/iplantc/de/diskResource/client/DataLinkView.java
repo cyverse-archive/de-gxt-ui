@@ -17,7 +17,7 @@ import java.util.List;
 public interface DataLinkView extends IsWidget {
     interface Appearance {
 
-        String copy();
+        String dataLinkTitle();
 
         String copyDataLinkDlgHeight();
 
@@ -41,7 +41,7 @@ public interface DataLinkView extends IsWidget {
 
         ImageResource treeCollapseIcon();
 
-        String copyLink();
+        String showLink();
 
         ImageResource pasteIcon();
 

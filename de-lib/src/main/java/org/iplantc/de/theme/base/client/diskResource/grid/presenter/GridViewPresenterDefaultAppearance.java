@@ -40,8 +40,8 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     }
 
     @Override
-    public String copy() {
-        return iplantDisplayStrings.copy();
+    public String dataLinkTitle() {
+        return displayStrings.dataLinkTitle();
     }
 
     @Override
