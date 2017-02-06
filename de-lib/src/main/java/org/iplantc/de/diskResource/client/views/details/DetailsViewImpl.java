@@ -326,7 +326,6 @@ public class DetailsViewImpl extends Composite implements DetailsView,
         editorDriver.edit(resource);
 
         // Clear previous values
-        tagsPresenter.removeAll();
         permission.setText("");
         size.setText("");
         fileFolderNum.setText("");
