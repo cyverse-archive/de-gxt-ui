@@ -84,8 +84,8 @@
                                        icon="{appearance.blueFolder}"/>
                 </toolbar:child>
                 <toolbar:child>
-                    <button:TextButton ui:field="deleteApp"
-                                       text="{appearance.confirmDeleteAppTitle}"
+                    <button:TextButton ui:field="deprecateApp"
+                                       text="{appearance.confirmDeprecateAppTitle}"
                                        icon="{appearance.deleteIcon}"/>
                 </toolbar:child>
                 <toolbar:child>

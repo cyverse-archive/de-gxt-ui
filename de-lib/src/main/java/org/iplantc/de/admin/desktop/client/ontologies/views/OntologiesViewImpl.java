@@ -88,7 +88,7 @@ public class OntologiesViewImpl extends Composite implements OntologiesView {
     @UiField TextButton saveHierarchy;
     @UiField TextButton deleteHierarchy;
     @UiField TextButton categorize;
-    @UiField TextButton deleteApp;
+    @UiField TextButton deprecateApp;
     @UiField AppSearchField appSearchField;
     @UiField TextButton refreshPreview;
     @UiField TextButton restoreApp;
@@ -466,7 +466,7 @@ public class OntologiesViewImpl extends Composite implements OntologiesView {
         deleteButton.setEnabled(ontologySelected && !isActiveOntology);
         deleteHierarchy.setEnabled(ontologySelected && editorTreeHasSelection);
         categorize.setEnabled(ontologySelected && hasAppSelected && !isExternalApp);
-        deleteApp.setEnabled(ontologySelected && hasAppSelected && !isExternalApp && !isDeletedApp);
+        deprecateApp.setEnabled(ontologySelected && hasAppSelected && !isExternalApp && !isDeletedApp);
         refreshPreview.setEnabled(ontologySelected && editorTreeHasHierarchies);
         restoreApp.setEnabled(isDeletedApp);
     }
@@ -571,10 +571,10 @@ public class OntologiesViewImpl extends Composite implements OntologiesView {
         fireEvent(new CategorizeButtonClickedEvent(targetApp, editorTreeStore.getRootItems()));
     }
 
-    @UiHandler("deleteApp")
+    @UiHandler("deprecateApp")
     void deleteAppClicked(SelectEvent event) {
-        ConfirmMessageBox msgBox = new ConfirmMessageBox(appearance.confirmDeleteAppTitle(),
-                                                         appearance.confirmDeleteAppWarning(targetApp.getName()));
+        ConfirmMessageBox msgBox = new ConfirmMessageBox(appearance.confirmDeprecateAppTitle(),
+                                                         appearance.confirmDeprecateAppWarning(targetApp.getName()));
 
         msgBox.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
             @Override
@@ -666,7 +666,7 @@ public class OntologiesViewImpl extends Composite implements OntologiesView {
         saveHierarchy.ensureDebugId(baseID + Belphegor.CatalogIds.SAVE_HIERARCHY_BTN);
         deleteHierarchy.ensureDebugId(baseID + Belphegor.CatalogIds.DELETE_HIERARCHY_BTN);
         categorize.ensureDebugId(baseID + Belphegor.CatalogIds.CATEGORIZE_BTN);
-        deleteApp.ensureDebugId(baseID + Belphegor.CatalogIds.DELETE_APP_BTN);
+        deprecateApp.ensureDebugId(baseID + Belphegor.CatalogIds.DELETE_APP_BTN);
         appSearchField.ensureDebugId(baseID + Belphegor.CatalogIds.APP_SEARCH);
         restoreApp.ensureDebugId(baseID + Belphegor.CatalogIds.RESTORE_APP_BTN);
 

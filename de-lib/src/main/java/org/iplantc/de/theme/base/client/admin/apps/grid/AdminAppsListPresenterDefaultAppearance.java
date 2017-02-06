@@ -33,7 +33,7 @@ public class AdminAppsListPresenterDefaultAppearance extends AppsListViewDefault
 
     @Override
     public String confirmDeleteAppTitle() {
-        return displayStrings.confirmDeleteAppTitle();
+        return displayStrings.confirmDeprecateAppTitle();
     }
 
     @Override

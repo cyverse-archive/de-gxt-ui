@@ -62,7 +62,7 @@ public class AdminPresenterDefaultAppearance implements AdminAppsView.AdminPrese
 
     @Override
     public String confirmDeleteAppTitle() {
-        return displayStrings.confirmDeleteAppTitle();
+        return displayStrings.confirmDeprecateAppTitle();
     }
 
     @Override

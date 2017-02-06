@@ -385,13 +385,13 @@ public class OntologiesViewDefaultAppearance implements OntologiesView.Ontologie
     }
 
     @Override
-    public String confirmDeleteAppWarning(String name) {
-        return displayStrings.confirmDeleteAppWarning(name);
+    public String confirmDeprecateAppWarning(String name) {
+        return displayStrings.confirmDeprecateAppWarning(name);
     }
 
     @Override
-    public String confirmDeleteAppTitle() {
-        return displayStrings.confirmDeleteAppTitle();
+    public String confirmDeprecateAppTitle() {
+        return displayStrings.confirmDeprecateAppTitle();
     }
 
     @Override

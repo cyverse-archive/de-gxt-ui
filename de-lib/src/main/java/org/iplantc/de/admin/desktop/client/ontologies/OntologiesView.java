@@ -222,9 +222,9 @@ public interface OntologiesView extends IsWidget,
 
         String confirmDeleteHierarchy(String selectedItem);
 
-        String confirmDeleteAppWarning(String name);
+        String confirmDeprecateAppWarning(String name);
 
-        String confirmDeleteAppTitle();
+        String confirmDeprecateAppTitle();
 
         String externalAppDND(String appLabels);
 
