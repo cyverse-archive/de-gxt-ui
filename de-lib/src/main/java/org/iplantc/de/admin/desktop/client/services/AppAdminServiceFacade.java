@@ -1,7 +1,6 @@
 package org.iplantc.de.admin.desktop.client.services;
 
 import org.iplantc.de.admin.desktop.client.services.model.AppCategorizeRequest;
-import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
@@ -31,7 +30,7 @@ public interface AppAdminServiceFacade extends  AppSearchFacade {
      */
     void addCategory(String systemId,
                      String newCategoryName,
-                     HasId parentCategory,
+                     HasQualifiedId parentCategory,
                      AsyncCallback<AppCategory> callback);
 
     void getPublicAppCategories(DECallback<List<AppCategory>> asyncCallback, boolean loadHpc);
@@ -39,18 +38,19 @@ public interface AppAdminServiceFacade extends  AppSearchFacade {
     /**
      * Renames a Category with the given category ID to the given name.
      */
-    void renameAppCategory(HasId categoryId, String newCategoryName,
-                                           AsyncCallback<AppCategory> callback);
+    void renameAppCategory(HasQualifiedId categoryId,
+                           String newCategoryName,
+                           AsyncCallback<AppCategory> callback);
 
     /**
      * Moves a Category with the given category ID to a parent Category with the given parentCategoryId.
      */
-    void moveCategory(String categoryId, String parentCategoryId, AsyncCallback<String> callback);
+    void moveCategory(HasQualifiedId category, HasQualifiedId parent, AsyncCallback<String> callback);
 
     /**
      * Deletes the Category with the given category ID.
      */
-    void deleteAppCategory(HasId category, AsyncCallback<Void> callback);
+    void deleteAppCategory(HasQualifiedId category, AsyncCallback<Void> callback);
 
     /**
      * Updates an app with the given values in application.

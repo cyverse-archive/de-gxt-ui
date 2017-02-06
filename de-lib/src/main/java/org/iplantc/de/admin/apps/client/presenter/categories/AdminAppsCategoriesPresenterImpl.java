@@ -353,8 +353,8 @@ public class AdminAppsCategoriesPresenterImpl implements AdminCategoriesView.Pre
     }
 
     void moveAppCategory(final AppCategory parentCategory, final AppCategory childCategory) {
-        adminAppService.moveCategory(childCategory.getId(),
-                                     parentCategory.getId(),
+        adminAppService.moveCategory(childCategory,
+                                     parentCategory,
                                      new AsyncCallback<String>() {
 
                                          @Override

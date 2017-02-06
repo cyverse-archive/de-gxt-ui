@@ -7,7 +7,6 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.admin.desktop.client.services.model.AppCategorizeRequest;
-import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
@@ -57,11 +56,12 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
     @Override
     public void addCategory(final String systemId,
                             final String newCategoryName,
-                            final HasId parentCategory,
+                            final HasQualifiedId parentCategory,
                             final AsyncCallback<AppCategory> callback) {
         String address = CATEGORIES_ADMIN;
 
         Splittable payload = StringQuoter.createSplittable();
+        StringQuoter.create(parentCategory.getSystemId()).assign(payload,"system_id");
         StringQuoter.create(parentCategory.getId()).assign(payload, "parent_id");
         StringQuoter.create(newCategoryName).assign(payload, "name");
 
@@ -93,8 +93,8 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
     }
 
     @Override
-    public void deleteAppCategory(HasId category, AsyncCallback<Void> callback) {
-        String address = CATEGORIES_ADMIN + "/" + category.getId();
+    public void deleteAppCategory(HasQualifiedId category, AsyncCallback<Void> callback) {
+        String address = CATEGORIES_ADMIN + "/" + category.getSystemId() + "/" + category.getId();
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address);
         deService.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
@@ -125,12 +125,13 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
     }
 
     @Override
-    public void moveCategory(String categoryId, String parentCategoryId,
+    public void moveCategory(HasQualifiedId category, HasQualifiedId parent,
                              AsyncCallback<String> callback) {
-        String address = CATEGORIES_ADMIN + "/" + categoryId;
+        String address = CATEGORIES_ADMIN + "/" + category.getSystemId() + "/" + category.getId();
 
         JSONObject body = new JSONObject();
-        body.put("parent_id", new JSONString(parentCategoryId));
+        body.put("system_id", new JSONString(parent.getSystemId()));
+        body.put("parent_id", new JSONString(parent.getId()));
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(PATCH, address,
                                                             body.toString());
@@ -138,10 +139,10 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
     }
 
     @Override
-    public void renameAppCategory(final HasId categoryId,
+    public void renameAppCategory(final HasQualifiedId category,
                                   final String newCategoryName,
                                   final AsyncCallback<AppCategory> callback) {
-        String address = CATEGORIES_ADMIN + "/" + categoryId.getId();
+        String address = CATEGORIES_ADMIN + "/" + category.getSystemId() + "/" + category.getId();
 
         Splittable payload = StringQuoter.createSplittable();
         StringQuoter.create(newCategoryName).assign(payload, "name");
