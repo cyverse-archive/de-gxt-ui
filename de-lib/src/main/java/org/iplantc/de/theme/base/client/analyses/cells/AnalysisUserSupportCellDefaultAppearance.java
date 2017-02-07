@@ -16,7 +16,6 @@ import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
-import com.google.gwt.safehtml.shared.SafeUri;
 
 /**
  * Created by sriram on 11/17/16.
@@ -26,6 +25,9 @@ public class AnalysisUserSupportCellDefaultAppearance implements AnalysisUserSup
     public interface AnalysisUserCellStyles extends CssResource {
         @ClassName("support")
         String support();
+
+        @CssResource.ClassName("noSharing")
+        String noSharing();
     }
 
     public interface AnalysisUserSupportCellResources extends ClientBundle {
@@ -35,10 +37,11 @@ public class AnalysisUserSupportCellDefaultAppearance implements AnalysisUserSup
     }
 
     interface Templates extends SafeHtmlTemplates {
-        @SafeHtmlTemplates.Template("<img name='{0}' title='{1}' class='{2}' src='{3}' />")
-        SafeHtml imgCell(String name, String toolTip, String className, SafeUri imgSrc);
         @SafeHtmlTemplates.Template("<span name=\"{0}\" title=\" {3}\" class='{2}'>{1}</span>")
         SafeHtml analysis(String elementName, SafeHtml analysisName, String className, String tooltip);
+
+        @SafeHtmlTemplates.Template("<span name=\"{0}\" title=\" {3}\" class='{2}'>{1}</span>")
+        SafeHtml analysisNoSharing(String elementName, SafeHtml analysisName, String className, String tooltip);
 
     }
 
@@ -83,10 +86,17 @@ public class AnalysisUserSupportCellDefaultAppearance implements AnalysisUserSup
 
     @Override
     public void render(Cell.Context context, Analysis value, SafeHtmlBuilder sb) {
-        sb.append(template.analysis(ELEMENT_NAME,
-                                SafeHtmlUtils.fromString(value.getStatus()),
-                                 resources.css().support(),
-                                displayStrings.analysisHelp()));
+        if (value.isShareable()) {
+            sb.append(template.analysis(ELEMENT_NAME,
+                                        SafeHtmlUtils.fromString(value.getStatus()),
+                                        resources.css().support(),
+                                        displayStrings.analysisHelp()));
+        } else {
+            sb.append(template.analysisNoSharing(ELEMENT_NAME,
+                                                 SafeHtmlUtils.fromString(value.getStatus()),
+                                                 resources.css().noSharing(),
+                                                 value.getStatus()));
+        }
     }
 
 
