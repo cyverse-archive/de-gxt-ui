@@ -180,7 +180,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         final boolean canCancelSelection = canCancelSelection(currentSelection);
         final boolean canDeleteSelection = canDeleteSelection(currentSelection);
         boolean isOwner = isOwner(currentSelection);
-        boolean can_share = isOwner(currentSelection);
+        boolean can_share = canShare(currentSelection);
 
         boolean goToFolderEnabled, viewParamsEnabled, relaunchEnabled, cancelEnabled, deleteEnabled;
         boolean renameEnabled, updateCommentsEnabled, shareEnabled;
@@ -237,6 +237,16 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     private boolean isOwner(List<Analysis> selection) {
         for (Analysis a : selection) {
             if (!(a.getUserName().equals(userInfo.getFullUsername()))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean canShare(List<Analysis> selection) {
+        for (Analysis a : selection) {
+            if (!(a.isShareable())) {
                 return false;
             }
         }
