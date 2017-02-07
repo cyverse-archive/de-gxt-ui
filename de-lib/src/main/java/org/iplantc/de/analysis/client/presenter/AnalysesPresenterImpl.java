@@ -492,8 +492,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         analysisService.shareAnalyses(listRequest, new AnalysisCallback<String>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
-                announcer.schedule(new ErrorAnnouncementConfig(
-                        "Unable to share your analysis with support. Please email support@cyverse.org!"));
+                ErrorHandler.post(exception);
             }
 
             @Override
