@@ -14,7 +14,6 @@ import com.sencha.gxt.widget.core.client.FramedPanel;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.CollapseEvent;
 import com.sencha.gxt.widget.core.client.event.ExpandEvent;
-import com.sencha.gxt.widget.core.client.form.TextArea;
 
 /**
  * @author jstroot
@@ -47,7 +46,7 @@ public class ErrorDialog extends IPlantDialog {
     @UiField(provided = true) ErrorDialogAppearance appearance;
     @UiField HTML errorMsg;
     @UiField FramedPanel detailsPanel;
-    @UiField TextArea descriptionArea;
+    @UiField HTML descriptionArea;
     @UiField VerticalLayoutContainer detailsContainer;
 
     public ErrorDialog(final SafeHtml errorMsg,
@@ -74,7 +73,7 @@ public class ErrorDialog extends IPlantDialog {
         }
    
         detailsContainer.setScrollMode(ScrollMode.AUTO);
-        descriptionArea.setText(description);
+        descriptionArea.setHTML(description);
         detailsPanel.setCollapsible(true);
         detailsPanel.expand();
     }

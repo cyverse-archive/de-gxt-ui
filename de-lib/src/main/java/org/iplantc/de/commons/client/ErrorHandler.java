@@ -51,7 +51,7 @@ public class ErrorHandler {
         appearance = GWT.create(ErrorHandlerAppearance.class);
     }
 
-    private static final String NEWLINE = "\n"; //$NON-NLS-1$
+    private static final String NEWLINE = "<br>"; //$NON-NLS-1$
 
     /**
      * Post a message box with error styles with the argument error message.
@@ -141,9 +141,9 @@ public class ErrorHandler {
          * TODO JDS Need to determine what the default error fields are, and if they include a "Reason" field.
          */
         if (!Strings.isNullOrEmpty(error.getReason())) {
-            errDetails += "\n" + appearance.serviceErrorReason(error.getReason()); //$NON-NLS-1$
+            errDetails += NEWLINE + appearance.serviceErrorReason(error.getReason()); //$NON-NLS-1$
         } else if (errorMsg != null && !Strings.isNullOrEmpty(errorMsg.asString())) {
-            errDetails += "\n" + appearance.serviceErrorReason(errorMsg.asString()); //$NON-NLS-1$
+            errDetails += NEWLINE + appearance.serviceErrorReason(errorMsg.asString()); //$NON-NLS-1$
         }
 
 
@@ -162,8 +162,8 @@ public class ErrorHandler {
         }
 
         if (jsonError != null) {
-            String error_code = JsonUtil.getInstance().getString(jsonError, "error_code"); //$NON-NLS-1$
-            String message = JsonUtil.getInstance().getString(jsonError, "reason"); //$NON-NLS-1$
+            String error_code = JsonUtil.getInstance().getString(jsonError, "error_code") + NEWLINE; //$NON-NLS-1$
+            String message = JsonUtil.getInstance().getString(jsonError, "reason") + NEWLINE; //$NON-NLS-1$
 
             if (!message.isEmpty() || !error_code.isEmpty()) {
                 exceptionMessage = appearance.errorReport(error_code, message);
