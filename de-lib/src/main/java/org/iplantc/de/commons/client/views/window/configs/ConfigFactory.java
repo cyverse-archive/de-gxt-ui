@@ -86,7 +86,7 @@ public class ConfigFactory {
         } else {
             applyTag(
                     "Untitled-"
-                            + DateTimeFormat.getFormat(PredefinedFormat.DATE_SHORT).format(new Date()),
+                            + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),
                     fvwc);
         }
 
@@ -95,7 +95,7 @@ public class ConfigFactory {
 
     public static TabularFileViewerWindowConfig newTabularFileViewerWindowConfig() {
         AutoBean<TabularFileViewerWindowConfig> ab = applyWindowType(WindowType.DATA_VIEWER, factory.newTabularFileViewerWindowConfig());
-        applyTag("Tabular File-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_SHORT).format(new Date()),
+        applyTag("Tabular File-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),
                  ab);
         return ab.as();
     }
@@ -106,7 +106,7 @@ public class ConfigFactory {
         ab.as().setVizTabFirst(true);
         ab.as().setSeparator(FileEditorServiceFacade.COMMA_DELIMITER);
         ab.as().setColumns(1);
-        applyTag("Path List-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_SHORT).format(new Date()),
+        applyTag("Path List-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),
                  ab);
         return ab.as();
     }
