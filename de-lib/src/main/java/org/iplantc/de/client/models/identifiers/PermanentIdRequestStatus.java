@@ -11,7 +11,9 @@ public enum PermanentIdRequestStatus {
     Evaluation("Evaluation"),
     Approved("Approved"),
     Completion("Completion"),
-    Failed("Failed");
+    Failed("Failed"),
+    Rejected("Rejected"),
+    Test("Test");
 
     private String displayText;
 
