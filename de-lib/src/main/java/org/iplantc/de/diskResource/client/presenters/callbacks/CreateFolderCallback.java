@@ -33,12 +33,16 @@ public class CreateFolderCallback extends DiskResourceServiceCallback<Folder> {
 
     @Override
     public void onFailure(Integer statusCode, Throwable caught) {
-        unmaskCaller();
-        DiskResourceErrorAutoBeanFactory factory = GWT.create(DiskResourceErrorAutoBeanFactory.class);
-        AutoBean<ErrorCreateFolder> errorBean = AutoBeanCodex.decode(factory, ErrorCreateFolder.class,
-                caught.getMessage());
+        super.onFailure(statusCode,caught);
+        try {
+            DiskResourceErrorAutoBeanFactory factory = GWT.create(DiskResourceErrorAutoBeanFactory.class);
+            AutoBean<ErrorCreateFolder> errorBean =
+                    AutoBeanCodex.decode(factory, ErrorCreateFolder.class, caught.getMessage());
 
-        ErrorHandler.post(errorBean.as(), caught);
+            ErrorHandler.post(errorBean.as(), caught);
+        } catch (Exception e) {
+            ErrorHandler.post(caught);
+        }
     }
 
     @Override

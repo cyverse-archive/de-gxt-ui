@@ -95,6 +95,8 @@ public class ErrorDiskResourceCategory {
                  return errStrings.dataErrorNotAuthorized();
             case ERR_TOO_MANY_PATHS:
                  return errStrings.tooManyItemsSelected(threshold);
+            case ERR_TOO_MANY_RESULTS:
+                 return errStrings.tooManyItemsSelected(threshold);
             default:
                     return errStrings.diskResourceError();
         }

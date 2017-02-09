@@ -30,15 +30,18 @@ public class DataLinkPresenterImpl implements DataLinkView.Presenter {
     private final DiskResourceServiceFacade drService;
     private final DataLinkFactory dlFactory;
     private final DiskResourceUtil diskResourceUtil;
+    private final DataLinkView.Appearance appearance;
 
     @Inject
     DataLinkPresenterImpl(final DiskResourceServiceFacade drService,
                           final DataLinkViewFactory dataLinkViewFactory,
                           final DataLinkFactory dlFactory,
                           final DiskResourceUtil diskResourceUtil,
+                          final DataLinkView.Appearance appearance,
                           @Assisted List<DiskResource> resources) {
         this.drService = drService;
         this.dlFactory = dlFactory;
+        this.appearance = appearance;
         this.diskResourceUtil = diskResourceUtil;
         view = dataLinkViewFactory.create(this, resources);
 
@@ -78,7 +81,7 @@ public class DataLinkPresenterImpl implements DataLinkView.Presenter {
             }
         }
 
-        view.mask();
+        view.mask(appearance.loadingMask());
         drService.createDataLinks(drResourceIds, new CreateDataLinkCallback(view));
     }
 
