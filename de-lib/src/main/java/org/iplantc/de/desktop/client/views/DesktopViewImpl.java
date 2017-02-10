@@ -2,12 +2,11 @@ package org.iplantc.de.desktop.client.views;
 
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
-import org.iplantc.de.commons.client.widgets.IPlantAnchor;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.widgets.IPlantAnchor;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.desktop.client.views.widgets.DEFeedbackDialog;
 import org.iplantc.de.desktop.client.views.widgets.DesktopIconButton;
-import org.iplantc.de.desktop.client.views.widgets.PreferencesDialog;
 import org.iplantc.de.desktop.client.views.widgets.TaskBar;
 import org.iplantc.de.desktop.client.views.widgets.TaskButton;
 import org.iplantc.de.desktop.client.views.widgets.UnseenNotificationsView;
@@ -181,13 +180,13 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
         // FIXME Need to move intro to themes
         // Window Btns
         dataWinBtn.getElement().setAttribute("data-intro", tourStrings.introDataWindow());
-        dataWinBtn.getElement().setAttribute("data-position", "dataWinBtn");
+        dataWinBtn.getElement().setAttribute("data-position", "right");
         dataWinBtn.getElement().setAttribute("data-step", "1");
         appsWinBtn.getElement().setAttribute("data-intro", tourStrings.introAppsWindow());
-        appsWinBtn.getElement().setAttribute("data-position", "bottom");
+        appsWinBtn.getElement().setAttribute("data-position", "right");
         appsWinBtn.getElement().setAttribute("data-step", "2");
         analysisWinBtn.getElement().setAttribute("data-intro", tourStrings.introAnalysesWindow());
-        analysisWinBtn.getElement().setAttribute("data-position", "bottom");
+        analysisWinBtn.getElement().setAttribute("data-position", "right");
         analysisWinBtn.getElement().setAttribute("data-step", "3");
 
         // User Menu Btns
