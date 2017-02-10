@@ -59,17 +59,16 @@ public class UpdatePermanentIdRequestDialogTest {
     PermanentIdRequestDetails mockDetails;
 
     @Mock
-    UserBootstrap mockStrap;
+    UserProfile mockStrap;
 
-    @Mock UserProfile mockProfile;
+
 
     private UpdatePermanentIdRequestDialog dialog;
 
     @Before
     public void setUp() {
         when(mockDetails.getRequestor()).thenReturn(mockStrap);
-        when(mockStrap.getUserProfile()).thenReturn(mockProfile);
-        when(mockProfile.getEmail()).thenReturn("foo@bar.com");
+        when(mockStrap.getEmail()).thenReturn("foo@bar.com");
         dialog = new UpdatePermanentIdRequestDialog(PermanentIdRequestStatus.Submitted.toString(),
                                                     mockDetails,
                                                     mockPrfactory);
