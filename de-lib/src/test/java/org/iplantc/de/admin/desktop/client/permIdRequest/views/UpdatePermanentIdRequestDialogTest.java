@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.iplantc.de.client.models.bootstrap.UserBootstrap;
 import org.iplantc.de.client.models.bootstrap.UserProfile;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequest;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestAutoBeanFactory;
@@ -59,16 +58,15 @@ public class UpdatePermanentIdRequestDialogTest {
     PermanentIdRequestDetails mockDetails;
 
     @Mock
-    UserBootstrap mockStrap;
+    UserProfile mockProfile;
 
-    @Mock UserProfile mockProfile;
+
 
     private UpdatePermanentIdRequestDialog dialog;
 
     @Before
     public void setUp() {
-        when(mockDetails.getRequestor()).thenReturn(mockStrap);
-        when(mockStrap.getUserProfile()).thenReturn(mockProfile);
+        when(mockDetails.getRequestor()).thenReturn(mockProfile);
         when(mockProfile.getEmail()).thenReturn("foo@bar.com");
         dialog = new UpdatePermanentIdRequestDialog(PermanentIdRequestStatus.Submitted.toString(),
                                                     mockDetails,
