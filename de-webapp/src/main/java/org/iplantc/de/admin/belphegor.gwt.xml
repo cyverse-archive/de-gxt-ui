@@ -25,6 +25,9 @@
     <set-property name="gwt.logging.simpleRemoteHandler" value="ENABLED"/>
     <set-property name="gwt.logging.consoleHandler" value="DISABLED"/>
 
+    <!--Required for stack trace deobfuscation-->
+    <set-property name="compiler.useSourceMaps" value="true"/>
+
     <!-- Collapse properties for fewer permutations -->
     <collapse-property name="gxt.device" values="phone, tablet" />
     <!-- group themes -->
