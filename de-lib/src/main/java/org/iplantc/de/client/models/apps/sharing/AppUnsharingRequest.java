@@ -1,7 +1,5 @@
 package org.iplantc.de.client.models.apps.sharing;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
-
 import java.util.List;
 
 /**
@@ -11,11 +9,9 @@ public interface AppUnsharingRequest {
 
     void setUser(String user);
 
-    @AutoBean.PropertyName("apps")
-    void setApps(List<String> apps);
+    void setApps(List<AppPermission> apps);
 
     String getUser();
 
-    @AutoBean.PropertyName("apps")
-    List<String> getApps();
+    List<AppPermission> getApps();
 }

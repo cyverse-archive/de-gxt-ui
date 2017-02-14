@@ -13,6 +13,7 @@ import org.iplantc.de.client.models.diskResources.PermissionValue;
 public class Sharing {
 
     private String id;
+    private String systemId;
     private PermissionValue displayPermission;
     private PermissionValue permission;
     private final Collaborator collaborator;
@@ -20,7 +21,12 @@ public class Sharing {
 
 
     public Sharing(final Collaborator c, final PermissionValue p, final String id, final String name) {
+        this(c, p, null, id, name);
+    }
+
+    public Sharing(final Collaborator c, final PermissionValue p, final String systemId, final String id, final String name) {
         this.collaborator = c;
+        this.systemId = systemId;
         setId(id);
         setName(name);
         if (p != null) {
@@ -39,25 +45,31 @@ public class Sharing {
     }
 
     public boolean isReadable() {
-        return permission != null && (permission.equals(PermissionValue.read) || permission.equals(
-                PermissionValue.write) || permission.equals(PermissionValue.own));
+        return isWritable() || PermissionValue.read.equals(permission);
     }
 
     public boolean isWritable() {
-        return permission != null && (permission.equals(PermissionValue.own) || permission.equals(
-                PermissionValue.write));
+        return isOwner() || PermissionValue.write.equals(permission);
     }
 
     public boolean isOwner() {
-        return permission != null && permission.equals(PermissionValue.own);
+        return PermissionValue.own.equals(permission);
     }
 
     public String getId() {
         return id;
     }
 
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
+
     public String getKey() {
-        return getCollaborator().getUserName() + getId();
+        return getCollaborator().getUserName() + getSystemId() + getId();
     }
 
     public void setPermission(PermissionValue perm) {
@@ -86,7 +98,7 @@ public class Sharing {
     }
 
     public Sharing copy() {
-        return new Sharing(getCollaborator(), permission, id, name);
+        return new Sharing(collaborator, permission, systemId, id, name);
     }
 
     public String getUserName() {
@@ -107,7 +119,8 @@ public class Sharing {
         if (getCollaborator().getFirstName() != null && !getCollaborator().getFirstName().isEmpty()) {
             builder.append(getCollaborator().getFirstName());
             if (getCollaborator().getLastName() != null && !getCollaborator().getLastName().isEmpty()) {
-                builder.append(" " + getCollaborator().getLastName());
+                builder.append(" ");
+                builder.append(getCollaborator().getLastName());
             }
             return builder.toString();
         } else {

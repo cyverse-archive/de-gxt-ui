@@ -8,11 +8,21 @@ public class SharedResource {
     private String id;
 
     /**
+     * systemId of the shared resource
+     */
+    private String systemId;
+
+    /**
      * name of the shared resource
      */
     private String name;
 
     public SharedResource(String id, String name) {
+        this(null, id, name);
+    }
+
+    public SharedResource(String systemId, String id, String name) {
+        this.systemId = systemId;
         this.id = id;
         this.name = name;
     }
@@ -33,4 +43,11 @@ public class SharedResource {
         this.name = name;
     }
 
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
 }

@@ -35,8 +35,6 @@ public class AppSharingDialog extends IPlantDialog implements SelectHandler {
 
     @Inject
     CollaboratorsUtil collaboratorsUtil;
-    @Inject
-    JsonUtil jsonUtil;
 
     @Inject
     AppSharingDialog(final AppUserServiceFacade appService) {
@@ -71,8 +69,7 @@ public class AppSharingDialog extends IPlantDialog implements SelectHandler {
         });
         AppSharingView view = new AppSharingViewImpl(buildAppColumnModel(), appStore);
         view.setSelectedApps(resourcesToShare);
-        sharingPresenter =
-                new AppSharingPresenter(appService, resourcesToShare, view, collaboratorsUtil, jsonUtil);
+        sharingPresenter = new AppSharingPresenter(appService, resourcesToShare, view, collaboratorsUtil);
         sharingPresenter.go(this);
         super.show();
     }
