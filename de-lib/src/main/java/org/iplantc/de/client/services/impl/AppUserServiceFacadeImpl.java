@@ -128,9 +128,6 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
         });
     }
 
-    public void getApps(String id, DECallback<List<App>> callback) {
-    }
-
     @Override
     public void getPagedApps(String appCategoryId,
                              int limit,

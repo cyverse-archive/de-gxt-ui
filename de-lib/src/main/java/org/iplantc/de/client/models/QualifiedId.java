@@ -37,7 +37,7 @@ public class QualifiedId  implements HasQualifiedId {
     public boolean equals(Object obj) {
         if (obj instanceof QualifiedId) {
             QualifiedId other = (QualifiedId) obj;
-            return other.getSystemId() == systemId && other.getId() == id;
+            return other.getSystemId().equals(systemId) && other.getId().equals(id);
         }
         return false;
     }
