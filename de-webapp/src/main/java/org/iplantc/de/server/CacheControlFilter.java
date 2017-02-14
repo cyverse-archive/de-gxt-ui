@@ -41,10 +41,11 @@ public class CacheControlFilter implements Filter {
             httpResponse.setDateHeader("Expires", now.getTime() - 86400000L);
             httpResponse.setHeader("Pragma", "no-cache");
             httpResponse.setHeader("Cache-control", "no-cache, no-store, must-revalidate");
-        }else if(requestURI.contains(".cache.")){
+        } else if(requestURI.contains(".cache.")) {
             HttpServletResponse httpResponse = (HttpServletResponse)response;
 
-            httpResponse.setHeader("Cache-control", "cache, private, max-age=2592000");
+            // one year
+            httpResponse.setHeader("Cache-control", "public, max-age=31536000");
             httpResponse.setHeader("Pragma", "cache");
         }
 
