@@ -74,7 +74,7 @@ public class AppSharingPresenter implements SharingPresenter {
                         Sharing sharing = new Sharing(user,
                                                       PermissionValue.valueOf(userPerms.getPermission()),
                                                       appUserPerms.getSystemId(),
-                                                      appUserPerms.getId(),
+                                                      appUserPerms.getAppId(),
                                                       appUserPerms.getName());
                         shares.add(sharing);
                     }
@@ -249,7 +249,7 @@ public class AppSharingPresenter implements SharingPresenter {
         for (Sharing unshare : unshareList) {
             final AppPermission appPerm = shareFactory.AppPermission().as();
             appPerm.setSystemId(unshare.getSystemId());
-            appPerm.setId(unshare.getId());
+            appPerm.setAppId(unshare.getId());
 
             appPermList.add(appPerm);
         }
@@ -261,7 +261,7 @@ public class AppSharingPresenter implements SharingPresenter {
         List<AppPermission> appPermList = new ArrayList<>();
         for (Sharing s : shareList) {
             AppPermission appPerm = shareFactory.AppPermission().as();
-            appPerm.setId(s.getId());
+            appPerm.setAppId(s.getId());
             appPerm.setSystemId(s.getSystemId());
             appPerm.setPermission(s.getPermission().toString());
             appPermList.add(appPerm);

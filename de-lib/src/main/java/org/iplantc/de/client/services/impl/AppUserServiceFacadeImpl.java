@@ -408,7 +408,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
 
         for(App a : apps) {
             final AppPermission appPermission = shareFactory.AppPermission().as();
-            appPermission.setId(a.getId());
+            appPermission.setAppId(a.getId());
             appPermission.setSystemId(a.getSystemId());
             appPermissionList.add(appPermission);
         }

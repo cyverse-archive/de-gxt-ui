@@ -1,6 +1,10 @@
 package org.iplantc.de.client.models.sharing;
 
-public class SharedResource {
+import org.iplantc.de.client.models.HasQualifiedId;
+
+import com.google.gwt.user.client.ui.HasName;
+
+public class SharedResource implements HasQualifiedId, HasName {
 
     /**
      * id of the shared resource
