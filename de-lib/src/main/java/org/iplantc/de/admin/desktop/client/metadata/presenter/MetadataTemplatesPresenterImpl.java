@@ -16,6 +16,7 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Strings;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -42,7 +43,7 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
                                                        DeleteMetadataSelectedEvent.DeleteMetadataSelectedEventHandler {
 
     private final TemplateListingView view;
-    private final DiskResourceServiceFacade drSvcFac;
+    @Inject AsyncProviderWrapper<DiskResourceServiceFacade> drSvcFacProvider;
     private final MetadataTemplateAdminServiceFacade mdSvcFac;
     private final EditMetadataTemplateView editView;
     private final DiskResourceAutoBeanFactory drFac;
@@ -53,13 +54,11 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
     @Inject
     MetadataTemplatesPresenterImpl(final TemplateListingView view,
                                    final EditMetadataTemplateView editView,
-                                   final DiskResourceServiceFacade drSvcFac,
                                    final MetadataTemplateAdminServiceFacade mdSvcFac,
                                    final DiskResourceAutoBeanFactory drFac,
                                    final TemplateListingView.Presenter.MetadataPresenterAppearance appearance) {
         this.view = view;
         this.editView = editView;
-        this.drSvcFac = drSvcFac;
         this.mdSvcFac = mdSvcFac;
         this.drFac = drFac;
         this.appearance = appearance;
@@ -136,47 +135,55 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
 
     @Override
     public void onEditMetadataSelected(EditMetadataSelectedEvent event) {
-        MetadataTemplateInfo template = event.getTemplateInfo();
-        drSvcFac.getMetadataTemplate(template.getId(), new AsyncCallback<MetadataTemplate>() {
+        final MetadataTemplateInfo template = event.getTemplateInfo();
+        drSvcFacProvider.get(new AsyncCallback<DiskResourceServiceFacade>() {
+            @Override
+            public void onFailure (Throwable e) {}
 
             @Override
-            public void onSuccess(MetadataTemplate result) {
-                final IPlantDialog id = createEditDialog();
-                editView.edit(result);
-                id.addOkButtonSelectHandler(new SelectHandler() {
+            public void onSuccess (DiskResourceServiceFacade drSvcFac) {
+              drSvcFac.getMetadataTemplate(template.getId(), new AsyncCallback<MetadataTemplate>() {
 
-                    @Override
-                    public void onSelect(SelectEvent event) {
-                        if (editView.validate()) {
-                            MetadataTemplate template = editView.getTemplate();
-                            Splittable sp = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(template));
-                            LOG.log(Level.INFO, sp.getPayload());
-                            doAddOrUpdate(id, template.getId(), sp.getPayload());
-                        } else {
-                            IplantAnnouncer.getInstance()
-                                           .schedule(new ErrorAnnouncementConfig(appearance.enumError()));
+                @Override
+                public void onSuccess(MetadataTemplate result) {
+                    final IPlantDialog id = createEditDialog();
+                    editView.edit(result);
+                    id.addOkButtonSelectHandler(new SelectHandler() {
+
+                        @Override
+                        public void onSelect(SelectEvent event) {
+                            if (editView.validate()) {
+                                MetadataTemplate template = editView.getTemplate();
+                                Splittable sp = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(template));
+                                LOG.log(Level.INFO, sp.getPayload());
+                                doAddOrUpdate(id, template.getId(), sp.getPayload());
+                            } else {
+                                IplantAnnouncer.getInstance()
+                                               .schedule(new ErrorAnnouncementConfig(appearance.enumError()));
+                            }
+
                         }
+                    });
 
-                    }
-                });
+                    id.addCancelButtonSelectHandler(new SelectHandler() {
 
-                id.addCancelButtonSelectHandler(new SelectHandler() {
+                        @Override
+                        public void onSelect(SelectEvent event) {
+                            id.hide();
 
-                    @Override
-                    public void onSelect(SelectEvent event) {
-                        id.hide();
+                        }
+                    });
+                    id.show();
+                    setDialogDebugIds(id);
 
-                    }
-                });
-                id.show();
-                setDialogDebugIds(id);
+                }
 
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(appearance.templateRetrieveError(), caught);
-            }
+                @Override
+                public void onFailure(Throwable caught) {
+                    ErrorHandler.post(appearance.templateRetrieveError(), caught);
+                }
+              });
+	    }
         });
 
     }
