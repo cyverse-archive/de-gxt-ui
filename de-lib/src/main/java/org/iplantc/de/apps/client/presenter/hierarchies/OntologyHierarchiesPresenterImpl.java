@@ -91,7 +91,10 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
             }
 
             List<OntologyHierarchy> hierarchies = appDetails.getHierarchies();
-            if (hierarchies != null && hierarchies.size() == 0) {
+
+            boolean isPublicApp = appDetails.isPublic() != null && appDetails.isPublic();
+            boolean isUnclassified = hierarchies != null && hierarchies.size() == 0;
+            if (isUnclassified && isPublicApp) {
                 hierarchies = unclassifiedHierarchies;
             }
             addHierarchies(hierarchyTreeStore, null, hierarchies);
