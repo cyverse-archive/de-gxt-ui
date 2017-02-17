@@ -62,7 +62,7 @@ public class DeployedComponentsListingViewImpl extends Composite implements
     @UiField Grid<Tool> grid;
     @UiField TextButton newToolBtn;
     @UiField SearchField<Tool> searchField;
-    private DeployedComponentsListingViewAppearance appearance;
+    @UiField DeployedComponentsListingViewAppearance appearance;
     @UiField(provided = true) ListStore<Tool> store;
 
     PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader;
@@ -72,10 +72,8 @@ public class DeployedComponentsListingViewImpl extends Composite implements
     @Inject Provider<NewToolRequestDialog> newToolRequestDialogProvider;
 
     @Inject
-    DeployedComponentsListingViewImpl(DeployedComponentsListingViewAppearance appearance,
-                                      @Assisted ListStore<Tool> listStore,
+    DeployedComponentsListingViewImpl(@Assisted ListStore<Tool> listStore,
                                       @Assisted SelectionChangedHandler<Tool> handler) {
-        this.appearance = appearance;
         this.store = listStore;
         searchProxy = new ToolSearchRPCProxy();
         loader = buildLoader();

@@ -5,6 +5,7 @@ package org.iplantc.de.apps.integration.client.view.tools;
 
 import org.iplantc.de.client.models.tool.Tool;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.IsWidget;
 
@@ -38,6 +39,9 @@ public interface DeployedComponentsListingView extends IsWidget {
 
         SafeHtml detailsRenderer();
 
+        String newToolReq();
+
+        ImageResource add();
     }
 
     public Tool getSelectedDC();
