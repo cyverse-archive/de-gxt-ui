@@ -40,8 +40,8 @@
                 <button:TextButton ui:field="collapseAll"
                                    text="{appearance.collapseAll}"
                                    icon="{appearance.treeCollapseIcon}"/>
-                <button:TextButton ui:field="copyDataLinkButton"
-                                   text="{appearance.copyLink}"
+                <button:TextButton ui:field="showDataLinkButton"
+                                   text="{appearance.showLink}"
                                    icon="{appearance.pasteIcon}"
                                    enabled="false"/>
                 <button:TextButton ui:field="advancedDataLinkButton"

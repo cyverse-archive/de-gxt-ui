@@ -86,8 +86,8 @@ public class DataLinkViewDefaultAppearance implements DataLinkView.Appearance {
     }
 
     @Override
-    public String copy() {
-        return iplantDisplayStrings.copy();
+    public String dataLinkTitle() {
+        return displayMessages.dataLinkTitle();
     }
 
     @Override
@@ -106,8 +106,8 @@ public class DataLinkViewDefaultAppearance implements DataLinkView.Appearance {
     }
 
     @Override
-    public String copyLink() {
-        return displayMessages.copyLink();
+    public String showLink() {
+        return displayMessages.showLink();
     }
 
     @Override

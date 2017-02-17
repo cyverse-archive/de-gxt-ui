@@ -27,6 +27,7 @@ import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.TreeStore;
+import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -89,7 +90,7 @@ public class DataLinkViewImpl implements DataLinkView,
 
     @UiField TextButton advancedDataLinkButton;
     @UiField TextButton collapseAll;
-    @UiField TextButton copyDataLinkButton;
+    @UiField TextButton showDataLinkButton;
     @UiField TextButton createDataLinksBtn;
     @UiField TextButton expandAll;
     @UiField TreeStore<DiskResource> store;
@@ -115,7 +116,7 @@ public class DataLinkViewImpl implements DataLinkView,
         tree.getStyle().setNodeOpenIcon(emptyImgResource);
 
         tree.getSelectionModel().addSelectionHandler(new TreeSelectionHandler(createDataLinksBtn,
-                                                                              copyDataLinkButton,
+                                                                              showDataLinkButton,
                                                                               advancedDataLinkButton,
                                                                               tree));
         DataLinkPanelCell dataLinkPanelCell = new DataLinkPanelCell();
@@ -128,7 +129,7 @@ public class DataLinkViewImpl implements DataLinkView,
 
     @Override
     public void onDeleteDataLinkSelected(DeleteDataLinkSelected event) {
-        copyDataLinkButton.setEnabled(false);
+        showDataLinkButton.setEnabled(false);
     }
 
     //<editor-fold desc="UI Handlers">
@@ -142,13 +143,14 @@ public class DataLinkViewImpl implements DataLinkView,
         tree.collapseAll();
     }
 
-    @UiHandler("copyDataLinkButton")
+    @UiHandler("showDataLinkButton")
     void onCopyDataLinkButtonSelected(SelectEvent event) {
         // Open dialog window with text selected.
         IPlantDialog dlg = new IPlantDialog();
-        dlg.setHeadingText(appearance.copy());
+        dlg.setHeadingText(appearance.dataLinkTitle());
         dlg.setHideOnButtonClick(true);
         dlg.setResizable(false);
+        dlg.setPredefinedButtons(Dialog.PredefinedButton.OK);
         dlg.setSize(appearance.copyDataLinkDlgWidth(), appearance.copyDataLinkDlgHeight());
         TextField textBox = new TextField();
         textBox.setWidth(appearance.copyDataLinkDlgTextBoxWidth());
