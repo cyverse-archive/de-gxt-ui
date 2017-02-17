@@ -20,17 +20,21 @@ public class DeployedComponentsListingViewDefaultAppearance implements DeployedC
 
     private IplantDisplayStrings iplantDisplayStrings;
     private DCDetailsRenderer dcDetailsRenderer;
+    private DeployedComponentsDisplayStrings displayStrings;
 
     public DeployedComponentsListingViewDefaultAppearance() {
         this(GWT.<IplantDisplayStrings>create(IplantDisplayStrings.class),
-             GWT.<DCDetailsRenderer>create(DCDetailsRenderer.class));
+             GWT.<DCDetailsRenderer>create(DCDetailsRenderer.class),
+             GWT.<DeployedComponentsDisplayStrings>create(DeployedComponentsDisplayStrings.class));
     }
 
     public DeployedComponentsListingViewDefaultAppearance(IplantDisplayStrings iplantDisplayStrings,
-                                                          DCDetailsRenderer dcDetailsRenderer) {
+                                                          DCDetailsRenderer dcDetailsRenderer,
+                                                          DeployedComponentsDisplayStrings displayStrings) {
 
         this.iplantDisplayStrings = iplantDisplayStrings;
         this.dcDetailsRenderer = dcDetailsRenderer;
+        this.displayStrings = displayStrings;
     }
 
     @Override
@@ -40,7 +44,7 @@ public class DeployedComponentsListingViewDefaultAppearance implements DeployedC
 
     @Override
     public String versionColumnHeader() {
-        return iplantDisplayStrings.version();
+        return displayStrings.toolVersion();
     }
 
     @Override
