@@ -170,10 +170,12 @@ public class AppLaunchPresenterImplTest {
 
     @Test
     public void createJobExecution() {
+        when(appTemplateMock.isRetainInputs()).thenReturn(true);
         /** CALL METHOD UNDER TEST **/
         uut.createJobExecution();
 
         verify(jeMock).setAppTemplateId(eq("id"));
+        verify(jeMock).setRetainInputs(eq(true));
         verify(jeMock).setEmailNotificationEnabled(eq(userSettingsMock.isEnableAnalysisEmailNotification()));
         verify(jeMock).setName(anyString());
         verify(jeMock).setOutputDirectory(eq("path"));
