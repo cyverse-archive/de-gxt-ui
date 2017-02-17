@@ -91,7 +91,10 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
             }
 
             List<OntologyHierarchy> hierarchies = appDetails.getHierarchies();
-            if (hierarchies != null && hierarchies.size() == 0) {
+
+            boolean isPublicApp = appDetails.isPublic() != null && appDetails.isPublic();
+            boolean isUnclassified = hierarchies != null && hierarchies.size() == 0;
+            if (isUnclassified && isPublicApp) {
                 hierarchies = unclassifiedHierarchies;
             }
             addHierarchies(hierarchyTreeStore, null, hierarchies);
@@ -161,7 +164,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
     Map<String, List<OntologyHierarchy>> iriToHierarchyMap = new FastMap<>();
     private OntologyHierarchiesViewFactory viewFactory;
     String baseID;
-    List<OntologyHierarchy> unclassifiedHierarchies = Lists.newArrayList();
+    List<OntologyHierarchy> unclassifiedHierarchies;
     List<OntologyHierarchiesView> views;
     boolean desiredHierarchyFound = false;
     Logger LOG = Logger.getLogger("OntologyHierarchiesPresenterImpl");
@@ -183,6 +186,7 @@ public class OntologyHierarchiesPresenterImpl implements OntologyHierarchiesView
     @Override
     public void go(final OntologyHierarchy selectedHierarchy, final DETabPanel tabPanel) {
         desiredHierarchyFound = false;
+        unclassifiedHierarchies = Lists.newArrayList();
         views = Lists.newArrayList();
         viewTabPanel = tabPanel;
         serviceFacade.getRootHierarchies(new AppsCallback<List<OntologyHierarchy>>() {
