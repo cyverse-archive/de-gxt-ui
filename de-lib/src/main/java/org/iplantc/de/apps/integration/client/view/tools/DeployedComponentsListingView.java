@@ -46,8 +46,6 @@ public interface DeployedComponentsListingView extends IsWidget {
 
     public void mask();
 
-    public void setPresenter(final Presenter presenter);
-
     public void showInfo(Tool dc);
 
     public void unmask();

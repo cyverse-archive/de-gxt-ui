@@ -19,7 +19,6 @@ public class DeployedComponentPresenterImpl implements DeployedComponentsListing
 
     public DeployedComponentPresenterImpl(DeployedComponentsListingView view) {
         this.view = view;
-        this.view.setPresenter(this);
     }
 
 

@@ -105,11 +105,6 @@ public class DeployedComponentsListingViewImpl extends Composite implements
     }
 
     @Override
-    public void setPresenter(DeployedComponentsListingView.Presenter presenter) {
-
-    }
-
-    @Override
     public void showInfo(Tool dc) {
         HtmlLayoutContainer c = new HtmlLayoutContainer(appearance.detailsRenderer());
         VerticalLayoutContainer vlc = new VerticalLayoutContainer();
