@@ -7,6 +7,7 @@ import org.iplantc.de.client.models.identifiers.PermanentIdRequest;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestAutoBeanFactory;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestUpdate;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GxtMockitoTestRunner;
@@ -33,7 +34,7 @@ import org.mockito.Mock;
 public class PermanentIdRequestPresenterTest {
 
     @Mock
-    DiskResourceServiceFacade mockDrFacade;
+    AsyncProviderWrapper<DiskResourceServiceFacade> mockDrFacadeProvider;
 
     @Mock
     PermanentIdRequestAdminServiceFacade mockPrFacade;
@@ -61,11 +62,11 @@ public class PermanentIdRequestPresenterTest {
 
     @Before
     public void setUp() {
-        presenter = new PermanentIdRequestPresenter(mockDrFacade,
-                                                    mockPrFacade,
+        presenter = new PermanentIdRequestPresenter(mockPrFacade,
                                                     mockFactory,
                                                     mockView,
                                                     mockAppearance);
+        presenter.drSvcProvider = mockDrFacadeProvider;
 
     }
 
