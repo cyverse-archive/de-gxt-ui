@@ -19,6 +19,7 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.views.dialogs.IplantErrorDialog;
 import org.iplantc.de.resources.client.messages.I18N;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -36,7 +37,7 @@ public class PermanentIdRequestPresenter implements Presenter {
 
     PermanentIdRequestView view;
 
-    final DiskResourceServiceFacade drsvc;
+    @Inject AsyncProviderWrapper<DiskResourceServiceFacade> drSvcProvider;
 
     final PermanentIdRequestAdminServiceFacade prsvc;
 
@@ -47,12 +48,10 @@ public class PermanentIdRequestPresenter implements Presenter {
     private final PermanentIdRequestPresenterAppearance appearance;
 
     @Inject
-    public PermanentIdRequestPresenter(DiskResourceServiceFacade drsvc,
-                                       PermanentIdRequestAdminServiceFacade prsvc,
+    public PermanentIdRequestPresenter(PermanentIdRequestAdminServiceFacade prsvc,
                                        PermanentIdRequestAutoBeanFactory factory,
                                        PermanentIdRequestView view,
                                        PermanentIdRequestPresenterAppearance appearance) {
-        this.drsvc = drsvc;
         this.prsvc = prsvc;
         this.view = view;
         this.factory = factory;
@@ -64,7 +63,15 @@ public class PermanentIdRequestPresenter implements Presenter {
     public void fetchMetadata() {
         final Folder selectedFolder = selectedRequest.getFolder();
         if (selectedFolder != null) {
-            view.fetchMetadata(selectedFolder, appearance, drsvc);
+            drSvcProvider.get(new AsyncCallback<DiskResourceServiceFacade>() {
+                @Override
+		public void onFailure(Throwable e) {}
+
+	        @Override
+		public void onSuccess(DiskResourceServiceFacade drsvc) {
+                    view.fetchMetadata(selectedFolder, appearance, drsvc);
+	        }
+	    });
         } else {
             final String errMessage = appearance.folderNotFound(selectedRequest.getOriginalPath());
             IplantAnnouncer.getInstance().schedule(new ErrorAnnouncementConfig(errMessage));
