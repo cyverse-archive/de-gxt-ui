@@ -1,12 +1,13 @@
 package org.iplantc.de.client.models.apps;
 
+import org.iplantc.de.client.models.HasQualifiedId;
+
 import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
-import org.iplantc.de.client.models.HasSettableId;
 
 import java.util.List;
 
-public interface AppCategory extends HasSettableId, HasName {
+public interface AppCategory extends HasQualifiedId, HasName {
 
     @PropertyName("app_count")
     int getAppCount();

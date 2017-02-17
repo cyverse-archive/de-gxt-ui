@@ -1,7 +1,6 @@
 package org.iplantc.de.admin.desktop.client.services;
 
 import org.iplantc.de.admin.desktop.client.services.model.AppCategorizeRequest;
-import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
@@ -29,31 +28,35 @@ public interface AppAdminServiceFacade extends  AppSearchFacade {
     /**
      * Adds a new Category with the given category name.
      */
-    void addCategory(String newCategoryName, HasId parentCategory, AsyncCallback<AppCategory> callback);
+    void addCategory(String systemId,
+                     String newCategoryName,
+                     HasQualifiedId parentCategory,
+                     AsyncCallback<AppCategory> callback);
 
     void getPublicAppCategories(DECallback<List<AppCategory>> asyncCallback, boolean loadHpc);
 
     /**
      * Renames a Category with the given category ID to the given name.
      */
-    void renameAppCategory(HasId categoryId, String newCategoryName,
-                                           AsyncCallback<AppCategory> callback);
+    void renameAppCategory(HasQualifiedId categoryId,
+                           String newCategoryName,
+                           AsyncCallback<AppCategory> callback);
 
     /**
      * Moves a Category with the given category ID to a parent Category with the given parentCategoryId.
      */
-    void moveCategory(String categoryId, String parentCategoryId, AsyncCallback<String> callback);
+    void moveCategory(HasQualifiedId category, HasQualifiedId parent, AsyncCallback<String> callback);
 
     /**
      * Deletes the Category with the given category ID.
      */
-    void deleteAppCategory(HasId category, AsyncCallback<Void> callback);
+    void deleteAppCategory(HasQualifiedId category, AsyncCallback<Void> callback);
 
     /**
      * Updates an app with the given values in application.
      *
      */
-    void restoreApp(HasId app,
+    void restoreApp(HasQualifiedId app,
                     AsyncCallback<App> callback);
 
     void updateApp(App app, AsyncCallback<App> callback);
@@ -61,16 +64,16 @@ public interface AppAdminServiceFacade extends  AppSearchFacade {
     /**
      * Deletes an App with the given applicationId.
      */
-    void deleteApp(HasId app, AsyncCallback<Void> callback);
+    void deleteApp(HasQualifiedId app, AsyncCallback<Void> callback);
 
     void categorizeApp(AppCategorizeRequest request, AsyncCallback<String> callback);
 
-    void getAppDetails(HasId app, AsyncCallback<App> callback);
+    void getAppDetails(HasQualifiedId app, AsyncCallback<App> callback);
 
     void getAppDoc(HasQualifiedId app, AsyncCallback<AppDoc> callback);
 
-    void saveAppDoc(HasId app, AppDoc doc, AsyncCallback<AppDoc> callback);
+    void saveAppDoc(HasQualifiedId app, AppDoc doc, AsyncCallback<AppDoc> callback);
 
-    void updateAppDoc(HasId app, AppDoc doc, AsyncCallback<AppDoc> callback);
+    void updateAppDoc(HasQualifiedId app, AppDoc doc, AsyncCallback<AppDoc> callback);
 
 }

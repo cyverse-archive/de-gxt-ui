@@ -25,6 +25,9 @@ import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
 import org.iplantc.de.apps.client.presenter.toolBar.proxy.AppSearchRpcProxy;
+import org.iplantc.de.client.DEClientConstants;
+import org.iplantc.de.client.models.HasQualifiedId;
+import org.iplantc.de.client.models.QualifiedId;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.avu.AvuAutoBeanFactory;
@@ -34,6 +37,7 @@ import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.models.ontologies.OntologyVersionDetail;
 import org.iplantc.de.client.services.AppSearchFacade;
 import org.iplantc.de.client.services.AppServiceFacade;
+import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.client.util.OntologyUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -177,6 +181,7 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
     }
 
     @Inject AppAdminServiceFacade adminAppService;
+    @Inject DEClientConstants constants;
     @Inject DEProperties properties;
     @Inject IplantAnnouncer announcer;
     @Inject JsonUtil jsonUtil;
@@ -745,10 +750,14 @@ public class OntologiesPresenterImpl implements OntologiesView.Presenter,
     }
 
     public void getTrashItems() {
+        String systemId = constants.deSystemId();
         String id = properties.getDefaultTrashAppCategoryId();
+        Preconditions.checkNotNull(systemId);
         Preconditions.checkNotNull(id);
+        QualifiedId qualifiedId = new QualifiedId(systemId, id);
+
         view.maskGrid(OntologiesView.ViewType.EDITOR);
-        appService.getApps(id, new AppsCallback<List<App>>() {
+        appService.getApps(qualifiedId, new AppsCallback<List<App>>() {
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);

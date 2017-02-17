@@ -31,6 +31,9 @@ import org.iplantc.de.admin.desktop.client.ontologies.views.OntologyHierarchyToA
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
 import org.iplantc.de.apps.client.presenter.toolBar.proxy.AppSearchRpcProxy;
+import org.iplantc.de.client.DEClientConstants;
+import org.iplantc.de.client.models.HasQualifiedId;
+import org.iplantc.de.client.models.QualifiedId;
 import org.iplantc.de.client.services.AppSearchFacade;
 import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.shared.DECallback;
@@ -75,6 +78,7 @@ import java.util.List;
 public class OntologiesPresenterImplTest {
 
     @Mock DEProperties propertiesMock;
+    @Mock DEClientConstants constantsMock;
     @Mock IplantAnnouncer announcerMock;
     @Mock OntologiesView viewMock;
     @Mock OntologyServiceFacade serviceFacadeMock;
@@ -169,6 +173,7 @@ public class OntologiesPresenterImplTest {
         when(appListMock.iterator()).thenReturn(appIteratorMock);
         when(appMock.getHierarchies()).thenReturn(ontologyHierarchyListMock);
         when(propertiesMock.getDefaultTrashAppCategoryId()).thenReturn("id");
+        when(constantsMock.deSystemId()).thenReturn("de");
 
         when(ontologyIteratorMock.hasNext()).thenReturn(true, true, false);
         when(ontologyIteratorMock.next()).thenReturn(ontologyMock).thenReturn(activeOntologyMock);
@@ -209,6 +214,7 @@ public class OntologiesPresenterImplTest {
             void displayErrorToAdmin() {}
         };
         uut.announcer = announcerMock;
+        uut.constants = constantsMock;
         uut.properties = propertiesMock;
         uut.ontologyUtil = utilMock;
         uut.adminAppService = adminAppServiceMock;
@@ -721,8 +727,12 @@ public class OntologiesPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         uut.getTrashItems();
 
+        final String systemId = constantsMock.deSystemId();
+        final String id = propertiesMock.getDefaultTrashAppCategoryId();
+        final QualifiedId qualifiedId = new QualifiedId(systemId, id);
+
         verify(viewMock).maskGrid(eq(OntologiesView.ViewType.EDITOR));
-        verify(appServiceMock).getApps(anyString(), deAppListCaptor.capture());
+        verify(appServiceMock).getApps(eq(qualifiedId), deAppListCaptor.capture());
 
         deAppListCaptor.getValue().onSuccess(appListMock);
         verify(editorGridViewMock).clearAndAdd(eq(appListMock));

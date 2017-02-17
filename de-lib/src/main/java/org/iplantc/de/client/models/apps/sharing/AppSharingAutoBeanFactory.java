@@ -11,4 +11,8 @@ public interface AppSharingAutoBeanFactory extends AutoBeanFactory {
     AutoBean<AppUserPermissionsList> resourceUserPermissionsList();
 
     AutoBean<AppUserPermissions> resourceUserPermissions();
+
+    AutoBean<AppPermissionsRequest> AppPermissionsRequest();
+
+    AutoBean<AppPermission> AppPermission();
 }

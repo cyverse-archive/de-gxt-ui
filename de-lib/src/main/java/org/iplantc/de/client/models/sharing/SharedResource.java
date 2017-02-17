@@ -1,6 +1,10 @@
 package org.iplantc.de.client.models.sharing;
 
-public class SharedResource {
+import org.iplantc.de.client.models.HasQualifiedId;
+
+import com.google.gwt.user.client.ui.HasName;
+
+public class SharedResource implements HasQualifiedId, HasName {
 
     /**
      * id of the shared resource
@@ -8,11 +12,21 @@ public class SharedResource {
     private String id;
 
     /**
+     * systemId of the shared resource
+     */
+    private String systemId;
+
+    /**
      * name of the shared resource
      */
     private String name;
 
     public SharedResource(String id, String name) {
+        this(null, id, name);
+    }
+
+    public SharedResource(String systemId, String id, String name) {
+        this.systemId = systemId;
         this.id = id;
         this.name = name;
     }
@@ -33,4 +47,11 @@ public class SharedResource {
         this.name = name;
     }
 
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
 }

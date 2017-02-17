@@ -15,6 +15,7 @@ import org.iplantc.de.admin.desktop.client.services.model.AppCategorizeRequest;
 import org.iplantc.de.apps.client.AppCategoriesView;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.gin.factory.AppCategoriesViewFactory;
+import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.client.models.HasId;
@@ -29,6 +30,7 @@ import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -55,6 +57,7 @@ public class AdminAppsCategoriesPresenterImpl implements AdminCategoriesView.Pre
     @Inject AppServiceFacade appService;
     @Inject AdminCategoriesView.Presenter.Appearance appearance;
     @Inject DEProperties properties;
+    @Inject DEClientConstants constants;
     @Inject AppAdminServiceRequestAutoBeanFactory serviceFactory;
 
     private final TreeStore<AppCategory> treeStore;
@@ -123,7 +126,8 @@ public class AdminAppsCategoriesPresenterImpl implements AdminCategoriesView.Pre
 
         final String newCategoryName = event.getNewCategoryName();
         view.mask(appearance.addCategoryLoadingMask());
-        adminAppService.addCategory(newCategoryName,
+        adminAppService.addCategory(constants.deSystemId(),
+                                    newCategoryName,
                                     selectedParentCategory,
                                     new AsyncCallback<AppCategory>() {
 
@@ -349,8 +353,8 @@ public class AdminAppsCategoriesPresenterImpl implements AdminCategoriesView.Pre
     }
 
     void moveAppCategory(final AppCategory parentCategory, final AppCategory childCategory) {
-        adminAppService.moveCategory(childCategory.getId(),
-                                     parentCategory.getId(),
+        adminAppService.moveCategory(childCategory,
+                                     parentCategory,
                                      new AsyncCallback<String>() {
 
                                          @Override
@@ -370,17 +374,32 @@ public class AdminAppsCategoriesPresenterImpl implements AdminCategoriesView.Pre
                                      });
     }
 
+    private AppCategorizeRequest.CategoryId categoryIdFromCategory(AppCategory category) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(category.getSystemId()));
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(category.getId()));
+
+        AppCategorizeRequest.CategoryId categoryId = serviceFactory.categoryId().as();
+        categoryId.setSystemId(category.getSystemId());
+        categoryId.setId(category.getId());
+
+        return categoryId;
+    }
+
     private AppCategorizeRequest buildAppCategorizeRequest(App selectedApp,
                                                            List<AppCategory> appCategories) {
-        HasId appId = CommonModelUtils.getInstance().createHasIdFromString(selectedApp.getId());
+
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(selectedApp.getSystemId()));
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(selectedApp.getId()));
+
         List<AppCategorizeRequest.CategoryRequest> categories = Lists.newArrayList();
-        List<String> cat_ids = Lists.newArrayList();
+        List<AppCategorizeRequest.CategoryId> cat_ids = Lists.newArrayList();
         for (AppCategory group : appCategories) {
-            cat_ids.add(group.getId());
+            cat_ids.add(categoryIdFromCategory(group));
         }
 
         AppCategorizeRequest.CategoryRequest categoryRequest = serviceFactory.categoryRequest().as();
-        categoryRequest.setAppId(appId.getId());
+        categoryRequest.setSystemId(selectedApp.getSystemId());
+        categoryRequest.setAppId(selectedApp.getId());
         categoryRequest.setCategories(cat_ids);
 
         categories.add(categoryRequest);

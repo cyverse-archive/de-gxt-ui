@@ -5,8 +5,27 @@ import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 import java.util.List;
 
 public interface AppCategorizeRequest {
+    interface CategoryId {
+        @PropertyName("system_id")
+        String getSystemId();
 
-    public interface CategoryRequest {
+        @PropertyName("system_id")
+        void setSystemId(String systemId);
+
+        @PropertyName("id")
+        String getId();
+
+        @PropertyName("id")
+        void setId(String id);
+    }
+
+    interface CategoryRequest {
+        @PropertyName("system_id")
+        String getSystemId();
+
+        @PropertyName("system_id")
+        void setSystemId(String systemId);
+
         @PropertyName("app_id")
         String getAppId();
 
@@ -14,10 +33,10 @@ public interface AppCategorizeRequest {
         void setAppId(String id);
 
         @PropertyName("category_ids")
-        List<String> getCategories();
+        List<CategoryId> getCategories();
 
         @PropertyName("category_ids")
-        void setCategories(List<String> categories);
+        void setCategories(List<CategoryId> categories);
     }
 
     List<CategoryRequest> getCategories();

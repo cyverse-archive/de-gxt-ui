@@ -3,6 +3,7 @@ package org.iplantc.de.notifications.client.views.cells;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasPath;
+import org.iplantc.de.client.models.QualifiedId;
 import org.iplantc.de.client.models.analysis.AnalysesAutoBeanFactory;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
@@ -94,13 +95,11 @@ public class NotificationMessageCell extends AbstractCell<NotificationMessage> {
                                                                          context1).as();
                         if (pal != null && pal.getApps() != null && pal.getApps().size() > 0) {
                             PayloadApps payload = pal.getApps().get(0);
+                            final String systemId = payload.getSystemId();
                             final String appCategoryId = payload.getCategoryId();
                             final String appId = payload.getId();
-                            appsConfig.setSelectedAppCategory(CommonModelUtils.getInstance()
-                                                                              .createHasIdFromString(
-                                                                                      appCategoryId));
-                            appsConfig.setSelectedApp(CommonModelUtils.getInstance()
-                                                                      .createHasIdFromString(appId));
+                            appsConfig.setSelectedAppCategory(new QualifiedId(systemId, appCategoryId));
+                            appsConfig.setSelectedApp(new QualifiedId(systemId, appId));
                             EventBus.getInstance()
                                     .fireEvent(new WindowShowRequestEvent(appsConfig, true));
                         }

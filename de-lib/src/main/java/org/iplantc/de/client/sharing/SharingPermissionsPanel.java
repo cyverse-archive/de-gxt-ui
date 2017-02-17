@@ -235,11 +235,13 @@ public class SharingPermissionsPanel implements IsWidget {
             List<Sharing> shareList = new ArrayList<>();
             Sharing displayShare = null;
 
-            for (String path : resources.keySet()) {
+            for (String id : resources.keySet()) {
+                final SharedResource resource = resources.get(id);
                 Sharing share = new Sharing(user,
                                             presenter.getDefaultPermissions(),
-                                            path,
-                                            resources.get(path).getName());
+                                            resource.getSystemId(),
+                                            id,
+                                            resource.getName());
                 shareList.add(share);
 
                 if (displayShare == null) {
@@ -271,19 +273,19 @@ public class SharingPermissionsPanel implements IsWidget {
         setExplainPanelVisibility(false);
 
         for (String userName : sharingMap.keySet()) {
-            List<Sharing> dataShares = sharingMap.get(userName);
+            List<Sharing> sharingList = sharingMap.get(userName);
 
-            if (dataShares != null && !dataShares.isEmpty()) {
+            if (sharingList != null && !sharingList.isEmpty()) {
                 List<Sharing> newList = new ArrayList<>();
-                for (Sharing share : dataShares) {
+                for (Sharing share : sharingList) {
                     Sharing copyShare = share.copy();
                     newList.add(copyShare);
                 }
                 originalList.put(userName, newList);
 
                 // Add a dummy display share to the grid.
-                Sharing displayShare = dataShares.get(0).copy();
-                if (hasVaryingPermissions(dataShares)) {
+                Sharing displayShare = sharingList.get(0).copy();
+                if (hasVaryingPermissions(sharingList)) {
                     // Set the display permission to "varies" if this user's share list has varying
                     // permissions.
                     displayShare.setDisplayPermission(PermissionValue.varies);
@@ -420,8 +422,7 @@ public class SharingPermissionsPanel implements IsWidget {
         FastMap<List<Sharing>> sharingList = new FastMap<>();
         for (Sharing share : grid.getStore().getAll()) {
             String userName = share.getUserName();
-            List<Sharing> dataShares = sharingMap.get(userName);
-            List<Sharing> updatedSharingList = getUpdatedSharingList(userName, dataShares);
+            List<Sharing> updatedSharingList = getUpdatedSharingList(userName, sharingMap.get(userName));
             if (updatedSharingList != null && updatedSharingList.size() > 0) {
                 sharingList.put(userName, updatedSharingList);
             }
@@ -459,22 +460,24 @@ public class SharingPermissionsPanel implements IsWidget {
                 share.setPermission(perm);
                 share.setDisplayPermission(perm);
             }
+            // Check if user does not have all resources shared yet, due to varying permissions/shares.
             if (resources.size() != models.size()) {
                 Collaborator user = models.get(0).getCollaborator();
-                for (String path : resources.keySet()) {
+                for (String id : resources.keySet()) {
+                    final SharedResource resource = resources.get(id);
+                    final String systemId = resource.getSystemId();
                     boolean shared = false;
+
                     for (Sharing existingShare : models) {
-                        if (path.equals(existingShare.getId())) {
-                            shared = true;
+                        shared = (id.equals(existingShare.getId())
+                                  && systemId.equals(existingShare.getSystemId()));
+                        if (shared) {
                             break;
                         }
                     }
 
                     if (!shared) {
-                        models.add(new Sharing(user,
-                                               perm,
-                                               path,
-                                               resources.get(path).getName()));
+                        models.add(new Sharing(user, perm, systemId, id, resource.getName()));
                     }
                 }
             }
@@ -490,8 +493,8 @@ public class SharingPermissionsPanel implements IsWidget {
         if (explainPanel.isVisible()) {
             boolean permsVary = false;
 
-            for (Sharing dataShare : grid.getStore().getAll()) {
-                permsVary = hasVaryingPermissions(sharingMap.get(dataShare.getUserName()));
+            for (Sharing share : grid.getStore().getAll()) {
+                permsVary = hasVaryingPermissions(sharingMap.get(share.getUserName()));
 
                 if (permsVary) {
                     // Stop checking after the first user is found with variable permissions.
@@ -506,16 +509,16 @@ public class SharingPermissionsPanel implements IsWidget {
     }
 
     /**
-     * @return true if the given dataShares list has a different size than the resources list, or if not
-     *         every permission in the given dataShares list is the same; false otherwise.
+     * @return true if the given sharingList list has a different size than the resources list, or if not
+     *         every permission in the given sharingList list is the same; false otherwise.
      */
-    private boolean hasVaryingPermissions(List<Sharing> dataShares) {
-        if (dataShares == null || dataShares.size() != resources.size()) {
+    private boolean hasVaryingPermissions(List<Sharing> sharingList) {
+        if (sharingList == null || sharingList.size() != resources.size()) {
             return true;
         } else {
-            PermissionValue displayPermission = dataShares.get(0).getDisplayPermission();
+            PermissionValue displayPermission = sharingList.get(0).getDisplayPermission();
 
-            for (Sharing share : dataShares) {
+            for (Sharing share : sharingList) {
                 if (!displayPermission.equals(share.getDisplayPermission())) {
                     return true;
                 }

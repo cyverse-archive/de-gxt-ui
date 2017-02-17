@@ -19,6 +19,9 @@ import org.iplantc.de.client.models.apps.QualifiedAppId;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
+import org.iplantc.de.client.models.apps.sharing.AppPermission;
+import org.iplantc.de.client.models.apps.sharing.AppPermissionsRequest;
+import org.iplantc.de.client.models.apps.sharing.AppSharingAutoBeanFactory;
 import org.iplantc.de.client.models.apps.sharing.AppSharingRequestList;
 import org.iplantc.de.client.models.apps.sharing.AppUnSharingRequestList;
 import org.iplantc.de.client.services.AppUserServiceFacade;
@@ -26,7 +29,6 @@ import org.iplantc.de.client.services.converters.AppCategoryListCallbackConverte
 import org.iplantc.de.client.services.converters.AppTemplateCallbackConverter;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.util.DiskResourceUtil;
-import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.BaseServiceCallWrapper.Type;
@@ -83,7 +85,7 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     private final EmailServiceAsync emailService;
     @Inject IplantDisplayStrings displayStrings;
     @Inject DiskResourceUtil diskResourceUtil;
-    @Inject JsonUtil jsonUtil;
+    @Inject AppSharingAutoBeanFactory shareFactory;
     @Inject AppUserServiceBeanFactory factory;
     @Inject AppServiceAutoBeanFactory svcFactory;
     @Inject AppTemplateAutoBeanFactory templateAutoBeanFactory;
@@ -114,12 +116,8 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void getApps(HasId appCategory, DECallback<List<App>> callback) {
-        getApps(appCategory.getId(), callback);
-    }
-
-    public void getApps(String id, DECallback<List<App>> callback) {
-        String address = CATEGORIES + "/" + id;
+    public void getApps(HasQualifiedId appCategory, DECallback<List<App>> callback) {
+        String address = CATEGORIES + "/" + appCategory.getSystemId() + "/" + appCategory.getId();
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
         deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, List<App>>(callback) {
             @Override
@@ -393,10 +391,10 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void saveAppDoc(final HasId app,
+    public void saveAppDoc(final HasQualifiedId app,
                            final String doc,
                            final DECallback<AppDoc> callback) {
-        String address = APPS + "/" + app.getId() + "/documentation";
+        String address = APPS + "/" + app.getSystemId() + "/" + app.getId() + "/documentation";
         Splittable payload = StringQuoter.createSplittable();
         StringQuoter.create(doc).assign(payload, "documentation");
         ServiceCallWrapper wrapper = new ServiceCallWrapper(PATCH, address, payload.getPayload());
@@ -406,17 +404,21 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
 
     @Override
     public void getPermissions(List<App> apps, DECallback<String> callback) {
-        Splittable appsObj = StringQuoter.createSplittable();
-        Splittable idArr = StringQuoter.createIndexed();
+        List<AppPermission> appPermissionList = new ArrayList<>();
 
         for(App a : apps) {
-            Splittable item = StringQuoter.create(a.getId());
-            item.assign(idArr, idArr.size());
+            final AppPermission appPermission = shareFactory.AppPermission().as();
+            appPermission.setAppId(a.getId());
+            appPermission.setSystemId(a.getSystemId());
+            appPermissionList.add(appPermission);
         }
 
-        idArr.assign(appsObj, "apps");
+        final AutoBean<AppPermissionsRequest> requestAutoBean = shareFactory.AppPermissionsRequest();
+        requestAutoBean.as().setApps(appPermissionList);
+        final Splittable requestJson = AutoBeanCodex.encode(requestAutoBean);
+
         String address = APPS + "/" + "permission-lister";
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(Type.POST, address, appsObj.getPayload());
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(Type.POST, address, requestJson.getPayload());
         deServiceFacade.getServiceData(wrapper, callback);
      }
 

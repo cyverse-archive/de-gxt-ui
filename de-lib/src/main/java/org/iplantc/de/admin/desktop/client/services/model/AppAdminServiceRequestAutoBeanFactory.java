@@ -5,6 +5,8 @@ import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
 public interface AppAdminServiceRequestAutoBeanFactory extends AutoBeanFactory {
 
+    AutoBean<AppCategorizeRequest.CategoryId> categoryId();
+
     AutoBean<AppCategorizeRequest> appCategorizeRequest();
 
     AutoBean<AppCategorizeRequest.CategoryRequest> categoryRequest();

@@ -1,15 +1,15 @@
 package org.iplantc.de.commons.client.views.window.configs;
 
-import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.HasQualifiedId;
 
 public interface AppsWindowConfig extends WindowConfig {
 
-    HasId getSelectedAppCategory();
+    HasQualifiedId getSelectedAppCategory();
 
-    HasId getSelectedApp();
+    HasQualifiedId getSelectedApp();
 
-    void setSelectedAppCategory(HasId appGroup);
+    void setSelectedAppCategory(HasQualifiedId appGroup);
 
-    void setSelectedApp(HasId app);
+    void setSelectedApp(HasQualifiedId app);
 
 }
