@@ -1,11 +1,12 @@
 package org.iplantc.de.client.models.apps.integration;
 
-import com.google.gwt.user.client.ui.HasName;
-import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 import org.iplantc.de.client.models.HasDescription;
 import org.iplantc.de.client.models.HasLabel;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.tool.Tool;
+
+import com.google.gwt.user.client.ui.HasName;
+import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 
 import java.util.Date;
 import java.util.List;
@@ -64,4 +65,8 @@ public interface AppTemplate extends HasQualifiedId, HasLabel, HasName, HasDescr
     String getAppType();
 
     Boolean isDeleted();
+
+    @PropertyName("debug")
+    Boolean isRetainInputs();
+
 }
