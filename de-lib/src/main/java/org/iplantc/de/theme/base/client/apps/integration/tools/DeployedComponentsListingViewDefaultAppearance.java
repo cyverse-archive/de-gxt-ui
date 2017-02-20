@@ -102,4 +102,19 @@ public class DeployedComponentsListingViewDefaultAppearance implements DeployedC
     public String infoDialogHeight() {
         return "300px";
     }
+
+    @Override
+    public int nameColumnWidth() {
+        return 100;
+    }
+
+    @Override
+    public int versionColumnWidth() {
+        return 100;
+    }
+
+    @Override
+    public int pathColumnWidth() {
+        return 100;
+    }
 }

@@ -114,7 +114,7 @@ public class DeployedComponentsListingViewImpl extends Composite implements
         IdentityValueProvider<Tool> provider = new IdentityValueProvider<>("name");
         List<ColumnConfig<Tool, ?>> configs = new LinkedList<>();
 
-        ColumnConfig<Tool, Tool> name = new ColumnConfig<>(provider, 100);
+        ColumnConfig<Tool, Tool> name = new ColumnConfig<>(provider, appearance.nameColumnWidth());
         name.setComparator(new Comparator<Tool>() {
 
             @Override
@@ -128,12 +128,12 @@ public class DeployedComponentsListingViewImpl extends Composite implements
         name.setCell(new DCNameHyperlinkCell(this));
         name.setMenuDisabled(true);
 
-        ColumnConfig<Tool, String> version = new ColumnConfig<>(properties.version(), 100);
+        ColumnConfig<Tool, String> version = new ColumnConfig<>(properties.version(), appearance.versionColumnWidth());
         version.setHeader(appearance.versionColumnHeader());
         configs.add(version);
         version.setMenuDisabled(true);
 
-        ColumnConfig<Tool, String> path = new ColumnConfig<>(properties.location(), 100);
+        ColumnConfig<Tool, String> path = new ColumnConfig<>(properties.location(), appearance.pathColumnWidth());
         path.setHeader(appearance.pathColumnHeader());
         configs.add(path);
         path.setMenuDisabled(true);

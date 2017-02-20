@@ -48,6 +48,12 @@ public interface DeployedComponentsListingView extends IsWidget,
         String infoDialogWidth();
 
         String infoDialogHeight();
+
+        int nameColumnWidth();
+
+        int versionColumnWidth();
+
+        int pathColumnWidth();
     }
 
     public Tool getSelectedDC();
