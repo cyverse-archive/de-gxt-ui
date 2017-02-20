@@ -34,8 +34,8 @@ public interface BelphegorDisplayStrings extends Messages {
     @Key("confirmDeleteAppCategory")
     String confirmDeleteAppCategory(String name);
 
-    @Key("confirmDeleteAppTitle")
-    String confirmDeleteAppTitle();
+    @Key("confirmDeprecateAppTitle")
+    String confirmDeprecateAppTitle();
 
     @Key("deleteApp")
     String deleteApp();

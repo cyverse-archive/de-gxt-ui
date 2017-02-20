@@ -75,9 +75,9 @@ public interface OntologyDisplayStrings extends Messages{
 
     String confirmDeleteHierarchy(String selectedItem);
 
-    String confirmDeleteAppTitle();
+    String confirmDeprecateAppTitle();
 
-    String confirmDeleteAppWarning(String name);
+    String confirmDeprecateAppWarning(String name);
 
     String externalAppDND(String appLabels);
 
