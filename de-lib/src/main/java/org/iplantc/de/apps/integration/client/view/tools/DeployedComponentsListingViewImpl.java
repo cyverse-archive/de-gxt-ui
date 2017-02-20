@@ -3,16 +3,14 @@
  */
 package org.iplantc.de.apps.integration.client.view.tools;
 
-import org.iplantc.de.tools.requests.client.views.dialogs.NewToolRequestDialog;
 import org.iplantc.de.apps.integration.client.view.deployedComponents.cells.DCNameHyperlinkCell;
 import org.iplantc.de.apps.integration.client.view.deployedComponents.proxy.ToolSearchRPCProxy;
 import org.iplantc.de.apps.integration.shared.AppIntegrationModule;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.widgets.SearchField;
-import org.iplantc.de.resources.client.messages.I18N;
+import org.iplantc.de.tools.requests.client.views.dialogs.NewToolRequestDialog;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -25,7 +23,6 @@ import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.core.client.IdentityValueProvider;
-import com.sencha.gxt.core.client.XTemplates;
 import com.sencha.gxt.core.client.dom.ScrollSupport.ScrollMode;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
@@ -58,11 +55,6 @@ import java.util.List;
 public class DeployedComponentsListingViewImpl extends Composite implements
                                                                  DeployedComponentsListingView {
 
-    interface DCDetailsRenderer extends XTemplates {
-        @XTemplate(source = "DCDetails.html")
-        SafeHtml render();
-    }
-
     @UiTemplate("DeployedComponentsListingView.ui.xml")
     interface MyUiBinder extends UiBinder<Widget, DeployedComponentsListingViewImpl> { }
 
@@ -70,6 +62,7 @@ public class DeployedComponentsListingViewImpl extends Composite implements
     @UiField Grid<Tool> grid;
     @UiField TextButton newToolBtn;
     @UiField SearchField<Tool> searchField;
+    private DeployedComponentsListingViewAppearance appearance;
     @UiField(provided = true) ListStore<Tool> store;
 
     PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader;
@@ -79,13 +72,15 @@ public class DeployedComponentsListingViewImpl extends Composite implements
     @Inject Provider<NewToolRequestDialog> newToolRequestDialogProvider;
 
     @Inject
-    DeployedComponentsListingViewImpl(@Assisted ListStore<Tool> listStore,
+    DeployedComponentsListingViewImpl(DeployedComponentsListingViewAppearance appearance,
+                                      @Assisted ListStore<Tool> listStore,
                                       @Assisted SelectionChangedHandler<Tool> handler) {
+        this.appearance = appearance;
         this.store = listStore;
         searchProxy = new ToolSearchRPCProxy();
         loader = buildLoader();
         initWidget(uiBinder.createAndBindUi(this));
-        searchField.setEmptyText(I18N.DISPLAY.searchEmptyText());
+        searchField.setEmptyText(appearance.searchEmptyText());
         grid.setLoader(loader);
         grid.getSelectionModel().addSelectionChangedHandler(handler);
         loader.addLoadHandler(new LoadResultListStoreBinding<FilterPagingLoadConfig, Tool, PagingLoadResult<Tool>>(store));
@@ -105,7 +100,7 @@ public class DeployedComponentsListingViewImpl extends Composite implements
 
     @Override
     public void mask() {
-        container.mask(I18N.DISPLAY.loadingMask());
+        container.mask(appearance.loadingMask());
 
     }
 
@@ -116,12 +111,11 @@ public class DeployedComponentsListingViewImpl extends Composite implements
 
     @Override
     public void showInfo(Tool dc) {
-        DCDetailsRenderer templates = GWT.create(DCDetailsRenderer.class);
-        HtmlLayoutContainer c = new HtmlLayoutContainer(templates.render());
+        HtmlLayoutContainer c = new HtmlLayoutContainer(appearance.detailsRenderer());
         VerticalLayoutContainer vlc = new VerticalLayoutContainer();
-        c.add(new Label(I18N.DISPLAY.attribution() + ": "), new HtmlData(".cell1"));
+        c.add(new Label(appearance.attributionLabel() + ": "), new HtmlData(".cell1"));
         c.add(new Label(dc.getAttribution()), new HtmlData(".cell3"));
-        c.add(new Label(I18N.DISPLAY.description() + ": "), new HtmlData(".cell5"));
+        c.add(new Label(appearance.descriptionLabel() + ": "), new HtmlData(".cell5"));
         c.add(new Label(dc.getDescription()), new HtmlData(".cell7"));
         Dialog d = buildDetailsDialog(dc.getName());
         vlc.add(c, new VerticalLayoutData(1, 1));
@@ -163,18 +157,18 @@ public class DeployedComponentsListingViewImpl extends Composite implements
             }
         });
         name.setSortable(true);
-        name.setHeader(I18N.DISPLAY.name());
+        name.setHeader(appearance.nameColumnHeader());
         configs.add(name);
         name.setCell(new DCNameHyperlinkCell(this));
         name.setMenuDisabled(true);
 
         ColumnConfig<Tool, String> version = new ColumnConfig<>(properties.version(), 100);
-        version.setHeader(I18N.DISPLAY.version());
+        version.setHeader(appearance.versionColumnHeader());
         configs.add(version);
         version.setMenuDisabled(true);
 
         ColumnConfig<Tool, String> path = new ColumnConfig<>(properties.location(), 100);
-        path.setHeader(I18N.DISPLAY.path());
+        path.setHeader(appearance.pathColumnHeader());
         configs.add(path);
         path.setMenuDisabled(true);
         return new ColumnModel<>(configs);
