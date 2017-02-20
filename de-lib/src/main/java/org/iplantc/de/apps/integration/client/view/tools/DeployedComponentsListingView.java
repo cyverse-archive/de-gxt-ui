@@ -11,8 +11,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 
-import java.util.List;
-
 /**
  * @author sriram
  *
@@ -50,12 +48,7 @@ public interface DeployedComponentsListingView extends IsWidget,
 
     public Tool getSelectedDC();
 
-    public void loadDC(List<Tool> list);
-
-    public void mask();
-
     public void showInfo(Tool dc);
 
-    public void unmask();
 
 }

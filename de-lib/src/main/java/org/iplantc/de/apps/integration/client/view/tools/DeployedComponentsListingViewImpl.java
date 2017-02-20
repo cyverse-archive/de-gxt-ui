@@ -84,18 +84,6 @@ public class DeployedComponentsListingViewImpl extends Composite implements
     }
 
     @Override
-    public void loadDC(List<Tool> list) {
-        store.clear();
-        store.addAll(list);
-    }
-
-    @Override
-    public void mask() {
-        container.mask(appearance.loadingMask());
-
-    }
-
-    @Override
     public void showInfo(Tool dc) {
         HtmlLayoutContainer c = new HtmlLayoutContainer(appearance.detailsRenderer());
         VerticalLayoutContainer vlc = new VerticalLayoutContainer();
@@ -108,12 +96,6 @@ public class DeployedComponentsListingViewImpl extends Composite implements
         vlc.setScrollMode(ScrollMode.AUTO);
         d.setWidget(vlc);
         d.show();
-    }
-
-    @Override
-    public void unmask() {
-        container.unmask();
-
     }
 
     @Override
