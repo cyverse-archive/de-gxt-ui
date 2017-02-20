@@ -92,4 +92,14 @@ public class DeployedComponentsListingViewDefaultAppearance implements DeployedC
     public ImageResource add() {
         return iplantResources.add();
     }
+
+    @Override
+    public String infoDialogWidth() {
+        return "500px";
+    }
+
+    @Override
+    public String infoDialogHeight() {
+        return "300px";
+    }
 }

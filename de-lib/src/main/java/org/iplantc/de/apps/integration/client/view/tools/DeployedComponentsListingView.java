@@ -44,6 +44,10 @@ public interface DeployedComponentsListingView extends IsWidget,
         String newToolReq();
 
         ImageResource add();
+
+        String infoDialogWidth();
+
+        String infoDialogHeight();
     }
 
     public Tool getSelectedDC();

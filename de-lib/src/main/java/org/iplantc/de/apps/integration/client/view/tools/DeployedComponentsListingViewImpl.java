@@ -4,9 +4,12 @@
 package org.iplantc.de.apps.integration.client.view.tools;
 
 import org.iplantc.de.apps.integration.client.view.deployedComponents.cells.DCNameHyperlinkCell;
+import org.iplantc.de.apps.integration.client.dialogs.ToolInfoDialog;
 import org.iplantc.de.apps.integration.shared.AppIntegrationModule;
 import org.iplantc.de.client.models.tool.Tool;
+import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.widgets.SearchField;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.tools.requests.client.views.dialogs.NewToolRequestDialog;
 
 import com.google.gwt.core.client.GWT;
@@ -16,25 +19,19 @@ import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.core.client.IdentityValueProvider;
-import com.sencha.gxt.core.client.dom.ScrollSupport.ScrollMode;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.Composite;
-import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.button.TextButton;
-import com.sencha.gxt.widget.core.client.container.AbstractHtmlLayoutContainer.HtmlData;
-import com.sencha.gxt.widget.core.client.container.HtmlLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
-import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
@@ -66,7 +63,8 @@ public class DeployedComponentsListingViewImpl extends Composite implements
     private PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader;
 
     private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
-    @Inject Provider<NewToolRequestDialog> newToolRequestDialogProvider;
+    @Inject AsyncProviderWrapper<NewToolRequestDialog> newToolRequestDialogProvider;
+    @Inject AsyncProviderWrapper<ToolInfoDialog> toolInfoDialogProvider;
 
     @Inject
     DeployedComponentsListingViewImpl(@Assisted ListStore<Tool> listStore,
@@ -84,18 +82,18 @@ public class DeployedComponentsListingViewImpl extends Composite implements
     }
 
     @Override
-    public void showInfo(Tool dc) {
-        HtmlLayoutContainer c = new HtmlLayoutContainer(appearance.detailsRenderer());
-        VerticalLayoutContainer vlc = new VerticalLayoutContainer();
-        c.add(new Label(appearance.attributionLabel() + ": "), new HtmlData(".cell1"));
-        c.add(new Label(dc.getAttribution()), new HtmlData(".cell3"));
-        c.add(new Label(appearance.descriptionLabel() + ": "), new HtmlData(".cell5"));
-        c.add(new Label(dc.getDescription()), new HtmlData(".cell7"));
-        Dialog d = buildDetailsDialog(dc.getName());
-        vlc.add(c, new VerticalLayoutData(1, 1));
-        vlc.setScrollMode(ScrollMode.AUTO);
-        d.setWidget(vlc);
-        d.show();
+    public void showInfo(final Tool dc) {
+        toolInfoDialogProvider.get(new AsyncCallback<ToolInfoDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(ToolInfoDialog result) {
+                result.show(dc);
+            }
+        });
     }
 
     @Override
@@ -144,16 +142,17 @@ public class DeployedComponentsListingViewImpl extends Composite implements
 
     @UiHandler({"newToolBtn"})
     void onNewToolRequestBtnClick(@SuppressWarnings("unused") SelectEvent event) {
-       newToolRequestDialogProvider.get().show();
-    }
+       newToolRequestDialogProvider.get(new AsyncCallback<NewToolRequestDialog>() {
+           @Override
+           public void onFailure(Throwable caught) {
+               ErrorHandler.post(caught);
+           }
 
-    private Dialog buildDetailsDialog(String heading) {
-        Dialog d = new Dialog();
-        d.getButtonBar().clear();
-        d.setModal(true);
-        d.setSize("500px", "300px");
-        d.setHeading(heading);
-        return d;
+           @Override
+           public void onSuccess(NewToolRequestDialog result) {
+                result.show();
+           }
+       });
     }
 
     @Override
