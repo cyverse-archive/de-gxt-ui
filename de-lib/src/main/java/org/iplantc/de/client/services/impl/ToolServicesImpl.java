@@ -22,7 +22,6 @@ import java.util.List;
 
 public class ToolServicesImpl implements ToolServices {
 
-//    private final String COMPONENTS = "org.iplantc.services.apps.elements.tools";
     private final String TOOLS = "org.iplantc.services.tools";
     private final ToolAutoBeanFactory factory;
     private final DiscEnvApiService deServiceFacade;

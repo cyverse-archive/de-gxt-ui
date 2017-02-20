@@ -44,7 +44,7 @@
                                      ui:field="container">
             <row:child layoutData="{topData}">
                 <tb:ToolBar ui:field="toolBar" height="30" spacing="3">
-                    <srh:SearchField ui:field="searchField" emptyText=""/>
+                    <srh:SearchField ui:field="searchField" emptyText="{appearance.searchEmptyText}"/>
                     <button:TextButton ui:field="newToolBtn"
                                        text="{appearance.newToolReq}"
                                        icon="{appearance.add}"/>

@@ -72,7 +72,6 @@ public class DeployedComponentsListingViewImpl extends Composite implements
         this.store = listStore;
         this.loader = loader;
         initWidget(uiBinder.createAndBindUi(this));
-        searchField.setEmptyText(appearance.searchEmptyText());
         grid.setLoader(loader);
     }
 
