@@ -4,13 +4,13 @@
 package org.iplantc.de.apps.integration.client.view.tools;
 
 import org.iplantc.de.apps.integration.client.view.deployedComponents.cells.DCNameHyperlinkCell;
-import org.iplantc.de.apps.integration.client.view.deployedComponents.proxy.ToolSearchRPCProxy;
 import org.iplantc.de.apps.integration.shared.AppIntegrationModule;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.widgets.SearchField;
 import org.iplantc.de.tools.requests.client.views.dialogs.NewToolRequestDialog;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -26,8 +26,6 @@ import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.dom.ScrollSupport.ScrollMode;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
-import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
-import com.sencha.gxt.data.shared.loader.LoadResultListStoreBinding;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.Composite;
@@ -41,6 +39,7 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
+import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent.SelectionChangedHandler;
 
 import java.util.Comparator;
@@ -64,25 +63,19 @@ public class DeployedComponentsListingViewImpl extends Composite implements
     @UiField SearchField<Tool> searchField;
     @UiField DeployedComponentsListingViewAppearance appearance;
     @UiField(provided = true) ListStore<Tool> store;
-
-    PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader;
-    ToolSearchRPCProxy searchProxy;
+    private PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader;
 
     private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
     @Inject Provider<NewToolRequestDialog> newToolRequestDialogProvider;
 
     @Inject
     DeployedComponentsListingViewImpl(@Assisted ListStore<Tool> listStore,
-                                      @Assisted SelectionChangedHandler<Tool> handler) {
+                                      @Assisted PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader) {
         this.store = listStore;
-        searchProxy = new ToolSearchRPCProxy();
-        loader = buildLoader();
+        this.loader = loader;
         initWidget(uiBinder.createAndBindUi(this));
         searchField.setEmptyText(appearance.searchEmptyText());
         grid.setLoader(loader);
-        grid.getSelectionModel().addSelectionChangedHandler(handler);
-        loader.addLoadHandler(new LoadResultListStoreBinding<FilterPagingLoadConfig, Tool, PagingLoadResult<Tool>>(store));
-        loader.load(new FilterPagingLoadConfigBean());
     }
 
     @Override
@@ -181,11 +174,9 @@ public class DeployedComponentsListingViewImpl extends Composite implements
         return d;
     }
 
-    private PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> buildLoader() {
-        final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader = new PagingLoader<>(
-                                                                                                                                                                                  searchProxy);
-        loader.useLoadConfig(new FilterPagingLoadConfigBean());
-        return loader;
+    @Override
+    public HandlerRegistration addSelectionChangedHandler(SelectionChangedHandler<Tool> handler) {
+        grid.getSelectionModel().addSelectionChangedHandler(handler);
+        return addHandler(handler, SelectionChangedEvent.getType());
     }
-
 }

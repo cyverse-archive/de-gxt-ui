@@ -3,11 +3,24 @@
  */
 package org.iplantc.de.apps.integration.client.presenter;
 
+import org.iplantc.de.apps.integration.client.gin.factory.DeployedComponentListingViewFactory;
+import org.iplantc.de.apps.integration.client.view.deployedComponents.proxy.ToolSearchRPCProxy;
 import org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingView;
 import org.iplantc.de.apps.integration.shared.AppIntegrationModule;
 import org.iplantc.de.client.models.tool.Tool;
 
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasOneWidget;
+import com.google.inject.Inject;
+
+import com.sencha.gxt.data.shared.ListStore;
+import com.sencha.gxt.data.shared.ModelKeyProvider;
+import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
+import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
+import com.sencha.gxt.data.shared.loader.LoadResultListStoreBinding;
+import com.sencha.gxt.data.shared.loader.PagingLoadResult;
+import com.sencha.gxt.data.shared.loader.PagingLoader;
+import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 
 /**
  * @author sriram
@@ -15,10 +28,27 @@ import com.google.gwt.user.client.ui.HasOneWidget;
  */
 public class DeployedComponentPresenterImpl implements DeployedComponentsListingView.Presenter {
 
-    private final DeployedComponentsListingView view;
+    class DCKeyProvider implements ModelKeyProvider<Tool> {
 
-    public DeployedComponentPresenterImpl(DeployedComponentsListingView view) {
-        this.view = view;
+        @Override
+        public String getKey(Tool item) {
+            return item.getId();
+        }
+
+    }
+    private final DeployedComponentsListingView view;
+    PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader;
+    ToolSearchRPCProxy searchProxy;
+
+
+    @Inject
+    public DeployedComponentPresenterImpl(DeployedComponentListingViewFactory viewFactory) {
+        ListStore<Tool> listStore = new ListStore<>(new DCKeyProvider());
+        searchProxy = new ToolSearchRPCProxy();
+        loader = buildLoader();
+        view = viewFactory.createDcListingView(listStore, loader);
+        loader.addLoadHandler(new LoadResultListStoreBinding<FilterPagingLoadConfig, Tool, PagingLoadResult<Tool>>(listStore));
+        loader.load(new FilterPagingLoadConfigBean());
     }
 
 
@@ -35,5 +65,16 @@ public class DeployedComponentPresenterImpl implements DeployedComponentsListing
 
         view.asWidget().ensureDebugId(AppIntegrationModule.Ids.INSTALLED_TOOLS_DLG);
         container.setWidget(view.asWidget());
+    }
+
+    private PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> buildLoader() {
+        final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader = new PagingLoader<>(searchProxy);
+        loader.useLoadConfig(new FilterPagingLoadConfigBean());
+        return loader;
+    }
+
+    @Override
+    public HandlerRegistration addSelectionChangedHandler(SelectionChangedEvent.SelectionChangedHandler<Tool> handler) {
+        return view.addSelectionChangedHandler(handler);
     }
 }
