@@ -40,11 +40,10 @@ public class DeployedComponentPresenterImpl implements DeployedComponentsListing
     PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader;
     ToolSearchRPCProxy searchProxy;
 
-
     @Inject
     public DeployedComponentPresenterImpl(DeployedComponentListingViewFactory viewFactory) {
-        ListStore<Tool> listStore = new ListStore<>(new DCKeyProvider());
-        searchProxy = new ToolSearchRPCProxy();
+        ListStore<Tool> listStore = getToolListStore();
+        searchProxy = getToolSearchRPCProxy();
         loader = buildLoader();
         view = viewFactory.createDcListingView(listStore, loader);
         loader.addLoadHandler(new LoadResultListStoreBinding<FilterPagingLoadConfig, Tool, PagingLoadResult<Tool>>(listStore));
@@ -67,10 +66,18 @@ public class DeployedComponentPresenterImpl implements DeployedComponentsListing
         container.setWidget(view.asWidget());
     }
 
-    private PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> buildLoader() {
+    PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> buildLoader() {
         final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader = new PagingLoader<>(searchProxy);
         loader.useLoadConfig(new FilterPagingLoadConfigBean());
         return loader;
+    }
+
+    ToolSearchRPCProxy getToolSearchRPCProxy() {
+        return new ToolSearchRPCProxy();
+    }
+
+    ListStore<Tool> getToolListStore() {
+        return new ListStore<>(new DCKeyProvider());
     }
 
     @Override
