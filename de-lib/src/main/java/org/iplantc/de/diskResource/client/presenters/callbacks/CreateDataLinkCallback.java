@@ -4,7 +4,6 @@ import org.iplantc.de.client.models.dataLink.DataLink;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.diskResource.client.DataLinkView;
-import org.iplantc.de.shared.DataCallback;
 
 import com.google.gwt.core.client.GWT;
 
@@ -17,21 +16,28 @@ import java.util.List;
 /**
  * @author jstroot
  */
-public class CreateDataLinkCallback extends DataCallback<List<DataLink>> {
+public class CreateDataLinkCallback extends DiskResourceServiceCallback<List<DataLink>> {
 
     private final Tree<DiskResource, DiskResource> tree;
     private final DataLinkView view;
     private final DiskResourceCallbackAppearance appearance = GWT.create(DiskResourceCallbackAppearance.class);
 
     public CreateDataLinkCallback(final DataLinkView view) {
+        super(view);
         this.view = view;
         this.tree = this.view.getTree();
     }
 
     @Override
     public void onFailure(Integer statusCode, Throwable caught) {
+        super.onFailure(statusCode,caught);
         ErrorHandler.post(appearance.createDataLinksError(), caught);
         view.unmask();
+    }
+
+    @Override
+    protected String getErrorMessageDefault() {
+        return appearance.createDataLinksError();
     }
 
     @Override

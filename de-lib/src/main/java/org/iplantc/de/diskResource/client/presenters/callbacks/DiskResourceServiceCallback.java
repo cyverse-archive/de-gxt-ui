@@ -1,7 +1,6 @@
 package org.iplantc.de.diskResource.client.presenters.callbacks;
 
 import org.iplantc.de.client.models.IsMaskable;
-import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.shared.DataCallback;
 
 /**
@@ -45,8 +44,6 @@ public abstract class DiskResourceServiceCallback<T> extends DataCallback<T> {
     @Override
     public void onFailure(Integer statusCode, Throwable caught) {
         unmaskCaller();
-
-        ErrorHandler.post(caught);
     }
 
     /**

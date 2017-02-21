@@ -193,8 +193,8 @@ public class DataLinkViewImpl implements DataLinkView,
     }
 
     @Override
-    public void mask() {
-        tree.mask(appearance.loadingMask());
+    public void mask(String mask) {
+        tree.mask(mask);
     }
 
     @Override

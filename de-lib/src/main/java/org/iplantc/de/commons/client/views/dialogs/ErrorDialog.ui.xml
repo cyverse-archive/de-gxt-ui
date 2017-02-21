@@ -55,8 +55,7 @@
                                      collapsible="true">
                         <container:VerticalLayoutContainer ui:field="detailsContainer">
                             <container:child layoutData="{topData}">
-                                <gxtForm:TextArea ui:field="descriptionArea"
-                                                  readOnly="true"/>
+                                <g:HTML ui:field="descriptionArea" />
                             </container:child>
                         </container:VerticalLayoutContainer>
                     </gxt:FramedPanel>

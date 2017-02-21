@@ -4,7 +4,6 @@ import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.diskResource.client.DataLinkView;
-import org.iplantc.de.shared.DataCallback;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
@@ -15,7 +14,7 @@ import com.sencha.gxt.widget.core.client.tree.Tree;
 /**
  * @author jstroot
  */
-public class DeleteDataLinksCallback extends DataCallback<String> {
+public class DeleteDataLinksCallback extends DiskResourceServiceCallback<String> {
 
     private final Tree<DiskResource, DiskResource> tree;
     private final DataLinkView view;
@@ -23,6 +22,7 @@ public class DeleteDataLinksCallback extends DataCallback<String> {
     private final DiskResourceCallbackAppearance appearance = GWT.create(DiskResourceCallbackAppearance.class);
 
     public DeleteDataLinksCallback(final DataLinkView view) {
+        super(view);
         this.view = view;
         this.tree = view.getTree();
         this.jsonUtil = JsonUtil.getInstance();
@@ -30,8 +30,14 @@ public class DeleteDataLinksCallback extends DataCallback<String> {
 
     @Override
     public void onFailure(Integer statusCode, Throwable caught) {
+        super.onFailure(statusCode,caught);
         ErrorHandler.post(appearance.deleteDataLinksError(), caught);
         view.unmask();
+    }
+
+    @Override
+    protected String getErrorMessageDefault() {
+        return appearance.deleteDataLinksError();
     }
 
     @Override

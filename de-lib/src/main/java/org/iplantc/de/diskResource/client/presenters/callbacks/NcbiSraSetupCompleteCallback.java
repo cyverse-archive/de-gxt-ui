@@ -40,12 +40,17 @@ public class NcbiSraSetupCompleteCallback extends DiskResourceServiceCallback<St
     @Override
     public void onFailure(Integer statusCode, Throwable caught) {
         unmaskCaller();
-        DiskResourceErrorAutoBeanFactory factory = GWT.create(DiskResourceErrorAutoBeanFactory.class);
-        AutoBean<ErrorCreateFolder> errorBean = AutoBeanCodex.decode(factory,
-                                                                     ErrorCreateFolder.class,
-                                                                     caught.getMessage());
+        try {
+            DiskResourceErrorAutoBeanFactory factory = GWT.create(DiskResourceErrorAutoBeanFactory.class);
+            AutoBean<ErrorCreateFolder> errorBean = AutoBeanCodex.decode(factory,
+                    ErrorCreateFolder.class,
+                    caught.getMessage());
 
-        ErrorHandler.post(errorBean.as(), caught);
+            ErrorHandler.post(errorBean.as(), caught);
+        } catch (Exception e) {
+            ErrorHandler.post(caught);
+        }
+
     }
 
     @Override

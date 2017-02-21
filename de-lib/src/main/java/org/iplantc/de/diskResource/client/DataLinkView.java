@@ -1,5 +1,6 @@
 package org.iplantc.de.diskResource.client;
 
+import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelected;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * Created by jstroot on 2/10/15.
  * @author jstroot
  */
-public interface DataLinkView extends IsWidget {
+public interface DataLinkView extends IsWidget, IsMaskable {
     interface Appearance {
 
         String dataLinkTitle();
@@ -74,7 +75,4 @@ public interface DataLinkView extends IsWidget {
 
     Tree<DiskResource, DiskResource> getTree();
 
-    void mask();
-
-    void unmask();
 }
