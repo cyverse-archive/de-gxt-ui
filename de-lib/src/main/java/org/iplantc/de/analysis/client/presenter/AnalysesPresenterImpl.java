@@ -436,8 +436,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         final AnalysisSharingPresenter sharingPresenter = new AnalysisSharingPresenter(analysisService,
                                                                                  selected,
                                                                                  sharingView,
-                                                                                 collaboratorsUtil,
-                                                                                 jsonUtil);
+                                                                                 collaboratorsUtil);
        aSharingDialogProvider.get(new AsyncCallback<AnalysisSharingDialog>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -448,10 +447,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
             public void onSuccess(AnalysisSharingDialog asd) {
                 asd.setPresenter(sharingPresenter);
                 asd.show();
-
             }
         });
-
     }
 
     @Override
