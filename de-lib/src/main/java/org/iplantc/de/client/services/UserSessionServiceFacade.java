@@ -1,6 +1,7 @@
 package org.iplantc.de.client.services;
 
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.userSettings.UserSetting;
 
 import com.google.gwt.http.client.Request;
@@ -20,6 +21,8 @@ public interface UserSessionServiceFacade {
     void saveUserPreferences(UserSetting setting, AsyncCallback<Void> callback);
 
     void postClientNotification(JSONObject notification, AsyncCallback<String> callback);
+
+    void postClientNotification(Notification notification, AsyncCallback<String> callback);
 
     Request bootstrap(AsyncCallback<String> callback);
 

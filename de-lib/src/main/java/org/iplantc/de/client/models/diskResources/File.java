@@ -24,4 +24,10 @@ public interface File extends DiskResource {
 
     void setMd5(String md5);
 
+    String getParentFolderId();
+    void setParentFolderId(String id);
+
+    String getSourceUrl();
+    void setSourceUrl(String url);
+
 }

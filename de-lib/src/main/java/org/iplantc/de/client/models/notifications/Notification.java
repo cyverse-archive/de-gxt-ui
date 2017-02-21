@@ -29,4 +29,10 @@ public interface Notification {
 
     @PropertyName("payload")
     void setNotificationPayload(Splittable payload);
+
+    String getUser();
+    void setUser(String user);
+
+    String getSubject();
+    void setSubject(String subject);
 }

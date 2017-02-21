@@ -1,16 +1,19 @@
 package org.iplantc.de.client.services.impl;
 
-import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.*;
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
+
 import org.iplantc.de.client.models.CommonModelAutoBeanFactory;
-import org.iplantc.de.client.models.userSettings.UserSetting;
-import org.iplantc.de.client.models.userSettings.UserSettingAutoBeanFactory;
-import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.UserSession;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.notifications.Notification;
+import org.iplantc.de.client.models.userSettings.UserSetting;
+import org.iplantc.de.client.models.userSettings.UserSettingAutoBeanFactory;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
+import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
@@ -102,6 +105,16 @@ public class UserSessionServiceFacadeImpl implements UserSessionServiceFacade {
         String address = deProperties.getUnproctedMuleServiceBaseUrl() + "send-notification";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, notification.toString());
+
+        deServiceFacade.getServiceData(wrapper, callback);
+
+    }
+
+    @Override
+    public void postClientNotification(Notification notification, AsyncCallback<String> callback) {
+        String address = deProperties.getUnproctedMuleServiceBaseUrl() + "send-notification";
+        final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(notification));
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
 
         deServiceFacade.getServiceData(wrapper, callback);
 
