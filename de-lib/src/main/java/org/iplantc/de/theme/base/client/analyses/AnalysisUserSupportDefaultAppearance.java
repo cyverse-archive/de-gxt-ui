@@ -70,4 +70,9 @@ public class AnalysisUserSupportDefaultAppearance implements AnalysisUserSupport
     public String supportRequestSuccess() {
         return messages.supportRequestSuccess();
     }
+
+    @Override
+    public String deSystemId() {
+        return "DE";
+    }
 }

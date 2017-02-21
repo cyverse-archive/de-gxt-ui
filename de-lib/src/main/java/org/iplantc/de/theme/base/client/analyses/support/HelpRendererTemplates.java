@@ -1,4 +1,4 @@
-package org.iplantc.de.analysis.client.views.status;
+package org.iplantc.de.theme.base.client.analyses.support;
 
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.bootstrap.UserProfile;

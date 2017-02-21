@@ -83,6 +83,12 @@ public class DEProperties {
      */
     private static final String DEFAULT_HPC_CATEGORY_ID = WORKSPACE_PREFIX + "defaultHpcAppCategoryId";
 
+
+    /**
+     * Properties key for the support service URL
+     */
+    private static final String SUPPORT_SERVICE_URL = "org.iplantc.discoveryenvironment.support";
+
     /**
      * Properties key of the default Beta Category ID.
      */
@@ -225,6 +231,8 @@ public class DEProperties {
 
     private String supportUser;
 
+    private String supportServiceUrl;
+
     /**
      * Force the constructor to be private.
      */
@@ -275,6 +283,7 @@ public class DEProperties {
         keys.add(APPS_CARD_URL);
         keys.add(APPS_CARD_URL_OPTIONS);
         keys.add(CYVERSE_SUPPORT_USER);
+        keys.add(SUPPORT_SERVICE_URL);
         return keys;
     }
 
@@ -309,6 +318,7 @@ public class DEProperties {
         cardUrl = properties.get(APPS_CARD_URL);
         cardUrlOptions = properties.get(APPS_CARD_URL_OPTIONS);
         supportUser = properties.get(CYVERSE_SUPPORT_USER);
+        supportServiceUrl = properties.get(SUPPORT_SERVICE_URL);
     }
 
     /**
@@ -465,5 +475,9 @@ public class DEProperties {
 
     public String getSupportUser() {
         return supportUser;
+    }
+
+    public String getSupportServiceUrl() {
+        return supportServiceUrl;
     }
 }
