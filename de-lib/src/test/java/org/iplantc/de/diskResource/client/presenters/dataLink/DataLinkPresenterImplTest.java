@@ -47,6 +47,7 @@ public class DataLinkPresenterImplTest {
     @Mock DiskResource resourceMock;
     @Mock List<String> stringListMock;
     @Mock DataLink dataLinkMock;
+    @Mock DataLinkView.Appearance appearanceMock;
 
     @Captor ArgumentCaptor<DECallback<String>> stringCallbackCaptor;
     @Captor ArgumentCaptor<DECallback<List<DataLink>>> dataLinkCallbackCaptor;
@@ -61,11 +62,12 @@ public class DataLinkPresenterImplTest {
         when(resourcesMock.iterator()).thenReturn(diskResourceIteratorMock);
         when(diskResourceIteratorMock.hasNext()).thenReturn(true, true, false);
         when(diskResourceIteratorMock.next()).thenReturn(resourceMock, resourceMock);
+        when(appearanceMock.loadingMask()).thenReturn("loading...");
 
         uut = new DataLinkPresenterImpl(drServiceMock,
                                         dataLinkViewFactoryMock,
                                         dlFactoryMock,
-                                        diskResourceUtilMock,
+                                        diskResourceUtilMock,appearanceMock,
                                         resourcesMock){
             @Override
             List<DiskResource> createDiskResourcesList() {
@@ -115,7 +117,7 @@ public class DataLinkPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         uut.createDataLinks(resourcesMock);
 
-        verify(viewMock).mask();
+        verify(viewMock).mask(appearanceMock.loadingMask());
         verify(drServiceMock).createDataLinks(eq(stringListMock), dataLinkCallbackCaptor.capture());
     }
 }
