@@ -1,7 +1,7 @@
 package org.iplantc.de.analysis.client.views.dialogs;
 
 
-import org.iplantc.de.analysis.client.views.status.HelpRendererTemplates;
+import org.iplantc.de.theme.base.client.analyses.support.HelpRendererTemplates;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.analysis.AnalysesAutoBeanFactory;
 import org.iplantc.de.client.models.analysis.Analysis;
@@ -36,7 +36,6 @@ public class AnalysisUserSupportDialog extends Window {
 
     private TextArea comments;
     private TextButton submitBtn;
-    private String commentText;
 
     public interface AnalysisUserSupportAppearance {
 
@@ -63,6 +62,8 @@ public class AnalysisUserSupportDialog extends Window {
         String supportRequestFailed();
 
         String supportRequestSuccess();
+
+        String deSystemId();
     }
 
 
@@ -95,7 +96,7 @@ public class AnalysisUserSupportDialog extends Window {
         HTML text = null;
         switch (AnalysisExecutionStatus.fromTypeString(selectedAnalysis.getStatus().toLowerCase())) {
             case SUBMITTED:
-                if (selectedAnalysis.getSystemId().equalsIgnoreCase("DE")) {
+                if (selectedAnalysis.getSystemId().equalsIgnoreCase(appearance.deSystemId())) {
                     text = new HTML(renderer.renderCondorSubmitted(selectedAnalysis));
                 } else {
                     text = new HTML(renderer.renderAgaveSubmitted(selectedAnalysis));
@@ -108,7 +109,7 @@ public class AnalysisUserSupportDialog extends Window {
                 add(vlc);
                 break;
             case RUNNING:
-                if (selectedAnalysis.getSystemId().equalsIgnoreCase("DE")) {
+                if (selectedAnalysis.getSystemId().equalsIgnoreCase(appearance.deSystemId())) {
                     text = new HTML(renderer.renderCondorRunning(selectedAnalysis));
                 } else {
                     text = new HTML(renderer.renderAgaveRunning(selectedAnalysis));

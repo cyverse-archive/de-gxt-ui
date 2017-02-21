@@ -17,7 +17,6 @@ import com.google.web.bindery.autobean.shared.Splittable;
  */
 public class DEUserSupportServiceFacadeImpl implements DEUserSupportServiceFacade {
 
-    private static String SUPPORT_SERVICE_PATH = "support-email";
     private final DEProperties deProperties;
     private final DiscEnvApiService deServiceFacade;
 
@@ -30,7 +29,7 @@ public class DEUserSupportServiceFacadeImpl implements DEUserSupportServiceFacad
 
     @Override
     public void submitSupportRequest(Splittable request, AsyncCallback<Void> callback) {
-        String addr = deProperties.getUnproctedMuleServiceBaseUrl() + SUPPORT_SERVICE_PATH;
+        String addr = deProperties.getSupportServiceUrl();
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, addr, request.getPayload());
         deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
     }
