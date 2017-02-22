@@ -25,6 +25,9 @@ import org.iplantc.de.client.models.analysis.sharing.AnalysisPermission;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingAutoBeanFactory;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingRequest;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingRequestList;
+import org.iplantc.de.client.models.analysis.support.AnalysisSupportAutoBeanFactory;
+import org.iplantc.de.client.models.analysis.support.AnalysisSupportRequest;
+import org.iplantc.de.client.models.analysis.support.AnalysisSupportRequestFields;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
 import org.iplantc.de.client.services.DEUserSupportServiceFacade;
@@ -35,8 +38,8 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.shared.AnalysisCallback;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
-
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -48,9 +51,9 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
-import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.loader.FilterConfigBean;
@@ -191,7 +194,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Inject
     AnalysisServiceFacade analysisService;
     @Inject
-    DEUserSupportServiceFacade supportService;
+    AsyncProviderWrapper<DEUserSupportServiceFacade> supportServiceProvider;
     @Inject
     IplantAnnouncer announcer;
     @Inject
@@ -199,8 +202,9 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Inject
     AnalysisStepsView analysisStepView;
     @Inject
-    Provider<AnalysisSharingDialog> aSharingDialogProvider;
-
+    AsyncProviderWrapper<AnalysisSharingDialog> aSharingDialogProvider;
+    @Inject
+    AsyncProviderWrapper<AnalysisUserSupportDialog> aSupportDialogProvider;
     @Inject
     CollaboratorsUtil collaboratorsUtil;
     @Inject
@@ -212,6 +216,9 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     AnalysisUserSupportDialog.AnalysisUserSupportAppearance userSupportAppearance;
     @Inject
     DEProperties deProperties;
+
+    @Inject
+    AnalysisSupportAutoBeanFactory supportFactory;
 
     private final ListStore<Analysis> listStore;
     private final AnalysesView view;
@@ -384,14 +391,25 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Override
     public void onShareSelected(List<Analysis> selected) {
         AnalysisSharingViewImpl sharingView = new AnalysisSharingViewImpl();
-        AnalysisSharingPresenter sharingPresenter = new AnalysisSharingPresenter(analysisService,
+        final AnalysisSharingPresenter sharingPresenter = new AnalysisSharingPresenter(analysisService,
                                                                                  selected,
                                                                                  sharingView,
                                                                                  collaboratorsUtil,
                                                                                  jsonUtil);
-        AnalysisSharingDialog asd = aSharingDialogProvider.get();
-        asd.setPresenter(sharingPresenter);
-        asd.show();
+       aSharingDialogProvider.get(new AsyncCallback<AnalysisSharingDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+
+            }
+
+            @Override
+            public void onSuccess(AnalysisSharingDialog asd) {
+                asd.setPresenter(sharingPresenter);
+                asd.show();
+
+            }
+        });
+
     }
 
     @Override
@@ -505,52 +523,68 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Override
     public void onUserSupportRequested(AnalysisUserSupportRequestedEvent event) {
         final Analysis value = event.getValue();
-        final AnalysisUserSupportDialog ausd = new AnalysisUserSupportDialog(value);
-        ausd.setHeadingHtml(value.getName());
-        ausd.setSize("800px", "500px");
-        ausd.addSubmitSelectHandler(new SelectEvent.SelectHandler() {
+        aSupportDialogProvider.get(new AsyncCallback<AnalysisUserSupportDialog>() {
             @Override
-            public void onSelect(SelectEvent event) {
-                Splittable parent = StringQuoter.createSplittable();
-                final Splittable sp = StringQuoter.createSplittable();
-                StringQuoter.create(value.getName()).assign(sp, "Name");
-                StringQuoter.create(value.getAppName()).assign(sp, "App");
-                StringQuoter.create(value.getResultFolderId()).assign(sp, "Output Folder");
-                StringQuoter.create(new Date(value.getStartDate()).toString()).assign(sp, "Start Date");
-                StringQuoter.create(new Date(value.getEndDate()).toString()).assign(sp, "End Date");
-                StringQuoter.create(ausd.getComment()).assign(sp, "Comment");
-                StringQuoter.create(value.getStatus()).assign(sp, "Status");
-                StringQuoter.create(UserInfo.getInstance().getEmail()).assign(sp, "Email");
+            public void onFailure(Throwable caught) {
 
-                StringQuoter.create(UserInfo.getInstance().getFirstName() + " " + UserInfo.getInstance()
-                                                                                          .getLastName())
-                            .assign(sp, "User");
-                sp.assign(parent, "fields");
+            }
 
-                StringQuoter.create(UserInfo.getInstance().getFullUsername()).assign(parent, "from");
-                StringQuoter.create(
-                        UserInfo.getInstance().getUsername() + " requesting help with Analysis")
-                            .assign(parent, "Subject");
-                GWT.log("splittable -->" + parent.getPayload());
-                ausd.hide();
-                shareWithSupport(value, parent);
+            @Override
+            public void onSuccess(final AnalysisUserSupportDialog ausd) {
+                ausd.setHeadingHtml(value.getName());
+                ausd.setSize("800px", "500px");
+                ausd.addSubmitSelectHandler(new SelectEvent.SelectHandler() {
+                    @Override
+                    public void onSelect(SelectEvent event) {
+                        AnalysisSupportRequestFields fields =
+                                supportFactory.analysisSupportRequest().as();
+                        fields.setName(value.getName());
+                        fields.setApp(value.getAppName());
+                        fields.setOutputFolder(value.getResultFolderId());
+                        fields.setStartDate(new Date(value.getStartDate()));
+                        fields.setEndDate(new Date(value.getEndDate()));
+                        fields.setComment(ausd.getComment());
+                        fields.setStatus(value.getStatus());
+                        fields.setEmail(UserInfo.getInstance().getEmail());
+
+                        AnalysisSupportRequest req = supportFactory.analysisSupportRequestSubject().as();
+                        req.setFrom(UserInfo.getInstance().getFullUsername());
+                        req.setSubject(
+                                UserInfo.getInstance().getUsername() + " requesting help with Analysis");
+                        req.setFields(fields);
+
+                        ausd.hide();
+                        shareWithSupport(value, AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(req)));
+                    }
+                });
+                ausd.renderHelp(value);
+                ausd.show();
             }
         });
 
-        ausd.show();
 
     }
 
-    protected void emailSupport(Splittable parent) {
-        supportService.submitSupportRequest(parent, new AsyncCallback<Void>() {
+    protected void emailSupport(final Splittable parent) {
+        supportServiceProvider.get(new AsyncCallback<DEUserSupportServiceFacade>() {
             @Override
             public void onFailure(Throwable caught) {
-                announcer.schedule(new ErrorAnnouncementConfig(userSupportAppearance.supportRequestFailed()));
+
             }
 
             @Override
-            public void onSuccess(Void result) {
-                announcer.schedule(new SuccessAnnouncementConfig(userSupportAppearance.supportRequestSuccess()));
+            public void onSuccess(DEUserSupportServiceFacade serviceFacade) {
+                serviceFacade.submitSupportRequest(parent, new AsyncCallback<Void>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        announcer.schedule(new ErrorAnnouncementConfig(userSupportAppearance.supportRequestFailed()));
+                    }
+
+                    @Override
+                    public void onSuccess(Void result) {
+                        announcer.schedule(new SuccessAnnouncementConfig(userSupportAppearance.supportRequestSuccess()));
+                    }
+                });
             }
         });
     }

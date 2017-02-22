@@ -13,6 +13,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
+import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.dom.ScrollSupport;
 import com.sencha.gxt.core.client.util.Margins;
@@ -67,15 +68,15 @@ public class AnalysisUserSupportDialog extends Window {
     }
 
 
-    private final Analysis selectedAnalysis;
+    private Analysis selectedAnalysis;
     private HelpRendererTemplates renderer = GWT.create(HelpRendererTemplates.class);
     private AnalysisUserSupportAppearance appearance = GWT.create(AnalysisUserSupportAppearance.class);
     private VerticalLayoutContainer vlc;
     private TextButton needHelpButton;
-    private AnalysesAutoBeanFactory factory = GWT.create(AnalysesAutoBeanFactory.class);
+    @Inject AnalysesAutoBeanFactory factory;
 
-
-    public AnalysisUserSupportDialog(Analysis selectedAnalysis) {
+    @Inject
+    public AnalysisUserSupportDialog() {
         needHelpButton = new TextButton(appearance.needHelp());
         needHelpButton.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
@@ -83,16 +84,15 @@ public class AnalysisUserSupportDialog extends Window {
                 displayConfirmation();
             }
         });
-        this.selectedAnalysis = selectedAnalysis;
         submitBtn = new TextButton(appearance.submit());
         submitBtn.disable();
         vlc = new VerticalLayoutContainer();
         vlc.getElement().getStyle().setBackgroundColor(appearance.backgroudColor());
         vlc.setScrollMode(ScrollSupport.ScrollMode.AUTO);
-        renderHelp();
     }
 
-    private void renderHelp() {
+    public void renderHelp(Analysis analysis) {
+        this.selectedAnalysis = analysis;
         HTML text = null;
         switch (AnalysisExecutionStatus.fromTypeString(selectedAnalysis.getStatus().toLowerCase())) {
             case SUBMITTED:

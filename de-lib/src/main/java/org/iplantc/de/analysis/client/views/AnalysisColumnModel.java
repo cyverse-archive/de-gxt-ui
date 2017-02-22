@@ -114,9 +114,9 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
         endDate.setHeader(appearance.endDate());
 
         status.setHeader(appearance.status());
-        status.setMenuDisabled(true);
+        status.setMenuDisabled(false);
         status.setCell(new AnalysisUserSupportCell());
-        status.setSortable(false);
+        status.setSortable(true);
         status.setHideable(false);
 
         List<ColumnConfig<Analysis, ?>> ret = Lists.newArrayList();
