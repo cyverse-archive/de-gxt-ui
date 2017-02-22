@@ -197,8 +197,6 @@ public interface AnalysesView extends IsWidget,
 
         void setViewDebugId(String baseId);
 
-        void onShareSelected(List<Analysis> selected);
-
         void setCurrentFilter(AnalysisFilter filter);
 
         AnalysisFilter getCurrentFilter();

@@ -9,6 +9,7 @@ import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
+import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.gin.factory.AnalysesViewFactory;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.presenter.proxy.AnalysisRpcProxy;
@@ -83,7 +84,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               HTAnalysisExpandEvent.HTAnalysisExpandEventHandler,
                                               AnalysisUserSupportRequestedEvent.AnalysisUserSupportRequestedEventHandler,
                                               AnalysisJobInfoSelected.AnalysisJobInfoSelectedHandler,
-                                              AnalysisCommentUpdate.AnalysisCommentUpdateHandler {
+                                              AnalysisCommentUpdate.AnalysisCommentUpdateHandler,
+                                              ShareAnalysisSelected.ShareAnalysisSelectedHandler {
 
     private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
         private final Analysis ae;
@@ -256,6 +258,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         toolBarView.addAnalysisJobInfoSelectedHandler(this);
         this.view.addAnalysisCommentUpdateHandler(this);
         toolBarView.addAnalysisCommentUpdateHandler(this);
+        toolBarView.addShareAnalysisSelectedHandler(this);
 
         //Set default filter to ALL
         currentFilter = AnalysisFilter.ALL;
@@ -400,7 +403,9 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void onShareSelected(List<Analysis> selected) {
+    public void onShareAnalysisSelected(ShareAnalysisSelected event) {
+        List<Analysis> selected = event.getAnalysisList();
+
         AnalysisSharingViewImpl sharingView = new AnalysisSharingViewImpl();
         final AnalysisSharingPresenter sharingPresenter = new AnalysisSharingPresenter(analysisService,
                                                                                  selected,

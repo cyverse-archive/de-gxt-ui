@@ -11,6 +11,7 @@ import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.client.AnalysisToolBarView;
 import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
+import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisParametersDialog;
@@ -484,7 +485,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
 
     @UiHandler("shareCollabMI")
     void onShareSelected(SelectionEvent<Item> event) {
-       presenter.onShareSelected(currentSelection);
+        fireEvent(new ShareAnalysisSelected(currentSelection));
     }
 
     @Override
@@ -495,5 +496,10 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     @Override
     public HandlerRegistration addAnalysisCommentUpdateHandler(AnalysisCommentUpdate.AnalysisCommentUpdateHandler handler) {
         return addHandler(handler, AnalysisCommentUpdate.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addShareAnalysisSelectedHandler(ShareAnalysisSelected.ShareAnalysisSelectedHandler handler) {
+        return addHandler(handler, ShareAnalysisSelected.TYPE);
     }
 }
