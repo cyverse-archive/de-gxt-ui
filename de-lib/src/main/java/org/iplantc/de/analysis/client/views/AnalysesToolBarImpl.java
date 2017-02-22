@@ -10,6 +10,7 @@ import static org.iplantc.de.client.models.analysis.AnalysisExecutionStatus.SUBM
 import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.client.AnalysisToolBarView;
 import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
+import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
@@ -470,7 +471,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     }
 
     void applyFilter(AnalysisFilter filter) {
-        presenter.setCurrentFilter(filter);
+        fireEvent(new AnalysisFilterChanged(filter));
     }
 
     @Override
@@ -501,5 +502,10 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     @Override
     public HandlerRegistration addShareAnalysisSelectedHandler(ShareAnalysisSelected.ShareAnalysisSelectedHandler handler) {
         return addHandler(handler, ShareAnalysisSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addAnalysisFilterChangedHandler(AnalysisFilterChanged.AnalysisFilterChangedHandler handler) {
+        return addHandler(handler, AnalysisFilterChanged.TYPE);
     }
 }

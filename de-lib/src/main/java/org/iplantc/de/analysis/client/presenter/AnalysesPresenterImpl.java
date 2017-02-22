@@ -3,6 +3,7 @@ package org.iplantc.de.analysis.client.presenter;
 import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.client.AnalysisToolBarView;
 import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
+import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
 import org.iplantc.de.analysis.client.events.OpenAppForRelaunchEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
@@ -85,7 +86,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               AnalysisUserSupportRequestedEvent.AnalysisUserSupportRequestedEventHandler,
                                               AnalysisJobInfoSelected.AnalysisJobInfoSelectedHandler,
                                               AnalysisCommentUpdate.AnalysisCommentUpdateHandler,
-                                              ShareAnalysisSelected.ShareAnalysisSelectedHandler {
+                                              ShareAnalysisSelected.ShareAnalysisSelectedHandler,
+                                              AnalysisFilterChanged.AnalysisFilterChangedHandler {
 
     private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
         private final Analysis ae;
@@ -259,6 +261,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         this.view.addAnalysisCommentUpdateHandler(this);
         toolBarView.addAnalysisCommentUpdateHandler(this);
         toolBarView.addShareAnalysisSelectedHandler(this);
+        toolBarView.addAnalysisFilterChangedHandler(this);
 
         //Set default filter to ALL
         currentFilter = AnalysisFilter.ALL;
@@ -429,7 +432,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void setCurrentFilter(AnalysisFilter filter) {
+    public void onAnalysisFilterChanged(AnalysisFilterChanged event) {
+        AnalysisFilter filter = event.getFilter();
         if (filter == null) {
             currentFilter = filter;
             return;
