@@ -9,6 +9,7 @@ import static org.iplantc.de.client.models.analysis.AnalysisExecutionStatus.SUBM
 
 import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.client.AnalysisToolBarView;
+import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
@@ -430,8 +431,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
                     public void onDialogHide(DialogHideEvent event) {
                         if (Dialog.PredefinedButton.OK.equals(event.getHideButton())
                             && result.isCommentChanged()) {
-
-                            presenter.updateAnalysisComment(selectedAnalysis, result.getComment());
+                            fireEvent(new AnalysisCommentUpdate(selectedAnalysis, result.getComment()));
                         }
                     }
                 });
@@ -490,5 +490,10 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     @Override
     public HandlerRegistration addAnalysisJobInfoSelectedHandler(AnalysisJobInfoSelected.AnalysisJobInfoSelectedHandler handler) {
         return addHandler(handler, AnalysisJobInfoSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addAnalysisCommentUpdateHandler(AnalysisCommentUpdate.AnalysisCommentUpdateHandler handler) {
+        return addHandler(handler, AnalysisCommentUpdate.TYPE);
     }
 }

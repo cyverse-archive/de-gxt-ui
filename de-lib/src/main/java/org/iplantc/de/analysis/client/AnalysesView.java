@@ -1,5 +1,6 @@
 package org.iplantc.de.analysis.client;
 
+import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
@@ -24,7 +25,8 @@ public interface AnalysesView extends IsWidget,
                                       AnalysisAppSelectedEvent.HasAnalysisAppSelectedEventHandlers,
                                       AnalysisNameSelectedEvent.HasAnalysisNameSelectedEventHandlers,
                                       HTAnalysisExpandEvent.HasHTAnalysisExpandEventHandlers,
-                                      AnalysisUserSupportRequestedEvent.HasAnalysisUserSupportRequestedEventHandlers {
+                                      AnalysisUserSupportRequestedEvent.HasAnalysisUserSupportRequestedEventHandlers,
+                                      AnalysisCommentUpdate.HasAnalysisCommentUpdateHandlers {
 
     interface Appearance {
 
@@ -194,8 +196,6 @@ public interface AnalysesView extends IsWidget,
         void setSelectedAnalyses(List<Analysis> selectedAnalyses);
 
         void setViewDebugId(String baseId);
-
-        void updateAnalysisComment(Analysis value, String comment);
 
         void onShareSelected(List<Analysis> selected);
 

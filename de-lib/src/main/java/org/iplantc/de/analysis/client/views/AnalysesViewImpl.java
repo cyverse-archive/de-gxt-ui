@@ -2,6 +2,7 @@ package org.iplantc.de.analysis.client.views;
 
 import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.client.AnalysisToolBarView;
+import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent.HTAnalysisExpandEventHandler;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisCommentSelectedEvent;
@@ -162,8 +163,8 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
                     public void onDialogHide(DialogHideEvent hideEvent) {
                         if (Dialog.PredefinedButton.OK.equals(hideEvent.getHideButton())
                             && result.isCommentChanged()) {
-                            presenter.updateAnalysisComment(event.getValue(),
-                                                            result.getComment());
+                            fireEvent(new AnalysisCommentUpdate(event.getValue(),
+                                                                result.getComment()));
 
                         }
                     }
@@ -219,5 +220,9 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     public AnalysisToolBarView getToolBarView() {
         return toolBar;
     }
-    
+
+    @Override
+    public HandlerRegistration addAnalysisCommentUpdateHandler(AnalysisCommentUpdate.AnalysisCommentUpdateHandler handler) {
+        return addHandler(handler, AnalysisCommentUpdate.TYPE);
+    }
 }

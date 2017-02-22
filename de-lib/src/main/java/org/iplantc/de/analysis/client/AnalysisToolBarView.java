@@ -1,5 +1,6 @@
 package org.iplantc.de.analysis.client;
 
+import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
@@ -14,7 +15,8 @@ import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
  */
 public interface AnalysisToolBarView extends IsWidget,
                                              SelectionChangedEvent.SelectionChangedHandler<Analysis>,
-                                             AnalysisJobInfoSelected.HasAnalysisJobInfoSelectedHandlers {
+                                             AnalysisJobInfoSelected.HasAnalysisJobInfoSelectedHandlers,
+                                             AnalysisCommentUpdate.HasAnalysisCommentUpdateHandlers {
 
     void filterByAnalysisId(String analysisId, String name);
 

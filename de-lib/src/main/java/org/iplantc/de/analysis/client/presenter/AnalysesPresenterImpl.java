@@ -2,6 +2,7 @@ package org.iplantc.de.analysis.client.presenter;
 
 import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.client.AnalysisToolBarView;
+import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
 import org.iplantc.de.analysis.client.events.OpenAppForRelaunchEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
@@ -81,7 +82,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               AnalysisAppSelectedEvent.AnalysisAppSelectedEventHandler,
                                               HTAnalysisExpandEvent.HTAnalysisExpandEventHandler,
                                               AnalysisUserSupportRequestedEvent.AnalysisUserSupportRequestedEventHandler,
-                                              AnalysisJobInfoSelected.AnalysisJobInfoSelectedHandler {
+                                              AnalysisJobInfoSelected.AnalysisJobInfoSelectedHandler,
+                                              AnalysisCommentUpdate.AnalysisCommentUpdateHandler {
 
     private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
         private final Analysis ae;
@@ -252,6 +254,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         this.view.addHTAnalysisExpandEventHandler(this);
         this.view.addAnalysisUserSupportRequestedEventHandler(this);
         toolBarView.addAnalysisJobInfoSelectedHandler(this);
+        this.view.addAnalysisCommentUpdateHandler(this);
+        toolBarView.addAnalysisCommentUpdateHandler(this);
 
         //Set default filter to ALL
         currentFilter = AnalysisFilter.ALL;
@@ -467,7 +471,9 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void updateAnalysisComment(final Analysis value, final String comment) {
+    public void onAnalysisCommentUpdate(AnalysisCommentUpdate event) {
+        Analysis value = event.getAnalysis();
+        String comment = event.getComment();
         analysisService.updateAnalysisComments(value,
                                                comment,
                                                new UpdateCommentsCallback(value, comment, listStore));
