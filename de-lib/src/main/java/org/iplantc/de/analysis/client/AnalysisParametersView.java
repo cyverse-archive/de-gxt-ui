@@ -34,14 +34,12 @@ public interface AnalysisParametersView extends IsWidget,
         String viewParameters(String name);
     }
 
-    interface Presenter {
+    interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
 
         interface BeanFactory extends AutoBeanFactory {
             AutoBean<File> file();
         }
 
         void fetchAnalysisParameters(Analysis analysis);
-
-        AnalysisParametersView getView();
     }
 }

@@ -37,6 +37,7 @@ import com.google.common.collect.Lists;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
@@ -194,6 +195,11 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
     }
 
     @Override
+    public void go(HasOneWidget container) {
+        container.setWidget(view);
+    }
+
+    @Override
     public void fetchAnalysisParameters(Analysis analysis) {
         view.mask(appearance.retrieveParametersLoadingMask());
         analysisService.getAnalysisParams(analysis, new AnalysisCallback<List<AnalysisParameter>>() {
@@ -208,11 +214,6 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
                 view.unmask();
             }
         });
-    }
-
-    @Override
-    public AnalysisParametersView getView() {
-        return view;
     }
 
     @Override

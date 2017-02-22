@@ -29,12 +29,12 @@ public class AnalysisParametersDialog extends IPlantDialog {
     public void show(final Analysis analysis){
         setHeading(appearance.viewParameters(analysis.getName()));
 
-        AnalysisParametersView view = presenter.getView();
-        add(view);
+        presenter.go(this);
 
         super.show();
 
         // Mask View, the Fetch analysis parameters
+
         presenter.fetchAnalysisParameters(analysis);
     }
 
