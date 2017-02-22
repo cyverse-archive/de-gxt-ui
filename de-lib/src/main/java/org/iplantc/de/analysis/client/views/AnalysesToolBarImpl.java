@@ -87,10 +87,6 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     @UiField
     MenuItem shareCollabMI;
 
-    //hidden for now...
-    //@UiField
-    //MenuItem shareSupportMI;
-
     @UiField(provided = true)
     SimpleComboBox<AnalysisFilter> filterCombo;
 
@@ -488,36 +484,5 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     void onShareSelected(SelectionEvent<Item> event) {
        presenter.onShareSelected(currentSelection);
     }
-
-  /**  @UiHandler("shareSupportMI")
-    void onShareSupportSelected(SelectionEvent<Item> event) {
-        ConfirmMessageBox messageBox = new ConfirmMessageBox(appearance.shareSupport(),
-                                                             appearance.shareSupportConfirm());
-        messageBox.setPredefinedButtons(Dialog.PredefinedButton.YES,
-                                        Dialog.PredefinedButton.NO,
-                                        Dialog.PredefinedButton.CANCEL);
-        messageBox.getButton(Dialog.PredefinedButton.YES).setText(appearance.shareWithInput());
-        messageBox.getButton(Dialog.PredefinedButton.NO).setText(appearance.shareOutputOnly());
-
-        messageBox.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
-            @Override
-            public void onDialogHide(DialogHideEvent event) {
-                switch (event.getHideButton()) {
-                    case YES:
-                        presenter.onShareSupportSelected(currentSelection, true);
-                        break;
-                    case NO:
-                        presenter.onShareSupportSelected(currentSelection, false);
-                        break;
-
-                    case CANCEL:
-                        break;
-                }
-            }
-        });
-
-        messageBox.show();
-
-    } **/
 
 }
