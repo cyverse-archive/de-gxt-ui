@@ -9,6 +9,7 @@ import static org.iplantc.de.client.models.analysis.AnalysisExecutionStatus.SUBM
 
 import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.client.AnalysisToolBarView;
+import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisParametersDialog;
@@ -29,6 +30,7 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -458,7 +460,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
 
     @UiHandler("viewJobInfoMI")
     void onViewAnalysisStepsInfo(SelectionEvent<Item> event) {
-        presenter.getAnalysisStepInfo(currentSelection.get(0));
+        fireEvent(new AnalysisJobInfoSelected(currentSelection.get(0)));
     }
 
     @UiHandler("refreshTb")
@@ -485,4 +487,8 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
        presenter.onShareSelected(currentSelection);
     }
 
+    @Override
+    public HandlerRegistration addAnalysisJobInfoSelectedHandler(AnalysisJobInfoSelected.AnalysisJobInfoSelectedHandler handler) {
+        return addHandler(handler, AnalysisJobInfoSelected.TYPE);
+    }
 }

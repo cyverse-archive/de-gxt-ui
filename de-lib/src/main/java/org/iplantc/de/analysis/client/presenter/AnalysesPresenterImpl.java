@@ -1,9 +1,11 @@
 package org.iplantc.de.analysis.client.presenter;
 
 import org.iplantc.de.analysis.client.AnalysesView;
+import org.iplantc.de.analysis.client.AnalysisToolBarView;
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
 import org.iplantc.de.analysis.client.events.OpenAppForRelaunchEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
+import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
 import org.iplantc.de.analysis.client.gin.factory.AnalysesViewFactory;
@@ -78,7 +80,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               AnalysisNameSelectedEvent.AnalysisNameSelectedEventHandler,
                                               AnalysisAppSelectedEvent.AnalysisAppSelectedEventHandler,
                                               HTAnalysisExpandEvent.HTAnalysisExpandEventHandler,
-                                              AnalysisUserSupportRequestedEvent.AnalysisUserSupportRequestedEventHandler{
+                                              AnalysisUserSupportRequestedEvent.AnalysisUserSupportRequestedEventHandler,
+                                              AnalysisJobInfoSelected.AnalysisJobInfoSelectedHandler {
 
     private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
         private final Analysis ae;
@@ -242,11 +245,13 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         loader.setReuseLoadConfig(true);
 
         this.view = viewFactory.create(listStore, loader, this);
+        AnalysisToolBarView toolBarView = view.getToolBarView();
 
         this.view.addAnalysisNameSelectedEventHandler(this);
         this.view.addAnalysisAppSelectedEventHandler(this);
         this.view.addHTAnalysisExpandEventHandler(this);
         this.view.addAnalysisUserSupportRequestedEventHandler(this);
+        toolBarView.addAnalysisJobInfoSelectedHandler(this);
 
         //Set default filter to ALL
         currentFilter = AnalysisFilter.ALL;
@@ -474,8 +479,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void getAnalysisStepInfo(Analysis value) {
-        analysisService.getAnalysisSteps(value, new AnalysisCallback<AnalysisStepsInfo>() {
+    public void onAnalysisJobInfoSelected(AnalysisJobInfoSelected event) {
+        analysisService.getAnalysisSteps(event.getAnalysis(), new AnalysisCallback<AnalysisStepsInfo>() {
 
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {

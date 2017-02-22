@@ -2,6 +2,7 @@ package org.iplantc.de.analysis.client;
 
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
+import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
@@ -196,8 +197,6 @@ public interface AnalysesView extends IsWidget,
 
         void updateAnalysisComment(Analysis value, String comment);
 
-        void getAnalysisStepInfo(Analysis value);
-
         void onShareSelected(List<Analysis> selected);
 
         void setCurrentFilter(AnalysisFilter filter);
@@ -222,4 +221,6 @@ public interface AnalysesView extends IsWidget,
     String getParentAnalysisId();
 
     AnalysisSearchField getSearchField();
+
+    AnalysisToolBarView getToolBarView();
 }

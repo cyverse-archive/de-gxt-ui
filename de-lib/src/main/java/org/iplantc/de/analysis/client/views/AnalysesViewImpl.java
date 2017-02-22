@@ -214,4 +214,10 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     private void setSelectionCount(int count) {
         selectionStatus.setText(appearance.selectionCount(count));
     }
+
+    @Override
+    public AnalysisToolBarView getToolBarView() {
+        return toolBar;
+    }
+    
 }
