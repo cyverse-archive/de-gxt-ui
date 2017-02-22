@@ -12,6 +12,7 @@ import org.iplantc.de.analysis.client.AnalysisToolBarView;
 import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
+import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
 import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
 import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
@@ -380,7 +381,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         Preconditions.checkNotNull(currentSelection);
         Preconditions.checkState(currentSelection.size() == 1);
 
-        presenter.goToSelectedAnalysisFolder(currentSelection.iterator().next());
+        fireEvent(new GoToAnalysisFolderSelected(currentSelection.iterator().next()));
     }
 
     @UiHandler("relaunchMI")
@@ -524,5 +525,10 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     @Override
     public HandlerRegistration addRelaunchAnalysisSelectedHandler(RelaunchAnalysisSelected.RelaunchAnalysisSelectedHandler handler) {
         return addHandler(handler, RelaunchAnalysisSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addGoToAnalysisFolderSelectedHandler(GoToAnalysisFolderSelected.GoToAnalysisFolderSelectedHandler handler) {
+        return addHandler(handler, GoToAnalysisFolderSelected.TYPE);
     }
 }

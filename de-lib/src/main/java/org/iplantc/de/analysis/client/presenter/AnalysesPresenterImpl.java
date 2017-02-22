@@ -10,6 +10,7 @@ import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
+import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
 import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
 import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
@@ -93,7 +94,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               AnalysisFilterChanged.AnalysisFilterChangedHandler,
                                               RefreshAnalysesSelected.RefreshAnalysesSelectedHandler,
                                               RenameAnalysisSelected.RenameAnalysisSelectedHandler,
-                                              RelaunchAnalysisSelected.RelaunchAnalysisSelectedHandler {
+                                              RelaunchAnalysisSelected.RelaunchAnalysisSelectedHandler,
+                                              GoToAnalysisFolderSelected.GoToAnalysisFolderSelectedHandler {
 
     private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
         private final Analysis ae;
@@ -271,6 +273,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         toolBarView.addRefreshAnalysesSelectedHandler(this);
         toolBarView.addRenameAnalysisSelectedHandler(this);
         toolBarView.addRelaunchAnalysisSelectedHandler(this);
+        toolBarView.addGoToAnalysisFolderSelectedHandler(this);
 
         //Set default filter to ALL
         currentFilter = AnalysisFilter.ALL;
@@ -399,9 +402,11 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void goToSelectedAnalysisFolder(final Analysis selectedAnalysis) {
+    public void onGoToAnalysisFolderSelected(GoToAnalysisFolderSelected event) {
+        Analysis selectedAnalysis = event.getAnalysis();
         // Request disk resource window
         eventBus.fireEvent(new OpenFolderEvent(selectedAnalysis.getResultFolderId(), true));
+
     }
 
     @Override

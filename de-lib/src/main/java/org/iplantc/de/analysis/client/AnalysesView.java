@@ -183,8 +183,6 @@ public interface AnalysesView extends IsWidget,
 
         void go(final HasOneWidget container, List<Analysis> selectedAnalyses);
 
-        void goToSelectedAnalysisFolder(Analysis selectedAnalysis);
-
         void onShowAllSelected();
 
         void setSelectedAnalyses(List<Analysis> selectedAnalyses);
