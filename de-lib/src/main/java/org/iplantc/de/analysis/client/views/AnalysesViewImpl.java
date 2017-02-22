@@ -69,7 +69,6 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     @UiField LiveGridView<Analysis> gridView;
     @UiField ToolBar pagingToolBar;
     @UiField Status selectionStatus;
-    private final AnalysesView.Presenter presenter;
     @Inject AsyncProviderWrapper<AnalysisCommentsDialog> analysisCommentsDlgProvider;
 
     AnalysisSearchField searchField;
@@ -78,12 +77,10 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     AnalysesViewImpl(final AnalysisColumnModel cm,
                      final AnalysisToolBarFactory toolBarFactory,
                      @Assisted final ListStore<Analysis> listStore,
-                     @Assisted final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader,
-                     @Assisted AnalysesView.Presenter presenter) {
+                     @Assisted final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader) {
         this.listStore = listStore;
         this.cm = cm;
-        this.presenter = presenter;
-        this.toolBar = toolBarFactory.create(presenter, loader);
+        this.toolBar = toolBarFactory.create(loader);
 
         MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
         initWidget(uiBinder.createAndBindUi(this));

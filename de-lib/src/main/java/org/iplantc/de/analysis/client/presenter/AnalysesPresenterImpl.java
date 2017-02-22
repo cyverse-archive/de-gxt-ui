@@ -262,7 +262,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         loader.setRemoteSort(true);
         loader.setReuseLoadConfig(true);
 
-        this.view = viewFactory.create(listStore, loader, this);
+        this.view = viewFactory.create(listStore, loader);
         AnalysisToolBarView toolBarView = view.getToolBarView();
 
         this.view.addAnalysisNameSelectedEventHandler(this);

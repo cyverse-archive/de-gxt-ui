@@ -109,15 +109,12 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
 
 
     List<Analysis> currentSelection;
-    private final AnalysesView.Presenter presenter;
     private final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader;
 
     @Inject
     AnalysesToolBarImpl(final AnalysesView.Appearance appearance,
-                        @Assisted final AnalysesView.Presenter presenter,
                         @Assisted PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader) {
         this.appearance = appearance;
-        this.presenter = presenter;
         this.loader = loader;
 
         filterCombo = new SimpleComboBox<AnalysisFilter>(new StringLabelProvider<AnalysisFilter>());
