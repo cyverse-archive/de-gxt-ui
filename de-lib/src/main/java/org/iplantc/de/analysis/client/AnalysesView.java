@@ -128,6 +128,12 @@ public interface AnalysesView extends IsWidget,
         String shareWithInput();
 
         String shareOutputOnly();
+
+        String stepInfoDialogHeader();
+
+        String stepInfoDialogWidth();
+
+        String stepInfoDialogHeight();
     }
 
     interface Presenter {

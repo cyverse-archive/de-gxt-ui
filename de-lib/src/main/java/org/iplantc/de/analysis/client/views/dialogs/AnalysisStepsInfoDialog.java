@@ -9,7 +9,7 @@ import com.google.inject.Inject;
 
 public class AnalysisStepsInfoDialog extends IPlantDialog {
 
-    @Inject AnalysisStepsView view;
+    private AnalysisStepsView view;
 
     @Inject
     public AnalysisStepsInfoDialog(AnalysisStepsView view,
@@ -29,7 +29,8 @@ public class AnalysisStepsInfoDialog extends IPlantDialog {
 
     @Override
     public void show() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("This method is not supported. Use show(AnalysisStepsInfo) method instead.");
+        throw new UnsupportedOperationException(
+                "This method is not supported. Use show(AnalysisStepsInfo) method instead.");
     }
 
 }

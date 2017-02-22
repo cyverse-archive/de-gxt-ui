@@ -307,4 +307,19 @@ public class AnalysesViewDefaultAppearance implements AnalysesView.Appearance {
     public String shareOutputOnly() {
         return analysesMessages.shareOutputOnly();
     }
+
+    @Override
+    public String stepInfoDialogHeader() {
+        return analysesMessages.stepInfoDialogHeader();
+    }
+
+    @Override
+    public String stepInfoDialogWidth() {
+        return "600px";
+    }
+
+    @Override
+    public String stepInfoDialogHeight() {
+        return "300px";
+    }
 }
