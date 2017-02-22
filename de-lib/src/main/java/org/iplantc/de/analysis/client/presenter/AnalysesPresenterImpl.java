@@ -204,6 +204,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     AsyncProviderWrapper<AnalysisSharingDialog> aSharingDialogProvider;
     @Inject
     AsyncProviderWrapper<AnalysisUserSupportDialog> aSupportDialogProvider;
+    @Inject AsyncProviderWrapper<AnalysisStepsInfoDialog> stepsInfoDialogProvider;
+
     @Inject
     CollaboratorsUtil collaboratorsUtil;
     @Inject
@@ -483,20 +485,24 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
             }
 
             @Override
-            public void onSuccess(AnalysisStepsInfo result) {
-                AnalysisStepsInfoDialog asid = getAnalysisStepsDialog();
-                asid.show();
-                analysisStepView.clearData();
-                analysisStepView.setData(result.getSteps());
+            public void onSuccess(AnalysisStepsInfo stepsInfo) {
+                stepsInfoDialogProvider.get(new AsyncCallback<AnalysisStepsInfoDialog>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(AnalysisStepsInfoDialog result) {
+                        result.show(stepsInfo);
+                    }
+                });
             }
         });
 
     }
 
 
-    AnalysisStepsInfoDialog getAnalysisStepsDialog() {
-        return new AnalysisStepsInfoDialog(analysisStepView);
-    }
 
     private void shareWithSupport(Analysis selectedAnalysis, final Splittable parent, final AnalysisUserSupportDialog ausd) {
         AnalysisPermission ap = shareFactory.analysisPermission().as();
