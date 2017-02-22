@@ -10,6 +10,7 @@ import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
+import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
 import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
 import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
@@ -95,7 +96,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               RefreshAnalysesSelected.RefreshAnalysesSelectedHandler,
                                               RenameAnalysisSelected.RenameAnalysisSelectedHandler,
                                               RelaunchAnalysisSelected.RelaunchAnalysisSelectedHandler,
-                                              GoToAnalysisFolderSelected.GoToAnalysisFolderSelectedHandler {
+                                              GoToAnalysisFolderSelected.GoToAnalysisFolderSelectedHandler,
+                                              DeleteAnalysisSelected.DeleteAnalysisSelectedHandler {
 
     private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
         private final Analysis ae;
@@ -274,6 +276,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         toolBarView.addRenameAnalysisSelectedHandler(this);
         toolBarView.addRelaunchAnalysisSelectedHandler(this);
         toolBarView.addGoToAnalysisFolderSelectedHandler(this);
+        toolBarView.addDeleteAnalysisSelectedHandler(this);
 
         //Set default filter to ALL
         currentFilter = AnalysisFilter.ALL;
@@ -296,7 +299,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void deleteSelectedAnalyses(final List<Analysis> analysesToDelete) {
+    public void onDeleteAnalysisSelected(DeleteAnalysisSelected event) {
+        List<Analysis> analysesToDelete = event.getAnalyses();
         analysisService.deleteAnalyses(analysesToDelete, new AnalysisCallback<String>() {
 
             @Override

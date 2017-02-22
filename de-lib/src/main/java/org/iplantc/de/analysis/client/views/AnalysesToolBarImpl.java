@@ -12,6 +12,7 @@ import org.iplantc.de.analysis.client.AnalysisToolBarView;
 import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
+import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
 import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
 import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
@@ -369,7 +370,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
             @Override
             public void onDialogHide(DialogHideEvent event) {
                 if (Dialog.PredefinedButton.OK.equals(event.getHideButton())){
-                    presenter.deleteSelectedAnalyses(currentSelection);
+                    fireEvent(new DeleteAnalysisSelected(currentSelection));
                 }
             }
         });
@@ -530,5 +531,10 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     @Override
     public HandlerRegistration addGoToAnalysisFolderSelectedHandler(GoToAnalysisFolderSelected.GoToAnalysisFolderSelectedHandler handler) {
         return addHandler(handler, GoToAnalysisFolderSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addDeleteAnalysisSelectedHandler(DeleteAnalysisSelected.DeleteAnalysisSelectedHandler handler) {
+        return addHandler(handler, DeleteAnalysisSelected.TYPE);
     }
 }
