@@ -10,6 +10,7 @@ import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
+import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
 import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
@@ -97,7 +98,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               RenameAnalysisSelected.RenameAnalysisSelectedHandler,
                                               RelaunchAnalysisSelected.RelaunchAnalysisSelectedHandler,
                                               GoToAnalysisFolderSelected.GoToAnalysisFolderSelectedHandler,
-                                              DeleteAnalysisSelected.DeleteAnalysisSelectedHandler {
+                                              DeleteAnalysisSelected.DeleteAnalysisSelectedHandler,
+                                              CancelAnalysisSelected.CancelAnalysisSelectedHandler {
 
     private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
         private final Analysis ae;
@@ -277,6 +279,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         toolBarView.addRelaunchAnalysisSelectedHandler(this);
         toolBarView.addGoToAnalysisFolderSelectedHandler(this);
         toolBarView.addDeleteAnalysisSelectedHandler(this);
+        toolBarView.addCancelAnalysisSelectedHandler(this);
 
         //Set default filter to ALL
         currentFilter = AnalysisFilter.ALL;
@@ -292,7 +295,9 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void cancelSelectedAnalyses(final List<Analysis> analysesToCancel) {
+    public void onCancelAnalysisSelected(CancelAnalysisSelected event) {
+        List<Analysis> analysesToCancel = event.getAnalysisList();
+
         for (Analysis analysis : analysesToCancel) {
             analysisService.stopAnalysis(analysis, new CancelAnalysisServiceCallback(analysis));
         }

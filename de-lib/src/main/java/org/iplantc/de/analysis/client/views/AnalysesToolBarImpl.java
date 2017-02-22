@@ -12,6 +12,7 @@ import org.iplantc.de.analysis.client.AnalysisToolBarView;
 import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
+import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
 import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
@@ -355,7 +356,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         Preconditions.checkNotNull(currentSelection);
         Preconditions.checkState(!currentSelection.isEmpty());
 
-        presenter.cancelSelectedAnalyses(currentSelection);
+        fireEvent(new CancelAnalysisSelected(currentSelection));
     }
 
     @UiHandler("deleteMI")
@@ -536,5 +537,10 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     @Override
     public HandlerRegistration addDeleteAnalysisSelectedHandler(DeleteAnalysisSelected.DeleteAnalysisSelectedHandler handler) {
         return addHandler(handler, DeleteAnalysisSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addCancelAnalysisSelectedHandler(CancelAnalysisSelected.CancelAnalysisSelectedHandler handler) {
+        return addHandler(handler, CancelAnalysisSelected.TYPE);
     }
 }

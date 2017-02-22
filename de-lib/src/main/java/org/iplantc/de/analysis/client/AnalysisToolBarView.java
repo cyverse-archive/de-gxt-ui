@@ -3,6 +3,7 @@ package org.iplantc.de.analysis.client;
 import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
+import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
 import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
@@ -30,7 +31,8 @@ public interface AnalysisToolBarView extends IsWidget,
                                              RenameAnalysisSelected.HasRenameAnalysisSelectedHandlers,
                                              RelaunchAnalysisSelected.HasRelaunchAnalysisSelectedHandlers,
                                              GoToAnalysisFolderSelected.HasGoToAnalysisFolderSelectedHandlers,
-                                             DeleteAnalysisSelected.HasDeleteAnalysisSelectedHandlers {
+                                             DeleteAnalysisSelected.HasDeleteAnalysisSelectedHandlers,
+                                             CancelAnalysisSelected.HasCancelAnalysisSelectedHandlers {
 
     void filterByAnalysisId(String analysisId, String name);
 

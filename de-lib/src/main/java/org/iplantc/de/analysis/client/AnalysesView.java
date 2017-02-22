@@ -175,8 +175,6 @@ public interface AnalysesView extends IsWidget,
 
         }
 
-        void cancelSelectedAnalyses(List<Analysis> analysesToDelete);
-
         List<Analysis> getSelectedAnalyses();
 
         void go(final HasOneWidget container, List<Analysis> selectedAnalyses);
