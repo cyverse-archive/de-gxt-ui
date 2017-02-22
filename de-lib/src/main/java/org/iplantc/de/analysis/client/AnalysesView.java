@@ -165,6 +165,11 @@ public interface AnalysesView extends IsWidget,
             String userRequestingHelpSubject();
 
             String requestProcessing();
+
+            String commentsDialogWidth();
+
+            String commentsDialogHeight();
+
         }
 
         void cancelSelectedAnalyses(List<Analysis> analysesToDelete);

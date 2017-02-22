@@ -20,7 +20,7 @@ public class AnalysisCommentsDialog extends IPlantDialog {
     @Inject
     public AnalysisCommentsDialog(AnalysesView.Presenter.Appearance appearance){
         this.appearance = appearance;
-        setSize("350px", "300px");
+        setSize(appearance.commentsDialogWidth(), appearance.commentsDialogHeight());
         ta = new TextArea();
         add(ta);
     }
