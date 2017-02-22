@@ -11,6 +11,7 @@ import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
 import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
+import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.gin.factory.AnalysesViewFactory;
@@ -91,7 +92,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               ShareAnalysisSelected.ShareAnalysisSelectedHandler,
                                               AnalysisFilterChanged.AnalysisFilterChangedHandler,
                                               RefreshAnalysesSelected.RefreshAnalysesSelectedHandler,
-                                              RenameAnalysisSelected.RenameAnalysisSelectedHandler {
+                                              RenameAnalysisSelected.RenameAnalysisSelectedHandler,
+                                              RelaunchAnalysisSelected.RelaunchAnalysisSelectedHandler {
 
     private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
         private final Analysis ae;
@@ -268,6 +270,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         toolBarView.addAnalysisFilterChangedHandler(this);
         toolBarView.addRefreshAnalysesSelectedHandler(this);
         toolBarView.addRenameAnalysisSelectedHandler(this);
+        toolBarView.addRelaunchAnalysisSelectedHandler(this);
 
         //Set default filter to ALL
         currentFilter = AnalysisFilter.ALL;
@@ -466,7 +469,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void relaunchSelectedAnalysis(final Analysis selectedAnalysis) {
+    public void onRelaunchAnalysisSelected(RelaunchAnalysisSelected event) {
+        Analysis selectedAnalysis = event.getAnalysis();
         if (selectedAnalysis.isAppDisabled()) {
             return;
         }

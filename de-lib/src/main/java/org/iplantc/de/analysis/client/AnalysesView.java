@@ -187,8 +187,6 @@ public interface AnalysesView extends IsWidget,
 
         void onShowAllSelected();
 
-        void relaunchSelectedAnalysis(Analysis selectedAnalysis);
-
         void setSelectedAnalyses(List<Analysis> selectedAnalyses);
 
         void setViewDebugId(String baseId);
