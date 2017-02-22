@@ -4,6 +4,7 @@ import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
+import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
@@ -22,7 +23,8 @@ public interface AnalysisToolBarView extends IsWidget,
                                              AnalysisCommentUpdate.HasAnalysisCommentUpdateHandlers,
                                              ShareAnalysisSelected.HasShareAnalysisSelectedHandlers,
                                              AnalysisFilterChanged.HasAnalysisFilterChangedHandlers,
-                                             RefreshAnalysesSelected.HasRefreshAnalysesSelectedHandlers {
+                                             RefreshAnalysesSelected.HasRefreshAnalysesSelectedHandlers,
+                                             RenameAnalysisSelected.HasRenameAnalysisSelectedHandlers {
 
     void filterByAnalysisId(String analysisId, String name);
 

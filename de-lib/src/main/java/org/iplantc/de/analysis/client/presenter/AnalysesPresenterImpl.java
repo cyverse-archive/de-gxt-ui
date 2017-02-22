@@ -11,6 +11,7 @@ import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
 import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
+import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.gin.factory.AnalysesViewFactory;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
@@ -89,7 +90,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               AnalysisCommentUpdate.AnalysisCommentUpdateHandler,
                                               ShareAnalysisSelected.ShareAnalysisSelectedHandler,
                                               AnalysisFilterChanged.AnalysisFilterChangedHandler,
-                                              RefreshAnalysesSelected.RefreshAnalysesSelectedHandler {
+                                              RefreshAnalysesSelected.RefreshAnalysesSelectedHandler,
+                                              RenameAnalysisSelected.RenameAnalysisSelectedHandler {
 
     private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
         private final Analysis ae;
@@ -265,6 +267,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         toolBarView.addShareAnalysisSelectedHandler(this);
         toolBarView.addAnalysisFilterChangedHandler(this);
         toolBarView.addRefreshAnalysesSelectedHandler(this);
+        toolBarView.addRenameAnalysisSelectedHandler(this);
 
         //Set default filter to ALL
         currentFilter = AnalysisFilter.ALL;
@@ -471,10 +474,13 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void renameSelectedAnalysis(final Analysis selectedAnalysis, final String newName) {
+    public void onRenameAnalysisSelected(RenameAnalysisSelected event) {
+        Analysis selectedAnalysis = event.getAnalysis();
+        String newName = event.getNewName();
         analysisService.renameAnalysis(selectedAnalysis,
                                        newName,
                                        new RenameAnalysisCallback(selectedAnalysis, newName, listStore));
+
     }
 
     @Override

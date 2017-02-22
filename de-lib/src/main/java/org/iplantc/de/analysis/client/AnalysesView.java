@@ -189,8 +189,6 @@ public interface AnalysesView extends IsWidget,
 
         void relaunchSelectedAnalysis(Analysis selectedAnalysis);
 
-        void renameSelectedAnalysis(Analysis selectedAnalysis, String newName);
-
         void setSelectedAnalyses(List<Analysis> selectedAnalyses);
 
         void setViewDebugId(String baseId);

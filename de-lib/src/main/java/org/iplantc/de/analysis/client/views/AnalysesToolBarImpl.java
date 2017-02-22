@@ -13,6 +13,7 @@ import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
+import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
@@ -405,7 +406,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
             @Override
             public void onSelect(SelectEvent event) {
                 if (!selectedAnalysis.getName().equals(dlg.getFieldText())) {
-                    presenter.renameSelectedAnalysis(selectedAnalysis, dlg.getFieldText());
+                    fireEvent(new RenameAnalysisSelected(selectedAnalysis, dlg.getFieldText()));
                 }
             }
         });
@@ -513,5 +514,10 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     @Override
     public HandlerRegistration addRefreshAnalysesSelectedHandler(RefreshAnalysesSelected.RefreshAnalysesSelectedHandler handler) {
         return addHandler(handler, RefreshAnalysesSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addRenameAnalysisSelectedHandler(RenameAnalysisSelected.RenameAnalysisSelectedHandler handler) {
+        return addHandler(handler, RenameAnalysisSelected.TYPE);
     }
 }
