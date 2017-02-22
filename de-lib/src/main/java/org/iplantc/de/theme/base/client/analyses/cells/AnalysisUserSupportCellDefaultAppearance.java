@@ -37,10 +37,10 @@ public class AnalysisUserSupportCellDefaultAppearance implements AnalysisUserSup
     }
 
     interface Templates extends SafeHtmlTemplates {
-        @SafeHtmlTemplates.Template("<span name=\"{0}\" title=\" {3}\" class='{2}'>{1}</span>")
+        @SafeHtmlTemplates.Template("<span name=\"{0}\" title=\"{3}\" class='{2}'>{1}</span>")
         SafeHtml analysis(String elementName, SafeHtml analysisName, String className, String tooltip);
 
-        @SafeHtmlTemplates.Template("<span name=\"{0}\" title=\" {3}\" class='{2}'>{1}</span>")
+        @SafeHtmlTemplates.Template("<span name=\"{0}\" title=\"{3}\" class='{2}'>{1}</span>")
         SafeHtml analysisNoSharing(String elementName, SafeHtml analysisName, String className, String tooltip);
 
     }
