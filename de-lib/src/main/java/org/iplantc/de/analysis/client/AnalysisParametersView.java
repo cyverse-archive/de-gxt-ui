@@ -32,6 +32,10 @@ public interface AnalysisParametersView extends IsWidget,
         String retrieveParametersLoadingMask();
 
         String viewParameters(String name);
+
+        String parametersDialogWidth();
+
+        String parametersDialogHeight();
     }
 
     interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {

@@ -19,7 +19,7 @@ public class AnalysisParametersDialog extends IPlantDialog {
     AnalysisParametersDialog(final AnalysisParametersView.Appearance appearance){
         this.appearance = appearance;
 
-        setSize("520px", "375px");
+        setSize(appearance.parametersDialogWidth(), appearance.parametersDialogHeight());
         setMinHeight(375);
         setMinWidth(520);
         setHideOnButtonClick(true);
