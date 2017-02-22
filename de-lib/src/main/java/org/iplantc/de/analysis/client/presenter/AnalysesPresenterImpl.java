@@ -10,6 +10,7 @@ import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
+import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
 import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.gin.factory.AnalysesViewFactory;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
@@ -87,7 +88,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               AnalysisJobInfoSelected.AnalysisJobInfoSelectedHandler,
                                               AnalysisCommentUpdate.AnalysisCommentUpdateHandler,
                                               ShareAnalysisSelected.ShareAnalysisSelectedHandler,
-                                              AnalysisFilterChanged.AnalysisFilterChangedHandler {
+                                              AnalysisFilterChanged.AnalysisFilterChangedHandler,
+                                              RefreshAnalysesSelected.RefreshAnalysesSelectedHandler {
 
     private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
         private final Analysis ae;
@@ -262,6 +264,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         toolBarView.addAnalysisCommentUpdateHandler(this);
         toolBarView.addShareAnalysisSelectedHandler(this);
         toolBarView.addAnalysisFilterChangedHandler(this);
+        toolBarView.addRefreshAnalysesSelectedHandler(this);
 
         //Set default filter to ALL
         currentFilter = AnalysisFilter.ALL;
@@ -396,7 +399,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void onRefreshSelected() {
+    public void onRefreshAnalysesSelected(RefreshAnalysesSelected event) {
         loadAnalyses(currentFilter);
     }
 

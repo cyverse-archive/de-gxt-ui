@@ -12,6 +12,7 @@ import org.iplantc.de.analysis.client.AnalysisToolBarView;
 import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
+import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
 import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
@@ -467,7 +468,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
 
     @UiHandler("refreshTb")
     void onRefreshSelected(SelectEvent event) {
-        presenter.onRefreshSelected();
+        fireEvent(new RefreshAnalysesSelected());
     }
 
     void applyFilter(AnalysisFilter filter) {
@@ -507,5 +508,10 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     @Override
     public HandlerRegistration addAnalysisFilterChangedHandler(AnalysisFilterChanged.AnalysisFilterChangedHandler handler) {
         return addHandler(handler, AnalysisFilterChanged.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addRefreshAnalysesSelectedHandler(RefreshAnalysesSelected.RefreshAnalysesSelectedHandler handler) {
+        return addHandler(handler, RefreshAnalysesSelected.TYPE);
     }
 }

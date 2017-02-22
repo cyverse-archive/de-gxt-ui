@@ -185,8 +185,6 @@ public interface AnalysesView extends IsWidget,
 
         void goToSelectedAnalysisFolder(Analysis selectedAnalysis);
 
-        void onRefreshSelected();
-
         void onShowAllSelected();
 
         void relaunchSelectedAnalysis(Analysis selectedAnalysis);
