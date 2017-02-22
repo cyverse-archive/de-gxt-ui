@@ -156,7 +156,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         searchField.filterByAnalysisId(analysisId, name);
         //reset filter. Users need to set Filter to ALL to go back...
         filterCombo.setValue(null);
-        presenter.setCurrentFilter(null);
+        applyFilter(null);
     }
 
     @Override
@@ -164,7 +164,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         searchField.filterByParentId(analysisId);
         //reset filter. Users need to set Filter to ALL to go back...
         filterCombo.setValue(null);
-        presenter.setCurrentFilter(null);
+        applyFilter(null);
     }
 
     @Override
@@ -335,7 +335,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
             filterCombo.setValue(AnalysisFilter.ALL);
         } else {
             filterCombo.setValue(null);
-            presenter.setCurrentFilter(null);
+            applyFilter(null);
         }
     }
 
