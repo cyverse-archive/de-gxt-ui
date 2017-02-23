@@ -155,6 +155,8 @@ public interface AnalysesView extends IsWidget,
             String stopAnalysisError(String name);
 
             String analysisStepInfoError();
+
+            String requestHelp();
         }
 
         void cancelSelectedAnalyses(List<Analysis> analysesToDelete);
