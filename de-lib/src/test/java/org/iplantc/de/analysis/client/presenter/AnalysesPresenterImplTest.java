@@ -30,13 +30,13 @@ import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.shared.AnalysisCallback;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import com.google.inject.Provider;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.loader.FilterConfig;
@@ -68,7 +68,7 @@ public class AnalysesPresenterImplTest {
     @Mock IplantAnnouncer announcerMock;
     @Mock AnalysesView.Presenter.Appearance appearanceMock;
     @Mock AnalysisStepsView analysisStepsViewMock;
-    @Mock Provider<AnalysisSharingDialog> aSharingDialogProviderMock;
+    @Mock AsyncProviderWrapper<AnalysisSharingDialog> aSharingDialogProviderMock;
     @Mock AnalysisSharingDialog analysisSharingDialogMock;
     @Mock CollaboratorsUtil collaboratorsUtilMock;
     @Mock JsonUtil jsonUtilMock;
@@ -117,7 +117,7 @@ public class AnalysesPresenterImplTest {
         when(viewMock.getSearchField()).thenReturn(analysisSearchFieldMock);
         when(loaderMock.getLastLoadConfig()).thenReturn(loadConfigMock);
         when(loadConfigMock.getFilters()).thenReturn(filterConfigsMock);
-        when(aSharingDialogProviderMock.get()).thenReturn(analysisSharingDialogMock);
+
 
         uut = new AnalysesPresenterImpl(viewFactoryMock,
                                         proxyMock,
