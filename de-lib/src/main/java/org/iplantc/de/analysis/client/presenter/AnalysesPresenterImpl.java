@@ -43,7 +43,6 @@ import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -209,23 +208,21 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     CollaboratorsUtil collaboratorsUtil;
     @Inject
     JsonUtil jsonUtil;
-
-    AnalysisFilter currentFilter;
-
     @Inject
     AnalysisUserSupportDialog.AnalysisUserSupportAppearance userSupportAppearance;
     @Inject
     DEProperties deProperties;
-
     @Inject
     AnalysisSupportAutoBeanFactory supportFactory;
+    @Inject AnalysisSharingAutoBeanFactory shareFactory;
 
     private final ListStore<Analysis> listStore;
     private final AnalysesView view;
     private final HasHandlers eventBus;
     private HandlerRegistration handlerFirstLoad;
     private final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader;
-    private AnalysisSharingAutoBeanFactory shareFactory = GWT.create(AnalysisSharingAutoBeanFactory.class);
+    AnalysisFilter currentFilter;
+
 
     @Inject
     AnalysesPresenterImpl(final AnalysesViewFactory viewFactory,
