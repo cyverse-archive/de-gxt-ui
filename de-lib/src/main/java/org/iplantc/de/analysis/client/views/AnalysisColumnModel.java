@@ -5,9 +5,11 @@ import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisCommentSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
+import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
 import org.iplantc.de.analysis.client.views.cells.AnalysisAppNameCell;
 import org.iplantc.de.analysis.client.views.cells.AnalysisCommentCell;
 import org.iplantc.de.analysis.client.views.cells.AnalysisNameCell;
+import org.iplantc.de.analysis.client.views.cells.AnalysisUserSupportCell;
 import org.iplantc.de.analysis.client.views.cells.EndDateTimeCell;
 import org.iplantc.de.analysis.client.views.cells.StartDateTimeCell;
 import org.iplantc.de.client.models.analysis.Analysis;
@@ -31,7 +33,8 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
                                                               AnalysisNameSelectedEvent.HasAnalysisNameSelectedEventHandlers,
                                                               AnalysisAppSelectedEvent.HasAnalysisAppSelectedEventHandlers,
                                                               AnalysisCommentSelectedEvent.HasAnalysisCommentSelectedEventHandlers,
-                                                              HTAnalysisExpandEvent.HasHTAnalysisExpandEventHandlers {
+                                                              HTAnalysisExpandEvent.HasHTAnalysisExpandEventHandlers,
+                                                              AnalysisUserSupportRequestedEvent.HasAnalysisUserSupportRequestedEventHandlers{
 
     @Inject
     AnalysisColumnModel(final CheckBoxSelectionModel<Analysis> checkBoxSelectionModel,
@@ -46,6 +49,8 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
                 ((AnalysisAppNameCell)cc.getCell()).setHasHandlers(ensureHandlers());
             } else if (cc.getCell() instanceof AnalysisCommentCell) {
                 ((AnalysisCommentCell)cc.getCell()).setHasHandlers(ensureHandlers());
+            } else if(cc.getCell() instanceof  AnalysisUserSupportCell) {
+                ((AnalysisUserSupportCell)cc.getCell()).setHasHandlers(ensureHandlers());
             }
         }
     }
@@ -64,27 +69,6 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
                                                                         125);
         ColumnConfig<Analysis, Analysis> endDate = new ColumnConfig<>(new IdentityValueProvider<Analysis>("enddate"),
                                                                       125);
-        ColumnConfig<Analysis, String> status = new ColumnConfig<>(new ValueProvider<Analysis, String>() {
-
-                                                                       @Override
-                                                                       public String
-                                                                               getValue(Analysis object) {
-                                                                           return object.getStatus();
-                                                                       }
-
-                                                                       @Override
-                                                                       public void
-                                                                               setValue(Analysis object,
-                                                                                        String value) {
-                                                                           object.setStatus(value);
-                                                                       }
-
-                                                                       @Override
-                                                                       public String getPath() {
-                                                                           return "status";
-                                                                       }
-                                                                   },
-                                                                   75);
 
         ColumnConfig<Analysis, String> username = new ColumnConfig<>(new ValueProvider<Analysis, String>() {
 
@@ -107,6 +91,7 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
                                                                          }
                                                                      },
                                                                      125);
+        ColumnConfig<Analysis, Analysis> status = new ColumnConfig<Analysis, Analysis>(new IdentityValueProvider<Analysis>("status"),75);
 
         name.setHeader(appearance.name());
         name.setCell(new AnalysisNameCell());
@@ -129,6 +114,10 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
         endDate.setHeader(appearance.endDate());
 
         status.setHeader(appearance.status());
+        status.setMenuDisabled(false);
+        status.setCell(new AnalysisUserSupportCell());
+        status.setSortable(true);
+        status.setHideable(false);
 
         List<ColumnConfig<Analysis, ?>> ret = Lists.newArrayList();
         ret.add(colCheckBox);
@@ -164,5 +153,11 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
     public HandlerRegistration
             addHTAnalysisExpandEventHandler(HTAnalysisExpandEvent.HTAnalysisExpandEventHandler handler) {
         return ensureHandlers().addHandler(HTAnalysisExpandEvent.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addAnalysisUserSupportRequestedEventHandler(
+            AnalysisUserSupportRequestedEvent.AnalysisUserSupportRequestedEventHandler handler) {
+        return ensureHandlers().addHandler(AnalysisUserSupportRequestedEvent.TYPE, handler);
     }
 }

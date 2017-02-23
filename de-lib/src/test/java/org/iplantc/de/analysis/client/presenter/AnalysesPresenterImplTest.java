@@ -21,22 +21,28 @@ import org.iplantc.de.analysis.client.views.dialogs.AnalysisSharingDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisStepsInfoDialog;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.client.events.EventBus;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.analysis.Analysis;
+import org.iplantc.de.client.models.analysis.AnalysisExecutionStatus;
 import org.iplantc.de.client.models.analysis.AnalysisStep;
 import org.iplantc.de.client.models.analysis.AnalysisStepsInfo;
+import org.iplantc.de.client.models.analysis.support.AnalysisSupportAutoBeanFactory;
+import org.iplantc.de.client.models.analysis.support.AnalysisSupportRequest;
+import org.iplantc.de.client.models.analysis.support.AnalysisSupportRequestFields;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.shared.AnalysisCallback;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import com.google.inject.Provider;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.loader.FilterConfig;
@@ -55,6 +61,7 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -64,11 +71,20 @@ import java.util.List;
 @RunWith(GwtMockitoTestRunner.class)
 public class AnalysesPresenterImplTest {
 
+    public static final String TESTUSER = "testuser";
+    public static final String TEST_CYVERSE_ORG = "test@cyverse.org";
+    public static final String TESTUSER_CYVERE_ORG = "testuser@cyvere.org";
+    public static final String THIS_IS_A_COMMENT = "This is a comment!";
+    public static final String NAME = "name";
+    public static final String APP_NAME = "word count";
+    public static final String REQUEST_HELP = " requesting help with Analysis";
+    public static final String RESULT = "/iplant/home/result";
+
     @Mock AnalysisServiceFacade analysisServiceMock;
     @Mock IplantAnnouncer announcerMock;
     @Mock AnalysesView.Presenter.Appearance appearanceMock;
     @Mock AnalysisStepsView analysisStepsViewMock;
-    @Mock Provider<AnalysisSharingDialog> aSharingDialogProviderMock;
+    @Mock AsyncProviderWrapper<AnalysisSharingDialog> aSharingDialogProviderMock;
     @Mock AnalysisSharingDialog analysisSharingDialogMock;
     @Mock CollaboratorsUtil collaboratorsUtilMock;
     @Mock JsonUtil jsonUtilMock;
@@ -93,6 +109,13 @@ public class AnalysesPresenterImplTest {
     @Mock AnalysisStepsInfo analysisStepsInfoMock;
     @Mock AnalysisStepsInfoDialog analysisStepsInfoDialogMock;
     @Mock List<AnalysisStep> stepListMock;
+    @Mock UserInfo userInfoMock;
+    @Mock AnalysisSupportAutoBeanFactory supportFactoryMock;
+    @Mock
+    AutoBean<AnalysisSupportRequest> aSupportRequestBeanMock;
+    @Mock
+    AutoBean<AnalysisSupportRequestFields> aSupportRequestFieldsBeanMock;
+
 
     @Captor ArgumentCaptor<AnalysisCallback<String>> stringCallbackCaptor;
     @Captor ArgumentCaptor<AnalysisCallback<Void>> voidCallbackCaptor;
@@ -111,13 +134,21 @@ public class AnalysesPresenterImplTest {
         when(analysisListMock.iterator()).thenReturn(analysisIteratorMock);
         when(analysisIteratorMock.hasNext()).thenReturn(true, false);
         when(analysisIteratorMock.next()).thenReturn(analysisMock).thenReturn(null);
+
         when(analysisMock.getId()).thenReturn("id");
-        when(analysisMock.getName()).thenReturn("name");
+        when(analysisMock.getName()).thenReturn(NAME);
+        when(analysisMock.getAppName()).thenReturn(APP_NAME);
+        when(analysisMock.getResultFolderId()).thenReturn(RESULT);
+        when(analysisMock.getStartDate()).thenReturn(new Date().getTime());
+        when(analysisMock.getEndDate()).thenReturn(new Date().getTime());
+        when(analysisMock.getStatus()).thenReturn(AnalysisExecutionStatus.COMPLETED.toString());
+
+
         when(appearanceMock.deleteAnalysisError()).thenReturn("error");
         when(viewMock.getSearchField()).thenReturn(analysisSearchFieldMock);
         when(loaderMock.getLastLoadConfig()).thenReturn(loadConfigMock);
         when(loadConfigMock.getFilters()).thenReturn(filterConfigsMock);
-        when(aSharingDialogProviderMock.get()).thenReturn(analysisSharingDialogMock);
+
 
         uut = new AnalysesPresenterImpl(viewFactoryMock,
                                         proxyMock,
@@ -152,7 +183,8 @@ public class AnalysesPresenterImplTest {
         uut.aSharingDialogProvider = aSharingDialogProviderMock;
         uut.collaboratorsUtil = collaboratorsUtilMock;
         uut.jsonUtil = jsonUtilMock;
-
+        uut.userInfo = userInfoMock;
+        uut.supportFactory = supportFactoryMock;
         verifyConstructor(uut);
     }
 
@@ -349,6 +381,33 @@ public class AnalysesPresenterImplTest {
         verify(analysisStepsViewMock).clearData();
         verify(analysisStepsViewMock).setData(eq(stepListMock));
 
+    }
+
+    @Test
+    public void getAnalysisSupportRequest() {
+        AnalysisSupportRequestFields requestFields = mock(AnalysisSupportRequestFields.class);
+        AnalysisSupportRequest request = mock(AnalysisSupportRequest.class);
+
+        when(supportFactoryMock.analysisSupportRequestFields()).thenReturn(aSupportRequestFieldsBeanMock);
+        when(supportFactoryMock.analysisSupportRequest()).thenReturn(aSupportRequestBeanMock);
+        when(aSupportRequestBeanMock.as()).thenReturn(request);
+        when(aSupportRequestFieldsBeanMock.as()).thenReturn(requestFields);
+        when(userInfoMock.getUsername()).thenReturn(TESTUSER);
+        when(userInfoMock.getEmail()).thenReturn(TEST_CYVERSE_ORG);
+        when(userInfoMock.getFullUsername()).thenReturn(TESTUSER_CYVERE_ORG);
+        when(appearanceMock.requestHelp()).thenReturn(REQUEST_HELP);
+
+        uut.getAnalysisSupportRequest(analysisMock, THIS_IS_A_COMMENT);
+
+        verify(request).setFrom(eq(TESTUSER_CYVERE_ORG));
+        verify(request).setSubject(eq(TESTUSER + REQUEST_HELP));
+
+        verify(requestFields).setEmail(eq(TEST_CYVERSE_ORG));
+        verify(requestFields).setStatus(eq(AnalysisExecutionStatus.COMPLETED.toString()));
+        verify(requestFields).setName(eq(NAME));
+        verify(requestFields).setApp(eq(APP_NAME));
+        verify(requestFields).setComment(eq(THIS_IS_A_COMMENT));
+        verify(requestFields).setOutputFolder(eq(RESULT));
     }
 
 }

@@ -468,4 +468,5 @@ public interface IplantResources extends ClientBundle,
 
     @Source("arrow_undo.png")
     ImageResource arrowUndoIcon();
+
 }
