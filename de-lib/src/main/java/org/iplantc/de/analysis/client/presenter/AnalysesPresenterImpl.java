@@ -214,7 +214,10 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     DEProperties deProperties;
     @Inject
     AnalysisSupportAutoBeanFactory supportFactory;
-    @Inject AnalysisSharingAutoBeanFactory shareFactory;
+    @Inject
+    AnalysisSharingAutoBeanFactory shareFactory;
+    @Inject
+    UserInfo userInfo;
 
     private final ListStore<Analysis> listStore;
     private final AnalysesView view;
@@ -533,24 +536,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                 ausd.addSubmitSelectHandler(new SelectEvent.SelectHandler() {
                     @Override
                     public void onSelect(SelectEvent event) {
-                        AnalysisSupportRequestFields fields =
-                                supportFactory.analysisSupportRequest().as();
-                        fields.setName(value.getName());
-                        fields.setApp(value.getAppName());
-                        fields.setOutputFolder(value.getResultFolderId());
-                        fields.setStartDate(new Date(value.getStartDate()));
-                        fields.setEndDate(new Date(value.getEndDate()));
-                        fields.setComment(ausd.getComment());
-                        fields.setStatus(value.getStatus());
-                        fields.setEmail(UserInfo.getInstance().getEmail());
-
-                        AnalysisSupportRequest req = supportFactory.analysisSupportRequestSubject().as();
-                        req.setFrom(UserInfo.getInstance().getFullUsername());
-                        req.setSubject(
-                                UserInfo.getInstance().getUsername() + " requesting help with Analysis");
-                        req.setFields(fields);
-
                         ausd.hide();
+                        AnalysisSupportRequest req = getAnalysisSupportRequest(value, ausd.getComment());
                         shareWithSupport(value, AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(req)));
                     }
                 });
@@ -560,6 +547,26 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         });
 
 
+    }
+
+    protected AnalysisSupportRequest getAnalysisSupportRequest(Analysis value, String comment) {
+        AnalysisSupportRequestFields fields =
+                supportFactory.analysisSupportRequestFields().as();
+        fields.setName(value.getName());
+        fields.setApp(value.getAppName());
+        fields.setOutputFolder(value.getResultFolderId());
+        fields.setStartDate(new Date(value.getStartDate()));
+        fields.setEndDate(new Date(value.getEndDate()));
+        fields.setComment(comment);
+        fields.setStatus(value.getStatus());
+        fields.setEmail(userInfo.getEmail());
+
+        AnalysisSupportRequest req = supportFactory.analysisSupportRequest().as();
+        req.setFrom(userInfo.getFullUsername());
+        req.setSubject(
+                userInfo.getUsername() + appearance.requestHelp());
+        req.setFields(fields);
+        return req;
     }
 
     protected void emailSupport(final Splittable parent) {

@@ -109,4 +109,6 @@ public interface AnalysesMessages extends Messages {
     String supportRequestFailed();
 
     String supportRequestSuccess();
+
+    String requestHelp();
 }

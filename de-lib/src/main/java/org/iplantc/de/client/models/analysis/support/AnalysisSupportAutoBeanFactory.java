@@ -8,7 +8,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanFactory;
  */
 public interface AnalysisSupportAutoBeanFactory extends AutoBeanFactory {
 
-    AutoBean<AnalysisSupportRequestFields> analysisSupportRequest();
+    AutoBean<AnalysisSupportRequestFields> analysisSupportRequestFields();
 
-    AutoBean<AnalysisSupportRequest> analysisSupportRequestSubject();
+    AutoBean<AnalysisSupportRequest> analysisSupportRequest();
 }
