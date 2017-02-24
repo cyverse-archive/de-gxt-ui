@@ -110,5 +110,5 @@ public interface AnalysesMessages extends Messages {
 
     String supportRequestSuccess();
 
-    String requestHelp();
+    String userRequestingHelpSubject();
 }

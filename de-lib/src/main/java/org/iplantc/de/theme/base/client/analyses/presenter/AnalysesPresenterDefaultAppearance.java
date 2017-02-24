@@ -76,8 +76,8 @@ public class AnalysesPresenterDefaultAppearance implements AnalysesView.Presente
     }
 
     @Override
-    public String requestHelp() {
-        return analysesMessages.requestHelp();
+    public String userRequestingHelpSubject() {
+        return analysesMessages.userRequestingHelpSubject();
     }
 
 }

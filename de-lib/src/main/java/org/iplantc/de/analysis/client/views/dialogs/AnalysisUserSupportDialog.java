@@ -1,15 +1,16 @@
 package org.iplantc.de.analysis.client.views.dialogs;
 
 
-import org.iplantc.de.theme.base.client.analyses.support.HelpRendererTemplates;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.analysis.AnalysesAutoBeanFactory;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisExecutionStatus;
+import org.iplantc.de.client.models.bootstrap.UserProfile;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
@@ -26,8 +27,6 @@ import com.sencha.gxt.widget.core.client.form.CheckBox;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.FormPanel;
 import com.sencha.gxt.widget.core.client.form.Radio;
-
-import java.util.Date;
 
 
 /**
@@ -65,15 +64,32 @@ public class AnalysisUserSupportDialog extends Window {
         String supportRequestSuccess();
 
         String deSystemId();
+
+        SafeHtml renderCondorSubmitted(Analysis selectedAnalysis);
+
+        SafeHtml renderAgaveSubmitted(Analysis selectedAnalysis);
+
+        SafeHtml renderCondorRunning(Analysis selectedAnalysis);
+
+        SafeHtml renderAgaveRunning(Analysis selectedAnalysis);
+
+        SafeHtml renderFailed(Analysis selectedAnalysis);
+
+        SafeHtml renderCompletedUnExpected(Analysis selectedAnalysis);
+
+        SafeHtml renderCompletedNoOutput(Analysis selectedAnalysis);
+
+        SafeHtml renderSubmitToSupport(Analysis selectedAnalysis, UserProfile userProfile);
+
     }
 
 
     private Analysis selectedAnalysis;
-    private HelpRendererTemplates renderer = GWT.create(HelpRendererTemplates.class);
     private AnalysisUserSupportAppearance appearance = GWT.create(AnalysisUserSupportAppearance.class);
     private VerticalLayoutContainer vlc;
     private TextButton needHelpButton;
-    @Inject AnalysesAutoBeanFactory factory;
+    @Inject
+    AnalysesAutoBeanFactory factory;
 
     @Inject
     public AnalysisUserSupportDialog() {
@@ -97,9 +113,9 @@ public class AnalysisUserSupportDialog extends Window {
         switch (AnalysisExecutionStatus.fromTypeString(selectedAnalysis.getStatus().toLowerCase())) {
             case SUBMITTED:
                 if (selectedAnalysis.getSystemId().equalsIgnoreCase(appearance.deSystemId())) {
-                    text = new HTML(renderer.renderCondorSubmitted(selectedAnalysis));
+                    text = new HTML(appearance.renderCondorSubmitted(selectedAnalysis));
                 } else {
-                    text = new HTML(renderer.renderAgaveSubmitted(selectedAnalysis));
+                    text = new HTML(appearance.renderAgaveSubmitted(selectedAnalysis));
                 }
                 vlc.add(text);
                 vlc.add(needHelpButton,
@@ -110,9 +126,9 @@ public class AnalysisUserSupportDialog extends Window {
                 break;
             case RUNNING:
                 if (selectedAnalysis.getSystemId().equalsIgnoreCase(appearance.deSystemId())) {
-                    text = new HTML(renderer.renderCondorRunning(selectedAnalysis));
+                    text = new HTML(appearance.renderCondorRunning(selectedAnalysis));
                 } else {
-                    text = new HTML(renderer.renderAgaveRunning(selectedAnalysis));
+                    text = new HTML(appearance.renderAgaveRunning(selectedAnalysis));
                 }
                 vlc.add(text);
                 vlc.add(needHelpButton,
@@ -122,7 +138,7 @@ public class AnalysisUserSupportDialog extends Window {
                 add(vlc);
                 break;
             case FAILED:
-                text = new HTML(renderer.renderFailed(selectedAnalysis));
+                text = new HTML(appearance.renderFailed(selectedAnalysis));
                 vlc.add(text);
                 add(vlc);
                 vlc.add(needHelpButton,
@@ -164,7 +180,7 @@ public class AnalysisUserSupportDialog extends Window {
             public void onValueChange(ValueChangeEvent<Boolean> event) {
                 if (unExpectedOutputOption.getValue()) {
                     vlc.clear();
-                    vlc.add(new HTML(renderer.renderCompletedUnExpected(selectedAnalysis)));
+                    vlc.add(new HTML(appearance.renderCompletedUnExpected(selectedAnalysis)));
                     vlc.add(needHelpButton,
                             new VerticalLayoutContainer.VerticalLayoutData(-1,
                                                                            -1,
@@ -179,7 +195,7 @@ public class AnalysisUserSupportDialog extends Window {
             public void onValueChange(ValueChangeEvent<Boolean> event) {
                 if (noOutputOption.getValue()) {
                     vlc.clear();
-                    vlc.add(new HTML(renderer.renderCompletedNoOutput(selectedAnalysis)));
+                    vlc.add(new HTML(appearance.renderCompletedNoOutput(selectedAnalysis)));
                     vlc.add(needHelpButton,
                             new VerticalLayoutContainer.VerticalLayoutData(-1,
                                                                            -1,
@@ -194,10 +210,8 @@ public class AnalysisUserSupportDialog extends Window {
 
     private void displayConfirmation() {
         vlc.clear();
-        vlc.add(new HTML(renderer.renderSubmitToSupport(selectedAnalysis,
-                                                        new Date(selectedAnalysis.getStartDate()),
-                                                        new Date(selectedAnalysis.getEndDate()),
-                                                        UserInfo.getInstance().getUserProfile())));
+        vlc.add(new HTML(appearance.renderSubmitToSupport(selectedAnalysis,
+                                                          UserInfo.getInstance().getUserProfile())));
         comments = new TextArea();
         FieldLabel commentsLbl = new FieldLabel(comments, appearance.comments());
         commentsLbl.setLabelAlign(FormPanel.LabelAlign.TOP);
@@ -208,11 +222,11 @@ public class AnalysisUserSupportDialog extends Window {
             @Override
             public void onValueChange(ValueChangeEvent<Boolean> event) {
 
-                   if(approvalChkBox.getValue()) {
-                       submitBtn.enable();
-                   } else {
-                       submitBtn.disable();
-                   }
+                if (approvalChkBox.getValue()) {
+                    submitBtn.enable();
+                } else {
+                    submitBtn.disable();
+                }
             }
         });
 

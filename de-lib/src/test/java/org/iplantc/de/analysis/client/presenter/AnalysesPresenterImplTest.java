@@ -395,7 +395,7 @@ public class AnalysesPresenterImplTest {
         when(userInfoMock.getUsername()).thenReturn(TESTUSER);
         when(userInfoMock.getEmail()).thenReturn(TEST_CYVERSE_ORG);
         when(userInfoMock.getFullUsername()).thenReturn(TESTUSER_CYVERE_ORG);
-        when(appearanceMock.requestHelp()).thenReturn(REQUEST_HELP);
+        when(appearanceMock.userRequestingHelpSubject()).thenReturn(REQUEST_HELP);
 
         uut.getAnalysisSupportRequest(analysisMock, THIS_IS_A_COMMENT);
 
