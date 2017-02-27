@@ -9,7 +9,6 @@ import org.iplantc.de.client.models.apps.PublishAppRequest;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.services.OntologyServiceFacade;
-import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.shared.AppsCallback;
 
@@ -84,7 +83,6 @@ public class SubmitAppForPublicPresenter implements SubmitAppForPublicUseView.Pr
     @Inject SubmitAppForPublicUseView.SubmitAppAppearance appearance;
     @Inject EventBus eventBus;
     @Inject SubmitAppPresenterBeanFactory factory;
-    @Inject JsonUtil jsonUtil;
     @Inject SubmitAppForPublicUseView view;
     private OntologyServiceFacade ontologyService;
     private AsyncCallback<String> callback;
