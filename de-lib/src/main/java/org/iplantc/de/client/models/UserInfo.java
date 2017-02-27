@@ -87,8 +87,6 @@ public class UserInfo {
                hasDataInfoError() ||
                hasPreferencesError() ||
                hasSessionError() ||
-               hasWorkspaceError() ||
-               hasSystemsError() ||
                hasAppsInfoError();
     }
 
@@ -112,14 +110,6 @@ public class UserInfo {
         return session != null && session.getError() != null;
     }
 
-    public boolean hasWorkspaceError() {
-        return workspace != null && workspace.getError() != null;
-    }
-
-    public boolean hasSystemsError() {
-        return systemIds != null && systemIds.getError() != null;
-    }
-
     public boolean hasAppsInfoError() {
         return appsInfo != null && appsInfo.getError() != null;
     }
@@ -134,14 +124,6 @@ public class UserInfo {
 
     public Splittable getSessionsError() {
         return hasSessionError() ? session.getError() : null;
-    }
-
-    public Splittable getWorkspaceError() {
-        return hasWorkspaceError() ? workspace.getError() : null;
-    }
-
-    public Splittable getSystemsError() {
-        return hasSystemsError() ? systemIds.getError() : null;
     }
 
     public Splittable getAppsInfoError() {
@@ -273,7 +255,7 @@ public class UserInfo {
      * @return the newUser
      */
     public boolean isNewUser() {
-        return workspace == null || hasWorkspaceError() ? true : workspace.isNewUser();
+        return workspace == null || hasAppsInfoError() ? true : workspace.isNewUser();
     }
 
     /**

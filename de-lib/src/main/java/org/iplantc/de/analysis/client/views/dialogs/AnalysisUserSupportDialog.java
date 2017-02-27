@@ -158,7 +158,7 @@ public class AnalysisUserSupportDialog extends Window {
     }
 
     private String getDESystemId() {
-         if(userInfo.hasSystemsError() || userInfo.hasAppsInfoError())  {
+         if(userInfo.hasAppsInfoError())  {
              return DE_SYSTEM_ID;  //hardcoded default
          } else {
              return userInfo.getSystemIds().getDESytemId();
