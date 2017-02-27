@@ -5,11 +5,9 @@ import org.iplantc.de.client.models.apps.App;
 import com.google.common.collect.Lists;
 import com.google.gwt.cell.client.CompositeCell;
 import com.google.gwt.cell.client.HasCell;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-
-import java.util.List;
+import com.google.inject.Inject;
 
 /**
  * @author aramsey
@@ -20,53 +18,46 @@ public class AppTileCell extends CompositeCell<App> {
         <X> void render(Context context, App value, SafeHtmlBuilder sb, HasCell<App, X> hasCell);
     }
 
-    private static AppNameCell appNameCell;
-    private static AppFavoriteCell appFavoriteCell;
-    private static AppInfoCell appInfoCell;
-    private static AppStatusCell appStatusCell;
-    private static AppCommentCell appCommentCell;
-    private static AppRatingCell appRatingCell;
-    private static AppIntegratorCell appIntegratorCell;
-    private static AppCardCell appCardCell;
+    private AppNameCell appNameCell;
+    private AppFavoriteCell appFavoriteCell;
+    private AppInfoCell appInfoCell;
+    private AppStatusCell appStatusCell;
+    private AppCommentCell appCommentCell;
+    private AppRatingCell appRatingCell;
+    private AppIntegratorCell appIntegratorCell;
+    private AppCardCell appCardCell;
 
-    private AppTileCellAppearance appearance = GWT.create(AppTileCellAppearance.class);
+    private AppTileCellAppearance appearance;
 
-    public AppTileCell() {
-        this(createAppTileCell());
-    }
+    @Inject
+    public AppTileCell(AppTileCellAppearance appearance,
+                       AppNameCell appNameCell,
+                       AppFavoriteCell appFavoriteCell,
+                       AppInfoCell appInfoCell,
+                       AppStatusCell appStatusCell,
+                       AppCommentCell appCommentCell,
+                       AppRatingCell appRatingCell,
+                       AppIntegratorCell appIntegratorCell,
+                       AppCardCell appCardCell) {
+        super(Lists.newArrayList(appNameCell,
+                                appFavoriteCell,
+                                appInfoCell,
+                                appStatusCell,
+                                appCommentCell,
+                                appRatingCell,
+                                appIntegratorCell,
+                                appCardCell));
 
-    /**
-     * Construct a new {@link CompositeCell}.
-     *
-     * @param hasCells the cells that makeup the composite
-     */
-    private AppTileCell(List<HasCell<App, ?>> hasCells) {
-        super(hasCells);
-    }
-
-    private static List<HasCell<App, ?>> createAppTileCell() {
-        List<HasCell<App, ?>> cellList = Lists.newArrayList();
-
-        appNameCell = new AppNameCell();
-        appNameCell.setSeparateFavoriteCell(true);
-        appFavoriteCell = new AppFavoriteCell();
-        appInfoCell = new AppInfoCell();
-        appStatusCell = new AppStatusCell();
-        appCommentCell = new AppCommentCell();
-        appRatingCell = new AppRatingCell();
-        appIntegratorCell = new AppIntegratorCell();
-        appCardCell = new AppCardCell();
-
-        cellList.add(appNameCell);
-        cellList.add(appFavoriteCell);
-        cellList.add(appInfoCell);
-        cellList.add(appStatusCell);
-        cellList.add(appCommentCell);
-        cellList.add(appRatingCell);
-        cellList.add(appIntegratorCell);
-        cellList.add(appCardCell);
-
-        return cellList;
+        this.appNameCell = appNameCell;
+        this.appNameCell.setSeparateFavoriteCell(true);
+        this.appFavoriteCell = appFavoriteCell;
+        this.appInfoCell = appInfoCell;
+        this.appStatusCell = appStatusCell;
+        this.appCommentCell = appCommentCell;
+        this.appRatingCell = appRatingCell;
+        this.appIntegratorCell = appIntegratorCell;
+        this.appCardCell = appCardCell;
+        this.appearance = appearance;
     }
 
     @Override
