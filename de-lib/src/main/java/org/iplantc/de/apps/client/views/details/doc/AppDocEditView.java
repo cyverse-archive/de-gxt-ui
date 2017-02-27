@@ -8,10 +8,7 @@ import org.iplantc.de.client.models.apps.AppDoc;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -92,12 +89,6 @@ public class AppDocEditView extends Composite implements IsMaskable,
         mask();
     }
 
-    private String getJsonFormat(String doc) {
-        JSONObject json = new JSONObject();
-        json.put("documentation", new JSONString(doc));
-        return json.toString();
-    }
-
     public void setData(String data) {
         jso = displayData(this,
                               panel.getElement(),
@@ -107,17 +98,6 @@ public class AppDocEditView extends Composite implements IsMaskable,
                               panel.getElement().getOffsetHeight());
 
         dirty = false;
-    }
-    
-    private final class ResizeViewHandlerImpl implements ResizeHandler {
-        @Override
-        public void onResize(ResizeEvent event) {
-            if (jso == null) {
-                return;
-            }
-            resizeDisplay(jso, panel.getElement().getOffsetWidth(), panel.getElement()
-                                                                           .getOffsetHeight());
-        }
     }
 
     public static native void resizeDisplay(JavaScriptObject jso, int width, int height) /*-{
