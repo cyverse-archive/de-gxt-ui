@@ -9,6 +9,7 @@ import org.iplantc.de.apps.client.OntologyHierarchiesView;
 import org.iplantc.de.apps.client.SubmitAppForPublicUseView;
 import org.iplantc.de.apps.client.gin.factory.AppCategoriesViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppDetailsViewFactory;
+import org.iplantc.de.apps.client.gin.factory.AppDocEditViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppsListViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppsToolbarViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppsViewFactory;
@@ -24,6 +25,8 @@ import org.iplantc.de.apps.client.views.AppsViewImpl;
 import org.iplantc.de.apps.client.views.categories.AppCategoriesViewImpl;
 import org.iplantc.de.apps.client.views.details.AppDetailsViewImpl;
 import org.iplantc.de.apps.client.views.details.dialogs.AppDetailsDialog;
+import org.iplantc.de.apps.client.views.details.doc.AppDocEditView;
+import org.iplantc.de.apps.client.views.details.doc.AppDocEditViewImpl;
 import org.iplantc.de.apps.client.views.list.AppsGridViewImpl;
 import org.iplantc.de.apps.client.views.list.AppsTileViewImpl;
 import org.iplantc.de.apps.client.views.hierarchies.OntologyHierarchiesViewImpl;
@@ -100,6 +103,11 @@ public class AppsGinModule extends AbstractGinModule {
         install(new GinFactoryModuleBuilder()
                     .implement(AppDetailsView.class, AppDetailsViewImpl.class)
                     .build(AppDetailsViewFactory.class));
+
+        install(new GinFactoryModuleBuilder()
+                        .implement(AppDocEditView.class, AppDocEditViewImpl.class)
+                        .build(AppDocEditViewFactory.class));
+
         bind(AppDetailsView.Presenter.class).to(AppDetailsViewPresenterImpl.class);
         bind(AppDetailsDialog.class);
     }
