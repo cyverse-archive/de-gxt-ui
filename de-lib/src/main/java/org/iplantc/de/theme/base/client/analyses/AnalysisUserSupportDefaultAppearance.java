@@ -81,11 +81,6 @@ public class AnalysisUserSupportDefaultAppearance
     }
 
     @Override
-    public String deSystemId() {
-        return "DE";
-    }
-
-    @Override
     public SafeHtml renderCondorSubmitted(Analysis selectedAnalysis) {
         return renderer.renderCondorSubmitted(selectedAnalysis);
     }

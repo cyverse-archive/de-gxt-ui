@@ -63,8 +63,6 @@ public class AnalysisUserSupportDialog extends Window {
 
         String supportRequestSuccess();
 
-        String deSystemId();
-
         SafeHtml renderCondorSubmitted(Analysis selectedAnalysis);
 
         SafeHtml renderAgaveSubmitted(Analysis selectedAnalysis);
@@ -88,8 +86,12 @@ public class AnalysisUserSupportDialog extends Window {
     private AnalysisUserSupportAppearance appearance = GWT.create(AnalysisUserSupportAppearance.class);
     private VerticalLayoutContainer vlc;
     private TextButton needHelpButton;
+    private final String DE_SYSTEM_ID = "de";
+
     @Inject
     AnalysesAutoBeanFactory factory;
+    @Inject
+    UserInfo userInfo;
 
     @Inject
     public AnalysisUserSupportDialog() {
@@ -112,7 +114,7 @@ public class AnalysisUserSupportDialog extends Window {
         HTML text = null;
         switch (AnalysisExecutionStatus.fromTypeString(selectedAnalysis.getStatus().toLowerCase())) {
             case SUBMITTED:
-                if (selectedAnalysis.getSystemId().equalsIgnoreCase(appearance.deSystemId())) {
+                if (selectedAnalysis.getSystemId().equalsIgnoreCase(getDESystemId())) {
                     text = new HTML(appearance.renderCondorSubmitted(selectedAnalysis));
                 } else {
                     text = new HTML(appearance.renderAgaveSubmitted(selectedAnalysis));
@@ -125,7 +127,7 @@ public class AnalysisUserSupportDialog extends Window {
                 add(vlc);
                 break;
             case RUNNING:
-                if (selectedAnalysis.getSystemId().equalsIgnoreCase(appearance.deSystemId())) {
+                if (selectedAnalysis.getSystemId().equalsIgnoreCase(getDESystemId())) {
                     text = new HTML(appearance.renderCondorRunning(selectedAnalysis));
                 } else {
                     text = new HTML(appearance.renderAgaveRunning(selectedAnalysis));
@@ -153,6 +155,14 @@ public class AnalysisUserSupportDialog extends Window {
 
         }
 
+    }
+
+    private String getDESystemId() {
+         if(userInfo.hasSystemsError() || userInfo.hasAppsInfoError())  {
+             return DE_SYSTEM_ID;  //hardcoded default
+         } else {
+             return userInfo.getSystemIds().getDESytemId();
+         }
     }
 
     private void onCompletedState() {

@@ -1,8 +1,10 @@
 package org.iplantc.de.client.models;
 
+import org.iplantc.de.client.models.bootstrap.AppsInfo;
 import org.iplantc.de.client.models.bootstrap.DataInfo;
 import org.iplantc.de.client.models.bootstrap.Preferences;
 import org.iplantc.de.client.models.bootstrap.Session;
+import org.iplantc.de.client.models.bootstrap.SystemIds;
 import org.iplantc.de.client.models.bootstrap.UserBootstrap;
 import org.iplantc.de.client.models.bootstrap.UserProfile;
 import org.iplantc.de.client.models.bootstrap.Workspace;
@@ -50,6 +52,8 @@ public class UserInfo {
     private Preferences preferences;
     private Session session;
     private Workspace workspace;
+    private SystemIds systemIds;
+    private AppsInfo appsInfo;
     private List<WindowState> savedOrderedWindowStates;
     private static String AGAVE_AUTH_KEY = "agave";
 
@@ -73,7 +77,9 @@ public class UserInfo {
         dataInfo = userBootstrap.getDataInfo();
         preferences = userBootstrap.getPreferences();
         session = userBootstrap.getSession();
-        workspace = userBootstrap.getWorkspace();
+        appsInfo = userBootstrap.getAppsInfo();
+        workspace = appsInfo.getWorkspace();
+        systemIds = appsInfo.getSystemsIds();
     }
 
     public boolean hasErrors() {
@@ -81,7 +87,9 @@ public class UserInfo {
                hasDataInfoError() ||
                hasPreferencesError() ||
                hasSessionError() ||
-               hasWorkspaceError();
+               hasWorkspaceError() ||
+               hasSystemsError() ||
+               hasAppsInfoError();
     }
 
     public boolean hasUserProfileError() {
@@ -90,7 +98,7 @@ public class UserInfo {
                Strings.isNullOrEmpty(userProfile.getFullUsername()) ||
                Strings.isNullOrEmpty(userProfile.getLastName()) ||
                Strings.isNullOrEmpty(userProfile.getUsername());
-    }
+   }
 
     public boolean hasDataInfoError() {
         return dataInfo != null && dataInfo.getError() != null;
@@ -108,6 +116,14 @@ public class UserInfo {
         return workspace != null && workspace.getError() != null;
     }
 
+    public boolean hasSystemsError() {
+        return systemIds != null && systemIds.getError() != null;
+    }
+
+    public boolean hasAppsInfoError() {
+        return appsInfo != null && appsInfo.getError() != null;
+    }
+
     public Splittable getDataInfoError() {
         return hasDataInfoError() ? dataInfo.getError() : null;
     }
@@ -122,6 +138,14 @@ public class UserInfo {
 
     public Splittable getWorkspaceError() {
         return hasWorkspaceError() ? workspace.getError() : null;
+    }
+
+    public Splittable getSystemsError() {
+        return hasSystemsError() ? systemIds.getError() : null;
+    }
+
+    public Splittable getAppsInfoError() {
+        return hasAppsInfoError() ? appsInfo.getError() : null;
     }
 
     /**
@@ -282,6 +306,10 @@ public class UserInfo {
 
     public UserProfile getUserProfile() {
         return userProfile;
+    }
+
+    public SystemIds getSystemIds() {
+        return systemIds;
     }
 
 }
