@@ -1,6 +1,7 @@
 package org.iplantc.de.apps.client.views.details.doc;
 
 import org.iplantc.de.apps.client.events.selection.SaveMarkdownSelected;
+import org.iplantc.de.apps.client.gin.factory.AppDocEditViewFactory;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppDoc;
@@ -38,14 +39,17 @@ public class AppDocMarkdownDialog extends IPlantDialog implements SaveMarkdownSe
 
     private static final AppDocMarkdownWindowUiBinder ourUiBinder = GWT.create(AppDocMarkdownWindowUiBinder.class);
     private final AppDocMarkdownDialogAppearance appearance;
+    private AppDocEditViewFactory docEditViewFactory;
     @UiField InlineHTML documentation;
     @UiField TabItemConfig editTabConfig;
     @UiField TabPanel tabPanel;
-    private AppDocEditView appDocEditView;
+    private AppDocEditViewImpl appDocEditView;
 
     @Inject
-    public AppDocMarkdownDialog(AppDocMarkdownDialogAppearance appearance) {
+    public AppDocMarkdownDialog(AppDocMarkdownDialogAppearance appearance,
+                                AppDocEditViewFactory docEditViewFactory) {
         this.appearance = appearance;
+        this.docEditViewFactory = docEditViewFactory;
         setModal(false);
         setResizable(false);
         setSize("700px", "500px");
@@ -85,7 +89,7 @@ public class AppDocMarkdownDialog extends IPlantDialog implements SaveMarkdownSe
 
         if(userInfo.getEmail().equals(app.getIntegratorEmail())){
             // If current user is the app integrator, add edit tab
-            appDocEditView = new AppDocEditView(app, appDoc);
+            appDocEditView = docEditViewFactory.create(app, appDoc);
             // Add handler to forward event
             appDocEditView.addSaveMarkdownSelectedHandler(this);
             tabPanel.add(appDocEditView, editTabConfig);
