@@ -31,8 +31,6 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.core.client.ValueProvider;
@@ -359,10 +357,8 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
 
     @UiHandler("addBtn")
     public void addClicked(SelectEvent event) {
-        AppAutoBeanFactory factory = GWT.create(AppAutoBeanFactory.class);
-        AutoBean<AppRefLink> bean = AutoBeanCodex.decode(factory, AppRefLink.class, "{}");
         editing.cancelEditing();
-        AppRefLink link = bean.as();
+        AppRefLink link = factory.appRefLink().as();
         link.setId(new Date().getTime() + "");
         listStore.add(0, link);
         editing.startEditing(new GridCell(0, 0));
