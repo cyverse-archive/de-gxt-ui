@@ -199,27 +199,27 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
     }
 
     private void addHelp() {
-        final ToolButton tool_help_ref = new ToolButton(ToolButton.QUESTION);
-        refPanel.getHeader().addTool(tool_help_ref);
-        tool_help_ref.addSelectHandler(new SelectHandler() {
+        final ToolButton refLinksHelp = new ToolButton(ToolButton.QUESTION);
+        refPanel.getHeader().addTool(refLinksHelp);
+        refLinksHelp.addSelectHandler(new SelectHandler() {
 
             @Override
             public void onSelect(SelectEvent event) {
                 ContextualHelpPopup popup = new ContextualHelpPopup();
                 popup.add(new HTML(appearance.publicSubmissionFormAttach()));
-                popup.showAt(tool_help_ref.getAbsoluteLeft(), tool_help_ref.getAbsoluteTop() + 15);
+                popup.showAt(refLinksHelp.getAbsoluteLeft(), refLinksHelp.getAbsoluteTop() + 15);
 
             }
         });
-        final ToolButton tool_help_cat = new ToolButton(ToolButton.QUESTION);
-        catPanel.getHeader().addTool(tool_help_cat);
-        tool_help_cat.addSelectHandler(new SelectHandler() {
+        final ToolButton categoriesHelp = new ToolButton(ToolButton.QUESTION);
+        catPanel.getHeader().addTool(categoriesHelp);
+        categoriesHelp.addSelectHandler(new SelectHandler() {
 
             @Override
             public void onSelect(SelectEvent event) {
                 ContextualHelpPopup popup = new ContextualHelpPopup();
                 popup.add(new HTML(appearance.publicSubmissionFormCategories()));
-                popup.showAt(tool_help_cat.getAbsoluteLeft(), tool_help_cat.getAbsoluteTop() + 15);
+                popup.showAt(categoriesHelp.getAbsoluteLeft(), categoriesHelp.getAbsoluteTop() + 15);
 
             }
         });
