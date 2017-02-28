@@ -87,8 +87,8 @@ public class AppsViewToolbarImplTest {
     }
 
     void setupMocks(AppsViewToolbarImpl uut) {
-        uut.wf_menu = mockWfMenu;
-        uut.app_menu = mockAppMenu;
+        uut.wfMenu = mockWfMenu;
+        uut.appMenu = mockAppMenu;
         uut.appRun = mockAppRun;
         uut.copyApp = mockCopyApp;
         uut.copyWf = mockCopyWf;
