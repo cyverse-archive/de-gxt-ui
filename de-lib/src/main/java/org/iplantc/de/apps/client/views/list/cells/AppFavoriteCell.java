@@ -5,7 +5,6 @@ import static com.google.gwt.dom.client.BrowserEvents.CLICK;
 import org.iplantc.de.apps.client.events.selection.AppFavoriteSelectedEvent;
 import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.theme.base.client.apps.AppsMessages;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
@@ -54,21 +53,21 @@ public class AppFavoriteCell extends AbstractCell<App> implements HasCell<App, A
 
         void render(SafeHtmlBuilder sb, String imgName, String imgClassName, String imgToolTip,
                     String debugId);
+
+        String featureNotSupported();
     }
 
     private final AppFavoriteCellAppearance appearance;
     private String baseID;
     private HasHandlers hasHandlers;
-    private final AppsMessages appMsgs;
 
     public AppFavoriteCell() {
-        this(GWT.<AppFavoriteCellAppearance> create(AppFavoriteCellAppearance.class),  GWT.<AppsMessages> create(AppsMessages.class));
+        this(GWT.<AppFavoriteCellAppearance> create(AppFavoriteCellAppearance.class));
     }
 
-    public AppFavoriteCell(final AppFavoriteCellAppearance appearance, AppsMessages appMsgs) {
+    public AppFavoriteCell(final AppFavoriteCellAppearance appearance) {
         super(CLICK);
         this.appearance = appearance;
-        this.appMsgs = appMsgs;
     }
 
     @Override
@@ -82,7 +81,7 @@ public class AppFavoriteCell extends AbstractCell<App> implements HasCell<App, A
         if (value.getAppType().equalsIgnoreCase(App.EXTERNAL_APP)) {
             imgName = "disabled";
             imgClassName = appearance.favoriteDisabledClass();
-            imgToolTip = appMsgs.featureNotSupported();
+            imgToolTip = appearance.featureNotSupported();
         } else if (!value.isDisabled() && value.isFavorite()) {
             imgName = "fav";
             imgClassName = appearance.favoriteClass();
