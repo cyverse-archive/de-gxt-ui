@@ -71,8 +71,7 @@ public class CommandLineOrderingView extends Composite {
     @UiField
     Grid<Argument> orderedGrid;
 
-    @UiField(provided = true)
-    ListStore<Argument> orderedStore;
+    @UiField ListStore<Argument> orderedStore;
 
     private final ArgumentProperties argProps;
 
@@ -120,36 +119,18 @@ public class CommandLineOrderingView extends Composite {
         cm = new ColumnModel<Argument>(cmList);
     }
 
-    private void initListStores(List<Argument> arguments) {
-        orderedStore = new ListStore<Argument>(argProps.id());
-        for (Argument arg : arguments) {
-            if (Strings.isNullOrEmpty(arg.getId())) {
-                if (!uuids.isEmpty()) {
-                    arg.setId(uuids.remove(0));
-                }
-            }
-            if (presenter.orderingRequired(arg)) {
-                Integer order = arg.getOrder();
+    @UiFactory
+    public ListStore<Argument> createListStore() {
+        ListStore<Argument> listStore = new ListStore<Argument>(argProps.id());
+        orderStoreSortInfo = new StoreSortInfo<Argument>(argProps.order(), SortDir.ASC);
 
-                // JDS If the order is null or 0, set it to a number higher than the length of the
-                // list to ensure that already numbered arguments are sorted into their appropriate
-                // places
-                if ((order == null) || (order <= 0)) {
-                    arg.setOrder(arguments.size() + 1);
-                }
-
-                orderedStore.add(arg);
-            }
-        }
         // Set store sort info
-        orderedStore.addSortInfo(orderStoreSortInfo);
+        listStore.addSortInfo(orderStoreSortInfo);
 
         // JDS Immediately clear sort info. Otherwise, sorts will be applied when items are added to the
         // store during DnD.
-        orderedStore.clearSortInfo();
-
-        updateArgumentOrdering();
-
+        listStore.clearSortInfo();
+        return listStore;
     }
 
     /**
