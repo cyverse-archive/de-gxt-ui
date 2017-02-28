@@ -2,6 +2,7 @@ package org.iplantc.de.theme.base.client.apps.cells;
 
 import org.iplantc.de.apps.client.views.list.cells.AppFavoriteCell;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
+import org.iplantc.de.theme.base.client.apps.AppsMessages;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
@@ -60,19 +61,23 @@ public class AppFavoriteCellDefaultAppearance implements AppFavoriteCell.AppFavo
     private final FavoriteTemplates templates;
     private final FavoriteCellResources resources;
     private final IplantDisplayStrings iplantDisplayStrings;
+    private AppsMessages appsMessages;
 
     public AppFavoriteCellDefaultAppearance() {
         this(GWT.<FavoriteTemplates> create(FavoriteTemplates.class),
              GWT.<FavoriteCellResources> create(FavoriteCellResources.class),
-             GWT.<IplantDisplayStrings> create(IplantDisplayStrings.class));
+             GWT.<IplantDisplayStrings> create(IplantDisplayStrings.class),
+             GWT.<AppsMessages> create(AppsMessages.class));
     }
 
     AppFavoriteCellDefaultAppearance(final FavoriteTemplates templates,
                                      final FavoriteCellResources resources,
-                                     final IplantDisplayStrings iplantDisplayStrings) {
+                                     final IplantDisplayStrings iplantDisplayStrings,
+                                     AppsMessages messages) {
         this.templates = templates;
         this.resources = resources;
         this.iplantDisplayStrings = iplantDisplayStrings;
+        appsMessages = messages;
         this.resources.css().ensureInjected();
     }
 
@@ -117,5 +122,10 @@ public class AppFavoriteCellDefaultAppearance implements AppFavoriteCell.AppFavo
         } else {
             sb.append(templates.cell(imgName, imgClassName, imgToolTip));
         }
+    }
+
+    @Override
+    public String featureNotSupported() {
+        return appsMessages.featureNotSupported();
     }
 }
