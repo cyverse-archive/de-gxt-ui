@@ -1,6 +1,7 @@
 package org.iplantc.de.apps.integration.client.dialogs;
 
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
+import org.iplantc.de.apps.integration.client.view.CommandLineOrderingView;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
