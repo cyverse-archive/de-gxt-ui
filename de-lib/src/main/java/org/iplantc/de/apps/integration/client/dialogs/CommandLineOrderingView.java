@@ -32,9 +32,9 @@ import java.util.List;
  * @author jstroot
  * 
  */
-public class CommandLineOrderingPanel extends Composite {
+public class CommandLineOrderingView extends Composite {
 
-    interface CommandLineOrderingPanelUiBinder extends UiBinder<Widget, CommandLineOrderingPanel> {}
+    interface CommandLineOrderingPanelUiBinder extends UiBinder<Widget, CommandLineOrderingView> {}
 
     private final class ArgNameValueProvider implements ValueProvider<Argument, String> {
         @Override
@@ -84,7 +84,7 @@ public class CommandLineOrderingPanel extends Composite {
 
     private final List<String> uuids;
 
-    public CommandLineOrderingPanel(List<Argument> arguments, AppsEditorView.Presenter presenter, AppIntegrationMessages messages, List<String> uuids) {
+    public CommandLineOrderingView(List<Argument> arguments, AppsEditorView.Presenter presenter, AppIntegrationMessages messages, List<String> uuids) {
         this.presenter = presenter;
         this.messages = messages;
         this.uuids = uuids;
