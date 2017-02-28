@@ -9,16 +9,21 @@ import org.iplantc.de.client.sharing.SharingPresenter;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Widget;
 
+import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
+import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.widget.core.client.FramedPanel;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
+import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AppSharingViewImpl implements AppSharingView {
@@ -29,8 +34,7 @@ public class AppSharingViewImpl implements AppSharingView {
     interface AppSharingViewUiBinder extends UiBinder<Widget, AppSharingViewImpl> {
     }
 
-    @UiField(provided = true)
-    final ColumnModel<App> appColumnModel;
+    @UiField ColumnModel<App> appColumnModel;
     @UiField(provided = true)
     final ListStore<App> appListStore;
     final Widget widget;
@@ -43,12 +47,11 @@ public class AppSharingViewImpl implements AppSharingView {
 
     SharingPresenter presenter;
 
-    public AppSharingViewImpl(ColumnModel<App> appColumnModel, ListStore<App> appListStore) {
-        this.appColumnModel = appColumnModel;
-        this.appListStore = appListStore;
+    public AppSharingViewImpl() {
+        this.appListStore = buildAppStore();
         widget = uiBinder.createAndBindUi(this);
     }
-    
+
     @Override
     public void addShareWidget(Widget widget) {
         container.add(widget);
@@ -71,6 +74,42 @@ public class AppSharingViewImpl implements AppSharingView {
             appListStore.addAll(models);
         }
 
+    }
+
+    @UiFactory
+    public ColumnModel<App> buildAppColumnModel() {
+        List<ColumnConfig<App, ?>> list = new ArrayList<>();
+
+        ColumnConfig<App, String> name = new ColumnConfig<>(new ValueProvider<App, String>() {
+
+            @Override
+            public String getValue(App object) {
+                return object.getName();
+            }
+
+            @Override
+            public void setValue(App object, String value) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public String getPath() {
+                return "name";
+            }
+        }, 180, "Name");
+        list.add(name);
+        return new ColumnModel<>(list);
+    }
+
+    private ListStore<App> buildAppStore() {
+        ListStore<App> appStore = new ListStore<>(new ModelKeyProvider<App>() {
+
+            @Override
+            public String getKey(App item) {
+                return item.getId();
+            }
+        });
+        return appStore;
     }
 
 }

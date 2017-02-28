@@ -10,22 +10,15 @@ import org.iplantc.de.apps.client.views.sharing.AppSharingViewImpl;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.sharing.SharingPresenter;
-import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 
-import com.sencha.gxt.core.client.ValueProvider;
-import com.sencha.gxt.data.shared.ListStore;
-import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
-import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
-import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AppSharingDialog extends IPlantDialog implements SelectHandler {
@@ -60,14 +53,7 @@ public class AppSharingDialog extends IPlantDialog implements SelectHandler {
     }
 
     public void show(final List<App> resourcesToShare) {
-        ListStore<App> appStore = new ListStore<>(new ModelKeyProvider<App>() {
-
-            @Override
-            public String getKey(App item) {
-                return item.getId();
-            }
-        });
-        AppSharingView view = new AppSharingViewImpl(buildAppColumnModel(), appStore);
+        AppSharingView view = new AppSharingViewImpl();
         view.setSelectedApps(resourcesToShare);
         sharingPresenter = new AppSharingPresenter(appService, resourcesToShare, view, collaboratorsUtil);
         sharingPresenter.go(this);
@@ -77,30 +63,6 @@ public class AppSharingDialog extends IPlantDialog implements SelectHandler {
     @Override
     public void show() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("This method is not supported for this class. ");
-    }
-
-    private ColumnModel<App> buildAppColumnModel() {
-        List<ColumnConfig<App, ?>> list = new ArrayList<>();
-
-        ColumnConfig<App, String> name = new ColumnConfig<>(new ValueProvider<App, String>() {
-
-            @Override
-            public String getValue(App object) {
-                return object.getName();
-            }
-
-            @Override
-            public void setValue(App object, String value) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public String getPath() {
-                return "name";
-            }
-        }, 180, "Name");
-        list.add(name);
-        return new ColumnModel<>(list);
     }
 
 }
