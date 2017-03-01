@@ -1,5 +1,6 @@
 package org.iplantc.de.client.models.bootstrap;
 
+import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.Splittable;
 
 /**
@@ -7,6 +8,7 @@ import com.google.web.bindery.autobean.shared.Splittable;
  */
 public interface AppsInfo {
 
+    @AutoBean.PropertyName("system_ids")
     SystemIds getSystemsIds();
 
     Workspace getWorkspace();
