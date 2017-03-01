@@ -118,8 +118,12 @@ public class AnalysisUserSupportDefaultAppearance
     @Override
     public SafeHtml renderSubmitToSupport(Analysis selectedAnalysis, UserProfile userProfile) {
         return renderer.renderSubmitToSupport(selectedAnalysis,
-                                              new Date(selectedAnalysis.getStartDate()),
-                                              new Date(selectedAnalysis.getEndDate()),
+                                              selectedAnalysis.getStartDate() != 0 ?
+                                              new Date(selectedAnalysis.getStartDate()).toString() :
+                                              "",
+                                              selectedAnalysis.getEndDate() != 0 ?
+                                              new Date(selectedAnalysis.getEndDate()).toString() :
+                                              "",
                                               userProfile);
     }
 
