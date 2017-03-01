@@ -171,4 +171,30 @@ public interface AppTemplateWizardAppearance {
     SafeHtml getChkBoxContextualHelpLabel(SafeHtml label, String contextualHelp);
 
     SafeHtml sanitizeHtml(String html);
+
+    SafeHtml cannotDeleteLastArgumentGroup();
+
+    String save();
+
+    String unsavedChanges();
+
+    String warning();
+
+    String appContainsErrorsPromptToContinue();
+
+    ImageResource getErrorIcon();
+
+    ImageResource getQuestionIcon();
+
+    String previewJSON();
+
+    String appContainsErrorsUnableToSave();
+
+    String saveSuccessful();
+
+    String unableToSave();
+
+    String commandLineOrder();
+
+    String done();
 }

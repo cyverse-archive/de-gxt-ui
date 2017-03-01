@@ -2,7 +2,9 @@ package org.iplantc.de.apps.widgets.client.view.editors.style;
 
 import org.iplantc.de.apps.widgets.client.view.util.IPlantSimpleHtmlSanitizer;
 import org.iplantc.de.client.models.HasLabel;
-import org.iplantc.de.resources.client.messages.I18N;
+import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
+import org.iplantc.de.resources.client.messages.IplantErrorStrings;
+import org.iplantc.de.resources.client.uiapps.integration.AppIntegrationMessages;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
 
@@ -11,9 +13,11 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.editor.client.EditorError;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 
+import com.sencha.gxt.widget.core.client.box.MessageBox;
 import com.sencha.gxt.widget.core.client.button.IconButton;
 import com.sencha.gxt.widget.core.client.button.IconButton.IconConfig;
 
@@ -26,15 +30,38 @@ import java.util.List;
 public class AppTemplateWizardAppearanceImpl implements AppTemplateWizardAppearance {
 
     private final AppsWidgetsContextualHelpMessages help;
+    private IplantErrorStrings errorStrings;
+    private IplantDisplayStrings iplantDisplayStrings;
+    private AppIntegrationMessages appIntegrationMessages;
     private final AppsWidgetsPropertyPanelLabels labels;
     private final Resources res;
     private final AppTemplateWizardTemplates templates;
 
     public AppTemplateWizardAppearanceImpl() {
-        res = GWT.create(Resources.class);
-        templates = GWT.create(AppTemplateWizardTemplates.class);
-        labels = I18N.APPS_LABELS;
-        help = I18N.APPS_HELP;
+        this(GWT.<Resources> create(Resources.class),
+             GWT.<AppTemplateWizardTemplates> create(AppTemplateWizardTemplates.class),
+             GWT.<AppsWidgetsPropertyPanelLabels> create(AppsWidgetsPropertyPanelLabels.class),
+             GWT.<AppsWidgetsContextualHelpMessages> create(AppsWidgetsContextualHelpMessages.class),
+             GWT.<IplantErrorStrings> create(IplantErrorStrings.class),
+             GWT.<IplantDisplayStrings> create(IplantDisplayStrings.class),
+             GWT.<AppIntegrationMessages> create(AppIntegrationMessages.class));
+    }
+
+    public AppTemplateWizardAppearanceImpl(Resources resources,
+                                           AppTemplateWizardTemplates templates,
+                                           AppsWidgetsPropertyPanelLabels labels,
+                                           AppsWidgetsContextualHelpMessages helpMessages,
+                                           IplantErrorStrings errorStrings,
+                                           IplantDisplayStrings iplantDisplayStrings,
+                                           AppIntegrationMessages appIntegrationMessages) {
+
+        this.res = resources;
+        this.templates = templates;
+        this.labels = labels;
+        this.help = helpMessages;
+        this.errorStrings = errorStrings;
+        this.iplantDisplayStrings = iplantDisplayStrings;
+        this.appIntegrationMessages = appIntegrationMessages;
     }
 
     @Override
@@ -156,6 +183,71 @@ public class AppTemplateWizardAppearanceImpl implements AppTemplateWizardAppeara
     @Override
     public SafeHtml sanitizeHtml(String html) {
         return IPlantSimpleHtmlSanitizer.sanitizeHtml(html);
+    }
+
+    @Override
+    public SafeHtml cannotDeleteLastArgumentGroup() {
+        return errorStrings.cannotDeleteLastArgumentGroup();
+    }
+
+    @Override
+    public String save() {
+        return iplantDisplayStrings.save();
+    }
+
+    @Override
+    public String unsavedChanges() {
+        return iplantDisplayStrings.unsavedChanges();
+    }
+
+    @Override
+    public String warning() {
+        return iplantDisplayStrings.warning();
+    }
+
+    @Override
+    public String appContainsErrorsPromptToContinue() {
+        return errorStrings.appContainsErrorsPromptToContinue();
+    }
+
+    @Override
+    public ImageResource getErrorIcon() {
+        return MessageBox.ICONS.error();
+    }
+
+    @Override
+    public ImageResource getQuestionIcon() {
+        return MessageBox.ICONS.question();
+    }
+
+    @Override
+    public String previewJSON() {
+        return appIntegrationMessages.previewJSON();
+    }
+
+    @Override
+    public String appContainsErrorsUnableToSave() {
+        return errorStrings.appContainsErrorsUnableToSave();
+    }
+
+    @Override
+    public String saveSuccessful() {
+        return appIntegrationMessages.saveSuccessful();
+    }
+
+    @Override
+    public String unableToSave() {
+        return errorStrings.unableToSave();
+    }
+
+    @Override
+    public String commandLineOrder() {
+        return appIntegrationMessages.commandLineOrder();
+    }
+
+    @Override
+    public String done() {
+        return iplantDisplayStrings.done();
     }
 
     @Override
