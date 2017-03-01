@@ -31,7 +31,7 @@ public class AnalysisUserSupportCellDefaultAppearance implements AnalysisUserSup
     }
 
     public interface AnalysisUserSupportCellResources extends ClientBundle {
-        @Source("AnalysisUserSupportCell.css")
+        @Source("AnalysisUserSupportCell.gss")
         AnalysisUserCellStyles css();
 
     }
