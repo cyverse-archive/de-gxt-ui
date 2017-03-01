@@ -555,8 +555,16 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         fields.setName(value.getName());
         fields.setApp(value.getAppName());
         fields.setOutputFolder(value.getResultFolderId());
-        fields.setStartDate(new Date(value.getStartDate()));
-        fields.setEndDate(new Date(value.getEndDate()));
+        if(value.getStartDate()!= 0) {
+            fields.setStartDate(new Date(value.getStartDate()).toString());
+        } else {
+            fields.setStartDate("");
+        }
+        if(value.getEndDate()!=0) {
+            fields.setEndDate(new Date(value.getEndDate()).toString());
+        } else {
+            fields.setEndDate("");
+        }
         fields.setComment(comment);
         fields.setStatus(value.getStatus());
         fields.setEmail(userInfo.getEmail());

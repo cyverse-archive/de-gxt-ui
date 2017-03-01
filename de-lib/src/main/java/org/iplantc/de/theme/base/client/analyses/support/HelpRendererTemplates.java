@@ -7,8 +7,6 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 
 import com.sencha.gxt.core.client.XTemplates;
 
-import java.util.Date;
-
 /**
  * Created by sriram on 11/18/16.
  */
@@ -36,6 +34,6 @@ public interface HelpRendererTemplates extends XTemplates {
     public SafeHtml renderFailed(Analysis analysis);
 
     @XTemplates.XTemplate(source = "submit-support.html")
-    public SafeHtml renderSubmitToSupport(Analysis data, Date startDate, Date finishDate,  UserProfile profile);
+    public SafeHtml renderSubmitToSupport(Analysis data, String startDate, String finishDate,  UserProfile profile);
 
 }

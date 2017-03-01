@@ -1,7 +1,5 @@
 package org.iplantc.de.client.models.analysis.support;
 
-import java.util.Date;
-
 /**
  * Created by sriram on 2/22/17.
  */
@@ -19,13 +17,13 @@ public interface AnalysisSupportRequestFields {
 
     void setOutputFolder(String folder);
 
-    Date getStartDate();
+    String getStartDate();
 
-    void setStartDate(Date startDate);
+    void setStartDate(String startDate);
 
-    Date getEndDate();
+    String getEndDate();
 
-    void setEndDate(Date endDate);
+    void setEndDate(String endDate);
 
     String getComment();
 
