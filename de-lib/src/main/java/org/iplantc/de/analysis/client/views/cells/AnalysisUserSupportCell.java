@@ -6,6 +6,7 @@ import static com.google.gwt.dom.client.BrowserEvents.MOUSEOVER;
 
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
 import org.iplantc.de.client.models.analysis.Analysis;
+import org.iplantc.de.client.models.analysis.AnalysisExecutionStatus;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
@@ -78,7 +79,8 @@ public class AnalysisUserSupportCell extends AbstractCell<Analysis> {
     }
 
     private void doOnClick(Analysis value) {
-        if (hasHandlers != null) {
+        if (hasHandlers != null && value.isShareable()
+            && !value.getStatus().equalsIgnoreCase(AnalysisExecutionStatus.CANCELED.toString())) {
             hasHandlers.fireEvent(new AnalysisUserSupportRequestedEvent(value));
         }
 
