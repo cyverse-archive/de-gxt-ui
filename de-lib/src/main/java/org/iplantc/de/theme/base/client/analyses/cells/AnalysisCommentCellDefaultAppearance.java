@@ -30,7 +30,7 @@ public class AnalysisCommentCellDefaultAppearance implements AnalysisCommentCell
     }
 
     interface Templates extends SafeHtmlTemplates {
-        @SafeHtmlTemplates.Template("<img name=\"{0}\" title=\"{1}\" class=\"{2}\" src=\"{3}\"></img>")
+        @SafeHtmlTemplates.Template("<img name='{0}' title='{1}' class='{2}' src='{3}' />")
         SafeHtml imgCell(String name, String toolTip, String className, SafeUri imgSrc);
     }
 
@@ -54,6 +54,7 @@ public class AnalysisCommentCellDefaultAppearance implements AnalysisCommentCell
         this.template = template;
         this.displayStrings = displayStrings;
         this.iplantResources = iplantResources;
+        resources.css().ensureInjected();
     }
 
     @Override

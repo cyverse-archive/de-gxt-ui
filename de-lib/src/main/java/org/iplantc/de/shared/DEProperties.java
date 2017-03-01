@@ -52,6 +52,12 @@ public class DEProperties {
     private static final String CONTEXT_CLICK_ENABLED =
             "org.iplantc.discoveryenvironment.contextMenu.enabled";
 
+
+    /**
+     * Cyverse support user
+     */
+    private static final String CYVERSE_SUPPORT_USER = "org.iplantc.discoveryenvironment.analysis.support.user";
+
     /**
      * The prefix used in each of the private workspace property names.
      */
@@ -76,6 +82,12 @@ public class DEProperties {
      * Properties key for the default HPC Category ID
      */
     private static final String DEFAULT_HPC_CATEGORY_ID = WORKSPACE_PREFIX + "defaultHpcAppCategoryId";
+
+
+    /**
+     * Properties key for the support service URL
+     */
+    private static final String SUPPORT_SERVICE_URL = "org.iplantc.discoveryenvironment.support";
 
     /**
      * Properties key of the default Beta Category ID.
@@ -177,7 +189,6 @@ public class DEProperties {
 
     private String cardUrlOptions;
 
-
     public String getPathListFileIdentifier() {
         return pathListFileIdentifier;
     }
@@ -217,6 +228,10 @@ public class DEProperties {
     private String baseTrashPath;
 
     private String dataMgmtAdminBaseUrl;
+
+    private String supportUser;
+
+    private String supportServiceUrl;
 
     /**
      * Force the constructor to be private.
@@ -267,6 +282,8 @@ public class DEProperties {
         keys.add(ONTOLOGY_ATTRS);
         keys.add(APPS_CARD_URL);
         keys.add(APPS_CARD_URL_OPTIONS);
+        keys.add(CYVERSE_SUPPORT_USER);
+        keys.add(SUPPORT_SERVICE_URL);
         return keys;
     }
 
@@ -300,6 +317,8 @@ public class DEProperties {
         ontologyAttrs = properties.get(ONTOLOGY_ATTRS);
         cardUrl = properties.get(APPS_CARD_URL);
         cardUrlOptions = properties.get(APPS_CARD_URL_OPTIONS);
+        supportUser = properties.get(CYVERSE_SUPPORT_USER);
+        supportServiceUrl = properties.get(SUPPORT_SERVICE_URL);
     }
 
     /**
@@ -452,5 +471,13 @@ public class DEProperties {
 
     public String getAppsCardUrlOptions() {
         return cardUrlOptions;
+    }
+
+    public String getSupportUser() {
+        return supportUser;
+    }
+
+    public String getSupportServiceUrl() {
+        return supportServiceUrl;
     }
 }

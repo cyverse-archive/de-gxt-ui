@@ -22,4 +22,8 @@ public interface UserBootstrap {
     DataInfo getDataInfo();
 
     Preferences getPreferences();
+
+    @PropertyName("apps_info")
+    AppsInfo getAppsInfo();
+
 }

@@ -51,8 +51,8 @@ public class DEGinModule extends AbstractGinModule {
         return ServicesInjector.INSTANCE.getFileEditorServiceFacade();
     }
 
-    @Provides public DEFeedbackServiceFacade createFeedbackService() {
-        return ServicesInjector.INSTANCE.getDeFeedbackServiceFacade();
+    @Provides public DEUserSupportServiceFacade createUserSupportService(){
+        return ServicesInjector.INSTANCE.getUserSupportServiceFacade();
     }
 
     @Provides public MessageServiceFacade createMessageServiceFacade () {

@@ -87,4 +87,28 @@ public interface AnalysesMessages extends Messages {
     String shareWithInput();
 
     String shareOutputOnly();
+
+    String outputUnexpected();
+
+    String noOutput();
+
+    String selectCondition();
+
+    String comments();
+
+    String needHelp();
+
+    String submit();
+
+    String agreeToShare();
+
+    String disclaimer();
+
+    String termsOfSupport();
+
+    String supportRequestFailed();
+
+    String supportRequestSuccess();
+
+    String userRequestingHelpSubject();
 }

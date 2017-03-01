@@ -5,6 +5,7 @@ import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
 import org.iplantc.de.analysis.client.events.OpenAppForRelaunchEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
+import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
 import org.iplantc.de.analysis.client.gin.factory.AnalysesViewFactory;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.presenter.proxy.AnalysisRpcProxy;
@@ -12,13 +13,24 @@ import org.iplantc.de.analysis.client.presenter.sharing.AnalysisSharingPresenter
 import org.iplantc.de.analysis.client.views.AnalysisStepsView;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisSharingDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisStepsInfoDialog;
+import org.iplantc.de.analysis.client.views.dialogs.AnalysisUserSupportDialog;
 import org.iplantc.de.analysis.client.views.sharing.AnalysisSharingViewImpl;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.events.diskResources.OpenFolderEvent;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisStepsInfo;
+import org.iplantc.de.client.models.analysis.sharing.AnalysisPermission;
+import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingAutoBeanFactory;
+import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingRequest;
+import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingRequestList;
+import org.iplantc.de.client.models.analysis.support.AnalysisSupportAutoBeanFactory;
+import org.iplantc.de.client.models.analysis.support.AnalysisSupportRequest;
+import org.iplantc.de.client.models.analysis.support.AnalysisSupportRequestFields;
+import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
+import org.iplantc.de.client.services.DEUserSupportServiceFacade;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -26,6 +38,8 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.shared.AnalysisCallback;
+import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -33,9 +47,12 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.loader.FilterConfigBean;
@@ -45,8 +62,11 @@ import com.sencha.gxt.data.shared.loader.LoadEvent;
 import com.sencha.gxt.data.shared.loader.LoadHandler;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,7 +77,8 @@ import java.util.List;
 public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               AnalysisNameSelectedEvent.AnalysisNameSelectedEventHandler,
                                               AnalysisAppSelectedEvent.AnalysisAppSelectedEventHandler,
-                                              HTAnalysisExpandEvent.HTAnalysisExpandEventHandler {
+                                              HTAnalysisExpandEvent.HTAnalysisExpandEventHandler,
+                                              AnalysisUserSupportRequestedEvent.AnalysisUserSupportRequestedEventHandler{
 
     private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
         private final Analysis ae;
@@ -172,27 +193,39 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Inject
     AnalysisServiceFacade analysisService;
     @Inject
+    AsyncProviderWrapper<DEUserSupportServiceFacade> supportServiceProvider;
+    @Inject
     IplantAnnouncer announcer;
     @Inject
     AnalysesView.Presenter.Appearance appearance;
     @Inject
     AnalysisStepsView analysisStepView;
     @Inject
-    Provider<AnalysisSharingDialog> aSharingDialogProvider;
-
+    AsyncProviderWrapper<AnalysisSharingDialog> aSharingDialogProvider;
+    @Inject
+    AsyncProviderWrapper<AnalysisUserSupportDialog> aSupportDialogProvider;
     @Inject
     CollaboratorsUtil collaboratorsUtil;
     @Inject
     JsonUtil jsonUtil;
-
-    AnalysisFilter currentFilter;
+    @Inject
+    AnalysisUserSupportDialog.AnalysisUserSupportAppearance userSupportAppearance;
+    @Inject
+    DEProperties deProperties;
+    @Inject
+    AnalysisSupportAutoBeanFactory supportFactory;
+    @Inject
+    AnalysisSharingAutoBeanFactory shareFactory;
+    @Inject
+    UserInfo userInfo;
 
     private final ListStore<Analysis> listStore;
-
     private final AnalysesView view;
     private final HasHandlers eventBus;
     private HandlerRegistration handlerFirstLoad;
     private final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader;
+    AnalysisFilter currentFilter;
+
 
     @Inject
     AnalysesPresenterImpl(final AnalysesViewFactory viewFactory,
@@ -211,6 +244,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         this.view.addAnalysisNameSelectedEventHandler(this);
         this.view.addAnalysisAppSelectedEventHandler(this);
         this.view.addHTAnalysisExpandEventHandler(this);
+        this.view.addAnalysisUserSupportRequestedEventHandler(this);
 
         //Set default filter to ALL
         currentFilter = AnalysisFilter.ALL;
@@ -357,14 +391,25 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Override
     public void onShareSelected(List<Analysis> selected) {
         AnalysisSharingViewImpl sharingView = new AnalysisSharingViewImpl();
-        AnalysisSharingPresenter sharingPresenter = new AnalysisSharingPresenter(analysisService,
+        final AnalysisSharingPresenter sharingPresenter = new AnalysisSharingPresenter(analysisService,
                                                                                  selected,
                                                                                  sharingView,
                                                                                  collaboratorsUtil,
                                                                                  jsonUtil);
-        AnalysisSharingDialog asd = aSharingDialogProvider.get();
-        asd.setPresenter(sharingPresenter);
-        asd.show();
+       aSharingDialogProvider.get(new AsyncCallback<AnalysisSharingDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+
+            }
+
+            @Override
+            public void onSuccess(AnalysisSharingDialog asd) {
+                asd.setPresenter(sharingPresenter);
+                asd.show();
+
+            }
+        });
+
     }
 
     @Override
@@ -448,7 +493,103 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     }
 
+
     AnalysisStepsInfoDialog getAnalysisStepsDialog() {
         return new AnalysisStepsInfoDialog(analysisStepView);
+    }
+
+    private void shareWithSupport(Analysis selectedAnalysis, final Splittable parent) {
+        AnalysisPermission ap = shareFactory.analysisPermission().as();
+        ap.setId(selectedAnalysis.getId());
+        ap.setPermission(PermissionValue.read.toString());
+        AnalysisSharingRequest asr = shareFactory.AnalysisSharingRequest().as();
+        asr.setUser(deProperties.getSupportUser());
+        asr.setAnalysisPermissions(Arrays.asList(ap));
+        AnalysisSharingRequestList listRequest = shareFactory.AnalysisSharingRequestList().as();
+        listRequest.setAnalysisSharingRequestList(Arrays.asList(asr));
+        analysisService.shareAnalyses(listRequest, new AnalysisCallback<String>() {
+            @Override
+            public void onFailure(Integer statusCode, Throwable exception) {
+                ErrorHandler.post(exception);
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                emailSupport(parent);
+            }
+        });
+    }
+
+    @Override
+    public void onUserSupportRequested(AnalysisUserSupportRequestedEvent event) {
+        final Analysis value = event.getValue();
+        aSupportDialogProvider.get(new AsyncCallback<AnalysisUserSupportDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+
+            }
+
+            @Override
+            public void onSuccess(final AnalysisUserSupportDialog ausd) {
+                ausd.setHeadingHtml(value.getName());
+                ausd.setSize("800px", "500px");
+                ausd.addSubmitSelectHandler(new SelectEvent.SelectHandler() {
+                    @Override
+                    public void onSelect(SelectEvent event) {
+                        ausd.hide();
+                        AnalysisSupportRequest req = getAnalysisSupportRequest(value, ausd.getComment());
+                        shareWithSupport(value, AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(req)));
+                    }
+                });
+                ausd.renderHelp(value);
+                ausd.show();
+            }
+        });
+
+
+    }
+
+    protected AnalysisSupportRequest getAnalysisSupportRequest(Analysis value, String comment) {
+        AnalysisSupportRequestFields fields =
+                supportFactory.analysisSupportRequestFields().as();
+        fields.setName(value.getName());
+        fields.setApp(value.getAppName());
+        fields.setOutputFolder(value.getResultFolderId());
+        fields.setStartDate(new Date(value.getStartDate()));
+        fields.setEndDate(new Date(value.getEndDate()));
+        fields.setComment(comment);
+        fields.setStatus(value.getStatus());
+        fields.setEmail(userInfo.getEmail());
+
+        AnalysisSupportRequest req = supportFactory.analysisSupportRequest().as();
+        req.setFrom(userInfo.getFullUsername());
+        req.setSubject(
+                userInfo.getUsername() + appearance.userRequestingHelpSubject());
+        req.setFields(fields);
+        return req;
+    }
+
+    protected void emailSupport(final Splittable parent) {
+        supportServiceProvider.get(new AsyncCallback<DEUserSupportServiceFacade>() {
+            @Override
+            public void onFailure(Throwable caught) {
+
+            }
+
+            @Override
+            public void onSuccess(DEUserSupportServiceFacade serviceFacade) {
+                serviceFacade.submitSupportRequest(parent, new AsyncCallback<Void>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        announcer.schedule(new ErrorAnnouncementConfig(userSupportAppearance.supportRequestFailed()));
+                    }
+
+                    @Override
+                    public void onSuccess(Void result) {
+                        announcer.schedule(new SuccessAnnouncementConfig(userSupportAppearance.supportRequestSuccess()));
+                    }
+                });
+            }
+        });
     }
 }

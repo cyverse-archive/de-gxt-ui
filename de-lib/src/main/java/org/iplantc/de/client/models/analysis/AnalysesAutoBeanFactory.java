@@ -28,4 +28,5 @@ public interface AnalysesAutoBeanFactory extends AutoBeanFactory {
     AutoBean<AnalysisStepsInfo> getAnalysisStepsInfo();
 
     AutoBean<AnalysisStep> getAnalysisStep();
+
 }

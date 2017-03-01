@@ -244,13 +244,14 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         return true;
     }
 
-     boolean isShareable(List<Analysis> selection) {
-        boolean shareable = true;
+    boolean isShareable(List<Analysis> selection) {
         for (Analysis a : selection) {
-            shareable = shareable && a.isShareable();
+            if (!(a.isShareable())) {
+                return false;
+            }
         }
 
-        return shareable;
+        return true;
     }
 
     @Override

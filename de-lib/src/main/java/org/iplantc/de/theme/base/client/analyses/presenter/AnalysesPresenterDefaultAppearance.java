@@ -75,4 +75,9 @@ public class AnalysesPresenterDefaultAppearance implements AnalysesView.Presente
         return analysesMessages.analysisStepInfoError();
     }
 
+    @Override
+    public String userRequestingHelpSubject() {
+        return analysesMessages.userRequestingHelpSubject();
+    }
+
 }

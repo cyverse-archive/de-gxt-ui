@@ -6,6 +6,7 @@ import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent.HTAnalysisExp
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisCommentSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
+import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
 import org.iplantc.de.analysis.client.gin.factory.AnalysisToolBarFactory;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
@@ -112,6 +113,11 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     @Override
     public HandlerRegistration addAnalysisNameSelectedEventHandler(AnalysisNameSelectedEvent.AnalysisNameSelectedEventHandler handler) {
         return ((AnalysisColumnModel) cm).addAnalysisNameSelectedEventHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addAnalysisUserSupportRequestedEventHandler(AnalysisUserSupportRequestedEvent.AnalysisUserSupportRequestedEventHandler handler){
+        return ((AnalysisColumnModel)cm).addAnalysisUserSupportRequestedEventHandler(handler);
     }
 
     @Override
