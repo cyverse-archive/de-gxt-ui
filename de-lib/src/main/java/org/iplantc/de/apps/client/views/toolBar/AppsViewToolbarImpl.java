@@ -375,10 +375,10 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
     boolean containsShareableApps(List<App> apps) {
         if (apps != null && apps.size() > 0) {
             for (App a : apps) {
-                if (a.getAppType().equalsIgnoreCase(App.EXTERNAL_APP) && a.isPublic()) {
+                boolean isExternal = a.getAppType().equalsIgnoreCase(App.EXTERNAL_APP);
+                if (isExternal && a.isPublic()) {
                     return false;
-                } else if (!(a.getAppType().equalsIgnoreCase(App.EXTERNAL_APP)) && !(
-                        a.getPermission() != null && a.getPermission().equals(PermissionValue.own))) {
+                } else if (!isExternal && !(PermissionValue.own.equals(a.getPermission()))) {
                     return false;
                 }
             }
