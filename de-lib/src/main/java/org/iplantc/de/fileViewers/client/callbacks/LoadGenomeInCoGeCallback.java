@@ -8,6 +8,7 @@ import org.iplantc.de.commons.client.views.dialogs.IplantInfoBox;
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -45,7 +46,8 @@ public class LoadGenomeInCoGeCallback implements AsyncCallback<String> {
         JSONObject resultObj = jsonUtil.getObject(result);
         String url = jsonUtil.getString(resultObj, "coge_genome_url");
         if (!Strings.isNullOrEmpty(url)) {
-            IplantInfoBox iib = new IplantInfoBox(appearance.coge(), appearance.cogeResponse(url));
+            IplantInfoBox iib = new IplantInfoBox(SafeHtmlUtils.fromTrustedString(appearance.coge()),
+                                                  SafeHtmlUtils.fromTrustedString(appearance.cogeResponse(url)));
             iib.show();
         } else {
             onFailure(null);
