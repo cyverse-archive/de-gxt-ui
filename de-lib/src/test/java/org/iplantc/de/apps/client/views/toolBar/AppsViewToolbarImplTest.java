@@ -701,6 +701,7 @@ public class AppsViewToolbarImplTest {
         when(appMock.getStepCount()).thenReturn(1);
         when(appMock.isPublic()).thenReturn(true);
         when(appMock.isRunnable()).thenReturn(true);
+        when(appMock.getAppType()).thenReturn("DE");
 
         List<App> singleAppSelection = Lists.newArrayList(appMock);
         when(eventMock.getAppSelection()).thenReturn(singleAppSelection);
@@ -1004,10 +1005,10 @@ public class AppsViewToolbarImplTest {
         AppSelectionChangedEvent eventMock = mock(AppSelectionChangedEvent.class);
 
         App wfMock = mock(App.class);
-        when(wfMock.getStepCount()).thenReturn(1);
         when(wfMock.getPermission()).thenReturn(PermissionValue.own);
         when(wfMock.getStepCount()).thenReturn(2);
         when(wfMock.isPublic()).thenReturn(true);
+        when(wfMock.getAppType()).thenReturn("DE");
 
         App appMock = mock(App.class);
         when(appMock.getPermission()).thenReturn(PermissionValue.own);
@@ -1038,8 +1039,8 @@ public class AppsViewToolbarImplTest {
         verify(mockCopyWf).setEnabled(false);
         verify(mockWfRun).setEnabled(false);
         verify(mockSharePublic).setEnabled(false);
-        verify(mockshareMenuButton).setEnabled(false);
-        verify(mockShareCollab).setEnabled(false);
+        verify(mockshareMenuButton).setEnabled(true);
+        verify(mockShareCollab).setEnabled(true);
 
         verifyNoMoreInteractions(mockAppMenu,
                                  mockWfMenu,
