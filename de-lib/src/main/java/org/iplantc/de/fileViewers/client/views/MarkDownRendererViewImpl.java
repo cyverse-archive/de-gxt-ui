@@ -7,6 +7,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -93,8 +94,8 @@ public class MarkDownRendererViewImpl extends AbstractFileViewer {
     HtmlLayoutContainer buildHtmlContainer() {
         // FIXME Roll into appearance
         renderHtml = render(previewData);
-        return new HtmlLayoutContainer("<link href=\"./markdown.css\" rel=\"stylesheet\"></link><div class=\"markdown\">"
-                                           + renderHtml + "</div>");
+        return new HtmlLayoutContainer((SafeHtml)() -> "<link href=\"./markdown.gss\" rel=\"stylesheet\"></link><div class=\"markdown\">"
+                                                       + renderHtml + "</div>");
     }
 
     @Override

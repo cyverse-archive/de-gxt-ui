@@ -27,7 +27,7 @@ public class AnalysesViewDefaultAppearance implements AnalysesView.Appearance {
         @Source("file_view.gif")
         ImageResource fileView();
 
-        @Source("AnalysisInfoStyle.css")
+        @Source("AnalysisInfoStyle.gss")
         AnalysisInfoStyle css();
     }
 

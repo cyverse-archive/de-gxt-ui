@@ -15,7 +15,7 @@
         <tabs:child config="{userManualTabConfig}">
 
             <g:HTMLPanel>
-                <link href="./markdown.css"
+                <link href="./markdown.gss"
                       rel="stylesheet"/>
                 <div style='background-color:white;overflow:scroll;height:450px;'
                      class="markdown">

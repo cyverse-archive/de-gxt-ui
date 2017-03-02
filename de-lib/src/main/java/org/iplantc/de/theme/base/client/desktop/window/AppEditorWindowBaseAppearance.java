@@ -31,7 +31,7 @@ public class AppEditorWindowBaseAppearance implements AppEditorWindow.AppEditorA
     }
 
     interface AppEditorAppearanceResources extends ClientBundle {
-        @Source("org/iplantc/de/theme/base/client/desktop/window/AppIntegrationWindowTitleStyles.css")
+        @Source("org/iplantc/de/theme/base/client/desktop/window/AppIntegrationWindowTitleStyles.gss")
         TitleStyles titleStyles();
     }
 

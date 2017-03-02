@@ -43,7 +43,7 @@ public class TreeCellDefaultAppearance implements TreeCell.TreeCellAppearance, B
     }
 
     public interface TreeCellResources extends ClientBundle {
-        @Source("TreeCellStyle.css")
+        @Source("TreeCellStyle.gss")
         TreeCellStyle css();
 
         @Source("delete_icon.png")

@@ -42,6 +42,6 @@ public interface CustomIplantTagResources extends ClientBundle {
         String previewRight();
     }
     
-    @Source("style.css")
+    @Source("style.gss")
     CustomStyle style();
 }

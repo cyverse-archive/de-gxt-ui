@@ -27,7 +27,7 @@ public class AppStatusCellDefaultAppearance implements AppStatusCell.AppStatusCe
     }
 
     interface Resources extends ClientBundle {
-        @Source("AppInfoCell.css")
+        @Source("AppInfoCell.gss")
         MyCss css();
     }
 

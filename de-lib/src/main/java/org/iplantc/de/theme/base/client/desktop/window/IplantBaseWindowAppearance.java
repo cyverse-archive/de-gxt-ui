@@ -31,7 +31,7 @@ public class IplantBaseWindowAppearance implements IplantWindowBase.IplantWindow
     }
 
     interface IplantWindowResources extends ClientBundle {
-        @Source("org/iplantc/de/theme/base/client/desktop/window/IplantWindowStyles.css")
+        @Source("org/iplantc/de/theme/base/client/desktop/window/IplantWindowStyles.gss")
         Styles css();
 
         @Source("org/iplantc/de/theme/base/client/desktop/window/cyverse_tiny.png")
@@ -150,7 +150,7 @@ public class IplantBaseWindowAppearance implements IplantWindowBase.IplantWindow
     @Override
     public void setHeaderStyle(Header header) {
         header.setIcon(resources.headerIcon());
-        header.getAppearance().getTextElem(header.getElement()).addClassName(resources.css().headerText());
+        header.getAppearance().getHeadingElem(header.getElement()).addClassName(resources.css().headerText());
     }
 
     @Override

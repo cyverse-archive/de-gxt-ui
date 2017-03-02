@@ -439,7 +439,8 @@ public class DiskResourceUtil {
 
     public boolean isEnsemblVizTab(Splittable obj) {
         String infoType = getInfoType(obj);
-        return (infoType != null) && infoType.equals(InfoType.BAM.toString())
+        if (infoType == null) { return false; }
+        return infoType.equals(InfoType.BAM.toString())
                 || infoType.equals(InfoType.VCF.toString()) || infoType.equals(InfoType.GFF.toString())
                 || infoType.equals(InfoType.BED.toString()) || infoType.equals(InfoType.BIGBED.toString());
     }

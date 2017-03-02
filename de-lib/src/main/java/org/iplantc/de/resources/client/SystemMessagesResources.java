@@ -75,7 +75,7 @@ public interface SystemMessagesResources extends ClientBundle {
     /**
      * The style used to render the system messages view.
      */
-    @Source("SystemMessagesStyle.css")
+    @Source("SystemMessagesStyle.gss")
 	Style style();
 
 }

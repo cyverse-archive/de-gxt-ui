@@ -1,0 +1,175 @@
+/**
+ * Sencha GXT 3.0.1 - Sencha for GWT
+ * Copyright(c) 2007-2012, Sencha, Inc.
+ * licensing@sencha.com
+ *
+ * http://www.sencha.com/products/gxt/license/
+ */
+@external x-has-width;
+
+.x-has-width .frame {
+  width: 100%; 
+}
+
+.contentArea {
+
+}
+
+.content {
+  gwt-sprite: 'background';	
+  height: 28px;
+  width: 100%;
+  background-size: cover;
+}
+
+.topLeft {
+  gwt-sprite: 'topLeftBorder';
+  height: 0px;
+  width: 0px;
+}
+
+.top {
+  gwt-sprite: 'topBorder';
+  height: 0px;
+  width: 0px;
+}
+
+.topRight {
+  gwt-sprite: 'topRightBorder';
+  height: 0px;
+  width: 0px;
+}
+
+.bottomLeft {
+  gwt-sprite: 'bottomLeftBorder';
+  height: 0px;
+  width: 0px;
+}
+
+.bottom {
+  gwt-sprite: 'bottomBorder';
+  height: 0px;
+  width: 0px;
+}
+
+.bottomRight {
+  gwt-sprite: 'bottomRightBorder';
+  height: 0px;
+  width: 0px;
+}
+
+.left {
+  gwt-sprite: 'leftBorder';
+  width: 1px;
+}
+
+.right {
+  gwt-sprite: 'rightBorder';
+}
+
+
+/* over style */
+
+.over .content {
+  gwt-sprite: 'backgroundOverBorder';
+  height: 28px;
+  width: 100%;
+}
+
+.over .topLeft {
+  gwt-sprite: 'topLeftOverBorder';
+  height: 0px;
+  width: 0px;
+}
+
+.over .top {
+  gwt-sprite: 'topOverBorder';
+  height: 0px;
+  width: 0px;
+}
+
+.over .topRight {
+  gwt-sprite: 'topRightOverBorder';
+  height: 0px;
+  width: 0px;
+}
+
+.over .bottomLeft {
+  gwt-sprite: 'bottomLeftOverBorder';
+  height: 0px;
+  width: 0px;
+}
+
+.over .bottom {
+  gwt-sprite: 'bottomOverBorder';
+  height: 0px;
+  width: 0px;
+}
+
+.over .right {
+  gwt-sprite: 'rightOverBorder';
+}
+
+.over .bottomRight {
+  gwt-sprite: 'bottomRightOverBorder';
+  height: 0px;
+  width: 0px;
+}
+
+.over .left {
+  gwt-sprite: 'leftOverBorder';
+  width: 1px;
+}
+
+/* pressed style */
+
+.pressed .content {
+  gwt-sprite: 'backgroundPressedBorder';
+  height: 28px;
+  width: 100%;
+}
+
+.pressed .topLeft {
+  gwt-sprite: 'topLeftPressedBorder';
+  height: 0px;
+  width: 0px;
+}
+
+.pressed .top {
+  gwt-sprite: 'topPressedBorder';
+  height: 0px;
+  width: 0px;
+}
+
+.pressed .topRight {
+  gwt-sprite: 'topRightPressedBorder';
+  height: 0px;
+  width: 0px;
+}
+
+.pressed .bottomLeft {
+  gwt-sprite: 'bottomLeftPressedBorder';
+  height: 0px;
+  width: 0px;
+}
+
+.pressed .bottom {
+  gwt-sprite: 'bottomPressedBorder';
+  height: 0px;
+  width: 0px;
+}
+
+.pressed .right {
+  gwt-sprite: 'rightPressedBorder';
+}
+
+.pressed .bottomRight {
+  gwt-sprite: 'bottomRightPressedBorder';
+  height: 0px;
+  width: 0px;
+}
+
+.pressed .left {
+  gwt-sprite: 'leftPressedBorder';
+  width: 1px;
+}

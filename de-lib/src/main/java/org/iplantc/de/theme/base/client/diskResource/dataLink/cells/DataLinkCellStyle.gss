@@ -1,0 +1,10 @@
+.dataLinkDelete {
+    gwt-sprite: "linkDelete";
+    cursor: pointer;
+    float: left;
+}
+
+.dataLinkFileIcon {
+    gwt-sprite: "file";
+    float: left;
+}

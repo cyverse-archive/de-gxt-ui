@@ -209,12 +209,12 @@ public class AppIntegrationPalette extends Composite {
             public void onDragStart(DndDragStartEvent event) {
                 if (onlyLabelEditMode && !type.equals(ArgumentType.Info)) {
                     event.getStatusProxy().setStatus(false);
-                    event.getStatusProxy().update("This item cannot be added to a published app.");
+                    event.getStatusProxy().update((SafeHtml)() -> "This item cannot be added to a published app.");
                     return;
                 }
 
                 event.getStatusProxy().setStatus(true);
-                event.getStatusProxy().update(widget.getElement().getString());
+                event.getStatusProxy().update((SafeHtml)() -> widget.getElement().getString());
                 event.setData(createNewArgument(type));
             }
         });
@@ -243,12 +243,12 @@ public class AppIntegrationPalette extends Composite {
             public void onDragStart(DndDragStartEvent event) {
                 if (onlyLabelEditMode) {
                     event.getStatusProxy().setStatus(false);
-                    event.getStatusProxy().update("Groups cannot be added to a published app.");
+                    event.getStatusProxy().update((SafeHtml)() -> "Groups cannot be added to a published app.");
                     return;
                 }
 
                 event.getStatusProxy().setStatus(true);
-                event.getStatusProxy().update(group.getElement().getString());
+                event.getStatusProxy().update((SafeHtml)() -> group.getElement().getString());
                 event.setData(createNewArgumentGroup());
 
             }

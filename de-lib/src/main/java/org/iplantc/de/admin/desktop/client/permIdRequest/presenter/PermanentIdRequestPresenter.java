@@ -163,7 +163,7 @@ public class PermanentIdRequestPresenter implements Presenter {
                         selectedRequest.getStatus(),
                         result,
                         factory);
-                dialog.setHeadingText(appearance.updateStatus());
+                dialog.setHeading(appearance.updateStatus());
                 dialog.getOkButton().setText(appearance.update());
                 dialog.getOkButton().addSelectHandler(new SelectEvent.SelectHandler() {
 

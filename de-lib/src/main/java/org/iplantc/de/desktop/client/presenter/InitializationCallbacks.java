@@ -102,7 +102,7 @@ class InitializationCallbacks {
         }
 
         ConfirmMessageBox getIntroConfirmation() {
-            return new ConfirmMessageBox(appearance.welcome(), appearance.introWelcome());
+            return new ConfirmMessageBox(SafeHtmlUtils.fromString(appearance.welcome()), SafeHtmlUtils.fromTrustedString(appearance.introWelcome()));
         }
 
         AgaveAuthPrompt getAgavePrompt() {

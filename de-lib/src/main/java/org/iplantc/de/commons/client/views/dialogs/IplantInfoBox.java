@@ -1,5 +1,7 @@
 package org.iplantc.de.commons.client.views.dialogs;
 
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+
 import com.sencha.gxt.widget.core.client.box.MessageBox;
 
 /**
@@ -11,7 +13,7 @@ public class IplantInfoBox extends MessageBox {
                          final String messageHtml,
                          final WindowAppearance appearance,
                          final MessageBoxAppearance contentAppearance) {
-        super(headingHtml, messageHtml, appearance, contentAppearance);
+        super(SafeHtmlUtils.fromString(headingHtml), SafeHtmlUtils.fromString(messageHtml), appearance, contentAppearance);
 
         setIcon(MessageBox.ICONS.info());
     }

@@ -65,7 +65,7 @@ project(':de-webapp') {
         superDev { noPrecompile = true }
         maxHeapSize = '2g'
         compiler {
-            enableClosureCompiler = true;
+//            enableClosureCompiler = true;
             disableClassMetadata = true;
             disableCastChecking = true;
             // enableClosureCompiler must be commented if the below is uncommented. GWT will prefer enableClosureCompiler over this if both are present.

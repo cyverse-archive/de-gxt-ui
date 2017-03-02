@@ -29,7 +29,7 @@ public class AppCommentCellDefaultAppearance implements AppCommentCellAppearance
     }
 
     public interface AppCommentCellResources extends ClientBundle {
-        @Source("AppCommentCell.css")
+        @Source("AppCommentCell.gss")
         AppCommentCellStyles css();
     }
 

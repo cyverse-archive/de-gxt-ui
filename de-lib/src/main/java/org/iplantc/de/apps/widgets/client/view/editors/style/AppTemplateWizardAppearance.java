@@ -47,7 +47,7 @@ public interface AppTemplateWizardAppearance {
     }
 
     interface Resources extends IplantResources {
-        @Source("AppTemplateWizard.css")
+        @Source("AppTemplateWizard.gss")
         Style css();
 
         // KLUDGE Duplicated resource in apps theme as well.

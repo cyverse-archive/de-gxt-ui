@@ -18,13 +18,13 @@
 .summary {
 }
 
-@sprite .dismiss {
-	gwt-image: "dismissImg";
+.dismiss {
+	gwt-sprite: "dismissImg";
 	float: right;
 }
 
-@sprite .dismiss:hover {
-	gwt-image: "dismissOnHoverImg";
+.dismiss:hover {
+	gwt-sprite: "dismissOnHoverImg";
 	cursor: pointer;
 }
 

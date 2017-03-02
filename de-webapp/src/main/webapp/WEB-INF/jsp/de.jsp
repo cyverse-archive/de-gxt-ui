@@ -18,8 +18,8 @@ response.setDateHeader("Expires", 0);
 <!-- Consider inlining CSS to reduce the number of requested files -->
 <!--                                                               -->
 <link type="image/x-icon" rel="shortcut icon" href="images/favicon.ico">
-<link type ="text/css" rel="stylesheet" href="./introjs.min.css">
-<link type="text/css" rel="stylesheet" href="./codemirror.css">
+<link type ="text/css" rel="stylesheet" href="./introjs.min.gss">
+<link type="text/css" rel="stylesheet" href="./codemirror.gss">
 
 <!-- set by i18n code -->
 <title></title>

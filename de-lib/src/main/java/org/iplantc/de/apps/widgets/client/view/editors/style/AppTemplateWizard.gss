@@ -1,0 +1,88 @@
+@def HOR_OFFSET 40px;
+@def BLUR 10px;
+@def SPREAD 5px;
+@def SELECTION_COLOR #E2E2E2;
+
+.appHeaderSelect {
+  background-image: linear-gradient(bottom, #dcdcdc 7%, SELECTION_COLOR 78%) !important;
+  /* @alternate */ background-image: -o-linear-gradient(bottom, #dcdcdc 7%, SELECTION_COLOR 78%) !important;
+  /* @alternate */ background-image: -moz-linear-gradient(bottom, #dcdcdc 7%, SELECTION_COLOR 78%) !important;
+  /* @alternate */ background-image: -webkit-linear-gradient(bottom, #dcdcdc 7%, SELECTION_COLOR 78%) !important;
+  /* @alternate */ background-image: -ms-linear-gradient(bottom, #dcdcdc 7%, SELECTION_COLOR 78%) !important;
+  /* @alternate */ background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.07, #dcdcdc), color-stop(0.78, SELECTION_COLOR)) !important;
+}
+
+.argument {
+    /*Transition*/
+    -webkit-transition: all 0.25s ease;
+    -moz-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+}
+
+.argument:hover {
+    -webkit-box-shadow: 0 0 BLUR SPREAD SELECTION_COLOR;
+    -moz-box-shadow: 0 0 BLUR SPREAD SELECTION_COLOR;
+    box-shadow: 0 0 BLUR SPREAD SELECTION_COLOR;
+}
+.argumentSelect {
+    -webkit-box-shadow: HOR_OFFSET 0 BLUR SPREAD SELECTION_COLOR !important;
+    -moz-box-shadow: HOR_OFFSET 0 BLUR SPREAD SELECTION_COLOR !important;
+    box-shadow: HOR_OFFSET 0 BLUR SPREAD SELECTION_COLOR !important;
+}
+
+.deleteBtn {
+    position: absolute !important;
+}
+
+.delete {
+    gwt-sprite: "deleteRating";
+    cursor: pointer; 
+}
+
+.deleteHover {
+    gwt-sprite: "deleteRatingHover";
+    cursor: pointer;
+}
+
+.emptyGroupBgText {
+	color: #ccc;
+	text-align: center;
+}
+
+.grab {}
+.grabbing{}
+
+@if (is("gecko1_8")) {
+	 .grab:hover {
+		cursor: -moz-grab;
+	}
+	
+    .grab:active {
+		cursor: -moz-grabbing !important;
+	}
+	
+	.grabbing {
+		cursor: -moz-grabbing !important;
+	}
+	
+} @elseif (is("safari")) {
+    .grab:hover {
+        cursor: -webkit-grab;
+    }
+    
+    .grab:active {
+        cursor: -webkit-grabbing;
+    }
+  
+} @else {
+    .grab:hover {
+        cursor: url(images/openhand.cur), move;
+    }
+    
+    .grab:active {
+        cursor: url(images/closedhand.cur), move;
+    }
+	
+}
+
+

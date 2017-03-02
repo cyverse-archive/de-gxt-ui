@@ -26,6 +26,7 @@ import com.google.gwt.editor.client.ValueAwareEditor;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -59,8 +60,7 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
     @UiField TextArea description;
     @UiField TextField name;
 
-    @Path("name")
-    HasHTMLEditor nameEditor;
+    @Path("name") HeaderEditor nameEditor;
     @Ignore
     @UiField TextButton searchBtn;
     @Ignore
@@ -81,7 +81,7 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
         this.appearance = appearance;
 
         initWidget(BINDER.createAndBindUi(this));
-        nameEditor = new HasHTMLEditor(cp.getHeader(), appearance);
+        nameEditor = new HeaderEditor(cp.getHeader(), appearance);
 
         name.addKeyDownHandler(new PreventEntryAfterLimitHandler(name));
         name.addValidator(new MaxLengthValidator(PreventEntryAfterLimitHandler.DEFAULT_LIMIT));
@@ -205,10 +205,10 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
 
         String toolHelp = appearance.getContextHelpMessages().appToolUsed();
         SafeHtml toolLabelHtml = appearance.createContextualHelpLabel(labels.toolUsedLabel(), toolHelp);
-        toolLabel.setHTML(toolLabelHtml.asString());
+        toolLabel.setHTML(SafeHtmlUtils.fromTrustedString(toolLabelHtml.asString()));
         new QuickTip(toolLabel).getToolTipConfig().setDismissDelay(0);
 
-        appNameLabel.setHTML(requiredHtml + labels.appNameLabel());
-        appDescriptionLabel.setHTML(requiredHtml + labels.appDescriptionLabel());
+        appNameLabel.setHTML(SafeHtmlUtils.fromTrustedString(requiredHtml + labels.appNameLabel()));
+        appDescriptionLabel.setHTML(SafeHtmlUtils.fromTrustedString(requiredHtml + labels.appDescriptionLabel()));
     }
 }

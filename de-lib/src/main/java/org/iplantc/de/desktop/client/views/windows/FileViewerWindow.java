@@ -12,6 +12,7 @@ import org.iplantc.de.commons.client.views.window.configs.TabularFileViewerWindo
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
@@ -64,7 +65,7 @@ public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
         this.configAB = fileViewerWindowConfig;
         this.file = configAB.getFile();
         if (file != null) {
-            setHeadingText(file.getName());
+            setHeading(file.getName());
             presenter.go(this,
                          file,
                          configAB.getParentFolder(),
@@ -73,7 +74,7 @@ public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
                          new CriticalPathCallback());
         } else {
             String title = "Untitled-" + Math.random();
-            setHeadingText(title);
+            setHeading(title);
             boolean isTabularFile = windowConfig instanceof TabularFileViewerWindowConfig;
             boolean isPathListFile = windowConfig instanceof PathListWindowConfig;
             String delimiter = isTabularFile ? ((TabularFileViewerWindowConfig) windowConfig).getSeparator() : "";
@@ -124,10 +125,10 @@ public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
     @Override
     public void onEditorDirtyStateChanged(DirtyStateChangedEvent event) {
         if (event.isDirty()) {
-            setHeadingHtml(getHeader().getHTML()
-                    + "<span style='color:red; vertical-align: super'> * </span>");
+            setHeading(SafeHtmlUtils.fromTrustedString(getHeader().getHTML()
+                                     + "<span style='color:red; vertical-align: super'> * </span>"));
         } else {
-            setHeadingText(presenter.getTitle());
+            setHeading(presenter.getTitle());
         }
     }
 

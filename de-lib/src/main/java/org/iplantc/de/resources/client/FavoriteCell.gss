@@ -1,0 +1,29 @@
+.favorite {
+    gwt-sprite: "favIcon";
+    cursor: pointer;
+    float: left;
+}
+
+.favorite:hover {
+    gwt-sprite: "favIconDelete";
+    cursor: pointer;
+    float: left;
+}
+
+.favoriteDisabled {
+    gwt-sprite: "disabledFavIcon";
+    cursor: pointer;
+    float: left;
+}
+
+.favoriteDisabled:hover {
+    gwt-sprite: "favIconAdd";
+    cursor: pointer;
+    float: left;
+}
+
+.unavailable {
+    gwt-sprite: "exclamation";
+    float: left;
+}
+

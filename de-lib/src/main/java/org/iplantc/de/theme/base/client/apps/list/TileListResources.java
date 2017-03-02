@@ -30,7 +30,7 @@ public interface TileListResources extends ClientBundle {
         String statusMod();
     }
 
-    @Source("org/iplantc/de/theme/base/client/apps/cells/AppsTile.css")
+    @Source("org/iplantc/de/theme/base/client/apps/cells/AppsTile.gss")
     AppsTileStyle style();
 
     @Source("org/iplantc/de/theme/base/client/desktop/window/cyverse_about.png")

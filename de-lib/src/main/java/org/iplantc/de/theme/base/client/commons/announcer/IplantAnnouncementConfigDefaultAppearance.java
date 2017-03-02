@@ -68,7 +68,7 @@ public class IplantAnnouncementConfigDefaultAppearance implements IplantAnnounce
         @Source("close_hover.png")
         ImageResource closeHover();
 
-        @Source("Announcer.css")
+        @Source("Announcer.gss")
         AnnouncerStyle css();
 
         @Source("exclamation.png")

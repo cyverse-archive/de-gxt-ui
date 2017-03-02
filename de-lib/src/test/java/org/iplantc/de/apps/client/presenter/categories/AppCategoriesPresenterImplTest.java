@@ -148,6 +148,8 @@ public class AppCategoriesPresenterImplTest {
         // Return empty list
         when(treeStoreMock.getAll()).thenReturn(Collections.<AppCategory>emptyList());
         when(appearanceMock.getAppCategoriesLoadingMask()).thenReturn("mask");
+        when(appearanceMock.workspaceTab()).thenReturn("workspace");
+        when(appearanceMock.hpcTab()).thenReturn("hpc");
 
         /*** CALL METHOD UNDER TEST ***/
         uut.go(null, false, tabPanelMock);

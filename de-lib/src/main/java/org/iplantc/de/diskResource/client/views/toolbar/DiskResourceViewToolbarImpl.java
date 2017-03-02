@@ -42,6 +42,7 @@ import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -629,8 +630,8 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("doiMi")
     void onRequestDOI(SelectionEvent<Item> event) {
-        final ConfirmMessageBox mb = new ConfirmMessageBox(appearance.requestDOI(),
-                                                           appearance.doiLinkMsg());
+        final ConfirmMessageBox mb = new ConfirmMessageBox(SafeHtmlUtils.fromString(appearance.requestDOI()),
+                                                           SafeHtmlUtils.fromTrustedString(appearance.doiLinkMsg()));
 
         mb.getButton(PredefinedButton.YES).setText(appearance.needDOI());
         mb.getButton(PredefinedButton.NO).setText(I18N.DISPLAY.cancel());

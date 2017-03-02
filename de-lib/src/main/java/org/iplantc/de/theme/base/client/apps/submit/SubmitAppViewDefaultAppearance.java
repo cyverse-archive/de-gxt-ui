@@ -9,6 +9,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
 /**
  * @author jstroot
@@ -70,6 +71,11 @@ public class SubmitAppViewDefaultAppearance implements SubmitAppForPublicUseView
     @Override
     public String publicNameNote() {
         return appsMessages.publicNameNote();
+    }
+
+    @Override
+    public SafeHtml publicNameHTML() {
+        return new SafeHtmlBuilder().appendEscaped(appsMessages.publicName()).toSafeHtml();
     }
 
     @Override
@@ -178,8 +184,8 @@ public class SubmitAppViewDefaultAppearance implements SubmitAppForPublicUseView
     }
 
     @Override
-    public String publicDescription() {
-        return templates.requiredLabel(appsMessages.publicDescription()).asString();
+    public SafeHtml publicDescription() {
+        return templates.requiredLabel(appsMessages.publicDescription());
     }
 
     @Override
@@ -188,23 +194,23 @@ public class SubmitAppViewDefaultAppearance implements SubmitAppForPublicUseView
     }
 
     @Override
-    public String describeInputLbl() {
-        return templates.requiredLabel(appsMessages.describeInputLbl()).asString();
+    public SafeHtml describeInputLbl() {
+        return templates.requiredLabel(appsMessages.describeInputLbl());
     }
 
     @Override
-    public String describeParamLbl() {
-        return templates.requiredLabel(appsMessages.describeParamLbl()).asString();
+    public SafeHtml describeParamLbl() {
+        return templates.requiredLabel(appsMessages.describeParamLbl());
     }
 
     @Override
-    public String describeOutputLbl() {
-        return templates.requiredLabel(appsMessages.describeOutputLbl()).asString();
+    public SafeHtml describeOutputLbl() {
+        return templates.requiredLabel(appsMessages.describeOutputLbl());
     }
 
     @Override
-    public String publicCategories() {
-        return templates.requiredLabel(appsMessages.publicCategories()).asString();
+    public SafeHtml publicCategories() {
+        return templates.requiredLabel(appsMessages.publicCategories());
     }
 
     @Override

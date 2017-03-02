@@ -128,13 +128,16 @@ public class DEFeedbackDialog extends IPlantDialog {
     @Inject
     public DEFeedbackDialog(final FeedbackAppearance appearance) {
         this.appearance = appearance;
-        setHeadingText(appearance.displayStrings().headingText());
+        setHeading(appearance.displayStrings().headingText());
         setPredefinedButtons(PredefinedButton.OK, PredefinedButton.CANCEL);
         getButton(PredefinedButton.OK).setText(appearance.displayStrings().submit());
         setHideOnButtonClick(false);
         setSize(appearance.dialogWidth(), appearance.dialogHeight());
 
         Widget widget = uiBinder.createAndBindUi(this);
+
+        initHTMLLabels();
+
         group = new ToggleGroup();
         group.add(vastField);
         group.add(swsatField);
@@ -143,6 +146,12 @@ public class DEFeedbackDialog extends IPlantDialog {
         group.add(nsField);
         group.add(otsatField);
         add(widget);
+    }
+
+    private void initHTMLLabels() {
+        reasonField.setHTML(appearance.displayStrings().reason());
+        completeField.setHTML(appearance.displayStrings().complete());
+        satisfyField.setHTML(appearance.displayStrings().satisfy());
     }
 
 

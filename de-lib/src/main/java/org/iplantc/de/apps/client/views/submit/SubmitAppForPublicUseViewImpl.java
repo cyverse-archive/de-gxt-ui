@@ -22,6 +22,7 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -141,11 +142,22 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
             }
         });
         addHelp();
+
+        setFieldLabelHTML();
+    }
+
+    private void setFieldLabelHTML() {
+        appField.setHTML(appearance.publicNameHTML());
+        descField.setHTML(appearance.publicDescription());
+        descInputField.setHTML(appearance.describeInputLbl());
+        descParamField.setHTML(appearance.describeParamLbl());
+        descOutputField.setHTML(appearance.describeOutputLbl());
+        catPanel.setHeading(appearance.publicCategories());
     }
 
     @UiFactory
     HtmlLayoutContainer buildIntroContainer() {
-        return new HtmlLayoutContainer(appearance.submitForPublicUseIntro());
+        return new HtmlLayoutContainer(SafeHtmlUtils.fromTrustedString(appearance.submitForPublicUseIntro()));
     }
 
     @Override

@@ -57,7 +57,7 @@ public class DiskResourceNameCellDefaultAppearance implements DiskResourceNameCe
         @Source("../../list-ingredients-16.png")
         ImageResource pathList();
 
-        @Source("DiskResourceNameCell.css")
+        @Source("DiskResourceNameCell.gss")
         CellStyle css();
     }
 

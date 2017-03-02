@@ -28,7 +28,7 @@ public class DataLinkCellDefaultAppearance implements DataLinkPanelCell.Appearan
     }
 
     public interface Resources extends ClientBundle {
-        @Source("DataLinkCellStyle.css")
+        @Source("DataLinkCellStyle.gss")
         DataLinkCellStyle css();
 
         @Source("../../link_delete.png")

@@ -32,7 +32,7 @@ public class AnalysisNameCellDefaultAppearance implements AnalysisNameCell.Analy
     }
 
     public interface AnalysisNameCellResources extends ClientBundle {
-        @Source("AnalysisNameCell.css")
+        @Source("AnalysisNameCell.gss")
         AnalysisNameCellStyle getAnalysisNameStyleCss();
 
         @Source("htlist.png")

@@ -34,7 +34,7 @@ public class AppRatingCellDefaultAppearance implements AppRatingCell.AppRatingCe
     }
 
     interface Resources extends ClientBundle {
-        @Source("AppRatingCell.css")
+        @Source("AppRatingCell.gss")
         MyCss css();
 
         @Source("../delete_rating.png")
@@ -182,13 +182,22 @@ public class AppRatingCellDefaultAppearance implements AppRatingCell.AppRatingCe
         if (app == null) {
             return;
         }
-        int rating = (int)((app.getRating().getUserRating() != 0) ? app.getRating().getUserRating()
-                                                                 : Math.floor(app.getRating()
-                                                                                 .getAverageRating()));
-        int total = app.getRating().getTotal();
+        int rating, total, userRating;
+        if (app.getRating() == null) {
+            rating = 0;
+            total = 0;
+            userRating = 0;
+        } else {
+            rating = (int)((app.getRating().getUserRating() != 0) ?
+                           app.getRating().getUserRating() :
+                           Math.floor(app.getRating().getAverageRating()));
+            total = app.getRating().getTotal();
+            userRating = app.getRating().getUserRating();
+        }
+
         // Build five rating stars
         for (int i = 0; i < ratings.size(); i++) {
-            if (!app.isPublic() || app.getAppType().equalsIgnoreCase(App.EXTERNAL_APP)) {
+            if ((app.isPublic() != null && !app.isPublic()) || (app.getAppType() != null && app.getAppType().equalsIgnoreCase(App.EXTERNAL_APP))) {
                 sb.append(templates.imgCell("Rating-" + i,
                                             ratings.get(i),
                                             resources.css().disabledRating(),
@@ -216,7 +225,7 @@ public class AppRatingCellDefaultAppearance implements AppRatingCell.AppRatingCe
         }
 
         // Determine if user has rated the app, and if so, add the unrate icon/button
-        if (app.getRating().getUserRating() > 0) {
+        if (userRating > 0) {
             // Add unrate icon
             sb.append(templates.imgCell("Unrate",
                                         "Unrate",

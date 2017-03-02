@@ -14,7 +14,7 @@ import com.sencha.gxt.widget.core.client.container.BoxLayoutContainer;
 public class TaskBarBaseAppearance extends ToolBarBaseAppearance implements TaskBar.TaskBarAppearance {
 
     public interface TaskBarResources extends ClientBundle {
-        @Source({"org/iplantc/de/theme/base/client/desktop/views/taskbar/TaskBar.css"})
+        @Source({ "org/iplantc/de/theme/base/client/desktop/views/taskbar/TaskBar.gss" })
         TaskBarStyle style();
 
     }

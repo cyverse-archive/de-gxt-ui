@@ -30,7 +30,7 @@ public class AppNameCellDefaultAppearance implements AppNameCell.AppNameCellAppe
     }
 
     public interface Resources extends ClientBundle {
-        @Source("AppNameCell.css")
+        @Source("AppNameCell.gss")
         MyCss css();
     }
 

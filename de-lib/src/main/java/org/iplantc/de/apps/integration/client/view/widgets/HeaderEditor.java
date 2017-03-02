@@ -4,15 +4,16 @@ import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAp
 
 import com.google.gwt.editor.client.LeafValueEditor;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
-import com.google.gwt.user.client.ui.HasHTML;
 
-public class HasHTMLEditor implements LeafValueEditor<String> {
+import com.sencha.gxt.widget.core.client.Header;
+
+public class HeaderEditor implements LeafValueEditor<String> {
 
     private String hasHtmlModel;
-    private final HasHTML peer;
+    private final Header peer;
     private final AppTemplateWizardAppearance wizAppearance;
 
-    public HasHTMLEditor(HasHTML peer, AppTemplateWizardAppearance wizAppearance) {
+    public HeaderEditor(Header peer, AppTemplateWizardAppearance wizAppearance) {
         this.peer = peer;
         this.wizAppearance = wizAppearance;
     }
@@ -25,7 +26,7 @@ public class HasHTMLEditor implements LeafValueEditor<String> {
     @Override
     public void setValue(String value) {
         this.hasHtmlModel = value;
-        peer.setHTML(wizAppearance.createContentPanelHeaderLabel(SafeHtmlUtils.fromString(value), false).asString());
+        peer.setHTML(wizAppearance.createContentPanelHeaderLabel(SafeHtmlUtils.fromString(value), false));
     }
 
 }

@@ -15,7 +15,7 @@ import com.google.gwt.resources.client.ImageResource;
 public class DetailsViewDefaultAppearance implements DetailsView.Appearance {
 
     public interface Resources extends ClientBundle {
-        @Source("DetailsViewStyle.css")
+        @Source("DetailsViewStyle.gss")
         DetailsViewStyle css();
     }
 

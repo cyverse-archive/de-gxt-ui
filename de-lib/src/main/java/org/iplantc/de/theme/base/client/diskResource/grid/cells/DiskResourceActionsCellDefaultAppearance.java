@@ -27,7 +27,7 @@ public class DiskResourceActionsCellDefaultAppearance implements DiskResourceAct
 
     interface Resources extends ClientBundle {
 
-        @ClientBundle.Source("DiskResourceActionsCell.css")
+        @ClientBundle.Source("DiskResourceActionsCell.gss")
         MyCss css();
 
         @Source("../../link.png")
