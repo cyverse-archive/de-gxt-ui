@@ -11,6 +11,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
@@ -240,7 +241,7 @@ public class AnalysisUserSupportDialog extends Window {
             }
         });
 
-        approvalChkBox.setBoxLabel(appearance.agreeToShare());
+        approvalChkBox.setBoxLabel(SafeHtmlUtils.fromTrustedString(appearance.agreeToShare()));
         vlc.add(approvalChkBox, new VerticalLayoutContainer.VerticalLayoutData(1, -1, new Margins(10)));
         vlc.add(submitBtn,
                 new VerticalLayoutContainer.VerticalLayoutData(-1, -1, new Margins(20, 0, 10, 300)));
