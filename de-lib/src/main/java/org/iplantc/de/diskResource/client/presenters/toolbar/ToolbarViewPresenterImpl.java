@@ -50,6 +50,7 @@ import org.iplantc.de.diskResource.client.views.toolbar.dialogs.TabFileConfigDia
 import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.base.Preconditions;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
@@ -329,7 +330,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
             @Override
             public void onSuccess(String result) {
                 MessageBox amb =
-                        new MessageBox(appearance.importFromCoge(), appearance.cogeImportGenomeSucess());
+                        new MessageBox(SafeHtmlUtils.fromTrustedString(appearance.importFromCoge()), SafeHtmlUtils.fromTrustedString(appearance.cogeImportGenomeSucess()));
                 amb.setIcon(MessageBox.ICONS.info());
                 amb.show();
             }
