@@ -2,7 +2,7 @@ package org.iplantc.de.apps.integration.client.view.propertyEditors;
 
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent;
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent.UpdateCommandLinePreviewEventHandler;
-import org.iplantc.de.apps.integration.client.view.propertyEditors.style.AppTemplateWizardPropertyContentPanelAppearance;
+import org.iplantc.de.theme.base.client.apps.integration.propertyEditors.AppTemplateWizardPropertyContentPanelAppearance;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.util.FinishEditing;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.util.PrefixedHasTextEditor;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.ArgumentEditor;
@@ -30,7 +30,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.Splittable;
 
 import static com.sencha.gxt.cell.core.client.form.ComboBoxCell.TriggerAction.ALL;
