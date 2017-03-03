@@ -78,8 +78,10 @@ public class UserInfo {
         preferences = userBootstrap.getPreferences();
         session = userBootstrap.getSession();
         appsInfo = userBootstrap.getAppsInfo();
-        workspace = appsInfo.getWorkspace();
-        systemIds = appsInfo.getSystemsIds();
+        if (appsInfo != null) {
+            workspace = appsInfo.getWorkspace();
+            systemIds = appsInfo.getSystemsIds();
+        }
     }
 
     public boolean hasErrors() {
