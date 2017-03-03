@@ -1,5 +1,7 @@
 package org.iplantc.de.client.models.bootstrap;
 
+import org.iplantc.de.client.models.HasSplittableError;
+
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 import com.google.web.bindery.autobean.shared.Splittable;
 
@@ -8,7 +10,7 @@ import java.util.Map;
 /**
  * @author aramsey
  */
-public interface Session {
+public interface Session extends HasSplittableError {
 
     @PropertyName("login_time")
     Long getLoginTime();
@@ -19,6 +21,5 @@ public interface Session {
     @PropertyName("auth_redirect")
     void setAuthRedirects(Map<String, String> redirects);
 
-    Splittable getError();
     void setError(Splittable error);
 }

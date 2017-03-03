@@ -1,14 +1,14 @@
 package org.iplantc.de.client.models.bootstrap;
 
+import org.iplantc.de.client.models.HasSplittableError;
 import org.iplantc.de.client.models.HasStatus;
 
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
-import com.google.web.bindery.autobean.shared.Splittable;
 
 /**
  * @author aramsey
  */
-public interface DataInfo extends HasStatus {
+public interface DataInfo extends HasStatus, HasSplittableError {
 
     @PropertyName("user_home_path")
     String getHomePath();
@@ -18,6 +18,4 @@ public interface DataInfo extends HasStatus {
 
     @PropertyName("base_trash_path")
     String getBaseTrashPath();
-
-    Splittable getError();
 }
