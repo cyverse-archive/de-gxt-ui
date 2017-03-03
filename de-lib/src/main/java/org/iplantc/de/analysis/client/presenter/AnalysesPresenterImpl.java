@@ -498,7 +498,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         return new AnalysisStepsInfoDialog(analysisStepView);
     }
 
-    private void shareWithSupport(Analysis selectedAnalysis, final Splittable parent) {
+    private void shareWithSupport(Analysis selectedAnalysis, final Splittable parent, final AnalysisUserSupportDialog ausd) {
         AnalysisPermission ap = shareFactory.analysisPermission().as();
         ap.setId(selectedAnalysis.getId());
         ap.setPermission(PermissionValue.read.toString());
@@ -511,11 +511,12 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 ErrorHandler.post(exception);
+                ausd.unmask();
             }
 
             @Override
             public void onSuccess(String result) {
-                emailSupport(parent);
+                emailSupport(parent, ausd);
             }
         });
     }
@@ -536,9 +537,9 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                 ausd.addSubmitSelectHandler(new SelectEvent.SelectHandler() {
                     @Override
                     public void onSelect(SelectEvent event) {
-                        ausd.hide();
+                        ausd.mask(appearance.requestProcessing());
                         AnalysisSupportRequest req = getAnalysisSupportRequest(value, ausd.getComment());
-                        shareWithSupport(value, AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(req)));
+                        shareWithSupport(value, AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(req)), ausd);
                     }
                 });
                 ausd.renderHelp(value);
@@ -577,7 +578,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         return req;
     }
 
-    protected void emailSupport(final Splittable parent) {
+    protected void emailSupport(final Splittable parent, final AnalysisUserSupportDialog ausd) {
         supportServiceProvider.get(new AsyncCallback<DEUserSupportServiceFacade>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -590,11 +591,14 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                     @Override
                     public void onFailure(Throwable caught) {
                         announcer.schedule(new ErrorAnnouncementConfig(userSupportAppearance.supportRequestFailed()));
+                        ausd.unmask();
                     }
 
                     @Override
                     public void onSuccess(Void result) {
                         announcer.schedule(new SuccessAnnouncementConfig(userSupportAppearance.supportRequestSuccess()));
+                        ausd.unmask();
+                        ausd.hide();
                     }
                 });
             }

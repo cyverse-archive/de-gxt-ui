@@ -80,4 +80,9 @@ public class AnalysesPresenterDefaultAppearance implements AnalysesView.Presente
         return analysesMessages.userRequestingHelpSubject();
     }
 
+    @Override
+    public String requestProcessing() {
+        return analysesMessages.requestProcessing();
+    }
+
 }
