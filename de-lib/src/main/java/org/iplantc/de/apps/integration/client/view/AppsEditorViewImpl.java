@@ -22,7 +22,7 @@ import org.iplantc.de.apps.integration.client.view.propertyEditors.ReferenceSequ
 import org.iplantc.de.apps.integration.client.view.propertyEditors.TextInputPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.TextSelectionPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.TreeSelectionPropertyEditor;
-import org.iplantc.de.apps.integration.client.view.propertyEditors.style.AppTemplateWizardPropertyContentPanelAppearance;
+import org.iplantc.de.theme.base.client.apps.integration.propertyEditors.AppTemplateWizardPropertyContentPanelAppearance;
 import org.iplantc.de.apps.integration.client.view.widgets.AppTemplatePropertyEditor;
 import org.iplantc.de.apps.integration.shared.AppIntegrationModule;
 import org.iplantc.de.apps.widgets.client.events.AppTemplateSelectedEvent;
