@@ -13,6 +13,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.TabItemConfig;
 import com.sencha.gxt.widget.core.client.TabPanel;
@@ -36,38 +37,20 @@ public class AppDocMarkdownDialog extends IPlantDialog implements SaveMarkdownSe
     }
 
     private static final AppDocMarkdownWindowUiBinder ourUiBinder = GWT.create(AppDocMarkdownWindowUiBinder.class);
-    private final AppDocMarkdownDialogAppearance appearance = GWT.create(AppDocMarkdownDialogAppearance.class);
+    private final AppDocMarkdownDialogAppearance appearance;
     @UiField InlineHTML documentation;
     @UiField TabItemConfig editTabConfig;
     @UiField TabPanel tabPanel;
     private AppDocEditView appDocEditView;
 
-    public AppDocMarkdownDialog(final App app,
-                                final AppDoc appDoc,
-                                final UserInfo userInfo) {
+    @Inject
+    public AppDocMarkdownDialog(AppDocMarkdownDialogAppearance appearance) {
+        this.appearance = appearance;
         setModal(false);
         setResizable(false);
         setSize("700px", "500px");
-        setHeading(app.getName());
         getButtonBar().clear();
         ourUiBinder.createAndBindUi(this);
-
-        // Build refLink html
-        SafeHtml docHtml = appearance.createDocumentMarkdown(render(appDoc.getDocumentation()), appDoc.getReferences());
-        documentation.setHTML(docHtml);
-
-
-        if(userInfo.getEmail().equals(app.getIntegratorEmail())){
-            // If current user is the app integrator, add edit tab
-            appDocEditView = new AppDocEditView(app, appDoc);
-            // Add handler to forward event
-            appDocEditView.addSaveMarkdownSelectedHandler(this);
-            tabPanel.add(appDocEditView, editTabConfig);
-        }
-
-
-        // Add uiBinder tab panel to dialog
-        add(tabPanel);
     }
 
 
@@ -91,6 +74,32 @@ public class AppDocMarkdownDialog extends IPlantDialog implements SaveMarkdownSe
         // Refresh the other
         final String editorContent = event.getEditorContent();
         documentation.setHTML(editorContent);
+    }
+
+    public void show(App app, AppDoc appDoc, UserInfo userInfo) {
+        setHeading(app.getName());
+        // Build refLink html
+        SafeHtml docHtml = appearance.createDocumentMarkdown(render(appDoc.getDocumentation()), appDoc.getReferences());
+        documentation.setHTML(docHtml);
+
+
+        if(userInfo.getEmail().equals(app.getIntegratorEmail())){
+            // If current user is the app integrator, add edit tab
+            appDocEditView = new AppDocEditView(app, appDoc);
+            // Add handler to forward event
+            appDocEditView.addSaveMarkdownSelectedHandler(this);
+            tabPanel.add(appDocEditView, editTabConfig);
+        }
+
+
+        // Add uiBinder tab panel to dialog
+        add(tabPanel);
+        super.show();
+    }
+
+    @Override
+    public void show() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("This method is not supported. Use show(App, AppDoc) method instead.");
     }
 
 }

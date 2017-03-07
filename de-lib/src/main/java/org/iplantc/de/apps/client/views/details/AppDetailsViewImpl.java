@@ -19,8 +19,10 @@ import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.models.tool.Tool;
+import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.views.dialogs.IPlantPromptDialog;
 import org.iplantc.de.desktop.client.presenter.DesktopPresenterImpl;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Strings;
 import com.google.gwt.cell.client.SafeHtmlCell;
@@ -40,6 +42,7 @@ import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DateLabel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -191,6 +194,7 @@ public class AppDetailsViewImpl extends Composite implements
     @Inject
     UserInfo userInfo;
     private final ToolEditorSource toolEditorSource;
+    @Inject AsyncProviderWrapper<AppDocMarkdownDialog> markdownDialogProvider;
 
     @Inject
     AppDetailsViewImpl(final AppDetailsView.AppDetailsAppearance appearance,
@@ -315,9 +319,18 @@ public class AppDetailsViewImpl extends Composite implements
 
     @Override
     public void showDoc(AppDoc appDoc) {
-        AppDocMarkdownDialog markdownDialog = new AppDocMarkdownDialog(app, appDoc, userInfo);
-        markdownDialog.show();
-        markdownDialog.addSaveMarkdownSelectedHandler(this);
+        markdownDialogProvider.get(new AsyncCallback<AppDocMarkdownDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(AppDocMarkdownDialog result) {
+                result.show(app, appDoc, userInfo);
+                result.addSaveMarkdownSelectedHandler(AppDetailsViewImpl.this);
+            }
+        });
     }
 
     @UiHandler("helpLink")
