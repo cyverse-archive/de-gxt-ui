@@ -9,6 +9,8 @@
     <inherits name='com.sencha.gxt.theme.gray.Gray' />
     <stylesheet src="reset.css" />
 
+    <set-configuration-property name="CssResource.style" value="pretty"/>
+
     <!-- iPlant Dependencies -->
     <inherits name="org.iplantc.de.admin.desktop.AdminDesktop" />
 
