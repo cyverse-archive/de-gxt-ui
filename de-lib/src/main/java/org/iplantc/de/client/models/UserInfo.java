@@ -255,7 +255,7 @@ public class UserInfo {
      * @return the newUser
      */
     public boolean isNewUser() {
-        return workspace == null || hasAppsInfoError() ? true : workspace.isNewUser();
+        return workspace == null || hasAppsInfoError() ? false : workspace.isNewUser();
     }
 
     /**
