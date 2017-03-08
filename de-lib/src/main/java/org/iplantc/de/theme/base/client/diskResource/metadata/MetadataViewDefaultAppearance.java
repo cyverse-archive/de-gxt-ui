@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
+import org.iplantc.de.theme.base.client.diskResource.toolbar.ToolbarDisplayMessages;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
@@ -20,6 +21,8 @@ import com.sencha.gxt.core.client.XTemplates;
  * @author jstroot
  */
 public class MetadataViewDefaultAppearance implements MetadataView.Appearance {
+
+
 
     interface MetadataHtmlTemplates extends SafeHtmlTemplates {
 
@@ -49,6 +52,7 @@ public class MetadataViewDefaultAppearance implements MetadataView.Appearance {
     private final IplantResources iplantResources;
     private final MetadataDisplayStrings displayStrings;
     private final IplantDisplayStrings iplantDisplayStrings;
+    private final ToolbarDisplayMessages toolbarMessages;
 
 
     public MetadataViewDefaultAppearance() {
@@ -56,19 +60,22 @@ public class MetadataViewDefaultAppearance implements MetadataView.Appearance {
              GWT.<MetadataInfoTemplate> create(MetadataInfoTemplate.class),
              GWT.<IplantResources> create(IplantResources.class),
              GWT.<MetadataDisplayStrings> create(MetadataDisplayStrings.class),
-             GWT.<IplantDisplayStrings> create(IplantDisplayStrings.class));
+             GWT.<IplantDisplayStrings> create(IplantDisplayStrings.class),
+             GWT.create(ToolbarDisplayMessages.class));
     }
 
     MetadataViewDefaultAppearance(final MetadataHtmlTemplates htmlTemplates,
                                   final MetadataInfoTemplate infoTemplate,
                                   final IplantResources iplantResources,
                                   final MetadataDisplayStrings displayStrings,
-                                  final IplantDisplayStrings iplantDisplayStrings) {
+                                  final IplantDisplayStrings iplantDisplayStrings,
+                                  final ToolbarDisplayMessages toolbarMessages) {
         this.htmlTemplates = htmlTemplates;
         this.infoTemplate = infoTemplate;
         this.iplantResources = iplantResources;
         this.displayStrings = displayStrings;
         this.iplantDisplayStrings = iplantDisplayStrings;
+        this.toolbarMessages = toolbarMessages;
     }
 
     @Override
@@ -236,5 +243,15 @@ public class MetadataViewDefaultAppearance implements MetadataView.Appearance {
     @Override
     public String readMore() {
         return displayStrings.readMore();
+    }
+
+    @Override
+    public ImageResource saveToFileIcon() {
+        return iplantResources.fileRename();
+    }
+
+    @Override
+    public String saveMetadataToFile() {
+        return toolbarMessages.saveMetadataMenuItem();
     }
 }

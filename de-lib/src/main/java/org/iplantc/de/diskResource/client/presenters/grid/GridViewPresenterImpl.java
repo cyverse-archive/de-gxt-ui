@@ -222,6 +222,7 @@ public class GridViewPresenterImpl implements
                                                                                                                  entityType);
 
         EventBus.getInstance().addHandler(TemplateDownloadEvent.TYPE,this);
+        EventBus.getInstance().addHandler(SaveMetadataSelected.TYPE, this);
 
         this.view = gridViewFactory.create(this, listStore, folderContentsRpcProxy);
 

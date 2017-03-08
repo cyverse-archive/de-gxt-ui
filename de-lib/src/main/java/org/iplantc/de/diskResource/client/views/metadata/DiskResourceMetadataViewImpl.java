@@ -149,6 +149,8 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
     ColumnModel<Avu> acm;
     @UiField
     IPlantAnchor infoLink;
+    @UiField
+    TextButton saveToFileButton;
 
 
     private HashSet<Avu> selectedSet;
@@ -293,6 +295,11 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
     @UiHandler("importButton")
     void onImportSelected(SelectEvent event) {
         presenter.onImport(additionalMdgrid.getSelectionModel().getSelectedItems());
+    }
+
+    @UiHandler("saveToFileButton")
+    void onSaveToFileButtonSelected(SelectEvent event) {
+         presenter.onSaveToFile();
     }
 
     private void setUserMetadataDebugIds() {
