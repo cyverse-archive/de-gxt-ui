@@ -201,4 +201,12 @@ public interface AppTemplateWizardAppearance {
     String commandLineDialogWidth();
 
     String commandLineDialogHeight();
+
+    int argumentNameColumnWidth();
+
+    SafeHtml argumentNameColumnLabel();
+
+    int argumentOrderColumnWidth();
+
+    SafeHtml argumentOrderColumnLabel();
 }

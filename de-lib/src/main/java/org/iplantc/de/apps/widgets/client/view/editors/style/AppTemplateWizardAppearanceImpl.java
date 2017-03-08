@@ -260,6 +260,25 @@ public class AppTemplateWizardAppearanceImpl implements AppTemplateWizardAppeara
         return "480";
     }
 
+    public int argumentNameColumnWidth() {
+        return 140;
+    }
+
+    @Override
+    public SafeHtml argumentNameColumnLabel() {
+        return appIntegrationMessages.argumentLabel();
+    }
+
+    @Override
+    public int argumentOrderColumnWidth() {
+        return 30;
+    }
+
+    @Override
+    public SafeHtml argumentOrderColumnLabel() {
+        return appIntegrationMessages.orderLabel();
+    }
+
     @Override
     public SafeHtml createChkBoxContextualHelpLabel(String labelToolTipText, String propertyToolTip) {
         return templates.fieldLabelImgFloatRightChkBox(SafeHtmlUtils.fromString(labelToolTipText),
