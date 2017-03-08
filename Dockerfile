@@ -13,3 +13,6 @@ ADD target/de-copy.war /de.war
 EXPOSE 8080
 
 ENTRYPOINT ["java", "-Dlogging.config=file:/etc/iplant/de/logging/de-ui.xml", "-jar", "de.war", "--spring.config.location=file:/etc/iplant/de/de-application.yaml"]
+LABEL org.label-schema.vcs-ref="$git_commit"
+LABEL org.label-schema.vcs-url="https://github.com/cyverse-de/ui"
+LABEL org.label-schema.version="$descriptive_version"
