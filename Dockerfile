@@ -2,9 +2,11 @@ FROM openjdk:alpine
 
 ARG git_commit=unknown
 ARG version="2.9.0"
+ARG descriptive_version=unknown
 
 LABEL org.cyverse.git-ref="$git_commit"
 LABEL org.cyverse.version="$version"
+LABEL org.cyverse.descriptive-version="$descriptive_version"
 
 ADD target/de-copy.war /de.war
 

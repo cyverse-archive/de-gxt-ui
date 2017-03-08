@@ -27,15 +27,17 @@ node('docker && gwtbuild') {
             sh """docker run -v /tmp:/tmp --name ${dockerWarBuilder} --rm -e BRANCH_NAME -e BUILD_TAG -e BUILD_ID -e BUILD_NUMBER ${dockerRepoBuild} > target/de-copy.war"""
 
             stage "Package Public Image and Push"
-            sh 'git rev-parse HEAD > GIT_COMMIT'
-            git_commit = readFile('GIT_COMMIT').trim()
+            git_commit = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
             echo git_commit
+
+            descriptive_version = sh(returnStdout: true, script: 'git describe --long --tags --dirty --always').trim()
+            echo descriptive_version
 
             milestone 100
             dockerRepo = "${dockerUser}/${repo}:${env.BRANCH_NAME}"
             lock("docker-push-${dockerRepo}") {
               milestone 101
-              sh "docker build --rm --build-arg git_commit=${git_commit} -t ${dockerRepo} ."
+              sh "docker build --rm --build-arg git_commit=${git_commit} --build-arg descriptive_version=${descriptive_version} -t ${dockerRepo} ."
 
               withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'jenkins-docker-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME']]) {
                   sh """docker run -e DOCKER_USERNAME -e DOCKER_PASSWORD \\
