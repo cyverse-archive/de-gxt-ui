@@ -251,6 +251,16 @@ public class AppTemplateWizardAppearanceImpl implements AppTemplateWizardAppeara
     }
 
     @Override
+    public String commandLineDialogWidth() {
+        return "640";
+    }
+
+    @Override
+    public String commandLineDialogHeight() {
+        return "480";
+    }
+
+    @Override
     public SafeHtml createChkBoxContextualHelpLabel(String labelToolTipText, String propertyToolTip) {
         return templates.fieldLabelImgFloatRightChkBox(SafeHtmlUtils.fromString(labelToolTipText),
                                                  res.help().getSafeUri(),

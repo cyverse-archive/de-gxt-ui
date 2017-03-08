@@ -197,4 +197,8 @@ public interface AppTemplateWizardAppearance {
     String commandLineOrder();
 
     String done();
+
+    String commandLineDialogWidth();
+
+    String commandLineDialogHeight();
 }

@@ -1,6 +1,7 @@
 package org.iplantc.de.apps.integration.client.presenter;
 
 import org.iplantc.de.apps.client.events.AppSavedEvent;
+import org.iplantc.de.apps.integration.client.dialogs.CommandLineOrderingDialog;
 import org.iplantc.de.apps.integration.client.dialogs.CommandLineOrderingPanel;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent.DeleteArgumentEventHandler;
@@ -41,6 +42,7 @@ import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.commons.client.views.dialogs.IplantInfoBox;
 import org.iplantc.de.shared.AppsCallback;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -350,6 +352,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
     Logger LOG = Logger.getLogger(AppsEditorPresenterImpl.class.getName());
 
     @Inject Provider<AppLaunchPreviewView> previewViewProvider;
+    @Inject AsyncProviderWrapper<CommandLineOrderingDialog> commandLineDialogProvider;
 
     @Inject
     AppsEditorPresenterImpl(final AppsEditorView view,
@@ -545,16 +548,21 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
 
             @Override
             public void onSuccess(ArrayList<String> result) {
-                final IPlantDialog dlg = new IPlantDialog();
-                dlg.setPredefinedButtons(PredefinedButton.OK);
-                dlg.setHeading(appearance.commandLineOrder());
-                dlg.setModal(true);
-                dlg.setOkButtonText(appearance.done());
-                dlg.setAutoHide(false);
-                CommandLineOrderingPanel clop = new CommandLineOrderingPanel(allTemplateArguments, AppsEditorPresenterImpl.this, appIntMessages, result);
-                clop.setSize("640", "480");
-                dlg.add(clop);
-                dlg.show();
+                commandLineDialogProvider.get(new AsyncCallback<CommandLineOrderingDialog>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        ErrorHandler.post(caught);
+                    }
+
+                    @Override
+                    public void onSuccess(CommandLineOrderingDialog dialog) {
+                        CommandLineOrderingPanel
+                                clop = new CommandLineOrderingPanel(allTemplateArguments, AppsEditorPresenterImpl.this, null, result);
+                        clop.setSize("640", "480");
+                        dialog.add(clop);
+                        dialog.show();
+                    }
+                });
             }
         });
     }

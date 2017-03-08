@@ -43,7 +43,7 @@ public class AppDocMarkdownDialog extends IPlantDialog implements SaveMarkdownSe
     @UiField InlineHTML documentation;
     @UiField TabItemConfig editTabConfig;
     @UiField TabPanel tabPanel;
-    private AppDocEditViewImpl appDocEditView;
+    private AppDocEditView appDocEditView;
 
     @Inject
     public AppDocMarkdownDialog(AppDocMarkdownDialogAppearance appearance,
@@ -66,7 +66,7 @@ public class AppDocMarkdownDialog extends IPlantDialog implements SaveMarkdownSe
     @Override
     public HandlerRegistration addSaveMarkdownSelectedHandler(SaveMarkdownSelected.SaveMarkdownSelectedHandler handler) {
         try {
-            return appDocEditView.addHandler(handler, SaveMarkdownSelected.TYPE);
+            return appDocEditView.addSaveMarkdownSelectedHandler(handler);
         } catch (NullPointerException ex) {
             GWT.log("Handler added for non markdown documentation", ex);
             return null;
