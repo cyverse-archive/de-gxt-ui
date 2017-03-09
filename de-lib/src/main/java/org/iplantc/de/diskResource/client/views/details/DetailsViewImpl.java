@@ -179,16 +179,15 @@ public class DetailsViewImpl extends Composite implements DetailsView,
     //<editor-fold desc="Event Handlers">
     @Override
     public void onDiskResourceSelectionChanged(DiskResourceSelectionChangedEvent event) {
-        mask(appearance.loadingMask());
         if (event.getSelection().isEmpty()
                 || event.getSelection().size() != 1 || event.getSelection().get(0).isFilter()) {
             bind(null);
             // Hide table
             table.addClassName(appearance.css().hidden());
             emptyDetails.removeClassName(appearance.css().hidden());
-            unmask();
             return;
         }
+        mask(appearance.loadingMask());
         table.removeClassName(appearance.css().hidden());
         emptyDetails.addClassName(appearance.css().hidden());
         // UPDATE ROW VISIBILITIES
