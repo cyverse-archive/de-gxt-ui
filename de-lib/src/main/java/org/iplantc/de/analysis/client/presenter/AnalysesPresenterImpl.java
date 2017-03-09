@@ -1,11 +1,22 @@
 package org.iplantc.de.analysis.client.presenter;
 
 import org.iplantc.de.analysis.client.AnalysesView;
+import org.iplantc.de.analysis.client.AnalysisToolBarView;
+import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
+import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
 import org.iplantc.de.analysis.client.events.OpenAppForRelaunchEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
+import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
+import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
+import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
+import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.gin.factory.AnalysesViewFactory;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.presenter.proxy.AnalysisRpcProxy;
@@ -78,7 +89,17 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               AnalysisNameSelectedEvent.AnalysisNameSelectedEventHandler,
                                               AnalysisAppSelectedEvent.AnalysisAppSelectedEventHandler,
                                               HTAnalysisExpandEvent.HTAnalysisExpandEventHandler,
-                                              AnalysisUserSupportRequestedEvent.AnalysisUserSupportRequestedEventHandler{
+                                              AnalysisUserSupportRequestedEvent.AnalysisUserSupportRequestedEventHandler,
+                                              AnalysisJobInfoSelected.AnalysisJobInfoSelectedHandler,
+                                              AnalysisCommentUpdate.AnalysisCommentUpdateHandler,
+                                              ShareAnalysisSelected.ShareAnalysisSelectedHandler,
+                                              AnalysisFilterChanged.AnalysisFilterChangedHandler,
+                                              RefreshAnalysesSelected.RefreshAnalysesSelectedHandler,
+                                              RenameAnalysisSelected.RenameAnalysisSelectedHandler,
+                                              RelaunchAnalysisSelected.RelaunchAnalysisSelectedHandler,
+                                              GoToAnalysisFolderSelected.GoToAnalysisFolderSelectedHandler,
+                                              DeleteAnalysisSelected.DeleteAnalysisSelectedHandler,
+                                              CancelAnalysisSelected.CancelAnalysisSelectedHandler {
 
     private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
         private final Analysis ae;
@@ -204,6 +225,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     AsyncProviderWrapper<AnalysisSharingDialog> aSharingDialogProvider;
     @Inject
     AsyncProviderWrapper<AnalysisUserSupportDialog> aSupportDialogProvider;
+    @Inject AsyncProviderWrapper<AnalysisStepsInfoDialog> stepsInfoDialogProvider;
+
     @Inject
     CollaboratorsUtil collaboratorsUtil;
     @Inject
@@ -239,12 +262,24 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         loader.setRemoteSort(true);
         loader.setReuseLoadConfig(true);
 
-        this.view = viewFactory.create(listStore, loader, this);
+        this.view = viewFactory.create(listStore, loader);
+        AnalysisToolBarView toolBarView = view.getToolBarView();
 
         this.view.addAnalysisNameSelectedEventHandler(this);
         this.view.addAnalysisAppSelectedEventHandler(this);
         this.view.addHTAnalysisExpandEventHandler(this);
         this.view.addAnalysisUserSupportRequestedEventHandler(this);
+        toolBarView.addAnalysisJobInfoSelectedHandler(this);
+        this.view.addAnalysisCommentUpdateHandler(this);
+        toolBarView.addAnalysisCommentUpdateHandler(this);
+        toolBarView.addShareAnalysisSelectedHandler(this);
+        toolBarView.addAnalysisFilterChangedHandler(this);
+        toolBarView.addRefreshAnalysesSelectedHandler(this);
+        toolBarView.addRenameAnalysisSelectedHandler(this);
+        toolBarView.addRelaunchAnalysisSelectedHandler(this);
+        toolBarView.addGoToAnalysisFolderSelectedHandler(this);
+        toolBarView.addDeleteAnalysisSelectedHandler(this);
+        toolBarView.addCancelAnalysisSelectedHandler(this);
 
         //Set default filter to ALL
         currentFilter = AnalysisFilter.ALL;
@@ -260,14 +295,17 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void cancelSelectedAnalyses(final List<Analysis> analysesToCancel) {
+    public void onCancelAnalysisSelected(CancelAnalysisSelected event) {
+        List<Analysis> analysesToCancel = event.getAnalysisList();
+
         for (Analysis analysis : analysesToCancel) {
             analysisService.stopAnalysis(analysis, new CancelAnalysisServiceCallback(analysis));
         }
     }
 
     @Override
-    public void deleteSelectedAnalyses(final List<Analysis> analysesToDelete) {
+    public void onDeleteAnalysisSelected(DeleteAnalysisSelected event) {
+        List<Analysis> analysesToDelete = event.getAnalyses();
         analysisService.deleteAnalyses(analysesToDelete, new AnalysisCallback<String>() {
 
             @Override
@@ -373,13 +411,15 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void goToSelectedAnalysisFolder(final Analysis selectedAnalysis) {
+    public void onGoToAnalysisFolderSelected(GoToAnalysisFolderSelected event) {
+        Analysis selectedAnalysis = event.getAnalysis();
         // Request disk resource window
         eventBus.fireEvent(new OpenFolderEvent(selectedAnalysis.getResultFolderId(), true));
+
     }
 
     @Override
-    public void onRefreshSelected() {
+    public void onRefreshAnalysesSelected(RefreshAnalysesSelected event) {
         loadAnalyses(currentFilter);
     }
 
@@ -389,7 +429,9 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void onShareSelected(List<Analysis> selected) {
+    public void onShareAnalysisSelected(ShareAnalysisSelected event) {
+        List<Analysis> selected = event.getAnalysisList();
+
         AnalysisSharingViewImpl sharingView = new AnalysisSharingViewImpl();
         final AnalysisSharingPresenter sharingPresenter = new AnalysisSharingPresenter(analysisService,
                                                                                  selected,
@@ -413,7 +455,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void setCurrentFilter(AnalysisFilter filter) {
+    public void onAnalysisFilterChanged(AnalysisFilterChanged event) {
+        AnalysisFilter filter = event.getFilter();
         if (filter == null) {
             currentFilter = filter;
             return;
@@ -440,7 +483,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void relaunchSelectedAnalysis(final Analysis selectedAnalysis) {
+    public void onRelaunchAnalysisSelected(RelaunchAnalysisSelected event) {
+        Analysis selectedAnalysis = event.getAnalysis();
         if (selectedAnalysis.isAppDisabled()) {
             return;
         }
@@ -448,10 +492,13 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void renameSelectedAnalysis(final Analysis selectedAnalysis, final String newName) {
+    public void onRenameAnalysisSelected(RenameAnalysisSelected event) {
+        Analysis selectedAnalysis = event.getAnalysis();
+        String newName = event.getNewName();
         analysisService.renameAnalysis(selectedAnalysis,
                                        newName,
                                        new RenameAnalysisCallback(selectedAnalysis, newName, listStore));
+
     }
 
     @Override
@@ -460,7 +507,9 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void updateAnalysisComment(final Analysis value, final String comment) {
+    public void onAnalysisCommentUpdate(AnalysisCommentUpdate event) {
+        Analysis value = event.getAnalysis();
+        String comment = event.getComment();
         analysisService.updateAnalysisComments(value,
                                                comment,
                                                new UpdateCommentsCallback(value, comment, listStore));
@@ -472,8 +521,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void getAnalysisStepInfo(Analysis value) {
-        analysisService.getAnalysisSteps(value, new AnalysisCallback<AnalysisStepsInfo>() {
+    public void onAnalysisJobInfoSelected(AnalysisJobInfoSelected event) {
+        analysisService.getAnalysisSteps(event.getAnalysis(), new AnalysisCallback<AnalysisStepsInfo>() {
 
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
@@ -483,20 +532,24 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
             }
 
             @Override
-            public void onSuccess(AnalysisStepsInfo result) {
-                AnalysisStepsInfoDialog asid = getAnalysisStepsDialog();
-                asid.show();
-                analysisStepView.clearData();
-                analysisStepView.setData(result.getSteps());
+            public void onSuccess(AnalysisStepsInfo stepsInfo) {
+                stepsInfoDialogProvider.get(new AsyncCallback<AnalysisStepsInfoDialog>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(AnalysisStepsInfoDialog result) {
+                        result.show(stepsInfo);
+                    }
+                });
             }
         });
 
     }
 
 
-    AnalysisStepsInfoDialog getAnalysisStepsDialog() {
-        return new AnalysisStepsInfoDialog(analysisStepView);
-    }
 
     private void shareWithSupport(Analysis selectedAnalysis, final Splittable parent, final AnalysisUserSupportDialog ausd) {
         AnalysisPermission ap = shareFactory.analysisPermission().as();

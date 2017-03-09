@@ -113,4 +113,6 @@ public interface AnalysesMessages extends Messages {
     String userRequestingHelpSubject();
 
     String requestProcessing();
+
+    String stepInfoDialogHeader();
 }

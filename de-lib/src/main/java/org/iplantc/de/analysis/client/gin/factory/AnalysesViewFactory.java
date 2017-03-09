@@ -14,6 +14,5 @@ import com.sencha.gxt.data.shared.loader.PagingLoader;
  */
 public interface AnalysesViewFactory {
     AnalysesView create(ListStore<Analysis> listStore,
-                        PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader,
-                        AnalysesView.Presenter presenter);
+                        PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader);
 }

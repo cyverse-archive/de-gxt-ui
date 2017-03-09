@@ -1,7 +1,9 @@
 package org.iplantc.de.analysis.client;
 
+import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
+import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
@@ -23,7 +25,8 @@ public interface AnalysesView extends IsWidget,
                                       AnalysisAppSelectedEvent.HasAnalysisAppSelectedEventHandlers,
                                       AnalysisNameSelectedEvent.HasAnalysisNameSelectedEventHandlers,
                                       HTAnalysisExpandEvent.HasHTAnalysisExpandEventHandlers,
-                                      AnalysisUserSupportRequestedEvent.HasAnalysisUserSupportRequestedEventHandlers {
+                                      AnalysisUserSupportRequestedEvent.HasAnalysisUserSupportRequestedEventHandlers,
+                                      AnalysisCommentUpdate.HasAnalysisCommentUpdateHandlers {
 
     interface Appearance {
 
@@ -128,6 +131,12 @@ public interface AnalysesView extends IsWidget,
         String shareWithInput();
 
         String shareOutputOnly();
+
+        String stepInfoDialogHeader();
+
+        String stepInfoDialogWidth();
+
+        String stepInfoDialogHeight();
     }
 
     interface Presenter {
@@ -159,37 +168,22 @@ public interface AnalysesView extends IsWidget,
             String userRequestingHelpSubject();
 
             String requestProcessing();
+
+            String commentsDialogWidth();
+
+            String commentsDialogHeight();
+
         }
-
-        void cancelSelectedAnalyses(List<Analysis> analysesToDelete);
-
-        void deleteSelectedAnalyses(List<Analysis> currentSelection);
 
         List<Analysis> getSelectedAnalyses();
 
         void go(final HasOneWidget container, List<Analysis> selectedAnalyses);
 
-        void goToSelectedAnalysisFolder(Analysis selectedAnalysis);
-
-        void onRefreshSelected();
-
         void onShowAllSelected();
-
-        void relaunchSelectedAnalysis(Analysis selectedAnalysis);
-
-        void renameSelectedAnalysis(Analysis selectedAnalysis, String newName);
 
         void setSelectedAnalyses(List<Analysis> selectedAnalyses);
 
         void setViewDebugId(String baseId);
-
-        void updateAnalysisComment(Analysis value, String comment);
-
-        void getAnalysisStepInfo(Analysis value);
-
-        void onShareSelected(List<Analysis> selected);
-
-        void setCurrentFilter(AnalysisFilter filter);
 
         AnalysisFilter getCurrentFilter();
 
@@ -211,4 +205,6 @@ public interface AnalysesView extends IsWidget,
     String getParentAnalysisId();
 
     AnalysisSearchField getSearchField();
+
+    AnalysisToolBarView getToolBarView();
 }

@@ -2,6 +2,7 @@ package org.iplantc.de.analysis.client.views;
 
 import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.client.AnalysisToolBarView;
+import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent.HTAnalysisExpandEventHandler;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisCommentSelectedEvent;
@@ -13,12 +14,15 @@ import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.analysis.shared.AnalysisModule;
 import org.iplantc.de.client.models.analysis.Analysis;
+import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -65,7 +69,7 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     @UiField LiveGridView<Analysis> gridView;
     @UiField ToolBar pagingToolBar;
     @UiField Status selectionStatus;
-    private final AnalysesView.Presenter presenter;
+    @Inject AsyncProviderWrapper<AnalysisCommentsDialog> analysisCommentsDlgProvider;
 
     AnalysisSearchField searchField;
 
@@ -73,12 +77,10 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     AnalysesViewImpl(final AnalysisColumnModel cm,
                      final AnalysisToolBarFactory toolBarFactory,
                      @Assisted final ListStore<Analysis> listStore,
-                     @Assisted final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader,
-                     @Assisted AnalysesView.Presenter presenter) {
+                     @Assisted final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader) {
         this.listStore = listStore;
         this.cm = cm;
-        this.presenter = presenter;
-        this.toolBar = toolBarFactory.create(presenter, loader);
+        this.toolBar = toolBarFactory.create(loader);
 
         MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
         initWidget(uiBinder.createAndBindUi(this));
@@ -145,19 +147,28 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     @Override
     public void onAnalysisCommentSelected(final AnalysisCommentSelectedEvent event) {
         // Show comments
-        final AnalysisCommentsDialog d = new AnalysisCommentsDialog(event.getValue());
-        d.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
+        analysisCommentsDlgProvider.get(new AsyncCallback<AnalysisCommentsDialog>() {
             @Override
-            public void onDialogHide(DialogHideEvent hideEvent) {
-                if (Dialog.PredefinedButton.OK.equals(hideEvent.getHideButton())
-                        && d.isCommentChanged()) {
-                    presenter.updateAnalysisComment(event.getValue(),
-                                                    d.getComment());
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
 
-                }
+            @Override
+            public void onSuccess(AnalysisCommentsDialog result) {
+                result.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
+                    @Override
+                    public void onDialogHide(DialogHideEvent hideEvent) {
+                        if (Dialog.PredefinedButton.OK.equals(hideEvent.getHideButton())
+                            && result.isCommentChanged()) {
+                            fireEvent(new AnalysisCommentUpdate(event.getValue(),
+                                                                result.getComment()));
+
+                        }
+                    }
+                });
+                result.show(event.getValue());
             }
         });
-        d.show();
     }
 
     @Override
@@ -200,5 +211,15 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
 
     private void setSelectionCount(int count) {
         selectionStatus.setText(appearance.selectionCount(count));
+    }
+
+    @Override
+    public AnalysisToolBarView getToolBarView() {
+        return toolBar;
+    }
+
+    @Override
+    public HandlerRegistration addAnalysisCommentUpdateHandler(AnalysisCommentUpdate.AnalysisCommentUpdateHandler handler) {
+        return addHandler(handler, AnalysisCommentUpdate.TYPE);
     }
 }

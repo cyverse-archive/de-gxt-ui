@@ -1,6 +1,5 @@
 package org.iplantc.de.analysis.client.gin.factory;
 
-import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.client.AnalysisToolBarView;
 import org.iplantc.de.client.models.analysis.Analysis;
 
@@ -13,6 +12,5 @@ import com.sencha.gxt.data.shared.loader.PagingLoader;
  * @author jstroot
  */
 public interface AnalysisToolBarFactory {
-    AnalysisToolBarView create(AnalysesView.Presenter presenter,
-                               PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader);
+    AnalysisToolBarView create(PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader);
 }

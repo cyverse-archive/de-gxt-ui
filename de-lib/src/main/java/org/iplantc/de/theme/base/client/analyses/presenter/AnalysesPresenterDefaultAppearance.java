@@ -85,4 +85,13 @@ public class AnalysesPresenterDefaultAppearance implements AnalysesView.Presente
         return analysesMessages.requestProcessing();
     }
 
+    public String commentsDialogWidth() {
+        return "350px";
+    }
+
+    @Override
+    public String commentsDialogHeight() {
+        return "300px";
+    }
+
 }

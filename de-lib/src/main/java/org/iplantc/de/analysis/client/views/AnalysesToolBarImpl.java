@@ -9,6 +9,16 @@ import static org.iplantc.de.client.models.analysis.AnalysisExecutionStatus.SUBM
 
 import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.client.AnalysisToolBarView;
+import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
+import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
+import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
+import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
+import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
+import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisParametersDialog;
@@ -29,6 +39,7 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -87,10 +98,6 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     @UiField
     MenuItem shareCollabMI;
 
-    //hidden for now...
-    //@UiField
-    //MenuItem shareSupportMI;
-
     @UiField(provided = true)
     SimpleComboBox<AnalysisFilter> filterCombo;
 
@@ -98,18 +105,16 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
 
     @Inject
     UserInfo userInfo;
+    @Inject AsyncProviderWrapper<AnalysisCommentsDialog> analysisCommentsDlgProvider;
 
 
     List<Analysis> currentSelection;
-    private final AnalysesView.Presenter presenter;
     private final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader;
 
     @Inject
     AnalysesToolBarImpl(final AnalysesView.Appearance appearance,
-                        @Assisted final AnalysesView.Presenter presenter,
                         @Assisted PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader) {
         this.appearance = appearance;
-        this.presenter = presenter;
         this.loader = loader;
 
         filterCombo = new SimpleComboBox<AnalysisFilter>(new StringLabelProvider<AnalysisFilter>());
@@ -159,7 +164,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         searchField.filterByAnalysisId(analysisId, name);
         //reset filter. Users need to set Filter to ALL to go back...
         filterCombo.setValue(null);
-        presenter.setCurrentFilter(null);
+        applyFilter(null);
     }
 
     @Override
@@ -167,7 +172,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         searchField.filterByParentId(analysisId);
         //reset filter. Users need to set Filter to ALL to go back...
         filterCombo.setValue(null);
-        presenter.setCurrentFilter(null);
+        applyFilter(null);
     }
 
     @Override
@@ -338,7 +343,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
             filterCombo.setValue(AnalysisFilter.ALL);
         } else {
             filterCombo.setValue(null);
-            presenter.setCurrentFilter(null);
+            applyFilter(null);
         }
     }
 
@@ -348,7 +353,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         Preconditions.checkNotNull(currentSelection);
         Preconditions.checkState(!currentSelection.isEmpty());
 
-        presenter.cancelSelectedAnalyses(currentSelection);
+        fireEvent(new CancelAnalysisSelected(currentSelection));
     }
 
     @UiHandler("deleteMI")
@@ -363,7 +368,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
             @Override
             public void onDialogHide(DialogHideEvent event) {
                 if (Dialog.PredefinedButton.OK.equals(event.getHideButton())){
-                    presenter.deleteSelectedAnalyses(currentSelection);
+                    fireEvent(new DeleteAnalysisSelected(currentSelection));
                 }
             }
         });
@@ -375,15 +380,14 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         Preconditions.checkNotNull(currentSelection);
         Preconditions.checkState(currentSelection.size() == 1);
 
-        presenter.goToSelectedAnalysisFolder(currentSelection.iterator().next());
+        fireEvent(new GoToAnalysisFolderSelected(currentSelection.iterator().next()));
     }
 
     @UiHandler("relaunchMI")
     void onRelaunchSelected(SelectionEvent<Item> event) {
         Preconditions.checkNotNull(currentSelection);
         Preconditions.checkState(currentSelection.size() == 1);
-
-        presenter.relaunchSelectedAnalysis(currentSelection.iterator().next());
+        fireEvent(new RelaunchAnalysisSelected(currentSelection.iterator().next()));
     }
 
     @UiHandler("renameMI")
@@ -402,7 +406,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
             @Override
             public void onSelect(SelectEvent event) {
                 if (!selectedAnalysis.getName().equals(dlg.getFieldText())) {
-                    presenter.renameSelectedAnalysis(selectedAnalysis, dlg.getFieldText());
+                    fireEvent(new RenameAnalysisSelected(selectedAnalysis, dlg.getFieldText()));
                 }
             }
         });
@@ -418,18 +422,26 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
 
 
         final Analysis selectedAnalysis = currentSelection.iterator().next();
-        final AnalysisCommentsDialog d = new AnalysisCommentsDialog(selectedAnalysis);
-        d.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
+        analysisCommentsDlgProvider.get(new AsyncCallback<AnalysisCommentsDialog>() {
             @Override
-            public void onDialogHide(DialogHideEvent event) {
-                if (Dialog.PredefinedButton.OK.equals(event.getHideButton())
-                        && d.isCommentChanged()) {
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
 
-                    presenter.updateAnalysisComment(selectedAnalysis, d.getComment());
-                }
+            @Override
+            public void onSuccess(AnalysisCommentsDialog result) {
+                result.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
+                    @Override
+                    public void onDialogHide(DialogHideEvent event) {
+                        if (Dialog.PredefinedButton.OK.equals(event.getHideButton())
+                            && result.isCommentChanged()) {
+                            fireEvent(new AnalysisCommentUpdate(selectedAnalysis, result.getComment()));
+                        }
+                    }
+                });
+                result.show(selectedAnalysis);
             }
         });
-        d.show();
     }
 
     @UiHandler("viewParamsMI")
@@ -452,16 +464,16 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
 
     @UiHandler("viewJobInfoMI")
     void onViewAnalysisStepsInfo(SelectionEvent<Item> event) {
-        presenter.getAnalysisStepInfo(currentSelection.get(0));
+        fireEvent(new AnalysisJobInfoSelected(currentSelection.get(0)));
     }
 
     @UiHandler("refreshTb")
     void onRefreshSelected(SelectEvent event) {
-        presenter.onRefreshSelected();
+        fireEvent(new RefreshAnalysesSelected());
     }
 
     void applyFilter(AnalysisFilter filter) {
-        presenter.setCurrentFilter(filter);
+        fireEvent(new AnalysisFilterChanged(filter));
     }
 
     @Override
@@ -476,38 +488,56 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
 
     @UiHandler("shareCollabMI")
     void onShareSelected(SelectionEvent<Item> event) {
-       presenter.onShareSelected(currentSelection);
+        fireEvent(new ShareAnalysisSelected(currentSelection));
     }
 
-  /**  @UiHandler("shareSupportMI")
-    void onShareSupportSelected(SelectionEvent<Item> event) {
-        ConfirmMessageBox messageBox = new ConfirmMessageBox(appearance.shareSupport(),
-                                                             appearance.shareSupportConfirm());
-        messageBox.setPredefinedButtons(Dialog.PredefinedButton.YES,
-                                        Dialog.PredefinedButton.NO,
-                                        Dialog.PredefinedButton.CANCEL);
-        messageBox.getButton(Dialog.PredefinedButton.YES).setText(appearance.shareWithInput());
-        messageBox.getButton(Dialog.PredefinedButton.NO).setText(appearance.shareOutputOnly());
+    @Override
+    public HandlerRegistration addAnalysisJobInfoSelectedHandler(AnalysisJobInfoSelected.AnalysisJobInfoSelectedHandler handler) {
+        return addHandler(handler, AnalysisJobInfoSelected.TYPE);
+    }
 
-        messageBox.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
-            @Override
-            public void onDialogHide(DialogHideEvent event) {
-                switch (event.getHideButton()) {
-                    case YES:
-                        presenter.onShareSupportSelected(currentSelection, true);
-                        break;
-                    case NO:
-                        presenter.onShareSupportSelected(currentSelection, false);
-                        break;
+    @Override
+    public HandlerRegistration addAnalysisCommentUpdateHandler(AnalysisCommentUpdate.AnalysisCommentUpdateHandler handler) {
+        return addHandler(handler, AnalysisCommentUpdate.TYPE);
+    }
 
-                    case CANCEL:
-                        break;
-                }
-            }
-        });
+    @Override
+    public HandlerRegistration addShareAnalysisSelectedHandler(ShareAnalysisSelected.ShareAnalysisSelectedHandler handler) {
+        return addHandler(handler, ShareAnalysisSelected.TYPE);
+    }
 
-        messageBox.show();
+    @Override
+    public HandlerRegistration addAnalysisFilterChangedHandler(AnalysisFilterChanged.AnalysisFilterChangedHandler handler) {
+        return addHandler(handler, AnalysisFilterChanged.TYPE);
+    }
 
-    } **/
+    @Override
+    public HandlerRegistration addRefreshAnalysesSelectedHandler(RefreshAnalysesSelected.RefreshAnalysesSelectedHandler handler) {
+        return addHandler(handler, RefreshAnalysesSelected.TYPE);
+    }
 
+    @Override
+    public HandlerRegistration addRenameAnalysisSelectedHandler(RenameAnalysisSelected.RenameAnalysisSelectedHandler handler) {
+        return addHandler(handler, RenameAnalysisSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addRelaunchAnalysisSelectedHandler(RelaunchAnalysisSelected.RelaunchAnalysisSelectedHandler handler) {
+        return addHandler(handler, RelaunchAnalysisSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addGoToAnalysisFolderSelectedHandler(GoToAnalysisFolderSelected.GoToAnalysisFolderSelectedHandler handler) {
+        return addHandler(handler, GoToAnalysisFolderSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addDeleteAnalysisSelectedHandler(DeleteAnalysisSelected.DeleteAnalysisSelectedHandler handler) {
+        return addHandler(handler, DeleteAnalysisSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addCancelAnalysisSelectedHandler(CancelAnalysisSelected.CancelAnalysisSelectedHandler handler) {
+        return addHandler(handler, CancelAnalysisSelected.TYPE);
+    }
 }

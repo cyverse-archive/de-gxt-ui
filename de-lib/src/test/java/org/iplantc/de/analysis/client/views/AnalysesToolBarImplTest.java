@@ -70,7 +70,6 @@ public class AnalysesToolBarImplTest {
 
     @Before public void setUp() {
         uut = new AnalysesToolBarImpl(appearanceMock,
-                                      presenterMock,
                                       loaderMock);
         currentSelectionMock =    spy(new ArrayList<Analysis>());
         mockMenuItems(uut);
@@ -109,7 +108,7 @@ public class AnalysesToolBarImplTest {
 
 
     @Test public void testOnSelectionChanged_OneSelected_appEnabled() {
-        uut = new AnalysesToolBarImpl(appearanceMock, presenterMock, loaderMock){
+        uut = new AnalysesToolBarImpl(appearanceMock, loaderMock){
             @Override
             boolean canCancelSelection(final List<Analysis> selection){
                 return true;
@@ -140,7 +139,7 @@ public class AnalysesToolBarImplTest {
     }
 
     @Test public void testOnSelectionChanged_OneSelected_appDisabled() {
-        uut = new AnalysesToolBarImpl(appearanceMock, presenterMock, loaderMock){
+        uut = new AnalysesToolBarImpl(appearanceMock, loaderMock){
             @Override
             boolean canCancelSelection(final List<Analysis> selection){
                 return true;
@@ -171,7 +170,7 @@ public class AnalysesToolBarImplTest {
     }
 
     @Test public void testOnSelectionChanged_ManySelected() {
-        uut = new AnalysesToolBarImpl(appearanceMock, presenterMock, loaderMock){
+        uut = new AnalysesToolBarImpl(appearanceMock, loaderMock){
             @Override
             boolean canCancelSelection(final List<Analysis> selection){
                 return true;

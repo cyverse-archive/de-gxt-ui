@@ -19,7 +19,7 @@ public class AnalysisParametersDialog extends IPlantDialog {
     AnalysisParametersDialog(final AnalysisParametersView.Appearance appearance){
         this.appearance = appearance;
 
-        setSize("520px", "375px");
+        setSize(appearance.parametersDialogWidth(), appearance.parametersDialogHeight());
         setMinHeight(375);
         setMinWidth(520);
         setHideOnButtonClick(true);
@@ -29,12 +29,12 @@ public class AnalysisParametersDialog extends IPlantDialog {
     public void show(final Analysis analysis){
         setHeading(appearance.viewParameters(analysis.getName()));
 
-        AnalysisParametersView view = presenter.getView();
-        add(view);
+        presenter.go(this);
 
         super.show();
 
         // Mask View, the Fetch analysis parameters
+
         presenter.fetchAnalysisParameters(analysis);
     }
 

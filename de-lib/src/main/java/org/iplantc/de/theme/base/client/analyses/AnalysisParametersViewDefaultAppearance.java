@@ -57,4 +57,14 @@ public class AnalysisParametersViewDefaultAppearance implements AnalysisParamete
     public String viewParameters(String name) {
         return analysesMessages.viewParameters(name);
     }
+
+    @Override
+    public String parametersDialogWidth() {
+        return "520px";
+    }
+
+    @Override
+    public String parametersDialogHeight() {
+        return "375px";
+    }
 }
