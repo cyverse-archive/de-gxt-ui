@@ -82,6 +82,10 @@ public interface MetadataView extends IsWidget {
         String metadataLink();
 
         String readMore();
+
+        ImageResource saveToFileIcon();
+
+        String saveMetadataToFile();
     }
 
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
@@ -128,6 +132,8 @@ public interface MetadataView extends IsWidget {
         boolean isDirty();
 
         void downloadTemplate(String templateid);
+
+        void onSaveToFile();
     }
 
 

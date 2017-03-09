@@ -1,5 +1,14 @@
 package org.iplantc.de.diskResource.client.presenters;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
+
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.dataLink.DataLinkFactory;
@@ -27,15 +36,6 @@ import org.iplantc.de.resources.client.messages.IplantContextualHelpStrings;
 import com.google.gwtmockito.GxtMockitoTestRunner;
 
 import com.sencha.gxt.data.shared.TreeStore;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyList;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -132,7 +132,6 @@ public class DiskResourcePresenterImplTest {
         verify(toolbarMock).addManageSharingSelectedEventHandler(eq(gridViewPresenterMock));
         verify(toolbarMock).addManageMetadataSelectedEventHandler(eq(gridViewPresenterMock));
         verify(toolbarMock).addCopyMetadataSelectedEventHandler(eq(gridViewPresenterMock));
-        verify(toolbarMock).addSaveMetadataSelectedEventHandler(eq(gridViewPresenterMock));
         verify(toolbarMock).addManageCommentsSelectedEventHandler(eq(gridViewPresenterMock));
         verify(toolbarMock).addMoveDiskResourcesSelectedHandler(eq(uut));
         verify(toolbarMock).addRefreshFolderSelectedHandler(eq(uut));
@@ -172,7 +171,7 @@ public class DiskResourcePresenterImplTest {
         verify(detailsPresenterMock, times(11)).getView();
         verify(gridViewPresenterMock, times(9)).getView();
         verify(navigationPresenterMock, times(5)).getView();
-        verify(toolbarPresenterMock, times(22)).getView();
+        verify(toolbarPresenterMock, times(21)).getView();
 
         verifyNoMoreInteractions(navigationPresenterMock,
                                  detailsPresenterMock,

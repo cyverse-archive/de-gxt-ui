@@ -1,5 +1,6 @@
 package org.iplantc.de.diskResource.client.views.toolbar;
 
+import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.File;
@@ -464,7 +465,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     @UiHandler("savemetadataMi")
     void onSaveMetadataClicked(SelectionEvent<Item> event) {
         Preconditions.checkState(selectedDiskResources != null && selectedDiskResources.size() == 1);
-        fireEvent(new SaveMetadataSelected(selectedDiskResources.iterator().next()));
+        EventBus.getInstance().fireEvent(new SaveMetadataSelected(selectedDiskResources.iterator().next()));
     }
 
     @UiHandler("downloadtemplateMi")
@@ -826,12 +827,6 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     private InfoType getInfoTypeFromSingletonCollection(List<DiskResource> selectedDiskResources) {
         Preconditions.checkArgument(selectedDiskResources.size() == 1);
         return InfoType.fromTypeString(selectedDiskResources.iterator().next().getInfoType());
-    }
-
-    @Override
-    public HandlerRegistration
-            addSaveMetadataSelectedEventHandler(SaveMetadataSelectedEventHandler handler) {
-        return addHandler(handler, SaveMetadataSelected.TYPE);
     }
 
     @Override

@@ -78,6 +78,12 @@
                                                    text="{appearance.selectTemplate}"
                                                    icon="{appearance.addIcon}"/>
                             </toolbar:child>
+                            <toolbar:FillToolItem/>
+                            <toolbar:child>
+                                <button:TextButton ui:field="saveToFileButton"
+                                                   text="{appearance.saveMetadataToFile}"
+                                                   icon="{appearance.saveToFileIcon}"/>
+                            </toolbar:child>
                         </toolbar:ToolBar>
                     </container:child>
                     <container:child layoutData="{gridLayoutData}">
