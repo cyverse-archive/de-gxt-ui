@@ -153,6 +153,7 @@ public class DiskResourcePresenterImplTest {
         verify(gridViewMock).addDiskResourceSelectionChangedEventHandler(eq(detailsViewMock));
         verify(gridViewMock).addDiskResourceSelectionChangedEventHandler(eq(toolbarMock));
         verify(gridViewPresenterMock).addStoreUpdateHandler(eq(detailsViewMock));
+        verify(gridViewPresenterMock).addFetchDetailsCompletedHandler(detailsViewMock);
 
         // Navigation
         verify(navigationPresenterMock).addSavedSearchedRetrievedEventHandler(eq(dataSearchPresenterMock));
@@ -169,7 +170,7 @@ public class DiskResourcePresenterImplTest {
         verify(dataSearchPresenterMock).addUpdateSavedSearchesEventHandler(eq(navigationPresenterMock));
         verify(dataSearchPresenterMock).addSavedSearchDeletedEventHandler(eq(searchFieldMock));
 
-        verify(detailsPresenterMock, times(11)).getView();
+        verify(detailsPresenterMock, times(12)).getView();
         verify(gridViewPresenterMock, times(9)).getView();
         verify(navigationPresenterMock, times(5)).getView();
         verify(toolbarPresenterMock, times(22)).getView();
