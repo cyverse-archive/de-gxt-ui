@@ -10,6 +10,7 @@ import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.diskResource.client.DetailsView;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent;
+import org.iplantc.de.diskResource.client.events.FetchDetailsCompleted;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.selection.EditInfoTypeSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected;
@@ -186,6 +187,7 @@ public class DetailsViewImpl extends Composite implements DetailsView,
             emptyDetails.removeClassName(appearance.css().hidden());
             return;
         }
+        mask(appearance.loadingMask());
         table.removeClassName(appearance.css().hidden());
         emptyDetails.addClassName(appearance.css().hidden());
         // UPDATE ROW VISIBILITIES
@@ -422,4 +424,8 @@ public class DetailsViewImpl extends Composite implements DetailsView,
     }
 
 
+    @Override
+    public void onFetchDetailsCompleted(FetchDetailsCompleted event) {
+        unmask();
+    }
 }

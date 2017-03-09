@@ -293,6 +293,7 @@ public class DiskResourcePresenterImpl implements
         this.gridViewPresenter.getView()
                               .addDiskResourceSelectionChangedEventHandler(toolbarPresenter.getView());
         this.gridViewPresenter.addStoreUpdateHandler(this.detailsViewPresenter.getView());
+        this.gridViewPresenter.addFetchDetailsCompletedHandler(this.detailsViewPresenter.getView());
 
         // Navigation Presenter
         this.navigationPresenter.addSavedSearchedRetrievedEventHandler(this.dataSearchPresenter);

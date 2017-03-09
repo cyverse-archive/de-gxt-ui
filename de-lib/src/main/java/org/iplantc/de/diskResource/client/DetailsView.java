@@ -3,17 +3,16 @@ package org.iplantc.de.diskResource.client;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.tags.Tag;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent.DiskResourceSelectionChangedEventHandler;
+import org.iplantc.de.diskResource.client.events.FetchDetailsCompleted;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.EditInfoTypeSelected.HasEditInfoTypeSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected.HasManageSharingSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked.HasMd5ValueClickedHandlers;
-import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked.Md5ValueClickedHandler;
 import org.iplantc.de.diskResource.client.events.selection.ResetInfoTypeSelected.HasResetInfoTypeSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected.HasSendToCogeSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected.HasSendToEnsemblSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected.HasSendToTreeViewerSelectedHandlers;
 
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -26,6 +25,7 @@ import com.sencha.gxt.data.shared.event.StoreUpdateEvent.StoreUpdateHandler;
  */
 public interface DetailsView extends IsWidget,
                                      DiskResourceSelectionChangedEventHandler,
+                                     FetchDetailsCompleted.FetchDetailsCompletedHandler,
                                      StoreUpdateHandler<DiskResource>,
                                      HasManageSharingSelectedEventHandlers,
                                      HasEditInfoTypeSelectedEventHandlers,
@@ -121,6 +121,7 @@ public interface DetailsView extends IsWidget,
 
         String lastModifiedLabel();
 
+        String loadingMask();
     }
 
     interface Presenter {

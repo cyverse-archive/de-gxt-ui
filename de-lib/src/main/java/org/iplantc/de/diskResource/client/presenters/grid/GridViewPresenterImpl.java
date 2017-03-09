@@ -31,6 +31,7 @@ import org.iplantc.de.diskResource.client.NavigationView;
 import org.iplantc.de.diskResource.client.events.DiskResourceNameSelectedEvent;
 import org.iplantc.de.diskResource.client.events.DiskResourcePathSelectedEvent;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent;
+import org.iplantc.de.diskResource.client.events.FetchDetailsCompleted;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
 import org.iplantc.de.diskResource.client.events.RequestDiskResourceFavoriteEvent;
 import org.iplantc.de.diskResource.client.events.ShowFilePreviewEvent;
@@ -69,6 +70,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -207,6 +209,7 @@ public class GridViewPresenterImpl implements
     private final GridView view;
     private boolean filePreviewEnabled = true;
     private DiskResourceView.Presenter parentPresenter;
+    private HandlerManager handlerManager;
 
     @Inject
     GridViewPresenterImpl(final GridViewFactory gridViewFactory,
@@ -600,6 +603,8 @@ public class GridViewPresenterImpl implements
                                         @Override
                                         public void onFailure(Integer statusCode, Throwable caught) {
                                             ErrorHandler.post(appearance.retrieveStatFailed(), caught);
+                                            ensureHandlers().fireEvent(new FetchDetailsCompleted());
+
                                             // This unmasks the sendTo.. toolbar buttons
                                             // presenter.unmaskVizMenuOptions();
                                         }
@@ -615,6 +620,7 @@ public class GridViewPresenterImpl implements
                                             Preconditions.checkNotNull(diskResource,
                                                                        "This object cannot be null at this point.");
                                             updateDiskResource(diskResource);
+                                            ensureHandlers().fireEvent(new FetchDetailsCompleted());
 
                                             // presenter.getView().unmaskDetailsPanel();
                                             // presenter.unmaskVizMenuOptions();
@@ -722,29 +728,46 @@ public class GridViewPresenterImpl implements
     public void onDownloadTemplateSelected(DownloadTemplateSelectedEvent event) {
         final MetadataView.Presenter.Appearance appearance =
                 GWT.create(MetadataView.Presenter.Appearance.class);
-       diskResourceService.getMetadataTemplateListing(new AsyncCallback<List<MetadataTemplateInfo>>() {
-           @Override
-           public void onFailure(Throwable caught) {
-               ErrorHandler.post(appearance.templateinfoError(), caught);
-           }
+        diskResourceService.getMetadataTemplateListing(new AsyncCallback<List<MetadataTemplateInfo>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(appearance.templateinfoError(), caught);
+            }
 
-           @Override
-           public void onSuccess(List<MetadataTemplateInfo> result) {
-               final SelectMetadataTemplateDialog view = new SelectMetadataTemplateDialog(result, appearance, false);
-               view.getOkButton().addSelectHandler(new SelectHandler() {
-                   @Override
-                   public void onSelect(SelectEvent event) {
-                       final String encodedSimpleDownloadURL =
-                               diskResourceService.downloadTemplate(view.getSelectedTemplate().getId());
-                       WindowUtil.open(encodedSimpleDownloadURL, "width=100,height=100");
-                   }
-               });
-               view.setModal(false);
-               view.setSize("400px", "400px");
-               view.setHeading(appearance.selectTemplate());
-               view.show();
-           }
-       });
+            @Override
+            public void onSuccess(List<MetadataTemplateInfo> result) {
+                final SelectMetadataTemplateDialog view =
+                        new SelectMetadataTemplateDialog(result, appearance, false);
+                view.getOkButton().addSelectHandler(new SelectHandler() {
+                    @Override
+                    public void onSelect(SelectEvent event) {
+                        final String encodedSimpleDownloadURL =
+                                diskResourceService.downloadTemplate(view.getSelectedTemplate().getId());
+                        WindowUtil.open(encodedSimpleDownloadURL, "width=100,height=100");
+                    }
+                });
+                view.setModal(false);
+                view.setSize("400px", "400px");
+                view.setHeading(appearance.selectTemplate());
+                view.show();
+            }
+        });
+    }
+
+    @Override
+    public HandlerRegistration addFetchDetailsCompletedHandler(
+            FetchDetailsCompleted.FetchDetailsCompletedHandler handler) {
+        return ensureHandlers().addHandler(FetchDetailsCompleted.TYPE, handler);
+    }
+
+    HandlerManager ensureHandlers() {
+        return handlerManager == null ?
+               handlerManager = createHandlerManager() :
+               handlerManager;
+    }
+
+    HandlerManager createHandlerManager() {
+        return new HandlerManager(this);
     }
 
     ListStore<DiskResource> getDiskResourceListStore() {
