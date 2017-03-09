@@ -197,6 +197,11 @@ public class DetailsViewDefaultAppearance implements DetailsView.Appearance {
     }
 
     @Override
+    public String loadingMask() {
+        return iplantDisplayStrings.loadingMask();
+    }
+
+    @Override
     public String md5CheckSum() {
         return displayStrings.md5CheckSum();
     }

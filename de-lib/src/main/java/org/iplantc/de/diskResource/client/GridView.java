@@ -7,6 +7,7 @@ import org.iplantc.de.diskResource.client.events.DiskResourceNameSelectedEvent.D
 import org.iplantc.de.diskResource.client.events.DiskResourceNameSelectedEvent.HasDiskResourceNameSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.DiskResourcePathSelectedEvent.HasDiskResourcePathSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent.HasDiskResourceSelectionChangedEventHandlers;
+import org.iplantc.de.diskResource.client.events.FetchDetailsCompleted;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent.FolderSelectionEventHandler;
 import org.iplantc.de.diskResource.client.events.RequestDiskResourceFavoriteEvent.RequestDiskResourceFavoriteEventHandler;
 import org.iplantc.de.diskResource.client.events.TemplateDownloadEvent;
@@ -119,7 +120,8 @@ public interface GridView extends IsWidget,
                                 EditInfoTypeSelectedEventHandler,
                                 ResetInfoTypeSelectedHandler,
                                 Md5ValueClickedHandler,
-                                TemplateDownloadEvent.TemplateDownloadEventHandler  {
+                                TemplateDownloadEvent.TemplateDownloadEventHandler,
+                                FetchDetailsCompleted.HasFetchDetailsCompletedHandlers  {
 
         interface Appearance {
 

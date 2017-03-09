@@ -10,6 +10,7 @@ import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.diskResource.client.DetailsView;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent;
+import org.iplantc.de.diskResource.client.events.FetchDetailsCompleted;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.selection.EditInfoTypeSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected;
@@ -178,12 +179,14 @@ public class DetailsViewImpl extends Composite implements DetailsView,
     //<editor-fold desc="Event Handlers">
     @Override
     public void onDiskResourceSelectionChanged(DiskResourceSelectionChangedEvent event) {
+        mask(appearance.loadingMask());
         if (event.getSelection().isEmpty()
                 || event.getSelection().size() != 1 || event.getSelection().get(0).isFilter()) {
             bind(null);
             // Hide table
             table.addClassName(appearance.css().hidden());
             emptyDetails.removeClassName(appearance.css().hidden());
+            unmask();
             return;
         }
         table.removeClassName(appearance.css().hidden());
@@ -422,4 +425,8 @@ public class DetailsViewImpl extends Composite implements DetailsView,
     }
 
 
+    @Override
+    public void onFetchDetailsCompleted(FetchDetailsCompleted event) {
+        unmask();
+    }
 }
