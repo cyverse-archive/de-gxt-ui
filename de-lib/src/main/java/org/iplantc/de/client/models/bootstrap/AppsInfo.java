@@ -1,17 +1,16 @@
 package org.iplantc.de.client.models.bootstrap;
 
+import org.iplantc.de.client.models.HasSplittableError;
+
 import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.Splittable;
 
 /**
  * Created by sriram on 2/27/17.
  */
-public interface AppsInfo {
+public interface AppsInfo extends HasSplittableError {
 
     @AutoBean.PropertyName("system_ids")
     SystemIds getSystemsIds();
 
     Workspace getWorkspace();
-
-    Splittable getError();
 }

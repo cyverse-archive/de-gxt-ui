@@ -11,19 +11,29 @@ import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
  */
 public interface UserBootstrap {
 
-    @PropertyName("user_info")
+    String USER_INFO_KEY = "user_info";
+    String SESSION_KEY = "session";
+    String WORKSPACE_KEY = "workspace";
+    String DATA_INFO_KEY = "data_info";
+    String PREFERENCES_KEY = "preferences";
+    String APPS_INFO_KEY = "apps_info";
+
+    @PropertyName(USER_INFO_KEY)
     UserProfile getUserProfile();
 
+    @PropertyName(SESSION_KEY)
     Session getSession();
 
+    @PropertyName(WORKSPACE_KEY)
     Workspace getWorkspace();
 
-    @PropertyName("data_info")
+    @PropertyName(DATA_INFO_KEY)
     DataInfo getDataInfo();
 
+    @PropertyName(PREFERENCES_KEY)
     Preferences getPreferences();
 
-    @PropertyName("apps_info")
+    @PropertyName(APPS_INFO_KEY)
     AppsInfo getAppsInfo();
 
 }

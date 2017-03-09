@@ -18,6 +18,7 @@ import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Holds all the information about an user.
@@ -56,6 +57,7 @@ public class UserInfo {
     private AppsInfo appsInfo;
     private List<WindowState> savedOrderedWindowStates;
     private static String AGAVE_AUTH_KEY = "agave";
+    private Logger LOG = Logger.getLogger(UserInfo.class.getName());
 
     /**
      * Constructs a default instance of the object with all fields being set to null.
@@ -78,8 +80,41 @@ public class UserInfo {
         preferences = userBootstrap.getPreferences();
         session = userBootstrap.getSession();
         appsInfo = userBootstrap.getAppsInfo();
-        workspace = appsInfo.getWorkspace();
-        systemIds = appsInfo.getSystemsIds();
+        if (appsInfo != null) {
+            workspace = appsInfo.getWorkspace();
+            systemIds = appsInfo.getSystemsIds();
+        }
+
+        checkForErrors();
+    }
+
+    private void checkForErrors() {
+        if (userProfile == null || hasUserProfileError()) {
+            logBootstrapError(UserBootstrap.USER_INFO_KEY, null);
+        }
+        if (dataInfo == null || hasDataInfoError()) {
+            logBootstrapError(UserBootstrap.DATA_INFO_KEY, dataInfo);
+        }
+        if (preferences == null || hasPreferencesError()) {
+            logBootstrapError(UserBootstrap.PREFERENCES_KEY, preferences);
+        }
+        if (session == null || hasSessionError()) {
+            logBootstrapError(UserBootstrap.SESSION_KEY, session);
+        }
+        if (appsInfo == null || hasAppsInfoError()) {
+            logBootstrapError(UserBootstrap.APPS_INFO_KEY, appsInfo);
+        }
+    }
+
+    private void logBootstrapError(String key, HasSplittableError obj) {
+        String errorMsg;
+        errorMsg = "Bootstrap error within '" + key + "' key: ";
+        if (obj != null) {
+            errorMsg += obj.getError().getPayload();
+        } else {
+            errorMsg += "null value or key parsing error";
+        }
+        LOG.severe(errorMsg);
     }
 
     public boolean hasErrors() {
