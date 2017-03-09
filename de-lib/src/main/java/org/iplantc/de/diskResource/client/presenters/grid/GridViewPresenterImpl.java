@@ -727,29 +727,31 @@ public class GridViewPresenterImpl implements
     public void onDownloadTemplateSelected(DownloadTemplateSelectedEvent event) {
         final MetadataView.Presenter.Appearance appearance =
                 GWT.create(MetadataView.Presenter.Appearance.class);
-       diskResourceService.getMetadataTemplateListing(new AsyncCallback<List<MetadataTemplateInfo>>() {
-           @Override
-           public void onFailure(Throwable caught) {
-               ErrorHandler.post(appearance.templateinfoError(), caught);
-           }
+        diskResourceService.getMetadataTemplateListing(new AsyncCallback<List<MetadataTemplateInfo>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(appearance.templateinfoError(), caught);
+            }
 
-           @Override
-           public void onSuccess(List<MetadataTemplateInfo> result) {
-               final SelectMetadataTemplateDialog view = new SelectMetadataTemplateDialog(result, appearance, false);
-               view.getOkButton().addSelectHandler(new SelectHandler() {
-                   @Override
-                   public void onSelect(SelectEvent event) {
-                       final String encodedSimpleDownloadURL =
-                               diskResourceService.downloadTemplate(view.getSelectedTemplate().getId());
-                       WindowUtil.open(encodedSimpleDownloadURL, "width=100,height=100");
-                   }
-               });
-               view.setModal(false);
-               view.setSize("400px", "400px");
-               view.setHeading(appearance.selectTemplate());
-               view.show();
-           }
-       });
+            @Override
+            public void onSuccess(List<MetadataTemplateInfo> result) {
+                final SelectMetadataTemplateDialog view =
+                        new SelectMetadataTemplateDialog(result, appearance, false);
+                view.getOkButton().addSelectHandler(new SelectHandler() {
+                    @Override
+                    public void onSelect(SelectEvent event) {
+                        final String encodedSimpleDownloadURL =
+                                diskResourceService.downloadTemplate(view.getSelectedTemplate().getId());
+                        WindowUtil.open(encodedSimpleDownloadURL, "width=100,height=100");
+                    }
+                });
+                view.setModal(false);
+                view.setSize("400px", "400px");
+                view.setHeading(appearance.selectTemplate());
+                view.show();
+            }
+        });
+    }
 
     @Override
     public HandlerRegistration addFetchDetailsCompletedHandler(
