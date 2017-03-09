@@ -2,6 +2,7 @@ package org.iplantc.de.apps.integration.client.gin;
 
 import org.iplantc.de.apps.integration.client.gin.factory.DeployedComponentListingViewFactory;
 import org.iplantc.de.apps.integration.client.presenter.AppsEditorPresenterImpl;
+import org.iplantc.de.apps.integration.client.presenter.DeployedComponentPresenterImpl;
 import org.iplantc.de.apps.integration.client.view.AppEditorToolbar;
 import org.iplantc.de.apps.integration.client.view.AppEditorToolbarImpl;
 import org.iplantc.de.apps.integration.client.view.AppIntegrationPalette;
@@ -37,6 +38,7 @@ public class AppEditorGinModule extends AbstractGinModule {
         bind(AppEditorToolbar.class).to(AppEditorToolbarImpl.class);
         bind(AppsEditorView.Presenter.class).to(AppsEditorPresenterImpl.class);
         bind(AppIntegrationPalette.class);
+        bind(DeployedComponentsListingView.Presenter.class).to(DeployedComponentPresenterImpl.class);
 
         // Bind the appearance for the ArgumentGroupEditors
         bind(AppIntegrationErrorMessages.class).to(IplantErrorStrings.class);

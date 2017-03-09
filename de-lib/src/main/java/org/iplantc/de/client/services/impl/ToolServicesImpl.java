@@ -7,15 +7,21 @@ import org.iplantc.de.client.services.converters.GetDeployedComponentsCallbackCo
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
+import com.google.common.collect.Iterables;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+
+import com.sencha.gxt.data.shared.SortDir;
+import com.sencha.gxt.data.shared.SortInfo;
+import com.sencha.gxt.data.shared.SortInfoBean;
+import com.sencha.gxt.data.shared.loader.FilterConfig;
+import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 
 import java.util.List;
 
 public class ToolServicesImpl implements ToolServices {
 
-    private final String COMPONENTS = "org.iplantc.services.apps.elements.tools";
     private final String TOOLS = "org.iplantc.services.tools";
     private final ToolAutoBeanFactory factory;
     private final DiscEnvApiService deServiceFacade;
@@ -28,20 +34,28 @@ public class ToolServicesImpl implements ToolServices {
     }
 
     @Override
-    public void getDeployedComponents(AsyncCallback<List<Tool>> callback) {
-        String address = COMPONENTS;
+    public void getDeployedComponents(FilterPagingLoadConfig loadConfig,
+                                      AsyncCallback<List<Tool>> callback) {
+        String address = TOOLS + "?";
+        // Get the proxy's search params.
+        String searchTerm;
+        List<FilterConfig> filterConfigs = loadConfig.getFilters();
+        if (filterConfigs != null && !filterConfigs.isEmpty()) {
+            searchTerm = filterConfigs.get(0).getValue();
+        } else {
+            searchTerm = "*";
+        }
+
+        SortInfo sortInfo =
+                Iterables.getFirst(loadConfig.getSortInfo(), new SortInfoBean("NAME", SortDir.ASC));
+
+        address += "search=" + URL.encodeQueryString(searchTerm)
+                   + "&sort-field=" + sortInfo.getSortField().toLowerCase()
+                   + "&sort-dir=" + sortInfo.getSortDir().toString();
+
         GetDeployedComponentsCallbackConverter callbackCnvt = new GetDeployedComponentsCallbackConverter(callback, factory);
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
 
-        deServiceFacade.getServiceData(wrapper, callbackCnvt);
-    }
-
-    @Override
-    public void searchDeployedComponents(String searchTerm, AsyncCallback<List<Tool>> callback) {
-        GetDeployedComponentsCallbackConverter callbackCnvt = new GetDeployedComponentsCallbackConverter(callback, factory);
-
-        String address = TOOLS + "?search=" + URL.encodeQueryString(searchTerm);
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
         deServiceFacade.getServiceData(wrapper, callbackCnvt);
     }
 

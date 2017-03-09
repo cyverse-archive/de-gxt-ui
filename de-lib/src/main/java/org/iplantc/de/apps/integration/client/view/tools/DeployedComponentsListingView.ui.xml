@@ -8,10 +8,8 @@
              xmlns:srh="urn:import:org.iplantc.de.commons.client.widgets">
 
 
-    <ui:with field="icons"
-             type="org.iplantc.de.resources.client.IplantResources"/>
-    <ui:with field="strings"
-             type="org.iplantc.de.resources.client.messages.IplantDisplayStrings"/>
+    <ui:with field="appearance"
+             type="org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingView.DeployedComponentsListingViewAppearance"/>
 
     <ui:with field="cm"
              type="com.sencha.gxt.widget.core.client.grid.ColumnModel">
@@ -46,10 +44,10 @@
                                      ui:field="container">
             <row:child layoutData="{topData}">
                 <tb:ToolBar ui:field="toolBar" height="30" spacing="3">
-                    <srh:SearchField ui:field="searchField"/>
+                    <srh:SearchField ui:field="searchField" emptyText="{appearance.searchEmptyText}"/>
                     <button:TextButton ui:field="newToolBtn"
-                                       text="{strings.newToolReq}"
-                                       icon="{icons.add}"/>
+                                       text="{appearance.newToolReq}"
+                                       icon="{appearance.add}"/>
                 </tb:ToolBar>
             </row:child>
 

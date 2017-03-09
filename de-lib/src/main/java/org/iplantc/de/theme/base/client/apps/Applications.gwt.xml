@@ -91,6 +91,10 @@
         <when-type-is class="org.iplantc.de.apps.client.views.details.doc.AppDocMarkdownDialog.AppDocMarkdownDialogAppearance"/>
     </replace-with>
 
+    <!--Tools-->
+    <replace-with class="org.iplantc.de.theme.base.client.apps.integration.tools.DeployedComponentsListingViewDefaultAppearance">
+        <when-type-is class="org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingView.DeployedComponentsListingViewAppearance"/>
+    </replace-with>
 
     <!--Launch Widget-->
     <replace-with class="org.iplantc.de.theme.base.client.apps.widgets.AppLaunchViewDefaultAppearance">
