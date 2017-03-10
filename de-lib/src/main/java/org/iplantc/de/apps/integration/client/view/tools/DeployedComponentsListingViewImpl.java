@@ -61,6 +61,7 @@ public class DeployedComponentsListingViewImpl extends Composite implements
     @UiField DeployedComponentsListingViewAppearance appearance;
     @UiField(provided = true) ListStore<Tool> store;
     private PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader;
+    private DCNameHyperlinkCell nameCell;
 
     private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
     @Inject AsyncProviderWrapper<NewToolRequestDialog> newToolRequestDialogProvider;
@@ -68,9 +69,11 @@ public class DeployedComponentsListingViewImpl extends Composite implements
 
     @Inject
     DeployedComponentsListingViewImpl(@Assisted ListStore<Tool> listStore,
-                                      @Assisted PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader) {
+                                      @Assisted PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader,
+                                      DCNameHyperlinkCell nameCell) {
         this.store = listStore;
         this.loader = loader;
+        this.nameCell = nameCell;
         initWidget(uiBinder.createAndBindUi(this));
         grid.setLoader(loader);
     }
@@ -124,7 +127,7 @@ public class DeployedComponentsListingViewImpl extends Composite implements
         name.setSortable(true);
         name.setHeader(appearance.nameColumnHeader());
         configs.add(name);
-        name.setCell(new DCNameHyperlinkCell(this));
+        name.setCell(nameCell);
         name.setMenuDisabled(true);
 
         ColumnConfig<Tool, String> version = new ColumnConfig<>(properties.version(), appearance.versionColumnWidth());

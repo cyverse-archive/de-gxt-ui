@@ -8,6 +8,7 @@ import org.iplantc.de.apps.integration.client.view.AppEditorToolbarImpl;
 import org.iplantc.de.apps.integration.client.view.AppIntegrationPalette;
 import org.iplantc.de.apps.integration.client.view.AppsEditorView;
 import org.iplantc.de.apps.integration.client.view.AppsEditorViewImpl;
+import org.iplantc.de.apps.integration.client.view.deployedComponents.cells.DCNameHyperlinkCell;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.*;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.widgets.ArgumentValidatorEditor;
 import org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingView;
@@ -66,6 +67,7 @@ public class AppEditorGinModule extends AbstractGinModule {
         bind(ReferenceSequencePropertyEditor.class);
         bind(ArgumentGroupPropertyEditor.class);
         bind(ArgumentValidatorEditor.class);
+        bind(DCNameHyperlinkCell.class);
 
         install(new GinFactoryModuleBuilder()
                     .implement(DeployedComponentsListingView.class, DeployedComponentsListingViewImpl.class)

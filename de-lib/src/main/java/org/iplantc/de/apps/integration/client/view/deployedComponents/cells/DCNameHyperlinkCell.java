@@ -1,26 +1,22 @@
 package org.iplantc.de.apps.integration.client.view.deployedComponents.cells;
 
-import org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingView;
-import org.iplantc.de.client.models.tool.Tool;
-
 import static com.google.gwt.dom.client.BrowserEvents.CLICK;
 import static com.google.gwt.dom.client.BrowserEvents.MOUSEOUT;
 import static com.google.gwt.dom.client.BrowserEvents.MOUSEOVER;
 
+import org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingView;
+import org.iplantc.de.client.models.tool.Tool;
+
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.ValueUpdater;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style.TextDecoration;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Event;
+import com.google.inject.Inject;
 
 /**
  * This is a custom cell which is clickable hyper-link of an DC name.
@@ -30,34 +26,21 @@ import com.google.gwt.user.client.Event;
  */
 public class DCNameHyperlinkCell extends AbstractCell<Tool> {
 
+    public interface DCNameHyperlinkCellAppearance {
 
-    interface MyCss extends CssResource {
-        String DCName();
+        String ELEMENT_NAME = "DCName";
+        SafeHtml render(Tool tool);
     }
 
-    interface Resources extends ClientBundle {
-        @Source("DCNameHyperlinkCell.gss")
-        MyCss css();
-    }
-
-    /**
-     * The HTML templates used to render the cell.
-     */
-    interface Templates extends SafeHtmlTemplates {
-
-        @SafeHtmlTemplates.Template("<span name=\"{3}\" class=\"{0}\" qtip=\"{2}\">{1}</span>")
-        SafeHtml cell(String textClassName, SafeHtml name, String textToolTip, String elementName);
-    }
-
-    private static final String ELEMENT_NAME = "DCName";
-    private final Resources resources = GWT.create(Resources.class);
-    private final Templates templates = GWT.create(Templates.class);
     private final DeployedComponentsListingView view;
+    private DCNameHyperlinkCellAppearance appearance;
 
-    public DCNameHyperlinkCell(DeployedComponentsListingView view) {
+    @Inject
+    public DCNameHyperlinkCell(DeployedComponentsListingView view,
+                               DCNameHyperlinkCellAppearance appearance) {
         super(CLICK, MOUSEOVER, MOUSEOUT);
         this.view = view;
-        resources.css().ensureInjected();
+        this.appearance = appearance;
     }
 
     @Override
@@ -68,7 +51,7 @@ public class DCNameHyperlinkCell extends AbstractCell<Tool> {
             return;
         }
 
-        if (eventTarget.getAttribute("name").equalsIgnoreCase(ELEMENT_NAME)) {
+        if (eventTarget.getAttribute("name").equalsIgnoreCase(DCNameHyperlinkCellAppearance.ELEMENT_NAME)) {
 
             switch (Event.as(event).getTypeInt()) {
                 case Event.ONCLICK:
@@ -92,9 +75,7 @@ public class DCNameHyperlinkCell extends AbstractCell<Tool> {
             return;
         }
         sb.appendHtmlConstant("&nbsp;");
-        SafeHtml safeHtmlName = SafeHtmlUtils.fromString(value.getName());
-        sb.append(templates.cell(resources.css().DCName(), safeHtmlName, "Click to view info",
-                ELEMENT_NAME));
+        sb.append(appearance.render(value));
 
     }
 
