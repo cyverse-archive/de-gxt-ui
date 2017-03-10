@@ -1,7 +1,7 @@
 package org.iplantc.de.apps.integration.client.view;
 
 import org.iplantc.de.apps.integration.client.view.propertyEditors.ArgumentGroupPropertyEditor;
-import org.iplantc.de.apps.integration.client.view.propertyEditors.ArgumentPropertyEditor;
+import org.iplantc.de.apps.integration.client.model.ArgumentPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.DecimalInputPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.DecimalSelectionPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.EnvVarPropertyEditor;

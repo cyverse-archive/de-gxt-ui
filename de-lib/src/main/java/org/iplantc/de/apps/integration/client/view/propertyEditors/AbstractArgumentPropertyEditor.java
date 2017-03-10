@@ -1,8 +1,12 @@
 package org.iplantc.de.apps.integration.client.view.propertyEditors;
 
+import static com.sencha.gxt.cell.core.client.form.ComboBoxCell.TriggerAction.ALL;
+
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent;
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent.UpdateCommandLinePreviewEventHandler;
-import org.iplantc.de.theme.base.client.apps.integration.propertyEditors.AppTemplateWizardPropertyContentPanelAppearance;
+import org.iplantc.de.apps.integration.client.model.ArgumentPropertyEditor;
+import org.iplantc.de.apps.integration.client.model.DataSourceProperties;
+import org.iplantc.de.apps.integration.client.model.FileInfoTypeProperties;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.util.FinishEditing;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.util.PrefixedHasTextEditor;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.ArgumentEditor;
@@ -16,6 +20,7 @@ import org.iplantc.de.client.models.apps.refGenome.ReferenceGenome;
 import org.iplantc.de.client.services.AppBuilderMetadataServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.shared.AppsCallback;
+import org.iplantc.de.theme.base.client.apps.integration.propertyEditors.AppTemplateWizardPropertyContentPanelAppearance;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.editor.client.Editor;
@@ -31,8 +36,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.web.bindery.autobean.shared.Splittable;
-
-import static com.sencha.gxt.cell.core.client.form.ComboBoxCell.TriggerAction.ALL;
 
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell.TriggerAction;
 import com.sencha.gxt.data.shared.LabelProvider;
