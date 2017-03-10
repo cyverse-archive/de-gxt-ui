@@ -3,6 +3,7 @@
  */
 package org.iplantc.de.apps.integration.client.view.tools;
 
+import org.iplantc.de.apps.integration.client.events.ShowToolInfoEvent;
 import org.iplantc.de.apps.integration.client.view.deployedComponents.cells.DCNameHyperlinkCell;
 import org.iplantc.de.apps.integration.client.dialogs.ToolInfoDialog;
 import org.iplantc.de.apps.integration.shared.AppIntegrationModule;
@@ -49,7 +50,8 @@ import java.util.List;
  * @author sriram, jstroot
  */
 public class DeployedComponentsListingViewImpl extends Composite implements
-                                                                 DeployedComponentsListingView {
+                                                                 DeployedComponentsListingView,
+                                                                 ShowToolInfoEvent.ShowToolInfoEventHandler {
 
     @UiTemplate("DeployedComponentsListingView.ui.xml")
     interface MyUiBinder extends UiBinder<Widget, DeployedComponentsListingViewImpl> { }
@@ -84,7 +86,8 @@ public class DeployedComponentsListingViewImpl extends Composite implements
     }
 
     @Override
-    public void showInfo(final Tool dc) {
+    public void onShowToolInfo(ShowToolInfoEvent event) {
+        Tool dc = event.getTool();
         toolInfoDialogProvider.get(new AsyncCallback<ToolInfoDialog>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -128,6 +131,7 @@ public class DeployedComponentsListingViewImpl extends Composite implements
         name.setHeader(appearance.nameColumnHeader());
         configs.add(name);
         name.setCell(nameCell);
+        nameCell.addShowToolInfoEventHandlers(this);
         name.setMenuDisabled(true);
 
         ColumnConfig<Tool, String> version = new ColumnConfig<>(properties.version(), appearance.versionColumnWidth());

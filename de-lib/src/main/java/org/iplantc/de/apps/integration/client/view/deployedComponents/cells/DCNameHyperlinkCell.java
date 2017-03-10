@@ -4,7 +4,7 @@ import static com.google.gwt.dom.client.BrowserEvents.CLICK;
 import static com.google.gwt.dom.client.BrowserEvents.MOUSEOUT;
 import static com.google.gwt.dom.client.BrowserEvents.MOUSEOVER;
 
-import org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingView;
+import org.iplantc.de.apps.integration.client.events.ShowToolInfoEvent;
 import org.iplantc.de.client.models.tool.Tool;
 
 import com.google.gwt.cell.client.AbstractCell;
@@ -13,6 +13,8 @@ import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style.TextDecoration;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Event;
@@ -24,7 +26,7 @@ import com.google.inject.Inject;
  * @author sriram
  * 
  */
-public class DCNameHyperlinkCell extends AbstractCell<Tool> {
+public class DCNameHyperlinkCell extends AbstractCell<Tool> implements ShowToolInfoEvent.HasShowToolInfoEventHandlers {
 
     public interface DCNameHyperlinkCellAppearance {
 
@@ -32,14 +34,12 @@ public class DCNameHyperlinkCell extends AbstractCell<Tool> {
         SafeHtml render(Tool tool);
     }
 
-    private final DeployedComponentsListingView view;
     private DCNameHyperlinkCellAppearance appearance;
+    private HandlerManager handlerManager;
 
     @Inject
-    public DCNameHyperlinkCell(DeployedComponentsListingView view,
-                               DCNameHyperlinkCellAppearance appearance) {
+    public DCNameHyperlinkCell(DCNameHyperlinkCellAppearance appearance) {
         super(CLICK, MOUSEOVER, MOUSEOUT);
-        this.view = view;
         this.appearance = appearance;
     }
 
@@ -80,7 +80,7 @@ public class DCNameHyperlinkCell extends AbstractCell<Tool> {
     }
 
     private void doOnClick(final Tool value) {
-        view.showInfo(value);
+        ensureHandlers().fireEvent(new ShowToolInfoEvent(value));
     }
 
     private void doOnMouseOut(Element eventTarget) {
@@ -89,5 +89,17 @@ public class DCNameHyperlinkCell extends AbstractCell<Tool> {
 
     private void doOnMouseOver(Element eventTarget) {
         eventTarget.getStyle().setTextDecoration(TextDecoration.UNDERLINE);
+    }
+
+    @Override
+    public HandlerRegistration addShowToolInfoEventHandlers(ShowToolInfoEvent.ShowToolInfoEventHandler handler) {
+        return ensureHandlers().addHandler(ShowToolInfoEvent.TYPE, handler);
+    }
+
+    protected HandlerManager ensureHandlers() {
+        if (handlerManager == null) {
+            handlerManager = new HandlerManager(this);
+        }
+        return handlerManager;
     }
 }

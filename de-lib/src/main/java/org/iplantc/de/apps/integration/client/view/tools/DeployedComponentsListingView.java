@@ -58,7 +58,4 @@ public interface DeployedComponentsListingView extends IsWidget,
 
     public Tool getSelectedDC();
 
-    public void showInfo(Tool dc);
-
-
 }
