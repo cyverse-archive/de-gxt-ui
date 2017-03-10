@@ -301,6 +301,9 @@ public class MetadataPresenterImpl implements MetadataView.Presenter{
             if (templateView != null) {
                 templateView.hide();
             }
+            view.getUserMetadata().forEach(md -> {
+                GWT.log(md.getAttribute() + "--->" + md.getValue() );
+            });
             templateView = new MetadataTemplateViewDialog(MetadataPresenterImpl.this,
                                                           view.getUserMetadata(),
                                                           isWritable(),
