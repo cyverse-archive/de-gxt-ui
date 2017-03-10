@@ -65,6 +65,11 @@ timestamps {
               sh returnStatus: true, script: "docker rm ${dockerPusher}"
 
               sh returnStatus: true, script: "docker rmi ${dockerRepoBuild}"
+
+              step([$class: 'hudson.plugins.jira.JiraIssueUpdater',
+                      issueSelector: [$class: 'hudson.plugins.jira.selector.DefaultIssueSelector'],
+                      scm: scm,
+                      labels: [ "ui-${descriptive_version}" ]])
           }
 
       } catch (InterruptedException e) {
