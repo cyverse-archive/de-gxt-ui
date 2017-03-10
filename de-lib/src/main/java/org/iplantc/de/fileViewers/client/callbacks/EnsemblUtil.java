@@ -15,6 +15,7 @@ import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 
 import com.sencha.gxt.core.shared.FastMap;
 
@@ -91,8 +92,8 @@ public class EnsemblUtil {
 
                                               @Override
                                               public void onFailure(Integer statusCode, Throwable caught) {
-                                                  IplantInfoBox info = new IplantInfoBox(appearance.indexFileMissing(),
-                                                                                         appearance.indexFileMissingError());
+                                                  IplantInfoBox info = new IplantInfoBox(SafeHtmlUtils.fromTrustedString(appearance.indexFileMissing()),
+                                                                                         SafeHtmlUtils.fromTrustedString(appearance.indexFileMissingError()));
                                                   info.show();
                                                   if (container != null) {
                                                       container.unmask();
