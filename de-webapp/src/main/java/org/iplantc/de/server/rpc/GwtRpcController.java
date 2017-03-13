@@ -67,9 +67,6 @@ public class GwtRpcController extends RemoteServiceServlet implements Controller
 
             RPCRequest rpcRequest = RPC.decodeRequest(payload,
                                                       this.remoteServiceClass);
-            if (remoteService instanceof DeGwtRemoteLoggingServiceImpl) {
-                ((DeGwtRemoteLoggingServiceImpl)remoteService).setRequest(getThreadLocalRequest());
-            }
 
             // delegate work to the spring injected service
             return RPC.invokeAndEncodeResponse(this.remoteService, rpcRequest

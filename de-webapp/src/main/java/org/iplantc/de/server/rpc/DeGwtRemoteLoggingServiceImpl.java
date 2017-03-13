@@ -1,5 +1,7 @@
 package org.iplantc.de.server.rpc;
 
+import org.iplantc.de.server.services.HasHttpServletRequest;
+
 import com.google.gwt.core.server.StackTraceDeobfuscator;
 import com.google.gwt.logging.server.RemoteLoggingServiceUtil;
 import com.google.gwt.logging.shared.RemoteLoggingService;
@@ -20,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author jstroot
  * @see org.iplantc.de.conf.GwtRpcConfig
  */
-public class DeGwtRemoteLoggingServiceImpl implements RemoteLoggingService {
+public class DeGwtRemoteLoggingServiceImpl implements RemoteLoggingService, HasHttpServletRequest {
     private static Logger logger = LoggerFactory.getLogger(RemoteLoggingService.class);
     private StackTraceDeobfuscator deobfuscator;
     private String loggerNameOverride = null;
@@ -44,8 +46,9 @@ public class DeGwtRemoteLoggingServiceImpl implements RemoteLoggingService {
         return null;
     }
 
-    public void setRequest(HttpServletRequest strongName) {
-        this.request = strongName;
+    @Override
+    public void setRequest(HttpServletRequest request) {
+        this.request = request;
     }
 
     String getModuleName(String path) {
