@@ -1,13 +1,19 @@
 package org.iplantc.de.server.rpc;
 
+import org.iplantc.de.server.services.HasHttpServletRequest;
+
 import com.google.gwt.core.server.StackTraceDeobfuscator;
 import com.google.gwt.logging.server.RemoteLoggingServiceUtil;
 import com.google.gwt.logging.shared.RemoteLoggingService;
+import com.google.gwt.user.client.rpc.RpcRequestBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.logging.LogRecord;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * This class is a light copy of {@link com.google.gwt.logging.server.RemoteLoggingServiceImpl}.
@@ -16,15 +22,21 @@ import java.util.logging.LogRecord;
  * @author jstroot
  * @see org.iplantc.de.conf.GwtRpcConfig
  */
-public class DeGwtRemoteLoggingServiceImpl implements RemoteLoggingService {
+public class DeGwtRemoteLoggingServiceImpl implements RemoteLoggingService, HasHttpServletRequest {
     private static Logger logger = LoggerFactory.getLogger(RemoteLoggingService.class);
-    // No deobfuscator by default
-    private StackTraceDeobfuscator deobfuscator = null;
+    private StackTraceDeobfuscator deobfuscator;
     private String loggerNameOverride = null;
+    private HttpServletRequest request;
+
 
     @Override
     public String logOnServer(LogRecord record) {
-        String strongName = null;
+        String strongName = request.getHeader(RpcRequestBuilder.STRONG_NAME_HEADER);
+        String contextPath = request.getServletPath();
+        String moduleName = getModuleName(contextPath);
+        String path = "WEB-INF/deploy/" + moduleName + "/symbolMaps/";
+        deobfuscator = StackTraceDeobfuscator.fromResource(path);
+
         try {
             RemoteLoggingServiceUtil.logOnServer(record, strongName, deobfuscator, loggerNameOverride);
         } catch (RemoteLoggingServiceUtil.RemoteLoggingException e) {
@@ -32,5 +44,20 @@ public class DeGwtRemoteLoggingServiceImpl implements RemoteLoggingService {
             return "Remote logging failed, check stack trace for details.";
         }
         return null;
+    }
+
+    @Override
+    public void setRequest(HttpServletRequest request) {
+        this.request = request;
+    }
+
+    String getModuleName(String path) {
+        if (path != null) {
+            String pattern = "(.*?)([a-z]+)/remote_logging";
+            Pattern regex = Pattern.compile(pattern);
+            Matcher matcher = regex.matcher(path);
+            return matcher.find() ? matcher.group(2) : "";
+        }
+        return "";
     }
 }
