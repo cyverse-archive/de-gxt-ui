@@ -2,7 +2,6 @@ package org.iplantc.de.apps.integration.client.view.tools;
 
 import org.iplantc.de.apps.integration.client.view.deployedComponents.proxy.ToolSearchRPCProxy;
 import org.iplantc.de.client.models.tool.Tool;
-import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
@@ -17,10 +16,10 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.inject.Inject;
 
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
 import com.sencha.gxt.core.client.IdentityValueProvider;
-import com.sencha.gxt.core.client.XTemplates;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.StringLabelProvider;
@@ -41,17 +40,34 @@ import java.util.List;
 
 public class ToolSearchField extends Composite implements HasSelectionHandlers<Tool>, HasValueChangeHandlers<Tool> {
 
-    interface DCTemplate extends XTemplates {
-        @XTemplate(source = "DCSearchResult.html")
-        SafeHtml render(Tool c);
+    public interface ToolSearchFieldAppearance {
+        SafeHtml render(Tool tool);
+
+        String searchEmptyText();
+
+        String toolLabel(Tool c);
+    }
+
+    class ToolCell extends AbstractCell<Tool> {
+
+        @Override
+        public void render(Context context, Tool value,
+                SafeHtmlBuilder sb) {
+            sb.append(appearance.render(value));
+        }
+
     }
 
     ComboBox<Tool> combo;
     
     private final ToolSearchRPCProxy searchProxy;
+    private ToolSearchFieldAppearance appearance;
 
-    public ToolSearchField() {
-        searchProxy = new ToolSearchRPCProxy();
+    @Inject
+    public ToolSearchField(ToolSearchFieldAppearance appearance,
+                           ToolSearchRPCProxy searchProxy) {
+        this.appearance = appearance;
+        this.searchProxy = searchProxy;
         PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader = buildLoader();
 
         ListStore<Tool> store = buildStore();
@@ -59,9 +75,7 @@ public class ToolSearchField extends Composite implements HasSelectionHandlers<T
         loader.addLoadHandler(new LoadResultListStoreBinding<FilterPagingLoadConfig, Tool, PagingLoadResult<Tool>>(
                 store));
 
-        final DCTemplate template = GWT.create(DCTemplate.class);
-
-        ListView<Tool, Tool> view = buildView(store, template);
+        ListView<Tool, Tool> view = buildView(store);
 
         ComboBoxCell<Tool> cell = buildComboCell(store, view);
         initCombo(loader, cell);
@@ -97,7 +111,7 @@ public class ToolSearchField extends Composite implements HasSelectionHandlers<T
 
                     @Override
                     public String getLabel(Tool c) {
-                        return c.getName() +  " " + c.getVersion();
+                        return appearance.toolLabel(c);
                     }
 
                 }, view) {
@@ -159,20 +173,11 @@ public class ToolSearchField extends Composite implements HasSelectionHandlers<T
         return store;
     }
 
-    private ListView<Tool, Tool> buildView(ListStore<Tool> store,
-            final DCTemplate template) {
+    private ListView<Tool, Tool> buildView(ListStore<Tool> store) {
         ListView<Tool, Tool> view = new ListView<Tool, Tool>(store,
                 new IdentityValueProvider<Tool>());
 
-        view.setCell(new AbstractCell<Tool>() {
-
-            @Override
-            public void render(com.google.gwt.cell.client.Cell.Context context, Tool value,
-                    SafeHtmlBuilder sb) {
-                sb.append(template.render(value));
-            }
-
-        });
+        view.setCell(new ToolCell());
         return view;
     }
 
@@ -182,7 +187,7 @@ public class ToolSearchField extends Composite implements HasSelectionHandlers<T
         combo.setMinChars(3);
         combo.setWidth(250);
         combo.setHideTrigger(true);
-        combo.setEmptyText(I18N.DISPLAY.searchEmptyText());
+        combo.setEmptyText(appearance.searchEmptyText());
         combo.addSelectionHandler(new SelectionHandler<Tool>() {
 
             @Override

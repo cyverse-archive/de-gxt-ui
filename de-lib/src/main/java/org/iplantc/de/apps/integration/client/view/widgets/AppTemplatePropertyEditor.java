@@ -64,7 +64,7 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
     @Ignore
     @UiField TextButton searchBtn;
     @Ignore
-    @UiField ToolSearchField tool;
+    @UiField(provided = true) ToolSearchField tool;
     @UiField FieldLabel toolLabel, appNameLabel, appDescriptionLabel;
     private static AppTemplatePropertyEditorUiBinder BINDER = GWT.create(AppTemplatePropertyEditorUiBinder.class);
     private final AppTemplateWizardAppearance appearance;
@@ -77,8 +77,10 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
     @Inject Provider<DCListingDialog> dcListingDialogProvider;
 
     @Inject
-    public AppTemplatePropertyEditor(AppTemplateWizardAppearance appearance) {
+    public AppTemplatePropertyEditor(AppTemplateWizardAppearance appearance,
+                                     ToolSearchField tool) {
         this.appearance = appearance;
+        this.tool = tool;
 
         initWidget(BINDER.createAndBindUi(this));
         nameEditor = new HeaderEditor(cp.getHeader(), appearance);
