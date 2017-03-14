@@ -11,9 +11,14 @@ import com.google.gwt.user.client.Event;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.dom.XElement;
+import com.sencha.gxt.theme.base.client.widget.HeaderDefaultAppearance;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 
 public final class AppTemplateContentPanel extends ContentPanel implements HasAppTemplateSelectedEventHandlers {
+
+    public interface ArgumentGroupContentPanelAppearance extends ContentPanelAppearance {
+        HeaderDefaultAppearance getHeaderAppearance();
+    }
 
     private final AppTemplateWizardAppearance wizAppearance;
 
