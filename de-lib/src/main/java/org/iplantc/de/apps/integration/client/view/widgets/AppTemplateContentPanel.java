@@ -8,6 +8,7 @@ import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAp
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
+import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.dom.XElement;
 import com.sencha.gxt.widget.core.client.ContentPanel;
@@ -16,11 +17,9 @@ public final class AppTemplateContentPanel extends ContentPanel implements HasAp
 
     private final AppTemplateWizardAppearance wizAppearance;
 
-    public AppTemplateContentPanel() {
-        this(new ArgumentGroupContentPanelAppearance(), AppTemplateWizardAppearance.INSTANCE);
-    }
-
-    private AppTemplateContentPanel(ArgumentGroupContentPanelAppearance appearance, AppTemplateWizardAppearance wizAppearance) {
+    @Inject
+    public AppTemplateContentPanel(ArgumentGroupContentPanelAppearance appearance,
+                                   AppTemplateWizardAppearance wizAppearance) {
         super(appearance);
         setCollapsible(true);
         setAnimCollapse(false);

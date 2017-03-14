@@ -34,6 +34,7 @@ import org.iplantc.de.apps.integration.client.view.propertyEditors.widgets.Argum
 import org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingView;
 import org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingViewImpl;
 import org.iplantc.de.apps.integration.client.view.tools.ToolSearchField;
+import org.iplantc.de.apps.integration.client.view.widgets.AppTemplateContentPanel;
 import org.iplantc.de.resources.client.IplantContextualHelpAccessStyle;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantErrorStrings;
@@ -90,6 +91,7 @@ public class AppEditorGinModule extends AbstractGinModule {
         bind(ArgumentValidatorEditor.class);
         bind(DCNameHyperlinkCell.class);
         bind(ToolSearchField.class);
+        bind(AppTemplateContentPanel.class);
 
         install(new GinFactoryModuleBuilder()
                     .implement(DeployedComponentsListingView.class, DeployedComponentsListingViewImpl.class)

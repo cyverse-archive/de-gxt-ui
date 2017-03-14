@@ -56,7 +56,7 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
 
     interface AppTemplatePropertyEditorUiBinder extends UiBinder<Widget, AppTemplatePropertyEditor> { }
 
-    @UiField AppTemplateContentPanel cp;
+    @UiField(provided = true) AppTemplateContentPanel cp;
     @UiField TextArea description;
     @UiField TextField name;
 
@@ -78,9 +78,11 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
 
     @Inject
     public AppTemplatePropertyEditor(AppTemplateWizardAppearance appearance,
+                                     AppTemplateContentPanel cp,
                                      ToolSearchField tool) {
         this.appearance = appearance;
         this.tool = tool;
+        this.cp = cp;
 
         initWidget(BINDER.createAndBindUi(this));
         nameEditor = new HeaderEditor(cp.getHeader(), appearance);
