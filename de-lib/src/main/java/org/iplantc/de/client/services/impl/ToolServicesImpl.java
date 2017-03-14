@@ -7,6 +7,7 @@ import org.iplantc.de.client.services.converters.GetDeployedComponentsCallbackCo
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -38,11 +39,12 @@ public class ToolServicesImpl implements ToolServices {
                                       AsyncCallback<List<Tool>> callback) {
         String address = TOOLS + "?";
         // Get the proxy's search params.
-        String searchTerm;
+        String searchTerm = null;
         List<FilterConfig> filterConfigs = loadConfig.getFilters();
         if (filterConfigs != null && !filterConfigs.isEmpty()) {
             searchTerm = filterConfigs.get(0).getValue();
-        } else {
+        }
+        if (Strings.isNullOrEmpty(searchTerm)) {
             searchTerm = "*";
         }
 
