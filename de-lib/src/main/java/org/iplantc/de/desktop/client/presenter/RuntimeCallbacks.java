@@ -80,20 +80,20 @@ class RuntimeCallbacks {
 
         @Override
         public void onFailure(Throwable arg0) {
-            GWT.log("error on logout:" + arg0.getMessage());
+            LOG.warning("Error on logout:" + arg0.getMessage());
             // logout anyway
             logout();
         }
 
         @Override
         public void onSuccess(String arg0) {
-            GWT.log("logout service success:" + arg0);
+            LOG.info("Logout success:" + arg0);
             logout();
         }
 
         void logout() {
             final String redirectUrl = GWT.getHostPageBaseURL() + constants.logoutUrl();
-            LOG.warning("RedirectUrl = " + redirectUrl);
+            LOG.info("RedirectUrl = " + redirectUrl);
             if (userSettings.isSaveSession()) {
                 final AutoProgressMessageBox progressMessageBox = getProgressMessage();
                 progressMessageBox.getProgressBar().setDuration(1000);

@@ -106,6 +106,7 @@ import com.sksamuel.gwt.websockets.WebsocketListener;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * @author jstroot
@@ -175,6 +176,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     private NotificationWebSocketManager notificationWebSocketManager;
     private SystemMessageWebSocketManager systemMessageWebSocketManager;
     private boolean loggedOut;
+    Logger LOG = Logger.getLogger(DesktopPresenterImpl.class.getName());
 
     public static final int NEW_NOTIFICATION_LIMIT = 10;
 
@@ -347,6 +349,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                                                                           getOrderedWindowStates()));
         } else {
             final String redirectUrl = GWT.getHostPageBaseURL() + deClientConstants.logoutUrl();
+            LOG.info("Session timeout.  Redirect url: " + redirectUrl);
             Window.Location.assign(redirectUrl);
         }
     }
