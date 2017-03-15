@@ -1,7 +1,7 @@
 package org.iplantc.de.apps.integration.client.view;
 
-import org.iplantc.de.apps.integration.client.view.propertyEditors.ArgumentGroupPropertyEditor;
 import org.iplantc.de.apps.integration.client.model.ArgumentPropertyEditor;
+import org.iplantc.de.apps.integration.client.view.propertyEditors.ArgumentGroupPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.DecimalInputPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.DecimalSelectionPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.EnvVarPropertyEditor;
@@ -22,7 +22,6 @@ import org.iplantc.de.apps.integration.client.view.propertyEditors.ReferenceSequ
 import org.iplantc.de.apps.integration.client.view.propertyEditors.TextInputPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.TextSelectionPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.TreeSelectionPropertyEditor;
-import org.iplantc.de.theme.base.client.apps.integration.propertyEditors.AppTemplateWizardPropertyContentPanelAppearance;
 import org.iplantc.de.apps.integration.client.view.widgets.AppTemplatePropertyEditor;
 import org.iplantc.de.apps.integration.shared.AppIntegrationModule;
 import org.iplantc.de.apps.widgets.client.events.AppTemplateSelectedEvent;
@@ -158,14 +157,18 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView {
     private final IplantContextualHelpAccessStyle style = IplantResources.RESOURCES.getContxtualHelpStyle();
 
     @Inject
-    public AppsEditorViewImpl(AppTemplateForm wizard, AppEditorToolbar toolbar, AppTemplatePropertyEditor appTemplatePropertyEditor, final AppIntegrationPalette palette) {
+    public AppsEditorViewImpl(AppTemplateForm wizard,
+                              AppEditorToolbar toolbar,
+                              AppTemplatePropertyEditor appTemplatePropertyEditor,
+                              final AppIntegrationPalette palette,
+                              AppTemplateWizardPropertyContentPanelAppearance panelAppearance) {
         this.wizard = wizard;
         this.toolbar = toolbar;
         wizard.setAdjustForScroll(false);
         this.appTemplatePropertyEditor = appTemplatePropertyEditor;
         this.palette = palette;
         style.ensureInjected();
-        defaultDetailsPanel = new ContentPanel(new AppTemplateWizardPropertyContentPanelAppearance());
+        defaultDetailsPanel = new ContentPanel(panelAppearance);
         defaultDetailsPanel.setHeading(SafeHtmlUtils.fromTrustedString(I18N.APPS_LABELS.detailsPanelHeader(""))); //$NON-NLS-1$
         defaultDetailsPanel.add(new HTML(I18N.APPS_LABELS.detailsPanelDefaultText()));
 
