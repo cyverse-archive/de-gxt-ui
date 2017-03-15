@@ -13,10 +13,4 @@ public interface AppEditorToolbar extends IsWidget,
                                           PreviewAppSelected.HasPreviewAppSelectedHandlers,
                                           SaveAppSelected.HasSaveAppSelectedHandlers {
 
-    public interface Presenter {
-
-    }
-
-    void setPresenter(AppEditorToolbar.Presenter presenter);
-
 }

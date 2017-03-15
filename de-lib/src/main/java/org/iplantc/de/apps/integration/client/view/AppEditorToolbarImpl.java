@@ -35,15 +35,9 @@ public class AppEditorToolbarImpl extends Composite implements AppEditorToolbar 
     @UiField
     TextButton previewBtn;
     private static AppIntegrationToolBarUiBinder BINDER = GWT.create(AppIntegrationToolBarUiBinder.class);
-    private AppEditorToolbar.Presenter presenter;
 
     public AppEditorToolbarImpl() {
         initWidget(BINDER.createAndBindUi(this));
-    }
-
-    @Override
-    public void setPresenter(AppEditorToolbar.Presenter presenter) {
-        this.presenter = presenter;
     }
 
     @Override

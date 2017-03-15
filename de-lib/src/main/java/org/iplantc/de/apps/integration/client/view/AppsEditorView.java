@@ -33,8 +33,7 @@ public interface AppsEditorView extends IsWidget, Editor<AppTemplate>, ArgumentS
     interface EditorDriver extends SimpleBeanEditorDriver<AppTemplate, AppsEditorView> {
     }
     
-    public interface Presenter extends AppEditorToolbar.Presenter,
-                                       BeforeHideHandler,
+    public interface Presenter extends BeforeHideHandler,
                                        UpdateCommandLinePreviewEventHandler,
                                        HasLabelOnlyEditMode,
                                        DeleteArgumentGroupEventHandler,
