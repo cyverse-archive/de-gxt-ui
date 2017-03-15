@@ -1,5 +1,11 @@
 package org.iplantc.de.apps.integration.client.view;
 
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.integration.Argument;
@@ -10,14 +16,10 @@ import org.iplantc.de.resources.client.IplantContextualHelpAccessStyle;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsDefaultLabels;
 
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwtmockito.GxtMockitoTestRunner;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import com.sencha.gxt.dnd.core.client.DragSource;
-
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,8 +27,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 @RunWith(GxtMockitoTestRunner.class)
-public class AppIntegrationPaletteTest {
+public class AppIntegrationItemDNDTest {
 
+    @Mock AppIntegrationPalette viewMock;
     @Mock AppTemplateWizardAppearance mockAppearance;
     @Mock AppsWidgetsDefaultLabels mockLabels; 
     @Mock AppTemplateAutoBeanFactory mockFactory; 
@@ -34,23 +37,19 @@ public class AppIntegrationPaletteTest {
     @Mock AutoBean<Argument> mockAbArgument; 
     @Mock AutoBean<FileParameters> mockAbDataObject;
     @Mock DragSource mockDragSource;
+    @Mock Image widgetMock;
+    @Mock ArgumentType typeMock;
 
-    private AppIntegrationPalette uut;
+    private AppIntegrationItemDND uut;
 
     @Before public void setUp() {
-        uut = new AppIntegrationPalette(mockAppearance, mockLabels, mockFactory, mockStyle, AppTemplateUtils.getInstance()){
-
-            @Override
-            DragSource createGrpDragSource(Widget widget, final AppTemplateAutoBeanFactory factory) {
-                return mockDragSource;
-            }
-
-            @Override
-            void createDragSource(Image widget, ArgumentType type) {
-                // Stub out method for unit test. Drag is best verified with selenium tests
-            }
-            
-        };
+        uut = new AppIntegrationItemDND(mockAppearance,
+                                        AppTemplateUtils.getInstance(),
+                                        mockFactory,
+                                        mockLabels, 
+                                        viewMock,
+                                        widgetMock,
+                                        typeMock);
     }
 
     @Test public void testCreateNewArgument_FileOutput() {
