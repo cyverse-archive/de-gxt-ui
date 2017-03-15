@@ -6,6 +6,7 @@ import org.iplantc.de.apps.integration.client.events.ArgumentOrderSelected;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent.DeleteArgumentEventHandler;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent;
+import org.iplantc.de.apps.integration.client.events.PreviewJsonSelected;
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent;
 import org.iplantc.de.apps.integration.client.presenter.visitors.DeleteArgumentGroup;
 import org.iplantc.de.apps.integration.client.presenter.visitors.GatherAllEventProviders;
@@ -600,7 +601,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
     }
 
     @Override
-    public void onPreviewJsonClicked() {
+    public void onPreviewJsonSelected(PreviewJsonSelected event) {
         AppTemplate appTemplate = flushViewAndClean();
         Splittable split = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(appTemplateUtils.removeEmptyGroupArguments(appTemplate)));
         IPlantDialog dlg = new IPlantDialog();

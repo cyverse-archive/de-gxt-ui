@@ -473,6 +473,7 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView {
     public void setPresenter(AppsEditorView.Presenter presenter) {
         this.presenter = presenter;
         toolbar.addArgumentOrderSelectedHandler(presenter);
+        toolbar.addPreviewJsonSelectedHandler(presenter);
     }
 
     @UiFactory

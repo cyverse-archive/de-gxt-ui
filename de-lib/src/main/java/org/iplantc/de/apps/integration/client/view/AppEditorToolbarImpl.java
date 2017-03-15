@@ -3,6 +3,7 @@ package org.iplantc.de.apps.integration.client.view;
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids;
 
 import org.iplantc.de.apps.integration.client.events.ArgumentOrderSelected;
+import org.iplantc.de.apps.integration.client.events.PreviewJsonSelected;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -60,7 +61,7 @@ public class AppEditorToolbarImpl extends Composite implements AppEditorToolbar 
 
     @UiHandler("previewJsonMenuItem")
     void onPreviewJsonClicked(@SuppressWarnings("unused") SelectionEvent<Item> event) {
-        presenter.onPreviewJsonClicked();
+        fireEvent(new PreviewJsonSelected());
     }
 
     @UiHandler("previewUiMenuItem")
@@ -76,5 +77,10 @@ public class AppEditorToolbarImpl extends Composite implements AppEditorToolbar 
     @Override
     public HandlerRegistration addArgumentOrderSelectedHandler(ArgumentOrderSelected.ArgumentOrderSelectedHandler handler) {
         return addHandler(handler, ArgumentOrderSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addPreviewJsonSelectedHandler(PreviewJsonSelected.PreviewJsonSelectedHandler handler) {
+        return addHandler(handler, PreviewJsonSelected.TYPE);
     }
 }
