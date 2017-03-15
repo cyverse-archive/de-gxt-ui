@@ -2,6 +2,7 @@ package org.iplantc.de.apps.integration.client.view;
 
 import org.iplantc.de.apps.integration.client.events.ArgumentOrderSelected;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent.DeleteArgumentGroupEventHandler;
+import org.iplantc.de.apps.integration.client.events.PreviewAppSelected;
 import org.iplantc.de.apps.integration.client.events.PreviewJsonSelected;
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent.UpdateCommandLinePreviewEventHandler;
 import org.iplantc.de.apps.integration.client.view.widgets.AppTemplatePropertyEditor;
@@ -37,7 +38,8 @@ public interface AppsEditorView extends IsWidget, Editor<AppTemplate>, ArgumentS
                                        HasLabelOnlyEditMode,
                                        DeleteArgumentGroupEventHandler,
                                        ArgumentOrderSelected.ArgumentOrderSelectedHandler,
-                                       PreviewJsonSelected.PreviewJsonSelectedHandler {
+                                       PreviewJsonSelected.PreviewJsonSelectedHandler,
+                                       PreviewAppSelected.PreviewAppSelectedHandler {
 
         /**
          * This constant is used to key into an Autobean's tag map

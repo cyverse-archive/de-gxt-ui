@@ -6,6 +6,7 @@ import org.iplantc.de.apps.integration.client.events.ArgumentOrderSelected;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent.DeleteArgumentEventHandler;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent;
+import org.iplantc.de.apps.integration.client.events.PreviewAppSelected;
 import org.iplantc.de.apps.integration.client.events.PreviewJsonSelected;
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent;
 import org.iplantc.de.apps.integration.client.presenter.visitors.DeleteArgumentGroup;
@@ -618,7 +619,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
     }
 
     @Override
-    public void onPreviewUiClicked() {
+    public void onPreviewAppSelected(PreviewAppSelected event) {
         AppLaunchPreviewView preview = previewViewProvider.get();
         preview.edit(flushViewAndClean(), null);
         preview.show();
