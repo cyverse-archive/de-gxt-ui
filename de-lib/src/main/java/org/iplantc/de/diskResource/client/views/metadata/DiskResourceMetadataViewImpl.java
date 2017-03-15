@@ -60,7 +60,6 @@ import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent.Selecti
 import com.sencha.gxt.widget.core.client.tips.QuickTip;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -494,17 +493,15 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
            userMdGrid.unmask();
            return;
         }
-        List<Avu> itemsToAdd = new ArrayList<>();
-        for (Avu md : metadataList) {
-            Avu model = userMdListStore.findModel(md);
-            if (model != null) {
-                model.setValue(md.getValue());
-                userMdListStore.update(model);
-            } else {
-                itemsToAdd.add(presenter.setAvuModelKey(md));
-            }
-        }
-        userMdListStore.addAll(itemsToAdd);
+        metadataList.forEach(md -> {
+             userMdListStore.getAll().forEach(umd -> {
+                  if(md.getAttribute().equals(umd.getAttribute())) {
+                      //GWT.log("attribute removed --> " + umd.getAttribute());
+                      userMdListStore.remove(umd);
+                  }
+             });
+         });
+        userMdListStore.addAll(metadataList);
         userMdGrid.unmask();
     }
 

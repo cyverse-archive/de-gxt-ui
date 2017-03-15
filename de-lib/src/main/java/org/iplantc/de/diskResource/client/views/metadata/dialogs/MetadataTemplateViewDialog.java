@@ -3,6 +3,7 @@ package org.iplantc.de.diskResource.client.views.metadata.dialogs;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
 import org.iplantc.de.client.models.diskResources.TemplateAttributeSelectionItem;
+import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.validators.UrlValidator;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.commons.client.widgets.IPlantAnchor;
@@ -64,7 +65,6 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
     private List<MetadataTemplateAttribute> attributes;
     private List<Avu> templateMd;
     private boolean valid;
-    private int dupeCounter;
 
     public MetadataTemplateViewDialog(MetadataView.Presenter presenter,
                                       List<Avu> templateMd,
@@ -96,7 +96,6 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
                 avu = MetadataPresenterImpl.newMetadata(metadataTemplateAttribute.getName(),
                                                         "",
                                                         ""); //$NON-NLS-1$ //$NON-NLS-2$
-                templateTagAvuMap.put(tag, presenter.setAvuModelKey(avu));
             }
 
             Field<?> field = templateTagFieldMap.get(tag);
@@ -116,8 +115,6 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
             avus.add(avu);
 
         });
-
-
         return avus;
     }
 
@@ -135,13 +132,22 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
     private void buildAvuMap() {
         for (MetadataTemplateAttribute attribute : attributes) {
             List<Avu> mds = findMetadataForAttribute(attribute.getName());
-            mds.forEach(md -> {
-                final AutoBean<Object> metadataBean = AutoBeanUtils.getAutoBean(md);
-                String tag = metadataBean.getTag(presenter.AVU_BEAN_TAG_MODEL_KEY);
-                templateTagAvuMap.put(tag, md);
+            if (mds != null && !mds.isEmpty()) {
+                mds.forEach(md -> {
+                    String tag = getTagForMetadata(md);
+                    templateTagAvuMap.put(tag, md);
+                    templateTagAtrrMap.put(tag, attribute);
+                   // GWT.log(tag + "-->" + attribute.getName());
+                });
+            } else {
+                Avu avu = presenter.setAvuModelKey(MetadataPresenterImpl.newMetadata(attribute.getName(),
+                                                                                     "",
+                                                                                     "")); //$NON-NLS-1$ //$NON-NLS-2$
+                String tag = getTagForMetadata(avu);
+                templateTagAvuMap.put(tag, avu);
                 templateTagAtrrMap.put(tag, attribute);
-                GWT.log(tag + "-->" + attribute.getName());
-            });
+               // GWT.log(tag + "-->" + attribute.getName());
+            }
 
         }
     }
@@ -285,7 +291,9 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
 
     }
 
-    private void addFieldToTemplate(String tag, MetadataTemplateAttribute attribute, Field<?> field) {
+    private void addFieldToTemplate(final String tag,
+                                    final MetadataTemplateAttribute attribute,
+                                    Field<?> field) {
         if (field != null) {
             field.setReadOnly(!writable);
             templateTagFieldMap.put(tag, field);
@@ -293,15 +301,19 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
                                              attribute.getName(),
                                              attribute.getDescription(),
                                              !attribute.isRequired());
-            HorizontalPanel panel = buildMultiField(tag, attribute, lbl);
-            widget.add(panel, new VerticalLayoutContainer.VerticalLayoutData(.90, -1));
+            if (field instanceof CheckBox || field instanceof TextArea) {
+                widget.add(lbl, new VerticalLayoutContainer.VerticalLayoutData(.90, -1));
+            } else {
+                HorizontalPanel panel = buildMultiField(tag, attribute, lbl);
+                widget.add(panel, new VerticalLayoutContainer.VerticalLayoutData(.90, -1));
+            }
             widget.forceLayout();
         }
     }
 
-    private HorizontalPanel buildMultiField(String tag,
-                                            MetadataTemplateAttribute attribute,
-                                            FieldLabel field) {
+    private HorizontalPanel buildMultiField(final String tag,
+                                            final MetadataTemplateAttribute attribute,
+                                            final FieldLabel field) {
         HorizontalPanel panel = new HorizontalPanel();
         panel.add(field);
         field.setWidth("300px");
@@ -309,8 +321,14 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
         addBtn.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
-                Field<?> field = getAttributeValueWidget(tag);
-                addFieldToTemplate(tag, attribute, field);
+                Avu avu = presenter.setAvuModelKey(MetadataPresenterImpl.newMetadata(attribute.getName(),
+                                                                                     "",
+                                                                                     "")); //$NON-NLS-1$ //$NON-NLS-2$
+                String newtag = getTagForMetadata(avu);
+                templateTagAvuMap.put(newtag, avu);
+                templateTagAtrrMap.put(newtag, attribute);
+                Field<?> field = getAttributeValueWidget(newtag);
+                addFieldToTemplate(newtag, attribute, field);
             }
         });
 
@@ -318,45 +336,48 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
         remBtn.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
-                panel.remove(field);
-                panel.removeFromParent();
-                widget.remove(panel);
-                widget.forceLayout();
+                if (canFieldBeRemoved(attribute)) {
+                    templateTagAtrrMap.remove(tag);
+                    templateTagAvuMap.remove(tag);
+                    templateTagFieldMap.remove(tag);
+                    panel.remove(field);
+                    panel.removeFromParent();
+                    widget.remove(panel);
+                    widget.forceLayout();
+                } else {
+                    ErrorHandler.post("This field cannot be removed!");
+                }
+
             }
         });
 
         panel.add(addBtn);
-        panel.add(remBtn);
+        if (canFieldBeRemoved(attribute)) {
+            panel.add(remBtn);
+        }
 
         return panel;
+    }
+
+    private boolean canFieldBeRemoved(MetadataTemplateAttribute attribute) {
+        List<MetadataTemplateAttribute> attributes = new ArrayList<>();
+        templateTagAtrrMap.values().forEach(attr -> {
+            if (attr.equals(attribute)) {
+                attributes.add(attr);
+            }
+        });
+        return attributes.size() > 1;
+    }
+
+    private String getTagForMetadata(Avu md) {
+        final AutoBean<Object> metadataBean = AutoBeanUtils.getAutoBean(md);
+        return metadataBean.getTag(presenter.AVU_BEAN_TAG_MODEL_KEY);
     }
 
     /**
      * @param tag the template attribute
      * @return Field based on MetadataTemplateAttribute type.
      */
-/*    private Field<?> getAttributeValueWidget(MetadataTemplateAttribute attribute) {
-        String type = attribute.getType();
-        if (type.equalsIgnoreCase("timestamp")) { //$NON-NLS-1$
-            return buildDateField(attribute);
-        } else if (type.equalsIgnoreCase("boolean")) { //$NON-NLS-1$
-            return buildBooleanField(attribute);
-        } else if (type.equalsIgnoreCase("number")) { //$NON-NLS-1$
-            return buildNumberField(attribute);
-        } else if (type.equalsIgnoreCase("integer")) { //$NON-NLS-1$
-            return buildIntegerField(attribute);
-        } else if (type.equalsIgnoreCase("string")) { //$NON-NLS-1$
-            return buildTextField(attribute);
-        } else if (type.equalsIgnoreCase("multiline text")) { //$NON-NLS-1$
-            return buildTextArea(attribute);
-        } else if (type.equalsIgnoreCase("URL/URI")) { //$NON-NLS-1$
-            return buildURLField(attribute);
-        } else if (type.equalsIgnoreCase("Enum")) {
-            return buildListField(attribute);
-        } else {
-            return null;
-        }
-    }*/
     private Field<?> getAttributeValueWidget(String tag) {
         MetadataTemplateAttribute attribute = templateTagAtrrMap.get(tag);
         String type = attribute.getType();
