@@ -3,7 +3,6 @@ package org.iplantc.de.diskResource.client.views.metadata.dialogs;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
 import org.iplantc.de.client.models.diskResources.TemplateAttributeSelectionItem;
-import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.validators.UrlValidator;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.commons.client.widgets.IPlantAnchor;
@@ -85,6 +84,7 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
         buildAvuMap();
         loadTemplateAttributes();
         add(widget);
+        widget.getElement().applyStyles(appearance.backgroudStyle());
     }
 
     public ArrayList<Avu> getMetadataFromTemplate() {
@@ -111,7 +111,7 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
 
                 avu.setValue(value);
             }
-
+            GWT.log("template attribute added ->" + avu.getAttribute());
             avus.add(avu);
 
         });
@@ -284,11 +284,15 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
         hp.setSpacing(5);
         hp.add(helpLink);
         widget.add(hp, new VerticalLayoutContainer.VerticalLayoutData(1, -1));
+        addFields();
+    }
+
+    private void addFields() {
         templateTagAtrrMap.keySet().forEach(tag -> {
             Field<?> field = getAttributeValueWidget(tag);
+            templateTagFieldMap.put(tag, field);
             addFieldToTemplate(tag, templateTagAtrrMap.get(tag), field);
         });
-
     }
 
     private void addFieldToTemplate(final String tag,
@@ -296,7 +300,6 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
                                     Field<?> field) {
         if (field != null) {
             field.setReadOnly(!writable);
-            templateTagFieldMap.put(tag, field);
             FieldLabel lbl = buildFieldLabel(field,
                                              attribute.getName(),
                                              attribute.getDescription(),
@@ -328,6 +331,7 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
                 templateTagAvuMap.put(newtag, avu);
                 templateTagAtrrMap.put(newtag, attribute);
                 Field<?> field = getAttributeValueWidget(newtag);
+                templateTagFieldMap.put(newtag, field);
                 addFieldToTemplate(newtag, attribute, field);
             }
         });
@@ -336,18 +340,13 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
         remBtn.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
-                if (canFieldBeRemoved(attribute)) {
                     templateTagAtrrMap.remove(tag);
                     templateTagAvuMap.remove(tag);
                     templateTagFieldMap.remove(tag);
-                    panel.remove(field);
-                    panel.removeFromParent();
-                    widget.remove(panel);
-                    widget.forceLayout();
-                } else {
-                    ErrorHandler.post("This field cannot be removed!");
-                }
-
+                    widget.mask(appearance.loading());
+                    widget.clear();
+                    addFields();
+                    widget.unmask();
             }
         });
 
@@ -464,7 +463,7 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
                         w.setSize("350", "400");
                         w.setPredefinedButtons(PredefinedButton.OK);
                         w.setHeading(MetadataTemplateViewDialog.this.getHeader().getText());
-                        w.setBodyStyle("background: #fff;");
+                        w.setBodyStyle(appearance.backgroudStyle());
                         w.setWidget(helpVlc);
                         w.show();
 

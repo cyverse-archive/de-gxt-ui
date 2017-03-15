@@ -1,6 +1,7 @@
 package org.iplantc.de.diskResource.client.views.metadata;
 
 import org.iplantc.de.client.models.avu.Avu;
+import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
 import org.iplantc.de.commons.client.widgets.IPlantAnchor;
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.model.DiskResourceMetadataProperties;
@@ -60,6 +61,7 @@ import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent.Selecti
 import com.sencha.gxt.widget.core.client.tips.QuickTip;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -451,7 +453,7 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
         cxb.setEnabled(false);
 
         TextField field1 = new TextField();
-        field1.setEmptyText("Required");
+        field1.setEmptyText(appearance.requiredGhostText());
         TextField field2 = new TextField();
         TextField field3 = new TextField();
 
@@ -486,21 +488,29 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
     }
 
     @Override
-    public void updateMetadataFromTemplateView(List<Avu> metadataList) {
+    public void updateMetadataFromTemplateView(List<Avu> metadataList,
+                                               List<MetadataTemplateAttribute> templateAttributes) {
         userMdGrid.mask();
-        if(userMdListStore.size() == 0) {
-           userMdListStore.addAll(metadataList);
-           userMdGrid.unmask();
-           return;
+        if (userMdListStore.size() == 0) {
+            userMdListStore.addAll(metadataList);
+            userMdGrid.unmask();
+            return;
         }
-        metadataList.forEach(md -> {
-             userMdListStore.getAll().forEach(umd -> {
-                  if(md.getAttribute().equals(umd.getAttribute())) {
-                      //GWT.log("attribute removed --> " + umd.getAttribute());
-                      userMdListStore.remove(umd);
-                  }
-             });
-         });
+
+        List<Avu> toRemove = new ArrayList<>();
+        templateAttributes.forEach(ta -> {
+            userMdListStore.getAll().forEach(umd -> {
+                if (ta.getName().equals(umd.getAttribute())) {
+                    GWT.log("attribute removed --> " + umd.getAttribute());
+                   toRemove.add(umd);
+                }
+            });
+        });
+
+        toRemove.forEach(tr -> {
+            userMdListStore.remove(tr);
+        });
+
         userMdListStore.addAll(metadataList);
         userMdGrid.unmask();
     }

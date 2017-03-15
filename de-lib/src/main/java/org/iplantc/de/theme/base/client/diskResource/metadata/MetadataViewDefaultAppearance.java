@@ -246,6 +246,7 @@ public class MetadataViewDefaultAppearance implements MetadataView.Appearance {
     }
 
     @Override
+
     public ImageResource saveToFileIcon() {
         return iplantResources.fileRename();
     }
@@ -253,5 +254,24 @@ public class MetadataViewDefaultAppearance implements MetadataView.Appearance {
     @Override
     public String saveMetadataToFile() {
         return toolbarMessages.saveMetadataMenuItem();
+    }
+    
+    public String loading() {
+        return iplantDisplayStrings.loadingMask();
+    }
+
+    @Override
+    public String backgroudStyle() {
+        return "background:#fff;";
+    }
+
+    @Override
+    public String urlGhostText() {
+        return displayStrings.urlGhostText();
+    }
+
+    @Override
+    public String requiredGhostText() {
+        return displayStrings.requiredGhostText();
     }
 }

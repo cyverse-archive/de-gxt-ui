@@ -52,4 +52,8 @@ public interface MetadataDisplayStrings extends Messages{
 	String metadataLink();
 
 	String readMore();
+
+	String urlGhostText();
+
+	String requiredGhostText();
 }
