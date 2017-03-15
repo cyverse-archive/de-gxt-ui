@@ -8,6 +8,7 @@ import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent.DeleteA
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent;
 import org.iplantc.de.apps.integration.client.events.PreviewAppSelected;
 import org.iplantc.de.apps.integration.client.events.PreviewJsonSelected;
+import org.iplantc.de.apps.integration.client.events.SaveAppSelected;
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent;
 import org.iplantc.de.apps.integration.client.presenter.visitors.DeleteArgumentGroup;
 import org.iplantc.de.apps.integration.client.presenter.visitors.GatherAllEventProviders;
@@ -626,7 +627,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
     }
 
     @Override
-    public void onSaveClicked() {
+    public void onSaveAppSelected(SaveAppSelected event) {
         if (isViewValid()) {
             doOnSaveClicked(null);
         } else {

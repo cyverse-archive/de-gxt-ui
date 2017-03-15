@@ -5,6 +5,7 @@ import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids;
 import org.iplantc.de.apps.integration.client.events.ArgumentOrderSelected;
 import org.iplantc.de.apps.integration.client.events.PreviewAppSelected;
 import org.iplantc.de.apps.integration.client.events.PreviewJsonSelected;
+import org.iplantc.de.apps.integration.client.events.SaveAppSelected;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -72,7 +73,7 @@ public class AppEditorToolbarImpl extends Composite implements AppEditorToolbar 
 
     @UiHandler("saveButton")
     void onSaveButtonClicked(@SuppressWarnings("unused") SelectEvent event) {
-        presenter.onSaveClicked();
+        fireEvent(new SaveAppSelected());
     }
 
     @Override
@@ -88,5 +89,10 @@ public class AppEditorToolbarImpl extends Composite implements AppEditorToolbar 
     @Override
     public HandlerRegistration addPreviewAppSelectedHandler(PreviewAppSelected.PreviewAppSelectedHandler handler) {
         return addHandler(handler, PreviewAppSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addSaveAppSelectedHandler(SaveAppSelected.SaveAppSelectedHandler handler) {
+        return addHandler(handler, SaveAppSelected.TYPE);
     }
 }

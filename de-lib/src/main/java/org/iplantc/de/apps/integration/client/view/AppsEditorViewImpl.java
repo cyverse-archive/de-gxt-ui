@@ -475,6 +475,7 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView {
         toolbar.addArgumentOrderSelectedHandler(presenter);
         toolbar.addPreviewJsonSelectedHandler(presenter);
         toolbar.addPreviewAppSelectedHandler(presenter);
+        toolbar.addSaveAppSelectedHandler(presenter);
     }
 
     @UiFactory
