@@ -31,8 +31,6 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.core.client.ValueProvider;
@@ -199,27 +197,27 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
     }
 
     private void addHelp() {
-        final ToolButton tool_help_ref = new ToolButton(ToolButton.QUESTION);
-        refPanel.getHeader().addTool(tool_help_ref);
-        tool_help_ref.addSelectHandler(new SelectHandler() {
+        final ToolButton refLinksHelp = new ToolButton(ToolButton.QUESTION);
+        refPanel.getHeader().addTool(refLinksHelp);
+        refLinksHelp.addSelectHandler(new SelectHandler() {
 
             @Override
             public void onSelect(SelectEvent event) {
                 ContextualHelpPopup popup = new ContextualHelpPopup();
                 popup.add(new HTML(appearance.publicSubmissionFormAttach()));
-                popup.showAt(tool_help_ref.getAbsoluteLeft(), tool_help_ref.getAbsoluteTop() + 15);
+                popup.showAt(refLinksHelp.getAbsoluteLeft(), refLinksHelp.getAbsoluteTop() + 15);
 
             }
         });
-        final ToolButton tool_help_cat = new ToolButton(ToolButton.QUESTION);
-        catPanel.getHeader().addTool(tool_help_cat);
-        tool_help_cat.addSelectHandler(new SelectHandler() {
+        final ToolButton categoriesHelp = new ToolButton(ToolButton.QUESTION);
+        catPanel.getHeader().addTool(categoriesHelp);
+        categoriesHelp.addSelectHandler(new SelectHandler() {
 
             @Override
             public void onSelect(SelectEvent event) {
                 ContextualHelpPopup popup = new ContextualHelpPopup();
                 popup.add(new HTML(appearance.publicSubmissionFormCategories()));
-                popup.showAt(tool_help_cat.getAbsoluteLeft(), tool_help_cat.getAbsoluteTop() + 15);
+                popup.showAt(categoriesHelp.getAbsoluteLeft(), categoriesHelp.getAbsoluteTop() + 15);
 
             }
         });
@@ -359,10 +357,8 @@ public class SubmitAppForPublicUseViewImpl implements SubmitAppForPublicUseView 
 
     @UiHandler("addBtn")
     public void addClicked(SelectEvent event) {
-        AppAutoBeanFactory factory = GWT.create(AppAutoBeanFactory.class);
-        AutoBean<AppRefLink> bean = AutoBeanCodex.decode(factory, AppRefLink.class, "{}");
         editing.cancelEditing();
-        AppRefLink link = bean.as();
+        AppRefLink link = factory.appRefLink().as();
         link.setId(new Date().getTime() + "");
         listStore.add(0, link);
         editing.startEditing(new GridCell(0, 0));

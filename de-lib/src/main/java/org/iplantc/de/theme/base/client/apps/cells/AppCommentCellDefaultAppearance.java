@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.I18N;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
+import org.iplantc.de.theme.base.client.apps.AppsMessages;
 
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.core.client.GWT;
@@ -46,13 +47,17 @@ public class AppCommentCellDefaultAppearance implements AppCommentCellAppearance
 
     private final Templates template;
     private final AppCommentCellResources resources;
+    private final AppsMessages messages;
 
     public AppCommentCellDefaultAppearance() {
-        this((AppCommentCellResources)GWT.create(AppCommentCellResources.class));
+        this((AppCommentCellResources)GWT.create(AppCommentCellResources.class),
+             (AppsMessages)GWT.create(AppsMessages.class));
     }
 
-    public AppCommentCellDefaultAppearance(AppCommentCellResources resources) {
+    public AppCommentCellDefaultAppearance(AppCommentCellResources resources,
+                                           AppsMessages messages) {
         this.resources = resources;
+        this.messages = messages;
         resources.css().ensureInjected();
         this.template = GWT.create(Templates.class);
     }
@@ -68,6 +73,11 @@ public class AppCommentCellDefaultAppearance implements AppCommentCellAppearance
         }
         SafeUri imgSrc = iplantResources.userComment().getSafeUri();
         sb.append(template.imgCell(comments, comments, className, imgSrc));
+    }
+
+    @Override
+    public String featureNotSupported() {
+        return messages.featureNotSupported();
     }
 
 }

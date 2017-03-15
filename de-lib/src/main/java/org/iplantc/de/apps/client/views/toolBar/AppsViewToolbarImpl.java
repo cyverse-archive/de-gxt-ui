@@ -80,7 +80,7 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
     @UiField
     AppSearchField appSearch;
     @UiField
-    TextButton app_menu;
+    TextButton appMenu;
     @UiField
     BoxLayoutData boxData;
     @UiField
@@ -107,7 +107,7 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
     @UiField
     MenuItem wfRun;
     @UiField
-    TextButton wf_menu;
+    TextButton wfMenu;
     @UiField TextButton swapViewBtn;
     @UiField(provided = true)
     final AppsToolbarAppearance appearance;
@@ -200,14 +200,14 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
 
     @Override
     public void hideAppMenu() {
-        app_menu.setVisible(false);
+        appMenu.setVisible(false);
         // KLUDGE:for CORE-5761 set flex to 0 so that search box shows up
         boxData.setFlex(0);
     }
 
     @Override
     public void hideWorkflowMenu() {
-        wf_menu.setVisible(false);
+        wfMenu.setVisible(false);
         // KLUDGE:for CORE-5761 set flex to 0 so that search box shows up
         boxData.setFlex(0);
     }
@@ -234,8 +234,8 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
 
     @Override
     public void onAppSelectionChanged(final AppSelectionChangedEvent event) {
-        app_menu.setEnabled(true);
-        wf_menu.setEnabled(true);
+        appMenu.setEnabled(true);
+        wfMenu.setEnabled(true);
 
         currentSelection.clear();
         currentSelection.addAll(event.getAppSelection());
@@ -347,7 +347,7 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
-        app_menu.ensureDebugId(baseID + Ids.MENU_ITEM_APPS);
+        appMenu.ensureDebugId(baseID + Ids.MENU_ITEM_APPS);
         appRun.ensureDebugId(baseID + Ids.MENU_ITEM_APPS + Ids.MENU_ITEM_USE_APP);
         createNewApp.ensureDebugId(baseID + Ids.MENU_ITEM_APPS + Ids.MENU_ITEM_CREATE_APP);
         requestTool.ensureDebugId(baseID + Ids.MENU_ITEM_APPS + Ids.MENU_ITEM_REQUEST_TOOL);
@@ -361,7 +361,7 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
 
         refreshButton.ensureDebugId(baseID + Ids.MENU_ITEM_REFRESH);
 
-        wf_menu.ensureDebugId(baseID + Ids.MENU_ITEM_WF);
+        wfMenu.ensureDebugId(baseID + Ids.MENU_ITEM_WF);
         wfRun.ensureDebugId(baseID + Ids.MENU_ITEM_WF + Ids.MENU_ITEM_USE_WF);
         createWorkflow.ensureDebugId(baseID + Ids.MENU_ITEM_WF + Ids.MENU_ITEM_CREATE_WF);
         copyWf.ensureDebugId(baseID + Ids.MENU_ITEM_WF + Ids.MENU_ITEM_COPY_WF);

@@ -34,7 +34,7 @@
 
 	<toolbar:ToolBar ui:field="toolBar">
 		<toolbar:child layoutData="{boxDataNoFlex}">
-			<button:TextButton ui:field="app_menu"
+			<button:TextButton ui:field="appMenu"
 				text="{appearance.applications}">
 				<button:menu>
 					<menu:Menu>
@@ -55,7 +55,7 @@
 			</button:TextButton>
 		</toolbar:child>
 		<toolbar:child layoutData="{boxDataNoFlex}">
-			<button:TextButton ui:field="wf_menu" text="{appearance.workflow}">
+			<button:TextButton ui:field="wfMenu" text="{appearance.workflow}">
 				<button:menu>
 					<menu:Menu>
 						<menu:MenuItem ui:field="wfRun" enabled="false"
