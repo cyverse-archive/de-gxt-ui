@@ -2,8 +2,11 @@ package org.iplantc.de.apps.integration.client.view;
 
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids;
 
+import org.iplantc.de.apps.integration.client.events.ArgumentOrderSelected;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -52,7 +55,7 @@ public class AppEditorToolbarImpl extends Composite implements AppEditorToolbar 
 
     @UiHandler("argumentOrderButton")
     void onArgumentOrderButtonClicked(@SuppressWarnings("unused") SelectEvent event) {
-        presenter.onArgumentOrderClicked();
+        fireEvent(new ArgumentOrderSelected());
     }
 
     @UiHandler("previewJsonMenuItem")
@@ -70,4 +73,8 @@ public class AppEditorToolbarImpl extends Composite implements AppEditorToolbar 
         presenter.onSaveClicked();
     }
 
+    @Override
+    public HandlerRegistration addArgumentOrderSelectedHandler(ArgumentOrderSelected.ArgumentOrderSelectedHandler handler) {
+        return addHandler(handler, ArgumentOrderSelected.TYPE);
+    }
 }

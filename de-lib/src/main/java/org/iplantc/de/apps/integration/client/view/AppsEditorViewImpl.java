@@ -472,7 +472,7 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView {
     @Override
     public void setPresenter(AppsEditorView.Presenter presenter) {
         this.presenter = presenter;
-        toolbar.setPresenter(presenter);
+        toolbar.addArgumentOrderSelectedHandler(presenter);
     }
 
     @UiFactory

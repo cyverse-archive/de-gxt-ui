@@ -2,6 +2,7 @@ package org.iplantc.de.apps.integration.client.presenter;
 
 import org.iplantc.de.apps.client.events.AppSavedEvent;
 import org.iplantc.de.apps.integration.client.dialogs.CommandLineOrderingPanel;
+import org.iplantc.de.apps.integration.client.events.ArgumentOrderSelected;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent.DeleteArgumentEventHandler;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent;
@@ -551,8 +552,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
     }
 
     @Override
-    public void onArgumentOrderClicked() {
-    
+    public void onArgumentOrderSelected(ArgumentOrderSelected event) {
         AppTemplate flushRawApp = view.getEditorDriver().flush();
         final List<Argument> allTemplateArguments = getAllTemplateArguments(flushRawApp);
         uuidService.getUUIDs(allTemplateArguments.size(), new AsyncCallback<ArrayList<String>>() {
