@@ -2,6 +2,9 @@ package org.iplantc.de.apps.integration.client.view.propertyEditors;
 
 import org.iplantc.de.apps.integration.client.view.AppsEditorPanelAppearance;
 
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
+
 /**
  * @author aramsey
  */
@@ -68,4 +71,26 @@ public interface PropertyEditorAppearance {
     String validatorDialogWidth();
 
     String validatorDialogHeight();
+
+    String textInputValidationRules();
+
+    String validatorRulesLabel();
+
+    SafeHtml createContextualHelpLabel(String label, String toolTip);
+
+    ImageResource helpIcon();
+
+    String argumentValidatorNameColumn();
+
+    String add();
+
+    ImageResource addIcon();
+
+    String edit();
+
+    ImageResource editIcon();
+
+    String delete();
+
+    ImageResource deleteIcon();
 }
