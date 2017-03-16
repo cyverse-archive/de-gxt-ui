@@ -14,7 +14,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -26,7 +25,6 @@ import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.StringLabelProvider;
-import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -62,6 +60,7 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
     private final FastMap<MetadataTemplateAttribute> templateTagAtrrMap;
     private final FastMap<Field<?>> templateTagFieldMap;
     private List<MetadataTemplateAttribute> attributes;
+    private final FastMap<VerticalLayoutContainer> templateAttrVLCMap;
     private List<Avu> templateMd;
     private boolean valid;
 
@@ -72,6 +71,7 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
         templateTagAvuMap = new FastMap<>();
         templateTagFieldMap = new FastMap<>();
         templateTagAtrrMap = new FastMap<>();
+        templateAttrVLCMap = new FastMap<>();
         timestampFormat = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT);
         this.presenter = presenter;
         this.writable = writable;
@@ -137,7 +137,7 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
                     String tag = getTagForMetadata(md);
                     templateTagAvuMap.put(tag, md);
                     templateTagAtrrMap.put(tag, attribute);
-                   // GWT.log(tag + "-->" + attribute.getName());
+                    // GWT.log(tag + "-->" + attribute.getName());
                 });
             } else {
                 Avu avu = presenter.setAvuModelKey(MetadataPresenterImpl.newMetadata(attribute.getName(),
@@ -146,7 +146,7 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
                 String tag = getTagForMetadata(avu);
                 templateTagAvuMap.put(tag, avu);
                 templateTagAtrrMap.put(tag, attribute);
-               // GWT.log(tag + "-->" + attribute.getName());
+                // GWT.log(tag + "-->" + attribute.getName());
             }
 
         }
@@ -279,12 +279,16 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
 
     private void loadTemplateAttributes() {
         templateTagFieldMap.clear();
+        addMdTermDictionary();
+        addFields();
+    }
+
+    private void addMdTermDictionary() {
         IPlantAnchor helpLink = buildHelpLink(attributes);
         HorizontalPanel hp = new HorizontalPanel();
         hp.setSpacing(5);
         hp.add(helpLink);
         widget.add(hp, new VerticalLayoutContainer.VerticalLayoutData(1, -1));
-        addFields();
     }
 
     private void addFields() {
@@ -308,7 +312,14 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
                 widget.add(lbl, new VerticalLayoutContainer.VerticalLayoutData(.90, -1));
             } else {
                 HorizontalPanel panel = buildMultiField(tag, attribute, lbl);
-                widget.add(panel, new VerticalLayoutContainer.VerticalLayoutData(.90, -1));
+                VerticalLayoutContainer vlc = findVLCForAttribute(attribute);
+                if (vlc == null) {
+                    vlc = buildVLC(attribute);
+                    vlc.add(panel);
+                    widget.add(vlc, new VerticalLayoutContainer.VerticalLayoutData(.90, -1));
+                } else {
+                    vlc.add(panel);
+                }
             }
             widget.forceLayout();
         }
@@ -319,6 +330,7 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
                                             final FieldLabel field) {
         HorizontalPanel panel = new HorizontalPanel();
         panel.add(field);
+        panel.setSpacing(10);
         field.setWidth("300px");
         TextButton addBtn = new TextButton("+");
         addBtn.addSelectHandler(new SelectEvent.SelectHandler() {
@@ -340,13 +352,15 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
         remBtn.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
-                    templateTagAtrrMap.remove(tag);
-                    templateTagAvuMap.remove(tag);
-                    templateTagFieldMap.remove(tag);
-                    widget.mask(appearance.loading());
-                    widget.clear();
-                    addFields();
-                    widget.unmask();
+                templateTagAtrrMap.remove(tag);
+                templateTagAvuMap.remove(tag);
+                templateTagFieldMap.remove(tag);
+                templateAttrVLCMap.clear();
+                widget.mask(appearance.loading());
+                widget.clear();
+                addMdTermDictionary();
+                addFields();
+                widget.unmask();
             }
         });
 
@@ -358,14 +372,24 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
         return panel;
     }
 
+    VerticalLayoutContainer findVLCForAttribute(MetadataTemplateAttribute attribute) {
+        return templateAttrVLCMap.get(attribute.getName());
+    }
+
+    VerticalLayoutContainer buildVLC(MetadataTemplateAttribute attribute) {
+        VerticalLayoutContainer vlc = new VerticalLayoutContainer();
+        templateAttrVLCMap.put(attribute.getName(), vlc);
+        return vlc;
+    }
+
     private boolean canFieldBeRemoved(MetadataTemplateAttribute attribute) {
-        List<MetadataTemplateAttribute> attributes = new ArrayList<>();
+        List<MetadataTemplateAttribute> attrFilter = new ArrayList<>();
         templateTagAtrrMap.values().forEach(attr -> {
             if (attr.equals(attribute)) {
-                attributes.add(attr);
+                attrFilter.add(attr);
             }
         });
-        return attributes.size() > 1;
+        return attrFilter.size() > 1;
     }
 
     private String getTagForMetadata(Avu md) {
@@ -449,22 +473,11 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
 
                     @Override
                     public void onClick(ClickEvent event) {
-                        VerticalLayoutContainer helpVlc = new VerticalLayoutContainer();
-                        helpVlc.setScrollMode(ScrollSupport.ScrollMode.AUTOY);
-                        for (MetadataTemplateAttribute mta : attributes) {
-                            HTML l = new HTML("<b>" + mta.getName() + ":</b> <br/>");
-                            HTML helpText = new HTML("<p>" + mta.getDescription() + "</p><br/>");
-                            helpVlc.add(l, new VerticalLayoutContainer.VerticalLayoutData(.25, -1));
-                            helpVlc.add(helpText,
-                                        new VerticalLayoutContainer.VerticalLayoutData(.90, -1));
-                        }
-                        Dialog w = new Dialog();
-                        w.setHideOnButtonClick(true);
-                        w.setSize("350", "400");
-                        w.setPredefinedButtons(PredefinedButton.OK);
-                        w.setHeading(MetadataTemplateViewDialog.this.getHeader().getText());
-                        w.setBodyStyle(appearance.backgroudStyle());
-                        w.setWidget(helpVlc);
+                        MetadataTermGuideDialog w = new MetadataTermGuideDialog(attributes,
+                                                                                appearance,
+                                                                                MetadataTemplateViewDialog.this
+                                                                                        .getHeader()
+                                                                                        .getText());
                         w.show();
 
                     }
