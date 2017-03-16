@@ -292,4 +292,29 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     public ImageResource deleteIcon() {
         return iplantResources.delete();
     }
+
+    @Override
+    public String singleSelectEditToolTip() {
+        return propertyPanelLabels.singleSelectEditToolTip();
+    }
+
+    @Override
+    public String selectionCreateWidgetEmptyText() {
+        return propertyPanelLabels.selectionCreateWidgetEmptyText();
+    }
+
+    @Override
+    public String singleSelectDisplayColumnHeader() {
+        return propertyPanelLabels.singleSelectDisplayColumnHeader();
+    }
+
+    @Override
+    public String singleSelectNameColumnHeader() {
+        return propertyPanelLabels.singleSelectNameColumnHeader();
+    }
+
+    @Override
+    public String singleSelectValueColumnHeader() {
+        return propertyPanelLabels.singleSelectValueColumnHeader();
+    }
 }

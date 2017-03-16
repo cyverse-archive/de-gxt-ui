@@ -93,4 +93,14 @@ public interface PropertyEditorAppearance {
     String delete();
 
     ImageResource deleteIcon();
+
+    String singleSelectEditToolTip();
+
+    String selectionCreateWidgetEmptyText();
+
+    String singleSelectDisplayColumnHeader();
+
+    String singleSelectNameColumnHeader();
+
+    String singleSelectValueColumnHeader();
 }
