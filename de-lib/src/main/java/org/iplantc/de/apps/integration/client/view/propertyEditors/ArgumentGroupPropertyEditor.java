@@ -56,11 +56,12 @@ public class ArgumentGroupPropertyEditor extends Composite implements Editor<Arg
 
     @Inject
     public ArgumentGroupPropertyEditor(AppTemplateWizardAppearance appearance,
-                                       AppsEditorPanelAppearance panelAppearance) {
+                                       PropertyEditorAppearance propertyAppearance,
+        AppsEditorPanelAppearance panelAppearance) {
         this.panelAppearance = panelAppearance;
         initWidget(BINDER.createAndBindUi(this));
         name = SimpleEditor.of();
-        labelEditor = new PrefixedHasTextEditor(cp.getHeader(), appearance);
+        labelEditor = new PrefixedHasTextEditor(cp.getHeader(), propertyAppearance);
         editorDriver.initialize(this);
         ensureDebugId(Ids.PROPERTY_EDITOR + Ids.GROUP);
     }

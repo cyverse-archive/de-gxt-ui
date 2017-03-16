@@ -141,15 +141,17 @@ public abstract class AbstractArgumentPropertyEditor extends Composite implement
 
     public AbstractArgumentPropertyEditor(AppTemplateWizardAppearance appearance) {
         this((AppsEditorPanelAppearance)GWT.create(AppsEditorPanelAppearance.class),
+             (PropertyEditorAppearance)GWT.create(PropertyEditorAppearance.class),
              appearance);
     }
 
     public AbstractArgumentPropertyEditor(AppsEditorPanelAppearance panelAppearance,
+                                          PropertyEditorAppearance propertyAppearance,
                                           AppTemplateWizardAppearance appearance) {
         this.panelAppearance = panelAppearance;
         this.appearance = appearance;
         contentPanel = new ContentPanel(panelAppearance);
-        labelEditor = new PrefixedHasTextEditor(contentPanel.getHeader(), appearance);
+        labelEditor = new PrefixedHasTextEditor(contentPanel.getHeader(), propertyAppearance);
         props = GWT.create(DataSourceProperties.class);
         props2 = GWT.create(FileInfoTypeProperties.class);
         referenceGenomeProperties = GWT.create(ReferenceGenomeProperties.class);
