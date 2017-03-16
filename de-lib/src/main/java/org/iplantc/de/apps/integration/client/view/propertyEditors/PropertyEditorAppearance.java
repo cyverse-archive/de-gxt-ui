@@ -103,4 +103,24 @@ public interface PropertyEditorAppearance {
     String singleSelectNameColumnHeader();
 
     String singleSelectValueColumnHeader();
+
+    String singleSelectIsDefaultColumnHeader();
+
+    String singleSelectToolTipColumnHeader();
+
+    String checkCascadeLabel();
+
+    String forceSingleSelectLabel();
+
+    String forceSingleSelectToolTip();
+
+    String addGroupToolTip();
+
+    String addArgumentToolTip();
+
+    String cascadeOptionsComboToolTip();
+
+    ImageResource folderAddIcon();
+
+    ImageResource cancelIcon();
 }

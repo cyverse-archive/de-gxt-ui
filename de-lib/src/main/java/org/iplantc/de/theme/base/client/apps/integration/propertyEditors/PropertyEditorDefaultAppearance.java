@@ -5,6 +5,7 @@ import org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEdito
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
+import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsDisplayMessages;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
 import org.iplantc.de.resources.client.uiapps.widgets.ArgumentValidatorMessages;
 
@@ -53,6 +54,7 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     private IplantResources iplantResources;
     private PropertyEditorDisplayStrings displayStrings;
     private IplantDisplayStrings iplantDisplayStrings;
+    private AppsWidgetsDisplayMessages appsWidgetsDisplayMessages;
 
     public PropertyEditorDefaultAppearance() {
         this ((AppsWidgetsPropertyPanelLabels)GWT.create(AppsWidgetsPropertyPanelLabels.class),
@@ -62,7 +64,8 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
               (Templates)GWT.create(Templates.class),
               (IplantResources)GWT.create(IplantResources.class),
               (PropertyEditorDisplayStrings)GWT.create(PropertyEditorDisplayStrings.class),
-              (IplantDisplayStrings)GWT.create(IplantDisplayStrings.class));
+              (IplantDisplayStrings)GWT.create(IplantDisplayStrings.class),
+              (AppsWidgetsDisplayMessages)GWT.create(AppsWidgetsDisplayMessages.class));
     }
 
     public PropertyEditorDefaultAppearance(AppsWidgetsPropertyPanelLabels propertyPanelLabels,
@@ -72,7 +75,8 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
                                            Templates templates,
                                            IplantResources iplantResources,
                                            PropertyEditorDisplayStrings displayStrings,
-                                           IplantDisplayStrings iplantDisplayStrings) {
+                                           IplantDisplayStrings iplantDisplayStrings,
+                                           AppsWidgetsDisplayMessages appsWidgetsDisplayMessages) {
         this.propertyPanelLabels = propertyPanelLabels;
         this.panelAppearance = panelAppearance;
         this.argumentValidatorMessages = argumentValidatorMessages;
@@ -81,6 +85,7 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
         this.iplantResources = iplantResources;
         this.displayStrings = displayStrings;
         this.iplantDisplayStrings = iplantDisplayStrings;
+        this.appsWidgetsDisplayMessages = appsWidgetsDisplayMessages;
     }
 
     @Override
@@ -316,5 +321,55 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     @Override
     public String singleSelectValueColumnHeader() {
         return propertyPanelLabels.singleSelectValueColumnHeader();
+    }
+
+    @Override
+    public String singleSelectIsDefaultColumnHeader() {
+        return propertyPanelLabels.singleSelectIsDefaultColumnHeader();
+    }
+
+    @Override
+    public String singleSelectToolTipColumnHeader() {
+        return propertyPanelLabels.singleSelectToolTipColumnHeader();
+    }
+
+    @Override
+    public String checkCascadeLabel() {
+        return appsWidgetsDisplayMessages.checkCascadeLabel();
+    }
+
+    @Override
+    public String forceSingleSelectLabel() {
+        return appsWidgetsDisplayMessages.forceSingleSelectLabel();
+    }
+
+    @Override
+    public String forceSingleSelectToolTip() {
+        return appsWidgetsDisplayMessages.forceSingleSelectToolTip();
+    }
+
+    @Override
+    public String addGroupToolTip() {
+        return appsWidgetsDisplayMessages.addGroupToolTip();
+    }
+
+    @Override
+    public String addArgumentToolTip() {
+        return appsWidgetsDisplayMessages.addArgumentToolTip();
+    }
+
+    @Override
+    public String cascadeOptionsComboToolTip() {
+        return appsWidgetsDisplayMessages.cascadeOptionsComboToolTip();
+    }
+
+    @Override
+    public ImageResource folderAddIcon() {
+        return iplantResources.folderAdd();
+    }
+
+    @Override
+    public ImageResource cancelIcon() {
+        return iplantResources.cancel();
     }
 }
