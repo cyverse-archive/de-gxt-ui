@@ -5,7 +5,9 @@ import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.models.apps.integration.ArgumentValidator;
 import org.iplantc.de.client.models.apps.integration.ArgumentValidatorType;
 import org.iplantc.de.client.util.AppTemplateUtils;
+import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.resources.client.uiapps.widgets.ArgumentValidatorMessages;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -21,6 +23,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -162,6 +165,8 @@ public class ArgumentValidatorEditor extends Composite implements ValueAwareEdit
     @UiField FieldLabel validatorEditorLabel;
     @UiField ListStore<ArgumentValidator> validatorStore;
 
+    @Inject AsyncProviderWrapper<AddValidatorDialog> validatorDialogProvider;
+
     // The Editor for Argument.getValidators()
     ListStoreEditor<ArgumentValidator> validators;
 
@@ -295,17 +300,26 @@ public class ArgumentValidatorEditor extends Composite implements ValueAwareEdit
 
     @UiHandler("add")
     void onAddButtonSelected(@SuppressWarnings("unused") SelectEvent event) {
-       final  AddValidatorDialog dlg = new AddValidatorDialog(supportedValidatorTypes, avMessages);
-        dlg.addOkButtonSelectHandler(new AddValidatorOkBtnSelectHandler(dlg));
-        dlg.addCancelButtonSelectHandler(new SelectHandler() {
-            
+        validatorDialogProvider.get(new AsyncCallback<AddValidatorDialog>() {
             @Override
-            public void onSelect(SelectEvent event) {
-                //do nothing. just hide
-                dlg.hide();
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(AddValidatorDialog dlg) {
+                dlg.addOkButtonSelectHandler(new AddValidatorOkBtnSelectHandler(dlg));
+                dlg.addCancelButtonSelectHandler(new SelectHandler() {
+
+                    @Override
+                    public void onSelect(SelectEvent event) {
+                        //do nothing. just hide
+                        dlg.hide();
+                    }
+                });
+                dlg.show(supportedValidatorTypes);
             }
         });
-        dlg.show();
     }
 
     @UiHandler("delete")
@@ -330,12 +344,21 @@ public class ArgumentValidatorEditor extends Composite implements ValueAwareEdit
         final int selectedItemIndex = validators.getStore().indexOf(selectedItem);
         validators.getStore().remove(selectedItem);
         ValueChangeEvent.fire(this, getValidators());
-        AddValidatorDialog dlg = new AddValidatorDialog(supportedValidatorTypes, avMessages);
-        dlg.addOkButtonSelectHandler(new AddValidatorOkBtnSelectHandler(dlg));
-        dlg.addCancelButtonSelectHandler(new AddValidatorCancelBtnSelectHandler(selectedItemIndex, selectedItem));
+        validatorDialogProvider.get(new AsyncCallback<AddValidatorDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
 
-        dlg.setArgumentValidator(selectedItem);
-        dlg.show();
+            @Override
+            public void onSuccess(AddValidatorDialog dlg) {
+                dlg.addOkButtonSelectHandler(new AddValidatorOkBtnSelectHandler(dlg));
+                dlg.addCancelButtonSelectHandler(new AddValidatorCancelBtnSelectHandler(selectedItemIndex, selectedItem));
+
+                dlg.show(supportedValidatorTypes);
+                dlg.setArgumentValidator(selectedItem);
+            }
+        });
     }
 
     List<ArgumentValidator> getValidators() {

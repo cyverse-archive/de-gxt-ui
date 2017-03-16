@@ -30,6 +30,7 @@ import org.iplantc.de.apps.integration.client.view.propertyEditors.ReferenceSequ
 import org.iplantc.de.apps.integration.client.view.propertyEditors.TextInputPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.TextSelectionPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.TreeSelectionPropertyEditor;
+import org.iplantc.de.apps.integration.client.view.propertyEditors.widgets.AddValidatorDialog;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.widgets.ArgumentValidatorEditor;
 import org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingView;
 import org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingViewImpl;
@@ -92,6 +93,7 @@ public class AppEditorGinModule extends AbstractGinModule {
         bind(DCNameHyperlinkCell.class);
         bind(ToolSearchField.class);
         bind(AppTemplateContentPanel.class);
+        bind(AddValidatorDialog.class);
 
         install(new GinFactoryModuleBuilder()
                     .implement(DeployedComponentsListingView.class, DeployedComponentsListingViewImpl.class)
