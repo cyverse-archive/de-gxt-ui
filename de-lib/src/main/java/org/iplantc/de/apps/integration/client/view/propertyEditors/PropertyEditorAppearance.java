@@ -123,4 +123,34 @@ public interface PropertyEditorAppearance {
     ImageResource folderAddIcon();
 
     ImageResource cancelIcon();
+
+    String doubleInputLabel();
+
+    String doubleInputEmptyText();
+
+    String argumentOptionEmptyText();
+
+    String toolTipEmptyText();
+
+    String doubleInputWidgetEmptyEditText();
+
+    String integerInputDefaultLabel();
+
+    String integerInputDefaultValue();
+
+    String integerInputExcludeArgument();
+
+    String excludeWhenEmpty();
+
+    SafeHtml createContextualHelpLabelNoFloat(String label, String toolTip);
+
+    String toolTip();
+
+    String toolTipText();
+
+    String argumentOption();
+
+    SafeHtml doNotDisplay();
+
+    SafeHtml isRequired();
 }

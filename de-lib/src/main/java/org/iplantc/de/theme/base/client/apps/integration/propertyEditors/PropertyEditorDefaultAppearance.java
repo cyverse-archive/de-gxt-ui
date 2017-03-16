@@ -372,4 +372,81 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     public ImageResource cancelIcon() {
         return iplantResources.cancel();
     }
+
+    @Override
+    public String doubleInputLabel() {
+        return propertyPanelLabels.doubleInputLabel();
+    }
+
+    @Override
+    public String doubleInputEmptyText() {
+        return propertyPanelLabels.doubleInputEmptyText();
+    }
+
+    @Override
+    public String argumentOptionEmptyText() {
+        return propertyPanelLabels.argumentOptionEmptyText();
+    }
+
+    @Override
+    public String toolTipEmptyText() {
+        return propertyPanelLabels.toolTipEmptyText();
+    }
+
+    @Override
+    public String doubleInputWidgetEmptyEditText() {
+        return propertyPanelLabels.doubleInputWidgetEmptyEditText();
+    }
+
+    @Override
+    public String integerInputDefaultLabel() {
+        return propertyPanelLabels.integerInputDefaultLabel();
+    }
+
+    @Override
+    public String integerInputDefaultValue() {
+        return contextualHelpMessages.integerInputDefaultValue();
+    }
+
+    @Override
+    public String integerInputExcludeArgument() {
+        return contextualHelpMessages.integerInputExcludeArgument();
+    }
+
+    @Override
+    public String excludeWhenEmpty() {
+        return propertyPanelLabels.excludeWhenEmpty();
+    }
+
+    @Override
+    public SafeHtml createContextualHelpLabelNoFloat(String label, String toolTip) {
+        return templates.fieldLabelImg(SafeHtmlUtils.fromString(label),
+                                       helpIcon().getSafeUri(),
+                                       toolTip);
+    }
+
+    @Override
+    public String toolTip() {
+        return contextualHelpMessages.toolTip();
+    }
+
+    @Override
+    public String toolTipText() {
+        return propertyPanelLabels.toolTipText();
+    }
+
+    @Override
+    public String argumentOption() {
+        return propertyPanelLabels.argumentOption();
+    }
+
+    @Override
+    public SafeHtml doNotDisplay() {
+        return propertyPanelLabels.doNotDisplay();
+    }
+
+    @Override
+    public SafeHtml isRequired() {
+        return propertyPanelLabels.isRequired();
+    }
 }

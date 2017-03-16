@@ -138,6 +138,11 @@ public abstract class AbstractArgumentPropertyEditor extends Composite implement
     private final ReferenceGenomeProperties referenceGenomeProperties;
     private QuickTip quickTip = null;
 
+    public AbstractArgumentPropertyEditor() {
+        this((AppTemplateWizardPropertyContentPanelAppearance)GWT.create(AppTemplateWizardPropertyContentPanelAppearance.class),
+             (PropertyEditorAppearance)GWT.create(PropertyEditorAppearance.class),
+             (AppTemplateWizardAppearance)GWT.create(AppTemplateWizardAppearance.class));
+    }
 
     public AbstractArgumentPropertyEditor(AppTemplateWizardAppearance appearance) {
         this((AppsEditorPanelAppearance)GWT.create(AppsEditorPanelAppearance.class),

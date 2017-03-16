@@ -8,16 +8,12 @@ import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Proper
 import org.iplantc.de.apps.integration.client.view.propertyEditors.widgets.ArgumentValidatorEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.ArgumentEditorConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.SplittableToDoubleConverter;
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.apps.widgets.client.view.editors.widgets.CheckBoxAdapter;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.models.apps.integration.ArgumentValidator;
 import org.iplantc.de.commons.client.validators.CmdLineArgCharacterValidator;
 import org.iplantc.de.commons.client.widgets.IPlantSideErrorHandler;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
-import org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.DoubleInputLabels;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.LeafValueEditor;
@@ -48,11 +44,10 @@ public class DecimalInputPropertyEditor extends AbstractArgumentPropertyEditor {
 
     interface EditorDriver extends SimpleBeanEditorDriver<Argument, DecimalInputPropertyEditor> { }
 
-    @UiField(provided = true) AppsWidgetsPropertyPanelLabels appLabels;
+    @UiField(provided = true) PropertyEditorAppearance appearance;
     @UiField @Path("name") TextField argumentOptionEditor;
     @UiField(provided = true) ArgumentEditorConverter<Double> defaultValueEditor;
     @UiField @Path("visible") CheckBoxAdapter doNotDisplay;
-    @UiField(provided = true) DoubleInputLabels doubleInputLabels;
     @UiField TextField label;
     @UiField CheckBoxAdapter omitIfBlank, requiredEditor;
     @UiField @Path("description") TextField toolTipEditor;
@@ -63,34 +58,30 @@ public class DecimalInputPropertyEditor extends AbstractArgumentPropertyEditor {
     private final EditorDriver editorDriver = GWT.create(EditorDriver.class);
 
     @Inject
-    public DecimalInputPropertyEditor(final AppTemplateWizardAppearance appearance,
-                                      final AppsWidgetsPropertyPanelLabels appLabels,
-                                      final AppsWidgetsContextualHelpMessages help,
+    public DecimalInputPropertyEditor(PropertyEditorAppearance appearance,
                                       final ArgumentValidatorEditor validatorsEditor,
                                       final IplantValidationConstants validationConstants) {
-        super(appearance);
-        this.appLabels = appLabels;
-        this.doubleInputLabels = appLabels;
+        this.appearance = appearance;
         this.validatorsEditor = validatorsEditor;
 
         SpinnerField<Double> dblSpinnerField = new SpinnerField<>(new NumberPropertyEditor.DoublePropertyEditor());
         dblSpinnerField.setErrorSupport(new IPlantSideErrorHandler(dblSpinnerField));
         dblSpinnerField.setMinValue(-Double.MAX_VALUE);
-        dblSpinnerField.setEmptyText(doubleInputLabels.doubleInputWidgetEmptyEditText());
+        dblSpinnerField.setEmptyText(appearance.doubleInputWidgetEmptyEditText());
         defaultValueEditor = new ArgumentEditorConverter<>(dblSpinnerField, new SplittableToDoubleConverter());
 
         initWidget(uiBinder.createAndBindUi(this));
 
         argumentOptionEditor.addValidator(new CmdLineArgCharacterValidator(validationConstants.restrictedCmdLineChars()));
 
-        defaultValueLabel.setHTML(appearance.createContextualHelpLabel(appLabels.integerInputDefaultLabel(), help.integerInputDefaultValue()));
+        defaultValueLabel.setHTML(appearance.createContextualHelpLabel(appearance.integerInputDefaultLabel(), appearance.integerInputDefaultValue()));
         omitIfBlank.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;")
-                                                 .append(appearance.createContextualHelpLabelNoFloat(appLabels.excludeWhenEmpty(), help.integerInputExcludeArgument())).toSafeHtml());
-        toolTipLabel.setHTML(appearance.createContextualHelpLabel(appLabels.toolTipText(), help.toolTip()));
-        argumentOptionLabel.setHTML(appearance.createContextualHelpLabel(appLabels.argumentOption(), help.argumentOption()));
-        doNotDisplay.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appLabels.doNotDisplay()).toSafeHtml());
+                                                 .append(appearance.createContextualHelpLabelNoFloat(appearance.excludeWhenEmpty(), appearance.integerInputExcludeArgument())).toSafeHtml());
+        toolTipLabel.setHTML(appearance.createContextualHelpLabel(appearance.toolTipText(), appearance.toolTip()));
+        argumentOptionLabel.setHTML(appearance.createContextualHelpLabel(appearance.argumentOption(), appearance.argumentOption()));
+        doNotDisplay.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appearance.doNotDisplay()).toSafeHtml());
 
-        requiredEditor.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appLabels.isRequired()).toSafeHtml());
+        requiredEditor.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appearance.isRequired()).toSafeHtml());
         editorDriver.initialize(this);
         editorDriver.accept(new InitializeTwoWayBinding(this));
         ensureDebugId(Ids.PROPERTY_EDITOR + Ids.DOUBLE_INPUT);
