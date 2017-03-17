@@ -829,4 +829,9 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     public String referenceSequenceEmptyText() {
         return propertyPanelLabels.referenceSequenceEmptyText();
     }
+
+    @Override
+    public String textInputLabel() {
+        return propertyPanelLabels.textInputLabel();
+    }
 }

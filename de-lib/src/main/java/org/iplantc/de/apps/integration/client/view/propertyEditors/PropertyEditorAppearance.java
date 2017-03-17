@@ -305,4 +305,6 @@ public interface PropertyEditorAppearance {
     String referenceSequenceLabel();
 
     String referenceSequenceEmptyText();
+
+    String textInputLabel();
 }
