@@ -764,4 +764,34 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     public String multiFileOutputEmptyText() {
         return propertyPanelLabels.multiFileOutputEmptyText();
     }
+
+    @Override
+    public String textInputWidgetEmptyEditText() {
+        return propertyPanelLabels.textInputWidgetEmptyEditText();
+    }
+
+    @Override
+    public String textInputDefaultLabel() {
+        return propertyPanelLabels.textInputDefaultLabel();
+    }
+
+    @Override
+    public String textInputDefaultText() {
+        return contextualHelpMessages.textInputDefaultText();
+    }
+
+    @Override
+    public String textInputExcludeArgument() {
+        return contextualHelpMessages.textInputExcludeArgument();
+    }
+
+    @Override
+    public String multiLineTextLabel() {
+        return propertyPanelLabels.multiLineTextLabel();
+    }
+
+    @Override
+    public String textInputEmptyText() {
+        return propertyPanelLabels.textInputEmptyText();
+    }
 }

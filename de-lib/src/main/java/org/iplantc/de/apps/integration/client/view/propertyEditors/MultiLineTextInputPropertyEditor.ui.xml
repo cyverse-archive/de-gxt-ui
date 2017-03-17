@@ -5,10 +5,8 @@
              xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
              xmlns:fields="urn:import:org.iplantc.de.apps.widgets.client.view.editors.widgets"
              xmlns:converter="urn:import:org.iplantc.de.apps.widgets.client.view.editors.arguments.converters">
-    <ui:with field="appLabels"
-             type="org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels"/>
-    <ui:with field="multiLineTextInputLabels"
-             type="org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.MultiLineTextLabels"/>
+    <ui:with field="appearance"
+             type="org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance"/>
     <ui:with field="margins"
              type="com.sencha.gxt.core.client.util.Margins">
         <ui:attributes top="10"
@@ -43,10 +41,10 @@
             <con:child layoutData="{fieldLayoutData}">
                 <form:FieldLabel ui:field="argLabelLabel"
                                  labelAlign="TOP"
-                                 text="{multiLineTextInputLabels.multiLineTextLabel}">
+                                 text="{appearance.multiLineTextLabel}">
                     <form:widget>
                         <form:TextField ui:field="label"
-                                        text="{multiLineTextInputLabels.textInputEmptyText}"/>
+                                        text="{appearance.textInputEmptyText}"/>
                     </form:widget>
                 </form:FieldLabel>
             </con:child>
@@ -55,7 +53,7 @@
                                  labelAlign="TOP">
                     <form:widget>
                         <form:TextField ui:field="argumentOptionEditor"
-                                        emptyText="{appLabels.argumentOptionEmptyText}"/>
+                                        emptyText="{appearance.argumentOptionEmptyText}"/>
                     </form:widget>
                 </form:FieldLabel>
             </con:child>
@@ -85,7 +83,7 @@
                                  labelAlign="TOP">
                     <form:widget>
                         <form:TextField ui:field="toolTipEditor"
-                                        emptyText="{appLabels.toolTipEmptyText}"/>
+                                        emptyText="{appearance.toolTipEmptyText}"/>
                     </form:widget>
                 </form:FieldLabel>
             </con:child>

@@ -279,4 +279,16 @@ public interface PropertyEditorAppearance {
     String multiFileOutputFileInfoTypeLabel();
 
     String multiFileOutputEmptyText();
+
+    String textInputWidgetEmptyEditText();
+
+    String textInputDefaultLabel();
+
+    String textInputDefaultText();
+
+    String textInputExcludeArgument();
+
+    String multiLineTextLabel();
+
+    String textInputEmptyText();
 }
