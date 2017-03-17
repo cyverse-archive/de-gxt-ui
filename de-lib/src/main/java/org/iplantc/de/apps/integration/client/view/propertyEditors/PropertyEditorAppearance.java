@@ -249,4 +249,10 @@ public interface PropertyEditorAppearance {
     String infoLabelHelp();
 
     String infoEmptyText();
+
+    String integerInputWidgetEmptyEditText();
+
+    String integerInputLabel();
+
+    String integerInputEmptyText();
 }

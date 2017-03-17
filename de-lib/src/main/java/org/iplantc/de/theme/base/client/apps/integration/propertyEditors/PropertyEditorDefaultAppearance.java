@@ -689,4 +689,19 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     public String infoEmptyText() {
         return propertyPanelLabels.infoEmptyText();
     }
+
+    @Override
+    public String integerInputWidgetEmptyEditText() {
+        return propertyPanelLabels.integerInputWidgetEmptyEditText();
+    }
+
+    @Override
+    public String integerInputLabel() {
+        return propertyPanelLabels.integerInputLabel();
+    }
+
+    @Override
+    public String integerInputEmptyText() {
+        return propertyPanelLabels.integerInputEmptyText();
+    }
 }
