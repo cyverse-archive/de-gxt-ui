@@ -619,4 +619,24 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     public String fileOutputFileInfoTypeLabel() {
         return propertyPanelLabels.fileOutputFileInfoTypeLabel();
     }
+
+    @Override
+    public String folderInputExcludeArgument() {
+        return contextualHelpMessages.folderInputExcludeArgument();
+    }
+
+    @Override
+    public String folderInputLabel() {
+        return propertyPanelLabels.folderInputLabel();
+    }
+
+    @Override
+    public String folderInputEmptyText() {
+        return propertyPanelLabels.folderInputEmptyText();
+    }
+
+    @Override
+    public String folderInputFileInfoType() {
+        return propertyPanelLabels.folderInputFileInfoType();
+    }
 }

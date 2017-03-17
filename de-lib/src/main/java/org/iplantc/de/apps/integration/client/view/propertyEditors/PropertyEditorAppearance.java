@@ -221,4 +221,12 @@ public interface PropertyEditorAppearance {
     String fileOutputLabelEmptyText();
 
     String fileOutputFileInfoTypeLabel();
+
+    String folderInputExcludeArgument();
+
+    String folderInputLabel();
+
+    String folderInputEmptyText();
+
+    String folderInputFileInfoType();
 }
