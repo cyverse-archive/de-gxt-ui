@@ -255,4 +255,6 @@ public interface PropertyEditorAppearance {
     String integerInputLabel();
 
     String integerInputEmptyText();
+
+    String integerSelectionLabel();
 }

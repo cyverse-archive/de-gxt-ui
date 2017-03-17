@@ -704,4 +704,9 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     public String integerInputEmptyText() {
         return propertyPanelLabels.integerInputEmptyText();
     }
+
+    @Override
+    public String integerSelectionLabel() {
+        return propertyPanelLabels.integerSelectionLabel();
+    }
 }
