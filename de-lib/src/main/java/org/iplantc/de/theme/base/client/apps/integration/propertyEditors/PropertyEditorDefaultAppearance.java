@@ -834,4 +834,9 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     public String textInputLabel() {
         return propertyPanelLabels.textInputLabel();
     }
+
+    @Override
+    public String textSelectionLabel() {
+        return propertyPanelLabels.textSelectionLabel();
+    }
 }

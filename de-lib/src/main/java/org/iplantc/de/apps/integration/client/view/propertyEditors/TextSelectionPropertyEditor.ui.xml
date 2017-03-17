@@ -1,17 +1,14 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	         xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
-	         xmlns:con="urn:import:com.sencha.gxt.widget.core.client.container"
-	         xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
-	         xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
-	         xmlns:validation="urn:import:org.iplantc.de.apps.integration.client.view.propertyEditors.widgets"
-	         xmlns:fields="urn:import:org.iplantc.de.apps.widgets.client.view.editors.widgets"
-	         xmlns:converters="urn:import:org.iplantc.de.apps.widgets.client.view.editors.arguments.converters">
-	         
-	<ui:with field="appLabels"
-             type="org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels" />
-	<ui:with field="textSelectionLabels"
-             type="org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.TextSelectionLabels" />
+			 xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
+			 xmlns:con="urn:import:com.sencha.gxt.widget.core.client.container"
+			 xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
+			 xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
+			 xmlns:fields="urn:import:org.iplantc.de.apps.widgets.client.view.editors.widgets"
+			 xmlns:converters="urn:import:org.iplantc.de.apps.widgets.client.view.editors.arguments.converters">
+
+	<ui:with field="appearance"
+			 type="org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance"/>
     <ui:with field="margins"
              type="com.sencha.gxt.core.client.util.Margins">
       <ui:attributes top="10"
@@ -44,12 +41,12 @@
 	                                 scrollMode="AUTOY"
 	                                 adjustForScroll="true">
 	        <con:child layoutData="{fieldLayoutData}">
-	            <form:FieldLabel ui:field="argLabelLabel" 
-	                             labelAlign="TOP"
-	                             text="{textSelectionLabels.textSelectionLabel}">
+	            <form:FieldLabel ui:field="argLabelLabel"
+								 labelAlign="TOP"
+								 text="{appearance.textSelectionLabel}">
 	                <form:widget>
 	                    <form:TextField ui:field="label"
-	                    				text="{textSelectionLabels.textSelectionEmptyText}"/>
+										text="{appearance.textSelectionEmptyText}"/>
 	                </form:widget>
 	            </form:FieldLabel>
 	        </con:child>
@@ -76,14 +73,14 @@
 	                             labelAlign="TOP">
 	                <form:widget>
 	                    <form:TextField ui:field="toolTipEditor"
-	                                    emptyText="{appLabels.toolTipEmptyText}"/>
+										emptyText="{appearance.toolTipEmptyText}"/>
 	                </form:widget>
 	            </form:FieldLabel>
 	        </con:child>
 	        
 	        <con:child layoutData="{fieldLayoutData}">
 	           <button:TextButton ui:field="editSimpleListBtn"
-	           					  text="{appLabels.singleSelectionCreateLabel}"/>
+								  text="{appearance.singleSelectionCreateLabel}"/>
 	        </con:child>
 	        
 	    </con:VerticalLayoutContainer>
