@@ -291,4 +291,10 @@ public interface PropertyEditorAppearance {
     String multiLineTextLabel();
 
     String textInputEmptyText();
+
+    String excludeReference();
+
+    String referenceAnnotationLabel();
+
+    String referenceAnnotationEmptyText();
 }

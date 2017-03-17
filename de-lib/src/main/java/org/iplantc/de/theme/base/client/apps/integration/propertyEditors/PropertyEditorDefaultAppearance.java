@@ -794,4 +794,19 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     public String textInputEmptyText() {
         return propertyPanelLabels.textInputEmptyText();
     }
+
+    @Override
+    public String excludeReference() {
+        return contextualHelpMessages.excludeReference();
+    }
+
+    @Override
+    public String referenceAnnotationLabel() {
+        return propertyPanelLabels.referenceAnnotationLabel();
+    }
+
+    @Override
+    public String referenceAnnotationEmptyText() {
+        return propertyPanelLabels.referenceAnnotationEmptyText();
+    }
 }
