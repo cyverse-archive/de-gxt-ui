@@ -21,12 +21,16 @@ public interface PayloadData {
     @PropertyName("action")
     String getAction();
 
+    void setAction(String action);
+
     /**
      * Present only for "file_uploaded" actions.
      * 
      * @return File object
      */
     File getData();
+
+    void setData(File file);
 
     /**
      * Present only for "share" actions.

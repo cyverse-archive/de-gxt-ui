@@ -18,12 +18,14 @@ import org.iplantc.de.client.models.analysis.AnalysisParameter;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.TYPE;
+import org.iplantc.de.client.models.notifications.Notification;
+import org.iplantc.de.client.models.notifications.NotificationAutoBeanFactory;
+import org.iplantc.de.client.models.notifications.payload.PayloadData;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
-import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -42,7 +44,6 @@ import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
-import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.ListStore;
@@ -91,7 +92,7 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
         private final AnalysisParametersView.Appearance appearance;
         private final DiskResourceUtil diskResourceUtil;
         private final EventBus eventBus;
-        private final JsonUtil jsonUtil;
+        private final NotificationAutoBeanFactory notificationFactory;
         private final UserInfo userInfo;
         private final UserSessionServiceFacade userSessionService;
         private final SaveAnalysisParametersEvent event;
@@ -100,7 +101,7 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
                                                final AnalysisParametersView.Appearance appearance,
                                                final DiskResourceUtil diskResourceUtil,
                                                final EventBus eventBus,
-                                               final JsonUtil jsonUtil,
+                                               final NotificationAutoBeanFactory notificationFactory,
                                                final UserInfo userInfo,
                                                final UserSessionServiceFacade userSessionService,
                                                final SaveAnalysisParametersEvent event) {
@@ -108,7 +109,7 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
             this.appearance = appearance;
             this.diskResourceUtil = diskResourceUtil;
             this.eventBus = eventBus;
-            this.jsonUtil = jsonUtil;
+            this.notificationFactory = notificationFactory;
             this.userInfo = userInfo;
             this.userSessionService = userSessionService;
             this.event = event;
@@ -123,29 +124,24 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
         public void onSuccess(final File file) {
             eventBus.fireEvent(new FileSavedEvent(file));
 
-            final Splittable annotatedFile = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(file));
-            StringQuoter.create(diskResourceUtil.parseParent(file.getPath())).assign(annotatedFile, "parentFolderId");
-            StringQuoter.create(event.getPath()).assign(annotatedFile, "sourceUrl");
-
             // Create notification message
-            final Splittable message = StringQuoter.createSplittable();
-            StringQuoter.create("data").assign(message, "type");
-            String subject = file.getName().isEmpty() ? appearance.importFailed(event.getPath())
-                                                     : appearance.fileUploadSuccess(file.getName());
-            StringQuoter.create(subject).assign(message, "subject");
-            StringQuoter.create(userInfo.getUsername()).assign(message, "user");
+            Notification notification = notificationFactory.getNotification().as();
+            notification.setCategory("data");
+            notification.setUser(userInfo.getUsername());
+            notification.setSubject(file.getName().isEmpty() ? appearance.importFailed(event.getPath())
+                                                             : appearance.fileUploadSuccess(file.getName()));
 
             // Create Notification payload and attach message
-            final Splittable payload = StringQuoter.createSplittable();
-            StringQuoter.create("file_uploaded").assign(payload, "action");
+            PayloadData payloadData = notificationFactory.getNotificationPayloadData().as();
+            payloadData.setAction("file_uploaded");
+            file.setParentFolderId(diskResourceUtil.parseParent(file.getPath()));
+            file.setSourceUrl(event.getPath());
+            payloadData.setData(file);
+            Splittable payloadSplittable = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(payloadData));
+            notification.setNotificationPayload(payloadSplittable);
 
-            // Attach annotated file and notification message to payload
-            annotatedFile.assign(payload, "data");
-            payload.assign(message, "payload");
-
-            final String notificationMsgPayload = message.getPayload();
-            userSessionService.postClientNotification(jsonUtil.getObject(notificationMsgPayload),
-                      new AsyncCallback<String>() {
+            userSessionService.postClientNotification(notification,
+                                                      new AsyncCallback<String>() {
                           @Override
                           public void onFailure(Throwable caught) {
                               event.getHideable().hide();
@@ -173,11 +169,11 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
     @Inject AnalysisServiceFacade analysisService;
     @Inject EventBus eventBus;
     @Inject DiskResourceUtil diskResourceUtil;
-    @Inject JsonUtil jsonUtil;
     @Inject UserInfo userInfo;
     @Inject UserSessionServiceFacade userSessionService;
     @Inject IplantAnnouncer announcer;
     @Inject AnalysisParametersView.Presenter.BeanFactory factory;
+    @Inject NotificationAutoBeanFactory notificationFactory;
 
     private final AnalysisParametersView.Appearance appearance;
     private final ListStore<AnalysisParameter> listStore;
@@ -270,7 +266,7 @@ public class AnalysisParametersPresenterImpl implements AnalysisParametersView.P
                                                                             appearance,
                                                                             diskResourceUtil,
                                                                             eventBus,
-                                                                            jsonUtil,
+                                                                            notificationFactory,
                                                                             userInfo,
                                                                             userSessionService,
                                                                             event));

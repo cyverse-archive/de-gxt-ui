@@ -22,18 +22,15 @@ import org.iplantc.de.client.models.sharing.UserPermission;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
 import org.iplantc.de.client.sharing.SharingPermissionsPanel;
 import org.iplantc.de.client.sharing.SharingPresenter;
-import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AnalysisCallback;
 
+import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import com.sencha.gxt.core.shared.FastMap;
@@ -46,10 +43,10 @@ public class AnalysisSharingPresenter implements SharingPresenter {
 
     private final class LoadPermissionsCallback extends AnalysisCallback<String> {
         private final class GetUserInfoCallback implements AsyncCallback<FastMap<Collaborator>> {
-            private final List<String> usernames;
+            private final AnalysisUserPermissionsList analysisPermsList;
 
-            private GetUserInfoCallback(List<String> usernames) {
-                this.usernames = usernames;
+            private GetUserInfoCallback(AnalysisUserPermissionsList analysisPermsList) {
+                this.analysisPermsList = analysisPermsList;
             }
 
             @Override
@@ -59,21 +56,28 @@ public class AnalysisSharingPresenter implements SharingPresenter {
 
             @Override
             public void onSuccess(FastMap<Collaborator> results) {
-                sharingMap = new FastMap<>();
-                for (String userName : usernames) {
-                    Collaborator user = results.get(userName);
-                    if (user == null) {
-                        user = collaboratorsUtil.getDummyCollaborator(userName);
-                    }
+                FastMap<List<Sharing>> sharingMap = new FastMap<>();
+                for (AnalysisUserPermissions analysisUserPerms : analysisPermsList.getResourceUserPermissionsList()) {
+                    for (UserPermission userPerms: analysisUserPerms.getPermissions()) {
 
-                    List<Sharing> shares = new ArrayList<>();
+                        String userName = userPerms.getUser();
+                        Collaborator user = results.get(userName);
+                        if (user == null) {
+                            user = collaboratorsUtil.getDummyCollaborator(userName);
+                        }
 
-                    sharingMap.put(userName, shares);
+                        List<Sharing> shares = sharingMap.get(userName);
 
-                    for (JSONObject share : sharingList.get(userName)) {
-                        String id = jsonUtil.getString(share, "id"); //$NON-NLS-1$
-                        String name = jsonUtil.getString(share, "name");
-                        Sharing sharing = new Sharing(user, buildPermissionFromJson(share), id, name);
+                        if (shares == null) {
+                            shares = new ArrayList<>();
+                            sharingMap.put(userName, shares);
+                        }
+
+                        Sharing sharing = new Sharing(user,
+                                                      PermissionValue.valueOf(userPerms.getPermission()),
+                                                      null,
+                                                      analysisUserPerms.getId(),
+                                                      analysisUserPerms.getName());
                         shares.add(sharing);
                     }
                 }
@@ -91,19 +95,16 @@ public class AnalysisSharingPresenter implements SharingPresenter {
 
         @Override
         public void onSuccess(String result) {
-            AutoBean<AnalysisUserPermissionsList> abrp =
-                    AutoBeanCodex.decode(shareFactory, AnalysisUserPermissionsList.class, result);
-            AnalysisUserPermissionsList aPermsList = abrp.as();
-            sharingList = new FastMap<>();
-            for (AnalysisUserPermissions rup : aPermsList.getResourceUserPermissionsList()) {
-                String id = rup.getId();
-                String appName = rup.getName();
-                List<UserPermission> upList = rup.getPermissions();
-                loadPermissions(id, appName, upList);
+            AnalysisUserPermissionsList analysisPermsList = AutoBeanCodex.decode(shareFactory,
+                                                                                 AnalysisUserPermissionsList.class,
+                                                                                 result).as();
+            final List<String> usernames = Lists.newArrayList();
+            for (AnalysisUserPermissions analysisUserPerms : analysisPermsList.getResourceUserPermissionsList()) {
+                for (UserPermission userPerm : analysisUserPerms.getPermissions()) {
+                    usernames.add(userPerm.getUser());
+                }
             }
-            final List<String> usernames = new ArrayList<>();
-            usernames.addAll(sharingList.keySet());
-            collaboratorsUtil.getUserInfo(usernames, new GetUserInfoCallback(usernames));
+            collaboratorsUtil.getUserInfo(usernames, new GetUserInfoCallback(analysisPermsList));
         }
 
     }
@@ -112,9 +113,6 @@ public class AnalysisSharingPresenter implements SharingPresenter {
     private final SharingPermissionsPanel permissionsPanel;
     private final List<Analysis> selectedAnalysis;
     private Appearance appearance;
-    private FastMap<List<Sharing>> sharingMap;
-    private FastMap<List<JSONObject>> sharingList;
-    private final JsonUtil jsonUtil;
     private final CollaboratorsUtil collaboratorsUtil;
     private final AnalysisServiceFacade aService;
     private AnalysisSharingAutoBeanFactory shareFactory = GWT.create(AnalysisSharingAutoBeanFactory.class);
@@ -122,12 +120,10 @@ public class AnalysisSharingPresenter implements SharingPresenter {
     public AnalysisSharingPresenter(final AnalysisServiceFacade aService,
                                     final List<Analysis> selectedAnalysis,
                                     final AnalysisSharingView view,
-                                    final CollaboratorsUtil collaboratorsUtil,
-                                    final JsonUtil jsonUtil) {
+                                    final CollaboratorsUtil collaboratorsUtil) {
 
         this.sharingView = view;
         this.aService = aService;
-        this.jsonUtil = jsonUtil;
         this.collaboratorsUtil = collaboratorsUtil;
         this.selectedAnalysis = selectedAnalysis;
         this.appearance = GWT.create(Appearance.class);
@@ -135,7 +131,6 @@ public class AnalysisSharingPresenter implements SharingPresenter {
                 new SharingPermissionsPanel(this, getSelectedResourcesAsMap(this.selectedAnalysis));
         permissionsPanel.hidePermissionColumn();
         permissionsPanel.setExplainPanelVisibility(false);
-        view.setPresenter(this);
         view.addShareWidget(permissionsPanel.asWidget());
         loadResources();
         loadPermissions();
@@ -147,15 +142,6 @@ public class AnalysisSharingPresenter implements SharingPresenter {
             resourcesMap.put(sr.getId(), new SharedResource(sr.getId(), sr.getName()));
         }
         return resourcesMap;
-    }
-
-    private List<String> buildAppsList(List<Sharing> shareList) {
-        List<String> anaIds = new ArrayList<>();
-        for (Sharing s : shareList) {
-            anaIds.add(s.getId());
-        }
-
-        return anaIds;
     }
 
     @Override
@@ -180,28 +166,6 @@ public class AnalysisSharingPresenter implements SharingPresenter {
         return PermissionValue.read;
     }
 
-    private PermissionValue buildPermissionFromJson(JSONObject perm) {
-        return PermissionValue.valueOf(jsonUtil.getString(perm, "permission"));
-    }
-
-    private void loadPermissions(String id, String appName, List<UserPermission> userPerms) {
-        for (UserPermission up : userPerms) {
-            String permVal = up.getPermission();
-            String userName = up.getUser();
-            JSONObject perm = new JSONObject();
-            List<JSONObject> shareList = sharingList.get(userName);
-            if (shareList == null) {
-                shareList = new ArrayList<>();
-                sharingList.put(userName, shareList);
-            }
-            perm.put("permission", new JSONString(permVal));
-            perm.put("id", new JSONString(id)); //$NON-NLS-1$
-            perm.put("name", new JSONString(appName));
-            shareList.add(perm);
-        }
-
-    }
-
     @Override
     public void processRequest() {
        AnalysisSharingRequestList request = buildSharingRequest();
@@ -223,39 +187,31 @@ public class AnalysisSharingPresenter implements SharingPresenter {
     }
 
     private AnalysisSharingRequestList buildSharingRequest() {
-        AutoBean<AnalysisSharingRequestList> sharingAbList =
-                AutoBeanCodex.decode(shareFactory, AnalysisSharingRequestList.class, "{}");
-        AnalysisSharingRequestList sharingRequestList = sharingAbList.as();
+        AnalysisSharingRequestList sharingRequestList = null;
 
         FastMap<List<Sharing>> sharingMap = permissionsPanel.getSharingMap();
 
-        List<AnalysisSharingRequest> requests = new ArrayList<>();
         if (sharingMap != null && sharingMap.size() > 0) {
+            List<AnalysisSharingRequest> requests = new ArrayList<>();
+
             for (String userName : sharingMap.keySet()) {
-                AutoBean<AnalysisSharingRequest> sharingAb =
-                        AutoBeanCodex.decode(shareFactory, AnalysisSharingRequest.class, "{}");
-                AnalysisSharingRequest sharingRequest = sharingAb.as();
+                AnalysisSharingRequest sharingRequest = shareFactory.AnalysisSharingRequest().as();
                 List<Sharing> shareList = sharingMap.get(userName);
                 sharingRequest.setUser(userName);
                 sharingRequest.setAnalysisPermissions(buildAnalysisPermissions(shareList));
                 requests.add(sharingRequest);
             }
 
+            sharingRequestList = shareFactory.AnalysisSharingRequestList().as();
             sharingRequestList.setAnalysisSharingRequestList(requests);
-            return sharingRequestList;
-
-        } else {
-            return null;
         }
-
+        return sharingRequestList;
     }
 
     private List<AnalysisPermission> buildAnalysisPermissions(List<Sharing> shareList) {
         List<AnalysisPermission> aPermList = new ArrayList<>();
         for (Sharing s : shareList) {
-            AutoBean<AnalysisPermission>aPermAb =
-                    AutoBeanCodex.decode(shareFactory, AnalysisPermission.class, "{}");
-            AnalysisPermission aPerm = aPermAb.as();
+            AnalysisPermission aPerm = shareFactory.analysisPermission().as();
             aPerm.setId(s.getId());
             aPerm.setPermission(getDefaultPermissions().toString());
             aPermList.add(aPerm);
@@ -264,41 +220,36 @@ public class AnalysisSharingPresenter implements SharingPresenter {
     }
 
     private AnalysisUnsharingRequestList buildUnsharingRequest() {
-        AutoBean<AnalysisUnsharingRequestList> unsharingAbList =
-                AutoBeanCodex.decode(shareFactory, AnalysisUnsharingRequestList.class, "{}");
-
-        AnalysisUnsharingRequestList unsharingRequestList = unsharingAbList.as();
+        AnalysisUnsharingRequestList unsharingRequestList = null;
 
         FastMap<List<Sharing>> unSharingMap = permissionsPanel.getUnshareList();
 
-        List<AnalysisUnsharingRequest> requests = new ArrayList<>();
-
         if (unSharingMap != null && unSharingMap.size() > 0) {
+            List<AnalysisUnsharingRequest> requests = new ArrayList<>();
+
             for (String userName : unSharingMap.keySet()) {
                 List<Sharing> shareList = unSharingMap.get(userName);
-                AutoBean<AnalysisUnsharingRequest> unsharingAb =
-                        AutoBeanCodex.decode(shareFactory, AnalysisUnsharingRequest.class, "{}");
 
-                AnalysisUnsharingRequest unsharingRequest = unsharingAb.as();
+                AnalysisUnsharingRequest unsharingRequest = shareFactory.AnalysisUnsharingRequest().as();
                 unsharingRequest.setUser(userName);
-                unsharingRequest.setAnalyses(buildAnalysisList(shareList));
+                unsharingRequest.setAnalyses(buildUnshareAnalysisPermissionList(shareList));
                 requests.add(unsharingRequest);
             }
+            unsharingRequestList = shareFactory.AnalysisUnsharingRequestList().as();
             unsharingRequestList.setAnalysisUnSharingRequestList(requests);
-            return unsharingRequestList;
-        } else {
-            return null;
-        }
 
+        }
+        return unsharingRequestList;
     }
 
-    private List<String> buildAnalysisList(List<Sharing> shareList) {
-        List<String> anaList = new ArrayList<>();
-        for (Sharing s : shareList) {
-            anaList.add(s.getId());
+    private List<String> buildUnshareAnalysisPermissionList(List<Sharing> unshareList) {
+        List<String> analysisPermList = Lists.newArrayList();
+        for (Sharing unshare : unshareList) {
+            final AnalysisPermission analysisPerm = shareFactory.analysisPermission().as();
+            analysisPermList.add(unshare.getId());
         }
 
-        return anaList;
+        return analysisPermList;
     }
 
 
