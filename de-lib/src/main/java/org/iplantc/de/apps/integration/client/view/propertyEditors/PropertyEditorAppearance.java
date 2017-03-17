@@ -297,4 +297,8 @@ public interface PropertyEditorAppearance {
     String referenceAnnotationLabel();
 
     String referenceAnnotationEmptyText();
+
+    String referenceGenomeLabel();
+
+    String referenceGenomeEmptyText();
 }

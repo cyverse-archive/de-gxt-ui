@@ -809,4 +809,14 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     public String referenceAnnotationEmptyText() {
         return propertyPanelLabels.referenceAnnotationEmptyText();
     }
+
+    @Override
+    public String referenceGenomeLabel() {
+        return propertyPanelLabels.referenceGenomeLabel();
+    }
+
+    @Override
+    public String referenceGenomeEmptyText() {
+        return propertyPanelLabels.referenceGenomeEmptyText();
+    }
 }
