@@ -309,4 +309,10 @@ public interface PropertyEditorAppearance {
     String textInputLabel();
 
     String textSelectionLabel();
+
+    String treeSelectionCreateTree();
+
+    String treeSelectionCreateLabel();
+
+    String treeSelectionLabel();
 }

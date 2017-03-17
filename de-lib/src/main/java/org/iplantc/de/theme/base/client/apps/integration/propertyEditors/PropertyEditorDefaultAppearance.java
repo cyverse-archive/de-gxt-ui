@@ -839,4 +839,19 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     public String textSelectionLabel() {
         return propertyPanelLabels.textSelectionLabel();
     }
+
+    @Override
+    public String treeSelectionCreateTree() {
+        return contextualHelpMessages.treeSelectionCreateTree();
+    }
+
+    @Override
+    public String treeSelectionCreateLabel() {
+        return propertyPanelLabels.treeSelectionCreateLabel();
+    }
+
+    @Override
+    public String treeSelectionLabel() {
+        return propertyPanelLabels.treeSelectionLabel();
+    }
 }
