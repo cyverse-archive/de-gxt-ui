@@ -267,4 +267,16 @@ public interface PropertyEditorAppearance {
     String multiFileInputEmptyText();
 
     String multiFileInputFileInfoType();
+
+    String multiFileOutputDefaultLabel();
+
+    String multiFileOutputDefaultValue();
+
+    String multiFileOutputLabel();
+
+    String multiFileOutputLabelEmptyText();
+
+    String multiFileOutputFileInfoTypeLabel();
+
+    String multiFileOutputEmptyText();
 }

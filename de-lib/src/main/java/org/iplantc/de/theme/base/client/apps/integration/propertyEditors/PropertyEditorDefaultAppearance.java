@@ -734,4 +734,34 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     public String multiFileInputFileInfoType() {
         return propertyPanelLabels.multiFileInputFileInfoType();
     }
+
+    @Override
+    public String multiFileOutputDefaultLabel() {
+        return propertyPanelLabels.multiFileOutputDefaultLabel();
+    }
+
+    @Override
+    public String multiFileOutputDefaultValue() {
+        return contextualHelpMessages.multiFileOutputDefaultValue();
+    }
+
+    @Override
+    public String multiFileOutputLabel() {
+        return propertyPanelLabels.multiFileOutputLabel();
+    }
+
+    @Override
+    public String multiFileOutputLabelEmptyText() {
+        return propertyPanelLabels.multiFileOutputLabelEmptyText();
+    }
+
+    @Override
+    public String multiFileOutputFileInfoTypeLabel() {
+        return propertyPanelLabels.multiFileOutputFileInfoTypeLabel();
+    }
+
+    @Override
+    public String multiFileOutputEmptyText() {
+        return propertyPanelLabels.multiFileOutputEmptyText();
+    }
 }
