@@ -187,4 +187,16 @@ public interface PropertyEditorAppearance {
     String envVarEmptyText();
 
     String envVarNameEmptyText();
+
+    String fileInputExcludeArgument();
+
+    String isImplicit();
+
+    String fileInputIsImplicit();
+
+    String fileInputLabel();
+
+    String fileInputEmptyText();
+
+    String fileInputFileInfoType();
 }

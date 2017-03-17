@@ -534,4 +534,34 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     public String envVarNameEmptyText() {
         return propertyPanelLabels.envVarNameEmptyText();
     }
+
+    @Override
+    public String fileInputExcludeArgument() {
+        return contextualHelpMessages.fileInputExcludeArgument();
+    }
+
+    @Override
+    public String isImplicit() {
+        return propertyPanelLabels.isImplicit();
+    }
+
+    @Override
+    public String fileInputIsImplicit() {
+        return contextualHelpMessages.fileInputIsImplicit();
+    }
+
+    @Override
+    public String fileInputLabel() {
+        return propertyPanelLabels.fileInputLabel();
+    }
+
+    @Override
+    public String fileInputEmptyText() {
+        return propertyPanelLabels.fileInputEmptyText();
+    }
+
+    @Override
+    public String fileInputFileInfoType() {
+        return propertyPanelLabels.fileInputFileInfoType();
+    }
 }

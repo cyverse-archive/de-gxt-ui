@@ -4,10 +4,8 @@
              xmlns:con="urn:import:com.sencha.gxt.widget.core.client.container"
              xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
              xmlns:fields="urn:import:org.iplantc.de.apps.widgets.client.view.editors.widgets">
-    <ui:with field="appLabels"
-             type="org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels"/>
-    <ui:with field="fileInputLabels"
-             type="org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.FileInputTypeLabels"/>
+    <ui:with field="appearance"
+             type="org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance"/>
     <ui:with field="margins"
              type="com.sencha.gxt.core.client.util.Margins">
         <ui:attributes top="10"
@@ -42,10 +40,10 @@
             <con:child layoutData="{fieldLayoutData}">
                 <form:FieldLabel ui:field="argLabelLabel"
                                  labelAlign="TOP"
-                                 text="{fileInputLabels.fileInputLabel}">
+                                 text="{appearance.fileInputLabel}">
                     <form:widget>
                         <form:TextField ui:field="label"
-                                        emptyText="{fileInputLabels.fileInputEmptyText}"/>
+                                        emptyText="{appearance.fileInputEmptyText}"/>
                     </form:widget>
                 </form:FieldLabel>
             </con:child>
@@ -54,7 +52,7 @@
                                  labelAlign="TOP">
                     <form:widget>
                         <form:TextField ui:field="argumentOptionEditor"
-                                        emptyText="{appLabels.argumentOptionEmptyText}"/>
+                                        emptyText="{appearance.argumentOptionEmptyText}"/>
                     </form:widget>
                 </form:FieldLabel>
             </con:child>
@@ -70,7 +68,7 @@
                                  labelAlign="TOP">
                     <form:widget>
                         <form:TextField ui:field="toolTipEditor"
-                                        emptyText="{appLabels.toolTipEmptyText}"/>
+                                        emptyText="{appearance.toolTipEmptyText}"/>
                     </form:widget>
                 </form:FieldLabel>
             </con:child>
@@ -78,7 +76,7 @@
             <con:child layoutData="{fieldLayoutData}">
                 <form:FieldLabel ui:field="fileInfoTypeLabel"
                                  labelAlign="TOP"
-                                 text="{fileInputLabels.fileInputFileInfoType}">
+                                 text="{appearance.fileInputFileInfoType}">
                     <form:widget>
                         <form:ComboBox ui:field="fileInfoTypeComboBox"/>
                     </form:widget>
