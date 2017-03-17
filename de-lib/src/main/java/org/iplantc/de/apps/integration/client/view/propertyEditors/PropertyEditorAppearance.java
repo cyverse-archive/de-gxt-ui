@@ -199,4 +199,26 @@ public interface PropertyEditorAppearance {
     String fileInputEmptyText();
 
     String fileInputFileInfoType();
+
+    String fileOutputEmptyText();
+
+    String fileOutputDefaultLabel();
+
+    String fileOutputDefaultValue();
+
+    String fileOutputSourceLabel();
+
+    String fileOutputOutputSource();
+
+    String fileOutputExcludeArgument();
+
+    String doNotPass();
+
+    String doNotPassHelp();
+
+    String fileOutputLabel();
+
+    String fileOutputLabelEmptyText();
+
+    String fileOutputFileInfoTypeLabel();
 }

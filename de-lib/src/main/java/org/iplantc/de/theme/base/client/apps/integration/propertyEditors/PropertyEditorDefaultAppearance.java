@@ -564,4 +564,59 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     public String fileInputFileInfoType() {
         return propertyPanelLabels.fileInputFileInfoType();
     }
+
+    @Override
+    public String fileOutputEmptyText() {
+        return propertyPanelLabels.fileOutputEmptyText();
+    }
+
+    @Override
+    public String fileOutputDefaultLabel() {
+        return propertyPanelLabels.fileOutputDefaultLabel();
+    }
+
+    @Override
+    public String fileOutputDefaultValue() {
+        return contextualHelpMessages.fileOutputDefaultValue();
+    }
+
+    @Override
+    public String fileOutputSourceLabel() {
+        return propertyPanelLabels.fileOutputSourceLabel();
+    }
+
+    @Override
+    public String fileOutputOutputSource() {
+        return contextualHelpMessages.fileOutputOutputSource();
+    }
+
+    @Override
+    public String fileOutputExcludeArgument() {
+        return contextualHelpMessages.fileOutputExcludeArgument();
+    }
+
+    @Override
+    public String doNotPass() {
+        return propertyPanelLabels.doNotPass();
+    }
+
+    @Override
+    public String doNotPassHelp() {
+        return contextualHelpMessages.doNotPass();
+    }
+
+    @Override
+    public String fileOutputLabel() {
+        return propertyPanelLabels.fileOutputLabel();
+    }
+
+    @Override
+    public String fileOutputLabelEmptyText() {
+        return propertyPanelLabels.fileOutputLabelEmptyText();
+    }
+
+    @Override
+    public String fileOutputFileInfoTypeLabel() {
+        return propertyPanelLabels.fileOutputFileInfoTypeLabel();
+    }
 }
