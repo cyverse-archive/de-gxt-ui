@@ -243,4 +243,10 @@ public interface PropertyEditorAppearance {
     String folderOutputFileInfoTypeLabel();
 
     String folderOutputDefaultValueHelp();
+
+    String infoLabel();
+
+    String infoLabelHelp();
+
+    String infoEmptyText();
 }

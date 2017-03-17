@@ -674,4 +674,19 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     public String folderOutputDefaultValueHelp() {
         return contextualHelpMessages.folderOutputDefaultValue();
     }
+
+    @Override
+    public String infoLabel() {
+        return propertyPanelLabels.infoLabel();
+    }
+
+    @Override
+    public String infoLabelHelp() {
+        return contextualHelpMessages.infoLabelHelp();
+    }
+
+    @Override
+    public String infoEmptyText() {
+        return propertyPanelLabels.infoEmptyText();
+    }
 }
