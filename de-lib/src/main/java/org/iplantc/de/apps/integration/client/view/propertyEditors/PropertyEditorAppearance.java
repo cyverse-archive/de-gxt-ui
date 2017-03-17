@@ -229,4 +229,18 @@ public interface PropertyEditorAppearance {
     String folderInputEmptyText();
 
     String folderInputFileInfoType();
+
+    String folderOutputEmptyText();
+
+    String folderOutputDefaultLabel();
+
+    String folderOutputDefaultValue();
+
+    String folderOutputLabel();
+
+    String folderOutputLabelEmptyText();
+
+    String folderOutputFileInfoTypeLabel();
+
+    String folderOutputDefaultValueHelp();
 }

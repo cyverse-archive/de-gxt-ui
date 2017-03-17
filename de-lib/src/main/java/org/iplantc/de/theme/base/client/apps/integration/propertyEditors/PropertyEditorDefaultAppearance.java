@@ -639,4 +639,39 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     public String folderInputFileInfoType() {
         return propertyPanelLabels.folderInputFileInfoType();
     }
+
+    @Override
+    public String folderOutputEmptyText() {
+        return propertyPanelLabels.folderOutputEmptyText();
+    }
+
+    @Override
+    public String folderOutputDefaultLabel() {
+        return propertyPanelLabels.folderOutputDefaultLabel();
+    }
+
+    @Override
+    public String folderOutputDefaultValue() {
+        return contextualHelpMessages.folderOutputDefaultValue();
+    }
+
+    @Override
+    public String folderOutputLabel() {
+        return propertyPanelLabels.folderOutputLabel();
+    }
+
+    @Override
+    public String folderOutputLabelEmptyText() {
+        return propertyPanelLabels.folderOutputLabelEmptyText();
+    }
+
+    @Override
+    public String folderOutputFileInfoTypeLabel() {
+        return propertyPanelLabels.folderOutputFileInfoTypeLabel();
+    }
+
+    @Override
+    public String folderOutputDefaultValueHelp() {
+        return contextualHelpMessages.folderOutputDefaultValue();
+    }
 }
