@@ -709,4 +709,29 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     public String integerSelectionLabel() {
         return propertyPanelLabels.integerSelectionLabel();
     }
+
+    @Override
+    public String repeatOptionFlag() {
+        return propertyPanelLabels.repeatOptionFlag();
+    }
+
+    @Override
+    public String fileInputRepeatOptionFlag() {
+        return contextualHelpMessages.fileInputRepeatOptionFlag();
+    }
+
+    @Override
+    public String multiFileInputLabel() {
+        return propertyPanelLabels.multiFileInputLabel();
+    }
+
+    @Override
+    public String multiFileInputEmptyText() {
+        return propertyPanelLabels.multiFileInputEmptyText();
+    }
+
+    @Override
+    public String multiFileInputFileInfoType() {
+        return propertyPanelLabels.multiFileInputFileInfoType();
+    }
 }

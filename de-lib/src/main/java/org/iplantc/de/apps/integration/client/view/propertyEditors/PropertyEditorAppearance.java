@@ -257,4 +257,14 @@ public interface PropertyEditorAppearance {
     String integerInputEmptyText();
 
     String integerSelectionLabel();
+
+    String repeatOptionFlag();
+
+    String fileInputRepeatOptionFlag();
+
+    String multiFileInputLabel();
+
+    String multiFileInputEmptyText();
+
+    String multiFileInputFileInfoType();
 }
