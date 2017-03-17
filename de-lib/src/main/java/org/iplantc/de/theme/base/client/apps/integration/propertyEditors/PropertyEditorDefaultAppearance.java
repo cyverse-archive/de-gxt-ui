@@ -854,4 +854,19 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     public String treeSelectionLabel() {
         return propertyPanelLabels.treeSelectionLabel();
     }
+
+    @Override
+    public String checkboxDefaultLabel() {
+        return propertyPanelLabels.checkboxDefaultLabel();
+    }
+
+    @Override
+    public String checkboxLabel() {
+        return propertyPanelLabels.checkboxLabel();
+    }
+
+    @Override
+    public String checkboxEmptyText() {
+        return propertyPanelLabels.checkboxEmptyText();
+    }
 }

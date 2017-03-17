@@ -2,18 +2,22 @@ package org.iplantc.de.apps.integration.client.view.propertyEditors;
 
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids.FLAG;
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids.PROPERTY_EDITOR;
-import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.PropertyPanelIds.*;
+import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.PropertyPanelIds.CHECKED_OPTION;
+import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.PropertyPanelIds.CHECKED_VALUE;
+import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.PropertyPanelIds.DEFAULT_VALUE;
+import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.PropertyPanelIds.DO_NOT_DISPLAY;
+import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.PropertyPanelIds.LABEL;
+import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.PropertyPanelIds.TOOL_TIP;
+import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.PropertyPanelIds.UNCHECKED_OPTION;
+import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.PropertyPanelIds.UNCHECKED_VALUE;
+
 import org.iplantc.de.apps.integration.client.view.propertyEditors.widgets.FlagArgumentOptionEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.ArgumentEditorConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.SplittableToBooleanConverter;
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.apps.widgets.client.view.editors.widgets.CheckBoxAdapter;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.commons.client.validators.CmdLineArgCharacterValidator;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
-import org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.CheckboxInputLabels;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.LeafValueEditor;
@@ -39,9 +43,8 @@ public class FlagArgumentPropertyEditor extends AbstractArgumentPropertyEditor {
 
     interface FlagArgumentPropertyEditorUiBinder extends UiBinder<Widget, FlagArgumentPropertyEditor> { }
 
-    @UiField(provided = true) AppsWidgetsPropertyPanelLabels appLabels;
+    @UiField(provided = true) PropertyEditorAppearance appearance;
     @UiField FieldLabel argLabelLabel;
-    @UiField(provided = true) CheckboxInputLabels checkBoxLabels;
     @UiField @Ignore TextField checkedArgOption, checkedValue, unCheckedArgOption, unCheckedValue;
     @UiField(provided = true) ArgumentEditorConverter<Boolean> defaultValueEditor;
     @UiField @Path("visible") CheckBoxAdapter doNotDisplay;
@@ -55,16 +58,12 @@ public class FlagArgumentPropertyEditor extends AbstractArgumentPropertyEditor {
     private final EditorDriver editorDriver = GWT.create(EditorDriver.class);
 
     @Inject
-    public FlagArgumentPropertyEditor(final AppTemplateWizardAppearance appearance,
-                                      final AppsWidgetsPropertyPanelLabels appLabels,
-                                      final AppsWidgetsContextualHelpMessages help,
+    public FlagArgumentPropertyEditor(final PropertyEditorAppearance appearance,
                                       final IplantValidationConstants validationConstants) {
-        super(appearance);
-        this.appLabels = appLabels;
-        this.checkBoxLabels = appLabels;
+        this.appearance = appearance;
 
         CheckBoxAdapter checkBoxAdapter = new CheckBoxAdapter();
-        checkBoxAdapter.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").appendEscaped(checkBoxLabels.checkboxDefaultLabel()).toSafeHtml());
+        checkBoxAdapter.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").appendEscaped(appearance.checkboxDefaultLabel()).toSafeHtml());
         defaultValueEditor = new ArgumentEditorConverter<>(checkBoxAdapter, new SplittableToBooleanConverter());
 
         initWidget(uiBinder.createAndBindUi(this));
@@ -77,9 +76,9 @@ public class FlagArgumentPropertyEditor extends AbstractArgumentPropertyEditor {
         unCheckedArgOption.addValidator(argOptValidator);
         unCheckedValue.addValidator(argValueValidator);
 
-        toolTipLabel.setHTML(appearance.createChkBoxContextualHelpLabel(appLabels.toolTipText(),
-                                                                  help.toolTip()));
-        doNotDisplay.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appLabels.doNotDisplay()).toSafeHtml());
+        toolTipLabel.setHTML(appearance.createContextualHelpLabel(appearance.toolTipText(),
+                                                                                      appearance.toolTip()));
+        doNotDisplay.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appearance.doNotDisplay()).toSafeHtml());
 
         argumentOptionEditor = new FlagArgumentOptionEditor(checkedArgOption, checkedValue, unCheckedArgOption, unCheckedValue,
                                                             validationConstants);

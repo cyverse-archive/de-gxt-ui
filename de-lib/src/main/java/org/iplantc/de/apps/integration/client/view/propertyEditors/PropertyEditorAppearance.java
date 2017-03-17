@@ -315,4 +315,10 @@ public interface PropertyEditorAppearance {
     String treeSelectionCreateLabel();
 
     String treeSelectionLabel();
+
+    String checkboxDefaultLabel();
+
+    String checkboxLabel();
+
+    String checkboxEmptyText();
 }
