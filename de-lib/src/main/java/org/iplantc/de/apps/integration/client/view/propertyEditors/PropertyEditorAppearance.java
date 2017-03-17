@@ -321,4 +321,6 @@ public interface PropertyEditorAppearance {
     String checkboxLabel();
 
     String checkboxEmptyText();
+
+    String environmentVariableNameValidationMsg();
 }

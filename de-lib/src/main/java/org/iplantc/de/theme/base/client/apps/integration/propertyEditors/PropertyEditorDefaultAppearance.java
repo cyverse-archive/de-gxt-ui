@@ -4,6 +4,7 @@ import org.iplantc.de.apps.integration.client.view.AppsEditorPanelAppearance;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
+import org.iplantc.de.resources.client.messages.IplantValidationMessages;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsDisplayMessages;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
@@ -55,6 +56,7 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     private PropertyEditorDisplayStrings displayStrings;
     private IplantDisplayStrings iplantDisplayStrings;
     private AppsWidgetsDisplayMessages appsWidgetsDisplayMessages;
+    private IplantValidationMessages iplantValidationMessages;
 
     public PropertyEditorDefaultAppearance() {
         this ((AppsWidgetsPropertyPanelLabels)GWT.create(AppsWidgetsPropertyPanelLabels.class),
@@ -65,7 +67,8 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
               (IplantResources)GWT.create(IplantResources.class),
               (PropertyEditorDisplayStrings)GWT.create(PropertyEditorDisplayStrings.class),
               (IplantDisplayStrings)GWT.create(IplantDisplayStrings.class),
-              (AppsWidgetsDisplayMessages)GWT.create(AppsWidgetsDisplayMessages.class));
+              (AppsWidgetsDisplayMessages)GWT.create(AppsWidgetsDisplayMessages.class),
+              (IplantValidationMessages)GWT.create(IplantValidationMessages.class));
     }
 
     public PropertyEditorDefaultAppearance(AppsWidgetsPropertyPanelLabels propertyPanelLabels,
@@ -76,7 +79,8 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
                                            IplantResources iplantResources,
                                            PropertyEditorDisplayStrings displayStrings,
                                            IplantDisplayStrings iplantDisplayStrings,
-                                           AppsWidgetsDisplayMessages appsWidgetsDisplayMessages) {
+                                           AppsWidgetsDisplayMessages appsWidgetsDisplayMessages,
+                                           IplantValidationMessages iplantValidationMessages) {
         this.propertyPanelLabels = propertyPanelLabels;
         this.panelAppearance = panelAppearance;
         this.argumentValidatorMessages = argumentValidatorMessages;
@@ -86,6 +90,7 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
         this.displayStrings = displayStrings;
         this.iplantDisplayStrings = iplantDisplayStrings;
         this.appsWidgetsDisplayMessages = appsWidgetsDisplayMessages;
+        this.iplantValidationMessages = iplantValidationMessages;
     }
 
     @Override
@@ -868,5 +873,10 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     @Override
     public String checkboxEmptyText() {
         return propertyPanelLabels.checkboxEmptyText();
+    }
+
+    @Override
+    public String environmentVariableNameValidationMsg() {
+        return iplantValidationMessages.environmentVariableNameValidationMsg();
     }
 }
