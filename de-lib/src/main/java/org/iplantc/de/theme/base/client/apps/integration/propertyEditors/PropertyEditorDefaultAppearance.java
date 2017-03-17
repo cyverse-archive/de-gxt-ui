@@ -494,4 +494,44 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     public String textSelectionEmptyText() {
         return propertyPanelLabels.textSelectionEmptyText();
     }
+
+    @Override
+    public String envVarWidgetEmptyEditText() {
+        return propertyPanelLabels.envVarWidgetEmptyEditText();
+    }
+
+    @Override
+    public String envVarDefaultLabel() {
+        return propertyPanelLabels.envVarDefaultLabel();
+    }
+
+    @Override
+    public String envVarDefaultValue() {
+        return contextualHelpMessages.envVarDefaultValue();
+    }
+
+    @Override
+    public String envVarNameLabel() {
+        return propertyPanelLabels.envVarNameLabel();
+    }
+
+    @Override
+    public String envVarDefaultName() {
+        return contextualHelpMessages.envVarDefaultName();
+    }
+
+    @Override
+    public String envVarLabel() {
+        return propertyPanelLabels.envVarLabel();
+    }
+
+    @Override
+    public String envVarEmptyText() {
+        return propertyPanelLabels.envVarEmptyText();
+    }
+
+    @Override
+    public String envVarNameEmptyText() {
+        return propertyPanelLabels.envVarNameEmptyText();
+    }
 }

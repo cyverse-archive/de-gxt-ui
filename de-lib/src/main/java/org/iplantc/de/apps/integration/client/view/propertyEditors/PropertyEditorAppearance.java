@@ -171,4 +171,20 @@ public interface PropertyEditorAppearance {
     String doubleSelectionLabel();
 
     String textSelectionEmptyText();
+
+    String envVarWidgetEmptyEditText();
+
+    String envVarDefaultLabel();
+
+    String envVarDefaultValue();
+
+    String envVarNameLabel();
+
+    String envVarDefaultName();
+
+    String envVarLabel();
+
+    String envVarEmptyText();
+
+    String envVarNameEmptyText();
 }
