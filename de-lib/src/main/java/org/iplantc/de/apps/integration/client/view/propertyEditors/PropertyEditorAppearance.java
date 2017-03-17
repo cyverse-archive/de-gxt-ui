@@ -150,7 +150,25 @@ public interface PropertyEditorAppearance {
 
     String argumentOption();
 
+    String argumentOptionHelp();
+
     SafeHtml doNotDisplay();
 
     SafeHtml isRequired();
+
+    String emptyListSelectionText();
+
+    String singleSelectionDefaultValue();
+
+    String singleSelectDefaultItem();
+
+    String singleSelectExcludeArgument();
+
+    String singleSelectionCreateLabel();
+
+    String singleSelectionCreateList();
+
+    String doubleSelectionLabel();
+
+    String textSelectionEmptyText();
 }

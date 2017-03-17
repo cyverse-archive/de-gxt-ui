@@ -441,6 +441,11 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     }
 
     @Override
+    public String argumentOptionHelp() {
+        return contextualHelpMessages.argumentOption();
+    }
+
+    @Override
     public SafeHtml doNotDisplay() {
         return propertyPanelLabels.doNotDisplay();
     }
@@ -448,5 +453,45 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     @Override
     public SafeHtml isRequired() {
         return propertyPanelLabels.isRequired();
+    }
+
+    @Override
+    public String emptyListSelectionText() {
+        return appsWidgetsDisplayMessages.emptyListSelectionText();
+    }
+
+    @Override
+    public String singleSelectionDefaultValue() {
+        return propertyPanelLabels.singleSelectionDefaultValue();
+    }
+
+    @Override
+    public String singleSelectDefaultItem() {
+        return contextualHelpMessages.singleSelectDefaultItem();
+    }
+
+    @Override
+    public String singleSelectExcludeArgument() {
+        return contextualHelpMessages.singleSelectExcludeArgument();
+    }
+
+    @Override
+    public String singleSelectionCreateLabel() {
+        return propertyPanelLabels.singleSelectionCreateLabel();
+    }
+
+    @Override
+    public String singleSelectionCreateList() {
+        return contextualHelpMessages.singleSelectionCreateList();
+    }
+
+    @Override
+    public String doubleSelectionLabel() {
+        return propertyPanelLabels.doubleSelectionLabel();
+    }
+
+    @Override
+    public String textSelectionEmptyText() {
+        return propertyPanelLabels.textSelectionEmptyText();
     }
 }
