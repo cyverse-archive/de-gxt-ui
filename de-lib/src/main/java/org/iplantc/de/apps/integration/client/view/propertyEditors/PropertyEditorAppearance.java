@@ -301,4 +301,8 @@ public interface PropertyEditorAppearance {
     String referenceGenomeLabel();
 
     String referenceGenomeEmptyText();
+
+    String referenceSequenceLabel();
+
+    String referenceSequenceEmptyText();
 }
