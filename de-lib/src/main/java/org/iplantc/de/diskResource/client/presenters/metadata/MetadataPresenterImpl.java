@@ -303,9 +303,6 @@ public class MetadataPresenterImpl implements MetadataView.Presenter{
             if (templateView != null) {
                 templateView.hide();
             }
-/*            view.getUserMetadata().forEach(md -> {
-                GWT.log(md.getAttribute() + "--->" + md.getValue() );
-            });*/
             templateAttributes = result.getAttributes();
             templateView = new MetadataTemplateViewDialog(MetadataPresenterImpl.this,
                                                           view.getUserMetadata(),
@@ -317,6 +314,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter{
             templateView.setHeading(result.getName());
             templateView.setModal(false);
             templateView.setSize("600px", "400px");
+            templateView.addMdTermDictionary();
             templateView.show();
 
         }

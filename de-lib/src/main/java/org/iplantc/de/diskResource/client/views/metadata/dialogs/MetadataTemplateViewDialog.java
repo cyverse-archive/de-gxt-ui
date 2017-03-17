@@ -56,12 +56,12 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
     private VerticalLayoutContainer widget;
     private final DateTimeFormat timestampFormat;
     private boolean writable;
-    private final FastMap<Avu> templateTagAvuMap;
-    private final FastMap<MetadataTemplateAttribute> templateTagAtrrMap;
-    private final FastMap<Field<?>> templateTagFieldMap;
-    private List<MetadataTemplateAttribute> attributes;
-    private final FastMap<VerticalLayoutContainer> templateAttrVLCMap;
-    private List<Avu> templateMd;
+    FastMap<Avu> templateTagAvuMap;
+    FastMap<MetadataTemplateAttribute> templateTagAtrrMap;
+    FastMap<Field<?>> templateTagFieldMap;
+    List<MetadataTemplateAttribute> attributes;
+    final FastMap<VerticalLayoutContainer> templateAttrVLCMap;
+    List<Avu> templateMd;
     private boolean valid;
 
     public MetadataTemplateViewDialog(MetadataView.Presenter presenter,
@@ -81,10 +81,10 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
 
         widget = new VerticalLayoutContainer();
         widget.setScrollMode(ScrollSupport.ScrollMode.AUTOY);
-        buildAvuMap();
-        loadTemplateAttributes();
-        add(widget);
         widget.getElement().applyStyles(appearance.backgroudStyle());
+        buildAvuMap();
+        initTemplate();
+        add(widget);
     }
 
     public ArrayList<Avu> getMetadataFromTemplate() {
@@ -111,7 +111,6 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
 
                 avu.setValue(value);
             }
-            GWT.log("template attribute added ->" + avu.getAttribute());
             avus.add(avu);
 
         });
@@ -271,19 +270,18 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
         TextField tf = buildTextField(tag, attribute);
         tf.addValidator(new UrlValidator());
         if (writable) {
-            tf.setEmptyText("Valid URL");
+            tf.setEmptyText(appearance.urlGhostText());
         }
         return tf;
     }
 
 
-    private void loadTemplateAttributes() {
+    private void initTemplate() {
         templateTagFieldMap.clear();
-        addMdTermDictionary();
         addFields();
     }
 
-    private void addMdTermDictionary() {
+    public void addMdTermDictionary() {
         IPlantAnchor helpLink = buildHelpLink(attributes);
         HorizontalPanel hp = new HorizontalPanel();
         hp.setSpacing(5);
@@ -467,7 +465,7 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
 
     }
 
-    public IPlantAnchor buildHelpLink(final List<MetadataTemplateAttribute> attributes) {
+    private IPlantAnchor buildHelpLink(final List<MetadataTemplateAttribute> attributes) {
         IPlantAnchor helpLink =
                 new IPlantAnchor(appearance.metadataTermGuide(), 150, new ClickHandler() {
 
