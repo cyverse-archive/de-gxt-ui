@@ -92,6 +92,11 @@
     </replace-with>
 
     <!--App Editor-->
+
+    <replace-with class="org.iplantc.de.theme.base.client.apps.integration.AppsEditorViewDefaultAppearance">
+        <when-type-is class="org.iplantc.de.apps.integration.client.view.AppsEditorView.AppsEditorViewAppearance"/>
+    </replace-with>
+
     <replace-with class="org.iplantc.de.theme.base.client.apps.integration.tools.DeployedComponentsListingViewDefaultAppearance">
         <when-type-is class="org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingView.DeployedComponentsListingViewAppearance"/>
     </replace-with>
