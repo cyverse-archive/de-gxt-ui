@@ -3,7 +3,6 @@ package org.iplantc.de.apps.integration.client.dialogs;
 import org.iplantc.de.apps.integration.client.model.ArgumentProperties;
 import org.iplantc.de.apps.integration.client.view.AppsEditorView;
 import org.iplantc.de.client.models.apps.integration.Argument;
-import org.iplantc.de.resources.client.uiapps.integration.AppIntegrationMessages;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -76,7 +75,7 @@ public class CommandLineOrderingPanel extends Composite {
 
     private final ArgumentProperties argProps;
 
-    private final AppIntegrationMessages messages;
+    private final AppsEditorView.AppsEditorViewAppearance appearance;
 
     private final StoreSortInfo<Argument> orderStoreSortInfo;
 
@@ -84,9 +83,9 @@ public class CommandLineOrderingPanel extends Composite {
 
     private final List<String> uuids;
 
-    public CommandLineOrderingPanel(List<Argument> arguments, AppsEditorView.Presenter presenter, AppIntegrationMessages messages, List<String> uuids) {
+    public CommandLineOrderingPanel(List<Argument> arguments, AppsEditorView.Presenter presenter, AppsEditorView.AppsEditorViewAppearance appearance, List<String> uuids) {
         this.presenter = presenter;
-        this.messages = messages;
+        this.appearance = appearance;
         this.uuids = uuids;
         argProps = GWT.create(ArgumentProperties.class);
         orderStoreSortInfo = new StoreSortInfo<Argument>(argProps.order(), SortDir.ASC);
@@ -106,8 +105,10 @@ public class CommandLineOrderingPanel extends Composite {
 
     private void initColumnModels() {
         ArgNameValueProvider valueProvider = new ArgNameValueProvider();
-        ColumnConfig<Argument, String> ordName = new ColumnConfig<Argument, String>(valueProvider, 140, messages.argumentLabel());
-        ColumnConfig<Argument, Integer> order = new ColumnConfig<Argument, Integer>(argProps.order(), 30, messages.orderLabel());
+        ColumnConfig<Argument, String> ordName = new ColumnConfig<Argument, String>(valueProvider, 140, appearance
+                .argumentLabel());
+        ColumnConfig<Argument, Integer> order = new ColumnConfig<Argument, Integer>(argProps.order(), 30, appearance
+                .orderLabel());
 
         ordName.setSortable(false);
         ordName.setMenuDisabled(true);

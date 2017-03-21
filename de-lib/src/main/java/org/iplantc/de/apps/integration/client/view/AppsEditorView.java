@@ -19,9 +19,12 @@ import org.iplantc.de.client.models.apps.integration.Argument;
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
+import com.sencha.gxt.widget.core.client.button.IconButton;
 import com.sencha.gxt.widget.core.client.event.BeforeHideEvent.BeforeHideHandler;
 
 /**
@@ -35,6 +38,41 @@ public interface AppsEditorView extends IsWidget, Editor<AppTemplate>, ArgumentS
 
     interface AppsEditorViewAppearance {
 
+        SafeHtml cannotDeleteLastArgumentGroup();
+
+        String appHeaderSelect();
+
+        IconButton getArgListDeleteButton();
+
+        String argumentSelect();
+
+        String warning();
+
+        String appContainsErrorsPromptToContinue();
+
+        String save();
+
+        String unsavedChanges();
+
+        String done();
+
+        String appContainsErrorsUnableToSave();
+
+        String unableToSave();
+
+        ImageResource questionIcon();
+
+        ImageResource errorIcon();
+
+        String commandLineOrder();
+
+        SafeHtml argumentLabel();
+
+        SafeHtml orderLabel();
+
+        String previewJSON();
+
+        String saveSuccessful();
     }
     
     public interface Presenter extends BeforeHideHandler,
