@@ -86,7 +86,7 @@ public class AppLaunchViewImpl extends Composite implements AppLaunchView {
         wizard.insertFirstInAccordion(law);
 
         if (appTemplate.isDeleted()) {
-            mask(appearance.deprecatedAppMask());
+            customMask(appearance.deprecatedAppMask());
             launchButton.setEnabled(false);
         }
     }
@@ -138,8 +138,7 @@ public class AppLaunchViewImpl extends Composite implements AppLaunchView {
         launchButton.setEnabled(false);
     }
 
-    @Override
-    public void mask(String message) {
+    public void customMask(String message) {
         mask = true;
         maskMessage = message;
         customMask.mask(this, message);
