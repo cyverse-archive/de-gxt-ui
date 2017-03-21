@@ -2,9 +2,12 @@ package org.iplantc.de.theme.base.client.apps.integration;
 
 import org.iplantc.de.apps.integration.client.view.AppsEditorView;
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
+import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.resources.client.messages.IplantErrorStrings;
 import org.iplantc.de.resources.client.uiapps.integration.AppIntegrationMessages;
+import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
+import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
@@ -22,23 +25,35 @@ public class AppsEditorViewDefaultAppearance implements AppsEditorView.AppsEdito
     private IplantErrorStrings errorStrings;
     private AppIntegrationMessages appIntegrationMessages;
     private AppTemplateWizardAppearance.Resources style;
+    private AppsWidgetsContextualHelpMessages contextualHelpMessages;
+    private IplantResources iplantResources;
+    private AppsWidgetsPropertyPanelLabels propertyPanelLabels;
 
     public AppsEditorViewDefaultAppearance() {
         this((IplantDisplayStrings)GWT.create(IplantDisplayStrings.class),
              (IplantErrorStrings)GWT.create(IplantErrorStrings.class),
              (AppIntegrationMessages)GWT.create(AppIntegrationMessages.class),
-             (AppTemplateWizardAppearance.Resources)GWT.create(AppTemplateWizardAppearance.Resources.class));
+             (AppTemplateWizardAppearance.Resources)GWT.create(AppTemplateWizardAppearance.Resources.class),
+             (AppsWidgetsContextualHelpMessages)GWT.create(AppsWidgetsContextualHelpMessages.class),
+             (IplantResources)GWT.create(IplantResources.class),
+             (AppsWidgetsPropertyPanelLabels)GWT.create(AppsWidgetsPropertyPanelLabels.class));
     }
 
     public AppsEditorViewDefaultAppearance(IplantDisplayStrings iplantDisplayStrings,
                                            IplantErrorStrings errorStrings,
                                            AppIntegrationMessages appIntegrationMessages,
-                                           AppTemplateWizardAppearance.Resources style) {
+                                           AppTemplateWizardAppearance.Resources style,
+                                           AppsWidgetsContextualHelpMessages contextualHelpMessages,
+                                           IplantResources iplantResources,
+                                           AppsWidgetsPropertyPanelLabels propertyPanelLabels) {
 
         this.iplantDisplayStrings = iplantDisplayStrings;
         this.errorStrings = errorStrings;
         this.appIntegrationMessages = appIntegrationMessages;
         this.style = style;
+        this.contextualHelpMessages = contextualHelpMessages;
+        this.iplantResources = iplantResources;
+        this.propertyPanelLabels = propertyPanelLabels;
 
         this.style.css().ensureInjected();
     }
@@ -134,5 +149,35 @@ public class AppsEditorViewDefaultAppearance implements AppsEditorView.AppsEdito
     @Override
     public String saveSuccessful() {
         return appIntegrationMessages.saveSuccessful();
+    }
+
+    @Override
+    public String contextualHelp() {
+        return iplantResources.getContxtualHelpStyle().contextualHelp();
+    }
+
+    @Override
+    public SafeHtml appCategorySection() {
+        return contextualHelpMessages.appCategorySection();
+    }
+
+    @Override
+    public String detailsPanelDefaultText() {
+        return propertyPanelLabels.detailsPanelDefaultText();
+    }
+
+    @Override
+    public String detailsPanelHeader(String s) {
+        return propertyPanelLabels.detailsPanelHeader(s);
+    }
+
+    @Override
+    public String paletteHeader() {
+        return appIntegrationMessages.paletteHeader();
+    }
+
+    @Override
+    public String cmdLinePreviewHeader() {
+        return appIntegrationMessages.cmdLinePreviewHeader();
     }
 }

@@ -9,8 +9,8 @@
              xmlns:appTemplatePropertyEditor="urn:import:org.iplantc.de.apps.integration.client.view.widgets">
              
              
-   <ui:with field="appIntStrings"
-            type="org.iplantc.de.resources.client.uiapps.integration.AppIntegrationMessages"/>
+   <ui:with field="appearance"
+            type="org.iplantc.de.apps.integration.client.view.AppsEditorView.AppsEditorViewAppearance"/>
 
     <!-- Border Layout Data -->
    <ui:with field="westMargins"
@@ -70,7 +70,7 @@
         
         <!-- Palette -->
         <con:west layoutData="{westData}">
-            <gxt:ContentPanel ui:field="palettePanel" heading="{appIntStrings.paletteHeader}">
+            <gxt:ContentPanel ui:field="palettePanel" heading="{appearance.paletteHeader}">
                 <gxt:tool>
                     <button:ToolButton ui:field="paletteContextualHelpBtn"/>
                 </gxt:tool>
@@ -98,7 +98,7 @@
         
         <!-- Command Line Preview -->
         <con:south layoutData="{southData}">
-            <gxt:ContentPanel heading="{appIntStrings.cmdLinePreviewHeader}">
+            <gxt:ContentPanel heading="{appearance.cmdLinePreviewHeader}">
             	<form:TextArea ui:field="cmdLinePreview"
             				   readOnly="true"/>
             </gxt:ContentPanel>

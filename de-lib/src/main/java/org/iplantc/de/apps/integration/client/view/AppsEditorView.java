@@ -73,6 +73,18 @@ public interface AppsEditorView extends IsWidget, Editor<AppTemplate>, ArgumentS
         String previewJSON();
 
         String saveSuccessful();
+
+        String contextualHelp();
+
+        SafeHtml appCategorySection();
+
+        String detailsPanelDefaultText();
+
+        String detailsPanelHeader(String s);
+
+        String paletteHeader();
+
+        String cmdLinePreviewHeader();
     }
     
     public interface Presenter extends BeforeHideHandler,

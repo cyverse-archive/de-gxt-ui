@@ -35,10 +35,6 @@ import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.models.apps.integration.ArgumentGroup;
 import org.iplantc.de.client.models.apps.integration.ArgumentType;
 import org.iplantc.de.commons.client.widgets.ContextualHelpPopup;
-import org.iplantc.de.resources.client.IplantContextualHelpAccessStyle;
-import org.iplantc.de.resources.client.IplantResources;
-import org.iplantc.de.resources.client.messages.I18N;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
 
 import com.google.common.collect.Maps;
 import com.google.gwt.core.client.GWT;
@@ -145,32 +141,34 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView {
     @UiField(provided = true)
     AppTemplateForm wizard;
 
-    private ArgumentGroupPropertyEditor argGrpPropertyEditor;
+    @UiField(provided = true) AppsEditorViewAppearance appearance;
 
+    private ArgumentGroupPropertyEditor argGrpPropertyEditor;
     private ArgumentPropertyEditor currArgumentPropEditor;
     private final ContentPanel defaultDetailsPanel;
-    private final AppsEditorView.EditorDriver editorDriver = GWT.create(AppsEditorView.EditorDriver.class);
-    private final AppsWidgetsContextualHelpMessages helpMessages = I18N.APPS_HELP;
+    private final AppsEditorView.EditorDriver editorDriver;
 
     private Presenter presenter;
     private final Map<Object, ArgumentPropertyEditor> propertyEditorMap = Maps.newHashMap();
-    private final IplantContextualHelpAccessStyle style = IplantResources.RESOURCES.getContxtualHelpStyle();
 
     @Inject
-    public AppsEditorViewImpl(AppTemplateForm wizard,
+    public AppsEditorViewImpl(AppsEditorViewAppearance appearance,
+                              AppTemplateForm wizard,
                               AppEditorToolbar toolbar,
                               AppTemplatePropertyEditor appTemplatePropertyEditor,
                               final AppIntegrationPalette palette,
+                              AppsEditorView.EditorDriver editorDriver,
                               AppsEditorPanelAppearance panelAppearance) {
+        this.appearance = appearance;
         this.wizard = wizard;
         this.toolbar = toolbar;
         wizard.setAdjustForScroll(false);
         this.appTemplatePropertyEditor = appTemplatePropertyEditor;
         this.palette = palette;
-        style.ensureInjected();
+        this.editorDriver = editorDriver;
         defaultDetailsPanel = new ContentPanel(panelAppearance);
-        defaultDetailsPanel.setHeading(SafeHtmlUtils.fromTrustedString(I18N.APPS_LABELS.detailsPanelHeader(""))); //$NON-NLS-1$
-        defaultDetailsPanel.add(new HTML(I18N.APPS_LABELS.detailsPanelDefaultText()));
+        defaultDetailsPanel.setHeading(SafeHtmlUtils.fromTrustedString(appearance.detailsPanelHeader(""))); //$NON-NLS-1$
+        defaultDetailsPanel.add(new HTML(appearance.detailsPanelDefaultText()));
 
         initWidget(BINDER.createAndBindUi(this));
         editorDriver.initialize(this);
@@ -480,13 +478,13 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView {
 
     @UiFactory
     ToolButton createToolBtn() {
-        final ToolButton toolButton = new ToolButton(style.contextualHelp());
+        final ToolButton toolButton = new ToolButton(appearance.contextualHelp());
         toolButton.addSelectHandler(new SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
                 ContextualHelpPopup popup = new ContextualHelpPopup();
                 popup.setWidth(450);
-                popup.add(new HTML(helpMessages.appCategorySection()));
+                popup.add(new HTML(appearance.appCategorySection()));
                 popup.showAt(toolButton.getAbsoluteLeft(), toolButton.getAbsoluteTop() + 15);
             }
         });
