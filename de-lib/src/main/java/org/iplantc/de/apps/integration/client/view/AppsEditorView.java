@@ -85,6 +85,70 @@ public interface AppsEditorView extends IsWidget, Editor<AppTemplate>, ArgumentS
         String paletteHeader();
 
         String cmdLinePreviewHeader();
+
+        SafeHtml appCategoryFileInput();
+
+        SafeHtml appCategoryLists();
+
+        SafeHtml appCategoryTextInput();
+
+        SafeHtml appCategoryOutput();
+
+        SafeHtml appCategoryReferenceGenome();
+
+        ImageResource inputSection();
+
+        ImageResource inputFileMulti();
+
+        ImageResource inputFile();
+
+        ImageResource inputFolder();
+
+        ImageResource generalInfoText();
+
+        ImageResource inputTextSingle();
+
+        ImageResource inputTextMulti();
+
+        ImageResource inputCheckBox();
+
+        ImageResource inputEnvVar();
+
+        ImageResource inputNumberInteger();
+
+        ImageResource inputNumberDouble();
+
+        ImageResource inputSelectSingle();
+
+        ImageResource inputSelectInteger();
+
+        ImageResource inputSelectDouble();
+
+        ImageResource inputSelectGrouped();
+
+        ImageResource outputFileName();
+
+        ImageResource outputFolderName();
+
+        ImageResource outputMultiFile();
+
+        ImageResource referenceGenome();
+
+        ImageResource referenceSequence();
+
+        ImageResource referenceAnnotation();
+
+        String fileFolderCategoryTitle();
+
+        String textNumericalInputCategoryTitle();
+
+        String listsCategoryTitle();
+
+        String outputCategoryTitle();
+
+        String referenceGenomeCategoryTitle();
+
+        String grab();
     }
     
     public interface Presenter extends BeforeHideHandler,

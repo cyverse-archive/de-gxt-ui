@@ -180,4 +180,164 @@ public class AppsEditorViewDefaultAppearance implements AppsEditorView.AppsEdito
     public String cmdLinePreviewHeader() {
         return appIntegrationMessages.cmdLinePreviewHeader();
     }
+
+    @Override
+    public SafeHtml appCategoryFileInput() {
+        return contextualHelpMessages.appCategoryFileInput();
+    }
+
+    @Override
+    public SafeHtml appCategoryLists() {
+        return contextualHelpMessages.appCategoryLists();
+    }
+
+    @Override
+    public SafeHtml appCategoryTextInput() {
+        return contextualHelpMessages.appCategoryTextInput();
+    }
+
+    @Override
+    public SafeHtml appCategoryOutput() {
+        return contextualHelpMessages.appCategoryOutput();
+    }
+
+    @Override
+    public SafeHtml appCategoryReferenceGenome() {
+        return contextualHelpMessages.appCategoryReferenceGenome();
+    }
+
+    @Override
+    public ImageResource inputSection() {
+        return iplantResources.inputSection();
+    }
+
+    @Override
+    public ImageResource inputFileMulti() {
+        return iplantResources.inputFileMulti();
+    }
+
+    @Override
+    public ImageResource inputFile() {
+        return iplantResources.inputFile();
+    }
+
+    @Override
+    public ImageResource inputFolder() {
+        return iplantResources.inputFolder();
+    }
+
+    @Override
+    public ImageResource generalInfoText() {
+        return iplantResources.generalInfoText();
+    }
+
+    @Override
+    public ImageResource inputTextSingle() {
+        return iplantResources.inputTextSingle();
+    }
+
+    @Override
+    public ImageResource inputTextMulti() {
+        return iplantResources.inputTextMulti();
+    }
+
+    @Override
+    public ImageResource inputCheckBox() {
+        return iplantResources.inputCheckBox();
+    }
+
+    @Override
+    public ImageResource inputEnvVar() {
+        return iplantResources.inputEnvVar();
+    }
+
+    @Override
+    public ImageResource inputNumberInteger() {
+        return iplantResources.inputNumberInteger();
+    }
+
+    @Override
+    public ImageResource inputNumberDouble() {
+        return iplantResources.inputNumberDouble();
+    }
+
+    @Override
+    public ImageResource inputSelectSingle() {
+        return iplantResources.inputSelectSingle();
+    }
+
+    @Override
+    public ImageResource inputSelectInteger() {
+        return iplantResources.inputSelectInteger();
+    }
+
+    @Override
+    public ImageResource inputSelectDouble() {
+        return iplantResources.inputSelectDouble();
+    }
+
+    @Override
+    public ImageResource inputSelectGrouped() {
+        return iplantResources.inputSelectGrouped();
+    }
+
+    @Override
+    public ImageResource outputFileName() {
+        return iplantResources.outputFileName();
+    }
+
+    @Override
+    public ImageResource outputFolderName() {
+        return iplantResources.outputFolderName();
+    }
+
+    @Override
+    public ImageResource outputMultiFile() {
+        return iplantResources.outputMultiFile();
+    }
+
+    @Override
+    public ImageResource referenceGenome() {
+        return iplantResources.referenceGenome();
+    }
+
+    @Override
+    public ImageResource referenceSequence() {
+        return iplantResources.referenceSequence();
+    }
+
+    @Override
+    public ImageResource referenceAnnotation() {
+        return iplantResources.referenceAnnotation();
+    }
+
+    @Override
+    public String fileFolderCategoryTitle() {
+        return appIntegrationMessages.fileFolderCategoryTitle();
+    }
+
+    @Override
+    public String textNumericalInputCategoryTitle() {
+        return appIntegrationMessages.textNumericalInputCategoryTitle();
+    }
+
+    @Override
+    public String listsCategoryTitle() {
+        return appIntegrationMessages.listsCategoryTitle();
+    }
+
+    @Override
+    public String outputCategoryTitle() {
+        return appIntegrationMessages.outputCategoryTitle();
+    }
+
+    @Override
+    public String referenceGenomeCategoryTitle() {
+        return appIntegrationMessages.referenceGenomeCategoryTitle();
+    }
+
+    @Override
+    public String grab() {
+        return style.css().grab();
+    }
 }

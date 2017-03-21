@@ -1,10 +1,8 @@
 package org.iplantc.de.apps.integration.client.view;
 
 import org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids;
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.client.models.apps.integration.ArgumentType;
 import org.iplantc.de.commons.client.widgets.ContextualHelpPopup;
-import org.iplantc.de.resources.client.IplantContextualHelpAccessStyle;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -67,17 +65,13 @@ public class AppIntegrationPalette extends Composite {
         referenceSequence,
         referenceAnnotation;
 
-    private final AppTemplateWizardAppearance appearance;
+    @UiField(provided = true) AppsEditorView.AppsEditorViewAppearance appearance;
     private boolean onlyLabelEditMode;
-    private final IplantContextualHelpAccessStyle style;
     private final AppIntegrationPaletteUiBinder uiBinder = GWT.create(AppIntegrationPaletteUiBinder.class);
 
     @Inject
-    public AppIntegrationPalette(final AppTemplateWizardAppearance appearance,
-                                 final IplantContextualHelpAccessStyle style) {
+    public AppIntegrationPalette(final AppsEditorView.AppsEditorViewAppearance appearance) {
         this.appearance = appearance;
-        this.style = style;
-        style.ensureInjected();
         initWidget(uiBinder.createAndBindUi(this));
 
         setUpDND();
@@ -171,7 +165,7 @@ public class AppIntegrationPalette extends Composite {
 
     @UiFactory
     ToolButton createToolButton() {
-        return new ToolButton(style.contextualHelp());
+        return new ToolButton(appearance.contextualHelp());
     }
 
     @UiHandler({"fileFolderCategoryHelpBtn", "listsCategoryHelpBtn", "textNumericalInputCategoryHelpBtn", "outputCategoryHelpBtn", "referenceGenomeCategoryHelpBtn"})
@@ -191,15 +185,15 @@ public class AppIntegrationPalette extends Composite {
     private SafeHtml getCategoryContextHelp(ToolButton btn) {
         SafeHtml ret = null;
         if (btn == fileFolderCategoryHelpBtn) {
-            ret = appearance.getContextHelpMessages().appCategoryFileInput();
+            ret = appearance.appCategoryFileInput();
         } else if (btn == listsCategoryHelpBtn) {
-            ret = appearance.getContextHelpMessages().appCategoryLists();
+            ret = appearance.appCategoryLists();
         } else if (btn == textNumericalInputCategoryHelpBtn) {
-            ret = appearance.getContextHelpMessages().appCategoryTextInput();
+            ret = appearance.appCategoryTextInput();
         } else if (btn == outputCategoryHelpBtn) {
-            ret = appearance.getContextHelpMessages().appCategoryOutput();
+            ret = appearance.appCategoryOutput();
         } else if (btn == referenceGenomeCategoryHelpBtn) {
-            ret = appearance.getContextHelpMessages().appCategoryReferenceGenome();
+            ret = appearance.appCategoryReferenceGenome();
         }
         return ret;
     }
