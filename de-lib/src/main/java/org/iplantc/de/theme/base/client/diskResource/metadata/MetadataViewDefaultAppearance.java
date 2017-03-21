@@ -261,7 +261,7 @@ public class MetadataViewDefaultAppearance implements MetadataView.Appearance {
     }
 
     @Override
-    public String backgroudStyle() {
+    public String backgroundStyle() {
         return "background:#fff;";
     }
 

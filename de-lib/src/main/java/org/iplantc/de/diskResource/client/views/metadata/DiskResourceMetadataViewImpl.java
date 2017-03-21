@@ -23,6 +23,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
@@ -156,16 +157,16 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
 
     private HashSet<Avu> selectedSet;
     private GridRowEditing<Avu> userGridRowEditing;
-    private final boolean writable;
+    private boolean editable;
     private boolean valid;
     private MetadataView.Presenter presenter;
     private String baseId;
     private CellSelectionModel<Avu> userChxBoxModel;
     private CheckBoxSelectionModel<Avu> addChxBoxModel;
 
-    public DiskResourceMetadataViewImpl(boolean isEditable) {
+    @Inject
+    public DiskResourceMetadataViewImpl() {
         selectedSet = new HashSet<>();
-        writable = isEditable;
         valid = true;
         userChxBoxModel = new CellSelectionModel<>();
         addChxBoxModel = new CheckBoxSelectionModel<Avu>();
@@ -174,12 +175,7 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
         initWidget(uiBinder.createAndBindUi(this));
         alc.setActiveWidget(userMetadataPanel);
         importButton.setToolTip(appearance.importMdTooltip());
-        addMetadataButton.setEnabled(writable);
         deleteMetadataButton.disable();
-        if (writable) {
-            initUserMdGridEditor();
-            new QuickTip(userMdGrid);
-        }
         userMdGrid.setSelectionModel(userChxBoxModel);
         additionalMdgrid.setSelectionModel(addChxBoxModel);
         additionalMdgrid.getSelectionModel()
@@ -191,6 +187,8 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
             }
         });
     }
+
+    
 
 
     @Override
@@ -415,8 +413,8 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
     }
 
     private void setButtonState() {
-        boolean deleteEnabled = (selectedSet.size() > 0) && writable;
-        boolean editEnabled = (selectedSet.size() == 1) && writable;
+        boolean deleteEnabled = (selectedSet.size() > 0) && editable;
+        boolean editEnabled = (selectedSet.size() == 1) && editable;
         deleteMetadataButton.setEnabled(deleteEnabled);
         editMetadataButton.setEnabled(editEnabled);
     }
@@ -529,6 +527,18 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
     public void removeImportedMetadataFromStore(List<Avu> umd) {
         for (Avu md : umd) {
             additionalMdListStore.remove(md);
+        }
+    }
+
+    @Override
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+        if (editable) {
+            addMetadataButton.enable();
+            initUserMdGridEditor();
+            new QuickTip(userMdGrid);
+        } else {
+            addMetadataButton.disable();
         }
     }
 

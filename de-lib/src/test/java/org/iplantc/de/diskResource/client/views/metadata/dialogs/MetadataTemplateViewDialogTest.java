@@ -77,8 +77,9 @@ public class MetadataTemplateViewDialogTest {
         when(attrIteMock.next()).thenReturn(attr1, attr2, attr3);
 
 
-        dialog = new MetadataTemplateViewDialog(presenterMock, templateMdMock, true, attributesMock);
-        dialog.templateTagAtrrMap = templateTagAtrrMapMock;
+        dialog = new MetadataTemplateViewDialog(appearanceMock);
+        dialog.initTemplate(presenterMock, templateMdMock, true, attributesMock);
+        dialog.templateTagAttrMap = templateTagAtrrMapMock;
         dialog.templateTagAvuMap = templateTagAvuMapMock;
         dialog.templateTagFieldMap = templateTagFieldMapMock;
     }

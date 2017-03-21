@@ -3,19 +3,23 @@ package org.iplantc.de.diskResource.client.views.metadata.dialogs;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
 import org.iplantc.de.client.models.diskResources.TemplateAttributeSelectionItem;
+import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.validators.UrlValidator;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.commons.client.widgets.IPlantAnchor;
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.presenters.metadata.MetadataPresenterImpl;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
@@ -51,48 +55,47 @@ import java.util.List;
  * Created by sriram on 5/9/16.
  */
 public class MetadataTemplateViewDialog extends IPlantDialog {
-    final MetadataView.Appearance appearance = GWT.create(MetadataView.Appearance.class);
-    private final MetadataView.Presenter presenter;
+
+
     private VerticalLayoutContainer widget;
     private final DateTimeFormat timestampFormat;
     private boolean writable;
-    FastMap<Avu> templateTagAvuMap;
-    FastMap<MetadataTemplateAttribute> templateTagAtrrMap;
-    FastMap<Field<?>> templateTagFieldMap;
-    List<MetadataTemplateAttribute> attributes;
-    final FastMap<VerticalLayoutContainer> templateAttrVLCMap;
-    List<Avu> templateMd;
     private boolean valid;
 
-    public MetadataTemplateViewDialog(MetadataView.Presenter presenter,
-                                      List<Avu> templateMd,
-                                      boolean writable,
-                                      List<MetadataTemplateAttribute> attributes) {
+    FastMap<Avu> templateTagAvuMap;
+    FastMap<MetadataTemplateAttribute> templateTagAttrMap;
+    FastMap<Field<?>> templateTagFieldMap;
+    List<MetadataTemplateAttribute> attributes;
+    FastMap<VerticalLayoutContainer> templateAttrVLCMap;
+    List<Avu> templateMd;
+    MetadataView.Presenter presenter;
+
+    MetadataView.Appearance appearance;
+
+    @Inject
+    AsyncProviderWrapper<MetadataTermGuideDialog>  termGuideDialogProvider;
+
+    @Inject
+    public MetadataTemplateViewDialog(MetadataView.Appearance appearance) {
         templateTagAvuMap = new FastMap<>();
         templateTagFieldMap = new FastMap<>();
-        templateTagAtrrMap = new FastMap<>();
+        templateTagAttrMap = new FastMap<>();
         templateAttrVLCMap = new FastMap<>();
+        this.appearance = appearance;
         timestampFormat = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT);
-        this.presenter = presenter;
-        this.writable = writable;
-        this.attributes = attributes;
-        this.templateMd = templateMd;
         valid = true;
-
         widget = new VerticalLayoutContainer();
         widget.setScrollMode(ScrollSupport.ScrollMode.AUTOY);
-        widget.getElement().applyStyles(appearance.backgroudStyle());
-        buildAvuMap();
-        initTemplate();
+        widget.getElement().applyStyles(appearance.backgroundStyle());
         add(widget);
     }
 
     public ArrayList<Avu> getMetadataFromTemplate() {
         ArrayList<Avu> avus = new ArrayList<>();
-        templateTagAtrrMap.keySet().forEach(tag -> {
+        templateTagAttrMap.keySet().forEach(tag -> {
             Avu avu = templateTagAvuMap.get(tag);
             if (avu == null) {
-                MetadataTemplateAttribute metadataTemplateAttribute = templateTagAtrrMap.get(tag);
+                MetadataTemplateAttribute metadataTemplateAttribute = templateTagAttrMap.get(tag);
                 avu = MetadataPresenterImpl.newMetadata(metadataTemplateAttribute.getName(),
                                                         "",
                                                         ""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -135,7 +138,7 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
                 mds.forEach(md -> {
                     String tag = getTagForMetadata(md);
                     templateTagAvuMap.put(tag, md);
-                    templateTagAtrrMap.put(tag, attribute);
+                    templateTagAttrMap.put(tag, attribute);
                     // GWT.log(tag + "-->" + attribute.getName());
                 });
             } else {
@@ -144,7 +147,7 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
                                                                                      "")); //$NON-NLS-1$ //$NON-NLS-2$
                 String tag = getTagForMetadata(avu);
                 templateTagAvuMap.put(tag, avu);
-                templateTagAtrrMap.put(tag, attribute);
+                templateTagAttrMap.put(tag, attribute);
                 // GWT.log(tag + "-->" + attribute.getName());
             }
 
@@ -276,12 +279,19 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
     }
 
 
-    private void initTemplate() {
+    public void initTemplate(MetadataView.Presenter presenter, List<Avu> templateMd,
+                               boolean writable,
+                               List<MetadataTemplateAttribute> attributes) {
+        this.presenter = presenter;
+        this.writable = writable;
+        this.attributes = attributes;
+        this.templateMd = templateMd;
         templateTagFieldMap.clear();
+        buildAvuMap();
         addFields();
     }
 
-    public void addMdTermDictionary() {
+    public void addMdTermDictionary(final List<MetadataTemplateAttribute> attributes) {
         IPlantAnchor helpLink = buildHelpLink(attributes);
         HorizontalPanel hp = new HorizontalPanel();
         hp.setSpacing(5);
@@ -290,10 +300,10 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
     }
 
     private void addFields() {
-        templateTagAtrrMap.keySet().forEach(tag -> {
+        templateTagAttrMap.keySet().forEach(tag -> {
             Field<?> field = getAttributeValueWidget(tag);
             templateTagFieldMap.put(tag, field);
-            addFieldToTemplate(tag, templateTagAtrrMap.get(tag), field);
+            addFieldToTemplate(tag, templateTagAttrMap.get(tag), field);
         });
     }
 
@@ -339,7 +349,7 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
                                                                                      "")); //$NON-NLS-1$ //$NON-NLS-2$
                 String newtag = getTagForMetadata(avu);
                 templateTagAvuMap.put(newtag, avu);
-                templateTagAtrrMap.put(newtag, attribute);
+                templateTagAttrMap.put(newtag, attribute);
                 Field<?> field = getAttributeValueWidget(newtag);
                 templateTagFieldMap.put(newtag, field);
                 addFieldToTemplate(newtag, attribute, field);
@@ -350,13 +360,13 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
         remBtn.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
-                templateTagAtrrMap.remove(tag);
+                templateTagAttrMap.remove(tag);
                 templateTagAvuMap.remove(tag);
                 templateTagFieldMap.remove(tag);
                 templateAttrVLCMap.clear();
                 widget.mask(appearance.loading());
                 widget.clear();
-                addMdTermDictionary();
+                addMdTermDictionary(attributes);
                 addFields();
                 widget.unmask();
             }
@@ -382,7 +392,7 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
 
     private boolean canFieldBeRemoved(MetadataTemplateAttribute attribute) {
         List<MetadataTemplateAttribute> attrFilter = new ArrayList<>();
-        templateTagAtrrMap.values().forEach(attr -> {
+        templateTagAttrMap.values().forEach(attr -> {
             if (attr.equals(attribute)) {
                 attrFilter.add(attr);
             }
@@ -400,7 +410,7 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
      * @return Field based on MetadataTemplateAttribute type.
      */
     private Field<?> getAttributeValueWidget(String tag) {
-        MetadataTemplateAttribute attribute = templateTagAtrrMap.get(tag);
+        MetadataTemplateAttribute attribute = templateTagAttrMap.get(tag);
         String type = attribute.getType();
         if (type.equalsIgnoreCase("timestamp")) { //$NON-NLS-1$
             return buildDateField(tag, attribute);
@@ -471,12 +481,20 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
 
                     @Override
                     public void onClick(ClickEvent event) {
-                        MetadataTermGuideDialog w = new MetadataTermGuideDialog(attributes,
-                                                                                appearance,
-                                                                                MetadataTemplateViewDialog.this
-                                                                                        .getHeader()
-                                                                                        .getText());
-                        w.show();
+                        termGuideDialogProvider.get(new AsyncCallback<MetadataTermGuideDialog>() {
+                            @Override
+                            public void onFailure(Throwable throwable) {
+                                ErrorHandler.post(throwable);
+                            }
+
+                            @Override
+                            public void onSuccess(MetadataTermGuideDialog dialog) {
+                                dialog.show(attributes,
+                                       MetadataTemplateViewDialog.this
+                                               .getHeader()
+                                               .getText());
+                            }});
+
 
                     }
                 });

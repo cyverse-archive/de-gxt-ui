@@ -40,7 +40,7 @@ public class MetadataPresenterImplTest {
     private MetadataPresenterImpl presenter;
     @Before
     public void setUp() {
-       presenter = new MetadataPresenterImpl(resource,view,drService);
+       presenter = new MetadataPresenterImpl(view,drService);
     }
 
     @Test

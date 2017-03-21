@@ -58,7 +58,8 @@
                             <toolbar:child>
                                 <button:TextButton ui:field="addMetadataButton"
                                                    text="{appearance.add}"
-                                                   icon="{appearance.addIcon}"/>
+                                                   icon="{appearance.addIcon}"
+                                                   />
                             </toolbar:child>
                             <toolbar:child>
                                 <button:TextButton ui:field="deleteMetadataButton"

@@ -30,17 +30,15 @@ import org.iplantc.de.admin.desktop.client.toolRequest.service.impl.ToolRequestS
 import org.iplantc.de.admin.desktop.client.toolRequest.view.ToolRequestViewImpl;
 import org.iplantc.de.admin.desktop.client.views.BelphegorView;
 import org.iplantc.de.admin.desktop.client.views.BelphegorViewImpl;
-import org.iplantc.de.admin.desktop.client.workshopAdmin.WorkshopAdminView;
-import org.iplantc.de.admin.desktop.client.workshopAdmin.view.WorkshopAdminViewImpl;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.gin.ServicesInjector;
-import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
 import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.client.services.TagsServiceFacade;
+import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 
 import com.google.gwt.inject.client.AbstractGinModule;
