@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.DiskResourceMetadataList;
 import org.iplantc.de.client.models.diskResources.MetadataTemplate;
+import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
@@ -91,7 +92,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter{
         private void updateMetadataFromTemplateView() {
             mdView.mask(I18N.DISPLAY.loadingMask());
             ArrayList<Avu> mdList = mdView.getMetadataFromTemplate();
-            view.updateMetadataFromTemplateView(mdList);
+            view.updateMetadataFromTemplateView(mdList, templateAttributes);
         }
     }
 
@@ -102,6 +103,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter{
     private List<MetadataTemplateInfo> templates;
     private MetadataTemplateViewDialog templateView;
     private List<Avu> userMdList;
+    private List<MetadataTemplateAttribute> templateAttributes;
 
     private MetadataView.Presenter.Appearance appearance =
             GWT.create(MetadataView.Presenter.Appearance.class);
@@ -301,6 +303,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter{
             if (templateView != null) {
                 templateView.hide();
             }
+            templateAttributes = result.getAttributes();
             templateView = new MetadataTemplateViewDialog(MetadataPresenterImpl.this,
                                                           view.getUserMetadata(),
                                                           isWritable(),
@@ -311,6 +314,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter{
             templateView.setHeading(result.getName());
             templateView.setModal(false);
             templateView.setSize("600px", "400px");
+            templateView.addMdTermDictionary();
             templateView.show();
 
         }

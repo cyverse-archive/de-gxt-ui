@@ -1,7 +1,8 @@
 package org.iplantc.de.diskResource.client;
 
-import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.avu.Avu;
+import org.iplantc.de.client.models.diskResources.DiskResource;
+import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetadataUpdateCallback;
 
@@ -86,6 +87,14 @@ public interface MetadataView extends IsWidget {
         ImageResource saveToFileIcon();
 
         String saveMetadataToFile();
+
+        String loading();
+
+        String backgroudStyle();
+
+        String urlGhostText();
+
+        String requiredGhostText();
     }
 
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
@@ -153,7 +162,8 @@ public interface MetadataView extends IsWidget {
 
     void unmask();
 
-    void updateMetadataFromTemplateView(List<Avu> metadataList);
+    void updateMetadataFromTemplateView(List<Avu> metadataList,
+                                        List<MetadataTemplateAttribute> templateAttributes);
 
     List<Avu> getUserMetadata();
 
