@@ -102,6 +102,8 @@ public interface MetadataView extends IsWidget {
 
         final String AVU_BEAN_TAG_MODEL_KEY = "model-key";
 
+        void setViewDebugId(String debugId);
+
         interface Appearance {
 
             String templateListingError();
@@ -126,6 +128,8 @@ public interface MetadataView extends IsWidget {
 
             String importMd();
         }
+
+        boolean isValid();
 
         Avu setAvuModelKey(Avu avu);
 
@@ -174,6 +178,6 @@ public interface MetadataView extends IsWidget {
 
     void removeImportedMetadataFromStore(List<Avu> umd);
 
-    void setEditable(boolean editable);
+    void init(boolean editable);
 
 }

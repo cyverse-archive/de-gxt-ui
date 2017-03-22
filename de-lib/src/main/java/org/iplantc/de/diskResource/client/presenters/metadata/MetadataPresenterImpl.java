@@ -122,6 +122,17 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
         this.view = view;
         this.drService = drService;
         view.setPresenter(this);
+    }
+
+    private void loadMetadata() {
+        drService.getDiskResourceMetaData(resource, new DiskResourceMetadataListAsyncCallback());
+    }
+
+    @Override
+    public void go(HasOneWidget container, final DiskResource selected) {
+        this.resource = selected;
+        view.init(DiskResourceUtil.getInstance().isWritable(selected));
+        container.setWidget(view);
         view.mask();
         drService.getMetadataTemplateListing(new AsyncCallback<List<MetadataTemplateInfo>>() {
             @Override
@@ -136,16 +147,6 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
                 loadMetadata();
             }
         });
-    }
-
-    private void loadMetadata() {
-        drService.getDiskResourceMetaData(resource, new DiskResourceMetadataListAsyncCallback());
-    }
-
-    @Override
-    public void go(HasOneWidget container, final DiskResource selected) {
-        this.resource = selected;
-        container.setWidget(view.asWidget());
     }
 
     @Override
@@ -257,6 +258,16 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
         avu.setUnit(unit);
 
         return avu;
+    }
+
+    @Override
+    public void setViewDebugId(String debugId) {
+        view.asWidget().ensureDebugId(debugId);
+    }
+
+    @Override
+    public boolean isValid() {
+        return view.isValid();
     }
 
     @Override

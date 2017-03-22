@@ -171,11 +171,12 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
         userChxBoxModel = new CellSelectionModel<>();
         addChxBoxModel = new CheckBoxSelectionModel<Avu>();
         props = GWT.create(DiskResourceMetadataProperties.class);
-        init();
+        buildAdditionalMetadataPanel();
+        buildUserMetadataPanel();
+        createColumnModel();
         initWidget(uiBinder.createAndBindUi(this));
         alc.setActiveWidget(userMetadataPanel);
         importButton.setToolTip(appearance.importMdTooltip());
-        deleteMetadataButton.disable();
         userMdGrid.setSelectionModel(userChxBoxModel);
         additionalMdgrid.setSelectionModel(addChxBoxModel);
         additionalMdgrid.getSelectionModel()
@@ -183,13 +184,12 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
         infoLink.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                Window.open(appearance.metadataLink(),"","_blank");
+                Window.open(appearance.metadataLink(), "", "_blank");
             }
         });
+
+
     }
-
-    
-
 
     @Override
     public void mask() {
@@ -261,6 +261,7 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
 
     @UiHandler("addMetadataButton")
     void onAddMetadataSelected(SelectEvent event) {
+        GWT.log("userGridRowEditing in add metadata--->" + userGridRowEditing);
         String attr = getUniqueAttrName(appearance.newAttribute(), 0);
         Avu md =
                 MetadataPresenterImpl.newMetadata(attr, appearance.newValue(), appearance.newUnit());
@@ -413,6 +414,7 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
     }
 
     private void setButtonState() {
+        addMetadataButton.setEnabled(editable);
         boolean deleteEnabled = (selectedSet.size() > 0) && editable;
         boolean editEnabled = (selectedSet.size() == 1) && editable;
         deleteMetadataButton.setEnabled(deleteEnabled);
@@ -475,10 +477,14 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
         });
     }
 
-    private void init() {
-        buildAdditionalMetadataPanel();
-        buildUserMetadataPanel();
-        createColumnModel();
+    @Override
+    public void init(boolean editable) {
+        this.editable = editable;
+        if (editable) {
+            initUserMdGridEditor();
+            new QuickTip(userMdGrid);
+        }
+        setButtonState();
     }
 
     private Widget getCollapseBtn(ContentPanel panel) {
@@ -499,7 +505,6 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
         templateAttributes.forEach(ta -> {
             userMdListStore.getAll().forEach(umd -> {
                 if (ta.getName().equals(umd.getAttribute())) {
-                    GWT.log("attribute removed --> " + umd.getAttribute());
                    toRemove.add(umd);
                 }
             });
@@ -530,17 +535,6 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
         }
     }
 
-    @Override
-    public void setEditable(boolean editable) {
-        this.editable = editable;
-        if (editable) {
-            addMetadataButton.enable();
-            initUserMdGridEditor();
-            new QuickTip(userMdGrid);
-        } else {
-            addMetadataButton.disable();
-        }
-    }
 
     @Override
     public boolean isDirty() {

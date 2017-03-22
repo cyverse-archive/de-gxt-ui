@@ -129,7 +129,6 @@ public class DiskResourceGinModule extends AbstractGinModule {
 
         install(new GinFactoryModuleBuilder().build(BulkMetadataDialogFactory.class));
 
-
         bind(MetadataView.class).to(DiskResourceMetadataViewImpl.class);
         bind(MetadataView.Presenter.class).to(MetadataPresenterImpl.class);
 
