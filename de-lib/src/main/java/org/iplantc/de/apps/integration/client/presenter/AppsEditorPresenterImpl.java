@@ -1,6 +1,7 @@
 package org.iplantc.de.apps.integration.client.presenter;
 
 import org.iplantc.de.apps.client.events.AppSavedEvent;
+import org.iplantc.de.apps.integration.client.model.ArgumentProperties;
 import org.iplantc.de.apps.integration.client.view.dialogs.CommandLineOrderingDialog;
 import org.iplantc.de.apps.integration.client.view.dialogs.CommandLineOrderingView;
 import org.iplantc.de.apps.integration.client.events.ArgumentOrderSelected;
@@ -322,6 +323,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
     }
 
     private final AppTemplateUtils appTemplateUtils;
+    private ArgumentProperties argProps;
     private final List<HandlerRegistration> handlerRegistrations = Lists.newArrayList();
 
     public static native void doJsonFormattting(XElement textArea,String val,int width, int height) /*-{
@@ -366,7 +368,8 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
                             final UUIDServiceAsync uuidService,
                             final AppsEditorView.AppsEditorViewAppearance appearance,
                             final IplantAnnouncer announcer,
-                            final AppTemplateUtils appTemplateUtils) {
+                            final AppTemplateUtils appTemplateUtils,
+                            ArgumentProperties argProps) {
         this.view = view;
         this.eventBus = eventBus;
         this.atService = atService;
@@ -374,6 +377,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
         this.appearance = appearance;
         this.announcer = announcer;
         this.appTemplateUtils = appTemplateUtils;
+        this.argProps = argProps;
 
         setUpHandlers(view);
     }
@@ -572,17 +576,42 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
 
                     @Override
                     public void onSuccess(CommandLineOrderingDialog dialog) {
-                        CommandLineOrderingView
-                                clop = new CommandLineOrderingView(allTemplateArguments, AppsEditorPresenterImpl.this, null, result);
-                        clop.setSize("640", "480");
-                        dialog.add(clop);
-                        dialog.show();
+                        List<Argument> argumentList =
+                                createArgumentList(allTemplateArguments, result);
+                        dialog.show(argumentList);
+
                     }
                 });
 
             }
         });
     }
+
+    List<Argument> createArgumentList(List<Argument> arguments, ArrayList<String> uuids) {
+        List<Argument> orderedArguments = Lists.newArrayList();
+        for (Argument arg : arguments) {
+            if (Strings.isNullOrEmpty(arg.getId())) {
+                if (!uuids.isEmpty()) {
+                    arg.setId(uuids.remove(0));
+                }
+            }
+            if (orderingRequired(arg)) {
+                Integer order = arg.getOrder();
+
+                // JDS If the order is null or 0, set it to a number higher than the length of the
+                // list to ensure that already numbered arguments are sorted into their appropriate
+                // places
+                if ((order == null) || (order <= 0)) {
+                    arg.setOrder(arguments.size() + 1);
+                }
+
+                orderedArguments.add(arg);
+            }
+        }
+        return orderedArguments;
+    }
+
+
 
     @Override
     public void onBeforeHide(final BeforeHideEvent event) {

@@ -8,6 +8,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -70,14 +71,13 @@ public class CommandLineOrderingView extends Composite {
     @UiField
     Grid<Argument> orderedGrid;
 
-    @UiField(provided = true)
-    ListStore<Argument> orderedStore;
+    @UiField ListStore<Argument> orderedStore;
 
     private final ArgumentProperties argProps;
 
     private final AppsEditorView.AppsEditorViewAppearance appearance;
 
-    private final StoreSortInfo<Argument> orderStoreSortInfo;
+    private StoreSortInfo<Argument> orderStoreSortInfo;
 
     private final AppsEditorView.Presenter presenter;
 
@@ -90,7 +90,6 @@ public class CommandLineOrderingView extends Composite {
         argProps = GWT.create(ArgumentProperties.class);
         orderStoreSortInfo = new StoreSortInfo<Argument>(argProps.order(), SortDir.ASC);
         initColumnModels();
-        initListStores(arguments);
         initWidget(BINDER.createAndBindUi(this));
 
         new GridDragSource<Argument>(orderedGrid);
@@ -121,36 +120,13 @@ public class CommandLineOrderingView extends Composite {
         cm = new ColumnModel<Argument>(cmList);
     }
 
-    private void initListStores(List<Argument> arguments) {
-        orderedStore = new ListStore<Argument>(argProps.id());
-        for (Argument arg : arguments) {
-            if (Strings.isNullOrEmpty(arg.getId())) {
-                if (!uuids.isEmpty()) {
-                    arg.setId(uuids.remove(0));
-                }
-            }
-            if (presenter.orderingRequired(arg)) {
-                Integer order = arg.getOrder();
-
-                // JDS If the order is null or 0, set it to a number higher than the length of the
-                // list to ensure that already numbered arguments are sorted into their appropriate
-                // places
-                if ((order == null) || (order <= 0)) {
-                    arg.setOrder(arguments.size() + 1);
-                }
-
-                orderedStore.add(arg);
-            }
-        }
-        // Set store sort info
-        orderedStore.addSortInfo(orderStoreSortInfo);
-
-        // JDS Immediately clear sort info. Otherwise, sorts will be applied when items are added to the
-        // store during DnD.
-        orderedStore.clearSortInfo();
-
-        updateArgumentOrdering();
-
+    @UiFactory
+    public ListStore<Argument> createListStore() {
+        ListStore<Argument> listStore = new ListStore<Argument>(argProps.id());
+        orderStoreSortInfo = new StoreSortInfo<Argument>(argProps.order(), SortDir.ASC);
+        listStore.addSortInfo(orderStoreSortInfo);
+        listStore.clearSortInfo();
+        return listStore;
     }
 
     /**
