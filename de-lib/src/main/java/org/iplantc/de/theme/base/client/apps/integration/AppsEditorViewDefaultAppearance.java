@@ -340,4 +340,14 @@ public class AppsEditorViewDefaultAppearance implements AppsEditorView.AppsEdito
     public String grab() {
         return style.css().grab();
     }
+
+    @Override
+    public String commandLineDialogWidth() {
+        return "640";
+    }
+
+    @Override
+    public String commandLineDialogHeight() {
+        return "480";
+    }
 }

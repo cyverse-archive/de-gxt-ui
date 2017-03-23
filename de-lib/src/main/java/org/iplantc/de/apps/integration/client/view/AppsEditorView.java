@@ -157,6 +157,10 @@ public interface AppsEditorView extends IsWidget,
         String referenceGenomeCategoryTitle();
 
         String grab();
+
+        String commandLineDialogWidth();
+
+        String commandLineDialogHeight();
     }
     
     public interface Presenter extends BeforeHideHandler,
