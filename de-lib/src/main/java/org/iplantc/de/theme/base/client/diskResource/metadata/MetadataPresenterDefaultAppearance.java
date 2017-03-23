@@ -5,6 +5,7 @@ import org.iplantc.de.resources.client.IplantResources;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
 
 public class MetadataPresenterDefaultAppearance implements MetadataView.Presenter.Appearance {
 
@@ -57,12 +58,12 @@ public class MetadataPresenterDefaultAppearance implements MetadataView.Presente
 		return iplantResources.info();
 	}
 
-	public String importMdMsg() {
+	public SafeHtml importMdMsg() {
 		return displayStrings.importMdMsg();
 	}
 
 	@Override
-	public String importMd() {
+	public SafeHtml importMd() {
 		return displayStrings.importMd();
 	}
 }

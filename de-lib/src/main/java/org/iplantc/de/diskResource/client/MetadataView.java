@@ -69,7 +69,7 @@ public interface MetadataView extends IsWidget {
 
         String selectTemplate();
 
-        String importMd();
+        SafeHtml importMd();
 
         String panelWidth();
 
@@ -96,6 +96,8 @@ public interface MetadataView extends IsWidget {
         String urlGhostText();
 
         String requiredGhostText();
+
+        String importUMdBtnText();
     }
 
     public interface Presenter {
@@ -124,9 +126,9 @@ public interface MetadataView extends IsWidget {
 
             ImageResource info();
 
-            String importMdMsg();
+            SafeHtml importMdMsg();
 
-            String importMd();
+            SafeHtml importMd();
         }
 
         boolean isValid();

@@ -43,29 +43,30 @@
         <ui:attributes stripeRows="true"></ui:attributes>
     </ui:with>
 
-    <ui:with
-            type="com.sencha.gxt.widget.core.client.container.AccordionLayoutContainer.AccordionLayoutAppearance"
-            field="aLayoutAppearance"/>
+    <ui:with type="com.sencha.gxt.widget.core.client.TabItemConfig" field="userMdTabConfig">
+        <ui:attributes text="{appearance.userMetadata}"/>
+    </ui:with>
 
-    <container:BorderLayoutContainer ui:field="con"
-                                     borders="true">
+    <ui:with type="com.sencha.gxt.widget.core.client.TabItemConfig" field="additionalMdTabConfig">
+        <ui:attributes text="{appearance.additionalMetadata}"/>
+    </ui:with>
 
-        <container:AccordionLayoutContainer ui:field="alc" expandMode="SINGLE_FILL">
-            <gxt:ContentPanel ui:field="userMetadataPanel">
-                <container:VerticalLayoutContainer>
+        <gxt:TabPanel ui:field="panel">
+            <gxt:child config="{userMdTabConfig}">
+                <container:VerticalLayoutContainer scrollMode="AUTO">
                     <container:child layoutData="{toolBarLayoutData}">
                         <toolbar:ToolBar ui:field="toolbar">
                             <toolbar:child>
                                 <button:TextButton ui:field="addMetadataButton"
                                                    text="{appearance.add}"
                                                    icon="{appearance.addIcon}"
-                                                   />
+                                />
                             </toolbar:child>
                             <toolbar:child>
                                 <button:TextButton ui:field="deleteMetadataButton"
                                                    text="{appearance.delete}"
                                                    icon="{appearance.deleteIcon}"
-                                                    enabled="false"/>
+                                                   enabled="false"/>
                             </toolbar:child>
                             <toolbar:child>
                                 <button:TextButton ui:field="editMetadataButton"
@@ -88,36 +89,38 @@
                         </toolbar:ToolBar>
                     </container:child>
                     <container:child layoutData="{gridLayoutData}">
-                        <grid:Grid ui:field="userMdGrid" store="{userMdListStore}" cm="{ucm}"
-                                   view="{uview}"
-                                   borders="false" columnReordering="false"
-                        />
+                            <grid:Grid ui:field="userMdGrid" store="{userMdListStore}" cm="{ucm}"
+                                       view="{uview}"
+                                       borders="false" columnReordering="false"
+                            />
                     </container:child>
+
                 </container:VerticalLayoutContainer>
-            </gxt:ContentPanel>
-            <gxt:ContentPanel ui:field="additionalMetadataPanel">
-                <container:VerticalLayoutContainer>
+            </gxt:child>
+            <gxt:child config="{additionalMdTabConfig}">
+                <container:VerticalLayoutContainer scrollMode="AUTO">
                     <container:child layoutData="{toolBarLayoutData}">
                         <toolbar:ToolBar ui:field="otherToolbar">
                             <toolbar:child>
                                 <button:TextButton ui:field="importButton"
-                                                   text="{appearance.importMd}"
+                                                   text="{appearance.importUMdBtnText}"
                                                    icon="{appearance.addIcon}"
-                                                    enabled="false"/>
+                                                   enabled="false"/>
                             </toolbar:child>
                             <toolbar:child>
-                                <widget:IPlantAnchor ui:field="infoLink" text="{appearance.readMore}"></widget:IPlantAnchor>
+                                <widget:IPlantAnchor ui:field="infoLink"
+                                                     text="{appearance.readMore}"></widget:IPlantAnchor>
                             </toolbar:child>
                         </toolbar:ToolBar>
                     </container:child>
                     <container:child layoutData="{gridLayoutData}">
-                        <grid:Grid ui:field="additionalMdgrid" store="{additionalMdListStore}" cm="{acm}"
-                                   view="{aview}"
-                                   borders="false" columnReordering="false"
-                        />
+                            <grid:Grid ui:field="additionalMdgrid" store="{additionalMdListStore}"
+                                       cm="{acm}"
+                                       view="{aview}"
+                                       borders="false" columnReordering="false"
+                            />
                     </container:child>
                 </container:VerticalLayoutContainer>
-            </gxt:ContentPanel>
-        </container:AccordionLayoutContainer>
-    </container:BorderLayoutContainer>
-</ui:UiBinder>
+            </gxt:child>
+        </gxt:TabPanel>
+ </ui:UiBinder>

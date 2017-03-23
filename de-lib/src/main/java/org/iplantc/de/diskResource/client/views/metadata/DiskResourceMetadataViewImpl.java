@@ -30,15 +30,12 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.sencha.gxt.cell.core.client.form.CheckBoxCell;
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.core.client.dom.XElement;
-import com.sencha.gxt.core.client.resources.ThemeStyles;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.widget.core.client.Composite;
-import com.sencha.gxt.widget.core.client.ContentPanel;
+import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.button.TextButton;
-import com.sencha.gxt.widget.core.client.container.AccordionLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.AccordionLayoutContainer.AccordionLayoutAppearance;
-import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.CompleteEditEvent;
 import com.sencha.gxt.widget.core.client.event.CompleteEditEvent.CompleteEditHandler;
 import com.sencha.gxt.widget.core.client.event.InvalidEvent;
@@ -63,6 +60,7 @@ import com.sencha.gxt.widget.core.client.tips.QuickTip;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -116,8 +114,6 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
     @UiField
     TextButton addMetadataButton;
     @UiField
-    BorderLayoutContainer con;
-    @UiField
     TextButton deleteMetadataButton;
     @UiField
     ToolBar toolbar;
@@ -127,12 +123,7 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
     TextButton importButton;
     @UiField
     TextButton editMetadataButton;
-    @UiField
-    AccordionLayoutContainer alc;
-    @UiField(provided = true)
-    ContentPanel userMetadataPanel;
-    @UiField(provided = true)
-    ContentPanel additionalMetadataPanel;
+
     @UiField
     ListStore<Avu> userMdListStore;
     @UiField
@@ -153,6 +144,8 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
     IPlantAnchor infoLink;
     @UiField
     TextButton saveToFileButton;
+    @UiField
+    TabPanel panel;
 
 
     private HashSet<Avu> selectedSet;
@@ -171,11 +164,8 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
         userChxBoxModel = new CellSelectionModel<>();
         addChxBoxModel = new CheckBoxSelectionModel<Avu>();
         props = GWT.create(DiskResourceMetadataProperties.class);
-        buildAdditionalMetadataPanel();
-        buildUserMetadataPanel();
         createColumnModel();
         initWidget(uiBinder.createAndBindUi(this));
-        alc.setActiveWidget(userMetadataPanel);
         importButton.setToolTip(appearance.importMdTooltip());
         userMdGrid.setSelectionModel(userChxBoxModel);
         additionalMdgrid.setSelectionModel(addChxBoxModel);
@@ -193,12 +183,12 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
 
     @Override
     public void mask() {
-        con.mask(appearance.loadingMask());
+        panel.mask(appearance.loadingMask());
     }
 
     @Override
     public void unmask() {
-        con.unmask();
+        panel.unmask();
     }
 
 
@@ -216,8 +206,8 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
     @Override
     public void loadMetadata(final List<Avu> metadataList) {
         if (metadataList == null || metadataList.size() == 0) {
-            alc.remove(additionalMetadataPanel);
-            alc.forceLayout();
+            panel.remove(1);
+            panel.forceLayout();
             return;
         }
         additionalMdListStore.clear();
@@ -261,10 +251,8 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
 
     @UiHandler("addMetadataButton")
     void onAddMetadataSelected(SelectEvent event) {
-        GWT.log("userGridRowEditing in add metadata--->" + userGridRowEditing);
         String attr = getUniqueAttrName(appearance.newAttribute(), 0);
-        Avu md =
-                MetadataPresenterImpl.newMetadata(attr, appearance.newValue(), appearance.newUnit());
+        Avu md = MetadataPresenterImpl.newMetadata(attr, appearance.newValue(), appearance.newUnit());
         presenter.setAvuModelKey(md);
         userMdListStore.add(0, md);
         userGridRowEditing.startEditing(new GridCell(0, 1));
@@ -273,16 +261,18 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
     @UiHandler("deleteMetadataButton")
     void onDeleteMetadataSelected(SelectEvent event) {
         for (Avu md : selectedSet) {
-          userMdListStore.remove(md);
+            userMdListStore.remove(md);
         }
 
         //remove deleted items
         selectedSet.clear();
+        setButtonState();
     }
+
     @UiHandler("editMetadataButton")
     void onEditMetadataSelected(SelectEvent event) {
         int row = uview.findRowIndex(uview.getRow(selectedSet.iterator().next()));
-        userGridRowEditing.startEditing(new GridCell(row,1));
+        userGridRowEditing.startEditing(new GridCell(row, 1));
         userGridRowEditing.getEditor(userMdGrid.getColumnModel().getColumn(1)).validate(false);
     }
 
@@ -299,52 +289,33 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
 
     @UiHandler("saveToFileButton")
     void onSaveToFileButtonSelected(SelectEvent event) {
-         presenter.onSaveToFile();
+        presenter.onSaveToFile();
     }
 
     private void setUserMetadataDebugIds() {
-        userMetadataPanel.ensureDebugId(baseId + MetadataIds.USER_METADATA);
-        getCollapseBtn(userMetadataPanel).ensureDebugId(
-                baseId + MetadataIds.USER_METADATA + MetadataIds.USER_METADATA_COLLAPSE);
+        panel.getWidget(0).ensureDebugId(baseId + MetadataIds.USER_METADATA);
     }
-
-    void buildUserMetadataPanel() {
-        userMetadataPanel = new ContentPanel(accordionLayoutAppearance);
-        userMetadataPanel.setSize(appearance.panelWidth(), appearance.panelHeight());
-        userMetadataPanel.setCollapsible(true);
-        userMetadataPanel.getHeader().addStyleName(ThemeStyles.get().style().borderTop());
-        userMetadataPanel.setHeading(appearance.boldHeader(appearance.userMetadata()));
-    }
-
-    void buildAdditionalMetadataPanel() {
-        additionalMetadataPanel = new ContentPanel(accordionLayoutAppearance);
-        additionalMetadataPanel.setSize(appearance.panelWidth(), appearance.panelHeight());
-        additionalMetadataPanel.setCollapsible(true);
-        additionalMetadataPanel.getHeader().addStyleName(ThemeStyles.get().style().borderTop());
-        additionalMetadataPanel.setHeading(appearance.boldHeader(appearance.additionalMetadata()));
-    }
-
 
     void createColumnModel() {
         List<ColumnConfig<Avu, ?>> columns = Lists.newArrayList();
 
 
         ColumnConfig<Avu, Boolean> selectColumn = new ColumnConfig<>(new ValueProvider<Avu, Boolean>() {
-           @Override
+            @Override
             public Boolean getValue(Avu object) {
                 return selectedSet.contains(object);
             }
 
             @Override
             public void setValue(Avu object, Boolean value) {
-               //do nothing
+                //do nothing
             }
 
             @Override
             public String getPath() {
                 return "SelectCheckBox";
             }
-        },30,"");
+        }, 30, "");
         ColumnConfig<Avu, String> attributeColumn =
                 new ColumnConfig<>(props.attribute(), 150, appearance.attribute());
         ColumnConfig<Avu, String> valueColumn =
@@ -377,7 +348,7 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
 
         List<ColumnConfig<Avu, ?>> addMdCols = Lists.newArrayList();
         addMdCols.add(addChxBoxModel.getColumn());
-        addMdCols.addAll(columns);
+        addMdCols.addAll(Arrays.asList(attributeColumn, valueColumn, unitColumn));
         acm = new ColumnModel<>(addMdCols);
 
     }
@@ -387,9 +358,9 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
             @Override
             protected void onClick(XElement parent, final NativeEvent event) {
                 super.onClick(parent, event);
-                Avu avu =  userChxBoxModel.getSelectedItem();
+                Avu avu = userChxBoxModel.getSelectedItem();
                 if (!selectedSet.remove(avu)) {
-                   selectedSet.add(avu);
+                    selectedSet.add(avu);
                 }
                 setButtonState();
             }
@@ -421,12 +392,6 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
         editMetadataButton.setEnabled(editEnabled);
     }
 
-    private void expandUserMetadataPanel() {
-        if (userMetadataPanel.isCollapsed()) {
-            userMetadataPanel.expand();
-        }
-    }
-
     private String getUniqueAttrName(String attrName, int i) {
         String retName = i > 0 ? attrName + "_(" + i + ")" : attrName;
         for (Avu md : additionalMdListStore.getAll()) {
@@ -444,7 +409,7 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
 
         userMdListStore.setAutoCommit(true);
 
-        ColumnConfig<Avu,Boolean> column0 = userMdGrid.getColumnModel().getColumn(0);
+        ColumnConfig<Avu, Boolean> column0 = userMdGrid.getColumnModel().getColumn(0);
         ColumnConfig<Avu, String> column1 = userMdGrid.getColumnModel().getColumn(1);
         ColumnConfig<Avu, String> column2 = userMdGrid.getColumnModel().getColumn(2);
         ColumnConfig<Avu, String> column3 = userMdGrid.getColumnModel().getColumn(3);
@@ -465,14 +430,14 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
 
             @Override
             public void onCompleteEdit(CompleteEditEvent<Avu> event) {
-              dirty = true;
-              for (Avu avu : userMdListStore.getAll()) {
-                  if(Strings.isNullOrEmpty(avu.getAttribute())) {
-                      valid = false;
-                      return;
-                  }
-              }
-              valid = true;
+                dirty = true;
+                for (Avu avu : userMdListStore.getAll()) {
+                    if (Strings.isNullOrEmpty(avu.getAttribute())) {
+                        valid = false;
+                        return;
+                    }
+                }
+                valid = true;
             }
         });
     }
@@ -485,10 +450,6 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
             new QuickTip(userMdGrid);
         }
         setButtonState();
-    }
-
-    private Widget getCollapseBtn(ContentPanel panel) {
-        return panel.getHeader().getTool(0);
     }
 
     @Override
@@ -505,7 +466,7 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
         templateAttributes.forEach(ta -> {
             userMdListStore.getAll().forEach(umd -> {
                 if (ta.getName().equals(umd.getAttribute())) {
-                   toRemove.add(umd);
+                    toRemove.add(umd);
                 }
             });
         });
@@ -526,6 +487,7 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
     @Override
     public void addToUserMetadata(List<Avu> umd) {
         userMdListStore.addAll(umd);
+        userMdGrid.getView().refresh(false);
     }
 
     @Override

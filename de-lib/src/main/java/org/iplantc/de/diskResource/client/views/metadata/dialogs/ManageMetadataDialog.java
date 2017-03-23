@@ -10,7 +10,6 @@ import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetad
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 import org.iplantc.de.resources.client.messages.I18N;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
 
@@ -31,7 +30,6 @@ public class ManageMetadataDialog extends IPlantDialog {
     private boolean canHide;
 
     MetadataView.Presenter mdPresenter;
-  //  MetadataView mView;
 
     @Inject
     ManageMetadataDialog(MetadataView.Presenter mdPresenter,

@@ -206,7 +206,7 @@ public class MetadataViewDefaultAppearance implements MetadataView.Appearance {
     }
 
     @Override
-    public String importMd() {
+    public SafeHtml importMd() {
         return displayStrings.importMd();
     }
 
@@ -273,5 +273,10 @@ public class MetadataViewDefaultAppearance implements MetadataView.Appearance {
     @Override
     public String requiredGhostText() {
         return displayStrings.requiredGhostText();
+    }
+
+    @Override
+    public String importUMdBtnText() {
+        return displayStrings.importUMdBtnText();
     }
 }
