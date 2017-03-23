@@ -184,7 +184,7 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView,
          * out the handler below, and drag a new argument group to the app wizard. The behaviour is
          * abrasive and jarring to the user.
          */
-        palette.grpDragSource.addDragStartHandler(new DndDragStartHandler() {
+        palette.addDragStartHandler(new DndDragStartHandler() {
 
             @Override
             public void onDragStart(DndDragStartEvent event) {

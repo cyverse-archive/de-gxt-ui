@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.apps.integration.ArgumentType;
 import org.iplantc.de.commons.client.widgets.ContextualHelpPopup;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
@@ -15,6 +16,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.dnd.core.client.DndDragStartEvent;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.button.ToolButton;
@@ -27,7 +29,7 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
  * @author jstroot
  * 
  */
-public class AppIntegrationPalette extends Composite {
+public class AppIntegrationPalette extends Composite implements DndDragStartEvent.HasDndDragStartHandlers {
 
     interface AppIntegrationPaletteUiBinder extends UiBinder<Widget, AppIntegrationPalette> {}
 
@@ -198,4 +200,8 @@ public class AppIntegrationPalette extends Composite {
         return ret;
     }
 
+    @Override
+    public HandlerRegistration addDragStartHandler(DndDragStartEvent.DndDragStartHandler handler) {
+        return grpDragSource.addDragStartHandler(handler);
+    }
 }
