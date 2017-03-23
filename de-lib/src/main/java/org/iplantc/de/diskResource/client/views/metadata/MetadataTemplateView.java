@@ -172,7 +172,6 @@ public class MetadataTemplateView implements IsWidget {
                     String tag = getTagForMetadata(md);
                     templateTagAvuMap.put(tag, md);
                     templateTagAttrMap.put(tag, attribute);
-                    // GWT.log(tag + "-->" + attribute.getName());
                 });
             } else {
                 Avu avu = presenter.setAvuModelKey(MetadataPresenterImpl.newMetadata(attribute.getName(),
@@ -181,7 +180,6 @@ public class MetadataTemplateView implements IsWidget {
                 String tag = getTagForMetadata(avu);
                 templateTagAvuMap.put(tag, avu);
                 templateTagAttrMap.put(tag, attribute);
-                // GWT.log(tag + "-->" + attribute.getName());
             }
 
         }

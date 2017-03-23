@@ -183,12 +183,12 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
 
     @Override
     public void mask() {
-        panel.mask(appearance.loadingMask());
+        userMdGrid.mask(appearance.loadingMask());
     }
 
     @Override
     public void unmask() {
-        panel.unmask();
+        userMdGrid.unmask();
     }
 
 
