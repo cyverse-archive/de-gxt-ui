@@ -1,5 +1,7 @@
 package org.iplantc.de.apps.integration.client.view;
 
+import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent;
+import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent;
 import org.iplantc.de.apps.integration.client.model.ArgumentPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.ArgumentGroupPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.DecimalInputPropertyEditor;
@@ -38,6 +40,7 @@ import org.iplantc.de.commons.client.widgets.ContextualHelpPopup;
 
 import com.google.common.collect.Maps;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
@@ -62,7 +65,9 @@ import com.sencha.gxt.widget.core.client.form.TextArea;
 
 import java.util.Map;
 
-public class AppsEditorViewImpl extends Composite implements AppsEditorView {
+public class AppsEditorViewImpl extends Composite implements AppsEditorView,
+                                                             DeleteArgumentGroupEvent.DeleteArgumentGroupEventHandler,
+                                                             UpdateCommandLinePreviewEvent.UpdateCommandLinePreviewEventHandler {
 
     @UiTemplate("AppsEditorView.ui.xml")
     interface AppsIntegrationViewImplUiBinder extends UiBinder<Widget, AppsEditorViewImpl> {}
@@ -148,7 +153,6 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView {
     private final ContentPanel defaultDetailsPanel;
     private final AppsEditorView.EditorDriver editorDriver;
 
-    private Presenter presenter;
     private final Map<Object, ArgumentPropertyEditor> propertyEditorMap = Maps.newHashMap();
 
     @Inject
@@ -266,7 +270,7 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView {
 
         if (argGrpPropertyEditor == null) {
             argGrpPropertyEditor = argGrpPropEditorProvider.get();
-            argGrpPropertyEditor.addDeleteArgumentGroupEventHandler(presenter);
+            argGrpPropertyEditor.addDeleteArgumentGroupEventHandler(this);
         }
 
         argGrpPropertyEditor.edit(selectedArgumentGroup, event.getAbsoluteEditorPath());
@@ -428,7 +432,7 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView {
                     break;
             }
 
-            currArgumentPropEditor.addUpdateCommandLinePreviewEventHandler(presenter);
+            currArgumentPropEditor.addUpdateCommandLinePreviewEventHandler(this);
         } else {
             currArgumentPropEditor = propertyEditorMap.get(type);
             currArgumentPropEditor.edit(selectedArgument);
@@ -443,7 +447,7 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView {
             ArgumentEditor currArgEditor = (ArgumentEditor)event.getSource();
             currArgumentPropEditor.setBoundArgumentEditor(currArgEditor);
 
-            currArgumentPropEditor.setLabelOnlyEditMode(presenter.isLabelOnlyEditMode());
+            currArgumentPropEditor.setLabelOnlyEditMode(palette.getOnlyLabelEditMode());
         }
 
     }
@@ -467,15 +471,6 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView {
         palette.setOnlyLabelEditMode(onlyLabelEditMode);
     }
 
-    @Override
-    public void setPresenter(AppsEditorView.Presenter presenter) {
-        this.presenter = presenter;
-        toolbar.addArgumentOrderSelectedHandler(presenter);
-        toolbar.addPreviewJsonSelectedHandler(presenter);
-        toolbar.addPreviewAppSelectedHandler(presenter);
-        toolbar.addSaveAppSelectedHandler(presenter);
-    }
-
     @UiFactory
     ToolButton createToolBtn() {
         final ToolButton toolButton = new ToolButton(appearance.contextualHelp());
@@ -491,4 +486,23 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView {
         return toolButton;
     }
 
+    @Override
+    public void doArgumentGroupDelete(DeleteArgumentGroupEvent event) {
+        fireEvent(event);
+    }
+
+    @Override
+    public void onUpdateCommandLinePreview(UpdateCommandLinePreviewEvent event) {
+        fireEvent(event);
+    }
+
+    @Override
+    public HandlerRegistration addDeleteArgumentGroupEventHandler(DeleteArgumentGroupEvent.DeleteArgumentGroupEventHandler handler) {
+        return addHandler(handler, DeleteArgumentGroupEvent.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addUpdateCommandLinePreviewEventHandler(UpdateCommandLinePreviewEvent.UpdateCommandLinePreviewEventHandler handler) {
+        return addHandler(handler, UpdateCommandLinePreviewEvent.TYPE);
+    }
 }

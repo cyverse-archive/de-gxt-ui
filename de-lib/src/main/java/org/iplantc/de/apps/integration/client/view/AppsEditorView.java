@@ -1,10 +1,12 @@
 package org.iplantc.de.apps.integration.client.view;
 
 import org.iplantc.de.apps.integration.client.events.ArgumentOrderSelected;
+import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent.DeleteArgumentGroupEventHandler;
 import org.iplantc.de.apps.integration.client.events.PreviewAppSelected;
 import org.iplantc.de.apps.integration.client.events.PreviewJsonSelected;
 import org.iplantc.de.apps.integration.client.events.SaveAppSelected;
+import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent;
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent.UpdateCommandLinePreviewEventHandler;
 import org.iplantc.de.apps.integration.client.view.widgets.AppTemplatePropertyEditor;
 import org.iplantc.de.apps.widgets.client.events.AppTemplateSelectedEvent.AppTemplateSelectedEventHandler;
@@ -31,7 +33,13 @@ import com.sencha.gxt.widget.core.client.event.BeforeHideEvent.BeforeHideHandler
  * @author jstroot
  *
  */
-public interface AppsEditorView extends IsWidget, Editor<AppTemplate>, ArgumentSelectedEventHandler, ArgumentGroupSelectedEventHandler, AppTemplateSelectedEventHandler {
+public interface AppsEditorView extends IsWidget,
+                                        Editor<AppTemplate>,
+                                        ArgumentSelectedEventHandler,
+                                        ArgumentGroupSelectedEventHandler,
+                                        AppTemplateSelectedEventHandler,
+                                        DeleteArgumentGroupEvent.HasDeleteArgumentGroupEventHandlers,
+                                        UpdateCommandLinePreviewEvent.HasUpdateCommandLinePreviewEventHandlers {
     
     interface EditorDriver extends SimpleBeanEditorDriver<AppTemplate, AppsEditorView> {
     }
@@ -217,7 +225,5 @@ public interface AppsEditorView extends IsWidget, Editor<AppTemplate>, ArgumentS
     void setEastWidget(IsWidget widget);
 
     void setOnlyLabelEditMode(boolean onlyLabelEditMode);
-
-    void setPresenter(Presenter presenter);
 
 }

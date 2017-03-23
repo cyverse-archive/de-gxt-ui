@@ -17,6 +17,7 @@ import org.iplantc.de.apps.integration.client.presenter.visitors.InitializeArgum
 import org.iplantc.de.apps.integration.client.presenter.visitors.InitializeArgumentGroupEventManagement;
 import org.iplantc.de.apps.integration.client.presenter.visitors.InitializeDragAndDrop;
 import org.iplantc.de.apps.integration.client.presenter.visitors.RegisterEventHandlers;
+import org.iplantc.de.apps.integration.client.view.AppEditorToolbar;
 import org.iplantc.de.apps.integration.client.view.AppsEditorView;
 import org.iplantc.de.apps.widgets.client.events.ArgumentAddedEvent;
 import org.iplantc.de.apps.widgets.client.events.ArgumentAddedEvent.ArgumentAddedEventHandler;
@@ -370,7 +371,19 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
         this.appearance = appearance;
         this.announcer = announcer;
         this.appTemplateUtils = appTemplateUtils;
-        view.setPresenter(this);
+
+        setUpHandlers(view);
+    }
+
+    void setUpHandlers(AppsEditorView view) {
+        AppEditorToolbar toolbar = view.getToolbar();
+
+        view.addDeleteArgumentGroupEventHandler(this);
+        view.addUpdateCommandLinePreviewEventHandler(this);
+        toolbar.addArgumentOrderSelectedHandler(this);
+        toolbar.addPreviewAppSelectedHandler(this);
+        toolbar.addPreviewJsonSelectedHandler(this);
+        toolbar.addSaveAppSelectedHandler(this);
     }
 
     @Override
