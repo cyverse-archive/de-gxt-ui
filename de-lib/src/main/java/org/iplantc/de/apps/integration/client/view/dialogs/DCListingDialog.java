@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.iplantc.de.apps.integration.client.dialogs;
+package org.iplantc.de.apps.integration.client.view.dialogs;
 
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids.CANCEL;
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids.INSTALLED_TOOLS_DLG;

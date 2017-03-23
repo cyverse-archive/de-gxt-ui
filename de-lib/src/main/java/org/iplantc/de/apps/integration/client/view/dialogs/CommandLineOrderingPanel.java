@@ -1,4 +1,4 @@
-package org.iplantc.de.apps.integration.client.dialogs;
+package org.iplantc.de.apps.integration.client.view.dialogs;
 
 import org.iplantc.de.apps.integration.client.model.ArgumentProperties;
 import org.iplantc.de.apps.integration.client.view.AppsEditorView;

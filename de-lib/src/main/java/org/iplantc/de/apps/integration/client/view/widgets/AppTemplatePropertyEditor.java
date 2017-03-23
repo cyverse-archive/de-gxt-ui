@@ -1,6 +1,6 @@
 package org.iplantc.de.apps.integration.client.view.widgets;
 
-import org.iplantc.de.apps.integration.client.dialogs.DCListingDialog;
+import org.iplantc.de.apps.integration.client.view.dialogs.DCListingDialog;
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent;
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent.HasUpdateCommandLinePreviewEventHandlers;
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent.UpdateCommandLinePreviewEventHandler;
