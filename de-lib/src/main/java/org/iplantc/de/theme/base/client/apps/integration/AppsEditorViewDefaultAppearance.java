@@ -350,4 +350,24 @@ public class AppsEditorViewDefaultAppearance implements AppsEditorView.AppsEdito
     public String commandLineDialogHeight() {
         return "480";
     }
+
+    @Override
+    public int argumentNameColumnWidth() {
+        return 140;
+    }
+
+    @Override
+    public SafeHtml argumentNameColumnLabel() {
+        return appIntegrationMessages.argumentLabel();
+    }
+
+    @Override
+    public int argumentOrderColumnWidth() {
+        return 30;
+    }
+
+    @Override
+    public SafeHtml argumentOrderColumnLabel() {
+        return appIntegrationMessages.orderLabel();
+    }
 }

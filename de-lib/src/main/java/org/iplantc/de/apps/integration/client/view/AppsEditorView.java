@@ -161,6 +161,14 @@ public interface AppsEditorView extends IsWidget,
         String commandLineDialogWidth();
 
         String commandLineDialogHeight();
+
+        int argumentNameColumnWidth();
+
+        SafeHtml argumentNameColumnLabel();
+
+        int argumentOrderColumnWidth();
+
+        SafeHtml argumentOrderColumnLabel();
     }
     
     public interface Presenter extends BeforeHideHandler,

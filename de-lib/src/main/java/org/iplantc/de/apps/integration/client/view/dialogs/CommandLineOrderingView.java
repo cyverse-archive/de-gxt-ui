@@ -11,6 +11,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
@@ -65,31 +66,23 @@ public class CommandLineOrderingView extends Composite {
 
     private static CommandLineOrderingPanelUiBinder BINDER = GWT.create(CommandLineOrderingPanelUiBinder.class);
 
-    @UiField(provided = true)
-    ColumnModel<Argument> cm;
+    @UiField ColumnModel<Argument> cm;
 
     @UiField
     Grid<Argument> orderedGrid;
 
     @UiField ListStore<Argument> orderedStore;
-
-    private final ArgumentProperties argProps;
-
-    private final AppsEditorView.AppsEditorViewAppearance appearance;
-
     private StoreSortInfo<Argument> orderStoreSortInfo;
 
-    private final AppsEditorView.Presenter presenter;
+    private final ArgumentProperties argProps;
+    private AppsEditorView.AppsEditorViewAppearance appearance;
 
-    private final List<String> uuids;
-
-    public CommandLineOrderingView(List<Argument> arguments, AppsEditorView.Presenter presenter, AppsEditorView.AppsEditorViewAppearance appearance, List<String> uuids) {
-        this.presenter = presenter;
+    @Inject
+    public CommandLineOrderingView(ArgumentProperties argProps,
+                                   AppsEditorView.AppsEditorViewAppearance appearance) {
+        this.argProps = argProps;
         this.appearance = appearance;
-        this.uuids = uuids;
-        argProps = GWT.create(ArgumentProperties.class);
-        orderStoreSortInfo = new StoreSortInfo<Argument>(argProps.order(), SortDir.ASC);
-        initColumnModels();
+
         initWidget(BINDER.createAndBindUi(this));
 
         new GridDragSource<Argument>(orderedGrid);
@@ -102,12 +95,15 @@ public class CommandLineOrderingView extends Composite {
 
     }
 
-    private void initColumnModels() {
+    @UiFactory
+    public ColumnModel<Argument> initColumnModels() {
         ArgNameValueProvider valueProvider = new ArgNameValueProvider();
-        ColumnConfig<Argument, String> ordName = new ColumnConfig<Argument, String>(valueProvider, 140, appearance
-                .argumentLabel());
-        ColumnConfig<Argument, Integer> order = new ColumnConfig<Argument, Integer>(argProps.order(), 30, appearance
-                .orderLabel());
+        ColumnConfig<Argument, String> ordName = new ColumnConfig<Argument, String>(valueProvider,
+                                                                                    appearance.argumentNameColumnWidth(),
+                                                                                    appearance.argumentNameColumnLabel());
+        ColumnConfig<Argument, Integer> order = new ColumnConfig<Argument, Integer>(argProps.order(),
+                                                                                    appearance.argumentOrderColumnWidth(),
+                                                                                    appearance.argumentOrderColumnLabel());
 
         ordName.setSortable(false);
         ordName.setMenuDisabled(true);
@@ -117,30 +113,37 @@ public class CommandLineOrderingView extends Composite {
         List<ColumnConfig<Argument, ?>> cmList = Lists.newArrayList();
         cmList.add(order);
         cmList.add(ordName);
-        cm = new ColumnModel<Argument>(cmList);
+        return new ColumnModel<Argument>(cmList);
     }
 
     @UiFactory
     public ListStore<Argument> createListStore() {
         ListStore<Argument> listStore = new ListStore<Argument>(argProps.id());
         orderStoreSortInfo = new StoreSortInfo<Argument>(argProps.order(), SortDir.ASC);
-        listStore.addSortInfo(orderStoreSortInfo);
-        listStore.clearSortInfo();
         return listStore;
     }
 
     /**
      * Updates the ordering of the given list
      */
-    private void updateArgumentOrdering() {
+    void updateArgumentOrdering() {
         for (Argument arg : orderedStore.getAll()) {
             arg.setOrder(orderedStore.indexOf(arg) + 1);
         }
+        sortListStore();
+
+    }
+
+    public void add(List<Argument> argumentList) {
+        orderedStore.addAll(argumentList);
+        sortListStore();
+        updateArgumentOrdering();
+    }
+
+    void sortListStore() {
         orderedStore.addSortInfo(orderStoreSortInfo);
         // JDS Immediately clear sort info. Otherwise, sorts will be applied when items are added to the
         // store during DnD.
         orderedStore.clearSortInfo();
-
     }
-
 }
