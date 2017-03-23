@@ -1,4 +1,4 @@
-package org.iplantc.de.apps.integration.client.view.propertyEditors.style;
+package org.iplantc.de.theme.base.client.apps.integration.propertyEditors;
 
 import com.google.gwt.core.client.GWT;
 

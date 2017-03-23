@@ -1,5 +1,7 @@
 package org.iplantc.de.apps.integration.client.gin;
 
+import org.iplantc.de.apps.integration.client.dialogs.CommandLineOrderingDialog;
+import org.iplantc.de.apps.integration.client.view.CommandLineOrderingView;
 import org.iplantc.de.apps.integration.client.gin.factory.DeployedComponentListingViewFactory;
 import org.iplantc.de.apps.integration.client.presenter.AppsEditorPresenterImpl;
 import org.iplantc.de.apps.integration.client.presenter.DeployedComponentPresenterImpl;
@@ -39,6 +41,8 @@ public class AppEditorGinModule extends AbstractGinModule {
         bind(AppsEditorView.Presenter.class).to(AppsEditorPresenterImpl.class);
         bind(AppIntegrationPalette.class);
         bind(DeployedComponentsListingView.Presenter.class).to(DeployedComponentPresenterImpl.class);
+        bind(CommandLineOrderingView.class);
+        bind(CommandLineOrderingDialog.class);
 
         // Bind the appearance for the ArgumentGroupEditors
         bind(AppIntegrationErrorMessages.class).to(IplantErrorStrings.class);

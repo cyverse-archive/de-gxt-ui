@@ -1,6 +1,14 @@
 package org.iplantc.de.apps.integration.client.presenter;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
+
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent;
+import org.iplantc.de.apps.integration.client.model.ArgumentProperties;
 import org.iplantc.de.apps.integration.client.view.AppsEditorView;
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.client.events.EventBus;
@@ -11,16 +19,12 @@ import org.iplantc.de.client.services.UUIDServiceAsync;
 import org.iplantc.de.client.util.AppTemplateUtils;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
-import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
-import org.iplantc.de.resources.client.messages.IplantErrorStrings;
-import org.iplantc.de.resources.client.uiapps.integration.AppIntegrationErrorMessages;
 
 import com.google.common.collect.Lists;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GxtMockitoTestRunner;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,13 +40,11 @@ public class AppsEditorPresenterImplTest {
     @Mock private AppsEditorView mockView;
     @Mock private EventBus mockEventBus;
     @Mock private AppTemplateServices mockAppTemplateService;
-    @Mock private AppIntegrationErrorMessages mockErrorMessages;
-    @Mock private IplantDisplayStrings mockDisplayStrings;
-    @Mock private IplantErrorStrings errorStringsMock;
     @Mock private UUIDServiceAsync mockUuidService;
     @Mock private AppTemplateWizardAppearance mockAppearance;
     @Mock private IplantAnnouncer mockAnnouncer;
     @Mock AppTemplateUtils mockAppTemplateUtils;
+    @Mock ArgumentProperties argPropsMock;
 
     @Mock private AsyncCallback<Void> mockVoidCallback;
 
@@ -52,18 +54,17 @@ public class AppsEditorPresenterImplTest {
         uut = new AppsEditorPresenterImpl(mockView,
                                           mockEventBus,
                                           mockAppTemplateService,
-                                          mockErrorMessages,
-                                          mockDisplayStrings,
                                           mockUuidService,
                                           mockAppearance,
                                           mockAnnouncer,
-                                          errorStringsMock,
-                                          mockAppTemplateUtils);
+                                          mockAppTemplateUtils,
+                                          argPropsMock);
     }
 
     @Test public void testDoArgumentGroupDelete() {
         AppTemplate mockAppTemplate = mock(AppTemplate.class);
         when(mockView.flush()).thenReturn(mockAppTemplate);
+        when(mockAppearance.cannotDeleteLastArgumentGroup()).thenReturn(SafeHtmlUtils.fromString("cannot delete"));
         when(mockAppTemplate.getArgumentGroups()).thenReturn(Lists.newArrayList(mock(ArgumentGroup.class)));
 
         DeleteArgumentGroupEvent mockEvent = mock(DeleteArgumentGroupEvent.class);
@@ -71,7 +72,7 @@ public class AppsEditorPresenterImplTest {
 
         verify(mockAnnouncer).schedule(any(ErrorAnnouncementConfig.class));
 
-        verifyZeroInteractions(mockEventBus, mockAppTemplateService, mockUuidService, mockAppearance);
+        verifyZeroInteractions(mockEventBus, mockAppTemplateService, mockUuidService);
         verifyNoMoreInteractions(mockAnnouncer);
     }
     
