@@ -10,7 +10,7 @@ import org.iplantc.de.apps.integration.client.view.AppsEditorView;
 import org.iplantc.de.apps.integration.client.view.AppsEditorViewImpl;
 import org.iplantc.de.apps.integration.client.view.deployedComponents.cells.DCNameHyperlinkCell;
 import org.iplantc.de.apps.integration.client.view.dialogs.CommandLineOrderingDialog;
-import org.iplantc.de.apps.integration.client.view.dialogs.CommandLineOrderingView;
+import org.iplantc.de.apps.integration.client.view.CommandLineOrderingView;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.ArgumentGroupPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.DecimalInputPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.DecimalSelectionPropertyEditor;

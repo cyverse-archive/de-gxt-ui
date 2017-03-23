@@ -3,7 +3,6 @@ package org.iplantc.de.apps.integration.client.presenter;
 import org.iplantc.de.apps.client.events.AppSavedEvent;
 import org.iplantc.de.apps.integration.client.model.ArgumentProperties;
 import org.iplantc.de.apps.integration.client.view.dialogs.CommandLineOrderingDialog;
-import org.iplantc.de.apps.integration.client.view.dialogs.CommandLineOrderingView;
 import org.iplantc.de.apps.integration.client.events.ArgumentOrderSelected;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent.DeleteArgumentEventHandler;
