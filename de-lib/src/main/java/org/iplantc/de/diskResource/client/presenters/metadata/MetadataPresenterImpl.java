@@ -113,7 +113,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
 
     @Inject
     AsyncProviderWrapper<MetadataTemplateViewDialog> templateViewDialogProvider;
-    MetadataTemplateViewDialog templateView;
+    MetadataTemplateViewDialog templateViewDialog;
 
     @Inject
     public MetadataPresenterImpl(final MetadataView view,
@@ -314,8 +314,8 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
         @Override
         public void onSuccess(MetadataTemplate result) {
             //close exisitng view before opening one...
-            if (templateView != null) {
-                templateView.hide();
+            if (templateViewDialog != null) {
+                templateViewDialog.hide();
             }
             templateAttributes = result.getAttributes();
             templateViewDialogProvider.get(new AsyncCallback<MetadataTemplateViewDialog>() {
@@ -326,21 +326,19 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
 
                 @Override
                 public void onSuccess(MetadataTemplateViewDialog dialog) {
-                    templateView = dialog;
-                    templateView.addOkButtonSelectHandler(new TemplateViewOkSelectHandler(isWritable(),
-                                                                                          templateView));
-                    templateView.addCancelButtonSelectHandler(new TemplateViewCancelSelectHandler(
-                            templateView));
-                    templateView.setHeading(result.getName());
-                    templateView.setModal(false);
-                    templateView.setSize("600px", "400px");
-                    templateView.addMdTermDictionary(templateAttributes);
-                    templateView.initTemplate(MetadataPresenterImpl.this,
-                                              view.getUserMetadata(),
-                                              isWritable(),
-                                              templateAttributes);
-                    templateView.show();
-
+                    templateViewDialog = dialog;
+                    templateViewDialog.addOkButtonSelectHandler(new TemplateViewOkSelectHandler(isWritable(),
+                                                                                                templateViewDialog));
+                    templateViewDialog.addCancelButtonSelectHandler(new TemplateViewCancelSelectHandler(
+                            templateViewDialog));
+                    templateViewDialog.setHeading(result.getName());
+                    templateViewDialog.setModal(false);
+                    templateViewDialog.setSize("600px", "400px");
+                    templateViewDialog.addMdTermDictionary(templateAttributes);
+                    templateViewDialog.show(MetadataPresenterImpl.this,
+                                            view.getUserMetadata(),
+                                            isWritable(),
+                                            templateAttributes);
                 }
             });
         }

@@ -1,8 +1,4 @@
-package org.iplantc.de.diskResource.client.views.metadata.dialogs;
-
-/**
- * Created by sriram on 3/16/17.
- */
+package org.iplantc.de.diskResource.client.views.metadata;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -27,9 +23,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Created by sriram on 3/16/17.
+ */
+
 
 @RunWith(GxtMockitoTestRunner.class)
-public class MetadataTemplateViewDialogTest {
+public class MetadataTemplateViewTest {
 
     @Mock
     MetadataView.Appearance appearanceMock;
@@ -50,8 +50,7 @@ public class MetadataTemplateViewDialogTest {
     @Mock
     List<Avu> templateMdMock;
 
-
-    private MetadataTemplateViewDialog dialog;
+    MetadataTemplateView view;
 
     MetadataTemplateAttribute attr1 = mock(MetadataTemplateAttribute.class);
     MetadataTemplateAttribute attr2 = mock(MetadataTemplateAttribute.class);
@@ -77,11 +76,11 @@ public class MetadataTemplateViewDialogTest {
         when(attrIteMock.next()).thenReturn(attr1, attr2, attr3);
 
 
-        dialog = new MetadataTemplateViewDialog(appearanceMock);
-        dialog.initTemplate(presenterMock, templateMdMock, true, attributesMock);
-        dialog.templateTagAttrMap = templateTagAtrrMapMock;
-        dialog.templateTagAvuMap = templateTagAvuMapMock;
-        dialog.templateTagFieldMap = templateTagFieldMapMock;
+        view = new MetadataTemplateView(appearanceMock);
+        view.initTemplate(presenterMock, templateMdMock, true, attributesMock);
+        view.templateTagAttrMap = templateTagAtrrMapMock;
+        view.templateTagAvuMap = templateTagAvuMapMock;
+        view.templateTagFieldMap = templateTagFieldMapMock;
     }
 
     @Test
@@ -110,7 +109,7 @@ public class MetadataTemplateViewDialogTest {
         when(templateTagFieldMapMock.get(tag2)).thenReturn(f2);
         when(templateTagFieldMapMock.get(tag3)).thenReturn(f3);
 
-        Assert.assertEquals(3, dialog.getMetadataFromTemplate().size());
+        Assert.assertEquals(3, view.getMetadataFromTemplate().size());
     }
 
 }
