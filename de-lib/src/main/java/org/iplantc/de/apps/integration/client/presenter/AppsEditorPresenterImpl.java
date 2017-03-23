@@ -2,7 +2,7 @@ package org.iplantc.de.apps.integration.client.presenter;
 
 import org.iplantc.de.apps.client.events.AppSavedEvent;
 import org.iplantc.de.apps.integration.client.view.dialogs.CommandLineOrderingDialog;
-import org.iplantc.de.apps.integration.client.view.dialogs.CommandLineOrderingPanel;
+import org.iplantc.de.apps.integration.client.view.dialogs.CommandLineOrderingView;
 import org.iplantc.de.apps.integration.client.events.ArgumentOrderSelected;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent.DeleteArgumentEventHandler;
@@ -572,8 +572,8 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
 
                     @Override
                     public void onSuccess(CommandLineOrderingDialog dialog) {
-                        CommandLineOrderingPanel
-                                clop = new CommandLineOrderingPanel(allTemplateArguments, AppsEditorPresenterImpl.this, null, result);
+                        CommandLineOrderingView
+                                clop = new CommandLineOrderingView(allTemplateArguments, AppsEditorPresenterImpl.this, null, result);
                         clop.setSize("640", "480");
                         dialog.add(clop);
                         dialog.show();
