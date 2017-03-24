@@ -31,7 +31,7 @@ public class MetadataDialog extends IPlantDialog {
     private class OkSelectHandler implements SelectEvent.SelectHandler {
         @Override
         public void onSelect(SelectEvent event) {
-            if (!meta_pre.isValid()) {
+            if (!presenter.isValid()) {
                 ConfirmMessageBox cmb =
                         new ConfirmMessageBox(I18N.DISPLAY.error(), appearance.metadataSaveError());
                 cmb.addDialogHideHandler(new DialogHideHandler() {
@@ -40,7 +40,7 @@ public class MetadataDialog extends IPlantDialog {
                     public void onDialogHide(DialogHideEvent event) {
                         if (event.getHideButton().equals(PredefinedButton.YES)) {
                             mask(I18N.DISPLAY.loadingMask());
-                            meta_pre.setDiskResourceMetadata(new DiskResourceMetadataUpdateCallback(
+                            presenter.setDiskResourceMetadata(new DiskResourceMetadataUpdateCallback(
                                     MetadataDialog.this));
                         }
 
@@ -49,12 +49,12 @@ public class MetadataDialog extends IPlantDialog {
                 cmb.show();
             } else {
                 mask(I18N.DISPLAY.loadingMask());
-                meta_pre.setDiskResourceMetadata(new DiskResourceMetadataUpdateCallback(MetadataDialog.this));
+                presenter.setDiskResourceMetadata(new DiskResourceMetadataUpdateCallback(MetadataDialog.this));
             }
         }
     }
 
-    MetadataView.Presenter meta_pre;
+    MetadataView.Presenter presenter;
     PermanentIdRequestPresenterAppearance appearance;
     private final DiskResourceServiceFacade drsvc;
 
@@ -62,7 +62,7 @@ public class MetadataDialog extends IPlantDialog {
     public MetadataDialog(MetadataView.Presenter meta_pre,
                           PermanentIdRequestPresenterAppearance appearance,
                           DiskResourceServiceFacade drsvc) {
-        this.meta_pre = meta_pre;
+        this.presenter = meta_pre;
         this.appearance = appearance;
         this.drsvc = drsvc;
 
@@ -75,7 +75,7 @@ public class MetadataDialog extends IPlantDialog {
 
 
     public void show(Folder selectedFolder) {
-        meta_pre.go(this, selectedFolder);
+        presenter.go(this, selectedFolder);
         ensureDebugId(Belphegor.PermIds.METADATA_DIALOG);
         show();
     }
@@ -84,6 +84,6 @@ public class MetadataDialog extends IPlantDialog {
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
         getButton(PredefinedButton.OK).ensureDebugId(baseID + Belphegor.PermIds.OK);
-        meta_pre.setViewDebugId(baseID + Belphegor.PermIds.VIEW);
+        presenter.setViewDebugId(baseID + Belphegor.PermIds.VIEW);
     }
 }

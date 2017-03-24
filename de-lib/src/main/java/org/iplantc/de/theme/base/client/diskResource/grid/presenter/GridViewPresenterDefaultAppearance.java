@@ -178,4 +178,9 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     public String metadataSaveError() {
         return displayStrings.metadataSaveError();
     }
+
+    @Override
+    public String error() {
+        return iplantDisplayStrings.error();
+    }
 }

@@ -264,8 +264,7 @@ public class PermanentIdRequestViewImpl extends Composite implements PermanentId
 
     @Override
     public void fetchMetadata(Folder selectedFolder,
-                              PermanentIdRequestPresenterAppearance appearance,
-                              DiskResourceServiceFacade drsvc) {
+                              PermanentIdRequestPresenterAppearance appearance) {
         metadataDialogAsyncProvider.get(new AsyncCallback<MetadataDialog>() {
             @Override
             public void onFailure(Throwable throwable) {

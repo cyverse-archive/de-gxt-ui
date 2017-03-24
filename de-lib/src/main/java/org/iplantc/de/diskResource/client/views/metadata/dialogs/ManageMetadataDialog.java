@@ -1,7 +1,6 @@
 package org.iplantc.de.diskResource.client.views.metadata.dialogs;
 
 import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.diskResource.client.GridView;
@@ -22,7 +21,6 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
  */
 public class ManageMetadataDialog extends IPlantDialog {
 
-    private final DiskResourceServiceFacade diskResourceService;
     private final GridView.Presenter.Appearance appearance;
     final DiskResourceUtil diskResourceUtil;
     private boolean writable;
@@ -33,13 +31,11 @@ public class ManageMetadataDialog extends IPlantDialog {
 
     @Inject
     ManageMetadataDialog(MetadataView.Presenter mdPresenter,
-                         final DiskResourceServiceFacade diskResourceService,
                          final DiskResourceUtil diskResourceUtil,
                          final GridView.Presenter.Appearance appearance) {
         super(true);
         setModal(true);
         this.mdPresenter = mdPresenter;
-        this.diskResourceService = diskResourceService;
         this.diskResourceUtil = diskResourceUtil;
         this.appearance = appearance;
         setSize(appearance.metadataDialogWidth(), appearance.metadataDialogHeight());
@@ -56,7 +52,7 @@ public class ManageMetadataDialog extends IPlantDialog {
                 canHide = true;
                 if (!mdPresenter.isValid()) {
                     AlertMessageBox cmb =
-                            new AlertMessageBox(I18N.DISPLAY.error(), appearance.metadataSaveError());
+                            new AlertMessageBox(appearance.error(), appearance.metadataSaveError());
 
                     cmb.show();
                 } else {
