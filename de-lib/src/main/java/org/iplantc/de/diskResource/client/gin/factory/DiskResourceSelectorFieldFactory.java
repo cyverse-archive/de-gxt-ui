@@ -22,7 +22,7 @@ public interface DiskResourceSelectorFieldFactory {
 
     FileFolderSelectorField createFilteredFileFolderSelector(List<InfoType> infotypes);
 
-    MultiFileSelectorField creaeteMultiFileSelector(boolean allowFolderSelect);
+    MultiFileSelectorField creaeteMultiFileSelector(boolean allowFolderSelect, String gridEmptyText);
 
 
 }

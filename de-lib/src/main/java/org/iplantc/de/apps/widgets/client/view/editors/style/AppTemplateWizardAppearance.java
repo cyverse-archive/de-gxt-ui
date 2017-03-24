@@ -22,6 +22,7 @@ import java.util.List;
  * 
  */
 public interface AppTemplateWizardAppearance {
+
     interface AppTemplateWizardTemplates extends SafeHtmlTemplates {
         @SafeHtmlTemplates.Template("<p style='text-overflow: ellipsis;overflow: hidden;white-space: nowrap;'>{0}</p>")
         SafeHtml contentPanelHeader(SafeHtml label);
@@ -171,4 +172,6 @@ public interface AppTemplateWizardAppearance {
     SafeHtml getChkBoxContextualHelpLabel(SafeHtml label, String contextualHelp);
 
     SafeHtml sanitizeHtml(String html);
+
+    String multiFilePrompt();
 }

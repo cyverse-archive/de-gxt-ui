@@ -159,6 +159,11 @@ public class AppTemplateWizardAppearanceImpl implements AppTemplateWizardAppeara
     }
 
     @Override
+    public String multiFilePrompt() {
+        return help.multiFilePrompt();
+    }
+
+    @Override
     public SafeHtml createChkBoxContextualHelpLabel(String labelToolTipText, String propertyToolTip) {
         return templates.fieldLabelImgFloatRightChkBox(SafeHtmlUtils.fromString(labelToolTipText),
                                                  res.help().getSafeUri(),

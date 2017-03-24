@@ -21,7 +21,7 @@ public class MultiFileInputEditor extends AbstractArgumentEditor implements HasD
     MultiFileInputEditor(final DiskResourceSelectorFieldFactory selectorFactory,
                          @Assisted AppTemplateWizardAppearance appearance) {
         super(appearance);
-        this.multiFileSelector = selectorFactory.creaeteMultiFileSelector(false);
+        this.multiFileSelector = selectorFactory.creaeteMultiFileSelector(false, appearance.multiFilePrompt());
         editorAdapter = new ArgumentEditorConverter<>(multiFileSelector,
                                                       new SplittableToHasPathListConverter());
 
