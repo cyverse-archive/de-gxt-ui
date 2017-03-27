@@ -1,13 +1,14 @@
 package org.iplantc.de.apps.integration.client.presenter.dnd;
 
+import org.iplantc.de.apps.integration.client.view.AppsEditorView;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm;
 import org.iplantc.de.apps.widgets.client.view.HasLabelOnlyEditMode;
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.models.apps.integration.ArgumentType;
 import org.iplantc.de.client.util.AppTemplateUtils;
 
 import com.google.common.base.Strings;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.adapters.ListEditor;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
@@ -26,7 +27,7 @@ import java.util.List;
  */
 public final class ArgListEditorDropTarget extends ContainerDropTarget<VerticalLayoutContainer> {
 
-    private final AppTemplateWizardAppearance appearance = AppTemplateWizardAppearance.INSTANCE;
+    private final AppsEditorView.AppsEditorViewAppearance appearance = GWT.create(AppsEditorView.AppsEditorViewAppearance.class);
     private int argCountInt = 1;
     private final HasLabelOnlyEditMode hasLabelOnlyEditMode;
     private final ListEditor<Argument, AppTemplateForm.ArgumentEditorFactory> listEditor;

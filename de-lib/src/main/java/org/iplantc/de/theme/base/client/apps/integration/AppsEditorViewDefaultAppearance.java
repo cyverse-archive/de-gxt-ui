@@ -370,4 +370,19 @@ public class AppsEditorViewDefaultAppearance implements AppsEditorView.AppsEdito
     public SafeHtml argumentOrderColumnLabel() {
         return appIntegrationMessages.orderLabel();
     }
+
+    @Override
+    public int getAutoScrollDelay() {
+        return 200;
+    }
+
+    @Override
+    public int getAutoScrollRegionHeight() {
+        return 5;
+    }
+
+    @Override
+    public int getAutoScrollRepeatDelay() {
+        return 50;
+    }
 }

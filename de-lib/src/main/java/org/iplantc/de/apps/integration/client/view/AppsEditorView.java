@@ -169,6 +169,12 @@ public interface AppsEditorView extends IsWidget,
         int argumentOrderColumnWidth();
 
         SafeHtml argumentOrderColumnLabel();
+
+        int getAutoScrollDelay();
+
+        int getAutoScrollRegionHeight();
+
+        int getAutoScrollRepeatDelay();
     }
     
     public interface Presenter extends BeforeHideHandler,
