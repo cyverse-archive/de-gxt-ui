@@ -188,6 +188,13 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
     }
 
     @Override
+    protected void afterShow() {
+        super.afterShow();
+
+        forceLayout();
+    }
+
+    @Override
     public <C extends WindowConfig> void update(final C config) {
         GWT.runAsync(new RunAsyncCallback() {
             @Override
