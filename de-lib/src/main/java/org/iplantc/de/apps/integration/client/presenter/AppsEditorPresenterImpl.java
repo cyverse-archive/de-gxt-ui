@@ -1,8 +1,6 @@
 package org.iplantc.de.apps.integration.client.presenter;
 
 import org.iplantc.de.apps.client.events.AppSavedEvent;
-import org.iplantc.de.apps.integration.client.model.ArgumentProperties;
-import org.iplantc.de.apps.integration.client.view.dialogs.CommandLineOrderingDialog;
 import org.iplantc.de.apps.integration.client.events.ArgumentOrderSelected;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent.DeleteArgumentEventHandler;
@@ -20,6 +18,7 @@ import org.iplantc.de.apps.integration.client.presenter.visitors.InitializeDragA
 import org.iplantc.de.apps.integration.client.presenter.visitors.RegisterEventHandlers;
 import org.iplantc.de.apps.integration.client.view.AppEditorToolbar;
 import org.iplantc.de.apps.integration.client.view.AppsEditorView;
+import org.iplantc.de.apps.integration.client.view.dialogs.CommandLineOrderingDialog;
 import org.iplantc.de.apps.widgets.client.events.ArgumentAddedEvent;
 import org.iplantc.de.apps.widgets.client.events.ArgumentAddedEvent.ArgumentAddedEventHandler;
 import org.iplantc.de.apps.widgets.client.events.ArgumentGroupAddedEvent;
@@ -322,7 +321,6 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
     }
 
     private final AppTemplateUtils appTemplateUtils;
-    private ArgumentProperties argProps;
     private final List<HandlerRegistration> handlerRegistrations = Lists.newArrayList();
 
     public static native void doJsonFormattting(XElement textArea,String val,int width, int height) /*-{
@@ -367,8 +365,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
                             final UUIDServiceAsync uuidService,
                             final AppsEditorView.AppsEditorViewAppearance appearance,
                             final IplantAnnouncer announcer,
-                            final AppTemplateUtils appTemplateUtils,
-                            ArgumentProperties argProps) {
+                            final AppTemplateUtils appTemplateUtils) {
         this.view = view;
         this.eventBus = eventBus;
         this.atService = atService;
@@ -376,7 +373,6 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
         this.appearance = appearance;
         this.announcer = announcer;
         this.appTemplateUtils = appTemplateUtils;
-        this.argProps = argProps;
 
         setUpHandlers(view);
     }

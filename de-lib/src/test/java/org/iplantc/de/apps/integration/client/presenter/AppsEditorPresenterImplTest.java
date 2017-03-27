@@ -8,7 +8,6 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent;
-import org.iplantc.de.apps.integration.client.model.ArgumentProperties;
 import org.iplantc.de.apps.integration.client.view.AppEditorToolbar;
 import org.iplantc.de.apps.integration.client.view.AppsEditorView;
 import org.iplantc.de.client.events.EventBus;
@@ -45,7 +44,6 @@ public class AppsEditorPresenterImplTest {
     @Mock private IplantAnnouncer mockAnnouncer;
     @Mock AppEditorToolbar toolbarMock;
     @Mock AppTemplateUtils mockAppTemplateUtils;
-    @Mock ArgumentProperties propertiesMock;
 
     @Mock private AsyncCallback<Void> mockVoidCallback;
 
@@ -60,8 +58,7 @@ public class AppsEditorPresenterImplTest {
                                           mockUuidService,
                                           mockAppearance,
                                           mockAnnouncer,
-                                          mockAppTemplateUtils,
-                                          propertiesMock);
+                                          mockAppTemplateUtils);
     }
 
     @Test public void testDoArgumentGroupDelete() {
