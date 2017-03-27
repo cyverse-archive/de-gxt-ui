@@ -9,15 +9,14 @@ import org.iplantc.de.theme.base.client.fileViewers.FileViewerStrings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeUri;
 
 /**
  * @author jstroot
  */
 public class ShareAnonymousCallbackDefaultAppearance implements ShareAnonymousCallback.ShareAnonymousCallbackAppearance {
     interface EnsemblPopupTemplate extends SafeHtmlTemplates {
-        @SafeHtmlTemplates.Template("{0}<img src='{1}' qtip='{2}'></img>")
-        SafeHtml notificationWithContextHelp(SafeHtml label, SafeUri img, String toolTip);
+        @SafeHtmlTemplates.Template("{0}")
+        SafeHtml notificationWithContextHelp(SafeHtml label);
     }
 
     private final FileViewerContextualHelpStrings helpStrings;
@@ -58,14 +57,17 @@ public class ShareAnonymousCallbackDefaultAppearance implements ShareAnonymousCa
 
     @Override
     public SafeHtml notificationWithContextHelp() {
-        return template.notificationWithContextHelp(fileViewerStrings.sendToEnsemblePopupNote(),
-                                                    resources.help().getSafeUri(),
-                                                    helpStrings.sendToEnsemblUrlHelp());
+        return template.notificationWithContextHelp(fileViewerStrings.sendToEnsemblePopupNote());
     }
 
     @Override
     public String sendToEnsemblMenuItem() {
         return displayStrings.sendToEnsemblMenuItem();
+    }
+
+    @Override
+    public String sendToEnsemblUrlHelp() {
+        return helpStrings.sendToEnsemblUrlHelp();
     }
 
 }

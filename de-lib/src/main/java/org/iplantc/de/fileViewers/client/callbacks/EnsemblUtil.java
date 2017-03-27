@@ -38,10 +38,8 @@ public class EnsemblUtil {
     private final EnsemblUtilAppearance appearance;
     private final DiskResourceUtil diskResourceUtil;
 
-    public EnsemblUtil(final File file,
-                       final String infoType,
-                       final IsMaskable container) {
-        this(file, infoType, container, GWT.<EnsemblUtilAppearance> create(EnsemblUtilAppearance.class));
+    public EnsemblUtil(final File file, final String infoType, final IsMaskable container) {
+        this(file, infoType, container, GWT.<EnsemblUtilAppearance>create(EnsemblUtilAppearance.class));
     }
 
     EnsemblUtil(final File file,
@@ -57,9 +55,8 @@ public class EnsemblUtil {
 
     public void sendToEnsembl(final DiskResourceServiceFacade diskResourceServiceFacade) {
         List<HasPath> list = new ArrayList<>();
-        final HasPaths diskResourcePaths = diskResourceServiceFacade.getDiskResourceFactory()
-                                                                    .pathsList()
-                                                                    .as();
+        final HasPaths diskResourcePaths =
+                diskResourceServiceFacade.getDiskResourceFactory().pathsList().as();
         final String path = file.getPath();
         String filename = diskResourceUtil.parseNameFromPath(path);
         String parent = diskResourceUtil.parseParent(path);
@@ -69,7 +66,9 @@ public class EnsemblUtil {
             indexFile = filename + ".bai";
         } else if (infoType.equals(InfoType.VCF.toString())) {
             indexFile = filename + ".tbi";
-        } else if (infoType.equals(InfoType.GFF.toString()) || infoType.equals(InfoType.BED.toString()) || infoType.equals(InfoType.BIGBED.toString()) || infoType.equals(InfoType.BIGWIG.toString())) {
+        } else if (infoType.equals(InfoType.GFF.toString()) || infoType.equals(InfoType.BED.toString())
+                   || infoType.equals(InfoType.BIGBED.toString())
+                   || infoType.equals(InfoType.BIGWIG.toString())) {
             indexFile = null;
         }
 
@@ -91,9 +90,13 @@ public class EnsemblUtil {
                                           new DataCallback<FastMap<DiskResource>>() {
 
                                               @Override
-                                              public void onFailure(Integer statusCode, Throwable caught) {
-                                                  IplantInfoBox info = new IplantInfoBox(SafeHtmlUtils.fromTrustedString(appearance.indexFileMissing()),
-                                                                                         SafeHtmlUtils.fromTrustedString(appearance.indexFileMissingError()));
+                                              public void onFailure(Integer statusCode,
+                                                                    Throwable caught) {
+                                                  IplantInfoBox info =
+                                                          new IplantInfoBox(SafeHtmlUtils.fromTrustedString(
+                                                                  appearance.indexFileMissing()),
+                                                                            SafeHtmlUtils.fromTrustedString(
+                                                                                    appearance.indexFileMissingError()));
                                                   info.show();
                                                   if (container != null) {
                                                       container.unmask();
@@ -103,9 +106,9 @@ public class EnsemblUtil {
                                               @Override
                                               public void onSuccess(FastMap<DiskResource> result) {
 
-                                                  diskResourceServiceFacade.shareWithAnonymous(diskResourcePaths,
-                                                                                               new ShareAnonymousCallback(file,
-                                                                                                                          container));
+                                                  diskResourceServiceFacade.shareWithAnonymous(
+                                                          diskResourcePaths,
+                                                          new ShareAnonymousCallback(file, container));
                                               }
                                           });
     }
