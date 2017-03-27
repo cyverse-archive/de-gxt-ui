@@ -30,6 +30,7 @@
     padding-top: 2px;
     padding-bottom: 2px;
     color: black;
+    white-space:pre;
 }
 
 .nameDisabledStyle {
@@ -41,6 +42,7 @@
     padding-bottom: 2px;
     color: red;
     font-style: italic;
+    white-space:pre;
 }
 
 .nameStyle:hover {
@@ -54,6 +56,7 @@
     padding-top: 2px;
     padding-bottom: 2px;
     color: black;
+    white-space:pre;
 }
 
 .pathList {
