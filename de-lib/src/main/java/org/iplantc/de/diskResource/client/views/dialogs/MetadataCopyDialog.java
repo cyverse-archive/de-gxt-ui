@@ -22,7 +22,7 @@ public class MetadataCopyDialog extends IPlantDialog implements TakesValue<List<
     public MetadataCopyDialog(final GridView.Presenter.Appearance appearance,
                               DiskResourceSelectorFieldFactory selectionFieldFactory) {
         this.appearance = appearance;
-        multiFileFolderSelector = selectionFieldFactory.creaeteMultiFileSelector(true, appearance.copyMetadataPrompt());
+        multiFileFolderSelector = selectionFieldFactory.createMultiFileSelector(true, appearance.copyMetadataPrompt());
         add(multiFileFolderSelector);
         setHideOnButtonClick(false);
         setHeading(this.appearance.copyMetadata());

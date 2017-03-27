@@ -229,14 +229,14 @@ public class MultiFileSelectorField extends Composite implements
 
     @Inject
     MultiFileSelectorField(final MultiFileSelectorFieldAppearance appearance,
-                           @Assisted boolean allowFolderSelect, @Assisted String multiFilePromt) {
+                           @Assisted boolean allowFolderSelect, @Assisted String multiFilePrompt) {
         this.appearance = appearance;
         this.errorSupport = new IPlantSideErrorHandler(this);
         this.allowFolderSelect = allowFolderSelect;
         initWidget(BINDER.createAndBindUi(this));
         grid.getSelectionModel().addSelectionChangedHandler(this);
         grid.setBorders(true);
-        gridView.setEmptyText(multiFilePromt);
+        gridView.setEmptyText(multiFilePrompt);
         initDragAndDrop();
     }
 
