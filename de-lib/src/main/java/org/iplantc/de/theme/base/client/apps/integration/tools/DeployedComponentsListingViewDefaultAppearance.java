@@ -117,4 +117,19 @@ public class DeployedComponentsListingViewDefaultAppearance implements DeployedC
     public int pathColumnWidth() {
         return 100;
     }
+
+    @Override
+    public int dcListingDialogWidth() {
+        return 600;
+    }
+
+    @Override
+    public int dcListingDialogHeight() {
+        return 500;
+    }
+
+    @Override
+    public String dcListingDialogHeading() {
+        return displayStrings.dcListingDialogHeading();
+    }
 }

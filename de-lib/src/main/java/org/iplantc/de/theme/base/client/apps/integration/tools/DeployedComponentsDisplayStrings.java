@@ -8,4 +8,6 @@ import com.google.gwt.i18n.client.Messages;
 public interface DeployedComponentsDisplayStrings extends Messages {
 
     String toolVersion();
+
+    String dcListingDialogHeading();
 }
