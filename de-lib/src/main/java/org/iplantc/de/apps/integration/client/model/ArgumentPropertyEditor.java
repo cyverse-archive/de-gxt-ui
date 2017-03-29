@@ -1,4 +1,4 @@
-package org.iplantc.de.apps.integration.client.view.propertyEditors;
+package org.iplantc.de.apps.integration.client.model;
 
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent.HasUpdateCommandLinePreviewEventHandlers;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.ArgumentEditor;

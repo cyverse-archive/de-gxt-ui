@@ -3,10 +3,11 @@ package org.iplantc.de.apps.integration.client.view.propertyEditors;
 
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids;
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.PropertyPanelIds;
+
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent.DeleteArgumentGroupEventHandler;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent.HasDeleteArgumentGroupEventHandlers;
-import org.iplantc.de.apps.integration.client.view.propertyEditors.style.AppTemplateWizardPropertyContentPanelAppearance;
+import org.iplantc.de.apps.integration.client.view.AppsEditorPanelAppearance;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.util.FinishEditing;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.util.PrefixedHasTextEditor;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.ArgumentGroupEditor;
@@ -51,9 +52,12 @@ public class ArgumentGroupPropertyEditor extends Composite implements Editor<Arg
     private ArgumentGroupEditor argumentGroupEditor;
     private boolean labelOnlyEditMode = false;
     private ArgumentGroup model;
+    private AppsEditorPanelAppearance panelAppearance;
 
     @Inject
-    public ArgumentGroupPropertyEditor(AppTemplateWizardAppearance appearance) {
+    public ArgumentGroupPropertyEditor(AppTemplateWizardAppearance appearance,
+                                       AppsEditorPanelAppearance panelAppearance) {
+        this.panelAppearance = panelAppearance;
         initWidget(BINDER.createAndBindUi(this));
         name = SimpleEditor.of();
         labelEditor = new PrefixedHasTextEditor(cp.getHeader(), appearance);
@@ -112,7 +116,7 @@ public class ArgumentGroupPropertyEditor extends Composite implements Editor<Arg
 
     @UiFactory
     ContentPanel createContentPanel() {
-        return new ContentPanel(new AppTemplateWizardPropertyContentPanelAppearance());
+        return new ContentPanel(panelAppearance);
     }
 
     /**

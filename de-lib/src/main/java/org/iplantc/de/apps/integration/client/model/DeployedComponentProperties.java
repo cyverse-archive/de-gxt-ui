@@ -1,4 +1,4 @@
-package org.iplantc.de.apps.integration.client.view.tools;
+package org.iplantc.de.apps.integration.client.model;
 
 import org.iplantc.de.client.models.tool.Tool;
 

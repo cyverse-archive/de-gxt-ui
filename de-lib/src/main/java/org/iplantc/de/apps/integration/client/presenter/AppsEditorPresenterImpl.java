@@ -2,9 +2,13 @@ package org.iplantc.de.apps.integration.client.presenter;
 
 import org.iplantc.de.apps.client.events.AppSavedEvent;
 import org.iplantc.de.apps.integration.client.dialogs.CommandLineOrderingPanel;
+import org.iplantc.de.apps.integration.client.events.ArgumentOrderSelected;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent.DeleteArgumentEventHandler;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent;
+import org.iplantc.de.apps.integration.client.events.PreviewAppSelected;
+import org.iplantc.de.apps.integration.client.events.PreviewJsonSelected;
+import org.iplantc.de.apps.integration.client.events.SaveAppSelected;
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent;
 import org.iplantc.de.apps.integration.client.presenter.visitors.DeleteArgumentGroup;
 import org.iplantc.de.apps.integration.client.presenter.visitors.GatherAllEventProviders;
@@ -551,8 +555,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
     }
 
     @Override
-    public void onArgumentOrderClicked() {
-    
+    public void onArgumentOrderSelected(ArgumentOrderSelected event) {
         AppTemplate flushRawApp = view.getEditorDriver().flush();
         final List<Argument> allTemplateArguments = getAllTemplateArguments(flushRawApp);
         uuidService.getUUIDs(allTemplateArguments.size(), new AsyncCallback<ArrayList<String>>() {
@@ -600,7 +603,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
     }
 
     @Override
-    public void onPreviewJsonClicked() {
+    public void onPreviewJsonSelected(PreviewJsonSelected event) {
         AppTemplate appTemplate = flushViewAndClean();
         Splittable split = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(appTemplateUtils.removeEmptyGroupArguments(appTemplate)));
         IPlantDialog dlg = new IPlantDialog();
@@ -617,14 +620,14 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
     }
 
     @Override
-    public void onPreviewUiClicked() {
+    public void onPreviewAppSelected(PreviewAppSelected event) {
         AppLaunchPreviewView preview = previewViewProvider.get();
         preview.edit(flushViewAndClean(), null);
         preview.show();
     }
 
     @Override
-    public void onSaveClicked() {
+    public void onSaveAppSelected(SaveAppSelected event) {
         if (isViewValid()) {
             doOnSaveClicked(null);
         } else {

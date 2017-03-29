@@ -3,6 +3,8 @@
  */
 package org.iplantc.de.apps.integration.client.view.tools;
 
+import org.iplantc.de.apps.integration.client.events.ShowToolInfoEvent;
+import org.iplantc.de.apps.integration.client.model.DeployedComponentProperties;
 import org.iplantc.de.apps.integration.client.view.deployedComponents.cells.DCNameHyperlinkCell;
 import org.iplantc.de.apps.integration.client.dialogs.ToolInfoDialog;
 import org.iplantc.de.apps.integration.shared.AppIntegrationModule;
@@ -49,7 +51,8 @@ import java.util.List;
  * @author sriram, jstroot
  */
 public class DeployedComponentsListingViewImpl extends Composite implements
-                                                                 DeployedComponentsListingView {
+                                                                 DeployedComponentsListingView,
+                                                                 ShowToolInfoEvent.ShowToolInfoEventHandler {
 
     @UiTemplate("DeployedComponentsListingView.ui.xml")
     interface MyUiBinder extends UiBinder<Widget, DeployedComponentsListingViewImpl> { }
@@ -61,6 +64,7 @@ public class DeployedComponentsListingViewImpl extends Composite implements
     @UiField DeployedComponentsListingViewAppearance appearance;
     @UiField(provided = true) ListStore<Tool> store;
     private PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader;
+    private DCNameHyperlinkCell nameCell;
 
     private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
     @Inject AsyncProviderWrapper<NewToolRequestDialog> newToolRequestDialogProvider;
@@ -68,9 +72,11 @@ public class DeployedComponentsListingViewImpl extends Composite implements
 
     @Inject
     DeployedComponentsListingViewImpl(@Assisted ListStore<Tool> listStore,
-                                      @Assisted PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader) {
+                                      @Assisted PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader,
+                                      DCNameHyperlinkCell nameCell) {
         this.store = listStore;
         this.loader = loader;
+        this.nameCell = nameCell;
         initWidget(uiBinder.createAndBindUi(this));
         grid.setLoader(loader);
     }
@@ -81,7 +87,8 @@ public class DeployedComponentsListingViewImpl extends Composite implements
     }
 
     @Override
-    public void showInfo(final Tool dc) {
+    public void onShowToolInfo(ShowToolInfoEvent event) {
+        Tool dc = event.getTool();
         toolInfoDialogProvider.get(new AsyncCallback<ToolInfoDialog>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -124,7 +131,8 @@ public class DeployedComponentsListingViewImpl extends Composite implements
         name.setSortable(true);
         name.setHeader(appearance.nameColumnHeader());
         configs.add(name);
-        name.setCell(new DCNameHyperlinkCell(this));
+        name.setCell(nameCell);
+        nameCell.addShowToolInfoEventHandlers(this);
         name.setMenuDisabled(true);
 
         ColumnConfig<Tool, String> version = new ColumnConfig<>(properties.version(), appearance.versionColumnWidth());

@@ -2,8 +2,14 @@ package org.iplantc.de.apps.integration.client.view;
 
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids;
 
+import org.iplantc.de.apps.integration.client.events.ArgumentOrderSelected;
+import org.iplantc.de.apps.integration.client.events.PreviewAppSelected;
+import org.iplantc.de.apps.integration.client.events.PreviewJsonSelected;
+import org.iplantc.de.apps.integration.client.events.SaveAppSelected;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -29,15 +35,9 @@ public class AppEditorToolbarImpl extends Composite implements AppEditorToolbar 
     @UiField
     TextButton previewBtn;
     private static AppIntegrationToolBarUiBinder BINDER = GWT.create(AppIntegrationToolBarUiBinder.class);
-    private AppEditorToolbar.Presenter presenter;
 
     public AppEditorToolbarImpl() {
         initWidget(BINDER.createAndBindUi(this));
-    }
-
-    @Override
-    public void setPresenter(AppEditorToolbar.Presenter presenter) {
-        this.presenter = presenter;
     }
 
     @Override
@@ -52,22 +52,41 @@ public class AppEditorToolbarImpl extends Composite implements AppEditorToolbar 
 
     @UiHandler("argumentOrderButton")
     void onArgumentOrderButtonClicked(@SuppressWarnings("unused") SelectEvent event) {
-        presenter.onArgumentOrderClicked();
+        fireEvent(new ArgumentOrderSelected());
     }
 
     @UiHandler("previewJsonMenuItem")
     void onPreviewJsonClicked(@SuppressWarnings("unused") SelectionEvent<Item> event) {
-        presenter.onPreviewJsonClicked();
+        fireEvent(new PreviewJsonSelected());
     }
 
     @UiHandler("previewUiMenuItem")
     void onPreviewUiClicked(@SuppressWarnings("unused") SelectionEvent<Item> event) {
-        presenter.onPreviewUiClicked();
+        fireEvent(new PreviewAppSelected());
     }
 
     @UiHandler("saveButton")
     void onSaveButtonClicked(@SuppressWarnings("unused") SelectEvent event) {
-        presenter.onSaveClicked();
+        fireEvent(new SaveAppSelected());
     }
 
+    @Override
+    public HandlerRegistration addArgumentOrderSelectedHandler(ArgumentOrderSelected.ArgumentOrderSelectedHandler handler) {
+        return addHandler(handler, ArgumentOrderSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addPreviewJsonSelectedHandler(PreviewJsonSelected.PreviewJsonSelectedHandler handler) {
+        return addHandler(handler, PreviewJsonSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addPreviewAppSelectedHandler(PreviewAppSelected.PreviewAppSelectedHandler handler) {
+        return addHandler(handler, PreviewAppSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addSaveAppSelectedHandler(SaveAppSelected.SaveAppSelectedHandler handler) {
+        return addHandler(handler, SaveAppSelected.TYPE);
+    }
 }

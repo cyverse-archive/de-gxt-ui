@@ -8,19 +8,23 @@ import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAp
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
+import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.dom.XElement;
+import com.sencha.gxt.theme.base.client.widget.HeaderDefaultAppearance;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 
 public final class AppTemplateContentPanel extends ContentPanel implements HasAppTemplateSelectedEventHandlers {
 
-    private final AppTemplateWizardAppearance wizAppearance;
-
-    public AppTemplateContentPanel() {
-        this(new ArgumentGroupContentPanelAppearance(), AppTemplateWizardAppearance.INSTANCE);
+    public interface ArgumentGroupContentPanelAppearance extends ContentPanelAppearance {
+        HeaderDefaultAppearance getHeaderAppearance();
     }
 
-    private AppTemplateContentPanel(ArgumentGroupContentPanelAppearance appearance, AppTemplateWizardAppearance wizAppearance) {
+    private final AppTemplateWizardAppearance wizAppearance;
+
+    @Inject
+    public AppTemplateContentPanel(ArgumentGroupContentPanelAppearance appearance,
+                                   AppTemplateWizardAppearance wizAppearance) {
         super(appearance);
         setCollapsible(true);
         setAnimCollapse(false);

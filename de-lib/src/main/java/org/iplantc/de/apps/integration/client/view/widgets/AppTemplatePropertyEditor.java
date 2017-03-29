@@ -16,9 +16,11 @@ import org.iplantc.de.apps.widgets.client.view.HasLabelOnlyEditMode;
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.tool.Tool;
+import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.validators.AppNameValidator;
 import org.iplantc.de.commons.client.widgets.PreventEntryAfterLimitHandler;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.EditorDelegate;
@@ -30,9 +32,9 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
@@ -56,7 +58,7 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
 
     interface AppTemplatePropertyEditorUiBinder extends UiBinder<Widget, AppTemplatePropertyEditor> { }
 
-    @UiField AppTemplateContentPanel cp;
+    @UiField(provided = true) AppTemplateContentPanel cp;
     @UiField TextArea description;
     @UiField TextField name;
 
@@ -64,7 +66,7 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
     @Ignore
     @UiField TextButton searchBtn;
     @Ignore
-    @UiField ToolSearchField tool;
+    @UiField(provided = true) ToolSearchField tool;
     @UiField FieldLabel toolLabel, appNameLabel, appDescriptionLabel;
     private static AppTemplatePropertyEditorUiBinder BINDER = GWT.create(AppTemplatePropertyEditorUiBinder.class);
     private final AppTemplateWizardAppearance appearance;
@@ -74,11 +76,15 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
     private AppTemplate model;
     Logger LOG = Logger.getLogger("App template");
 
-    @Inject Provider<DCListingDialog> dcListingDialogProvider;
+    @Inject AsyncProviderWrapper<DCListingDialog> dcListingDialogProvider;
 
     @Inject
-    public AppTemplatePropertyEditor(AppTemplateWizardAppearance appearance) {
+    public AppTemplatePropertyEditor(AppTemplateWizardAppearance appearance,
+                                     AppTemplateContentPanel cp,
+                                     ToolSearchField tool) {
         this.appearance = appearance;
+        this.tool = tool;
+        this.cp = cp;
 
         initWidget(BINDER.createAndBindUi(this));
         nameEditor = new HeaderEditor(cp.getHeader(), appearance);
@@ -174,20 +180,29 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
      */
     @UiHandler("searchBtn")
     void onSearchBtnClick(SelectEvent event) {
-        final DCListingDialog dialog = dcListingDialogProvider.get();
-        dialog.addHideHandler(new HideHandler() {
+        dcListingDialogProvider.get(new AsyncCallback<DCListingDialog>(){
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
 
             @Override
-            public void onHide(HideEvent event) {
-                Tool dc = dialog.getSelectedComponent();
-                // Set the deployed component in the AppTemplate
-                if (dc != null) {
-                    tool.setValue(dc);
-                    // presenter.onArgumentPropertyValueChange();
-                }
+            public void onSuccess(DCListingDialog dialog) {
+                dialog.addHideHandler(new HideHandler() {
+
+                    @Override
+                    public void onHide(HideEvent event) {
+                        Tool dc = dialog.getSelectedComponent();
+                        // Set the deployed component in the AppTemplate
+                        if (dc != null) {
+                            tool.setValue(dc);
+                            // presenter.onArgumentPropertyValueChange();
+                        }
+                    }
+                });
+                dialog.show();
             }
         });
-        dialog.show();
     }
 
     /**
