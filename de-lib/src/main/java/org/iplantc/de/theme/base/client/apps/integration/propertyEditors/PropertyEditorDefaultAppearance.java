@@ -2,6 +2,7 @@ package org.iplantc.de.theme.base.client.apps.integration.propertyEditors;
 
 import org.iplantc.de.apps.integration.client.view.AppsEditorPanelAppearance;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance;
+import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.resources.client.messages.IplantValidationMessages;
@@ -57,6 +58,7 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     private IplantDisplayStrings iplantDisplayStrings;
     private AppsWidgetsDisplayMessages appsWidgetsDisplayMessages;
     private IplantValidationMessages iplantValidationMessages;
+    private AppTemplateWizardAppearance.Style style;
 
     public PropertyEditorDefaultAppearance() {
         this ((AppsWidgetsPropertyPanelLabels)GWT.create(AppsWidgetsPropertyPanelLabels.class),
@@ -68,7 +70,8 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
               (PropertyEditorDisplayStrings)GWT.create(PropertyEditorDisplayStrings.class),
               (IplantDisplayStrings)GWT.create(IplantDisplayStrings.class),
               (AppsWidgetsDisplayMessages)GWT.create(AppsWidgetsDisplayMessages.class),
-              (IplantValidationMessages)GWT.create(IplantValidationMessages.class));
+              (IplantValidationMessages)GWT.create(IplantValidationMessages.class),
+              (AppTemplateWizardAppearance.Resources)GWT.create(AppTemplateWizardAppearance.Resources.class));
     }
 
     public PropertyEditorDefaultAppearance(AppsWidgetsPropertyPanelLabels propertyPanelLabels,
@@ -80,7 +83,8 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
                                            PropertyEditorDisplayStrings displayStrings,
                                            IplantDisplayStrings iplantDisplayStrings,
                                            AppsWidgetsDisplayMessages appsWidgetsDisplayMessages,
-                                           IplantValidationMessages iplantValidationMessages) {
+                                           IplantValidationMessages iplantValidationMessages,
+                                           AppTemplateWizardAppearance.Resources resources) {
         this.propertyPanelLabels = propertyPanelLabels;
         this.panelAppearance = panelAppearance;
         this.argumentValidatorMessages = argumentValidatorMessages;
@@ -91,6 +95,9 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
         this.iplantDisplayStrings = iplantDisplayStrings;
         this.appsWidgetsDisplayMessages = appsWidgetsDisplayMessages;
         this.iplantValidationMessages = iplantValidationMessages;
+        this.style = resources.css();
+
+        style.ensureInjected();
     }
 
     @Override
@@ -878,5 +885,58 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     @Override
     public String environmentVariableNameValidationMsg() {
         return iplantValidationMessages.environmentVariableNameValidationMsg();
+    }
+
+    @Override
+    public SafeHtml createContentPanelHeaderLabel(SafeHtml label, boolean required) {
+        if (required) {
+            return templates.contentPanelHeaderRequired(label);
+        }
+        return templates.contentPanelHeader(label);
+    }
+
+    @Override
+    public SafeHtml fieldLabelRequired() {
+        return templates.fieldLabelRequired();
+    }
+
+    @Override
+    public String appToolUsed() {
+        return contextualHelpMessages.appToolUsed();
+    }
+
+    @Override
+    public String toolUsedLabel() {
+        return propertyPanelLabels.toolUsedLabel();
+    }
+
+    @Override
+    public String appNameLabel() {
+        return propertyPanelLabels.appNameLabel();
+    }
+
+    @Override
+    public String appDescriptionLabel() {
+        return propertyPanelLabels.appDescriptionLabel();
+    }
+
+    @Override
+    public String appHeaderSelect() {
+        return style.appHeaderSelect();
+    }
+
+    @Override
+    public ImageResource searchIcon() {
+        return iplantResources.search();
+    }
+
+    @Override
+    public String appNameEmptyText() {
+        return propertyPanelLabels.appNameEmptyText();
+    }
+
+    @Override
+    public String appDescriptionEmptyText() {
+        return propertyPanelLabels.appDescriptionEmptyText();
     }
 }

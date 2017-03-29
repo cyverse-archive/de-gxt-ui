@@ -1,9 +1,9 @@
 package org.iplantc.de.apps.integration.client.view.widgets;
 
+import org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance;
 import org.iplantc.de.apps.widgets.client.events.AppTemplateSelectedEvent;
 import org.iplantc.de.apps.widgets.client.events.AppTemplateSelectedEvent.AppTemplateSelectedEventHandler;
 import org.iplantc.de.apps.widgets.client.events.AppTemplateSelectedEvent.HasAppTemplateSelectedEventHandlers;
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -20,17 +20,17 @@ public final class AppTemplateContentPanel extends ContentPanel implements HasAp
         HeaderDefaultAppearance getHeaderAppearance();
     }
 
-    private final AppTemplateWizardAppearance wizAppearance;
+    private final PropertyEditorAppearance appearance;
 
     @Inject
-    public AppTemplateContentPanel(ArgumentGroupContentPanelAppearance appearance,
-                                   AppTemplateWizardAppearance wizAppearance) {
-        super(appearance);
+    public AppTemplateContentPanel(ArgumentGroupContentPanelAppearance panelAppearance,
+                                   PropertyEditorAppearance appearance) {
+        super(panelAppearance);
         setCollapsible(true);
         setAnimCollapse(false);
         setTitleCollapse(true);
-        getHeader().addStyleName(wizAppearance.getStyle().appHeaderSelect());
-        this.wizAppearance = wizAppearance;
+        getHeader().addStyleName(appearance.appHeaderSelect());
+        this.appearance = appearance;
         sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS);
     }
 
@@ -44,7 +44,7 @@ public final class AppTemplateContentPanel extends ContentPanel implements HasAp
         XElement element = XElement.as(header.getElement());
         if (element.isOrHasChild(ce.getEventTarget().<Element> cast())) {
             fireEvent(new AppTemplateSelectedEvent());
-            getHeader().addStyleName(wizAppearance.getStyle().appHeaderSelect());
+            getHeader().addStyleName(appearance.appHeaderSelect());
         }
         super.onClick(ce);
     }

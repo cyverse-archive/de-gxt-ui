@@ -6,10 +6,8 @@
              xmlns:srh="urn:import:org.iplantc.de.apps.integration.client.view.tools"
              xmlns:viewWidgets="urn:import:org.iplantc.de.apps.integration.client.view.widgets">
 
-    <ui:with field="icons"
-             type="org.iplantc.de.resources.client.IplantResources"/>
-    <ui:with field="labels"
-             type="org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels"/>
+    <ui:with field="appearance"
+             type="org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance"/>
     <ui:with field="margins"
              type="com.sencha.gxt.core.client.util.Margins">
         <ui:attributes top="5"
@@ -50,7 +48,7 @@
                                 </con:child>
                                 <con:child>
                                     <button:TextButton ui:field="searchBtn"
-                                                       icon="{icons.search}"/>
+                                                       icon="{appearance.searchIcon}"/>
                                 </con:child>
                             </con:HBoxLayoutContainer>
                         </form:widget>
@@ -61,7 +59,7 @@
                                      labelAlign="TOP">
                         <form:widget>
                             <form:TextField ui:field="name"
-                                            emptyText="{labels.appNameEmptyText}"
+                                            emptyText="{appearance.appNameEmptyText}"
                                             allowBlank="false"/>
                         </form:widget>
                     </form:FieldLabel>
@@ -71,7 +69,7 @@
                                      labelAlign="TOP">
                         <form:widget>
                             <form:TextArea ui:field="description"
-                                           emptyText="{labels.appDescriptionEmptyText}"
+                                           emptyText="{appearance.appDescriptionEmptyText}"
                                            allowBlank="false"
                                            height="60"/>
                         </form:widget>

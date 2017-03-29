@@ -1,6 +1,6 @@
 package org.iplantc.de.apps.integration.client.view.widgets;
 
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
+import org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance;
 
 import com.google.gwt.editor.client.LeafValueEditor;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -11,11 +11,11 @@ public class HeaderEditor implements LeafValueEditor<String> {
 
     private String hasHtmlModel;
     private final Header peer;
-    private final AppTemplateWizardAppearance wizAppearance;
+    private final PropertyEditorAppearance appearance;
 
-    public HeaderEditor(Header peer, AppTemplateWizardAppearance wizAppearance) {
+    public HeaderEditor(Header peer, PropertyEditorAppearance appearance) {
         this.peer = peer;
-        this.wizAppearance = wizAppearance;
+        this.appearance = appearance;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class HeaderEditor implements LeafValueEditor<String> {
     @Override
     public void setValue(String value) {
         this.hasHtmlModel = value;
-        peer.setHTML(wizAppearance.createContentPanelHeaderLabel(SafeHtmlUtils.fromString(value), false));
+        peer.setHTML(appearance.createContentPanelHeaderLabel(SafeHtmlUtils.fromString(value), false));
     }
 
 }

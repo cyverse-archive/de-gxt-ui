@@ -323,4 +323,24 @@ public interface PropertyEditorAppearance {
     String checkboxEmptyText();
 
     String environmentVariableNameValidationMsg();
+
+    SafeHtml createContentPanelHeaderLabel(SafeHtml label, boolean required);
+
+    SafeHtml fieldLabelRequired();
+
+    String appToolUsed();
+
+    String toolUsedLabel();
+
+    String appNameLabel();
+
+    String appDescriptionLabel();
+
+    String appHeaderSelect();
+
+    ImageResource searchIcon();
+
+    String appNameEmptyText();
+
+    String appDescriptionEmptyText();
 }

@@ -1,9 +1,10 @@
 package org.iplantc.de.apps.integration.client.view.widgets;
 
-import org.iplantc.de.apps.integration.client.view.dialogs.DCListingDialog;
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent;
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent.HasUpdateCommandLinePreviewEventHandlers;
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent.UpdateCommandLinePreviewEventHandler;
+import org.iplantc.de.apps.integration.client.view.dialogs.DCListingDialog;
+import org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance;
 import org.iplantc.de.apps.integration.client.view.tools.ToolSearchField;
 import org.iplantc.de.apps.integration.shared.AppIntegrationModule;
 import org.iplantc.de.apps.widgets.client.events.AppTemplateSelectedEvent.AppTemplateSelectedEventHandler;
@@ -13,13 +14,11 @@ import org.iplantc.de.apps.widgets.client.events.ArgumentGroupSelectedEvent.Argu
 import org.iplantc.de.apps.widgets.client.events.ArgumentSelectedEvent;
 import org.iplantc.de.apps.widgets.client.events.ArgumentSelectedEvent.ArgumentSelectedEventHandler;
 import org.iplantc.de.apps.widgets.client.view.HasLabelOnlyEditMode;
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.validators.AppNameValidator;
 import org.iplantc.de.commons.client.widgets.PreventEntryAfterLimitHandler;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.core.client.GWT;
@@ -68,8 +67,8 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
     @Ignore
     @UiField(provided = true) ToolSearchField tool;
     @UiField FieldLabel toolLabel, appNameLabel, appDescriptionLabel;
+    @UiField(provided = true) PropertyEditorAppearance appearance;
     private static AppTemplatePropertyEditorUiBinder BINDER = GWT.create(AppTemplatePropertyEditorUiBinder.class);
-    private final AppTemplateWizardAppearance appearance;
 
     private boolean labelOnlyEditMode = false;
 
@@ -79,7 +78,7 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
     @Inject AsyncProviderWrapper<DCListingDialog> dcListingDialogProvider;
 
     @Inject
-    public AppTemplatePropertyEditor(AppTemplateWizardAppearance appearance,
+    public AppTemplatePropertyEditor(PropertyEditorAppearance appearance,
                                      AppTemplateContentPanel cp,
                                      ToolSearchField tool) {
         this.appearance = appearance;
@@ -130,12 +129,12 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
 
     @Override
     public void onArgumentGroupSelected(ArgumentGroupSelectedEvent event) {
-        cp.getHeader().removeStyleName(appearance.getStyle().appHeaderSelect());
+        cp.getHeader().removeStyleName(appearance.appHeaderSelect());
     }
 
     @Override
     public void onArgumentSelected(ArgumentSelectedEvent event) {
-        cp.getHeader().removeStyleName(appearance.getStyle().appHeaderSelect());
+        cp.getHeader().removeStyleName(appearance.appHeaderSelect());
     }
 
     @Override
@@ -215,15 +214,14 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
     }
 
     private void initLabels() {
-        AppsWidgetsPropertyPanelLabels labels = appearance.getPropertyPanelLabels();
-        String requiredHtml = appearance.getTemplates().fieldLabelRequired().asString();
+        String requiredHtml = appearance.fieldLabelRequired().asString();
 
-        String toolHelp = appearance.getContextHelpMessages().appToolUsed();
-        SafeHtml toolLabelHtml = appearance.createContextualHelpLabel(labels.toolUsedLabel(), toolHelp);
+        String toolHelp = appearance.appToolUsed();
+        SafeHtml toolLabelHtml = appearance.createContextualHelpLabel(appearance.toolUsedLabel(), toolHelp);
         toolLabel.setHTML(SafeHtmlUtils.fromTrustedString(toolLabelHtml.asString()));
         new QuickTip(toolLabel).getToolTipConfig().setDismissDelay(0);
 
-        appNameLabel.setHTML(SafeHtmlUtils.fromTrustedString(requiredHtml + labels.appNameLabel()));
-        appDescriptionLabel.setHTML(SafeHtmlUtils.fromTrustedString(requiredHtml + labels.appDescriptionLabel()));
+        appNameLabel.setHTML(SafeHtmlUtils.fromTrustedString(requiredHtml + appearance.appNameLabel()));
+        appDescriptionLabel.setHTML(SafeHtmlUtils.fromTrustedString(requiredHtml + appearance.appDescriptionLabel()));
     }
 }
