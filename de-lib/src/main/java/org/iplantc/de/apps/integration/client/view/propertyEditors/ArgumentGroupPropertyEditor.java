@@ -7,7 +7,7 @@ import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Proper
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent.DeleteArgumentGroupEventHandler;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent.HasDeleteArgumentGroupEventHandlers;
-import org.iplantc.de.apps.integration.client.view.AppTemplateWizardPropertyContentPanelAppearance;
+import org.iplantc.de.apps.integration.client.view.AppsEditorPanelAppearance;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.util.FinishEditing;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.util.PrefixedHasTextEditor;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.ArgumentGroupEditor;
@@ -52,11 +52,11 @@ public class ArgumentGroupPropertyEditor extends Composite implements Editor<Arg
     private ArgumentGroupEditor argumentGroupEditor;
     private boolean labelOnlyEditMode = false;
     private ArgumentGroup model;
-    private AppTemplateWizardPropertyContentPanelAppearance panelAppearance;
+    private AppsEditorPanelAppearance panelAppearance;
 
     @Inject
     public ArgumentGroupPropertyEditor(AppTemplateWizardAppearance appearance,
-                                       AppTemplateWizardPropertyContentPanelAppearance panelAppearance) {
+                                       AppsEditorPanelAppearance panelAppearance) {
         this.panelAppearance = panelAppearance;
         initWidget(BINDER.createAndBindUi(this));
         name = SimpleEditor.of();

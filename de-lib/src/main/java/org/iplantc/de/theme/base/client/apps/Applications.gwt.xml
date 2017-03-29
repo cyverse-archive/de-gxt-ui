@@ -108,8 +108,8 @@
         <when-type-is class="org.iplantc.de.apps.integration.client.view.widgets.AppTemplateContentPanel.ArgumentGroupContentPanelAppearance"/>
     </replace-with>
 
-    <replace-with class="org.iplantc.de.theme.base.client.apps.integration.propertyEditors.AppTemplateWizardPropertyContentPanelDefaultAppearance">
-        <when-type-is class="org.iplantc.de.apps.integration.client.view.AppTemplateWizardPropertyContentPanelAppearance"/>
+    <replace-with class="org.iplantc.de.theme.base.client.apps.integration.propertyEditors.AppsEditorPanelDefaultAppearance">
+        <when-type-is class="org.iplantc.de.apps.integration.client.view.AppsEditorPanelAppearance"/>
     </replace-with>
 
     <!--Launch Widget-->

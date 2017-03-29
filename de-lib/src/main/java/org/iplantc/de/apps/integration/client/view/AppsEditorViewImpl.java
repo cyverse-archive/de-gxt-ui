@@ -161,7 +161,7 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView {
                               AppEditorToolbar toolbar,
                               AppTemplatePropertyEditor appTemplatePropertyEditor,
                               final AppIntegrationPalette palette,
-                              AppTemplateWizardPropertyContentPanelAppearance panelAppearance) {
+                              AppsEditorPanelAppearance panelAppearance) {
         this.wizard = wizard;
         this.toolbar = toolbar;
         wizard.setAdjustForScroll(false);

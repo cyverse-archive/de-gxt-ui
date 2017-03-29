@@ -6,6 +6,6 @@ import com.sencha.gxt.widget.core.client.ContentPanel;
 /**
  * @author aramsey
  */
-public interface AppTemplateWizardPropertyContentPanelAppearance extends ContentPanel.ContentPanelAppearance {
+public interface AppsEditorPanelAppearance extends ContentPanel.ContentPanelAppearance {
     HeaderDefaultAppearance getHeaderAppearance();
 }

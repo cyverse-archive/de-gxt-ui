@@ -7,7 +7,7 @@ import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEve
 import org.iplantc.de.apps.integration.client.model.ArgumentPropertyEditor;
 import org.iplantc.de.apps.integration.client.model.DataSourceProperties;
 import org.iplantc.de.apps.integration.client.model.FileInfoTypeProperties;
-import org.iplantc.de.apps.integration.client.view.AppTemplateWizardPropertyContentPanelAppearance;
+import org.iplantc.de.apps.integration.client.view.AppsEditorPanelAppearance;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.util.FinishEditing;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.util.PrefixedHasTextEditor;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.ArgumentEditor;
@@ -21,7 +21,6 @@ import org.iplantc.de.client.models.apps.refGenome.ReferenceGenome;
 import org.iplantc.de.client.services.AppBuilderMetadataServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.shared.AppsCallback;
-import org.iplantc.de.theme.base.client.apps.integration.propertyEditors.AppTemplateWizardPropertyContentPanelDefaultAppearance;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.editor.client.Editor;
@@ -123,7 +122,7 @@ public abstract class AbstractArgumentPropertyEditor extends Composite implement
         }
     }
 
-    private AppTemplateWizardPropertyContentPanelAppearance panelAppearance;
+    private AppsEditorPanelAppearance panelAppearance;
     protected final AppTemplateWizardAppearance appearance;
 
     @Ignore protected ArgumentEditor argumentEditor;
@@ -141,11 +140,11 @@ public abstract class AbstractArgumentPropertyEditor extends Composite implement
 
 
     public AbstractArgumentPropertyEditor(AppTemplateWizardAppearance appearance) {
-        this((AppTemplateWizardPropertyContentPanelAppearance)GWT.create(AppTemplateWizardPropertyContentPanelAppearance.class),
+        this((AppsEditorPanelAppearance)GWT.create(AppsEditorPanelAppearance.class),
              appearance);
     }
 
-    public AbstractArgumentPropertyEditor(AppTemplateWizardPropertyContentPanelAppearance panelAppearance,
+    public AbstractArgumentPropertyEditor(AppsEditorPanelAppearance panelAppearance,
                                           AppTemplateWizardAppearance appearance) {
         this.panelAppearance = panelAppearance;
         this.appearance = appearance;
