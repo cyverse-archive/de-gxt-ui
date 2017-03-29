@@ -1,15 +1,11 @@
 package org.iplantc.de.diskResource.client.views.metadata.dialogs;
 
-import org.iplantc.de.admin.desktop.client.permIdRequest.views.MetadataDialog;
 import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.diskResource.client.GridView;
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetadataUpdateCallback;
-import org.iplantc.de.diskResource.client.presenters.metadata.MetadataPresenterImpl;
-import org.iplantc.de.diskResource.client.views.metadata.DiskResourceMetadataViewImpl;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 import org.iplantc.de.resources.client.messages.I18N;
 
@@ -17,7 +13,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
-import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
@@ -26,23 +21,21 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
  */
 public class ManageMetadataDialog extends IPlantDialog {
 
-    private final DiskResourceServiceFacade diskResourceService;
     private final GridView.Presenter.Appearance appearance;
-    private MetadataView.Presenter mdPresenter;
-    private MetadataView mdView;
-
     final DiskResourceUtil diskResourceUtil;
     private boolean writable;
     private DiskResource resource;
     private boolean canHide;
 
+    MetadataView.Presenter mdPresenter;
+
     @Inject
-    ManageMetadataDialog(final DiskResourceServiceFacade diskResourceService,
+    ManageMetadataDialog(MetadataView.Presenter mdPresenter,
                          final DiskResourceUtil diskResourceUtil,
                          final GridView.Presenter.Appearance appearance) {
         super(true);
         setModal(true);
-        this.diskResourceService = diskResourceService;
+        this.mdPresenter = mdPresenter;
         this.diskResourceUtil = diskResourceUtil;
         this.appearance = appearance;
         setSize(appearance.metadataDialogWidth(), appearance.metadataDialogHeight());
@@ -57,9 +50,9 @@ public class ManageMetadataDialog extends IPlantDialog {
             @Override
             public void onSelect(SelectEvent event) {
                 canHide = true;
-                if (!mdView.isValid()) {
-                    AlertMessageBox cmb = new AlertMessageBox(I18N.DISPLAY.error(),
-                                                                  appearance.metadataSaveError());
+                if (!mdPresenter.isValid()) {
+                    AlertMessageBox cmb =
+                            new AlertMessageBox(appearance.error(), appearance.metadataSaveError());
 
                     cmb.show();
                 } else {
@@ -81,20 +74,18 @@ public class ManageMetadataDialog extends IPlantDialog {
 
     @Override
     public void hide() {
-      if(canHide) {
-          super.hide();
-      } else {
-          checkForUnsavedChanges();
-      }
+        if (canHide) {
+            super.hide();
+        } else {
+            checkForUnsavedChanges();
+        }
     }
 
     public void show(final DiskResource resource) {
         this.resource = resource;
         setHeading(appearance.metadata() + ":" + resource.getName());
-        mdView = new DiskResourceMetadataViewImpl(diskResourceUtil.isWritable(resource));
-        mdPresenter = new MetadataPresenterImpl(resource, mdView, diskResourceService);
-        mdPresenter.go(this);
         writable = diskResourceUtil.isWritable(resource);
+        mdPresenter.go(this, resource);
         if (writable) {
             setHideOnButtonClick(false);
         } else {
@@ -113,7 +104,7 @@ public class ManageMetadataDialog extends IPlantDialog {
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
-        mdView.asWidget().ensureDebugId(baseID + DiskResourceModule.MetadataIds.METADATA_VIEW);
+        mdPresenter.setViewDebugId(baseID + DiskResourceModule.MetadataIds.METADATA_VIEW);
     }
 
     private void checkForUnsavedChanges() {

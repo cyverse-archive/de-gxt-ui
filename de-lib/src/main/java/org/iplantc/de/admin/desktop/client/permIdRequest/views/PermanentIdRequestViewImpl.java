@@ -8,12 +8,15 @@ import org.iplantc.de.client.models.identifiers.PermanentIdRequestAutoBeanFactor
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.StaticIdHelper;
+import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -76,6 +79,9 @@ public class PermanentIdRequestViewImpl extends Composite implements PermanentId
     private Presenter presenter;
 
     private final PermanentIdRequestAutoBeanFactory factory;
+
+    @Inject
+    AsyncProviderWrapper<MetadataDialog> metadataDialogAsyncProvider;
 
     @Inject
     PermanentIdRequestViewImpl(PermanentIdRequestProperties pr_props,
@@ -258,10 +264,19 @@ public class PermanentIdRequestViewImpl extends Composite implements PermanentId
 
     @Override
     public void fetchMetadata(Folder selectedFolder,
-                              PermanentIdRequestPresenterAppearance appearance,
-                              DiskResourceServiceFacade drsvc) {
-        MetadataDialog dialog = new MetadataDialog(selectedFolder, appearance, drsvc);
-        dialog.show();
+                              PermanentIdRequestPresenterAppearance appearance) {
+        metadataDialogAsyncProvider.get(new AsyncCallback<MetadataDialog>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(throwable);
+            }
+
+            @Override
+            public void onSuccess(MetadataDialog dialog) {
+                dialog.show(selectedFolder);
+            }
+        });
+
 
     }
 

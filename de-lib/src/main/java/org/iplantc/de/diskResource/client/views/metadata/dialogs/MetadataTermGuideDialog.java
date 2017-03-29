@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
 import org.iplantc.de.diskResource.client.MetadataView;
 
 import com.google.gwt.user.client.ui.HTML;
+import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.dom.ScrollSupport;
 import com.sencha.gxt.widget.core.client.Dialog;
@@ -16,14 +17,17 @@ import java.util.List;
  */
 public class MetadataTermGuideDialog extends Dialog {
 
-    public MetadataTermGuideDialog(List<MetadataTemplateAttribute> attributes,
-                                   MetadataView.Appearance appearance,
-                                   String header) {
+    @Inject
+    public MetadataTermGuideDialog(MetadataView.Appearance appearance) {
         setHideOnButtonClick(true);
         setSize("350", "400");
         setPredefinedButtons(PredefinedButton.OK);
+        setBodyStyle(appearance.backgroundStyle());
+    }
+
+
+    public void show(List<MetadataTemplateAttribute> attributes, String header) {
         setHeading(header);
-        setBodyStyle(appearance.backgroudStyle());
         setWidget(buildGuide(attributes));
         show();
     }

@@ -1,6 +1,7 @@
 package org.iplantc.de.theme.base.client.diskResource.metadata;
 
 import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.safehtml.shared.SafeHtml;
 
 /**
  * Created by jstroot on 2/10/15.
@@ -23,7 +24,7 @@ public interface MetadataDisplayStrings extends Messages{
 
 	String selectTemplate();
 
-	String importMd();
+	SafeHtml importMd();
 
     String userMetadata();
 
@@ -45,7 +46,7 @@ public interface MetadataDisplayStrings extends Messages{
 
 	String incomplete();
 
-	String importMdMsg();
+	SafeHtml importMdMsg();
 
 	String importMdTooltip();
 
@@ -56,4 +57,6 @@ public interface MetadataDisplayStrings extends Messages{
 	String urlGhostText();
 
 	String requiredGhostText();
+
+    String importUMdBtnText();
 }

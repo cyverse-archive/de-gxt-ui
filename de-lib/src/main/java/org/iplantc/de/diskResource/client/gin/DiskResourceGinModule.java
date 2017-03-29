@@ -5,6 +5,7 @@ import org.iplantc.de.diskResource.client.DataLinkView;
 import org.iplantc.de.diskResource.client.DetailsView;
 import org.iplantc.de.diskResource.client.DiskResourceView;
 import org.iplantc.de.diskResource.client.GridView;
+import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.NavigationView;
 import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.ToolbarView;
@@ -26,6 +27,7 @@ import org.iplantc.de.diskResource.client.presenters.dataLink.DataLinkPresenterI
 import org.iplantc.de.diskResource.client.presenters.details.DetailsViewPresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.grid.GridViewPresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsRpcProxyImpl;
+import org.iplantc.de.diskResource.client.presenters.metadata.MetadataPresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.navigation.NavigationPresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.navigation.proxy.FolderRpcProxyImpl;
 import org.iplantc.de.diskResource.client.presenters.search.DataSearchPresenterImpl;
@@ -33,11 +35,12 @@ import org.iplantc.de.diskResource.client.presenters.toolbar.ToolbarViewPresente
 import org.iplantc.de.diskResource.client.views.DiskResourceViewImpl;
 import org.iplantc.de.diskResource.client.views.dataLink.DataLinkViewImpl;
 import org.iplantc.de.diskResource.client.views.details.DetailsViewImpl;
-import org.iplantc.de.diskResource.client.views.dialogs.BulkMetadataDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.InfoTypeEditorDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.SaveAsDialog;
 import org.iplantc.de.diskResource.client.views.grid.GridViewImpl;
+import org.iplantc.de.diskResource.client.views.metadata.DiskResourceMetadataViewImpl;
+import org.iplantc.de.diskResource.client.views.metadata.MetadataTemplateView;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.ManageMetadataDialog;
 import org.iplantc.de.diskResource.client.views.navigation.NavigationViewImpl;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
@@ -126,6 +129,10 @@ public class DiskResourceGinModule extends AbstractGinModule {
                     .build(DetailsViewFactory.class));
 
         install(new GinFactoryModuleBuilder().build(BulkMetadataDialogFactory.class));
+
+        bind(MetadataView.class).to(DiskResourceMetadataViewImpl.class);
+        bind(MetadataView.Presenter.class).to(MetadataPresenterImpl.class);
+        bind(MetadataTemplateView.class);
 
         // Dialogs
         bind(InfoTypeEditorDialog.class);

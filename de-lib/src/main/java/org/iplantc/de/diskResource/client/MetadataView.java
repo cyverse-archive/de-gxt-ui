@@ -9,6 +9,7 @@ import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetad
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import java.util.List;
@@ -68,7 +69,7 @@ public interface MetadataView extends IsWidget {
 
         String selectTemplate();
 
-        String importMd();
+        SafeHtml importMd();
 
         String panelWidth();
 
@@ -90,16 +91,20 @@ public interface MetadataView extends IsWidget {
 
         String loading();
 
-        String backgroudStyle();
+        String backgroundStyle();
 
         String urlGhostText();
 
         String requiredGhostText();
+
+        String importUMdBtnText();
     }
 
-    public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
+    public interface Presenter {
 
         final String AVU_BEAN_TAG_MODEL_KEY = "model-key";
+
+        void setViewDebugId(String debugId);
 
         interface Appearance {
 
@@ -121,10 +126,12 @@ public interface MetadataView extends IsWidget {
 
             ImageResource info();
 
-            String importMdMsg();
+            SafeHtml importMdMsg();
 
-            String importMd();
+            SafeHtml importMd();
         }
+
+        boolean isValid();
 
         Avu setAvuModelKey(Avu avu);
 
@@ -143,6 +150,8 @@ public interface MetadataView extends IsWidget {
         void downloadTemplate(String templateid);
 
         void onSaveToFile();
+
+        void go(HasOneWidget container, final DiskResource selected);
     }
 
 
@@ -170,5 +179,7 @@ public interface MetadataView extends IsWidget {
     void addToUserMetadata(List<Avu> umd);
 
     void removeImportedMetadataFromStore(List<Avu> umd);
+
+    void init(boolean editable);
 
 }
