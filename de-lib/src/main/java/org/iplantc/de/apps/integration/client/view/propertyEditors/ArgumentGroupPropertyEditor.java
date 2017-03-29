@@ -7,12 +7,10 @@ import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Proper
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent.DeleteArgumentGroupEventHandler;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent.HasDeleteArgumentGroupEventHandlers;
-import org.iplantc.de.apps.integration.client.view.AppsEditorPanelAppearance;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.util.FinishEditing;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.util.PrefixedHasTextEditor;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.ArgumentGroupEditor;
 import org.iplantc.de.apps.widgets.client.view.HasLabelOnlyEditMode;
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.client.models.apps.integration.ArgumentGroup;
 
 import com.google.gwt.core.client.GWT;
@@ -45,6 +43,7 @@ public class ArgumentGroupPropertyEditor extends Composite implements Editor<Arg
     @UiField ContentPanel cp;
     @UiField @Ignore TextButton deleteButton;
     @UiField TextField label;
+    @UiField(provided = true) PropertyEditorAppearance appearance;
     SimpleEditor<String> name;
     private static ArgumentGroupPropertyEditorUiBinder BINDER = GWT.create(ArgumentGroupPropertyEditorUiBinder.class);
     private final EditorDriver editorDriver = GWT.create(EditorDriver.class);
@@ -52,16 +51,13 @@ public class ArgumentGroupPropertyEditor extends Composite implements Editor<Arg
     private ArgumentGroupEditor argumentGroupEditor;
     private boolean labelOnlyEditMode = false;
     private ArgumentGroup model;
-    private AppsEditorPanelAppearance panelAppearance;
 
     @Inject
-    public ArgumentGroupPropertyEditor(AppTemplateWizardAppearance appearance,
-                                       PropertyEditorAppearance propertyAppearance,
-        AppsEditorPanelAppearance panelAppearance) {
-        this.panelAppearance = panelAppearance;
+    public ArgumentGroupPropertyEditor(PropertyEditorAppearance appearance) {
+        this.appearance = appearance;
         initWidget(BINDER.createAndBindUi(this));
         name = SimpleEditor.of();
-        labelEditor = new PrefixedHasTextEditor(cp.getHeader(), propertyAppearance);
+        labelEditor = new PrefixedHasTextEditor(cp.getHeader(), appearance);
         editorDriver.initialize(this);
         ensureDebugId(Ids.PROPERTY_EDITOR + Ids.GROUP);
     }
@@ -117,7 +113,7 @@ public class ArgumentGroupPropertyEditor extends Composite implements Editor<Arg
 
     @UiFactory
     ContentPanel createContentPanel() {
-        return new ContentPanel(panelAppearance);
+        return new ContentPanel(appearance.panelAppearance());
     }
 
     /**
