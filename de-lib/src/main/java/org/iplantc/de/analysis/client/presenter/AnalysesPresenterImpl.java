@@ -623,7 +623,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         AnalysisSupportRequest req = supportFactory.analysisSupportRequest().as();
         req.setFrom(userInfo.getFullUsername());
         req.setSubject(
-                userInfo.getUsername() + appearance.userRequestingHelpSubject());
+                userInfo.getUsername() +" " + appearance.userRequestingHelpSubject());
         req.setFields(fields);
         return req;
     }
