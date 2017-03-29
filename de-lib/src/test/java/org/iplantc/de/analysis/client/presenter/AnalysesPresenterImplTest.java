@@ -423,7 +423,7 @@ public class AnalysesPresenterImplTest {
         uut.getAnalysisSupportRequest(analysisMock, THIS_IS_A_COMMENT);
 
         verify(request).setFrom(eq(TESTUSER_CYVERE_ORG));
-        verify(request).setSubject(eq(TESTUSER + REQUEST_HELP));
+        verify(request).setSubject(eq(TESTUSER + " " + REQUEST_HELP));
 
         verify(requestFields).setEmail(eq(TEST_CYVERSE_ORG));
         verify(requestFields).setStatus(eq(AnalysisExecutionStatus.COMPLETED.toString()));
