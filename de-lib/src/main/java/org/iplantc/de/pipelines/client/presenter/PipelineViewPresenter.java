@@ -450,13 +450,13 @@ public class PipelineViewPresenter implements Presenter, PipelineView.Presenter,
 
         if (selectedApp != null) {
             ListStore<PipelineTask> store = view.getPipelineAppStore();
-
             store.remove(selectedApp);
 
-            for (int step = 1; step <= store.size(); step++) {
+            for(int step = store.size(); step>0; step--) {
                 PipelineTask app = store.get(step - 1);
-                app.setStep(step);
+                app.setStep(step - 1);
                 store.update(app);
+
             }
 
             reconfigurePipelineAppMappingView(selectedApp.getStep(), store.getAll());
