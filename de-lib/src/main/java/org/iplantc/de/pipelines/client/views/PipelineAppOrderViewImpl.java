@@ -22,9 +22,11 @@ import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.SortDir;
 import com.sencha.gxt.data.shared.Store.StoreSortInfo;
 import com.sencha.gxt.widget.core.client.Composite;
+import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
+import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 
 import java.util.List;
 
@@ -46,11 +48,34 @@ public class PipelineAppOrderViewImpl extends Composite implements PipelineAppOr
 
     ListStoreEditor<PipelineTask> apps;
 
+    @UiField
+    @Ignore
+    TextButton addAppsBtn;
+
+    @UiField
+    @Ignore
+    TextButton removeAppBtn;
+
+    @UiField
+    @Ignore
+    TextButton moveDownBtn;
+
+    @UiField
+    @Ignore
+    TextButton moveUpBtn;
+
     public PipelineAppOrderViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
 
         apps = new AppListStoreEditor(this);
         appOrderGrid.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        appOrderGrid.getSelectionModel()
+                    .addSelectionChangedHandler(new SelectionChangedEvent.SelectionChangedHandler<PipelineTask>() {
+                        @Override
+                        public void onSelectionChanged(SelectionChangedEvent<PipelineTask> event) {
+                            setButtonState();
+                        }
+                    });
 
     }
 
@@ -88,6 +113,7 @@ public class PipelineAppOrderViewImpl extends Composite implements PipelineAppOr
     @UiHandler("removeAppBtn")
     public void onRemoveAppClick(SelectEvent e) {
         presenter.onRemoveAppClicked();
+        setButtonState();
     }
 
     @UiHandler("moveUpBtn")
@@ -113,6 +139,21 @@ public class PipelineAppOrderViewImpl extends Composite implements PipelineAppOr
     @Override
     public PipelineTask getOrderGridSelectedApp() {
         return appOrderGrid.getSelectionModel().getSelectedItem();
+    }
+
+    private void setButtonState() {
+        int size = appOrderGrid.getSelectionModel().getSelectedItems().size();
+        if(size > 0) {
+            removeAppBtn.enable();
+            if(appOrderGrid.getStore().size() > 1) {
+                moveDownBtn.enable();
+                moveUpBtn.enable();
+            }
+        } else {
+            removeAppBtn.disable();
+            moveUpBtn.disable();
+            moveDownBtn.disable();
+        }
     }
 
     public class AppListStoreEditor extends ListStoreEditor<PipelineTask> {
