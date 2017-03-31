@@ -34,9 +34,9 @@ import java.util.List;
  * An implementation of the PipelineAppOrderView.
  *
  * @author psarando
- *
  */
-public class PipelineAppOrderViewImpl extends Composite implements PipelineAppOrderView, Editor<Pipeline> {
+public class PipelineAppOrderViewImpl extends Composite
+        implements PipelineAppOrderView, Editor<Pipeline> {
 
     @UiTemplate("PipelineAppOrderView.ui.xml")
     interface PipelineAppOrderUiBinder extends UiBinder<Widget, PipelineAppOrderViewImpl> {
@@ -87,13 +87,15 @@ public class PipelineAppOrderViewImpl extends Composite implements PipelineAppOr
 
     @UiFactory
     ListStore<PipelineTask> createListStore() {
-        ListStore<PipelineTask> store = new ListStore<PipelineTask>(new ModelKeyProvider<PipelineTask>() {
+        ListStore<PipelineTask> store =
+                new ListStore<PipelineTask>(new ModelKeyProvider<PipelineTask>() {
 
-            @Override
-            public String getKey(PipelineTask item) {
-                return presenter.getStepName(item);
-            }
-        });
+                    @Override
+                    public String getKey(PipelineTask item) {
+                        //prevent liststore assertion errors
+                        return item.getTaskId() + "-" + presenter.getStepName(item);
+                    }
+                });
 
         store.addSortInfo(new StoreSortInfo<PipelineTask>(pipelineAppProps.step(), SortDir.ASC));
 
@@ -119,11 +121,13 @@ public class PipelineAppOrderViewImpl extends Composite implements PipelineAppOr
     @UiHandler("moveUpBtn")
     public void onMoveUpClick(SelectEvent e) {
         presenter.onMoveUpClicked();
+        setButtonState();
     }
 
     @UiHandler("moveDownBtn")
     public void onMoveDownClick(SelectEvent e) {
         presenter.onMoveDownClicked();
+        setButtonState();
     }
 
     @Override
@@ -143,11 +147,21 @@ public class PipelineAppOrderViewImpl extends Composite implements PipelineAppOr
 
     private void setButtonState() {
         int size = appOrderGrid.getSelectionModel().getSelectedItems().size();
-        if(size > 0) {
+        if (size > 0) {
             removeAppBtn.enable();
-            if(appOrderGrid.getStore().size() > 1) {
-                moveDownBtn.enable();
-                moveUpBtn.enable();
+            if (appOrderGrid.getStore().size() > 1) {
+                PipelineTask task = appOrderGrid.getSelectionModel().getSelectedItem();
+                if (getPipelineAppStore().indexOf(task)
+                    == getPipelineAppStore().size() - 1) { //last item
+                    moveDownBtn.disable();
+                } else {
+                    moveDownBtn.enable();
+                }
+                if (getPipelineAppStore().indexOf(task) == 0) {   //first item
+                    moveUpBtn.disable();
+                } else {
+                    moveUpBtn.enable();
+                }
             }
         } else {
             removeAppBtn.disable();
@@ -190,7 +204,6 @@ public class PipelineAppOrderViewImpl extends Composite implements PipelineAppOr
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
-
         appOrderGrid.ensureDebugId(baseID + Pipelines.Ids.APP_ORDER_GRID);
     }
 }
