@@ -35,6 +35,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell.TriggerAction;
@@ -122,8 +123,7 @@ public abstract class AbstractArgumentPropertyEditor extends Composite implement
         }
     }
 
-    private AppsEditorPanelAppearance panelAppearance;
-    protected final AppTemplateWizardAppearance appearance;
+    protected final PropertyEditorAppearance appearance;
 
     @Ignore protected ArgumentEditor argumentEditor;
     protected Argument model;
@@ -138,21 +138,23 @@ public abstract class AbstractArgumentPropertyEditor extends Composite implement
     private final ReferenceGenomeProperties referenceGenomeProperties;
     private QuickTip quickTip = null;
 
-
-    public AbstractArgumentPropertyEditor(AppTemplateWizardAppearance appearance) {
-        this((AppsEditorPanelAppearance)GWT.create(AppsEditorPanelAppearance.class),
-             appearance);
+    public AbstractArgumentPropertyEditor() {
+        this((PropertyEditorAppearance)GWT.create(PropertyEditorAppearance.class),
+             (ReferenceGenomeProperties)GWT.create(ReferenceGenomeProperties.class),
+             (DataSourceProperties)GWT.create(DataSourceProperties.class),
+             (FileInfoTypeProperties)GWT.create(FileInfoTypeProperties.class));
     }
 
-    public AbstractArgumentPropertyEditor(AppsEditorPanelAppearance panelAppearance,
-                                          AppTemplateWizardAppearance appearance) {
-        this.panelAppearance = panelAppearance;
+    public AbstractArgumentPropertyEditor(PropertyEditorAppearance appearance,
+                                          ReferenceGenomeProperties referenceGenomeProperties,
+                                          DataSourceProperties props,
+                                          FileInfoTypeProperties props2) {
         this.appearance = appearance;
-        contentPanel = new ContentPanel(panelAppearance);
+        this.referenceGenomeProperties = referenceGenomeProperties;
+        this.props = props;
+        this.props2 = props2;
+        contentPanel = new ContentPanel(appearance.panelAppearance());
         labelEditor = new PrefixedHasTextEditor(contentPanel.getHeader(), appearance);
-        props = GWT.create(DataSourceProperties.class);
-        props2 = GWT.create(FileInfoTypeProperties.class);
-        referenceGenomeProperties = GWT.create(ReferenceGenomeProperties.class);
     }
 
     @Override

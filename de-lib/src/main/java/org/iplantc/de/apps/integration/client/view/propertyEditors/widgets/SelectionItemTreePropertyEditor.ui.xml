@@ -6,12 +6,8 @@
              xmlns:treeGrid="urn:import:com.sencha.gxt.widget.core.client.treegrid"
              xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button">
 
-    <ui:with field="display"
-             type="org.iplantc.de.resources.client.messages.IplantDisplayStrings"/>
-    <ui:with field="appWidgetStrings"
-             type="org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsDisplayMessages"/>
-    <ui:with field="res"
-             type="org.iplantc.de.resources.client.IplantResources"/>
+    <ui:with field="appearance"
+             type="org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance"/>
     <ui:with field="padding5"
              type="com.sencha.gxt.core.client.util.Padding">
         <ui:attributes top="5" right="5" bottom="5" left="5"/>
@@ -32,11 +28,11 @@
     <con:VBoxLayoutContainer padding="{padding5}"
                              vBoxLayoutAlign="STRETCH">
         <con:child layoutData="{boxLayoutDataMargins0050}">
-            <form:FieldLabel text="{appWidgetStrings.checkCascadeLabel}"
+            <form:FieldLabel text="{appearance.checkCascadeLabel}"
                              labelAlign="TOP">
                 <form:widget>
                     <form:SimpleComboBox ui:field="cascadeOptionsCombo"
-                                         toolTip="{appWidgetStrings.cascadeOptionsComboToolTip}"
+                                         toolTip="{appearance.cascadeOptionsComboToolTip}"
                                          triggerAction="ALL"
                                          editable="false"/>
                 </form:widget>
@@ -45,25 +41,25 @@
 
         <con:child layoutData="{boxLayoutDataMargins0050}">
             <form:CheckBox ui:field="forceSingleSelectCheckBox"
-                           boxLabel="{appWidgetStrings.forceSingleSelectLabel}"
-                           toolTip="{appWidgetStrings.forceSingleSelectToolTip}"/>
+                           boxLabel="{appearance.forceSingleSelectLabel}"
+                           toolTip="{appearance.forceSingleSelectToolTip}"/>
         </con:child>
         <con:child layoutData="{boxLayoutDataMargins0050}">
             <toolbar:ToolBar horizontalSpacing="4">
                 <toolbar:child>
                     <button:TextButton ui:field="addGrpBtn"
-                                       icon="{res.folderAdd}"
-                                       text="{appWidgetStrings.addGroupToolTip}"/>
+                                       icon="{appearance.folderAddIcon}"
+                                       text="{appearance.addGroupToolTip}"/>
                 </toolbar:child>
                 <toolbar:child>
                     <button:TextButton ui:field="addArgBtn"
-                                       icon="{res.add}"
-                                       text="{appWidgetStrings.addArgumentToolTip}"/>
+                                       icon="{appearance.addIcon}"
+                                       text="{appearance.addArgumentToolTip}"/>
                 </toolbar:child>
                 <toolbar:child>
                     <button:TextButton ui:field="deleteBtn"
-                                       text="{display.delete}"
-                                       icon="{res.cancel}"/>
+                                       text="{appearance.delete}"
+                                       icon="{appearance.cancelIcon}"/>
                 </toolbar:child>
             </toolbar:ToolBar>
         </con:child>

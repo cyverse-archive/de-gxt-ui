@@ -10,7 +10,6 @@ import org.iplantc.de.apps.widgets.client.view.editors.SelectionItemProperties;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.ClearComboBoxSelectionKeyDownHandler;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.ArgumentEditorConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.SplittableToSelectionArgConverter;
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.apps.widgets.client.view.editors.widgets.CheckBoxAdapter;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.models.apps.integration.SelectionItem;
@@ -18,10 +17,6 @@ import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.commons.client.widgets.ContextualHelpPopup;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.I18N;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsDisplayMessages;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
-import org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.DoubleSelectionLabels;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.LeafValueEditor;
@@ -60,9 +55,8 @@ public class DecimalSelectionPropertyEditor extends AbstractArgumentPropertyEdit
 
     final ListStoreEditor<SelectionItem> selectionItemsEditor;
 
-    @UiField(provided = true) AppsWidgetsPropertyPanelLabels appLabels;
+    @UiField(provided = true) PropertyEditorAppearance appearance;
     @UiField(provided = true) ArgumentEditorConverter<SelectionItem> defaultValueEditor;
-    @UiField(provided = true) DoubleSelectionLabels doubleSelectionLabels;
     @UiField @Ignore TextButton editSimpleListBtn;
     @UiField TextField label;
     @UiField CheckBoxAdapter omitIfBlank, requiredEditor;
@@ -74,20 +68,15 @@ public class DecimalSelectionPropertyEditor extends AbstractArgumentPropertyEdit
     private final ComboBox<SelectionItem> selectionItemsComboBox;
 
     @Inject
-    public DecimalSelectionPropertyEditor(AppTemplateWizardAppearance appearance,
-                                          AppsWidgetsPropertyPanelLabels appLabels,
-                                          AppsWidgetsContextualHelpMessages help,
-                                          AppsWidgetsDisplayMessages appsWidgetsMessages,
+    public DecimalSelectionPropertyEditor(PropertyEditorAppearance appearance,
                                           SelectionItemProperties props) {
-        super(appearance);
-        this.appLabels = appLabels;
-        this.doubleSelectionLabels = appLabels;
+        this.appearance = appearance;
 
         // Setup selectionItems and defaultValue editors
         selectionItemsEditor = new ListStoreEditor<>(new ListStore<>(new SelectionItemModelKeyProvider()));
 
         selectionItemsComboBox = new ComboBox<>(selectionItemsEditor.getStore(), props.displayLabel());
-        selectionItemsComboBox.setEmptyText(appsWidgetsMessages.emptyListSelectionText());
+        selectionItemsComboBox.setEmptyText(appearance.emptyListSelectionText());
         selectionItemsComboBox.setTriggerAction(ALL);
         selectionItemsComboBox.setMinChars(1);
         ClearComboBoxSelectionKeyDownHandler handler = new ClearComboBoxSelectionKeyDownHandler(selectionItemsComboBox);
@@ -96,12 +85,12 @@ public class DecimalSelectionPropertyEditor extends AbstractArgumentPropertyEdit
 
         initWidget(uiBinder.createAndBindUi(this));
 
-        selectionItemDefaultValueLabel.setHTML(appearance.createContextualHelpLabel(appLabels.singleSelectionDefaultValue(), help.singleSelectDefaultItem()));
+        selectionItemDefaultValueLabel.setHTML(appearance.createContextualHelpLabel(appearance.singleSelectionDefaultValue(), appearance.singleSelectDefaultItem()));
         omitIfBlank.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;")
-                                                 .append(appearance.createContextualHelpLabelNoFloat(appLabels.excludeWhenEmpty(), help.singleSelectExcludeArgument())).toSafeHtml());
-        toolTipLabel.setHTML(appearance.createContextualHelpLabel(appLabels.toolTipText(), help.toolTip()));
+                                                 .append(appearance.createContextualHelpLabelNoFloat(appearance.excludeWhenEmpty(), appearance.singleSelectExcludeArgument())).toSafeHtml());
+        toolTipLabel.setHTML(appearance.createContextualHelpLabel(appearance.toolTipText(), appearance.toolTip()));
 
-        requiredEditor.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appLabels.isRequired()).toSafeHtml());
+        requiredEditor.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appearance.isRequired()).toSafeHtml());
         editorDriver.initialize(this);
         editorDriver.accept(new InitializeTwoWayBinding(this));
         ensureDebugId(Ids.PROPERTY_EDITOR + Ids.DOUBLE_SELECTION);
@@ -154,7 +143,7 @@ public class DecimalSelectionPropertyEditor extends AbstractArgumentPropertyEdit
     void onEditSimpleListBtnClicked(@SuppressWarnings("unused") SelectEvent event) {
         IPlantDialog dlg = new IPlantDialog();
         dlg.setPredefinedButtons(PredefinedButton.OK, PredefinedButton.CANCEL);
-        dlg.setHeading(appearance.getPropertyPanelLabels().singleSelectionCreateLabel());
+        dlg.setHeading(appearance.singleSelectionCreateLabel());
         dlg.setModal(true);
         dlg.setOkButtonText(I18N.DISPLAY.done());
         dlg.setAutoHide(false);
@@ -183,7 +172,7 @@ public class DecimalSelectionPropertyEditor extends AbstractArgumentPropertyEdit
             public void onSelect(SelectEvent event) {
                 ContextualHelpPopup popup = new ContextualHelpPopup();
                 popup.setWidth(450);
-                popup.add(new HTML(appearance.getContextHelpMessages().singleSelectionCreateList()));
+                popup.add(new HTML(appearance.singleSelectionCreateList()));
                 popup.showAt(toolBtn.getAbsoluteLeft(), toolBtn.getAbsoluteTop() + 15);
             }
         });

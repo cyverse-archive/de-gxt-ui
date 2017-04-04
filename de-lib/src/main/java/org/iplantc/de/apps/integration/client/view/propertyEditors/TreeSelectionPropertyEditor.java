@@ -2,8 +2,8 @@ package org.iplantc.de.apps.integration.client.view.propertyEditors;
 
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids;
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.PropertyPanelIds;
+
 import org.iplantc.de.apps.integration.client.view.propertyEditors.widgets.SelectionItemTreePropertyEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.apps.widgets.client.view.editors.widgets.CheckBoxAdapter;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.models.apps.integration.SelectionItem;
@@ -12,9 +12,6 @@ import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.commons.client.widgets.ContextualHelpPopup;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.I18N;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
-import org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.TreeSelectionLabels;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
@@ -47,44 +44,32 @@ public class TreeSelectionPropertyEditor extends AbstractArgumentPropertyEditor 
 
     private static TreeSelectionPropertyEditorUiBinder uiBinder = GWT.create(TreeSelectionPropertyEditorUiBinder.class);
 
-    @UiField(provided = true)
-    AppsWidgetsPropertyPanelLabels appLabels;
+    @UiField(provided = true) PropertyEditorAppearance appearance;
 
-    @UiField
-    TextField label;
+    @UiField TextField label;
 
-    @UiField
-    CheckBoxAdapter omitIfBlank, requiredEditor;
+    @UiField CheckBoxAdapter omitIfBlank, requiredEditor;
 
-    @UiField
-    @Path("description")
-    TextField toolTipEditor;
+    @UiField @Path("description") TextField toolTipEditor;
 
-    @UiField
-    FieldLabel toolTipTextLabel;
-    @UiField(provided = true)
-    TreeSelectionLabels treeSelectionLabels;
+    @UiField FieldLabel toolTipTextLabel;
 
-    @Ignore
-    @UiField
-    TextButton editTreeListBtn;
+    @Ignore @UiField TextButton editTreeListBtn;
 
     private int uniqueIdNum = 0;
 
     private final EditorDriver editorDriver = GWT.create(EditorDriver.class);
 
     @Inject
-    public TreeSelectionPropertyEditor(AppTemplateWizardAppearance appearance, AppsWidgetsPropertyPanelLabels appLabels, AppsWidgetsContextualHelpMessages help) {
-        super(appearance);
-        this.appLabels = appLabels;
-        this.treeSelectionLabels = appLabels;
+    public TreeSelectionPropertyEditor(PropertyEditorAppearance appearance) {
+        this.appearance = appearance;
         initWidget(uiBinder.createAndBindUi(this));
 
-        toolTipTextLabel.setHTML(appearance.createContextualHelpLabel(appLabels.toolTipText(), help.toolTip()));
+        toolTipTextLabel.setHTML(appearance.createContextualHelpLabel(appearance.toolTipText(), appearance.toolTip()));
 
-        requiredEditor.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appLabels.isRequired()).toSafeHtml());
+        requiredEditor.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appearance.isRequired()).toSafeHtml());
         omitIfBlank.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;")
-                .append(appearance.createContextualHelpLabelNoFloat(appLabels.excludeWhenEmpty(), help.singleSelectExcludeArgument())).toSafeHtml());
+                .append(appearance.createContextualHelpLabelNoFloat(appearance.excludeWhenEmpty(), appearance.singleSelectExcludeArgument())).toSafeHtml());
 
         editorDriver.initialize(this);
         editorDriver.accept(new InitializeTwoWayBinding(this));
@@ -105,7 +90,7 @@ public class TreeSelectionPropertyEditor extends AbstractArgumentPropertyEditor 
     void onEditTreeListSelected(@SuppressWarnings("unused") SelectEvent event) {
         IPlantDialog dlg = new IPlantDialog();
         dlg.setPredefinedButtons(PredefinedButton.OK, PredefinedButton.CANCEL);
-        dlg.setHeading(appearance.getPropertyPanelLabels().singleSelectionCreateLabel());
+        dlg.setHeading(appearance.singleSelectionCreateLabel());
         dlg.setModal(true);
         dlg.setOkButtonText(I18N.DISPLAY.done());
         dlg.setAutoHide(false);
@@ -147,7 +132,7 @@ public class TreeSelectionPropertyEditor extends AbstractArgumentPropertyEditor 
             public void onSelect(SelectEvent event) {
                 ContextualHelpPopup popup = new ContextualHelpPopup();
                 popup.setWidth(450);
-                popup.add(new HTML(appearance.getContextHelpMessages().treeSelectionCreateTree()));
+                popup.add(new HTML(appearance.treeSelectionCreateTree()));
                 popup.showAt(toolBtn.getAbsoluteLeft(), toolBtn.getAbsoluteTop() + 15);
             }
         });

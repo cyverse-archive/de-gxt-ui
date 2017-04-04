@@ -2,16 +2,13 @@ package org.iplantc.de.apps.integration.client.view.propertyEditors;
 
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids;
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.PropertyPanelIds;
+
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.ArgumentEditorConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.SplittableToStringConverter;
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.apps.widgets.client.view.editors.widgets.CheckBoxAdapter;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.commons.client.validators.CmdLineArgCharacterValidator;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
-import org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.MultiLineTextLabels;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.LeafValueEditor;
@@ -40,13 +37,12 @@ public class MultiLineTextInputPropertyEditor extends AbstractArgumentPropertyEd
     interface MultiLineTextInputPropertyEditorUiBinder extends UiBinder<Widget, MultiLineTextInputPropertyEditor> {
     }
 
-    @UiField(provided = true) AppsWidgetsPropertyPanelLabels appLabels;
+    @UiField(provided = true) PropertyEditorAppearance appearance;
     @UiField @Path("name") TextField argumentOptionEditor;
     @UiField(provided = true) ArgumentEditorConverter<String> defaultValueEditor;
     @UiField FieldLabel defaultValueLabel, toolTipLabel, argumentOptionLabel;
     @UiField @Path("visible") CheckBoxAdapter doNotDisplay;
     @UiField TextField label;
-    @UiField(provided = true) MultiLineTextLabels multiLineTextInputLabels;
     @UiField CheckBoxAdapter omitIfBlank, requiredEditor;
     @UiField @Path("description") TextField toolTipEditor;
 
@@ -54,16 +50,12 @@ public class MultiLineTextInputPropertyEditor extends AbstractArgumentPropertyEd
     private final EditorDriver editorDriver = GWT.create(EditorDriver.class);
 
     @Inject
-    public MultiLineTextInputPropertyEditor(final AppTemplateWizardAppearance appearance,
-                                            final AppsWidgetsPropertyPanelLabels appLabels,
-                                            final AppsWidgetsContextualHelpMessages help,
+    public MultiLineTextInputPropertyEditor(final PropertyEditorAppearance appearance,
                                             final IplantValidationConstants validationConstants) {
-        super(appearance);
-        this.appLabels = appLabels;
-        this.multiLineTextInputLabels = appLabels;
+        this.appearance = appearance;
 
         TextArea textArea = new TextArea();
-        textArea.setEmptyText(appLabels.textInputWidgetEmptyEditText());
+        textArea.setEmptyText(appearance.textInputWidgetEmptyEditText());
         textArea.addValidator(new CmdLineArgCharacterValidator(validationConstants.restrictedCmdLineArgCharsExclNewline()));
         defaultValueEditor = new ArgumentEditorConverter<>(textArea, new SplittableToStringConverter());
 
@@ -71,16 +63,16 @@ public class MultiLineTextInputPropertyEditor extends AbstractArgumentPropertyEd
 
         argumentOptionEditor.addValidator(new CmdLineArgCharacterValidator(validationConstants.restrictedCmdLineChars()));
 
-        defaultValueLabel.setHTML(appearance.createContextualHelpLabel(appLabels.textInputDefaultLabel(), help.textInputDefaultText()));
+        defaultValueLabel.setHTML(appearance.createContextualHelpLabel(appearance.textInputDefaultLabel(), appearance.textInputDefaultText()));
 
-        toolTipLabel.setHTML(appearance.createContextualHelpLabel(appLabels.toolTipText(), help.toolTip()));
-        argumentOptionLabel.setHTML(appearance.createContextualHelpLabel(appLabels.argumentOption(), help.argumentOption()));
-        doNotDisplay.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appLabels.doNotDisplay()).toSafeHtml());
+        toolTipLabel.setHTML(appearance.createContextualHelpLabel(appearance.toolTipText(), appearance.toolTip()));
+        argumentOptionLabel.setHTML(appearance.createContextualHelpLabel(appearance.argumentOption(), appearance.argumentOptionHelp()));
+        doNotDisplay.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appearance.doNotDisplay()).toSafeHtml());
 
-        requiredEditor.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appLabels.isRequired()).toSafeHtml());
+        requiredEditor.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appearance.isRequired()).toSafeHtml());
 
         omitIfBlank.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;")
-                                                 .append(appearance.createContextualHelpLabelNoFloat(appLabels.excludeWhenEmpty(), help.textInputExcludeArgument()))
+                                                 .append(appearance.createContextualHelpLabelNoFloat(appearance.excludeWhenEmpty(), appearance.textInputExcludeArgument()))
                                                  .toSafeHtml());
         editorDriver.initialize(this);
         editorDriver.accept(new InitializeTwoWayBinding(this));

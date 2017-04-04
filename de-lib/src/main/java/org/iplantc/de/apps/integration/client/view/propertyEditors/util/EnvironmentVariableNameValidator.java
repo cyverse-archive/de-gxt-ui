@@ -1,8 +1,9 @@
 package org.iplantc.de.apps.integration.client.view.propertyEditors.util;
 
-import org.iplantc.de.resources.client.messages.I18N;
+import org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance;
 
 import com.google.common.base.Strings;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.EditorError;
 
@@ -22,7 +23,8 @@ public class EnvironmentVariableNameValidator extends AbstractValidator<String> 
     @Override
     public List<EditorError> validate(Editor<String> editor, String value) {
         if (Strings.isNullOrEmpty(value) || !value.matches("[\\w]+")) { //$NON-NLS-1$
-            String errorMsg = I18N.VALIDATION.environmentVariableNameValidationMsg();
+            PropertyEditorAppearance appearance = GWT.create(PropertyEditorAppearance.class);
+            String errorMsg = appearance.environmentVariableNameValidationMsg();
 
             return createError(new DefaultEditorError(editor, errorMsg, value));
         }

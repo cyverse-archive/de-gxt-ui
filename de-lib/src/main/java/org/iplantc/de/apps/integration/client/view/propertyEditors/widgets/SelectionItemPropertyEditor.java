@@ -1,5 +1,6 @@
 package org.iplantc.de.apps.integration.client.view.propertyEditors.widgets;
 
+import org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance;
 import org.iplantc.de.apps.widgets.client.view.editors.SelectionItemModelKeyProvider;
 import org.iplantc.de.apps.widgets.client.view.editors.SelectionItemProperties;
 import org.iplantc.de.apps.widgets.client.view.util.SelectionItemValueChangeStoreHandler.HasEventSuppression;
@@ -9,7 +10,6 @@ import org.iplantc.de.client.models.apps.integration.SelectionItem;
 import org.iplantc.de.client.util.AppTemplateUtils;
 import org.iplantc.de.commons.client.validators.CmdLineArgCharacterValidator;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
@@ -145,7 +145,7 @@ public class SelectionItemPropertyEditor extends Composite implements HasValueCh
     @UiField @Ignore TextButton delete;
     @UiField Grid<SelectionItem> grid;
     @UiField ListStore<SelectionItem> selectionArgStore;
-    @UiField(provided = true) AppsWidgetsPropertyPanelLabels labels;
+    @UiField(provided = true) PropertyEditorAppearance appearance;
 
     // The Editor for Argument.getSelectionItems()
     ListStoreEditor<SelectionItem> selectionItemsEditor;
@@ -167,9 +167,9 @@ public class SelectionItemPropertyEditor extends Composite implements HasValueCh
     public SelectionItemPropertyEditor(final List<SelectionItem> selectionItems,
                                        final ArgumentType type) {
         this.appTemplateUtils = AppTemplateUtils.getInstance();
-        labels = GWT.create(AppsWidgetsPropertyPanelLabels.class);
+        appearance = GWT.create(PropertyEditorAppearance.class);
         initWidget(BINDER.createAndBindUi(this));
-        grid.getView().setEmptyText(labels.selectionCreateWidgetEmptyText());
+        grid.getView().setEmptyText(appearance.selectionCreateWidgetEmptyText());
 
         editing = new GridRowEditing<SelectionItem>(grid){
             
@@ -239,9 +239,9 @@ public class SelectionItemPropertyEditor extends Composite implements HasValueCh
     ColumnModel<SelectionItem> createColumnModel() {
         List<ColumnConfig<SelectionItem, ?>> list = Lists.newArrayList();
         SelectionItemProperties props = GWT.create(SelectionItemProperties.class);
-        displayCol = new ColumnConfig<>(props.display(), 120, labels.singleSelectDisplayColumnHeader());
-        nameCol = new ColumnConfig<>(props.name(), 150, labels.singleSelectNameColumnHeader());
-        valueCol = new ColumnConfig<>(props.value(), 150, labels.singleSelectValueColumnHeader());
+        displayCol = new ColumnConfig<>(props.display(), 120, appearance.singleSelectDisplayColumnHeader());
+        nameCol = new ColumnConfig<>(props.name(), 150, appearance.singleSelectNameColumnHeader());
+        valueCol = new ColumnConfig<>(props.value(), 150, appearance.singleSelectValueColumnHeader());
 
         list.add(displayCol);
         list.add(nameCol);

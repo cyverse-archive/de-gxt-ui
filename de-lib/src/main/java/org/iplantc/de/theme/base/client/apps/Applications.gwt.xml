@@ -91,7 +91,12 @@
         <when-type-is class="org.iplantc.de.apps.client.views.details.doc.AppDocMarkdownDialog.AppDocMarkdownDialogAppearance"/>
     </replace-with>
 
-    <!--Tools-->
+    <!--App Editor-->
+
+    <replace-with class="org.iplantc.de.theme.base.client.apps.integration.AppsEditorViewDefaultAppearance">
+        <when-type-is class="org.iplantc.de.apps.integration.client.view.AppsEditorView.AppsEditorViewAppearance"/>
+    </replace-with>
+
     <replace-with class="org.iplantc.de.theme.base.client.apps.integration.tools.DeployedComponentsListingViewDefaultAppearance">
         <when-type-is class="org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingView.DeployedComponentsListingViewAppearance"/>
     </replace-with>
@@ -110,6 +115,10 @@
 
     <replace-with class="org.iplantc.de.theme.base.client.apps.integration.propertyEditors.AppsEditorPanelDefaultAppearance">
         <when-type-is class="org.iplantc.de.apps.integration.client.view.AppsEditorPanelAppearance"/>
+    </replace-with>
+
+    <replace-with class="org.iplantc.de.theme.base.client.apps.integration.propertyEditors.PropertyEditorDefaultAppearance">
+        <when-type-is class="org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance"/>
     </replace-with>
 
     <!--Launch Widget-->

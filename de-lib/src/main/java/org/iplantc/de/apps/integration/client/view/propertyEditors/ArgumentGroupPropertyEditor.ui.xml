@@ -5,8 +5,8 @@
              xmlns:con="urn:import:com.sencha.gxt.widget.core.client.container"
              xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
              xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button">
-    <ui:with field="labels"
-        type="org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels" />
+    <ui:with field="appearance"
+        type="org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance" />
     <ui:with field="margins"
             type="com.sencha.gxt.core.client.util.Margins">
       <ui:attributes top="5"
@@ -27,18 +27,18 @@
             <con:VerticalLayoutContainer scrollMode="AUTOY"
                                          adjustForScroll="true">
                 <con:child layoutData="{fieldLayoutData}">
-                    <form:FieldLabel text="{labels.groupNameLabel}"
+                    <form:FieldLabel text="{appearance.groupNameLabel}"
                                      labelAlign="TOP">
                         <form:widget>
                             <form:TextField ui:field="label"
-                                            emptyText="{labels.groupNameEmptyText}"
+                                            emptyText="{appearance.groupNameEmptyText}"
                                             allowBlank="false"/>
                         </form:widget>
                     </form:FieldLabel> 
                 </con:child>                    
                 <con:child layoutData="{fieldLayoutData}">
                     <button:TextButton ui:field="deleteButton"
-                                       text="{labels.groupDelete}"/>
+                                       text="{appearance.groupDelete}"/>
                 </con:child>
             </con:VerticalLayoutContainer>
         </gxt:child>

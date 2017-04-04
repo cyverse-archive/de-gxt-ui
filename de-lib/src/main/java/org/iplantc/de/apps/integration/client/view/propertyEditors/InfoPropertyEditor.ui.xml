@@ -3,8 +3,8 @@
              xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
              xmlns:con="urn:import:com.sencha.gxt.widget.core.client.container"
              xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form">
-    <ui:with field="infoLabels"
-             type="org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.InfoTypeLabels"/>
+    <ui:with field="appearance"
+             type="org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance"/>
     <ui:with field="margins"
              type="com.sencha.gxt.core.client.util.Margins">
         <ui:attributes top="10"
@@ -26,10 +26,10 @@
             <con:child layoutData="{fieldLayoutData}">
                 <form:FieldLabel ui:field="argLabelLabel"
                                  labelAlign="TOP"
-                                 text="{infoLabels.infoLabel}">
+                                 text="{appearance.infoLabel}">
                     <form:widget>
                         <form:TextArea ui:field="label"
-                                       text="{infoLabels.infoEmptyText}"
+                                       text="{appearance.infoEmptyText}"
                                        height="60"
                                        resizable="VERTICAL"/>
                     </form:widget>

@@ -1,7 +1,6 @@
 package org.iplantc.de.apps.integration.client.presenter;
 
 import org.iplantc.de.apps.client.events.AppSavedEvent;
-import org.iplantc.de.apps.integration.client.dialogs.CommandLineOrderingPanel;
 import org.iplantc.de.apps.integration.client.events.ArgumentOrderSelected;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent.DeleteArgumentEventHandler;
@@ -17,7 +16,9 @@ import org.iplantc.de.apps.integration.client.presenter.visitors.InitializeArgum
 import org.iplantc.de.apps.integration.client.presenter.visitors.InitializeArgumentGroupEventManagement;
 import org.iplantc.de.apps.integration.client.presenter.visitors.InitializeDragAndDrop;
 import org.iplantc.de.apps.integration.client.presenter.visitors.RegisterEventHandlers;
+import org.iplantc.de.apps.integration.client.view.AppEditorToolbar;
 import org.iplantc.de.apps.integration.client.view.AppsEditorView;
+import org.iplantc.de.apps.integration.client.view.dialogs.CommandLineOrderingDialog;
 import org.iplantc.de.apps.widgets.client.events.ArgumentAddedEvent;
 import org.iplantc.de.apps.widgets.client.events.ArgumentAddedEvent.ArgumentAddedEventHandler;
 import org.iplantc.de.apps.widgets.client.events.ArgumentGroupAddedEvent;
@@ -25,7 +26,6 @@ import org.iplantc.de.apps.widgets.client.events.ArgumentGroupAddedEvent.Argumen
 import org.iplantc.de.apps.widgets.client.events.ArgumentSelectedEvent;
 import org.iplantc.de.apps.widgets.client.view.AppLaunchPreviewView;
 import org.iplantc.de.apps.widgets.client.view.AppLaunchView.RenameWindowHeaderCommand;
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.IsMinimizable;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
@@ -44,15 +44,11 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.commons.client.views.dialogs.IplantInfoBox;
-import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
-import org.iplantc.de.resources.client.messages.IplantErrorStrings;
-import org.iplantc.de.resources.client.uiapps.integration.AppIntegrationErrorMessages;
-import org.iplantc.de.resources.client.uiapps.integration.AppIntegrationMessages;
 import org.iplantc.de.shared.AppsCallback;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -167,15 +163,14 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
         private final HandlerRegistration beforeHideHndlrReg;
         private final Component component;
 
-        private ContainsErrorsOnHideDialog(IplantDisplayStrings messages,
-                                           IplantErrorStrings errorMessages,
+        private ContainsErrorsOnHideDialog(AppsEditorView.AppsEditorViewAppearance appearance,
                                            Component component,
                                            HandlerRegistration beforeHideHndlrReg) {
-            super(messages.warning(), errorMessages.appContainsErrorsPromptToContinue());
+            super(appearance.warning(), appearance.appContainsErrorsPromptToContinue());
             this.component = component;
             this.beforeHideHndlrReg = beforeHideHndlrReg;
             setPredefinedButtons(PredefinedButton.YES, PredefinedButton.NO);
-            setIcon(MessageBox.ICONS.error());
+            setIcon(appearance.errorIcon());
         }
 
         @Override
@@ -202,17 +197,16 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
         private final HasOneWidget container;
         private final RenameWindowHeaderCommand renameHeaderCmd;
 
-        private ContainsErrorsOnSwitchDialog(IplantDisplayStrings messages,
-                                             IplantErrorStrings errorMessages,
+        private ContainsErrorsOnSwitchDialog(AppsEditorView.AppsEditorViewAppearance appearance,
                                              HasOneWidget container,
                                              AppTemplate appTemplate,
                                              RenameWindowHeaderCommand renameCmd) {
-            super(messages.warning(), errorMessages.appContainsErrorsPromptToContinue());
+            super(appearance.warning(), appearance.appContainsErrorsPromptToContinue());
             this.container = container;
             this.appTempl = appTemplate;
             this.renameHeaderCmd = renameCmd;
             setPredefinedButtons(PredefinedButton.YES, PredefinedButton.NO);
-            setIcon(MessageBox.ICONS.error());
+            setIcon(appearance.errorIcon());
         }
 
         @Override
@@ -240,11 +234,11 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
         private final HandlerRegistration beforeHideHndlrReg;
         private final Component component;
 
-        private PromptForSaveDialog(IplantDisplayStrings messages,
+        private PromptForSaveDialog(AppsEditorView.AppsEditorViewAppearance appearance,
                                     Component component,
                                     HandlerRegistration beforeHideHndlrReg) {
-            super(messages.save(), messages.unsavedChanges());
-            setIcon(MessageBox.ICONS.question());
+            super(appearance.save(), appearance.unsavedChanges());
+            setIcon(appearance.questionIcon());
             setPredefinedButtons(PredefinedButton.YES, PredefinedButton.NO, PredefinedButton.CANCEL);
             this.component = component;
             TextButton gtb = new TextButton();
@@ -284,12 +278,12 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
         private final HasOneWidget container;
         private final RenameWindowHeaderCommand renameHeaderCmd;
 
-        private PromptForSaveThenSwitchDialog(IplantDisplayStrings messages,
+        private PromptForSaveThenSwitchDialog(AppsEditorView.AppsEditorViewAppearance appearance,
                                               HasOneWidget container,
                                               AppTemplate appTemplate,
                                               RenameWindowHeaderCommand renameCmd) {
-            super(messages.save(), messages.unsavedChanges());
-            setIcon(MessageBox.ICONS.question());
+            super(appearance.save(), appearance.unsavedChanges());
+            setIcon(appearance.questionIcon());
             setPredefinedButtons(PredefinedButton.YES, PredefinedButton.NO, PredefinedButton.CANCEL);
             this.container = container;
             this.appTempl = appTemplate;
@@ -326,7 +320,6 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
         }
     }
 
-    private final IplantErrorStrings errorStrings;
     private final AppTemplateUtils appTemplateUtils;
     private final List<HandlerRegistration> handlerRegistrations = Lists.newArrayList();
 
@@ -342,16 +335,12 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
 		myCodeMirror.setSize(width, height);
 		myCodeMirror.setOption("readOnly", true);
     }-*/;
-    private final AppTemplateWizardAppearance appearance;
-    private final AppIntegrationMessages appIntMessages = GWT.create(AppIntegrationMessages.class);
+    private final AppsEditorView.AppsEditorViewAppearance appearance;
     private AppTemplate appTemplate;
     private final AppTemplateServices atService;
     private HandlerRegistration beforeHideHandlerRegistration;
-    private final AppIntegrationErrorMessages errorMessages;
     private final EventBus eventBus;
     private AppTemplate lastSave;
-
-    private final IplantDisplayStrings messages;
 
     private boolean onlyLabelEditMode = false;
 
@@ -367,29 +356,36 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
     Logger LOG = Logger.getLogger(AppsEditorPresenterImpl.class.getName());
 
     @Inject Provider<AppLaunchPreviewView> previewViewProvider;
+    @Inject AsyncProviderWrapper<CommandLineOrderingDialog> commandLineDialogProvider;
 
     @Inject
     AppsEditorPresenterImpl(final AppsEditorView view,
                             final EventBus eventBus,
                             final AppTemplateServices atService,
-                            final AppIntegrationErrorMessages errorMessages,
-                            final IplantDisplayStrings messages,
                             final UUIDServiceAsync uuidService,
-                            final AppTemplateWizardAppearance appearance,
+                            final AppsEditorView.AppsEditorViewAppearance appearance,
                             final IplantAnnouncer announcer,
-                            final IplantErrorStrings errorStrings,
                             final AppTemplateUtils appTemplateUtils) {
         this.view = view;
         this.eventBus = eventBus;
         this.atService = atService;
-        this.errorMessages = errorMessages;
-        this.messages = messages;
         this.uuidService = uuidService;
         this.appearance = appearance;
         this.announcer = announcer;
-        this.errorStrings = errorStrings;
         this.appTemplateUtils = appTemplateUtils;
-        view.setPresenter(this);
+
+        setUpHandlers(view);
+    }
+
+    void setUpHandlers(AppsEditorView view) {
+        AppEditorToolbar toolbar = view.getToolbar();
+
+        view.addDeleteArgumentGroupEventHandler(this);
+        view.addUpdateCommandLinePreviewEventHandler(this);
+        toolbar.addArgumentOrderSelectedHandler(this);
+        toolbar.addPreviewAppSelectedHandler(this);
+        toolbar.addPreviewJsonSelectedHandler(this);
+        toolbar.addSaveAppSelectedHandler(this);
     }
 
     @Override
@@ -409,7 +405,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
     public void doArgumentGroupDelete(DeleteArgumentGroupEvent event) {
         AppTemplate flush = view.flush();
         if (flush.getArgumentGroups().size() == 1) {
-            announcer.schedule(new ErrorAnnouncementConfig(errorMessages.cannotDeleteLastArgumentGroup(), true, 3000));
+            announcer.schedule(new ErrorAnnouncementConfig(appearance.cannotDeleteLastArgumentGroup(), true, 3000));
             return;
         }
         AutoBean<ArgumentGroup> autoBean = AutoBeanUtils.getAutoBean(event.getArgumentGroupToBeDeleted());
@@ -493,10 +489,10 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
                 public void execute() {
                     if (!isViewValid()) {
                         // JDS View has changes, but contains errors.
-                        new ContainsErrorsOnSwitchDialog(messages, errorStrings, container, appTemplate, renameCmd).show();
+                        new ContainsErrorsOnSwitchDialog(appearance, container, appTemplate, renameCmd).show();
                     } else {
                         // JDS There are differences and form is valid, so prompt user to save.
-                        new PromptForSaveThenSwitchDialog(messages, container, appTemplate, renameCmd).show();
+                        new PromptForSaveThenSwitchDialog(appearance, container, appTemplate, renameCmd).show();
                     }
 
                 }
@@ -567,19 +563,50 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
 
             @Override
             public void onSuccess(ArrayList<String> result) {
-                final IPlantDialog dlg = new IPlantDialog();
-                dlg.setPredefinedButtons(PredefinedButton.OK);
-                dlg.setHeading(appIntMessages.commandLineOrder());
-                dlg.setModal(true);
-                dlg.setOkButtonText(messages.done());
-                dlg.setAutoHide(false);
-                CommandLineOrderingPanel clop = new CommandLineOrderingPanel(allTemplateArguments, AppsEditorPresenterImpl.this, appIntMessages, result);
-                clop.setSize("640", "480");
-                dlg.add(clop);
-                dlg.show();
+                commandLineDialogProvider.get(new AsyncCallback<CommandLineOrderingDialog>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        ErrorHandler.post(caught);
+                    }
+
+                    @Override
+                    public void onSuccess(CommandLineOrderingDialog dialog) {
+                        List<Argument> argumentList =
+                                createArgumentList(allTemplateArguments, result);
+                        dialog.show(argumentList);
+
+                    }
+                });
+
             }
         });
     }
+
+    List<Argument> createArgumentList(List<Argument> arguments, ArrayList<String> uuids) {
+        List<Argument> orderedArguments = Lists.newArrayList();
+        for (Argument arg : arguments) {
+            if (Strings.isNullOrEmpty(arg.getId())) {
+                if (!uuids.isEmpty()) {
+                    arg.setId(uuids.remove(0));
+                }
+            }
+            if (orderingRequired(arg)) {
+                Integer order = arg.getOrder();
+
+                // JDS If the order is null or 0, set it to a number higher than the length of the
+                // list to ensure that already numbered arguments are sorted into their appropriate
+                // places
+                if ((order == null) || (order <= 0)) {
+                    arg.setOrder(arguments.size() + 1);
+                }
+
+                orderedArguments.add(arg);
+            }
+        }
+        return orderedArguments;
+    }
+
+
 
     @Override
     public void onBeforeHide(final BeforeHideEvent event) {
@@ -591,9 +618,9 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
             final Component component = event.getSource();
             if (isViewValid()) {
                 // JDS There are differences and form is valid, so prompt user to save.
-                new PromptForSaveDialog(messages, component, beforeHideHandlerRegistration).show();
+                new PromptForSaveDialog(appearance, component, beforeHideHandlerRegistration).show();
             } else {
-                new ContainsErrorsOnHideDialog(messages, errorStrings, component,
+                new ContainsErrorsOnHideDialog(appearance, component,
                         beforeHideHandlerRegistration).show();
             }
         } else {
@@ -607,7 +634,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
         AppTemplate appTemplate = flushViewAndClean();
         Splittable split = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(appTemplateUtils.removeEmptyGroupArguments(appTemplate)));
         IPlantDialog dlg = new IPlantDialog();
-        dlg.setHeading(appIntMessages.previewJSON());
+        dlg.setHeading(appearance.previewJSON());
         dlg.setPredefinedButtons(PredefinedButton.OK);
         dlg.setSize("500", "350");
         dlg.setResizable(false);
@@ -631,8 +658,8 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
         if (isViewValid()) {
             doOnSaveClicked(null);
         } else {
-            IplantInfoBox errorsInfo = new IplantInfoBox(messages.warning(),
-                    errorStrings.appContainsErrorsUnableToSave());
+            IplantInfoBox errorsInfo = new IplantInfoBox(appearance.warning(),
+                    appearance.appContainsErrorsUnableToSave());
             errorsInfo.setIcon(MessageBox.ICONS.error());
             errorsInfo.show();
         }
@@ -686,8 +713,8 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
                                                          eventBus,
                                                          renameCmd,
                                                          this,
-                                                         appIntMessages.saveSuccessful(),
-                                                         errorMessages.unableToSave(),
+                                                         appearance.saveSuccessful(),
+                                                         appearance.unableToSave(),
                                                          appTemplate.isPublic());
 
         // service requires that this key is NOT present in json

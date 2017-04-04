@@ -2,16 +2,13 @@ package org.iplantc.de.apps.integration.client.view.propertyEditors;
 
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids;
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.PropertyPanelIds;
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
+
 import org.iplantc.de.apps.widgets.client.view.editors.widgets.CheckBoxAdapter;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.models.apps.integration.FileInfoType;
 import org.iplantc.de.client.services.AppBuilderMetadataServiceFacade;
 import org.iplantc.de.commons.client.validators.CmdLineArgCharacterValidator;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
-import org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.FolderInputTypeLabels;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
@@ -36,11 +33,10 @@ public class FolderInputPropertyEditor extends AbstractArgumentPropertyEditor {
     interface FolderInputPropertyEditorUiBinder extends UiBinder<Widget, FolderInputPropertyEditor> {
     }
 
-    @UiField(provided = true) AppsWidgetsPropertyPanelLabels appLabels;
+    @UiField(provided = true) PropertyEditorAppearance appearance;
     @UiField @Path("name") TextField argumentOptionEditor;
     @UiField FieldLabel argumentOptionLabel, toolTipLabel, fileInfoTypeLabel;
     @UiField(provided = true) @Ignore ComboBox<FileInfoType> fileInfoTypeComboBox;
-    @UiField(provided = true) FolderInputTypeLabels folderInputLabels;
     @UiField TextField label;
     @UiField CheckBoxAdapter requiredEditor, omitIfBlank;
     @UiField @Path("description") TextField toolTipEditor;
@@ -50,25 +46,21 @@ public class FolderInputPropertyEditor extends AbstractArgumentPropertyEditor {
     private final EditorDriver editorDriver = GWT.create(EditorDriver.class);
 
     @Inject
-    public FolderInputPropertyEditor(final AppTemplateWizardAppearance appearance,
-                                     final AppsWidgetsPropertyPanelLabels appLabels,
-                                     final AppsWidgetsContextualHelpMessages help,
+    public FolderInputPropertyEditor(final PropertyEditorAppearance appearance,
                                      final AppBuilderMetadataServiceFacade appMetadataService,
                                      final IplantValidationConstants validationConstants) {
-        super(appearance);
-        this.appLabels = appLabels;
-        this.folderInputLabels = appLabels;
+        this.appearance = appearance;
         this.fileInfoTypeComboBox = createFileInfoTypeComboBox(appMetadataService);
 
         initWidget(uiBinder.createAndBindUi(this));
 
         argumentOptionEditor.addValidator(new CmdLineArgCharacterValidator(validationConstants.restrictedCmdLineChars()));
 
-        omitIfBlank.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appearance.createContextualHelpLabelNoFloat(appLabels.excludeWhenEmpty(), help.folderInputExcludeArgument())).toSafeHtml());
-        argumentOptionLabel.setHTML(appearance.createContextualHelpLabel(appLabels.argumentOption(), help.argumentOption()));
-        toolTipLabel.setHTML(appearance.createContextualHelpLabel(appLabels.toolTipText(), help.toolTip()));
-        requiredEditor.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appLabels.isRequired()).toSafeHtml());
-        isImplicit.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appearance.createContextualHelpLabelNoFloat(appLabels.isImplicit(), help.fileInputIsImplicit())).toSafeHtml());
+        omitIfBlank.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appearance.createContextualHelpLabelNoFloat(appearance.excludeWhenEmpty(), appearance.folderInputExcludeArgument())).toSafeHtml());
+        argumentOptionLabel.setHTML(appearance.createContextualHelpLabel(appearance.argumentOption(), appearance.argumentOptionHelp()));
+        toolTipLabel.setHTML(appearance.createContextualHelpLabel(appearance.toolTipText(), appearance.toolTip()));
+        requiredEditor.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appearance.isRequired()).toSafeHtml());
+        isImplicit.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appearance.createContextualHelpLabelNoFloat(appearance.isImplicit(), appearance.fileInputIsImplicit())).toSafeHtml());
 
         editorDriver.initialize(this);
         editorDriver.accept(new InitializeTwoWayBinding(this));

@@ -1,11 +1,12 @@
 package org.iplantc.de.apps.integration.client.view.propertyEditors.widgets;
 
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
+import org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.models.apps.integration.ArgumentValidator;
 import org.iplantc.de.client.models.apps.integration.ArgumentValidatorType;
 import org.iplantc.de.client.util.AppTemplateUtils;
-import org.iplantc.de.resources.client.uiapps.widgets.ArgumentValidatorMessages;
+import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -21,6 +22,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -105,41 +107,41 @@ public class ArgumentValidatorEditor extends Composite implements ValueAwareEdit
                     } else {
                         regex = regexSplittable.asString();
                     }
-                    retVal = avMessages.regex(SafeHtmlUtils.fromString(regex).asString());
+                    retVal = appearance.regex(SafeHtmlUtils.fromString(regex).asString());
                     break;
                 case CharacterLimit:
                     int charLimit = Double.valueOf(object.getParams().get(0).asNumber()).intValue();
-                    retVal = avMessages.characterLimit(charLimit);
+                    retVal = appearance.characterLimit(charLimit);
                     break;
 
                 case IntAbove:
                     int intAbove = Double.valueOf(object.getParams().get(0).asNumber()).intValue();
-                    retVal = avMessages.intAbove(intAbove);
+                    retVal = appearance.intAbove(intAbove);
                     break;
 
                 case IntBelow:
                     int intBelow = Double.valueOf(object.getParams().get(0).asNumber()).intValue();
-                    retVal = avMessages.intBelow(intBelow);
+                    retVal = appearance.intBelow(intBelow);
                     break;
                 case IntRange:
                     int intRangeAbove = Double.valueOf(object.getParams().get(0).asNumber()).intValue();
                     int intRangeBelow = Double.valueOf(object.getParams().get(1).asNumber()).intValue();
-                    retVal = avMessages.intRange(intRangeAbove, intRangeBelow);
+                    retVal = appearance.intRange(intRangeAbove, intRangeBelow);
                     break;
 
                 case DoubleAbove:
                     double dblAbove = Double.valueOf(object.getParams().get(0).asNumber());
-                    retVal = avMessages.dblAbove(dblAbove);
+                    retVal = appearance.dblAbove(dblAbove);
                     break;
                 case DoubleBelow:
                     double dblBelow = Double.valueOf(object.getParams().get(0).asNumber());
-                    retVal = avMessages.dblBelow(dblBelow);
+                    retVal = appearance.dblBelow(dblBelow);
                     break;
 
                 case DoubleRange:
                     double dblRangeAbove = Double.valueOf(object.getParams().get(0).asNumber());
                     double dblRangeBelow = Double.valueOf(object.getParams().get(1).asNumber());
-                    retVal = avMessages.dblRange(dblRangeAbove, dblRangeBelow);
+                    retVal = appearance.dblRange(dblRangeAbove, dblRangeBelow);
                     break;
 
                 default:
@@ -162,25 +164,26 @@ public class ArgumentValidatorEditor extends Composite implements ValueAwareEdit
     @UiField FieldLabel validatorEditorLabel;
     @UiField ListStore<ArgumentValidator> validatorStore;
 
+    @Inject AsyncProviderWrapper<AddValidatorDialog> validatorDialogProvider;
+
     // The Editor for Argument.getValidators()
     ListStoreEditor<ArgumentValidator> validators;
 
-    private final ArgumentValidatorMessages avMessages;
+    @UiField(provided = true) PropertyEditorAppearance appearance;
     private final AppTemplateUtils appTemplateUtils;
     private Argument model;
     private final Set<ArgumentValidatorType> supportedValidatorTypes;
     private int uniqueIdNum = 0;
 
     @Inject
-    public ArgumentValidatorEditor(final AppTemplateWizardAppearance appearance,
-                                   final ArgumentValidatorMessages avMessages,
+    public ArgumentValidatorEditor(final PropertyEditorAppearance appearance,
                                    final AppTemplateUtils appTemplateUtils) {
-        this.avMessages = avMessages;
+        this.appearance = appearance;
         this.appTemplateUtils = appTemplateUtils;
         initWidget(BINDER.createAndBindUi(this));
         grid.setHeight(300);
 
-        validatorEditorLabel.setHTML(appearance.createContextualHelpLabel(appearance.getPropertyPanelLabels().validatorRulesLabel(), appearance.getContextHelpMessages().textInputValidationRules()));
+        validatorEditorLabel.setHTML(appearance.createContextualHelpLabel(appearance.validatorRulesLabel(), appearance.textInputValidationRules()));
         // Add selection handler to grid to control enabled state of "edit" and "delete" buttons.
         grid.getSelectionModel().addSelectionChangedHandler(new SelectionChangedHandler<ArgumentValidator>() {
             @Override
@@ -275,7 +278,7 @@ public class ArgumentValidatorEditor extends Composite implements ValueAwareEdit
 
     @UiFactory
     ColumnModel<ArgumentValidator> createColumnModel() {
-        ColumnConfig<ArgumentValidator, String> nameCol = new ColumnConfig<>(new ValidatorValueProvider(), 50, "Validation Rules");
+        ColumnConfig<ArgumentValidator, String> nameCol = new ColumnConfig<>(new ValidatorValueProvider(), 50, appearance.argumentValidatorNameColumn());
         List<ColumnConfig<ArgumentValidator, ?>> list = Lists.newArrayList();
         list.add(nameCol);
         return new ColumnModel<>(list);
@@ -295,17 +298,26 @@ public class ArgumentValidatorEditor extends Composite implements ValueAwareEdit
 
     @UiHandler("add")
     void onAddButtonSelected(@SuppressWarnings("unused") SelectEvent event) {
-       final  AddValidatorDialog dlg = new AddValidatorDialog(supportedValidatorTypes, avMessages);
-        dlg.addOkButtonSelectHandler(new AddValidatorOkBtnSelectHandler(dlg));
-        dlg.addCancelButtonSelectHandler(new SelectHandler() {
-            
+        validatorDialogProvider.get(new AsyncCallback<AddValidatorDialog>() {
             @Override
-            public void onSelect(SelectEvent event) {
-                //do nothing. just hide
-                dlg.hide();
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(AddValidatorDialog dlg) {
+                dlg.addOkButtonSelectHandler(new AddValidatorOkBtnSelectHandler(dlg));
+                dlg.addCancelButtonSelectHandler(new SelectHandler() {
+
+                    @Override
+                    public void onSelect(SelectEvent event) {
+                        //do nothing. just hide
+                        dlg.hide();
+                    }
+                });
+                dlg.show(supportedValidatorTypes);
             }
         });
-        dlg.show();
     }
 
     @UiHandler("delete")
@@ -330,12 +342,21 @@ public class ArgumentValidatorEditor extends Composite implements ValueAwareEdit
         final int selectedItemIndex = validators.getStore().indexOf(selectedItem);
         validators.getStore().remove(selectedItem);
         ValueChangeEvent.fire(this, getValidators());
-        AddValidatorDialog dlg = new AddValidatorDialog(supportedValidatorTypes, avMessages);
-        dlg.addOkButtonSelectHandler(new AddValidatorOkBtnSelectHandler(dlg));
-        dlg.addCancelButtonSelectHandler(new AddValidatorCancelBtnSelectHandler(selectedItemIndex, selectedItem));
+        validatorDialogProvider.get(new AsyncCallback<AddValidatorDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
 
-        dlg.setArgumentValidator(selectedItem);
-        dlg.show();
+            @Override
+            public void onSuccess(AddValidatorDialog dlg) {
+                dlg.addOkButtonSelectHandler(new AddValidatorOkBtnSelectHandler(dlg));
+                dlg.addCancelButtonSelectHandler(new AddValidatorCancelBtnSelectHandler(selectedItemIndex, selectedItem));
+
+                dlg.show(supportedValidatorTypes);
+                dlg.setArgumentValidator(selectedItem);
+            }
+        });
     }
 
     List<ArgumentValidator> getValidators() {

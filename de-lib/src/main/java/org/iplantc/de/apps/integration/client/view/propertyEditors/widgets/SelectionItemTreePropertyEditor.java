@@ -1,5 +1,6 @@
 package org.iplantc.de.apps.integration.client.view.propertyEditors.widgets;
 
+import org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance;
 import org.iplantc.de.apps.widgets.client.view.editors.SelectionItemModelKeyProvider;
 import org.iplantc.de.apps.widgets.client.view.editors.SelectionItemProperties;
 import org.iplantc.de.apps.widgets.client.view.util.SelectionItemTreeStoreEditor;
@@ -10,7 +11,6 @@ import org.iplantc.de.client.util.AppTemplateUtils;
 import org.iplantc.de.commons.client.validators.CmdLineArgCharacterValidator;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
 import org.iplantc.de.resources.client.messages.I18N;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
@@ -164,12 +164,12 @@ public class SelectionItemTreePropertyEditor extends Composite implements HasVal
     @UiField SimpleComboBox<CheckCascade> cascadeOptionsCombo;
     @UiField CheckBox forceSingleSelectCheckBox;
     @UiField(provided = true) TreeGrid<SelectionItem> treeGrid;
+    @UiField(provided = true) PropertyEditorAppearance appearance = GWT.create(PropertyEditorAppearance.class);
     SelectionItemTreeStoreEditor selectionItemsEditor;
     TreeStore<SelectionItem> store;
 
     private static SelectionItemTreePropertyEditorUiBinder BINDER = GWT.create(SelectionItemTreePropertyEditorUiBinder.class);
     private final AppTemplateAutoBeanFactory factory = GWT.create(AppTemplateAutoBeanFactory.class);
-    private final AppsWidgetsPropertyPanelLabels labels = GWT.create(AppsWidgetsPropertyPanelLabels.class);
     private final SelectionItemProperties siProps = GWT.create(SelectionItemProperties.class);
     private final IplantValidationConstants validationConstants = GWT.create(IplantValidationConstants.class);
     private final List<SelectionItem> toBeRemoved = Lists.newArrayList();
@@ -183,7 +183,7 @@ public class SelectionItemTreePropertyEditor extends Composite implements HasVal
         this.appTemplateUtils = AppTemplateUtils.getInstance();
         buildTreeGrid();
         initWidget(BINDER.createAndBindUi(this));
-        treeGrid.getView().setEmptyText(labels.selectionCreateWidgetEmptyText());
+        treeGrid.getView().setEmptyText(appearance.selectionCreateWidgetEmptyText());
 
         selectionItemsEditor = new MyTreeStoreEditor(store, this);
         cascadeOptionsCombo.add(CheckCascade.TRI);
@@ -466,7 +466,8 @@ public class SelectionItemTreePropertyEditor extends Composite implements HasVal
     }
 
     private ColumnConfig<SelectionItem, Boolean> buildIsDefaultConfig() {
-        ColumnConfig<SelectionItem, Boolean> defaultConfig = new ColumnConfig<>(new IsDefaultColumnValueProvider(), 45, labels.singleSelectIsDefaultColumnHeader());
+        ColumnConfig<SelectionItem, Boolean> defaultConfig = new ColumnConfig<>(new IsDefaultColumnValueProvider(), 45, appearance
+                .singleSelectIsDefaultColumnHeader());
 
         CheckBoxCell cell = new CheckBoxCell();
         defaultConfig.setCell(cell);
@@ -482,10 +483,14 @@ public class SelectionItemTreePropertyEditor extends Composite implements HasVal
         store.setAutoCommit(true);
 
         // Build ColumnModel
-        ColumnConfig<SelectionItem, String> displayConfig = new ColumnConfig<>(siProps.display(), 90, labels.singleSelectDisplayColumnHeader());
-        ColumnConfig<SelectionItem, String> nameConfig = new ColumnConfig<>(siProps.name(), 60, labels.singleSelectNameColumnHeader());
-        ColumnConfig<SelectionItem, String> valueConfig = new ColumnConfig<>(siProps.value(), 40, labels.singleSelectValueColumnHeader());
-        ColumnConfig<SelectionItem, String> descriptionConfig = new ColumnConfig<>(siProps.description(), 90, labels.singleSelectToolTipColumnHeader());
+        ColumnConfig<SelectionItem, String> displayConfig = new ColumnConfig<>(siProps.display(), 90, appearance
+                .singleSelectDisplayColumnHeader());
+        ColumnConfig<SelectionItem, String> nameConfig = new ColumnConfig<>(siProps.name(), 60, appearance
+                .singleSelectNameColumnHeader());
+        ColumnConfig<SelectionItem, String> valueConfig = new ColumnConfig<>(siProps.value(), 40, appearance
+                .singleSelectValueColumnHeader());
+        ColumnConfig<SelectionItem, String> descriptionConfig = new ColumnConfig<>(siProps.description(), 90, appearance
+                .singleSelectToolTipColumnHeader());
         ColumnConfig<SelectionItem, Boolean> defaultColumn = buildIsDefaultConfig();
 
         defaultColumn.setSortable(false);

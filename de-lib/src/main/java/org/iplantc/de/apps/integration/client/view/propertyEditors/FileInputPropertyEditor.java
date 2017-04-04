@@ -2,16 +2,13 @@ package org.iplantc.de.apps.integration.client.view.propertyEditors;
 
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids;
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.PropertyPanelIds;
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
+
 import org.iplantc.de.apps.widgets.client.view.editors.widgets.CheckBoxAdapter;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.models.apps.integration.FileInfoType;
 import org.iplantc.de.client.services.AppBuilderMetadataServiceFacade;
 import org.iplantc.de.commons.client.validators.CmdLineArgCharacterValidator;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
-import org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.FileInputTypeLabels;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
@@ -34,11 +31,10 @@ public class FileInputPropertyEditor extends AbstractArgumentPropertyEditor {
 
     interface FileInputPropertyEditorUiBinder extends UiBinder<Widget, FileInputPropertyEditor> { }
 
-    @UiField(provided = true) AppsWidgetsPropertyPanelLabels appLabels;
+    @UiField(provided = true) PropertyEditorAppearance appearance;
     @UiField @Path("name") TextField argumentOptionEditor;
     @UiField FieldLabel argumentOptionLabel;
     @UiField(provided = true) @Ignore ComboBox<FileInfoType> fileInfoTypeComboBox;
-    @UiField(provided = true) FileInputTypeLabels fileInputLabels;
     @UiField TextField label;
     @UiField CheckBoxAdapter requiredEditor, omitIfBlank;
     @UiField @Path("description") TextField toolTipEditor;
@@ -49,27 +45,23 @@ public class FileInputPropertyEditor extends AbstractArgumentPropertyEditor {
     private final EditorDriver editorDriver = GWT.create(EditorDriver.class);
 
     @Inject
-    public FileInputPropertyEditor(final AppTemplateWizardAppearance appearance,
-                                   final AppsWidgetsPropertyPanelLabels appLabels,
-                                   final AppsWidgetsContextualHelpMessages help,
+    public FileInputPropertyEditor(final PropertyEditorAppearance appearance,
                                    final AppBuilderMetadataServiceFacade appMetadataService,
                                    final IplantValidationConstants validationConstants) {
-        super(appearance);
-        this.appLabels = appLabels;
-        this.fileInputLabels = appLabels;
+        this.appearance = appearance;
         fileInfoTypeComboBox = createFileInfoTypeComboBox(appMetadataService);
 
         initWidget(uiBinder.createAndBindUi(this));
 
         argumentOptionEditor.addValidator(new CmdLineArgCharacterValidator(validationConstants.restrictedCmdLineChars()));
 
-        toolTipLabel.setHTML(appearance.createContextualHelpLabel(appLabels.toolTipText(), help.toolTip()));
-        argumentOptionLabel.setHTML(appearance.createContextualHelpLabel(appLabels.argumentOption(), help.argumentOption()));
+        toolTipLabel.setHTML(appearance.createContextualHelpLabel(appearance.toolTipText(), appearance.toolTip()));
+        argumentOptionLabel.setHTML(appearance.createContextualHelpLabel(appearance.argumentOption(), appearance.argumentOptionHelp()));
 
-        requiredEditor.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appLabels.isRequired()).toSafeHtml());
-        omitIfBlank.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appearance.createContextualHelpLabelNoFloat(appLabels.excludeWhenEmpty(), help.fileInputExcludeArgument()))
+        requiredEditor.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appearance.isRequired()).toSafeHtml());
+        omitIfBlank.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appearance.createContextualHelpLabelNoFloat(appearance.excludeWhenEmpty(), appearance.fileInputExcludeArgument()))
                                                  .toSafeHtml());
-        isImplicit.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appearance.createContextualHelpLabelNoFloat(appLabels.isImplicit(), help.fileInputIsImplicit())).toSafeHtml());
+        isImplicit.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appearance.createContextualHelpLabelNoFloat(appearance.isImplicit(), appearance.fileInputIsImplicit())).toSafeHtml());
         editorDriver.initialize(this);
         editorDriver.accept(new InitializeTwoWayBinding(this));
         ensureDebugId(Ids.PROPERTY_EDITOR + Ids.FILE_INPUT);

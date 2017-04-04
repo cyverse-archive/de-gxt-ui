@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.iplantc.de.apps.integration.client.dialogs;
+package org.iplantc.de.apps.integration.client.view.dialogs;
 
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids.CANCEL;
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids.INSTALLED_TOOLS_DLG;
@@ -26,13 +26,16 @@ import java.util.List;
 public class DCListingDialog extends IPlantDialog implements SelectionChangedHandler<Tool> {
 
     private Tool selectedComponent = null;
+    private DeployedComponentsListingView.DeployedComponentsListingViewAppearance appearance;
 
     @Inject
-    DCListingDialog(DeployedComponentsListingView.Presenter toolsPresenter) {
-        setPixelSize(600, 500);
+    DCListingDialog(DeployedComponentsListingView.Presenter toolsPresenter,
+                    DeployedComponentsListingView.DeployedComponentsListingViewAppearance appearance) {
+        this.appearance = appearance;
+        setPixelSize(appearance.dcListingDialogWidth(), appearance.dcListingDialogHeight());
         setResizable(false);
         setModal(true);
-        setHeading("Installed Tools");
+        setHeading(appearance.dcListingDialogHeading());
         setHideOnButtonClick(false);
         getOkButton().setEnabled(false);
         getButton(PredefinedButton.CANCEL).addSelectHandler(new SelectHandler() {

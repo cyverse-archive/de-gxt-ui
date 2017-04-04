@@ -1,11 +1,11 @@
 package org.iplantc.de.apps.integration.client.view.propertyEditors.widgets;
 
+import org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.AbstractArgumentEditor;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.integration.ArgumentValidator;
 import org.iplantc.de.client.models.apps.integration.ArgumentValidatorType;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
-import org.iplantc.de.resources.client.uiapps.widgets.ArgumentValidatorMessages;
 
 import com.google.common.collect.Maps;
 import com.google.gwt.core.client.GWT;
@@ -17,6 +17,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
@@ -56,7 +57,7 @@ import java.util.Set;
  * @author jstroot
  * 
  */
-class AddValidatorDialog extends IPlantDialog implements ValidHandler, InvalidHandler {
+public class AddValidatorDialog extends IPlantDialog implements ValidHandler, InvalidHandler {
 
     interface AddValidatorDialogUiBinder extends UiBinder<Widget, AddValidatorDialog> { }
 
@@ -72,32 +73,32 @@ class AddValidatorDialog extends IPlantDialog implements ValidHandler, InvalidHa
             String retVal;
             switch (item) {
                 case Regex:
-                    retVal = avMessages.regexLabel();
+                    retVal = appearance.regexLabel();
                     break;
                 case CharacterLimit:
-                    retVal = avMessages.characterLimitLabel();
+                    retVal = appearance.characterLimitLabel();
                     break;
 
                 case IntAbove:
-                    retVal = avMessages.intAboveLabel();
+                    retVal = appearance.intAboveLabel();
                     break;
 
                 case IntBelow:
-                    retVal = avMessages.intBelowLabel();
+                    retVal = appearance.intBelowLabel();
                     break;
                 case IntRange:
-                    retVal = avMessages.intRangeLabel();
+                    retVal = appearance.intRangeLabel();
                     break;
 
                 case DoubleAbove:
-                    retVal = avMessages.dblAboveLabel();
+                    retVal = appearance.dblAboveLabel();
                     break;
                 case DoubleBelow:
-                    retVal = avMessages.dblBelowLabel();
+                    retVal = appearance.dblBelowLabel();
                     break;
 
                 case DoubleRange:
-                    retVal = avMessages.dblRangeLabel();
+                    retVal = appearance.dblRangeLabel();
                     break;
 
                 default:
@@ -174,24 +175,27 @@ class AddValidatorDialog extends IPlantDialog implements ValidHandler, InvalidHa
     @UiField VerticalLayoutContainer regexValidatorCon, characterLimitValidatorCon;
     @UiField(provided = true) ComboBox<ArgumentValidatorType> validatorTypeCB;
 
-    private final ArgumentValidatorMessages avMessages;
+    @UiField(provided = true) PropertyEditorAppearance appearance;
 
-    private final AppTemplateAutoBeanFactory factory = GWT.create(AppTemplateAutoBeanFactory.class);
+    private final AppTemplateAutoBeanFactory factory;
 
     // Need a way of associating validator type with a card
-    private final Map<ArgumentValidatorType, VerticalLayoutContainer> validatorTypeToCardMap;
+    private Map<ArgumentValidatorType, VerticalLayoutContainer> validatorTypeToCardMap;
 
-    /**
-     * @param supportedValidatorTypes use these to construct content of the combo box
-     */
-    AddValidatorDialog(Set<ArgumentValidatorType> supportedValidatorTypes,
-            ArgumentValidatorMessages avMessages) {
-        this.avMessages = avMessages;
 
-        setHeading(avMessages.validatorDialogHeading());
+    @Inject
+    AddValidatorDialog(PropertyEditorAppearance appearance,
+                       AppTemplateAutoBeanFactory factory) {
+        this.appearance = appearance;
+        this.factory = factory;
+
+        setHeading(appearance.validatorDialogHeading());
         setAutoHide(false);
-        setSize("400", "250");
+        setSize(appearance.validatorDialogWidth(), appearance.validatorDialogHeight());
         // Initialize the ComboBox list store with the given Set<..>
+    }
+
+    public void show(Set<ArgumentValidatorType> supportedValidatorTypes) {
         ListStore<ArgumentValidatorType> validatorTypes = new ListStore<>(new AVTLabelKeyProvider());
         validatorTypes.addAll(supportedValidatorTypes);
 
@@ -228,6 +232,12 @@ class AddValidatorDialog extends IPlantDialog implements ValidHandler, InvalidHa
         ArgumentValidatorType next = supportedValidatorTypes.iterator().next();
         validatorTypeCB.setValue(next, true);
         cardLC.setActiveWidget(validatorTypeToCardMap.get(next));
+        super.show();
+    }
+
+    @Override
+    public void show() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("This method is not supported. Use 'show(Set<ArgumentValidatorType>)' instead.");
     }
 
     @Override

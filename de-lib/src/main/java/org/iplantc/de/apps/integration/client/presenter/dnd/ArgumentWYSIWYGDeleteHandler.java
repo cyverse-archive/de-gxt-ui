@@ -3,12 +3,12 @@ package org.iplantc.de.apps.integration.client.presenter.dnd;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent.DeleteArgumentEventHandler;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent.HasDeleteArgumentEventHandlers;
+import org.iplantc.de.apps.integration.client.view.AppsEditorView;
 import org.iplantc.de.apps.widgets.client.events.ArgumentSelectedEvent;
 import org.iplantc.de.apps.widgets.client.events.ArgumentSelectedEvent.ArgumentSelectedEventHandler;
 import org.iplantc.de.apps.widgets.client.events.ArgumentSelectedEvent.HasArgumentSelectedEventHandlers;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm;
 import org.iplantc.de.apps.widgets.client.view.HasLabelOnlyEditMode;
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.models.apps.integration.ArgumentType;
 import org.iplantc.de.client.util.AppTemplateUtils;
@@ -37,7 +37,7 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
  */
 public final class ArgumentWYSIWYGDeleteHandler implements MouseOverHandler, MouseOutHandler, SelectEvent.SelectHandler, HasDeleteArgumentEventHandlers, HasArgumentSelectedEventHandlers {
     int currentItemIndex = -1;
-    private final AppTemplateWizardAppearance appearance;
+    private final AppsEditorView.AppsEditorViewAppearance appearance;
     private final IconButton button;
     private HandlerManager handlerManager;
     private final HasLabelOnlyEditMode hasLabelOnlyEditMode;
@@ -45,7 +45,7 @@ public final class ArgumentWYSIWYGDeleteHandler implements MouseOverHandler, Mou
     private final ListEditor<Argument, AppTemplateForm.ArgumentEditorFactory> listEditor;
     private final AppTemplateUtils appTemplateUtils;
 
-    public ArgumentWYSIWYGDeleteHandler(final AppTemplateWizardAppearance appearance,
+    public ArgumentWYSIWYGDeleteHandler(final AppsEditorView.AppsEditorViewAppearance appearance,
                                         final ListEditor<Argument, AppTemplateForm.ArgumentEditorFactory> listEditor,
                                         final VerticalLayoutContainer layoutContainer,
                                         final IconButton button,
@@ -130,7 +130,7 @@ public final class ArgumentWYSIWYGDeleteHandler implements MouseOverHandler, Mou
                 ensureHandlers().fireEvent(new ArgumentSelectedEvent(nextArgument));
 
                 final AppTemplateForm.ArgumentEditor toBeSelected = listEditor.getEditors().get(index).getSubEditor();
-                toBeSelected.asWidget().addStyleName(appearance.getStyle().argumentSelect());
+                toBeSelected.asWidget().addStyleName(appearance.argumentSelect());
             } else {
                 /*
                  * JDS If the ArgumentGroup is empty after performing remove, add the empty group

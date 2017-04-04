@@ -3,6 +3,7 @@ package org.iplantc.de.apps.integration.client.presenter.visitors;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent.DeleteArgumentEventHandler;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent.HasDeleteArgumentEventHandlers;
 import org.iplantc.de.apps.integration.client.presenter.dnd.ArgumentWYSIWYGDeleteHandler;
+import org.iplantc.de.apps.integration.client.view.AppsEditorView;
 import org.iplantc.de.apps.widgets.client.events.AppTemplateSelectedEvent.HasAppTemplateSelectedEventHandlers;
 import org.iplantc.de.apps.widgets.client.events.ArgumentAddedEvent.HasArgumentAddedEventHandlers;
 import org.iplantc.de.apps.widgets.client.events.ArgumentGroupAddedEvent.HasArgumentGroupAddedEventHandlers;
@@ -14,7 +15,6 @@ import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.ArgumentGroupEdit
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.HasDisableValidations;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.HasDisabledOnNotVisible;
 import org.iplantc.de.apps.widgets.client.view.HasLabelOnlyEditMode;
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.diskResource.client.views.widgets.DiskResourceSelector.HasDisableBrowseButtons;
 
 import com.google.common.collect.Lists;
@@ -35,7 +35,7 @@ import java.util.Map;
 public class GatherAllEventProviders extends EditorVisitor {
 
 
-    private final AppTemplateWizardAppearance appearance;
+    private final AppsEditorView.AppsEditorViewAppearance appearance;
     private final DeleteArgumentEventHandler delArgHandler;
     private final List<HasAppTemplateSelectedEventHandlers> hasAppTemplateSelectedHandlers = Lists.newArrayList();
 
@@ -50,7 +50,7 @@ public class GatherAllEventProviders extends EditorVisitor {
     private final HasLabelOnlyEditMode hasLabelOnlyEditMode;
     private final Map<String, List<HasValueChangeHandlers<?>>> hasValChangeHandlerMap = Maps.newHashMap();
 
-    public GatherAllEventProviders(AppTemplateWizardAppearance appearance, HasLabelOnlyEditMode hasLabelOnlyEditMode, DeleteArgumentEventHandler delArgHandler) {
+    public GatherAllEventProviders(AppsEditorView.AppsEditorViewAppearance appearance, HasLabelOnlyEditMode hasLabelOnlyEditMode, DeleteArgumentEventHandler delArgHandler) {
         this.appearance = appearance;
         this.hasLabelOnlyEditMode = hasLabelOnlyEditMode;
         this.delArgHandler = delArgHandler;

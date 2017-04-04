@@ -2,8 +2,8 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:con="urn:import:com.sencha.gxt.widget.core.client.container"
 	xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form">
-    <ui:with field="appWidgetValidationStrings"
-             type="org.iplantc.de.resources.client.uiapps.widgets.ArgumentValidatorMessages"/>
+    <ui:with field="appearance"
+             type="org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance"/>
 	<ui:with
 		type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
 		field="layoutData">
@@ -11,7 +11,7 @@
 	</ui:with>
 	<con:VerticalLayoutContainer>
 		<con:child layoutData="{layoutData}">
-			<form:FieldLabel text="{appWidgetValidationStrings.ruleType}"
+			<form:FieldLabel text="{appearance.ruleType}"
 				labelAlign="TOP">
 				<form:child>
 					<form:ComboBox ui:field="validatorTypeCB" />
@@ -22,7 +22,7 @@
 			<con:CardLayoutContainer ui:field="cardLC">
 				<con:VerticalLayoutContainer ui:field="dblAboveValidatorCon">
 					<con:child layoutData="{layoutData}">
-						<form:FieldLabel text="{appWidgetValidationStrings.valueAbove}"
+						<form:FieldLabel text="{appearance.valueAbove}"
 							labelAlign="TOP">
 							<form:child>
 								<form:SpinnerField ui:field="dblAboveField" />
@@ -32,7 +32,7 @@
 				</con:VerticalLayoutContainer>
 				<con:VerticalLayoutContainer ui:field="dblBelowValidatorCon">
 					<con:child layoutData="{layoutData}">
-						<form:FieldLabel text="{appWidgetValidationStrings.valueBelow}"
+						<form:FieldLabel text="{appearance.valueBelow}"
 							labelAlign="TOP">
 							<form:child>
 								<form:SpinnerField ui:field="dblBelowField" />
@@ -42,7 +42,7 @@
 				</con:VerticalLayoutContainer>
 				<con:VerticalLayoutContainer ui:field="dblRangeValidatorCon">
 					<con:child layoutData="{layoutData}">
-						<form:FieldLabel text="{appWidgetValidationStrings.valueBetween}"
+						<form:FieldLabel text="{appearance.valueBetween}"
 							labelAlign="TOP">
 							<form:child>
 								<form:SpinnerField ui:field="dblRangeAboveField" />
@@ -50,7 +50,7 @@
 						</form:FieldLabel>
 					</con:child>
 					<con:child layoutData="{layoutData}">
-						<form:FieldLabel text="{appWidgetValidationStrings.valueBetweenAnd}"
+						<form:FieldLabel text="{appearance.valueBetweenAnd}"
 							labelAlign="TOP">
 							<form:child>
 								<form:SpinnerField ui:field="dblRangeBelowField" />
@@ -60,7 +60,7 @@
 				</con:VerticalLayoutContainer>
 				<con:VerticalLayoutContainer ui:field="intAboveValidatorCon">
 					<con:child layoutData="{layoutData}">
-						<form:FieldLabel text="{appWidgetValidationStrings.valueAbove}"
+						<form:FieldLabel text="{appearance.valueAbove}"
 							labelAlign="TOP">
 							<form:child>
 								<form:SpinnerField ui:field="intAboveField" />
@@ -70,7 +70,7 @@
 				</con:VerticalLayoutContainer>
 				<con:VerticalLayoutContainer ui:field="intBelowValidatorCon">
 					<con:child layoutData="{layoutData}">
-						<form:FieldLabel text="{appWidgetValidationStrings.valueBelow}"
+						<form:FieldLabel text="{appearance.valueBelow}"
 							labelAlign="TOP">
 							<form:child>
 								<form:SpinnerField ui:field="intBelowField" />
@@ -80,7 +80,7 @@
 				</con:VerticalLayoutContainer>
 				<con:VerticalLayoutContainer ui:field="intRangeValidatorCon">
 					<con:child layoutData="{layoutData}">
-						<form:FieldLabel text="{appWidgetValidationStrings.valueBetween}"
+						<form:FieldLabel text="{appearance.valueBetween}"
 							labelAlign="TOP">
 							<form:child>
 								<form:SpinnerField ui:field="intRangeAboveField" />
@@ -88,7 +88,7 @@
 						</form:FieldLabel>
 					</con:child>
 					<con:child layoutData="{layoutData}">
-						<form:FieldLabel text="{appWidgetValidationStrings.valueBetweenAnd}"
+						<form:FieldLabel text="{appearance.valueBetweenAnd}"
 							labelAlign="TOP">
 							<form:child>
 								<form:SpinnerField ui:field="intRangeBelowField" />
@@ -98,7 +98,7 @@
 				</con:VerticalLayoutContainer>
 				<con:VerticalLayoutContainer ui:field="regexValidatorCon">
 					<con:child layoutData="{layoutData}">
-						<form:FieldLabel text="{appWidgetValidationStrings.valueRegex}"
+						<form:FieldLabel text="{appearance.valueRegex}"
 							labelAlign="TOP">
 							<form:child>
 								<form:TextField ui:field="regexField" allowBlank="false" />
@@ -108,7 +108,7 @@
 				</con:VerticalLayoutContainer>
 				<con:VerticalLayoutContainer ui:field="characterLimitValidatorCon">
 					<con:child layoutData="{layoutData}">
-						<form:FieldLabel text="{appWidgetValidationStrings.valueCharLimit}"
+						<form:FieldLabel text="{appearance.valueCharLimit}"
 							labelAlign="TOP">
 							<form:child>
 								<form:NumberField ui:field="charLimitField" />

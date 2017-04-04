@@ -1,5 +1,7 @@
 package org.iplantc.de.apps.integration.client.view;
 
+import org.iplantc.de.apps.integration.client.events.DeleteArgumentGroupEvent;
+import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent;
 import org.iplantc.de.apps.integration.client.model.ArgumentPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.ArgumentGroupPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.DecimalInputPropertyEditor;
@@ -35,13 +37,10 @@ import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.models.apps.integration.ArgumentGroup;
 import org.iplantc.de.client.models.apps.integration.ArgumentType;
 import org.iplantc.de.commons.client.widgets.ContextualHelpPopup;
-import org.iplantc.de.resources.client.IplantContextualHelpAccessStyle;
-import org.iplantc.de.resources.client.IplantResources;
-import org.iplantc.de.resources.client.messages.I18N;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
 
 import com.google.common.collect.Maps;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
@@ -66,7 +65,9 @@ import com.sencha.gxt.widget.core.client.form.TextArea;
 
 import java.util.Map;
 
-public class AppsEditorViewImpl extends Composite implements AppsEditorView {
+public class AppsEditorViewImpl extends Composite implements AppsEditorView,
+                                                             DeleteArgumentGroupEvent.DeleteArgumentGroupEventHandler,
+                                                             UpdateCommandLinePreviewEvent.UpdateCommandLinePreviewEventHandler {
 
     @UiTemplate("AppsEditorView.ui.xml")
     interface AppsIntegrationViewImplUiBinder extends UiBinder<Widget, AppsEditorViewImpl> {}
@@ -145,32 +146,33 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView {
     @UiField(provided = true)
     AppTemplateForm wizard;
 
-    private ArgumentGroupPropertyEditor argGrpPropertyEditor;
+    @UiField(provided = true) AppsEditorViewAppearance appearance;
 
+    private ArgumentGroupPropertyEditor argGrpPropertyEditor;
     private ArgumentPropertyEditor currArgumentPropEditor;
     private final ContentPanel defaultDetailsPanel;
-    private final AppsEditorView.EditorDriver editorDriver = GWT.create(AppsEditorView.EditorDriver.class);
-    private final AppsWidgetsContextualHelpMessages helpMessages = I18N.APPS_HELP;
+    private final AppsEditorView.EditorDriver editorDriver;
 
-    private Presenter presenter;
     private final Map<Object, ArgumentPropertyEditor> propertyEditorMap = Maps.newHashMap();
-    private final IplantContextualHelpAccessStyle style = IplantResources.RESOURCES.getContxtualHelpStyle();
 
     @Inject
-    public AppsEditorViewImpl(AppTemplateForm wizard,
+    public AppsEditorViewImpl(AppsEditorViewAppearance appearance,
+                              AppTemplateForm wizard,
                               AppEditorToolbar toolbar,
                               AppTemplatePropertyEditor appTemplatePropertyEditor,
                               final AppIntegrationPalette palette,
+                              AppsEditorView.EditorDriver editorDriver,
                               AppsEditorPanelAppearance panelAppearance) {
+        this.appearance = appearance;
         this.wizard = wizard;
         this.toolbar = toolbar;
         wizard.setAdjustForScroll(false);
         this.appTemplatePropertyEditor = appTemplatePropertyEditor;
         this.palette = palette;
-        style.ensureInjected();
+        this.editorDriver = editorDriver;
         defaultDetailsPanel = new ContentPanel(panelAppearance);
-        defaultDetailsPanel.setHeading(SafeHtmlUtils.fromTrustedString(I18N.APPS_LABELS.detailsPanelHeader(""))); //$NON-NLS-1$
-        defaultDetailsPanel.add(new HTML(I18N.APPS_LABELS.detailsPanelDefaultText()));
+        defaultDetailsPanel.setHeading(SafeHtmlUtils.fromTrustedString(appearance.detailsPanelHeader(""))); //$NON-NLS-1$
+        defaultDetailsPanel.add(new HTML(appearance.detailsPanelDefaultText()));
 
         initWidget(BINDER.createAndBindUi(this));
         editorDriver.initialize(this);
@@ -182,7 +184,7 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView {
          * out the handler below, and drag a new argument group to the app wizard. The behaviour is
          * abrasive and jarring to the user.
          */
-        palette.grpDragSource.addDragStartHandler(new DndDragStartHandler() {
+        palette.addDragStartHandler(new DndDragStartHandler() {
 
             @Override
             public void onDragStart(DndDragStartEvent event) {
@@ -268,7 +270,7 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView {
 
         if (argGrpPropertyEditor == null) {
             argGrpPropertyEditor = argGrpPropEditorProvider.get();
-            argGrpPropertyEditor.addDeleteArgumentGroupEventHandler(presenter);
+            argGrpPropertyEditor.addDeleteArgumentGroupEventHandler(this);
         }
 
         argGrpPropertyEditor.edit(selectedArgumentGroup, event.getAbsoluteEditorPath());
@@ -430,7 +432,7 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView {
                     break;
             }
 
-            currArgumentPropEditor.addUpdateCommandLinePreviewEventHandler(presenter);
+            currArgumentPropEditor.addUpdateCommandLinePreviewEventHandler(this);
         } else {
             currArgumentPropEditor = propertyEditorMap.get(type);
             currArgumentPropEditor.edit(selectedArgument);
@@ -445,7 +447,7 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView {
             ArgumentEditor currArgEditor = (ArgumentEditor)event.getSource();
             currArgumentPropEditor.setBoundArgumentEditor(currArgEditor);
 
-            currArgumentPropEditor.setLabelOnlyEditMode(presenter.isLabelOnlyEditMode());
+            currArgumentPropEditor.setLabelOnlyEditMode(palette.getOnlyLabelEditMode());
         }
 
     }
@@ -469,28 +471,38 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView {
         palette.setOnlyLabelEditMode(onlyLabelEditMode);
     }
 
-    @Override
-    public void setPresenter(AppsEditorView.Presenter presenter) {
-        this.presenter = presenter;
-        toolbar.addArgumentOrderSelectedHandler(presenter);
-        toolbar.addPreviewJsonSelectedHandler(presenter);
-        toolbar.addPreviewAppSelectedHandler(presenter);
-        toolbar.addSaveAppSelectedHandler(presenter);
-    }
-
     @UiFactory
     ToolButton createToolBtn() {
-        final ToolButton toolButton = new ToolButton(style.contextualHelp());
+        final ToolButton toolButton = new ToolButton(appearance.contextualHelp());
         toolButton.addSelectHandler(new SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
                 ContextualHelpPopup popup = new ContextualHelpPopup();
                 popup.setWidth(450);
-                popup.add(new HTML(helpMessages.appCategorySection()));
+                popup.add(new HTML(appearance.appCategorySection()));
                 popup.showAt(toolButton.getAbsoluteLeft(), toolButton.getAbsoluteTop() + 15);
             }
         });
         return toolButton;
     }
 
+    @Override
+    public void doArgumentGroupDelete(DeleteArgumentGroupEvent event) {
+        fireEvent(event);
+    }
+
+    @Override
+    public void onUpdateCommandLinePreview(UpdateCommandLinePreviewEvent event) {
+        fireEvent(event);
+    }
+
+    @Override
+    public HandlerRegistration addDeleteArgumentGroupEventHandler(DeleteArgumentGroupEvent.DeleteArgumentGroupEventHandler handler) {
+        return addHandler(handler, DeleteArgumentGroupEvent.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addUpdateCommandLinePreviewEventHandler(UpdateCommandLinePreviewEvent.UpdateCommandLinePreviewEventHandler handler) {
+        return addHandler(handler, UpdateCommandLinePreviewEvent.TYPE);
+    }
 }

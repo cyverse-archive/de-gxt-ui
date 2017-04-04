@@ -5,17 +5,12 @@ import org.iplantc.de.apps.integration.shared.AppIntegrationModule.PropertyPanel
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.ClearComboBoxSelectionKeyDownHandler;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.ArgumentEditorConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.SplittableToReferenceGenomeConverter;
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.apps.widgets.client.view.editors.widgets.CheckBoxAdapter;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.models.apps.refGenome.ReferenceGenome;
 import org.iplantc.de.client.services.AppBuilderMetadataServiceFacade;
 import org.iplantc.de.commons.client.validators.CmdLineArgCharacterValidator;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsDisplayMessages;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
-import org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.ReferenceSelectorLabels;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.LeafValueEditor;
@@ -44,12 +39,11 @@ public class ReferenceSequencePropertyEditor extends AbstractArgumentPropertyEdi
     interface ReferenceSequencePropertyEditorUiBinder extends UiBinder<Widget, ReferenceSequencePropertyEditor> {
     }
 
-    @UiField(provided = true) AppsWidgetsPropertyPanelLabels appLabels;
+    @UiField(provided = true) PropertyEditorAppearance appearance;
     @UiField @Path("name") TextField argumentOptionEditor;
     @UiField(provided = true) ArgumentEditorConverter<ReferenceGenome> defaultValueEditor;
     @UiField TextField label;
     @UiField CheckBoxAdapter omitIfBlank, requiredEditor;
-    @UiField(provided = true) ReferenceSelectorLabels referenceSequenceSelectorLabels;
     @UiField @Path("description") TextField toolTipEditor;
     @UiField FieldLabel toolTipLabel, argumentOptionLabel, selectionItemDefaultValueLabel;
 
@@ -57,18 +51,13 @@ public class ReferenceSequencePropertyEditor extends AbstractArgumentPropertyEdi
     private final EditorDriver editorDriver = GWT.create(EditorDriver.class);
 
     @Inject
-    public ReferenceSequencePropertyEditor(final AppTemplateWizardAppearance appearance,
-                                           final AppsWidgetsPropertyPanelLabels appLabels,
-                                           final AppsWidgetsContextualHelpMessages help,
+    public ReferenceSequencePropertyEditor(final PropertyEditorAppearance appearance,
                                            final AppBuilderMetadataServiceFacade appMetadataService,
-                                           final AppsWidgetsDisplayMessages appsWidgetsDisplayMessages,
                                            final IplantValidationConstants validationConstants) {
-        super(appearance);
-        this.appLabels = appLabels;
-        this.referenceSequenceSelectorLabels = appLabels;
+        this.appearance = appearance;
 
         ComboBox<ReferenceGenome> comboBox = createReferenceGenomeStore(appMetadataService);
-        comboBox.setEmptyText(appsWidgetsDisplayMessages.emptyListSelectionText());
+        comboBox.setEmptyText(appearance.emptyListSelectionText());
         comboBox.setMinChars(1);
         ClearComboBoxSelectionKeyDownHandler handler = new ClearComboBoxSelectionKeyDownHandler(comboBox);
         comboBox.addKeyDownHandler(handler);
@@ -78,15 +67,15 @@ public class ReferenceSequencePropertyEditor extends AbstractArgumentPropertyEdi
 
         argumentOptionEditor.addValidator(new CmdLineArgCharacterValidator(validationConstants.restrictedCmdLineChars()));
 
-        selectionItemDefaultValueLabel.setHTML(appearance.createContextualHelpLabel(appLabels.singleSelectionDefaultValue(), help.singleSelectDefaultItem()));
+        selectionItemDefaultValueLabel.setHTML(appearance.createContextualHelpLabel(appearance.singleSelectionDefaultValue(), appearance.singleSelectDefaultItem()));
 
-        toolTipLabel.setHTML(appearance.createContextualHelpLabel(appLabels.toolTipText(), help.toolTip()));
-        argumentOptionLabel.setHTML(appearance.createContextualHelpLabel(appLabels.argumentOption(), help.argumentOption()));
+        toolTipLabel.setHTML(appearance.createContextualHelpLabel(appearance.toolTipText(), appearance.toolTip()));
+        argumentOptionLabel.setHTML(appearance.createContextualHelpLabel(appearance.argumentOption(), appearance.argumentOptionHelp()));
 
-        requiredEditor.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appLabels.isRequired()).toSafeHtml());
+        requiredEditor.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appearance.isRequired()).toSafeHtml());
 
         omitIfBlank.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;")
-                                                 .append(appearance.createContextualHelpLabelNoFloat(appLabels.excludeWhenEmpty(), help.excludeReference()))
+                                                 .append(appearance.createContextualHelpLabelNoFloat(appearance.excludeWhenEmpty(), appearance.excludeReference()))
                                                  .toSafeHtml());
         editorDriver.initialize(this);
         editorDriver.accept(new InitializeTwoWayBinding(this));

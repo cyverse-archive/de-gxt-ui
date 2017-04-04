@@ -2,18 +2,15 @@ package org.iplantc.de.apps.integration.client.view.propertyEditors;
 
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids;
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.PropertyPanelIds;
+
 import org.iplantc.de.apps.integration.client.view.propertyEditors.util.EnvironmentVariableNameValidator;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.ArgumentEditorConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.SplittableToStringConverter;
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.apps.widgets.client.view.editors.widgets.CheckBoxAdapter;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.util.AppTemplateUtils;
 import org.iplantc.de.commons.client.validators.CmdLineArgCharacterValidator;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
-import org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.EnvironmentVariableLabels;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
@@ -40,12 +37,11 @@ public class EnvVarPropertyEditor extends AbstractArgumentPropertyEditor {
 
     interface EnvVarPropertyEditorUiBinder extends UiBinder<Widget, EnvVarPropertyEditor> { }
 
-    @UiField(provided = true) AppsWidgetsPropertyPanelLabels appLabels;
+    @UiField(provided = true) PropertyEditorAppearance appearance;
     @UiField FieldLabel argLabelLabel;
     @UiField(provided = true) ArgumentEditorConverter<String> defaultValueEditor;
     @UiField FieldLabel defaultValueLabel;
     @UiField @Path("visible") CheckBoxAdapter doNotDisplay;
-    @UiField(provided = true) EnvironmentVariableLabels envVarLabels;
     @UiField TextField label, name;
     @UiField FieldLabel nameLabel;
     @UiField CheckBoxAdapter requiredEditor;
@@ -56,16 +52,11 @@ public class EnvVarPropertyEditor extends AbstractArgumentPropertyEditor {
     private final EditorDriver editorDriver = GWT.create(EditorDriver.class);
 
     @Inject
-    public EnvVarPropertyEditor(final AppTemplateWizardAppearance appearance,
-                                final AppsWidgetsPropertyPanelLabels appLabels,
-                                final AppsWidgetsContextualHelpMessages help,
+    public EnvVarPropertyEditor(final PropertyEditorAppearance appearance,
                                 final IplantValidationConstants validationConstants) {
-        super(appearance);
-        this.appLabels = appLabels;
-        this.envVarLabels = appLabels;
-
+        this.appearance = appearance;
         TextField textField = new TextField();
-        textField.setEmptyText(envVarLabels.envVarWidgetEmptyEditText());
+        textField.setEmptyText(appearance.envVarWidgetEmptyEditText());
         textField.addValidator(new CmdLineArgCharacterValidator(validationConstants.restrictedCmdLineChars()));
         defaultValueEditor = new ArgumentEditorConverter<>(textField, new SplittableToStringConverter());
 
@@ -73,13 +64,13 @@ public class EnvVarPropertyEditor extends AbstractArgumentPropertyEditor {
 
         name.addValidator(new EnvironmentVariableNameValidator());
 
-        defaultValueLabel.setHTML(appearance.createContextualHelpLabel(envVarLabels.envVarDefaultLabel(), help.envVarDefaultValue()));
-        toolTipLabel.setHTML(appearance.createContextualHelpLabel(appLabels.toolTipText(), help.toolTip()));
-        nameLabel.setHTML(appearance.createContextualHelpLabel(appLabels.argumentOption(), help.argumentOption()));
-        doNotDisplay.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appLabels.doNotDisplay()).toSafeHtml());
+        defaultValueLabel.setHTML(appearance.createContextualHelpLabel(appearance.envVarDefaultLabel(), appearance.envVarDefaultValue()));
+        toolTipLabel.setHTML(appearance.createContextualHelpLabel(this.appearance.toolTipText(), appearance.toolTip()));
+        nameLabel.setHTML(appearance.createContextualHelpLabel(this.appearance.argumentOption(), appearance.argumentOptionHelp()));
+        doNotDisplay.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(this.appearance.doNotDisplay()).toSafeHtml());
 
-        nameLabel.setHTML(appearance.createContextualHelpLabel(appLabels.envVarNameLabel(), help.envVarDefaultName()));
-        requiredEditor.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(appLabels.isRequired()).toSafeHtml());
+        nameLabel.setHTML(appearance.createContextualHelpLabel(this.appearance.envVarNameLabel(), appearance.envVarDefaultName()));
+        requiredEditor.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").append(this.appearance.isRequired()).toSafeHtml());
         editorDriver.initialize(this);
         editorDriver.accept(new InitializeTwoWayBinding(this));
         ensureDebugId(Ids.PROPERTY_EDITOR + Ids.ENV_VARIABLE);

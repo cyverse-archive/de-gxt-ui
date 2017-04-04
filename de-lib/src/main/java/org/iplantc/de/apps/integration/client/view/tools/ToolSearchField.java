@@ -1,6 +1,6 @@
 package org.iplantc.de.apps.integration.client.view.tools;
 
-import org.iplantc.de.apps.integration.client.view.deployedComponents.proxy.ToolSearchRPCProxy;
+import org.iplantc.de.apps.integration.client.presenter.ToolSearchRPCProxy;
 import org.iplantc.de.client.models.tool.Tool;
 
 import com.google.gwt.cell.client.AbstractCell;

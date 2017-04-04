@@ -1,17 +1,17 @@
 package org.iplantc.de.apps.integration.client.view.propertyEditors.util;
 
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
+import org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance;
 
 import com.google.gwt.editor.client.LeafValueEditor;
 import com.google.gwt.user.client.ui.HasHTML;
 
 public class PrefixedHasTextEditor implements LeafValueEditor<String> {
 
-    private final AppTemplateWizardAppearance appearance;
+    private final PropertyEditorAppearance appearance;
     private final HasHTML peer;
     private String prefixedMmodel;
 
-    public PrefixedHasTextEditor(HasHTML peer, AppTemplateWizardAppearance appearance) {
+    public PrefixedHasTextEditor(HasHTML peer, PropertyEditorAppearance appearance) {
         this.peer = peer;
         this.appearance = appearance;
     }
@@ -24,7 +24,7 @@ public class PrefixedHasTextEditor implements LeafValueEditor<String> {
     @Override
     public void setValue(String value) {
         this.prefixedMmodel = value;
-        peer.setHTML(appearance.getPropertyPanelLabels().detailsPanelHeader(value));
+        peer.setHTML(appearance.getPropertyDetailsPanelHeader(value));
     }
 
 }

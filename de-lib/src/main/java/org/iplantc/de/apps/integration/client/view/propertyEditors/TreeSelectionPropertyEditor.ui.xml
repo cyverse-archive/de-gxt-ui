@@ -5,10 +5,8 @@
 	         xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
 	         xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
 	         xmlns:fields="urn:import:org.iplantc.de.apps.widgets.client.view.editors.widgets">
-	<ui:with field="appLabels"
-             type="org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels" />
-	<ui:with field="treeSelectionLabels"
-             type="org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.TreeSelectionLabels" />
+	<ui:with field="appearance"
+             type="org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance" />
     <ui:with field="margins"
              type="com.sencha.gxt.core.client.util.Margins">
       <ui:attributes top="10"
@@ -43,10 +41,10 @@
 	        <con:child layoutData="{fieldLayoutData}">
 	            <form:FieldLabel ui:field="argLabelLabel" 
 	                             labelAlign="TOP"
-	                             text="{treeSelectionLabels.treeSelectionLabel}">
+	                             text="{appearance.treeSelectionLabel}">
 	                <form:widget>
 	                    <form:TextField ui:field="label"
-	                    				text="{treeSelectionLabels.textSelectionEmptyText}"/>
+	                    				text="{appearance.textSelectionEmptyText}"/>
 	                </form:widget>
 	            </form:FieldLabel>
 	        </con:child>
@@ -62,7 +60,7 @@
 	                             labelAlign="TOP">
 	                <form:widget>
 	                    <form:TextField ui:field="toolTipEditor"
-	                                    emptyText="{appLabels.toolTipEmptyText}"/>
+	                                    emptyText="{appearance.toolTipEmptyText}"/>
 	                </form:widget>
 	            </form:FieldLabel>
 	        </con:child>
@@ -73,7 +71,7 @@
 
 	        <con:child layoutData="{fieldLayoutData}">
 			 	<button:TextButton ui:field="editTreeListBtn"
-			 				       text="{appLabels.treeSelectionCreateLabel}"/> 
+			 				       text="{appearance.treeSelectionCreateLabel}"/> 
 	        </con:child>
             
 	    </con:VerticalLayoutContainer>
