@@ -202,7 +202,6 @@ public class NotificationViewImpl extends Composite implements NotificationView 
                                    appearance.categoryColumnWidth(),
                                    appearance.category());
         configs.add(colCategory);
-        colCategory.setMenuDisabled(true);
         colCategory.setSortable(false);
 
         ColumnConfig<NotificationMessage, NotificationMessage> colMessage =
@@ -212,7 +211,6 @@ public class NotificationViewImpl extends Composite implements NotificationView 
         colMessage.setCell(new NotificationMessageCell());
         configs.add(colMessage);
         colMessage.setSortable(false);
-        colMessage.setMenuDisabled(true);
 
         ColumnConfig<NotificationMessage, Date> colTimestamp = new ColumnConfig<>(new ValueProvider<NotificationMessage, Date>() {
 
