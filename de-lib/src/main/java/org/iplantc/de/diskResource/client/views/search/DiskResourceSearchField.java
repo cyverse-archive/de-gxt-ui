@@ -154,5 +154,6 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
     public void onSubmitTextSearch(SubmitTextSearchEvent event) {
         // Finish editing to fire search event.
         finishEditing();
+        focus();
     }
 }
