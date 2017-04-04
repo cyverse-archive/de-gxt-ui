@@ -47,6 +47,7 @@ public class ErrorDialog extends IPlantDialog {
     @UiField HTML errorMsg;
     @UiField FramedPanel detailsPanel;
     @UiField HTML descriptionArea;
+    @UiField VerticalLayoutContainer messagePanel;
     @UiField VerticalLayoutContainer detailsContainer;
 
     public ErrorDialog(final SafeHtml errorMsg,
@@ -67,6 +68,7 @@ public class ErrorDialog extends IPlantDialog {
         add(uiBinder.createAndBindUi(this));
         detailsPanel.setHeading(appearance.detailsHeading());
         detailsPanel.setSize(appearance.detailsPanelWidth(), appearance.detailsPanelHeight());
+        messagePanel.setScrollMode(ScrollMode.AUTO);
 
         if (errorMsg != null) {
             this.errorMsg.setHTML(errorMsg);

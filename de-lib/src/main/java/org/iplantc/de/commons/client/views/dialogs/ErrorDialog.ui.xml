@@ -3,7 +3,7 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
              xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
-             xmlns:gxtForm="urn:import:com.sencha.gxt.widget.core.client.form">
+>
 
     <ui:with field="appearance"
              type="org.iplantc.de.commons.client.views.dialogs.ErrorDialog.ErrorDialogAppearance" />
@@ -45,8 +45,11 @@
                 <container:north layoutData="{northData}">
                     <container:HorizontalLayoutContainer styleName="{appearance.bgColor}">
                         <g:Image resource="{appearance.errorIcon}"/>
-                        <g:HTML ui:field="errorMsg"
-                                wordWrap="true"/>
+                        <container:VerticalLayoutContainer ui:field="messagePanel">
+                            <g:HTML ui:field="errorMsg"
+                                    wordWrap="true"
+                                    height="80px"/>
+                        </container:VerticalLayoutContainer>
                     </container:HorizontalLayoutContainer>
                 </container:north>
                 <container:center layoutData="{centerData}">
