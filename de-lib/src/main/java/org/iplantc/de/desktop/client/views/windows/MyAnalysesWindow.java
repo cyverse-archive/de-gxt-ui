@@ -34,7 +34,7 @@ public class MyAnalysesWindow extends IplantWindowBase {
         ensureDebugId(DeModule.WindowIds.ANALYSES_WINDOW);
         setHeading(displayStrings.analyses());
         setSize("670", "375");
-        setMinWidth(400);
+        setMinWidth(590);
     }
 
     @Override
