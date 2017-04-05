@@ -2930,7 +2930,7 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
      *
      * @return translated "Send to CoGE"
      */
-    @DefaultMessage("Send to CoGE")
+    @DefaultMessage("View in CoGE")
     @Key("sendToCogeMenuItem")
     String sendToCogeMenuItem();
 
@@ -2939,7 +2939,7 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
      *
      * @return translated "Send to Ensembl"
      */
-    @DefaultMessage("Send to Ensembl")
+    @DefaultMessage("View in Genome Browser")
     @Key("sendToEnsemblMenuItem")
     String sendToEnsemblMenuItem();
 
@@ -2948,7 +2948,7 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
      *
      * @return translated "Send to Tree Viewer"
      */
-    @DefaultMessage("Send to Tree Viewer")
+    @DefaultMessage("View in Tree Viewer")
     @Key("sendToTreeViewerMenuItem")
     String sendToTreeViewerMenuItem();
 
