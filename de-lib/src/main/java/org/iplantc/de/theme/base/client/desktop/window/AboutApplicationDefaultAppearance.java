@@ -6,12 +6,16 @@ import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.Window;
+
+import java.time.Year;
+import java.util.Date;
 
 /**
  * The Default production Appearance for the About Window's contents and layout.
@@ -62,7 +66,7 @@ public class AboutApplicationDefaultAppearance implements AboutApplicationWindow
         return templates.about(Strings.nullToEmpty(data.getReleaseVersion()),
                 Strings.nullToEmpty(data.getBuild()),
                 Window.Navigator.getUserAgent(),
-                I18N.DISPLAY.projectCopyrightStatement(),
+                I18N.DISPLAY.projectCopyrightStatement(DateTimeFormat.getFormat("yyyy").format(new Date())),
                 I18N.DISPLAY.nsfProjectText());
     }
 

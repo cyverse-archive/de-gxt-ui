@@ -1892,9 +1892,8 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
      *
      * @return translated "&copy;2016 CyVerse Collaborative"
      */
-    @DefaultMessage("&copy;2016 CyVerse Collaborative")
     @Key("projectCopyrightStatement")
-    SafeHtml projectCopyrightStatement();
+    SafeHtml projectCopyrightStatement(String year);
 
     /**
      * Translated "Boolean".

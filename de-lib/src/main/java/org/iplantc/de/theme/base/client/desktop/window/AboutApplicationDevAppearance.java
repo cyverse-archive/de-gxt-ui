@@ -5,9 +5,12 @@ import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.Window;
+
+import java.util.Date;
 
 /**
  * The Dev mode Appearance for the About Window's contents and layout, with additional build info.
@@ -45,7 +48,7 @@ public class AboutApplicationDevAppearance extends AboutApplicationDefaultAppear
                 Strings.nullToEmpty(data.getBuildCommit()),
                 Strings.nullToEmpty(data.getBuildJdk()),
                 Window.Navigator.getUserAgent(),
-                I18N.DISPLAY.projectCopyrightStatement(),
+                I18N.DISPLAY.projectCopyrightStatement(DateTimeFormat.getFormat("yyyy").format(new Date())),
                 I18N.DISPLAY.nsfProjectText());
     }
 }

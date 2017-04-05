@@ -1,11 +1,12 @@
 package org.iplantc.de.theme.base.client.admin.desktop;
 
-import org.iplantc.de.theme.base.client.admin.BelphegorConstants;
 import org.iplantc.de.admin.desktop.client.views.BelphegorView;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
+import org.iplantc.de.theme.base.client.admin.BelphegorConstants;
 import org.iplantc.de.theme.base.client.admin.BelphegorDisplayStrings;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -13,6 +14,8 @@ import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
 
 import com.sencha.gxt.core.client.XTemplates;
+
+import java.util.Date;
 
 /**
  * @author jstroot
@@ -97,7 +100,7 @@ public class BelphegorViewDefaultAppearance implements BelphegorView.BelphegorVi
 
     @Override
     public SafeHtml projectCopyrightStatement() {
-        return displayStrings.projectCopyrightStatement();
+        return displayStrings.projectCopyrightStatement(DateTimeFormat.getFormat("yyyy").format(new Date()));
     }
 
     @Override
