@@ -129,6 +129,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
             @Override
             public void onSelection(SelectionEvent<AnalysisFilter> event) {
                 onFilterChange(event.getSelectedItem());
+                searchField.clear();
             }
         });
         filterCombo.addValueChangeHandler(new ValueChangeHandler<AnalysisFilter>() {
