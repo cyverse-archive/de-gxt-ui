@@ -41,10 +41,14 @@ import com.sencha.gxt.dnd.core.client.DND.Feedback;
 import com.sencha.gxt.dnd.core.client.TreeGridDragSource;
 import com.sencha.gxt.dnd.core.client.TreeGridDropTarget;
 import com.sencha.gxt.widget.core.client.Composite;
+import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.event.CancelEditEvent;
+import com.sencha.gxt.widget.core.client.event.CompleteEditEvent;
 import com.sencha.gxt.widget.core.client.event.ExpandItemEvent;
 import com.sencha.gxt.widget.core.client.event.InvalidEvent;
 import com.sencha.gxt.widget.core.client.event.InvalidEvent.InvalidHandler;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
+import com.sencha.gxt.widget.core.client.event.StartEditEvent;
 import com.sencha.gxt.widget.core.client.event.ViewReadyEvent;
 import com.sencha.gxt.widget.core.client.form.CheckBox;
 import com.sencha.gxt.widget.core.client.form.SimpleComboBox;
@@ -164,6 +168,7 @@ public class SelectionItemTreePropertyEditor extends Composite implements HasVal
     @UiField SimpleComboBox<CheckCascade> cascadeOptionsCombo;
     @UiField CheckBox forceSingleSelectCheckBox;
     @UiField(provided = true) TreeGrid<SelectionItem> treeGrid;
+    @UiField TextButton addGrpBtn, addArgBtn, deleteBtn;
     @UiField(provided = true) PropertyEditorAppearance appearance = GWT.create(PropertyEditorAppearance.class);
     SelectionItemTreeStoreEditor selectionItemsEditor;
     TreeStore<SelectionItem> store;
@@ -547,6 +552,24 @@ public class SelectionItemTreePropertyEditor extends Composite implements HasVal
         editing.addEditor(nameConfig, buildEditorField(new CmdLineArgCharacterValidator(validationConstants.restrictedCmdLineChars())));
         editing.addEditor(valueConfig, buildEditorField(new CmdLineArgCharacterValidator(validationConstants.restrictedCmdLineArgCharsExclNewline())));
         editing.addEditor(descriptionConfig, buildEditorField(null));
+        editing.addStartEditHandler(new StartEditEvent.StartEditHandler<SelectionItem>() {
+            @Override
+            public void onStartEdit(StartEditEvent<SelectionItem> event) {
+                deleteBtn.setEnabled(false);
+            }
+        });
+        editing.addCompleteEditHandler(new CompleteEditEvent.CompleteEditHandler<SelectionItem>() {
+            @Override
+            public void onCompleteEdit(CompleteEditEvent<SelectionItem> event) {
+                deleteBtn.setEnabled(true);
+            }
+        });
+        editing.addCancelEditHandler(new CancelEditEvent.CancelEditHandler<SelectionItem>() {
+            @Override
+            public void onCancelEdit(CancelEditEvent<SelectionItem> event) {
+                deleteBtn.setEnabled(true);
+            }
+        });
         editing.setClicksToEdit(ClicksToEdit.TWO);
 
         treeGrid.getView().setAutoExpandColumn(descriptionConfig);
