@@ -15,4 +15,8 @@ public interface GroupAutoBeanFactory extends AutoBeanFactory {
     AutoBean<MemberSaveRequest> getMemberSaveRequest();
 
     AutoBean<MemberSaveResult> getMemberSaveResult();
+
+    AutoBean<Group> getGroup();
+
+    AutoBean<GroupList> getGroupList();
 }
