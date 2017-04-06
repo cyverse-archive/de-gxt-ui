@@ -80,4 +80,6 @@ public interface GridViewDisplayStrings extends Messages {
     String dataLinkTitle();
 
     String copyMetadataPrompt();
+
+    String fileExistsError();
 }

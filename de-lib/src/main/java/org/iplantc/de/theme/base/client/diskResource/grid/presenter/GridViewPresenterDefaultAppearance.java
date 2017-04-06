@@ -186,4 +186,9 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     public String copyMetadataPrompt() {
         return displayStrings.copyMetadataPrompt();
     }
+
+    @Override
+    public String fileExistsError() {
+        return displayStrings.fileExistsError();
+    }
 }

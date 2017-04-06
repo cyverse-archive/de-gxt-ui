@@ -111,8 +111,13 @@ public class GridViewPresenterImpl implements
 
         @Override
          public void onFailure(Throwable caught) {
-             save_dialog.hide();
-             announcer.schedule(new ErrorAnnouncementConfig("Unable to save your file. Please try again or contact support."));
+            save_dialog.unmask();
+             if (caught.getMessage().contains("ERR_EXISTS")) {
+                 announcer.schedule(new ErrorAnnouncementConfig(appearance.fileExistsError()));
+             } else {
+                 ErrorHandler.post("Unable to save your file. Please try again or contact support.",
+                                   caught);
+             }
          }
 
         @Override
