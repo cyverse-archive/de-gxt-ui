@@ -5,6 +5,7 @@ import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.views.dialogs.ErrorDialog;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -14,6 +15,7 @@ import com.google.gwt.user.client.Window;
 import com.sencha.gxt.core.client.GXT;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Provides a uniform manner for posting errors to the user.
@@ -52,6 +54,19 @@ public class ErrorHandler {
     }
 
     private static final String NEWLINE = "<br>"; //$NON-NLS-1$
+
+    private static JsonUtil jsonUtil = JsonUtil.getInstance();
+
+    private static final List<String> errorStrings =
+            Lists.newArrayList("error_code",
+                               "status");
+
+    private static final List<String> messageStrings =
+            Lists.newArrayList("message",
+                               "msg",
+                               "reason");
+
+
 
     /**
      * Post a message box with error styles with the argument error message.
@@ -162,8 +177,8 @@ public class ErrorHandler {
         }
 
         if (jsonError != null) {
-            String error_code = JsonUtil.getInstance().getString(jsonError, "error_code") + NEWLINE; //$NON-NLS-1$
-            String message = JsonUtil.getInstance().getString(jsonError, "reason") + NEWLINE; //$NON-NLS-1$
+            String error_code = getErrorCode(jsonError) + NEWLINE; //$NON-NLS-1$
+            String message = getErrorMessage(jsonError) + NEWLINE; //$NON-NLS-1$
 
             if (!message.isEmpty() || !error_code.isEmpty()) {
                 exceptionMessage = appearance.errorReport(error_code, message);
@@ -171,6 +186,26 @@ public class ErrorHandler {
         }
 
         return exceptionMessage;
+    }
+
+    private static String getErrorCode(JSONObject jsonError) {
+        for (String s : errorStrings) {
+            String error = jsonUtil.getString(jsonError, s);
+            if (!Strings.isNullOrEmpty(error)) {
+                return error;
+            }
+        }
+        return "";
+    }
+
+    private static String getErrorMessage(JSONObject jsonError) {
+        for (String s : messageStrings) {
+            String error = jsonUtil.getString(jsonError, s);
+            if (!Strings.isNullOrEmpty(error)) {
+                return error;
+            }
+        }
+        return "";
     }
 
     /**
