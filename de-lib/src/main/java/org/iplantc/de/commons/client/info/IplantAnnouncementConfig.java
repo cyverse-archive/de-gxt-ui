@@ -53,7 +53,7 @@ public class IplantAnnouncementConfig {
      * @param message
      */
     public IplantAnnouncementConfig(final String message) {
-        this(SafeHtmlUtils.fromString(message));
+        this(SafeHtmlUtils.fromTrustedString(message));
     }
 
     /**
