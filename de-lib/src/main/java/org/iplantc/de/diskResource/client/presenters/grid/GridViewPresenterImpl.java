@@ -110,25 +110,23 @@ public class GridViewPresenterImpl implements
         }
 
         @Override
-         public void onFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             save_dialog.unmask();
-             if (caught.getMessage().contains("ERR_EXISTS")) {
-                 announcer.schedule(new ErrorAnnouncementConfig(appearance.fileExistsError()));
-             } else {
-                 ErrorHandler.post("Unable to save your file. Please try again or contact support.",
-                                   caught);
-             }
-         }
+            if (caught.getMessage().contains("ERR_EXISTS")) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.fileExistsError()));
+            } else {
+                ErrorHandler.post("Unable to save your file. Please try again or contact support.",
+                                  caught);
+            }
+        }
 
         @Override
-         public void onSuccess(String result) {
-             save_dialog.hide();
-             IplantAnnouncer.getInstance()
-                            .schedule(new SuccessAnnouncementConfig("Metadata saved!",
-                                                                    true,
-                                                                    3000));
+        public void onSuccess(String result) {
+            save_dialog.hide();
+            IplantAnnouncer.getInstance()
+                           .schedule(new SuccessAnnouncementConfig("Metadata saved!", true, 3000));
 
-         }
+        }
     }
 
     private final class CopyMetadataCallback implements AsyncCallback<String> {
