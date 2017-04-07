@@ -1,0 +1,7 @@
+<module>
+    <!-- View -->
+    <replace-with class="org.iplantc.de.theme.base.client.groups.GroupViewDefaultAppearance">
+        <when-type-is class="org.iplantc.de.groups.client.GroupView.GroupViewAppearance"/>
+    </replace-with>
+
+</module>

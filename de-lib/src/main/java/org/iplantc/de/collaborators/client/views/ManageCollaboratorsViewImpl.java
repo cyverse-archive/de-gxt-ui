@@ -50,6 +50,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @UiField TextButton deleteBtn;
     @UiField Grid<Collaborator> grid;
     @UiField TextButton manageBtn;
+    @UiField TextButton groupsBtn;
     @UiField(provided = true) UserSearchField searchField;
     @UiField HorizontalLayoutContainer searchPanel;
     @UiField ToolBar toolbar;
@@ -183,6 +184,8 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     ColumnModel<Collaborator> buildColumnModel() {
         return new CollaboratorsColumnModel(checkBoxModel);
     }
+
+
 
     @UiHandler("deleteBtn")
     void deleteCollaborator(SelectEvent event) {
