@@ -3,6 +3,7 @@ package org.iplantc.de.collaborators.client.views;
 import org.iplantc.de.client.models.collaborators.Collaborator;
 
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import java.util.List;
@@ -18,7 +19,9 @@ public interface ManageCollaboratorsView extends IsWidget {
         SafeHtml renderCheckBoxColumnHeader(String debugId);
     }
 
-    public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
+    public interface Presenter {
+
+        void go (HasOneWidget container, MODE mode);
 
         void addAsCollaborators(List<Collaborator> models);
 

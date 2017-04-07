@@ -13,6 +13,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.Style.LayoutRegion;
@@ -44,7 +46,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     interface MyUiBinder extends UiBinder<Widget, ManageCollaboratorsViewImpl> {
     }
     @UiField ColumnModel<Collaborator> cm;
-    @UiField(provided = true) final ListStore<Collaborator> listStore;
+    @UiField ListStore<Collaborator> listStore;
     @UiField FramedPanel collaboratorListPnl;
     @UiField BorderLayoutContainer con;
     @UiField TextButton deleteBtn;
@@ -61,9 +63,8 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     private MODE mode;
     private String baseID;
 
-    public ManageCollaboratorsViewImpl(final ListStore<Collaborator> store,
-                                       final MODE mode) {
-        this.listStore = store;
+    @Inject
+    public ManageCollaboratorsViewImpl(@Assisted final MODE mode) {
         searchField = new UserSearchField(USER_SEARCH_EVENT_TAG.MANAGE);
         checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Collaborator>());
         initWidget(uiBinder.createAndBindUi(this));
@@ -181,11 +182,14 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @UiFactory
+    ListStore<Collaborator> createListStore() {
+        return new ListStore<>(new CollaboratorKeyProvider());
+    }
+
+    @UiFactory
     ColumnModel<Collaborator> buildColumnModel() {
         return new CollaboratorsColumnModel(checkBoxModel);
     }
-
-
 
     @UiHandler("deleteBtn")
     void deleteCollaborator(SelectEvent event) {

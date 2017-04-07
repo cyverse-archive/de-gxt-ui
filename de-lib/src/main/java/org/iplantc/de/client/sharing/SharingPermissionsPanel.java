@@ -135,21 +135,21 @@ public class SharingPermissionsPanel implements IsWidget {
 
             @Override
             public void onSelect(SelectEvent event) {
-                final ManageCollaboratorsDialog dialog = new ManageCollaboratorsDialog(ManageCollaboratorsView.MODE.SELECT);
-                dialog.setModal(true);
-                dialog.show();
-                dialog.addOkButtonSelectHandler(new SelectHandler() {
-
-                    @Override
-                    public void onSelect(SelectEvent event) {
-                        List<Collaborator> selected = dialog.getSelectedCollaborators();
-                        if (selected != null && selected.size() > 0) {
-                            for (Collaborator c : selected) {
-                                addCollaborator(c);
-                            }
-                        }
-                    }
-                });
+//                final ManageCollaboratorsDialog dialog = new ManageCollaboratorsDialog(ManageCollaboratorsView.MODE.SELECT);
+//                dialog.setModal(true);
+//                dialog.show();
+//                dialog.addOkButtonSelectHandler(new SelectHandler() {
+//
+//                    @Override
+//                    public void onSelect(SelectEvent event) {
+//                        List<Collaborator> selected = dialog.getSelectedCollaborators();
+//                        if (selected != null && selected.size() > 0) {
+//                            for (Collaborator c : selected) {
+//                                addCollaborator(c);
+//                            }
+//                        }
+//                    }
+//                });
 
             }
 

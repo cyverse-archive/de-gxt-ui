@@ -4,6 +4,7 @@ import org.iplantc.de.analysis.client.gin.AnalysisGinModule;
 import org.iplantc.de.apps.client.gin.AppsGinModule;
 import org.iplantc.de.apps.integration.client.gin.AppEditorGinModule;
 import org.iplantc.de.apps.widgets.client.gin.AppLaunchGinModule;
+import org.iplantc.de.collaborators.client.gin.CollaboratorsGinModule;
 import org.iplantc.de.commons.client.comments.gin.CommentsGinModule;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.desktop.client.gin.DEGinModule;
@@ -33,6 +34,7 @@ import com.google.gwt.inject.client.Ginjector;
               CommentsGinModule.class,
               TagsGinModule.class,
               FileViewerGinModule.class,
+              CollaboratorsGinModule.class,
               NotificationGinModule.class,
               PreferencesGinModule.class,
               GroupGinModule.class })
