@@ -687,7 +687,7 @@ public class GridViewPresenterImpl implements
         saveAsDialogProvider.get(new AsyncCallback<SaveAsDialog>() {
             @Override
             public void onFailure(Throwable caught) {
-                announcer.schedule(new ErrorAnnouncementConfig("Unable to save your file. Please try again or contact support."));
+                ErrorHandler.post(caught);
             }
 
             @Override
