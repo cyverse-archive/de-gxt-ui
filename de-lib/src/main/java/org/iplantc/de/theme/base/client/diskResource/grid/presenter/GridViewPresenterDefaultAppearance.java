@@ -188,7 +188,12 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     }
 
     @Override
-    public String fileExistsError() {
-        return displayStrings.fileExistsError();
+    public String fileExistsError(String fileName) {
+        return iplantErrorStrings.fileExists(fileName);
+    }
+
+    @Override
+    public String fileSaveError(String fileName) {
+        return displayStrings.fileSaveError(fileName);
     }
 }

@@ -81,5 +81,5 @@ public interface GridViewDisplayStrings extends Messages {
 
     String copyMetadataPrompt();
 
-    String fileExistsError();
+    String fileSaveError(String fileName);
 }
