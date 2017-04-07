@@ -331,6 +331,7 @@ public class DiskResourcePresenterImpl implements
         toolbarPresenter.getView().addSendToTreeViewerSelectedHandler(this);
         toolbarPresenter.getView().addSimpleUploadSelectedHandler(this.navigationPresenter);
         toolbarPresenter.getView().addImportFromUrlSelectedHandler(this.navigationPresenter);
+        toolbarPresenter.getView().addSaveMetadataSelectedEventHandler(this.gridViewPresenter);
 
     }
 

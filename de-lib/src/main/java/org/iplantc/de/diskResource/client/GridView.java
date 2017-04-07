@@ -186,6 +186,10 @@ public interface GridView extends IsWidget,
             String error();
 
             String copyMetadataPrompt();
+
+            String fileExistsError(String fileName);
+
+            String fileSaveError(String fileName);
         }
 
         void deSelectDiskResources();

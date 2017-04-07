@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 public class ErrorAnnouncementConfig extends IplantAnnouncementConfig {
 
     public ErrorAnnouncementConfig(final String message) {
-        this(SafeHtmlUtils.fromString(message));
+        this(SafeHtmlUtils.fromTrustedString(message));
     }
 
     public ErrorAnnouncementConfig(final SafeHtml message) {

@@ -103,27 +103,31 @@ public class GridViewPresenterImpl implements
                                   {
 
     private final class SaveMetadataCallback implements AsyncCallback<String> {
-        private final SaveAsDialog save_dialog;
+        private final SaveAsDialog saveDialog;
 
-        private SaveMetadataCallback(SaveAsDialog save_dialog) {
-            this.save_dialog = save_dialog;
+        private SaveMetadataCallback(SaveAsDialog saveDialog) {
+            this.saveDialog = saveDialog;
         }
 
         @Override
-         public void onFailure(Throwable caught) {
-             save_dialog.hide();
-             announcer.schedule(new ErrorAnnouncementConfig("Unable to save your file. Please try again or contact support."));
-         }
+        public void onFailure(Throwable caught) {
+            saveDialog.unmask();
+            String fileName = saveDialog.getFileName();
+            if (caught.getMessage().contains("ERR_EXISTS")) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.fileExistsError(fileName)));
+            } else {
+                ErrorHandler.post(appearance.fileSaveError(fileName),
+                                  caught);
+            }
+        }
 
         @Override
-         public void onSuccess(String result) {
-             save_dialog.hide();
-             IplantAnnouncer.getInstance()
-                            .schedule(new SuccessAnnouncementConfig("Metadata saved!",
-                                                                    true,
-                                                                    3000));
+        public void onSuccess(String result) {
+            saveDialog.hide();
+            IplantAnnouncer.getInstance()
+                           .schedule(new SuccessAnnouncementConfig("Metadata saved!", true, 3000));
 
-         }
+        }
     }
 
     private final class CopyMetadataCallback implements AsyncCallback<String> {
@@ -683,36 +687,36 @@ public class GridViewPresenterImpl implements
         saveAsDialogProvider.get(new AsyncCallback<SaveAsDialog>() {
             @Override
             public void onFailure(Throwable caught) {
-                announcer.schedule(new ErrorAnnouncementConfig("Unable to save your file. Please try again or contact support."));
+                ErrorHandler.post(caught);
             }
 
             @Override
-            public void onSuccess(final SaveAsDialog save_dialog) {
+            public void onSuccess(final SaveAsDialog saveDialog) {
 
-                save_dialog.addOkButtonSelectHandler(new SelectHandler() {
+                saveDialog.addOkButtonSelectHandler(new SelectHandler() {
 
                     @Override
                     public void onSelect(SelectEvent select_event) {
-                        save_dialog.mask("Saving");
-                        String destination = save_dialog.getSelectedFolder().getPath() + "/"
-                                + save_dialog.getFileName();
+                        saveDialog.mask("Saving");
+                        String destination = saveDialog.getSelectedFolder().getPath() + "/"
+                                + saveDialog.getFileName();
                         diskResourceService.saveMetadata(event.getDiskResource().getId(),
                                                          destination,
                                                          true,
-                                                         new SaveMetadataCallback(save_dialog));
+                                                         new SaveMetadataCallback(saveDialog));
 
                     }
                 });
-                save_dialog.addCancelButtonSelectHandler(new SelectHandler() {
+                saveDialog.addCancelButtonSelectHandler(new SelectHandler() {
 
                     @Override
                     public void onSelect(SelectEvent event) {
-                        save_dialog.hide();
+                        saveDialog.hide();
 
                     }
                 });
-                save_dialog.show(null);
-                save_dialog.toFront();
+                saveDialog.show(null);
+                saveDialog.toFront();
             }
         });
     }
