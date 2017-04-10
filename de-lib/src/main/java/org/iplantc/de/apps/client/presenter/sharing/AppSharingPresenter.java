@@ -30,6 +30,8 @@ import org.iplantc.de.shared.AppsCallback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import com.sencha.gxt.core.shared.FastMap;
@@ -118,27 +120,16 @@ public class AppSharingPresenter implements SharingPresenter {
     private AppSharingAutoBeanFactory shareFactory = GWT.create(AppSharingAutoBeanFactory.class);
 
 
+    @Inject
     public AppSharingPresenter(final AppUserServiceFacade appService,
-                               final List<App> selectedApps,
-                               final AppSharingView view,
-                               final CollaboratorsUtil collaboratorsUtil) {
-        this(appService,
-             selectedApps,
-             view,
-             collaboratorsUtil,
-             GWT.<SharingPresenter.Appearance>create(SharingPresenter.Appearance.class));
-    }
-
-    public AppSharingPresenter(final AppUserServiceFacade appService,
-                               final List<App> selectedApps,
+                               @Assisted final List<App> selectedApps,
                                final AppSharingView view,
                                final CollaboratorsUtil collaboratorsUtil,
-                               Appearance appearance) {
+                               SharingPresenter.Appearance appearance) {
 
         this.view = view;
         this.appearance = appearance;
         this.appService = appService;
-        view.setPresenter(this);
         this.collaboratorsUtil = collaboratorsUtil;
         this.selectedApps = selectedApps;
         this.permissionsPanel = new SharingPermissionsPanel(this, getSelectedApps(selectedApps));

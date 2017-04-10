@@ -10,6 +10,7 @@ import org.iplantc.de.apps.client.SubmitAppForPublicUseView;
 import org.iplantc.de.apps.client.gin.factory.AppCategoriesViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppDetailsViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppDocEditViewFactory;
+import org.iplantc.de.apps.client.gin.factory.AppSharingPresenterFactory;
 import org.iplantc.de.apps.client.gin.factory.AppsListViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppsToolbarViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppsViewFactory;
@@ -19,6 +20,7 @@ import org.iplantc.de.apps.client.presenter.categories.AppCategoriesPresenterImp
 import org.iplantc.de.apps.client.presenter.details.AppDetailsViewPresenterImpl;
 import org.iplantc.de.apps.client.presenter.list.AppsListPresenterImpl;
 import org.iplantc.de.apps.client.presenter.hierarchies.OntologyHierarchiesPresenterImpl;
+import org.iplantc.de.apps.client.presenter.sharing.AppSharingPresenter;
 import org.iplantc.de.apps.client.presenter.submit.SubmitAppForPublicPresenter;
 import org.iplantc.de.apps.client.presenter.toolBar.AppsToolbarPresenterImpl;
 import org.iplantc.de.apps.client.views.AppsViewImpl;
@@ -30,6 +32,8 @@ import org.iplantc.de.apps.client.views.details.doc.AppDocEditViewImpl;
 import org.iplantc.de.apps.client.views.list.AppsGridViewImpl;
 import org.iplantc.de.apps.client.views.list.AppsTileViewImpl;
 import org.iplantc.de.apps.client.views.hierarchies.OntologyHierarchiesViewImpl;
+import org.iplantc.de.apps.client.views.sharing.AppSharingView;
+import org.iplantc.de.apps.client.views.sharing.AppSharingViewImpl;
 import org.iplantc.de.apps.client.views.submit.SubmitAppForPublicUseViewImpl;
 import org.iplantc.de.apps.client.views.toolBar.AppsViewToolbarImpl;
 import org.iplantc.de.client.models.apps.App;
@@ -39,6 +43,7 @@ import org.iplantc.de.client.services.AppMetadataServiceFacade;
 import org.iplantc.de.client.services.OntologyServiceFacade;
 import org.iplantc.de.client.services.impl.AppMetadataServiceFacadeImpl;
 import org.iplantc.de.client.services.impl.OntologyServiceFacadeImpl;
+import org.iplantc.de.client.sharing.SharingPresenter;
 
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
@@ -110,6 +115,10 @@ public class AppsGinModule extends AbstractGinModule {
 
         bind(AppDetailsView.Presenter.class).to(AppDetailsViewPresenterImpl.class);
         bind(AppDetailsDialog.class);
+        bind(AppSharingView.class).to(AppSharingViewImpl.class);
+        install(new GinFactoryModuleBuilder()
+                        .implement(SharingPresenter.class, AppSharingPresenter.class)
+                        .build(AppSharingPresenterFactory.class));
     }
 
 }
