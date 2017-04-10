@@ -1,12 +1,14 @@
 package org.iplantc.de.collaborators.client.views;
 
 import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected.USER_SEARCH_EVENT_TAG;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -56,8 +58,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @UiField(provided = true) UserSearchField searchField;
     @UiField HorizontalLayoutContainer searchPanel;
     @UiField ToolBar toolbar;
-
-    Presenter presenter;
+    
     private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
     private final CheckBoxSelectionModel<Collaborator> checkBoxModel;
     private MODE mode;
@@ -156,11 +157,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @Override
-    public void setPresenter(Presenter p) {
-        this.presenter = p;
-    }
-
-    @Override
     public void unmask() {
         collaboratorListPnl.unmask();
     }
@@ -193,7 +189,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
 
     @UiHandler("deleteBtn")
     void deleteCollaborator(SelectEvent event) {
-        presenter.removeFromCollaborators(grid.getSelectionModel().getSelectedItems());
+        fireEvent(new RemoveCollaboratorSelected(grid.getSelectionModel().getSelectedItems()));
     }
 
     @UiHandler("manageBtn")
@@ -206,4 +202,8 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
         grid.getSelectionModel().addSelectionChangedHandler(this);
     }
 
+    @Override
+    public HandlerRegistration addRemoveCollaboratorSelectedHandler(RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler handler) {
+        return addHandler(handler, RemoveCollaboratorSelected.TYPE);
+    }
 }

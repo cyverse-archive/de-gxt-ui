@@ -1,6 +1,7 @@
 package org.iplantc.de.collaborators.client.views;
 
 import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -12,7 +13,8 @@ import java.util.List;
  * @author sriram, jstroot
  * 
  */
-public interface ManageCollaboratorsView extends IsWidget {
+public interface ManageCollaboratorsView extends IsWidget,
+                                                 RemoveCollaboratorSelected.HasRemoveCollaboratorSelectedHandlers{
 
     interface Appearance {
 
@@ -29,8 +31,6 @@ public interface ManageCollaboratorsView extends IsWidget {
 
         void addAsCollaborators(List<Collaborator> models);
 
-        void removeFromCollaborators(List<Collaborator> models);
-
         void loadCurrentCollaborators();
 
         void setCurrentMode(MODE mode);
@@ -45,8 +45,6 @@ public interface ManageCollaboratorsView extends IsWidget {
     enum MODE {
         MANAGE, SELECT
     }
-
-    void setPresenter(Presenter p);
 
     void loadData(List<Collaborator> models);
 

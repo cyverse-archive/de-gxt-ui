@@ -6,6 +6,7 @@ package org.iplantc.de.collaborators.client.presenter;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
@@ -27,7 +28,8 @@ import java.util.List;
  * @author sriram
  * 
  */
-public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Presenter {
+public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Presenter,
+                                                     RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler{
 
     private ManageCollaboratorsView view;
     private HandlerRegistration addCollabHandlerRegistration;
@@ -77,7 +79,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     @Override
     public void go(HasOneWidget container, ManageCollaboratorsView.MODE mode) {
         this.view = factory.create(mode);
-        view.setPresenter(this);
+        view.addRemoveCollaboratorSelectedHandler(this);
         loadCurrentCollaborators();
         addEventHandlers();
         container.setWidget(view.asWidget());
@@ -108,15 +110,9 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.iplantc.de.client.collaborators.views.ManageCollaboratorsView.Presenter#removeFromCollaborators
-     * (java.util.List)
-     */
     @Override
-    public void removeFromCollaborators(final List<Collaborator> models) {
+    public void onRemoveCollaboratorSelected(RemoveCollaboratorSelected event) {
+        List<Collaborator> models = event.getCollaborators();
         collaboratorsUtil.removeCollaborators(models, new AsyncCallback<Void>() {
 
             @Override
