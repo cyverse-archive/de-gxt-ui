@@ -117,4 +117,9 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
     public String selectCollabs() {
         return iplantDisplayStrings.selectCollabs();
     }
+
+    @Override
+    public ImageResource groupsIcon() {
+        return iplantResources.viewCurrentCollabs();
+    }
 }

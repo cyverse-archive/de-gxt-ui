@@ -63,8 +63,6 @@
 						<container:VerticalLayoutContainer pixelSize="445,150">
 							<container:child>
 								<toolbar:ToolBar height="30" ui:field="toolbar">
-									<button:TextButton ui:field="groupsBtn"
-													   text="{appearance.manageGroups}"/>
 									<button:TextButton debugId="idDeleteBtn"
 													   ui:field="deleteBtn"
 													   text="{appearance.delete}"
@@ -75,6 +73,9 @@
 													   text="{appearance.manageCollaborators}"
 													   visible="false"
 													   icon="{appearance.shareIcon}"/>
+									<button:TextButton ui:field="groupsBtn"
+													   icon="{appearance.groupsIcon}"
+													   text="{appearance.manageGroups}"/>
 								</toolbar:ToolBar>
 							</container:child>
 							<container:child layoutData="{middleData}">
