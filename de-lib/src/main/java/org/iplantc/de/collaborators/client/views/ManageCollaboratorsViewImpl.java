@@ -78,6 +78,9 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
         searchField = new UserSearchField(USER_SEARCH_EVENT_TAG.MANAGE);
         checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Collaborator>());
         initWidget(uiBinder.createAndBindUi(this));
+
+        groupsBtn.setVisible(false);
+
         grid.setSelectionModel(checkBoxModel);
         checkBoxModel.setSelectionMode(SelectionMode.MULTI);
         grid.getView().setEmptyText(appearance.noCollaborators());
