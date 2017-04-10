@@ -4,7 +4,6 @@ import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.collaborators.client.views.ManageCollaboratorsView.MODE;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
-import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.gwt.user.client.ui.HTML;
 
@@ -51,8 +50,8 @@ public class ManageCollaboratorsDialog extends IPlantDialog {
 
     private void initDialog() {
         setPredefinedButtons(PredefinedButton.OK);
-        setHeading(I18N.DISPLAY.collaborators());
-        addHelp(new HTML(I18N.HELP.collaboratorsHelp()));
+        setHeading(appearance.collaborators());
+        addHelp(new HTML(appearance.collaboratorsHelp()));
         setPixelSize(450, 400);
         addOkButtonHandler();
         setHideOnButtonClick(true);

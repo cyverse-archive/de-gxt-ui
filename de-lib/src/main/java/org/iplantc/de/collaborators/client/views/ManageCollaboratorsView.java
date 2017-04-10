@@ -17,6 +17,10 @@ public interface ManageCollaboratorsView extends IsWidget {
     interface Appearance {
 
         SafeHtml renderCheckBoxColumnHeader(String debugId);
+
+        String collaborators();
+
+        String collaboratorsHelp();
     }
 
     public interface Presenter {

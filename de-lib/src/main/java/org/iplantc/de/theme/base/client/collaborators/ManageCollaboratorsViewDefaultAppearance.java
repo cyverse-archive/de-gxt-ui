@@ -1,6 +1,8 @@
 package org.iplantc.de.theme.base.client.collaborators;
 
 import org.iplantc.de.collaborators.client.views.ManageCollaboratorsView;
+import org.iplantc.de.resources.client.messages.IplantContextualHelpStrings;
+import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -27,17 +29,25 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
     private final CheckBoxColumnResources resources;
     private final CheckBoxColumnStyle style;
     private final CheckBoxColumnDebugTemplates templates;
+    private IplantDisplayStrings iplantDisplayStrings;
+    private IplantContextualHelpStrings iplantContextualHelpStrings;
 
     public ManageCollaboratorsViewDefaultAppearance() {
         this(GWT.<CheckBoxColumnResources> create(CheckBoxColumnResources.class),
-             GWT.<CheckBoxColumnDebugTemplates>create(CheckBoxColumnDebugTemplates.class));
+             GWT.<CheckBoxColumnDebugTemplates>create(CheckBoxColumnDebugTemplates.class),
+             GWT.<IplantDisplayStrings>create(IplantDisplayStrings.class),
+             GWT.<IplantContextualHelpStrings>create(IplantContextualHelpStrings.class));
     }
 
     ManageCollaboratorsViewDefaultAppearance(final CheckBoxColumnResources resources,
-                                             final CheckBoxColumnDebugTemplates templates) {
+                                             final CheckBoxColumnDebugTemplates templates,
+                                             IplantDisplayStrings iplantDisplayStrings,
+                                             IplantContextualHelpStrings iplantContextualHelpStrings) {
         this.resources = resources;
         this.style = resources.style();
         this.templates = templates;
+        this.iplantDisplayStrings = iplantDisplayStrings;
+        this.iplantContextualHelpStrings = iplantContextualHelpStrings;
 
         style.ensureInjected();
     }
@@ -46,5 +56,15 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
     public SafeHtml renderCheckBoxColumnHeader(String debugId) {
         // Pull in checkbox column appearance resources
         return templates.renderDebugHeader(style, debugId);
+    }
+
+    @Override
+    public String collaborators() {
+        return iplantDisplayStrings.collaborators();
+    }
+
+    @Override
+    public String collaboratorsHelp() {
+        return iplantContextualHelpStrings.collaboratorsHelp();
     }
 }
