@@ -1,12 +1,13 @@
 package org.iplantc.de.diskResource.client.presenters.sharing;
 
+import org.iplantc.de.client.gin.factory.SharingPermissionViewFactory;
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
-import org.iplantc.de.client.sharing.SharingPermissionsPanel;
+import org.iplantc.de.client.sharing.SharingPermissionView;
 import org.iplantc.de.client.sharing.SharingPresenter;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.client.util.JsonUtil;
@@ -105,7 +106,7 @@ public class DataSharingPresenterImpl implements SharingPresenter {
 
     final DataSharingView view;
     private final DiskResourceServiceFacade diskResourceService;
-    private final SharingPermissionsPanel permissionsPanel;
+    private final SharingPermissionView permissionsPanel;
     private final List<DiskResource> selectedResources;
     private final Appearance appearance;
     private FastMap<List<Sharing>> dataSharingMap;
@@ -120,14 +121,15 @@ public class DataSharingPresenterImpl implements SharingPresenter {
                                     final DataSharingView view,
                                     final CollaboratorsUtil collaboratorsUtil,
                                     final JsonUtil jsonUtil,
-                                    SharingPresenter.Appearance appearance) {
+                                    SharingPresenter.Appearance appearance,
+                                    SharingPermissionViewFactory sharingViewFactory) {
         this.diskResourceService = diskResourceService;
         this.view = view;
         this.selectedResources = selectedResources;
         this.collaboratorsUtil = collaboratorsUtil;
         this.jsonUtil = jsonUtil;
         this.appearance = appearance;
-        permissionsPanel = new SharingPermissionsPanel(this, getSelectedResourcesAsMap(selectedResources));
+        permissionsPanel = sharingViewFactory.create(this, getSelectedResourcesAsMap(selectedResources));
         view.addShareWidget(permissionsPanel.asWidget());
         loadResources();
         loadPermissions();

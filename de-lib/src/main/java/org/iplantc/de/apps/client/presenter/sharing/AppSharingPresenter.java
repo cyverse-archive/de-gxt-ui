@@ -4,6 +4,7 @@
 package org.iplantc.de.apps.client.presenter.sharing;
 
 import org.iplantc.de.apps.client.views.sharing.AppSharingView;
+import org.iplantc.de.client.gin.factory.SharingPermissionViewFactory;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.sharing.AppPermission;
@@ -20,14 +21,13 @@ import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
 import org.iplantc.de.client.models.sharing.UserPermission;
 import org.iplantc.de.client.services.AppUserServiceFacade;
-import org.iplantc.de.client.sharing.SharingPermissionsPanel;
+import org.iplantc.de.client.sharing.SharingPermissionView;
 import org.iplantc.de.client.sharing.SharingPresenter;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AppsCallback;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
@@ -111,13 +111,13 @@ public class AppSharingPresenter implements SharingPresenter {
     }
 
     final AppSharingView view;
-    private final SharingPermissionsPanel permissionsPanel;
+    private final SharingPermissionView permissionsPanel;
     private final List<App> selectedApps;
     private final AppUserServiceFacade appService;
     private Appearance appearance;
     private final CollaboratorsUtil collaboratorsUtil;
-    private AppAutoBeanFactory appFactory = GWT.create(AppAutoBeanFactory.class);
-    private AppSharingAutoBeanFactory shareFactory = GWT.create(AppSharingAutoBeanFactory.class);
+    @Inject AppAutoBeanFactory appFactory;
+    @Inject AppSharingAutoBeanFactory shareFactory;
 
 
     @Inject
@@ -125,14 +125,15 @@ public class AppSharingPresenter implements SharingPresenter {
                                @Assisted final List<App> selectedApps,
                                final AppSharingView view,
                                final CollaboratorsUtil collaboratorsUtil,
-                               SharingPresenter.Appearance appearance) {
+                               SharingPresenter.Appearance appearance,
+                               SharingPermissionViewFactory sharingViewFactory) {
 
         this.view = view;
         this.appearance = appearance;
         this.appService = appService;
         this.collaboratorsUtil = collaboratorsUtil;
         this.selectedApps = selectedApps;
-        this.permissionsPanel = new SharingPermissionsPanel(this, getSelectedApps(selectedApps));
+        this.permissionsPanel = sharingViewFactory.create(this, getSelectedApps(selectedApps));
         view.addShareWidget(permissionsPanel.asWidget());
         loadResources();
         loadPermissions();

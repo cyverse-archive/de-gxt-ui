@@ -37,7 +37,8 @@ import com.google.gwt.inject.client.Ginjector;
               CollaboratorsGinModule.class,
               NotificationGinModule.class,
               PreferencesGinModule.class,
-              GroupGinModule.class })
+              GroupGinModule.class,
+              ClientGinModule.class })
 public interface DEInjector extends Ginjector {
     public static final DEInjector INSTANCE = GWT.create(DEInjector.class);
 

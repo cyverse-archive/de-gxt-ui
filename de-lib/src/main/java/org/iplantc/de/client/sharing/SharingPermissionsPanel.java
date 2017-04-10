@@ -23,6 +23,8 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.cell.core.client.TextButtonCell;
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
@@ -51,7 +53,7 @@ import java.util.List;
 /**
  * @author sriram, jstroot
  */
-public class SharingPermissionsPanel implements IsWidget {
+public class SharingPermissionsPanel implements SharingPermissionView {
 
     @UiField
     Grid<Sharing> grid;
@@ -80,13 +82,9 @@ public class SharingPermissionsPanel implements IsWidget {
     interface MyUiBinder extends UiBinder<Widget, SharingPermissionsPanel> {
     }
 
-    public SharingPermissionsPanel(final SharingPresenter dataSharingPresenter,
-                                   final FastMap<SharedResource> resources) {
-        this(dataSharingPresenter, resources, GWT.<SharingAppearance> create(SharingAppearance.class));
-    }
-
-    SharingPermissionsPanel(final SharingPresenter dataSharingPresenter,
-                            final FastMap<SharedResource> resources,
+    @Inject
+    SharingPermissionsPanel(@Assisted SharingPresenter dataSharingPresenter,
+                            @Assisted FastMap<SharedResource> resources,
                             final SharingAppearance appearance) {
         this.presenter = dataSharingPresenter;
         this.resources = resources;
@@ -327,6 +325,7 @@ public class SharingPermissionsPanel implements IsWidget {
         return new ColumnModel<>(configs);
     }
 
+    @Override
     public void hidePermissionColumn() {
       for(ColumnConfig<Sharing, ?> cc: grid.getColumnModel().getColumns()) {
           if(cc.getHeader().asString().equals(appearance.permissionsColumnLabel())) {
@@ -336,6 +335,7 @@ public class SharingPermissionsPanel implements IsWidget {
       }
     }
 
+    @Override
     public void showPermissionColumn() {
         for(ColumnConfig<Sharing, ?> cc: grid.getColumnModel().getColumns()) {
             if(cc.getHeader().asString().equals(appearance.permissionsColumnLabel())) {
@@ -345,6 +345,7 @@ public class SharingPermissionsPanel implements IsWidget {
         }
     }
 
+    @Override
     public void setExplainPanelVisibility(boolean visible) {
         explainPanel.setVisible(visible);
     }
@@ -418,6 +419,7 @@ public class SharingPermissionsPanel implements IsWidget {
      * 
      * @return the sharing list
      */
+    @Override
     public FastMap<List<Sharing>> getSharingMap() {
         FastMap<List<Sharing>> sharingList = new FastMap<>();
         for (Sharing share : grid.getStore().getAll()) {
@@ -531,6 +533,7 @@ public class SharingPermissionsPanel implements IsWidget {
     /**
      * @return the unshareList
      */
+    @Override
     public FastMap<List<Sharing>> getUnshareList() {
         // Prepare unshared list here
         FastMap<List<Sharing>> unshareList = new FastMap<>();
@@ -550,10 +553,12 @@ public class SharingPermissionsPanel implements IsWidget {
         return unshareList;
     }
 
+    @Override
     public void mask() {
         container.mask(appearance.loadingMask());
     }
 
+    @Override
     public void unmask() {
         container.unmask();
     }

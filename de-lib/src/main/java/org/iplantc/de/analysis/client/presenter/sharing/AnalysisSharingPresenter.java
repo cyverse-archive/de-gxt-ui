@@ -5,6 +5,7 @@
 package org.iplantc.de.analysis.client.presenter.sharing;
 
 import org.iplantc.de.analysis.client.views.sharing.AnalysisSharingView;
+import org.iplantc.de.client.gin.factory.SharingPermissionViewFactory;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisPermission;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingAutoBeanFactory;
@@ -20,7 +21,7 @@ import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
 import org.iplantc.de.client.models.sharing.UserPermission;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
-import org.iplantc.de.client.sharing.SharingPermissionsPanel;
+import org.iplantc.de.client.sharing.SharingPermissionView;
 import org.iplantc.de.client.sharing.SharingPresenter;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -112,7 +113,7 @@ public class AnalysisSharingPresenter implements SharingPresenter {
     }
 
     final AnalysisSharingView sharingView;
-    private final SharingPermissionsPanel permissionsPanel;
+    private final SharingPermissionView permissionsPanel;
     private final List<Analysis> selectedAnalysis;
     private Appearance appearance;
     private final CollaboratorsUtil collaboratorsUtil;
@@ -123,15 +124,16 @@ public class AnalysisSharingPresenter implements SharingPresenter {
     public AnalysisSharingPresenter(final AnalysisServiceFacade aService,
                                     @Assisted final List<Analysis> selectedAnalysis,
                                     final AnalysisSharingView view,
-                                    final CollaboratorsUtil collaboratorsUtil) {
+                                    final CollaboratorsUtil collaboratorsUtil,
+                                    SharingPermissionViewFactory sharingViewFactory,
+                                    Appearance appearance) {
 
         this.sharingView = view;
         this.aService = aService;
         this.collaboratorsUtil = collaboratorsUtil;
         this.selectedAnalysis = selectedAnalysis;
-        this.appearance = GWT.create(Appearance.class);
-        this.permissionsPanel =
-                new SharingPermissionsPanel(this, getSelectedResourcesAsMap(this.selectedAnalysis));
+        this.appearance = appearance;
+        this.permissionsPanel = sharingViewFactory.create(this, getSelectedResourcesAsMap(this.selectedAnalysis));
         permissionsPanel.hidePermissionColumn();
         permissionsPanel.setExplainPanelVisibility(false);
         view.addShareWidget(permissionsPanel.asWidget());
