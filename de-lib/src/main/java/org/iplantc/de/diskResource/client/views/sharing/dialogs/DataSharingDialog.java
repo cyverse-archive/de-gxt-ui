@@ -5,32 +5,20 @@ package org.iplantc.de.diskResource.client.views.sharing.dialogs;
 
 
 import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.sharing.SharingAppearance;
 import org.iplantc.de.client.sharing.SharingPresenter;
-import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
-import org.iplantc.de.diskResource.client.DataSharingView;
-import org.iplantc.de.diskResource.client.model.DiskResourceModelKeyProvider;
-import org.iplantc.de.diskResource.client.model.DiskResourceNameComparator;
-import org.iplantc.de.diskResource.client.presenters.sharing.DataSharingPresenterImpl;
-import org.iplantc.de.diskResource.client.views.grid.cells.DiskResourceNameCell;
-import org.iplantc.de.diskResource.client.views.sharing.DataSharingViewImpl;
+import org.iplantc.de.diskResource.client.gin.factory.DataSharingPresenterFactory;
 
 import com.google.common.base.Preconditions;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
 
-import com.sencha.gxt.core.client.IdentityValueProvider;
-import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
-import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
-import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,22 +26,17 @@ import java.util.List;
  */
 public class DataSharingDialog extends IPlantDialog implements SelectHandler {
 
-    private final DiskResourceServiceFacade diskResourceService;
-    private final DiskResourceUtil diskResourceUtil;
-    private final SharingAppearance appearance;
     private SharingPresenter sharingPresenter;
 
     @Inject CollaboratorsUtil collaboratorsUtil;
     @Inject JsonUtil jsonUtil;
+    private DataSharingPresenterFactory factory;
 
     @Inject
-    DataSharingDialog(final DiskResourceServiceFacade diskResourceService,
-                      final DiskResourceUtil diskResourceUtil,
+    DataSharingDialog(DataSharingPresenterFactory factory,
                       final SharingAppearance appearance) {
         super(true);
-        this.diskResourceService = diskResourceService;
-        this.diskResourceUtil = diskResourceUtil;
-        this.appearance = appearance;
+        this.factory = factory;
         setPixelSize(600, 500);
         setHideOnButtonClick(true);
         setModal(true);
@@ -72,12 +55,7 @@ public class DataSharingDialog extends IPlantDialog implements SelectHandler {
     }
 
     public void show(final List<DiskResource> resourcesToShare) {
-        DataSharingView view = new DataSharingViewImpl(buildDiskResourceColumnModel(), drStore);
-        sharingPresenter = new DataSharingPresenterImpl(diskResourceService,
-                                                        resourcesToShare,
-                                                        view,
-                                                        collaboratorsUtil,
-                                                        jsonUtil);
+        sharingPresenter = factory.create(resourcesToShare);
         sharingPresenter.go(this);
         super.show();
     }

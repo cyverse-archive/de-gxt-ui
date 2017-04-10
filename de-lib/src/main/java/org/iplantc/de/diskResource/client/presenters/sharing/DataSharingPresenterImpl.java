@@ -16,13 +16,14 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.DataSharingView;
 import org.iplantc.de.shared.DataCallback;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.core.shared.FastMap;
 
@@ -30,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * FIXME Refactor to use injection
  * FIXME Tighten contract with data sharing service. Should not have to manually construct the json here.
  * @author sriram, jstroot
  */
@@ -114,32 +114,19 @@ public class DataSharingPresenterImpl implements SharingPresenter {
     private final CollaboratorsUtil collaboratorsUtil;
 
 
+    @Inject
     public DataSharingPresenterImpl(final DiskResourceServiceFacade diskResourceService,
-                                    final List<DiskResource> selectedResources,
+                                    @Assisted final List<DiskResource> selectedResources,
                                     final DataSharingView view,
                                     final CollaboratorsUtil collaboratorsUtil,
-                                    final JsonUtil jsonUtil) {
-        this(diskResourceService,
-             selectedResources,
-             view,
-             collaboratorsUtil,
-             jsonUtil,
-             GWT.<SharingPresenter.Appearance> create(SharingPresenter.Appearance.class));
-    }
-
-    DataSharingPresenterImpl(final DiskResourceServiceFacade diskResourceService,
-                             final List<DiskResource> selectedResources,
-                             final DataSharingView view,
-                             final CollaboratorsUtil collaboratorsUtil,
-                             final JsonUtil jsonUtil,
-                             final SharingPresenter.Appearance appearance) {
+                                    final JsonUtil jsonUtil,
+                                    SharingPresenter.Appearance appearance) {
         this.diskResourceService = diskResourceService;
         this.view = view;
         this.selectedResources = selectedResources;
         this.collaboratorsUtil = collaboratorsUtil;
         this.jsonUtil = jsonUtil;
         this.appearance = appearance;
-        view.setPresenter(this);
         permissionsPanel = new SharingPermissionsPanel(this, getSelectedResourcesAsMap(selectedResources));
         view.addShareWidget(permissionsPanel.asWidget());
         loadResources();

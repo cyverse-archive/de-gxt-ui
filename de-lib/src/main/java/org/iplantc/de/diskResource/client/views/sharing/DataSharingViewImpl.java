@@ -1,21 +1,31 @@
 package org.iplantc.de.diskResource.client.views.sharing;
 
 import org.iplantc.de.client.models.diskResources.DiskResource;
+import org.iplantc.de.client.sharing.SharingAppearance;
 import org.iplantc.de.client.sharing.SharingPresenter;
+import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.diskResource.client.DataSharingView;
+import org.iplantc.de.diskResource.client.model.DiskResourceModelKeyProvider;
+import org.iplantc.de.diskResource.client.model.DiskResourceNameComparator;
+import org.iplantc.de.diskResource.client.views.grid.cells.DiskResourceNameCell;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
+import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.FramedPanel;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
+import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +36,9 @@ public class DataSharingViewImpl implements DataSharingView {
     @UiTemplate("DataSharingView.ui.xml")
     interface MyUiBinder extends UiBinder<Widget, DataSharingViewImpl> {
     }
+
+    @UiField(provided = true) SharingAppearance appearance;
+    private DiskResourceUtil diskResourceUtil;
     @UiField ColumnModel<DiskResource> diskResourcesColumnModel;
     @UiField ListStore<DiskResource> diskResourcesListStore;
     final Widget widget;
@@ -54,11 +67,6 @@ public class DataSharingViewImpl implements DataSharingView {
     @Override
     public Widget asWidget() {
         return widget;
-    }
-
-    @Override
-    public void setPresenter(SharingPresenter dataSharingPresenter) {
-        this.presenter = dataSharingPresenter;
     }
 
     @Override
