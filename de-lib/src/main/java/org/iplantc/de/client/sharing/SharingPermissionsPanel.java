@@ -10,9 +10,11 @@ import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.client.views.ManageCollaboratorsDialog;
 import org.iplantc.de.collaborators.client.views.ManageCollaboratorsView;
+import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.diskResource.client.model.DataSharingKeyProvider;
 import org.iplantc.de.diskResource.client.model.DataSharingProperties;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.ShareBreakDownDialog;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -20,8 +22,8 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -55,32 +57,28 @@ import java.util.List;
  */
 public class SharingPermissionsPanel implements SharingPermissionView {
 
-    @UiField
-    Grid<Sharing> grid;
-    @UiField
-    ToolBar toolbar;
-    @UiField(provided = true)
-    ListStore<Sharing> listStore;
-    @UiField(provided = true)
-    ColumnModel<Sharing> cm;
-    @UiField
-    VerticalLayoutContainer container;
-    private final EventBus eventBus;
-
-    private FastMap<List<Sharing>> originalList;
-    private final FastMap<SharedResource> resources;
-    @UiField(provided = true)
-    final SharingAppearance appearance;
-    private final SharingPresenter presenter;
-    private FastMap<List<Sharing>> sharingMap;
-    private HorizontalPanel explainPanel;
-
-    final Widget widget;
-    private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
-
     @UiTemplate("SharingPermissionsView.ui.xml")
     interface MyUiBinder extends UiBinder<Widget, SharingPermissionsPanel> {
     }
+
+    @UiField Grid<Sharing> grid;
+    @UiField ToolBar toolbar;
+    @UiField(provided = true) ListStore<Sharing> listStore;
+    @UiField(provided = true) ColumnModel<Sharing> cm;
+    @UiField VerticalLayoutContainer container;
+    @UiField(provided = true) final SharingAppearance appearance;
+
+    private final EventBus eventBus;
+    private FastMap<List<Sharing>> originalList;
+    private final FastMap<SharedResource> resources;
+    private final SharingPresenter presenter;
+    private FastMap<List<Sharing>> sharingMap;
+    private HorizontalPanel explainPanel;
+    final Widget widget;
+
+    @Inject AsyncProviderWrapper<ManageCollaboratorsDialog> collaboratorsDialogProvider;
+
+    private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
     @Inject
     SharingPermissionsPanel(@Assisted SharingPresenter dataSharingPresenter,
@@ -133,22 +131,30 @@ public class SharingPermissionsPanel implements SharingPermissionView {
 
             @Override
             public void onSelect(SelectEvent event) {
-//                final ManageCollaboratorsDialog dialog = new ManageCollaboratorsDialog(ManageCollaboratorsView.MODE.SELECT);
-//                dialog.setModal(true);
-//                dialog.show();
-//                dialog.addOkButtonSelectHandler(new SelectHandler() {
-//
-//                    @Override
-//                    public void onSelect(SelectEvent event) {
-//                        List<Collaborator> selected = dialog.getSelectedCollaborators();
-//                        if (selected != null && selected.size() > 0) {
-//                            for (Collaborator c : selected) {
-//                                addCollaborator(c);
-//                            }
-//                        }
-//                    }
-//                });
+                collaboratorsDialogProvider.get(new AsyncCallback<ManageCollaboratorsDialog>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        ErrorHandler.post(caught);
+                    }
 
+                    @Override
+                    public void onSuccess(ManageCollaboratorsDialog result) {
+                        result.setModal(true);
+                        result.show(ManageCollaboratorsView.MODE.SELECT);
+                        result.addOkButtonSelectHandler(new SelectHandler() {
+
+                            @Override
+                            public void onSelect(SelectEvent event) {
+                                List<Collaborator> selected = result.getSelectedCollaborators();
+                                if (selected != null && selected.size() > 0) {
+                                    for (Collaborator c : selected) {
+                                        addCollaborator(c);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
             }
 
         });
