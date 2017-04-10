@@ -62,6 +62,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @UiField(provided = true) UserSearchField searchField;
     @UiField HorizontalLayoutContainer searchPanel;
     @UiField ToolBar toolbar;
+    @UiField(provided = true) ManageCollaboratorsView.Appearance appearance;
 
     @Inject AsyncProviderWrapper<GroupListDialog> groupDialogProvider;
     
@@ -71,13 +72,15 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     private String baseID;
 
     @Inject
-    public ManageCollaboratorsViewImpl(@Assisted final MODE mode) {
+    public ManageCollaboratorsViewImpl(@Assisted final MODE mode,
+                                       ManageCollaboratorsView.Appearance appearance) {
+        this.appearance = appearance;
         searchField = new UserSearchField(USER_SEARCH_EVENT_TAG.MANAGE);
         checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Collaborator>());
         initWidget(uiBinder.createAndBindUi(this));
         grid.setSelectionModel(checkBoxModel);
         checkBoxModel.setSelectionMode(SelectionMode.MULTI);
-        grid.getView().setEmptyText(I18N.DISPLAY.noCollaborators());
+        grid.getView().setEmptyText(appearance.noCollaborators());
         grid.addViewReadyHandler(new ViewReadyEvent.ViewReadyHandler() {
             @Override
             public void onViewReady(ViewReadyEvent event) {
@@ -146,18 +149,18 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
         this.mode = mode;
         switch (mode) {
             case MANAGE:
-                grid.getView().setEmptyText(I18N.DISPLAY.noCollaborators());
-                collaboratorListPnl.setHeading(I18N.DISPLAY.myCollaborators());
+                grid.getView().setEmptyText(appearance.noCollaborators());
+                collaboratorListPnl.setHeading(appearance.myCollaborators());
                 manageBtn.setVisible(false);
                 deleteBtn.setVisible(true);
                 con.show(LayoutRegion.NORTH);
                 break;
             case SELECT:
-                grid.getView().setEmptyText(I18N.DISPLAY.noCollaborators());
+                grid.getView().setEmptyText(appearance.noCollaborators());
                 con.hide(LayoutRegion.NORTH);
                 manageBtn.setVisible(true);
                 deleteBtn.setVisible(false);
-                collaboratorListPnl.setHeading(I18N.DISPLAY.selectCollabs());
+                collaboratorListPnl.setHeading(appearance.selectCollabs());
                 break;
         }
     }
@@ -219,7 +222,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     private void init() {
-        collaboratorListPnl.setHeading(I18N.DISPLAY.myCollaborators());
+        collaboratorListPnl.setHeading(appearance.myCollaborators());
         grid.getSelectionModel().addSelectionChangedHandler(this);
     }
 

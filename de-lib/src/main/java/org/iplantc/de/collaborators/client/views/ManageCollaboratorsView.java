@@ -3,6 +3,7 @@ package org.iplantc.de.collaborators.client.views;
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -23,6 +24,22 @@ public interface ManageCollaboratorsView extends IsWidget,
         String collaborators();
 
         String collaboratorsHelp();
+
+        String manageGroups();
+
+        String delete();
+
+        ImageResource deleteIcon();
+
+        String manageCollaborators();
+
+        ImageResource shareIcon();
+
+        String noCollaborators();
+
+        String myCollaborators();
+
+        String selectCollabs();
     }
 
     public interface Presenter {

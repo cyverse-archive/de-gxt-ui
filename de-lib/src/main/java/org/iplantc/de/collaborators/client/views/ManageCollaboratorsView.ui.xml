@@ -8,8 +8,9 @@
 			 xmlns:userSearch="urn:import:org.iplantc.de.collaborators.client.util"
 >
 
-   <ui:with type="org.iplantc.de.resources.client.IplantResources" field="icons"/>
-   <ui:with type="org.iplantc.de.resources.client.messages.IplantDisplayStrings" field="strings" />
+	<ui:with field="appearance"
+			 type="org.iplantc.de.collaborators.client.views.ManageCollaboratorsView.Appearance"/>
+
  	<!-- Main Panel -->
 	<ui:with field="listStore" type="com.sencha.gxt.data.shared.ListStore" />
 	<ui:with field="cm"
@@ -62,18 +63,27 @@
 						<container:VerticalLayoutContainer pixelSize="445,150">
 							<container:child>
 								<toolbar:ToolBar height="30" ui:field="toolbar">
-									<button:TextButton ui:field="groupsBtn" text="GROUPS"></button:TextButton>
-									<button:TextButton debugId="idDeleteBtn" ui:field="deleteBtn"
-													   text="{strings.delete}" icon="{icons.delete}"
-													   enabled="false"></button:TextButton>
-									<button:TextButton debugId="idManage" ui:field="manageBtn"
-													   text="Manage Collaborators" visible="false"
-													   icon="{icons.share}"></button:TextButton>
+									<button:TextButton ui:field="groupsBtn"
+													   text="{appearance.manageGroups}"/>
+									<button:TextButton debugId="idDeleteBtn"
+													   ui:field="deleteBtn"
+													   text="{appearance.delete}"
+													   icon="{appearance.deleteIcon}"
+													   enabled="false"/>
+									<button:TextButton debugId="idManage"
+													   ui:field="manageBtn"
+													   text="{appearance.manageCollaborators}"
+													   visible="false"
+													   icon="{appearance.shareIcon}"/>
 								</toolbar:ToolBar>
 							</container:child>
 							<container:child layoutData="{middleData}">
-								<grid:Grid ui:field="grid" cm="{cm}" store="{listStore}"
-										   view="{gridView}" loadMask="true" columnReordering="true"
+								<grid:Grid ui:field="grid"
+										   cm="{cm}"
+										   store="{listStore}"
+										   view="{gridView}"
+										   loadMask="true"
+										   columnReordering="true"
 										   borders="false">
 								</grid:Grid>
 							</container:child>
