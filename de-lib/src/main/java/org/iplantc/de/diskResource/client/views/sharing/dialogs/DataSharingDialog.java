@@ -72,7 +72,6 @@ public class DataSharingDialog extends IPlantDialog implements SelectHandler {
     }
 
     public void show(final List<DiskResource> resourcesToShare) {
-        ListStore<DiskResource> drStore = new ListStore<>(new DiskResourceModelKeyProvider());
         DataSharingView view = new DataSharingViewImpl(buildDiskResourceColumnModel(), drStore);
         sharingPresenter = new DataSharingPresenterImpl(diskResourceService,
                                                         resourcesToShare,
@@ -87,19 +86,6 @@ public class DataSharingDialog extends IPlantDialog implements SelectHandler {
     public void show() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("This method is not supported for this class. " +
                                                     "Use show(List<DiskResource>) instead.");
-    }
-
-    private ColumnModel<DiskResource> buildDiskResourceColumnModel() {
-        List<ColumnConfig<DiskResource, ?>> list = new ArrayList<>();
-
-        ColumnConfig<DiskResource, DiskResource> name = new ColumnConfig<>(new IdentityValueProvider<DiskResource>("name"),
-                                                                           appearance.dataSharingDlgNameColumnWidth(),
-                                                                           appearance.nameColumnLabel());
-        name.setCell(new DiskResourceNameCell(diskResourceUtil));
-        name.setComparator(new DiskResourceNameComparator());
-        list.add(name);
-
-        return new ColumnModel<>(list);
     }
 
 }

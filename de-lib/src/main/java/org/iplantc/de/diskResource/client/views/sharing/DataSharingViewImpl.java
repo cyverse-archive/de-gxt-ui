@@ -26,8 +26,8 @@ public class DataSharingViewImpl implements DataSharingView {
     @UiTemplate("DataSharingView.ui.xml")
     interface MyUiBinder extends UiBinder<Widget, DataSharingViewImpl> {
     }
-    @UiField(provided = true) final ColumnModel<DiskResource> diskResourcesColumnModel;
-    @UiField(provided = true) final ListStore<DiskResource> diskResourcesListStore;
+    @UiField ColumnModel<DiskResource> diskResourcesColumnModel;
+    @UiField ListStore<DiskResource> diskResourcesListStore;
     final Widget widget;
     @UiField VerticalLayoutContainer container;
     @UiField FramedPanel diskResourceListPnl;
@@ -37,10 +37,12 @@ public class DataSharingViewImpl implements DataSharingView {
 
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
-    public DataSharingViewImpl(ColumnModel<DiskResource> diskReColumnModel,
-                               ListStore<DiskResource> drStore) {
-        this.diskResourcesColumnModel = diskReColumnModel;
-        this.diskResourcesListStore = drStore;
+    @Inject
+    public DataSharingViewImpl(SharingAppearance appearance,
+                               DiskResourceUtil diskResourceUtil) {
+        this.appearance = appearance;
+        this.diskResourceUtil = diskResourceUtil;
+
         widget = uiBinder.createAndBindUi(this);
     }
 
@@ -68,5 +70,23 @@ public class DataSharingViewImpl implements DataSharingView {
 
     }
 
+    @UiFactory
+    ListStore<DiskResource> createListStore() {
+        return new ListStore<>(new DiskResourceModelKeyProvider());
+    }
+
+    @UiFactory
+    ColumnModel<DiskResource> createColumnModel() {
+        List<ColumnConfig<DiskResource, ?>> list = new ArrayList<>();
+
+        ColumnConfig<DiskResource, DiskResource> name = new ColumnConfig<>(new IdentityValueProvider<DiskResource>("name"),
+                                                                           appearance.dataSharingDlgNameColumnWidth(),
+                                                                           appearance.nameColumnLabel());
+        name.setCell(new DiskResourceNameCell(diskResourceUtil));
+        name.setComparator(new DiskResourceNameComparator());
+        list.add(name);
+
+        return new ColumnModel<>(list);
+    }
 
 }
