@@ -5,17 +5,22 @@ import org.iplantc.de.analysis.client.AnalysisParametersView;
 import org.iplantc.de.analysis.client.AnalysisToolBarView;
 import org.iplantc.de.analysis.client.gin.factory.AnalysesViewFactory;
 import org.iplantc.de.analysis.client.gin.factory.AnalysisParamViewFactory;
+import org.iplantc.de.analysis.client.gin.factory.AnalysisSharingPresenterFactory;
 import org.iplantc.de.analysis.client.gin.factory.AnalysisToolBarFactory;
 import org.iplantc.de.analysis.client.presenter.AnalysesPresenterImpl;
 import org.iplantc.de.analysis.client.presenter.parameters.AnalysisParametersPresenterImpl;
 import org.iplantc.de.analysis.client.presenter.proxy.AnalysisRpcProxy;
+import org.iplantc.de.analysis.client.presenter.sharing.AnalysisSharingPresenter;
 import org.iplantc.de.analysis.client.views.AnalysesToolBarImpl;
 import org.iplantc.de.analysis.client.views.AnalysesViewImpl;
 import org.iplantc.de.analysis.client.views.AnalysisColumnModel;
 import org.iplantc.de.analysis.client.views.AnalysisStepsView;
 import org.iplantc.de.analysis.client.views.parameters.AnalysisParamViewColumnModel;
 import org.iplantc.de.analysis.client.views.parameters.AnalysisParametersViewImpl;
+import org.iplantc.de.analysis.client.views.sharing.AnalysisSharingView;
+import org.iplantc.de.analysis.client.views.sharing.AnalysisSharingViewImpl;
 import org.iplantc.de.client.models.analysis.Analysis;
+import org.iplantc.de.client.sharing.SharingPresenter;
 
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
@@ -46,5 +51,9 @@ public class AnalysisGinModule extends AbstractGinModule {
         install(new GinFactoryModuleBuilder()
                     .implement(AnalysisParametersView.class, AnalysisParametersViewImpl.class)
                     .build(AnalysisParamViewFactory.class));
+        install(new GinFactoryModuleBuilder()
+                        .implement(SharingPresenter.class, AnalysisSharingPresenter.class)
+                        .build(AnalysisSharingPresenterFactory.class));
+        bind(AnalysisSharingView.class).to(AnalysisSharingViewImpl.class);
     }
 }

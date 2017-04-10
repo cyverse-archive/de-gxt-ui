@@ -20,12 +20,10 @@ import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.gin.factory.AnalysesViewFactory;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.presenter.proxy.AnalysisRpcProxy;
-import org.iplantc.de.analysis.client.presenter.sharing.AnalysisSharingPresenter;
 import org.iplantc.de.analysis.client.views.AnalysisStepsView;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisSharingDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisStepsInfoDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisUserSupportDialog;
-import org.iplantc.de.analysis.client.views.sharing.AnalysisSharingViewImpl;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.events.diskResources.OpenFolderEvent;
@@ -431,22 +429,15 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Override
     public void onShareAnalysisSelected(ShareAnalysisSelected event) {
         List<Analysis> selected = event.getAnalysisList();
-
-        AnalysisSharingViewImpl sharingView = new AnalysisSharingViewImpl();
-        final AnalysisSharingPresenter sharingPresenter = new AnalysisSharingPresenter(analysisService,
-                                                                                 selected,
-                                                                                 sharingView,
-                                                                                 collaboratorsUtil);
-       aSharingDialogProvider.get(new AsyncCallback<AnalysisSharingDialog>() {
+        aSharingDialogProvider.get(new AsyncCallback<AnalysisSharingDialog>() {
             @Override
             public void onFailure(Throwable caught) {
-
+                ErrorHandler.post(caught);
             }
 
             @Override
             public void onSuccess(AnalysisSharingDialog asd) {
-                asd.setPresenter(sharingPresenter);
-                asd.show();
+                asd.show(selected);
             }
         });
     }

@@ -31,6 +31,8 @@ import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import com.sencha.gxt.core.shared.FastMap;
@@ -117,8 +119,9 @@ public class AnalysisSharingPresenter implements SharingPresenter {
     private final AnalysisServiceFacade aService;
     private AnalysisSharingAutoBeanFactory shareFactory = GWT.create(AnalysisSharingAutoBeanFactory.class);
 
+    @Inject
     public AnalysisSharingPresenter(final AnalysisServiceFacade aService,
-                                    final List<Analysis> selectedAnalysis,
+                                    @Assisted final List<Analysis> selectedAnalysis,
                                     final AnalysisSharingView view,
                                     final CollaboratorsUtil collaboratorsUtil) {
 
