@@ -53,7 +53,6 @@
 				<container:north layoutData="{northData}">
 					<container:HorizontalLayoutContainer ui:field="searchPanel">
 						<userSearch:UserSearchField ui:field="searchField"/>
-						<button:TextButton ui:field="groupsBtn" text="GROUPS"></button:TextButton>
 					</container:HorizontalLayoutContainer>
 				</container:north>
 				<!-- This is the main panel -->
@@ -63,6 +62,7 @@
 						<container:VerticalLayoutContainer pixelSize="445,150">
 							<container:child>
 								<toolbar:ToolBar height="30" ui:field="toolbar">
+									<button:TextButton ui:field="groupsBtn" text="GROUPS"></button:TextButton>
 									<button:TextButton debugId="idDeleteBtn" ui:field="deleteBtn"
 													   text="{strings.delete}" icon="{icons.delete}"
 													   enabled="false"></button:TextButton>

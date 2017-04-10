@@ -5,7 +5,10 @@ import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected.USER_SEARCH_EVENT_TAG;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
+import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.groups.client.views.dialogs.GroupListDialog;
 import org.iplantc.de.resources.client.messages.I18N;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -14,6 +17,7 @@ import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -58,6 +62,8 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @UiField(provided = true) UserSearchField searchField;
     @UiField HorizontalLayoutContainer searchPanel;
     @UiField ToolBar toolbar;
+
+    @Inject AsyncProviderWrapper<GroupListDialog> groupDialogProvider;
     
     private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
     private final CheckBoxSelectionModel<Collaborator> checkBoxModel;
@@ -195,6 +201,21 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @UiHandler("manageBtn")
     void manageCollaborators(SelectEvent event) {
         setMode(MODE.MANAGE);
+    }
+
+    @UiHandler("groupsBtn")
+    void manageGroupsSelected(SelectEvent event) {
+        groupDialogProvider.get(new AsyncCallback<GroupListDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(GroupListDialog result) {
+                result.show();
+            }
+        });
     }
 
     private void init() {
