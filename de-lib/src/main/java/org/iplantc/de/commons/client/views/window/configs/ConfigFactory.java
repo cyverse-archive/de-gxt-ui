@@ -37,12 +37,15 @@ public class ConfigFactory {
     }
 
     public static AppsIntegrationWindowConfig appsIntegrationWindowConfig(HasQualifiedId app) {
-        AppsIntegrationWindowConfig aiwc = applyWindowType(WindowType.APP_INTEGRATION,
-                factory.appsIntegrationWindowConfig()).as();
-        aiwc.setSystemId(app == null ? "" : app.getSystemId());
-        aiwc.setAppId(app == null ? "" : app.getId());
-        aiwc.setOnlyLabelEditMode(false);
-        return aiwc;
+        AutoBean<AppsIntegrationWindowConfig> aiwc = applyWindowType(WindowType.APP_INTEGRATION,
+                factory.appsIntegrationWindowConfig());
+        String systemId = app.getSystemId();
+        String appId = app.getId();
+        aiwc.as().setSystemId(app == null ? "" : systemId);
+        aiwc.as().setAppId(app == null ? "" : appId);
+        applyTag(systemId + ":" + appId, aiwc);
+        aiwc.as().setOnlyLabelEditMode(false);
+        return aiwc.as();
     }
 
     public static AppsWindowConfig appsWindowConfig() {
