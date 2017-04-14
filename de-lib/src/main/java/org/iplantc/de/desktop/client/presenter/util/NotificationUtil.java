@@ -96,6 +96,10 @@ public class NotificationUtil {
                 GWT.log("TOOLREQUEST  category");
                 msg.setContext(payload.getPayload());
                 break;
+            case TOOLS:
+                GWT.log("TOOL category");
+                msg.setContext(payload.getPayload());
+                break;
 
             default:
                 break;
