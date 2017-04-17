@@ -8,6 +8,7 @@ import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.viewer.MimeType;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
 
+import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
@@ -24,6 +25,7 @@ import java.util.Date;
 public class ConfigFactory {
     private static ConfigAutoBeanFactory factory = GWT.create(ConfigAutoBeanFactory.class);
     private static int dataWindowCount = 0;
+    private static int appEditorWindowCount = 0;
 
     public static AboutWindowConfig aboutWindowConfig() {
         AboutWindowConfig awc = applyWindowType(WindowType.ABOUT, factory.aboutWindowConfig()).as();
@@ -39,11 +41,17 @@ public class ConfigFactory {
     public static AppsIntegrationWindowConfig appsIntegrationWindowConfig(HasQualifiedId app) {
         AutoBean<AppsIntegrationWindowConfig> aiwc = applyWindowType(WindowType.APP_INTEGRATION,
                 factory.appsIntegrationWindowConfig());
-        String systemId = app.getSystemId();
-        String appId = app.getId();
-        aiwc.as().setSystemId(app == null ? "" : systemId);
-        aiwc.as().setAppId(app == null ? "" : appId);
-        applyTag(systemId + ":" + appId, aiwc);
+        String systemId = app == null ? "" : app.getSystemId();
+        String appId = app == null ? "" : app.getId();
+        aiwc.as().setSystemId(systemId);
+        aiwc.as().setAppId(appId);
+        String tag;
+        if (Strings.isNullOrEmpty(systemId) && Strings.isNullOrEmpty(appId)) {
+            tag = Integer.toString(appEditorWindowCount++);
+        } else {
+            tag = systemId + ":" + appId;
+        }
+        applyTag(tag, aiwc);
         aiwc.as().setOnlyLabelEditMode(false);
         return aiwc.as();
     }
