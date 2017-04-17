@@ -452,4 +452,9 @@ public class OntologiesViewDefaultAppearance implements OntologiesView.Ontologie
     public String restoreAppSuccessMsg(String name, String joinedCatNames) {
         return displayStrings.restoreAppSuccessMsg(name, joinedCatNames);
     }
+
+    @Override
+    public String searchFieldWidth() {
+        return "200px";
+    }
 }

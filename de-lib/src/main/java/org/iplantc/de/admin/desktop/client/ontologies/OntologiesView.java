@@ -249,6 +249,8 @@ public interface OntologiesView extends IsWidget,
         String restoreAppSuccessMsgTitle();
 
         String restoreAppSuccessMsg(String name, String joinedCatNames);
+
+        String searchFieldWidth();
     }
 
     interface Presenter {

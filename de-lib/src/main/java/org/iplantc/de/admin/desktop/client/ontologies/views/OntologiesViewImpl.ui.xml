@@ -93,9 +93,10 @@
                                        text="{appearance.restoreApp}"
                                        icon="{appearance.restoreAppIcon}"/>
                 </toolbar:child>
-                <toolbar:child layoutData="{boxData}">
+                <toolbar:child>
                     <appSearch:AppSearchField ui:field="appSearchField"
-                                              emptyText="{appearance.emptySearchFieldText}"/>
+                                              emptyText="{appearance.emptySearchFieldText}"
+                                              width="{appearance.searchFieldWidth}"/>
                 </toolbar:child>
 
 
