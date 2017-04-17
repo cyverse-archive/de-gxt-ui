@@ -52,12 +52,16 @@ import java.util.Map;
 
 /**
  * The Presenter for the Pipeline View.
- * 
+ *
  * @author psarando
- * 
  */
-public class PipelineViewPresenter implements Presenter, PipelineView.Presenter, PipelineViewToolbar.Presenter, PipelineBuilderDNDHandler.Presenter, PipelineAppOrderView.Presenter,
-        PipelineAppMappingView.Presenter, AppSelectionDialog.Presenter {
+public class PipelineViewPresenter implements Presenter,
+                                              PipelineView.Presenter,
+                                              PipelineViewToolbar.Presenter,
+                                              PipelineBuilderDNDHandler.Presenter,
+                                              PipelineAppOrderView.Presenter,
+                                              PipelineAppMappingView.Presenter,
+                                              AppSelectionDialog.Presenter {
 
     private final class PipelineSaveCallback extends AppsCallback<String> {
         private final Pipeline pipeline;
@@ -102,7 +106,8 @@ public class PipelineViewPresenter implements Presenter, PipelineView.Presenter,
     private final Command onPublishCallback;
     private final PipelineAutoBeanUtil utils = new PipelineAutoBeanUtil();
 
-    public PipelineViewPresenter(PipelineView view, Command onPublishCallback,
+    public PipelineViewPresenter(PipelineView view,
+                                 Command onPublishCallback,
                                  AppsView.Presenter appsPresenter) {
         this.view = view;
         this.onPublishCallback = onPublishCallback;
@@ -200,11 +205,14 @@ public class PipelineViewPresenter implements Presenter, PipelineView.Presenter,
 
     private boolean isValidJson(Pipeline pipeline) {
         List<EditorError> errorList = new ArrayList<>();
-        if (Strings.isNullOrEmpty(pipeline.getName()) || pipeline.getName().equalsIgnoreCase("Click to edit name")) {
+        if (Strings.isNullOrEmpty(pipeline.getName()) || pipeline.getName()
+                                                                 .equalsIgnoreCase("Click to edit name")) {
             errorList.add(new DefaultEditorError(null, "Name is required.", null));
         }
 
-        if (Strings.isNullOrEmpty(pipeline.getDescription()) || pipeline.getDescription().equalsIgnoreCase("Click to edit description")) {
+        if (Strings.isNullOrEmpty(pipeline.getDescription()) || pipeline.getDescription()
+                                                                        .equalsIgnoreCase(
+                                                                                "Click to edit description")) {
             errorList.add(new DefaultEditorError(null, "Description is required.", null));
         }
 
@@ -214,7 +222,9 @@ public class PipelineViewPresenter implements Presenter, PipelineView.Presenter,
             List<PipelineTask> apps = pipeline.getApps();
             for (PipelineTask app : apps) {
                 if (!isMappingValid(app)) {
-                    errorList.add(new DefaultEditorError(null, I18N.DISPLAY.inputsOutputsPnlTip(), null));
+                    errorList.add(new DefaultEditorError(null,
+                                                         I18N.DISPLAY.inputsOutputsPnlTip(),
+                                                         null));
                     break;
                 }
             }
@@ -248,9 +258,12 @@ public class PipelineViewPresenter implements Presenter, PipelineView.Presenter,
         for (EditorError err : errorList) {
             // SS - this is ugly fix to display field names in the error message
             if (err.getMessage().equalsIgnoreCase("This field is required")) {
-                builder.appendHtmlConstant("<p>*&nbsp;<span style='color:red;'>" + "Name / Description field is required." + "</span> </p>");
+                builder.appendHtmlConstant(
+                        "<p>*&nbsp;<span style='color:red;'>" + "Name / Description field is required."
+                        + "</span> </p>");
             } else {
-                builder.appendHtmlConstant("<p>*&nbsp;<span style='color:red;'>" + err.getMessage() + "</span> </p>");
+                builder.appendHtmlConstant(
+                        "<p>*&nbsp;<span style='color:red;'>" + err.getMessage() + "</span> </p>");
             }
         }
         return builder.toSafeHtml();
@@ -282,9 +295,10 @@ public class PipelineViewPresenter implements Presenter, PipelineView.Presenter,
                                      .createWorkflows(publishJson, new PipelineSaveCallback(pipeline));
         } else {
             // update existing pipeline
-        ServicesInjector.INSTANCE.getAppUserServiceFacade().publishWorkflow(pipeline.getId(),
-                                                                            publishJson,
-                                                                            new PipelineSaveCallback(pipeline));
+            ServicesInjector.INSTANCE.getAppUserServiceFacade()
+                                     .publishWorkflow(pipeline.getId(),
+                                                      publishJson,
+                                                      new PipelineSaveCallback(pipeline));
         }
     }
 
@@ -450,15 +464,12 @@ public class PipelineViewPresenter implements Presenter, PipelineView.Presenter,
 
         if (selectedApp != null) {
             ListStore<PipelineTask> store = view.getPipelineAppStore();
-
             store.remove(selectedApp);
-
-            for (int step = 1; step <= store.size(); step++) {
+            for (int step = store.size(); step > 0; step--) {
                 PipelineTask app = store.get(step - 1);
-                app.setStep(step);
+                app.setStep(step - 1);
                 store.update(app);
             }
-
             reconfigurePipelineAppMappingView(selectedApp.getStep(), store.getAll());
         }
     }
@@ -473,12 +484,9 @@ public class PipelineViewPresenter implements Presenter, PipelineView.Presenter,
                 public void onSuccess(PipelineTask result) {
                     if (result != null) {
                         ListStore<PipelineTask> store = view.getPipelineAppStore();
-
                         result.setStep(store.size());
                         store.add(result);
-
                         appSelectView.updateStatusBar(store.size(), result.getName());
-
                         view.getMappingPanel().setValue(store.getAll());
                     }
                 }
@@ -487,12 +495,14 @@ public class PipelineViewPresenter implements Presenter, PipelineView.Presenter,
                 public void onFailure(Throwable caught) {
                     SafeHtmlBuilder builder = new SafeHtmlBuilder();
                     builder.appendEscaped("Error adding app to workflow:" + caught.getMessage());
-                    ErrorAnnouncementConfig config = new ErrorAnnouncementConfig(builder.toSafeHtml(), true);
+                    ErrorAnnouncementConfig config =
+                            new ErrorAnnouncementConfig(builder.toSafeHtml(), true);
                     IplantAnnouncer.getInstance().schedule(config);
                 }
             });
         } else {
-            IplantAnnouncer.getInstance().schedule(new ErrorAnnouncementConfig("Cannot add disabled App to workflow!"));
+            IplantAnnouncer.getInstance()
+                           .schedule(new ErrorAnnouncementConfig("Cannot add disabled App to workflow!"));
         }
 
     }
@@ -538,7 +548,10 @@ public class PipelineViewPresenter implements Presenter, PipelineView.Presenter,
      * {@inheritDoc}
      */
     @Override
-    public void setInputOutputMapping(PipelineTask targetStep, String targetInputId, PipelineTask sourceStep, String sourceOutputId) {
+    public void setInputOutputMapping(PipelineTask targetStep,
+                                      String targetInputId,
+                                      PipelineTask sourceStep,
+                                      String sourceOutputId) {
         utils.setInputOutputMapping(targetStep, targetInputId, sourceStep, sourceOutputId);
     }
 
