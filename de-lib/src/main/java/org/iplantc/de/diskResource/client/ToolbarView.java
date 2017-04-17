@@ -18,7 +18,6 @@ import org.iplantc.de.diskResource.client.events.selection.MoveDiskResourcesSele
 import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected.HasRefreshFolderSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.RenameDiskResourceSelected.HasRenameDiskResourceSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.RestoreDiskResourcesSelected.HasRestoreDiskResourceSelectedHandlers;
-import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected.HasSendToCogeSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected.HasSendToEnsemblSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected.HasSendToTreeViewerSelectedHandlers;
@@ -60,8 +59,7 @@ public interface ToolbarView extends IsWidget,
                                      HasImportFromUrlSelectedHandlers,
                                      DownloadTemplateSelectedEvent.HasDownloadTemplateSelectedEventHandlers,
                                      FolderSelectionEventHandler,
-                                     DiskResourceSelectionChangedEventHandler,
-                                     SaveMetadataSelected.HasSaveMetadataSelectedEventHandlers{
+                                     DiskResourceSelectionChangedEventHandler {
     interface Appearance {
 
         SafeHtml bulkDownloadInfoBoxHeading();
