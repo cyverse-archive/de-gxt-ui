@@ -33,15 +33,14 @@ import org.iplantc.de.diskResource.client.events.selection.SimpleUploadSelected;
 import org.iplantc.de.diskResource.client.views.dialogs.BulkMetadataDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
+import org.iplantc.de.diskResource.client.views.toolbar.dialogs.DOIAgreementDialog;
 import org.iplantc.de.diskResource.share.DiskResourceModule.Ids;
-import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -51,12 +50,8 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.widget.core.client.Composite;
-import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
-import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.box.MessageBox;
 import com.sencha.gxt.widget.core.client.button.TextButton;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent.DialogHideHandler;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.menu.Item;
 import com.sencha.gxt.widget.core.client.menu.MenuItem;
@@ -634,33 +629,14 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("doiMi")
     void onRequestDOI(SelectionEvent<Item> event) {
-        final ConfirmMessageBox mb = new ConfirmMessageBox(SafeHtmlUtils.fromString(appearance.requestDOI()),
-                                                           SafeHtmlUtils.fromTrustedString(appearance.doiLinkMsg()));
-
-        mb.getButton(PredefinedButton.YES).setText(appearance.needDOI());
-        mb.getButton(PredefinedButton.NO).setText(I18N.DISPLAY.cancel());
-        mb.addDialogHideHandler(new DialogHideHandler() {
+        DOIAgreementDialog dialog = new DOIAgreementDialog(appearance);
+        dialog.addOkButtonSelectHandler(new SelectEvent.SelectHandler() {
             @Override
-            public void onDialogHide(DialogHideEvent event) {
-                switch (event.getHideButton()) {
-                    case OK:
-                        break;
-                    case CANCEL:
-                        break;
-                    case CLOSE:
-                        break;
-                    case YES:
-                        presenter.onDoiRequest(getFirstDiskResource().getId());
-                        break;
-                    case NO:
-                        break;
-                    default:
-                        // error, button added with no specific action ready
-                }
+            public void onSelect(SelectEvent event) {
+                presenter.onDoiRequest(getFirstDiskResource().getId());
             }
         });
-        mb.setWidth(300);
-        mb.show();
+        dialog.show();
     }
     // </editor-fold>
 

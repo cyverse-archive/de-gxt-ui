@@ -137,4 +137,6 @@ public interface ToolbarDisplayMessages extends Messages {
     String editViewMetadataMenuItem();
 
     String downloadTemplateMenuItem();
+
+    String doiUserAgreement();
 }
