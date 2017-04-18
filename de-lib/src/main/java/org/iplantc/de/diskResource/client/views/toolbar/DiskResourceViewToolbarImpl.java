@@ -35,6 +35,7 @@ import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
 import org.iplantc.de.diskResource.client.views.toolbar.dialogs.DOIAgreementDialog;
 import org.iplantc.de.diskResource.share.DiskResourceModule.Ids;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -45,6 +46,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -118,6 +120,9 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     private final UserInfo userInfo;
     private List<DiskResource> selectedDiskResources;
     private Folder selectedFolder;
+
+    @Inject
+    AsyncProviderWrapper<DOIAgreementDialog> agreementDialogWrapper;
 
     @Inject
     DiskResourceViewToolbarImpl(final DiskResourceSearchField searchField,
@@ -629,14 +634,24 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("doiMi")
     void onRequestDOI(SelectionEvent<Item> event) {
-        DOIAgreementDialog dialog = new DOIAgreementDialog(appearance);
-        dialog.addOkButtonSelectHandler(new SelectEvent.SelectHandler() {
+        agreementDialogWrapper.get(new AsyncCallback<DOIAgreementDialog>() {
             @Override
-            public void onSelect(SelectEvent event) {
-                presenter.onDoiRequest(getFirstDiskResource().getId());
+            public void onFailure(Throwable throwable) {
+                    //do nothing
+            }
+
+            @Override
+            public void onSuccess(DOIAgreementDialog  dialog) {
+                dialog.addOkButtonSelectHandler(new SelectEvent.SelectHandler() {
+                    @Override
+                    public void onSelect(SelectEvent event) {
+                        presenter.onDoiRequest(getFirstDiskResource().getId());
+                    }
+                });
+                dialog.show();
             }
         });
-        dialog.show();
+
     }
     // </editor-fold>
 
