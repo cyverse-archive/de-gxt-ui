@@ -119,6 +119,7 @@ public class GridViewPresenterImplTest {
         uut = new GridViewPresenterImpl(gridViewFactoryMock,
                                         folderContentsProxyFactoryMock,
                                         appearanceMock,
+                                        eventBusMock,
                                         navigationPresenterMock,
                                         infoTypeFiltersMock,
                                         entityTypeMock) {
