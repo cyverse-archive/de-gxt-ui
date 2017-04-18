@@ -233,6 +233,8 @@ public interface ToolbarView extends IsWidget,
         String needDOI();
 
         String downloadTemplateMenuItem();
+
+        String doiUserAgreement();
     }
 
     interface Presenter {
