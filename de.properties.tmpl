@@ -1,95 +1,95 @@
 {{- with $base := (printf "configs/%s" (env "DE_ENV")) -}}
-{{ with $v := (key (printf "%s/de/default-build-number" $base)) }}org.iplantc.discoveryenvironment.about.defaultBuildNumber = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/release-version" $base)) }}org.iplantc.discoveryenvironment.about.releaseVersion = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/base-url" $base)) }}org.iplantc.discoveryenvironment.cas.base-url = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/cas-server-name" $base)) }}org.iplantc.discoveryenvironment.cas.server-name = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/cas-validation" $base)) }}org.iplantc.discoveryenvironment.cas.validation = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/cas-logout-url" $base)) }}org.iplantc.discoveryenvironment.cas.logout-url = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/cas-app-name" $base)) }}org.iplantc.discoveryenvironment.cas.app-name = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/cas-login-url" $base)) }}org.iplantc.discoveryenvironment.cas.login-url = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/authorized-groups" $base)) }}org.iplantc.admin.cas.authorized-groups = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/group-attribute-name" $base)) }}org.iplantc.admin.cas.group-attribute-name = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/cas-no-logout-url" $base)) }}org.iplantc.discoveryenvironment.cas.no-logout-url = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/cas-app-list" $base)) }}org.iplantc.discoveryenvironment.cas.app-list = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/keepalive-service" $base)) }}org.iplantc.discoveryenvironment.keepalive.service = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/keepalive-target" $base)) }}org.iplantc.discoveryenvironment.keepalive.target = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/keepalive-interval" $base)) }}org.iplantc.discoveryenvironment.keepalive.interval = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/jwt/private-key-path" $base)) }}org.iplantc.discoveryenvironment.jwt.private-key-path = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/jwt/private-key-password" $base)) }}org.iplantc.discoveryenvironment.jwt.private-key-password = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/twitter-url" $base)) }}org.iplantc.discoveryenvironment.twitter-url = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/facebook-url" $base)) }}org.iplantc.discoveryenvironment.facebook-url = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/newsletter-url" $base)) }}org.iplantc.discoveryenvironment.newsletter-url = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/ask-url" $base)) }}org.iplantc.discoveryenvironment.ask-url = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/prefix" $base)) }}prefix = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.discoveryenvironment.muleServiceBaseUrl = {{ $v }}/secured{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.discoveryenvironment.unprotectedMuleServiceBaseUrl = {{ $v }}/{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.bootstrap = {{ $v }}/secured/bootstrap{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.logout = {{ $v }}/secured/logout{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.de-data-mgmt.base = {{ $v }}/secured/filesystem/{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.admin.de-data-mgmt.base = {{ $v }}/admin/filesystem/{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.file-io.base.secured = {{ $v }}/secured/fileio/{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.file-io.file-upload = {{ $v }}/fileio/upload{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.file-io.secured.file-upload = {{ $v }}/secured/fileio/upload{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.buggalo.baseUrl = {{ $v }}/secured/tree-viewer-urls{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.toolRequests = {{ $v }}/tool-requests{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.toolRequests.statusCodes = {{ $v }}/tool-requests/status-codes{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.admin.toolRequests = {{ $v }}/admin/tool-requests{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.permIdRequests = {{ $v }}/permanent-id-requests{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.permIdRequests.statusCodes = {{ $v }}/permanent-id-requests/status-codes{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.admin.permIdRequests = {{ $v }}/admin/permanent-id-requests{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.apps = {{ $v }}/apps{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.apps.ids = {{ $v }}/apps/ids{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.apps.categories = {{ $v }}/apps/categories{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.apps.hierarchies = {{ $v }}/apps/hierarchies{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.apps.elements = {{ $v }}/apps/elements{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.apps.elements.tools = {{ $v }}/apps/elements/tools{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.apps.elements.infoTypes = {{ $v }}/apps/elements/info-types{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.apps.elements.dataSources = {{ $v }}/apps/elements/data-sources{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.apps.argPreview = {{ $v }}/apps/arg-preview{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.admin.apps = {{ $v }}/admin/apps{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.admin.apps.categories = {{ $v }}/admin/apps/categories{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.oauth = {{ $v }}/secured/oauth{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.apps.pipelines = {{ $v }}/apps/pipelines{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.admin.referenceGenomes = {{ $v }}/admin/reference-genomes{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.referenceGenomes = {{ $v }}/reference-genomes{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.analyses = {{ $v }}/analyses{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.admin.tools = {{ $v }}/admin/tools{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.tools = {{ $v }}/tools{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.admin.workshop = {{ $v }}/admin/groups/workshop{{ end }}
-{{ with $v := (key (printf "%s/de/file-identifier" $base)) }}org.iplantc.pathList.fileIdentifier = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.filesystem.index = {{ $v }}/secured/filesystem/index{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.filesystem.index-status = {{ $v }}/secured/filesystem/index-status{{ end }}
-{{ with $v := (key (printf "%s/email/base" $base)) }}org.iplantc.services.email-base = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.notifications = {{ $v }}/secured/notifications{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.admin.notifications.system = {{ $v }}/admin/notifications/system{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.admin.notifications.system.types = {{ $v }}/admin/notifications/system-types{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.admin.ontologies = {{ $v }}/admin/ontologies{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.services.ontologies = {{ $v }}/ontologies{{ end }}
-{{ with $v := (key (printf "%s/de/root-app-category" $base)) }}org.iplantc.discoveryenvironment.workspace.rootAppCategory = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/default-app-categories" $base)) }}org.iplantc.discoveryenvironment.workspace.defaultAppCategories = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/default-beta-app-category" $base)) }}org.iplantc.discoveryenvironment.workspace.defaultBetaAppCategoryId = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/default-hpc-app-category" $base)) }}org.iplantc.discoveryenvironment.workspace.defaultHpcAppCategoryId = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/default-trash-app-category" $base)) }}org.iplantc.discoveryenvironment.workspace.defaultTrashAppCategoryId = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/ontology-attributes" $base)) }}org.iplantc.discoveryenvironment.workspace.ontologyAttrs = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/beta-attr-iri" $base)) }}org.iplantc.discoveryenvironment.workspace.metadata.beta.attr.iri = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/beta-attr-label" $base)) }}org.iplantc.discoveryenvironment.workspace.metadata.beta.attr.label = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/beta-value" $base)) }}org.iplantc.discoveryenvironment.workspace.metadata.beta.value = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/beta-unit" $base)) }}org.iplantc.discoveryenvironment.workspace.metadata.beta.unit = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/card-url" $base)) }}org.iplantc.discoveryenvironment.workspace.apps.cardUrl = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/card-url-options" $base)) }}org.iplantc.discoveryenvironment.workspace.apps.cardUrlOptions = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/context-menu-enabled" $base)) }}org.iplantc.discoveryenvironment.contextMenu.enabled = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/community-data-path" $base)) }}org.iplantc.communitydata.path = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/irods-home" $base)) }}org.iplantc.irodshome.path = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/trash-path" $base)) }}org.iplantc.basetrash.path = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/maintenance-file" $base)) }}org.iplantc.discoveryenvironment.maintenance-file = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/local-ip-ranges" $base)) }}org.iplantc.discoveryenvironment.local-ip-ranges = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/environment-name" $base)) }}org.iplantc.discoveryenvironment.environment.name = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/prod-deployment" $base)) }}org.iplantc.discoveryenvironment.environment.prod-deployment = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/poll-interval" $base)) }}org.iplantc.discoveryenvironment.notifications.poll-interval = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/amqp/uri" $base)) }}org.iplantc.discoveryenvironment.notification.amqp.uri = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/amqp/exchange/name" $base)) }}org.iplantc.discoveryenvironment.notification.amqp.exchange.name = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/amqp-de-durable" $base)) }}org.iplantc.discoveryenvironment.notification.amqp.exchange.durable = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/amqp-de-auto-delete" $base)) }}org.iplantc.discoveryenvironment.notification.amqp.exchange.auto-delete = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/de/support-user" $base)) }}org.iplantc.discoveryenvironment.analysis.support.user = {{ $v }}{{ end }}
-{{ with $v := (key (printf "%s/terrain/base" $base)) }}org.iplantc.discoveryenvironment.support = {{ $v }}/support-email{{ end }}
+org.iplantc.discoveryenvironment.about.defaultBuildNumber = {{ key (printf "%s/de/default-build-number" $base) }}
+org.iplantc.discoveryenvironment.about.releaseVersion = {{ key (printf "%s/de/release-version" $base) }}
+org.iplantc.discoveryenvironment.cas.base-url = {{ key (printf "%s/de/base-url" $base) }}
+org.iplantc.discoveryenvironment.cas.server-name = {{ key (printf "%s/de/cas-server-name" $base) }}
+org.iplantc.discoveryenvironment.cas.validation = {{ key (printf "%s/de/cas-validation" $base) }}
+org.iplantc.discoveryenvironment.cas.logout-url = {{ key (printf "%s/de/cas-logout-url" $base) }}
+org.iplantc.discoveryenvironment.cas.app-name = {{ key (printf "%s/de/cas-app-name" $base) }}
+org.iplantc.discoveryenvironment.cas.login-url = {{ key (printf "%s/de/cas-login-url" $base) }}
+org.iplantc.admin.cas.authorized-groups = {{ key (printf "%s/de/authorized-groups" $base) }}
+org.iplantc.admin.cas.group-attribute-name = {{ key (printf "%s/de/group-attribute-name" $base) }}
+org.iplantc.discoveryenvironment.cas.no-logout-url = {{ key (printf "%s/de/cas-no-logout-url" $base) }}
+org.iplantc.discoveryenvironment.cas.app-list = {{ key (printf "%s/de/cas-app-list" $base) }}
+org.iplantc.discoveryenvironment.keepalive.service = {{ key (printf "%s/de/keepalive-service" $base) }}
+org.iplantc.discoveryenvironment.keepalive.target = {{ key (printf "%s/de/keepalive-target" $base) }}
+org.iplantc.discoveryenvironment.keepalive.interval = {{ key (printf "%s/de/keepalive-interval" $base) }}
+org.iplantc.discoveryenvironment.jwt.private-key-path = {{ key (printf "%s/jwt/private-key-path" $base) }}
+org.iplantc.discoveryenvironment.jwt.private-key-password = {{ key (printf "%s/jwt/private-key-password" $base) }}
+org.iplantc.discoveryenvironment.twitter-url = {{ key (printf "%s/de/twitter-url" $base) }}
+org.iplantc.discoveryenvironment.facebook-url = {{ key (printf "%s/de/facebook-url" $base) }}
+org.iplantc.discoveryenvironment.newsletter-url = {{ key (printf "%s/de/newsletter-url" $base) }}
+org.iplantc.discoveryenvironment.ask-url = {{ key (printf "%s/de/ask-url" $base) }}
+prefix = {{ key (printf "%s/de/prefix" $base) }}
+org.iplantc.discoveryenvironment.muleServiceBaseUrl = {{ key (printf "%s/terrain/base" $base) }}/secured/
+org.iplantc.discoveryenvironment.unprotectedMuleServiceBaseUrl = {{ key (printf "%s/terrain/base" $base) }}/
+org.iplantc.services.bootstrap = {{ key (printf "%s/terrain/base" $base) }}/secured/bootstrap
+org.iplantc.services.logout = {{ key (printf "%s/terrain/base" $base) }}/secured/logout
+org.iplantc.services.de-data-mgmt.base = {{ key (printf "%s/terrain/base" $base) }}/secured/filesystem/
+org.iplantc.services.admin.de-data-mgmt.base = {{ key (printf "%s/terrain/base" $base) }}/admin/filesystem/
+org.iplantc.services.file-io.base.secured = {{ key (printf "%s/terrain/base" $base) }}/secured/fileio/
+org.iplantc.services.file-io.file-upload = {{ key (printf "%s/terrain/base" $base) }}/fileio/upload
+org.iplantc.services.file-io.secured.file-upload = {{ key (printf "%s/terrain/base" $base) }}/secured/fileio/upload
+org.iplantc.services.buggalo.baseUrl = {{ key (printf "%s/terrain/base" $base) }}/secured/tree-viewer-urls
+org.iplantc.services.toolRequests = {{ key (printf "%s/terrain/base" $base) }}/tool-requests
+org.iplantc.services.toolRequests.statusCodes = {{ key (printf "%s/terrain/base" $base) }}/tool-requests/status-codes
+org.iplantc.services.admin.toolRequests = {{ key (printf "%s/terrain/base" $base) }}/admin/tool-requests
+org.iplantc.services.permIdRequests = {{ key (printf "%s/terrain/base" $base) }}/permanent-id-requests
+org.iplantc.services.permIdRequests.statusCodes = {{ key (printf "%s/terrain/base" $base) }}/permanent-id-requests/status-codes
+org.iplantc.services.admin.permIdRequests = {{ key (printf "%s/terrain/base" $base) }}/admin/permanent-id-requests
+org.iplantc.services.apps = {{ key (printf "%s/terrain/base" $base) }}/apps
+org.iplantc.services.apps.ids = {{ key (printf "%s/terrain/base" $base) }}/apps/ids
+org.iplantc.services.apps.categories = {{ key (printf "%s/terrain/base" $base) }}/apps/categories
+org.iplantc.services.apps.hierarchies = {{ key (printf "%s/terrain/base" $base) }}/apps/hierarchies
+org.iplantc.services.apps.elements = {{ key (printf "%s/terrain/base" $base) }}/apps/elements
+org.iplantc.services.apps.elements.tools = {{ key (printf "%s/terrain/base" $base) }}/apps/elements/tools
+org.iplantc.services.apps.elements.infoTypes = {{ key (printf "%s/terrain/base" $base) }}/apps/elements/info-types
+org.iplantc.services.apps.elements.dataSources = {{ key (printf "%s/terrain/base" $base) }}/apps/elements/data-sources
+org.iplantc.services.apps.argPreview = {{ key (printf "%s/terrain/base" $base) }}/apps/arg-preview
+org.iplantc.services.admin.apps = {{ key (printf "%s/terrain/base" $base) }}/admin/apps
+org.iplantc.services.admin.apps.categories = {{ key (printf "%s/terrain/base" $base) }}/admin/apps/categories
+org.iplantc.services.oauth = {{ key (printf "%s/terrain/base" $base) }}/secured/oauth
+org.iplantc.services.apps.pipelines = {{ key (printf "%s/terrain/base" $base) }}/apps/pipelines
+org.iplantc.services.admin.referenceGenomes = {{ key (printf "%s/terrain/base" $base) }}/admin/reference-genomes
+org.iplantc.services.referenceGenomes = {{ key (printf "%s/terrain/base" $base) }}/reference-genomes
+org.iplantc.services.analyses = {{ key (printf "%s/terrain/base" $base) }}/analyses
+org.iplantc.services.admin.tools = {{ key (printf "%s/terrain/base" $base) }}/admin/tools
+org.iplantc.services.tools = {{ key (printf "%s/terrain/base" $base) }}/tools
+org.iplantc.services.admin.workshop = {{ key (printf "%s/terrain/base" $base) }}/admin/groups/workshop
+org.iplantc.pathList.fileIdentifier = {{ key (printf "%s/de/file-identifier" $base) }}
+org.iplantc.services.filesystem.index = {{ key (printf "%s/terrain/base" $base) }}/secured/filesystem/index
+org.iplantc.services.filesystem.index-status = {{ key (printf "%s/terrain/base" $base) }}/secured/filesystem/index-status
+org.iplantc.services.email-base = {{ key (printf "%s/email/base" $base) }}/
+org.iplantc.services.notifications = {{ key (printf "%s/terrain/base" $base) }}/secured/notifications
+org.iplantc.services.admin.notifications.system = {{ key (printf "%s/terrain/base" $base) }}/admin/notifications/system
+org.iplantc.services.admin.notifications.system.types = {{ key (printf "%s/terrain/base" $base) }}/admin/notifications/system-types
+org.iplantc.services.admin.ontologies = {{ key (printf "%s/terrain/base" $base) }}/admin/ontologies
+org.iplantc.services.ontologies = {{ key (printf "%s/terrain/base" $base) }}/ontologies
+org.iplantc.discoveryenvironment.workspace.rootAppCategory = {{ key (printf "%s/de/root-app-category" $base) }}
+org.iplantc.discoveryenvironment.workspace.defaultAppCategories = {{ key (printf "%s/de/default-app-categories" $base) }}
+org.iplantc.discoveryenvironment.workspace.defaultBetaAppCategoryId = {{ key (printf "%s/de/default-beta-app-category" $base) }}
+org.iplantc.discoveryenvironment.workspace.defaultHpcAppCategoryId = {{ key (printf "%s/de/default-hpc-app-category" $base) }}
+org.iplantc.discoveryenvironment.workspace.defaultTrashAppCategoryId = {{ key (printf "%s/de/default-trash-app-category" $base) }}
+org.iplantc.discoveryenvironment.workspace.ontologyAttrs = {{ key (printf "%s/de/ontology-attributes" $base) }}
+org.iplantc.discoveryenvironment.workspace.metadata.beta.attr.iri = {{ key (printf "%s/de/beta-attr-iri" $base) }}
+org.iplantc.discoveryenvironment.workspace.metadata.beta.attr.label = {{ key (printf "%s/de/beta-attr-label" $base) }}
+org.iplantc.discoveryenvironment.workspace.metadata.beta.value = {{ key (printf "%s/de/beta-value" $base) }}
+org.iplantc.discoveryenvironment.workspace.metadata.beta.unit = {{ key (printf "%s/de/beta-unit" $base) }}
+org.iplantc.discoveryenvironment.workspace.apps.cardUrl = {{ key (printf "%s/de/card-url" $base) }}
+org.iplantc.discoveryenvironment.workspace.apps.cardUrlOptions = {{ key (printf "%s/de/card-url-options" $base) }}
+org.iplantc.discoveryenvironment.contextMenu.enabled = {{ key (printf "%s/de/context-menu-enabled" $base) }}
+org.iplantc.communitydata.path = {{ key (printf "%s/de/community-data-path" $base) }}
+org.iplantc.irodshome.path = {{ key (printf "%s/de/irods-home" $base) }}
+org.iplantc.basetrash.path = {{ key (printf "%s/de/trash-path" $base) }}
+org.iplantc.discoveryenvironment.maintenance-file = {{ key (printf "%s/de/maintenance-file" $base) }}
+org.iplantc.discoveryenvironment.local-ip-ranges = {{ key (printf "%s/de/local-ip-ranges" $base) }}
+org.iplantc.discoveryenvironment.environment.name = {{ key (printf "%s/de/environment-name" $base) }}
+org.iplantc.discoveryenvironment.environment.prod-deployment = {{ key (printf "%s/de/prod-deployment" $base) }}
+org.iplantc.discoveryenvironment.notifications.poll-interval = {{ key (printf "%s/de/poll-interval" $base) }}
+org.iplantc.discoveryenvironment.notification.amqp.uri = {{ key (printf "%s/de/amqp-de-uri" $base) }}
+org.iplantc.discoveryenvironment.notification.amqp.exchange.name = {{ key (printf "%s/de/amqp-de-name" $base) }}
+org.iplantc.discoveryenvironment.notification.amqp.exchange.durable = {{ key (printf "%s/de/amqp-de-durable" $base) }}
+org.iplantc.discoveryenvironment.notification.amqp.exchange.auto-delete = {{ key (printf "%s/de/amqp-de-auto-delete" $base) }}
+org.iplantc.discoveryenvironment.analysis.support.user = {{ key (printf "%s/de/support-user" $base) }}
+org.iplantc.discoveryenvironment.support = {{ key (printf "%s/terrain/base" $base) }}/support-email
 {{- end -}}
