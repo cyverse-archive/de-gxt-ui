@@ -1,8 +1,8 @@
 package org.iplantc.de.pipelines.client.views;
 
-import org.iplantc.de.client.models.pipelines.PipelineTask;
 import org.iplantc.de.client.models.pipelines.PipelineAppData;
 import org.iplantc.de.client.models.pipelines.PipelineAppMapping;
+import org.iplantc.de.client.models.pipelines.PipelineTask;
 import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.gwt.editor.client.EditorDelegate;
@@ -138,7 +138,12 @@ public class PipelineAppMappingForm implements PipelineAppMappingView {
                 for (PipelineAppData input : appInputs) {
                     ComboBox<PipelineMappingOutputWrapper> combo = buildOutputCombo(app, input, outputs);
 
-                    FieldLabel inputField = new FieldLabel(combo, input.getLabel());
+                    String label = input.getLabel();
+                    if (label.indexOf(':') == label.length() - 1) {
+                        label = label.substring(0, label.length() - 1);
+                    }
+
+                    FieldLabel inputField = new FieldLabel(combo, label);
                     panel.add(inputField);
                 }
             }
