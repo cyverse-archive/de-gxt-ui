@@ -13,6 +13,7 @@ LABEL org.cyverse.version="$version"
 LABEL org.cyverse.descriptive-version="$descriptive_version"
 
 ADD target/de-copy.war /de.war
+ADD de-application.yaml /etc/iplant/de/de-application.yaml
 
 EXPOSE 8080
 
