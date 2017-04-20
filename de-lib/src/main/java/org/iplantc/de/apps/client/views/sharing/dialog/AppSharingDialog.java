@@ -4,11 +4,8 @@
 
 package org.iplantc.de.apps.client.views.sharing.dialog;
 
-import org.iplantc.de.apps.client.presenter.sharing.AppSharingPresenter;
-import org.iplantc.de.apps.client.views.sharing.AppSharingView;
-import org.iplantc.de.apps.client.views.sharing.AppSharingViewImpl;
+import org.iplantc.de.apps.client.gin.factory.AppSharingPresenterFactory;
 import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.sharing.SharingPresenter;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
@@ -23,16 +20,16 @@ import java.util.List;
 
 public class AppSharingDialog extends IPlantDialog implements SelectHandler {
 
-    private final AppUserServiceFacade appService;
+    private AppSharingPresenterFactory factory;
     private SharingPresenter sharingPresenter;
 
     @Inject
     CollaboratorsUtil collaboratorsUtil;
 
     @Inject
-    AppSharingDialog(final AppUserServiceFacade appService) {
+    AppSharingDialog(AppSharingPresenterFactory factory) {
         super(false);
-        this.appService = appService;
+        this.factory = factory;
         setPixelSize(600, 500);
         setHideOnButtonClick(true);
         setModal(true);
@@ -53,9 +50,7 @@ public class AppSharingDialog extends IPlantDialog implements SelectHandler {
     }
 
     public void show(final List<App> resourcesToShare) {
-        AppSharingView view = new AppSharingViewImpl();
-        view.setSelectedApps(resourcesToShare);
-        sharingPresenter = new AppSharingPresenter(appService, resourcesToShare, view, collaboratorsUtil);
+        sharingPresenter = factory.create(resourcesToShare);
         sharingPresenter.go(this);
         super.show();
     }

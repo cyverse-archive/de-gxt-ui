@@ -1,5 +1,7 @@
 package org.iplantc.de.analysis.client.views.dialogs;
 
+import org.iplantc.de.analysis.client.gin.factory.AnalysisSharingPresenterFactory;
+import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.sharing.SharingPresenter;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
@@ -11,6 +13,8 @@ import com.google.inject.Inject;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 
+import java.util.List;
+
 public class AnalysisSharingDialog extends IPlantDialog implements SelectHandler {
 
     private SharingPresenter sharingPresenter;
@@ -19,10 +23,12 @@ public class AnalysisSharingDialog extends IPlantDialog implements SelectHandler
     CollaboratorsUtil collaboratorsUtil;
     @Inject
     JsonUtil jsonUtil;
+    private AnalysisSharingPresenterFactory factory;
 
     @Inject
-    public AnalysisSharingDialog() {
+    public AnalysisSharingDialog(AnalysisSharingPresenterFactory factory) {
         super(false);
+        this.factory = factory;
         setPixelSize(600, 500);
         setHideOnButtonClick(true);
         setModal(true);
@@ -39,13 +45,15 @@ public class AnalysisSharingDialog extends IPlantDialog implements SelectHandler
         sharingPresenter.processRequest();
     }
 
-    @Override
-    public void show() throws UnsupportedOperationException {
+    public void show(List<Analysis> analyses) {
+        sharingPresenter = factory.create(analyses);
         sharingPresenter.go(this);
         super.show();
     }
 
-    public void setPresenter(SharingPresenter sharingPresenter) {
-        this.sharingPresenter = sharingPresenter;
+    @Override
+    public void show() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("This method is not supported for this class. "
+                                                + "Use show(List<Analysis>) instead.");
     }
 }

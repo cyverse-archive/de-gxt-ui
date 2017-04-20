@@ -23,9 +23,11 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AppsCallback;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.tools.requests.client.views.dialogs.NewToolRequestDialog;
 
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.autobean.shared.Splittable;
@@ -54,8 +56,7 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
     @Inject AppsToolbarView.AppsToolbarAppearance appearance;
     @Inject EventBus eventBus;
     @Inject Provider<NewToolRequestDialog> newToolRequestDialogProvider;
-    @Inject
-    Provider<AppSharingDialog> appSharingDialgoProvider;
+    @Inject AsyncProviderWrapper<AppSharingDialog> appSharingDialogProvider;
     @Inject UserInfo userInfo;
     private final AppUserServiceFacade appService;
     private final AppSearchRpcProxy proxy;
@@ -144,6 +145,16 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
 
     @Override
     public void onShareAppSelected(ShareAppsSelected event) {
-        appSharingDialgoProvider.get().show(event.getSelectedApps());
+        appSharingDialogProvider.get(new AsyncCallback<AppSharingDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+
+            }
+
+            @Override
+            public void onSuccess(AppSharingDialog result) {
+                result.show(event.getSelectedApps());
+            }
+        });
     }
 }

@@ -13,6 +13,7 @@ import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
@@ -45,8 +46,7 @@ public class AppSharingViewImpl implements AppSharingView {
     @UiField
     Grid<App> appGrid;
 
-    SharingPresenter presenter;
-
+    @Inject
     public AppSharingViewImpl() {
         this.appListStore = buildAppStore();
         widget = uiBinder.createAndBindUi(this);
@@ -60,11 +60,6 @@ public class AppSharingViewImpl implements AppSharingView {
     @Override
     public Widget asWidget() {
         return widget;
-    }
-
-    @Override
-    public void setPresenter(SharingPresenter appSharingPresenter) {
-        this.presenter = appSharingPresenter;
     }
 
     @Override

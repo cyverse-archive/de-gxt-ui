@@ -10,9 +10,11 @@ import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.client.views.ManageCollaboratorsDialog;
 import org.iplantc.de.collaborators.client.views.ManageCollaboratorsView;
+import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.diskResource.client.model.DataSharingKeyProvider;
 import org.iplantc.de.diskResource.client.model.DataSharingProperties;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.ShareBreakDownDialog;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -20,9 +22,11 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.cell.core.client.TextButtonCell;
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
@@ -51,42 +55,34 @@ import java.util.List;
 /**
  * @author sriram, jstroot
  */
-public class SharingPermissionsPanel implements IsWidget {
-
-    @UiField
-    Grid<Sharing> grid;
-    @UiField
-    ToolBar toolbar;
-    @UiField(provided = true)
-    ListStore<Sharing> listStore;
-    @UiField(provided = true)
-    ColumnModel<Sharing> cm;
-    @UiField
-    VerticalLayoutContainer container;
-    private final EventBus eventBus;
-
-    private FastMap<List<Sharing>> originalList;
-    private final FastMap<SharedResource> resources;
-    @UiField(provided = true)
-    final SharingAppearance appearance;
-    private final SharingPresenter presenter;
-    private FastMap<List<Sharing>> sharingMap;
-    private HorizontalPanel explainPanel;
-
-    final Widget widget;
-    private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
+public class SharingPermissionsPanel implements SharingPermissionView {
 
     @UiTemplate("SharingPermissionsView.ui.xml")
     interface MyUiBinder extends UiBinder<Widget, SharingPermissionsPanel> {
     }
 
-    public SharingPermissionsPanel(final SharingPresenter dataSharingPresenter,
-                                   final FastMap<SharedResource> resources) {
-        this(dataSharingPresenter, resources, GWT.<SharingAppearance> create(SharingAppearance.class));
-    }
+    @UiField Grid<Sharing> grid;
+    @UiField ToolBar toolbar;
+    @UiField(provided = true) ListStore<Sharing> listStore;
+    @UiField(provided = true) ColumnModel<Sharing> cm;
+    @UiField VerticalLayoutContainer container;
+    @UiField(provided = true) final SharingAppearance appearance;
 
-    SharingPermissionsPanel(final SharingPresenter dataSharingPresenter,
-                            final FastMap<SharedResource> resources,
+    private final EventBus eventBus;
+    private FastMap<List<Sharing>> originalList;
+    private final FastMap<SharedResource> resources;
+    private final SharingPresenter presenter;
+    private FastMap<List<Sharing>> sharingMap;
+    private HorizontalPanel explainPanel;
+    final Widget widget;
+
+    @Inject AsyncProviderWrapper<ManageCollaboratorsDialog> collaboratorsDialogProvider;
+
+    private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
+
+    @Inject
+    SharingPermissionsPanel(@Assisted SharingPresenter dataSharingPresenter,
+                            @Assisted FastMap<SharedResource> resources,
                             final SharingAppearance appearance) {
         this.presenter = dataSharingPresenter;
         this.resources = resources;
@@ -135,22 +131,30 @@ public class SharingPermissionsPanel implements IsWidget {
 
             @Override
             public void onSelect(SelectEvent event) {
-                final ManageCollaboratorsDialog dialog = new ManageCollaboratorsDialog(ManageCollaboratorsView.MODE.SELECT);
-                dialog.setModal(true);
-                dialog.show();
-                dialog.addOkButtonSelectHandler(new SelectHandler() {
+                collaboratorsDialogProvider.get(new AsyncCallback<ManageCollaboratorsDialog>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        ErrorHandler.post(caught);
+                    }
 
                     @Override
-                    public void onSelect(SelectEvent event) {
-                        List<Collaborator> selected = dialog.getSelectedCollaborators();
-                        if (selected != null && selected.size() > 0) {
-                            for (Collaborator c : selected) {
-                                addCollaborator(c);
+                    public void onSuccess(ManageCollaboratorsDialog result) {
+                        result.setModal(true);
+                        result.show(ManageCollaboratorsView.MODE.SELECT);
+                        result.addOkButtonSelectHandler(new SelectHandler() {
+
+                            @Override
+                            public void onSelect(SelectEvent event) {
+                                List<Collaborator> selected = result.getSelectedCollaborators();
+                                if (selected != null && selected.size() > 0) {
+                                    for (Collaborator c : selected) {
+                                        addCollaborator(c);
+                                    }
+                                }
                             }
-                        }
+                        });
                     }
                 });
-
             }
 
         });
@@ -327,6 +331,7 @@ public class SharingPermissionsPanel implements IsWidget {
         return new ColumnModel<>(configs);
     }
 
+    @Override
     public void hidePermissionColumn() {
       for(ColumnConfig<Sharing, ?> cc: grid.getColumnModel().getColumns()) {
           if(cc.getHeader().asString().equals(appearance.permissionsColumnLabel())) {
@@ -336,6 +341,7 @@ public class SharingPermissionsPanel implements IsWidget {
       }
     }
 
+    @Override
     public void showPermissionColumn() {
         for(ColumnConfig<Sharing, ?> cc: grid.getColumnModel().getColumns()) {
             if(cc.getHeader().asString().equals(appearance.permissionsColumnLabel())) {
@@ -345,6 +351,7 @@ public class SharingPermissionsPanel implements IsWidget {
         }
     }
 
+    @Override
     public void setExplainPanelVisibility(boolean visible) {
         explainPanel.setVisible(visible);
     }
@@ -418,6 +425,7 @@ public class SharingPermissionsPanel implements IsWidget {
      * 
      * @return the sharing list
      */
+    @Override
     public FastMap<List<Sharing>> getSharingMap() {
         FastMap<List<Sharing>> sharingList = new FastMap<>();
         for (Sharing share : grid.getStore().getAll()) {
@@ -531,6 +539,7 @@ public class SharingPermissionsPanel implements IsWidget {
     /**
      * @return the unshareList
      */
+    @Override
     public FastMap<List<Sharing>> getUnshareList() {
         // Prepare unshared list here
         FastMap<List<Sharing>> unshareList = new FastMap<>();
@@ -550,10 +559,12 @@ public class SharingPermissionsPanel implements IsWidget {
         return unshareList;
     }
 
+    @Override
     public void mask() {
         container.mask(appearance.loadingMask());
     }
 
+    @Override
     public void unmask() {
         container.unmask();
     }

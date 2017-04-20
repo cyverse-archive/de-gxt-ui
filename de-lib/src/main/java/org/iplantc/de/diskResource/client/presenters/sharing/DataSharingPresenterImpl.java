@@ -1,12 +1,13 @@
 package org.iplantc.de.diskResource.client.presenters.sharing;
 
+import org.iplantc.de.client.gin.factory.SharingPermissionViewFactory;
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
-import org.iplantc.de.client.sharing.SharingPermissionsPanel;
+import org.iplantc.de.client.sharing.SharingPermissionView;
 import org.iplantc.de.client.sharing.SharingPresenter;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.client.util.JsonUtil;
@@ -16,13 +17,14 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.DataSharingView;
 import org.iplantc.de.shared.DataCallback;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.core.shared.FastMap;
 
@@ -30,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * FIXME Refactor to use injection
  * FIXME Tighten contract with data sharing service. Should not have to manually construct the json here.
  * @author sriram, jstroot
  */
@@ -105,7 +106,7 @@ public class DataSharingPresenterImpl implements SharingPresenter {
 
     final DataSharingView view;
     private final DiskResourceServiceFacade diskResourceService;
-    private final SharingPermissionsPanel permissionsPanel;
+    private final SharingPermissionView permissionsPanel;
     private final List<DiskResource> selectedResources;
     private final Appearance appearance;
     private FastMap<List<Sharing>> dataSharingMap;
@@ -114,33 +115,21 @@ public class DataSharingPresenterImpl implements SharingPresenter {
     private final CollaboratorsUtil collaboratorsUtil;
 
 
+    @Inject
     public DataSharingPresenterImpl(final DiskResourceServiceFacade diskResourceService,
-                                    final List<DiskResource> selectedResources,
+                                    @Assisted final List<DiskResource> selectedResources,
                                     final DataSharingView view,
                                     final CollaboratorsUtil collaboratorsUtil,
-                                    final JsonUtil jsonUtil) {
-        this(diskResourceService,
-             selectedResources,
-             view,
-             collaboratorsUtil,
-             jsonUtil,
-             GWT.<SharingPresenter.Appearance> create(SharingPresenter.Appearance.class));
-    }
-
-    DataSharingPresenterImpl(final DiskResourceServiceFacade diskResourceService,
-                             final List<DiskResource> selectedResources,
-                             final DataSharingView view,
-                             final CollaboratorsUtil collaboratorsUtil,
-                             final JsonUtil jsonUtil,
-                             final SharingPresenter.Appearance appearance) {
+                                    final JsonUtil jsonUtil,
+                                    SharingPresenter.Appearance appearance,
+                                    SharingPermissionViewFactory sharingViewFactory) {
         this.diskResourceService = diskResourceService;
         this.view = view;
         this.selectedResources = selectedResources;
         this.collaboratorsUtil = collaboratorsUtil;
         this.jsonUtil = jsonUtil;
         this.appearance = appearance;
-        view.setPresenter(this);
-        permissionsPanel = new SharingPermissionsPanel(this, getSelectedResourcesAsMap(selectedResources));
+        permissionsPanel = sharingViewFactory.create(this, getSelectedResourcesAsMap(selectedResources));
         view.addShareWidget(permissionsPanel.asWidget());
         loadResources();
         loadPermissions();

@@ -1,21 +1,31 @@
 package org.iplantc.de.diskResource.client.views.sharing;
 
 import org.iplantc.de.client.models.diskResources.DiskResource;
+import org.iplantc.de.client.sharing.SharingAppearance;
 import org.iplantc.de.client.sharing.SharingPresenter;
+import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.diskResource.client.DataSharingView;
+import org.iplantc.de.diskResource.client.model.DiskResourceModelKeyProvider;
+import org.iplantc.de.diskResource.client.model.DiskResourceNameComparator;
+import org.iplantc.de.diskResource.client.views.grid.cells.DiskResourceNameCell;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
+import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.FramedPanel;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
+import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,8 +36,11 @@ public class DataSharingViewImpl implements DataSharingView {
     @UiTemplate("DataSharingView.ui.xml")
     interface MyUiBinder extends UiBinder<Widget, DataSharingViewImpl> {
     }
-    @UiField(provided = true) final ColumnModel<DiskResource> diskResourcesColumnModel;
-    @UiField(provided = true) final ListStore<DiskResource> diskResourcesListStore;
+
+    @UiField(provided = true) SharingAppearance appearance;
+    private DiskResourceUtil diskResourceUtil;
+    @UiField ColumnModel<DiskResource> diskResourcesColumnModel;
+    @UiField ListStore<DiskResource> diskResourcesListStore;
     final Widget widget;
     @UiField VerticalLayoutContainer container;
     @UiField FramedPanel diskResourceListPnl;
@@ -37,10 +50,12 @@ public class DataSharingViewImpl implements DataSharingView {
 
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
-    public DataSharingViewImpl(ColumnModel<DiskResource> diskReColumnModel,
-                               ListStore<DiskResource> drStore) {
-        this.diskResourcesColumnModel = diskReColumnModel;
-        this.diskResourcesListStore = drStore;
+    @Inject
+    public DataSharingViewImpl(SharingAppearance appearance,
+                               DiskResourceUtil diskResourceUtil) {
+        this.appearance = appearance;
+        this.diskResourceUtil = diskResourceUtil;
+
         widget = uiBinder.createAndBindUi(this);
     }
 
@@ -55,11 +70,6 @@ public class DataSharingViewImpl implements DataSharingView {
     }
 
     @Override
-    public void setPresenter(SharingPresenter dataSharingPresenter) {
-        this.presenter = dataSharingPresenter;
-    }
-
-    @Override
     public void setSelectedDiskResources(List<DiskResource> models) {
         if (models != null && models.size() > 0) {
             diskResourcesListStore.clear();
@@ -68,5 +78,23 @@ public class DataSharingViewImpl implements DataSharingView {
 
     }
 
+    @UiFactory
+    ListStore<DiskResource> createListStore() {
+        return new ListStore<>(new DiskResourceModelKeyProvider());
+    }
+
+    @UiFactory
+    ColumnModel<DiskResource> createColumnModel() {
+        List<ColumnConfig<DiskResource, ?>> list = new ArrayList<>();
+
+        ColumnConfig<DiskResource, DiskResource> name = new ColumnConfig<>(new IdentityValueProvider<DiskResource>("name"),
+                                                                           appearance.dataSharingDlgNameColumnWidth(),
+                                                                           appearance.nameColumnLabel());
+        name.setCell(new DiskResourceNameCell(diskResourceUtil));
+        name.setComparator(new DiskResourceNameComparator());
+        list.add(name);
+
+        return new ColumnModel<>(list);
+    }
 
 }

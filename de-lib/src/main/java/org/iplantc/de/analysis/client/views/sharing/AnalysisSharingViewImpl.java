@@ -1,7 +1,6 @@
 package org.iplantc.de.analysis.client.views.sharing;
 
 import org.iplantc.de.client.models.analysis.Analysis;
-import org.iplantc.de.client.sharing.SharingPresenter;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -9,6 +8,7 @@ import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
@@ -45,10 +45,9 @@ public class AnalysisSharingViewImpl implements AnalysisSharingView {
     @UiField
     Grid<Analysis> grid;
 
-    SharingPresenter presenter;
-
     final Widget widget;
 
+    @Inject
     public AnalysisSharingViewImpl() {
         widget = uiBinder.createAndBindUi(this);
     }
@@ -61,12 +60,6 @@ public class AnalysisSharingViewImpl implements AnalysisSharingView {
     @Override
     public void addShareWidget(Widget widget) {
         container.add(widget);
-    }
-
-    @Override
-    public void setPresenter(SharingPresenter sharingPresenter) {
-        this.presenter = sharingPresenter;
-
     }
 
     @Override

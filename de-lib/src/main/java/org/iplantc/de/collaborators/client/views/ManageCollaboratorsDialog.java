@@ -1,20 +1,17 @@
 package org.iplantc.de.collaborators.client.views;
 
 import org.iplantc.de.client.models.collaborators.Collaborator;
-import org.iplantc.de.collaborators.client.presenter.ManageCollaboratorsPresenter;
 import org.iplantc.de.collaborators.client.views.ManageCollaboratorsView.MODE;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
-import org.iplantc.de.resources.client.messages.I18N;
 
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.ui.HTML;
 
-import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 
 import java.util.List;
+import javax.inject.Inject;
 
 /**
  * @author sriram, jstroot
@@ -23,24 +20,25 @@ import java.util.List;
 public class ManageCollaboratorsDialog extends IPlantDialog {
 
 
-    private final ManageCollaboratorsView.Presenter p;
+    private final ManageCollaboratorsView.Presenter presenter;
     private final ManageCollaboratorsView.Appearance appearance;
 
 
-    public ManageCollaboratorsDialog(final MODE mode) {
-        this(mode,
-             GWT.<ManageCollaboratorsView.Appearance>create(ManageCollaboratorsView.Appearance.class));
-    }
-
-    ManageCollaboratorsDialog(final MODE mode,
-                              final ManageCollaboratorsView.Appearance appearance) {
+    @Inject
+    ManageCollaboratorsDialog(final ManageCollaboratorsView.Appearance appearance,
+                              ManageCollaboratorsView.Presenter presenter) {
         super(true);
         this.appearance = appearance;
+        this.presenter = presenter;
         initDialog();
-        ListStore<Collaborator> store = new ListStore<>(new CollaboratorKeyProvider());
-        ManageCollaboratorsView view = new ManageCollaboratorsViewImpl(store, mode);
-        p = new ManageCollaboratorsPresenter(view);
-        p.go(this);
+    }
+
+    public void show(MODE mode) {
+        presenter.go(this, mode);
+
+        super.show();
+        ensureDebugId(CollaboratorsModule.Ids.DIALOG);
+
     }
 
     @Override
@@ -52,8 +50,8 @@ public class ManageCollaboratorsDialog extends IPlantDialog {
 
     private void initDialog() {
         setPredefinedButtons(PredefinedButton.OK);
-        setHeading(I18N.DISPLAY.collaborators());
-        addHelp(new HTML(I18N.HELP.collaboratorsHelp()));
+        setHeading(appearance.collaborators());
+        addHelp(new HTML(appearance.collaboratorsHelp()));
         setPixelSize(450, 400);
         addOkButtonHandler();
         setHideOnButtonClick(true);
@@ -71,19 +69,17 @@ public class ManageCollaboratorsDialog extends IPlantDialog {
 
     @Override
     protected void onHide() {
-        p.cleanup();
+        presenter.cleanup();
         super.onHide();
     }
 
     @Override
-    public void show() {
-        super.show();
-
-        ensureDebugId(CollaboratorsModule.Ids.DIALOG);
+    public void show() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException(
+                "This method is not supported. Use show(MODE mode) method instead.");
     }
 
     public List<Collaborator> getSelectedCollaborators() {
-        return p.getSelectedCollaborators();
+        return presenter.getSelectedCollaborators();
     }
-
 }

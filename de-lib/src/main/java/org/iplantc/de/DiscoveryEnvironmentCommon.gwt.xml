@@ -10,6 +10,9 @@
 
     <!-- Other module inherits                                      -->
     <inherits name="com.sksamuel.gwt.GwtWebsockets" />
+    <inherits name="org.iplantc.de.commons.ui-commons"/>
+    <inherits name="org.iplantc.de.collaborators.Collaborators"/>
+    <inherits name="org.iplantc.de.diskResource.diskresource"/>
 
     <replace-with class="org.iplantc.de.shared.services.DefaultTimeSource">
         <when-type-is class="org.iplantc.de.shared.services.ProvidesTime"/>

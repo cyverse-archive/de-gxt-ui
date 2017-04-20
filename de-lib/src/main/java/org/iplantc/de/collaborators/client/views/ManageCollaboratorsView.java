@@ -1,8 +1,11 @@
 package org.iplantc.de.collaborators.client.views;
 
 import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import java.util.List;
@@ -11,18 +14,41 @@ import java.util.List;
  * @author sriram, jstroot
  * 
  */
-public interface ManageCollaboratorsView extends IsWidget {
+public interface ManageCollaboratorsView extends IsWidget,
+                                                 RemoveCollaboratorSelected.HasRemoveCollaboratorSelectedHandlers{
 
     interface Appearance {
 
         SafeHtml renderCheckBoxColumnHeader(String debugId);
+
+        String collaborators();
+
+        String collaboratorsHelp();
+
+        String manageGroups();
+
+        String delete();
+
+        ImageResource deleteIcon();
+
+        String manageCollaborators();
+
+        ImageResource shareIcon();
+
+        String noCollaborators();
+
+        String myCollaborators();
+
+        String selectCollabs();
+
+        ImageResource groupsIcon();
     }
 
-    public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
+    public interface Presenter {
+
+        void go (HasOneWidget container, MODE mode);
 
         void addAsCollaborators(List<Collaborator> models);
-
-        void removeFromCollaborators(List<Collaborator> models);
 
         void loadCurrentCollaborators();
 
@@ -38,8 +64,6 @@ public interface ManageCollaboratorsView extends IsWidget {
     enum MODE {
         MANAGE, SELECT
     }
-
-    void setPresenter(Presenter p);
 
     void loadData(List<Collaborator> models);
 

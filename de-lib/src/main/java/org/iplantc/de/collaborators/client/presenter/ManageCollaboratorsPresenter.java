@@ -6,7 +6,9 @@ package org.iplantc.de.collaborators.client.presenter;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
+import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.collaborators.client.views.ManageCollaboratorsView;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -17,6 +19,7 @@ import org.iplantc.de.resources.client.messages.I18N;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
+import com.google.inject.Inject;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,9 +28,10 @@ import java.util.List;
  * @author sriram
  * 
  */
-public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Presenter {
+public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Presenter,
+                                                     RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler{
 
-    private final ManageCollaboratorsView view;
+    private ManageCollaboratorsView view;
     private HandlerRegistration addCollabHandlerRegistration;
 
     private final class UserSearchResultSelectedEventHandlerImpl implements
@@ -52,14 +56,12 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
            }
     }
 
-    private final CollaboratorsUtil collaboratorsUtil;
+    @Inject CollaboratorsUtil collaboratorsUtil;
+    private ManageCollaboratorsViewFactory factory;
 
-    public ManageCollaboratorsPresenter(ManageCollaboratorsView view) {
-        this.view = view;
-        this.collaboratorsUtil = CollaboratorsUtil.getInstance();
-        view.setPresenter(this);
-        loadCurrentCollaborators();
-        addEventHandlers();
+    @Inject
+    public ManageCollaboratorsPresenter(ManageCollaboratorsViewFactory factory) {
+        this.factory = factory;
     }
 
     private void addEventHandlers() {
@@ -75,7 +77,11 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
      * org.iplantc.de.commons.client.presenter.Presenter#go(com.google.gwt.user.client.ui.HasOneWidget )
      */
     @Override
-    public void go(HasOneWidget container) {
+    public void go(HasOneWidget container, ManageCollaboratorsView.MODE mode) {
+        this.view = factory.create(mode);
+        view.addRemoveCollaboratorSelectedHandler(this);
+        loadCurrentCollaborators();
+        addEventHandlers();
         container.setWidget(view.asWidget());
     }
 
@@ -104,15 +110,9 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.iplantc.de.client.collaborators.views.ManageCollaboratorsView.Presenter#removeFromCollaborators
-     * (java.util.List)
-     */
     @Override
-    public void removeFromCollaborators(final List<Collaborator> models) {
+    public void onRemoveCollaboratorSelected(RemoveCollaboratorSelected event) {
+        List<Collaborator> models = event.getCollaborators();
         collaboratorsUtil.removeCollaborators(models, new AsyncCallback<Void>() {
 
             @Override

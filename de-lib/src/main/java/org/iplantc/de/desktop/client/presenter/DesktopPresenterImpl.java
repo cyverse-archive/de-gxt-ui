@@ -165,6 +165,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     @Inject NotifyInfo notifyInfo;
     @Inject DiskResourceUtil diskResourceUtil;
     @Inject AsyncProviderWrapper<PreferencesDialog> preferencesDialogProvider;
+    @Inject AsyncProviderWrapper<ManageCollaboratorsDialog> collaboratorsDialogProvider;
     private DesktopPresenterAppearance appearance;
 
     private final EventBus eventBus;
@@ -465,7 +466,17 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
      */
     @Override
     public void onCollaboratorsClick() {
-        new ManageCollaboratorsDialog(ManageCollaboratorsView.MODE.MANAGE).show();
+        collaboratorsDialogProvider.get(new AsyncCallback<ManageCollaboratorsDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(ManageCollaboratorsDialog result) {
+                result.show(ManageCollaboratorsView.MODE.MANAGE);
+            }
+        });
     }
 
     @Override
