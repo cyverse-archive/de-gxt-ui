@@ -16,16 +16,20 @@ timestamps {
           dockerRepoBuild = "build-${repo}-${env.BUILD_TAG}"
           sh "docker build --rm -f Dockerfile-build -t ${dockerRepoBuild} ."
 
+          dockerCacher = "precache-${repo}-${env.BUILD_TAG}"
           dockerTestRunner = "test-${repo}-${env.BUILD_TAG}"
           dockerWarBuilder = "war-${repo}-${env.BUILD_TAG}"
           dockerPusher = "push-${env.BUILD_TAG}"
+
+          sh "docker run -v \"\$(pwd)/.gradle/caches:/root/.gradle/caches\" --name ${dockerCacher} --rm ${dockerRepoBuild} ./gradlew clean classes testClasses"
+
           try {
               stage "Test"
-              sh "docker run --name ${dockerTestRunner} --rm ${dockerRepoBuild} ./gradlew test"
+              sh "docker run -v \"\$(pwd)/.gradle/caches:/root/.gradle/caches\" --name ${dockerTestRunner} --rm ${dockerRepoBuild} ./gradlew test"
 
               stage "Build WAR"
               sh "mkdir -p target/"
-              sh """docker run -v /tmp:/tmp --name ${dockerWarBuilder} --rm -e BRANCH_NAME -e BUILD_TAG -e BUILD_ID -e BUILD_NUMBER ${dockerRepoBuild} > target/de-copy.war"""
+              sh """docker run -v /tmp:/tmp -v "\$(pwd)/.gradle/caches:/root/.gradle/caches" --name ${dockerWarBuilder} --rm -e BRANCH_NAME -e BUILD_TAG -e BUILD_ID -e BUILD_NUMBER ${dockerRepoBuild} > target/de-copy.war"""
 
               fingerprint 'target/de-copy.war'
 
@@ -62,6 +66,9 @@ timestamps {
           } finally {
               // using returnStatus so if these are gone it doesn't error
               sh returnStatus: true, script: "rm sencha_gradle.properties"
+
+              sh returnStatus: true, script: "docker kill ${dockerCacher}"
+              sh returnStatus: true, script: "docker rm ${dockerCacher}"
 
               sh returnStatus: true, script: "docker kill ${dockerTestRunner}"
               sh returnStatus: true, script: "docker rm ${dockerTestRunner}"
