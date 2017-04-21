@@ -6,6 +6,7 @@ import org.iplantc.de.apps.client.events.CreateNewAppEvent;
 import org.iplantc.de.apps.client.events.CreateNewWorkflowEvent;
 import org.iplantc.de.apps.client.events.EditAppEvent;
 import org.iplantc.de.apps.client.events.EditWorkflowEvent;
+import org.iplantc.de.apps.client.events.ManageToolsClickedEvent;
 import org.iplantc.de.apps.client.events.selection.CreateNewAppSelected;
 import org.iplantc.de.apps.client.events.selection.CreateNewWorkflowSelected;
 import org.iplantc.de.apps.client.events.selection.EditAppSelected;
@@ -15,6 +16,7 @@ import org.iplantc.de.apps.client.events.selection.ShareAppsSelected;
 import org.iplantc.de.apps.client.gin.factory.AppsToolbarViewFactory;
 import org.iplantc.de.apps.client.presenter.toolBar.proxy.AppSearchRpcProxy;
 import org.iplantc.de.apps.client.views.sharing.dialog.AppSharingDialog;
+import org.iplantc.de.apps.client.views.tools.ManageToolsViewImpl;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
@@ -37,6 +39,7 @@ import com.sencha.gxt.data.shared.loader.BeforeLoadEvent;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
+import com.sencha.gxt.widget.core.client.Window;
 
 /**
  * TODO Search will stay here until it is necessary to fold it out
@@ -48,8 +51,8 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
                                                  CreateNewWorkflowSelected.CreateNewWorkflowSelectedHandler,
                                                  EditAppSelected.EditAppSelectedHandler,
                                                  RequestToolSelected.RequestToolSelectedHandler,
-                                     EditWorkflowSelected.EditWorkflowSelectedHandler,
-                                     ShareAppsSelected.ShareAppsSelectedHandler {
+                                                 EditWorkflowSelected.EditWorkflowSelectedHandler,
+                                                 ShareAppsSelected.ShareAppsSelectedHandler {
 
     protected PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader;
     @Inject IplantAnnouncer announcer;
@@ -156,5 +159,14 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
                 result.show(event.getSelectedApps());
             }
         });
+    }
+
+    @Override
+    public void onManageToolsClicked(ManageToolsClickedEvent event) {
+        Window w = new Window();
+        w.setHeading(appearance.manageTools());
+        w.add(new ManageToolsViewImpl().asWidget());
+        w.setSize("600px", "300px");
+        w.show();
     }
 }

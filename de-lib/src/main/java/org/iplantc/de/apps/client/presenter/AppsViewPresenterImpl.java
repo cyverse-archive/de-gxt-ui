@@ -74,6 +74,7 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
         toolbarPresenter.getView().addAppSearchResultLoadEventHandler(appsListPresenter);
         toolbarPresenter.getView().addSwapViewButtonClickedEventHandler(appsListPresenter);
         toolbarPresenter.getView().addRefreshAppsSelectedEventHandler(this);
+        toolbarPresenter.getView().addManageToolsClickedEventHandler(toolbarPresenter);
     }
 
     @Override

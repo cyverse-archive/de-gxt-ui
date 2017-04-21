@@ -46,4 +46,15 @@ public interface Tool extends HasId, HasDescription, HasName {
     @PropertyName("container")
     void setContainer(ToolContainer container);
 
+    @PropertyName("permission")
+    void setPermission(String permission);
+
+    @PropertyName("permission")
+    String getPermission();
+
+    @PropertyName("is_public")
+    boolean isPublic();
+
+    @PropertyName("time_limit_seconds")
+    long getTimeLimit();
 }
