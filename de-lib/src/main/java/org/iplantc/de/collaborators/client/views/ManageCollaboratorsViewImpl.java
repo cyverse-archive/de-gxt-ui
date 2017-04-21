@@ -5,7 +5,7 @@ import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected.USER_SEARCH_EVENT_TAG;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
-import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.widgets.DETabPanel;
 import org.iplantc.de.groups.client.views.dialogs.GroupListDialog;
 import org.iplantc.de.resources.client.messages.I18N;
 import org.iplantc.de.shared.AsyncProviderWrapper;
@@ -17,7 +17,6 @@ import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -58,7 +57,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @UiField TextButton deleteBtn;
     @UiField Grid<Collaborator> grid;
     @UiField TextButton manageBtn;
-    @UiField TextButton groupsBtn;
     @UiField(provided = true) UserSearchField searchField;
     @UiField HorizontalLayoutContainer searchPanel;
     @UiField ToolBar toolbar;
@@ -78,8 +76,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
         searchField = new UserSearchField(USER_SEARCH_EVENT_TAG.MANAGE);
         checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Collaborator>());
         initWidget(uiBinder.createAndBindUi(this));
-
-        groupsBtn.setVisible(false);
 
         grid.setSelectionModel(checkBoxModel);
         checkBoxModel.setSelectionMode(SelectionMode.MULTI);
@@ -178,7 +174,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
         super.onEnsureDebugId(baseID);
         this.baseID = baseID;
         deleteBtn.ensureDebugId(baseID + CollaboratorsModule.Ids.DELETE);
-        groupsBtn.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUPS);
         //Checkbox column config is at index 0
         grid.getView().getHeader().getHead(0).getElement().setId(baseID + CollaboratorsModule.Ids.CHECKBOX_HEADER);
         searchField.setViewDebugId(CollaboratorsModule.Ids.SEARCH_LIST);
@@ -208,21 +203,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @UiHandler("manageBtn")
     void manageCollaborators(SelectEvent event) {
         setMode(MODE.MANAGE);
-    }
-
-    @UiHandler("groupsBtn")
-    void manageGroupsSelected(SelectEvent event) {
-        groupDialogProvider.get(new AsyncCallback<GroupListDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(GroupListDialog result) {
-                result.show();
-            }
-        });
     }
 
     private void init() {

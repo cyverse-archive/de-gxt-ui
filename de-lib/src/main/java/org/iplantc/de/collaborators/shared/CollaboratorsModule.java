@@ -14,6 +14,5 @@ public interface CollaboratorsModule {
         String OK = ".okBtn";
         String CHECKBOX_ITEM = ".checkbox_";
         String SEARCH_LIST = "collaboratorsSearchList";
-        String GROUPS = ".groupsBtn";
     }
 }

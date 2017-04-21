@@ -73,9 +73,6 @@
 													   text="{appearance.manageCollaborators}"
 													   visible="false"
 													   icon="{appearance.shareIcon}"/>
-									<button:TextButton ui:field="groupsBtn"
-													   icon="{appearance.groupsIcon}"
-													   text="{appearance.manageGroups}"/>
 								</toolbar:ToolBar>
 							</container:child>
 							<container:child layoutData="{middleData}">
