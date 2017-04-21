@@ -1,1 +1,16 @@
+# Backups and various other autocreated files
+**/*~
+**/.DS_Store
+**/*.ipr
+**/*.iws
+**/*.ids
+**/*.iml
+.idea
+
+# Unuseful inside the dockerfile
+Jenkinsfile
+
+# Caches and stuff
 .gradle
+*/build
+log
