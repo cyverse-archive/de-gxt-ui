@@ -22,15 +22,17 @@ timestamps {
           dockerWarBuilder = "war-${repo}-${env.BUILD_TAG}"
           dockerPusher = "push-${env.BUILD_TAG}"
 
-          sh "docker run -v \"\$(pwd)/.gradle/caches:/root/.gradle/caches\" --name ${dockerCacher} --rm ${dockerRepoBuild} ./gradlew clean classes testClasses"
+          dockerCacheVolumes = """-v /tmp:/tmp -v "\$(pwd)/.gradle/caches:/root/.gradle/caches""""
+
+          sh "docker run ${dockerCacheVolumes} --name ${dockerCacher} --rm ${dockerRepoBuild} ./gradlew clean classes testClasses"
 
           try {
               stage "Test"
-              sh "docker run -v \"\$(pwd)/.gradle/caches:/root/.gradle/caches\" --name ${dockerTestRunner} --rm ${dockerRepoBuild} ./gradlew test"
+              sh "docker run ${dockerCacheVolumes} --name ${dockerTestRunner} --rm ${dockerRepoBuild} ./gradlew test"
 
               stage "Build WAR"
               sh "mkdir -p target/"
-              sh """docker run -v /tmp:/tmp -v "\$(pwd)/.gradle/caches:/root/.gradle/caches" --name ${dockerWarBuilder} --rm -e BRANCH_NAME -e BUILD_TAG -e BUILD_ID -e BUILD_NUMBER ${dockerRepoBuild} > target/de-copy.war"""
+              sh """docker run ${dockerCacheVolumes} --name ${dockerWarBuilder} --rm -e BRANCH_NAME -e BUILD_TAG -e BUILD_ID -e BUILD_NUMBER ${dockerRepoBuild} > target/de-copy.war"""
 
               fingerprint 'target/de-copy.war'
 
