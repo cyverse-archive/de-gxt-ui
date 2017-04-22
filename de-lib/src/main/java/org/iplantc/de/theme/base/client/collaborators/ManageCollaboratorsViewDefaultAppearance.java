@@ -122,4 +122,14 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
     public ImageResource groupsIcon() {
         return iplantResources.viewCurrentCollabs();
     }
+
+    @Override
+    public String collaboratorTab() {
+        return displayStrings.collaboratorTab();
+    }
+
+    @Override
+    public String collaboratorListTab() {
+        return displayStrings.collaboratorListTab();
+    }
 }

@@ -6,7 +6,6 @@ import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.groups.client.GroupView;
-import org.iplantc.de.groups.client.gin.GroupViewFactory;
 import org.iplantc.de.groups.client.model.GroupProperties;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -22,7 +21,6 @@ import javax.inject.Inject;
  */
 public class GroupPresenterImpl implements GroupView.GroupPresenter {
 
-    private final GroupView view;
     private final GroupAutoBeanFactory factory;
     private final GroupView.GroupViewAppearance appearance;
     private GroupServiceFacade serviceFacade;
@@ -31,13 +29,11 @@ public class GroupPresenterImpl implements GroupView.GroupPresenter {
     @Inject IplantAnnouncer announcer;
 
     @Inject
-    public GroupPresenterImpl(GroupViewFactory viewFactory,
-                              GroupAutoBeanFactory factory,
+    public GroupPresenterImpl(GroupAutoBeanFactory factory,
                               GroupProperties properties,
                               GroupView.GroupViewAppearance appearance,
                               GroupServiceFacade serviceFacade) {
         this.listStore = createListStore(properties);
-        this.view = viewFactory.create(listStore);
         this.factory = factory;
         this.appearance = appearance;
         this.serviceFacade = serviceFacade;
@@ -45,13 +41,12 @@ public class GroupPresenterImpl implements GroupView.GroupPresenter {
 
     @Override
     public void go(HasOneWidget container) {
-        container.setWidget(view);
         updateView();
     }
 
     @Override
     public void setViewDebugId(String baseId) {
-        view.asWidget().ensureDebugId(baseId);
+
     }
 
     void updateView() {

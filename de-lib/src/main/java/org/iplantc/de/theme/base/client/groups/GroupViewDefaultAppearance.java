@@ -48,7 +48,7 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
 
     @Override
     public ImageResource deleteIcon() {
-        return iplantResources.deleteIcon();
+        return iplantResources.delete();
     }
 
     @Override

@@ -5,7 +5,7 @@ import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected.USER_SEARCH_EVENT_TAG;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
-import org.iplantc.de.commons.client.widgets.DETabPanel;
+import org.iplantc.de.groups.client.GroupView;
 import org.iplantc.de.groups.client.views.dialogs.GroupListDialog;
 import org.iplantc.de.resources.client.messages.I18N;
 import org.iplantc.de.shared.AsyncProviderWrapper;
@@ -60,6 +60,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @UiField(provided = true) UserSearchField searchField;
     @UiField HorizontalLayoutContainer searchPanel;
     @UiField ToolBar toolbar;
+    @UiField(provided = true) GroupView groupView;
     @UiField(provided = true) ManageCollaboratorsView.Appearance appearance;
 
     @Inject AsyncProviderWrapper<GroupListDialog> groupDialogProvider;
@@ -71,8 +72,10 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
 
     @Inject
     public ManageCollaboratorsViewImpl(@Assisted final MODE mode,
-                                       ManageCollaboratorsView.Appearance appearance) {
+                                       ManageCollaboratorsView.Appearance appearance,
+                                       GroupView groupView) {
         this.appearance = appearance;
+        this.groupView = groupView;
         searchField = new UserSearchField(USER_SEARCH_EVENT_TAG.MANAGE);
         checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Collaborator>());
         initWidget(uiBinder.createAndBindUi(this));

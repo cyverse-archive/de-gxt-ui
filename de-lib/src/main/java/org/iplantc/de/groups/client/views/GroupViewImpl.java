@@ -11,7 +11,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.Style;
@@ -39,7 +38,7 @@ public class GroupViewImpl extends Composite implements GroupView {
     @UiField TextButton addGroup;
     @UiField TextButton deleteGroup;
     @UiField Grid<Group> grid;
-    @UiField(provided = true) ListStore<Group> listStore;
+    @UiField ListStore<Group> listStore;
     @UiField ColumnModel<Group> cm;
     @UiField(provided = true) GroupViewAppearance appearance;
 
@@ -47,11 +46,9 @@ public class GroupViewImpl extends Composite implements GroupView {
 
     @Inject
     public GroupViewImpl(GroupViewAppearance appearance,
-                         GroupProperties props,
-                         @Assisted ListStore<Group> listStore) {
+                         GroupProperties props) {
         this.appearance = appearance;
         this.props = props;
-        this.listStore = listStore;
 
         initWidget(uiBinder.createAndBindUi(this));
         grid.getSelectionModel().setSelectionMode(Style.SelectionMode.SINGLE);
@@ -70,6 +67,11 @@ public class GroupViewImpl extends Composite implements GroupView {
         columns.add(nameCol);
         columns.add(descriptionCol);
         return new ColumnModel<>(columns);
+    }
+
+    @UiFactory
+    ListStore<Group> createListStore() {
+        return new ListStore<>(props.id());
     }
 
     @Override

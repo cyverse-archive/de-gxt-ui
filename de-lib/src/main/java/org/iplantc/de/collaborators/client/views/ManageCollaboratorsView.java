@@ -42,6 +42,10 @@ public interface ManageCollaboratorsView extends IsWidget,
         String selectCollabs();
 
         ImageResource groupsIcon();
+
+        String collaboratorTab();
+
+        String collaboratorListTab();
     }
 
     public interface Presenter {
