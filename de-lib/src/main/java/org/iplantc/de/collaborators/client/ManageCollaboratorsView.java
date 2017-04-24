@@ -47,6 +47,8 @@ public interface ManageCollaboratorsView extends IsWidget,
         String collaboratorTab();
 
         String collaboratorListTab();
+
+        String loadingMask();
     }
 
     public interface Presenter {

@@ -132,4 +132,9 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
     public String collaboratorListTab() {
         return displayStrings.collaboratorListTab();
     }
+
+    @Override
+    public String loadingMask() {
+        return iplantDisplayStrings.loadingMask();
+    }
 }

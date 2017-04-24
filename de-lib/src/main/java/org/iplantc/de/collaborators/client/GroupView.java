@@ -46,4 +46,8 @@ public interface GroupView extends IsWidget {
     }
 
     void addCollabLists(List<Group> result);
+
+    void mask(String loadingMask);
+
+    void unmask();
 }

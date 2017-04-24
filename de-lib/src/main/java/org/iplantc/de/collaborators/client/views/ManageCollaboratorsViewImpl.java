@@ -118,7 +118,10 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @Override
     public void mask(String maskText) {
         if (maskText == null || maskText.isEmpty()) {
+            maskText = appearance.loadingMask();
         }
+        super.mask(maskText);
+        groupView.mask(maskText);
     }
 
     @Override
@@ -164,6 +167,8 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
 
     @Override
     public void unmask() {
+        super.unmask();
+        groupView.unmask();
     }
 
     @Override
