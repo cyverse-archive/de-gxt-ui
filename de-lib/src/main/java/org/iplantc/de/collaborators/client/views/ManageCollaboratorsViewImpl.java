@@ -6,7 +6,7 @@ import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected.USER_SEARCH_EVENT_TAG;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
-import org.iplantc.de.groups.client.GroupView;
+import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.groups.client.views.dialogs.GroupListDialog;
 import org.iplantc.de.resources.client.messages.I18N;
 import org.iplantc.de.shared.AsyncProviderWrapper;

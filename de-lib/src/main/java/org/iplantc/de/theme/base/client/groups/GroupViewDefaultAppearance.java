@@ -1,6 +1,6 @@
 package org.iplantc.de.theme.base.client.groups;
 
-import org.iplantc.de.groups.client.GroupView;
+import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 

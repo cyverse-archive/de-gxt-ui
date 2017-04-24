@@ -7,7 +7,7 @@
 >
 
     <ui:with field="appearance"
-             type="org.iplantc.de.groups.client.GroupView.GroupViewAppearance"/>
+             type="org.iplantc.de.collaborators.client.GroupView.GroupViewAppearance"/>
 
     <ui:with field="margins"
              type="com.sencha.gxt.core.client.util.Margins">

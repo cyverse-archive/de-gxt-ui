@@ -8,7 +8,7 @@
 			 xmlns:userSearch="urn:import:org.iplantc.de.collaborators.client.util"
 			 xmlns:de="urn:import:org.iplantc.de.commons.client.widgets"
 			 xmlns:groups="urn:import:org.iplantc.de.groups.client"
->
+			 xmlns:client="urn:import:org.iplantc.de.collaborators.client">
 
 	<ui:with field="appearance"
 			 type="org.iplantc.de.collaborators.client.views.ManageCollaboratorsView.Appearance"/>
@@ -105,7 +105,7 @@
 							</gxt:FramedPanel>
 						</de:child>
 						<de:child config="{collaboratorListTabConfig}">
-							<groups:GroupView ui:field="groupView"/>
+							<client:GroupView ui:field="groupView"/>
 						</de:child>
 					</de:DETabPanel>
 

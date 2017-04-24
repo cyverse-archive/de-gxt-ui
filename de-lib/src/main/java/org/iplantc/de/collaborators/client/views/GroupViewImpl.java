@@ -1,8 +1,8 @@
-package org.iplantc.de.groups.client.views;
+package org.iplantc.de.collaborators.client.views;
 
 import org.iplantc.de.client.models.groups.Group;
-import org.iplantc.de.groups.client.GroupView;
-import org.iplantc.de.groups.client.model.GroupProperties;
+import org.iplantc.de.collaborators.client.GroupView;
+import org.iplantc.de.collaborators.client.models.GroupProperties;
 import org.iplantc.de.groups.shared.GroupsModule;
 
 import com.google.common.collect.Lists;

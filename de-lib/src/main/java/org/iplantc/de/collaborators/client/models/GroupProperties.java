@@ -1,4 +1,4 @@
-package org.iplantc.de.groups.client.model;
+package org.iplantc.de.collaborators.client.models;
 
 import org.iplantc.de.client.models.groups.Group;
 
