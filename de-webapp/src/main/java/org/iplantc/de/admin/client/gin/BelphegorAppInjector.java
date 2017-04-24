@@ -10,7 +10,6 @@ import org.iplantc.de.client.gin.ClientGinModule;
 import org.iplantc.de.collaborators.client.gin.CollaboratorsGinModule;
 import org.iplantc.de.commons.client.comments.gin.CommentsGinModule;
 import org.iplantc.de.diskResource.client.gin.DiskResourceGinModule;
-import org.iplantc.de.groups.client.gin.GroupGinModule;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.tags.client.gin.TagsGinModule;
 import org.iplantc.de.tools.requests.client.gin.ToolRequestGinModule;
@@ -28,7 +27,6 @@ import com.google.gwt.inject.client.Ginjector;
               DiskResourceGinModule.class,
               ClientGinModule.class,
               CollaboratorsGinModule.class,
-              GroupGinModule.class,
               CommentsGinModule.class,
               TagsGinModule.class,
               ToolRequestGinModule.class,
