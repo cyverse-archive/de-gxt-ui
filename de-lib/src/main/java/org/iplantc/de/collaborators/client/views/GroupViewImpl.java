@@ -3,7 +3,7 @@ package org.iplantc.de.collaborators.client.views;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.models.GroupProperties;
-import org.iplantc.de.groups.shared.GroupsModule;
+import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
@@ -78,9 +78,9 @@ public class GroupViewImpl extends Composite implements GroupView {
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
 
-        addGroup.ensureDebugId(baseID + GroupsModule.Ids.ADD_GROUP);
-        deleteGroup.ensureDebugId(baseID + GroupsModule.Ids.DELETE_GROUP);
-        grid.ensureDebugId(baseID + GroupsModule.Ids.GRID);
+        addGroup.ensureDebugId(baseID + CollaboratorsModule.Ids.ADD_GROUP);
+        deleteGroup.ensureDebugId(baseID + CollaboratorsModule.Ids.DELETE_GROUP);
+        grid.ensureDebugId(baseID + CollaboratorsModule.Ids.GRID);
     }
 
     @Override

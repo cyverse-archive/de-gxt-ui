@@ -182,6 +182,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
         //Checkbox column config is at index 0
         grid.getView().getHeader().getHead(0).getElement().setId(baseID + CollaboratorsModule.Ids.CHECKBOX_HEADER);
         searchField.setViewDebugId(CollaboratorsModule.Ids.SEARCH_LIST);
+        groupView.asWidget().ensureDebugId(baseID + CollaboratorsModule.Ids.GROUPS_VIEW);
     }
 
     void setGridCheckBoxDebugIds() {
