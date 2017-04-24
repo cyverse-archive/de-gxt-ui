@@ -1,4 +1,4 @@
-package org.iplantc.de.collaborators.client.views;
+package org.iplantc.de.collaborators.client;
 
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;

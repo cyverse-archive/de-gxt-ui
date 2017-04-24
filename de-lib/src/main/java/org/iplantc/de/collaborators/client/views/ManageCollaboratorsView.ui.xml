@@ -11,7 +11,7 @@
 			 xmlns:client="urn:import:org.iplantc.de.collaborators.client">
 
 	<ui:with field="appearance"
-			 type="org.iplantc.de.collaborators.client.views.ManageCollaboratorsView.Appearance"/>
+			 type="org.iplantc.de.collaborators.client.ManageCollaboratorsView.Appearance"/>
 
  	<!-- Main Panel -->
 	<ui:with field="listStore" type="com.sencha.gxt.data.shared.ListStore" />

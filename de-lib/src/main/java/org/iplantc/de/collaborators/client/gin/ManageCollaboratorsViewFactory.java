@@ -1,6 +1,6 @@
 package org.iplantc.de.collaborators.client.gin;
 
-import org.iplantc.de.collaborators.client.views.ManageCollaboratorsView;
+import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 
 /**
  * @author aramsey

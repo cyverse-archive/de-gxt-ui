@@ -1,6 +1,7 @@
 package org.iplantc.de.collaborators.client.views;
 
 import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.models.CollaboratorNameComparator;
 import org.iplantc.de.collaborators.client.models.CollaboratorProperties;
 import org.iplantc.de.collaborators.client.views.cells.NameCell;
