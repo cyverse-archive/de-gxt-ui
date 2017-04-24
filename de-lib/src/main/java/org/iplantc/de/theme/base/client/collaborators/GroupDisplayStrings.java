@@ -1,4 +1,4 @@
-package org.iplantc.de.theme.base.client.groups;
+package org.iplantc.de.theme.base.client.collaborators;
 
 import com.google.gwt.i18n.client.Messages;
 

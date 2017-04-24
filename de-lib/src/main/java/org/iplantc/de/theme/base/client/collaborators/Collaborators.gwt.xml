@@ -8,4 +8,8 @@
         <when-type-is class="org.iplantc.de.collaborators.client.views.ManageCollaboratorsView.Appearance" />
     </replace-with>
 
+    <replace-with class="org.iplantc.de.theme.base.client.collaborators.GroupViewDefaultAppearance">
+        <when-type-is class="org.iplantc.de.collaborators.client.GroupView.GroupViewAppearance"/>
+    </replace-with>
+
 </module>

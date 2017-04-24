@@ -1,4 +1,4 @@
-package org.iplantc.de.theme.base.client.groups;
+package org.iplantc.de.theme.base.client.collaborators;
 
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.resources.client.IplantResources;
