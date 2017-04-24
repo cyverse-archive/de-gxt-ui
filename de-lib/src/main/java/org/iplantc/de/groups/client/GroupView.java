@@ -1,8 +1,12 @@
 package org.iplantc.de.groups.client;
 
+import org.iplantc.de.client.models.groups.Group;
+
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+
+import java.util.List;
 
 /**
  * @author aramsey
@@ -40,4 +44,6 @@ public interface GroupView extends IsWidget {
 
         void setViewDebugId(String baseId);
     }
+
+    void addCollabLists(List<Group> result);
 }

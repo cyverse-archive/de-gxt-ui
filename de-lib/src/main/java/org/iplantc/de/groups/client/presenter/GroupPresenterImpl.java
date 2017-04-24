@@ -3,17 +3,14 @@ package org.iplantc.de.groups.client.presenter;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.services.GroupServiceFacade;
-import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.groups.client.GroupView;
 import org.iplantc.de.groups.client.model.GroupProperties;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 
 import com.sencha.gxt.data.shared.ListStore;
 
-import java.util.List;
 import javax.inject.Inject;
 
 /**
@@ -41,7 +38,6 @@ public class GroupPresenterImpl implements GroupView.GroupPresenter {
 
     @Override
     public void go(HasOneWidget container) {
-        updateView();
     }
 
     @Override
@@ -49,24 +45,7 @@ public class GroupPresenterImpl implements GroupView.GroupPresenter {
 
     }
 
-    void updateView() {
-        String searchTerm = "*";
-        updateView(searchTerm);
-    }
 
-    void updateView(String searchTerm) {
-        serviceFacade.getGroups(searchTerm, new AsyncCallback<List<Group>>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(List<Group> result) {
-                listStore.replaceAll(result);
-            }
-        });
-    }
 
     ListStore<Group> createListStore(GroupProperties properties) {
         final ListStore<Group> listStore = new ListStore<Group>(properties.id());

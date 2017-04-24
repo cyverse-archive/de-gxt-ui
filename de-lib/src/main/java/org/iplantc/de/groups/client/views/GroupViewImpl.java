@@ -82,4 +82,9 @@ public class GroupViewImpl extends Composite implements GroupView {
         deleteGroup.ensureDebugId(baseID + GroupsModule.Ids.DELETE_GROUP);
         grid.ensureDebugId(baseID + GroupsModule.Ids.GRID);
     }
+
+    @Override
+    public void addCollabLists(List<Group> result) {
+        listStore.addAll(result);
+    }
 }

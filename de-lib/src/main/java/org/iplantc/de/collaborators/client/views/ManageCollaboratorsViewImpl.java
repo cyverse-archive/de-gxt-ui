@@ -1,6 +1,7 @@
 package org.iplantc.de.collaborators.client.views;
 
 import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected.USER_SEARCH_EVENT_TAG;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
@@ -107,6 +108,11 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @Override
     public List<Collaborator> getSelectedCollaborators() {
         return grid.getSelectionModel().getSelectedItems();
+    }
+
+    @Override
+    public void addCollabLists(List<Group> result) {
+        groupView.addCollabLists(result);
     }
 
     @Override

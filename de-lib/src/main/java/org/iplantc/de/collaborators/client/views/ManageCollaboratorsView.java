@@ -1,6 +1,7 @@
 package org.iplantc.de.collaborators.client.views;
 
 import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 
 import com.google.gwt.resources.client.ImageResource;
@@ -54,6 +55,8 @@ public interface ManageCollaboratorsView extends IsWidget,
 
         void addAsCollaborators(List<Collaborator> models);
 
+        void updateListView(String searchTerm);
+
         void loadCurrentCollaborators();
 
         void setCurrentMode(MODE mode);
@@ -64,6 +67,8 @@ public interface ManageCollaboratorsView extends IsWidget,
 
         void cleanup();
     }
+
+    void addCollabLists(List<Group> result);
 
     enum MODE {
         MANAGE, SELECT

@@ -6,6 +6,8 @@ package org.iplantc.de.collaborators.client.presenter;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
@@ -58,10 +60,13 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     @Inject CollaboratorsUtil collaboratorsUtil;
     private ManageCollaboratorsViewFactory factory;
+    private GroupServiceFacade groupServiceFacade;
 
     @Inject
-    public ManageCollaboratorsPresenter(ManageCollaboratorsViewFactory factory) {
+    public ManageCollaboratorsPresenter(ManageCollaboratorsViewFactory factory,
+                                        GroupServiceFacade groupServiceFacade) {
         this.factory = factory;
+        this.groupServiceFacade = groupServiceFacade;
     }
 
     private void addEventHandlers() {
@@ -81,6 +86,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         this.view = factory.create(mode);
         view.addRemoveCollaboratorSelectedHandler(this);
         loadCurrentCollaborators();
+        updateListView();
         addEventHandlers();
         container.setWidget(view.asWidget());
     }
@@ -108,6 +114,26 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
             }
         });
 
+    }
+
+    void updateListView() {
+        String searchTerm = "*";
+        updateListView(searchTerm);
+    }
+
+    @Override
+    public void updateListView(String searchTerm) {
+        groupServiceFacade.getGroups(searchTerm, new AsyncCallback<List<Group>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(List<Group> result) {
+                view.addCollabLists(result);
+            }
+        });
     }
 
     @Override
