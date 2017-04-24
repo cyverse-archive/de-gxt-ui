@@ -8,7 +8,6 @@ import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected.USER_SEARCH_EVENT_TAG;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
-import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -26,7 +25,6 @@ import com.sencha.gxt.core.client.Style.LayoutRegion;
 import com.sencha.gxt.core.client.Style.SelectionMode;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
-import com.sencha.gxt.widget.core.client.FramedPanel;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer;
@@ -52,7 +50,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
     @UiField ColumnModel<Collaborator> cm;
     @UiField ListStore<Collaborator> listStore;
-    @UiField FramedPanel collaboratorListPnl;
     @UiField BorderLayoutContainer con;
     @UiField TextButton deleteBtn;
     @UiField Grid<Collaborator> grid;
@@ -121,9 +118,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @Override
     public void mask(String maskText) {
         if (maskText == null || maskText.isEmpty()) {
-            collaboratorListPnl.mask(I18N.DISPLAY.loadingMask());
-        } else {
-            collaboratorListPnl.mask(maskText);
         }
     }
 
@@ -155,7 +149,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
         switch (mode) {
             case MANAGE:
                 grid.getView().setEmptyText(appearance.noCollaborators());
-                collaboratorListPnl.setHeading(appearance.myCollaborators());
                 manageBtn.setVisible(false);
                 deleteBtn.setVisible(true);
                 con.show(LayoutRegion.NORTH);
@@ -165,14 +158,12 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
                 con.hide(LayoutRegion.NORTH);
                 manageBtn.setVisible(true);
                 deleteBtn.setVisible(false);
-                collaboratorListPnl.setHeading(appearance.selectCollabs());
                 break;
         }
     }
 
     @Override
     public void unmask() {
-        collaboratorListPnl.unmask();
     }
 
     @Override
@@ -213,7 +204,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     private void init() {
-        collaboratorListPnl.setHeading(appearance.myCollaborators());
         grid.getSelectionModel().addSelectionChangedHandler(this);
     }
 
