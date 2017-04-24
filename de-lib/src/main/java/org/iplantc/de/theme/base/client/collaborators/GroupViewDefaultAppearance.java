@@ -85,4 +85,9 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
     public String groupDialogHeight() {
         return "400";
     }
+
+    @Override
+    public String noCollabLists() {
+        return displayStrings.noCollabLists();
+    }
 }

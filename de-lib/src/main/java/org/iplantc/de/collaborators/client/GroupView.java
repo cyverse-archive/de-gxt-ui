@@ -36,6 +36,8 @@ public interface GroupView extends IsWidget {
         String groupDialogWidth();
 
         String groupDialogHeight();
+
+        String noCollabLists();
     }
 
     interface GroupPresenter {

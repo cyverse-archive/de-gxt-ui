@@ -52,6 +52,7 @@ public class GroupViewImpl extends Composite implements GroupView {
 
         initWidget(uiBinder.createAndBindUi(this));
         grid.getSelectionModel().setSelectionMode(Style.SelectionMode.SINGLE);
+        grid.getView().setEmptyText(appearance.noCollabLists());
     }
 
     @UiFactory

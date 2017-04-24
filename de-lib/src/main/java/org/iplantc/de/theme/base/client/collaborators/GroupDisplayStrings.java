@@ -7,4 +7,6 @@ import com.google.gwt.i18n.client.Messages;
  */
 public interface GroupDisplayStrings extends Messages {
     String groupDialogHeader();
+
+    String noCollabLists();
 }
