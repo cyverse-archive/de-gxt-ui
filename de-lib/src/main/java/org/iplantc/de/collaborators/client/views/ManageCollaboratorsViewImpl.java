@@ -2,14 +2,12 @@ package org.iplantc.de.collaborators.client.views;
 
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected.USER_SEARCH_EVENT_TAG;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
-import org.iplantc.de.collaborators.client.GroupView;
-import org.iplantc.de.groups.client.views.dialogs.GroupListDialog;
 import org.iplantc.de.resources.client.messages.I18N;
-import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -64,8 +62,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @UiField(provided = true) GroupView groupView;
     @UiField(provided = true) ManageCollaboratorsView.Appearance appearance;
 
-    @Inject AsyncProviderWrapper<GroupListDialog> groupDialogProvider;
-    
     private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
     private final CheckBoxSelectionModel<Collaborator> checkBoxModel;
     private MODE mode;
