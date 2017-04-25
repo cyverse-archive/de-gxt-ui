@@ -1,11 +1,12 @@
 package org.iplantc.de.apps.client.views;
 
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.IsWidget;
 
 /**
  * Created by sriram on 4/20/17.
  */
-public interface ManageToolsToolbarView {
+public interface ManageToolsToolbarView extends IsWidget{
 
     interface ManageToolsToolbarApperance {
 
@@ -25,14 +26,6 @@ public interface ManageToolsToolbarView {
 
         String sharePublic();
 
-        String name();
-
-        String version();
-
-        String imaName();
-
-        String status();
-
         String submitForPublicUse();
 
         String refresh();
@@ -44,6 +37,8 @@ public interface ManageToolsToolbarView {
         ImageResource submitForPublicIcon();
 
         String searchTools();
+
+        String addTool();
     }
 
 

@@ -18,24 +18,29 @@ import org.iplantc.de.apps.client.gin.factory.OntologyHierarchiesViewFactory;
 import org.iplantc.de.apps.client.presenter.AppsViewPresenterImpl;
 import org.iplantc.de.apps.client.presenter.categories.AppCategoriesPresenterImpl;
 import org.iplantc.de.apps.client.presenter.details.AppDetailsViewPresenterImpl;
-import org.iplantc.de.apps.client.presenter.list.AppsListPresenterImpl;
 import org.iplantc.de.apps.client.presenter.hierarchies.OntologyHierarchiesPresenterImpl;
+import org.iplantc.de.apps.client.presenter.list.AppsListPresenterImpl;
 import org.iplantc.de.apps.client.presenter.sharing.AppSharingPresenter;
 import org.iplantc.de.apps.client.presenter.submit.SubmitAppForPublicPresenter;
 import org.iplantc.de.apps.client.presenter.toolBar.AppsToolbarPresenterImpl;
+import org.iplantc.de.apps.client.presenter.tools.ManageToolsViewPresenter;
 import org.iplantc.de.apps.client.views.AppsViewImpl;
+import org.iplantc.de.apps.client.views.ManageToolsToolbarView;
+import org.iplantc.de.apps.client.views.ManageToolsView;
 import org.iplantc.de.apps.client.views.categories.AppCategoriesViewImpl;
 import org.iplantc.de.apps.client.views.details.AppDetailsViewImpl;
 import org.iplantc.de.apps.client.views.details.dialogs.AppDetailsDialog;
 import org.iplantc.de.apps.client.views.details.doc.AppDocEditView;
 import org.iplantc.de.apps.client.views.details.doc.AppDocEditViewImpl;
+import org.iplantc.de.apps.client.views.hierarchies.OntologyHierarchiesViewImpl;
 import org.iplantc.de.apps.client.views.list.AppsGridViewImpl;
 import org.iplantc.de.apps.client.views.list.AppsTileViewImpl;
-import org.iplantc.de.apps.client.views.hierarchies.OntologyHierarchiesViewImpl;
 import org.iplantc.de.apps.client.views.sharing.AppSharingView;
 import org.iplantc.de.apps.client.views.sharing.AppSharingViewImpl;
 import org.iplantc.de.apps.client.views.submit.SubmitAppForPublicUseViewImpl;
 import org.iplantc.de.apps.client.views.toolBar.AppsViewToolbarImpl;
+import org.iplantc.de.apps.client.views.tools.ManageToolsViewImpl;
+import org.iplantc.de.apps.client.views.tools.ManageToolsViewToolbarImpl;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
@@ -60,12 +65,12 @@ public class AppsGinModule extends AbstractGinModule {
 
     @Override
     protected void configure() {
-        bind(new TypeLiteral<TreeStore<AppCategory>>() {})
-            .toProvider(AppCategoryTreeStoreProvider.class);
-        bind(new TypeLiteral<ListStore<App>>() {})
-            .toProvider(AppListStoreProvider.class);
-        bind(new TypeLiteral<TreeStore<OntologyHierarchy>>() {})
-                .toProvider(OntologyHierarchyTreeStoreProvider.class);
+        bind(new TypeLiteral<TreeStore<AppCategory>>() {
+        }).toProvider(AppCategoryTreeStoreProvider.class);
+        bind(new TypeLiteral<ListStore<App>>() {
+        }).toProvider(AppListStoreProvider.class);
+        bind(new TypeLiteral<TreeStore<OntologyHierarchy>>() {
+        }).toProvider(OntologyHierarchyTreeStoreProvider.class);
 
         bind(SubmitAppForPublicUseView.class).to(SubmitAppForPublicUseViewImpl.class);
         bind(SubmitAppForPublicUseView.Presenter.class).to(SubmitAppForPublicPresenter.class);
@@ -73,52 +78,56 @@ public class AppsGinModule extends AbstractGinModule {
         bind(OntologyServiceFacade.class).to(OntologyServiceFacadeImpl.class);
 
         // Main View
-        install(new GinFactoryModuleBuilder()
-                    .implement(AppsView.class, AppsViewImpl.class)
-                    .build(AppsViewFactory.class));
+        install(new GinFactoryModuleBuilder().implement(AppsView.class, AppsViewImpl.class)
+                                             .build(AppsViewFactory.class));
         bind(AppsView.Presenter.class).to(AppsViewPresenterImpl.class);
 
         // Categories View
-        install(new GinFactoryModuleBuilder()
-                    .implement(AppCategoriesView.class, AppCategoriesViewImpl.class)
-                    .build(AppCategoriesViewFactory.class));
+        install(new GinFactoryModuleBuilder().implement(AppCategoriesView.class,
+                                                        AppCategoriesViewImpl.class)
+                                             .build(AppCategoriesViewFactory.class));
         bind(AppCategoriesView.Presenter.class).to(AppCategoriesPresenterImpl.class);
 
         // Hierarchies View
-        install(new GinFactoryModuleBuilder()
-                        .implement(OntologyHierarchiesView.class, OntologyHierarchiesViewImpl.class)
-                        .build(OntologyHierarchiesViewFactory.class));
+        install(new GinFactoryModuleBuilder().implement(OntologyHierarchiesView.class,
+                                                        OntologyHierarchiesViewImpl.class)
+                                             .build(OntologyHierarchiesViewFactory.class));
         bind(OntologyHierarchiesView.Presenter.class).to(OntologyHierarchiesPresenterImpl.class);
 
         // List View
         bind(AppsListView.Presenter.class).to(AppsListPresenterImpl.class);
 
-        install(new GinFactoryModuleBuilder()
-                        .implement(AppsListView.class, Names.named(AppsListView.GRID_VIEW), AppsGridViewImpl.class)
-                        .implement(AppsListView.class, Names.named(AppsListView.TILE_VIEW), AppsTileViewImpl.class)
-                        .build(AppsListViewFactory.class));
+        install(new GinFactoryModuleBuilder().implement(AppsListView.class,
+                                                        Names.named(AppsListView.GRID_VIEW),
+                                                        AppsGridViewImpl.class)
+                                             .implement(AppsListView.class,
+                                                        Names.named(AppsListView.TILE_VIEW),
+                                                        AppsTileViewImpl.class)
+                                             .build(AppsListViewFactory.class));
 
         // Toolbar View
-        install(new GinFactoryModuleBuilder()
-                    .implement(AppsToolbarView.class, AppsViewToolbarImpl.class)
-                    .build(AppsToolbarViewFactory.class));
+        install(new GinFactoryModuleBuilder().implement(AppsToolbarView.class, AppsViewToolbarImpl.class)
+                                             .build(AppsToolbarViewFactory.class));
         bind(AppsToolbarView.Presenter.class).to(AppsToolbarPresenterImpl.class);
 
         // Details
-        install(new GinFactoryModuleBuilder()
-                    .implement(AppDetailsView.class, AppDetailsViewImpl.class)
-                    .build(AppDetailsViewFactory.class));
+        install(new GinFactoryModuleBuilder().implement(AppDetailsView.class, AppDetailsViewImpl.class)
+                                             .build(AppDetailsViewFactory.class));
 
-        install(new GinFactoryModuleBuilder()
-                        .implement(AppDocEditView.class, AppDocEditViewImpl.class)
-                        .build(AppDocEditViewFactory.class));
+        install(new GinFactoryModuleBuilder().implement(AppDocEditView.class, AppDocEditViewImpl.class)
+                                             .build(AppDocEditViewFactory.class));
 
         bind(AppDetailsView.Presenter.class).to(AppDetailsViewPresenterImpl.class);
         bind(AppDetailsDialog.class);
+
         bind(AppSharingView.class).to(AppSharingViewImpl.class);
-        install(new GinFactoryModuleBuilder()
-                        .implement(SharingPresenter.class, AppSharingPresenter.class)
-                        .build(AppSharingPresenterFactory.class));
+        install(new GinFactoryModuleBuilder().implement(SharingPresenter.class,
+                                                        AppSharingPresenter.class)
+                                             .build(AppSharingPresenterFactory.class));
+        bind(ManageToolsToolbarView.class).to(ManageToolsViewToolbarImpl.class);
+        bind(ManageToolsView.class).to(ManageToolsViewImpl.class);
+        bind(ManageToolsView.Presenter.class).to(ManageToolsViewPresenter.class);
+
     }
 
 }
