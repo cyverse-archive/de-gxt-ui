@@ -4,7 +4,6 @@ import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import java.util.List;
@@ -34,20 +33,21 @@ public interface GroupView extends IsWidget,
 
         String descriptionColumnLabel();
 
-        String groupDialogHeader();
-
-        String groupDialogWidth();
-
-        String groupDialogHeight();
-
         String noCollabLists();
-    }
 
-    interface GroupPresenter {
+        String groupNameLabel();
 
-        void go(HasOneWidget container);
+        String groupDescriptionLabel();
 
-        void setViewDebugId(String baseId);
+        String delete();
+
+        String noCollaborators();
+
+        int groupDetailsWidth();
+
+        int groupDetailsHeight();
+
+        String groupDetailsHeading(Group group);
     }
 
     void addCollabLists(List<Group> result);

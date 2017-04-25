@@ -1,5 +1,6 @@
 package org.iplantc.de.theme.base.client.collaborators;
 
+import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
@@ -72,22 +73,46 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
     }
 
     @Override
-    public String groupDialogHeader() {
-        return displayStrings.groupDialogHeader();
-    }
-
-    @Override
-    public String groupDialogWidth() {
-        return "500";
-    }
-
-    @Override
-    public String groupDialogHeight() {
-        return "400";
-    }
-
-    @Override
     public String noCollabLists() {
         return displayStrings.noCollabLists();
+    }
+
+    @Override
+    public String groupNameLabel() {
+        return displayStrings.groupNameLabel();
+    }
+
+    @Override
+    public String groupDescriptionLabel() {
+        return displayStrings.groupDescriptionLabel();
+    }
+
+    @Override
+    public String delete() {
+        return iplantDisplayStrings.delete();
+    }
+
+    @Override
+    public String noCollaborators() {
+        return iplantDisplayStrings.noCollaborators();
+    }
+
+    @Override
+    public int groupDetailsWidth() {
+        return 500;
+    }
+
+    @Override
+    public int groupDetailsHeight() {
+        return 500;
+    }
+
+    @Override
+    public String groupDetailsHeading(Group group) {
+        if (group == null) {
+            return displayStrings.newGroupDetailsHeading();
+        } else {
+            return displayStrings.editGroupDetailsHeading(group.getName());
+        }
     }
 }
