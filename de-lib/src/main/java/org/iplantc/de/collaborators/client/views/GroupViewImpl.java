@@ -2,15 +2,18 @@ package org.iplantc.de.collaborators.client.views;
 
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupView;
+import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.models.GroupProperties;
 import org.iplantc.de.collaborators.client.views.cells.GroupNameCell;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 
 import com.sencha.gxt.core.client.IdentityValueProvider;
@@ -18,6 +21,7 @@ import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
@@ -89,5 +93,20 @@ public class GroupViewImpl extends Composite implements GroupView {
     @Override
     public void addCollabLists(List<Group> result) {
         listStore.addAll(result);
+    }
+
+    @UiHandler("addGroup")
+    void addGroupSelected(SelectEvent event) {
+        fireEvent(new GroupNameSelected(null));
+    }
+
+    @Override
+    public void onGroupNameSelected(GroupNameSelected event) {
+        fireEvent(new GroupNameSelected(event.getGroup()));
+    }
+
+    @Override
+    public HandlerRegistration addGroupNameSelectedHandler(GroupNameSelected.GroupNameSelectedHandler handler) {
+        return addHandler(handler, GroupNameSelected.TYPE);
     }
 }

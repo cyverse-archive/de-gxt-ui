@@ -1,6 +1,7 @@
 package org.iplantc.de.collaborators.client;
 
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -11,7 +12,9 @@ import java.util.List;
 /**
  * @author aramsey
  */
-public interface GroupView extends IsWidget {
+public interface GroupView extends IsWidget,
+                                   GroupNameSelected.GroupNameSelectedHandler,
+                                   GroupNameSelected.HasGroupNameSelectedHandlers {
 
     interface GroupViewAppearance {
 
