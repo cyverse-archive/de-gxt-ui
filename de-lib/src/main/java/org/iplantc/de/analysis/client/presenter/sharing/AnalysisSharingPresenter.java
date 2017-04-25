@@ -21,6 +21,7 @@ import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
 import org.iplantc.de.client.models.sharing.UserPermission;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
+import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.sharing.SharingPermissionView;
 import org.iplantc.de.client.sharing.SharingPresenter;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
@@ -107,7 +108,7 @@ public class AnalysisSharingPresenter implements SharingPresenter {
                     usernames.add(userPerm.getUser());
                 }
             }
-            collaboratorsUtil.getUserInfo(usernames, new GetUserInfoCallback(analysisPermsList));
+            collaboratorsServiceFacade.getUserInfo(usernames, new GetUserInfoCallback(analysisPermsList));
         }
 
     }
@@ -115,6 +116,7 @@ public class AnalysisSharingPresenter implements SharingPresenter {
     final AnalysisSharingView sharingView;
     private final SharingPermissionView permissionsPanel;
     private final List<Analysis> selectedAnalysis;
+    private CollaboratorsServiceFacade collaboratorsServiceFacade;
     private Appearance appearance;
     private final CollaboratorsUtil collaboratorsUtil;
     private final AnalysisServiceFacade aService;
@@ -125,6 +127,7 @@ public class AnalysisSharingPresenter implements SharingPresenter {
                                     @Assisted final List<Analysis> selectedAnalysis,
                                     final AnalysisSharingView view,
                                     final CollaboratorsUtil collaboratorsUtil,
+                                    CollaboratorsServiceFacade collaboratorsServiceFacade,
                                     SharingPermissionViewFactory sharingViewFactory,
                                     Appearance appearance) {
 
@@ -132,6 +135,7 @@ public class AnalysisSharingPresenter implements SharingPresenter {
         this.aService = aService;
         this.collaboratorsUtil = collaboratorsUtil;
         this.selectedAnalysis = selectedAnalysis;
+        this.collaboratorsServiceFacade = collaboratorsServiceFacade;
         this.appearance = appearance;
         this.permissionsPanel = sharingViewFactory.create(this, getSelectedResourcesAsMap(this.selectedAnalysis));
         permissionsPanel.hidePermissionColumn();

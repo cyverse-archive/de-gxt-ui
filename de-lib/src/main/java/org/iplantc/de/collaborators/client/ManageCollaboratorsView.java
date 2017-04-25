@@ -91,4 +91,6 @@ public interface ManageCollaboratorsView extends IsWidget,
     MODE getMode();
 
     void addCollaborators(List<Collaborator> models);
+
+    List<Collaborator> getCollaborators();
 }

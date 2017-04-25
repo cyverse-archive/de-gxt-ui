@@ -9,6 +9,7 @@ import org.iplantc.de.client.services.AppBuilderMetadataServiceFacade;
 import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.services.AppTemplateServices;
 import org.iplantc.de.client.services.AppUserServiceFacade;
+import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.DEUserSupportServiceFacade;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
@@ -122,6 +123,11 @@ public class DEGinModule extends AbstractGinModule {
     @Provides
     public OauthServiceFacade createOauthServices() {
         return ServicesInjector.INSTANCE.getOauthService();
+    }
+
+    @Provides
+    public CollaboratorsServiceFacade createCollaboratorServices() {
+        return ServicesInjector.INSTANCE.getCollaboratorsServiceFacade();
     }
 
     //</editor-fold>

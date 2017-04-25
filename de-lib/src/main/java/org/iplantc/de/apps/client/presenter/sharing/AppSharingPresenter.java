@@ -21,6 +21,7 @@ import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
 import org.iplantc.de.client.models.sharing.UserPermission;
 import org.iplantc.de.client.services.AppUserServiceFacade;
+import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.sharing.SharingPermissionView;
 import org.iplantc.de.client.sharing.SharingPresenter;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
@@ -105,7 +106,7 @@ public class AppSharingPresenter implements SharingPresenter {
                 }
             }
 
-            collaboratorsUtil.getUserInfo(usernames, new GetUserInfoCallback(appPermsList));
+            collaboratorsServiceFacade.getUserInfo(usernames, new GetUserInfoCallback(appPermsList));
         }
 
     }
@@ -114,6 +115,7 @@ public class AppSharingPresenter implements SharingPresenter {
     private final SharingPermissionView permissionsPanel;
     private final List<App> selectedApps;
     private final AppUserServiceFacade appService;
+    private CollaboratorsServiceFacade collaboratorsServiceFacade;
     private Appearance appearance;
     private final CollaboratorsUtil collaboratorsUtil;
     @Inject AppAutoBeanFactory appFactory;
@@ -125,10 +127,12 @@ public class AppSharingPresenter implements SharingPresenter {
                                @Assisted final List<App> selectedApps,
                                final AppSharingView view,
                                final CollaboratorsUtil collaboratorsUtil,
+                               CollaboratorsServiceFacade collaboratorsServiceFacade,
                                SharingPresenter.Appearance appearance,
                                SharingPermissionViewFactory sharingViewFactory) {
 
         this.view = view;
+        this.collaboratorsServiceFacade = collaboratorsServiceFacade;
         this.appearance = appearance;
         this.appService = appService;
         this.collaboratorsUtil = collaboratorsUtil;

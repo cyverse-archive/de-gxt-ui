@@ -98,6 +98,11 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @Override
+    public List<Collaborator> getCollaborators() {
+        return listStore.getAll();
+    }
+
+    @Override
     public MODE getMode() {
         return mode;
     }
