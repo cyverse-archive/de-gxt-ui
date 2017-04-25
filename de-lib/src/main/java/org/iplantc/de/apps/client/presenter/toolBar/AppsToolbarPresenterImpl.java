@@ -15,8 +15,8 @@ import org.iplantc.de.apps.client.events.selection.RequestToolSelected;
 import org.iplantc.de.apps.client.events.selection.ShareAppsSelected;
 import org.iplantc.de.apps.client.gin.factory.AppsToolbarViewFactory;
 import org.iplantc.de.apps.client.presenter.toolBar.proxy.AppSearchRpcProxy;
+import org.iplantc.de.apps.client.views.ManageToolsView;
 import org.iplantc.de.apps.client.views.sharing.dialog.AppSharingDialog;
-import org.iplantc.de.apps.client.views.tools.ManageToolsViewImpl;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
@@ -61,6 +61,12 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
     @Inject Provider<NewToolRequestDialog> newToolRequestDialogProvider;
     @Inject AsyncProviderWrapper<AppSharingDialog> appSharingDialogProvider;
     @Inject UserInfo userInfo;
+    @Inject
+    ManageToolsView toolsView;
+    @Inject
+    ManageToolsView.Presenter toolsPresenter;
+
+
     private final AppUserServiceFacade appService;
     private final AppSearchRpcProxy proxy;
     private final AppsToolbarView view;
@@ -165,8 +171,9 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
     public void onManageToolsClicked(ManageToolsClickedEvent event) {
         Window w = new Window();
         w.setHeading(appearance.manageTools());
-        w.add(new ManageToolsViewImpl().asWidget());
-        w.setSize("600px", "300px");
+        //w.add(toolsView.asWidget());
+        w.setSize("600px", "600px");
+        toolsPresenter.go(w);
         w.show();
     }
 }

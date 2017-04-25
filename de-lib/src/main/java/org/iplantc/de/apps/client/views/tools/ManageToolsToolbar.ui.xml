@@ -34,6 +34,19 @@
 
     <toolbar:ToolBar ui:field="toolBar">
         <toolbar:child>
+            <button:TextButton ui:field="toolsMenuButton" text="{appearance.tools}">
+                <button:menu>
+                    <menu:Menu ui:field="toolsMenu">
+                        <menu:MenuItem ui:field="addTool" text="{appearance.addTool}"/>
+                        <menu:MenuItem ui:field="requestTool" text="{appearance.requestTool}"/>
+                        <menu:MenuItem ui:field="edit" text="{appearance.edit}"/>
+                        <menu:MenuItem ui:field="delete" text="{appearance.delete}"/>
+                        <menu:MenuItem ui:field="useInApp" text="{appearance.useInApp}"/>
+                    </menu:Menu>
+                </button:menu>
+            </button:TextButton>
+        </toolbar:child>
+        <toolbar:child>
             <button:TextButton ui:field="shareMenuButton" text="{appearance.share}">
                 <button:menu>
                     <menu:Menu ui:field="sharingMenu">

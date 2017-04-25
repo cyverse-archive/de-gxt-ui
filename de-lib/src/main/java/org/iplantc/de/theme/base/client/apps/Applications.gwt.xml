@@ -83,6 +83,14 @@
         <when-type-is class="org.iplantc.de.apps.client.AppsToolbarView.AppsToolbarAppearance"/>
     </replace-with>
 
+    <replace-with class="org.iplantc.de.theme.base.client.apps.tools.ManageToolsViewDefaultAppearance">
+        <when-type-is class="org.iplantc.de.apps.client.views.ManageToolsView.ManageToolsViewAppearance"/>
+    </replace-with>
+
+    <replace-with class="org.iplantc.de.theme.base.client.apps.tools.ManageToolsViewDefaultAppearance">
+        <when-type-is class="org.iplantc.de.apps.client.views.ManageToolsToolbarView.ManageToolsToolbarApperance"/>
+    </replace-with>
+
     <!-- Details -->
     <replace-with class="org.iplantc.de.theme.base.client.apps.details.AppDetailsDefaultAppearance">
         <when-type-is class="org.iplantc.de.apps.client.AppDetailsView.AppDetailsAppearance"/>

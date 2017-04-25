@@ -24,7 +24,7 @@ public class ToolSearchRPCProxy extends
     public void load(FilterPagingLoadConfig loadConfig,
             final AsyncCallback<PagingLoadResult<Tool>> callback) {
 
-        dcService.getDeployedComponents(loadConfig, new AsyncCallback<List<Tool>>() {
+        dcService.searchTools(loadConfig, new AsyncCallback<List<Tool>>() {
 
             @Override
             public void onFailure(Throwable caught) {
