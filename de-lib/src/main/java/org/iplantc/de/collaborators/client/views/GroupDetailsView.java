@@ -1,5 +1,6 @@
 package org.iplantc.de.collaborators.client.views;
 
+import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupView;
@@ -9,6 +10,7 @@ import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -38,6 +40,16 @@ public class GroupDetailsView extends Composite {
     interface GroupDetailsViewUiBinder extends UiBinder<Widget, GroupDetailsView> {
     }
 
+    private class CollaboratorSelectedHandler
+            implements UserSearchResultSelected.UserSearchResultSelectedEventHandler {
+        @Override
+        public void onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected) {
+            if (UserSearchResultSelected.USER_SEARCH_EVENT_TAG.GROUP.toString().equals(userSearchResultSelected.getTag())) {
+                listStore.add(userSearchResultSelected.getCollaborator());
+            }
+        }
+    }
+
     static GroupDetailsViewUiBinder uiBinder = GWT.create(GroupDetailsViewUiBinder.class);
 
     @UiField FieldLabel groupNameLabel;
@@ -52,12 +64,17 @@ public class GroupDetailsView extends Composite {
     @UiField ColumnModel<Collaborator> cm;
     @UiField(provided = true) GroupView.GroupViewAppearance appearance;
 
+    EventBus eventBus;
+    HandlerRegistration handlerRegistration;
+
     private CheckBoxSelectionModel<Collaborator> checkBoxModel;
     String baseID;
 
     @Inject
-    public GroupDetailsView(GroupView.GroupViewAppearance appearance) {
+    public GroupDetailsView(GroupView.GroupViewAppearance appearance,
+                            EventBus eventBus) {
         this.appearance = appearance;
+        this.eventBus = eventBus;
         searchField = new UserSearchField(UserSearchResultSelected.USER_SEARCH_EVENT_TAG.GROUP);
         checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Collaborator>());
         initWidget(uiBinder.createAndBindUi(this));
@@ -71,6 +88,9 @@ public class GroupDetailsView extends Composite {
                 setGridCheckBoxDebugIds();
             }
         });
+
+        handlerRegistration =
+                eventBus.addHandler(UserSearchResultSelected.TYPE, new CollaboratorSelectedHandler());
     }
 
     @UiFactory
@@ -100,5 +120,9 @@ public class GroupDetailsView extends Composite {
             groupName.setText(group.getName());
             groupDesc.setText(group.getDescription());
         }
+    }
+
+    public void clearHandlers() {
+        handlerRegistration.removeHandler();
     }
 }

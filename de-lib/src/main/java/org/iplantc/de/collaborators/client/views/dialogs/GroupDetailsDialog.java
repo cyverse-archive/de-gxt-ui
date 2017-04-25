@@ -8,6 +8,8 @@ import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
 import com.google.inject.Inject;
 
+import com.sencha.gxt.widget.core.client.event.HideEvent;
+
 /**
  * @author aramsey
  */
@@ -27,6 +29,13 @@ public class GroupDetailsDialog extends IPlantDialog {
         setOnEsc(false);
 
         add(view);
+
+        addHideHandler(new HideEvent.HideHandler() {
+            @Override
+            public void onHide(HideEvent event) {
+                view.clearHandlers();
+            }
+        });
     }
 
     public void show(Group group) {
