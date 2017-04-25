@@ -3,6 +3,7 @@ package org.iplantc.de.collaborators.client.views;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.models.GroupProperties;
+import org.iplantc.de.collaborators.client.views.cells.GroupNameCell;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 
 import com.google.common.collect.Lists;
@@ -65,6 +66,7 @@ public class GroupViewImpl extends Composite implements GroupView {
         ColumnConfig<Group, String> descriptionCol = new ColumnConfig<>(props.description(),
                                                                         appearance.descriptionColumnWidth(),
                                                                         appearance.descriptionColumnLabel());
+        nameCol.setCell(new GroupNameCell(this));
         columns.add(nameCol);
         columns.add(descriptionCol);
         return new ColumnModel<>(columns);
