@@ -3,8 +3,6 @@ package org.iplantc.de.analysis.client.views.dialogs;
 import org.iplantc.de.analysis.client.gin.factory.AnalysisSharingPresenterFactory;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.sharing.SharingPresenter;
-import org.iplantc.de.client.util.JsonUtil;
-import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
 import com.google.common.base.Preconditions;
@@ -18,11 +16,6 @@ import java.util.List;
 public class AnalysisSharingDialog extends IPlantDialog implements SelectHandler {
 
     private SharingPresenter sharingPresenter;
-
-    @Inject
-    CollaboratorsUtil collaboratorsUtil;
-    @Inject
-    JsonUtil jsonUtil;
     private AnalysisSharingPresenterFactory factory;
 
     @Inject

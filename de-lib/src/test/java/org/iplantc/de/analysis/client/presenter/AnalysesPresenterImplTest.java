@@ -37,8 +37,6 @@ import org.iplantc.de.client.models.analysis.support.AnalysisSupportAutoBeanFact
 import org.iplantc.de.client.models.analysis.support.AnalysisSupportRequest;
 import org.iplantc.de.client.models.analysis.support.AnalysisSupportRequestFields;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
-import org.iplantc.de.client.util.JsonUtil;
-import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.shared.AnalysisCallback;
@@ -94,8 +92,6 @@ public class AnalysesPresenterImplTest {
     @Mock AnalysisStepsView analysisStepsViewMock;
     @Mock AsyncProviderWrapper<AnalysisSharingDialog> aSharingDialogProviderMock;
     @Mock AnalysisSharingDialog analysisSharingDialogMock;
-    @Mock CollaboratorsUtil collaboratorsUtilMock;
-    @Mock JsonUtil jsonUtilMock;
     @Mock AnalysisFilter currentFilterMock;
     @Mock ListStore<Analysis> listStoreMock;
     @Mock AnalysesView viewMock;
@@ -187,7 +183,6 @@ public class AnalysesPresenterImplTest {
         uut.appearance = appearanceMock;
         uut.analysisStepView = analysisStepsViewMock;
         uut.aSharingDialogProvider = aSharingDialogProviderMock;
-        uut.collaboratorsUtil = collaboratorsUtilMock;
         uut.userInfo = userInfoMock;
         uut.supportFactory = supportFactoryMock;
         uut.stepsInfoDialogProvider = stepsInfoDialogMock;

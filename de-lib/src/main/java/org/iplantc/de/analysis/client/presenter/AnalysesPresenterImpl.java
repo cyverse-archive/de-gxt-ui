@@ -40,8 +40,6 @@ import org.iplantc.de.client.models.analysis.support.AnalysisSupportRequestField
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
 import org.iplantc.de.client.services.DEUserSupportServiceFacade;
-import org.iplantc.de.client.util.JsonUtil;
-import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -225,10 +223,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     AsyncProviderWrapper<AnalysisUserSupportDialog> aSupportDialogProvider;
     @Inject AsyncProviderWrapper<AnalysisStepsInfoDialog> stepsInfoDialogProvider;
 
-    @Inject
-    CollaboratorsUtil collaboratorsUtil;
-    @Inject
-    JsonUtil jsonUtil;
     @Inject
     AnalysisUserSupportDialog.AnalysisUserSupportAppearance userSupportAppearance;
     @Inject
