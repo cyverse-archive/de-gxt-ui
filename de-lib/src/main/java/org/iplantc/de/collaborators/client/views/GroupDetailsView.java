@@ -29,6 +29,7 @@ import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.grid.CheckBoxSelectionModel;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
+import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
 
@@ -86,6 +87,12 @@ public class GroupDetailsView extends Composite {
             @Override
             public void onViewReady(ViewReadyEvent event) {
                 setGridCheckBoxDebugIds();
+            }
+        });
+        grid.getSelectionModel().addSelectionChangedHandler(new SelectionChangedEvent.SelectionChangedHandler<Collaborator>() {
+            @Override
+            public void onSelectionChanged(SelectionChangedEvent<Collaborator> event) {
+                deleteBtn.setEnabled(!event.getSelection().isEmpty());
             }
         });
 
