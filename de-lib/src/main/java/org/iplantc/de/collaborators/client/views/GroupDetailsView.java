@@ -107,6 +107,15 @@ public class GroupDetailsView extends Composite {
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
         this.baseID = baseID;
+
+        groupNameLabel.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_NAME_LABEL);
+        groupDescLabel.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_DESC_LABEL);
+        groupName.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_NAME);
+        groupDesc.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_DESC);
+        searchField.asWidget().ensureDebugId(baseID + CollaboratorsModule.Ids.SEARCH_LIST);
+        toolbar.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_TOOLBAR);
+        deleteBtn.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_DELETE_BTN);
+        grid.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_GRID);
     }
 
     void setGridCheckBoxDebugIds() {

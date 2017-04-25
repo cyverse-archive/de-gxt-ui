@@ -18,5 +18,14 @@ public interface CollaboratorsModule {
         String DELETE_GROUP = ".deleteCollabList";
         String GRID = ".collabListGrid";
         String GROUPS_VIEW = ".collabListsView";
+        String GROUP_DETAILS_DLG = "collabListDetails";
+        String GROUP_NAME_CELL = ".groupNameCell";
+        String GROUP_NAME_LABEL = "groupNameLabel";
+        String GROUP_DESC_LABEL = "groupDescLabel";
+        String GROUP_NAME = "groupName";
+        String GROUP_DESC = ".groupDesc";
+        String GROUP_TOOLBAR = ".toolbar";
+        String GROUP_DELETE_BTN = ".groupDeleteBtn";
+        String GROUP_GRID = ".grid";
     }
 }
