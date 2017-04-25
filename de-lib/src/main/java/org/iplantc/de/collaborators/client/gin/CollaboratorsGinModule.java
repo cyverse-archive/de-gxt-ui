@@ -6,7 +6,7 @@ import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.presenter.ManageCollaboratorsPresenter;
 import org.iplantc.de.collaborators.client.views.GroupViewImpl;
-import org.iplantc.de.collaborators.client.views.ManageCollaboratorsDialog;
+import org.iplantc.de.collaborators.client.views.dialogs.ManageCollaboratorsDialog;
 import org.iplantc.de.collaborators.client.views.ManageCollaboratorsViewImpl;
 
 import com.google.gwt.inject.client.AbstractGinModule;
