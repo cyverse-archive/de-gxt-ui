@@ -33,10 +33,7 @@ import java.util.List;
 public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Presenter,
                                                      RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler{
 
-    private ManageCollaboratorsView view;
-    private HandlerRegistration addCollabHandlerRegistration;
-
-    private final class UserSearchResultSelectedEventHandlerImpl implements
+    final class UserSearchResultSelectedEventHandlerImpl implements
                                                                  UserSearchResultSelected.UserSearchResultSelectedEventHandler {
         @Override
            public void
@@ -59,8 +56,11 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     @Inject CollaboratorsUtil collaboratorsUtil;
+    @Inject EventBus eventBus;
     private ManageCollaboratorsViewFactory factory;
     private GroupServiceFacade groupServiceFacade;
+    ManageCollaboratorsView view;
+    HandlerRegistration addCollabHandlerRegistration;
 
     @Inject
     public ManageCollaboratorsPresenter(ManageCollaboratorsViewFactory factory,
@@ -69,9 +69,8 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         this.groupServiceFacade = groupServiceFacade;
     }
 
-    private void addEventHandlers() {
-        addCollabHandlerRegistration = EventBus.getInstance()
-                                               .addHandler(UserSearchResultSelected.TYPE,
+    void addEventHandlers() {
+        addCollabHandlerRegistration = eventBus.addHandler(UserSearchResultSelected.TYPE,
                                                            new UserSearchResultSelectedEventHandlerImpl());
     }
 
