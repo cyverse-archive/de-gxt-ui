@@ -7,29 +7,41 @@ import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
+
+import com.sencha.gxt.core.client.XTemplates;
 
 /**
  * @author aramsey
  */
 public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance {
 
+    interface Templates extends XTemplates {
+        @XTemplates.XTemplate("<span style='color: red;'>*&nbsp</span>{label}")
+        SafeHtml requiredFieldLabel(String label);
+    }
+
     private IplantDisplayStrings iplantDisplayStrings;
     private IplantResources iplantResources;
     private GroupDisplayStrings displayStrings;
+    private Templates templates;
 
     public GroupViewDefaultAppearance() {
         this(GWT.<IplantDisplayStrings>create(IplantDisplayStrings.class),
              GWT.<IplantResources>create(IplantResources.class),
-             GWT.<GroupDisplayStrings>create(GroupDisplayStrings.class));
+             GWT.<GroupDisplayStrings>create(GroupDisplayStrings.class),
+             GWT.<Templates> create(Templates.class));
     }
 
     public GroupViewDefaultAppearance(IplantDisplayStrings iplantDisplayStrings,
                                       IplantResources iplantResources,
-                                      GroupDisplayStrings displayStrings) {
+                                      GroupDisplayStrings displayStrings,
+                                      Templates templates) {
 
         this.iplantDisplayStrings = iplantDisplayStrings;
         this.iplantResources = iplantResources;
         this.displayStrings = displayStrings;
+        this.templates = templates;
     }
 
     @Override
@@ -78,8 +90,8 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
     }
 
     @Override
-    public String groupNameLabel() {
-        return displayStrings.groupNameLabel();
+    public SafeHtml groupNameLabel() {
+        return templates.requiredFieldLabel(displayStrings.groupNameLabel());
     }
 
     @Override

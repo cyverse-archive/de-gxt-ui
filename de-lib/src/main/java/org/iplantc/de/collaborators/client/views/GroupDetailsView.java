@@ -80,6 +80,8 @@ public class GroupDetailsView extends Composite {
         checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Collaborator>());
         initWidget(uiBinder.createAndBindUi(this));
 
+        groupNameLabel.setHTML(appearance.groupNameLabel());
+
         checkBoxModel.setSelectionMode(Style.SelectionMode.MULTI);
         grid.setSelectionModel(checkBoxModel);
         grid.getView().setEmptyText(appearance.noCollaborators());

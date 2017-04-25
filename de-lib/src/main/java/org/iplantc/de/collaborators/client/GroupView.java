@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public interface GroupView extends IsWidget,
 
         String noCollabLists();
 
-        String groupNameLabel();
+        SafeHtml groupNameLabel();
 
         String groupDescriptionLabel();
 

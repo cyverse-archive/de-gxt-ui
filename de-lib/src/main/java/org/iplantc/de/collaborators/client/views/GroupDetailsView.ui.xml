@@ -56,10 +56,10 @@
         <container:north layoutData="{northData}">
             <container:VerticalLayoutContainer>
                 <container:child layoutData="{layoutData}">
-                    <form:FieldLabel ui:field="groupNameLabel"
-                                     text="{appearance.groupNameLabel}">
+                    <form:FieldLabel ui:field="groupNameLabel">
                         <form:widget>
-                            <form:TextField ui:field="groupName"/>
+                            <form:TextField ui:field="groupName"
+                                            allowBlank="false"/>
                         </form:widget>
                     </form:FieldLabel>
                 </container:child>
