@@ -13,9 +13,11 @@ import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
+import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.CollaboratorsLoadedEvent;
+import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
@@ -56,6 +58,7 @@ public class ManageCollaboratorsPresenterTest {
     @Mock Widget viewWidgetMock;
     @Mock EventBus eventBusMock;
     @Mock IplantAnnouncer announcerMock;
+    @Mock GroupView.GroupViewAppearance groupAppearance;
 
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Collaborator>>> collabListCallbackCaptor;
@@ -71,7 +74,8 @@ public class ManageCollaboratorsPresenterTest {
 
         uut = new ManageCollaboratorsPresenter(factoryMock,
                                                groupServiceFacadeMock,
-                                               collabServiceFacadeMock) {
+                                               collabServiceFacadeMock,
+                                               groupAppearance) {
             @Override
             String getCollaboratorNames(List<Collaborator> collaborators) {
                 return "names";
@@ -193,6 +197,24 @@ public class ManageCollaboratorsPresenterTest {
         groupCallbackCaptor.getValue().onSuccess(groupMock);
 
         verify(viewMock).addCollabLists(eq(groupListMock));
+
+    }
+
+    @Test
+    public void onDeleteGroupSelected() {
+        DeleteGroupSelected eventMock = mock(DeleteGroupSelected.class);
+        when(eventMock.getGroup()).thenReturn(groupMock);
+        when(groupMock.getName()).thenReturn("name");
+        when(groupAppearance.groupDeleteSuccess(groupMock)).thenReturn("success");
+
+        /** CALL METHOD UNDER TEST **/
+        uut.onDeleteGroupSelected(eventMock);
+
+        verify(groupServiceFacadeMock).deleteGroup(eq("name"), groupCallbackCaptor.capture());
+
+        groupCallbackCaptor.getValue().onSuccess(groupMock);
+        verify(viewMock).removeCollabList(eq(groupMock));
+        verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));
 
     }
 
