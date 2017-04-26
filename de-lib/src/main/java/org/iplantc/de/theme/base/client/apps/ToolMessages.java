@@ -38,4 +38,6 @@ public interface ToolMessages extends Messages {
     String searchTools();
 
     String addTool();
+
+    String tag();
 }

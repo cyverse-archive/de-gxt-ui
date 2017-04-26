@@ -1,19 +1,22 @@
 package org.iplantc.de.apps.client.views.tools;
 
 import org.iplantc.de.admin.desktop.client.toolAdmin.model.ToolProperties;
-import org.iplantc.de.apps.client.views.ManageToolsToolbarView;
-import org.iplantc.de.apps.client.views.ManageToolsView;
-import org.iplantc.de.client.models.apps.App;
+import org.iplantc.de.apps.client.events.tools.BeforeToolSearchEvent;
+import org.iplantc.de.apps.client.events.tools.ToolSearchResultLoadEvent;
+import org.iplantc.de.apps.client.events.tools.ToolSelectionChangedEvent;
 import org.iplantc.de.client.models.tool.Tool;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
@@ -22,6 +25,7 @@ import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.grid.GridView;
+import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +33,7 @@ import java.util.List;
 /**
  * Created by sriram on 4/21/17.
  */
-public class ManageToolsViewImpl implements ManageToolsView {
+public class ManageToolsViewImpl extends Composite implements ManageToolsView {
 
 
     private final ManageToolsViewAppearance appearance;
@@ -47,7 +51,7 @@ public class ManageToolsViewImpl implements ManageToolsView {
     ColumnModel cm;
 
     @UiField
-    Grid<App> grid;
+    Grid<Tool> grid;
 
     @UiField
     GridView<Tool> gridView;
@@ -67,12 +71,20 @@ public class ManageToolsViewImpl implements ManageToolsView {
         this.toolbar = toolbar;
         this.properties = properties;
         uiBinder.createAndBindUi(this);
+        grid.getSelectionModel().setSelectionMode(Style.SelectionMode.SINGLE);
+        grid.getSelectionModel().addSelectionChangedHandler(new SelectionChangedEvent.SelectionChangedHandler<Tool>() {
+            @Override
+            public void onSelectionChanged(SelectionChangedEvent<Tool> event) {
+                fireEvent(new ToolSelectionChangedEvent(event.getSelection()));
+            }
+        });
     }
 
     @Override
     public Widget asWidget() {
         return container;
     }
+
 
     @UiFactory
     ListStore<Tool> buildListStore() {
@@ -109,7 +121,7 @@ public class ManageToolsViewImpl implements ManageToolsView {
         ColumnConfig<Tool, String> tag = new ColumnConfig<Tool, String>(new ValueProvider<Tool, String>() {
             @Override
             public String getValue(Tool object) {
-                return object.getContainer()!=null ? object.getContainer().getImage().getTag() : "";
+                return (object.getContainer()!=null)? object.getContainer().getImage().getTag() : "";
             }
 
             @Override
@@ -121,13 +133,35 @@ public class ManageToolsViewImpl implements ManageToolsView {
             public String getPath() {
                 return null;
             }
-        },appearance.tagWidth(), appearance.version());
-        return new ColumnModel<>(Arrays.asList(nameCol, imgName, tag));
-    }
+        },appearance.tagWidth(), appearance.tag());
+
+        ColumnConfig<Tool, String> status = new ColumnConfig<Tool, String>(new ValueProvider<Tool, String>() {
+            @Override
+            public String getValue(Tool object) {
+                return (object.isPublic())? "Public" : object.getPermission();
+            }
+
+            @Override
+            public void setValue(Tool object, String value) {
+
+            }
+
+            @Override
+            public String getPath() {
+                return null;
+            }
+        },50, appearance.status());
+        return new ColumnModel<>(Arrays.asList(nameCol, imgName, tag, status));    }
 
     @Override
     public void loadTools(List<Tool> tools) {
+        listStore.clear();
         listStore.addAll(tools);
+    }
+
+    @Override
+    public ManageToolsToolbarView getToolbar() {
+        return toolbar;
     }
 
 
@@ -139,6 +173,23 @@ public class ManageToolsViewImpl implements ManageToolsView {
     @Override
     public void unmask() {
       container.unmask();
+    }
+
+    @Override
+    public void onBeforeToolSearch(BeforeToolSearchEvent event) {
+        mask(appearance.mask());
+    }
+
+    @Override
+    public void onToolSearchResultLoad(ToolSearchResultLoadEvent event) {
+         listStore.clear();
+         listStore.addAll(event.getResults());
+         unmask();
+    }
+
+    @Override
+    public HandlerRegistration addToolSelectionChangedEventHandler(ToolSelectionChangedEvent.ToolSelectionChangedEventHandler handler) {
+        return addHandler(handler, ToolSelectionChangedEvent.TYPE);
     }
 
 }
