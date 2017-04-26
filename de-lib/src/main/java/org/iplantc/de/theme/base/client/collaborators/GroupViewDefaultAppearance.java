@@ -5,6 +5,7 @@ import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
+import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -121,7 +122,7 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
 
     @Override
     public String groupDetailsHeading(Group group) {
-        if (group == null) {
+        if (group == null || Strings.isNullOrEmpty(group.getName())) {
             return displayStrings.newGroupDetailsHeading();
         } else {
             return displayStrings.editGroupDetailsHeading(group.getName());

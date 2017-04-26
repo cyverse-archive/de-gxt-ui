@@ -2,6 +2,7 @@ package org.iplantc.de.collaborators.client.presenter;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -10,11 +11,16 @@ import static org.mockito.Mockito.when;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
+import org.iplantc.de.collaborators.client.events.AddGroupSelected;
+import org.iplantc.de.collaborators.client.events.CollaboratorsLoadedEvent;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -46,10 +52,14 @@ public class ManageCollaboratorsPresenterTest {
     @Mock List<Group> groupListMock;
     @Mock Collaborator collaboratorMock;
     @Mock List<Collaborator> collaboratorListMock;
+    @Mock CollaboratorsServiceFacade collabServiceFacadeMock;
     @Mock Widget viewWidgetMock;
     @Mock EventBus eventBusMock;
+    @Mock IplantAnnouncer announcerMock;
 
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<List<Collaborator>>> collabListCallbackCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<Group>> groupCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Group>>> groupListCallbackCaptor;
 
     private ManageCollaboratorsPresenter uut;
@@ -60,12 +70,24 @@ public class ManageCollaboratorsPresenterTest {
         when(viewMock.asWidget()).thenReturn(viewWidgetMock);
 
         uut = new ManageCollaboratorsPresenter(factoryMock,
-                                               groupServiceFacadeMock);
+                                               groupServiceFacadeMock,
+                                               collabServiceFacadeMock) {
+            @Override
+            String getCollaboratorNames(List<Collaborator> collaborators) {
+                return "names";
+            }
+
+            @Override
+            List<Group> getGroupList(Group result) {
+                return groupListMock;
+            }
+        };
 
         uut.collaboratorsUtil = collaboratorsUtilMock;
         uut.eventBus = eventBusMock;
         uut.view = viewMock;
         uut.addCollabHandlerRegistration = addCollabHandlerRegistrationMock;
+        uut.announcer = announcerMock;
     }
 
     @Test
@@ -81,6 +103,7 @@ public class ManageCollaboratorsPresenterTest {
         verify(spy).loadCurrentCollaborators();
         verify(spy).updateListView();
         verify(spy).addEventHandlers();
+        verify(viewMock).addAddGroupSelectedHandler(eq(spy));
         verify(containerMock).setWidget(eq(viewWidgetMock));
     }
 
@@ -90,10 +113,11 @@ public class ManageCollaboratorsPresenterTest {
         /** CALL METHOD UNDER TEST **/
         uut.addAsCollaborators(collaboratorListMock);
 
-        verify(collaboratorsUtilMock).addCollaborators(eq(collaboratorListMock), voidCallbackCaptor.capture());
+        verify(collabServiceFacadeMock).addCollaborators(eq(collaboratorListMock), voidCallbackCaptor.capture());
 
         voidCallbackCaptor.getValue().onSuccess(null);
         verify(viewMock).addCollaborators(eq(collaboratorListMock));
+        verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));
     }
 
     @Test
@@ -120,7 +144,7 @@ public class ManageCollaboratorsPresenterTest {
         uut.onRemoveCollaboratorSelected(eventMock);
         verify(eventMock).getCollaborators();
 
-        verify(collaboratorsUtilMock).removeCollaborators(eq(collaboratorListMock), voidCallbackCaptor.capture());
+        verify(collabServiceFacadeMock).removeCollaborators(eq(collaboratorListMock), voidCallbackCaptor.capture());
 
         voidCallbackCaptor.getValue().onSuccess(null);
         verify(viewMock).removeCollaborators(eq(collaboratorListMock));
@@ -128,17 +152,17 @@ public class ManageCollaboratorsPresenterTest {
 
     @Test
     public void loadCurrentCollaborators() {
-        when(collaboratorsUtilMock.getCurrentCollaborators()).thenReturn(collaboratorListMock);
 
         /** CALL METHOD UNDER TEST **/
         uut.loadCurrentCollaborators();
 
         verify(viewMock).mask(anyString());
-        verify(collaboratorsUtilMock).getCollaborators(voidCallbackCaptor.capture());
+        verify(collabServiceFacadeMock).getCollaborators(collabListCallbackCaptor.capture());
 
-        voidCallbackCaptor.getValue().onSuccess(null);
+        collabListCallbackCaptor.getValue().onSuccess(collaboratorListMock);
         verify(viewMock).unmask();
         verify(viewMock).loadData(eq(collaboratorListMock));
+        verify(eventBusMock).fireEvent(isA(CollaboratorsLoadedEvent.class));
     }
 
     @Test
@@ -156,6 +180,20 @@ public class ManageCollaboratorsPresenterTest {
         uut.cleanup();
 
         verify(addCollabHandlerRegistrationMock).removeHandler();
+    }
+
+    @Test
+    public void onAddGroupSelected() {
+        AddGroupSelected eventMock = mock(AddGroupSelected.class);
+        when(eventMock.getGroup()).thenReturn(groupMock);
+
+        /** CALL METHOD UNDER TEST **/
+        uut.onAddGroupSelected(eventMock);
+        verify(groupServiceFacadeMock).addGroup(eq(groupMock), groupCallbackCaptor.capture());
+        groupCallbackCaptor.getValue().onSuccess(groupMock);
+
+        verify(viewMock).addCollabLists(eq(groupListMock));
+
     }
 
 }

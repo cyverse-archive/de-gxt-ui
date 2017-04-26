@@ -245,8 +245,12 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
             @Override
             public void onSuccess(Group result) {
-                view.addCollabLists(Lists.newArrayList(result));
+                view.addCollabLists(getGroupList(result));
             }
         });
+    }
+
+    List<Group> getGroupList(Group result) {
+        return Lists.newArrayList(result);
     }
 }
