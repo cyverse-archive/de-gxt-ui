@@ -3,6 +3,7 @@ package org.iplantc.de.collaborators.client.views;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.models.CollaboratorKeyProvider;
@@ -69,6 +70,7 @@ public class GroupDetailsView extends Composite {
     @UiField ColumnModel<Collaborator> cm;
     @UiField(provided = true) GroupView.GroupViewAppearance appearance;
 
+    private GroupAutoBeanFactory factory;
     EventBus eventBus;
     HandlerRegistration handlerRegistration;
 
@@ -77,8 +79,10 @@ public class GroupDetailsView extends Composite {
 
     @Inject
     public GroupDetailsView(GroupView.GroupViewAppearance appearance,
+                            GroupAutoBeanFactory factory,
                             EventBus eventBus) {
         this.appearance = appearance;
+        this.factory = factory;
         this.eventBus = eventBus;
         searchField = new UserSearchField(UserSearchResultSelected.USER_SEARCH_EVENT_TAG.GROUP);
         checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Collaborator>());
@@ -154,5 +158,16 @@ public class GroupDetailsView extends Composite {
 
     public void clearHandlers() {
         handlerRegistration.removeHandler();
+    }
+
+    public Group getGroup() {
+        Group group = factory.getGroup().as();
+        group.setName(groupName.getCurrentValue());
+        group.setDescription(groupDesc.getCurrentValue());
+        return group;
+    }
+
+    public List<Collaborator> getCollaborators() {
+        return listStore.getAll();
     }
 }
