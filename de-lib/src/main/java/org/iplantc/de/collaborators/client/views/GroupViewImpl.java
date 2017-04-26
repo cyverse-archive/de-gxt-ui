@@ -5,16 +5,19 @@ import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.models.GroupProperties;
 import org.iplantc.de.collaborators.client.views.cells.GroupNameCell;
+import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.Style;
@@ -28,7 +31,6 @@ import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
 import java.util.List;
-import javax.inject.Inject;
 
 /**
  * @author aramsey
@@ -46,6 +48,8 @@ public class GroupViewImpl extends Composite implements GroupView {
     @UiField ListStore<Group> listStore;
     @UiField ColumnModel<Group> cm;
     @UiField(provided = true) GroupViewAppearance appearance;
+
+    @Inject AsyncProviderWrapper<GroupDetailsDialog> groupDetailsDialog;
 
     private final GroupProperties props;
 
@@ -97,16 +101,29 @@ public class GroupViewImpl extends Composite implements GroupView {
 
     @UiHandler("addGroup")
     void addGroupSelected(SelectEvent event) {
-        fireEvent(new GroupNameSelected(null));
+        groupDetailsDialog.get(new AsyncCallback<GroupDetailsDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(GroupDetailsDialog result) {
+                result.show(null);
+
+            }
+        });
     }
 
     @Override
     public void onGroupNameSelected(GroupNameSelected event) {
-        fireEvent(new GroupNameSelected(event.getGroup()));
-    }
+        Group group = event.getGroup();
+        groupDetailsDialog.get(new AsyncCallback<GroupDetailsDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
 
-    @Override
-    public HandlerRegistration addGroupNameSelectedHandler(GroupNameSelected.GroupNameSelectedHandler handler) {
-        return addHandler(handler, GroupNameSelected.TYPE);
+            @Override
+            public void onSuccess(GroupDetailsDialog result) {
+                result.show(group);
+            }
+        });
     }
 }

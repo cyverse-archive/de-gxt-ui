@@ -11,18 +11,15 @@ import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.CollaboratorsLoadedEvent;
-import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
-import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.resources.client.messages.I18N;
-import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Joiner;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -40,8 +37,7 @@ import java.util.stream.Stream;
  * 
  */
 public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Presenter,
-                                                     RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler,
-                                                     GroupNameSelected.GroupNameSelectedHandler {
+                                                     RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler {
 
     final class UserSearchResultSelectedEventHandlerImpl implements
                                                                  UserSearchResultSelected.UserSearchResultSelectedEventHandler {
@@ -72,7 +68,6 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     private CollaboratorsServiceFacade collabServiceFacade;
     ManageCollaboratorsView view;
     HandlerRegistration addCollabHandlerRegistration;
-    @Inject AsyncProviderWrapper<GroupDetailsDialog> groupDetailsDialog;
 
     @Inject
     public ManageCollaboratorsPresenter(ManageCollaboratorsViewFactory factory,
@@ -86,7 +81,6 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     void addEventHandlers() {
         addCollabHandlerRegistration = eventBus.addHandler(UserSearchResultSelected.TYPE,
                                                            new UserSearchResultSelectedEventHandlerImpl());
-        view.addGroupNameSelectedHandler(this);
     }
 
     /*
@@ -231,23 +225,5 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         if (addCollabHandlerRegistration != null) {
             addCollabHandlerRegistration.removeHandler();
         }
-    }
-
-    @Override
-    public void onGroupNameSelected(GroupNameSelected event) {
-        Group group = event.getGroup();
-        showGroupDetailsDialog(group);
-    }
-
-    void showGroupDetailsDialog(Group group) {
-        groupDetailsDialog.get(new AsyncCallback<GroupDetailsDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {}
-
-            @Override
-            public void onSuccess(GroupDetailsDialog result) {
-                result.show(group);
-            }
-        });
     }
 }

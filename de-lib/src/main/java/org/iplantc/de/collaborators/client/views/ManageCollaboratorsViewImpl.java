@@ -226,9 +226,4 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     public HandlerRegistration addRemoveCollaboratorSelectedHandler(RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler handler) {
         return addHandler(handler, RemoveCollaboratorSelected.TYPE);
     }
-
-    @Override
-    public HandlerRegistration addGroupNameSelectedHandler(GroupNameSelected.GroupNameSelectedHandler handler) {
-        return groupView.addGroupNameSelectedHandler(handler);
-    }
 }

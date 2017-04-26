@@ -13,8 +13,7 @@ import java.util.List;
  * @author aramsey
  */
 public interface GroupView extends IsWidget,
-                                   GroupNameSelected.GroupNameSelectedHandler,
-                                   GroupNameSelected.HasGroupNameSelectedHandlers {
+                                   GroupNameSelected.GroupNameSelectedHandler {
 
     interface GroupViewAppearance {
 
