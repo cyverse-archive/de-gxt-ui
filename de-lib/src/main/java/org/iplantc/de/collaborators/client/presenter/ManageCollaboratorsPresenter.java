@@ -10,6 +10,7 @@ import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
+import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.CollaboratorsLoadedEvent;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
@@ -22,6 +23,7 @@ import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -37,7 +39,8 @@ import java.util.stream.Stream;
  * 
  */
 public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Presenter,
-                                                     RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler {
+                                                     RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler,
+                                                     AddGroupSelected.AddGroupSelectedHandler {
 
     final class UserSearchResultSelectedEventHandlerImpl implements
                                                                  UserSearchResultSelected.UserSearchResultSelectedEventHandler {
@@ -81,6 +84,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     void addEventHandlers() {
         addCollabHandlerRegistration = eventBus.addHandler(UserSearchResultSelected.TYPE,
                                                            new UserSearchResultSelectedEventHandlerImpl());
+        view.addAddGroupSelectedHandler(this);
     }
 
     /*
@@ -225,5 +229,24 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         if (addCollabHandlerRegistration != null) {
             addCollabHandlerRegistration.removeHandler();
         }
+    }
+
+    @Override
+    public void onAddGroupSelected(AddGroupSelected event) {
+        Group group = event.getGroup();
+        if (group == null) {
+            return;
+        }
+        groupServiceFacade.addGroup(group, new AsyncCallback<Group>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(Group result) {
+                view.addCollabLists(Lists.newArrayList(result));
+            }
+        });
     }
 }

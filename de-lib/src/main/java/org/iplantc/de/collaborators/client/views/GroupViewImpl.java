@@ -2,7 +2,9 @@ package org.iplantc.de.collaborators.client.views;
 
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupView;
+import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.GroupNameSelected;
+import org.iplantc.de.collaborators.client.events.SaveGroupSelected;
 import org.iplantc.de.collaborators.client.models.GroupProperties;
 import org.iplantc.de.collaborators.client.views.cells.GroupNameCell;
 import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
@@ -11,6 +13,7 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -108,7 +111,12 @@ public class GroupViewImpl extends Composite implements GroupView {
             @Override
             public void onSuccess(GroupDetailsDialog result) {
                 result.show(null);
-
+                result.addSaveGroupSelectedHandler(new SaveGroupSelected.SaveGroupSelectedHandler() {
+                    @Override
+                    public void onSaveGroupSelected(SaveGroupSelected event) {
+                        fireEvent(new AddGroupSelected(event.getGroup()));
+                    }
+                });
             }
         });
     }
@@ -125,5 +133,10 @@ public class GroupViewImpl extends Composite implements GroupView {
                 result.show(group);
             }
         });
+    }
+
+    @Override
+    public HandlerRegistration addAddGroupSelectedHandler(AddGroupSelected.AddGroupSelectedHandler handler) {
+        return addHandler(handler, AddGroupSelected.TYPE);
     }
 }
