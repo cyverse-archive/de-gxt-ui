@@ -14,6 +14,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -22,6 +23,7 @@ import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.ViewReadyEvent;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.TextArea;
@@ -31,6 +33,8 @@ import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
+
+import java.util.List;
 
 
 /**
@@ -100,6 +104,14 @@ public class GroupDetailsView extends Composite {
 
         handlerRegistration =
                 eventBus.addHandler(UserSearchResultSelected.TYPE, new CollaboratorSelectedHandler());
+    }
+
+    @UiHandler("deleteBtn")
+    void onDeleteButtonSelected(SelectEvent event) {
+        List<Collaborator> selectedCollab = grid.getSelectionModel().getSelectedItems();
+        if (selectedCollab != null && !selectedCollab.isEmpty()) {
+            selectedCollab.forEach(collaborator -> listStore.remove(collaborator));
+        }
     }
 
     @UiFactory
