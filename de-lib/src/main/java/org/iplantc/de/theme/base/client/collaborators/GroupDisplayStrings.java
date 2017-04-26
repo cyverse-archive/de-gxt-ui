@@ -15,4 +15,8 @@ public interface GroupDisplayStrings extends Messages {
     String newGroupDetailsHeading();
 
     String editGroupDetailsHeading(String name);
+
+    String deleteGroupConfirmHeading(String name);
+
+    String deleteGroupConfirm(String name);
 }

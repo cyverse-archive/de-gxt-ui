@@ -133,4 +133,14 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
     public String completeRequiredFieldsError() {
         return iplantDisplayStrings.completeRequiredFieldsError();
     }
+
+    @Override
+    public String deleteGroupConfirmHeading(Group group) {
+        return displayStrings.deleteGroupConfirmHeading(group.getName());
+    }
+
+    @Override
+    public String deleteGroupConfirm(Group group) {
+        return displayStrings.deleteGroupConfirm(group.getName());
+    }
 }

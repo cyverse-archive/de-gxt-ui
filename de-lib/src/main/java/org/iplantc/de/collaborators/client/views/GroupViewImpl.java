@@ -26,7 +26,10 @@ import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
+import com.sencha.gxt.widget.core.client.Dialog;
+import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
@@ -117,6 +120,25 @@ public class GroupViewImpl extends Composite implements GroupView {
                         fireEvent(new AddGroupSelected(event.getGroup()));
                     }
                 });
+            }
+        });
+    }
+
+    @UiHandler("deleteGroup")
+    void deleteGroupSelected(SelectEvent event) {
+        Group group = grid.getSelectionModel().getSelectedItem();
+        if (group == null) {
+            return;
+        }
+        ConfirmMessageBox deleteAlert = new ConfirmMessageBox(appearance.deleteGroupConfirmHeading(group),
+                                                            appearance.deleteGroupConfirm(group));
+        deleteAlert.show();
+        deleteAlert.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
+            @Override
+            public void onDialogHide(DialogHideEvent event) {
+                if (event.getHideButton().equals(Dialog.PredefinedButton.YES)) {
+                    fireEvent(new DeleteGroupSelected(group));
+                }
             }
         });
     }
