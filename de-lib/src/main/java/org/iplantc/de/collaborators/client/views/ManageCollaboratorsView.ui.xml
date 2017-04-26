@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 			 xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
+			 xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
 			 xmlns:grid="urn:import:com.sencha.gxt.widget.core.client.grid"
 			 xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
 			 xmlns:toolbar="urn:import:com.sencha.gxt.widget.core.client.toolbar"
@@ -69,8 +70,13 @@
 				</container:north>
 				<!-- This is the main panel -->
 				<container:center layoutData="{centerData}">
-					<de:DETabPanel ui:field="tabPanel">
-						<de:child config="{collaboratorTabConfig}">
+					<gxt:FramedPanel ui:field="collaboratorListPnl"
+									 pixelSize="445,175" collapsible="false"
+									 headerVisible="true"
+					heading="My Collaborators">
+
+					<!--<de:DETabPanel ui:field="tabPanel" visible="false">-->
+						<!--<de:child config="{collaboratorTabConfig}">-->
 							<container:VerticalLayoutContainer pixelSize="445,150">
 								<container:child>
 									<toolbar:ToolBar height="30" ui:field="toolbar">
@@ -97,12 +103,12 @@
 									</grid:Grid>
 								</container:child>
 							</container:VerticalLayoutContainer>
-						</de:child>
-						<de:child config="{collaboratorListTabConfig}">
-							<client:GroupView ui:field="groupView"/>
-						</de:child>
-					</de:DETabPanel>
-
+						<!--</de:child>-->
+						<!--<de:child config="{collaboratorListTabConfig}">-->
+							<!--<client:GroupView ui:field="groupView"/>-->
+						<!--</de:child>-->
+					<!--</de:DETabPanel>-->
+					</gxt:FramedPanel>
 				</container:center>
 			</container:BorderLayoutContainer>
 		</container:child>

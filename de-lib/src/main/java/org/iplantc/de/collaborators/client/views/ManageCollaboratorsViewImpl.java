@@ -25,6 +25,7 @@ import com.sencha.gxt.core.client.Style.LayoutRegion;
 import com.sencha.gxt.core.client.Style.SelectionMode;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
+import com.sencha.gxt.widget.core.client.FramedPanel;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer;
@@ -57,7 +58,8 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @UiField(provided = true) UserSearchField searchField;
     @UiField HorizontalLayoutContainer searchPanel;
     @UiField ToolBar toolbar;
-    @UiField(provided = true) GroupView groupView;
+    @UiField FramedPanel collaboratorListPnl;
+    private GroupView groupView;
     @UiField(provided = true) ManageCollaboratorsView.Appearance appearance;
 
     private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
@@ -120,7 +122,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
         if (maskText == null || maskText.isEmpty()) {
             maskText = appearance.loadingMask();
         }
-        super.mask(maskText);
+        collaboratorListPnl.mask(maskText);
         groupView.mask(maskText);
     }
 
@@ -167,7 +169,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
 
     @Override
     public void unmask() {
-        super.unmask();
+        collaboratorListPnl.unmask();
         groupView.unmask();
     }
 
