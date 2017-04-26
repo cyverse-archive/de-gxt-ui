@@ -58,7 +58,7 @@
                 <container:child layoutData="{layoutData}">
                     <form:FieldLabel ui:field="groupNameLabel">
                         <form:widget>
-                            <form:TextField ui:field="groupName"
+                            <form:TextField ui:field="nameEditor"
                                             allowBlank="false"/>
                         </form:widget>
                     </form:FieldLabel>
@@ -67,7 +67,7 @@
                     <form:FieldLabel ui:field="groupDescLabel"
                                      text="{appearance.groupDescriptionLabel}">
                         <form:widget>
-                            <form:TextArea ui:field="groupDesc"/>
+                            <form:TextArea ui:field="descriptionEditor"/>
                         </form:widget>
                     </form:FieldLabel>
                 </container:child>

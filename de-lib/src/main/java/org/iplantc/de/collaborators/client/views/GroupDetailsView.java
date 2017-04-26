@@ -3,7 +3,6 @@ package org.iplantc.de.collaborators.client.views;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
-import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.models.CollaboratorKeyProvider;
@@ -11,6 +10,8 @@ import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.editor.client.Editor;
+import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
@@ -41,10 +42,12 @@ import java.util.List;
 /**
  * @author aramsey
  */
-public class GroupDetailsView extends Composite {
+public class GroupDetailsView extends Composite implements Editor<Group> {
 
     interface GroupDetailsViewUiBinder extends UiBinder<Widget, GroupDetailsView> {
     }
+
+    interface EditorDriver extends SimpleBeanEditorDriver<Group, GroupDetailsView> {}
 
     private class CollaboratorSelectedHandler
             implements UserSearchResultSelected.UserSearchResultSelectedEventHandler {
@@ -56,21 +59,21 @@ public class GroupDetailsView extends Composite {
         }
     }
 
+    final EditorDriver editorDriver = GWT.create(EditorDriver.class);
     static GroupDetailsViewUiBinder uiBinder = GWT.create(GroupDetailsViewUiBinder.class);
 
-    @UiField FieldLabel groupNameLabel;
-    @UiField FieldLabel groupDescLabel;
-    @UiField TextField groupName;
-    @UiField TextArea groupDesc;
+    @UiField @Ignore FieldLabel groupNameLabel;
+    @UiField @Ignore FieldLabel groupDescLabel;
+    @UiField TextField nameEditor;
+    @UiField TextArea descriptionEditor;
     @UiField(provided = true) UserSearchField searchField;
     @UiField ToolBar toolbar;
-    @UiField TextButton deleteBtn;
+    @UiField @Ignore TextButton deleteBtn;
     @UiField ListStore<Collaborator> listStore;
     @UiField Grid<Collaborator> grid;
     @UiField ColumnModel<Collaborator> cm;
     @UiField(provided = true) GroupView.GroupViewAppearance appearance;
 
-    private GroupAutoBeanFactory factory;
     EventBus eventBus;
     HandlerRegistration handlerRegistration;
 
@@ -79,10 +82,8 @@ public class GroupDetailsView extends Composite {
 
     @Inject
     public GroupDetailsView(GroupView.GroupViewAppearance appearance,
-                            GroupAutoBeanFactory factory,
                             EventBus eventBus) {
         this.appearance = appearance;
-        this.factory = factory;
         this.eventBus = eventBus;
         searchField = new UserSearchField(UserSearchResultSelected.USER_SEARCH_EVENT_TAG.GROUP);
         checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Collaborator>());
@@ -108,6 +109,8 @@ public class GroupDetailsView extends Composite {
 
         handlerRegistration =
                 eventBus.addHandler(UserSearchResultSelected.TYPE, new CollaboratorSelectedHandler());
+
+        editorDriver.initialize(this);
     }
 
     @UiHandler("deleteBtn")
@@ -135,8 +138,8 @@ public class GroupDetailsView extends Composite {
 
         groupNameLabel.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_NAME_LABEL);
         groupDescLabel.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_DESC_LABEL);
-        groupName.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_NAME);
-        groupDesc.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_DESC);
+        nameEditor.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_NAME);
+        descriptionEditor.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_DESC);
         searchField.asWidget().ensureDebugId(baseID + CollaboratorsModule.Ids.SEARCH_LIST);
         toolbar.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_TOOLBAR);
         deleteBtn.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_DELETE_BTN);
@@ -150,10 +153,7 @@ public class GroupDetailsView extends Composite {
     }
 
     public void edit(Group group) {
-        if (group != null) {
-            groupName.setText(group.getName());
-            groupDesc.setText(group.getDescription());
-        }
+        editorDriver.edit(group);
     }
 
     public void clearHandlers() {
@@ -161,10 +161,7 @@ public class GroupDetailsView extends Composite {
     }
 
     public Group getGroup() {
-        Group group = factory.getGroup().as();
-        group.setName(groupName.getCurrentValue());
-        group.setDescription(groupDesc.getCurrentValue());
-        return group;
+        return editorDriver.flush();
     }
 
     public List<Collaborator> getCollaborators() {

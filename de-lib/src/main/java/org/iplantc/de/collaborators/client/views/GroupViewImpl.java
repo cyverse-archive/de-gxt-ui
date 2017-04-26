@@ -110,7 +110,7 @@ public class GroupViewImpl extends Composite implements GroupView {
 
             @Override
             public void onSuccess(GroupDetailsDialog result) {
-                result.show(null);
+                result.show();
                 result.addSaveGroupSelectedHandler(new SaveGroupSelected.SaveGroupSelectedHandler() {
                     @Override
                     public void onSaveGroupSelected(SaveGroupSelected event) {

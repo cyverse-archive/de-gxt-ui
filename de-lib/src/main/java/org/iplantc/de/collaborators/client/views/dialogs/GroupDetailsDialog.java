@@ -1,6 +1,7 @@
 package org.iplantc.de.collaborators.client.views.dialogs;
 
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.events.SaveGroupSelected;
 import org.iplantc.de.collaborators.client.views.GroupDetailsView;
@@ -20,12 +21,15 @@ public class GroupDetailsDialog extends IPlantDialog implements SaveGroupSelecte
 
     GroupDetailsView view;
     GroupView.GroupViewAppearance appearance;
+    private GroupAutoBeanFactory factory;
 
     @Inject
     public GroupDetailsDialog(GroupDetailsView view,
-                              GroupView.GroupViewAppearance appearance) {
+                              GroupView.GroupViewAppearance appearance,
+                              GroupAutoBeanFactory factory) {
         this.view = view;
         this.appearance = appearance;
+        this.factory = factory;
 
         setResizable(true);
         setPixelSize(appearance.groupDetailsWidth(), appearance.groupDetailsHeight());
@@ -54,6 +58,12 @@ public class GroupDetailsDialog extends IPlantDialog implements SaveGroupSelecte
         super.show();
 
         ensureDebugId(CollaboratorsModule.Ids.GROUP_DETAILS_DLG);
+    }
+
+    @Override
+    public void show() {
+        Group group = factory.getGroup().as();
+        show(group);
     }
 
     @Override
