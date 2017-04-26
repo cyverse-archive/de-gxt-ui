@@ -127,4 +127,9 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
             return displayStrings.editGroupDetailsHeading(group.getName());
         }
     }
+
+    @Override
+    public String completeRequiredFieldsError() {
+        return iplantDisplayStrings.completeRequiredFieldsError();
+    }
 }

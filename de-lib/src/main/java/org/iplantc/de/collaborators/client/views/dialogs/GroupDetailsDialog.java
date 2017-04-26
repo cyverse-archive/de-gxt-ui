@@ -11,6 +11,7 @@ import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 import com.sencha.gxt.widget.core.client.event.HideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
@@ -34,13 +35,28 @@ public class GroupDetailsDialog extends IPlantDialog implements SaveGroupSelecte
         setResizable(true);
         setPixelSize(appearance.groupDetailsWidth(), appearance.groupDetailsHeight());
         setOnEsc(false);
+        setHideOnButtonClick(false);
 
         add(view);
 
         addOkButtonSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
-                fireEvent(new SaveGroupSelected(view.getGroup(), view.getCollaborators()));
+                if (view.isValid()) {
+                    fireEvent(new SaveGroupSelected(view.getGroup(), view.getCollaborators()));
+                    hide();
+                } else {
+                    AlertMessageBox alertMsgBox =
+                            new AlertMessageBox("Warning", appearance.completeRequiredFieldsError());
+                    alertMsgBox.show();
+                }
+            }
+        });
+
+        addCancelButtonSelectHandler(new SelectEvent.SelectHandler() {
+            @Override
+            public void onSelect(SelectEvent event) {
+                hide();
             }
         });
 

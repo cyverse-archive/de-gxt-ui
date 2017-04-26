@@ -50,6 +50,8 @@ public interface GroupView extends IsWidget,
         int groupDetailsHeight();
 
         String groupDetailsHeading(Group group);
+
+        String completeRequiredFieldsError();
     }
 
     void addCollabLists(List<Group> result);

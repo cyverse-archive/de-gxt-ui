@@ -164,6 +164,10 @@ public class GroupDetailsView extends Composite implements Editor<Group> {
         return editorDriver.flush();
     }
 
+    public boolean isValid() {
+        return nameEditor.isValid();
+    }
+
     public List<Collaborator> getCollaborators() {
         return listStore.getAll();
     }
