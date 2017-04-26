@@ -143,4 +143,9 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
     public String deleteGroupConfirm(Group group) {
         return displayStrings.deleteGroupConfirm(group.getName());
     }
+
+    @Override
+    public String groupDeleteSuccess(Group group) {
+        return displayStrings.groupDeleteSuccess(group.getName());
+    }
 }

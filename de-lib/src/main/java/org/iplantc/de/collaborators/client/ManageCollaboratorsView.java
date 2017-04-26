@@ -3,6 +3,7 @@ package org.iplantc.de.collaborators.client;
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
+import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 
 import com.google.gwt.resources.client.ImageResource;
@@ -18,7 +19,8 @@ import java.util.List;
  */
 public interface ManageCollaboratorsView extends IsWidget,
                                                  RemoveCollaboratorSelected.HasRemoveCollaboratorSelectedHandlers,
-                                                 AddGroupSelected.HasAddGroupSelectedHandlers {
+                                                 AddGroupSelected.HasAddGroupSelectedHandlers,
+                                                 DeleteGroupSelected.HasDeleteGroupSelectedHandlers {
 
     interface Appearance {
 
@@ -73,6 +75,8 @@ public interface ManageCollaboratorsView extends IsWidget,
     }
 
     void addCollabLists(List<Group> result);
+
+    void removeCollabList(Group result);
 
     enum MODE {
         MANAGE, SELECT

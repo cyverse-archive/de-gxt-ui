@@ -2,6 +2,7 @@ package org.iplantc.de.collaborators.client;
 
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
+import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
 import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 
 import com.google.gwt.resources.client.ImageResource;
@@ -15,7 +16,8 @@ import java.util.List;
  */
 public interface GroupView extends IsWidget,
                                    GroupNameSelected.GroupNameSelectedHandler,
-                                   AddGroupSelected.HasAddGroupSelectedHandlers {
+                                   AddGroupSelected.HasAddGroupSelectedHandlers,
+                                   DeleteGroupSelected.HasDeleteGroupSelectedHandlers {
 
     interface GroupViewAppearance {
 
@@ -56,6 +58,8 @@ public interface GroupView extends IsWidget,
         String deleteGroupConfirmHeading(Group group);
 
         String deleteGroupConfirm(Group group);
+
+        String groupDeleteSuccess(Group group);
     }
 
     void addCollabLists(List<Group> result);
@@ -63,4 +67,6 @@ public interface GroupView extends IsWidget,
     void mask(String loadingMask);
 
     void unmask();
+
+    void removeCollabList(Group result);
 }

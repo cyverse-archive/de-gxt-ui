@@ -19,4 +19,6 @@ public interface GroupDisplayStrings extends Messages {
     String deleteGroupConfirmHeading(String name);
 
     String deleteGroupConfirm(String name);
+
+    String groupDeleteSuccess(String name);
 }
