@@ -6,7 +6,7 @@
              xmlns:MyWidgets="urn:import:org.iplantc.de.apps.client.views.tools">
 
     <ui:with field="appearance"
-             type="org.iplantc.de.apps.client.views.ManageToolsToolbarView.ManageToolsToolbarAppearance" />
+             type="org.iplantc.de.apps.client.views.tools.ManageToolsToolbarView.ManageToolsToolbarAppearance" />
 
     <ui:with field="margins0" type="com.sencha.gxt.core.client.util.Margins">
         <ui:attributes top="0" right="0" bottom="0" left="0" />
@@ -34,11 +34,11 @@
             <button:TextButton ui:field="toolsMenuButton" text="{appearance.tools}">
                 <button:menu>
                     <menu:Menu ui:field="toolsMenu">
-                        <menu:MenuItem ui:field="addTool" text="{appearance.addTool}"/>
-                        <menu:MenuItem ui:field="requestTool" text="{appearance.requestTool}"/>
-                        <menu:MenuItem ui:field="edit" text="{appearance.edit}"/>
-                        <menu:MenuItem ui:field="delete" text="{appearance.delete}"/>
-                        <menu:MenuItem ui:field="useInApp" text="{appearance.useInApp}"/>
+                        <menu:MenuItem ui:field="addTool" text="{appearance.addTool}" icon="{appearance.addIcon}"/>
+                        <menu:MenuItem ui:field="requestTool" text="{appearance.requestTool}" icon="{appearance.requestToolIcon}"/>
+                        <menu:MenuItem ui:field="edit" text="{appearance.edit}" icon="{appearance.editIcon}"/>
+                        <menu:MenuItem ui:field="delete" text="{appearance.delete}" icon="{appearance.deleteIcon}"/>
+                        <menu:MenuItem ui:field="useInApp" text="{appearance.useInApp}" icon="{appearance.useInAppIcon}"/>
                     </menu:Menu>
                 </button:menu>
             </button:TextButton>

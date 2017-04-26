@@ -84,11 +84,11 @@
     </replace-with>
 
     <replace-with class="org.iplantc.de.theme.base.client.apps.tools.ManageToolsViewDefaultAppearance">
-        <when-type-is class="org.iplantc.de.apps.client.views.ManageToolsView.ManageToolsViewAppearance"/>
+        <when-type-is class="org.iplantc.de.apps.client.views.tools.ManageToolsView.ManageToolsViewAppearance"/>
     </replace-with>
 
     <replace-with class="org.iplantc.de.theme.base.client.apps.tools.ManageToolsViewDefaultAppearance">
-        <when-type-is class="org.iplantc.de.apps.client.views.ManageToolsToolbarView.ManageToolsToolbarAppearance"/>
+       <when-type-is class="org.iplantc.de.apps.client.views.tools.ManageToolsToolbarView.ManageToolsToolbarApperance"/>
     </replace-with>
 
     <!-- Details -->
