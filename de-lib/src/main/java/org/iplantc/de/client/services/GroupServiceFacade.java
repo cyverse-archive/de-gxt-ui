@@ -15,4 +15,6 @@ public interface GroupServiceFacade {
 
     void addGroup(Group group, AsyncCallback<Group> callback);
 
+    void deleteGroup(String name, AsyncCallback<Group> callback);
+
 }
