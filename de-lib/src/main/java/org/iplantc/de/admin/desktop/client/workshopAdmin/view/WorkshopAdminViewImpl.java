@@ -6,9 +6,9 @@ import org.iplantc.de.admin.desktop.client.workshopAdmin.events.RefreshMembersCl
 import org.iplantc.de.admin.desktop.client.workshopAdmin.events.SaveMembersClickedEvent;
 import org.iplantc.de.admin.desktop.client.workshopAdmin.model.MemberProperties;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
-import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.groups.Member;
 import org.iplantc.de.client.util.StaticIdHelper;
+import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 
 import com.google.common.collect.Lists;
@@ -34,7 +34,6 @@ import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,15 +50,15 @@ public class WorkshopAdminViewImpl extends Composite implements WorkshopAdminVie
     @UiField(provided = true) WorkshopAdminViewAppearance appearance;
 
     private MemberProperties memberProperties;
-    ArrayList<HandlerRegistration> globalHandlerRegistrations = new ArrayList<>();
 
     private static WorkshopAdminViewImplUiBinder uiBinder = GWT.create(WorkshopAdminViewImplUiBinder.class);
 
     @Inject
     public WorkshopAdminViewImpl(final WorkshopAdminViewAppearance appearance,
                                  final MemberProperties memberProperties,
+                                 UserSearchField userSearch,
                                  @Assisted ListStore<Member> listStore) {
-        this.userSearch = new UserSearchField(userSearchEventTag);
+        this.userSearch = userSearch;
         this.appearance = appearance;
         this.memberProperties = memberProperties;
         this.listStore = listStore;
@@ -68,25 +67,8 @@ public class WorkshopAdminViewImpl extends Composite implements WorkshopAdminVie
     }
 
     @Override
-    public <H extends EventHandler> void addGlobalEventHandler(GwtEvent.Type<H> type, H handler) {
-        HandlerRegistration registration = EventBus.getInstance().addHandler(type, handler);
-        globalHandlerRegistrations.add(registration);
-    }
-
-    @Override
     public <H extends EventHandler> void addLocalEventHandler(GwtEvent.Type<H> type, H handler) {
         addHandler(handler, type);
-    }
-
-    @Override
-    protected void onUnload() {
-        super.onUnload();
-
-        // FIXME: it would be nice not to have to use the global event bus.
-        for (HandlerRegistration registration : globalHandlerRegistrations) {
-            registration.removeHandler();
-        }
-        globalHandlerRegistrations.clear();
     }
 
     @UiFactory
@@ -142,5 +124,10 @@ public class WorkshopAdminViewImpl extends Composite implements WorkshopAdminVie
                                                  + Belphegor.WorkshopAdminIds.COL_HEADER, grid);
             }
         });
+    }
+
+    @Override
+    public HandlerRegistration addUserSearchResultSelectedEventHandler(UserSearchResultSelected.UserSearchResultSelectedEventHandler handler) {
+        return userSearch.addUserSearchResultSelectedEventHandler(handler);
     }
 }

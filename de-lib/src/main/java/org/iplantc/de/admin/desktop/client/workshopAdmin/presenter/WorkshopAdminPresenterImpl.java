@@ -65,11 +65,6 @@ public class WorkshopAdminPresenterImpl implements WorkshopAdminView.Presenter {
         @Override
         public void onUserSearchResultSelected(UserSearchResultSelected event) {
 
-            // Ignore the event if it wasn't initiated by the workshop admin panel.
-            if (!event.matchesTag(WorkshopAdminView.userSearchEventTag)) {
-                return;
-            }
-
             // Add the user to the list if not there already.
             Member member = memberFromCollaborator(event.getCollaborator());
             if (!listContainsMember(listStore.getAll(), member)) {
@@ -119,7 +114,7 @@ public class WorkshopAdminPresenterImpl implements WorkshopAdminView.Presenter {
         this.groupAutoBeanFactory = groupAutoBeanFactory;
         this.appearance = appearance;
 
-        view.addGlobalEventHandler(UserSearchResultSelected.TYPE, new UserSearchResultSelectedEventHandler());
+        view.addUserSearchResultSelectedEventHandler(new UserSearchResultSelectedEventHandler());
         view.addLocalEventHandler(DeleteMembersClickedEvent.TYPE, new DeleteMembersClickedEventHandler());
         view.addLocalEventHandler(SaveMembersClickedEvent.TYPE, new SaveMembersClickedEventHandler());
         view.addLocalEventHandler(RefreshMembersClickedEvent.TYPE, new RefreshMembersClickedEventHandler());
