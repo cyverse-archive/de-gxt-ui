@@ -12,6 +12,10 @@ import com.google.gwt.user.client.ui.IsWidget;
 import java.util.List;
 
 /**
+ * The GroupView is used within the Collaborators window as a way to provide users
+ * the ability to manage and create custom, private lists of collaborators so as to easily
+ * share data to collaborators in bulk.
+ *
  * @author aramsey
  */
 public interface GroupView extends IsWidget,
@@ -19,6 +23,9 @@ public interface GroupView extends IsWidget,
                                    AddGroupSelected.HasAddGroupSelectedHandlers,
                                    DeleteGroupSelected.HasDeleteGroupSelectedHandlers {
 
+    /**
+     * Appearance related items for the GroupView
+     */
     interface GroupViewAppearance {
 
         String addGroup();
@@ -62,10 +69,21 @@ public interface GroupView extends IsWidget,
         String groupDeleteSuccess(Group group);
     }
 
+    /**
+     * Add Collaborator Lists to the GroupView
+     * @param result
+     */
     void addCollabLists(List<Group> result);
 
+    /**
+     * Mask the GroupView with the specified loading mask text
+     * @param loadingMask
+     */
     void mask(String loadingMask);
 
+    /**
+     * Unmask the GroupView
+     */
     void unmask();
 
     void removeCollabList(Group result);

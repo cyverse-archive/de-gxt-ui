@@ -7,7 +7,7 @@ import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.PropertyAccess;
 
 /**
- * @author jstroot
+ * Properties interface to provide the values in a Group autobean
  * @author aramsey
  */
 public interface GroupProperties extends PropertyAccess<Group> {
