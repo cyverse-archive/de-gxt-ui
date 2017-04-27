@@ -6,6 +6,7 @@ import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
 import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
+import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -25,8 +26,8 @@ public interface ManageCollaboratorsView extends IsWidget,
                                                  RemoveCollaboratorSelected.HasRemoveCollaboratorSelectedHandlers,
                                                  DeleteGroupSelected.HasDeleteGroupSelectedHandlers,
                                                  AddGroupSelected.HasAddGroupSelectedHandlers,
-                                                 GroupNameSelected.HasGroupNameSelectedHandlers {
-
+                                                 GroupNameSelected.HasGroupNameSelectedHandlers,
+                                                 UserSearchResultSelected.HasUserSearchResultSelectedEventHandlers {
     /**
      * Appearance related items for the ManageCollaboratorsView
      */
@@ -83,7 +84,6 @@ public interface ManageCollaboratorsView extends IsWidget,
 
         /**
          * Fetch the list of all Collaborator Lists for this user
-         * @param searchTerm
          */
         void updateListView();
 
@@ -109,11 +109,6 @@ public interface ManageCollaboratorsView extends IsWidget,
          * @return
          */
         List<Collaborator> getSelectedCollaborators();
-
-        /**
-         * Clean up any dangling event handlers
-         */
-        void cleanup();
     }
 
     /**

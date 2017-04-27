@@ -69,12 +69,6 @@ public class ManageCollaboratorsDialog extends IPlantDialog {
     }
 
     @Override
-    protected void onHide() {
-        presenter.cleanup();
-        super.onHide();
-    }
-
-    @Override
     public void show() throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "This method is not supported. Use show(MODE mode) method instead.");

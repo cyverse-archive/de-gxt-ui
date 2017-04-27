@@ -8,7 +8,7 @@ import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
 import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
-import org.iplantc.de.collaborators.client.events.UserSearchResultSelected.USER_SEARCH_EVENT_TAG;
+import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.models.CollaboratorKeyProvider;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
@@ -75,10 +75,11 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @Inject
     public ManageCollaboratorsViewImpl(@Assisted final MODE mode,
                                        ManageCollaboratorsView.Appearance appearance,
-                                       GroupView groupView) {
+                                       GroupView groupView,
+                                       UserSearchField searchField) {
         this.appearance = appearance;
         this.groupView = groupView;
-        searchField = new UserSearchField(USER_SEARCH_EVENT_TAG.MANAGE);
+        this.searchField = searchField;
         checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Collaborator>());
         initWidget(uiBinder.createAndBindUi(this));
 
@@ -260,5 +261,10 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @Override
     public HandlerRegistration addGroupNameSelectedHandler(GroupNameSelected.GroupNameSelectedHandler handler) {
         return groupView.addGroupNameSelectedHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addUserSearchResultSelectedEventHandler(UserSearchResultSelected.UserSearchResultSelectedEventHandler handler) {
+        return searchField.addUserSearchResultSelectedEventHandler(handler);
     }
 }

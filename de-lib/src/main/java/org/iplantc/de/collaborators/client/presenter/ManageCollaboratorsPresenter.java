@@ -52,32 +52,13 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                                                      RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler,
                                                      DeleteGroupSelected.DeleteGroupSelectedHandler,
                                                      AddGroupSelected.AddGroupSelectedHandler,
-                                                     GroupNameSelected.GroupNameSelectedHandler {
-
-    final class UserSearchResultSelectedEventHandlerImpl implements
-                                                                 UserSearchResultSelected.UserSearchResultSelectedEventHandler {
-        @Override
-           public void
-                   onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected) {
-               if (userSearchResultSelected.getTag()
-                                           .equalsIgnoreCase(UserSearchResultSelected.USER_SEARCH_EVENT_TAG.MANAGE.toString())) {
-                   Collaborator collaborator = userSearchResultSelected.getCollaborator();
-                   if (!UserInfo.getInstance()
-                                .getUsername()
-                                .equals(collaborator.getUserName())) {
-                       if (!collaboratorsUtil.isCurrentCollaborator(collaborator, view.getCollaborators())) {
-                           addAsCollaborators(Arrays.asList(collaborator));
-                       }
-                   } else {
-                       announcer.schedule(new ErrorAnnouncementConfig(I18N.DISPLAY.collaboratorSelfAdd()));
-                   }
-               }
-           }
-    }
+                                                     GroupNameSelected.GroupNameSelectedHandler,
+                                                     UserSearchResultSelected.UserSearchResultSelectedEventHandler {
 
     @Inject CollaboratorsUtil collaboratorsUtil;
     @Inject EventBus eventBus;
     @Inject IplantAnnouncer announcer;
+    @Inject UserInfo userInfo;
     private ManageCollaboratorsViewFactory factory;
     private GroupServiceFacade groupServiceFacade;
     private CollaboratorsServiceFacade collabServiceFacade;
@@ -99,11 +80,10 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     void addEventHandlers() {
-        addCollabHandlerRegistration = eventBus.addHandler(UserSearchResultSelected.TYPE,
-                                                           new UserSearchResultSelectedEventHandlerImpl());
         view.addDeleteGroupSelectedHandler(this);
         view.addAddGroupSelectedHandler(this);
         view.addGroupNameSelectedHandler(this);
+        view.addUserSearchResultSelectedEventHandler(this);
     }
 
     /*
@@ -120,6 +100,19 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 //        updateListView();
         addEventHandlers();
         container.setWidget(view.asWidget());
+    }
+
+    @Override
+    public void onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected) {
+        Collaborator collaborator = userSearchResultSelected.getCollaborator();
+        if (!userInfo.getUsername()
+                     .equals(collaborator.getUserName())) {
+            if (!collaboratorsUtil.isCurrentCollaborator(collaborator, view.getCollaborators())) {
+                addAsCollaborators(Arrays.asList(collaborator));
+            }
+        } else {
+            announcer.schedule(new ErrorAnnouncementConfig(I18N.DISPLAY.collaboratorSelfAdd()));
+        }
     }
 
     /*
@@ -239,13 +232,6 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     @Override
     public List<Collaborator> getSelectedCollaborators() {
         return view.getSelectedCollaborators();
-    }
-
-    @Override
-    public void cleanup() {
-        if (addCollabHandlerRegistration != null) {
-            addCollabHandlerRegistration.removeHandler();
-        }
     }
 
     @Override
