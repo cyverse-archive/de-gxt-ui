@@ -1,6 +1,5 @@
 package org.iplantc.de.collaborators.client.views;
 
-import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupDetailsView;
@@ -45,29 +44,15 @@ import java.util.List;
 /**
  * @author aramsey
  */
+
 public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
-                                                               Editor<Group> {
+                                                               Editor<Group>,
+                                                               UserSearchResultSelected.UserSearchResultSelectedEventHandler {
 
     interface GroupDetailsViewImplUiBinder extends UiBinder<Widget, GroupDetailsViewImpl> {
     }
 
     interface EditorDriver extends SimpleBeanEditorDriver<Group, GroupDetailsViewImpl> {}
-
-    private class CollaboratorSelectedHandler
-            implements UserSearchResultSelected.UserSearchResultSelectedEventHandler {
-        @Override
-        public void onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected) {
-            if (UserSearchResultSelected.USER_SEARCH_EVENT_TAG.GROUP.toString().equals(userSearchResultSelected.getTag())) {
-                Collaborator collaborator = userSearchResultSelected.getCollaborator();
-                if (MODE.EDIT == mode) {
-                    mask();
-                    fireEvent(new AddGroupMemberSelected(getGroup(), collaborator));
-                } else {
-                    listStore.add(collaborator);
-                }
-            }
-        }
-    }
 
     final EditorDriver editorDriver = GWT.create(EditorDriver.class);
     static GroupDetailsViewImplUiBinder uiBinder = GWT.create(GroupDetailsViewImplUiBinder.class);
@@ -84,24 +69,21 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
     @UiField ColumnModel<Collaborator> cm;
     @UiField(provided = true) GroupView.GroupViewAppearance appearance;
 
-    EventBus eventBus;
-    HandlerRegistration handlerRegistration;
-
     private CheckBoxSelectionModel<Collaborator> checkBoxModel;
     String baseID;
     private MODE mode;
 
     @Inject
     public GroupDetailsViewImpl(GroupView.GroupViewAppearance appearance,
-                            EventBus eventBus) {
+                                UserSearchField searchField) {
         this.appearance = appearance;
-        this.eventBus = eventBus;
-        searchField = new UserSearchField(UserSearchResultSelected.USER_SEARCH_EVENT_TAG.GROUP);
+        this.searchField = searchField;
         checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Collaborator>());
         initWidget(uiBinder.createAndBindUi(this));
 
         groupNameLabel.setHTML(appearance.groupNameLabel());
 
+        searchField.addUserSearchResultSelectedEventHandler(this);
         checkBoxModel.setSelectionMode(Style.SelectionMode.MULTI);
         grid.setSelectionModel(checkBoxModel);
         grid.getView().setEmptyText(appearance.noCollaborators());
@@ -118,10 +100,18 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
             }
         });
 
-        handlerRegistration =
-                eventBus.addHandler(UserSearchResultSelected.TYPE, new CollaboratorSelectedHandler());
-
         editorDriver.initialize(this);
+    }
+
+    @Override
+    public void onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected) {
+        Collaborator collaborator = userSearchResultSelected.getCollaborator();
+        if (MODE.EDIT == mode) {
+            mask();
+            fireEvent(new AddGroupMemberSelected(getGroup(), collaborator));
+        } else {
+            listStore.add(collaborator);
+        }
     }
 
     @UiHandler("deleteBtn")
@@ -169,12 +159,6 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
         editorDriver.edit(group);
     }
 
-    @Override
-    public void clearHandlers() {
-        handlerRegistration.removeHandler();
-    }
-
-    @Override
     public Group getGroup() {
         return editorDriver.flush();
     }

@@ -11,7 +11,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
-import com.sencha.gxt.widget.core.client.event.HideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 /**
@@ -54,13 +53,6 @@ public class GroupDetailsDialog extends IPlantDialog implements GroupSaved.HasGr
             @Override
             public void onSelect(SelectEvent event) {
                 hide();
-            }
-        });
-
-        addHideHandler(new HideEvent.HideHandler() {
-            @Override
-            public void onHide(HideEvent event) {
-                presenter.clearHandlers();
             }
         });
     }

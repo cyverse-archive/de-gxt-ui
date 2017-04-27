@@ -88,11 +88,6 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     }
 
     @Override
-    public void clearHandlers() {
-        view.clearHandlers();
-    }
-
-    @Override
     public void saveGroupSelected() {
         view.mask(appearance.loadingMask());
         Group group = view.getGroup();

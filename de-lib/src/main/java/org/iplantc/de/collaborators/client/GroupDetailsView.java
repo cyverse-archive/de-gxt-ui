@@ -44,11 +44,6 @@ public interface GroupDetailsView extends IsWidget,
         boolean isViewValid();
 
         /**
-         * Clear any EventBus handlers that are no longer needed
-         */
-        void clearHandlers();
-
-        /**
          * Handling saving the Collaborator List
          */
         void saveGroupSelected();
@@ -59,11 +54,6 @@ public interface GroupDetailsView extends IsWidget,
      * @param group
      */
     void edit(Group group, MODE mode);
-
-    /**
-     * Clear any EventBus handlers that can now be removed
-     */
-    void clearHandlers();
 
     /**
      * Get the current Collaborator List from the view
