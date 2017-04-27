@@ -8,6 +8,7 @@ import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.presenter.GroupDetailsPresenterImpl;
 import org.iplantc.de.collaborators.client.presenter.ManageCollaboratorsPresenter;
 import org.iplantc.de.collaborators.client.views.GroupDetailsViewImpl;
+import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.client.views.GroupViewImpl;
 import org.iplantc.de.collaborators.client.views.dialogs.ManageCollaboratorsDialog;
 import org.iplantc.de.collaborators.client.views.ManageCollaboratorsViewImpl;
@@ -30,5 +31,6 @@ public class CollaboratorsGinModule extends AbstractGinModule {
         bind(GroupServiceFacade.class).to(GroupServiceFacadeImpl.class);
         bind(GroupDetailsView.class).to(GroupDetailsViewImpl.class);
         bind(GroupDetailsView.Presenter.class).to(GroupDetailsPresenterImpl.class);
+        bind(UserSearchField.class);
     }
 }

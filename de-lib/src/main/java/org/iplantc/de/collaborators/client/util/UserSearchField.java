@@ -3,35 +3,31 @@
  */
 package org.iplantc.de.collaborators.client.util;
 
-import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
-import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.ValueUpdater;
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanFactory;
+import com.google.inject.Inject;
 
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
 import com.sencha.gxt.core.client.IdentityValueProvider;
-import com.sencha.gxt.core.client.XTemplates;
 import com.sencha.gxt.data.shared.ListStore;
-import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.StringLabelProvider;
 import com.sencha.gxt.data.shared.loader.BeforeLoadEvent;
 import com.sencha.gxt.data.shared.loader.BeforeLoadEvent.BeforeLoadHandler;
 import com.sencha.gxt.data.shared.loader.LoadResultListStoreBinding;
-import com.sencha.gxt.data.shared.loader.PagingLoadConfig;
+import com.sencha.gxt.data.shared.loader.PagingLoadConfigBean;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.ListView;
@@ -41,46 +37,47 @@ import com.sencha.gxt.widget.core.client.form.ComboBox;
  * @author sriram
  *
  */
-public class UserSearchField implements IsWidget {
+public class UserSearchField implements IsWidget,
+                                        UserSearchResultSelected.HasUserSearchResultSelectedEventHandlers {
+
+    public class UsersLoadConfig extends PagingLoadConfigBean {
+        private String query;
+
+        public String getQuery() {
+            return query;
+        }
+
+        public void setQuery(String query) {
+            this.query = query;
+        }
+    }
+
+    public interface UserSearchFieldAppearance {
+        void render(Cell.Context context, Collaborator collaborator, SafeHtmlBuilder sb);
+
+        String searchCollab();
+
+        String collaboratorDisplayName(Collaborator c);
+    }
 
     private final UserSearchRPCProxy searchProxy;
-
     private ComboBox<Collaborator> combo;
-
-    private final UserSearchResultSelected.USER_SEARCH_EVENT_TAG tag;
-
     private ListView<Collaborator, Collaborator> view;
+    private UserSearchFieldAppearance appearance;
+    private HandlerManager handlerManager;
 
-    interface UserTemplate extends XTemplates {
-        @XTemplate(source = "UserSearchResult.html")
-        SafeHtml render(Collaborator c);
-    }
-
-    public interface UsersLoadConfig extends PagingLoadConfig {
-        String getQuery();
-
-        void setQuery(String query);
-    }
-
-    interface UserSearchAutoBeanFactory extends AutoBeanFactory {
-        static UserSearchAutoBeanFactory instance = GWT.create(UserSearchAutoBeanFactory.class);
-
-        AutoBean<UsersLoadConfig> loadConfig();
-
-    }
-
-    public UserSearchField(UserSearchResultSelected.USER_SEARCH_EVENT_TAG tag) {
-        this.tag = tag;
-        this.searchProxy = new UserSearchRPCProxy();
+    @Inject
+    public UserSearchField(UserSearchFieldAppearance appearance,
+                           UserSearchRPCProxy searchProxy) {
+        this.appearance = appearance;
+        this.searchProxy = searchProxy;
         PagingLoader<UsersLoadConfig, PagingLoadResult<Collaborator>> loader = buildLoader();
 
         ListStore<Collaborator> store = buildStore();
         loader.addLoadHandler(new LoadResultListStoreBinding<UsersLoadConfig, Collaborator, PagingLoadResult<Collaborator>>(
                 store));
 
-        final UserTemplate template = GWT.create(UserTemplate.class);
-
-        view = buildView(store, template);
+        view = buildView(store);
 
         ComboBoxCell<Collaborator> cell = buildComboCell(store, view);
         initCombo(loader, cell);
@@ -93,17 +90,13 @@ public class UserSearchField implements IsWidget {
         combo.setMinChars(3);
         combo.setWidth(250);
         combo.setHideTrigger(true);
-        combo.setEmptyText(I18N.DISPLAY.searchCollab());
+        combo.setEmptyText(appearance.searchCollab());
         combo.addSelectionHandler(new SelectionHandler<Collaborator>() {
 
             @Override
             public void onSelection(SelectionEvent<Collaborator> event) {
-                EventBus bus = EventBus.getInstance();
-                UserSearchResultSelected usrs = new UserSearchResultSelected(UserSearchField.this.tag
-                        .toString(), combo
-                                .getListView().getSelectionModel().getSelectedItem());
-                bus.fireEvent(usrs);
-
+                Collaborator collaborator = combo.getListView().getSelectionModel().getSelectedItem();
+                ensureHandlers().fireEvent(new UserSearchResultSelected(collaborator));
             }
         });
     }
@@ -115,7 +108,7 @@ public class UserSearchField implements IsWidget {
 
                     @Override
                     public String getLabel(Collaborator c) {
-                        return c.getFirstName() + " " + c.getLastName();
+                        return appearance.collaboratorDisplayName(c);
                     }
 
                 }, view) {
@@ -132,8 +125,7 @@ public class UserSearchField implements IsWidget {
         return cell;
     }
 
-    private ListView<Collaborator, Collaborator> buildView(ListStore<Collaborator> store,
-            final UserTemplate template) {
+    private ListView<Collaborator, Collaborator> buildView(ListStore<Collaborator> store) {
         ListView<Collaborator, Collaborator> view = new ListView<Collaborator, Collaborator>(store,
                 new IdentityValueProvider<Collaborator>());
 
@@ -142,7 +134,7 @@ public class UserSearchField implements IsWidget {
             @Override
             public void render(com.google.gwt.cell.client.Cell.Context context, Collaborator value,
                     SafeHtmlBuilder sb) {
-                sb.append(template.render(value));
+                appearance.render(context, value, sb);
             }
 
         });
@@ -152,8 +144,7 @@ public class UserSearchField implements IsWidget {
     private PagingLoader<UsersLoadConfig, PagingLoadResult<Collaborator>> buildLoader() {
         PagingLoader<UsersLoadConfig, PagingLoadResult<Collaborator>> loader = new PagingLoader<UsersLoadConfig, PagingLoadResult<Collaborator>>(
                 searchProxy);
-        UsersLoadConfig loadConfig = UserSearchAutoBeanFactory.instance.loadConfig().as();
-        loader.useLoadConfig(loadConfig);
+        loader.useLoadConfig(new UsersLoadConfig());
         loader.addBeforeLoadHandler(new BeforeLoadHandler<UsersLoadConfig>() {
 
             @Override
@@ -169,15 +160,7 @@ public class UserSearchField implements IsWidget {
     }
 
     private ListStore<Collaborator> buildStore() {
-        ListStore<Collaborator> store = new ListStore<Collaborator>(
-                new ModelKeyProvider<Collaborator>() {
-
-                    @Override
-                    public String getKey(Collaborator item) {
-                return item.getUserName();
-                    }
-
-                });
+        ListStore<Collaborator> store = new ListStore<Collaborator>(item -> item.getUserName());
         return store;
     }
 
@@ -190,4 +173,15 @@ public class UserSearchField implements IsWidget {
         view.ensureDebugId(debugId);
     }
 
+    @Override
+    public HandlerRegistration addUserSearchResultSelectedEventHandler(UserSearchResultSelected.UserSearchResultSelectedEventHandler handler) {
+        return ensureHandlers().addHandler(UserSearchResultSelected.TYPE, handler);
+    }
+
+    protected HandlerManager ensureHandlers() {
+        if (handlerManager == null) {
+            handlerManager = new HandlerManager(this);
+        }
+        return handlerManager;
+    }
 }
