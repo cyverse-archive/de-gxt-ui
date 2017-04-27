@@ -177,15 +177,6 @@ public class ManageCollaboratorsPresenterTest {
         verify(viewMock).setMode(eq(ManageCollaboratorsView.MODE.SELECT));
     }
 
-
-    @Test
-    public void cleanup() {
-        /** CALL METHOD UNDER TEST **/
-        uut.cleanup();
-
-        verify(addCollabHandlerRegistrationMock).removeHandler();
-    }
-
     @Test
     public void onDeleteGroupSelected() {
         when(groupMock.getName()).thenReturn("name");

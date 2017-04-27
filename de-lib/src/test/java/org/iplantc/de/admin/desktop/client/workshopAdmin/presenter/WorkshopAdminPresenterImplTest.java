@@ -19,7 +19,6 @@ import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.Member;
 import org.iplantc.de.client.models.groups.MemberSaveResult;
-import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -87,8 +86,7 @@ public class WorkshopAdminPresenterImplTest {
     public void verifyConstructor() {
         verify(viewFactoryMock).create(eq(listStoreMock));
 
-        verify(viewMock).addGlobalEventHandler(eq(UserSearchResultSelected.TYPE), isA(
-                WorkshopAdminPresenterImpl.UserSearchResultSelectedEventHandler.class));
+        verify(viewMock).addUserSearchResultSelectedEventHandler(isA(WorkshopAdminPresenterImpl.UserSearchResultSelectedEventHandler.class));
 
         verify(viewMock).addLocalEventHandler(eq(DeleteMembersClickedEvent.TYPE), isA(
                 WorkshopAdminPresenterImpl.DeleteMembersClickedEventHandler.class));
