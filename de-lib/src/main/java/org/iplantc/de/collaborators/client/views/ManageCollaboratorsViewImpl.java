@@ -9,6 +9,7 @@ import org.iplantc.de.collaborators.client.events.UserSearchResultSelected.USER_
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 
+import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -119,7 +120,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
 
     @Override
     public void mask(String maskText) {
-        if (maskText == null || maskText.isEmpty()) {
+        if (Strings.isNullOrEmpty(maskText)) {
             maskText = appearance.loadingMask();
         }
         collaboratorListPnl.mask(maskText);
