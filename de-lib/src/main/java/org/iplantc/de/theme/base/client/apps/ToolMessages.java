@@ -39,5 +39,30 @@ public interface ToolMessages extends Messages {
 
     String addTool();
 
+    String toolName();
+
+    String description();
+
+    String imgName();
+
     String tag();
+
+    String dockerUrl();
+
+    String cpuShare();
+
+    String memLimit();
+
+    String nwMode();
+
+    String timeLimit();
+
+    String create();
+
+    String restrictions();
+
+    String toolInfo();
 }
+        
+    
+

@@ -25,6 +25,8 @@ import org.iplantc.de.apps.client.presenter.submit.SubmitAppForPublicPresenter;
 import org.iplantc.de.apps.client.presenter.toolBar.AppsToolbarPresenterImpl;
 import org.iplantc.de.apps.client.presenter.tools.ManageToolsViewPresenter;
 import org.iplantc.de.apps.client.views.AppsViewImpl;
+import org.iplantc.de.apps.client.views.tools.EditToolView;
+import org.iplantc.de.apps.client.views.tools.EditToolViewImpl;
 import org.iplantc.de.apps.client.views.tools.ManageToolsToolbarView;
 import org.iplantc.de.apps.client.views.categories.AppCategoriesViewImpl;
 import org.iplantc.de.apps.client.views.details.AppDetailsViewImpl;
@@ -126,7 +128,8 @@ public class AppsGinModule extends AbstractGinModule {
         bind(ManageToolsToolbarView.class).to(ManageToolsViewToolbarImpl.class);
         bind(ManageToolsView.class).to(ManageToolsViewImpl.class);
         bind(ManageToolsView.Presenter.class).to(ManageToolsViewPresenter.class);
-
+        bind(EditToolView.class).to(EditToolViewImpl.class);
     }
 
 }
+

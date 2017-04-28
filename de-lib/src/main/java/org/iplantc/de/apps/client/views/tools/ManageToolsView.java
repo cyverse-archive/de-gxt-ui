@@ -1,6 +1,11 @@
 package org.iplantc.de.apps.client.views.tools;
 
+import org.iplantc.de.apps.client.events.tools.AddNewToolSelected;
 import org.iplantc.de.apps.client.events.tools.BeforeToolSearchEvent;
+
+import org.iplantc.de.apps.client.events.tools.DeleteToolSelected;
+import org.iplantc.de.apps.client.events.tools.RefreshToolsSelectedEvent;
+import org.iplantc.de.apps.client.events.tools.ShareToolsSelected;
 import org.iplantc.de.apps.client.events.tools.ToolSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.tools.ToolSelectionChangedEvent;
 import org.iplantc.de.client.models.IsMaskable;
@@ -45,9 +50,21 @@ public interface ManageToolsView extends IsWidget,
 
     void loadTools(List<Tool> tools);
 
+    void addTool(Tool tool);
+
+    void removeTool(Tool tool);
+
     ManageToolsToolbarView getToolbar();
 
-    public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter{
-          void loadTools();
+    public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter,
+                                       RefreshToolsSelectedEvent.RefreshToolsSelectedEventHandler,
+                                       AddNewToolSelected.NewToolSelectedHandler,
+                                       DeleteToolSelected.DeleteToolsSelectedHandler,
+                                       ShareToolsSelected.ShareToolsSelectedHandler {
+        void loadTools();
+
+        void addTool(Tool tool);
+
+        void removeTool(Tool tool);
     }
 }
