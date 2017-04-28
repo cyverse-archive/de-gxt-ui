@@ -22,7 +22,7 @@ timestamps {
           dockerWarBuilder = "war-${repo}-${env.BUILD_TAG}"
           dockerPusher = "push-${env.BUILD_TAG}"
 
-          dockerCacheVolumes = """-v /tmp:/tmp -v "\$(pwd)/.gradle/caches:/root/.gradle/caches""""
+          dockerCacheVolumes = """-v /tmp:/tmp -v "\$(pwd)/.gradle/caches:/root/.gradle/caches\""""
 
           sh "docker run ${dockerCacheVolumes} --name ${dockerCacher} --rm ${dockerRepoBuild} ./gradlew clean classes testClasses"
 
