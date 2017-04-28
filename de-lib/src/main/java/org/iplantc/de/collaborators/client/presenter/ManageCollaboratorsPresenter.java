@@ -9,9 +9,11 @@ import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
+import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.CollaboratorsLoadedEvent;
+import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
@@ -40,7 +42,8 @@ import java.util.stream.Stream;
  */
 public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Presenter,
                                                      RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler,
-                                                     AddGroupSelected.AddGroupSelectedHandler {
+                                                     AddGroupSelected.AddGroupSelectedHandler,
+                                                     DeleteGroupSelected.DeleteGroupSelectedHandler {
 
     final class UserSearchResultSelectedEventHandlerImpl implements
                                                                  UserSearchResultSelected.UserSearchResultSelectedEventHandler {
@@ -69,22 +72,26 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     private ManageCollaboratorsViewFactory factory;
     private GroupServiceFacade groupServiceFacade;
     private CollaboratorsServiceFacade collabServiceFacade;
+    private GroupView.GroupViewAppearance groupAppearance;
     ManageCollaboratorsView view;
     HandlerRegistration addCollabHandlerRegistration;
 
     @Inject
     public ManageCollaboratorsPresenter(ManageCollaboratorsViewFactory factory,
                                         GroupServiceFacade groupServiceFacade,
-                                        CollaboratorsServiceFacade collabServiceFacade) {
+                                        CollaboratorsServiceFacade collabServiceFacade,
+                                        GroupView.GroupViewAppearance groupAppearance) {
         this.factory = factory;
         this.groupServiceFacade = groupServiceFacade;
         this.collabServiceFacade = collabServiceFacade;
+        this.groupAppearance = groupAppearance;
     }
 
     void addEventHandlers() {
         addCollabHandlerRegistration = eventBus.addHandler(UserSearchResultSelected.TYPE,
                                                            new UserSearchResultSelectedEventHandlerImpl());
         view.addAddGroupSelectedHandler(this);
+        view.addDeleteGroupSelectedHandler(this);
     }
 
     /*
@@ -252,5 +259,22 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     List<Group> getGroupList(Group result) {
         return Lists.newArrayList(result);
+    }
+
+    @Override
+    public void onDeleteGroupSelected(DeleteGroupSelected event) {
+        Group group = event.getGroup();
+        groupServiceFacade.deleteGroup(group.getName(), new AsyncCallback<Group>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(Group result) {
+                view.removeCollabList(result);
+                announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.groupDeleteSuccess(result)));
+            }
+        });
     }
 }

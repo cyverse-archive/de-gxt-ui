@@ -1,5 +1,6 @@
 package org.iplantc.de.client.services.impl;
 
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.DELETE;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
@@ -62,5 +63,14 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
         deService.getServiceData(wrapper, new GroupCallbackConverter(callback, factory));
     }
+
+    @Override
+    public void deleteGroup(String name, AsyncCallback<Group> callback) {
+        String address = GROUPS + "/" + URL.encodeQueryString(name);
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address);
+        deService.getServiceData(wrapper, new GroupCallbackConverter(callback, factory));
+    }
+
 
 }

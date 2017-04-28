@@ -3,6 +3,7 @@ package org.iplantc.de.collaborators.client.views;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
+import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
 import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.events.SaveGroupSelected;
 import org.iplantc.de.collaborators.client.models.GroupProperties;
@@ -26,7 +27,10 @@ import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
+import com.sencha.gxt.widget.core.client.Dialog;
+import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
@@ -102,6 +106,11 @@ public class GroupViewImpl extends Composite implements GroupView {
         listStore.addAll(result);
     }
 
+    @Override
+    public void removeCollabList(Group result) {
+        listStore.remove(result);
+    }
+
     @UiHandler("addGroup")
     void addGroupSelected(SelectEvent event) {
         groupDetailsDialog.get(new AsyncCallback<GroupDetailsDialog>() {
@@ -117,6 +126,25 @@ public class GroupViewImpl extends Composite implements GroupView {
                         fireEvent(new AddGroupSelected(event.getGroup()));
                     }
                 });
+            }
+        });
+    }
+
+    @UiHandler("deleteGroup")
+    void deleteGroupSelected(SelectEvent event) {
+        Group group = grid.getSelectionModel().getSelectedItem();
+        if (group == null) {
+            return;
+        }
+        ConfirmMessageBox deleteAlert = new ConfirmMessageBox(appearance.deleteGroupConfirmHeading(group),
+                                                            appearance.deleteGroupConfirm(group));
+        deleteAlert.show();
+        deleteAlert.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
+            @Override
+            public void onDialogHide(DialogHideEvent event) {
+                if (event.getHideButton().equals(Dialog.PredefinedButton.YES)) {
+                    fireEvent(new DeleteGroupSelected(group));
+                }
             }
         });
     }
@@ -138,5 +166,10 @@ public class GroupViewImpl extends Composite implements GroupView {
     @Override
     public HandlerRegistration addAddGroupSelectedHandler(AddGroupSelected.AddGroupSelectedHandler handler) {
         return addHandler(handler, AddGroupSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addDeleteGroupSelectedHandler(DeleteGroupSelected.DeleteGroupSelectedHandler handler) {
+        return addHandler(handler, DeleteGroupSelected.TYPE);
     }
 }

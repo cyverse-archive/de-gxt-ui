@@ -16,6 +16,8 @@ import com.sencha.gxt.widget.core.client.event.HideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 /**
+ * A dialog for creating/editing a Collaborator List.
+ * From this dialog, a user can update the details of a Collaborator List and add/remove members to it.
  * @author aramsey
  */
 public class GroupDetailsDialog extends IPlantDialog implements SaveGroupSelected.HasSaveGroupSelectedHandlers {

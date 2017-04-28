@@ -15,6 +15,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Event;
 
 /**
+ * A clickable cell containing the Collaborator List name that will open up the GroupDetailsDialog
  * @author aramsey
  */
 public class GroupNameCell extends AbstractCell<Group> {

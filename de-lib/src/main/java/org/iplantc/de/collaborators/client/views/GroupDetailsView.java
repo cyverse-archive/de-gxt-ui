@@ -40,6 +40,8 @@ import java.util.List;
 
 
 /**
+ * The GroupDetailsView is used within the GroupDetailsDialog.  It allows users to
+ * edit/create Collaborator Lists and add members to those lists.
  * @author aramsey
  */
 public class GroupDetailsView extends Composite implements Editor<Group> {
