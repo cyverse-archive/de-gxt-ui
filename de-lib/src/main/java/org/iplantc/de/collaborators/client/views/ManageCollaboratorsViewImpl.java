@@ -1,15 +1,15 @@
 package org.iplantc.de.collaborators.client.views;
 
 import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.collaborators.client.GroupView;
+import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected.USER_SEARCH_EVENT_TAG;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
-import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.groups.client.views.dialogs.GroupListDialog;
-import org.iplantc.de.resources.client.messages.I18N;
-import org.iplantc.de.shared.AsyncProviderWrapper;
 
+import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -17,7 +17,6 @@ import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -53,19 +52,17 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
     @UiField ColumnModel<Collaborator> cm;
     @UiField ListStore<Collaborator> listStore;
-    @UiField FramedPanel collaboratorListPnl;
     @UiField BorderLayoutContainer con;
     @UiField TextButton deleteBtn;
     @UiField Grid<Collaborator> grid;
     @UiField TextButton manageBtn;
-    @UiField TextButton groupsBtn;
     @UiField(provided = true) UserSearchField searchField;
     @UiField HorizontalLayoutContainer searchPanel;
     @UiField ToolBar toolbar;
+    @UiField FramedPanel collaboratorListPnl;
+    private GroupView groupView;
     @UiField(provided = true) ManageCollaboratorsView.Appearance appearance;
 
-    @Inject AsyncProviderWrapper<GroupListDialog> groupDialogProvider;
-    
     private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
     private final CheckBoxSelectionModel<Collaborator> checkBoxModel;
     private MODE mode;
@@ -73,13 +70,13 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
 
     @Inject
     public ManageCollaboratorsViewImpl(@Assisted final MODE mode,
-                                       ManageCollaboratorsView.Appearance appearance) {
+                                       ManageCollaboratorsView.Appearance appearance,
+                                       GroupView groupView) {
         this.appearance = appearance;
+        this.groupView = groupView;
         searchField = new UserSearchField(USER_SEARCH_EVENT_TAG.MANAGE);
         checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Collaborator>());
         initWidget(uiBinder.createAndBindUi(this));
-
-        groupsBtn.setVisible(false);
 
         grid.setSelectionModel(checkBoxModel);
         checkBoxModel.setSelectionMode(SelectionMode.MULTI);
@@ -111,6 +108,11 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @Override
+    public void addCollabLists(List<Group> result) {
+        groupView.addCollabLists(result);
+    }
+
+    @Override
     public void loadData(List<Collaborator> models) {
         listStore.clear();
         listStore.addAll(models);
@@ -118,11 +120,11 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
 
     @Override
     public void mask(String maskText) {
-        if (maskText == null || maskText.isEmpty()) {
-            collaboratorListPnl.mask(I18N.DISPLAY.loadingMask());
-        } else {
-            collaboratorListPnl.mask(maskText);
+        if (Strings.isNullOrEmpty(maskText)) {
+            maskText = appearance.loadingMask();
         }
+        collaboratorListPnl.mask(maskText);
+        groupView.mask(maskText);
     }
 
     @Override
@@ -153,7 +155,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
         switch (mode) {
             case MANAGE:
                 grid.getView().setEmptyText(appearance.noCollaborators());
-                collaboratorListPnl.setHeading(appearance.myCollaborators());
                 manageBtn.setVisible(false);
                 deleteBtn.setVisible(true);
                 con.show(LayoutRegion.NORTH);
@@ -163,7 +164,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
                 con.hide(LayoutRegion.NORTH);
                 manageBtn.setVisible(true);
                 deleteBtn.setVisible(false);
-                collaboratorListPnl.setHeading(appearance.selectCollabs());
                 break;
         }
     }
@@ -171,6 +171,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @Override
     public void unmask() {
         collaboratorListPnl.unmask();
+        groupView.unmask();
     }
 
     @Override
@@ -178,10 +179,10 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
         super.onEnsureDebugId(baseID);
         this.baseID = baseID;
         deleteBtn.ensureDebugId(baseID + CollaboratorsModule.Ids.DELETE);
-        groupsBtn.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUPS);
         //Checkbox column config is at index 0
         grid.getView().getHeader().getHead(0).getElement().setId(baseID + CollaboratorsModule.Ids.CHECKBOX_HEADER);
         searchField.setViewDebugId(CollaboratorsModule.Ids.SEARCH_LIST);
+        groupView.asWidget().ensureDebugId(baseID + CollaboratorsModule.Ids.GROUPS_VIEW);
     }
 
     void setGridCheckBoxDebugIds() {
@@ -210,23 +211,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
         setMode(MODE.MANAGE);
     }
 
-    @UiHandler("groupsBtn")
-    void manageGroupsSelected(SelectEvent event) {
-        groupDialogProvider.get(new AsyncCallback<GroupListDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(GroupListDialog result) {
-                result.show();
-            }
-        });
-    }
-
     private void init() {
-        collaboratorListPnl.setHeading(appearance.myCollaborators());
         grid.getSelectionModel().addSelectionChangedHandler(this);
     }
 

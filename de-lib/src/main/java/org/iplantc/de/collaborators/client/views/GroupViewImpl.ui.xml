@@ -7,11 +7,11 @@
 >
 
     <ui:with field="appearance"
-             type="org.iplantc.de.groups.client.GroupView.GroupViewAppearance"/>
+             type="org.iplantc.de.collaborators.client.GroupView.GroupViewAppearance"/>
 
     <ui:with field="margins"
              type="com.sencha.gxt.core.client.util.Margins">
-        <ui:attributes top="0" right="5" bottom="0" left="5"/>
+        <ui:attributes top="0" right="0" bottom="0" left="0"/>
     </ui:with>
     <ui:with field="layoutData"
              type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
@@ -28,7 +28,7 @@
     </ui:with>
 
 
-    <container:VerticalLayoutContainer borders="true">
+    <container:VerticalLayoutContainer>
         <container:child layoutData="{layoutData}">
             <toolbar:ToolBar ui:field="toolBar">
                 <toolbar:child>

@@ -14,6 +14,9 @@ public interface CollaboratorsModule {
         String OK = ".okBtn";
         String CHECKBOX_ITEM = ".checkbox_";
         String SEARCH_LIST = "collaboratorsSearchList";
-        String GROUPS = ".groupsBtn";
+        String ADD_GROUP = ".addCollabList";
+        String DELETE_GROUP = ".deleteCollabList";
+        String GRID = ".collabListGrid";
+        String GROUPS_VIEW = ".collabListsView";
     }
 }

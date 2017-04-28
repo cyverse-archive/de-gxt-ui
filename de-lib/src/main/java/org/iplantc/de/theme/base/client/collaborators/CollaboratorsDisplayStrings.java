@@ -10,4 +10,8 @@ public interface CollaboratorsDisplayStrings extends Messages {
     String manageGroups();
 
     String manageCollaborators();
+
+    String collaboratorTab();
+
+    String collaboratorListTab();
 }

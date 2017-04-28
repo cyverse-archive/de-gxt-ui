@@ -1,9 +1,9 @@
-package org.iplantc.de.groups.client.views;
+package org.iplantc.de.collaborators.client.views;
 
 import org.iplantc.de.client.models.groups.Group;
-import org.iplantc.de.groups.client.GroupView;
-import org.iplantc.de.groups.client.model.GroupProperties;
-import org.iplantc.de.groups.shared.GroupsModule;
+import org.iplantc.de.collaborators.client.GroupView;
+import org.iplantc.de.collaborators.client.models.GroupProperties;
+import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
@@ -11,7 +11,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.Style;
@@ -39,7 +38,7 @@ public class GroupViewImpl extends Composite implements GroupView {
     @UiField TextButton addGroup;
     @UiField TextButton deleteGroup;
     @UiField Grid<Group> grid;
-    @UiField(provided = true) ListStore<Group> listStore;
+    @UiField ListStore<Group> listStore;
     @UiField ColumnModel<Group> cm;
     @UiField(provided = true) GroupViewAppearance appearance;
 
@@ -47,14 +46,13 @@ public class GroupViewImpl extends Composite implements GroupView {
 
     @Inject
     public GroupViewImpl(GroupViewAppearance appearance,
-                         GroupProperties props,
-                         @Assisted ListStore<Group> listStore) {
+                         GroupProperties props) {
         this.appearance = appearance;
         this.props = props;
-        this.listStore = listStore;
 
         initWidget(uiBinder.createAndBindUi(this));
         grid.getSelectionModel().setSelectionMode(Style.SelectionMode.SINGLE);
+        grid.getView().setEmptyText(appearance.noCollabLists());
     }
 
     @UiFactory
@@ -72,12 +70,22 @@ public class GroupViewImpl extends Composite implements GroupView {
         return new ColumnModel<>(columns);
     }
 
+    @UiFactory
+    ListStore<Group> createListStore() {
+        return new ListStore<>(props.id());
+    }
+
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
 
-        addGroup.ensureDebugId(baseID + GroupsModule.Ids.ADD_GROUP);
-        deleteGroup.ensureDebugId(baseID + GroupsModule.Ids.DELETE_GROUP);
-        grid.ensureDebugId(baseID + GroupsModule.Ids.GRID);
+        addGroup.ensureDebugId(baseID + CollaboratorsModule.Ids.ADD_GROUP);
+        deleteGroup.ensureDebugId(baseID + CollaboratorsModule.Ids.DELETE_GROUP);
+        grid.ensureDebugId(baseID + CollaboratorsModule.Ids.GRID);
+    }
+
+    @Override
+    public void addCollabLists(List<Group> result) {
+        listStore.addAll(result);
     }
 }

@@ -1,4 +1,4 @@
-package org.iplantc.de.theme.base.client.groups;
+package org.iplantc.de.theme.base.client.collaborators;
 
 import com.google.gwt.i18n.client.Messages;
 
@@ -7,4 +7,6 @@ import com.google.gwt.i18n.client.Messages;
  */
 public interface GroupDisplayStrings extends Messages {
     String groupDialogHeader();
+
+    String noCollabLists();
 }

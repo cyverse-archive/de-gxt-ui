@@ -1,8 +1,12 @@
-package org.iplantc.de.groups.client;
+package org.iplantc.de.collaborators.client;
+
+import org.iplantc.de.client.models.groups.Group;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+
+import java.util.List;
 
 /**
  * @author aramsey
@@ -32,6 +36,8 @@ public interface GroupView extends IsWidget {
         String groupDialogWidth();
 
         String groupDialogHeight();
+
+        String noCollabLists();
     }
 
     interface GroupPresenter {
@@ -40,4 +46,10 @@ public interface GroupView extends IsWidget {
 
         void setViewDebugId(String baseId);
     }
+
+    void addCollabLists(List<Group> result);
+
+    void mask(String loadingMask);
+
+    void unmask();
 }

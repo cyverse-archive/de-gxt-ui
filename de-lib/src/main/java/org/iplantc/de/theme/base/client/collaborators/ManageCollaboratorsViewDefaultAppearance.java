@@ -1,6 +1,6 @@
 package org.iplantc.de.theme.base.client.collaborators;
 
-import org.iplantc.de.collaborators.client.views.ManageCollaboratorsView;
+import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantContextualHelpStrings;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
@@ -121,5 +121,20 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
     @Override
     public ImageResource groupsIcon() {
         return iplantResources.viewCurrentCollabs();
+    }
+
+    @Override
+    public String collaboratorTab() {
+        return displayStrings.collaboratorTab();
+    }
+
+    @Override
+    public String collaboratorListTab() {
+        return displayStrings.collaboratorListTab();
+    }
+
+    @Override
+    public String loadingMask() {
+        return iplantDisplayStrings.loadingMask();
     }
 }

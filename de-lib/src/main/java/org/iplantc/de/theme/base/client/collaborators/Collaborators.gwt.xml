@@ -5,7 +5,11 @@
     <inherits name="org.iplantc.de.collaborators.Collaborators"/>
 
     <replace-with class="org.iplantc.de.theme.base.client.collaborators.ManageCollaboratorsViewDefaultAppearance">
-        <when-type-is class="org.iplantc.de.collaborators.client.views.ManageCollaboratorsView.Appearance" />
+        <when-type-is class="org.iplantc.de.collaborators.client.ManageCollaboratorsView.Appearance" />
+    </replace-with>
+
+    <replace-with class="org.iplantc.de.theme.base.client.collaborators.GroupViewDefaultAppearance">
+        <when-type-is class="org.iplantc.de.collaborators.client.GroupView.GroupViewAppearance"/>
     </replace-with>
 
 </module>

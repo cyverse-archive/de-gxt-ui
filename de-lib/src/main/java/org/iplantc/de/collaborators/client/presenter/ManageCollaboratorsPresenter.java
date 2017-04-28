@@ -6,11 +6,13 @@ package org.iplantc.de.collaborators.client.presenter;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
-import org.iplantc.de.collaborators.client.views.ManageCollaboratorsView;
+import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -31,10 +33,7 @@ import java.util.List;
 public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Presenter,
                                                      RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler{
 
-    private ManageCollaboratorsView view;
-    private HandlerRegistration addCollabHandlerRegistration;
-
-    private final class UserSearchResultSelectedEventHandlerImpl implements
+    final class UserSearchResultSelectedEventHandlerImpl implements
                                                                  UserSearchResultSelected.UserSearchResultSelectedEventHandler {
         @Override
            public void
@@ -57,16 +56,21 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     @Inject CollaboratorsUtil collaboratorsUtil;
+    @Inject EventBus eventBus;
     private ManageCollaboratorsViewFactory factory;
+    private GroupServiceFacade groupServiceFacade;
+    ManageCollaboratorsView view;
+    HandlerRegistration addCollabHandlerRegistration;
 
     @Inject
-    public ManageCollaboratorsPresenter(ManageCollaboratorsViewFactory factory) {
+    public ManageCollaboratorsPresenter(ManageCollaboratorsViewFactory factory,
+                                        GroupServiceFacade groupServiceFacade) {
         this.factory = factory;
+        this.groupServiceFacade = groupServiceFacade;
     }
 
-    private void addEventHandlers() {
-        addCollabHandlerRegistration = EventBus.getInstance()
-                                               .addHandler(UserSearchResultSelected.TYPE,
+    void addEventHandlers() {
+        addCollabHandlerRegistration = eventBus.addHandler(UserSearchResultSelected.TYPE,
                                                            new UserSearchResultSelectedEventHandlerImpl());
     }
 
@@ -81,6 +85,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         this.view = factory.create(mode);
         view.addRemoveCollaboratorSelectedHandler(this);
         loadCurrentCollaborators();
+//        updateListView();
         addEventHandlers();
         container.setWidget(view.asWidget());
     }
@@ -108,6 +113,26 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
             }
         });
 
+    }
+
+    void updateListView() {
+        String searchTerm = "*";
+        updateListView(searchTerm);
+    }
+
+    @Override
+    public void updateListView(String searchTerm) {
+        groupServiceFacade.getGroups(searchTerm, new AsyncCallback<List<Group>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(List<Group> result) {
+                view.addCollabLists(result);
+            }
+        });
     }
 
     @Override

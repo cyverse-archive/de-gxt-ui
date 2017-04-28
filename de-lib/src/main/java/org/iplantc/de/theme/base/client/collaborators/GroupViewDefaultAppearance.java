@@ -1,6 +1,6 @@
-package org.iplantc.de.theme.base.client.groups;
+package org.iplantc.de.theme.base.client.collaborators;
 
-import org.iplantc.de.groups.client.GroupView;
+import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
@@ -48,7 +48,7 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
 
     @Override
     public ImageResource deleteIcon() {
-        return iplantResources.deleteIcon();
+        return iplantResources.delete();
     }
 
     @Override
@@ -84,5 +84,10 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
     @Override
     public String groupDialogHeight() {
         return "400";
+    }
+
+    @Override
+    public String noCollabLists() {
+        return displayStrings.noCollabLists();
     }
 }
