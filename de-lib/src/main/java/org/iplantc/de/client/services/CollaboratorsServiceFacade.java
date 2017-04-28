@@ -3,8 +3,11 @@
  */
 package org.iplantc.de.client.services;
 
-import com.google.gwt.json.client.JSONObject;
+import org.iplantc.de.client.models.collaborators.Collaborator;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import com.sencha.gxt.core.shared.FastMap;
 
 import java.util.List;
 /**
@@ -12,14 +15,14 @@ import java.util.List;
  *
  */
 public interface CollaboratorsServiceFacade {
-    public void searchCollaborators(String term, AsyncCallback<String> callback) ;
+    public void searchCollaborators(String term, AsyncCallback<List<Collaborator>> callback) ;
       
-    public void getCollaborators(AsyncCallback<String> callback);
+    public void getCollaborators(AsyncCallback<List<Collaborator>> callback);
 
-    public void addCollaborators(JSONObject users, AsyncCallback<String> callback);
+    public void addCollaborators(List<Collaborator> collaborators, AsyncCallback<Void> callback);
 
-    public void removeCollaborators(JSONObject users, AsyncCallback<String> callback);
+    public void removeCollaborators(List<Collaborator> users, AsyncCallback<Void> callback);
 
-    public void getUserInfo(List<String> usernames, AsyncCallback<String> callback);
+    public void getUserInfo(List<String> usernames, AsyncCallback<FastMap<Collaborator>> callback);
 
 }

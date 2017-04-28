@@ -1,9 +1,11 @@
 package org.iplantc.de.collaborators.client;
 
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.collaborators.client.events.AddGroupSelected;
+import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.HasOneWidget;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import java.util.List;
@@ -11,7 +13,9 @@ import java.util.List;
 /**
  * @author aramsey
  */
-public interface GroupView extends IsWidget {
+public interface GroupView extends IsWidget,
+                                   GroupNameSelected.GroupNameSelectedHandler,
+                                   AddGroupSelected.HasAddGroupSelectedHandlers {
 
     interface GroupViewAppearance {
 
@@ -31,20 +35,23 @@ public interface GroupView extends IsWidget {
 
         String descriptionColumnLabel();
 
-        String groupDialogHeader();
-
-        String groupDialogWidth();
-
-        String groupDialogHeight();
-
         String noCollabLists();
-    }
 
-    interface GroupPresenter {
+        SafeHtml groupNameLabel();
 
-        void go(HasOneWidget container);
+        String groupDescriptionLabel();
 
-        void setViewDebugId(String baseId);
+        String delete();
+
+        String noCollaborators();
+
+        int groupDetailsWidth();
+
+        int groupDetailsHeight();
+
+        String groupDetailsHeading(Group group);
+
+        String completeRequiredFieldsError();
     }
 
     void addCollabLists(List<Group> result);

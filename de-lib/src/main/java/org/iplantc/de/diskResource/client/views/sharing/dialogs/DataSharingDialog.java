@@ -7,8 +7,6 @@ package org.iplantc.de.diskResource.client.views.sharing.dialogs;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.sharing.SharingAppearance;
 import org.iplantc.de.client.sharing.SharingPresenter;
-import org.iplantc.de.client.util.JsonUtil;
-import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.diskResource.client.gin.factory.DataSharingPresenterFactory;
 
@@ -27,9 +25,6 @@ import java.util.List;
 public class DataSharingDialog extends IPlantDialog implements SelectHandler {
 
     private SharingPresenter sharingPresenter;
-
-    @Inject CollaboratorsUtil collaboratorsUtil;
-    @Inject JsonUtil jsonUtil;
     private DataSharingPresenterFactory factory;
 
     @Inject

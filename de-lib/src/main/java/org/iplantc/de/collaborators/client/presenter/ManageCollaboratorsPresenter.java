@@ -7,17 +7,23 @@ import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
+import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
+import org.iplantc.de.collaborators.client.events.AddGroupSelected;
+import org.iplantc.de.collaborators.client.events.CollaboratorsLoadedEvent;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
-import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.resources.client.messages.I18N;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -25,13 +31,16 @@ import com.google.inject.Inject;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author sriram
  * 
  */
 public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Presenter,
-                                                     RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler{
+                                                     RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler,
+                                                     AddGroupSelected.AddGroupSelectedHandler {
 
     final class UserSearchResultSelectedEventHandlerImpl implements
                                                                  UserSearchResultSelected.UserSearchResultSelectedEventHandler {
@@ -44,12 +53,11 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                    if (!UserInfo.getInstance()
                                 .getUsername()
                                 .equals(collaborator.getUserName())) {
-                       if (!collaboratorsUtil.isCurrentCollaborator(collaborator)) {
+                       if (!collaboratorsUtil.isCurrentCollaborator(collaborator, view.getCollaborators())) {
                            addAsCollaborators(Arrays.asList(collaborator));
                        }
                    } else {
-                       IplantAnnouncer.getInstance()
-                                      .schedule(new ErrorAnnouncementConfig(I18N.DISPLAY.collaboratorSelfAdd()));
+                       announcer.schedule(new ErrorAnnouncementConfig(I18N.DISPLAY.collaboratorSelfAdd()));
                    }
                }
            }
@@ -57,21 +65,26 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     @Inject CollaboratorsUtil collaboratorsUtil;
     @Inject EventBus eventBus;
+    @Inject IplantAnnouncer announcer;
     private ManageCollaboratorsViewFactory factory;
     private GroupServiceFacade groupServiceFacade;
+    private CollaboratorsServiceFacade collabServiceFacade;
     ManageCollaboratorsView view;
     HandlerRegistration addCollabHandlerRegistration;
 
     @Inject
     public ManageCollaboratorsPresenter(ManageCollaboratorsViewFactory factory,
-                                        GroupServiceFacade groupServiceFacade) {
+                                        GroupServiceFacade groupServiceFacade,
+                                        CollaboratorsServiceFacade collabServiceFacade) {
         this.factory = factory;
         this.groupServiceFacade = groupServiceFacade;
+        this.collabServiceFacade = collabServiceFacade;
     }
 
     void addEventHandlers() {
         addCollabHandlerRegistration = eventBus.addHandler(UserSearchResultSelected.TYPE,
                                                            new UserSearchResultSelectedEventHandlerImpl());
+        view.addAddGroupSelectedHandler(this);
     }
 
     /*
@@ -99,20 +112,32 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
      */
     @Override
     public void addAsCollaborators(final List<Collaborator> models) {
-        collaboratorsUtil.addCollaborators(models, new AsyncCallback<Void>() {
+        collabServiceFacade.addCollaborators(models, new AsyncCallback<Void>() {
 
             @Override
             public void onSuccess(Void result) {
                 // remove added models from search results
                 view.addCollaborators(models);
+                String names = getCollaboratorNames(models);
+
+                announcer.schedule(new SuccessAnnouncementConfig(
+                                       I18N.DISPLAY.collaboratorAddConfirm(names)));
             }
 
             @Override
             public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
+                ErrorHandler.post(I18N.ERROR.addCollabErrorMsg(), caught);
             }
         });
 
+    }
+
+    String getCollaboratorNames(List<Collaborator> collaborators) {
+        Stream<Collaborator> stream = collaborators.stream();
+
+        Stream<String> stringStream = stream.map(Collaborator::getUserName);
+        List<String> names = stringStream.collect(Collectors.toList());
+        return Joiner.on(",").join(names);
     }
 
     void updateListView() {
@@ -138,11 +163,13 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     @Override
     public void onRemoveCollaboratorSelected(RemoveCollaboratorSelected event) {
         List<Collaborator> models = event.getCollaborators();
-        collaboratorsUtil.removeCollaborators(models, new AsyncCallback<Void>() {
+        collabServiceFacade.removeCollaborators(models, new AsyncCallback<Void>() {
 
             @Override
             public void onSuccess(Void result) {
                 view.removeCollaborators(models);
+                String names = getCollaboratorNames(models);
+                announcer.schedule(new SuccessAnnouncementConfig(I18N.DISPLAY.collaboratorRemoveConfirm(names)));
 
             }
 
@@ -164,7 +191,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     @Override
     public void loadCurrentCollaborators() {
         view.mask(null);
-        collaboratorsUtil.getCollaborators(new AsyncCallback<Void>() {
+        collabServiceFacade.getCollaborators(new AsyncCallback<List<Collaborator>>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -172,9 +199,10 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
             }
 
             @Override
-            public void onSuccess(Void result) {
+            public void onSuccess(List<Collaborator> result) {
                 view.unmask();
-                view.loadData(collaboratorsUtil.getCurrentCollaborators());
+                view.loadData(result);
+                eventBus.fireEvent(new CollaboratorsLoadedEvent());
             }
 
         });
@@ -203,4 +231,26 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         }
     }
 
+    @Override
+    public void onAddGroupSelected(AddGroupSelected event) {
+        Group group = event.getGroup();
+        if (group == null) {
+            return;
+        }
+        groupServiceFacade.addGroup(group, new AsyncCallback<Group>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(Group result) {
+                view.addCollabLists(getGroupList(result));
+            }
+        });
+    }
+
+    List<Group> getGroupList(Group result) {
+        return Lists.newArrayList(result);
+    }
 }

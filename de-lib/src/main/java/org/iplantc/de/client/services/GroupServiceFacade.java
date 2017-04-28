@@ -12,4 +12,7 @@ import java.util.List;
 public interface GroupServiceFacade {
 
     void getGroups(String searchTerm, AsyncCallback<List<Group>> callback);
+
+    void addGroup(Group group, AsyncCallback<Group> callback);
+
 }

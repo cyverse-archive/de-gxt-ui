@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
+import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.sharing.SharingPermissionView;
 import org.iplantc.de.client.sharing.SharingPresenter;
@@ -99,7 +100,7 @@ public class DataSharingPresenterImpl implements SharingPresenter {
 
                 final List<String> usernames = new ArrayList<>();
                 usernames.addAll(sharingList.keySet());
-                collaboratorsUtil.getUserInfo(usernames, new GetUserInfoCallback(usernames));
+                collaboratorsServiceFacade.getUserInfo(usernames, new GetUserInfoCallback(usernames));
             }
         }
     }
@@ -111,6 +112,7 @@ public class DataSharingPresenterImpl implements SharingPresenter {
     private final Appearance appearance;
     private FastMap<List<Sharing>> dataSharingMap;
     private FastMap<List<JSONObject>> sharingList;
+    private CollaboratorsServiceFacade collaboratorsServiceFacade;
     private final JsonUtil jsonUtil;
     private final CollaboratorsUtil collaboratorsUtil;
 
@@ -120,6 +122,7 @@ public class DataSharingPresenterImpl implements SharingPresenter {
                                     @Assisted final List<DiskResource> selectedResources,
                                     final DataSharingView view,
                                     final CollaboratorsUtil collaboratorsUtil,
+                                    CollaboratorsServiceFacade collaboratorsServiceFacade,
                                     final JsonUtil jsonUtil,
                                     SharingPresenter.Appearance appearance,
                                     SharingPermissionViewFactory sharingViewFactory) {
@@ -127,6 +130,7 @@ public class DataSharingPresenterImpl implements SharingPresenter {
         this.view = view;
         this.selectedResources = selectedResources;
         this.collaboratorsUtil = collaboratorsUtil;
+        this.collaboratorsServiceFacade = collaboratorsServiceFacade;
         this.jsonUtil = jsonUtil;
         this.appearance = appearance;
         permissionsPanel = sharingViewFactory.create(this, getSelectedResourcesAsMap(selectedResources));

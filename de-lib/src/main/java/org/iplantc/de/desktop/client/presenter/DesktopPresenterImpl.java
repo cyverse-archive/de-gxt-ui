@@ -33,7 +33,7 @@ import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.client.util.JsonUtil;
-import org.iplantc.de.collaborators.client.views.ManageCollaboratorsDialog;
+import org.iplantc.de.collaborators.client.views.dialogs.ManageCollaboratorsDialog;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.commons.client.CommonUiConstants;
 import org.iplantc.de.commons.client.ErrorHandler;

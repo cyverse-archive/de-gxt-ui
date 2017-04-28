@@ -5,15 +5,25 @@ package org.iplantc.de.client.services.impl;
 
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
-import org.iplantc.de.shared.DEProperties;
+
+import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.CollaboratorAutoBeanFactory;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
+import org.iplantc.de.client.services.converters.CollaboratorListCallbackConverter;
+import org.iplantc.de.client.services.converters.FastMapCollaboratorCallbackConverter;
+import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
+import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
 import com.google.gwt.http.client.URL;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+
+import com.sencha.gxt.core.shared.FastMap;
 
 import java.util.List;
 
@@ -24,54 +34,61 @@ import java.util.List;
 public class CollaboratorsServiceFacadeImpl implements CollaboratorsServiceFacade {
 
     private final DEProperties deProperties;
+    private CollaboratorAutoBeanFactory factory;
     private final DiscEnvApiService deServiceFacade;
 
     @Inject
     public CollaboratorsServiceFacadeImpl(final DiscEnvApiService deServiceFacade,
-                                          final DEProperties deProperties) {
+                                          final DEProperties deProperties,
+                                          CollaboratorAutoBeanFactory factory) {
         this.deServiceFacade = deServiceFacade;
         this.deProperties = deProperties;
+        this.factory = factory;
     }
 
     @Override
-    public void searchCollaborators(String term, AsyncCallback<String> callback) {
+    public void searchCollaborators(String term, AsyncCallback<List<Collaborator>> callback) {
         String address = deProperties.getMuleServiceBaseUrl()
                 + "user-search?search=" + URL.encodeQueryString(term.trim()); //$NON-NLS-1$
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
 
-        deServiceFacade.getServiceData(wrapper, callback);
+        deServiceFacade.getServiceData(wrapper, new CollaboratorListCallbackConverter(callback, factory));
     }
 
     @Override
-    public void getCollaborators(AsyncCallback<String> callback) {
+    public void getCollaborators(AsyncCallback<List<Collaborator>> callback) {
         String address = deProperties.getMuleServiceBaseUrl() + "collaborators";
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deServiceFacade.getServiceData(wrapper, callback);
+        deServiceFacade.getServiceData(wrapper, new CollaboratorListCallbackConverter(callback, factory));
     }
 
     @Override
-    public void addCollaborators(JSONObject users, AsyncCallback<String> callback) {
+    public void addCollaborators(List<Collaborator> collaborators, AsyncCallback<Void> callback) {
+        JSONObject users = buildJSONModel(collaborators);
+
         String address = deProperties.getMuleServiceBaseUrl() + "collaborators"; //$NON-NLS-1$
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address,
                 users.toString());
 
-        deServiceFacade.getServiceData(wrapper, callback);
+        deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
     }
 
     @Override
-    public void removeCollaborators(JSONObject users, AsyncCallback<String> callback) {
+    public void removeCollaborators(List<Collaborator> collaborators, AsyncCallback<Void> callback) {
+        JSONObject users = buildJSONModel(collaborators);
+
         String address = deProperties.getMuleServiceBaseUrl() + "remove-collaborators"; //$NON-NLS-1$
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address,
                 users.toString());
 
-        deServiceFacade.getServiceData(wrapper, callback);
+        deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
     }
 
     @Override
-    public void getUserInfo(List<String> usernames, AsyncCallback<String> callback) {
+    public void getUserInfo(List<String> usernames, AsyncCallback<FastMap<Collaborator>> callback) {
         StringBuilder address = new StringBuilder(deProperties.getMuleServiceBaseUrl());
         address.append("user-info"); //$NON-NLS-1$
 
@@ -91,7 +108,20 @@ public class CollaboratorsServiceFacadeImpl implements CollaboratorsServiceFacad
         }
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address.toString());
-        deServiceFacade.getServiceData(wrapper, callback);
+        deServiceFacade.getServiceData(wrapper, new FastMapCollaboratorCallbackConverter(callback, factory));
     }
 
+    JSONObject buildJSONModel(final List<Collaborator> models) {
+        JSONArray arr = new JSONArray();
+        int count = 0;
+        for (Collaborator model : models) {
+            JSONObject user = new JSONObject();
+            user.put("username", new JSONString(model.getUserName()));
+            arr.set(count++, user);
+        }
+
+        JSONObject obj = new JSONObject();
+        obj.put("users", arr);
+        return obj;
+    }
 }
