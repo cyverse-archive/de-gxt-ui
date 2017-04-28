@@ -25,10 +25,6 @@
         <ui:attributes trackMouse="true" title="{appearance.submitForPublicUse}" />
     </ui:with>
 
-    <ui:with
-            field="icons"
-            type="org.iplantc.de.resources.client.IplantResources" />
-
     <toolbar:ToolBar ui:field="toolBar">
         <toolbar:child>
             <button:TextButton ui:field="toolsMenuButton" text="{appearance.tools}">

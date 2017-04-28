@@ -13,4 +13,8 @@ public interface ToolServices {
     void searchTools(FilterPagingLoadConfig loadConfig, AsyncCallback<List<Tool>> callback);
 
     void getTools(AsyncCallback<List<Tool>> callback);
+
+    void addTool(Tool tool, AsyncCallback<Tool> callback);
+
+    void deleteTool(Tool tool, AsyncCallback<String> callback);
 }

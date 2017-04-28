@@ -160,6 +160,16 @@ public class ManageToolsViewImpl extends Composite implements ManageToolsView {
     }
 
     @Override
+    public void addTool(Tool tool) {
+        listStore.add(tool);
+    }
+
+    @Override
+    public void removeTool(Tool tool) {
+        listStore.remove(tool);
+    }
+
+    @Override
     public ManageToolsToolbarView getToolbar() {
         return toolbar;
     }

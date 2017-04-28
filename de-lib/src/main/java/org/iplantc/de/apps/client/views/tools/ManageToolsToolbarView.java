@@ -1,7 +1,10 @@
 package org.iplantc.de.apps.client.views.tools;
 
+import org.iplantc.de.apps.client.events.tools.AddNewToolSelected;
 import org.iplantc.de.apps.client.events.tools.BeforeToolSearchEvent;
+import org.iplantc.de.apps.client.events.tools.DeleteToolSelected;
 import org.iplantc.de.apps.client.events.tools.RefreshToolsSelectedEvent;
+import org.iplantc.de.apps.client.events.tools.ShareToolsSelected;
 import org.iplantc.de.apps.client.events.tools.ToolSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.tools.ToolSelectionChangedEvent;
 
@@ -17,7 +20,10 @@ public interface ManageToolsToolbarView extends IsWidget,
                                                 BeforeToolSearchEvent.HasBeforeToolSearchEventHandlers,
                                                 ToolSearchResultLoadEvent.HasToolSearchResultLoadEventHandlers,
                                                 RefreshToolsSelectedEvent.HasRefreshToolsSelectedEventHandlers,
-                                                ToolSelectionChangedEvent.ToolSelectionChangedEventHandler {
+                                                ToolSelectionChangedEvent.ToolSelectionChangedEventHandler,
+                                                AddNewToolSelected.HasNewToolSelectedHandlers,
+                                                DeleteToolSelected.HasDeleteToolsSelectedHandlers,
+                                                ShareToolsSelected.HasShareToolselectedHandlers{
 
     interface ManageToolsToolbarAppearance {
 
