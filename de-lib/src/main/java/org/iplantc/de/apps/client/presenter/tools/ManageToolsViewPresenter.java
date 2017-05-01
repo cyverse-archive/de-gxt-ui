@@ -6,7 +6,9 @@ import org.iplantc.de.apps.client.events.tools.RefreshToolsSelectedEvent;
 import org.iplantc.de.apps.client.events.tools.ShareToolsSelected;
 import org.iplantc.de.apps.client.views.tools.EditToolDialog;
 import org.iplantc.de.apps.client.views.tools.ManageToolsView;
+import org.iplantc.de.apps.client.views.tools.ToolSharingPresenter;
 import org.iplantc.de.client.gin.ServicesInjector;
+import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.services.ToolServices;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -23,7 +25,7 @@ import java.util.List;
 /**
  * Created by sriram on 4/24/17.
  */
-public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
+public class ManageToolsViewPresenter implements ManageToolsView.Presenter, ToolSharingPresenter {
 
     @Inject
     ManageToolsView toolsView;
@@ -134,5 +136,25 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     @Override
     public void onShareToolselected(ShareToolsSelected event) {
         
+    }
+
+    @Override
+    public void loadResources() {
+        
+    }
+
+    @Override
+    public void loadPermissions() {
+
+    }
+
+    @Override
+    public PermissionValue getDefaultPermissions() {
+        return null;
+    }
+
+    @Override
+    public void processRequest() {
+
     }
 }
