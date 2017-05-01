@@ -42,6 +42,9 @@ import org.iplantc.de.apps.client.views.submit.SubmitAppForPublicUseViewImpl;
 import org.iplantc.de.apps.client.views.toolBar.AppsViewToolbarImpl;
 import org.iplantc.de.apps.client.views.tools.ManageToolsViewImpl;
 import org.iplantc.de.apps.client.views.tools.ManageToolsViewToolbarImpl;
+import org.iplantc.de.apps.client.views.tools.ToolSharingPresenter;
+import org.iplantc.de.apps.client.views.tools.ToolSharingView;
+import org.iplantc.de.apps.client.views.tools.ToolSharingViewImpl;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
@@ -125,10 +128,13 @@ public class AppsGinModule extends AbstractGinModule {
         install(new GinFactoryModuleBuilder().implement(SharingPresenter.class,
                                                         AppSharingPresenter.class)
                                              .build(AppSharingPresenterFactory.class));
+
         bind(ManageToolsToolbarView.class).to(ManageToolsViewToolbarImpl.class);
         bind(ManageToolsView.class).to(ManageToolsViewImpl.class);
         bind(ManageToolsView.Presenter.class).to(ManageToolsViewPresenter.class);
         bind(EditToolView.class).to(EditToolViewImpl.class);
+        bind(ToolSharingView.class).to(ToolSharingViewImpl.class);
+        bind(ToolSharingPresenter.class).to(ManageToolsViewPresenter.class);
     }
 
 }
