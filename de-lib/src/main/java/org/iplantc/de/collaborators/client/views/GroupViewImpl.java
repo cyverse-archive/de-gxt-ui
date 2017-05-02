@@ -56,6 +56,7 @@ public class GroupViewImpl extends Composite implements GroupView {
     @UiField ColumnModel<Group> cm;
     @UiField(provided = true) GroupViewAppearance appearance;
 
+    @Inject GroupNameCell nameCell;
     @Inject AsyncProviderWrapper<GroupDetailsDialog> groupDetailsDialog;
 
     private final GroupProperties props;
@@ -81,7 +82,7 @@ public class GroupViewImpl extends Composite implements GroupView {
         ColumnConfig<Group, String> descriptionCol = new ColumnConfig<>(props.description(),
                                                                         appearance.descriptionColumnWidth(),
                                                                         appearance.descriptionColumnLabel());
-        nameCol.setCell(new GroupNameCell(this));
+        nameCol.setCell(nameCell);
         columns.add(nameCol);
         columns.add(descriptionCol);
         return new ColumnModel<>(columns);
