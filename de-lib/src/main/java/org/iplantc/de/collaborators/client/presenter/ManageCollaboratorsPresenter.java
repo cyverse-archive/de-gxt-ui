@@ -14,6 +14,7 @@ import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.CollaboratorsLoadedEvent;
 import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
+import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
@@ -43,7 +44,8 @@ import java.util.stream.Stream;
 public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Presenter,
                                                      RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler,
                                                      AddGroupSelected.AddGroupSelectedHandler,
-                                                     DeleteGroupSelected.DeleteGroupSelectedHandler {
+                                                     DeleteGroupSelected.DeleteGroupSelectedHandler,
+                                                     GroupNameSelected.GroupNameSelectedHandler {
 
     final class UserSearchResultSelectedEventHandlerImpl implements
                                                                  UserSearchResultSelected.UserSearchResultSelectedEventHandler {

@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.groups.Group;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * @author aramsey
@@ -12,6 +13,10 @@ public class GroupNameSelected extends GwtEvent<GroupNameSelected.GroupNameSelec
 
     public static interface GroupNameSelectedHandler extends EventHandler {
         void onGroupNameSelected(GroupNameSelected event);
+    }
+
+    public interface HasGroupNameSelectedHandlers {
+        HandlerRegistration addGroupNameSelectedHandler(GroupNameSelectedHandler handler);
     }
 
     public static Type<GroupNameSelectedHandler> TYPE = new Type<GroupNameSelectedHandler>();

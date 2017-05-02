@@ -173,4 +173,9 @@ public class GroupViewImpl extends Composite implements GroupView {
     public HandlerRegistration addDeleteGroupSelectedHandler(DeleteGroupSelected.DeleteGroupSelectedHandler handler) {
         return addHandler(handler, DeleteGroupSelected.TYPE);
     }
+
+    @Override
+    public HandlerRegistration addGroupNameSelectedHandler(GroupNameSelected.GroupNameSelectedHandler handler) {
+        return nameCell.addGroupNameSelectedHandler(handler);
+    }
 }
