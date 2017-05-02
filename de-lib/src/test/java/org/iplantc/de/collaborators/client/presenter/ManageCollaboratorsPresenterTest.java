@@ -18,6 +18,7 @@ import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.CollaboratorsLoadedEvent;
 import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
+import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
@@ -108,6 +109,8 @@ public class ManageCollaboratorsPresenterTest {
 //        verify(spy).updateListView();
         verify(spy).addEventHandlers();
         verify(viewMock).addAddGroupSelectedHandler(eq(spy));
+        verify(viewMock).addDeleteGroupSelectedHandler(eq(spy));
+        verify(viewMock).addGroupNameSelectedHandler(eq(spy));
         verify(containerMock).setWidget(eq(viewWidgetMock));
     }
 
@@ -216,6 +219,19 @@ public class ManageCollaboratorsPresenterTest {
         verify(viewMock).removeCollabList(eq(groupMock));
         verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));
 
+    }
+
+    @Test
+    public void onGroupNameSelected() {
+        GroupNameSelected eventMock = mock(GroupNameSelected.class);
+        when(eventMock.getGroup()).thenReturn(groupMock);
+
+        /** CALL METHOD UNDER TEST **/
+        uut.onGroupNameSelected(eventMock);
+        verify(groupServiceFacadeMock).getMembers(eq(groupMock), collabListCallbackCaptor.capture());
+
+        collabListCallbackCaptor.getValue().onSuccess(collaboratorListMock);
+        verify(viewMock).editCollabList(eq(groupMock), eq(collaboratorListMock));
     }
 
 }
