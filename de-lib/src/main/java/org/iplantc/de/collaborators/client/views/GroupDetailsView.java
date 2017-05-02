@@ -173,4 +173,10 @@ public class GroupDetailsView extends Composite implements Editor<Group> {
     public List<Collaborator> getCollaborators() {
         return listStore.getAll();
     }
+
+    public void addMembers(List<Collaborator> members) {
+        if (members != null) {
+            listStore.addAll(members);
+        }
+    }
 }

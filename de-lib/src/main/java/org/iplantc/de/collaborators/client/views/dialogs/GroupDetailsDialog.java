@@ -1,5 +1,6 @@
 package org.iplantc.de.collaborators.client.views.dialogs;
 
+import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.collaborators.client.GroupView;
@@ -14,6 +15,8 @@ import com.google.inject.Inject;
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 import com.sencha.gxt.widget.core.client.event.HideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
+
+import java.util.List;
 
 /**
  * A dialog for creating/editing a Collaborator List.
@@ -70,18 +73,27 @@ public class GroupDetailsDialog extends IPlantDialog implements SaveGroupSelecte
         });
     }
 
-    public void show(Group group) {
+    /**
+     * Used for displaying GroupDetailsView to edit an existing Group
+     * @param group
+     * @param members
+     */
+    public void show(Group group, List<Collaborator> members) {
         view.edit(group);
+        view.addMembers(members);
         setHeading(appearance.groupDetailsHeading(group));
         super.show();
 
         ensureDebugId(CollaboratorsModule.Ids.GROUP_DETAILS_DLG);
     }
 
+    /**
+     * Used for displaying GroupDetailsView with a new Group
+     */
     @Override
     public void show() {
         Group group = factory.getGroup().as();
-        show(group);
+        show(group, null);
     }
 
     @Override

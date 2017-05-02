@@ -1,5 +1,6 @@
 package org.iplantc.de.collaborators.client.views;
 
+import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
@@ -151,15 +152,14 @@ public class GroupViewImpl extends Composite implements GroupView {
     }
 
     @Override
-    public void onGroupNameSelected(GroupNameSelected event) {
-        Group group = event.getGroup();
+    public void editCollabList(Group group, List<Collaborator> members) {
         groupDetailsDialog.get(new AsyncCallback<GroupDetailsDialog>() {
             @Override
             public void onFailure(Throwable caught) {}
 
             @Override
             public void onSuccess(GroupDetailsDialog result) {
-                result.show(group);
+                result.show(group, members);
             }
         });
     }

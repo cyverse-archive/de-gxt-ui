@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
+import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 
 import com.google.gwt.resources.client.ImageResource;
@@ -23,7 +24,8 @@ import java.util.List;
 public interface ManageCollaboratorsView extends IsWidget,
                                                  RemoveCollaboratorSelected.HasRemoveCollaboratorSelectedHandlers,
                                                  AddGroupSelected.HasAddGroupSelectedHandlers,
-                                                 DeleteGroupSelected.HasDeleteGroupSelectedHandlers {
+                                                 DeleteGroupSelected.HasDeleteGroupSelectedHandlers,
+                                                 GroupNameSelected.HasGroupNameSelectedHandlers {
 
     /**
      * Appearance related items for the ManageCollaboratorsView
@@ -185,4 +187,11 @@ public interface ManageCollaboratorsView extends IsWidget,
      * @return
      */
     List<Collaborator> getCollaborators();
+
+    /**
+     * Show the view for editing the specified Collaborator List and/or its members
+     * @param group
+     * @param members
+     */
+    void editCollabList(Group group, List<Collaborator> members);
 }

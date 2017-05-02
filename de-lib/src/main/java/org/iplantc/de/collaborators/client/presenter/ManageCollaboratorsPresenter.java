@@ -94,6 +94,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                                                            new UserSearchResultSelectedEventHandlerImpl());
         view.addAddGroupSelectedHandler(this);
         view.addDeleteGroupSelectedHandler(this);
+        view.addGroupNameSelectedHandler(this);
     }
 
     /*
@@ -276,6 +277,22 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
             public void onSuccess(Group result) {
                 view.removeCollabList(result);
                 announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.groupDeleteSuccess(result)));
+            }
+        });
+    }
+
+    @Override
+    public void onGroupNameSelected(GroupNameSelected event) {
+        Group group = event.getGroup();
+        groupServiceFacade.getMembers(group, new AsyncCallback<List<Collaborator>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(List<Collaborator> result) {
+                view.editCollabList(group, result);
             }
         });
     }
