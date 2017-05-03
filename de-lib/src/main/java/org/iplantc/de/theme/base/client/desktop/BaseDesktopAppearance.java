@@ -50,7 +50,7 @@ public class BaseDesktopAppearance implements DesktopView.DesktopAppearance {
         @Source("org/iplantc/de/theme/base/client/desktop/header_bg.png")
         ImageResource headerBg();
 
-        @Source("org/iplantc/de/theme/base/client/desktop/mini_logo.png")
+        @Source("org/iplantc/de/theme/base/client/desktop/cyverse_icon_white.png")
         ImageResource cyverseLogo();
 
         @Source("org/iplantc/de/theme/base/client/desktop/notification.png")
