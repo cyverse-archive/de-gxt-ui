@@ -52,6 +52,9 @@ public class EditToolViewImpl implements EditToolView {
     @UiField
     TextField url;
 
+    @UiField
+    TextField version;
+
     @Override
     public Widget asWidget() {
         return container;
@@ -89,7 +92,7 @@ public class EditToolViewImpl implements EditToolView {
         Tool tool = factory.getTool().as();
         tool.setName(name.getValue());
         tool.setDescription(desc.getValue());
-        tool.setLocation(url.getValue());
+        tool.setVersion(version.getValue());
 
         ToolImage image = factory.getImage().as();
         image.setName(imgName.getValue());
@@ -101,7 +104,6 @@ public class EditToolViewImpl implements EditToolView {
         tool.setContainer(container);
 
         GWT.log("json ->" + AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tool)).getPayload());
-
         return tool;
     }
     

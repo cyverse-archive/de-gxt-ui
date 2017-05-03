@@ -37,6 +37,8 @@ public interface EditToolView extends IsWidget{
         String restrictions();
 
         String toolInfo();
+
+        String version();
     }
 
     boolean validate();
