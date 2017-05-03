@@ -2,9 +2,14 @@ package org.iplantc.de.client.services.impl;
 
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
+import org.iplantc.de.client.models.tool.sharing.ToolPermissionsRequest;
+import org.iplantc.de.client.models.tool.sharing.ToolSharingAutoBeanFactory;
+import org.iplantc.de.client.models.tool.sharing.ToolSharingRequestList;
+import org.iplantc.de.client.models.tool.sharing.ToolUnSharingRequestList;
 import org.iplantc.de.client.services.ToolServices;
 import org.iplantc.de.client.services.converters.ToolCallbackConverter;
 import org.iplantc.de.client.services.converters.ToolsCallbackConverter;
+import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.services.BaseServiceCallWrapper;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
@@ -14,8 +19,10 @@ import com.google.common.collect.Iterables;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.SortDir;
 import com.sencha.gxt.data.shared.SortInfo;
@@ -23,6 +30,7 @@ import com.sencha.gxt.data.shared.SortInfoBean;
 import com.sencha.gxt.data.shared.loader.FilterConfig;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ToolServicesImpl implements ToolServices {
@@ -30,6 +38,9 @@ public class ToolServicesImpl implements ToolServices {
     private final String TOOLS = "org.iplantc.services.tools";
     private final ToolAutoBeanFactory factory;
     private final DiscEnvApiService deServiceFacade;
+
+    @Inject
+    ToolSharingAutoBeanFactory sharingFactory;
 
     @Inject
     public ToolServicesImpl(final DiscEnvApiService deServiceFacade, final ToolAutoBeanFactory factory) {
@@ -87,10 +98,38 @@ public class ToolServicesImpl implements ToolServices {
     @Override
     public void deleteTool(Tool tool, AsyncCallback<String> callback) {
         String address = TOOLS + "/" + tool.getId();
-        ServiceCallWrapper wrapper =
-                new ServiceCallWrapper(BaseServiceCallWrapper.Type.DELETE, address);
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(BaseServiceCallWrapper.Type.DELETE, address);
 
         deServiceFacade.getServiceData(wrapper, callback);
+    }
+
+    @Override
+    public void getPermissions(List<Tool> currentSelection, AsyncCallback<String> callback) {
+        String address = TOOLS + "/" + "permission-lister";
+        List<String> toolPermissionList = new ArrayList<>();
+
+        for (Tool t : currentSelection) {
+            toolPermissionList.add(t.getId());
+        }
+
+        final AutoBean<ToolPermissionsRequest> requestAutoBean = sharingFactory.ToolPermissionsRequest();
+        requestAutoBean.as().setTools(toolPermissionList);
+        final Splittable requestJson = AutoBeanCodex.encode(requestAutoBean);
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(BaseServiceCallWrapper.Type.POST,
+                                                            address,
+                                                            requestJson.getPayload());
+        deServiceFacade.getServiceData(wrapper, callback);
+    }
+
+    @Override
+    public void shareTool(ToolSharingRequestList obj, AppsCallback<String> appsCallback) {
+
+    }
+
+    @Override
+    public void unShareTool(ToolUnSharingRequestList obj, AppsCallback<String> appsCallback) {
+
     }
 
 }

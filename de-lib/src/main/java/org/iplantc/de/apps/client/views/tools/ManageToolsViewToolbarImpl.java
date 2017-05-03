@@ -7,7 +7,6 @@ import org.iplantc.de.apps.client.events.tools.DeleteToolSelected;
 import org.iplantc.de.apps.client.events.tools.RefreshToolsSelectedEvent;
 import org.iplantc.de.apps.client.events.tools.ShareToolsSelected;
 import org.iplantc.de.apps.client.events.tools.ToolSearchResultLoadEvent;
-import org.iplantc.de.apps.client.events.tools.ToolSelectionChangedEvent;
 import org.iplantc.de.apps.integration.client.presenter.ToolSearchRPCProxy;
 import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.models.sharing.PermissionValue;
@@ -129,7 +128,7 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
 
     @UiHandler("delete")
     void onDeleteClicked(SelectionEvent<Item> event) {
-        fireEvent(new DeleteToolSelected(currentSelection));
+        fireEvent(new DeleteToolSelected());
     }
 
     @UiHandler("useInApp")
@@ -139,7 +138,7 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
 
     @UiHandler("shareCollab")
     void onShareCollabClicked(SelectionEvent<Item> event) {
-
+       fireEvent(new ShareToolsSelected());
     }
 
     @UiHandler("sharePublic")
@@ -184,10 +183,8 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
     }
 
     @Override
-    public void onToolSelectionChanged(ToolSelectionChangedEvent event) {
-        currentSelection.clear();
-        currentSelection = event.getToolSelection();
-        setButtonState(event.getToolSelection());
+    public void setSelection(List<Tool> currentSelection) {
+
     }
 
     private void setButtonState(List<Tool> tools) {

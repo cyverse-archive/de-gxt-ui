@@ -6,11 +6,13 @@ import org.iplantc.de.apps.client.events.tools.DeleteToolSelected;
 import org.iplantc.de.apps.client.events.tools.RefreshToolsSelectedEvent;
 import org.iplantc.de.apps.client.events.tools.ShareToolsSelected;
 import org.iplantc.de.apps.client.events.tools.ToolSearchResultLoadEvent;
-import org.iplantc.de.apps.client.events.tools.ToolSelectionChangedEvent;
+import org.iplantc.de.client.models.tool.Tool;
 
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.IsWidget;
+
+import java.util.List;
 
 /**
  * Created by sriram on 4/20/17.
@@ -20,10 +22,11 @@ public interface ManageToolsToolbarView extends IsWidget,
                                                 BeforeToolSearchEvent.HasBeforeToolSearchEventHandlers,
                                                 ToolSearchResultLoadEvent.HasToolSearchResultLoadEventHandlers,
                                                 RefreshToolsSelectedEvent.HasRefreshToolsSelectedEventHandlers,
-                                                ToolSelectionChangedEvent.ToolSelectionChangedEventHandler,
                                                 AddNewToolSelected.HasNewToolSelectedHandlers,
                                                 DeleteToolSelected.HasDeleteToolsSelectedHandlers,
                                                 ShareToolsSelected.HasShareToolselectedHandlers{
+
+    void setSelection(List<Tool> currentSelection);
 
     interface ManageToolsToolbarAppearance {
 
@@ -67,6 +70,5 @@ public interface ManageToolsToolbarView extends IsWidget,
 
         ImageResource useInAppIcon();
     }
-
 
 }
