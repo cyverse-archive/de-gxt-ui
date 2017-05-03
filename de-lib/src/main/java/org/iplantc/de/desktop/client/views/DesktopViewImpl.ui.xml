@@ -16,7 +16,7 @@
                 <a href="http://cyverse.org" target="_blank">
                     <div class="{appearance.styles.logo}"/>
                 </a>
-                <span class="{appearance.styles.logoText}">Discovery Environment</span>
+                <span class="{appearance.styles.logoText}">CyVerse Discovery Environment</span>
             </div>
             <nav class="{appearance.styles.userMenuContainer}">
 
