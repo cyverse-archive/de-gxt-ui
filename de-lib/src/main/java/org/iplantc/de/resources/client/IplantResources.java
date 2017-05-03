@@ -17,8 +17,7 @@ import com.google.gwt.resources.client.ImageResource;
 public interface IplantResources extends ClientBundle,
                                          AppResources,
                                          DiskResourceResources,
-                                         AppIntegrationPaletteImages,
-                                         DEHeaderResources {
+                                         AppIntegrationPaletteImages {
 
     public static IplantResources RESOURCES = GWT.create(IplantResources.class);
 
@@ -425,19 +424,8 @@ public interface IplantResources extends ClientBundle,
     @Source("integrator_ref_seq.png")
     ImageResource referenceSequence();
 
-    @Override
-    @Source("header_bg.png")
-    ImageResource headerBg();
-
-    @Override
-    @Source("mini_logo.png")
-    ImageResource headerLogo();
-
     @Source("help.png")
     ImageResource help();
-
-    @Source("DEHeader.gss")
-    DEHeaderStyle getHeaderStyle();
 
     @Source("tree_collapse_hover.png")
     ImageResource treeCollapseHover();
