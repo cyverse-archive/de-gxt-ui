@@ -11,10 +11,8 @@ import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
-import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.CollaboratorsLoadedEvent;
 import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
-import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
@@ -26,7 +24,6 @@ import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -43,9 +40,7 @@ import java.util.stream.Stream;
  */
 public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Presenter,
                                                      RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler,
-                                                     AddGroupSelected.AddGroupSelectedHandler,
-                                                     DeleteGroupSelected.DeleteGroupSelectedHandler,
-                                                     GroupNameSelected.GroupNameSelectedHandler {
+                                                     DeleteGroupSelected.DeleteGroupSelectedHandler {
 
     final class UserSearchResultSelectedEventHandlerImpl implements
                                                                  UserSearchResultSelected.UserSearchResultSelectedEventHandler {
@@ -92,9 +87,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     void addEventHandlers() {
         addCollabHandlerRegistration = eventBus.addHandler(UserSearchResultSelected.TYPE,
                                                            new UserSearchResultSelectedEventHandlerImpl());
-        view.addAddGroupSelectedHandler(this);
         view.addDeleteGroupSelectedHandler(this);
-        view.addGroupNameSelectedHandler(this);
     }
 
     /*
@@ -242,29 +235,6 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     @Override
-    public void onAddGroupSelected(AddGroupSelected event) {
-        Group group = event.getGroup();
-        if (group == null) {
-            return;
-        }
-        groupServiceFacade.addGroup(group, new AsyncCallback<Group>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(Group result) {
-                view.addCollabLists(getGroupList(result));
-            }
-        });
-    }
-
-    List<Group> getGroupList(Group result) {
-        return Lists.newArrayList(result);
-    }
-
-    @Override
     public void onDeleteGroupSelected(DeleteGroupSelected event) {
         Group group = event.getGroup();
         groupServiceFacade.deleteGroup(group.getName(), new AsyncCallback<Group>() {
@@ -277,22 +247,6 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
             public void onSuccess(Group result) {
                 view.removeCollabList(result);
                 announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.groupDeleteSuccess(result)));
-            }
-        });
-    }
-
-    @Override
-    public void onGroupNameSelected(GroupNameSelected event) {
-        Group group = event.getGroup();
-        groupServiceFacade.getMembers(group, new AsyncCallback<List<Collaborator>>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(List<Collaborator> result) {
-                view.editCollabList(group, result);
             }
         });
     }

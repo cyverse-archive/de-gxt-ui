@@ -2,9 +2,12 @@ package org.iplantc.de.collaborators.client.gin;
 
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.client.services.impl.GroupServiceFacadeImpl;
+import org.iplantc.de.collaborators.client.GroupDetailsView;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
+import org.iplantc.de.collaborators.client.presenter.GroupDetailsPresenterImpl;
 import org.iplantc.de.collaborators.client.presenter.ManageCollaboratorsPresenter;
+import org.iplantc.de.collaborators.client.views.GroupDetailsViewImpl;
 import org.iplantc.de.collaborators.client.views.GroupViewImpl;
 import org.iplantc.de.collaborators.client.views.dialogs.ManageCollaboratorsDialog;
 import org.iplantc.de.collaborators.client.views.ManageCollaboratorsViewImpl;
@@ -25,5 +28,7 @@ public class CollaboratorsGinModule extends AbstractGinModule {
         bind(ManageCollaboratorsDialog.class);
         bind(GroupView.class).to(GroupViewImpl.class);
         bind(GroupServiceFacade.class).to(GroupServiceFacadeImpl.class);
+        bind(GroupDetailsView.class).to(GroupDetailsViewImpl.class);
+        bind(GroupDetailsView.Presenter.class).to(GroupDetailsPresenterImpl.class);
     }
 }

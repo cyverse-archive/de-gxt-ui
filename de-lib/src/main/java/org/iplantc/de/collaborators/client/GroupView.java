@@ -2,7 +2,6 @@ package org.iplantc.de.collaborators.client;
 
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
-import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
 import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 
@@ -20,8 +19,7 @@ import java.util.List;
  * @author aramsey
  */
 public interface GroupView extends IsWidget,
-                                   GroupNameSelected.HasGroupNameSelectedHandlers,
-                                   AddGroupSelected.HasAddGroupSelectedHandlers,
+                                   GroupNameSelected.GroupNameSelectedHandler,
                                    DeleteGroupSelected.HasDeleteGroupSelectedHandlers {
 
     /**

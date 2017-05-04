@@ -15,10 +15,8 @@ import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
-import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.CollaboratorsLoadedEvent;
 import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
-import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
@@ -81,11 +79,6 @@ public class ManageCollaboratorsPresenterTest {
             String getCollaboratorNames(List<Collaborator> collaborators) {
                 return "names";
             }
-
-            @Override
-            List<Group> getGroupList(Group result) {
-                return groupListMock;
-            }
         };
 
         uut.collaboratorsUtil = collaboratorsUtilMock;
@@ -108,9 +101,7 @@ public class ManageCollaboratorsPresenterTest {
         verify(spy).loadCurrentCollaborators();
 //        verify(spy).updateListView();
         verify(spy).addEventHandlers();
-        verify(viewMock).addAddGroupSelectedHandler(eq(spy));
         verify(viewMock).addDeleteGroupSelectedHandler(eq(spy));
-        verify(viewMock).addGroupNameSelectedHandler(eq(spy));
         verify(containerMock).setWidget(eq(viewWidgetMock));
     }
 
@@ -190,20 +181,6 @@ public class ManageCollaboratorsPresenterTest {
     }
 
     @Test
-    public void onAddGroupSelected() {
-        AddGroupSelected eventMock = mock(AddGroupSelected.class);
-        when(eventMock.getGroup()).thenReturn(groupMock);
-
-        /** CALL METHOD UNDER TEST **/
-        uut.onAddGroupSelected(eventMock);
-        verify(groupServiceFacadeMock).addGroup(eq(groupMock), groupCallbackCaptor.capture());
-        groupCallbackCaptor.getValue().onSuccess(groupMock);
-
-        verify(viewMock).addCollabLists(eq(groupListMock));
-
-    }
-
-    @Test
     public void onDeleteGroupSelected() {
         DeleteGroupSelected eventMock = mock(DeleteGroupSelected.class);
         when(eventMock.getGroup()).thenReturn(groupMock);
@@ -221,17 +198,6 @@ public class ManageCollaboratorsPresenterTest {
 
     }
 
-    @Test
-    public void onGroupNameSelected() {
-        GroupNameSelected eventMock = mock(GroupNameSelected.class);
-        when(eventMock.getGroup()).thenReturn(groupMock);
 
-        /** CALL METHOD UNDER TEST **/
-        uut.onGroupNameSelected(eventMock);
-        verify(groupServiceFacadeMock).getMembers(eq(groupMock), collabListCallbackCaptor.capture());
-
-        collabListCallbackCaptor.getValue().onSuccess(collaboratorListMock);
-        verify(viewMock).editCollabList(eq(groupMock), eq(collaboratorListMock));
-    }
 
 }

@@ -3,10 +3,9 @@ package org.iplantc.de.collaborators.client.views;
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupView;
-import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
 import org.iplantc.de.collaborators.client.events.GroupNameSelected;
-import org.iplantc.de.collaborators.client.events.SaveGroupSelected;
+import org.iplantc.de.collaborators.client.events.GroupSaved;
 import org.iplantc.de.collaborators.client.models.GroupProperties;
 import org.iplantc.de.collaborators.client.views.cells.GroupNameCell;
 import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
@@ -57,7 +56,6 @@ public class GroupViewImpl extends Composite implements GroupView {
     @UiField ColumnModel<Group> cm;
     @UiField(provided = true) GroupViewAppearance appearance;
 
-    @Inject GroupNameCell nameCell;
     @Inject AsyncProviderWrapper<GroupDetailsDialog> groupDetailsDialog;
 
     private final GroupProperties props;
@@ -83,6 +81,8 @@ public class GroupViewImpl extends Composite implements GroupView {
         ColumnConfig<Group, String> descriptionCol = new ColumnConfig<>(props.description(),
                                                                         appearance.descriptionColumnWidth(),
                                                                         appearance.descriptionColumnLabel());
+        GroupNameCell nameCell = new GroupNameCell();
+        nameCell.addGroupNameSelectedHandler(this);
         nameCol.setCell(nameCell);
         columns.add(nameCol);
         columns.add(descriptionCol);
@@ -113,6 +113,11 @@ public class GroupViewImpl extends Composite implements GroupView {
         listStore.remove(result);
     }
 
+    @Override
+    public void editCollabList(Group group, List<Collaborator> members) {
+
+    }
+
     @UiHandler("addGroup")
     void addGroupSelected(SelectEvent event) {
         groupDetailsDialog.get(new AsyncCallback<GroupDetailsDialog>() {
@@ -122,10 +127,11 @@ public class GroupViewImpl extends Composite implements GroupView {
             @Override
             public void onSuccess(GroupDetailsDialog result) {
                 result.show();
-                result.addSaveGroupSelectedHandler(new SaveGroupSelected.SaveGroupSelectedHandler() {
+                result.addGroupSavedHandler(new GroupSaved.GroupSavedHandler() {
                     @Override
-                    public void onSaveGroupSelected(SaveGroupSelected event) {
-                        fireEvent(new AddGroupSelected(event.getGroup()));
+                    public void onGroupSaved(GroupSaved event) {
+                        List<Group> groups = event.getGroups();
+                        listStore.addAll(groups);
                     }
                 });
             }
@@ -152,30 +158,21 @@ public class GroupViewImpl extends Composite implements GroupView {
     }
 
     @Override
-    public void editCollabList(Group group, List<Collaborator> members) {
+    public void onGroupNameSelected(GroupNameSelected event) {
+        Group group = event.getGroup();
         groupDetailsDialog.get(new AsyncCallback<GroupDetailsDialog>() {
             @Override
             public void onFailure(Throwable caught) {}
 
             @Override
             public void onSuccess(GroupDetailsDialog result) {
-                result.show(group, members);
+                result.show(group);
             }
         });
     }
 
     @Override
-    public HandlerRegistration addAddGroupSelectedHandler(AddGroupSelected.AddGroupSelectedHandler handler) {
-        return addHandler(handler, AddGroupSelected.TYPE);
-    }
-
-    @Override
     public HandlerRegistration addDeleteGroupSelectedHandler(DeleteGroupSelected.DeleteGroupSelectedHandler handler) {
         return addHandler(handler, DeleteGroupSelected.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration addGroupNameSelectedHandler(GroupNameSelected.GroupNameSelectedHandler handler) {
-        return nameCell.addGroupNameSelectedHandler(handler);
     }
 }
