@@ -1,5 +1,7 @@
 package org.iplantc.de.client.services.impl;
 
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
+
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
 import org.iplantc.de.client.models.tool.sharing.ToolPermissionsRequest;
@@ -16,8 +18,8 @@ import org.iplantc.de.shared.services.ServiceCallWrapper;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
@@ -49,7 +51,7 @@ public class ToolServicesImpl implements ToolServices {
     }
 
     @Override
-    public void searchTools(FilterPagingLoadConfig loadConfig, AsyncCallback<List<Tool>> callback) {
+    public void searchTools(FilterPagingLoadConfig loadConfig, AppsCallback<List<Tool>> callback) {
         String address = TOOLS + "?";
         // Get the proxy's search params.
         String searchTerm = null;
@@ -76,7 +78,7 @@ public class ToolServicesImpl implements ToolServices {
     }
 
     @Override
-    public void getTools(AsyncCallback<List<Tool>> callback) {
+    public void getTools(AppsCallback<List<Tool>> callback) {
         String address = TOOLS;
         ToolsCallbackConverter callbackCnvt = new ToolsCallbackConverter(callback, factory);
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
@@ -85,7 +87,7 @@ public class ToolServicesImpl implements ToolServices {
     }
 
     @Override
-    public void addTool(Tool tool, AsyncCallback<Tool> callback) {
+    public void addTool(Tool tool, AppsCallback<Tool> callback) {
         String address = TOOLS;
         String newTool = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tool)).getPayload();
         ToolCallbackConverter callbackCnvt = new ToolCallbackConverter(callback, factory);
@@ -96,7 +98,7 @@ public class ToolServicesImpl implements ToolServices {
     }
 
     @Override
-    public void deleteTool(Tool tool, AsyncCallback<String> callback) {
+    public void deleteTool(Tool tool, AppsCallback<String> callback) {
         String address = TOOLS + "/" + tool.getId();
         ServiceCallWrapper wrapper = new ServiceCallWrapper(BaseServiceCallWrapper.Type.DELETE, address);
 
@@ -104,7 +106,7 @@ public class ToolServicesImpl implements ToolServices {
     }
 
     @Override
-    public void getPermissions(List<Tool> currentSelection, AsyncCallback<String> callback) {
+    public void getPermissions(List<Tool> currentSelection, AppsCallback<String> callback) {
         String address = TOOLS + "/" + "permission-lister";
         List<String> toolPermissionList = new ArrayList<>();
 
@@ -123,13 +125,21 @@ public class ToolServicesImpl implements ToolServices {
     }
 
     @Override
-    public void shareTool(ToolSharingRequestList obj, AppsCallback<String> appsCallback) {
-
+    public void shareTool(ToolSharingRequestList obj, AppsCallback<String> callback) {
+        final String payload = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(obj)).getPayload();
+        GWT.log("tool sharing request:" + payload);
+        String address = TOOLS + "/" + "sharing";
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, payload);
+        deServiceFacade.getServiceData(wrapper, callback);
     }
 
     @Override
-    public void unShareTool(ToolUnSharingRequestList obj, AppsCallback<String> appsCallback) {
-
+    public void unShareTool(ToolUnSharingRequestList obj, AppsCallback<String> callback) {
+        final String payload = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(obj)).getPayload();
+        GWT.log("tool un-sharing request:" + payload);
+        String address = TOOLS + "/" + "unsharing";
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, payload);
+        deServiceFacade.getServiceData(wrapper, callback);
     }
 
 }

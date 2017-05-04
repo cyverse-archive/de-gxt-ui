@@ -184,7 +184,7 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
 
     @Override
     public void setSelection(List<Tool> currentSelection) {
-
+        setButtonState(currentSelection);
     }
 
     private void setButtonState(List<Tool> tools) {
