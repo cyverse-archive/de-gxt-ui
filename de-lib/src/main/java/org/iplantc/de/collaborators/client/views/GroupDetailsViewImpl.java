@@ -58,8 +58,11 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
         @Override
         public void onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected) {
             if (UserSearchResultSelected.USER_SEARCH_EVENT_TAG.GROUP.toString().equals(userSearchResultSelected.getTag())) {
+                Collaborator collaborator = userSearchResultSelected.getCollaborator();
                 if (MODE.EDIT == mode) {
-                    fireEvent(new AddGroupMemberSelected(getGroup(), userSearchResultSelected.getCollaborator()));
+                    fireEvent(new AddGroupMemberSelected(getGroup(), collaborator));
+                } else {
+                    listStore.add(collaborator);
                 }
             }
         }

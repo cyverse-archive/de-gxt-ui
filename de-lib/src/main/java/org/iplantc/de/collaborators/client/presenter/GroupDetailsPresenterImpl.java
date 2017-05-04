@@ -10,6 +10,7 @@ import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
 import org.iplantc.de.collaborators.client.events.GroupSaved;
 import org.iplantc.de.commons.client.ErrorHandler;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -96,6 +97,10 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
             @Override
             public void onSuccess(Group result) {
                 ensureHandlers().fireEvent(new GroupSaved(getGroupList(result)));
+                List<Collaborator> subjects = view.getCollaborators();
+                if (subjects != null && subjects.size() > 0) {
+                    subjects.forEach(collaborator -> addGroupMember(group, collaborator));
+                }
             }
         });
     }
@@ -105,17 +110,23 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
         Group group = event.getGroup();
         Collaborator subject = event.getSubject();
 
-        serviceFacade.addMembers(group, subject, new AsyncCallback<Void>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
+        addGroupMember(group, subject);
+    }
 
-            @Override
-            public void onSuccess(Void result) {
-                view.addMembers(Lists.newArrayList(subject));
-            }
-        });
+    void addGroupMember(Group group, Collaborator subject) {
+        if (group != null && !Strings.isNullOrEmpty(group.getName()) && subject != null) {
+            serviceFacade.addMembers(group, subject, new AsyncCallback<Void>() {
+                @Override
+                public void onFailure(Throwable caught) {
+                    ErrorHandler.post(caught);
+                }
+
+                @Override
+                public void onSuccess(Void result) {
+                    view.addMembers(Lists.newArrayList(subject));
+                }
+            });
+        }
     }
 
     List<Group> getGroupList(Group result) {
