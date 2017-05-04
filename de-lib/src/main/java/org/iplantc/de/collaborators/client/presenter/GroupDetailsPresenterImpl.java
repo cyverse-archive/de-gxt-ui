@@ -30,7 +30,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     private GroupAutoBeanFactory factory;
     private GroupView.GroupViewAppearance appearance;
     private HandlerManager handlerManager;
-    private GroupDetailsView.MODE mode;
+    GroupDetailsView.MODE mode;
 
     @Inject
     public GroupDetailsPresenterImpl(GroupDetailsView view,
@@ -115,7 +115,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
 
     void addGroupMember(Group group, Collaborator subject) {
         if (group != null && !Strings.isNullOrEmpty(group.getName()) && subject != null) {
-            serviceFacade.addMembers(group, subject, new AsyncCallback<Void>() {
+            serviceFacade.addMember(group, subject, new AsyncCallback<Void>() {
                 @Override
                 public void onFailure(Throwable caught) {
                     ErrorHandler.post(caught);

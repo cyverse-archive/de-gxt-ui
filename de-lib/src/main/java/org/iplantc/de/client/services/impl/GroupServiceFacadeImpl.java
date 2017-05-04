@@ -91,7 +91,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void addMembers(Group group, Collaborator member, AsyncCallback<Void> callback) {
+    public void addMember(Group group, Collaborator member, AsyncCallback<Void> callback) {
         String groupName = group.getName();
         String subjectId = member.getId();
 

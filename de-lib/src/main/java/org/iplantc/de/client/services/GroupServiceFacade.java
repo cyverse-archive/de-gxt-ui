@@ -41,10 +41,10 @@ public interface GroupServiceFacade {
     void getMembers(Group group, AsyncCallback<List<Collaborator>> callback);
 
     /**
-     * Add members to a Collaborator List
+     * Add a single member to a Collaborator List
      * @param group
      * @param callback
      */
-    void addMembers(Group group, Collaborator member, AsyncCallback<Void> callback);
+    void addMember(Group group, Collaborator member, AsyncCallback<Void> callback);
 
 }
