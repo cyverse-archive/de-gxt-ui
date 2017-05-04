@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.GroupDetailsView;
 import org.iplantc.de.collaborators.client.GroupView;
+import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
 import org.iplantc.de.collaborators.client.events.GroupSaved;
 import org.iplantc.de.commons.client.ErrorHandler;
 
@@ -95,6 +96,24 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
             @Override
             public void onSuccess(Group result) {
                 ensureHandlers().fireEvent(new GroupSaved(getGroupList(result)));
+            }
+        });
+    }
+
+    @Override
+    public void onAddGroupMemberSelected(AddGroupMemberSelected event) {
+        Group group = event.getGroup();
+        Collaborator subject = event.getSubject();
+
+        serviceFacade.addMembers(group, subject, new AsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(Void result) {
+                view.addMembers(Lists.newArrayList(subject));
             }
         });
     }

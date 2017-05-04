@@ -2,6 +2,7 @@ package org.iplantc.de.collaborators.client;
 
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
 import org.iplantc.de.collaborators.client.events.GroupSaved;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -16,11 +17,13 @@ import java.util.List;
  */
 public interface GroupDetailsView extends IsWidget {
 
-    interface Presenter extends GroupSaved.HasGroupSavedHandlers {
     enum MODE {
         ADD,
         EDIT
     }
+
+    interface Presenter extends GroupSaved.HasGroupSavedHandlers,
+                                AddGroupMemberSelected.AddGroupMemberSelectedHandler {
 
         /**
          * Initialize the presenter and add the GroupDetailsView to the specified container

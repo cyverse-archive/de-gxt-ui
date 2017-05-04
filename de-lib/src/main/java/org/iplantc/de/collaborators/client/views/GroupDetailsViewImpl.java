@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupDetailsView;
 import org.iplantc.de.collaborators.client.GroupView;
+import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.models.CollaboratorKeyProvider;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
@@ -44,7 +45,8 @@ import java.util.List;
  * @author aramsey
  */
 public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
-                                                               Editor<Group> {
+                                                               Editor<Group>,
+                                                               AddGroupMemberSelected.HasAddGroupMemberSelectedHandlers {
 
     interface GroupDetailsViewImplUiBinder extends UiBinder<Widget, GroupDetailsViewImpl> {
     }
@@ -56,7 +58,9 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
         @Override
         public void onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected) {
             if (UserSearchResultSelected.USER_SEARCH_EVENT_TAG.GROUP.toString().equals(userSearchResultSelected.getTag())) {
-                listStore.add(userSearchResultSelected.getCollaborator());
+                if (MODE.EDIT == mode) {
+                    fireEvent(new AddGroupMemberSelected(getGroup(), userSearchResultSelected.getCollaborator()));
+                }
             }
         }
     }
@@ -186,5 +190,10 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
         if (members != null) {
             listStore.addAll(members);
         }
+    }
+
+    @Override
+    public HandlerRegistration addAddGroupMemberSelectedHandler(AddGroupMemberSelected.AddGroupMemberSelectedHandler handler) {
+        return addHandler(handler, AddGroupMemberSelected.TYPE);
     }
 }
