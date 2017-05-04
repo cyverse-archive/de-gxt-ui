@@ -81,6 +81,7 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
 
     private CheckBoxSelectionModel<Collaborator> checkBoxModel;
     String baseID;
+    private MODE mode;
 
     @Inject
     public GroupDetailsViewImpl(GroupView.GroupViewAppearance appearance,
@@ -155,7 +156,8 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
     }
 
     @Override
-    public void edit(Group group) {
+    public void edit(Group group, MODE mode) {
+        this.mode = mode;
         editorDriver.edit(group);
     }
 

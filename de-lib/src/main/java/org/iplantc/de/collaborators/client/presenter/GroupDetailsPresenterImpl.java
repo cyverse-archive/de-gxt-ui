@@ -27,8 +27,8 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     private GroupServiceFacade serviceFacade;
     private GroupAutoBeanFactory factory;
     private GroupView.GroupViewAppearance appearance;
-    boolean isNewGroup;
     private HandlerManager handlerManager;
+    private GroupDetailsView.MODE mode;
 
     @Inject
     public GroupDetailsPresenterImpl(GroupDetailsView view,
@@ -42,10 +42,11 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     }
 
     @Override
-    public void go(HasOneWidget container, Group group) {
+    public void go(HasOneWidget container, Group group, GroupDetailsView.MODE mode) {
+        this.mode = mode;
         container.setWidget(view);
 
-        if (group != null) {
+        if (GroupDetailsView.MODE.EDIT == mode) {
             serviceFacade.getMembers(group, new AsyncCallback<List<Collaborator>>() {
                 @Override
                 public void onFailure(Throwable caught) {
@@ -58,10 +59,9 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
                 }
             });
         } else {
-            isNewGroup = true;
             group = factory.getGroup().as();
         }
-        view.edit(group);
+        view.edit(group, mode);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
         if (group == null) {
             return;
         }
-        if (isNewGroup) {
+        if (GroupDetailsView.MODE.ADD == mode) {
             addGroup(group);
         }
     }
