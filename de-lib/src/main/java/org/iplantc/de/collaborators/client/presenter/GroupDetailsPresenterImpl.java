@@ -101,11 +101,12 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
+                view.unmask();
             }
 
             @Override
             public void onSuccess(Group result) {
-                ensureHandlers().fireEvent(new GroupSaved(getGroupList(result)));
+                ensureHandlers().fireEvent(new GroupSaved(result));
                 List<Collaborator> subjects = view.getCollaborators();
                 updateGroupMembers(group, subjects);
             }
@@ -118,6 +119,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
                 @Override
                 public void onFailure(Throwable caught) {
                     ErrorHandler.post(caught);
+                    view.unmask();
                 }
 
                 @Override
@@ -154,10 +156,6 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
                 }
             });
         }
-    }
-
-    List<Group> getGroupList(Group result) {
-        return Lists.newArrayList(result);
     }
 
     HandlerManager createHandlerManager() {

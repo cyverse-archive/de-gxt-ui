@@ -183,11 +183,4 @@ public interface ManageCollaboratorsView extends IsWidget,
      * @return
      */
     List<Collaborator> getCollaborators();
-
-    /**
-     * Show the view for editing the specified Collaborator List and/or its members
-     * @param group
-     * @param members
-     */
-    void editCollabList(Group group, List<Collaborator> members);
 }

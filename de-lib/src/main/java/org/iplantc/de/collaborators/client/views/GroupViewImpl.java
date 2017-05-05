@@ -1,6 +1,5 @@
 package org.iplantc.de.collaborators.client.views;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
@@ -113,11 +112,6 @@ public class GroupViewImpl extends Composite implements GroupView {
         listStore.remove(result);
     }
 
-    @Override
-    public void editCollabList(Group group, List<Collaborator> members) {
-
-    }
-
     @UiHandler("addGroup")
     void addGroupSelected(SelectEvent event) {
         groupDetailsDialog.get(new AsyncCallback<GroupDetailsDialog>() {
@@ -130,8 +124,8 @@ public class GroupViewImpl extends Composite implements GroupView {
                 result.addGroupSavedHandler(new GroupSaved.GroupSavedHandler() {
                     @Override
                     public void onGroupSaved(GroupSaved event) {
-                        List<Group> groups = event.getGroups();
-                        listStore.addAll(groups);
+                        Group group = event.getGroup();
+                        listStore.add(group);
                     }
                 });
             }

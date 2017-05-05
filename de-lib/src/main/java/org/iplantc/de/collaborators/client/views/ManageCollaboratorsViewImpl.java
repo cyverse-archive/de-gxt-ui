@@ -105,11 +105,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @Override
-    public void editCollabList(Group group, List<Collaborator> members) {
-        groupView.editCollabList(group, members);
-    }
-
-    @Override
     public MODE getMode() {
         return mode;
     }
