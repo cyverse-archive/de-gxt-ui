@@ -35,6 +35,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.widget.core.client.Dialog;
+import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
+import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -249,6 +253,23 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     @Override
     public void onDeleteGroupSelected(DeleteGroupSelected event) {
         Group group = event.getGroup();
+        if (group == null) {
+            return;
+        }
+        ConfirmMessageBox deleteAlert = new ConfirmMessageBox(groupAppearance.deleteGroupConfirmHeading(group),
+                                                              groupAppearance.deleteGroupConfirm(group));
+        deleteAlert.show();
+        deleteAlert.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
+            @Override
+            public void onDialogHide(DialogHideEvent event) {
+                if (event.getHideButton().equals(Dialog.PredefinedButton.YES)) {
+                    deleteGroup(group);
+                }
+            }
+        });
+    }
+
+    void deleteGroup(Group group) {
         groupServiceFacade.deleteGroup(group.getName(), new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable caught) {
