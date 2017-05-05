@@ -135,8 +135,6 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
             @Override
             public void onSuccess(Group result) {
                 ensureHandlers().fireEvent(new GroupSaved(result));
-                List<Collaborator> subjects = view.getCollaborators();
-                updateGroupMembers(result, subjects);
             }
         });
     }
