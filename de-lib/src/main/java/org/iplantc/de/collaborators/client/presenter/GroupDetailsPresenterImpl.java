@@ -99,6 +99,8 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
         }
         if (GroupDetailsView.MODE.ADD == mode) {
             addGroup(group);
+        } else {
+            updateGroup(group);
         }
     }
 
@@ -115,6 +117,23 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
                 ensureHandlers().fireEvent(new GroupSaved(result));
                 List<Collaborator> subjects = view.getCollaborators();
                 updateGroupMembers(group, subjects);
+            }
+        });
+    }
+
+    void updateGroup(Group group) {
+        serviceFacade.updateGroup(group, new AsyncCallback<Group>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+                view.unmask();
+            }
+
+            @Override
+            public void onSuccess(Group result) {
+                ensureHandlers().fireEvent(new GroupSaved(result));
+                List<Collaborator> subjects = view.getCollaborators();
+                updateGroupMembers(result, subjects);
             }
         });
     }

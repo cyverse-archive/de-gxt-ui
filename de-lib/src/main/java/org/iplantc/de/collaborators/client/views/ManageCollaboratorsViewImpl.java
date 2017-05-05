@@ -135,6 +135,11 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     public void unmaskCollabLists() {
         groupView.unmask();
     }
+    
+    @Override
+    public void updateCollabList(Group group) {
+        groupView.updateCollabList(group);
+    }
 
     @Override
     public void loadData(List<Collaborator> models) {

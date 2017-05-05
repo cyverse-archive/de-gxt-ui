@@ -115,6 +115,11 @@ public class GroupViewImpl extends Composite implements GroupView {
         listStore.remove(result);
     }
 
+    @Override
+    public void updateCollabList(Group group) {
+        listStore.update(group);
+    }
+
     @UiHandler("addGroup")
     void addGroupSelected(SelectEvent event) {
         fireEvent(new AddGroupSelected());

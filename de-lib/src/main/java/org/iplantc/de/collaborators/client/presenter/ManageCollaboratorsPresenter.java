@@ -312,6 +312,13 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
             @Override
             public void onSuccess(GroupDetailsDialog result) {
                 result.show(group);
+                result.addGroupSavedHandler(new GroupSaved.GroupSavedHandler() {
+                    @Override
+                    public void onGroupSaved(GroupSaved event) {
+                        Group group = event.getGroup();
+                        view.updateCollabList(group);
+                    }
+                });
             }
         });
     }
