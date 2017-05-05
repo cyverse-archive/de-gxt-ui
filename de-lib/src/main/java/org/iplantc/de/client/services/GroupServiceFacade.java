@@ -49,6 +49,14 @@ public interface GroupServiceFacade {
     void addMember(Group group, Collaborator member, AsyncCallback<Void> callback);
 
     /**
+     * Delete a single member from a Collaborator List
+     * @param group
+     * @param member
+     * @param callback
+     */
+    void deleteMember(Group group, Collaborator member, AsyncCallback<Void> callback);
+
+    /**
      * Replaces all members in the Collaborator List with the specified list instead
      * @param group
      * @param collaborators

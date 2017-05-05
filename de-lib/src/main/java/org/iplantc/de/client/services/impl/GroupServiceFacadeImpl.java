@@ -106,6 +106,17 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
+    public void deleteMember(Group group, Collaborator member, AsyncCallback<Void> callback) {
+        String groupName = group.getName();
+        String subjectId = member.getId();
+
+        String address = LISTS + "/" + groupName + "/members/" + subjectId;
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address);
+        deService.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
+    }
+
+    @Override
     public void updateMembers(Group group,
                               List<Collaborator> collaborators,
                               AsyncCallback<List<UpdateMemberResult>> callback) {
