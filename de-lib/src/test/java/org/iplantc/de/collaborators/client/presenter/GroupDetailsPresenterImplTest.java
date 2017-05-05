@@ -181,4 +181,18 @@ public class GroupDetailsPresenterImplTest {
         voidCallbackCaptor.getValue().onSuccess(null);
         verify(viewMock).addMembers(any());
     }
+
+    @Test
+    public void updateGroup() {
+        when(viewMock.getCollaborators()).thenReturn(collaboratorListMock);
+        GroupDetailsPresenterImpl spy = Mockito.spy(uut);
+
+        /** CALL METHOD UNDER TEST **/
+        spy.updateGroup(groupMock);
+        verify(serviceFacadeMock).updateGroup(eq(groupMock), groupCallbackCaptor.capture());
+        groupCallbackCaptor.getValue().onSuccess(groupMock);
+
+        verify(handlerManagerMock).fireEvent(isA(GroupSaved.class));
+        verify(spy).updateGroupMembers(eq(groupMock), eq(collaboratorListMock));
+    }
 }
