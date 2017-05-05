@@ -51,7 +51,7 @@ public class ToolServicesImpl implements ToolServices {
     }
 
     @Override
-    public void searchTools(FilterPagingLoadConfig loadConfig, AppsCallback<List<Tool>> callback) {
+    public void searchTools(boolean isPublic, FilterPagingLoadConfig loadConfig, AppsCallback<List<Tool>> callback) {
         String address = TOOLS + "?";
         // Get the proxy's search params.
         String searchTerm = null;
@@ -69,7 +69,7 @@ public class ToolServicesImpl implements ToolServices {
         address +=
                 "search=" + URL.encodeQueryString(searchTerm) + "&sort-field=" + sortInfo.getSortField()
                                                                                          .toLowerCase()
-                + "&sort-dir=" + sortInfo.getSortDir().toString();
+                + "&sort-dir=" + sortInfo.getSortDir().toString() + "&public=" + isPublic;
 
         ToolsCallbackConverter callbackCnvt = new ToolsCallbackConverter(callback, factory);
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);

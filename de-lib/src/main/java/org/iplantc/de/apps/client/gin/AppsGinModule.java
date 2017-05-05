@@ -15,7 +15,6 @@ import org.iplantc.de.apps.client.gin.factory.AppsListViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppsToolbarViewFactory;
 import org.iplantc.de.apps.client.gin.factory.AppsViewFactory;
 import org.iplantc.de.apps.client.gin.factory.OntologyHierarchiesViewFactory;
-import org.iplantc.de.apps.client.gin.factory.ToolSharingPresenterFactory;
 import org.iplantc.de.apps.client.presenter.AppsViewPresenterImpl;
 import org.iplantc.de.apps.client.presenter.categories.AppCategoriesPresenterImpl;
 import org.iplantc.de.apps.client.presenter.details.AppDetailsViewPresenterImpl;
@@ -24,12 +23,7 @@ import org.iplantc.de.apps.client.presenter.list.AppsListPresenterImpl;
 import org.iplantc.de.apps.client.presenter.sharing.AppSharingPresenter;
 import org.iplantc.de.apps.client.presenter.submit.SubmitAppForPublicPresenter;
 import org.iplantc.de.apps.client.presenter.toolBar.AppsToolbarPresenterImpl;
-import org.iplantc.de.apps.client.presenter.tools.ManageToolsViewPresenter;
-import org.iplantc.de.apps.client.presenter.tools.ToolSharingPresenterImpl;
 import org.iplantc.de.apps.client.views.AppsViewImpl;
-import org.iplantc.de.apps.client.views.tools.EditToolView;
-import org.iplantc.de.apps.client.views.tools.EditToolViewImpl;
-import org.iplantc.de.apps.client.views.tools.ManageToolsToolbarView;
 import org.iplantc.de.apps.client.views.categories.AppCategoriesViewImpl;
 import org.iplantc.de.apps.client.views.details.AppDetailsViewImpl;
 import org.iplantc.de.apps.client.views.details.dialogs.AppDetailsDialog;
@@ -42,11 +36,6 @@ import org.iplantc.de.apps.client.views.sharing.AppSharingView;
 import org.iplantc.de.apps.client.views.sharing.AppSharingViewImpl;
 import org.iplantc.de.apps.client.views.submit.SubmitAppForPublicUseViewImpl;
 import org.iplantc.de.apps.client.views.toolBar.AppsViewToolbarImpl;
-import org.iplantc.de.apps.client.views.tools.ManageToolsViewImpl;
-import org.iplantc.de.apps.client.views.tools.ManageToolsViewToolbarImpl;
-import org.iplantc.de.apps.client.views.tools.ToolSharingPresenter;
-import org.iplantc.de.apps.client.views.tools.ToolSharingView;
-import org.iplantc.de.apps.client.views.tools.ToolSharingViewImpl;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
@@ -130,16 +119,6 @@ public class AppsGinModule extends AbstractGinModule {
         install(new GinFactoryModuleBuilder().implement(SharingPresenter.class,
                                                         AppSharingPresenter.class)
                                              .build(AppSharingPresenterFactory.class));
-
-        bind(ManageToolsToolbarView.class).to(ManageToolsViewToolbarImpl.class);
-        bind(ManageToolsView.class).to(ManageToolsViewImpl.class);
-        bind(ManageToolsView.Presenter.class).to(ManageToolsViewPresenter.class);
-        bind(EditToolView.class).to(EditToolViewImpl.class);
-        bind(ToolSharingView.class).to(ToolSharingViewImpl.class);
-
-        install(new GinFactoryModuleBuilder().implement(ToolSharingPresenter.class,
-                                                        ToolSharingPresenterImpl.class)
-                                             .build(ToolSharingPresenterFactory.class));
 
     }
 

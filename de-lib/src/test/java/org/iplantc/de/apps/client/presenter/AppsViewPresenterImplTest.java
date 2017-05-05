@@ -78,8 +78,9 @@ public class AppsViewPresenterImplTest {
         verify(toolbarViewMock).addBeforeAppSearchEventHandler(listPresenterMock);
         verify(toolbarViewMock).addSwapViewButtonClickedEventHandler(listPresenterMock);
         verify(toolbarViewMock).addRefreshAppsSelectedEventHandler(isA(AppsViewPresenterImpl.class));
+        verify(toolbarViewMock).addManageToolsClickedEventHandler(toolbarPresenterMock);
 
-        verify(toolbarPresenterMock, times(13)).getView();
+        verify(toolbarPresenterMock, times(14)).getView();
 
 
         verifyNoMoreInteractions(viewFactoryMock,

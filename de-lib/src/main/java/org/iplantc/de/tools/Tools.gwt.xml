@@ -6,7 +6,6 @@
     <inherits name="com.google.gwt.inject.Inject"/>
     <inherits name="org.iplantc.de.commons.ui-commons" />
     <inherits name="org.iplantc.de.diskResource.diskresource"/>
-    <inherits name="org.iplantc.de.tools.Tools"/>
     <inherits name="com.sencha.gxt.theme.gray.Gray"/>
     <inherits name="org.iplantc.de.theme.base.Base"/>
 

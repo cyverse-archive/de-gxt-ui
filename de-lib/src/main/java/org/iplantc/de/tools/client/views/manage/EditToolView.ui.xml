@@ -1,0 +1,110 @@
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:c="urn:import:com.sencha.gxt.widget.core.client"
+             xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
+             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
+             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button">
+
+       <ui:with field="outerMargins" type="com.sencha.gxt.core.client.util.Margins">
+           <ui:attributes top="0" right="0" bottom="10" left="0" />
+       </ui:with>
+       
+       <ui:with field="outerLayout" type="com.sencha.gxt.widget.core.client.container.BoxLayoutContainer.BoxLayoutData">
+           <ui:attributes flex="1" margins="{outerMargins}"/>
+       </ui:with>
+    
+        <ui:with field="margins" type="com.sencha.gxt.core.client.util.Margins">
+            <ui:attributes top="15" right="15" bottom="0" left="15" />
+        </ui:with>
+
+        <ui:with field="marginData" type="com.sencha.gxt.widget.core.client.container.MarginData" >
+            <ui:attributes margins="{margins}" />
+        </ui:with>
+
+        <ui:with field="appearance"
+             type="org.iplantc.de.tools.client.views.manage.EditToolView.EditToolViewAppearance" />
+
+    <container:VBoxLayoutContainer ui:field="container" VBoxLayoutAlign="STRETCH">
+        <container:child layoutData="{outerLayout}">
+        <c:FramedPanel ui:field="form" heading="{appearance.toolInfo}">
+            <container:VBoxLayoutContainer VBoxLayoutAlign="STRETCH" layoutData="{margins}">
+                <container:child>
+                    <form:FieldLabel text="{appearance.toolName}">
+                        <form:widget>
+                            <form:TextField ui:field="name" allowBlank="false" />
+                        </form:widget>
+                    </form:FieldLabel>
+                </container:child>
+
+                <container:child>
+                    <form:FieldLabel text="{appearance.description}">
+                        <form:widget>
+                            <form:TextArea ui:field="desc" allowBlank="true" />
+                        </form:widget>
+                    </form:FieldLabel>
+                </container:child>
+
+                <container:child>
+                    <form:FieldLabel text="{appearance.version}">
+                        <form:widget>
+                            <form:TextField ui:field="version" allowBlank="false" />
+                        </form:widget>
+                    </form:FieldLabel>
+                </container:child>
+
+                <container:child>
+                    <form:FieldLabel text="{appearance.imgName}">
+                        <form:widget>
+                            <form:TextField ui:field="imgName" allowBlank="false" />
+                        </form:widget>
+                    </form:FieldLabel>
+                </container:child>
+
+                <container:child>
+                    <form:FieldLabel text="{appearance.tag}">
+                        <form:widget>
+                            <form:TextField ui:field="tag" allowBlank="true" />
+                        </form:widget>
+                    </form:FieldLabel>
+                </container:child>
+
+                <container:child>
+                    <form:FieldLabel text="{appearance.dockerUrl}">
+                        <form:widget>
+                            <form:TextField ui:field="url" allowBlank="true" />
+                        </form:widget>
+                    </form:FieldLabel>
+                </container:child>
+         </container:VBoxLayoutContainer>
+        </c:FramedPanel>
+        </container:child>
+        <c:FramedPanel ui:field="restrictions" heading="{appearance.restrictions}">
+            <form:FieldSet ui:field="fieldSet" heading="{appearance.restrictions}" collapsible="true" layoutData="{marginData}">
+                <container:VBoxLayoutContainer VBoxLayoutAlign="STRETCH">
+                    <form:FieldLabel text="{appearance.cpuShare}">
+                        <form:widget>
+                            <form:TextField ui:field="cpu" allowBlank="true" enabled="false" />
+                        </form:widget>
+                    </form:FieldLabel>
+                    <form:FieldLabel text="{appearance.memLimit}">
+                        <form:widget>
+                            <form:TextField ui:field="memory" allowBlank="true" enabled="false" />
+                        </form:widget>
+                    </form:FieldLabel>
+                    <form:FieldLabel text="{appearance.nwMode}">
+                        <form:widget>
+                            <form:TextField ui:field="network" allowBlank="true" enabled="false" />
+                        </form:widget>
+                    </form:FieldLabel>
+                    <form:FieldLabel text="{appearance.timeLimit}">
+                        <form:widget>
+                            <form:TextField ui:field="time" allowBlank="true" enabled="false" />
+                        </form:widget>
+                    </form:FieldLabel>
+                </container:VBoxLayoutContainer>
+            </form:FieldSet>
+
+        </c:FramedPanel>
+    </container:VBoxLayoutContainer>
+    
+</ui:UiBinder>

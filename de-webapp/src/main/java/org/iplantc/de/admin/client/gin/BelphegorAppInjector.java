@@ -12,7 +12,7 @@ import org.iplantc.de.commons.client.comments.gin.CommentsGinModule;
 import org.iplantc.de.diskResource.client.gin.DiskResourceGinModule;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.tags.client.gin.TagsGinModule;
-import org.iplantc.de.tools.requests.client.gin.ToolRequestGinModule;
+import org.iplantc.de.tools.client.gin.ToolsGinModule;
 
 import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
@@ -29,7 +29,7 @@ import com.google.gwt.inject.client.Ginjector;
               CollaboratorsGinModule.class,
               CommentsGinModule.class,
               TagsGinModule.class,
-              ToolRequestGinModule.class,
+              ToolsGinModule.class,
               ToolAdminGinModule.class,
               WorkshopAdminGinModule.class})
 public interface BelphegorAppInjector extends Ginjector {

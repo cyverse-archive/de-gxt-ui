@@ -26,7 +26,7 @@ import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.shared.DECallback;
-import org.iplantc.de.tools.requests.client.views.dialogs.NewToolRequestDialog;
+import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.inject.Provider;

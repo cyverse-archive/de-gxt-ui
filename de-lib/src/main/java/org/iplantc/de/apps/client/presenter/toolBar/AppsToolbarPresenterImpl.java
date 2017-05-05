@@ -15,6 +15,8 @@ import org.iplantc.de.apps.client.events.selection.RequestToolSelected;
 import org.iplantc.de.apps.client.events.selection.ShareAppsSelected;
 import org.iplantc.de.apps.client.gin.factory.AppsToolbarViewFactory;
 import org.iplantc.de.apps.client.presenter.toolBar.proxy.AppSearchRpcProxy;
+
+import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 import org.iplantc.de.apps.client.views.sharing.dialog.AppSharingDialog;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
@@ -25,7 +27,7 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
-import org.iplantc.de.tools.requests.client.views.dialogs.NewToolRequestDialog;
+import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
