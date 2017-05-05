@@ -3,12 +3,15 @@ package org.iplantc.de.collaborators.client.presenter;
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
+import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.GroupDetailsView;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
 import org.iplantc.de.collaborators.client.events.GroupSaved;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -19,6 +22,7 @@ import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author aramsey
@@ -31,6 +35,8 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     private GroupView.GroupViewAppearance appearance;
     private HandlerManager handlerManager;
     GroupDetailsView.MODE mode;
+
+    @Inject IplantAnnouncer announcer;
 
     @Inject
     public GroupDetailsPresenterImpl(GroupDetailsView view,
@@ -98,11 +104,30 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
             public void onSuccess(Group result) {
                 ensureHandlers().fireEvent(new GroupSaved(getGroupList(result)));
                 List<Collaborator> subjects = view.getCollaborators();
-                if (subjects != null && subjects.size() > 0) {
-                    subjects.forEach(collaborator -> addGroupMember(group, collaborator));
-                }
+                updateGroupMembers(group, subjects);
             }
         });
+    }
+
+    void updateGroupMembers(Group group, List<Collaborator> subjects) {
+        if (subjects != null && subjects.size() > 0) {
+            serviceFacade.updateMembers(group, subjects, new AsyncCallback<List<UpdateMemberResult>>() {
+                @Override
+                public void onFailure(Throwable caught) {
+                    ErrorHandler.post(caught);
+                }
+
+                @Override
+                public void onSuccess(List<UpdateMemberResult> result) {
+                    List<UpdateMemberResult> failures = result.stream()
+                                                             .filter(item -> !item.isSuccess())
+                                                             .collect(Collectors.toList());
+                    if (failures == null || !failures.isEmpty()) {
+                        announcer.schedule(new ErrorAnnouncementConfig(appearance.unableToAddMembers(failures)));
+                    }
+                }
+            });
+        }
     }
 
     @Override
