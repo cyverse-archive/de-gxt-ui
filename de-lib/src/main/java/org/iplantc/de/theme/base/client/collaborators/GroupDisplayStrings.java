@@ -27,4 +27,6 @@ public interface GroupDisplayStrings extends Messages {
     String unableToAddMembers(@PluralCount List<String> memberString);
 
     String groupCreatedSuccess(String name);
+
+    String memberDeleteSuccess(String subjectName, String groupName);
 }

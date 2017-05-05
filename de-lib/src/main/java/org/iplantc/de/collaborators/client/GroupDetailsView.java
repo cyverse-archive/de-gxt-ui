@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
+import org.iplantc.de.collaborators.client.events.DeleteMembersSelected;
 import org.iplantc.de.collaborators.client.events.GroupSaved;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -18,7 +19,8 @@ import java.util.List;
  */
 public interface GroupDetailsView extends IsWidget,
                                           IsMaskable,
-                                          AddGroupMemberSelected.HasAddGroupMemberSelectedHandlers {
+                                          AddGroupMemberSelected.HasAddGroupMemberSelectedHandlers,
+                                          DeleteMembersSelected.HasDeleteMembersSelectedHandlers {
 
     enum MODE {
         ADD,
@@ -26,7 +28,8 @@ public interface GroupDetailsView extends IsWidget,
     }
 
     interface Presenter extends GroupSaved.HasGroupSavedHandlers,
-                                AddGroupMemberSelected.AddGroupMemberSelectedHandler {
+                                AddGroupMemberSelected.AddGroupMemberSelectedHandler,
+                                DeleteMembersSelected.DeleteMembersSelectedHandler {
 
         /**
          * Initialize the presenter and add the GroupDetailsView to the specified container

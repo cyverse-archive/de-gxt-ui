@@ -8,9 +8,11 @@ import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.GroupDetailsView;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
+import org.iplantc.de.collaborators.client.events.DeleteMembersSelected;
 import org.iplantc.de.collaborators.client.events.GroupSaved;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
+import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 
@@ -48,8 +50,9 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
         this.serviceFacade = serviceFacade;
         this.factory = factory;
         this.appearance = appearance;
-
+        
         view.addAddGroupMemberSelectedHandler(this);
+        view.addDeleteMembersSelectedHandler(this);
     }
 
     @Override
@@ -181,6 +184,32 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
                 }
             });
         }
+    }
+
+    @Override
+    public void onDeleteMembersSelected(DeleteMembersSelected event) {
+        if (GroupDetailsView.MODE.EDIT == mode) {
+            List<Collaborator> subjects = event.getSubjects();
+            Group group = event.getGroup();
+            if (subjects != null && !subjects.isEmpty()) {
+                subjects.forEach(subject -> deleteMember(subject, group));
+            }
+        }
+    }
+
+    void deleteMember(Collaborator subject, Group group) {
+        serviceFacade.deleteMember(group, subject, new AsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(Void result) {
+                announcer.schedule(new IplantAnnouncementConfig(appearance.memberDeleteSuccess(subject,
+                                                                                               group)));
+            }
+        });
     }
 
     HandlerManager createHandlerManager() {
