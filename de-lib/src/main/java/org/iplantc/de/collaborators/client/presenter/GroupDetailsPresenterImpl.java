@@ -48,6 +48,8 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
         this.serviceFacade = serviceFacade;
         this.factory = factory;
         this.appearance = appearance;
+
+        view.addAddGroupMemberSelectedHandler(this);
     }
 
     @Override

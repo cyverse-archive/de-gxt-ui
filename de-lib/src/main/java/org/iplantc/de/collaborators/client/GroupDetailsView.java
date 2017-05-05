@@ -17,7 +17,8 @@ import java.util.List;
  * @author aramsey
  */
 public interface GroupDetailsView extends IsWidget,
-                                          IsMaskable {
+                                          IsMaskable,
+                                          AddGroupMemberSelected.HasAddGroupMemberSelectedHandlers {
 
     enum MODE {
         ADD,

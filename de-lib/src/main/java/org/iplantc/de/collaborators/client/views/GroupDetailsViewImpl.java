@@ -45,8 +45,7 @@ import java.util.List;
  * @author aramsey
  */
 public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
-                                                               Editor<Group>,
-                                                               AddGroupMemberSelected.HasAddGroupMemberSelectedHandlers {
+                                                               Editor<Group> {
 
     interface GroupDetailsViewImplUiBinder extends UiBinder<Widget, GroupDetailsViewImpl> {
     }
