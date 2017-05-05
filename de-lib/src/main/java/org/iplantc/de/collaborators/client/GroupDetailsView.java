@@ -1,5 +1,6 @@
 package org.iplantc.de.collaborators.client;
 
+import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
@@ -15,7 +16,8 @@ import java.util.List;
  * edit/create Collaborator Lists and add members to those lists.
  * @author aramsey
  */
-public interface GroupDetailsView extends IsWidget {
+public interface GroupDetailsView extends IsWidget,
+                                          IsMaskable {
 
     enum MODE {
         ADD,

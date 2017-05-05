@@ -12,6 +12,7 @@ import org.iplantc.de.collaborators.client.events.GroupSaved;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -84,8 +85,10 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
 
     @Override
     public void saveGroupSelected() {
+        view.mask(appearance.loadingMask());
         Group group = view.getGroup();
         if (group == null) {
+            view.unmask();
             return;
         }
         if (GroupDetailsView.MODE.ADD == mode) {
@@ -124,7 +127,10 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
                                                              .collect(Collectors.toList());
                     if (failures == null || !failures.isEmpty()) {
                         announcer.schedule(new ErrorAnnouncementConfig(appearance.unableToAddMembers(failures)));
+                    } else {
+                        announcer.schedule(new SuccessAnnouncementConfig(appearance.groupCreatedSuccess(group)));
                     }
+                    view.unmask();
                 }
             });
         }

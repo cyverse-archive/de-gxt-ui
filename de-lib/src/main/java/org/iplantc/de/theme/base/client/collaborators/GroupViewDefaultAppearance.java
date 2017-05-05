@@ -6,7 +6,6 @@ import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
@@ -159,5 +158,15 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
         List<String> memberNames = failures.stream().map(UpdateMemberResult::getSubjectName).collect(
                 Collectors.toList());
         return displayStrings.unableToAddMembers(memberNames);
+    }
+
+    @Override
+    public String loadingMask() {
+        return iplantDisplayStrings.loadingMask();
+    }
+
+    @Override
+    public String groupCreatedSuccess(Group group) {
+        return displayStrings.groupCreatedSuccess(group.getName());
     }
 }
