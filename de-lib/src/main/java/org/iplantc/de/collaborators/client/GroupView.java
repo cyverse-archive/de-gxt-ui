@@ -20,9 +20,9 @@ import java.util.List;
  * @author aramsey
  */
 public interface GroupView extends IsWidget,
-                                   GroupNameSelected.GroupNameSelectedHandler,
                                    DeleteGroupSelected.HasDeleteGroupSelectedHandlers,
-                                   AddGroupSelected.HasAddGroupSelectedHandlers {
+                                   AddGroupSelected.HasAddGroupSelectedHandlers,
+                                   GroupNameSelected.HasGroupNameSelectedHandlers {
 
     /**
      * Appearance related items for the GroupView

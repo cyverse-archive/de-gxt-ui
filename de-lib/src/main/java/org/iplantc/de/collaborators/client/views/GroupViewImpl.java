@@ -18,7 +18,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -55,6 +54,7 @@ public class GroupViewImpl extends Composite implements GroupView {
     @UiField ColumnModel<Group> cm;
     @UiField(provided = true) GroupViewAppearance appearance;
 
+    @Inject GroupNameCell nameCell;
     @Inject AsyncProviderWrapper<GroupDetailsDialog> groupDetailsDialog;
 
     private final GroupProperties props;
@@ -80,8 +80,6 @@ public class GroupViewImpl extends Composite implements GroupView {
         ColumnConfig<Group, String> descriptionCol = new ColumnConfig<>(props.description(),
                                                                         appearance.descriptionColumnWidth(),
                                                                         appearance.descriptionColumnLabel());
-        GroupNameCell nameCell = new GroupNameCell();
-        nameCell.addGroupNameSelectedHandler(this);
         nameCol.setCell(nameCell);
         columns.add(nameCol);
         columns.add(descriptionCol);
@@ -137,20 +135,6 @@ public class GroupViewImpl extends Composite implements GroupView {
     }
 
     @Override
-    public void onGroupNameSelected(GroupNameSelected event) {
-        Group group = event.getGroup();
-        groupDetailsDialog.get(new AsyncCallback<GroupDetailsDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {}
-
-            @Override
-            public void onSuccess(GroupDetailsDialog result) {
-                result.show(group);
-            }
-        });
-    }
-
-    @Override
     public HandlerRegistration addDeleteGroupSelectedHandler(DeleteGroupSelected.DeleteGroupSelectedHandler handler) {
         return addHandler(handler, DeleteGroupSelected.TYPE);
     }
@@ -158,5 +142,10 @@ public class GroupViewImpl extends Composite implements GroupView {
     @Override
     public HandlerRegistration addAddGroupSelectedHandler(AddGroupSelected.AddGroupSelectedHandler handler) {
         return addHandler(handler, AddGroupSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addGroupNameSelectedHandler(GroupNameSelected.GroupNameSelectedHandler handler) {
+        return nameCell.addGroupNameSelectedHandler(handler);
     }
 }

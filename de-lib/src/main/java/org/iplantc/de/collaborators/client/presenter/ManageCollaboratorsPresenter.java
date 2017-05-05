@@ -14,6 +14,7 @@ import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.CollaboratorsLoadedEvent;
 import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
+import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.events.GroupSaved;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
@@ -46,7 +47,8 @@ import java.util.stream.Stream;
 public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Presenter,
                                                      RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler,
                                                      DeleteGroupSelected.DeleteGroupSelectedHandler,
-                                                     AddGroupSelected.AddGroupSelectedHandler {
+                                                     AddGroupSelected.AddGroupSelectedHandler,
+                                                     GroupNameSelected.GroupNameSelectedHandler {
 
     final class UserSearchResultSelectedEventHandlerImpl implements
                                                                  UserSearchResultSelected.UserSearchResultSelectedEventHandler {
@@ -97,6 +99,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                                                            new UserSearchResultSelectedEventHandlerImpl());
         view.addDeleteGroupSelectedHandler(this);
         view.addAddGroupSelectedHandler(this);
+        view.addGroupNameSelectedHandler(this);
     }
 
     /*
@@ -276,6 +279,20 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                         view.addCollabLists(Lists.newArrayList(group));
                     }
                 });
+            }
+        });
+    }
+
+    @Override
+    public void onGroupNameSelected(GroupNameSelected event) {
+        Group group = event.getGroup();
+        groupDetailsDialog.get(new AsyncCallback<GroupDetailsDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(GroupDetailsDialog result) {
+                result.show(group);
             }
         });
     }
