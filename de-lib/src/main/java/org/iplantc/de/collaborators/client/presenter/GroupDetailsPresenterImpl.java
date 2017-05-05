@@ -55,6 +55,10 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
         this.mode = mode;
         container.setWidget(view);
 
+        getGroupMembers(group);
+    }
+
+    void getGroupMembers(Group group) {
         if (GroupDetailsView.MODE.EDIT == mode) {
             serviceFacade.getMembers(group, new AsyncCallback<List<Collaborator>>() {
                 @Override
