@@ -10,6 +10,9 @@ import org.iplantc.de.client.models.collaborators.CollaboratorAutoBeanFactory;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.GroupList;
+import org.iplantc.de.client.models.groups.UpdateMemberRequest;
+import org.iplantc.de.client.models.groups.UpdateMemberResult;
+import org.iplantc.de.client.models.groups.UpdateMemberResultList;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.CollaboratorListCallbackConverter;
@@ -26,6 +29,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 /**
@@ -101,5 +105,29 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
         deService.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
     }
 
+    @Override
+    public void updateMembers(Group group,
+                              List<Collaborator> collaborators,
+                              AsyncCallback<List<UpdateMemberResult>> callback) {
+        String groupName = group.getName();
+        UpdateMemberRequest request = factory.getUpdateMemberRequest().as();
+        List<String> ids = collaborators.stream()
+                                            .map(collaborator -> collaborator.getId())
+                                            .collect(Collectors.toList());
+        request.setMembers(ids);
+
+        String address = GROUPS + "/" + groupName + "/members";
+
+        Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(PUT, address, encode.getPayload());
+        deService.getServiceData(wrapper, new AsyncCallbackConverter<String, List<UpdateMemberResult>>(callback) {
+            @Override
+            protected List<UpdateMemberResult> convertFrom(String object) {
+                AutoBean<UpdateMemberResultList> listAutoBean = AutoBeanCodex.decode(factory, UpdateMemberResultList.class, object);
+                return listAutoBean.as().getResults();
+            }
+        });
+    }
 
 }

@@ -2,6 +2,7 @@ package org.iplantc.de.client.services;
 
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.models.groups.UpdateMemberResult;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -46,5 +47,12 @@ public interface GroupServiceFacade {
      * @param callback
      */
     void addMember(Group group, Collaborator member, AsyncCallback<Void> callback);
+
+    /**
+     * Replaces all members in the Collaborator List with the specified list instead
+     * @param group
+     * @param collaborators
+     */
+    void updateMembers(Group group, List<Collaborator> collaborators, AsyncCallback<List<UpdateMemberResult>> callback);
 
 }
