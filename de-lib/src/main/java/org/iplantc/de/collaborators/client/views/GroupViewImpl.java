@@ -2,9 +2,9 @@ package org.iplantc.de.collaborators.client.views;
 
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupView;
+import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
 import org.iplantc.de.collaborators.client.events.GroupNameSelected;
-import org.iplantc.de.collaborators.client.events.GroupSaved;
 import org.iplantc.de.collaborators.client.models.GroupProperties;
 import org.iplantc.de.collaborators.client.views.cells.GroupNameCell;
 import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
@@ -114,22 +114,7 @@ public class GroupViewImpl extends Composite implements GroupView {
 
     @UiHandler("addGroup")
     void addGroupSelected(SelectEvent event) {
-        groupDetailsDialog.get(new AsyncCallback<GroupDetailsDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {}
-
-            @Override
-            public void onSuccess(GroupDetailsDialog result) {
-                result.show();
-                result.addGroupSavedHandler(new GroupSaved.GroupSavedHandler() {
-                    @Override
-                    public void onGroupSaved(GroupSaved event) {
-                        Group group = event.getGroup();
-                        listStore.add(group);
-                    }
-                });
-            }
-        });
+        fireEvent(new AddGroupSelected());
     }
 
     @UiHandler("deleteGroup")
@@ -168,5 +153,10 @@ public class GroupViewImpl extends Composite implements GroupView {
     @Override
     public HandlerRegistration addDeleteGroupSelectedHandler(DeleteGroupSelected.DeleteGroupSelectedHandler handler) {
         return addHandler(handler, DeleteGroupSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addAddGroupSelectedHandler(AddGroupSelected.AddGroupSelectedHandler handler) {
+        return addHandler(handler, AddGroupSelected.TYPE);
     }
 }
