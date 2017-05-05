@@ -1,7 +1,7 @@
 package org.iplantc.de.apps.integration.client.presenter;
 
-import org.iplantc.de.apps.client.events.tools.BeforeToolSearchEvent;
-import org.iplantc.de.apps.client.events.tools.ToolSearchResultLoadEvent;
+import org.iplantc.de.tools.client.events.BeforeToolSearchEvent;
+import org.iplantc.de.tools.client.events.ToolSearchResultLoadEvent;
 import org.iplantc.de.client.gin.ServicesInjector;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.services.ToolServices;
@@ -51,7 +51,7 @@ public class ToolSearchRPCProxy extends
         // Cache the search text for this callback; used to sort the results.
         final String searchText = lastQueryText;
         hasHandlers.fireEvent(new BeforeToolSearchEvent());
-        dcService.searchTools(loadConfig, new AppsCallback<List<Tool>>() {
+        dcService.searchTools(false, loadConfig, new AppsCallback<List<Tool>>() {
 
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {

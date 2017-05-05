@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ToolServices {
 
-    void searchTools(FilterPagingLoadConfig loadConfig, AppsCallback<List<Tool>> callback);
+    void searchTools(boolean isPublic, FilterPagingLoadConfig loadConfig, AppsCallback<List<Tool>> callback);
 
     void getTools(AppsCallback<List<Tool>> callback);
 

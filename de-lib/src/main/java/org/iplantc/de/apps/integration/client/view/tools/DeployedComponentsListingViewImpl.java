@@ -12,7 +12,7 @@ import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.widgets.SearchField;
 import org.iplantc.de.shared.AsyncProviderWrapper;
-import org.iplantc.de.tools.requests.client.views.dialogs.NewToolRequestDialog;
+import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
