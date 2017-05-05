@@ -113,7 +113,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     }
 
     void updateGroupMembers(Group group, List<Collaborator> subjects) {
-        if (subjects != null && subjects.size() > 0) {
+        if (subjects != null && !subjects.isEmpty()) {
             serviceFacade.updateMembers(group, subjects, new AsyncCallback<List<UpdateMemberResult>>() {
                 @Override
                 public void onFailure(Throwable caught) {
@@ -141,10 +141,6 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
         Group group = event.getGroup();
         Collaborator subject = event.getSubject();
 
-        addGroupMember(group, subject);
-    }
-
-    void addGroupMember(Group group, Collaborator subject) {
         if (group != null && !Strings.isNullOrEmpty(group.getName()) && subject != null) {
             serviceFacade.addMember(group, subject, new AsyncCallback<Void>() {
                 @Override
