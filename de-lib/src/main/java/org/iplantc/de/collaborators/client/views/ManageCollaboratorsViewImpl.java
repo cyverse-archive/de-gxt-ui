@@ -26,7 +26,6 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.core.client.IdentityValueProvider;
-import com.sencha.gxt.core.client.Style.LayoutRegion;
 import com.sencha.gxt.core.client.Style.SelectionMode;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
@@ -186,16 +185,17 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
             case MANAGE:
                 grid.getView().setEmptyText(appearance.noCollaborators());
                 manageBtn.setVisible(false);
-                deleteBtn.setVisible(true);
-                con.show(LayoutRegion.NORTH);
+                searchField.asWidget().setVisible(true);
+                toolbar.setVisible(true);
                 break;
             case SELECT:
                 grid.getView().setEmptyText(appearance.noCollaborators());
-                con.hide(LayoutRegion.NORTH);
                 manageBtn.setVisible(true);
-                deleteBtn.setVisible(false);
+                searchField.asWidget().setVisible(false);
+                toolbar.setVisible(false);
                 break;
         }
+        toolbar.forceLayout();
     }
 
     @Override

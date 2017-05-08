@@ -65,6 +65,11 @@
 				<!-- This is the tool bar -->
 				<container:north layoutData="{northData}">
 					<container:HorizontalLayoutContainer ui:field="searchPanel">
+						<button:TextButton debugId="idManage"
+										   ui:field="manageBtn"
+										   text="{appearance.manageCollaborators}"
+										   visible="false"
+										   icon="{appearance.shareIcon}"/>
 						<userSearch:UserSearchField ui:field="searchField"/>
 					</container:HorizontalLayoutContainer>
 				</container:north>
@@ -85,11 +90,6 @@
 														   text="{appearance.delete}"
 														   icon="{appearance.deleteIcon}"
 														   enabled="false"/>
-										<button:TextButton debugId="idManage"
-														   ui:field="manageBtn"
-														   text="{appearance.manageCollaborators}"
-														   visible="false"
-														   icon="{appearance.shareIcon}"/>
 									</toolbar:ToolBar>
 								</container:child>
 								<container:child layoutData="{middleData}">
