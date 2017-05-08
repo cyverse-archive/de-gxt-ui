@@ -2,6 +2,7 @@ package org.iplantc.de.collaborators.client.views;
 
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupView;
+import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
 import org.iplantc.de.collaborators.client.events.GroupNameSelected;
@@ -55,6 +56,7 @@ public class GroupViewImpl extends Composite implements GroupView {
     @Inject AsyncProviderWrapper<GroupDetailsDialog> groupDetailsDialog;
 
     private final GroupProperties props;
+    private ManageCollaboratorsView.MODE mode;
 
     @Inject
     public GroupViewImpl(GroupViewAppearance appearance,
@@ -118,6 +120,13 @@ public class GroupViewImpl extends Composite implements GroupView {
     @Override
     public void updateCollabList(Group group) {
         listStore.update(group);
+    }
+
+    @Override
+    public void setMode(ManageCollaboratorsView.MODE mode) {
+        this.mode = mode;
+        toolBar.setVisible(ManageCollaboratorsView.MODE.MANAGE == mode);
+        toolBar.forceLayout();
     }
 
     @UiHandler("addGroup")

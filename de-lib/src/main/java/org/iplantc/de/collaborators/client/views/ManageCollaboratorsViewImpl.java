@@ -181,6 +181,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @Override
     public void setMode(MODE mode) {
         this.mode = mode;
+        groupView.setMode(mode);
         switch (mode) {
             case MANAGE:
                 grid.getView().setEmptyText(appearance.noCollaborators());
