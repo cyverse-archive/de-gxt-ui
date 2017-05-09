@@ -97,6 +97,12 @@ public class GroupViewImpl extends Composite implements GroupView {
         addGroup.ensureDebugId(baseID + CollaboratorsModule.Ids.ADD_GROUP);
         deleteGroup.ensureDebugId(baseID + CollaboratorsModule.Ids.DELETE_GROUP);
         grid.ensureDebugId(baseID + CollaboratorsModule.Ids.GRID);
+
+        for (ColumnConfig<Group, ?> cc : cm.getColumns()) {
+            if (cc.getCell() instanceof GroupNameCell) {
+                ((GroupNameCell)cc.getCell()).setBaseDebugId(baseID);
+            }
+        }
     }
 
     @Override
