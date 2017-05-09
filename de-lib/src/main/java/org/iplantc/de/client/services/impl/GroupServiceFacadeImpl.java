@@ -4,11 +4,14 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.DELETE;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
+import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.CollaboratorAutoBeanFactory;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.GroupList;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
+import org.iplantc.de.client.services.converters.CollaboratorListCallbackConverter;
 import org.iplantc.de.client.services.converters.GroupCallbackConverter;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
@@ -31,12 +34,16 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     private final String GROUPS = "org.iplantc.services.groups";
 
     private GroupAutoBeanFactory factory;
+    private CollaboratorAutoBeanFactory collabFactory;
     private DiscEnvApiService deService;
 
     @Inject
-    public GroupServiceFacadeImpl(GroupAutoBeanFactory factory, DiscEnvApiService deService) {
+    public GroupServiceFacadeImpl(GroupAutoBeanFactory factory,
+                                  CollaboratorAutoBeanFactory collabFactory,
+                                  DiscEnvApiService deService) {
 
         this.factory = factory;
+        this.collabFactory = collabFactory;
         this.deService = deService;
     }
 
@@ -70,6 +77,15 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address);
         deService.getServiceData(wrapper, new GroupCallbackConverter(callback, factory));
+    }
+
+    @Override
+    public void getMembers(Group group, AsyncCallback<List<Collaborator>> callback) {
+        String groupName = group.getName();
+        String address = GROUPS + "/" + URL.encodeQueryString(groupName) + "/members";
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
+        deService.getServiceData(wrapper, new CollaboratorListCallbackConverter(callback, collabFactory));
     }
 
 

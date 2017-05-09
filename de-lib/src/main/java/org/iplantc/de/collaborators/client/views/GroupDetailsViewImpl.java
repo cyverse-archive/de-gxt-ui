@@ -3,6 +3,7 @@ package org.iplantc.de.collaborators.client.views;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.collaborators.client.GroupDetailsView;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.models.CollaboratorKeyProvider;
@@ -40,16 +41,15 @@ import java.util.List;
 
 
 /**
- * The GroupDetailsView is used within the GroupDetailsDialog.  It allows users to
- * edit/create Collaborator Lists and add members to those lists.
  * @author aramsey
  */
-public class GroupDetailsView extends Composite implements Editor<Group> {
+public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
+                                                               Editor<Group> {
 
-    interface GroupDetailsViewUiBinder extends UiBinder<Widget, GroupDetailsView> {
+    interface GroupDetailsViewImplUiBinder extends UiBinder<Widget, GroupDetailsViewImpl> {
     }
 
-    interface EditorDriver extends SimpleBeanEditorDriver<Group, GroupDetailsView> {}
+    interface EditorDriver extends SimpleBeanEditorDriver<Group, GroupDetailsViewImpl> {}
 
     private class CollaboratorSelectedHandler
             implements UserSearchResultSelected.UserSearchResultSelectedEventHandler {
@@ -62,7 +62,7 @@ public class GroupDetailsView extends Composite implements Editor<Group> {
     }
 
     final EditorDriver editorDriver = GWT.create(EditorDriver.class);
-    static GroupDetailsViewUiBinder uiBinder = GWT.create(GroupDetailsViewUiBinder.class);
+    static GroupDetailsViewImplUiBinder uiBinder = GWT.create(GroupDetailsViewImplUiBinder.class);
 
     @UiField @Ignore FieldLabel groupNameLabel;
     @UiField @Ignore FieldLabel groupDescLabel;
@@ -83,7 +83,7 @@ public class GroupDetailsView extends Composite implements Editor<Group> {
     String baseID;
 
     @Inject
-    public GroupDetailsView(GroupView.GroupViewAppearance appearance,
+    public GroupDetailsViewImpl(GroupView.GroupViewAppearance appearance,
                             EventBus eventBus) {
         this.appearance = appearance;
         this.eventBus = eventBus;
@@ -154,23 +154,35 @@ public class GroupDetailsView extends Composite implements Editor<Group> {
         }
     }
 
+    @Override
     public void edit(Group group) {
         editorDriver.edit(group);
     }
 
+    @Override
     public void clearHandlers() {
         handlerRegistration.removeHandler();
     }
 
+    @Override
     public Group getGroup() {
         return editorDriver.flush();
     }
 
+    @Override
     public boolean isValid() {
         return nameEditor.isValid();
     }
 
+    @Override
     public List<Collaborator> getCollaborators() {
         return listStore.getAll();
+    }
+
+    @Override
+    public void addMembers(List<Collaborator> members) {
+        if (members != null) {
+            listStore.addAll(members);
+        }
     }
 }

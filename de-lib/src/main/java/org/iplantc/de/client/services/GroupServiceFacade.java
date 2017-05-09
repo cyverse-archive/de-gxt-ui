@@ -1,5 +1,6 @@
 package org.iplantc.de.client.services;
 
+import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -31,5 +32,12 @@ public interface GroupServiceFacade {
      * @param callback
      */
     void deleteGroup(String name, AsyncCallback<Group> callback);
+
+    /**
+     * Get the list of members who belong to a Collaborator List
+     * @param group
+     * @param callback
+     */
+    void getMembers(Group group, AsyncCallback<List<Collaborator>> callback);
 
 }

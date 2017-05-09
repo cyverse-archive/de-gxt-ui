@@ -11,6 +11,8 @@ import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Event;
 
@@ -18,7 +20,7 @@ import com.google.gwt.user.client.Event;
  * A clickable cell containing the Collaborator List name that will open up the GroupDetailsDialog
  * @author aramsey
  */
-public class GroupNameCell extends AbstractCell<Group> {
+public class GroupNameCell extends AbstractCell<Group> implements GroupNameSelected.HasGroupNameSelectedHandlers {
 
     public interface GroupNameCellAppearance {
         String CLICKABLE_ELEMENT_NAME = "groupName";
@@ -28,11 +30,10 @@ public class GroupNameCell extends AbstractCell<Group> {
 
     private GroupNameCellAppearance appearance = GWT.create(GroupNameCellAppearance.class);
     private String baseDebugId;
-    private GroupNameSelected.GroupNameSelectedHandler handler;
+    private HandlerManager handlerManager;
 
-    public GroupNameCell(GroupNameSelected.GroupNameSelectedHandler handler) {
+    public GroupNameCell() {
         super(CLICK);
-        this.handler = handler;
     }
 
     @Override
@@ -48,7 +49,7 @@ public class GroupNameCell extends AbstractCell<Group> {
         Element eventTargetElement = Element.as(event.getEventTarget());
         if ((Event.as(event).getTypeInt() == Event.ONCLICK)
             && eventTargetElement.getAttribute("name").equalsIgnoreCase(GroupNameCellAppearance.CLICKABLE_ELEMENT_NAME)) {
-            handler.onGroupNameSelected(new GroupNameSelected(value));
+            ensureHandlers().fireEvent(new GroupNameSelected(value));
         }
     }
 
@@ -60,5 +61,17 @@ public class GroupNameCell extends AbstractCell<Group> {
 
     public void setBaseDebugId(String baseDebugId) {
         this.baseDebugId = baseDebugId;
+    }
+
+    @Override
+    public HandlerRegistration addGroupNameSelectedHandler(GroupNameSelected.GroupNameSelectedHandler handler) {
+        return ensureHandlers().addHandler(GroupNameSelected.TYPE, handler);
+    }
+
+    protected HandlerManager ensureHandlers() {
+        if (handlerManager == null) {
+            handlerManager = new HandlerManager(this);
+        }
+        return handlerManager;
     }
 }

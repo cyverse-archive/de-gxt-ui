@@ -1,10 +1,9 @@
 package org.iplantc.de.collaborators.client.views.dialogs;
 
 import org.iplantc.de.client.models.groups.Group;
-import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
+import org.iplantc.de.collaborators.client.GroupDetailsView;
 import org.iplantc.de.collaborators.client.GroupView;
-import org.iplantc.de.collaborators.client.events.SaveGroupSelected;
-import org.iplantc.de.collaborators.client.views.GroupDetailsView;
+import org.iplantc.de.collaborators.client.events.GroupSaved;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
@@ -20,32 +19,28 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
  * From this dialog, a user can update the details of a Collaborator List and add/remove members to it.
  * @author aramsey
  */
-public class GroupDetailsDialog extends IPlantDialog implements SaveGroupSelected.HasSaveGroupSelectedHandlers {
+public class GroupDetailsDialog extends IPlantDialog implements GroupSaved.HasGroupSavedHandlers {
 
-    GroupDetailsView view;
+    GroupDetailsView.Presenter presenter;
     GroupView.GroupViewAppearance appearance;
-    private GroupAutoBeanFactory factory;
+    boolean isNewGroup = false;
 
     @Inject
-    public GroupDetailsDialog(GroupDetailsView view,
-                              GroupView.GroupViewAppearance appearance,
-                              GroupAutoBeanFactory factory) {
-        this.view = view;
+    public GroupDetailsDialog(GroupDetailsView.Presenter presenter,
+                              GroupView.GroupViewAppearance appearance) {
+        this.presenter = presenter;
         this.appearance = appearance;
-        this.factory = factory;
 
         setResizable(true);
         setPixelSize(appearance.groupDetailsWidth(), appearance.groupDetailsHeight());
         setOnEsc(false);
         setHideOnButtonClick(false);
 
-        add(view);
-
         addOkButtonSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
-                if (view.isValid()) {
-                    fireEvent(new SaveGroupSelected(view.getGroup(), view.getCollaborators()));
+                if (presenter.isViewValid()) {
+                    presenter.saveGroupSelected();
                     hide();
                 } else {
                     AlertMessageBox alertMsgBox =
@@ -65,27 +60,32 @@ public class GroupDetailsDialog extends IPlantDialog implements SaveGroupSelecte
         addHideHandler(new HideEvent.HideHandler() {
             @Override
             public void onHide(HideEvent event) {
-                view.clearHandlers();
+                presenter.clearHandlers();
             }
         });
     }
 
+    /**
+     * Used for displaying GroupDetailsView to edit an existing Group
+     * @param group
+     */
     public void show(Group group) {
-        view.edit(group);
+        presenter.go(this, group);
         setHeading(appearance.groupDetailsHeading(group));
         super.show();
 
         ensureDebugId(CollaboratorsModule.Ids.GROUP_DETAILS_DLG);
     }
 
-    @Override
+    /**
+     * Used for displaying GroupDetailsView with a new Group
+     */
     public void show() {
-        Group group = factory.getGroup().as();
-        show(group);
+        show(null);
     }
 
     @Override
-    public HandlerRegistration addSaveGroupSelectedHandler(SaveGroupSelected.SaveGroupSelectedHandler handler) {
-        return addHandler(handler, SaveGroupSelected.TYPE);
+    public HandlerRegistration addGroupSavedHandler(GroupSaved.GroupSavedHandler handler) {
+        return presenter.addGroupSavedHandler(handler);
     }
 }
