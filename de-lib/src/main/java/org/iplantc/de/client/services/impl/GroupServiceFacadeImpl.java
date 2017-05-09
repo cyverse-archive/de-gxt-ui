@@ -54,8 +54,8 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void getGroups(String searchTerm, AsyncCallback<List<Group>> callback) {
-        String address = LISTS + "?search=" + URL.encodeQueryString(searchTerm);
+    public void getGroups(AsyncCallback<List<Group>> callback) {
+        String address = LISTS;
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new AsyncCallbackConverter<String, List<Group>>(callback) {

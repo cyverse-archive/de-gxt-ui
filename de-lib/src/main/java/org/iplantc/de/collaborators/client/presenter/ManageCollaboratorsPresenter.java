@@ -159,14 +159,9 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         return Joiner.on(",").join(names);
     }
 
-    void updateListView() {
-        String searchTerm = "*";
-        updateListView(searchTerm);
-    }
-
     @Override
-    public void updateListView(String searchTerm) {
-        groupServiceFacade.getGroups(searchTerm, new AsyncCallback<List<Group>>() {
+    public void updateListView() {
+        groupServiceFacade.getGroups(new AsyncCallback<List<Group>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);

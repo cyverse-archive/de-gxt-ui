@@ -82,10 +82,10 @@ public interface ManageCollaboratorsView extends IsWidget,
         void addAsCollaborators(List<Collaborator> models);
 
         /**
-         * Run a search for Collaborator Lists with the given search term
+         * Fetch the list of all Collaborator Lists for this user
          * @param searchTerm
          */
-        void updateListView(String searchTerm);
+        void updateListView();
 
         /**
          * Fetch the list of current collaborators
