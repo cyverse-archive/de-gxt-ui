@@ -51,16 +51,18 @@ public class GroupViewImpl extends Composite implements GroupView {
     @UiField ColumnModel<Group> cm;
     @UiField(provided = true) GroupViewAppearance appearance;
 
-    @Inject GroupNameCell nameCell;
+    GroupNameCell nameCell;
     @Inject AsyncProviderWrapper<GroupDetailsDialog> groupDetailsDialog;
 
     private final GroupProperties props;
 
     @Inject
     public GroupViewImpl(GroupViewAppearance appearance,
-                         GroupProperties props) {
+                         GroupProperties props,
+                         GroupNameCell nameCell) {
         this.appearance = appearance;
         this.props = props;
+        this.nameCell = nameCell;
 
         initWidget(uiBinder.createAndBindUi(this));
         grid.getSelectionModel().setSelectionMode(Style.SelectionMode.SINGLE);
