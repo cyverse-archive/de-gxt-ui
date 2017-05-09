@@ -11,23 +11,33 @@ import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
+import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.CollaboratorsLoadedEvent;
 import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
+import org.iplantc.de.collaborators.client.events.GroupNameSelected;
+import org.iplantc.de.collaborators.client.events.GroupSaved;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
+import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.resources.client.messages.I18N;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
+
+import com.sencha.gxt.widget.core.client.Dialog;
+import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
+import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +50,9 @@ import java.util.stream.Stream;
  */
 public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Presenter,
                                                      RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler,
-                                                     DeleteGroupSelected.DeleteGroupSelectedHandler {
+                                                     DeleteGroupSelected.DeleteGroupSelectedHandler,
+                                                     AddGroupSelected.AddGroupSelectedHandler,
+                                                     GroupNameSelected.GroupNameSelectedHandler {
 
     final class UserSearchResultSelectedEventHandlerImpl implements
                                                                  UserSearchResultSelected.UserSearchResultSelectedEventHandler {
@@ -73,6 +85,8 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     ManageCollaboratorsView view;
     HandlerRegistration addCollabHandlerRegistration;
 
+    @Inject AsyncProviderWrapper<GroupDetailsDialog> groupDetailsDialog;
+
     @Inject
     public ManageCollaboratorsPresenter(ManageCollaboratorsViewFactory factory,
                                         GroupServiceFacade groupServiceFacade,
@@ -88,6 +102,8 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         addCollabHandlerRegistration = eventBus.addHandler(UserSearchResultSelected.TYPE,
                                                            new UserSearchResultSelectedEventHandlerImpl());
         view.addDeleteGroupSelectedHandler(this);
+        view.addAddGroupSelectedHandler(this);
+        view.addGroupNameSelectedHandler(this);
     }
 
     /*
@@ -237,6 +253,23 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     @Override
     public void onDeleteGroupSelected(DeleteGroupSelected event) {
         Group group = event.getGroup();
+        if (group == null) {
+            return;
+        }
+        ConfirmMessageBox deleteAlert = new ConfirmMessageBox(groupAppearance.deleteGroupConfirmHeading(group),
+                                                              groupAppearance.deleteGroupConfirm(group));
+        deleteAlert.show();
+        deleteAlert.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
+            @Override
+            public void onDialogHide(DialogHideEvent event) {
+                if (event.getHideButton().equals(Dialog.PredefinedButton.YES)) {
+                    deleteGroup(group);
+                }
+            }
+        });
+    }
+
+    void deleteGroup(Group group) {
         groupServiceFacade.deleteGroup(group.getName(), new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -247,6 +280,40 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
             public void onSuccess(Group result) {
                 view.removeCollabList(result);
                 announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.groupDeleteSuccess(result)));
+            }
+        });
+    }
+
+    @Override
+    public void onAddGroupSelected(AddGroupSelected event) {
+        groupDetailsDialog.get(new AsyncCallback<GroupDetailsDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(GroupDetailsDialog result) {
+                result.show();
+                result.addGroupSavedHandler(new GroupSaved.GroupSavedHandler() {
+                    @Override
+                    public void onGroupSaved(GroupSaved event) {
+                        Group group = event.getGroup();
+                        view.addCollabLists(Lists.newArrayList(group));
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
+    public void onGroupNameSelected(GroupNameSelected event) {
+        Group group = event.getGroup();
+        groupDetailsDialog.get(new AsyncCallback<GroupDetailsDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(GroupDetailsDialog result) {
+                result.show(group);
             }
         });
     }

@@ -1,7 +1,9 @@
 package org.iplantc.de.collaborators.client;
 
+import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
 import org.iplantc.de.collaborators.client.events.GroupSaved;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -14,15 +16,23 @@ import java.util.List;
  * edit/create Collaborator Lists and add members to those lists.
  * @author aramsey
  */
-public interface GroupDetailsView extends IsWidget {
+public interface GroupDetailsView extends IsWidget,
+                                          IsMaskable,
+                                          AddGroupMemberSelected.HasAddGroupMemberSelectedHandlers {
 
-    interface Presenter extends GroupSaved.HasGroupSavedHandlers {
+    enum MODE {
+        ADD,
+        EDIT
+    }
+
+    interface Presenter extends GroupSaved.HasGroupSavedHandlers,
+                                AddGroupMemberSelected.AddGroupMemberSelectedHandler {
 
         /**
          * Initialize the presenter and add the GroupDetailsView to the specified container
          * @param container
          */
-        void go(HasOneWidget container, Group group);
+        void go(HasOneWidget container, Group group, MODE mode);
 
         /**
          * Check whether the GroupDetailsView is valid
@@ -45,7 +55,7 @@ public interface GroupDetailsView extends IsWidget {
      * Edit the specified Collaborator List
      * @param group
      */
-    void edit(Group group);
+    void edit(Group group, MODE mode);
 
     /**
      * Clear any EventBus handlers that can now be removed

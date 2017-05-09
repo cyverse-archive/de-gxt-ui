@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupDetailsView;
 import org.iplantc.de.collaborators.client.GroupView;
+import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.models.CollaboratorKeyProvider;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
@@ -56,7 +57,13 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
         @Override
         public void onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected) {
             if (UserSearchResultSelected.USER_SEARCH_EVENT_TAG.GROUP.toString().equals(userSearchResultSelected.getTag())) {
-                listStore.add(userSearchResultSelected.getCollaborator());
+                Collaborator collaborator = userSearchResultSelected.getCollaborator();
+                if (MODE.EDIT == mode) {
+                    mask();
+                    fireEvent(new AddGroupMemberSelected(getGroup(), collaborator));
+                } else {
+                    listStore.add(collaborator);
+                }
             }
         }
     }
@@ -81,6 +88,7 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
 
     private CheckBoxSelectionModel<Collaborator> checkBoxModel;
     String baseID;
+    private MODE mode;
 
     @Inject
     public GroupDetailsViewImpl(GroupView.GroupViewAppearance appearance,
@@ -155,7 +163,8 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
     }
 
     @Override
-    public void edit(Group group) {
+    public void edit(Group group, MODE mode) {
+        this.mode = mode;
         editorDriver.edit(group);
     }
 
@@ -184,5 +193,10 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
         if (members != null) {
             listStore.addAll(members);
         }
+    }
+
+    @Override
+    public HandlerRegistration addAddGroupMemberSelectedHandler(AddGroupMemberSelected.AddGroupMemberSelectedHandler handler) {
+        return addHandler(handler, AddGroupMemberSelected.TYPE);
     }
 }

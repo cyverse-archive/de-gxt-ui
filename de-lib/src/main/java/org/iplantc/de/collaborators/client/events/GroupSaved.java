@@ -6,8 +6,6 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
-import java.util.List;
-
 /**
  * @author aramsey
  */
@@ -22,10 +20,10 @@ public class GroupSaved extends GwtEvent<GroupSaved.GroupSavedHandler> {
     }
 
     public static Type<GroupSavedHandler> TYPE = new Type<GroupSavedHandler>();
-    private List<Group> groups;
+    private Group group;
 
-    public GroupSaved(List<Group> groups) {
-        this.groups = groups;
+    public GroupSaved(Group group) {
+        this.group = group;
     }
 
     public Type<GroupSavedHandler> getAssociatedType() {
@@ -36,7 +34,7 @@ public class GroupSaved extends GwtEvent<GroupSaved.GroupSavedHandler> {
         handler.onGroupSaved(this);
     }
 
-    public List<Group> getGroups() {
-        return groups;
+    public Group getGroup() {
+        return group;
     }
 }

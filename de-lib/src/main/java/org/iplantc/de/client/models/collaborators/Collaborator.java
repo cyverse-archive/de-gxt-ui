@@ -3,13 +3,15 @@
  */
 package org.iplantc.de.client.models.collaborators;
 
+import org.iplantc.de.client.models.HasId;
+
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 
 /**
  * @author sriram
  * 
  */
-public interface Collaborator {
+public interface Collaborator extends HasId {
 
     @PropertyName("username")
     void setUserName(String username);

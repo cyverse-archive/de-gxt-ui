@@ -23,7 +23,7 @@ public class GroupDetailsDialog extends IPlantDialog implements GroupSaved.HasGr
 
     GroupDetailsView.Presenter presenter;
     GroupView.GroupViewAppearance appearance;
-    boolean isNewGroup = false;
+    GroupDetailsView.MODE mode = GroupDetailsView.MODE.EDIT;
 
     @Inject
     public GroupDetailsDialog(GroupDetailsView.Presenter presenter,
@@ -70,7 +70,7 @@ public class GroupDetailsDialog extends IPlantDialog implements GroupSaved.HasGr
      * @param group
      */
     public void show(Group group) {
-        presenter.go(this, group);
+        presenter.go(this, group, mode);
         setHeading(appearance.groupDetailsHeading(group));
         super.show();
 
@@ -81,6 +81,7 @@ public class GroupDetailsDialog extends IPlantDialog implements GroupSaved.HasGr
      * Used for displaying GroupDetailsView with a new Group
      */
     public void show() {
+        mode = GroupDetailsView.MODE.ADD;
         show(null);
     }
 

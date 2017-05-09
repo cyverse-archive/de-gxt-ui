@@ -1,7 +1,8 @@
 package org.iplantc.de.collaborators.client;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.models.groups.UpdateMemberResult;
+import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
 import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 
@@ -19,8 +20,9 @@ import java.util.List;
  * @author aramsey
  */
 public interface GroupView extends IsWidget,
-                                   GroupNameSelected.GroupNameSelectedHandler,
-                                   DeleteGroupSelected.HasDeleteGroupSelectedHandlers {
+                                   DeleteGroupSelected.HasDeleteGroupSelectedHandlers,
+                                   AddGroupSelected.HasAddGroupSelectedHandlers,
+                                   GroupNameSelected.HasGroupNameSelectedHandlers {
 
     /**
      * Appearance related items for the GroupView
@@ -66,6 +68,12 @@ public interface GroupView extends IsWidget,
         String deleteGroupConfirm(Group group);
 
         String groupDeleteSuccess(Group group);
+
+        String unableToAddMembers(List<UpdateMemberResult> failures);
+
+        String loadingMask();
+
+        String groupCreatedSuccess(Group group);
     }
 
     /**
@@ -90,11 +98,4 @@ public interface GroupView extends IsWidget,
      * @param result
      */
     void removeCollabList(Group result);
-
-    /**
-     * Edit the specified Collaborator List and/or its members
-     * @param group
-     * @param members
-     */
-    void editCollabList(Group group, List<Collaborator> members);
 }

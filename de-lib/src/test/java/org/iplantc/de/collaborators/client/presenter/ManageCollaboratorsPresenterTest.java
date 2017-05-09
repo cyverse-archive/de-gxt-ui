@@ -1,5 +1,6 @@
 package org.iplantc.de.collaborators.client.presenter;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -15,13 +16,16 @@ import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
+import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.CollaboratorsLoadedEvent;
-import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
+import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
+import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -58,11 +62,15 @@ public class ManageCollaboratorsPresenterTest {
     @Mock EventBus eventBusMock;
     @Mock IplantAnnouncer announcerMock;
     @Mock GroupView.GroupViewAppearance groupAppearance;
+    @Mock GroupDetailsDialog groupDetailsDialogMock;
+    @Mock AsyncProviderWrapper<GroupDetailsDialog> groupDetailsDialogProvider;
 
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Collaborator>>> collabListCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<Group>> groupCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Group>>> groupListCallbackCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<GroupDetailsDialog>> groupDetailsDialogCaptor;
+
 
     private ManageCollaboratorsPresenter uut;
 
@@ -86,6 +94,7 @@ public class ManageCollaboratorsPresenterTest {
         uut.view = viewMock;
         uut.addCollabHandlerRegistration = addCollabHandlerRegistrationMock;
         uut.announcer = announcerMock;
+        uut.groupDetailsDialog = groupDetailsDialogProvider;
     }
 
     @Test
@@ -182,13 +191,11 @@ public class ManageCollaboratorsPresenterTest {
 
     @Test
     public void onDeleteGroupSelected() {
-        DeleteGroupSelected eventMock = mock(DeleteGroupSelected.class);
-        when(eventMock.getGroup()).thenReturn(groupMock);
         when(groupMock.getName()).thenReturn("name");
         when(groupAppearance.groupDeleteSuccess(groupMock)).thenReturn("success");
 
         /** CALL METHOD UNDER TEST **/
-        uut.onDeleteGroupSelected(eventMock);
+        uut.deleteGroup(groupMock);
 
         verify(groupServiceFacadeMock).deleteGroup(eq("name"), groupCallbackCaptor.capture());
 
@@ -198,6 +205,31 @@ public class ManageCollaboratorsPresenterTest {
 
     }
 
+    @Test
+    public void onAddGroupSelected() {
+        AddGroupSelected eventMock = mock(AddGroupSelected.class);
+
+        /** CALL METHOD UNDER TEST **/
+        uut.onAddGroupSelected(eventMock);
+        verify(groupDetailsDialogProvider).get(groupDetailsDialogCaptor.capture());
+
+        groupDetailsDialogCaptor.getValue().onSuccess(groupDetailsDialogMock);
+        verify(groupDetailsDialogMock).show();
+        verify(groupDetailsDialogMock).addGroupSavedHandler(any());
+    }
+
+    @Test
+    public void onGroupNameSelected() {
+        GroupNameSelected eventMock = mock(GroupNameSelected.class);
+        when(eventMock.getGroup()).thenReturn(groupMock);
+
+        /** CALL METHOD UNDER TEST **/
+        uut.onGroupNameSelected(eventMock);
+        verify(groupDetailsDialogProvider).get(groupDetailsDialogCaptor.capture());
+
+        groupDetailsDialogCaptor.getValue().onSuccess(groupDetailsDialogMock);
+        verify(groupDetailsDialogMock).show(eq(groupMock));
+    }
 
 
 }

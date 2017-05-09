@@ -19,4 +19,10 @@ public interface GroupAutoBeanFactory extends AutoBeanFactory {
     AutoBean<Group> getGroup();
 
     AutoBean<GroupList> getGroupList();
+
+    AutoBean<UpdateMemberRequest> getUpdateMemberRequest();
+
+    AutoBean<UpdateMemberResult> getUpdateMemberResult();
+
+    AutoBean<UpdateMemberResultList> getUpdateMemberResultList();
 }
