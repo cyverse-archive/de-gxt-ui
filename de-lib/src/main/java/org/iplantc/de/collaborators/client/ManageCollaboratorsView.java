@@ -129,6 +129,16 @@ public interface ManageCollaboratorsView extends IsWidget,
     void removeCollabList(Group result);
 
     /**
+     * Mask only the Collaborator List view
+     */
+    void maskCollabLists(String loadingMask);
+
+    /**
+     * Unmask only the Collaborator List view
+     */
+    void unmaskCollabLists();
+
+    /**
      *  The collection of modes the ManageCollaboratorsView can step into
      */
     enum MODE {
@@ -148,15 +158,15 @@ public interface ManageCollaboratorsView extends IsWidget,
     void removeCollaborators(List<Collaborator> models);
 
     /**
-     * Mask both the ManageCollaboratorsView and GroupView
+     * Mask only the ManageCollaboratorsView
      * @param maskText
      */
-    void mask(String maskText);
+    void maskCollaborators(String maskText);
 
     /**
-     * Unmask both the ManageCollaboratorsView and GroupView
+     * Unmask the ManageCollaboratorsView
      */
-    void unmask();
+    void unmaskCollaborators();
 
     /**
      * Set the mode for the ManageCollaboratorsView

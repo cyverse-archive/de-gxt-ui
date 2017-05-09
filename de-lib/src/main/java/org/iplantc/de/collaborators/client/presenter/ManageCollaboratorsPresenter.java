@@ -161,15 +161,18 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     @Override
     public void updateListView() {
+        view.maskCollabLists(groupAppearance.loadingMask());
         groupServiceFacade.getGroups(new AsyncCallback<List<Group>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
+                view.unmaskCollabLists();
             }
 
             @Override
             public void onSuccess(List<Group> result) {
                 view.addCollabLists(result);
+                view.unmaskCollabLists();
             }
         });
     }
@@ -204,17 +207,17 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
      */
     @Override
     public void loadCurrentCollaborators() {
-        view.mask(null);
+        view.maskCollaborators(null);
         collabServiceFacade.getCollaborators(new AsyncCallback<List<Collaborator>>() {
 
             @Override
             public void onFailure(Throwable caught) {
-                view.unmask();
+                view.unmaskCollaborators();
             }
 
             @Override
             public void onSuccess(List<Collaborator> result) {
-                view.unmask();
+                view.unmaskCollaborators();
                 view.loadData(result);
                 eventBus.fireEvent(new CollaboratorsLoadedEvent());
             }

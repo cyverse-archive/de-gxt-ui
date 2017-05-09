@@ -127,18 +127,27 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @Override
+    public void maskCollabLists(String loadingMask) {
+        groupView.mask(loadingMask);
+    }
+
+    @Override
+    public void unmaskCollabLists() {
+        groupView.unmask();
+    }
+
+    @Override
     public void loadData(List<Collaborator> models) {
         listStore.clear();
         listStore.addAll(models);
     }
 
     @Override
-    public void mask(String maskText) {
+    public void maskCollaborators(String maskText) {
         if (Strings.isNullOrEmpty(maskText)) {
             maskText = appearance.loadingMask();
         }
         collaboratorListPnl.mask(maskText);
-        groupView.mask(maskText);
     }
 
     @Override
@@ -183,9 +192,8 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @Override
-    public void unmask() {
+    public void unmaskCollaborators() {
         collaboratorListPnl.unmask();
-        groupView.unmask();
     }
 
     @Override
