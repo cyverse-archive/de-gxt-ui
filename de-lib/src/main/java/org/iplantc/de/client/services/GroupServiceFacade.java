@@ -18,7 +18,7 @@ public interface GroupServiceFacade {
      * @param searchTerm
      * @param callback
      */
-    void getGroups(String searchTerm, AsyncCallback<List<Group>> callback);
+    void getGroups(AsyncCallback<List<Group>> callback);
 
     /**
      * Create a Collaborator List
