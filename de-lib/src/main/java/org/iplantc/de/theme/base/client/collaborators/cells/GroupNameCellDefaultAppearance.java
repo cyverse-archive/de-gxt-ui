@@ -33,6 +33,7 @@ public class GroupNameCellDefaultAppearance implements GroupNameCell.GroupNameCe
                                           Templates templates) {
         this.defaultStyle = iplantResources.diskResourceNameCss();
         this.templates = templates;
+        defaultStyle.ensureInjected();
     }
 
     @Override
