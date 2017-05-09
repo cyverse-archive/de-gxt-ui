@@ -129,13 +129,10 @@ public class ManageCollaboratorsPresenterTest {
 
     @Test
     public void updateListView() {
-
-        String searchTerm = "search";
-
         /** CALL METHOD UNDER TEST **/
-        uut.updateListView(searchTerm);
+        uut.updateListView();
 
-        verify(groupServiceFacadeMock).getGroups(eq(searchTerm), groupListCallbackCaptor.capture());
+        verify(groupServiceFacadeMock).getGroups(groupListCallbackCaptor.capture());
 
         groupListCallbackCaptor.getValue().onSuccess(groupListMock);
         verify(viewMock).addCollabLists(groupListMock);
@@ -163,11 +160,11 @@ public class ManageCollaboratorsPresenterTest {
         /** CALL METHOD UNDER TEST **/
         uut.loadCurrentCollaborators();
 
-        verify(viewMock).mask(anyString());
+        verify(viewMock).maskCollaborators(anyString());
         verify(collabServiceFacadeMock).getCollaborators(collabListCallbackCaptor.capture());
 
         collabListCallbackCaptor.getValue().onSuccess(collaboratorListMock);
-        verify(viewMock).unmask();
+        verify(viewMock).unmaskCollaborators();
         verify(viewMock).loadData(eq(collaboratorListMock));
         verify(eventBusMock).fireEvent(isA(CollaboratorsLoadedEvent.class));
     }
