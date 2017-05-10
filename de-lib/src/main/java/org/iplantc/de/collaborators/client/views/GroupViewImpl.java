@@ -28,6 +28,7 @@ import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
+import com.sencha.gxt.widget.core.client.grid.CheckBoxSelectionModel;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
@@ -53,6 +54,7 @@ public class GroupViewImpl extends Composite implements GroupView {
     @UiField(provided = true) GroupViewAppearance appearance;
 
     GroupNameCell nameCell;
+    CheckBoxSelectionModel<Group> checkBoxModel;
     @Inject AsyncProviderWrapper<GroupDetailsDialog> groupDetailsDialog;
 
     private final GroupProperties props;
@@ -65,9 +67,11 @@ public class GroupViewImpl extends Composite implements GroupView {
         this.appearance = appearance;
         this.props = props;
         this.nameCell = nameCell;
+        checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Group>());
 
         initWidget(uiBinder.createAndBindUi(this));
-        grid.getSelectionModel().setSelectionMode(Style.SelectionMode.SINGLE);
+        checkBoxModel.setSelectionMode(Style.SelectionMode.MULTI);
+        grid.setSelectionModel(checkBoxModel);
         grid.getView().setEmptyText(appearance.noCollabLists());
     }
 
@@ -75,12 +79,15 @@ public class GroupViewImpl extends Composite implements GroupView {
     ColumnModel<Group> createColumnModel() {
         List<ColumnConfig<Group, ?>> columns = Lists.newArrayList();
 
+        ColumnConfig<Group, Group> checkBoxCol = checkBoxModel.getColumn();
+
         ColumnConfig<Group, Group> nameCol = new ColumnConfig<>(new IdentityValueProvider<Group>("name"),
                                                                 appearance.nameColumnWidth(),
                                                                 appearance.nameColumnLabel());
         ColumnConfig<Group, String> descriptionCol = new ColumnConfig<>(props.description(),
                                                                         appearance.descriptionColumnWidth(),
                                                                         appearance.descriptionColumnLabel());
+        columns.add(checkBoxCol);
         nameCol.setCell(nameCell);
         columns.add(nameCol);
         columns.add(descriptionCol);
