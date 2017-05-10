@@ -102,7 +102,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         this.view = factory.create(mode);
         view.addRemoveCollaboratorSelectedHandler(this);
         loadCurrentCollaborators();
-//        updateListView();
+        updateListView();
         addEventHandlers();
         container.setWidget(view.asWidget());
     }
