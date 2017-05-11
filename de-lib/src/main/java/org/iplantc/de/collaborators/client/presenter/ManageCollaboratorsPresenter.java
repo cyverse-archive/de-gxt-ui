@@ -254,16 +254,19 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     void deleteGroup(Group group) {
-        groupServiceFacade.deleteGroup(group.getName(), new AsyncCallback<Group>() {
+        view.maskCollabLists(groupAppearance.loadingMask());
+        groupServiceFacade.deleteGroup(group, new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
+                view.unmaskCollabLists();
             }
 
             @Override
             public void onSuccess(Group result) {
-                view.removeCollabList(result);
+                view.removeCollabList(group);
                 announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.groupDeleteSuccess(result)));
+                view.unmaskCollabLists();
             }
         });
     }
