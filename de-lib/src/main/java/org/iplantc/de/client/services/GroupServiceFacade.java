@@ -29,10 +29,10 @@ public interface GroupServiceFacade {
 
     /**
      * Delete a Collaborator List
-     * @param name
+     * @param group
      * @param callback
      */
-    void deleteGroup(String name, AsyncCallback<Group> callback);
+    void deleteGroup(Group group, AsyncCallback<Group> callback);
 
     /**
      * Get the list of members who belong to a Collaborator List

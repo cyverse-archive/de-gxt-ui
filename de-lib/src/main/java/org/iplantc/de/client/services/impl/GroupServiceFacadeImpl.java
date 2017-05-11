@@ -78,8 +78,8 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void deleteGroup(String name, AsyncCallback<Group> callback) {
-        String address = LISTS + "/" + URL.encodeQueryString(name);
+    public void deleteGroup(Group group, AsyncCallback<Group> callback) {
+        String address = LISTS + "/" + URL.encode(group.getName());
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address);
         deService.getServiceData(wrapper, new GroupCallbackConverter(callback, factory));
