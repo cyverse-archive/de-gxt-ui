@@ -14,5 +14,5 @@ import java.util.List;
 public interface CollaboratorsList {
 
     @PropertyName("users")
-    public List<Collaborator> getCollaborators();
+    public List<OldCollaborator> getCollaborators();
 }

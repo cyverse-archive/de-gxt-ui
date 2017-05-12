@@ -1,13 +1,13 @@
 package org.iplantc.de.collaborators.client.views;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupDetailsView;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
 import org.iplantc.de.collaborators.client.events.DeleteMembersSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
-import org.iplantc.de.collaborators.client.models.CollaboratorKeyProvider;
+import org.iplantc.de.collaborators.client.models.SubjectKeyProvider;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 
@@ -64,12 +64,12 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
     @UiField(provided = true) UserSearchField searchField;
     @UiField ToolBar toolbar;
     @UiField @Ignore TextButton deleteBtn;
-    @UiField ListStore<Collaborator> listStore;
-    @UiField Grid<Collaborator> grid;
-    @UiField ColumnModel<Collaborator> cm;
+    @UiField ListStore<Subject> listStore;
+    @UiField Grid<Subject> grid;
+    @UiField ColumnModel<Subject> cm;
     @UiField(provided = true) GroupView.GroupViewAppearance appearance;
 
-    private CheckBoxSelectionModel<Collaborator> checkBoxModel;
+    private CheckBoxSelectionModel<Subject> checkBoxModel;
     String baseID;
     private MODE mode;
 
@@ -78,7 +78,7 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
                                 UserSearchField searchField) {
         this.appearance = appearance;
         this.searchField = searchField;
-        checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Collaborator>());
+        checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Subject>());
         initWidget(uiBinder.createAndBindUi(this));
 
         groupNameLabel.setHTML(appearance.groupNameLabel());
@@ -93,9 +93,9 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
                 setGridCheckBoxDebugIds();
             }
         });
-        grid.getSelectionModel().addSelectionChangedHandler(new SelectionChangedEvent.SelectionChangedHandler<Collaborator>() {
+        grid.getSelectionModel().addSelectionChangedHandler(new SelectionChangedEvent.SelectionChangedHandler<Subject>() {
             @Override
-            public void onSelectionChanged(SelectionChangedEvent<Collaborator> event) {
+            public void onSelectionChanged(SelectionChangedEvent<Subject> event) {
                 deleteBtn.setEnabled(!event.getSelection().isEmpty());
             }
         });
@@ -105,30 +105,30 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
 
     @Override
     public void onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected) {
-        Collaborator collaborator = userSearchResultSelected.getCollaborator();
+        Subject subject = userSearchResultSelected.getSubject();
         if (MODE.EDIT == mode) {
             mask();
-            fireEvent(new AddGroupMemberSelected(getGroup(), collaborator));
+            fireEvent(new AddGroupMemberSelected(getGroup(), subject));
         } else {
-            listStore.add(collaborator);
+            listStore.add(subject);
         }
     }
 
     @UiHandler("deleteBtn")
     void onDeleteButtonSelected(SelectEvent event) {
-        List<Collaborator> selectedItems = grid.getSelectionModel().getSelectedItems();
+        List<Subject> selectedItems = grid.getSelectionModel().getSelectedItems();
         if (selectedItems != null && !selectedItems.isEmpty()) {
             fireEvent(new DeleteMembersSelected(getGroup(), selectedItems));
         }
     }
 
     @UiFactory
-    ListStore<Collaborator> createListStore() {
-        return new ListStore<Collaborator>(new CollaboratorKeyProvider());
+    ListStore<Subject> createListStore() {
+        return new ListStore<Subject>(new SubjectKeyProvider());
     }
 
     @UiFactory
-    ColumnModel<Collaborator> buildColumnModel() {
+    ColumnModel<Subject> buildColumnModel() {
         return new CollaboratorsColumnModel(checkBoxModel);
     }
 
@@ -169,12 +169,12 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
     }
 
     @Override
-    public List<Collaborator> getCollaborators() {
+    public List<Subject> getMembers() {
         return listStore.getAll();
     }
 
     @Override
-    public void addMembers(List<Collaborator> members) {
+    public void addMembers(List<Subject> members) {
         if (members != null) {
             listStore.addAll(members);
         }

@@ -1,7 +1,7 @@
 package org.iplantc.de.collaborators.client;
 
 import org.iplantc.de.client.models.IsMaskable;
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
 import org.iplantc.de.collaborators.client.events.DeleteMembersSelected;
@@ -71,11 +71,11 @@ public interface GroupDetailsView extends IsWidget,
      * Get the list of members in the current Collaborator List
      * @return
      */
-    List<Collaborator> getCollaborators();
+    List<Subject> getMembers();
 
     /**
      * Add the specified members to the Collaborator List
      * @param members
      */
-    void addMembers(List<Collaborator> members);
+    void addMembers(List<Subject> members);
 }

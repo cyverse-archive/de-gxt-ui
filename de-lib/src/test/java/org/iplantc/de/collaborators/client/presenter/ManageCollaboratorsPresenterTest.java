@@ -10,7 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.iplantc.de.client.events.EventBus;
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
@@ -55,8 +55,8 @@ public class ManageCollaboratorsPresenterTest {
     @Mock HandlerRegistration addCollabHandlerRegistrationMock;
     @Mock Group groupMock;
     @Mock List<Group> groupListMock;
-    @Mock Collaborator collaboratorMock;
-    @Mock List<Collaborator> collaboratorListMock;
+    @Mock Subject subjectMock;
+    @Mock List<Subject> subjectListMock;
     @Mock CollaboratorsServiceFacade collabServiceFacadeMock;
     @Mock Widget viewWidgetMock;
     @Mock EventBus eventBusMock;
@@ -66,7 +66,7 @@ public class ManageCollaboratorsPresenterTest {
     @Mock AsyncProviderWrapper<GroupDetailsDialog> groupDetailsDialogProvider;
 
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<List<Collaborator>>> collabListCallbackCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> collabListCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<Group>> groupCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Group>>> groupListCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<GroupDetailsDialog>> groupDetailsDialogCaptor;
@@ -84,7 +84,7 @@ public class ManageCollaboratorsPresenterTest {
                                                collabServiceFacadeMock,
                                                groupAppearance) {
             @Override
-            String getCollaboratorNames(List<Collaborator> collaborators) {
+            String getCollaboratorNames(List<Subject> subjects) {
                 return "names";
             }
         };
@@ -118,12 +118,12 @@ public class ManageCollaboratorsPresenterTest {
     public void addAsCollaborators() {
 
         /** CALL METHOD UNDER TEST **/
-        uut.addAsCollaborators(collaboratorListMock);
+        uut.addAsCollaborators(subjectListMock);
 
-        verify(collabServiceFacadeMock).addCollaborators(eq(collaboratorListMock), voidCallbackCaptor.capture());
+        verify(collabServiceFacadeMock).addCollaborators(eq(subjectListMock), voidCallbackCaptor.capture());
 
         voidCallbackCaptor.getValue().onSuccess(null);
-        verify(viewMock).addCollaborators(eq(collaboratorListMock));
+        verify(viewMock).addCollaborators(eq(subjectListMock));
         verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));
     }
 
@@ -142,16 +142,16 @@ public class ManageCollaboratorsPresenterTest {
     @Test
     public void onRemoveCollaboratorSelected() {
         RemoveCollaboratorSelected eventMock = mock(RemoveCollaboratorSelected.class);
-        when(eventMock.getCollaborators()).thenReturn(collaboratorListMock);
+        when(eventMock.getSubjects()).thenReturn(subjectListMock);
 
         /** CALL METHOD UNDER TEST **/
         uut.onRemoveCollaboratorSelected(eventMock);
-        verify(eventMock).getCollaborators();
+        verify(eventMock).getSubjects();
 
-        verify(collabServiceFacadeMock).removeCollaborators(eq(collaboratorListMock), voidCallbackCaptor.capture());
+        verify(collabServiceFacadeMock).removeCollaborators(eq(subjectListMock), voidCallbackCaptor.capture());
 
         voidCallbackCaptor.getValue().onSuccess(null);
-        verify(viewMock).removeCollaborators(eq(collaboratorListMock));
+        verify(viewMock).removeCollaborators(eq(subjectListMock));
     }
 
     @Test
@@ -163,9 +163,9 @@ public class ManageCollaboratorsPresenterTest {
         verify(viewMock).maskCollaborators(anyString());
         verify(collabServiceFacadeMock).getCollaborators(collabListCallbackCaptor.capture());
 
-        collabListCallbackCaptor.getValue().onSuccess(collaboratorListMock);
+        collabListCallbackCaptor.getValue().onSuccess(subjectListMock);
         verify(viewMock).unmaskCollaborators();
-        verify(viewMock).loadData(eq(collaboratorListMock));
+        verify(viewMock).loadData(eq(subjectListMock));
         verify(eventBusMock).fireEvent(isA(CollaboratorsLoadedEvent.class));
     }
 

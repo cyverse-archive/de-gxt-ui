@@ -1,6 +1,6 @@
 package org.iplantc.de.collaborators.client.views.cells;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -8,10 +8,10 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 /**
  * @author jstroot
  */
-public final class NameCell extends AbstractCell<Collaborator> {
+public final class NameCell extends AbstractCell<Subject> {
     @Override
     public void render(Context context,
-                       Collaborator value,
+                       Subject value,
                        SafeHtmlBuilder sb) {
         StringBuilder builder = new StringBuilder();
         if (value.getFirstName() != null && !value.getFirstName().isEmpty()) {
@@ -21,7 +21,7 @@ public final class NameCell extends AbstractCell<Collaborator> {
             }
             sb.appendEscaped(builder.toString());
         } else {
-            sb.appendEscaped(value.getUserName());
+            sb.appendEscaped(value.getId());
         }
 
     }

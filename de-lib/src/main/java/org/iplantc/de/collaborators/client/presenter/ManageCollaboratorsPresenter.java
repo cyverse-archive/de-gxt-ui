@@ -5,7 +5,7 @@ package org.iplantc.de.collaborators.client.presenter;
 
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
@@ -104,11 +104,11 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     @Override
     public void onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected) {
-        Collaborator collaborator = userSearchResultSelected.getCollaborator();
+        Subject subject = userSearchResultSelected.getSubject();
         if (!userInfo.getUsername()
-                     .equals(collaborator.getUserName())) {
-            if (!collaboratorsUtil.isCurrentCollaborator(collaborator, view.getCollaborators())) {
-                addAsCollaborators(Arrays.asList(collaborator));
+                     .equals(subject.getId())) {
+            if (!collaboratorsUtil.isCurrentCollaborator(subject, view.getCollaborators())) {
+                addAsCollaborators(Arrays.asList(subject));
             }
         } else {
             announcer.schedule(new ErrorAnnouncementConfig(I18N.DISPLAY.collaboratorSelfAdd()));
@@ -123,7 +123,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
      * (java.util.List)
      */
     @Override
-    public void addAsCollaborators(final List<Collaborator> models) {
+    public void addAsCollaborators(final List<Subject> models) {
         collabServiceFacade.addCollaborators(models, new AsyncCallback<Void>() {
 
             @Override
@@ -144,10 +144,10 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     }
 
-    String getCollaboratorNames(List<Collaborator> collaborators) {
-        Stream<Collaborator> stream = collaborators.stream();
+    String getCollaboratorNames(List<Subject> subjects) {
+        Stream<Subject> stream = subjects.stream();
 
-        Stream<String> stringStream = stream.map(Collaborator::getUserName);
+        Stream<String> stringStream = stream.map(Subject::getId);
         List<String> names = stringStream.collect(Collectors.toList());
         return Joiner.on(",").join(names);
     }
@@ -172,7 +172,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     @Override
     public void onRemoveCollaboratorSelected(RemoveCollaboratorSelected event) {
-        List<Collaborator> models = event.getCollaborators();
+        List<Subject> models = event.getSubjects();
         collabServiceFacade.removeCollaborators(models, new AsyncCallback<Void>() {
 
             @Override
@@ -201,7 +201,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     @Override
     public void loadCurrentCollaborators() {
         view.maskCollaborators(null);
-        collabServiceFacade.getCollaborators(new AsyncCallback<List<Collaborator>>() {
+        collabServiceFacade.getCollaborators(new AsyncCallback<List<Subject>>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -209,7 +209,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
             }
 
             @Override
-            public void onSuccess(List<Collaborator> result) {
+            public void onSuccess(List<Subject> result) {
                 view.unmaskCollaborators();
                 view.loadData(result);
                 eventBus.fireEvent(new CollaboratorsLoadedEvent());
@@ -230,7 +230,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     @Override
-    public List<Collaborator> getSelectedCollaborators() {
+    public List<Subject> getSelectedCollaborators() {
         return view.getSelectedCollaborators();
     }
 

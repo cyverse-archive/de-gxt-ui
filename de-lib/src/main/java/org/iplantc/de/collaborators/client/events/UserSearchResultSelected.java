@@ -1,6 +1,6 @@
 package org.iplantc.de.collaborators.client.events;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected.UserSearchResultSelectedEventHandler;
 
 import com.google.gwt.event.shared.EventHandler;
@@ -26,10 +26,10 @@ public class UserSearchResultSelected extends GwtEvent<UserSearchResultSelectedE
     }
 
     public static final GwtEvent.Type<UserSearchResultSelectedEventHandler> TYPE = new GwtEvent.Type<UserSearchResultSelected.UserSearchResultSelectedEventHandler>();
-    private final Collaborator collaborator;
+    private final Subject subject;
 
-    public UserSearchResultSelected(Collaborator collaborator) {
-        this.collaborator = collaborator;
+    public UserSearchResultSelected(Subject subject) {
+        this.subject = subject;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class UserSearchResultSelected extends GwtEvent<UserSearchResultSelectedE
         handler.onUserSearchResultSelected(this);
     }
 
-    public Collaborator getCollaborator() {
-        return collaborator;
+    public Subject getSubject() {
+        return subject;
     }
 }

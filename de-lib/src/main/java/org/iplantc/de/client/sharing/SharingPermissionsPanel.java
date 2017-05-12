@@ -1,7 +1,7 @@
 package org.iplantc.de.client.sharing;
 
 import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
@@ -134,10 +134,10 @@ public class SharingPermissionsPanel implements SharingPermissionView,
 
                             @Override
                             public void onSelect(SelectEvent event) {
-                                List<Collaborator> selected = result.getSelectedCollaborators();
+                                List<Subject> selected = result.getSelectedSubjects();
                                 if (selected != null && selected.size() > 0) {
-                                    for (Collaborator c : selected) {
-                                        addCollaborator(c);
+                                    for (Subject c : selected) {
+                                        addSubject(c);
                                     }
                                 }
                             }
@@ -214,8 +214,8 @@ public class SharingPermissionsPanel implements SharingPermissionView,
         toolbar.add(explainPanel);
     }
 
-    private void addCollaborator(Collaborator user) {
-        String userName = user.getUserName();
+    private void addSubject(Subject user) {
+        String userName = user.getId();
         if (userName != null && userName.equalsIgnoreCase(UserInfo.getInstance().getUsername())) {
             AlertMessageBox amb = new AlertMessageBox(appearance.warning(),
                                                       appearance.selfShareWarning());
@@ -260,7 +260,7 @@ public class SharingPermissionsPanel implements SharingPermissionView,
 
     @Override
     public void onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected) {
-        addCollaborator(userSearchResultSelected.getCollaborator());
+        addSubject(userSearchResultSelected.getSubject());
     }
 
     public void loadSharingData(FastMap<List<Sharing>> sharingMap) {
@@ -464,7 +464,7 @@ public class SharingPermissionsPanel implements SharingPermissionView,
             }
             // Check if user does not have all resources shared yet, due to varying permissions/shares.
             if (resources.size() != models.size()) {
-                Collaborator user = models.get(0).getCollaborator();
+                Subject user = models.get(0).getSubject();
                 for (String id : resources.keySet()) {
                     final SharedResource resource = resources.get(id);
                     final String systemId = resource.getSystemId();

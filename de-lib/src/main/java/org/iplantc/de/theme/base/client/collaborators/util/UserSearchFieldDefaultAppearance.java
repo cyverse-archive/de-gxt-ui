@@ -1,6 +1,6 @@
 package org.iplantc.de.theme.base.client.collaborators.util;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
@@ -18,7 +18,7 @@ public class UserSearchFieldDefaultAppearance implements UserSearchField.UserSea
 
     interface UserTemplate extends XTemplates {
         @XTemplate(source = "UserSearchResult.html")
-        SafeHtml render(Collaborator c);
+        SafeHtml render(Subject c);
     }
 
     private UserTemplate userTemplate;
@@ -36,8 +36,8 @@ public class UserSearchFieldDefaultAppearance implements UserSearchField.UserSea
     }
 
     @Override
-    public void render(Cell.Context context, Collaborator collaborator, SafeHtmlBuilder sb) {
-        sb.append(userTemplate.render(collaborator));
+    public void render(Cell.Context context, Subject subject, SafeHtmlBuilder sb) {
+        sb.append(userTemplate.render(subject));
     }
 
     @Override
@@ -46,7 +46,7 @@ public class UserSearchFieldDefaultAppearance implements UserSearchField.UserSea
     }
 
     @Override
-    public String collaboratorDisplayName(Collaborator c) {
+    public String collaboratorDisplayName(Subject c) {
         return c.getFirstName() + c.getLastName();
     }
 }

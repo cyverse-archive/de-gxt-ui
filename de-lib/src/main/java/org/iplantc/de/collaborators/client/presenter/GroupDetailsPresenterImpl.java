@@ -1,6 +1,6 @@
 package org.iplantc.de.collaborators.client.presenter;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
@@ -65,14 +65,14 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
 
     void getGroupMembers(Group group) {
         if (GroupDetailsView.MODE.EDIT == mode) {
-            serviceFacade.getMembers(group, new AsyncCallback<List<Collaborator>>() {
+            serviceFacade.getMembers(group, new AsyncCallback<List<Subject>>() {
                 @Override
                 public void onFailure(Throwable caught) {
                     ErrorHandler.post(caught);
                 }
 
                 @Override
-                public void onSuccess(List<Collaborator> result) {
+                public void onSuccess(List<Subject> result) {
                     view.addMembers(result);
                 }
             });
@@ -113,7 +113,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
             @Override
             public void onSuccess(Group result) {
                 ensureHandlers().fireEvent(new GroupSaved(result));
-                List<Collaborator> subjects = view.getCollaborators();
+                List<Subject> subjects = view.getMembers();
                 updateGroupMembers(group, subjects);
             }
         });
@@ -134,7 +134,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
         });
     }
 
-    void updateGroupMembers(Group group, List<Collaborator> subjects) {
+    void updateGroupMembers(Group group, List<Subject> subjects) {
         if (subjects != null && !subjects.isEmpty()) {
             serviceFacade.updateMembers(group, subjects, new AsyncCallback<List<UpdateMemberResult>>() {
                 @Override
@@ -162,7 +162,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     @Override
     public void onAddGroupMemberSelected(AddGroupMemberSelected event) {
         Group group = event.getGroup();
-        Collaborator subject = event.getSubject();
+        Subject subject = event.getSubject();
 
         if (group != null && !Strings.isNullOrEmpty(group.getName()) && subject != null) {
             serviceFacade.addMember(group, subject, new AsyncCallback<Void>() {
@@ -182,7 +182,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     @Override
     public void onDeleteMembersSelected(DeleteMembersSelected event) {
         if (GroupDetailsView.MODE.EDIT == mode) {
-            List<Collaborator> subjects = event.getSubjects();
+            List<Subject> subjects = event.getSubjects();
             Group group = event.getGroup();
             if (subjects != null && !subjects.isEmpty()) {
                 subjects.forEach(subject -> deleteMember(subject, group));
@@ -190,7 +190,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
         }
     }
 
-    void deleteMember(Collaborator subject, Group group) {
+    void deleteMember(Subject subject, Group group) {
         serviceFacade.deleteMember(group, subject, new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {

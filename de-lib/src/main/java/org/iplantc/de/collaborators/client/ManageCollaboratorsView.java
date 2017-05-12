@@ -1,6 +1,6 @@
 package org.iplantc.de.collaborators.client;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
@@ -80,7 +80,7 @@ public interface ManageCollaboratorsView extends IsWidget,
          * Add collaborators to the view
          * @param models
          */
-        void addAsCollaborators(List<Collaborator> models);
+        void addAsCollaborators(List<Subject> models);
 
         /**
          * Fetch the list of all Collaborator Lists for this user
@@ -108,7 +108,7 @@ public interface ManageCollaboratorsView extends IsWidget,
          * Returns the list of currently selected collaborators from the ManageCollaboratorsView
          * @return
          */
-        List<Collaborator> getSelectedCollaborators();
+        List<Subject> getSelectedCollaborators();
     }
 
     /**
@@ -150,13 +150,13 @@ public interface ManageCollaboratorsView extends IsWidget,
      * Set the list of collaborators in the ManageCollaboratorsView
      * @param models
      */
-    void loadData(List<Collaborator> models);
+    void loadData(List<Subject> models);
 
     /**
      * Remove the list of collaborators from the ManageCollaboratorsView
      * @param models
      */
-    void removeCollaborators(List<Collaborator> models);
+    void removeCollaborators(List<Subject> models);
 
     /**
      * Mask only the ManageCollaboratorsView
@@ -179,7 +179,7 @@ public interface ManageCollaboratorsView extends IsWidget,
      * Returns the list of currently selected collaborators from the ManageCollaboratorsView
      * @return
      */
-    List<Collaborator> getSelectedCollaborators();
+    List<Subject> getSelectedCollaborators();
 
     /**
      * Returns the mode the ManageCollaboratorsView is currently set to
@@ -191,11 +191,11 @@ public interface ManageCollaboratorsView extends IsWidget,
      * Add to the list of collaborators in the ManageCollaboratorsView
      * @param models
      */
-    void addCollaborators(List<Collaborator> models);
+    void addCollaborators(List<Subject> models);
 
     /**
      * Get the list of collaborators from the ManageCollaboratorsView
      * @return
      */
-    List<Collaborator> getCollaborators();
+    List<Subject> getCollaborators();
 }

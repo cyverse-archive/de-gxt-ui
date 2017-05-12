@@ -6,12 +6,13 @@ package org.iplantc.de.client.services.impl;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.collaborators.CollaboratorAutoBeanFactory;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.converters.CollaboratorListCallbackConverter;
 import org.iplantc.de.client.services.converters.FastMapCollaboratorCallbackConverter;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
+import org.iplantc.de.client.services.converters.SubjectListCallbackConverter;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
@@ -33,6 +34,8 @@ import java.util.List;
  */
 public class CollaboratorsServiceFacadeImpl implements CollaboratorsServiceFacade {
 
+    private final String SUBJECTS = "org.iplantc.services.subjects";
+
     private final DEProperties deProperties;
     private CollaboratorAutoBeanFactory factory;
     private final DiscEnvApiService deServiceFacade;
@@ -47,25 +50,24 @@ public class CollaboratorsServiceFacadeImpl implements CollaboratorsServiceFacad
     }
 
     @Override
-    public void searchCollaborators(String term, AsyncCallback<List<Collaborator>> callback) {
-        String address = deProperties.getMuleServiceBaseUrl()
-                + "user-search?search=" + URL.encodeQueryString(term.trim()); //$NON-NLS-1$
+    public void searchCollaborators(String term, AsyncCallback<List<Subject>> callback) {
+        String address = SUBJECTS + "?search=" + URL.encodeQueryString(term.trim()); //$NON-NLS-1$
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
 
-        deServiceFacade.getServiceData(wrapper, new CollaboratorListCallbackConverter(callback, factory));
+        deServiceFacade.getServiceData(wrapper, new SubjectListCallbackConverter(callback, factory));
     }
 
     @Override
-    public void getCollaborators(AsyncCallback<List<Collaborator>> callback) {
+    public void getCollaborators(AsyncCallback<List<Subject>> callback) {
         String address = deProperties.getMuleServiceBaseUrl() + "collaborators";
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deServiceFacade.getServiceData(wrapper, new CollaboratorListCallbackConverter(callback, factory));
     }
 
     @Override
-    public void addCollaborators(List<Collaborator> collaborators, AsyncCallback<Void> callback) {
-        JSONObject users = buildJSONModel(collaborators);
+    public void addCollaborators(List<Subject> subjects, AsyncCallback<Void> callback) {
+        JSONObject users = buildJSONModel(subjects);
 
         String address = deProperties.getMuleServiceBaseUrl() + "collaborators"; //$NON-NLS-1$
 
@@ -76,8 +78,8 @@ public class CollaboratorsServiceFacadeImpl implements CollaboratorsServiceFacad
     }
 
     @Override
-    public void removeCollaborators(List<Collaborator> collaborators, AsyncCallback<Void> callback) {
-        JSONObject users = buildJSONModel(collaborators);
+    public void removeCollaborators(List<Subject> subjects, AsyncCallback<Void> callback) {
+        JSONObject users = buildJSONModel(subjects);
 
         String address = deProperties.getMuleServiceBaseUrl() + "remove-collaborators"; //$NON-NLS-1$
 
@@ -88,7 +90,7 @@ public class CollaboratorsServiceFacadeImpl implements CollaboratorsServiceFacad
     }
 
     @Override
-    public void getUserInfo(List<String> usernames, AsyncCallback<FastMap<Collaborator>> callback) {
+    public void getUserInfo(List<String> usernames, AsyncCallback<FastMap<Subject>> callback) {
         StringBuilder address = new StringBuilder(deProperties.getMuleServiceBaseUrl());
         address.append("user-info"); //$NON-NLS-1$
 
@@ -111,12 +113,12 @@ public class CollaboratorsServiceFacadeImpl implements CollaboratorsServiceFacad
         deServiceFacade.getServiceData(wrapper, new FastMapCollaboratorCallbackConverter(callback, factory));
     }
 
-    JSONObject buildJSONModel(final List<Collaborator> models) {
+    JSONObject buildJSONModel(final List<Subject> models) {
         JSONArray arr = new JSONArray();
         int count = 0;
-        for (Collaborator model : models) {
+        for (Subject model : models) {
             JSONObject user = new JSONObject();
-            user.put("username", new JSONString(model.getUserName()));
+            user.put("username", new JSONString(model.getId()));
             arr.set(count++, user);
         }
 

@@ -14,7 +14,7 @@ import org.iplantc.de.client.models.apps.sharing.AppSharingRequestList;
 import org.iplantc.de.client.models.apps.sharing.AppUnSharingRequestList;
 import org.iplantc.de.client.models.apps.sharing.AppUserPermissions;
 import org.iplantc.de.client.models.apps.sharing.AppUserPermissionsList;
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
@@ -43,7 +43,7 @@ import java.util.List;
 public class AppSharingPresenter implements SharingPresenter {
 
     private final class LoadPermissionsCallback extends AppsCallback<String> {
-        private final class GetUserInfoCallback implements AsyncCallback<FastMap<Collaborator>> {
+        private final class GetUserInfoCallback implements AsyncCallback<FastMap<Subject>> {
             private final AppUserPermissionsList appPermsList;
 
             private GetUserInfoCallback(AppUserPermissionsList appPermsList) {
@@ -56,15 +56,15 @@ public class AppSharingPresenter implements SharingPresenter {
             }
 
             @Override
-            public void onSuccess(FastMap<Collaborator> results) {
+            public void onSuccess(FastMap<Subject> results) {
                 FastMap<List<Sharing>> sharingMap = new FastMap<>();
                 for (AppUserPermissions appUserPerms : appPermsList.getResourceUserPermissionsList()) {
                     for (UserPermission userPerms : appUserPerms.getPermissions()) {
                         String userName = userPerms.getSubject().getId();
 
-                        Collaborator user = results.get(userName);
+                        Subject user = results.get(userName);
                         if (user == null) {
-                            user = collaboratorsUtil.getDummyCollaborator(userName);
+                            user = collaboratorsUtil.getDummySubject(userName);
                         }
 
                         List<Sharing> shares = sharingMap.get(userName);

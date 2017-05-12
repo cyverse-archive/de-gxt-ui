@@ -1,6 +1,6 @@
 package org.iplantc.de.collaborators.client.events;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 
 import com.google.gwt.event.shared.EventHandler;
@@ -23,9 +23,9 @@ public class AddGroupMemberSelected
 
     public static Type<AddGroupMemberSelectedHandler> TYPE = new Type<AddGroupMemberSelectedHandler>();
     private Group group;
-    private Collaborator subject;
+    private Subject subject;
 
-    public AddGroupMemberSelected(Group group, Collaborator subject) {
+    public AddGroupMemberSelected(Group group, Subject subject) {
         this.group = group;
         this.subject = subject;
     }
@@ -42,7 +42,7 @@ public class AddGroupMemberSelected
         return group;
     }
 
-    public Collaborator getSubject() {
+    public Subject getSubject() {
         return subject;
     }
 }

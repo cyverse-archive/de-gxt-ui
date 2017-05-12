@@ -1,6 +1,6 @@
 package org.iplantc.de.collaborators.client.events;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 
 import com.google.gwt.event.shared.EventHandler;
@@ -24,9 +24,9 @@ public class DeleteMembersSelected extends GwtEvent<DeleteMembersSelected.Delete
 
     public static Type<DeleteMembersSelectedHandler> TYPE = new Type<DeleteMembersSelectedHandler>();
     private Group group;
-    private List<Collaborator> subjects;
+    private List<Subject> subjects;
 
-    public DeleteMembersSelected(Group group, List<Collaborator> subjects) {
+    public DeleteMembersSelected(Group group, List<Subject> subjects) {
         this.group = group;
         this.subjects = subjects;
     }
@@ -35,7 +35,7 @@ public class DeleteMembersSelected extends GwtEvent<DeleteMembersSelected.Delete
         return group;
     }
 
-    public List<Collaborator> getSubjects() {
+    public List<Subject> getSubjects() {
         return subjects;
     }
 
