@@ -122,6 +122,15 @@ public class ManageToolsViewDefaultAppearance implements ManageToolsToolbarView.
         return toolMessages.shareTools();
     }
 
+    public String deleteTool() {
+        return toolMessages.delete();
+    }
+
+    @Override
+    public String confirmDelete() {
+        return toolMessages.confirmDelete();
+    }
+
     @Override
     public String submitForPublicUse() {
         return toolMessages.submitForUse();

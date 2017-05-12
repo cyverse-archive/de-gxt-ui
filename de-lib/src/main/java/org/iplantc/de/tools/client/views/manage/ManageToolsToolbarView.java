@@ -1,13 +1,15 @@
 package org.iplantc.de.tools.client.views.manage;
 
+import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.tools.client.events.AddNewToolSelected;
 import org.iplantc.de.tools.client.events.BeforeToolSearchEvent;
 import org.iplantc.de.tools.client.events.DeleteToolSelected;
+import org.iplantc.de.tools.client.events.EditToolSelected;
 import org.iplantc.de.tools.client.events.RefreshToolsSelectedEvent;
+import org.iplantc.de.tools.client.events.RequestToolSelected;
 import org.iplantc.de.tools.client.events.ShareToolsSelected;
 import org.iplantc.de.tools.client.events.ToolFilterChanged;
 import org.iplantc.de.tools.client.events.ToolSearchResultLoadEvent;
-import org.iplantc.de.client.models.tool.Tool;
 
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.resources.client.ImageResource;
@@ -26,9 +28,15 @@ public interface ManageToolsToolbarView extends IsWidget,
                                                 AddNewToolSelected.HasNewToolSelectedHandlers,
                                                 DeleteToolSelected.HasDeleteToolsSelectedHandlers,
                                                 ShareToolsSelected.HasShareToolselectedHandlers,
-                                                ToolFilterChanged.HasToolFilterChangedHandlers {
+                                                ToolFilterChanged.HasToolFilterChangedHandlers,
+                                                RequestToolSelected.HasRequestToolSelectedHandlers,
+                                                EditToolSelected.HasEditToolSelectedHandlers {
 
     void setSelection(List<Tool> currentSelection);
+
+    void clearSearch();
+
+    void resetFilter();
 
     interface ManageToolsToolbarAppearance {
 

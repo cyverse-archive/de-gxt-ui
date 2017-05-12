@@ -1,9 +1,8 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:c="urn:import:com.sencha.gxt.widget.core.client"
              xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
-             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
-             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button">
+             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form">
+
 
        <ui:with field="outerMargins" type="com.sencha.gxt.core.client.util.Margins">
            <ui:attributes top="0" right="0" bottom="10" left="0" />
@@ -29,7 +28,7 @@
         <c:FramedPanel ui:field="form" heading="{appearance.toolInfo}">
             <container:VBoxLayoutContainer VBoxLayoutAlign="STRETCH" layoutData="{margins}">
                 <container:child>
-                    <form:FieldLabel text="{appearance.toolName}">
+                    <form:FieldLabel ui:field="nameLbl" text="{appearance.toolName}">
                         <form:widget>
                             <form:TextField ui:field="name" allowBlank="false" />
                         </form:widget>
@@ -45,7 +44,7 @@
                 </container:child>
 
                 <container:child>
-                    <form:FieldLabel text="{appearance.version}">
+                    <form:FieldLabel ui:field="versionLbl" text="{appearance.version}">
                         <form:widget>
                             <form:TextField ui:field="version" allowBlank="false" />
                         </form:widget>
@@ -53,7 +52,7 @@
                 </container:child>
 
                 <container:child>
-                    <form:FieldLabel text="{appearance.imgName}">
+                    <form:FieldLabel ui:field="imgLbl" text="{appearance.imgName}">
                         <form:widget>
                             <form:TextField ui:field="imgName" allowBlank="false" />
                         </form:widget>
@@ -78,7 +77,7 @@
          </container:VBoxLayoutContainer>
         </c:FramedPanel>
         </container:child>
-        <c:FramedPanel ui:field="restrictions" heading="{appearance.restrictions}">
+        <c:FramedPanel ui:field="restrictions" heading="{appearance.restrictions}" visible="false">
             <form:FieldSet ui:field="fieldSet" heading="{appearance.restrictions}" collapsible="true" layoutData="{marginData}">
                 <container:VBoxLayoutContainer VBoxLayoutAlign="STRETCH">
                     <form:FieldLabel text="{appearance.cpuShare}">

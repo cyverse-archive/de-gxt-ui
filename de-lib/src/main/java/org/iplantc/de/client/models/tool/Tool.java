@@ -8,6 +8,9 @@ import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 
 public interface Tool extends HasId, HasDescription, HasName {
 
+    @PropertyName("id")
+    void setId(String id);
+
     @PropertyName("location")
     String getLocation();
 

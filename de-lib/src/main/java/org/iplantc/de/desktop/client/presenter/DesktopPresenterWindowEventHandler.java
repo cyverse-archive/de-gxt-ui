@@ -1,5 +1,7 @@
 package org.iplantc.de.desktop.client.presenter;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.iplantc.de.analysis.client.events.OpenAppForRelaunchEvent;
 import org.iplantc.de.apps.client.events.CreateNewAppEvent;
 import org.iplantc.de.apps.client.events.CreateNewWorkflowEvent;
@@ -20,6 +22,7 @@ import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.util.WindowUtil;
+import org.iplantc.de.commons.client.views.dialogs.SimpleFileUploadDialog;
 import org.iplantc.de.commons.client.views.window.configs.AppWizardConfig;
 import org.iplantc.de.commons.client.views.window.configs.AppsIntegrationWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
@@ -37,12 +40,11 @@ import org.iplantc.de.diskResource.client.events.RequestSimpleDownloadEvent;
 import org.iplantc.de.diskResource.client.events.RequestSimpleUploadEvent;
 import org.iplantc.de.diskResource.client.events.ShowFilePreviewEvent;
 import org.iplantc.de.diskResource.client.views.dialogs.FileUploadByUrlDialog;
-import org.iplantc.de.commons.client.views.dialogs.SimpleFileUploadDialog;
 import org.iplantc.de.fileViewers.client.callbacks.EnsemblUtil;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
 import org.iplantc.de.systemMessages.client.events.ShowSystemMessagesEvent;
+import org.iplantc.de.tools.client.events.UseInNewAppEvent;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -64,6 +66,7 @@ import java.util.Map;
  */
 public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppEventHandler,
                                                            CreateNewAppEvent.CreateNewAppEventHandler,
+                                                           UseInNewAppEvent.UseInNewAppEventHandler,
                                                            CreateNewWorkflowEvent.CreateNewWorkflowEventHandler,
                                                            EditWorkflowEvent.EditWorkflowEventHandler,
                                                            ShowFilePreviewEvent.ShowFilePreviewEventHandler,
@@ -339,13 +342,18 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
         registrations.add(handlerRegistration);
         handlerRegistration = eventBus.addHandler(RequestSendToEnsemblEvent.TYPE, this);
         registrations.add(handlerRegistration);
-
-
+        handlerRegistration = eventBus.addHandler(UseInNewAppEvent.TYPE,this);
+        registrations.add(handlerRegistration);
         handlerRegistration = eventBus.addHandler(RequestImportFromUrlEvent.TYPE, this);
         registrations.add(handlerRegistration);
         handlerRegistration = eventBus.addHandler(RequestSimpleDownloadEvent.TYPE, this);
         registrations.add(handlerRegistration);
         handlerRegistration = eventBus.addHandler(RequestSimpleUploadEvent.TYPE, this);
         registrations.add(handlerRegistration);
+    }
+
+    @Override
+    public void createNewApp(UseInNewAppEvent event) {
+        presenter.show(ConfigFactory.appsIntegrationWindowConfig(null), true);
     }
 }

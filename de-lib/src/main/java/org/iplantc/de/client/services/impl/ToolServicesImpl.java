@@ -51,35 +51,30 @@ public class ToolServicesImpl implements ToolServices {
     }
 
     @Override
-    public void searchTools(boolean isPublic, FilterPagingLoadConfig loadConfig, AppsCallback<List<Tool>> callback) {
+    public void searchTools(Boolean isPublic, FilterPagingLoadConfig loadConfig, AppsCallback<List<Tool>> callback) {
         String address = TOOLS + "?";
         // Get the proxy's search params.
         String searchTerm = null;
-        List<FilterConfig> filterConfigs = loadConfig.getFilters();
-        if (filterConfigs != null && !filterConfigs.isEmpty()) {
-            searchTerm = filterConfigs.get(0).getValue();
+        if(loadConfig != null) {
+            List<FilterConfig> filterConfigs = loadConfig.getFilters();
+            if (filterConfigs != null && !filterConfigs.isEmpty()) {
+                searchTerm = filterConfigs.get(0).getValue();
+            }
+            if (Strings.isNullOrEmpty(searchTerm)) {
+                searchTerm = "*";
+            }
+
+            SortInfo sortInfo =
+                    Iterables.getFirst(loadConfig.getSortInfo(), new SortInfoBean("NAME", SortDir.ASC));
+
+            address += "search=" + URL.encodeQueryString(searchTerm) + "&sort-field=" + sortInfo.getSortField().toLowerCase()
+                       + "&sort-dir=" + sortInfo.getSortDir().toString() + "&public=" + isPublic;
+        } else {
+            if(isPublic != null) {
+                address += "public=" + isPublic;
+            }
         }
-        if (Strings.isNullOrEmpty(searchTerm)) {
-            searchTerm = "*";
-        }
 
-        SortInfo sortInfo =
-                Iterables.getFirst(loadConfig.getSortInfo(), new SortInfoBean("NAME", SortDir.ASC));
-
-        address +=
-                "search=" + URL.encodeQueryString(searchTerm) + "&sort-field=" + sortInfo.getSortField()
-                                                                                         .toLowerCase()
-                + "&sort-dir=" + sortInfo.getSortDir().toString() + "&public=" + isPublic;
-
-        ToolsCallbackConverter callbackCnvt = new ToolsCallbackConverter(callback, factory);
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
-
-        deServiceFacade.getServiceData(wrapper, callbackCnvt);
-    }
-
-    @Override
-    public void getTools(AppsCallback<List<Tool>> callback) {
-        String address = TOOLS;
         ToolsCallbackConverter callbackCnvt = new ToolsCallbackConverter(callback, factory);
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
 
@@ -140,6 +135,17 @@ public class ToolServicesImpl implements ToolServices {
         String address = TOOLS + "/" + "unsharing";
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, payload);
         deServiceFacade.getServiceData(wrapper, callback);
+    }
+
+    @Override
+    public void updateTool(Tool tool, AppsCallback<Tool> appsCallback) {
+        String address = TOOLS + "/" + tool.getId();
+        String newTool = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tool)).getPayload();
+        ToolCallbackConverter callbackCnvt = new ToolCallbackConverter(appsCallback, factory);
+        ServiceCallWrapper wrapper =
+                new ServiceCallWrapper(BaseServiceCallWrapper.Type.PATCH, address, newTool);
+
+        deServiceFacade.getServiceData(wrapper, callbackCnvt);
     }
 
 }

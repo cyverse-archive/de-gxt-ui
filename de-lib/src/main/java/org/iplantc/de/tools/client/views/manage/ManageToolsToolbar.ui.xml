@@ -34,8 +34,8 @@
                     <menu:Menu ui:field="toolsMenu">
                         <menu:MenuItem ui:field="addTool" text="{appearance.addTool}" icon="{appearance.addIcon}"/>
                         <menu:MenuItem ui:field="requestTool" text="{appearance.requestTool}" icon="{appearance.requestToolIcon}"/>
-                        <menu:MenuItem ui:field="edit" text="{appearance.edit}" icon="{appearance.editIcon}"/>
-                        <menu:MenuItem ui:field="delete" text="{appearance.delete}" icon="{appearance.deleteIcon}"/>
+                        <menu:MenuItem ui:field="edit" text="{appearance.edit}" icon="{appearance.editIcon}" enabled="false"/>
+                        <menu:MenuItem ui:field="delete" text="{appearance.delete}" icon="{appearance.deleteIcon}" enabled="false"/>
                         <menu:MenuItem ui:field="useInApp" text="{appearance.useInApp}" icon="{appearance.useInAppIcon}"/>
                     </menu:Menu>
                 </button:menu>
