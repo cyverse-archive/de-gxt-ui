@@ -98,4 +98,10 @@ public interface GroupView extends IsWidget,
      * @param result
      */
     void removeCollabList(Group result);
+
+    /**
+     * Update an existing Collaborator List with the specified information
+     * @param group
+     */
+    void updateCollabList(Group group);
 }

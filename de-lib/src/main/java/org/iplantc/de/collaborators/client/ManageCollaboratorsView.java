@@ -139,6 +139,12 @@ public interface ManageCollaboratorsView extends IsWidget,
     void unmaskCollabLists();
 
     /**
+     * Update an existing Collaborator List in the GroupView
+     * @param group
+     */
+    void updateCollabList(Group group);
+
+    /**
      *  The collection of modes the ManageCollaboratorsView can step into
      */
     enum MODE {
