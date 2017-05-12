@@ -102,7 +102,7 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
     @UiField CardLayoutContainer testDataOptions;
     @UiField CardLayoutContainer otherDataOptions;
     @UiField HtmlLayoutContainer intro;
-    
+
     private final AutoProgressMessageBox submissionProgressBox;
 
     private Presenter presenter;

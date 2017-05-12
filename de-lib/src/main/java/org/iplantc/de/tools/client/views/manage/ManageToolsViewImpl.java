@@ -1,10 +1,10 @@
 package org.iplantc.de.tools.client.views.manage;
 
 import org.iplantc.de.admin.desktop.client.toolAdmin.model.ToolProperties;
+import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.tools.client.events.BeforeToolSearchEvent;
 import org.iplantc.de.tools.client.events.ToolSearchResultLoadEvent;
 import org.iplantc.de.tools.client.events.ToolSelectionChangedEvent;
-import org.iplantc.de.client.models.tool.Tool;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -151,7 +151,15 @@ public class ManageToolsViewImpl extends Composite implements ManageToolsView {
                 return null;
             }
         },50, appearance.status());
-        return new ColumnModel<>(Arrays.asList(nameCol, imgName, tag, status));    }
+        return new ColumnModel<>(Arrays.asList(nameCol, imgName, tag, status));
+    }
+
+    @Override
+    public void updateTool(Tool result) {
+        Tool tool = listStore.findModelWithKey(result.getId());
+        listStore.remove(tool);
+        listStore.add(result);
+    }
 
     @Override
     public void loadTools(List<Tool> tools) {
@@ -177,12 +185,12 @@ public class ManageToolsViewImpl extends Composite implements ManageToolsView {
 
     @Override
     public void mask(String loadingMask) {
-      container.mask(loadingMask);
+        container.mask(loadingMask);
     }
 
     @Override
     public void unmask() {
-      container.unmask();
+        container.unmask();
     }
 
     @Override
@@ -192,9 +200,10 @@ public class ManageToolsViewImpl extends Composite implements ManageToolsView {
 
     @Override
     public void onToolSearchResultLoad(ToolSearchResultLoadEvent event) {
-         listStore.clear();
-         listStore.addAll(event.getResults());
-         unmask();
+        toolbar.resetFilter();
+        listStore.clear();
+        listStore.addAll(event.getResults());
+        unmask();
     }
 
     @Override

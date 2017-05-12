@@ -65,6 +65,7 @@ public interface ToolMessages extends Messages {
 
     String shareTools();
     
+    String confirmDelete();
 }
         
     

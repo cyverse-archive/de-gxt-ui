@@ -1,15 +1,7 @@
 package org.iplantc.de.tools.client.presenter;
 
-import org.iplantc.de.tools.client.events.AddNewToolSelected;
-import org.iplantc.de.tools.client.events.DeleteToolSelected;
-import org.iplantc.de.tools.client.events.RefreshToolsSelectedEvent;
-import org.iplantc.de.tools.client.events.ShareToolsSelected;
-import org.iplantc.de.tools.client.events.ToolFilterChanged;
-import org.iplantc.de.tools.client.events.ToolSelectionChangedEvent;
 import org.iplantc.de.apps.client.models.ToolFilter;
-import org.iplantc.de.tools.client.views.manage.EditToolDialog;
-import org.iplantc.de.tools.client.views.manage.ManageToolsView;
-import org.iplantc.de.tools.client.views.manage.ToolSharingDialog;
+import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.gin.ServicesInjector;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.services.ToolServices;
@@ -18,11 +10,28 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.tools.client.events.AddNewToolSelected;
+import org.iplantc.de.tools.client.events.DeleteToolSelected;
+import org.iplantc.de.tools.client.events.EditToolSelected;
+import org.iplantc.de.tools.client.events.RefreshToolsSelectedEvent;
+import org.iplantc.de.tools.client.events.RequestToolSelected;
+import org.iplantc.de.tools.client.events.ShareToolsSelected;
+import org.iplantc.de.tools.client.events.ToolFilterChanged;
+import org.iplantc.de.tools.client.events.ToolSelectionChangedEvent;
+import org.iplantc.de.tools.client.views.dialogs.EditToolDialog;
+import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
+import org.iplantc.de.tools.client.views.dialogs.ToolSharingDialog;
+import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 
 import com.google.common.collect.Lists;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
+
+import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
+import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
 import java.util.List;
 
@@ -47,6 +56,12 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     @Inject
     AsyncProviderWrapper<ToolSharingDialog> shareDialogProvider;
 
+    @Inject
+    Provider<NewToolRequestDialog> newToolRequestDialogProvider;
+
+    @Inject
+    EventBus eventBus;
+
     protected List<Tool> currentSelection = Lists.newArrayList();
 
     @Inject
@@ -65,7 +80,14 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
         toolsView.getToolbar().addShareToolselectedHandler(this);
         toolsView.getToolbar().addDeleteToolsSelectedHandler(this);
         toolsView.getToolbar().addToolFilterChangedHandler(this);
-        loadTools(false);
+        toolsView.getToolbar().addRequestToolSelectedHandler(this);
+        toolsView.getToolbar().addEditToolSelectedHandler(this);
+        loadTools(null);
+    }
+
+    @Override
+    public void setViewDebugId(String baseId) {
+        toolsView.asWidget().ensureDebugId(baseId);
     }
 
     @Override
@@ -75,9 +97,9 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     }
 
     @Override
-    public void loadTools(boolean isPublic) {
+    public void loadTools(Boolean isPublic) {
         toolsView.mask(appearance.mask());
-        dcService.getTools(new AppsCallback<List<Tool>>() {
+        dcService.searchTools(isPublic, null, new AppsCallback<List<Tool>>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 ErrorHandler.post(exception);
@@ -92,7 +114,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     }
 
     @Override
-    public void addTool(Tool tool) {
+    public void addTool(Tool tool, final Command dialogCallbackCommand) {
         dcService.addTool(tool, new AppsCallback<Tool>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
@@ -103,14 +125,33 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
             public void onSuccess(Tool s) {
                 announcer.schedule(new SuccessAnnouncementConfig(
                         "Your tool " + s.getName() + " is added."));
+                dialogCallbackCommand.execute();
                 toolsView.addTool(s);
             }
         });
     }
 
     @Override
+    public void updateTool(final Tool tool, final Command dialogCallbackCommand) {
+        dcService.updateTool(tool, new AppsCallback<Tool>() {
+            @Override
+            public void onFailure(Integer statusCode, Throwable exception) {
+                ErrorHandler.post(exception);
+            }
+
+            @Override
+            public void onSuccess(Tool result) {
+                announcer.schedule(new SuccessAnnouncementConfig(
+                        "Your tool " + result.getName() + " is updated."));
+                dialogCallbackCommand.execute();
+                toolsView.updateTool(result);
+            }
+        });
+    }
+
+    @Override
     public void onRefreshToolsSelected(RefreshToolsSelectedEvent event) {
-        loadTools(false);
+        loadTools(null);
     }
 
     @Override
@@ -123,8 +164,8 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
             @Override
             public void onSuccess(EditToolDialog etd) {
-                etd.setSize("600px", "600px");
-                etd.show();
+                etd.setSize("600px", "300px");
+                etd.show(ManageToolsViewPresenter.this);
             }
         });
 
@@ -133,6 +174,24 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     @Override
     public void onDeleteToolsSelected(final DeleteToolSelected event) {
         Tool tool = currentSelection.get(0);
+        ConfirmMessageBox cmb = new ConfirmMessageBox(appearance.deleteTool(), appearance.confirmDelete());
+        cmb.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
+            @Override
+            public void onDialogHide(DialogHideEvent event) {
+               switch (event.getHideButton()) {
+                   case YES:
+                       doDelete(tool);
+                       break;
+                   case NO:
+                       //do nothing
+                       break;
+               }
+            }
+        });
+        cmb.show();
+    }
+
+    private void doDelete(final Tool tool) {
         dcService.deleteTool(tool, new AppsCallback<String>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
@@ -165,5 +224,39 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     @Override
     public void onToolFilterChanged(ToolFilterChanged event) {
         ToolFilter tf = event.getFilter();
+        toolsView.getToolbar().clearSearch();
+        switch (tf) {
+            case ALL:
+                loadTools(null);
+                break;
+            case MY_TOOLS:
+                loadTools(false);
+                break;
+            case PUBLIC:
+                loadTools(true);
+                break;
+        }
+    }
+
+    @Override
+    public void onRequestToolSelected(RequestToolSelected event) {
+        newToolRequestDialogProvider.get().show();
+    }
+
+    @Override
+    public void onEditToolSelected(EditToolSelected event) {
+       editDialogProvider.get(new AsyncCallback<EditToolDialog>() {
+           @Override
+           public void onFailure(Throwable throwable) {
+
+           }
+
+           @Override
+           public void onSuccess(EditToolDialog etd) {
+               etd.setSize("600px", "300px");
+               etd.editTool(currentSelection.get(0));
+               etd.show(ManageToolsViewPresenter.this);
+           }
+       });
     }
 }

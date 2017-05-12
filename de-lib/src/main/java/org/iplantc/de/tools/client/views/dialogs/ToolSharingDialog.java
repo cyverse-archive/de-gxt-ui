@@ -2,11 +2,12 @@
  * @author sriram
  */
 
-package org.iplantc.de.tools.client.views.manage;
+package org.iplantc.de.tools.client.views.dialogs;
 
 import org.iplantc.de.tools.client.gin.factory.ToolSharingPresenterFactory;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
+import org.iplantc.de.tools.client.views.manage.ToolSharingPresenter;
 
 import com.google.inject.Inject;
 

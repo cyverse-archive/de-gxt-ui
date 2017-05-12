@@ -11,6 +11,8 @@ public interface EditToolView extends IsWidget{
 
     Tool getTool();
 
+    void editTool(Tool t);
+
     interface EditToolViewAppearance {
         String toolName();
 

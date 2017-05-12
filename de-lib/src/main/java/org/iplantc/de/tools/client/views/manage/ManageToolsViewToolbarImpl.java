@@ -1,18 +1,21 @@
 package org.iplantc.de.tools.client.views.manage;
 
-import org.iplantc.de.apps.client.events.selection.RequestToolSelected;
+import org.iplantc.de.apps.client.models.ToolFilter;
+import org.iplantc.de.apps.integration.client.presenter.ToolSearchRPCProxy;
+import org.iplantc.de.client.events.EventBus;
+import org.iplantc.de.client.models.sharing.PermissionValue;
+import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.tools.client.events.AddNewToolSelected;
 import org.iplantc.de.tools.client.events.BeforeToolSearchEvent;
 import org.iplantc.de.tools.client.events.DeleteToolSelected;
+import org.iplantc.de.tools.client.events.EditToolSelected;
 import org.iplantc.de.tools.client.events.RefreshToolsSelectedEvent;
+import org.iplantc.de.tools.client.events.RequestToolSelected;
 import org.iplantc.de.tools.client.events.ShareToolsSelected;
 import org.iplantc.de.tools.client.events.ToolFilterChanged;
 import org.iplantc.de.tools.client.events.ToolSearchResultLoadEvent;
-import org.iplantc.de.apps.client.models.ToolFilter;
-import org.iplantc.de.apps.integration.client.presenter.ToolSearchRPCProxy;
-import org.iplantc.de.apps.shared.AppsModule;
-import org.iplantc.de.client.models.sharing.PermissionValue;
-import org.iplantc.de.client.models.tool.Tool;
+import org.iplantc.de.tools.client.events.UseInNewAppEvent;
+import org.iplantc.de.tools.shared.ToolsModule;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
@@ -47,6 +50,7 @@ import java.util.List;
  */
 
 public class ManageToolsViewToolbarImpl extends Composite implements ManageToolsToolbarView {
+
 
     @UiTemplate("ManageToolsToolbar.ui.xml")
     interface ManageToolsViewToolbarUiBinder extends UiBinder<Widget, ManageToolsViewToolbarImpl> {
@@ -98,7 +102,10 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
     protected List<Tool> currentSelection = Lists.newArrayList();
 
     @Inject
-    public ManageToolsViewToolbarImpl(final ManageToolsToolbarView.ManageToolsToolbarAppearance apperance) {
+    EventBus eventBus;
+
+    @Inject
+    public ManageToolsViewToolbarImpl(final ManageToolsToolbarView.ManageToolsToolbarApperance apperance) {
         loader = new PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>>(toolSearchRPCProxy);
         toolSearch = new ToolSearchField(loader);
         toolSearchRPCProxy.setHasHandlers(this);
@@ -115,7 +122,7 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
             @Override
             public void onSelection(SelectionEvent<ToolFilter> selectionEvent) {
                 onFilterChange(selectionEvent.getSelectedItem());
-                toolSearch.clear();
+                clearSearch();
             }
         });
 
@@ -151,18 +158,18 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
-        toolsMenuButton.ensureDebugId(baseID + AppsModule.ToolIds.MENU_TOOLS);
-        addTool.ensureDebugId(baseID + AppsModule.ToolIds.MENU_ITEM_ADD_TOOLS);
-        edit.ensureDebugId(baseID + AppsModule.ToolIds.MENU_ITEM_EDIT);
-        requestTool.ensureDebugId(baseID + AppsModule.ToolIds.MENU_ITEM_REQUEST_TOOL);
-        delete.ensureDebugId(baseID + AppsModule.ToolIds.MENU_ITEM_DELETE);
-        useInApp.ensureDebugId(baseID + AppsModule.ToolIds.MENU_ITEM_USE_IN_APPS);
+        toolsMenuButton.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_TOOLS);
+        addTool.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_ITEM_ADD_TOOLS);
+        edit.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_ITEM_EDIT);
+        requestTool.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_ITEM_REQUEST_TOOL);
+        delete.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_ITEM_DELETE);
+        useInApp.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_ITEM_USE_IN_APPS);
 
-        shareMenuButton.ensureDebugId(baseID + AppsModule.ToolIds.MENU_SHARE);
-        shareCollab.ensureDebugId(baseID + AppsModule.ToolIds.MENU_ITEM_SHARE_COLLABS);
-        sharePublic.ensureDebugId(baseID + AppsModule.ToolIds.MENU_ITEM_SHARE_PUBLIC);
+        shareMenuButton.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_SHARE);
+        shareCollab.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_ITEM_SHARE_COLLABS);
+        sharePublic.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_ITEM_SHARE_PUBLIC);
 
-        refreshButton.ensureDebugId(baseID + AppsModule.ToolIds.MENU_ITEM_REFRESH);
+        refreshButton.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_ITEM_REFRESH);
     }
 
     @UiHandler("addTool")
@@ -177,7 +184,7 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
 
     @UiHandler("edit")
     void onEditClicked(SelectionEvent<Item> event) {
-
+        fireEvent(new EditToolSelected());
     }
 
     @UiHandler("delete")
@@ -187,7 +194,7 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
 
     @UiHandler("useInApp")
     void onUseInAppClicked(SelectionEvent<Item> event) {
-
+       eventBus.fireEvent(new UseInNewAppEvent());
     }
 
     @UiHandler("shareCollab")
@@ -241,10 +248,29 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
         return addHandler(handler, ToolFilterChanged.TYPE);
     }
 
+    @Override
+    public HandlerRegistration addRequestToolSelectedHandler(RequestToolSelected.RequestToolSelectedHandler handler) {
+        return addHandler(handler, RequestToolSelected.TYPE);
+    }
 
     @Override
+    public HandlerRegistration addEditToolSelectedHandler(EditToolSelected.EditToolSelectedHandler handler) {
+        return addHandler(handler, EditToolSelected.TYPE);
+    }
+
+   @Override
     public void setSelection(List<Tool> currentSelection) {
         setButtonState(currentSelection);
+    }
+
+    @Override
+    public void clearSearch() {
+        toolSearch.clear();
+    }
+
+    @Override
+    public void resetFilter() {
+        filterCombo.reset();
     }
 
     private void setButtonState(List<Tool> tools) {

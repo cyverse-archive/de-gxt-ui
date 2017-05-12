@@ -1,18 +1,21 @@
 
 package org.iplantc.de.tools.client.views.manage;
 
+import org.iplantc.de.client.models.IsMaskable;
+import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.tools.client.events.AddNewToolSelected;
 import org.iplantc.de.tools.client.events.BeforeToolSearchEvent;
 import org.iplantc.de.tools.client.events.DeleteToolSelected;
+import org.iplantc.de.tools.client.events.EditToolSelected;
 import org.iplantc.de.tools.client.events.RefreshToolsSelectedEvent;
+import org.iplantc.de.tools.client.events.RequestToolSelected;
 import org.iplantc.de.tools.client.events.ShareToolsSelected;
 import org.iplantc.de.tools.client.events.ToolFilterChanged;
 import org.iplantc.de.tools.client.events.ToolSearchResultLoadEvent;
 import org.iplantc.de.tools.client.events.ToolSelectionChangedEvent;
-import org.iplantc.de.client.models.IsMaskable;
-import org.iplantc.de.client.models.tool.Tool;
 
 import com.google.gwt.event.shared.HasHandlers;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import java.util.List;
@@ -27,6 +30,8 @@ public interface ManageToolsView extends IsWidget,
                                          ToolSearchResultLoadEvent.ToolSearchResultLoadEventHandler,
                                          ToolSelectionChangedEvent.HasToolSelectionChangedEventHandlers {
 
+
+    void updateTool(Tool result);
 
     public interface ManageToolsViewAppearance {
         String name();
@@ -48,6 +53,10 @@ public interface ManageToolsView extends IsWidget,
         String tag();
 
         String shareTools();
+
+        String deleteTool();
+
+        String confirmDelete();
     }
 
 
@@ -65,9 +74,14 @@ public interface ManageToolsView extends IsWidget,
                                        DeleteToolSelected.DeleteToolsSelectedHandler,
                                        ShareToolsSelected.ShareToolsSelectedHandler,
                                        ToolSelectionChangedEvent.ToolSelectionChangedEventHandler,
-                                       ToolFilterChanged.ToolFilterChangedHandler {
-        void loadTools(boolean isPublic);
+                                       ToolFilterChanged.ToolFilterChangedHandler,
+                                       RequestToolSelected.RequestToolSelectedHandler, EditToolSelected.EditToolSelectedHandler {
+        void setViewDebugId(String baseId);
 
-        void addTool(Tool tool);
+        void loadTools(Boolean isPublic);
+
+        void addTool(Tool tool, Command dialogCallbackCommand);
+
+        void updateTool(Tool tool, Command dialogCallbackCommand);
     }
 }

@@ -25,10 +25,15 @@ import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.views.window.configs.ConfigAutoBeanFactory;
+import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
+import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
+import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -40,7 +45,6 @@ import com.sencha.gxt.data.shared.loader.BeforeLoadEvent;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
-import com.sencha.gxt.widget.core.client.Window;
 
 /**
  * TODO Search will stay here until it is necessary to fold it out
@@ -56,16 +60,24 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
                                                  ShareAppsSelected.ShareAppsSelectedHandler {
 
     protected PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader;
-    @Inject IplantAnnouncer announcer;
-    @Inject AppsToolbarView.AppsToolbarAppearance appearance;
-    @Inject EventBus eventBus;
-    @Inject Provider<NewToolRequestDialog> newToolRequestDialogProvider;
-    @Inject AsyncProviderWrapper<AppSharingDialog> appSharingDialogProvider;
-    @Inject UserInfo userInfo;
+    @Inject
+    IplantAnnouncer announcer;
+    @Inject
+    AppsToolbarView.AppsToolbarAppearance appearance;
+    @Inject
+    EventBus eventBus;
+    @Inject
+    Provider<NewToolRequestDialog> newToolRequestDialogProvider;
+    @Inject
+    AsyncProviderWrapper<AppSharingDialog> appSharingDialogProvider;
+    @Inject
+    UserInfo userInfo;
     @Inject
     ManageToolsView toolsView;
     @Inject
     ManageToolsView.Presenter toolsPresenter;
+
+    private static ConfigAutoBeanFactory factory = GWT.create(ConfigAutoBeanFactory.class);
 
 
     private final AppUserServiceFacade appService;
@@ -170,11 +182,6 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
 
     @Override
     public void onManageToolsClicked(ManageToolsClickedEvent event) {
-        Window w = new Window();
-        w.setHeading(appearance.manageTools());
-        //w.add(toolsView.asWidget());
-        w.setSize("600px", "600px");
-        toolsPresenter.go(w);
-        w.show();
+        eventBus.fireEvent(new WindowShowRequestEvent(ConfigFactory.manageToolsWindowConfig(), true));
     }
 }
