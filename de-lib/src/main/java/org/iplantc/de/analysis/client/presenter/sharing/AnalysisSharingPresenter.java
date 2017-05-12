@@ -19,6 +19,7 @@ import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
+import org.iplantc.de.client.models.sharing.SharingSubject;
 import org.iplantc.de.client.models.sharing.UserPermission;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
@@ -205,8 +206,11 @@ public class AnalysisSharingPresenter implements SharingPresenter {
 
             for (String userName : sharingMap.keySet()) {
                 AnalysisSharingRequest sharingRequest = shareFactory.AnalysisSharingRequest().as();
+                SharingSubject sharingSubject = shareFactory.getSharingSubject().as();
+                sharingSubject.setSourceId("ldap");
+                sharingSubject.setId(userName);
                 List<Sharing> shareList = sharingMap.get(userName);
-                sharingRequest.setUser(userName);
+                sharingRequest.setSubject(sharingSubject);
                 sharingRequest.setAnalysisPermissions(buildAnalysisPermissions(shareList));
                 requests.add(sharingRequest);
             }

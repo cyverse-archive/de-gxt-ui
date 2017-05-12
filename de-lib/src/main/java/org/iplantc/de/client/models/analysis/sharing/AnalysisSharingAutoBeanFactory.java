@@ -1,5 +1,7 @@
 package org.iplantc.de.client.models.analysis.sharing;
 
+import org.iplantc.de.client.models.sharing.SharingSubject;
+
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
@@ -20,4 +22,6 @@ public interface AnalysisSharingAutoBeanFactory extends AutoBeanFactory {
     AutoBean<AnalysisSharingRequestList> AnalysisSharingRequestList();
 
     AutoBean<AnalysisUnsharingRequestList> AnalysisUnsharingRequestList();
+
+    AutoBean<SharingSubject> getSharingSubject();
 }

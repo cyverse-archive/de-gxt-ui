@@ -1,5 +1,7 @@
 package org.iplantc.de.client.models.analysis.sharing;
 
+import org.iplantc.de.client.models.sharing.SharingSubject;
+
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import java.util.List;
@@ -9,12 +11,12 @@ import java.util.List;
  */
 public interface AnalysisSharingRequest {
 
-    String getUser();
+    SharingSubject getSubject();
+
+    void setSubject(SharingSubject subject);
 
     @AutoBean.PropertyName("analyses")
     List<AnalysisPermission> getAnalysisPermissions();
-
-    void setUser(String user);
 
     @AutoBean.PropertyName("analyses")
     void setAnalysisPermissions(List<AnalysisPermission> appPerms);
