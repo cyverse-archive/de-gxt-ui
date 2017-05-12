@@ -19,6 +19,7 @@ import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
+import org.iplantc.de.client.models.sharing.SharingSubject;
 import org.iplantc.de.client.models.sharing.UserPermission;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
@@ -203,8 +204,11 @@ public class AppSharingPresenter implements SharingPresenter {
 
             for (String userName : sharingMap.keySet()) {
                 AppSharingRequest sharingRequest = appFactory.appSharingRequest().as();
+                SharingSubject sharingSubject = shareFactory.getSharingSubject().as();
+                sharingSubject.setSourceId("ldap");
+                sharingSubject.setId(userName);
                 List<Sharing> shareList = sharingMap.get(userName);
-                sharingRequest.setUser(userName);
+                sharingRequest.setSubject(sharingSubject);
                 sharingRequest.setAppPermissions(buildShareAppPermissionList(shareList));
                 requests.add(sharingRequest);
             }
@@ -228,7 +232,10 @@ public class AppSharingPresenter implements SharingPresenter {
                 List<Sharing> shareList = unSharingMap.get(userName);
 
                 AppUnsharingRequest unsharingRequest = appFactory.appUnSharingRequest().as();
-                unsharingRequest.setUser(userName);
+                SharingSubject sharingSubject = shareFactory.getSharingSubject().as();
+                sharingSubject.setId(userName);
+                sharingSubject.setSourceId("ldap");
+                unsharingRequest.setSubject(sharingSubject);
                 unsharingRequest.setApps(buildUnshareAppPermissionList(shareList));
                 requests.add(unsharingRequest);
             }

@@ -1,5 +1,7 @@
 package org.iplantc.de.client.models.apps.sharing;
 
+import org.iplantc.de.client.models.sharing.SharingSubject;
+
 import java.util.List;
 
 /**
@@ -7,11 +9,11 @@ import java.util.List;
  */
 public interface AppUnsharingRequest {
 
-    void setUser(String user);
+    SharingSubject getSubject();
+
+    void setSubject(SharingSubject subject);
 
     void setApps(List<AppPermission> apps);
-
-    String getUser();
 
     List<AppPermission> getApps();
 }
