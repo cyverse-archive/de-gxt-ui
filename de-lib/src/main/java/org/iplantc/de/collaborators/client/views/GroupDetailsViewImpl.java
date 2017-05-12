@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupDetailsView;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
+import org.iplantc.de.collaborators.client.events.DeleteMembersSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.models.CollaboratorKeyProvider;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
@@ -125,9 +126,9 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
 
     @UiHandler("deleteBtn")
     void onDeleteButtonSelected(SelectEvent event) {
-        List<Collaborator> selectedCollab = grid.getSelectionModel().getSelectedItems();
-        if (selectedCollab != null && !selectedCollab.isEmpty()) {
-            selectedCollab.forEach(collaborator -> listStore.remove(collaborator));
+        List<Collaborator> selectedItems = grid.getSelectionModel().getSelectedItems();
+        if (selectedItems != null && !selectedItems.isEmpty()) {
+            fireEvent(new DeleteMembersSelected(getGroup(), selectedItems));
         }
     }
 
@@ -198,5 +199,10 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
     @Override
     public HandlerRegistration addAddGroupMemberSelectedHandler(AddGroupMemberSelected.AddGroupMemberSelectedHandler handler) {
         return addHandler(handler, AddGroupMemberSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addDeleteMembersSelectedHandler(DeleteMembersSelected.DeleteMembersSelectedHandler handler) {
+        return addHandler(handler, DeleteMembersSelected.TYPE);
     }
 }
