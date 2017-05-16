@@ -8,6 +8,5 @@ import com.google.gwt.user.client.Command;
  * @author jstroot
  */
 public interface NewToolRequestFormPresenterFactory {
-    NewToolRequestFormView.Presenter createPresenter(NewToolRequestFormView view,
-                                                     Command callbackCommand);
+    NewToolRequestFormView.Presenter createPresenter(Command callbackCommand);
 }

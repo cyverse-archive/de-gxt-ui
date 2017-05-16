@@ -1,7 +1,6 @@
 package org.iplantc.de.tools.client.views.requests;
 
-import org.iplantc.de.client.models.toolRequests.Architecture;
-import org.iplantc.de.client.models.toolRequests.YesNoMaybe;
+import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
 import org.iplantc.de.commons.client.validators.LengthRangeValidator;
 import org.iplantc.de.commons.client.validators.UrlValidator;
@@ -23,7 +22,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.core.client.dom.ScrollSupport.ScrollMode;
 import com.sencha.gxt.core.client.util.ToggleGroup;
@@ -33,7 +31,6 @@ import com.sencha.gxt.widget.core.client.box.AutoProgressMessageBox;
 import com.sencha.gxt.widget.core.client.container.CardLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.HtmlLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
-import com.sencha.gxt.widget.core.client.form.ComboBox;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.FormPanelHelper;
 import com.sencha.gxt.widget.core.client.form.IsField;
@@ -42,11 +39,9 @@ import com.sencha.gxt.widget.core.client.form.TextArea;
 import com.sencha.gxt.widget.core.client.form.TextField;
 
 /**
- *
  * A form to submit request to install new tools in condor
  *
  * @author sriram
- *
  */
 public final class NewToolRequestFormViewImpl extends Composite implements NewToolRequestFormView {
 
@@ -54,7 +49,8 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
     interface NewToolRequestFormViewUiBinder extends UiBinder<Widget, NewToolRequestFormViewImpl> {
     }
 
-    private static final NewToolRequestFormViewUiBinder uiBinder = GWT.create(NewToolRequestFormViewUiBinder.class);
+    private static final NewToolRequestFormViewUiBinder uiBinder =
+            GWT.create(NewToolRequestFormViewUiBinder.class);
     private final IplantValidationConstants validationConstants;
 
     private static SafeHtml buildRequiredFieldLabel(final String label) {
@@ -62,47 +58,78 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
             return null;
         }
 
-        return SafeHtmlUtils.fromTrustedString("<span style='color:red; top:-5px;' >*</span> " + label); //$NON-NLS-1$
+        return SafeHtmlUtils.fromTrustedString(
+                "<span style='color:red; top:-5px;' >*</span> " + label); //$NON-NLS-1$
     }
 
-    @UiField VerticalLayoutContainer container;
-    @UiField FieldLabel toolNameLbl;
-    @UiField FieldLabel toolDescLbl;
-    @UiField FieldLabel srcLbl;
-    @UiField Radio toolLink;
-    @UiField Radio toolUpld;
-    @UiField Radio toolSlt;
-    @UiField Radio testUpld;
-    @UiField Radio testSlt;
-    @UiField Radio otherUpld;
-    @UiField Radio otherSlt;
-    @UiField FieldLabel docUrlLbl;
-    @UiField FieldLabel versionLbl;
-    @UiField FieldLabel archLbl;
-    @UiField FieldLabel multiLbl;
-    @UiField FieldLabel cmdLineLbl;
-    @UiField TextField toolName;
-    @UiField TextArea toolDesc;
-    @UiField TextArea toolAttrib;
-    @UiField TextField binLink;
-    @UiField TextField toolDoc;
-    @UiField TextField toolVersion;
-    @UiField TextArea runInfo;
-    @UiField TextArea otherInfo;
-    @UiField(provided = true) final ComboBox<Architecture> archCbo;
-    @UiField(provided = true) final ComboBox<YesNoMaybe> multiThreadCbo;
-    @UiField UploadForm binUpld;
-    @UiField UploadForm testDataUpld;
-    @UiField UploadForm otherDataUpld;
-    @UiField(provided = true) FileSelectorField binSelect;
-    @UiField(provided = true) FileSelectorField testDataSelect;
-    @UiField(provided = true) FileSelectorField otherDataSelect;
-    @UiField FieldLabel testLbl;
-    @UiField FieldLabel otherLbl;
-    @UiField CardLayoutContainer binOptions;
-    @UiField CardLayoutContainer testDataOptions;
-    @UiField CardLayoutContainer otherDataOptions;
-    @UiField HtmlLayoutContainer intro;
+    @UiField
+    VerticalLayoutContainer container;
+    @UiField
+    FieldLabel toolNameLbl;
+    @UiField
+    FieldLabel toolDescLbl;
+    @UiField
+    FieldLabel srcLbl;
+    @UiField
+    Radio toolLink;
+    @UiField
+    Radio toolUpld;
+    @UiField
+    Radio toolSlt;
+    @UiField
+    Radio testUpld;
+    @UiField
+    Radio testSlt;
+    @UiField
+    Radio otherUpld;
+    @UiField
+    Radio otherSlt;
+    @UiField
+    FieldLabel docUrlLbl;
+    @UiField
+    FieldLabel versionLbl;
+    @UiField
+    FieldLabel cmdLineLbl;
+    @UiField
+    TextField toolName;
+    @UiField
+    TextArea toolDesc;
+    @UiField
+    TextArea toolAttrib;
+    @UiField
+    TextField binLink;
+    @UiField
+    TextField toolDoc;
+    @UiField
+    TextField toolVersion;
+    @UiField
+    TextArea runInfo;
+    @UiField
+    TextArea otherInfo;
+    @UiField
+    UploadForm binUpld;
+    @UiField
+    UploadForm testDataUpld;
+    @UiField
+    UploadForm otherDataUpld;
+    @UiField(provided = true)
+    FileSelectorField binSelect;
+    @UiField(provided = true)
+    FileSelectorField testDataSelect;
+    @UiField(provided = true)
+    FileSelectorField otherDataSelect;
+    @UiField
+    FieldLabel testLbl;
+    @UiField
+    FieldLabel otherLbl;
+    @UiField
+    CardLayoutContainer binOptions;
+    @UiField
+    CardLayoutContainer testDataOptions;
+    @UiField
+    CardLayoutContainer otherDataOptions;
+    @UiField
+    HtmlLayoutContainer intro;
 
     private final AutoProgressMessageBox submissionProgressBox;
 
@@ -110,15 +137,11 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
 
     @Inject
     NewToolRequestFormViewImpl(final DiskResourceSelectorFieldFactory fileSelectorFieldFactory,
-                               final IplantValidationConstants validationConstants,
-                               @Assisted final ComboBox<Architecture> archChooser,
-                               @Assisted final ComboBox<YesNoMaybe> multithreadChooser) {
+                               final IplantValidationConstants validationConstants) {
         this.validationConstants = validationConstants;
         this.binSelect = fileSelectorFieldFactory.defaultFileSelector();
         this.testDataSelect = fileSelectorFieldFactory.defaultFileSelector();
         this.otherDataSelect = fileSelectorFieldFactory.defaultFileSelector();
-        archCbo = archChooser;
-        multiThreadCbo = multithreadChooser;
         initWidget(uiBinder.createAndBindUi(this));
         submissionProgressBox = new AutoProgressMessageBox(I18N.DISPLAY.submitRequest());
         submissionProgressBox.auto();
@@ -142,7 +165,7 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
         grp3.add(otherUpld);
 
     }
-    
+
     @UiFactory
     HtmlLayoutContainer buildIntroContainer() {
         return new HtmlLayoutContainer((SafeHtml)() -> I18N.DISPLAY.toolRequestFormIntro());
@@ -154,14 +177,14 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
         srcLbl.setHTML(buildRequiredFieldLabel(I18N.DISPLAY.srcLinkPrompt()));
         docUrlLbl.setHTML(buildRequiredFieldLabel(I18N.DISPLAY.docLink()));
         versionLbl.setHTML(buildRequiredFieldLabel(I18N.DISPLAY.version()));
-        archLbl.setHTML(buildRequiredFieldLabel(I18N.DISPLAY.architecture()));
-        multiLbl.setHTML(buildRequiredFieldLabel(I18N.DISPLAY.isMultiThreaded()));
         cmdLineLbl.setHTML(buildRequiredFieldLabel(I18N.DISPLAY.cmdLineRun()));
         testLbl.setHTML(buildRequiredFieldLabel((I18N.DISPLAY.upldTestData())));
     }
 
     private void initValidators() {
-        toolName.addValidator(new LengthRangeValidator(I18N.DISPLAY.toolName(), 1, validationConstants.maxToolNameLength()));
+        toolName.addValidator(new LengthRangeValidator(I18N.DISPLAY.toolName(),
+                                                       1,
+                                                       validationConstants.maxToolNameLength()));
         toolName.addValidator(new DiskResourceNameValidator());
         binLink.addValidator(new UrlValidator());
         toolDoc.addValidator(new UrlValidator());
@@ -172,7 +195,7 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
         otherDataSelect.setRequired(false);
         binSelect.setRequired(false);
         binLink.setAllowBlank(true);
-        binUpld.setAllowBlank(false);   
+        binUpld.setAllowBlank(false);
         testDataUpld.setAllowBlank(false);
         testDataSelect.setRequired(false);
     }
@@ -200,7 +223,7 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
 
     @UiHandler("testSlt")
     void onTestDataSelect(final ValueChangeEvent<Boolean> unused) {
-        if(presenter != null) {
+        if (presenter != null) {
             presenter.onTestDataSelectionModeChange();
         }
 
@@ -208,7 +231,7 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
 
     @UiHandler("testUpld")
     void onTestDataUpload(final ValueChangeEvent<Boolean> unused) {
-        if(presenter != null) {
+        if (presenter != null) {
             presenter.onTestDataSelectionModeChange();
         }
 
@@ -216,7 +239,7 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
 
     @UiHandler("otherUpld")
     void onOtherDataUpload(final ValueChangeEvent<Boolean> unused) {
-        if(presenter != null) {
+        if (presenter != null) {
             presenter.onOtherDataSeelctionModeChange();
         }
 
@@ -224,7 +247,7 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
 
     @UiHandler("otherSlt")
     void onOtherDataSelect(final ValueChangeEvent<Boolean> unused) {
-        if(presenter != null) {
+        if (presenter != null) {
             presenter.onOtherDataSeelctionModeChange();
         }
 
@@ -263,7 +286,8 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
     @Override
     public final void indicateSubmissionSuccess() {
         submissionProgressBox.hide();
-        final IplantInfoBox successMsg = new IplantInfoBox(I18N.DISPLAY.success(), I18N.DISPLAY.requestConfirmMsg());
+        final IplantInfoBox successMsg =
+                new IplantInfoBox(I18N.DISPLAY.success(), I18N.DISPLAY.requestConfirmMsg());
         successMsg.show();
     }
 
@@ -279,13 +303,13 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
 
     @Override
     public void setToolSelectionMode() {
-        if(toolLink.getValue()) {
+        if (toolLink.getValue()) {
             binOptions.setActiveWidget(binOptions.getWidget(1));
             presenter.setToolMode(SELECTION_MODE.LINK);
             binUpld.setAllowBlank(true);
             binSelect.setRequired(false);
             binLink.setAllowBlank(false);
-        } else if(toolUpld.getValue()) {
+        } else if (toolUpld.getValue()) {
             binOptions.setActiveWidget(binOptions.getWidget(0));
             presenter.setToolMode(SELECTION_MODE.UPLOAD);
             binUpld.setAllowBlank(false);
@@ -331,11 +355,6 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
     }
 
     @Override
-    public IsField<YesNoMaybe> getMultithreadedField() {
-        return multiThreadCbo;
-    }
-
-    @Override
     public IsField<String> getInstructionsField() {
         return runInfo;
     }
@@ -345,10 +364,6 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
         return otherInfo;
     }
 
-    @Override
-    public IsField<Architecture> getArchitectureField() {
-        return archCbo;
-    }
 
     @Override
     public FileSelectorField getBinSelectField() {
@@ -367,7 +382,7 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
 
     @Override
     public void setTestDataSelectMode() {
-        if(testUpld.getValue()) {
+        if (testUpld.getValue()) {
             testDataOptions.setActiveWidget(testDataOptions.getWidget(0));
             presenter.setTestDataMode(SELECTION_MODE.UPLOAD);
             testDataUpld.setAllowBlank(false);
@@ -383,13 +398,20 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
 
     @Override
     public void setOtherDataSelectMode() {
-       if(otherUpld.getValue()) {
-           otherDataOptions.setActiveWidget(otherDataOptions.getWidget(0));
-           presenter.setOtherDataMode(SELECTION_MODE.UPLOAD);
-       } else if (otherSlt.getValue()) {
-           otherDataOptions.setActiveWidget(otherDataOptions.getWidget(1));
-           presenter.setOtherDataMode(SELECTION_MODE.SELECT);
-       }
+        if (otherUpld.getValue()) {
+            otherDataOptions.setActiveWidget(otherDataOptions.getWidget(0));
+            presenter.setOtherDataMode(SELECTION_MODE.UPLOAD);
+        } else if (otherSlt.getValue()) {
+            otherDataOptions.setActiveWidget(otherDataOptions.getWidget(1));
+            presenter.setOtherDataMode(SELECTION_MODE.SELECT);
+        }
+    }
+
+    @Override
+    public void setTool(Tool tool) {
+       toolName.setValue(tool.getName());
+       toolDesc.setValue(tool.getDescription());
+       toolVersion.setValue(tool.getVersion());
     }
 
     @Override

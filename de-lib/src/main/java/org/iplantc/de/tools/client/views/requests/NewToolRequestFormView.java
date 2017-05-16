@@ -1,7 +1,6 @@
 package org.iplantc.de.tools.client.views.requests;
 
-import org.iplantc.de.client.models.toolRequests.Architecture;
-import org.iplantc.de.client.models.toolRequests.YesNoMaybe;
+import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.diskResource.client.views.widgets.FileSelectorField;
 
 import com.google.gwt.user.client.ui.IsWidget;
@@ -56,6 +55,8 @@ public interface NewToolRequestFormView extends IsWidget {
         void onOtherDataSeelctionModeChange();
 
         void setViewDebugId(String baseID);
+
+        void setTool(Tool tool);
     }
 
     enum SELECTION_MODE {
@@ -138,29 +139,20 @@ public interface NewToolRequestFormView extends IsWidget {
     IsField<String> getVersionField();
 
     /**
-     * @return the field indicating if the tool is multi-threaded
-     */
-    IsField<YesNoMaybe> getMultithreadedField();
-
-    /**
      * @return the command line usage instructions field
      */
     IsField<String> getInstructionsField();
+
+    /**
+     * 
+     * @return the bin selection field
+     */
 
     /**
      * @return the additional information field
      */
     IsField<String> getAdditionalInfoField();
 
-    /**
-     * @return the architecture field
-     */
-    IsField<Architecture> getArchitectureField();
-
-    /**
-     * 
-     * @return the bin selection field
-     */
     FileSelectorField getBinSelectField();
 
     FileSelectorField getTestDataSelectField();
@@ -171,4 +163,6 @@ public interface NewToolRequestFormView extends IsWidget {
 
     void setOtherDataSelectMode();
 
+    void setTool(Tool tool);
 }
+
