@@ -205,7 +205,7 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
 
     @UiHandler("sharePublic")
     void onSharePublicClicked(SelectionEvent<Item> event) {
-
+        fireEvent(new RequestToMakeToolPublicSelected());
     }
 
     @UiHandler("refreshButton")
