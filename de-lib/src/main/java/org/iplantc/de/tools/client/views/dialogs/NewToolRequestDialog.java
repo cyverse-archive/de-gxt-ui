@@ -16,6 +16,8 @@ import com.google.inject.Inject;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 
+import javax.ws.rs.HEAD;
+
 /**
  * @author sriram
  *
@@ -72,8 +74,10 @@ public class NewToolRequestDialog extends IPlantDialog {
         presenter.setViewDebugId(baseID + ToolsModule.RequestToolIds.TOOL_REQUEST_VIEW);
     }
 
-    public void setName(Tool name) {
+    public void setTool(Tool tool) {
         this.tool = tool;
+        presenter.setTool(tool);
+   }
 
-    }
 }
+
