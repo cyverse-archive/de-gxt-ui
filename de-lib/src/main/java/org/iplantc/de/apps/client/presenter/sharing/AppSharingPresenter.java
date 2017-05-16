@@ -12,7 +12,6 @@ import org.iplantc.de.client.models.apps.sharing.AppSharingAutoBeanFactory;
 import org.iplantc.de.client.models.apps.sharing.AppSharingRequest;
 import org.iplantc.de.client.models.apps.sharing.AppSharingRequestList;
 import org.iplantc.de.client.models.apps.sharing.AppUnSharingRequestList;
-import org.iplantc.de.client.models.apps.sharing.AppUnsharingRequest;
 import org.iplantc.de.client.models.apps.sharing.AppUserPermissions;
 import org.iplantc.de.client.models.apps.sharing.AppUserPermissionsList;
 import org.iplantc.de.client.models.collaborators.Collaborator;
@@ -226,17 +225,17 @@ public class AppSharingPresenter implements SharingPresenter {
         FastMap<List<Sharing>> unSharingMap = permissionsPanel.getUnshareList();
 
         if (unSharingMap != null && unSharingMap.size() > 0) {
-            List<AppUnsharingRequest> requests = new ArrayList<>();
+            List<AppSharingRequest> requests = new ArrayList<>();
 
             for (String userName : unSharingMap.keySet()) {
                 List<Sharing> shareList = unSharingMap.get(userName);
 
-                AppUnsharingRequest unsharingRequest = appFactory.appUnSharingRequest().as();
+                AppSharingRequest unsharingRequest = appFactory.appSharingRequest().as();
                 SharingSubject sharingSubject = shareFactory.getSharingSubject().as();
                 sharingSubject.setId(userName);
                 sharingSubject.setSourceId("ldap");
                 unsharingRequest.setSubject(sharingSubject);
-                unsharingRequest.setApps(buildUnshareAppPermissionList(shareList));
+                unsharingRequest.setAppPermissions(buildUnshareAppPermissionList(shareList));
                 requests.add(unsharingRequest);
             }
 
