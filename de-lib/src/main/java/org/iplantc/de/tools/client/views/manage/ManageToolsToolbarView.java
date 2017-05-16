@@ -6,6 +6,7 @@ import org.iplantc.de.tools.client.events.BeforeToolSearchEvent;
 import org.iplantc.de.tools.client.events.DeleteToolSelected;
 import org.iplantc.de.tools.client.events.EditToolSelected;
 import org.iplantc.de.tools.client.events.RefreshToolsSelectedEvent;
+import org.iplantc.de.tools.client.events.RequestToMakeToolPublicSelected;
 import org.iplantc.de.tools.client.events.RequestToolSelected;
 import org.iplantc.de.tools.client.events.ShareToolsSelected;
 import org.iplantc.de.tools.client.events.ToolFilterChanged;
@@ -30,7 +31,8 @@ public interface ManageToolsToolbarView extends IsWidget,
                                                 ShareToolsSelected.HasShareToolselectedHandlers,
                                                 ToolFilterChanged.HasToolFilterChangedHandlers,
                                                 RequestToolSelected.HasRequestToolSelectedHandlers,
-                                                EditToolSelected.HasEditToolSelectedHandlers {
+                                                EditToolSelected.HasEditToolSelectedHandlers,
+                                                RequestToMakeToolPublicSelected.HasRequestToMakeToolPublicSelectedHandlers {
 
     void setSelection(List<Tool> currentSelection);
 
