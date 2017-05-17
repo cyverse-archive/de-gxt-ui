@@ -97,6 +97,7 @@ public class UserSearchField implements IsWidget,
             public void onSelection(SelectionEvent<Subject> event) {
                 Subject subject = combo.getListView().getSelectionModel().getSelectedItem();
                 ensureHandlers().fireEvent(new UserSearchResultSelected(subject));
+                combo.clear();
             }
         });
     }
@@ -126,8 +127,7 @@ public class UserSearchField implements IsWidget,
     }
 
     private ListView<Subject, Subject> buildView(ListStore<Subject> store) {
-        ListView<Subject, Subject> view = new ListView<Subject, Subject>(store,
-                                                                         new IdentityValueProvider<Subject>());
+        ListView<Subject, Subject> view = new ListView<Subject, Subject>(store, new IdentityValueProvider<Subject>());
 
         view.setCell(new AbstractCell<Subject>() {
 
