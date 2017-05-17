@@ -14,6 +14,8 @@ import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -112,8 +114,10 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @Override
-    public List<Subject> getSelectedCollaborators() {
-        return grid.getSelectionModel().getSelectedItems();
+    public List<Subject> getSelectedSubjects() {
+        List<Group> selectedCollabLists = groupView.getSelectedCollabLists();
+        List<Subject> selectedCollaborators = grid.getSelectionModel().getSelectedItems();
+        return Lists.newArrayList(Iterables.concat(selectedCollabLists, selectedCollaborators));
     }
 
     @Override

@@ -230,8 +230,8 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     @Override
-    public List<Subject> getSelectedCollaborators() {
-        return view.getSelectedCollaborators();
+    public List<Subject> getSelectedSubjects() {
+        return view.getSelectedSubjects();
     }
 
     @Override

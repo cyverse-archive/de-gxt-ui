@@ -136,6 +136,11 @@ public class GroupViewImpl extends Composite implements GroupView {
         toolBar.forceLayout();
     }
 
+    @Override
+    public List<Group> getSelectedCollabLists() {
+        return grid.getSelectionModel().getSelectedItems();
+    }
+
     @UiHandler("addGroup")
     void addGroupSelected(SelectEvent event) {
         fireEvent(new AddGroupSelected());

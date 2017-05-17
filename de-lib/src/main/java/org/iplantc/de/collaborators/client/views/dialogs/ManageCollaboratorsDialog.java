@@ -75,6 +75,6 @@ public class ManageCollaboratorsDialog extends IPlantDialog {
     }
 
     public List<Subject> getSelectedSubjects() {
-        return presenter.getSelectedCollaborators();
+        return presenter.getSelectedSubjects();
     }
 }
