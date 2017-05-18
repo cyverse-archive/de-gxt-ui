@@ -7,11 +7,12 @@ import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids.CA
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids.INSTALLED_TOOLS_DLG;
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids.OK;
 
-import org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingView;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -21,17 +22,58 @@ import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 /**
  * @author sriram
  */
-public class DCListingDialog extends IPlantDialog implements SelectionChangedEvent.SelectionChangedHandler<Tool> {
+public class ToolListingDialog extends IPlantDialog implements SelectionChangedEvent.SelectionChangedHandler<Tool> {
 
-    private DeployedComponentsListingView.DeployedComponentsListingViewAppearance appearance;
+
+    public interface ToolsListingViewAppearance {
+
+        String nameColumnHeader();
+
+        String versionColumnHeader();
+
+        String pathColumnHeader();
+
+        String attributionLabel();
+
+        String descriptionLabel();
+
+        String loadingMask();
+
+        String searchEmptyText();
+
+        SafeHtml detailsRenderer();
+
+        String newToolReq();
+
+        ImageResource add();
+
+        String infoDialogWidth();
+
+        String infoDialogHeight();
+
+        int nameColumnWidth();
+
+        int versionColumnWidth();
+
+        int pathColumnWidth();
+
+        int dcListingDialogWidth();
+
+        int dcListingDialogHeight();
+
+        String dcListingDialogHeading();
+    }
+
+
+    private ToolsListingViewAppearance appearance;
 
     ManageToolsView.Presenter toolsPresenter;
 
     Tool selectedTool;
 
     @Inject
-    DCListingDialog(ManageToolsView.Presenter toolsPresenter,
-                    DeployedComponentsListingView.DeployedComponentsListingViewAppearance appearance) {
+    ToolListingDialog(ManageToolsView.Presenter toolsPresenter,
+                      ToolsListingViewAppearance appearance) {
         this.appearance = appearance;
         setPixelSize(appearance.dcListingDialogWidth(), appearance.dcListingDialogHeight());
         setResizable(false);

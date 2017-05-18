@@ -3,7 +3,7 @@ package org.iplantc.de.apps.integration.client.view.widgets;
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent;
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent.HasUpdateCommandLinePreviewEventHandlers;
 import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEvent.UpdateCommandLinePreviewEventHandler;
-import org.iplantc.de.apps.integration.client.view.dialogs.DCListingDialog;
+import org.iplantc.de.apps.integration.client.view.dialogs.ToolListingDialog;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance;
 import org.iplantc.de.apps.integration.client.view.tools.ToolSearchField;
 import org.iplantc.de.apps.integration.shared.AppIntegrationModule;
@@ -92,7 +92,7 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
     Logger LOG = Logger.getLogger("App template");
 
     @Inject
-    AsyncProviderWrapper<DCListingDialog> dcListingDialogProvider;
+    AsyncProviderWrapper<ToolListingDialog> dcListingDialogProvider;
     @Inject
     EventBus eventBus;
 
@@ -201,14 +201,14 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
      */
     @UiHandler("searchBtn")
     void onSearchBtnClick(SelectEvent event) {
-        dcListingDialogProvider.get(new AsyncCallback<DCListingDialog>(){
+        dcListingDialogProvider.get(new AsyncCallback<ToolListingDialog>(){
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
             }
 
             @Override
-            public void onSuccess(DCListingDialog dialog) {
+            public void onSuccess(ToolListingDialog dialog) {
                 dialog.addHideHandler(new HideEvent.HideHandler() {
 
                     @Override

@@ -1,6 +1,6 @@
 package org.iplantc.de.theme.base.client.apps.integration.tools;
 
-import org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingView;
+import org.iplantc.de.apps.integration.client.view.dialogs.ToolListingDialog;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
@@ -13,7 +13,7 @@ import com.sencha.gxt.core.client.XTemplates;
 /**
  * @author aramsey
  */
-public class DeployedComponentsListingViewDefaultAppearance implements DeployedComponentsListingView.DeployedComponentsListingViewAppearance {
+public class ToolListingViewDefaultAppearance implements ToolListingDialog.ToolsListingViewAppearance {
 
     interface DCDetailsRenderer extends XTemplates {
         @XTemplate(source = "DCDetails.html")
@@ -25,17 +25,17 @@ public class DeployedComponentsListingViewDefaultAppearance implements DeployedC
     private DeployedComponentsDisplayStrings displayStrings;
     private IplantResources iplantResources;
 
-    public DeployedComponentsListingViewDefaultAppearance() {
+    public ToolListingViewDefaultAppearance() {
         this(GWT.<IplantDisplayStrings>create(IplantDisplayStrings.class),
              GWT.<DCDetailsRenderer>create(DCDetailsRenderer.class),
              GWT.<DeployedComponentsDisplayStrings>create(DeployedComponentsDisplayStrings.class),
              GWT.<IplantResources>create(IplantResources.class));
     }
 
-    public DeployedComponentsListingViewDefaultAppearance(IplantDisplayStrings iplantDisplayStrings,
-                                                          DCDetailsRenderer dcDetailsRenderer,
-                                                          DeployedComponentsDisplayStrings displayStrings,
-                                                          IplantResources iplantResources) {
+    public ToolListingViewDefaultAppearance(IplantDisplayStrings iplantDisplayStrings,
+                                            DCDetailsRenderer dcDetailsRenderer,
+                                            DeployedComponentsDisplayStrings displayStrings,
+                                            IplantResources iplantResources) {
 
         this.iplantDisplayStrings = iplantDisplayStrings;
         this.dcDetailsRenderer = dcDetailsRenderer;
