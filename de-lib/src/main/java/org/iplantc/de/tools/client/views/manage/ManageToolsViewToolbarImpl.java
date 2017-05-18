@@ -15,7 +15,7 @@ import org.iplantc.de.tools.client.events.RequestToolSelected;
 import org.iplantc.de.tools.client.events.ShareToolsSelected;
 import org.iplantc.de.tools.client.events.ToolFilterChanged;
 import org.iplantc.de.tools.client.events.ToolSearchResultLoadEvent;
-import org.iplantc.de.tools.client.events.UseInNewAppEvent;
+import org.iplantc.de.tools.client.events.UseToolInNewAppEvent;
 import org.iplantc.de.tools.shared.ToolsModule;
 
 import com.google.common.collect.Lists;
@@ -195,7 +195,7 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
 
     @UiHandler("useInApp")
     void onUseInAppClicked(SelectionEvent<Item> event) {
-       eventBus.fireEvent(new UseInNewAppEvent());
+       eventBus.fireEvent(new UseToolInNewAppEvent(currentSelection.get(0)));
     }
 
     @UiHandler("shareCollab")
@@ -267,6 +267,7 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
 
     @Override
     public void setSelection(List<Tool> currentSelection) {
+        this.currentSelection = currentSelection;
         setButtonState(currentSelection);
     }
 

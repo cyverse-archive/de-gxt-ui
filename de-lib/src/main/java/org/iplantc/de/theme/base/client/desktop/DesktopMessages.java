@@ -114,4 +114,8 @@ public interface DesktopMessages extends Messages {
     String preferencesFailure();
 
     String preferencesSuccess();
+
+    String newApp();
+
+    String sectionOne();
 }

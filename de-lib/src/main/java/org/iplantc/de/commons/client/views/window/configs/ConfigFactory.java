@@ -56,6 +56,7 @@ public class ConfigFactory {
         return aiwc.as();
     }
 
+
     public static AppsWindowConfig appsWindowConfig() {
         AppsWindowConfig awc = applyWindowType(WindowType.APPS, factory.appsWindowConfig()).as();
         return awc;
