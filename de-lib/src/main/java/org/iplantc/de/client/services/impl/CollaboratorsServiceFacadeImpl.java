@@ -17,6 +17,7 @@ import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
+import com.google.common.base.Joiner;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -95,18 +96,9 @@ public class CollaboratorsServiceFacadeImpl implements CollaboratorsServiceFacad
         address.append("user-info"); //$NON-NLS-1$
 
         if (usernames != null && !usernames.isEmpty()) {
-            address.append("?"); //$NON-NLS-1$
-            boolean first = true;
-            for (String user : usernames) {
-                if (first) {
-                    first = false;
-                } else {
-                    address.append("&"); //$NON-NLS-1$
-                }
-
-                address.append("username="); //$NON-NLS-1$
-                address.append(URL.encodeQueryString(user.trim()));
-            }
+            address.append("?username="); //$NON-NLS-1$
+            String userList = Joiner.on("&username=").join(usernames);
+            address.append(URL.encode(userList));
         }
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address.toString());

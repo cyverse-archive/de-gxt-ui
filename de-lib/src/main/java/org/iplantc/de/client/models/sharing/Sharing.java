@@ -20,18 +20,18 @@ public class Sharing {
     private String name;
 
 
-    public Sharing(final Subject c, final PermissionValue p, final String id, final String name) {
-        this(c, p, null, id, name);
+    public Sharing(final Subject subject, final PermissionValue permission, final String id, final String name) {
+        this(subject, permission, null, id, name);
     }
 
-    public Sharing(final Subject c, final PermissionValue p, final String systemId, final String id, final String name) {
-        this.subject = c;
+    public Sharing(final Subject subject, final PermissionValue permission, final String systemId, final String id, final String name) {
+        this.subject = subject;
         this.systemId = systemId;
         setId(id);
         setName(name);
-        if (p != null) {
-            permission = p;
-            displayPermission = permission;
+        if (permission != null) {
+            this.permission = permission;
+            displayPermission = this.permission;
         }
 
     }
@@ -74,7 +74,7 @@ public class Sharing {
     }
 
     public String getKey() {
-        return getSubject().getId() + getSystemId() + getId();
+        return getSubject().getId();
     }
 
     public void setPermission(PermissionValue perm) {

@@ -3,7 +3,7 @@ package org.iplantc.de.client.models.diskResources.sharing;
 import static com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 
 import org.iplantc.de.client.models.HasPath;
-import org.iplantc.de.client.models.sharing.UserPermission;
+import org.iplantc.de.client.models.sharing.OldUserPermission;
 
 import java.util.List;
 
@@ -16,9 +16,9 @@ import java.util.List;
 public interface DataUserPermission extends HasPath {
 
     @PropertyName("user-permissions")
-    List<UserPermission> getUserPermissions();
+    List<OldUserPermission> getUserPermissions();
 
     @PropertyName("user-permissions")
-    void setUserPermissions(List<UserPermission> userPermissions);
+    void setUserPermissions(List<OldUserPermission> userPermissions);
 
 }
