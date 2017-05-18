@@ -6,8 +6,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.iplantc.de.apps.integration.client.gin.factory.DeployedComponentListingViewFactory;
-import org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingView;
 import org.iplantc.de.client.models.tool.Tool;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
