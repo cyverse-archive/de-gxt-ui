@@ -192,7 +192,7 @@ public class DataSharingViewDefaultAppearance implements SharingAppearance {
 
     @Override
     public String variablePermissionsNotice() {
-        return sharingMessages.variablePermissionsNotice();
+        return sharingMessages.variablePermissionsNotice() + ":" + explain();
     }
 
     @Override
