@@ -132,4 +132,14 @@ public class DesktopPresenterDefaultAppearance implements DesktopView.Presenter.
     public String userPreferencesLoadError() {
         return desktopErrorMessages.userPreferencesLoadError();
     }
+
+    @Override
+    public String newApp() {
+        return desktopMessages.newApp();
+    }
+
+    @Override
+    public String sectionOne() {
+        return desktopMessages.sectionOne();
+    }
 }

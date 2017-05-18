@@ -186,6 +186,10 @@ public interface DesktopView extends IsWidget {
             String checkSysMessageError();
 
             String userPreferencesLoadError();
+
+            String newApp();
+
+            String sectionOne();
         }
 
         List<WindowState> getOrderedWindowStates();

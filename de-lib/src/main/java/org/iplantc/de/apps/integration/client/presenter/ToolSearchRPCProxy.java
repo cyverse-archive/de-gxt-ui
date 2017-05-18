@@ -50,8 +50,10 @@ public class ToolSearchRPCProxy extends
 
         // Cache the search text for this callback; used to sort the results.
         final String searchText = lastQueryText;
-        hasHandlers.fireEvent(new BeforeToolSearchEvent());
-        dcService.searchTools(false, loadConfig, new AppsCallback<List<Tool>>() {
+        if(hasHandlers != null) {
+            hasHandlers.fireEvent(new BeforeToolSearchEvent());
+        }
+        dcService.searchTools(null, loadConfig, new AppsCallback<List<Tool>>() {
 
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
@@ -65,7 +67,9 @@ public class ToolSearchRPCProxy extends
                         result.size(), 0));
                 // The search service accepts * and ? wildcards, so convert them for the pattern group.
                 String pattern = "(" + searchText.replace("*", ".*").replace('?', '.') + ")";
-                hasHandlers.fireEvent(new ToolSearchResultLoadEvent(searchText, pattern, result));
+                if(hasHandlers != null) {
+                    hasHandlers.fireEvent(new ToolSearchResultLoadEvent(searchText, pattern, result));
+                }
             }
         });
     }

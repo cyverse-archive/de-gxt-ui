@@ -162,6 +162,12 @@ public class ManageToolsViewImpl extends Composite implements ManageToolsView {
     }
 
     @Override
+    public HandlerRegistration addSelectionChangedHandler(SelectionChangedEvent.SelectionChangedHandler<Tool> handler) {
+        grid.getSelectionModel().addSelectionChangedHandler(handler);
+        return addHandler(handler, SelectionChangedEvent.getType());
+    }
+
+    @Override
     public void loadTools(List<Tool> tools) {
         listStore.clear();
         listStore.addAll(tools);

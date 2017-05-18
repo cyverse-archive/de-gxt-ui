@@ -36,7 +36,7 @@
                         <menu:MenuItem ui:field="requestTool" text="{appearance.requestTool}" icon="{appearance.requestToolIcon}"/>
                         <menu:MenuItem ui:field="edit" text="{appearance.edit}" icon="{appearance.editIcon}" enabled="false"/>
                         <menu:MenuItem ui:field="delete" text="{appearance.delete}" icon="{appearance.deleteIcon}" enabled="false"/>
-                        <menu:MenuItem ui:field="useInApp" text="{appearance.useInApp}" icon="{appearance.useInAppIcon}"/>
+                        <menu:MenuItem ui:field="useInApp" text="{appearance.useInApp}" icon="{appearance.useInAppIcon}" enabled="false"/>
                     </menu:Menu>
                 </button:menu>
             </button:TextButton>

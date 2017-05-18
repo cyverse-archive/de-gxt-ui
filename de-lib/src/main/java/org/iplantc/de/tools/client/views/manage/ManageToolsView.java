@@ -15,9 +15,12 @@ import org.iplantc.de.tools.client.events.ToolFilterChanged;
 import org.iplantc.de.tools.client.events.ToolSearchResultLoadEvent;
 import org.iplantc.de.tools.client.events.ToolSelectionChangedEvent;
 
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.IsWidget;
+
+import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 
 import java.util.List;
 
@@ -31,8 +34,6 @@ public interface ManageToolsView extends IsWidget,
                                          ToolSearchResultLoadEvent.ToolSearchResultLoadEventHandler,
                                          ToolSelectionChangedEvent.HasToolSelectionChangedEventHandlers {
 
-
-    void updateTool(Tool result);
 
     public interface ManageToolsViewAppearance {
         String name();
@@ -69,6 +70,10 @@ public interface ManageToolsView extends IsWidget,
 
     ManageToolsToolbarView getToolbar();
 
+    void updateTool(Tool result);
+
+    HandlerRegistration addSelectionChangedHandler(SelectionChangedEvent.SelectionChangedHandler<Tool> handler);
+
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter,
                                        RefreshToolsSelectedEvent.RefreshToolsSelectedEventHandler,
                                        AddNewToolSelected.NewToolSelectedHandler,
@@ -85,5 +90,9 @@ public interface ManageToolsView extends IsWidget,
         void addTool(Tool tool, Command dialogCallbackCommand);
 
         void updateTool(Tool tool, Command dialogCallbackCommand);
+
+        Tool getSelectedTool();
+
+        HandlerRegistration addSelectionChangedHandler(SelectionChangedEvent.SelectionChangedHandler<Tool> handler);
     }
 }
