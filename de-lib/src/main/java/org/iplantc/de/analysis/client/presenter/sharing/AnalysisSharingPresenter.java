@@ -247,6 +247,7 @@ public class AnalysisSharingPresenter implements SharingPresenter {
                 SharingSubject sharingSubject = shareFactory.getSharingSubject().as();
                 sharingSubject.setSourceId("ldap");
                 sharingSubject.setId(userName);
+                unsharingRequest.setSubject(sharingSubject);
                 unsharingRequest.setAnalyses(buildUnshareAnalysisPermissionList(shareList));
                 requests.add(unsharingRequest);
             }
