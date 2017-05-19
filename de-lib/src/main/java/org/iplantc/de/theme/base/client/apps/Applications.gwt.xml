@@ -97,12 +97,8 @@
         <when-type-is class="org.iplantc.de.apps.integration.client.view.AppsEditorView.AppsEditorViewAppearance"/>
     </replace-with>
 
-    <replace-with class="org.iplantc.de.theme.base.client.apps.integration.tools.ToolListingViewDefaultAppearance">
+    <replace-with class="org.iplantc.de.theme.base.client.tools.ToolListingViewDefaultAppearance">
         <when-type-is class="org.iplantc.de.apps.integration.client.view.dialogs.ToolListingDialog.ToolsListingViewAppearance"/>
-    </replace-with>
-
-    <replace-with class="org.iplantc.de.theme.base.client.apps.integration.tools.DCNameHyperlinkCellDefaultAppearance">
-        <when-type-is class="org.iplantc.de.apps.integration.client.view.deployedComponents.cells.DCNameHyperlinkCell.DCNameHyperlinkCellAppearance"/>
     </replace-with>
 
     <replace-with class="org.iplantc.de.theme.base.client.apps.integration.tools.ToolSearchFieldDefaultAppearance">

@@ -1,6 +1,7 @@
 package org.iplantc.de.tools.client.presenter;
 
 import org.iplantc.de.apps.client.models.ToolFilter;
+import org.iplantc.de.tools.client.views.dialogs.ToolInfoDialog;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.gin.ServicesInjector;
 import org.iplantc.de.client.models.tool.Tool;
@@ -17,6 +18,7 @@ import org.iplantc.de.tools.client.events.RefreshToolsSelectedEvent;
 import org.iplantc.de.tools.client.events.RequestToMakeToolPublicSelected;
 import org.iplantc.de.tools.client.events.RequestToolSelected;
 import org.iplantc.de.tools.client.events.ShareToolsSelected;
+import org.iplantc.de.tools.client.events.ShowToolInfoEvent;
 import org.iplantc.de.tools.client.events.ToolFilterChanged;
 import org.iplantc.de.tools.client.events.ToolSelectionChangedEvent;
 import org.iplantc.de.tools.client.views.dialogs.EditToolDialog;
@@ -62,6 +64,9 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     AsyncProviderWrapper<NewToolRequestDialog> newToolRequestDialogProvider;
 
     @Inject
+    AsyncProviderWrapper<ToolInfoDialog> toolInfoDialogProvider;
+
+    @Inject
     EventBus eventBus;
 
     protected List<Tool> currentSelection = Lists.newArrayList();
@@ -85,6 +90,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
         toolsView.getToolbar().addRequestToolSelectedHandler(this);
         toolsView.getToolbar().addEditToolSelectedHandler(this);
         toolsView.getToolbar().addRequestToMakeToolPublicSelectedHandler(this);
+        toolsView.addShowToolInfoEventHandlers(this);
         loadTools(null);
     }
 
@@ -272,7 +278,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
            @Override
            public void onSuccess(EditToolDialog etd) {
                etd.setSize("600px", "300px");
-               etd.editTool(currentSelection.get(0));
+               etd.editTool(getSelectedTool());
                etd.show(ManageToolsViewPresenter.this);
            }
        });
@@ -288,7 +294,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
             @Override
             public void onSuccess(NewToolRequestDialog o) {
-                o.setTool(currentSelection.get(0));
+                o.setTool(getSelectedTool());
                 o.show();
             }
         });
@@ -297,5 +303,20 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     @Override
     public HandlerRegistration addSelectionChangedHandler(SelectionChangedEvent.SelectionChangedHandler<Tool> handler) {
         return toolsView.addSelectionChangedHandler(handler);
+    }
+
+    @Override
+    public void onShowToolInfo(ShowToolInfoEvent event) {
+       toolInfoDialogProvider.get(new AsyncCallback<ToolInfoDialog>() {
+           @Override
+           public void onFailure(Throwable throwable) {
+
+           }
+
+           @Override
+           public void onSuccess(ToolInfoDialog o) {
+              o.show(getSelectedTool());
+           }
+       });
     }
 }
