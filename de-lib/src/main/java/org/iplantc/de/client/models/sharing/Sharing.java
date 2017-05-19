@@ -68,6 +68,11 @@ public class Sharing {
         this.systemId = systemId;
     }
 
+    //TODO REMOVE ME, I'M TEMPORARY
+    public String getSourceId() {
+        return "ldap";
+    }
+
     public String getKey() {
         return getCollaborator().getUserName() + getSystemId() + getId();
     }

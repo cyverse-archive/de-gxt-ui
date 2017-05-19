@@ -19,6 +19,7 @@ import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
+import org.iplantc.de.client.models.sharing.SharingSubject;
 import org.iplantc.de.client.models.sharing.UserPermission;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
@@ -64,7 +65,7 @@ public class AnalysisSharingPresenter implements SharingPresenter {
                 for (AnalysisUserPermissions analysisUserPerms : analysisPermsList.getResourceUserPermissionsList()) {
                     for (UserPermission userPerms: analysisUserPerms.getPermissions()) {
 
-                        String userName = userPerms.getUser();
+                        String userName = userPerms.getSubject().getId();
                         Collaborator user = results.get(userName);
                         if (user == null) {
                             user = collaboratorsUtil.getDummyCollaborator(userName);
@@ -105,7 +106,7 @@ public class AnalysisSharingPresenter implements SharingPresenter {
             final List<String> usernames = Lists.newArrayList();
             for (AnalysisUserPermissions analysisUserPerms : analysisPermsList.getResourceUserPermissionsList()) {
                 for (UserPermission userPerm : analysisUserPerms.getPermissions()) {
-                    usernames.add(userPerm.getUser());
+                    usernames.add(userPerm.getSubject().getId());
                 }
             }
             collaboratorsServiceFacade.getUserInfo(usernames, new GetUserInfoCallback(analysisPermsList));
@@ -205,8 +206,11 @@ public class AnalysisSharingPresenter implements SharingPresenter {
 
             for (String userName : sharingMap.keySet()) {
                 AnalysisSharingRequest sharingRequest = shareFactory.AnalysisSharingRequest().as();
+                SharingSubject sharingSubject = shareFactory.getSharingSubject().as();
+                sharingSubject.setSourceId("ldap");
+                sharingSubject.setId(userName);
                 List<Sharing> shareList = sharingMap.get(userName);
-                sharingRequest.setUser(userName);
+                sharingRequest.setSubject(sharingSubject);
                 sharingRequest.setAnalysisPermissions(buildAnalysisPermissions(shareList));
                 requests.add(sharingRequest);
             }
@@ -240,7 +244,10 @@ public class AnalysisSharingPresenter implements SharingPresenter {
                 List<Sharing> shareList = unSharingMap.get(userName);
 
                 AnalysisUnsharingRequest unsharingRequest = shareFactory.AnalysisUnsharingRequest().as();
-                unsharingRequest.setUser(userName);
+                SharingSubject sharingSubject = shareFactory.getSharingSubject().as();
+                sharingSubject.setSourceId("ldap");
+                sharingSubject.setId(userName);
+                unsharingRequest.setSubject(sharingSubject);
                 unsharingRequest.setAnalyses(buildUnshareAnalysisPermissionList(shareList));
                 requests.add(unsharingRequest);
             }

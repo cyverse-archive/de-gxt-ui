@@ -38,6 +38,7 @@ import org.iplantc.de.client.models.analysis.support.AnalysisSupportAutoBeanFact
 import org.iplantc.de.client.models.analysis.support.AnalysisSupportRequest;
 import org.iplantc.de.client.models.analysis.support.AnalysisSupportRequestFields;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
+import org.iplantc.de.client.models.sharing.SharingSubject;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
 import org.iplantc.de.client.services.DEUserSupportServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -538,7 +539,10 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         ap.setId(selectedAnalysis.getId());
         ap.setPermission(PermissionValue.read.toString());
         AnalysisSharingRequest asr = shareFactory.AnalysisSharingRequest().as();
-        asr.setUser(deProperties.getSupportUser());
+        SharingSubject sharingSubject = shareFactory.getSharingSubject().as();
+        sharingSubject.setSourceId("ldap");
+        sharingSubject.setId(deProperties.getSupportUser());
+        asr.setSubject(sharingSubject);
         asr.setAnalysisPermissions(Arrays.asList(ap));
         AnalysisSharingRequestList listRequest = shareFactory.AnalysisSharingRequestList().as();
         listRequest.setAnalysisSharingRequestList(Arrays.asList(asr));

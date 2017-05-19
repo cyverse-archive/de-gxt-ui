@@ -1,5 +1,7 @@
 package org.iplantc.de.client.models.apps.sharing;
 
+import org.iplantc.de.client.models.sharing.SharingSubject;
+
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import java.util.List;
@@ -9,12 +11,12 @@ import java.util.List;
  */
 public interface AppSharingRequest {
 
-    String getUser();
+    SharingSubject getSubject();
+
+    void setSubject(SharingSubject subject);
 
     @AutoBean.PropertyName("apps")
     List<AppPermission> getAppPermissions();
-
-    void setUser(String user);
 
     @AutoBean.PropertyName("apps")
     void setAppPermissions(List<AppPermission> appPerms);

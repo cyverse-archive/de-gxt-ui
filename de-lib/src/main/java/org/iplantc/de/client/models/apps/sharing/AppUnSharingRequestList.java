@@ -10,9 +10,9 @@ import java.util.List;
 public interface AppUnSharingRequestList {
 
     @AutoBean.PropertyName("unsharing")
-    List<AppUnsharingRequest> getAppUnSharingRequestList();
+    List<AppSharingRequest> getAppUnSharingRequestList();
 
     @AutoBean.PropertyName("unsharing")
-    void setAppUnSharingRequestList(List<AppUnsharingRequest> unsharinglist);
+    void setAppUnSharingRequestList(List<AppSharingRequest> unsharinglist);
 
 }
