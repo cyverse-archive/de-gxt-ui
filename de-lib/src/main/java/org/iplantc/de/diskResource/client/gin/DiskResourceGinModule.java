@@ -1,7 +1,7 @@
 package org.iplantc.de.diskResource.client.gin;
 
 import org.iplantc.de.client.models.diskResources.Folder;
-import org.iplantc.de.client.sharing.SharingPresenter;
+import org.iplantc.de.commons.client.presenter.SharingPresenter;
 import org.iplantc.de.diskResource.client.DataLinkView;
 import org.iplantc.de.diskResource.client.DataSharingView;
 import org.iplantc.de.diskResource.client.DetailsView;

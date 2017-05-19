@@ -43,7 +43,7 @@ import org.iplantc.de.client.services.AppMetadataServiceFacade;
 import org.iplantc.de.client.services.OntologyServiceFacade;
 import org.iplantc.de.client.services.impl.AppMetadataServiceFacadeImpl;
 import org.iplantc.de.client.services.impl.OntologyServiceFacadeImpl;
-import org.iplantc.de.client.sharing.SharingPresenter;
+import org.iplantc.de.commons.client.presenter.SharingPresenter;
 
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;

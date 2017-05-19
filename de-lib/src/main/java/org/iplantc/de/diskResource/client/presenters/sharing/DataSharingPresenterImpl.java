@@ -1,6 +1,6 @@
 package org.iplantc.de.diskResource.client.presenters.sharing;
 
-import org.iplantc.de.client.gin.factory.SharingPermissionViewFactory;
+import org.iplantc.de.commons.client.gin.factory.SharingPermissionViewFactory;
 import org.iplantc.de.client.models.HasPaths;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.diskResources.DiskResource;
@@ -19,8 +19,8 @@ import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
-import org.iplantc.de.client.sharing.SharingPermissionView;
-import org.iplantc.de.client.sharing.SharingPresenter;
+import org.iplantc.de.commons.client.views.sharing.SharingPermissionView;
+import org.iplantc.de.commons.client.presenter.SharingPresenter;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;

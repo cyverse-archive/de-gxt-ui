@@ -5,8 +5,8 @@ package org.iplantc.de.diskResource.client.views.sharing.dialogs;
 
 
 import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.sharing.SharingAppearance;
-import org.iplantc.de.client.sharing.SharingPresenter;
+import org.iplantc.de.commons.client.views.sharing.SharingAppearance;
+import org.iplantc.de.commons.client.presenter.SharingPresenter;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.diskResource.client.gin.factory.DataSharingPresenterFactory;
 

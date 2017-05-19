@@ -5,7 +5,7 @@
 package org.iplantc.de.analysis.client.presenter.sharing;
 
 import org.iplantc.de.analysis.client.views.sharing.AnalysisSharingView;
-import org.iplantc.de.client.gin.factory.SharingPermissionViewFactory;
+import org.iplantc.de.commons.client.gin.factory.SharingPermissionViewFactory;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisPermission;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingAutoBeanFactory;
@@ -23,8 +23,8 @@ import org.iplantc.de.client.models.sharing.SharingSubject;
 import org.iplantc.de.client.models.sharing.UserPermission;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
-import org.iplantc.de.client.sharing.SharingPermissionView;
-import org.iplantc.de.client.sharing.SharingPresenter;
+import org.iplantc.de.commons.client.views.sharing.SharingPermissionView;
+import org.iplantc.de.commons.client.presenter.SharingPresenter;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;

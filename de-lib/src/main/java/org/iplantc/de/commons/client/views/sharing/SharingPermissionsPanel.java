@@ -1,4 +1,4 @@
-package org.iplantc.de.client.sharing;
+package org.iplantc.de.commons.client.views.sharing;
 
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Subject;
@@ -10,6 +10,7 @@ import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.client.views.dialogs.ManageCollaboratorsDialog;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.presenter.SharingPresenter;
 import org.iplantc.de.diskResource.client.model.DataSharingKeyProvider;
 import org.iplantc.de.diskResource.client.model.DataSharingProperties;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.ShareBreakDownDialog;

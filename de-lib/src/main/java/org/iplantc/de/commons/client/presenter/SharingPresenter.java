@@ -1,4 +1,4 @@
-package org.iplantc.de.client.sharing;
+package org.iplantc.de.commons.client.presenter;
 
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 

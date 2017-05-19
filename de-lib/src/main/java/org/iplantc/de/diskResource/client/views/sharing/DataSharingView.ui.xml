@@ -6,7 +6,7 @@
 
 
     <ui:with field="appearance"
-             type="org.iplantc.de.client.sharing.SharingAppearance" />
+             type="org.iplantc.de.commons.client.views.sharing.SharingAppearance" />
 
     <ui:with field="diskResourcesListStore"
              type="com.sencha.gxt.data.shared.ListStore"/>

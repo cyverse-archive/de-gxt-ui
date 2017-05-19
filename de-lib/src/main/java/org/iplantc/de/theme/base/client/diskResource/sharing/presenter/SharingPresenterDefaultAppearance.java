@@ -1,6 +1,6 @@
 package org.iplantc.de.theme.base.client.diskResource.sharing.presenter;
 
-import org.iplantc.de.client.sharing.SharingPresenter;
+import org.iplantc.de.commons.client.presenter.SharingPresenter;
 import org.iplantc.de.theme.base.client.diskResource.sharing.SharingMessages;
 
 import com.google.gwt.core.client.GWT;

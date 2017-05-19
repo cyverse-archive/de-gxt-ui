@@ -1,6 +1,6 @@
 package org.iplantc.de.theme.base.client.diskResource.sharing;
 
-import org.iplantc.de.client.sharing.SharingAppearance;
+import org.iplantc.de.commons.client.views.sharing.SharingAppearance;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.theme.base.client.diskResource.DiskResourceMessages;

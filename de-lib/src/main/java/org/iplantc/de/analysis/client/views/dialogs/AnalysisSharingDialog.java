@@ -2,7 +2,7 @@ package org.iplantc.de.analysis.client.views.dialogs;
 
 import org.iplantc.de.analysis.client.gin.factory.AnalysisSharingPresenterFactory;
 import org.iplantc.de.client.models.analysis.Analysis;
-import org.iplantc.de.client.sharing.SharingPresenter;
+import org.iplantc.de.commons.client.presenter.SharingPresenter;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
 import com.google.common.base.Preconditions;

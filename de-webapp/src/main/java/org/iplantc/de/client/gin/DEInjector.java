@@ -6,6 +6,7 @@ import org.iplantc.de.apps.integration.client.gin.AppEditorGinModule;
 import org.iplantc.de.apps.widgets.client.gin.AppLaunchGinModule;
 import org.iplantc.de.collaborators.client.gin.CollaboratorsGinModule;
 import org.iplantc.de.commons.client.comments.gin.CommentsGinModule;
+import org.iplantc.de.commons.client.gin.CommonsGinModule;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.desktop.client.gin.DEGinModule;
 import org.iplantc.de.diskResource.client.gin.DiskResourceGinModule;
@@ -36,7 +37,7 @@ import com.google.gwt.inject.client.Ginjector;
               CollaboratorsGinModule.class,
               NotificationGinModule.class,
               PreferencesGinModule.class,
-              ClientGinModule.class })
+              CommonsGinModule.class })
 public interface DEInjector extends Ginjector {
     public static final DEInjector INSTANCE = GWT.create(DEInjector.class);
 
