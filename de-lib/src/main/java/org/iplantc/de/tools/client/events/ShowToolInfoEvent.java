@@ -1,4 +1,4 @@
-package org.iplantc.de.apps.integration.client.events;
+package org.iplantc.de.tools.client.events;
 
 import org.iplantc.de.client.models.tool.Tool;
 
@@ -7,11 +7,11 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * @author aramsey
+ * @author sriram
  */
 public class ShowToolInfoEvent extends GwtEvent<ShowToolInfoEvent.ShowToolInfoEventHandler> {
 
-    public static interface ShowToolInfoEventHandler extends EventHandler {
+    public interface ShowToolInfoEventHandler extends EventHandler {
         void onShowToolInfo(ShowToolInfoEvent event);
     }
 

@@ -3,8 +3,10 @@ package org.iplantc.de.tools.client.views.manage;
 import org.iplantc.de.admin.desktop.client.toolAdmin.model.ToolProperties;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.tools.client.events.BeforeToolSearchEvent;
+import org.iplantc.de.tools.client.events.ShowToolInfoEvent;
 import org.iplantc.de.tools.client.events.ToolSearchResultLoadEvent;
 import org.iplantc.de.tools.client.events.ToolSelectionChangedEvent;
+import org.iplantc.de.tools.client.views.cells.ToolInfoCell;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -16,6 +18,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
@@ -29,6 +32,7 @@ import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 
 import java.util.Arrays;
 import java.util.List;
+import javax.ws.rs.HEAD;
 
 /**
  * Created by sriram on 4/21/17.
@@ -64,11 +68,16 @@ public class ManageToolsViewImpl extends Composite implements ManageToolsView {
 
     private static final ManageToolsViewUiBinder uiBinder = GWT.create(ManageToolsViewUiBinder.class);
 
+    final ToolInfoCell infoCell;
+
     @Inject
     public ManageToolsViewImpl(ManageToolsView.ManageToolsViewAppearance appearance,
-                               ManageToolsToolbarView toolbar, ToolProperties properties) {
+                               ToolProperties properties,
+                               ManageToolsToolbarView toolbar,
+                               ToolInfoCell nameCell) {
         this.appearance = appearance;
         this.toolbar = toolbar;
+        this.infoCell = nameCell;
         this.properties = properties;
         uiBinder.createAndBindUi(this);
         grid.getSelectionModel().setSelectionMode(Style.SelectionMode.MULTI);
@@ -151,7 +160,11 @@ public class ManageToolsViewImpl extends Composite implements ManageToolsView {
                 return null;
             }
         },50, appearance.status());
-        return new ColumnModel<>(Arrays.asList(nameCol, imgName, tag, status));
+        ColumnConfig<Tool, Tool> info = new ColumnConfig<>(new IdentityValueProvider<>(), 25, "");
+        info.setCell(infoCell);
+        info.setMenuDisabled(true);
+        info.setSortable(false);
+        return new ColumnModel<>(Arrays.asList(info, nameCol, imgName, tag, status));
     }
 
     @Override
@@ -171,6 +184,13 @@ public class ManageToolsViewImpl extends Composite implements ManageToolsView {
     public void loadTools(List<Tool> tools) {
         listStore.clear();
         listStore.addAll(tools);
+    }
+
+    @Override
+    public HandlerRegistration addShowToolInfoEventHandlers(ShowToolInfoEvent.ShowToolInfoEventHandler handler) {
+
+        infoCell.addShowToolInfoEventHandlers(handler);
+        return addHandler(handler, ShowToolInfoEvent.TYPE);
     }
 
     @Override

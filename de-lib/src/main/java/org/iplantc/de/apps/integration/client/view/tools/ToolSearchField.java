@@ -5,12 +5,10 @@ import org.iplantc.de.client.models.tool.Tool;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -188,14 +186,6 @@ public class ToolSearchField extends Composite implements HasSelectionHandlers<T
         combo.setWidth(250);
         combo.setHideTrigger(true);
         combo.setEmptyText(appearance.searchEmptyText());
-        combo.addSelectionHandler(new SelectionHandler<Tool>() {
-
-            @Override
-            public void onSelection(SelectionEvent<Tool> event) {
-                GWT.log("Selected " + event.getSelectedItem().getName());
-            }
-        });
-
     }
 
 }

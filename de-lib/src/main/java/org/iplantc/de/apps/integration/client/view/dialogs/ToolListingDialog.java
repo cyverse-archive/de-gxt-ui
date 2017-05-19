@@ -11,8 +11,6 @@ import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -26,36 +24,9 @@ public class ToolListingDialog extends IPlantDialog implements SelectionChangedE
 
 
     public interface ToolsListingViewAppearance {
-
-        String nameColumnHeader();
-
-        String versionColumnHeader();
-
-        String pathColumnHeader();
-
-        String attributionLabel();
-
-        String descriptionLabel();
-
         String loadingMask();
 
         String searchEmptyText();
-
-        SafeHtml detailsRenderer();
-
-        String newToolReq();
-
-        ImageResource add();
-
-        String infoDialogWidth();
-
-        String infoDialogHeight();
-
-        int nameColumnWidth();
-
-        int versionColumnWidth();
-
-        int pathColumnWidth();
 
         int dcListingDialogWidth();
 
