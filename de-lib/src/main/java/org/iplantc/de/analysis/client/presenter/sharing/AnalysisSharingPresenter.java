@@ -65,7 +65,7 @@ public class AnalysisSharingPresenter implements SharingPresenter {
                 for (AnalysisUserPermissions analysisUserPerms : analysisPermsList.getResourceUserPermissionsList()) {
                     for (UserPermission userPerms: analysisUserPerms.getPermissions()) {
 
-                        String userName = userPerms.getUser();
+                        String userName = userPerms.getSubject().getId();
                         Collaborator user = results.get(userName);
                         if (user == null) {
                             user = collaboratorsUtil.getDummyCollaborator(userName);
@@ -106,7 +106,7 @@ public class AnalysisSharingPresenter implements SharingPresenter {
             final List<String> usernames = Lists.newArrayList();
             for (AnalysisUserPermissions analysisUserPerms : analysisPermsList.getResourceUserPermissionsList()) {
                 for (UserPermission userPerm : analysisUserPerms.getPermissions()) {
-                    usernames.add(userPerm.getUser());
+                    usernames.add(userPerm.getSubject().getId());
                 }
             }
             collaboratorsServiceFacade.getUserInfo(usernames, new GetUserInfoCallback(analysisPermsList));

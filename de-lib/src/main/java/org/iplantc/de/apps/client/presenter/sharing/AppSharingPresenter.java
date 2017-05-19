@@ -60,7 +60,7 @@ public class AppSharingPresenter implements SharingPresenter {
                 FastMap<List<Sharing>> sharingMap = new FastMap<>();
                 for (AppUserPermissions appUserPerms : appPermsList.getResourceUserPermissionsList()) {
                     for (UserPermission userPerms : appUserPerms.getPermissions()) {
-                        String userName = userPerms.getUser();
+                        String userName = userPerms.getSubject().getId();
 
                         Collaborator user = results.get(userName);
                         if (user == null) {
@@ -102,7 +102,7 @@ public class AppSharingPresenter implements SharingPresenter {
             final List<String> usernames = new ArrayList<>();
             for (AppUserPermissions appUserPerms : appPermsList.getResourceUserPermissionsList()) {
                 for (UserPermission up : appUserPerms.getPermissions()) {
-                    usernames.add(up.getUser());
+                    usernames.add(up.getSubject().getId());
                 }
             }
 

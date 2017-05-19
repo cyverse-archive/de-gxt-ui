@@ -5,12 +5,9 @@ package org.iplantc.de.client.models.sharing;
  */
 public interface UserPermission {
 
-    /**
-     * @return user name
-     */
-    String getUser();
+    SharingSubject getSubject();
 
-    void setUser(String user);
+    void setSubject(SharingSubject subject);
 
     /**
      * @return permission for the user
