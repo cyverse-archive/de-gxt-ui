@@ -61,4 +61,10 @@
     <replace-with class="org.iplantc.de.theme.base.client.commons.widgets.CustomMaskDefaultAppearance">
         <when-type-is class="org.iplantc.de.commons.client.widgets.CustomMask.CustomMaskAppearance" />
     </replace-with>
+
+    <!--Sharing Permission panel-->
+    <replace-with class="org.iplantc.de.theme.base.client.commons.views.sharing.SharingPermissionNameCellDefaultAppearance">
+        <when-type-is class="org.iplantc.de.commons.client.views.sharing.SharingPermissionNameCell.SharingPermissionNameCellAppearance" />
+    </replace-with>
+
 </module>

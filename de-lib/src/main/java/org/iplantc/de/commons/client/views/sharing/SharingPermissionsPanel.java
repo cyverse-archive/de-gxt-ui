@@ -33,6 +33,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.sencha.gxt.cell.core.client.TextButtonCell;
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell.TriggerAction;
+import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.ListStore;
@@ -272,25 +273,13 @@ public class SharingPermissionsPanel
         List<ColumnConfig<Sharing, ?>> configs = new ArrayList<>();
         DataSharingProperties props = GWT.create(DataSharingProperties.class);
 
-        ColumnConfig<Sharing, String> name = new ColumnConfig<>(new ValueProvider<Sharing, String>() {
-            @Override
-            public String getValue(Sharing object) {
-                return object.getCollaboratorName();
-            }
-
-            @Override
-            public void setValue(Sharing object, String value) {
-
-            }
-
-            @Override
-            public String getPath() {
-                return null;
-            }
-        }, appearance.nameColumnWidth(), appearance.nameColumnLabel());
+        ColumnConfig<Sharing, Sharing> name = new ColumnConfig<>(new IdentityValueProvider<Sharing>("id"),
+                                                                 appearance.nameColumnWidth(),
+                                                                 appearance.nameColumnLabel());
         ColumnConfig<Sharing, PermissionValue> permission = buildPermissionColumn(props);
         ColumnConfig<Sharing, String> remove = buildRemoveColumn();
 
+        name.setCell(new SharingPermissionNameCell());
         configs.add(name);
         configs.add(permission);
         configs.add(remove);

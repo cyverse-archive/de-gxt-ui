@@ -10,5 +10,6 @@ public interface CommonsModule {
         String HELP = ".helpBtn";
         String CLOSE = ".closeBtn";
         String CANCEL = ".cancelBtn";
+        String SHARING_NAME_CELL = ".shareName";
     }
 }
