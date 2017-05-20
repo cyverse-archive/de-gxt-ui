@@ -430,10 +430,12 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
     public void go(HasOneWidget container) {
         clearRegisteredHandlers();
 
-        if(appTemplate.isPublic()!=null) {
-            setLabelOnlyEditMode(appTemplate.isPublic());
-        } else {
-            setLabelOnlyEditMode(false);
+        boolean isPublic = appTemplate.isPublic() != null ? appTemplate.isPublic() : false;
+
+        setLabelOnlyEditMode(isPublic);
+
+        if (!isPublic) {
+            checkForDeprecatedTools(appTemplate.getTools());
         }
 
         view.getEditorDriver().edit(appTemplate);
@@ -814,4 +816,16 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
         }
     }
 
+    private void checkForDeprecatedTools(final List<Tool> tools) {
+        if (tools != null && !tools.isEmpty()) {
+            if (tools.stream().anyMatch(Tool::isDeprecated)) {
+                Scheduler.get().scheduleDeferred(() -> {
+                    IplantInfoBox errorsInfo = new IplantInfoBox(appearance.warning(),
+                                                                 appearance.appUsesDeprecatedTools());
+                    errorsInfo.setIcon(MessageBox.ICONS.warning());
+                    errorsInfo.show();
+                });
+            }
+        }
+    }
 }

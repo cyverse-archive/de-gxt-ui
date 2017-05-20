@@ -10,6 +10,8 @@ public interface AppIntegrationErrorMessages {
 
     String appContainsErrorsPromptToContinue();
 
+    String appUsesDeprecatedTools();
+
     SafeHtml cannotDeleteLastArgumentGroup();
 
 }
