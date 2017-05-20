@@ -64,6 +64,8 @@ public interface AppsEditorView extends IsWidget,
 
         String done();
 
+        String appUsesDeprecatedTools();
+
         String appContainsErrorsUnableToSave();
 
         String unableToSave();

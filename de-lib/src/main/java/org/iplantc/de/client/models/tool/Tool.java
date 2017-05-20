@@ -32,6 +32,8 @@ public interface Tool extends HasId, HasDescription, HasName {
     @PropertyName("version")
     String getVersion();
 
+    boolean isDeprecated();
+
     @PropertyName("implementation")
     ToolImplementation getImplementation();
 

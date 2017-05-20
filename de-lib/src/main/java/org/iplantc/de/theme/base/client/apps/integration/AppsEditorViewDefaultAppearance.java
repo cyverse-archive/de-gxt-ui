@@ -107,6 +107,11 @@ public class AppsEditorViewDefaultAppearance implements AppsEditorView.AppsEdito
     }
 
     @Override
+    public String appUsesDeprecatedTools() {
+        return errorStrings.appUsesDeprecatedTools();
+    }
+
+    @Override
     public String appContainsErrorsUnableToSave() {
         return errorStrings.appContainsErrorsUnableToSave();
     }
