@@ -117,19 +117,7 @@ public class Sharing {
         return subject;
     }
 
-
-    public String getCollaboratorName() {
-        StringBuilder builder = new StringBuilder();
-        if (getSubject().getFirstName() != null && !getSubject().getFirstName().isEmpty()) {
-            builder.append(getSubject().getFirstName());
-            if (getSubject().getLastName() != null && !getSubject().getLastName().isEmpty()) {
-                builder.append(" ");
-                builder.append(getSubject().getLastName());
-            }
-            return builder.toString();
-        } else {
-            return getSubject().getId();
-        }
+    public String getSubjectName() {
+        return subject.getSubjectDisplayName();
     }
-
 }

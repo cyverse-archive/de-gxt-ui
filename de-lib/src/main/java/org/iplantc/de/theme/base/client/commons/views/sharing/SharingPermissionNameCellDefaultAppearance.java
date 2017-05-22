@@ -1,5 +1,6 @@
 package org.iplantc.de.theme.base.client.commons.views.sharing;
 
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.sharing.Sharing;
 import org.iplantc.de.commons.client.views.sharing.SharingPermissionNameCell;
 import org.iplantc.de.resources.client.IplantResources;
@@ -39,10 +40,11 @@ public class SharingPermissionNameCellDefaultAppearance implements SharingPermis
 
     @Override
     public void render(SafeHtmlBuilder safeHtmlBuilder, Sharing sharing, String debugID) {
-        if (sharing.getSourceId().equals("ldap")) {
-            safeHtmlBuilder.append(templates.subject(sharing.getSubject().getName(), debugID));
+        String subjectName = sharing.getSubject().getSubjectDisplayName();
+        if (sharing.getSourceId().equals(Subject.GROUP_IDENTIFIER)) {
+            safeHtmlBuilder.append(templates.group(iplantResources.viewCurrentCollabs().getSafeUri(), subjectName, debugID));
         } else {
-            safeHtmlBuilder.append(templates.group(iplantResources.viewCurrentCollabs().getSafeUri(), sharing.getSubject().getName(), debugID));
+            safeHtmlBuilder.append(templates.subject(subjectName, debugID));
         }
     }
 }

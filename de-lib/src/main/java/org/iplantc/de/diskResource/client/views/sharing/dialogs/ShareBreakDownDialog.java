@@ -118,7 +118,7 @@ public class ShareBreakDownDialog extends Dialog {
 
             @Override
             public String getValue(Sharing object) {
-                return object.getCollaboratorName();
+                return object.getSubjectName();
             }
 
             @Override
