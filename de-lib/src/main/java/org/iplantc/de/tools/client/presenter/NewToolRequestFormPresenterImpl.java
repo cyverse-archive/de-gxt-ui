@@ -10,8 +10,8 @@ import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.DiskResourceExistMap;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.toolRequests.NewToolRequest;
-import org.iplantc.de.client.models.toolRequests.RequestedToolDetails;
-import org.iplantc.de.client.models.toolRequests.ToolRequestFactory;
+import org.iplantc.de.client.models.toolRequests.ToolRequestAutoBeanFactory;
+import org.iplantc.de.client.models.toolRequests.ToolRequestDetails;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.ToolRequestServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
@@ -41,7 +41,7 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
 
     private static final DiskResourceAutoBeanFactory FS_FACTORY =
             GWT.create(DiskResourceAutoBeanFactory.class);
-    private static final ToolRequestFactory REQ_FACTORY = GWT.create(ToolRequestFactory.class);
+    private static final ToolRequestAutoBeanFactory REQ_FACTORY = GWT.create(ToolRequestAutoBeanFactory.class);
 
     private final DiskResourceServiceFacade fsServices =
             ServicesInjector.INSTANCE.getDiskResourceServiceFacade();
@@ -56,6 +56,8 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
 
     @Inject
     DiskResourceUtil diskResourceUtil;
+    private NewToolRequestFormView.Mode mode;
+    private Tool tool;
 
     @Inject
     NewToolRequestFormPresenterImpl(final NewToolRequestFormView view,
@@ -63,9 +65,10 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
         this.view = view;
         this.callback = callbackCmd;
         view.setPresenter(this);
-        setToolMode(NewToolRequestFormView.SELECTION_MODE.UPLOAD);
+        setToolMode(NewToolRequestFormView.SELECTION_MODE.LINK);
         setTestDataMode(NewToolRequestFormView.SELECTION_MODE.UPLOAD);
         setOtherDataMode(NewToolRequestFormView.SELECTION_MODE.UPLOAD);
+        view.setToolSelectionMode();
     }
 
     /* (non-Javadoc)
@@ -133,7 +136,14 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
         view.asWidget().ensureDebugId(baseID);
     }
     public void setTool(Tool tool) {
+        this.tool = tool;
         view.setTool(tool);
+    }
+
+    @Override
+    public void setMode(NewToolRequestFormView.Mode mode) {
+        this.mode = mode;
+        view.setMode(mode);
     }
 
     private final Command indicateSuccessCmd = new Command() {
@@ -227,7 +237,7 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
 
     private void submitRequest(final Iterable<Uploader> uploaders, final Command onSuccess) {
         final NewToolRequest req = getToolRequest();
-        reqServices.requestInstallation(req, new AsyncCallback<RequestedToolDetails>() {
+        reqServices.requestInstallation(req, new AsyncCallback<ToolRequestDetails>() {
             @Override
             public void onFailure(final Throwable caught) {
                 view.indicateSubmissionFailure(I18N.ERROR.newToolRequestError());
@@ -235,7 +245,7 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
             }
 
             @Override
-            public void onSuccess(final RequestedToolDetails response) {
+            public void onSuccess(final ToolRequestDetails response) {
                 onSuccess.execute();
             }
         });
@@ -314,6 +324,9 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
 
     private NewToolRequest getToolRequest() {
         final NewToolRequest req = REQ_FACTORY.makeNewToolRequest().as();
+        if (mode.equals(NewToolRequestFormView.Mode.MAKEPUBLIC)) {
+            req.setToolId(tool.getId());
+        }
         req.setName(view.getNameField().getValue());
         req.setDescription(view.getDescriptionField().getValue());
         req.setAttribution(view.getAttributionField().getValue());

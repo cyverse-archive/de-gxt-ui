@@ -1,9 +1,9 @@
 package org.iplantc.de.admin.desktop.client.toolRequest;
 
 import org.iplantc.de.client.models.IsMaskable;
-import org.iplantc.de.client.models.toolRequest.ToolRequest;
-import org.iplantc.de.client.models.toolRequest.ToolRequestDetails;
-import org.iplantc.de.client.models.toolRequest.ToolRequestUpdate;
+import org.iplantc.de.client.models.toolRequests.ToolRequest;
+import org.iplantc.de.client.models.toolRequests.ToolRequestDetails;
+import org.iplantc.de.client.models.toolRequests.ToolRequestUpdate;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.HasOneWidget;

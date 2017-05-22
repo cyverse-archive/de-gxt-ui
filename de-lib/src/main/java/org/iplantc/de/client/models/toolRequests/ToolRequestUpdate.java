@@ -1,4 +1,4 @@
-package org.iplantc.de.client.models.toolRequest;
+package org.iplantc.de.client.models.toolRequests;
 
 /**
  * @author jstroot

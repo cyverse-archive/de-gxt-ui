@@ -15,3 +15,4 @@ public interface ToolsDisplayStrings extends Messages {
 
     String toolInformation();
 }
+

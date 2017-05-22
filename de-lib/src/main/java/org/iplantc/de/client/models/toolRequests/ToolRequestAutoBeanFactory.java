@@ -1,4 +1,4 @@
-package org.iplantc.de.client.models.toolRequest;
+package org.iplantc.de.client.models.toolRequests;
 
 import org.iplantc.de.client.models.requestStatus.RequestHistory;
 
@@ -14,6 +14,6 @@ public interface ToolRequestAutoBeanFactory extends AutoBeanFactory {
     AutoBean<RequestHistory> history();
     
     AutoBean<ToolRequestUpdate> update();
-    
 
+    AutoBean<NewToolRequest> makeNewToolRequest();
 }

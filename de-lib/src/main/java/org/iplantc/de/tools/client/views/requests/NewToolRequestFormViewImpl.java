@@ -45,6 +45,8 @@ import com.sencha.gxt.widget.core.client.form.TextField;
  */
 public final class NewToolRequestFormViewImpl extends Composite implements NewToolRequestFormView {
 
+    private Mode mode;
+
     @UiTemplate("NewToolRequestFormView.ui.xml")
     interface NewToolRequestFormViewUiBinder extends UiBinder<Widget, NewToolRequestFormViewImpl> {
     }
@@ -71,19 +73,19 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
     @UiField
     FieldLabel srcLbl;
     @UiField
-    Radio toolLink;
+    Radio toolLinkRdo;
     @UiField
-    Radio toolUpld;
+    Radio toolUpldRdo;
     @UiField
-    Radio toolSlt;
+    Radio toolSltRdo;
     @UiField
-    Radio testUpld;
+    Radio testUpldRdo;
     @UiField
-    Radio testSlt;
+    Radio testSltRdo;
     @UiField
-    Radio otherUpld;
+    Radio otherUpldRdo;
     @UiField
-    Radio otherSlt;
+    Radio otherSltRdo;
     @UiField
     FieldLabel docUrlLbl;
     @UiField
@@ -97,7 +99,7 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
     @UiField
     TextArea toolAttrib;
     @UiField
-    TextField binLink;
+    TextField toolLink;
     @UiField
     TextField toolDoc;
     @UiField
@@ -151,18 +153,18 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
         initRequiredLabels();
 
         ToggleGroup grp1 = new ToggleGroup();
-        grp1.add(toolLink);
-        grp1.add(toolSlt);
-        grp1.add(toolUpld);
+        grp1.add(toolLinkRdo);
+        grp1.add(toolSltRdo);
+        grp1.add(toolUpldRdo);
 
         ToggleGroup grp2 = new ToggleGroup();
-        grp2.add(testSlt);
-        grp2.add(testUpld);
+        grp2.add(testSltRdo);
+        grp2.add(testUpldRdo);
 
 
         ToggleGroup grp3 = new ToggleGroup();
-        grp3.add(otherSlt);
-        grp3.add(otherUpld);
+        grp3.add(otherSltRdo);
+        grp3.add(otherUpldRdo);
 
     }
 
@@ -186,7 +188,7 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
                                                        1,
                                                        validationConstants.maxToolNameLength()));
         toolName.addValidator(new DiskResourceNameValidator());
-        binLink.addValidator(new UrlValidator());
+        toolLink.addValidator(new UrlValidator());
         toolDoc.addValidator(new UrlValidator());
         binUpld.addValidator(new DiskResourceNameValidator());
         testDataUpld.addValidator(new DiskResourceNameValidator());
@@ -194,34 +196,34 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
         otherDataUpld.setAllowBlank(true);
         otherDataSelect.setRequired(false);
         binSelect.setRequired(false);
-        binLink.setAllowBlank(true);
+        toolLink.setAllowBlank(true);
         binUpld.setAllowBlank(false);
         testDataUpld.setAllowBlank(false);
         testDataSelect.setRequired(false);
     }
 
-    @UiHandler("toolLink")
+    @UiHandler("toolLinkRdo")
     void onBinLinkSelect(final ValueChangeEvent<Boolean> unused) {
         if (presenter != null) {
             presenter.onToolSelectionModeChange();
         }
     }
 
-    @UiHandler("toolUpld")
+    @UiHandler("toolUpldRdo")
     void onBinUploadSelect(final ValueChangeEvent<Boolean> unused) {
         if (presenter != null) {
             presenter.onToolSelectionModeChange();
         }
     }
 
-    @UiHandler("toolSlt")
+    @UiHandler("toolSltRdo")
     void onBinSelect(final ValueChangeEvent<Boolean> unused) {
         if (presenter != null) {
             presenter.onToolSelectionModeChange();
         }
     }
 
-    @UiHandler("testSlt")
+    @UiHandler("testSltRdo")
     void onTestDataSelect(final ValueChangeEvent<Boolean> unused) {
         if (presenter != null) {
             presenter.onTestDataSelectionModeChange();
@@ -229,7 +231,7 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
 
     }
 
-    @UiHandler("testUpld")
+    @UiHandler("testUpldRdo")
     void onTestDataUpload(final ValueChangeEvent<Boolean> unused) {
         if (presenter != null) {
             presenter.onTestDataSelectionModeChange();
@@ -237,7 +239,7 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
 
     }
 
-    @UiHandler("otherUpld")
+    @UiHandler("otherUpldRdo")
     void onOtherDataUpload(final ValueChangeEvent<Boolean> unused) {
         if (presenter != null) {
             presenter.onOtherDataSeelctionModeChange();
@@ -245,7 +247,7 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
 
     }
 
-    @UiHandler("otherSlt")
+    @UiHandler("otherSltRdo")
     void onOtherDataSelect(final ValueChangeEvent<Boolean> unused) {
         if (presenter != null) {
             presenter.onOtherDataSeelctionModeChange();
@@ -297,30 +299,42 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
     }
 
     @Override
+    public void setMode(Mode mode) {
+        this.mode = mode;
+        switch (mode) {
+            case NEWTOOL:
+                break;
+            case MAKEPUBLIC:
+                toolLinkRdo.setValue(true);
+                break;
+        }
+    }
+
+    @Override
     public void setPresenter(final Presenter p) {
         this.presenter = p;
     }
 
     @Override
     public void setToolSelectionMode() {
-        if (toolLink.getValue()) {
+        if (toolLinkRdo.getValue()) {
             binOptions.setActiveWidget(binOptions.getWidget(1));
             presenter.setToolMode(SELECTION_MODE.LINK);
             binUpld.setAllowBlank(true);
             binSelect.setRequired(false);
-            binLink.setAllowBlank(false);
-        } else if (toolUpld.getValue()) {
+            toolLink.setAllowBlank(false);
+        } else if (toolUpldRdo.getValue()) {
             binOptions.setActiveWidget(binOptions.getWidget(0));
             presenter.setToolMode(SELECTION_MODE.UPLOAD);
             binUpld.setAllowBlank(false);
             binSelect.setRequired(false);
-            binLink.setAllowBlank(true);
-        } else if (toolSlt.getValue()) {
+            toolLink.setAllowBlank(true);
+        } else if (toolSltRdo.getValue()) {
             binOptions.setActiveWidget(binOptions.getWidget(2));
             presenter.setToolMode(SELECTION_MODE.SELECT);
             binUpld.setAllowBlank(true);
             binSelect.setRequired(true);
-            binLink.setAllowBlank(true);
+            toolLink.setAllowBlank(true);
         }
     }
 
@@ -341,7 +355,7 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
 
     @Override
     public IsField<String> getSourceURLField() {
-        return binLink;
+        return toolLink;
     }
 
     @Override
@@ -382,12 +396,12 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
 
     @Override
     public void setTestDataSelectMode() {
-        if (testUpld.getValue()) {
+        if (testUpldRdo.getValue()) {
             testDataOptions.setActiveWidget(testDataOptions.getWidget(0));
             presenter.setTestDataMode(SELECTION_MODE.UPLOAD);
             testDataUpld.setAllowBlank(false);
             testDataSelect.setRequired(false);
-        } else if (testSlt.getValue()) {
+        } else if (testSltRdo.getValue()) {
             testDataOptions.setActiveWidget(testDataOptions.getWidget(1));
             presenter.setTestDataMode(SELECTION_MODE.SELECT);
             testDataUpld.setAllowBlank(true);
@@ -398,10 +412,10 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
 
     @Override
     public void setOtherDataSelectMode() {
-        if (otherUpld.getValue()) {
+        if (otherUpldRdo.getValue()) {
             otherDataOptions.setActiveWidget(otherDataOptions.getWidget(0));
             presenter.setOtherDataMode(SELECTION_MODE.UPLOAD);
-        } else if (otherSlt.getValue()) {
+        } else if (otherSltRdo.getValue()) {
             otherDataOptions.setActiveWidget(otherDataOptions.getWidget(1));
             presenter.setOtherDataMode(SELECTION_MODE.SELECT);
         }
@@ -412,6 +426,9 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
        toolName.setValue(tool.getName());
        toolDesc.setValue(tool.getDescription());
        toolVersion.setValue(tool.getVersion());
+       toolLink.setValue(tool.getLocation());
+       toolUpldRdo.disable();
+       toolSltRdo.disable();
     }
 
     @Override
