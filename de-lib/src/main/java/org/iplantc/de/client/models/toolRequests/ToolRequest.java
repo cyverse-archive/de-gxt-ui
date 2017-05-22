@@ -1,8 +1,9 @@
-package org.iplantc.de.client.models.toolRequest;
+package org.iplantc.de.client.models.toolRequests;
+
+import org.iplantc.de.client.models.HasSettableId;
 
 import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
-import org.iplantc.de.client.models.HasSettableId;
 
 import java.util.Date;
 

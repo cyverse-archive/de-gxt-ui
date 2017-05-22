@@ -30,7 +30,6 @@ public class NewToolRequestDialog extends IPlantDialog {
 
     @Inject
     NewToolRequestDialog(final NewToolRequestFormPresenterFactory presenterFactory) {
-        setHeading(I18N.DISPLAY.requestNewTool());
         setPixelSize(480, 400);
         this.setResizable(false);
         setPredefinedButtons(PredefinedButton.OK, PredefinedButton.CANCEL);
@@ -62,16 +61,29 @@ public class NewToolRequestDialog extends IPlantDialog {
 
     }
 
-    @Override
-    public void show() {
-        super.show();
-        ensureDebugId(ToolsModule.RequestToolIds.TOOL_REQUEST);
-    }
 
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
         presenter.setViewDebugId(baseID + ToolsModule.RequestToolIds.TOOL_REQUEST_VIEW);
+    }
+
+    public void show(NewToolRequestFormView.Mode mode) {
+        presenter.setMode(mode);
+         switch (mode) {
+             case NEWTOOL:
+                 setHeading(I18N.DISPLAY.requestNewTool());
+                 break;
+             case MAKEPUBLIC:
+                 setHeading("Public submission form");
+                 break;
+         }
+        super.show();
+    }
+
+    @Override
+    public void show() {
+        throw new UnsupportedOperationException("Method not supported!");
     }
 
     public void setTool(Tool tool) {

@@ -5,10 +5,10 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
 import org.iplantc.de.admin.desktop.client.toolRequest.service.ToolRequestServiceFacade;
 import org.iplantc.de.client.models.HasId;
-import org.iplantc.de.client.models.toolRequest.ToolRequest;
-import org.iplantc.de.client.models.toolRequest.ToolRequestAdminAutoBeanFactory;
-import org.iplantc.de.client.models.toolRequest.ToolRequestDetails;
-import org.iplantc.de.client.models.toolRequest.ToolRequestUpdate;
+import org.iplantc.de.client.models.toolRequests.ToolRequest;
+import org.iplantc.de.client.models.toolRequests.ToolRequestAdminAutoBeanFactory;
+import org.iplantc.de.client.models.toolRequests.ToolRequestDetails;
+import org.iplantc.de.client.models.toolRequests.ToolRequestUpdate;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 

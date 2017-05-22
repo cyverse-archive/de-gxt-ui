@@ -27,6 +27,7 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
+import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.inject.Provider;
@@ -182,7 +183,7 @@ public class AppsToolbarPresenterImplTest {
         uut.onRequestToolSelected(eventMock);
 
         verify(requestToolDlgProviderMock).get();
-        verify(dlgMock).show();
+        verify(dlgMock).show(NewToolRequestFormView.Mode.NEWTOOL);
 
         verifyNoMoreInteractions(dlgMock,
                                  requestToolDlgProviderMock,

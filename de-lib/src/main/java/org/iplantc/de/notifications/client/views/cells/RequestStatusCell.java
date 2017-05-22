@@ -1,6 +1,6 @@
 package org.iplantc.de.notifications.client.views.cells;
 
-import org.iplantc.de.client.models.toolRequest.ToolRequestStatus;
+import org.iplantc.de.client.models.toolRequests.ToolRequestStatus;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;

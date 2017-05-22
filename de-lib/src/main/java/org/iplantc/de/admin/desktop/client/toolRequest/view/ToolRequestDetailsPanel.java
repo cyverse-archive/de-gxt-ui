@@ -3,7 +3,7 @@ package org.iplantc.de.admin.desktop.client.toolRequest.view;
 import org.iplantc.de.admin.desktop.client.toolRequest.ToolRequestView;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.apps.widgets.client.view.editors.widgets.CheckBoxAdapter;
-import org.iplantc.de.client.models.toolRequest.ToolRequestDetails;
+import org.iplantc.de.client.models.toolRequests.ToolRequestDetails;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;
