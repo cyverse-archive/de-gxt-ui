@@ -204,9 +204,9 @@ public class AppSharingPresenter implements SharingPresenter {
             for (String userName : sharingMap.keySet()) {
                 AppSharingRequest sharingRequest = appFactory.appSharingRequest().as();
                 SharingSubject sharingSubject = shareFactory.getSharingSubject().as();
-                sharingSubject.setSourceId("ldap");
-                sharingSubject.setId(userName);
                 List<Sharing> shareList = sharingMap.get(userName);
+                sharingSubject.setSourceId(getSourceId(shareList));
+                sharingSubject.setId(userName);
                 sharingRequest.setSubject(sharingSubject);
                 sharingRequest.setAppPermissions(buildShareAppPermissionList(shareList));
                 requests.add(sharingRequest);
@@ -217,6 +217,11 @@ public class AppSharingPresenter implements SharingPresenter {
         }
 
         return sharingRequestList;
+    }
+
+    String getSourceId(List<Sharing> shareList) {
+        Sharing share = shareList.get(0);
+        return share.getSourceId();
     }
 
     private AppUnSharingRequestList buildUnSharingRequest() {
@@ -233,7 +238,7 @@ public class AppSharingPresenter implements SharingPresenter {
                 AppSharingRequest unsharingRequest = appFactory.appSharingRequest().as();
                 SharingSubject sharingSubject = shareFactory.getSharingSubject().as();
                 sharingSubject.setId(userName);
-                sharingSubject.setSourceId("ldap");
+                sharingSubject.setSourceId(getSourceId(shareList));
                 unsharingRequest.setSubject(sharingSubject);
                 unsharingRequest.setAppPermissions(buildUnshareAppPermissionList(shareList));
                 requests.add(unsharingRequest);

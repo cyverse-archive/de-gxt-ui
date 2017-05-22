@@ -207,9 +207,9 @@ public class AnalysisSharingPresenter implements SharingPresenter {
             for (String userName : sharingMap.keySet()) {
                 AnalysisSharingRequest sharingRequest = shareFactory.AnalysisSharingRequest().as();
                 SharingSubject sharingSubject = shareFactory.getSharingSubject().as();
-                sharingSubject.setSourceId("ldap");
-                sharingSubject.setId(userName);
                 List<Sharing> shareList = sharingMap.get(userName);
+                sharingSubject.setSourceId(getSourceId(shareList));
+                sharingSubject.setId(userName);
                 sharingRequest.setSubject(sharingSubject);
                 sharingRequest.setAnalysisPermissions(buildAnalysisPermissions(shareList));
                 requests.add(sharingRequest);
@@ -219,6 +219,11 @@ public class AnalysisSharingPresenter implements SharingPresenter {
             sharingRequestList.setAnalysisSharingRequestList(requests);
         }
         return sharingRequestList;
+    }
+
+    String getSourceId(List<Sharing> shareList) {
+        Sharing share = shareList.get(0);
+        return share.getSourceId();
     }
 
     private List<AnalysisPermission> buildAnalysisPermissions(List<Sharing> shareList) {
@@ -245,7 +250,7 @@ public class AnalysisSharingPresenter implements SharingPresenter {
 
                 AnalysisUnsharingRequest unsharingRequest = shareFactory.AnalysisUnsharingRequest().as();
                 SharingSubject sharingSubject = shareFactory.getSharingSubject().as();
-                sharingSubject.setSourceId("ldap");
+                sharingSubject.setSourceId(getSourceId(shareList));
                 sharingSubject.setId(userName);
                 unsharingRequest.setSubject(sharingSubject);
                 unsharingRequest.setAnalyses(buildUnshareAnalysisPermissionList(shareList));
