@@ -4,6 +4,7 @@
 package org.iplantc.de.apps.client.presenter.sharing;
 
 import org.iplantc.de.apps.client.views.sharing.AppSharingView;
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.commons.client.gin.factory.SharingPermissionViewFactory;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
@@ -191,6 +192,12 @@ public class AppSharingPresenter implements SharingPresenter {
             IplantAnnouncer.getInstance().schedule(appearance.sharingCompleteMsg());
         }
 
+    }
+
+    @Override
+    public void setViewDebugId(String debugId) {
+        view.asWidget().ensureDebugId(debugId + AppsModule.Ids.SHARING_VIEW);
+        permissionsPanel.asWidget().ensureDebugId(debugId + AppsModule.Ids.SHARING_VIEW + AppsModule.Ids.SHARING_PERMS);
     }
 
     private AppSharingRequestList buildSharingRequest() {

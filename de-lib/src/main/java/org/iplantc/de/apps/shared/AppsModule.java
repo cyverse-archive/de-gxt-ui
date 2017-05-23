@@ -48,6 +48,9 @@ public interface AppsModule {
         String SWAP_VIEW_BTN = ".swapBtn";
         String APP_STATUS_CELL = ".status";
         String MENU_ITEM_REFRESH = ".refresh";
+        String SHARING_DLG = "appSharingDlg";
+        String SHARING_VIEW = ".view";
+        String SHARING_PERMS = ".permPanel";
     }
 }
 

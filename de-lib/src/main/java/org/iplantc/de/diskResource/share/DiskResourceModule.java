@@ -78,6 +78,10 @@ public interface DiskResourceModule {
         String MENU_ITEM_BULK_METADATA = ".bulkmetadata";
         String MENU_ITEM_REQUEST_DOI = ".requestdoi";
         String MENU_ITEM_SELECTFILE = ".selectfile";
+
+        String SHARING_DLG = "dataSharingDlg";
+        String SHARING_VIEW = ".view";
+        String SHARING_PERMS = ".permPanel";
     }
 
     interface MetadataIds {

@@ -28,7 +28,7 @@ public class SharingPermissionNameCell extends AbstractCell<Sharing> {
 
     @Override
     public void render(Context context, Sharing value, SafeHtmlBuilder sb) {
-        String debugID = baseDebugId + value.getId() + CommonsModule.IDs.SHARING_NAME_CELL;
+        String debugID = baseDebugId + "." + value.getId() + CommonsModule.IDs.SHARING_NAME_CELL;
         appearance.render(sb, value, debugID);
     }
 

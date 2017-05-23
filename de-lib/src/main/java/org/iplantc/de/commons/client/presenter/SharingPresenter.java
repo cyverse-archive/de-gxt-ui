@@ -17,4 +17,5 @@ public interface SharingPresenter extends org.iplantc.de.commons.client.presente
 
     void processRequest();
 
+    void setViewDebugId(String debugId);
 }

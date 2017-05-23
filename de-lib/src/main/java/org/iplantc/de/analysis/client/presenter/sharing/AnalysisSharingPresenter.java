@@ -5,6 +5,7 @@
 package org.iplantc.de.analysis.client.presenter.sharing;
 
 import org.iplantc.de.analysis.client.views.sharing.AnalysisSharingView;
+import org.iplantc.de.analysis.shared.AnalysisModule;
 import org.iplantc.de.commons.client.gin.factory.SharingPermissionViewFactory;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisPermission;
@@ -194,6 +195,12 @@ public class AnalysisSharingPresenter implements SharingPresenter {
         }
 
 
+    }
+
+    @Override
+    public void setViewDebugId(String debugId) {
+        sharingView.asWidget().ensureDebugId(debugId + AnalysisModule.Ids.SHARING_VIEW);
+        permissionsPanel.asWidget().ensureDebugId(debugId + AnalysisModule.Ids.SHARING_VIEW + AnalysisModule.Ids.SHARING_PERMS);
     }
 
     private AnalysisSharingRequestList buildSharingRequest() {

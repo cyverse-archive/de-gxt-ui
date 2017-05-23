@@ -26,6 +26,7 @@ import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.DataSharingView;
+import org.iplantc.de.diskResource.share.DiskResourceModule;
 import org.iplantc.de.shared.DataCallback;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -202,6 +203,12 @@ public class DataSharingPresenterImpl implements SharingPresenter {
             IplantAnnouncer.getInstance().schedule(appearance.sharingCompleteMsg());
         }
 
+    }
+
+    @Override
+    public void setViewDebugId(String debugId) {
+        view.asWidget().ensureDebugId(debugId + DiskResourceModule.Ids.SHARING_VIEW);
+        permissionsPanel.asWidget().ensureDebugId(debugId + DiskResourceModule.Ids.SHARING_VIEW + DiskResourceModule.Ids.SHARING_PERMS);
     }
 
     private List<DataPermission> buildShareDataPermissionList(List<Sharing> shareList) {

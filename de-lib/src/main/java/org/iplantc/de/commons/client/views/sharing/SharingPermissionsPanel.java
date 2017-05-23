@@ -11,6 +11,7 @@ import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.client.views.dialogs.ManageCollaboratorsDialog;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.presenter.SharingPresenter;
+import org.iplantc.de.commons.share.CommonsModule;
 import org.iplantc.de.diskResource.client.model.DataSharingKeyProvider;
 import org.iplantc.de.diskResource.client.model.DataSharingProperties;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.ShareBreakDownDialog;
@@ -39,6 +40,7 @@ import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.StringLabelProvider;
+import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
@@ -57,7 +59,7 @@ import java.util.List;
 /**
  * @author sriram, jstroot
  */
-public class SharingPermissionsPanel
+public class SharingPermissionsPanel extends Composite
         implements SharingPermissionView, UserSearchResultSelected.UserSearchResultSelectedEventHandler {
 
     @UiTemplate("SharingPermissionsView.ui.xml")
@@ -79,7 +81,6 @@ public class SharingPermissionsPanel
     private final FastMap<SharedResource> resources;
     private final SharingPresenter presenter;
     private FastMap<List<Sharing>> sharingMap;
-    final Widget widget;
 
     @Inject AsyncProviderWrapper<ManageCollaboratorsDialog> collaboratorsDialogProvider;
 
@@ -94,13 +95,26 @@ public class SharingPermissionsPanel
         this.resources = resources;
         this.appearance = appearance;
         this.searchField = searchField;
-        widget = uiBinder.createAndBindUi(this);
+        initWidget(uiBinder.createAndBindUi(this));
         searchField.addUserSearchResultSelectedEventHandler(this);
     }
 
     @Override
-    public Widget asWidget() {
-        return widget;
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        grid.ensureDebugId(baseID + CommonsModule.IDs.PERM_GRID);
+        toolbar.ensureDebugId(baseID + CommonsModule.IDs.PERM_TOOLBAR);
+        explainPanel.ensureDebugId(toolbar.getId() + CommonsModule.IDs.PERM_EXPLAIN_PNL);
+        explainBtn.ensureDebugId(explainPanel.getElement().getId() + CommonsModule.IDs.PERM_EXPLAIN_BTN);
+        chooseCollabBtn.ensureDebugId(toolbar.getId() + CommonsModule.IDs.PERM_CHOOSE_COLLAB);
+        searchField.asWidget().ensureDebugId(toolbar.getId() + CommonsModule.IDs.PERM_USER_SEARCH);
+
+        for (ColumnConfig<Sharing, ?> cc : cm.getColumns()) {
+            if (cc.getCell() instanceof SharingPermissionNameCell) {
+                ((SharingPermissionNameCell)cc.getCell()).setBaseDebugId(grid.getId());
+            }
+        }
     }
 
     @UiFactory

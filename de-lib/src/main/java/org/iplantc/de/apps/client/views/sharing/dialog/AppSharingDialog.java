@@ -5,6 +5,7 @@
 package org.iplantc.de.apps.client.views.sharing.dialog;
 
 import org.iplantc.de.apps.client.gin.factory.AppSharingPresenterFactory;
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.commons.client.presenter.SharingPresenter;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
@@ -49,6 +50,8 @@ public class AppSharingDialog extends IPlantDialog implements SelectHandler {
         sharingPresenter = factory.create(resourcesToShare);
         sharingPresenter.go(this);
         super.show();
+
+        ensureDebugId(AppsModule.Ids.SHARING_DLG);
     }
 
     @Override
@@ -56,4 +59,10 @@ public class AppSharingDialog extends IPlantDialog implements SelectHandler {
         throw new UnsupportedOperationException("This method is not supported for this class. ");
     }
 
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        sharingPresenter.setViewDebugId(baseID);
+    }
 }
