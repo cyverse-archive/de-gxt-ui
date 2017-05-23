@@ -1,5 +1,6 @@
 package org.iplantc.de.client.services;
 
+import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.sharing.ToolSharingRequestList;
 import org.iplantc.de.client.models.tool.sharing.ToolUnSharingRequestList;
@@ -24,4 +25,6 @@ public interface ToolServices {
     void unShareTool(ToolUnSharingRequestList obj, AppsCallback<String> callback);
 
     void updateTool(Tool tool, AppsCallback<Tool> appsCallback);
+
+    void getAppsForTool(String toolId, AppsCallback<List<App>> appsCallback);
 }
