@@ -316,7 +316,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
 
 
     void displayNotificationPopup(NotificationMessage nm) {
-        if (NotificationCategory.ANALYSIS.equals(nm.getCategory())) {
+        if (NotificationCategory.ANALYSIS.equals(nm.getCategory()) && nm.getContext() != null) {
             PayloadAnalysis analysisPayload =
                     AutoBeanCodex.decode(notificationFactory, PayloadAnalysis.class, nm.getContext())
                                  .as();
