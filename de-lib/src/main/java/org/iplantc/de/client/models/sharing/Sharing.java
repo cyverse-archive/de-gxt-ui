@@ -6,6 +6,7 @@ package org.iplantc.de.client.models.sharing;
 
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
+import org.iplantc.de.client.models.groups.Group;
 
 /**
  * @author sriram
@@ -69,6 +70,9 @@ public class Sharing {
     }
 
     public String getSourceId() {
+        if (subject instanceof Group) {
+            return Subject.GROUP_IDENTIFIER;
+        }
         return subject.getSourceId();
     }
 

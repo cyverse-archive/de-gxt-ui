@@ -2,6 +2,7 @@ package org.iplantc.de.client.models.collaborators;
 
 import org.iplantc.de.client.models.HasSettableId;
 
+import com.google.common.base.Strings;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.HasName;
@@ -62,6 +63,9 @@ public interface Subject extends HasSettableId, HasName {
 
     default String getSubjectDisplayName() {
         String subjectName = getName();
+        if (Strings.isNullOrEmpty(subjectName)) {
+            subjectName = getFirstName() + " " + getLastName();
+        }
         if (!isCollaboratorList() || !hasCollaboratorListLongName(subjectName)) {
             return subjectName;
         } else {
