@@ -1,14 +1,19 @@
 package org.iplantc.de.client.services.impl;
 
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
+import org.iplantc.de.client.models.apps.App;
+import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
 import org.iplantc.de.client.models.tool.sharing.ToolPermissionsRequest;
 import org.iplantc.de.client.models.tool.sharing.ToolSharingAutoBeanFactory;
 import org.iplantc.de.client.models.tool.sharing.ToolSharingRequestList;
 import org.iplantc.de.client.models.tool.sharing.ToolUnSharingRequestList;
+import org.iplantc.de.client.services.AppServiceFacade;
 import org.iplantc.de.client.services.ToolServices;
+import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.services.converters.ToolCallbackConverter;
 import org.iplantc.de.client.services.converters.ToolsCallbackConverter;
 import org.iplantc.de.shared.AppsCallback;
@@ -43,6 +48,8 @@ public class ToolServicesImpl implements ToolServices {
 
     @Inject
     ToolSharingAutoBeanFactory sharingFactory;
+    @Inject
+    AppServiceFacade.AppServiceAutoBeanFactory svcFactory;
 
     @Inject
     public ToolServicesImpl(final DiscEnvApiService deServiceFacade, final ToolAutoBeanFactory factory) {
@@ -147,6 +154,21 @@ public class ToolServicesImpl implements ToolServices {
                 new ServiceCallWrapper(BaseServiceCallWrapper.Type.PATCH, address, newTool);
 
         deServiceFacade.getServiceData(wrapper, callbackCnvt);
+    }
+
+    @Override
+    public void getAppsForTool(String toolId, AppsCallback<List<App>> appsCallback) {
+       String address = TOOLS + "/" + toolId + "/apps";
+
+       ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, List<App>>(appsCallback) {
+            @Override
+            protected List<App> convertFrom(String object) {
+                List<App> apps = AutoBeanCodex.decode(svcFactory, AppList.class, object).as().getApps();
+                return apps;
+            }
+        });
+       
     }
 
 }
