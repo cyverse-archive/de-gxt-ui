@@ -88,7 +88,7 @@
     </replace-with>
 
     <replace-with class="org.iplantc.de.theme.base.client.apps.tools.ManageToolsViewDefaultAppearance">
-        <when-type-is class="org.iplantc.de.apps.client.views.ManageToolsToolbarView.ManageToolsToolbarApperance"/>
+        <when-type-is class="org.iplantc.de.apps.client.views.ManageToolsToolbarView.ManageToolsToolbarAppearance"/>
     </replace-with>
 
     <!-- Details -->

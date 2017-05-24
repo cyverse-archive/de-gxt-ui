@@ -23,6 +23,12 @@ public interface ManageToolsView extends IsWidget, IsMaskable {
         String status();
 
         String mask();
+
+        int nameWidth();
+
+        int imgNameWidth();
+
+        int tagWidth();
     }
 
 

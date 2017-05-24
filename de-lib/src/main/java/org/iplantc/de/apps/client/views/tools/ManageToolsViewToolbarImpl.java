@@ -48,7 +48,7 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
     final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader;
 
     @Inject
-    public ManageToolsViewToolbarImpl(final ManageToolsToolbarView.ManageToolsToolbarApperance apperance) {
+    public ManageToolsViewToolbarImpl(final ManageToolsToolbarAppearance apperance) {
         loader = new PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>>(new ToolSearchRPCProxy()) ;
         toolSearch = new ToolSearchField(loader);
         initWidget(uiBinder.createAndBindUi(this));

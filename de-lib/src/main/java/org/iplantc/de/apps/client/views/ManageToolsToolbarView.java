@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.IsWidget;
  */
 public interface ManageToolsToolbarView extends IsWidget{
 
-    interface ManageToolsToolbarApperance {
+    interface ManageToolsToolbarAppearance {
 
         String tools();
 
