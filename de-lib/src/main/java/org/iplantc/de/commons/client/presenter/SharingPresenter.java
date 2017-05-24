@@ -1,6 +1,6 @@
 package org.iplantc.de.commons.client.presenter;
 
-import org.iplantc.de.client.models.diskResources.PermissionValue;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 
 public interface SharingPresenter extends org.iplantc.de.commons.client.presenter.Presenter {
 

@@ -37,7 +37,7 @@ import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingRequestList;
 import org.iplantc.de.client.models.analysis.support.AnalysisSupportAutoBeanFactory;
 import org.iplantc.de.client.models.analysis.support.AnalysisSupportRequest;
 import org.iplantc.de.client.models.analysis.support.AnalysisSupportRequestFields;
-import org.iplantc.de.client.models.diskResources.PermissionValue;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharingSubject;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
 import org.iplantc.de.client.services.DEUserSupportServiceFacade;

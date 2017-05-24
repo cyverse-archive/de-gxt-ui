@@ -5,9 +5,8 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * Created by jstroot on 3/5/15.
  *
- * @author jstroot
+ * @author sriram
  */
 public class RequestToolSelected extends GwtEvent<RequestToolSelected.RequestToolSelectedHandler> {
     public static interface HasRequestToolSelectedHandlers {
