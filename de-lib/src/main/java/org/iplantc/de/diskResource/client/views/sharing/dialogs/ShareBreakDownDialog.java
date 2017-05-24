@@ -1,6 +1,6 @@
 package org.iplantc.de.diskResource.client.views.sharing.dialogs;
 
-import org.iplantc.de.client.models.diskResources.PermissionValue;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.sharing.Sharing;
 import org.iplantc.de.client.sharing.SharingAppearance;
 import org.iplantc.de.diskResource.client.model.DataSharingKeyProvider;

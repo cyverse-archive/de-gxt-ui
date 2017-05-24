@@ -3,7 +3,7 @@ package org.iplantc.de.diskResource.client.presenters.sharing;
 import org.iplantc.de.client.gin.factory.SharingPermissionViewFactory;
 import org.iplantc.de.client.models.collaborators.Collaborator;
 import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.models.diskResources.PermissionValue;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;

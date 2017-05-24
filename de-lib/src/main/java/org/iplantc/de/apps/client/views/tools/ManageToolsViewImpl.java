@@ -71,7 +71,7 @@ public class ManageToolsViewImpl extends Composite implements ManageToolsView {
         this.toolbar = toolbar;
         this.properties = properties;
         uiBinder.createAndBindUi(this);
-        grid.getSelectionModel().setSelectionMode(Style.SelectionMode.SINGLE);
+        grid.getSelectionModel().setSelectionMode(Style.SelectionMode.MULTI);
         grid.getSelectionModel().addSelectionChangedHandler(new SelectionChangedEvent.SelectionChangedHandler<Tool>() {
             @Override
             public void onSelectionChanged(SelectionChangedEvent<Tool> event) {

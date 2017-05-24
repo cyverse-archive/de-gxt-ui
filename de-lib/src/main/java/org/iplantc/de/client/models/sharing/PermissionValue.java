@@ -1,4 +1,4 @@
-package org.iplantc.de.client.models.diskResources;
+package org.iplantc.de.client.models.sharing;
 
 public enum PermissionValue {
     read, write, own, varies;

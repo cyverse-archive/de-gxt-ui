@@ -6,6 +6,7 @@ import org.iplantc.de.apps.client.events.tools.ToolSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.tools.ToolSelectionChangedEvent;
 import org.iplantc.de.apps.integration.client.presenter.ToolSearchRPCProxy;
 import org.iplantc.de.apps.shared.AppsModule;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.tool.Tool;
 
 import com.google.gwt.core.client.GWT;
@@ -190,10 +191,10 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
                     addTool.setEnabled(true);
                     requestTool.setEnabled(true);
                     edit.setEnabled(false);
-                    delete.setEnabled(false);
+                    delete.setEnabled(true);
                     useInApp.setEnabled(false);
                     shareMenuButton.setEnabled(false);
-                    shareCollab.setEnabled(false);
+                    shareCollab.setEnabled(true);
                     sharePublic.setEnabled(false);
             }
         }
@@ -205,15 +206,15 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
     }
 
     private boolean isOwner(Tool tool) {
-        return tool.getPermission().equalsIgnoreCase("OWNER");
+        return tool.getPermission().equalsIgnoreCase(PermissionValue.own.toString());
     }
 
     private boolean hasWritePermission(Tool tool) {
-        return tool.getPermission().equalsIgnoreCase("WRITE");
+        return tool.getPermission().equalsIgnoreCase(PermissionValue.write.toString());
     }
 
     private boolean hasReadPermission(Tool tool) {
-        return tool.getPermission().equalsIgnoreCase("READ");
+        return tool.getPermission().equalsIgnoreCase(PermissionValue.read.toString());
     }
 
 

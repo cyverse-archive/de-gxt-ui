@@ -2,7 +2,7 @@ package org.iplantc.de.client.models.apps;
 
 import org.iplantc.de.client.models.HasDescription;
 import org.iplantc.de.client.models.HasQualifiedId;
-import org.iplantc.de.client.models.diskResources.PermissionValue;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.models.tool.Tool;
 

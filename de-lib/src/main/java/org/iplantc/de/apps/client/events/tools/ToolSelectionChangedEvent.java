@@ -28,15 +28,15 @@ public class ToolSelectionChangedEvent extends GwtEvent<ToolSelectionChangedEven
 
     public static final Type<ToolSelectionChangedEventHandler> TYPE = new Type<>();
 
-    private final List<Tool> ToolSelection;
+    private final List<Tool> toolSelection;
 
     public ToolSelectionChangedEvent(final List<Tool> ToolSelection) {
         Preconditions.checkNotNull(ToolSelection);
-        this.ToolSelection = ToolSelection;
+        this.toolSelection = ToolSelection;
     }
 
     public List<Tool> getToolSelection() {
-        return ToolSelection;
+        return toolSelection;
     }
 
     @Override

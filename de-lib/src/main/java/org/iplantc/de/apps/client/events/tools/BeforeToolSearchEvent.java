@@ -5,7 +5,6 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * Created by Sriram on 3/11/15.
  *
  * @author sriram
  */

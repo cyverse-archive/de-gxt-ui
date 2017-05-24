@@ -16,7 +16,7 @@ import org.iplantc.de.client.models.analysis.sharing.AnalysisUnsharingRequestLis
 import org.iplantc.de.client.models.analysis.sharing.AnalysisUserPermissions;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisUserPermissionsList;
 import org.iplantc.de.client.models.collaborators.Collaborator;
-import org.iplantc.de.client.models.diskResources.PermissionValue;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
 import org.iplantc.de.client.models.sharing.SharingSubject;
