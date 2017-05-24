@@ -14,7 +14,6 @@ import org.iplantc.de.apps.widgets.client.events.ArgumentGroupSelectedEvent.Argu
 import org.iplantc.de.apps.widgets.client.events.ArgumentSelectedEvent;
 import org.iplantc.de.apps.widgets.client.events.ArgumentSelectedEvent.ArgumentSelectedEventHandler;
 import org.iplantc.de.apps.widgets.client.view.HasLabelOnlyEditMode;
-import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -92,9 +91,7 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
     Logger LOG = Logger.getLogger("App template");
 
     @Inject
-    AsyncProviderWrapper<ToolListingDialog> dcListingDialogProvider;
-    @Inject
-    EventBus eventBus;
+    AsyncProviderWrapper<ToolListingDialog> toolListingDialogProvider;
 
     @Inject
     public AppTemplatePropertyEditor(PropertyEditorAppearance appearance,
@@ -201,7 +198,7 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
      */
     @UiHandler("searchBtn")
     void onSearchBtnClick(SelectEvent event) {
-        dcListingDialogProvider.get(new AsyncCallback<ToolListingDialog>(){
+        toolListingDialogProvider.get(new AsyncCallback<ToolListingDialog>(){
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);

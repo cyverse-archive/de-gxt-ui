@@ -11,8 +11,6 @@ import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
-import org.iplantc.de.client.models.apps.integration.Argument;
-import org.iplantc.de.client.models.apps.integration.ArgumentGroup;
 import org.iplantc.de.client.models.errorHandling.SimpleServiceError;
 import org.iplantc.de.client.services.AppTemplateServices;
 import org.iplantc.de.client.services.ToolServices;
@@ -32,7 +30,6 @@ import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpM
 import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -268,18 +265,9 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
             at.onSuccess(config.getAppTemplate().getPayload());
         } else if (Strings.isNullOrEmpty(config.getAppId())) {
             setHeading(appearance.headingText());
-
-            // Create empty AppTemplate
-            AppTemplate newAppTemplate = factory.appTemplate().as();
+            AppTemplate newAppTemplate = factory.appTemplate().as().getDefaultAppTemplate();
             newAppTemplate.setName(appearance.appDefaultName());
-            newAppTemplate.setPublic(false);
-            ArgumentGroup argGrp = factory.argumentGroup().as();
-            argGrp.setName("");
-            argGrp.setLabel(appearance.groupDefaultLabel(1));
-            argGrp.setArguments(Lists.<Argument> newArrayList());
-            newAppTemplate.setArgumentGroups(Lists.newArrayList(argGrp));
-            newAppTemplate.setId(null);
-
+            newAppTemplate.getArgumentGroups().get(0).setLabel(appearance.groupDefaultLabel(1));
             /*
              * JDS Set the id of the AppTemplate passed to the rename command to newAppTemplate. This is
              * to ensure that the window title is not changed until a new app has been saved.
