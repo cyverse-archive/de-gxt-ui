@@ -5,15 +5,17 @@
              xmlns:grid="urn:import:com.sencha.gxt.widget.core.client.grid">
 
 
-    <ui:with field="ToolListStore"
+    <ui:with field="toolListStore"
              type="com.sencha.gxt.data.shared.ListStore"/>
-    <ui:with field="ToolColumnModel"
+    <ui:with field="toolColumnModel"
              type="com.sencha.gxt.widget.core.client.grid.ColumnModel"/>
-    <ui:with field="ToolGridView"
+    <ui:with field="toolGridView"
              type="com.sencha.gxt.widget.core.client.grid.GridView">
         <ui:attributes forceFit="true"
                        autoFill="true"/>
     </ui:with>
+    <ui:with field="appearance"
+             type="org.iplantc.de.apps.client.views.tools.ManageToolsView.ManageToolsViewAppearance" />
 
 
     <container:VerticalLayoutContainer ui:field="container">
@@ -21,12 +23,12 @@
             <gxt:FramedPanel ui:field="ToolListPnl"
                              collapsible="false"
                              headerVisible="true"
-                             heading="Selected Tools"
+                             heading="{appearance.shareTools}"
                              height="200px">
                 <grid:Grid ui:field="ToolGrid"
-                           cm="{ToolColumnModel}"
-                           store="{ToolListStore}"
-                           view="{ToolGridView}"
+                           cm="{toolColumnModel}"
+                           store="{toolListStore}"
+                           view="{toolGridView}"
                            loadMask="true"
                            columnReordering="true"
                            borders="false"/>

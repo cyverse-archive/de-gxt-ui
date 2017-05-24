@@ -118,6 +118,11 @@ public class ManageToolsViewDefaultAppearance implements ManageToolsToolbarView.
     }
 
     @Override
+    public String shareTools() {
+        return toolMessages.shareTools();
+    }
+
+    @Override
     public String submitForPublicUse() {
         return toolMessages.submitForUse();
     }

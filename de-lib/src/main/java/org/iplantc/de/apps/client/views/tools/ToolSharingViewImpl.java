@@ -30,13 +30,16 @@ public class ToolSharingViewImpl implements ToolSharingView {
 
     private static ToolSharingViewUiBinder uiBinder = GWT.create(ToolSharingViewUiBinder.class);
 
+    @UiField
+    ManageToolsView.ManageToolsViewAppearance appearance;
+
     @UiTemplate("ToolSharingView.ui.xml")
     interface ToolSharingViewUiBinder extends UiBinder<Widget, ToolSharingViewImpl> {
     }
 
-    @UiField ColumnModel<Tool> ToolColumnModel;
-    @UiField(provided = true)
-    final ListStore<Tool> ToolListStore;
+    @UiField ColumnModel<Tool> toolColumnModel;
+    @UiField
+     ListStore<Tool> toolListStore;
     final Widget widget;
     @UiField
     VerticalLayoutContainer container;
@@ -47,7 +50,6 @@ public class ToolSharingViewImpl implements ToolSharingView {
 
     @Inject
     public ToolSharingViewImpl() {
-        this.ToolListStore = buildToolStore();
         widget = uiBinder.createAndBindUi(this);
     }
 
@@ -64,8 +66,8 @@ public class ToolSharingViewImpl implements ToolSharingView {
     @Override
     public void setSelectedTools(List<Tool> models) {
         if (models != null && models.size() > 0) {
-            ToolListStore.clear();
-            ToolListStore.addAll(models);
+            toolListStore.clear();
+            toolListStore.addAll(models);
         }
 
     }
@@ -90,20 +92,21 @@ public class ToolSharingViewImpl implements ToolSharingView {
             public String getPath() {
                 return "name";
             }
-        }, 180, "Name");
+        }, 180, appearance.name());
         list.add(name);
         return new ColumnModel<>(list);
     }
 
-    private ListStore<Tool> buildToolStore() {
-        ListStore<Tool> ToolStore = new ListStore<>(new ModelKeyProvider<Tool>() {
+    @UiFactory
+    public ListStore<Tool> buildToolStore() {
+        ListStore<Tool> toolListStore = new ListStore<>(new ModelKeyProvider<Tool>() {
 
             @Override
             public String getKey(Tool item) {
                 return item.getId();
             }
         });
-        return ToolStore;
+        return toolListStore;
     }
 
 }
