@@ -263,7 +263,7 @@ public class ConfigFactory {
 
     public static ManageToolsWindowConfig manageToolsWindowConfig() {
         ManageToolsWindowConfig mtwc =
-                applyWindowType(WindowType.MANAGETOOLS, factory.manageToolsWindoeConfig()).as();
+                applyWindowType(WindowType.MANAGETOOLS, factory.manageToolsWindowConfig()).as();
         return mtwc;
     }
 

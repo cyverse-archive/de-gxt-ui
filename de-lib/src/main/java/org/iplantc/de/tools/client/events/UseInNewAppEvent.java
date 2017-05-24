@@ -4,8 +4,7 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * FIXME This is more of a message than an event
- * @author jstroot
+ * @author sriram
  */
 public class UseInNewAppEvent extends GwtEvent<UseInNewAppEvent.UseInNewAppEventHandler> {
 
@@ -26,3 +25,4 @@ public class UseInNewAppEvent extends GwtEvent<UseInNewAppEvent.UseInNewAppEvent
     }
 
 }
+

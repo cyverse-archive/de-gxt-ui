@@ -2,6 +2,7 @@ package org.iplantc.de.tools.client.views.manage;
 
 import org.iplantc.de.client.models.tool.Tool;
 
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.IsWidget;
 
 /**
@@ -41,6 +42,8 @@ public interface EditToolView extends IsWidget{
         String toolInfo();
 
         String version();
+
+        SafeHtml buildRequiredFieldLabel(String label);
     }
 
     boolean validate();
