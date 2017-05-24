@@ -11,7 +11,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public class ShareToolsSelected extends GwtEvent<ShareToolsSelected.ShareToolsSelectedHandler> {
 
     public static interface ShareToolsSelectedHandler extends EventHandler {
-        void onShareToolselected(ShareToolsSelected event);
+        void onShareToolsSelected(ShareToolsSelected event);
     }
 
     public static interface HasShareToolselectedHandlers {
@@ -31,7 +31,7 @@ public class ShareToolsSelected extends GwtEvent<ShareToolsSelected.ShareToolsSe
 
     @Override
     protected void dispatch(ShareToolsSelectedHandler handler) {
-        handler.onShareToolselected(this);
+        handler.onShareToolsSelected(this);
     }
 
 }

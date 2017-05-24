@@ -45,6 +45,8 @@ public interface ManageToolsView extends IsWidget,
         int tagWidth();
 
         String tag();
+
+        String shareTools();
     }
 
 

@@ -9,5 +9,5 @@ import java.util.List;
  * Created by sriram on 5/3/17.
  */
 public interface ToolSharingPresenterFactory {
-    ToolSharingPresenter create(List<Tool> apps);
+    ToolSharingPresenter create(List<Tool> tools);
 }

@@ -145,7 +145,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     }
 
     @Override
-    public void onShareToolselected(final ShareToolsSelected event) {
+    public void onShareToolsSelected(final ShareToolsSelected event) {
         shareDialogProvider.get(new AsyncCallback<ToolSharingDialog>() {
             @Override
             public void onFailure(Throwable throwable) {
