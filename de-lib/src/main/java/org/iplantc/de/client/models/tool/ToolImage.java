@@ -20,9 +20,5 @@ public interface ToolImage extends HasName {
     @PropertyName("url")
     String getUrl();
 
-    @PropertyName("auth")
-    String getAuth();
-
-    @PropertyName("auth")
-    void setAuth(String auth);
 }
+

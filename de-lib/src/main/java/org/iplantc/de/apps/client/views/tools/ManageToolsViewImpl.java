@@ -3,7 +3,6 @@ package org.iplantc.de.apps.client.views.tools;
 import org.iplantc.de.admin.desktop.client.toolAdmin.model.ToolProperties;
 import org.iplantc.de.apps.client.views.ManageToolsToolbarView;
 import org.iplantc.de.apps.client.views.ManageToolsView;
-import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.tool.Tool;
 
@@ -35,6 +34,8 @@ public class ManageToolsViewImpl implements ManageToolsView {
 
     private final ManageToolsViewAppearance appearance;
 
+    private final ToolProperties properties;
+
     @UiTemplate("ManageToolsView.ui.xml")
     interface ManageToolsViewUiBinder extends UiBinder<Widget, ManageToolsViewImpl> {
     }
@@ -61,9 +62,10 @@ public class ManageToolsViewImpl implements ManageToolsView {
 
     @Inject
     public ManageToolsViewImpl(ManageToolsView.ManageToolsViewAppearance appearance,
-                               ManageToolsToolbarView toolbar) {
+                               ManageToolsToolbarView toolbar, ToolProperties properties) {
         this.appearance = appearance;
         this.toolbar = toolbar;
+        this.properties = properties;
         uiBinder.createAndBindUi(this);
     }
 
@@ -84,9 +86,8 @@ public class ManageToolsViewImpl implements ManageToolsView {
 
     @UiFactory
     ColumnModel<Tool> buildColumnModel() {
-        ToolProperties tp = GWT.create(ToolProperties.class);
         ColumnConfig<Tool, String> nameCol =
-                new ColumnConfig<Tool, String>(tp.name(), 150, appearance.name());
+                new ColumnConfig<Tool, String>(properties.name(), appearance.nameWidth(), appearance.name());
 
         ColumnConfig<Tool, String> imgName = new ColumnConfig<Tool, String>(new ValueProvider<Tool, String>() {
             @Override
@@ -103,7 +104,7 @@ public class ManageToolsViewImpl implements ManageToolsView {
             public String getPath() {
                 return null;
             }
-        }, 200,appearance.imaName());
+        }, appearance.imgNameWidth(),appearance.imaName());
 
         ColumnConfig<Tool, String> tag = new ColumnConfig<Tool, String>(new ValueProvider<Tool, String>() {
             @Override
@@ -120,7 +121,7 @@ public class ManageToolsViewImpl implements ManageToolsView {
             public String getPath() {
                 return null;
             }
-        },50, appearance.version());
+        },appearance.tagWidth(), appearance.version());
         return new ColumnModel<>(Arrays.asList(nameCol, imgName, tag));
     }
 

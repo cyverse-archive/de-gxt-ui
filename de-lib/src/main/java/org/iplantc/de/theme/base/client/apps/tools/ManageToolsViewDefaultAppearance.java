@@ -12,7 +12,7 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * Created by sriram on 4/21/17.
  */
-public class ManageToolsViewDefaultAppearance implements ManageToolsToolbarView.ManageToolsToolbarApperance,
+public class ManageToolsViewDefaultAppearance implements ManageToolsToolbarView.ManageToolsToolbarAppearance,
                                                          ManageToolsView.ManageToolsViewAppearance {
 
     private final ToolMessages toolMessages;
@@ -96,6 +96,21 @@ public class ManageToolsViewDefaultAppearance implements ManageToolsToolbarView.
     @Override
     public String mask() {
         return iplantDisplayStrings.loadingMask();
+    }
+
+    @Override
+    public int nameWidth() {
+        return 150;
+    }
+
+    @Override
+    public int imgNameWidth() {
+        return 200;
+    }
+
+    @Override
+    public int tagWidth() {
+        return 50;
     }
 
     @Override
