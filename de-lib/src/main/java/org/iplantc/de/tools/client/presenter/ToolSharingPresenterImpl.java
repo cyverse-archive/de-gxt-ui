@@ -1,5 +1,6 @@
 package org.iplantc.de.tools.client.presenter;
 
+import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
 import org.iplantc.de.tools.client.views.manage.ToolSharingPresenter;
 import org.iplantc.de.tools.client.views.manage.ToolSharingView;
 import org.iplantc.de.client.gin.factory.SharingPermissionViewFactory;
@@ -192,12 +193,12 @@ public class ToolSharingPresenterImpl implements ToolSharingPresenter {
         ToolUnSharingRequestList unshareRequest = buildUnSharingRequest();
         if (request != null) {
             callSharingService(request);
-            IplantAnnouncer.getInstance().schedule("Sharing request submitted");
+            announcer.schedule(new IplantAnnouncementConfig(appearance.sharingCompleteMsg()));
         }
 
         if (unshareRequest != null) {
             callUnshareService(unshareRequest);
-            IplantAnnouncer.getInstance().schedule("Request to unshare your tool has been submitted!");
+            announcer.schedule(new IplantAnnouncementConfig(appearance.sharingCompleteMsg()));
         }
     }
 

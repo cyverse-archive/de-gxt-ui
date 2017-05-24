@@ -7,7 +7,6 @@ import org.iplantc.de.client.models.tool.ToolImage;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
@@ -70,6 +69,9 @@ public class EditToolViewImpl implements EditToolView {
 
     Hidden toolId;
 
+    @UiField
+    EditToolView.EditToolViewAppearance appearance;
+
 
     @UiTemplate("EditToolView.ui.xml")
     interface EditToolViewUiBinder extends UiBinder<Widget, EditToolViewImpl> {
@@ -92,7 +94,7 @@ public class EditToolViewImpl implements EditToolView {
             return null;
         }
 
-        return SafeHtmlUtils.fromTrustedString("<span style='color:red; top:-5px;' >*</span> " + label); //$NON-NLS-1$
+        return appearance.buildRequiredFieldLabel(label); //$NON-NLS-1$
     }
 
     @Override

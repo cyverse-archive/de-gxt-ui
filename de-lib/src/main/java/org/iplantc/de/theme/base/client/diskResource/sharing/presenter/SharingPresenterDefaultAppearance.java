@@ -6,7 +6,7 @@ import org.iplantc.de.theme.base.client.diskResource.sharing.SharingMessages;
 import com.google.gwt.core.client.GWT;
 
 /**
- * @author jstroot
+ * @author sriram
  */
 public class SharingPresenterDefaultAppearance implements SharingPresenter.Appearance {
     private final SharingMessages sharingMessages;
