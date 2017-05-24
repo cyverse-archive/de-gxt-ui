@@ -86,17 +86,17 @@ public class EditToolViewImpl implements EditToolView {
 
     @Override
     public Tool getTool() {
-        Tool tool = AutoBeanCodex.decode(factory, Tool.class,"{}").as();
+        Tool tool = factory.getTool().as();
         tool.setName(name.getValue());
         tool.setDescription(desc.getValue());
         tool.setLocation(url.getValue());
 
-        ToolImage image = AutoBeanCodex.decode(factory, ToolImage.class, "{}").as();
+        ToolImage image = factory.getImage().as();
         image.setName(imgName.getValue());
         image.setTag(tag.getValue());
         image.setUrl(url.getValue());
 
-        ToolContainer container = AutoBeanCodex.decode(factory, ToolContainer.class, "{}").as();
+        ToolContainer container = factory.getContainer().as();
         container.setImage(image);
         tool.setContainer(container);
 

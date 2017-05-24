@@ -51,7 +51,6 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
         toolsView.getToolbar().addRefreshToolsSelectedEventHandler(this);
         toolsView.addToolSelectionChangedEventHandler(toolsView.getToolbar());
         toolsView.getToolbar().addNewToolSelectedHandler(this);
-        toolsView.getToolbar().addNewToolSelectedHandler(this);
         loadTools();
     }
 
