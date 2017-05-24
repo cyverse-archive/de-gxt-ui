@@ -16,8 +16,6 @@ import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
-import org.iplantc.de.client.models.apps.integration.Argument;
-import org.iplantc.de.client.models.apps.integration.ArgumentGroup;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
@@ -364,17 +362,11 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
     @Override
     public void useToolInNewApp(UseToolInNewAppEvent event) {
         AppsIntegrationWindowConfig aiwc = ConfigFactory.appsIntegrationWindowConfig(null);
-        AppTemplate appTemplate = templateAutoBeanFactory.appTemplate().as();
-        appTemplate.setTools(Arrays.asList(event.getTool()));
-        appTemplate.setPublic(false);
-        appTemplate.setName(appearance.newApp());
-        ArgumentGroup argGrp = templateAutoBeanFactory.argumentGroup().as();
-        argGrp.setName("");
-        argGrp.setLabel(appearance.sectionOne());
-        argGrp.setArguments(Lists.<Argument> newArrayList());
-        appTemplate.setArgumentGroups(Lists.newArrayList(argGrp));
-        appTemplate.setId(null);
-        aiwc.setAppTemplate(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(appTemplate)));
+        AppTemplate newAppTemplate = templateAutoBeanFactory.appTemplate().as().getDefaultAppTemplate();
+        newAppTemplate.setName(appearance.newApp());
+        newAppTemplate.getArgumentGroups().get(0).setLabel(appearance.sectionOne());
+        newAppTemplate.setTools(Arrays.asList(event.getTool()));
+        aiwc.setAppTemplate(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(newAppTemplate)));
 
         presenter.show(aiwc, true);
     }
