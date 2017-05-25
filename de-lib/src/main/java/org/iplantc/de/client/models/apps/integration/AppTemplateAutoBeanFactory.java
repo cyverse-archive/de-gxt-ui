@@ -6,7 +6,6 @@ import org.iplantc.de.client.models.errorHandling.SimpleServiceError;
 import org.iplantc.de.client.services.impl.models.AnalysisSubmissionResponse;
 
 import com.google.common.collect.Lists;
-import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
@@ -52,11 +51,9 @@ public interface AppTemplateAutoBeanFactory extends AutoBeanFactory {
      * @return  AutoBean<AppTemplate>
      */
     default AutoBean<AppTemplate> defaultAppTemplate() {
-        //still cannot inject here
-        AppTemplateAutoBeanFactory factory = GWT.create(AppTemplateAutoBeanFactory.class);
-        AppTemplate newAppTemplate = factory.appTemplate().as();
+        AppTemplate newAppTemplate = appTemplate().as();
         newAppTemplate.setPublic(false);
-        ArgumentGroup argGrp = factory.argumentGroup().as();
+        ArgumentGroup argGrp = argumentGroup().as();
         argGrp.setName("");
         argGrp.setArguments(Lists.<Argument>newArrayList());
         newAppTemplate.setArgumentGroups(Lists.newArrayList(argGrp));
