@@ -362,7 +362,7 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
     @Override
     public void useToolInNewApp(UseToolInNewAppEvent event) {
         AppsIntegrationWindowConfig aiwc = ConfigFactory.appsIntegrationWindowConfig(null);
-        AppTemplate newAppTemplate = templateAutoBeanFactory.appTemplate().as().getDefaultAppTemplate();
+        AppTemplate newAppTemplate = templateAutoBeanFactory.defaultAppTemplate().as();
         newAppTemplate.setName(appearance.newApp());
         newAppTemplate.getArgumentGroups().get(0).setLabel(appearance.sectionOne());
         newAppTemplate.setTools(Arrays.asList(event.getTool()));

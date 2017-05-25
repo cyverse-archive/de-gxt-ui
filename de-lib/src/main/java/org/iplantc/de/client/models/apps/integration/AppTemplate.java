@@ -5,8 +5,6 @@ import org.iplantc.de.client.models.HasLabel;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.tool.Tool;
 
-import com.google.common.collect.Lists;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 
@@ -71,17 +69,5 @@ public interface AppTemplate extends HasQualifiedId, HasLabel, HasName, HasDescr
     @PropertyName("debug")
     Boolean isRetainInputs();
 
-    default AppTemplate getDefaultAppTemplate() {
-        //still cannot inject here
-        AppTemplateAutoBeanFactory factory = GWT.create(AppTemplateAutoBeanFactory.class);
-        AppTemplate newAppTemplate = factory.appTemplate().as();
-        newAppTemplate.setPublic(false);
-        ArgumentGroup argGrp = factory.argumentGroup().as();
-        argGrp.setName("");
-        argGrp.setArguments(Lists.<Argument>newArrayList());
-        newAppTemplate.setArgumentGroups(Lists.newArrayList(argGrp));
-        newAppTemplate.setId(null);
-        return newAppTemplate;
-    }
-
 }
+
