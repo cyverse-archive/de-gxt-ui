@@ -137,10 +137,14 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
 
     private Presenter presenter;
 
+    private final NewToolRequestFormView.NewToolRequestFormViewAppearance appearance;
+
     @Inject
     NewToolRequestFormViewImpl(final DiskResourceSelectorFieldFactory fileSelectorFieldFactory,
-                               final IplantValidationConstants validationConstants) {
+                               final IplantValidationConstants validationConstants,
+                               final NewToolRequestFormView.NewToolRequestFormViewAppearance appearance) {
         this.validationConstants = validationConstants;
+        this.appearance = appearance;
         this.binSelect = fileSelectorFieldFactory.defaultFileSelector();
         this.testDataSelect = fileSelectorFieldFactory.defaultFileSelector();
         this.otherDataSelect = fileSelectorFieldFactory.defaultFileSelector();
@@ -170,7 +174,7 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
 
     @UiFactory
     HtmlLayoutContainer buildIntroContainer() {
-        return new HtmlLayoutContainer((SafeHtml)() -> I18N.DISPLAY.toolRequestFormIntro());
+        return new HtmlLayoutContainer((SafeHtml)() -> appearance.newToolInstruction());
     }
 
     private void initRequiredLabels() {
@@ -306,6 +310,7 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
                 break;
             case MAKEPUBLIC:
                 toolLinkRdo.setValue(true);
+                intro.setHTML(() -> appearance.newToolInstruction());
                 break;
         }
     }

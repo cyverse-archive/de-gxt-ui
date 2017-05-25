@@ -4,7 +4,6 @@ import org.iplantc.de.tools.client.views.manage.ManageToolsToolbarView;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
-import org.iplantc.de.theme.base.client.apps.ToolMessages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;

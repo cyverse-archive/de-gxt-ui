@@ -17,6 +17,16 @@ public interface NewToolRequestFormView extends IsWidget {
         NEWTOOL, MAKEPUBLIC;
     }
 
+    interface NewToolRequestFormViewAppearance  {
+        String newToolRequest();
+
+        String makePublicRequest();
+
+        String newToolInstruction();
+
+        String makePublicInstruction();
+    }
+
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
         /**
          * The method to be called when the user clicks the cancel button.
