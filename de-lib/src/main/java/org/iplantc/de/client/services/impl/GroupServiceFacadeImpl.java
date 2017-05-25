@@ -88,7 +88,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     @Override
     public void getMembers(Group group, AsyncCallback<List<Subject>> callback) {
         String groupName = group.getName();
-        String address = LISTS + "/" + URL.encodeQueryString(groupName) + "/members";
+        String address = LISTS + "/" + URL.encode(groupName) + "/members";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new SubjectListCallbackConverter(callback, collabFactory));
@@ -99,7 +99,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
         String groupName = group.getName();
         String subjectId = member.getId();
 
-        String address = LISTS + "/" + groupName + "/members/" + subjectId;
+        String address = LISTS + "/" + URL.encode(groupName) + "/members/" + subjectId;
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(PUT, address);
         deService.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
@@ -110,7 +110,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
         String groupName = group.getName();
         String subjectId = member.getId();
 
-        String address = LISTS + "/" + groupName + "/members/" + subjectId;
+        String address = LISTS + "/" + URL.encode(groupName) + "/members/" + subjectId;
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address);
         deService.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
@@ -127,7 +127,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
                                    .collect(Collectors.toList());
         request.setMembers(ids);
 
-        String address = LISTS + "/" + groupName + "/members";
+        String address = LISTS + "/" + URL.encode(groupName) + "/members";
 
         Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
 
