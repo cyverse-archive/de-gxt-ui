@@ -65,9 +65,10 @@ public interface GroupServiceFacade {
 
     /**
      * Update the details of a Collaborator List
+     * @param originalGroup
      * @param group
      * @param callback
      */
-    void updateGroup(Group group, AsyncCallback<Group> callback);
+    void updateGroup(String originalGroup, Group group, AsyncCallback<Group> callback);
 
 }

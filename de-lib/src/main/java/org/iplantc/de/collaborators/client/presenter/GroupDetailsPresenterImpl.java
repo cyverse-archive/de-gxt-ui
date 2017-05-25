@@ -38,6 +38,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     private GroupView.GroupViewAppearance appearance;
     private HandlerManager handlerManager;
     GroupDetailsView.MODE mode;
+    String originalGroup;
 
     @Inject IplantAnnouncer announcer;
 
@@ -76,6 +77,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
                     view.addMembers(result);
                 }
             });
+            this.originalGroup = group.getName();
         } else {
             group = factory.getGroup().as();
         }
@@ -120,7 +122,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     }
 
     void updateGroup(Group group) {
-        serviceFacade.updateGroup(group, new AsyncCallback<Group>() {
+        serviceFacade.updateGroup(originalGroup, group, new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
@@ -169,11 +171,13 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
                 @Override
                 public void onFailure(Throwable caught) {
                     ErrorHandler.post(caught);
+                    view.unmask();
                 }
 
                 @Override
                 public void onSuccess(Void result) {
                     view.addMembers(Lists.newArrayList(subject));
+                    view.unmask();
                 }
             });
         }

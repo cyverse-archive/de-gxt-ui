@@ -190,7 +190,7 @@ public class GroupDetailsPresenterImplTest {
 
         /** CALL METHOD UNDER TEST **/
         spy.updateGroup(groupMock);
-        verify(serviceFacadeMock).updateGroup(eq(groupMock), groupCallbackCaptor.capture());
+        verify(serviceFacadeMock).updateGroup(originalGroup, eq(groupMock), groupCallbackCaptor.capture());
         groupCallbackCaptor.getValue().onSuccess(groupMock);
 
         verify(handlerManagerMock).fireEvent(isA(GroupSaved.class));

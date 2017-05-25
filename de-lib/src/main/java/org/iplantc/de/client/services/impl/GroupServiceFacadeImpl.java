@@ -2,6 +2,7 @@ package org.iplantc.de.client.services.impl;
 
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.DELETE;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PATCH;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PUT;
 
@@ -142,12 +143,12 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void updateGroup(Group group, AsyncCallback<Group> callback) {
-        String address = LISTS;
+    public void updateGroup(String originalGroup, Group group, AsyncCallback<Group> callback) {
+        String address = LISTS + "/" + URL.encode(originalGroup);
 
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(group));
 
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(PUT, address, encode.getPayload());
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(PATCH, address, encode.getPayload());
         deService.getServiceData(wrapper, new GroupCallbackConverter(callback, factory));
     }
 
