@@ -9,10 +9,12 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.pipelines.Pipeline;
 import org.iplantc.de.client.models.pipelines.PipelineAppMapping;
 import org.iplantc.de.client.models.pipelines.PipelineTask;
+import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.presenter.Presenter;
+import org.iplantc.de.commons.client.views.dialogs.IplantInfoBox;
 import org.iplantc.de.pipelines.client.dnd.AppsGridDragHandler;
 import org.iplantc.de.pipelines.client.dnd.PipelineBuilderDNDHandler;
 import org.iplantc.de.pipelines.client.dnd.PipelineBuilderDropHandler;
@@ -27,6 +29,7 @@ import org.iplantc.de.resources.client.messages.I18N;
 import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.base.Strings;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.editor.client.EditorError;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -42,6 +45,8 @@ import com.sencha.gxt.dnd.core.client.DND.Operation;
 import com.sencha.gxt.dnd.core.client.DragSource;
 import com.sencha.gxt.dnd.core.client.DropTarget;
 import com.sencha.gxt.widget.core.client.Dialog;
+import com.sencha.gxt.widget.core.client.box.MessageBox;
+import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.Container;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.form.error.DefaultEditorError;
@@ -62,6 +67,28 @@ public class PipelineViewPresenter implements Presenter,
                                               PipelineAppOrderView.Presenter,
                                               PipelineAppMappingView.Presenter,
                                               AppSelectionDialog.Presenter {
+
+    private final class ConfirmAddDeprecatedApp extends IplantInfoBox {
+        private final Command addConfirmed;
+
+        private ConfirmAddDeprecatedApp(final Command addConfirmed) {
+            super(I18N.DISPLAY.confirmAction(), I18N.ERROR.workflowAddingDeprecatedTask());
+
+            setIcon(MessageBox.ICONS.warning());
+            setPredefinedButtons(PredefinedButton.OK, PredefinedButton.CANCEL);
+
+            this.addConfirmed = addConfirmed;
+        }
+
+        @Override
+        protected void onButtonPressed(TextButton button) {
+            if (button == getButtonBar().getItemByItemId(PredefinedButton.OK.name())) {
+                addConfirmed.execute();
+            }
+
+            hide();
+        }
+    }
 
     private final class PipelineSaveCallback extends AppsCallback<String> {
         private final Pipeline pipeline;
@@ -166,6 +193,8 @@ public class PipelineViewPresenter implements Presenter,
     public void setPipeline(Pipeline pipeline) {
         if (pipeline == null) {
             pipeline = utils.getPipelineFactory().pipeline().as();
+        } else {
+            checkForDeprecatedTools(pipeline.getApps());
         }
         view.setPipeline(pipeline);
     }
@@ -177,6 +206,22 @@ public class PipelineViewPresenter implements Presenter,
             pipeline = utils.serviceJsonToPipeline(serviceWorkflowJson);
         }
         setPipeline(pipeline);
+    }
+
+    private void checkForDeprecatedTools(final List<PipelineTask> apps) {
+        if (apps != null && !apps.isEmpty()) {
+            if (apps.stream().anyMatch(app -> ((app.getTool() != null) && app.getTool()
+                                                                             .getContainer()
+                                                                             .getImage()
+                                                                             .isDeprecated()))) {
+                Scheduler.get().scheduleDeferred(() -> {
+                    IplantInfoBox errorsInfo = new IplantInfoBox(I18N.DISPLAY.warning(),
+                                                                 I18N.ERROR.workflowUsesDeprecatedTools());
+                    errorsInfo.setIcon(MessageBox.ICONS.warning());
+                    errorsInfo.show();
+                });
+            }
+        }
     }
 
     @Override
@@ -481,13 +526,23 @@ public class PipelineViewPresenter implements Presenter,
             utils.appToPipelineApp(selectedApp, new AsyncCallback<PipelineTask>() {
 
                 @Override
-                public void onSuccess(PipelineTask result) {
+                public void onSuccess(final PipelineTask result) {
                     if (result != null) {
-                        ListStore<PipelineTask> store = view.getPipelineAppStore();
-                        result.setStep(store.size());
-                        store.add(result);
-                        appSelectView.updateStatusBar(store.size(), result.getName());
-                        view.getMappingPanel().setValue(store.getAll());
+                        final Command addConfirmed = () -> {
+                            ListStore<PipelineTask> store = view.getPipelineAppStore();
+                            result.setStep(store.size());
+                            store.add(result);
+                            appSelectView.updateStatusBar(store.size(), result.getName());
+                            view.getMappingPanel().setValue(store.getAll());
+                        };
+
+                        final Tool tool = result.getTool();
+
+                        if (tool != null && tool.getContainer().getImage().isDeprecated()) {
+                            new ConfirmAddDeprecatedApp(addConfirmed).show();
+                        } else {
+                            addConfirmed.execute();
+                        }
                     }
                 }
 
@@ -512,9 +567,18 @@ public class PipelineViewPresenter implements Presenter,
         utils.appToPipelineApp(app, new AsyncCallback<PipelineTask>() {
 
             @Override
-            public void onSuccess(PipelineTask result) {
+            public void onSuccess(final PipelineTask result) {
                 if (result != null) {
-                    view.getPipelineCreator().appendApp(result);
+                    final Command addConfirmed = () -> view.getPipelineCreator().appendApp(result);
+
+                    final Tool tool = result.getTool();
+
+                    if (tool != null && tool.getContainer().getImage().isDeprecated()) {
+                        new ConfirmAddDeprecatedApp(addConfirmed).show();
+                    } else {
+                        addConfirmed.execute();
+                    }
+
                     unmaskPipelineBuilder();
                 }
             }

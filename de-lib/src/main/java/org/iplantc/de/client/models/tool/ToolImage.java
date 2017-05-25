@@ -19,4 +19,6 @@ public interface ToolImage extends HasName {
 
     @PropertyName("url")
     String getUrl();
+
+    boolean isDeprecated();
 }
