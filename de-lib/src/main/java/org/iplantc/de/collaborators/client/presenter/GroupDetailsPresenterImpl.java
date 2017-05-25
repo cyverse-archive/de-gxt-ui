@@ -66,6 +66,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
 
     void getGroupMembers(Group group) {
         if (GroupDetailsView.MODE.EDIT == mode) {
+            this.originalGroup = group.getName();
             serviceFacade.getMembers(group, new AsyncCallback<List<Subject>>() {
                 @Override
                 public void onFailure(Throwable caught) {
@@ -77,7 +78,6 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
                     view.addMembers(result);
                 }
             });
-            this.originalGroup = group.getName();
         } else {
             group = factory.getGroup().as();
         }
