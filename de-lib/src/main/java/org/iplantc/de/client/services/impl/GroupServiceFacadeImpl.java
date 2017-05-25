@@ -132,7 +132,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
         Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
 
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(PUT, address, encode.getPayload());
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
         deService.getServiceData(wrapper, new AsyncCallbackConverter<String, List<UpdateMemberResult>>(callback) {
             @Override
             protected List<UpdateMemberResult> convertFrom(String object) {
