@@ -16,8 +16,6 @@ import com.google.inject.Inject;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 
-import javax.ws.rs.HEAD;
-
 /**
  * @author sriram
  *
@@ -27,9 +25,12 @@ public class NewToolRequestDialog extends IPlantDialog {
 
     private Tool tool;
     private final NewToolRequestFormView.Presenter presenter;
+    private final NewToolRequestFormView.NewToolRequestFormViewAppearance appearance;
 
     @Inject
-    NewToolRequestDialog(final NewToolRequestFormPresenterFactory presenterFactory) {
+    NewToolRequestDialog(final NewToolRequestFormPresenterFactory presenterFactory,
+                         NewToolRequestFormView.NewToolRequestFormViewAppearance appearance) {
+        this.appearance = appearance;
         setPixelSize(480, 400);
         this.setResizable(false);
         setPredefinedButtons(PredefinedButton.OK, PredefinedButton.CANCEL);
@@ -72,10 +73,10 @@ public class NewToolRequestDialog extends IPlantDialog {
         presenter.setMode(mode);
          switch (mode) {
              case NEWTOOL:
-                 setHeading(I18N.DISPLAY.requestNewTool());
+                 setHeading(appearance.newToolRequest());
                  break;
              case MAKEPUBLIC:
-                 setHeading("Public submission form");
+                 setHeading(appearance.makePublicRequest());
                  break;
          }
         super.show();

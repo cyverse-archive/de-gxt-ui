@@ -2,9 +2,7 @@ package org.iplantc.de.theme.base.client.tools;
 
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
-import org.iplantc.de.theme.base.client.apps.ToolMessages;
 import org.iplantc.de.tools.client.views.manage.EditToolView;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
