@@ -265,7 +265,7 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
             at.onSuccess(config.getAppTemplate().getPayload());
         } else if (Strings.isNullOrEmpty(config.getAppId())) {
             setHeading(appearance.headingText());
-            AppTemplate newAppTemplate = factory.appTemplate().as().getDefaultAppTemplate();
+            AppTemplate newAppTemplate = factory.defaultAppTemplate().as();
             newAppTemplate.setName(appearance.appDefaultName());
             newAppTemplate.getArgumentGroups().get(0).setLabel(appearance.groupDefaultLabel(1));
             /*
