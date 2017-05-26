@@ -86,7 +86,8 @@ public interface AppsListView extends IsWidget,
      * To update the {@code ListStore}, it listens for {@link AppCategory} selection and search result
      * load events.
      */
-    interface Presenter extends AppCategorySelectionChangedEvent.AppCategorySelectionChangedEventHandler,
+    interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter,
+                                AppCategorySelectionChangedEvent.AppCategorySelectionChangedEventHandler,
                                 AppSearchResultLoadEvent.AppSearchResultLoadEventHandler,
                                 StoreAddEvent.HasStoreAddHandlers<App>,
                                 StoreRemoveEvent.HasStoreRemoveHandler<App>,
@@ -106,6 +107,8 @@ public interface AppsListView extends IsWidget,
         void go(CardLayoutContainer container);
 
         void setViewDebugId(String baseID);
+
+        void loadApps(List<App> apps);
     }
 
     List<DragSource> getAppsDragSources();

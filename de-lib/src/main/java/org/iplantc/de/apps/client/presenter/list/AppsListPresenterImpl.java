@@ -47,6 +47,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.data.shared.ListStore;
@@ -102,19 +103,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
         @Override
         public void onSuccess(final List<App> apps) {
-            listStore.clear();
-            listStore.addAll(apps);
-
-            if (getDesiredSelectedApp() != null) {
-
-                activeView.select(getDesiredSelectedApp(), false);
-
-            } else if (listStore.size() > 0) {
-                // Select first app
-                activeView.select(listStore.get(0), false);
-            }
-            setDesiredSelectedApp(null);
-            activeView.unmask();
+            loadApps(apps);
         }
     }
 
@@ -173,6 +162,30 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
         cards.add(tileView);
         cards.add(gridView);
+    }
+
+    @Override
+    public void go(HasOneWidget widget) {
+        //by default support only gridView
+        widget.setWidget(gridView);
+        activeView = gridView;
+    }
+
+    @Override
+    public void loadApps(List<App> apps) {
+        listStore.clear();
+        listStore.addAll(apps);
+
+        if (getDesiredSelectedApp() != null) {
+
+            activeView.select(getDesiredSelectedApp(), false);
+
+        } else if (listStore.size() > 0) {
+            // Select first app
+            activeView.select(listStore.get(0), false);
+        }
+        setDesiredSelectedApp(null);
+        activeView.unmask();
     }
 
     @Override

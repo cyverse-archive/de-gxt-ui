@@ -113,4 +113,24 @@ public class ToolInfoCellDefaultAppearance implements ToolInfoCell.ToolInfoCellA
     public String descriptionLabel() {
         return displayStrings.descriptionLabel();
     }
+
+    @Override
+    public String tabWidth() {
+        return "500px";
+    }
+
+    @Override
+    public String tabHeight() {
+        return "300px";
+    }
+
+    @Override
+    public String toolInformation() {
+        return displayStrings.toolInformation();
+    }
+
+    @Override
+    public String appsUsingTool() {
+        return displayStrings.appUsingTool();
+    }
 }
