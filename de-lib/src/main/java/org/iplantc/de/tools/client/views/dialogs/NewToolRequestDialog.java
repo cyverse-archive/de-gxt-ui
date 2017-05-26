@@ -10,6 +10,7 @@ import org.iplantc.de.resources.client.messages.I18N;
 import org.iplantc.de.tools.client.gin.factory.NewToolRequestFormPresenterFactory;
 import org.iplantc.de.tools.client.gin.factory.NewToolRequestFormViewFactory;
 import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
+import org.iplantc.de.tools.shared.ToolsModule;
 
 import com.google.gwt.user.client.Command;
 import com.google.inject.Inject;
@@ -34,6 +35,7 @@ public class NewToolRequestDialog extends IPlantDialog {
     private static final String ARCH32 = "32-bit Generic";
     private static final String ARCH64 = "64-bit Generic";
     private static final String OTHERS = "Others";
+    private final NewToolRequestFormView.Presenter presenter;
 
     // TODO this should be part of a widget factory for the NewToolRequestFormView.
     private static ComboBox<Architecture> makeArchitectureChooser() {
@@ -94,7 +96,7 @@ public class NewToolRequestDialog extends IPlantDialog {
         final ComboBox<YesNoMaybe> multithreadChooser = makeMultithreadChooser();
         final NewToolRequestFormView
                 view = viewFactory.createNewToolRequestFormView(archChooser, multithreadChooser);
-        final NewToolRequestFormView.Presenter p = presenterFactory.createPresenter(view, new Command() {
+        presenter = presenterFactory.createPresenter(view, new Command() {
 
             @Override
             public void execute() {
@@ -102,13 +104,14 @@ public class NewToolRequestDialog extends IPlantDialog {
 
             }
         });
-        p.go(this);
+        presenter.go(this);
+        presenter.setViewDebugId(ToolsModule.ToolIds.TOOLS_VIEW);
         
         addOkButtonSelectHandler(new SelectHandler() {
             
             @Override
             public void onSelect(SelectEvent event) {
-                p.onSubmitBtnClick();
+                presenter.onSubmitBtnClick();
             }
         });
         
@@ -116,12 +119,21 @@ public class NewToolRequestDialog extends IPlantDialog {
             
             @Override
             public void onSelect(SelectEvent event) {
-                p.onCancelBtnClick();
+                presenter.onCancelBtnClick();
             }
         });
 
     }
-    
 
+    @Override
+    public void show() {
+        super.show();
+        ensureDebugId(ToolsModule.RequestToolIds.TOOL_REQUEST);
+    }
 
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+        presenter.setViewDebugId(baseID + ToolsModule.RequestToolIds.TOOL_REQUEST_VIEW);
+    }
 }

@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.tools.client.views.manage.EditToolView;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
+import org.iplantc.de.tools.shared.ToolsModule;
 
 import com.google.common.base.Strings;
 import com.google.gwt.user.client.Command;
@@ -54,8 +55,9 @@ public class EditToolDialog extends IPlantDialog {
 
     public void show(ManageToolsView.Presenter presenter) {
         this.presenter = presenter;
-        add(editToolView.asWidget());
+        add(editToolView);
         super.show();
+        ensureDebugId(ToolsModule.EditToolIds.EDIT_DIALOG);
     }
 
     public void show() {
@@ -69,4 +71,11 @@ public class EditToolDialog extends IPlantDialog {
             EditToolDialog.this.hide();
         }
     }
+    
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+        editToolView.asWidget().ensureDebugId(baseID + ToolsModule.EditToolIds.EDIT_VIEW);
+    }
+
 }

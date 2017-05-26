@@ -10,6 +10,7 @@ import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldF
 import org.iplantc.de.diskResource.client.views.widgets.FileSelectorField;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
 import org.iplantc.de.resources.client.messages.I18N;
+import org.iplantc.de.tools.shared.ToolsModule;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -389,6 +390,28 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
            otherDataOptions.setActiveWidget(otherDataOptions.getWidget(1));
            presenter.setOtherDataMode(SELECTION_MODE.SELECT);
        }
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        toolLink.ensureDebugId(baseID + ToolsModule.RequestToolIds.toolLink);
+        toolUpld.ensureDebugId(baseID + ToolsModule.RequestToolIds.toolUpld);
+        toolSlt.ensureDebugId(baseID + ToolsModule.RequestToolIds.toolSlt);
+        testUpld.ensureDebugId(baseID + ToolsModule.RequestToolIds.testUpld);
+        testSlt.ensureDebugId(baseID + ToolsModule.RequestToolIds.testSlt);
+        otherUpld.ensureDebugId(baseID + ToolsModule.RequestToolIds.otherUpld);
+        otherSlt.ensureDebugId(baseID + ToolsModule.RequestToolIds.otherSlt);
+        toolName.ensureDebugId(baseID + ToolsModule.RequestToolIds.toolName);
+        toolDesc.ensureDebugId(baseID + ToolsModule.RequestToolIds.toolDesc);
+        toolAttrib.ensureDebugId(baseID + ToolsModule.RequestToolIds.toolAttrib);
+        binLink.ensureDebugId(baseID + ToolsModule.RequestToolIds.binLink);
+        toolDoc.ensureDebugId(baseID + ToolsModule.RequestToolIds.toolDoc);
+        toolVersion.ensureDebugId(baseID + ToolsModule.RequestToolIds.toolVer);
+        runInfo.ensureDebugId(baseID + ToolsModule.RequestToolIds.runInfo);
+        otherInfo.ensureDebugId(baseID + ToolsModule.RequestToolIds.otherInfo);
+        binUpld.ensureDebugId(baseID + ToolsModule.RequestToolIds.binUpld);
+        testDataUpld.ensureDebugId(baseID + ToolsModule.RequestToolIds.testDataUpld);
+        otherDataUpld.ensureDebugId(baseID + ToolsModule.RequestToolIds.otherDataUpld);
     }
 
 }

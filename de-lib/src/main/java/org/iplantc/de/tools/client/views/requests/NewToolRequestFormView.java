@@ -54,6 +54,8 @@ public interface NewToolRequestFormView extends IsWidget {
         void onTestDataSelectionModeChange();
 
         void onOtherDataSeelctionModeChange();
+
+        void setViewDebugId(String baseID);
     }
 
     enum SELECTION_MODE {
