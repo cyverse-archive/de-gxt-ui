@@ -105,8 +105,6 @@ public class NewToolRequestDialog extends IPlantDialog {
             }
         });
         presenter.go(this);
-        presenter.setViewDebugId(ToolsModule.ToolIds.TOOLS_VIEW);
-        
         addOkButtonSelectHandler(new SelectHandler() {
             
             @Override
