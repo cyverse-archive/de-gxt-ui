@@ -31,7 +31,7 @@
                     <container:child>
                         <form:FieldLabel ui:field="nameLbl" text="{appearance.toolName}">
                             <form:widget>
-                                <form:TextField ui:field="name" allowBlank="false" debugId="idToolName"/>
+                                <form:TextField ui:field="name" allowBlank="false"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
@@ -39,7 +39,7 @@
                     <container:child>
                         <form:FieldLabel text="{appearance.description}">
                             <form:widget>
-                                <form:TextArea ui:field="desc" allowBlank="true" debugId="idToolDesc"/>
+                                <form:TextArea ui:field="desc" allowBlank="true"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
@@ -48,7 +48,7 @@
                         <form:FieldLabel ui:field="versionLbl" text="{appearance.version}">
                             <form:widget>
                                 <form:TextField ui:field="version" allowBlank="false"
-                                                debugId="idToolVersion"/>
+                                />
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
@@ -56,7 +56,7 @@
                     <container:child>
                         <form:FieldLabel ui:field="imgLbl" text="{appearance.imgName}">
                             <form:widget>
-                                <form:TextField ui:field="imgName" allowBlank="false" debugId="idImgName"/>
+                                <form:TextField ui:field="imgName" allowBlank="false"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
@@ -64,7 +64,7 @@
                     <container:child>
                         <form:FieldLabel text="{appearance.tag}">
                             <form:widget>
-                                <form:TextField ui:field="tag" allowBlank="true" debugId="idToolTag"/>
+                                <form:TextField ui:field="tag" allowBlank="true"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
@@ -72,7 +72,7 @@
                     <container:child>
                         <form:FieldLabel text="{appearance.dockerUrl}">
                             <form:widget>
-                                <form:TextField ui:field="url" allowBlank="true" debugId="idDockerUrl"/>
+                                <form:TextField ui:field="url" allowBlank="true"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
@@ -85,25 +85,22 @@
                 <container:VBoxLayoutContainer VBoxLayoutAlign="STRETCH">
                     <form:FieldLabel text="{appearance.cpuShare}">
                         <form:widget>
-                            <form:TextField ui:field="cpu" allowBlank="true" enabled="false" debugId="idCpu"/>
+                            <form:TextField ui:field="cpu" allowBlank="true" enabled="false"/>
                         </form:widget>
                     </form:FieldLabel>
                     <form:FieldLabel text="{appearance.memLimit}">
                         <form:widget>
-                            <form:TextField ui:field="memory" allowBlank="true" enabled="false"
-                                            debugId="idMemLimit"/>
+                            <form:TextField ui:field="memory" allowBlank="true" enabled="false"/>
                         </form:widget>
                     </form:FieldLabel>
                     <form:FieldLabel text="{appearance.nwMode}">
                         <form:widget>
-                            <form:TextField ui:field="network" allowBlank="true" enabled="false"
-                                            debugId="idNwMode"/>
+                            <form:TextField ui:field="network" allowBlank="true" enabled="false"/>
                         </form:widget>
                     </form:FieldLabel>
                     <form:FieldLabel text="{appearance.timeLimit}">
                         <form:widget>
-                            <form:TextField ui:field="time" allowBlank="true" enabled="false"
-                                            debugId="idTimeLimit"/>
+                            <form:TextField ui:field="time" allowBlank="true" enabled="false"/>
                         </form:widget>
                     </form:FieldLabel>
                 </container:VBoxLayoutContainer>

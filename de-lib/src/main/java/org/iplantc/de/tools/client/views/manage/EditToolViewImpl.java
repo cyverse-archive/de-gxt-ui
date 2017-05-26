@@ -4,12 +4,14 @@ import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
 import org.iplantc.de.client.models.tool.ToolContainer;
 import org.iplantc.de.client.models.tool.ToolImage;
+import org.iplantc.de.tools.shared.ToolsModule;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -29,7 +31,7 @@ import java.util.List;
 /**
  * Created by sriram on 4/27/17.
  */
-public class EditToolViewImpl implements EditToolView {
+public class EditToolViewImpl extends Composite implements EditToolView {
 
     @Inject
     ToolAutoBeanFactory factory;
@@ -67,6 +69,18 @@ public class EditToolViewImpl implements EditToolView {
     @UiField
     FieldLabel imgLbl;
 
+    @UiField
+    TextField cpu;
+
+    @UiField
+    TextField memory;
+
+    @UiField
+    TextField network;
+
+    @UiField
+    TextField time;
+
     Hidden toolId;
 
     @UiField
@@ -75,14 +89,14 @@ public class EditToolViewImpl implements EditToolView {
 
     @UiTemplate("EditToolView.ui.xml")
     interface EditToolViewUiBinder extends UiBinder<Widget, EditToolViewImpl> {
-        
+
     }
 
     private static  final  EditToolViewUiBinder uiBinder = GWT.create(EditToolViewUiBinder.class);
 
     @Inject
     public EditToolViewImpl() {
-        uiBinder.createAndBindUi(this);
+        initWidget(uiBinder.createAndBindUi(this));
         nameLbl.setHTML(buildRequiredFieldLabel(nameLbl.getText()));
         versionLbl.setHTML(buildRequiredFieldLabel(versionLbl.getText()));
         imgLbl.setHTML(buildRequiredFieldLabel(imgLbl.getText()));
@@ -95,11 +109,6 @@ public class EditToolViewImpl implements EditToolView {
         }
 
         return appearance.buildRequiredFieldLabel(label); //$NON-NLS-1$
-    }
-
-    @Override
-    public Widget asWidget() {
-        return container;
     }
 
     @Override
@@ -150,6 +159,21 @@ public class EditToolViewImpl implements EditToolView {
         url.setEnabled(false);
         imgName.setEnabled(false);
         tag.setEnabled(false);
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+        name.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_NAME);
+        desc.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_DESC);
+        version.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_VER);
+        imgName.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_IMG);
+        tag.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_TAG);
+        url.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_URL);
+        cpu.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_CPU);
+        memory.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_MEM);
+        network.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_NW);
+        time.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_TIME);
     }
 
 }

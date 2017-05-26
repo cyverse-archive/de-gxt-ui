@@ -125,6 +125,11 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
         view.setOtherDataSelectMode();
     }
 
+    @Override
+    public void setViewDebugId(String baseID) {
+        view.asWidget().ensureDebugId(baseID);
+    }
+
     private final Command indicateSuccessCmd = new Command() {
         @Override
         public void execute() {
