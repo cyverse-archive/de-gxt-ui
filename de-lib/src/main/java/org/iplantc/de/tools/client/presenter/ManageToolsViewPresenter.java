@@ -310,7 +310,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
     @Override
     public void onShowToolInfo(ShowToolInfoEvent event) {
-        dcService.getAppsForTool(getSelectedTool().getId(), new AppsCallback<List<App>>() {
+        dcService.getAppsForTool(event.getTool().getId(), new AppsCallback<List<App>>() {
 
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {

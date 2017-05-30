@@ -88,4 +88,9 @@ public class AppsListViewDefaultAppearance implements AppsListView.AppsListAppea
     public String appLoadError() {
         return appsMessages.appLoadError();
     }
+
+    @Override
+    public String noApps() {
+        return appsMessages.noApps();
+    }
 }
