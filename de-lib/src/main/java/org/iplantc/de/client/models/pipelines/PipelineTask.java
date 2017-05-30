@@ -1,6 +1,7 @@
 package org.iplantc.de.client.models.pipelines;
 
 import org.iplantc.de.client.models.HasSystemId;
+import org.iplantc.de.client.models.tool.Tool;
 
 import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
@@ -30,6 +31,10 @@ public interface PipelineTask extends HasName, HasSystemId {
     String getDescription();
 
     void setDescription(String description);
+
+    Tool getTool();
+
+    void setTool(Tool tool);
 
     Integer getStep();
 

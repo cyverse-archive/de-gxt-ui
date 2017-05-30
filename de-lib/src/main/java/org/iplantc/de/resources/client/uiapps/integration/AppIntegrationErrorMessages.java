@@ -14,4 +14,7 @@ public interface AppIntegrationErrorMessages {
 
     SafeHtml cannotDeleteLastArgumentGroup();
 
+    String workflowAddingDeprecatedTask();
+
+    String workflowUsesDeprecatedTools();
 }
