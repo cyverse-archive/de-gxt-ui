@@ -77,6 +77,8 @@ public interface AppsListView extends IsWidget,
         String sortLabel();
 
         String appLoadError();
+
+        String noApps();
     }
 
     /**
