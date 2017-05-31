@@ -1,5 +1,7 @@
 package org.iplantc.de.admin.desktop.client.toolRequest;
 
+import org.iplantc.de.admin.desktop.client.toolRequest.events.AdminMakeToolPublicSelectedEvent;
+import org.iplantc.de.admin.desktop.client.toolRequest.view.ToolRequestDetailsPanel;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.toolRequests.ToolRequest;
 import org.iplantc.de.client.models.toolRequests.ToolRequestDetails;
@@ -91,9 +93,12 @@ public interface ToolRequestView extends IsWidget, IsMaskable {
         String testDataPathLabel();
 
         String versionLabel();
+
+        String makePublic();
     }
 
-    public interface Presenter {
+    public interface Presenter
+            extends AdminMakeToolPublicSelectedEvent.AdminMakeToolPublicSelectedEventHandler {
 
         public interface ToolRequestPresenterAppearance {
 
@@ -137,5 +142,7 @@ public interface ToolRequestView extends IsWidget, IsMaskable {
     void setDetailsPanel(ToolRequestDetails result);
 
     void update(ToolRequestUpdate toolRequestUpdate, ToolRequestDetails toolRequestDetails);
+
+    ToolRequestDetailsPanel getDetailsPanel();
 
 }

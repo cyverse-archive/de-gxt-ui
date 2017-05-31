@@ -213,4 +213,9 @@ public class ToolRequestViewDefaultAppearance implements ToolRequestView.ToolReq
     public String versionLabel() {
         return displayStrings.versionColumnLabel();
     }
+
+    @Override
+    public String makePublic() {
+        return displayStrings.makePublic();
+    }
 }
