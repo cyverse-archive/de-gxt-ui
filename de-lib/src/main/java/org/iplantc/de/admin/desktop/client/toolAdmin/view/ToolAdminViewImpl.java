@@ -184,7 +184,7 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
     }
 
     @Override
-    public void editToolDetails(final Tool tool) {
+    public void editToolDetails(final Tool tool, final ToolAdminDetailsDialog.Mode mode) {
         toolDetailsDialog.get(new AsyncCallback<ToolAdminDetailsDialog>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -193,7 +193,7 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
 
             @Override
             public void onSuccess(final ToolAdminDetailsDialog result) {
-                result.show(tool);
+                result.show(tool, mode);
                 result.ensureDebugId(Belphegor.ToolAdminIds.TOOL_ADMIN_DIALOG);
                 result.addSaveToolSelectedEventHandler(new SaveToolSelectedEvent.SaveToolSelectedEventHandler() {
                     @Override

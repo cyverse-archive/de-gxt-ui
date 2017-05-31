@@ -4,6 +4,7 @@ import org.iplantc.de.admin.desktop.client.toolAdmin.events.AddToolSelectedEvent
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.DeleteToolSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.SaveToolSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.ToolSelectedEvent;
+import org.iplantc.de.admin.desktop.client.toolAdmin.view.dialogs.ToolAdminDetailsDialog;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.tool.Tool;
 
@@ -203,6 +204,8 @@ public interface ToolAdminView extends IsWidget,
         SafeHtml toolEntryPointWarning();
 
         SafeHtml toolVolumeWarning();
+
+        String dialogMakePublicText();
     }
 
     interface Presenter {
@@ -212,7 +215,7 @@ public interface ToolAdminView extends IsWidget,
         void setViewDebugId(String baseId);
     }
 
-    void editToolDetails(Tool tool);
+    void editToolDetails(Tool tool, ToolAdminDetailsDialog.Mode mode);
 
     void toolSelected(Tool tool);
 
