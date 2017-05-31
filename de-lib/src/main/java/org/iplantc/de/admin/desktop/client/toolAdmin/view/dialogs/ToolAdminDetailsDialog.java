@@ -35,8 +35,14 @@ public class ToolAdminDetailsDialog extends IPlantDialog implements IsHideable,
 
     private final ToolAdminDetailsView view;
     private final ToolAdminView.ToolAdminViewAppearance appearance;
+    private Mode mode;
+
     @Inject
     ToolAutoBeanFactory factory;
+
+    public enum Mode {
+        EDIT, MAKEPUBLIC;
+    }
 
     @Inject
     public ToolAdminDetailsDialog(final ToolAdminDetailsView view,
@@ -57,8 +63,6 @@ public class ToolAdminDetailsDialog extends IPlantDialog implements IsHideable,
         addHelp(new HTML(appearance.toolAdminHelp()));
 
         setPredefinedButtons(PredefinedButton.OK, PredefinedButton.CANCEL);
-        getOkButton().setText(appearance.dialogWindowUpdateBtnText());
-
         addOkButtonSelectHandler(new OkSelectHandler(this, this, this.appearance, this.view));
         addCancelButtonSelectHandler(new CancelSelectHandler());
         FlowLayoutContainer container = new FlowLayoutContainer();
@@ -67,7 +71,16 @@ public class ToolAdminDetailsDialog extends IPlantDialog implements IsHideable,
         add(container);
     }
 
-    public void show(final Tool tool) {
+    public void show(final Tool tool, Mode mode) {
+        this.mode = mode;
+        switch (mode) {
+            case MAKEPUBLIC:
+                getOkButton().setText(appearance.dialogMakePublicText());
+                break;
+            case EDIT:
+                getOkButton().setText(appearance.dialogWindowUpdateBtnText());
+                break;
+        }
         view.edit(tool);
         super.show();
 
@@ -93,7 +106,7 @@ public class ToolAdminDetailsDialog extends IPlantDialog implements IsHideable,
         tool.setContainer(toolContainer);
         tool.setImplementation(toolImplementation);
 
-        show(tool);
+        show(tool, Mode.EDIT);
     }
 
     @Override

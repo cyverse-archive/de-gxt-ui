@@ -511,4 +511,9 @@ public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminVi
     public SafeHtml toolVolumeWarning() {
         return displayStrings.toolVolumeWarning();
     }
+
+    @Override
+    public String dialogMakePublicText() {
+        return displayStrings.dialogMakePublicText();
+    }
 }
