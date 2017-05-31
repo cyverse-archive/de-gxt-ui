@@ -3,7 +3,8 @@
              xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
              xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
              xmlns:fields="urn:import:org.iplantc.de.apps.widgets.client.view.editors.widgets"
-             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form">
+             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
+             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button">
 
     <ui:with field="appearance"
              type="org.iplantc.de.admin.desktop.client.toolRequest.ToolRequestView.ToolRequestViewAppearance" />
@@ -122,6 +123,9 @@
                                         ui:field="versionEditor"/>
                     </form:widget>
                 </form:FieldLabel>
+            </container:child>
+            <container:child layoutData="{layoutData}">
+                <button:TextButton ui:field="makePublicBtn" text="{appearance.makePublic}"/>
             </container:child>
 
         </container:VerticalLayoutContainer>

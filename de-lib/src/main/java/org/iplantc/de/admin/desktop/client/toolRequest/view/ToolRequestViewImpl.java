@@ -186,4 +186,9 @@ public class ToolRequestViewImpl extends Composite implements ToolRequestView, S
         detailsPanel.ensureDebugId(baseID + Belphegor.ToolRequestIds.DETAILS_PANEL);
 
     }
+
+    @Override
+    public ToolRequestDetailsPanel getDetailsPanel() {
+        return detailsPanel;
+    }
 }
