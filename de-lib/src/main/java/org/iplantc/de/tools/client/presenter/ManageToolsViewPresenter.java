@@ -7,6 +7,7 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.services.ToolServices;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.shared.AppsCallback;
@@ -39,6 +40,7 @@ import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -314,24 +316,30 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.appsLoadError()));
+                showToolInfo(Arrays.asList());
 
             }
 
             @Override
             public void onSuccess(final List<App> result) {
-                toolInfoDialogProvider.get(new AsyncCallback<ToolInfoDialog>() {
-                    @Override
-                    public void onFailure(Throwable throwable) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(ToolInfoDialog o) {
-                        o.show(getSelectedTool(), result);
-                    }
-                });
+                showToolInfo(result);
             }
         });
 
+    }
+
+    private void showToolInfo(final List<App> result) {
+        toolInfoDialogProvider.get(new AsyncCallback<ToolInfoDialog>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+
+            }
+
+            @Override
+            public void onSuccess(ToolInfoDialog o) {
+                o.show(getSelectedTool(), result);
+            }
+        });
     }
 }
