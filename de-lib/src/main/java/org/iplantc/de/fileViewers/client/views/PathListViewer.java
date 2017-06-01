@@ -138,33 +138,48 @@ public class PathListViewer extends AbstractStructuredTextViewer implements Stor
                               CancellableEvent cancellableEvent,
                               StatusProxy statusProxy) {
 
-            if(!hasCorrectData(o)){
+            if(!isNonEmptyCollection(o)){
                 cancellableEvent.setCancelled(true);
                 statusProxy.setStatus(false);
+                return;
             }
-            // TODO Check to see if any items are pathlists. If they are, prevent drop
-            Iterable<DiskResource> iterable = (Iterable<DiskResource>) o;
-            for(DiskResource dr : iterable){
-                InfoType infoType1 = InfoType.fromTypeString(dr.getInfoType());
-                if(InfoType.HT_ANALYSIS_PATH_LIST.equals(infoType1)){
-                    cancellableEvent.setCancelled(true);
-                    statusProxy.update((SafeHtml)appearance::preventPathListDrop);
-                    statusProxy.setStatus(false);
 
-                    return;
+            if (hasDiskResources(o)) {
+
+                // TODO Check to see if any items are pathlists. If they are, prevent drop
+                Iterable<DiskResource> iterable = (Iterable<DiskResource>)o;
+                for (DiskResource dr : iterable) {
+                    InfoType infoType1 = InfoType.fromTypeString(dr.getInfoType());
+                    if (InfoType.HT_ANALYSIS_PATH_LIST.equals(infoType1)) {
+                        cancellableEvent.setCancelled(true);
+                        statusProxy.update((SafeHtml)appearance::preventPathListDrop);
+                        statusProxy.setStatus(false);
+
+                        return;
+                    }
                 }
+                cancellableEvent.setCancelled(false);
+                statusProxy.setStatus(true);
+            } else {
+                cancellableEvent.setCancelled(false);
+                statusProxy.setStatus(true);
             }
-            cancellableEvent.setCancelled(false);
-            statusProxy.setStatus(true);
         }
 
-        boolean hasCorrectData(Object data){
-           boolean isCollection = data instanceof Collection<?>;
-            boolean isEmpty = ((Collection<?>) data).isEmpty();
-            boolean hasDiskResources = ((Collection<?>) data).iterator().next() instanceof DiskResource;
-            return isCollection
-                       && !isEmpty
-                       && hasDiskResources;
+        boolean hasCorrectData(Object data) {
+
+            return isNonEmptyCollection(data)
+                       && hasDiskResources(data);
+        }
+
+        boolean hasDiskResources (Object data) {
+            return ((Collection<?>) data).iterator().next() instanceof DiskResource;
+        }
+
+        boolean isNonEmptyCollection(Object data) {
+            boolean isCollection = data instanceof Collection<?>;
+            boolean isEmpty = isCollection && ((Collection<?>)data).isEmpty();
+            return isCollection && !isEmpty;
         }
 
         private StringBuilder checkForSplChar(List<Splittable> idSet) {
