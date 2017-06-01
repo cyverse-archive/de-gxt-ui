@@ -1,7 +1,6 @@
 package org.iplantc.de.client.services.converters;
 
 import org.iplantc.de.client.models.collaborators.CollaboratorAutoBeanFactory;
-import org.iplantc.de.client.models.collaborators.OldCollaborator;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.util.JsonUtil;
 
@@ -33,20 +32,10 @@ public class FastMapCollaboratorCallbackConverter extends AsyncCallbackConverter
 
             for (String username : users.keySet()) {
                 JSONObject userJson = jsonUtil.getObject(users, username);
-                OldCollaborator oldCollaborator = AutoBeanCodex.decode(factory, OldCollaborator.class,
+                Subject subject = AutoBeanCodex.decode(factory, Subject.class,
                                                                       userJson.toString()).as();
-                Subject subject = factory.getSubject().as();
-                subject.setId(oldCollaborator.getUserName());
-                subject.setFirstName(oldCollaborator.getFirstName());
-                subject.setLastName(oldCollaborator.getLastName());
-                subject.setName(oldCollaborator.getName());
-                subject.setEmail(oldCollaborator.getEmail());
-                subject.setInstitution(oldCollaborator.getInstitution());
-                subject.setSourceId("ldap");
-
                 userResults.put(username, subject);
             }
-
         }
         return userResults;
     }
