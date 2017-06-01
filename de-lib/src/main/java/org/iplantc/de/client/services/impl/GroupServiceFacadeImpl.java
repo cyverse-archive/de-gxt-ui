@@ -17,8 +17,8 @@ import org.iplantc.de.client.models.groups.UpdateMemberResultList;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.GroupCallbackConverter;
+import org.iplantc.de.client.services.converters.SubjectMemberListCallbackConverter;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
-import org.iplantc.de.client.services.converters.SubjectListCallbackConverter;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
@@ -92,7 +92,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
         String address = LISTS + "/" + URL.encode(groupName) + "/members";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, new SubjectListCallbackConverter(callback, collabFactory));
+        deService.getServiceData(wrapper, new SubjectMemberListCallbackConverter(callback, collabFactory));
     }
 
     @Override

@@ -6,10 +6,9 @@ package org.iplantc.de.client.services.impl;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
-import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.collaborators.CollaboratorAutoBeanFactory;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
-import org.iplantc.de.client.services.converters.CollaboratorListCallbackConverter;
 import org.iplantc.de.client.services.converters.FastMapCollaboratorCallbackConverter;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
 import org.iplantc.de.client.services.converters.SubjectListCallbackConverter;
@@ -57,13 +56,6 @@ public class CollaboratorsServiceFacadeImpl implements CollaboratorsServiceFacad
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
 
         deServiceFacade.getServiceData(wrapper, new SubjectListCallbackConverter(callback, factory));
-    }
-
-    @Override
-    public void getCollaborators(AsyncCallback<List<Subject>> callback) {
-        String address = deProperties.getMuleServiceBaseUrl() + "collaborators";
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deServiceFacade.getServiceData(wrapper, new CollaboratorListCallbackConverter(callback, factory));
     }
 
     @Override

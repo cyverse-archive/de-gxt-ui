@@ -11,6 +11,8 @@ import com.google.web.bindery.autobean.shared.AutoBean;
  * @author aramsey
  */
 public interface Group extends Subject, HasDescription {
+
+    String DEFAULT_GROUP = "default";
     
     String getType();
     void setType(String type);

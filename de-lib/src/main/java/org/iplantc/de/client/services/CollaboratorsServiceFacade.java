@@ -24,12 +24,6 @@ public interface CollaboratorsServiceFacade {
     public void searchCollaborators(String term, AsyncCallback<List<Subject>> callback) ;
 
     /**
-     * Get the list of all collaborators a user has
-     * @param callback
-     */
-    public void getCollaborators(AsyncCallback<List<Subject>> callback);
-
-    /**
      * Add a collaborator to a user's list of collaborators
      * @param users
      * @param callback

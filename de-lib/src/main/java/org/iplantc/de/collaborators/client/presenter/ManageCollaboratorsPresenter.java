@@ -7,6 +7,7 @@ import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.GroupView;
@@ -60,6 +61,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     @Inject IplantAnnouncer announcer;
     @Inject UserInfo userInfo;
     private ManageCollaboratorsViewFactory factory;
+    private GroupAutoBeanFactory groupFactory;
     private GroupServiceFacade groupServiceFacade;
     private CollaboratorsServiceFacade collabServiceFacade;
     private GroupView.GroupViewAppearance groupAppearance;
@@ -70,10 +72,12 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     @Inject
     public ManageCollaboratorsPresenter(ManageCollaboratorsViewFactory factory,
+                                        GroupAutoBeanFactory groupFactory,
                                         GroupServiceFacade groupServiceFacade,
                                         CollaboratorsServiceFacade collabServiceFacade,
                                         GroupView.GroupViewAppearance groupAppearance) {
         this.factory = factory;
+        this.groupFactory = groupFactory;
         this.groupServiceFacade = groupServiceFacade;
         this.collabServiceFacade = collabServiceFacade;
         this.groupAppearance = groupAppearance;
@@ -164,7 +168,10 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
             @Override
             public void onSuccess(List<Group> result) {
-                view.addCollabLists(result);
+                List<Group> filteredGroups = result.stream()
+                                            .filter(group -> !Group.DEFAULT_GROUP.equals(group.getName()))
+                                            .collect(Collectors.toList());
+                view.addCollabLists(filteredGroups);
                 view.unmaskCollabLists();
             }
         });
@@ -201,7 +208,9 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     @Override
     public void loadCurrentCollaborators() {
         view.maskCollaborators(null);
-        collabServiceFacade.getCollaborators(new AsyncCallback<List<Subject>>() {
+        Group defaultGroup = groupFactory.getGroup().as();
+        defaultGroup.setName(Group.DEFAULT_GROUP);
+        groupServiceFacade.getMembers(defaultGroup, new AsyncCallback<List<Subject>>() {
 
             @Override
             public void onFailure(Throwable caught) {
