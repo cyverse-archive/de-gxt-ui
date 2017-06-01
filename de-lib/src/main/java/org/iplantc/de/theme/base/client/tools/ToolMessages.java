@@ -74,6 +74,8 @@ public interface ToolMessages extends Messages {
     String newToolInstruction();
 
     String makePublicInstruction();
+
+    String appsLoadError();
 }
         
     
