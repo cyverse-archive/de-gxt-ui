@@ -22,4 +22,6 @@ public interface ToolAdminServiceFacade {
 
     void deleteTool(String toolId, AsyncCallback<Void> callback);
 
+    void publishTool(String toolId, AsyncCallback<Void> callback);
+
 }

@@ -1,6 +1,7 @@
 package org.iplantc.de.admin.desktop.client.toolAdmin.view.dialogs;
 
 import org.iplantc.de.admin.desktop.client.toolAdmin.ToolAdminView;
+import org.iplantc.de.admin.desktop.client.toolAdmin.events.PublishToolEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.SaveToolSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.view.ToolAdminDetailsView;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
@@ -29,9 +30,11 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
 /**
  * @author jstroot
  * @author aramsey
+ * @author sriram 
  */
 public class ToolAdminDetailsDialog extends IPlantDialog implements IsHideable,
-                                                                    SaveToolSelectedEvent.HasSaveToolSelectedEventHandlers{
+                                                                    SaveToolSelectedEvent.HasSaveToolSelectedEventHandlers,
+                                                                    PublishToolEvent.HasPublishToolEventHandlers {
 
     private final ToolAdminDetailsView view;
     private final ToolAdminView.ToolAdminViewAppearance appearance;
@@ -63,7 +66,6 @@ public class ToolAdminDetailsDialog extends IPlantDialog implements IsHideable,
         addHelp(new HTML(appearance.toolAdminHelp()));
 
         setPredefinedButtons(PredefinedButton.OK, PredefinedButton.CANCEL);
-        addOkButtonSelectHandler(new OkSelectHandler(this, this, this.appearance, this.view));
         addCancelButtonSelectHandler(new CancelSelectHandler());
         FlowLayoutContainer container = new FlowLayoutContainer();
         container.getScrollSupport().setScrollMode(ScrollSupport.ScrollMode.AUTO);
@@ -73,6 +75,8 @@ public class ToolAdminDetailsDialog extends IPlantDialog implements IsHideable,
 
     public void show(final Tool tool, Mode mode) {
         this.mode = mode;
+        addOkButtonSelectHandler(new OkSelectHandler(this, this, this.appearance, this.view, mode));
+
         switch (mode) {
             case MAKEPUBLIC:
                 getOkButton().setText(appearance.dialogMakePublicText());
@@ -114,29 +118,46 @@ public class ToolAdminDetailsDialog extends IPlantDialog implements IsHideable,
         return addHandler(handler, SaveToolSelectedEvent.TYPE);
     }
 
+    @Override
+    public HandlerRegistration addPublishToolEventHandler(PublishToolEvent.PublishToolEventHandler handler) {
+        return addHandler(handler, PublishToolEvent.TYPE);
+    }
 
     private static class OkSelectHandler implements SelectEvent.SelectHandler {
         private final IsHideable hideable;
         private final HasHandlers hasHandlers;
         private ToolAdminView.ToolAdminViewAppearance appearance;
         private ToolAdminDetailsView view;
+        private Mode mode;
 
 
         private OkSelectHandler(IsHideable hideable,
                                 HasHandlers hasHandlers,
                                 ToolAdminView.ToolAdminViewAppearance appearance,
-                                ToolAdminDetailsView view) {
+                                ToolAdminDetailsView view,
+                                Mode mode) {
             this.hideable = hideable;
             this.hasHandlers = hasHandlers;
             this.appearance = appearance;
             this.view = view;
+            this.mode = mode;
         }
 
         @Override
         public void onSelect(SelectEvent event) {
             if (view.isValid()) {
-                SaveToolSelectedEvent saveToolSelectedEvent = new SaveToolSelectedEvent(view.getTool());
-                hasHandlers.fireEvent(saveToolSelectedEvent);
+                switch (mode) {
+                    case EDIT:
+                        SaveToolSelectedEvent saveToolSelectedEvent =
+                                new SaveToolSelectedEvent(view.getTool());
+                        hasHandlers.fireEvent(saveToolSelectedEvent);
+                        break;
+                    case MAKEPUBLIC:
+                        PublishToolEvent publishEvent = new PublishToolEvent(view.getTool().getId());
+                        hasHandlers.fireEvent(publishEvent);
+                        break;
+                }
+
                 hideable.hide();
             } else {
                 AlertMessageBox alertMsgBox =

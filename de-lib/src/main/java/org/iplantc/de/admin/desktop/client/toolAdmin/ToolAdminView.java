@@ -2,6 +2,7 @@ package org.iplantc.de.admin.desktop.client.toolAdmin;
 
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.AddToolSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.DeleteToolSelectedEvent;
+import org.iplantc.de.admin.desktop.client.toolAdmin.events.PublishToolEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.SaveToolSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.ToolSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.view.dialogs.ToolAdminDetailsDialog;
@@ -21,7 +22,8 @@ public interface ToolAdminView extends IsWidget,
                                        AddToolSelectedEvent.HasAddToolSelectedEventHandlers,
                                        ToolSelectedEvent.HasToolSelectedEventHandlers,
                                        SaveToolSelectedEvent.HasSaveToolSelectedEventHandlers,
-                                       DeleteToolSelectedEvent.HasDeleteToolSelectedEventHandlers {
+                                       DeleteToolSelectedEvent.HasDeleteToolSelectedEventHandlers,
+                                       PublishToolEvent.HasPublishToolEventHandlers {
 
     interface ToolAdminViewAppearance {
 

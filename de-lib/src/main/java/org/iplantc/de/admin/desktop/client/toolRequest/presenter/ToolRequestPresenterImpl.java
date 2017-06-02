@@ -1,8 +1,10 @@
 package org.iplantc.de.admin.desktop.client.toolRequest.presenter;
 
 import org.iplantc.de.admin.desktop.client.toolAdmin.ToolAdminView;
+import org.iplantc.de.admin.desktop.client.toolAdmin.events.PublishToolEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.gin.factory.ToolAdminViewFactory;
 import org.iplantc.de.admin.desktop.client.toolAdmin.service.ToolAdminServiceFacade;
+import org.iplantc.de.admin.desktop.client.toolAdmin.view.dialogs.ToolAdminDetailsDialog;
 import org.iplantc.de.admin.desktop.client.toolRequest.ToolRequestView;
 import org.iplantc.de.admin.desktop.client.toolRequest.events.AdminMakeToolPublicSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolRequest.service.ToolRequestServiceFacade;
@@ -26,9 +28,9 @@ import com.sencha.gxt.data.shared.ModelKeyProvider;
 import java.util.List;
 
 /**
- * @author jstroot
+ * @author jstroot sriram
  */
-public class ToolRequestPresenterImpl implements ToolRequestView.Presenter {
+public class ToolRequestPresenterImpl implements ToolRequestView.Presenter, PublishToolEvent.PublishToolEventHandler {
 
     private final ToolRequestView view;
     private final ToolRequestServiceFacade toolReqService;
@@ -37,6 +39,7 @@ public class ToolRequestPresenterImpl implements ToolRequestView.Presenter {
     private final ToolAdminViewFactory adminFactory;
     private ToolAdminView adminView;
     private ToolAdminServiceFacade toolAdminServiceFacade;
+    @Inject IplantAnnouncer announcer;
 
     @Inject
     ToolRequestPresenterImpl(final ToolRequestView view,
@@ -125,6 +128,7 @@ public class ToolRequestPresenterImpl implements ToolRequestView.Presenter {
                 return item.getId();
             }
         }));
+        adminView.addPublishToolEventHandler(this);
 
         toolAdminServiceFacade.getToolDetails(event.getToolId(), new AsyncCallback<Tool>() {
             @Override
@@ -134,9 +138,24 @@ public class ToolRequestPresenterImpl implements ToolRequestView.Presenter {
 
             @Override
             public void onSuccess(Tool result) {
-                adminView.editToolDetails(result);
+                adminView.editToolDetails(result, ToolAdminDetailsDialog.Mode.MAKEPUBLIC);
             }
         });
 
+    }
+
+    @Override
+    public void onPublish(PublishToolEvent event) {
+        toolAdminServiceFacade.publishTool(event.getToolId(), new AsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(appearance.publishFailed(), throwable);
+            }
+
+            @Override
+            public void onSuccess(Void aVoid) {
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.publishSuccess()));
+            }
+        });
     }
 }
