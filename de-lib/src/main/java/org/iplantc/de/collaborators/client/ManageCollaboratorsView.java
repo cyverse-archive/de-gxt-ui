@@ -108,7 +108,7 @@ public interface ManageCollaboratorsView extends IsWidget,
          * Returns the list of currently selected collaborators from the ManageCollaboratorsView
          * @return
          */
-        List<Subject> getSelectedCollaborators();
+        List<Subject> getSelectedSubjects();
     }
 
     /**
@@ -179,7 +179,7 @@ public interface ManageCollaboratorsView extends IsWidget,
      * Returns the list of currently selected collaborators from the ManageCollaboratorsView
      * @return
      */
-    List<Subject> getSelectedCollaborators();
+    List<Subject> getSelectedSubjects();
 
     /**
      * Returns the mode the ManageCollaboratorsView is currently set to

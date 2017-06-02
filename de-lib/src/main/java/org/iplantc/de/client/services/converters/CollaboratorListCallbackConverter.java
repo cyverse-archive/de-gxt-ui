@@ -36,6 +36,7 @@ public class CollaboratorListCallbackConverter extends AsyncCallbackConverter<St
             public void accept(OldCollaborator oldCollaborator) {
                 Subject subject = factory.getSubject().as();
                 subject.setId(oldCollaborator.getUserName());
+                subject.setName(oldCollaborator.getName());
                 subject.setFirstName(oldCollaborator.getFirstName());
                 subject.setLastName(oldCollaborator.getLastName());
                 subject.setEmail(oldCollaborator.getEmail());

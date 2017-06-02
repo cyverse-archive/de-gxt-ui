@@ -7,8 +7,6 @@ import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.regexp.shared.MatchResult;
-import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeUri;
@@ -45,27 +43,12 @@ public class UserSearchFieldDefaultAppearance implements UserSearchField.UserSea
 
     @Override
     public void render(Cell.Context context, Subject subject, SafeHtmlBuilder sb) {
-        if (subject.getSourceId().equals("ldap")) {
-            sb.append(userTemplate.render(subject.getName(), subject.getInstitution(), null));
-        } else {
-            String name = getCollaboratorListDisplayName(subject.getName());
+        String name = subject.getSubjectDisplayName();
+        if (subject.isCollaboratorList()) {
             sb.append(userTemplate.render(name, null, iplantResources.viewCurrentCollabs().getSafeUri()));
+        } else {
+            sb.append(userTemplate.render(name, subject.getInstitution(), null));
         }
-
-    }
-
-    /**
-     * Currently subject.getName from the GET /subjects endpoints returns the full name, for example
-     * iplant:de:de-2:users:aramsey:collaborator-lists:test
-     *
-     * Instead, we want to return the part that comes after "collaborator-lists:"
-     * @param name
-     * @return
-     */
-    String getCollaboratorListDisplayName(String name) {
-        RegExp regex = RegExp.compile(".*collaborator-lists:(.+)");
-        MatchResult match = regex.exec(name);
-        return match.getGroup(1);
     }
 
     @Override

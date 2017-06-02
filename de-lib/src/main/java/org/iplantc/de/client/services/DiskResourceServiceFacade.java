@@ -12,11 +12,12 @@ import org.iplantc.de.client.models.diskResources.MetadataTemplate;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.diskResources.RootFolders;
 import org.iplantc.de.client.models.diskResources.TYPE;
+import org.iplantc.de.client.models.diskResources.sharing.DataSharingRequestList;
+import org.iplantc.de.client.models.diskResources.sharing.DataUnsharingRequestList;
 import org.iplantc.de.client.models.services.DiskResourceMove;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.shared.DECallback;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.Splittable;
 
@@ -184,27 +185,24 @@ public interface DiskResourceServiceFacade {
      * 
      * Share a resource with give user with permission
      * 
-     * 
-     * @param body - Post body in JSONObject format
+     *  @param requestList - Post body in JSONObject format
      * @param callback callback object
      */
-    void shareDiskResource(JSONObject body, AsyncCallback<String> callback);
+    void shareDiskResource(DataSharingRequestList requestList, AsyncCallback<String> callback);
 
     /**
      * UnShare a resource with give user with permission
-     * 
-     * @param body - Post body in JSONObject format
+     *  @param unsharingRequestList - Post body in JSONObject format
      * @param callback callback object
      */
-    void unshareDiskResource(JSONObject body, AsyncCallback<String> callback);
+    void unshareDiskResource(DataUnsharingRequestList unsharingRequestList, AsyncCallback<String> callback);
 
     /**
      * get user permission info on selected disk resources
-     * 
-     * @param body - Post body in JSONObject format
+     *  @param paths - Post body in JSONObject format
      * @param callback callback object
      */
-    void getPermissions(JSONObject body, DECallback<String> callback);
+    void getPermissions(HasPaths paths, DECallback<String> callback);
 
     /**
      * Get info about a selected file or folder

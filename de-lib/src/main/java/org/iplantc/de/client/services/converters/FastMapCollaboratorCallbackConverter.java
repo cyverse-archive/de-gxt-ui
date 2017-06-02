@@ -1,12 +1,11 @@
 package org.iplantc.de.client.services.converters;
 
-import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.collaborators.CollaboratorAutoBeanFactory;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.util.JsonUtil;
 
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import com.sencha.gxt.core.shared.FastMap;
@@ -33,11 +32,10 @@ public class FastMapCollaboratorCallbackConverter extends AsyncCallbackConverter
 
             for (String username : users.keySet()) {
                 JSONObject userJson = jsonUtil.getObject(users, username);
-                AutoBean<Subject> bean = AutoBeanCodex.decode(factory, Subject.class,
-                                                              userJson.toString());
-                userResults.put(username, bean.as());
+                Subject subject = AutoBeanCodex.decode(factory, Subject.class,
+                                                                      userJson.toString()).as();
+                userResults.put(username, subject);
             }
-
         }
         return userResults;
     }

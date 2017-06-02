@@ -2,7 +2,7 @@ package org.iplantc.de.diskResource.client.views.sharing.dialogs;
 
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.models.sharing.Sharing;
-import org.iplantc.de.client.sharing.SharingAppearance;
+import org.iplantc.de.commons.client.views.sharing.SharingAppearance;
 import org.iplantc.de.diskResource.client.model.DataSharingKeyProvider;
 import org.iplantc.de.diskResource.client.model.DataSharingProperties;
 
@@ -118,7 +118,7 @@ public class ShareBreakDownDialog extends Dialog {
 
             @Override
             public String getValue(Sharing object) {
-                return object.getCollaboratorName();
+                return object.getSubjectName();
             }
 
             @Override

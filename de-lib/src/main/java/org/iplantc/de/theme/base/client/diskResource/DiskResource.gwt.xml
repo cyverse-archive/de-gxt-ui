@@ -122,10 +122,10 @@
 
     <!-- Sharing -->
     <replace-with class="org.iplantc.de.theme.base.client.diskResource.sharing.DataSharingViewDefaultAppearance">
-        <when-type-is class="org.iplantc.de.client.sharing.SharingAppearance" />
+        <when-type-is class="org.iplantc.de.commons.client.views.sharing.SharingAppearance" />
     </replace-with>
     <replace-with class="org.iplantc.de.theme.base.client.diskResource.sharing.presenter.SharingPresenterDefaultAppearance">
-        <when-type-is class="org.iplantc.de.client.sharing.SharingPresenter.Appearance" />
+        <when-type-is class="org.iplantc.de.commons.client.presenter.SharingPresenter.Appearance" />
     </replace-with>
 
     <!-- Search -->

@@ -6,6 +6,7 @@ package org.iplantc.de.client.models.sharing;
 
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
+import org.iplantc.de.client.models.groups.Group;
 
 /**
  * @author sriram
@@ -20,18 +21,18 @@ public class Sharing {
     private String name;
 
 
-    public Sharing(final Subject c, final PermissionValue p, final String id, final String name) {
-        this(c, p, null, id, name);
+    public Sharing(final Subject subject, final PermissionValue permission, final String id, final String name) {
+        this(subject, permission, null, id, name);
     }
 
-    public Sharing(final Subject c, final PermissionValue p, final String systemId, final String id, final String name) {
-        this.subject = c;
+    public Sharing(final Subject subject, final PermissionValue permission, final String systemId, final String id, final String name) {
+        this.subject = subject;
         this.systemId = systemId;
         setId(id);
         setName(name);
-        if (p != null) {
-            permission = p;
-            displayPermission = permission;
+        if (permission != null) {
+            this.permission = permission;
+            displayPermission = this.permission;
         }
 
     }
@@ -68,13 +69,15 @@ public class Sharing {
         this.systemId = systemId;
     }
 
-    //TODO REMOVE ME, I'M TEMPORARY
     public String getSourceId() {
-        return "ldap";
+        if (subject instanceof Group) {
+            return Subject.GROUP_IDENTIFIER;
+        }
+        return subject.getSourceId();
     }
 
     public String getKey() {
-        return getSubject().getId() + getSystemId() + getId();
+        return getSubject().getId();
     }
 
     public void setPermission(PermissionValue perm) {
@@ -118,19 +121,7 @@ public class Sharing {
         return subject;
     }
 
-
-    public String getCollaboratorName() {
-        StringBuilder builder = new StringBuilder();
-        if (getSubject().getFirstName() != null && !getSubject().getFirstName().isEmpty()) {
-            builder.append(getSubject().getFirstName());
-            if (getSubject().getLastName() != null && !getSubject().getLastName().isEmpty()) {
-                builder.append(" ");
-                builder.append(getSubject().getLastName());
-            }
-            return builder.toString();
-        } else {
-            return getSubject().getId();
-        }
+    public String getSubjectName() {
+        return subject.getSubjectDisplayName();
     }
-
 }

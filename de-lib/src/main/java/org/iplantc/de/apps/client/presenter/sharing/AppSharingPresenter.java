@@ -4,7 +4,8 @@
 package org.iplantc.de.apps.client.presenter.sharing;
 
 import org.iplantc.de.apps.client.views.sharing.AppSharingView;
-import org.iplantc.de.client.gin.factory.SharingPermissionViewFactory;
+import org.iplantc.de.apps.shared.AppsModule;
+import org.iplantc.de.commons.client.gin.factory.SharingPermissionViewFactory;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.sharing.AppPermission;
@@ -22,8 +23,8 @@ import org.iplantc.de.client.models.sharing.SharingSubject;
 import org.iplantc.de.client.models.sharing.UserPermission;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
-import org.iplantc.de.client.sharing.SharingPermissionView;
-import org.iplantc.de.client.sharing.SharingPresenter;
+import org.iplantc.de.commons.client.views.sharing.SharingPermissionView;
+import org.iplantc.de.commons.client.presenter.SharingPresenter;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -193,6 +194,12 @@ public class AppSharingPresenter implements SharingPresenter {
 
     }
 
+    @Override
+    public void setViewDebugId(String debugId) {
+        view.asWidget().ensureDebugId(debugId + AppsModule.Ids.SHARING_VIEW);
+        permissionsPanel.asWidget().ensureDebugId(debugId + AppsModule.Ids.SHARING_VIEW + AppsModule.Ids.SHARING_PERMS);
+    }
+
     private AppSharingRequestList buildSharingRequest() {
         AppSharingRequestList sharingRequestList = null;
 
@@ -204,9 +211,9 @@ public class AppSharingPresenter implements SharingPresenter {
             for (String userName : sharingMap.keySet()) {
                 AppSharingRequest sharingRequest = appFactory.appSharingRequest().as();
                 SharingSubject sharingSubject = shareFactory.getSharingSubject().as();
-                sharingSubject.setSourceId("ldap");
-                sharingSubject.setId(userName);
                 List<Sharing> shareList = sharingMap.get(userName);
+                sharingSubject.setSourceId(getSourceId(shareList));
+                sharingSubject.setId(userName);
                 sharingRequest.setSubject(sharingSubject);
                 sharingRequest.setAppPermissions(buildShareAppPermissionList(shareList));
                 requests.add(sharingRequest);
@@ -217,6 +224,11 @@ public class AppSharingPresenter implements SharingPresenter {
         }
 
         return sharingRequestList;
+    }
+
+    String getSourceId(List<Sharing> shareList) {
+        Sharing share = shareList.get(0);
+        return share.getSourceId();
     }
 
     private AppUnSharingRequestList buildUnSharingRequest() {
@@ -233,7 +245,7 @@ public class AppSharingPresenter implements SharingPresenter {
                 AppSharingRequest unsharingRequest = appFactory.appSharingRequest().as();
                 SharingSubject sharingSubject = shareFactory.getSharingSubject().as();
                 sharingSubject.setId(userName);
-                sharingSubject.setSourceId("ldap");
+                sharingSubject.setSourceId(getSourceId(shareList));
                 unsharingRequest.setSubject(sharingSubject);
                 unsharingRequest.setAppPermissions(buildUnshareAppPermissionList(shareList));
                 requests.add(unsharingRequest);

@@ -20,7 +20,7 @@ import org.iplantc.de.analysis.client.views.parameters.AnalysisParametersViewImp
 import org.iplantc.de.analysis.client.views.sharing.AnalysisSharingView;
 import org.iplantc.de.analysis.client.views.sharing.AnalysisSharingViewImpl;
 import org.iplantc.de.client.models.analysis.Analysis;
-import org.iplantc.de.client.sharing.SharingPresenter;
+import org.iplantc.de.commons.client.presenter.SharingPresenter;
 
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;

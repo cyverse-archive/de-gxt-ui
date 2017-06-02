@@ -25,6 +25,8 @@ import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfoList;
 import org.iplantc.de.client.models.diskResources.RootFolders;
 import org.iplantc.de.client.models.diskResources.TYPE;
+import org.iplantc.de.client.models.diskResources.sharing.DataSharingRequestList;
+import org.iplantc.de.client.models.diskResources.sharing.DataUnsharingRequestList;
 import org.iplantc.de.client.models.services.DiskResourceMove;
 import org.iplantc.de.client.models.services.DiskResourceRename;
 import org.iplantc.de.client.models.viewer.InfoType;
@@ -664,12 +666,13 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
     }
 
     @Override
-    public void shareDiskResource(JSONObject body, AsyncCallback<String> callback) {
+    public void shareDiskResource(DataSharingRequestList requestList, AsyncCallback<String> callback) {
         String address = deProperties.getMuleServiceBaseUrl() + "share"; //$NON-NLS-1$
         HashMap<String, String> mdcMap = Maps.newHashMap();
         mdcMap.put(METRIC_TYPE_KEY, SHARE_EVENT);
 
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, body.toString());
+        String payload = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(requestList)).getPayload();
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, payload);
 
         deServiceFacade.getServiceData(wrapper,
                                        mdcMap,
@@ -677,12 +680,14 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
     }
 
     @Override
-    public void unshareDiskResource(JSONObject body, AsyncCallback<String> callback) {
+    public void unshareDiskResource(DataUnsharingRequestList unsharingRequestList, AsyncCallback<String> callback) {
         String address = deProperties.getMuleServiceBaseUrl() + "unshare"; //$NON-NLS-1$
         HashMap<String, String> mdcMap = Maps.newHashMap();
         mdcMap.put(METRIC_TYPE_KEY, SHARE_EVENT);
 
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, body.toString());
+        String payload = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(unsharingRequestList)).getPayload();
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, payload);
 
         deServiceFacade.getServiceData(wrapper,
                                        mdcMap,
@@ -690,9 +695,10 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
     }
 
     @Override
-    public void getPermissions(JSONObject body, DECallback<String> callback) {
+    public void getPermissions(HasPaths paths, DECallback<String> callback) {
         String fullAddress = deProperties.getDataMgmtBaseUrl() + "user-permissions"; //$NON-NLS-1$
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, fullAddress, body.toString());
+        String payload = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(paths)).getPayload();
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, fullAddress, payload);
         callService(wrapper, callback);
     }
 

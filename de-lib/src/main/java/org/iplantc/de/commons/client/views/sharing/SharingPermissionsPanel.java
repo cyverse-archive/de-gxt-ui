@@ -1,4 +1,4 @@
-package org.iplantc.de.client.sharing;
+package org.iplantc.de.commons.client.views.sharing;
 
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Subject;
@@ -10,6 +10,8 @@ import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.client.views.dialogs.ManageCollaboratorsDialog;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.presenter.SharingPresenter;
+import org.iplantc.de.commons.share.CommonsModule;
 import org.iplantc.de.diskResource.client.model.DataSharingKeyProvider;
 import org.iplantc.de.diskResource.client.model.DataSharingProperties;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.ShareBreakDownDialog;
@@ -19,7 +21,9 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -30,11 +34,13 @@ import com.google.inject.assistedinject.Assisted;
 import com.sencha.gxt.cell.core.client.TextButtonCell;
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell.TriggerAction;
+import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.StringLabelProvider;
+import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
@@ -44,7 +50,6 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
-import com.sencha.gxt.widget.core.client.toolbar.FillToolItem;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
 import java.util.ArrayList;
@@ -54,8 +59,8 @@ import java.util.List;
 /**
  * @author sriram, jstroot
  */
-public class SharingPermissionsPanel implements SharingPermissionView,
-                                                UserSearchResultSelected.UserSearchResultSelectedEventHandler {
+public class SharingPermissionsPanel extends Composite
+        implements SharingPermissionView, UserSearchResultSelected.UserSearchResultSelectedEventHandler {
 
     @UiTemplate("SharingPermissionsView.ui.xml")
     interface MyUiBinder extends UiBinder<Widget, SharingPermissionsPanel> {
@@ -63,18 +68,19 @@ public class SharingPermissionsPanel implements SharingPermissionView,
 
     @UiField Grid<Sharing> grid;
     @UiField ToolBar toolbar;
-    @UiField(provided = true) ListStore<Sharing> listStore;
-    @UiField(provided = true) ColumnModel<Sharing> cm;
+    @UiField HorizontalPanel explainPanel;
+    @UiField TextButton explainBtn;
+    @UiField TextButton chooseCollabBtn;
+    @UiField ListStore<Sharing> listStore;
+    @UiField ColumnModel<Sharing> cm;
     @UiField VerticalLayoutContainer container;
     @UiField(provided = true) final SharingAppearance appearance;
-    private UserSearchField searchField;
+    @UiField(provided = true) UserSearchField searchField;
 
     private FastMap<List<Sharing>> originalList;
     private final FastMap<SharedResource> resources;
     private final SharingPresenter presenter;
     private FastMap<List<Sharing>> sharingMap;
-    private HorizontalPanel explainPanel;
-    final Widget widget;
 
     @Inject AsyncProviderWrapper<ManageCollaboratorsDialog> collaboratorsDialogProvider;
 
@@ -89,70 +95,62 @@ public class SharingPermissionsPanel implements SharingPermissionView,
         this.resources = resources;
         this.appearance = appearance;
         this.searchField = searchField;
-        init();
-        widget = uiBinder.createAndBindUi(this);
-        initToolbar();
+        initWidget(uiBinder.createAndBindUi(this));
         searchField.addUserSearchResultSelectedEventHandler(this);
     }
 
     @Override
-    public Widget asWidget() {
-        return widget;
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        grid.ensureDebugId(baseID + CommonsModule.IDs.PERM_GRID);
+        toolbar.ensureDebugId(baseID + CommonsModule.IDs.PERM_TOOLBAR);
+        explainPanel.ensureDebugId(toolbar.getId() + CommonsModule.IDs.PERM_EXPLAIN_PNL);
+        explainBtn.ensureDebugId(explainPanel.getElement().getId() + CommonsModule.IDs.PERM_EXPLAIN_BTN);
+        chooseCollabBtn.ensureDebugId(toolbar.getId() + CommonsModule.IDs.PERM_CHOOSE_COLLAB);
+        searchField.asWidget().ensureDebugId(toolbar.getId() + CommonsModule.IDs.PERM_USER_SEARCH);
+
+        for (ColumnConfig<Sharing, ?> cc : cm.getColumns()) {
+            if (cc.getCell() instanceof SharingPermissionNameCell) {
+                ((SharingPermissionNameCell)cc.getCell()).setBaseDebugId(grid.getId());
+            }
+        }
     }
 
-    private void init() {
-        listStore = new ListStore<>(new DataSharingKeyProvider());
-        cm = buildColumnModel();
+    @UiFactory
+    ListStore<Sharing> createListStore() {
+        return new ListStore<>(new DataSharingKeyProvider());
     }
 
-    private void initToolbar() {
-        toolbar.setHorizontalSpacing(5);
-        addExplainPanel();
-        toolbar.add(searchField);
-        toolbar.add(new FillToolItem());
-        toolbar.add(buildChooseCollabButton());
-    }
-
-    private TextButton buildChooseCollabButton() {
-        TextButton button = new TextButton();
-        button.setText(appearance.chooseFromCollab());
-        button.addSelectHandler(new SelectHandler() {
+    @UiHandler("chooseCollabBtn")
+    void chooseCollabBtnSelected(SelectEvent event) {
+        collaboratorsDialogProvider.get(new AsyncCallback<ManageCollaboratorsDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
 
             @Override
-            public void onSelect(SelectEvent event) {
-                collaboratorsDialogProvider.get(new AsyncCallback<ManageCollaboratorsDialog>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        ErrorHandler.post(caught);
-                    }
+            public void onSuccess(ManageCollaboratorsDialog result) {
+                result.setModal(true);
+                result.show(ManageCollaboratorsView.MODE.SELECT);
+                result.addOkButtonSelectHandler(new SelectHandler() {
 
                     @Override
-                    public void onSuccess(ManageCollaboratorsDialog result) {
-                        result.setModal(true);
-                        result.show(ManageCollaboratorsView.MODE.SELECT);
-                        result.addOkButtonSelectHandler(new SelectHandler() {
-
-                            @Override
-                            public void onSelect(SelectEvent event) {
-                                List<Subject> selected = result.getSelectedSubjects();
-                                if (selected != null && selected.size() > 0) {
-                                    for (Subject c : selected) {
-                                        addSubject(c);
-                                    }
-                                }
+                    public void onSelect(SelectEvent event) {
+                        List<Subject> selected = result.getSelectedSubjects();
+                        if (selected != null && selected.size() > 0) {
+                            for (Subject c : selected) {
+                                addSubject(c);
                             }
-                        });
+                        }
                     }
                 });
             }
-
         });
-        button.setToolTip(appearance.chooseFromCollab());
-        button.setIcon(appearance.shareIcon());
-        return button;
     }
 
-    private ComboBoxCell<PermissionValue> buildPermissionsCombo() {
+    ComboBoxCell<PermissionValue> buildPermissionsCombo() {
         ListStore<PermissionValue> perms = new ListStore<>(new ModelKeyProvider<PermissionValue>() {
 
             @Override
@@ -164,14 +162,13 @@ public class SharingPermissionsPanel implements SharingPermissionView,
         perms.add(PermissionValue.write);
         perms.add(PermissionValue.own);
 
-        final ComboBoxCell<PermissionValue> permCombo = new ComboBoxCell<>(perms,
-                                                                           new StringLabelProvider<PermissionValue>() {
-                                                                               @Override
-                                                                               public String
-                                                                                       getLabel(PermissionValue value) {
-                                                                                   return value.toString();
-                                                                               }
-                                                                           });
+        final ComboBoxCell<PermissionValue> permCombo =
+                new ComboBoxCell<>(perms, new StringLabelProvider<PermissionValue>() {
+                    @Override
+                    public String getLabel(PermissionValue value) {
+                        return value.toString();
+                    }
+                });
 
         permCombo.setForceSelection(true);
         permCombo.setSelectOnFocus(true);
@@ -192,33 +189,23 @@ public class SharingPermissionsPanel implements SharingPermissionView,
         return permCombo;
     }
 
-    private void addExplainPanel() {
-        explainPanel = new HorizontalPanel();
-        TextButton explainBtn = new TextButton(appearance.variablePermissionsNotice() + ":"
-                + appearance.explain(), new SelectHandler() {
+    @UiHandler("explainBtn")
+    void onExplainBtnSelected(SelectEvent event) {
+        ArrayList<Sharing> shares = new ArrayList<>();
+        for (String user : sharingMap.keySet()) {
+            shares.addAll(sharingMap.get(user));
+        }
 
-            @Override
-            public void onSelect(SelectEvent event) {
-                ArrayList<Sharing> shares = new ArrayList<>();
-                for (String user : sharingMap.keySet()) {
-                    shares.addAll(sharingMap.get(user));
-                }
-
-                ShareBreakDownDialog explainDlg = new ShareBreakDownDialog(shares);
-                explainDlg.setHeading(appearance.whoHasAccess());
-                explainDlg.show();
-            }
-        });
-        explainBtn.setIcon(appearance.helpIcon());
-        explainPanel.add(explainBtn);
-        toolbar.add(explainPanel);
+        ShareBreakDownDialog explainDlg = new ShareBreakDownDialog(shares);
+        explainDlg.setHeading(appearance.whoHasAccess());
+        explainDlg.show();
     }
 
     private void addSubject(Subject user) {
         String userName = user.getId();
         if (userName != null && userName.equalsIgnoreCase(UserInfo.getInstance().getUsername())) {
-            AlertMessageBox amb = new AlertMessageBox(appearance.warning(),
-                                                      appearance.selfShareWarning());
+            AlertMessageBox amb =
+                    new AlertMessageBox(appearance.warning(), appearance.selfShareWarning());
             amb.show();
             return;
         }
@@ -295,29 +282,18 @@ public class SharingPermissionsPanel implements SharingPermissionView,
         }
     }
 
-    private ColumnModel<Sharing> buildColumnModel() {
+    @UiFactory
+    ColumnModel<Sharing> createColumnModel() {
         List<ColumnConfig<Sharing, ?>> configs = new ArrayList<>();
         DataSharingProperties props = GWT.create(DataSharingProperties.class);
 
-        ColumnConfig<Sharing, String> name = new ColumnConfig<>(new ValueProvider<Sharing, String>() {
-            @Override
-            public String getValue(Sharing object) {
-                return object.getCollaboratorName();
-            }
-
-            @Override
-            public void setValue(Sharing object, String value) {
-
-            }
-
-            @Override
-            public String getPath() {
-                return null;
-            }
-        }, appearance.nameColumnWidth(), appearance.nameColumnLabel());
+        ColumnConfig<Sharing, Sharing> name = new ColumnConfig<>(new IdentityValueProvider<Sharing>("id"),
+                                                                 appearance.nameColumnWidth(),
+                                                                 appearance.nameColumnLabel());
         ColumnConfig<Sharing, PermissionValue> permission = buildPermissionColumn(props);
         ColumnConfig<Sharing, String> remove = buildRemoveColumn();
 
+        name.setCell(new SharingPermissionNameCell());
         configs.add(name);
         configs.add(permission);
         configs.add(remove);
@@ -327,18 +303,18 @@ public class SharingPermissionsPanel implements SharingPermissionView,
 
     @Override
     public void hidePermissionColumn() {
-      for(ColumnConfig<Sharing, ?> cc: grid.getColumnModel().getColumns()) {
-          if(cc.getHeader().asString().equals(appearance.permissionsColumnLabel())) {
+        for (ColumnConfig<Sharing, ?> cc : grid.getColumnModel().getColumns()) {
+            if (cc.getHeader().asString().equals(appearance.permissionsColumnLabel())) {
                 cc.setHidden(true);
                 return;
-          }
-      }
+            }
+        }
     }
 
     @Override
     public void showPermissionColumn() {
-        for(ColumnConfig<Sharing, ?> cc: grid.getColumnModel().getColumns()) {
-            if(cc.getHeader().asString().equals(appearance.permissionsColumnLabel())) {
+        for (ColumnConfig<Sharing, ?> cc : grid.getColumnModel().getColumns()) {
+            if (cc.getHeader().asString().equals(appearance.permissionsColumnLabel())) {
                 cc.setHidden(false);
                 return;
             }
@@ -415,8 +391,6 @@ public class SharingPermissionsPanel implements SharingPermissionView,
     }
 
     /**
-     * 
-     * 
      * @return the sharing list
      */
     @Override
@@ -512,7 +486,7 @@ public class SharingPermissionsPanel implements SharingPermissionView,
 
     /**
      * @return true if the given sharingList list has a different size than the resources list, or if not
-     *         every permission in the given sharingList list is the same; false otherwise.
+     * every permission in the given sharingList list is the same; false otherwise.
      */
     private boolean hasVaryingPermissions(List<Sharing> sharingList) {
         if (sharingList == null || sharingList.size() != resources.size()) {

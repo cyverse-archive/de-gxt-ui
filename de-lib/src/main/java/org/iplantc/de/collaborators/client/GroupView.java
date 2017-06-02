@@ -107,4 +107,16 @@ public interface GroupView extends IsWidget,
      * @param group
      */
     void updateCollabList(Group group);
+
+    /**
+     * Set the mode to match the ManageCollaboratorsView mode
+     * @param mode
+     */
+    void setMode(ManageCollaboratorsView.MODE mode);
+
+    /**
+     * Return the list of currently selected Collaborator Lists
+     * @return
+     */
+    List<Group> getSelectedCollabLists();
 }

@@ -2,11 +2,13 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
              xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
+             xmlns:gwt="urn:import:com.google.gwt.user.client.ui"
              xmlns:grid="urn:import:com.sencha.gxt.widget.core.client.grid"
+             xmlns:search="urn:import:org.iplantc.de.collaborators.client.util"
              xmlns:toolbar="urn:import:com.sencha.gxt.widget.core.client.toolbar">
 
     <ui:with field="appearance"
-             type="org.iplantc.de.client.sharing.SharingAppearance"/>
+             type="org.iplantc.de.commons.client.views.sharing.SharingAppearance"/>
     <ui:with field="listStore"
              type="com.sencha.gxt.data.shared.ListStore"/>
     <ui:with field="cm"
@@ -35,7 +37,28 @@
         </container:child>
         <container:child>
             <toolbar:ToolBar ui:field="toolbar"
-                             height="30"/>
+                             height="30"
+                             horizontalSpacing="5">
+                <toolbar:child>
+                    <gwt:HorizontalPanel ui:field="explainPanel">
+                        <gxt:button.TextButton ui:field="explainBtn"
+                                               text="{appearance.variablePermissionsNotice}"
+                                               icon="{appearance.helpIcon}"/>
+                    </gwt:HorizontalPanel>
+                </toolbar:child>
+                <toolbar:child>
+                    <search:UserSearchField ui:field="searchField"/>
+                </toolbar:child>
+                <toolbar:child>
+                    <toolbar:FillToolItem/>
+                </toolbar:child>
+                <toolbar:child>
+                    <gxt:button.TextButton ui:field="chooseCollabBtn"
+                                           text="{appearance.chooseFromCollab}"
+                                           toolTip="{appearance.chooseFromCollab}"
+                                           icon="{appearance.shareIcon}"/>
+                </toolbar:child>
+            </toolbar:ToolBar>
         </container:child>
 
     </container:VerticalLayoutContainer>

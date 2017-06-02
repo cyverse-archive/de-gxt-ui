@@ -1,4 +1,4 @@
-package org.iplantc.de.client.sharing;
+package org.iplantc.de.commons.client.views.sharing;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safecss.shared.SafeStyles;

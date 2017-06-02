@@ -5,7 +5,6 @@
 package org.iplantc.de.apps.client.views.sharing;
 
 import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.client.sharing.SharingPresenter;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;

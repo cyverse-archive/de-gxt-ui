@@ -5,7 +5,8 @@
 package org.iplantc.de.analysis.client.presenter.sharing;
 
 import org.iplantc.de.analysis.client.views.sharing.AnalysisSharingView;
-import org.iplantc.de.client.gin.factory.SharingPermissionViewFactory;
+import org.iplantc.de.analysis.shared.AnalysisModule;
+import org.iplantc.de.commons.client.gin.factory.SharingPermissionViewFactory;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisPermission;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingAutoBeanFactory;
@@ -23,8 +24,8 @@ import org.iplantc.de.client.models.sharing.SharingSubject;
 import org.iplantc.de.client.models.sharing.UserPermission;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
-import org.iplantc.de.client.sharing.SharingPermissionView;
-import org.iplantc.de.client.sharing.SharingPresenter;
+import org.iplantc.de.commons.client.views.sharing.SharingPermissionView;
+import org.iplantc.de.commons.client.presenter.SharingPresenter;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -196,6 +197,12 @@ public class AnalysisSharingPresenter implements SharingPresenter {
 
     }
 
+    @Override
+    public void setViewDebugId(String debugId) {
+        sharingView.asWidget().ensureDebugId(debugId + AnalysisModule.Ids.SHARING_VIEW);
+        permissionsPanel.asWidget().ensureDebugId(debugId + AnalysisModule.Ids.SHARING_VIEW + AnalysisModule.Ids.SHARING_PERMS);
+    }
+
     private AnalysisSharingRequestList buildSharingRequest() {
         AnalysisSharingRequestList sharingRequestList = null;
 
@@ -207,9 +214,9 @@ public class AnalysisSharingPresenter implements SharingPresenter {
             for (String userName : sharingMap.keySet()) {
                 AnalysisSharingRequest sharingRequest = shareFactory.AnalysisSharingRequest().as();
                 SharingSubject sharingSubject = shareFactory.getSharingSubject().as();
-                sharingSubject.setSourceId("ldap");
-                sharingSubject.setId(userName);
                 List<Sharing> shareList = sharingMap.get(userName);
+                sharingSubject.setSourceId(getSourceId(shareList));
+                sharingSubject.setId(userName);
                 sharingRequest.setSubject(sharingSubject);
                 sharingRequest.setAnalysisPermissions(buildAnalysisPermissions(shareList));
                 requests.add(sharingRequest);
@@ -219,6 +226,11 @@ public class AnalysisSharingPresenter implements SharingPresenter {
             sharingRequestList.setAnalysisSharingRequestList(requests);
         }
         return sharingRequestList;
+    }
+
+    String getSourceId(List<Sharing> shareList) {
+        Sharing share = shareList.get(0);
+        return share.getSourceId();
     }
 
     private List<AnalysisPermission> buildAnalysisPermissions(List<Sharing> shareList) {
@@ -245,7 +257,7 @@ public class AnalysisSharingPresenter implements SharingPresenter {
 
                 AnalysisUnsharingRequest unsharingRequest = shareFactory.AnalysisUnsharingRequest().as();
                 SharingSubject sharingSubject = shareFactory.getSharingSubject().as();
-                sharingSubject.setSourceId("ldap");
+                sharingSubject.setSourceId(getSourceId(shareList));
                 sharingSubject.setId(userName);
                 unsharingRequest.setSubject(sharingSubject);
                 unsharingRequest.setAnalyses(buildUnshareAnalysisPermissionList(shareList));

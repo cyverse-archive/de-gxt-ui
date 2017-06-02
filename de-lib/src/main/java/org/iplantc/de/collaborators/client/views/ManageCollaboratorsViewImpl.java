@@ -14,6 +14,8 @@ import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -26,7 +28,6 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.core.client.IdentityValueProvider;
-import com.sencha.gxt.core.client.Style.LayoutRegion;
 import com.sencha.gxt.core.client.Style.SelectionMode;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
@@ -113,8 +114,10 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @Override
-    public List<Subject> getSelectedCollaborators() {
-        return grid.getSelectionModel().getSelectedItems();
+    public List<Subject> getSelectedSubjects() {
+        List<Group> selectedCollabLists = groupView.getSelectedCollabLists();
+        List<Subject> selectedCollaborators = grid.getSelectionModel().getSelectedItems();
+        return Lists.newArrayList(Iterables.concat(selectedCollabLists, selectedCollaborators));
     }
 
     @Override
@@ -181,20 +184,22 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @Override
     public void setMode(MODE mode) {
         this.mode = mode;
+        groupView.setMode(mode);
         switch (mode) {
             case MANAGE:
                 grid.getView().setEmptyText(appearance.noCollaborators());
                 manageBtn.setVisible(false);
-                deleteBtn.setVisible(true);
-                con.show(LayoutRegion.NORTH);
+                searchField.asWidget().setVisible(true);
+                toolbar.setVisible(true);
                 break;
             case SELECT:
                 grid.getView().setEmptyText(appearance.noCollaborators());
-                con.hide(LayoutRegion.NORTH);
                 manageBtn.setVisible(true);
-                deleteBtn.setVisible(false);
+                searchField.asWidget().setVisible(false);
+                toolbar.setVisible(false);
                 break;
         }
+        toolbar.forceLayout();
     }
 
     @Override

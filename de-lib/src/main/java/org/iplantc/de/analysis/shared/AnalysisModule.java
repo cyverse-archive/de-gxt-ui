@@ -29,5 +29,8 @@ public interface AnalysisModule {
         String SHARE_MENU =".share";
         String SHARE_COLLAB = ".sharecollab";
         String SHARE_SUPPORT =".sharesupport";
+        String SHARING_DLG = "analysisSharingDlg";
+        String SHARING_VIEW = ".view";
+        String SHARING_PERMS = ".permPanel";
     }
 }

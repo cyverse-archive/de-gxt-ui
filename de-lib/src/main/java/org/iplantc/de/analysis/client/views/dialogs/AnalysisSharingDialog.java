@@ -1,8 +1,9 @@
 package org.iplantc.de.analysis.client.views.dialogs;
 
 import org.iplantc.de.analysis.client.gin.factory.AnalysisSharingPresenterFactory;
+import org.iplantc.de.analysis.shared.AnalysisModule;
 import org.iplantc.de.client.models.analysis.Analysis;
-import org.iplantc.de.client.sharing.SharingPresenter;
+import org.iplantc.de.commons.client.presenter.SharingPresenter;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
 import com.google.common.base.Preconditions;
@@ -33,6 +34,13 @@ public class AnalysisSharingDialog extends IPlantDialog implements SelectHandler
     }
 
     @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        sharingPresenter.setViewDebugId(baseID);
+    }
+
+    @Override
     public void onSelect(SelectEvent event) {
         Preconditions.checkNotNull(sharingPresenter);
         sharingPresenter.processRequest();
@@ -42,6 +50,8 @@ public class AnalysisSharingDialog extends IPlantDialog implements SelectHandler
         sharingPresenter = factory.create(analyses);
         sharingPresenter.go(this);
         super.show();
+
+        ensureDebugId(AnalysisModule.Ids.SHARING_DLG);
     }
 
     @Override
