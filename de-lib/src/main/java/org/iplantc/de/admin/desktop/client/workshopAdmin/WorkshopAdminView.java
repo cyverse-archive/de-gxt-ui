@@ -1,21 +1,20 @@
 package org.iplantc.de.admin.desktop.client.workshopAdmin;
 
+import org.iplantc.de.client.models.IsMaskable;
+import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
+
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-import org.iplantc.de.client.models.IsMaskable;
-import org.iplantc.de.client.models.groups.Member;
-import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 
 /**
  * @author dennis
  */
-public interface WorkshopAdminView extends IsWidget, IsMaskable {
-
-    UserSearchResultSelected.USER_SEARCH_EVENT_TAG userSearchEventTag
-            = UserSearchResultSelected.USER_SEARCH_EVENT_TAG.WORKSHOP_ADMIN;
+public interface WorkshopAdminView extends IsWidget,
+                                           IsMaskable,
+                                           UserSearchResultSelected.HasUserSearchResultSelectedEventHandlers{
 
     interface WorkshopAdminViewAppearance {
 
@@ -54,8 +53,6 @@ public interface WorkshopAdminView extends IsWidget, IsMaskable {
 
         void setViewDebugId(String baseId);
     }
-
-    <H extends EventHandler> void addGlobalEventHandler(GwtEvent.Type<H> type, H handler);
 
     <H extends EventHandler> void addLocalEventHandler(GwtEvent.Type<H> type, H handler);
 }

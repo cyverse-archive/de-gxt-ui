@@ -4,7 +4,7 @@
 package org.iplantc.de.collaborators.client.util;
 
 import org.iplantc.de.client.gin.ServicesInjector;
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.collaborators.client.util.UserSearchField.UsersLoadConfig;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -21,7 +21,7 @@ import java.util.List;
  * @author sriram
  *
  */
-public class UserSearchRPCProxy extends RpcProxy<UsersLoadConfig, PagingLoadResult<Collaborator>> {
+public class UserSearchRPCProxy extends RpcProxy<UsersLoadConfig, PagingLoadResult<Subject>> {
 
     CollaboratorsServiceFacade serviceFacade;
     private String lastQueryText = ""; //$NON-NLS-1$
@@ -36,7 +36,7 @@ public class UserSearchRPCProxy extends RpcProxy<UsersLoadConfig, PagingLoadResu
 
     @Override
     public void load(UsersLoadConfig loadConfig,
-            final AsyncCallback<PagingLoadResult<Collaborator>> callback) {
+            final AsyncCallback<PagingLoadResult<Subject>> callback) {
 
         lastQueryText = loadConfig.getQuery();
 
@@ -45,9 +45,9 @@ public class UserSearchRPCProxy extends RpcProxy<UsersLoadConfig, PagingLoadResu
             return;
         }
 
-        serviceFacade.searchCollaborators(lastQueryText, new AsyncCallback<List<Collaborator>>() {
+        serviceFacade.searchCollaborators(lastQueryText, new AsyncCallback<List<Subject>>() {
             @Override
-            public void onSuccess(List<Collaborator> result) {
+            public void onSuccess(List<Subject> result) {
                 callback.onSuccess(new PagingLoadResultBean<>(result, result.size(), 0));
             }
 

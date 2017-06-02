@@ -5,7 +5,7 @@ package org.iplantc.de.collaborators.client.presenter;
 
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
@@ -52,32 +52,13 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                                                      RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler,
                                                      DeleteGroupSelected.DeleteGroupSelectedHandler,
                                                      AddGroupSelected.AddGroupSelectedHandler,
-                                                     GroupNameSelected.GroupNameSelectedHandler {
-
-    final class UserSearchResultSelectedEventHandlerImpl implements
-                                                                 UserSearchResultSelected.UserSearchResultSelectedEventHandler {
-        @Override
-           public void
-                   onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected) {
-               if (userSearchResultSelected.getTag()
-                                           .equalsIgnoreCase(UserSearchResultSelected.USER_SEARCH_EVENT_TAG.MANAGE.toString())) {
-                   Collaborator collaborator = userSearchResultSelected.getCollaborator();
-                   if (!UserInfo.getInstance()
-                                .getUsername()
-                                .equals(collaborator.getUserName())) {
-                       if (!collaboratorsUtil.isCurrentCollaborator(collaborator, view.getCollaborators())) {
-                           addAsCollaborators(Arrays.asList(collaborator));
-                       }
-                   } else {
-                       announcer.schedule(new ErrorAnnouncementConfig(I18N.DISPLAY.collaboratorSelfAdd()));
-                   }
-               }
-           }
-    }
+                                                     GroupNameSelected.GroupNameSelectedHandler,
+                                                     UserSearchResultSelected.UserSearchResultSelectedEventHandler {
 
     @Inject CollaboratorsUtil collaboratorsUtil;
     @Inject EventBus eventBus;
     @Inject IplantAnnouncer announcer;
+    @Inject UserInfo userInfo;
     private ManageCollaboratorsViewFactory factory;
     private GroupServiceFacade groupServiceFacade;
     private CollaboratorsServiceFacade collabServiceFacade;
@@ -99,11 +80,10 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     void addEventHandlers() {
-        addCollabHandlerRegistration = eventBus.addHandler(UserSearchResultSelected.TYPE,
-                                                           new UserSearchResultSelectedEventHandlerImpl());
         view.addDeleteGroupSelectedHandler(this);
         view.addAddGroupSelectedHandler(this);
         view.addGroupNameSelectedHandler(this);
+        view.addUserSearchResultSelectedEventHandler(this);
     }
 
     /*
@@ -122,6 +102,19 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         container.setWidget(view.asWidget());
     }
 
+    @Override
+    public void onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected) {
+        Subject subject = userSearchResultSelected.getSubject();
+        if (!userInfo.getUsername()
+                     .equals(subject.getId())) {
+            if (!collaboratorsUtil.isCurrentCollaborator(subject, view.getCollaborators())) {
+                addAsCollaborators(Arrays.asList(subject));
+            }
+        } else {
+            announcer.schedule(new ErrorAnnouncementConfig(I18N.DISPLAY.collaboratorSelfAdd()));
+        }
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -130,7 +123,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
      * (java.util.List)
      */
     @Override
-    public void addAsCollaborators(final List<Collaborator> models) {
+    public void addAsCollaborators(final List<Subject> models) {
         collabServiceFacade.addCollaborators(models, new AsyncCallback<Void>() {
 
             @Override
@@ -151,10 +144,10 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     }
 
-    String getCollaboratorNames(List<Collaborator> collaborators) {
-        Stream<Collaborator> stream = collaborators.stream();
+    String getCollaboratorNames(List<Subject> subjects) {
+        Stream<Subject> stream = subjects.stream();
 
-        Stream<String> stringStream = stream.map(Collaborator::getUserName);
+        Stream<String> stringStream = stream.map(Subject::getId);
         List<String> names = stringStream.collect(Collectors.toList());
         return Joiner.on(",").join(names);
     }
@@ -179,7 +172,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     @Override
     public void onRemoveCollaboratorSelected(RemoveCollaboratorSelected event) {
-        List<Collaborator> models = event.getCollaborators();
+        List<Subject> models = event.getSubjects();
         collabServiceFacade.removeCollaborators(models, new AsyncCallback<Void>() {
 
             @Override
@@ -208,7 +201,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     @Override
     public void loadCurrentCollaborators() {
         view.maskCollaborators(null);
-        collabServiceFacade.getCollaborators(new AsyncCallback<List<Collaborator>>() {
+        collabServiceFacade.getCollaborators(new AsyncCallback<List<Subject>>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -216,7 +209,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
             }
 
             @Override
-            public void onSuccess(List<Collaborator> result) {
+            public void onSuccess(List<Subject> result) {
                 view.unmaskCollaborators();
                 view.loadData(result);
                 eventBus.fireEvent(new CollaboratorsLoadedEvent());
@@ -237,15 +230,8 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     @Override
-    public List<Collaborator> getSelectedCollaborators() {
+    public List<Subject> getSelectedCollaborators() {
         return view.getSelectedCollaborators();
-    }
-
-    @Override
-    public void cleanup() {
-        if (addCollabHandlerRegistration != null) {
-            addCollabHandlerRegistration.removeHandler();
-        }
     }
 
     @Override

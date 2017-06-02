@@ -3,7 +3,7 @@
  */
 package org.iplantc.de.collaborators.client.util;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.collaborators.CollaboratorAutoBeanFactory;
 
 import com.google.gwt.core.shared.GWT;
@@ -34,16 +34,17 @@ public class CollaboratorsUtil {
         return INSTANCE;
     }
 
-    public Collaborator getDummyCollaborator(String userName) {
+    //TODO Do I still need this for Subject?
+    public Subject getDummySubject(String userName) {
         JSONObject obj = new JSONObject();
         obj.put("username", new JSONString(userName));
-        AutoBean<Collaborator> bean = AutoBeanCodex.decode(factory, Collaborator.class, obj.toString());
+        AutoBean<Subject> bean = AutoBeanCodex.decode(factory, Subject.class, obj.toString());
         return bean.as();
     }
 
-    public boolean isCurrentCollaborator(Collaborator c, List<Collaborator> collaborators) {
-        for (Collaborator current : collaborators) {
-            if (current.getUserName().equals(c.getUserName())) {
+    public boolean isCurrentCollaborator(Subject c, List<Subject> subjects) {
+        for (Subject current : subjects) {
+            if (current.getId().equals(c.getId())) {
                 return true;
             }
         }

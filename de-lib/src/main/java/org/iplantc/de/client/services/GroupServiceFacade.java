@@ -1,6 +1,6 @@
 package org.iplantc.de.client.services;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 
@@ -39,14 +39,14 @@ public interface GroupServiceFacade {
      * @param group
      * @param callback
      */
-    void getMembers(Group group, AsyncCallback<List<Collaborator>> callback);
+    void getMembers(Group group, AsyncCallback<List<Subject>> callback);
 
     /**
      * Add a single member to a Collaborator List
      * @param group
      * @param callback
      */
-    void addMember(Group group, Collaborator member, AsyncCallback<Void> callback);
+    void addMember(Group group, Subject member, AsyncCallback<Void> callback);
 
     /**
      * Delete a single member from a Collaborator List
@@ -54,14 +54,14 @@ public interface GroupServiceFacade {
      * @param member
      * @param callback
      */
-    void deleteMember(Group group, Collaborator member, AsyncCallback<Void> callback);
+    void deleteMember(Group group, Subject member, AsyncCallback<Void> callback);
 
     /**
      * Replaces all members in the Collaborator List with the specified list instead
      * @param group
-     * @param collaborators
+     * @param subjects
      */
-    void updateMembers(Group group, List<Collaborator> collaborators, AsyncCallback<List<UpdateMemberResult>> callback);
+    void updateMembers(Group group, List<Subject> subjects, AsyncCallback<List<UpdateMemberResult>> callback);
 
     /**
      * Update the details of a Collaborator List

@@ -7,7 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
@@ -51,18 +51,18 @@ public class GroupDetailsPresenterImplTest {
     @Mock Group groupMock;
     @Mock Group newGroupMock;
     @Mock AutoBean<Group> groupAutoBeanMock;
-    @Mock List<Collaborator> collaboratorListMock;
+    @Mock List<Subject> subjectListMock;
     @Mock HandlerManager handlerManagerMock;
     @Mock UpdateMemberResult updateResultMock;
     @Mock List<UpdateMemberResult> updateMemberResultsMock;
     @Mock List<UpdateMemberResult> failedUpdateResultsMock;
     @Mock Stream<UpdateMemberResult> updateMemberResultStreamMock;
     @Mock IplantAnnouncer announcerMock;
-    @Mock Collaborator subjectMock;
-    @Mock Iterator<Collaborator> collaboratorIteratorMock;
+    @Mock Subject subjectMock;
+    @Mock Iterator<Subject> collaboratorIteratorMock;
     @Mock Iterator<UpdateMemberResult> resultIteratorMock;
 
-    @Captor ArgumentCaptor<AsyncCallback<List<Collaborator>>> collabListCallbackCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> collabListCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<Group>> groupCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<UpdateMemberResult>>> updateMembersCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
@@ -74,8 +74,8 @@ public class GroupDetailsPresenterImplTest {
 
         when(factoryMock.getGroup()).thenReturn(groupAutoBeanMock);
         when(groupAutoBeanMock.as()).thenReturn(newGroupMock);
-        when(collaboratorListMock.size()).thenReturn(2);
-        when(collaboratorListMock.iterator()).thenReturn(collaboratorIteratorMock);
+        when(subjectListMock.size()).thenReturn(2);
+        when(subjectListMock.iterator()).thenReturn(collaboratorIteratorMock);
         when(collaboratorIteratorMock.hasNext()).thenReturn(true, true, false);
         when(collaboratorIteratorMock.next()).thenReturn(subjectMock, subjectMock);
         when(failedUpdateResultsMock.size()).thenReturn(2);
@@ -105,8 +105,8 @@ public class GroupDetailsPresenterImplTest {
         verify(containerMock).setWidget(eq(viewMock));
         verify(serviceFacadeMock).getMembers(eq(groupMock), collabListCallbackCaptor.capture());
 
-        collabListCallbackCaptor.getValue().onSuccess(collaboratorListMock);
-        verify(viewMock).addMembers(eq(collaboratorListMock));
+        collabListCallbackCaptor.getValue().onSuccess(subjectListMock);
+        verify(viewMock).addMembers(eq(subjectListMock));
         verify(viewMock).edit(eq(groupMock), eq(GroupDetailsView.MODE.EDIT));
     }
 
@@ -147,16 +147,16 @@ public class GroupDetailsPresenterImplTest {
 
     @Test
     public void updateGroupMembers_withFailures() {
-        when(collaboratorListMock.isEmpty()).thenReturn(false);
+        when(subjectListMock.isEmpty()).thenReturn(false);
         when(updateMemberResultsMock.stream()).thenReturn(updateMemberResultStreamMock);
         when(updateMemberResultStreamMock.filter(any())).thenReturn(updateMemberResultStreamMock);
         when(updateMemberResultStreamMock.collect(any())).thenReturn(failedUpdateResultsMock);
         when(appearanceMock.unableToAddMembers(any())).thenReturn("announcement");
         /** CALL METHOD UNDER TEST **/
-        uut.updateGroupMembers(groupMock, collaboratorListMock);
+        uut.updateGroupMembers(groupMock, subjectListMock);
 
         verify(serviceFacadeMock).updateMembers(eq(groupMock),
-                                                eq(collaboratorListMock),
+                                                eq(subjectListMock),
                                                 updateMembersCallbackCaptor.capture());
 
         updateMembersCallbackCaptor.getValue().onSuccess(updateMemberResultsMock);
@@ -185,7 +185,7 @@ public class GroupDetailsPresenterImplTest {
 
     @Test
     public void updateGroup() {
-        when(viewMock.getCollaborators()).thenReturn(collaboratorListMock);
+        when(viewMock.getMembers()).thenReturn(subjectListMock);
         GroupDetailsPresenterImpl spy = Mockito.spy(uut);
 
         /** CALL METHOD UNDER TEST **/

@@ -1,6 +1,6 @@
 package org.iplantc.de.collaborators.client.events;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -23,11 +23,11 @@ public class RemoveCollaboratorSelected
 
     public static Type<RemoveCollaboratorSelectedHandler> TYPE =
             new Type<RemoveCollaboratorSelectedHandler>();
-    private List<Collaborator> collaborators;
+    private List<Subject> subjects;
 
-    public RemoveCollaboratorSelected(List<Collaborator> collaborators) {
+    public RemoveCollaboratorSelected(List<Subject> subjects) {
 
-        this.collaborators = collaborators;
+        this.subjects = subjects;
     }
 
     public Type<RemoveCollaboratorSelectedHandler> getAssociatedType() {
@@ -38,7 +38,7 @@ public class RemoveCollaboratorSelected
         handler.onRemoveCollaboratorSelected(this);
     }
 
-    public List<Collaborator> getCollaborators() {
-        return collaborators;
+    public List<Subject> getSubjects() {
+        return subjects;
     }
 }

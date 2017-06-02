@@ -4,7 +4,7 @@
  */
 package org.iplantc.de.client.models.sharing;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 
 /**
@@ -16,16 +16,16 @@ public class Sharing {
     private String systemId;
     private PermissionValue displayPermission;
     private PermissionValue permission;
-    private final Collaborator collaborator;
+    private final Subject subject;
     private String name;
 
 
-    public Sharing(final Collaborator c, final PermissionValue p, final String id, final String name) {
+    public Sharing(final Subject c, final PermissionValue p, final String id, final String name) {
         this(c, p, null, id, name);
     }
 
-    public Sharing(final Collaborator c, final PermissionValue p, final String systemId, final String id, final String name) {
-        this.collaborator = c;
+    public Sharing(final Subject c, final PermissionValue p, final String systemId, final String id, final String name) {
+        this.subject = c;
         this.systemId = systemId;
         setId(id);
         setName(name);
@@ -74,7 +74,7 @@ public class Sharing {
     }
 
     public String getKey() {
-        return getCollaborator().getUserName() + getSystemId() + getId();
+        return getSubject().getId() + getSystemId() + getId();
     }
 
     public void setPermission(PermissionValue perm) {
@@ -103,33 +103,33 @@ public class Sharing {
     }
 
     public Sharing copy() {
-        return new Sharing(collaborator, permission, systemId, id, name);
+        return new Sharing(subject, permission, systemId, id, name);
     }
 
     public String getUserName() {
-        return getCollaborator().getUserName();
+        return getSubject().getId();
     }
 
     public String getName() {
         return name;
     }
 
-    public Collaborator getCollaborator() {
-        return collaborator;
+    public Subject getSubject() {
+        return subject;
     }
 
 
     public String getCollaboratorName() {
         StringBuilder builder = new StringBuilder();
-        if (getCollaborator().getFirstName() != null && !getCollaborator().getFirstName().isEmpty()) {
-            builder.append(getCollaborator().getFirstName());
-            if (getCollaborator().getLastName() != null && !getCollaborator().getLastName().isEmpty()) {
+        if (getSubject().getFirstName() != null && !getSubject().getFirstName().isEmpty()) {
+            builder.append(getSubject().getFirstName());
+            if (getSubject().getLastName() != null && !getSubject().getLastName().isEmpty()) {
                 builder.append(" ");
-                builder.append(getCollaborator().getLastName());
+                builder.append(getSubject().getLastName());
             }
             return builder.toString();
         } else {
-            return getCollaborator().getUserName();
+            return getSubject().getId();
         }
     }
 

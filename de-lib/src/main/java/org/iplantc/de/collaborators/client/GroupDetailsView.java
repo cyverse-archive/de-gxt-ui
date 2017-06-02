@@ -1,7 +1,7 @@
 package org.iplantc.de.collaborators.client;
 
 import org.iplantc.de.client.models.IsMaskable;
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
 import org.iplantc.de.collaborators.client.events.DeleteMembersSelected;
@@ -44,11 +44,6 @@ public interface GroupDetailsView extends IsWidget,
         boolean isViewValid();
 
         /**
-         * Clear any EventBus handlers that are no longer needed
-         */
-        void clearHandlers();
-
-        /**
          * Handling saving the Collaborator List
          */
         void saveGroupSelected();
@@ -59,11 +54,6 @@ public interface GroupDetailsView extends IsWidget,
      * @param group
      */
     void edit(Group group, MODE mode);
-
-    /**
-     * Clear any EventBus handlers that can now be removed
-     */
-    void clearHandlers();
 
     /**
      * Get the current Collaborator List from the view
@@ -81,11 +71,11 @@ public interface GroupDetailsView extends IsWidget,
      * Get the list of members in the current Collaborator List
      * @return
      */
-    List<Collaborator> getCollaborators();
+    List<Subject> getMembers();
 
     /**
      * Add the specified members to the Collaborator List
      * @param members
      */
-    void addMembers(List<Collaborator> members);
+    void addMembers(List<Subject> members);
 }

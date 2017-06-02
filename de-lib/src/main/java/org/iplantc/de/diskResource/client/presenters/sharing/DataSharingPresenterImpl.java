@@ -1,7 +1,7 @@
 package org.iplantc.de.diskResource.client.presenters.sharing;
 
 import org.iplantc.de.client.gin.factory.SharingPermissionViewFactory;
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
@@ -39,7 +39,7 @@ import java.util.List;
 public class DataSharingPresenterImpl implements SharingPresenter {
 
     private final class LoadPermissionsCallback extends DataCallback<String> {
-        private final class GetUserInfoCallback implements AsyncCallback<FastMap<Collaborator>> {
+        private final class GetUserInfoCallback implements AsyncCallback<FastMap<Subject>> {
             private final List<String> usernames;
 
             private GetUserInfoCallback(List<String> usernames) {
@@ -52,12 +52,12 @@ public class DataSharingPresenterImpl implements SharingPresenter {
             }
 
             @Override
-            public void onSuccess(FastMap<Collaborator> results) {
+            public void onSuccess(FastMap<Subject> results) {
                 dataSharingMap = new FastMap<>();
                 for (String userName : usernames) {
-                    Collaborator user = results.get(userName);
+                    Subject user = results.get(userName);
                     if (user == null) {
-                        user = collaboratorsUtil.getDummyCollaborator(userName);
+                        user = collaboratorsUtil.getDummySubject(userName);
                     }
 
                     List<Sharing> dataShares = new ArrayList<>();

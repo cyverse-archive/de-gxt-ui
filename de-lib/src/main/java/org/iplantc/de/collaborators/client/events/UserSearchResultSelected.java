@@ -1,10 +1,11 @@
 package org.iplantc.de.collaborators.client.events;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected.UserSearchResultSelectedEventHandler;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * 
@@ -15,28 +16,20 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class UserSearchResultSelected extends GwtEvent<UserSearchResultSelectedEventHandler> {
 
-    public enum USER_SEARCH_EVENT_TAG {
-
-        SHARING, MANAGE, WORKSHOP_ADMIN, GROUP
-
-    };
-
     public interface UserSearchResultSelectedEventHandler extends EventHandler {
 
         void onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected);
     }
 
-    public static final GwtEvent.Type<UserSearchResultSelectedEventHandler> TYPE = new GwtEvent.Type<UserSearchResultSelected.UserSearchResultSelectedEventHandler>();
-    private final Collaborator collaborator;
-    private String tag;
-
-    public UserSearchResultSelected(String tag, Collaborator collaborator) {
-        this.collaborator = collaborator;
-        this.setTag(tag);
+    public interface HasUserSearchResultSelectedEventHandlers {
+        HandlerRegistration addUserSearchResultSelectedEventHandler(UserSearchResultSelectedEventHandler handler);
     }
 
-    public boolean matchesTag(USER_SEARCH_EVENT_TAG tag) {
-        return this.tag.equalsIgnoreCase(tag.toString());
+    public static final GwtEvent.Type<UserSearchResultSelectedEventHandler> TYPE = new GwtEvent.Type<UserSearchResultSelected.UserSearchResultSelectedEventHandler>();
+    private final Subject subject;
+
+    public UserSearchResultSelected(Subject subject) {
+        this.subject = subject;
     }
 
     @Override
@@ -49,22 +42,7 @@ public class UserSearchResultSelected extends GwtEvent<UserSearchResultSelectedE
         handler.onUserSearchResultSelected(this);
     }
 
-    public Collaborator getCollaborator() {
-        return collaborator;
+    public Subject getSubject() {
+        return subject;
     }
-
-    /**
-     * @return the tag
-     */
-    public String getTag() {
-        return tag;
-    }
-
-    /**
-     * @param tag the tag to set
-     */
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
 }

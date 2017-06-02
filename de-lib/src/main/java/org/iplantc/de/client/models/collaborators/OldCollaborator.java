@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.iplantc.de.client.models.collaborators;
 
@@ -9,9 +9,9 @@ import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 
 /**
  * @author sriram
- * 
+ *
  */
-public interface Collaborator extends HasId {
+public interface OldCollaborator extends HasId {
 
     @PropertyName("username")
     void setUserName(String username);

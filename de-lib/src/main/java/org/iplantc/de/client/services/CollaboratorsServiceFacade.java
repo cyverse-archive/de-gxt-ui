@@ -3,7 +3,7 @@
  */
 package org.iplantc.de.client.services;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -21,32 +21,32 @@ public interface CollaboratorsServiceFacade {
      * @param term
      * @param callback
      */
-    public void searchCollaborators(String term, AsyncCallback<List<Collaborator>> callback) ;
+    public void searchCollaborators(String term, AsyncCallback<List<Subject>> callback) ;
 
     /**
      * Get the list of all collaborators a user has
      * @param callback
      */
-    public void getCollaborators(AsyncCallback<List<Collaborator>> callback);
+    public void getCollaborators(AsyncCallback<List<Subject>> callback);
 
     /**
      * Add a collaborator to a user's list of collaborators
      * @param users
      * @param callback
      */
-    public void addCollaborators(List<Collaborator> collaborators, AsyncCallback<Void> callback);
+    public void addCollaborators(List<Subject> subjects, AsyncCallback<Void> callback);
 
     /**
      * Remove a collaborator from a user's list of all collaborators
      * @param users
      * @param callback
      */
-    public void removeCollaborators(List<Collaborator> users, AsyncCallback<Void> callback);
+    public void removeCollaborators(List<Subject> users, AsyncCallback<Void> callback);
 
     /**
      *
      * @param usernames
      * @param callback
      */
-    public void getUserInfo(List<String> usernames, AsyncCallback<FastMap<Collaborator>> callback);
+    public void getUserInfo(List<String> usernames, AsyncCallback<FastMap<Subject>> callback);
 }

@@ -1,9 +1,8 @@
 package org.iplantc.de.client.models.groups;
 
 import org.iplantc.de.client.models.HasDescription;
-import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.collaborators.Subject;
 
-import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 /**
@@ -11,7 +10,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
  *
  * @author aramsey
  */
-public interface Group extends HasName, HasDescription, HasId {
+public interface Group extends Subject, HasDescription {
     
     String getType();
     void setType(String type);

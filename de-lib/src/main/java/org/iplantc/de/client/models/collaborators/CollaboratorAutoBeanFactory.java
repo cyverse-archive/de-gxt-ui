@@ -14,6 +14,10 @@ public interface CollaboratorAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<CollaboratorsList> getCollaboratorsList();
 
-    AutoBean<Collaborator> getCollaborator();
+    AutoBean<SubjectList> getSubjectList();
+
+    AutoBean<Subject> getSubject();
+
+    AutoBean<OldCollaborator> getOldCollaborator();
 
 }

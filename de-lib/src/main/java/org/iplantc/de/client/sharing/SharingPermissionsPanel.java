@@ -1,15 +1,14 @@
 package org.iplantc.de.client.sharing;
 
-import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
+import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.client.views.dialogs.ManageCollaboratorsDialog;
-import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.diskResource.client.model.DataSharingKeyProvider;
 import org.iplantc.de.diskResource.client.model.DataSharingProperties;
@@ -55,7 +54,8 @@ import java.util.List;
 /**
  * @author sriram, jstroot
  */
-public class SharingPermissionsPanel implements SharingPermissionView {
+public class SharingPermissionsPanel implements SharingPermissionView,
+                                                UserSearchResultSelected.UserSearchResultSelectedEventHandler {
 
     @UiTemplate("SharingPermissionsView.ui.xml")
     interface MyUiBinder extends UiBinder<Widget, SharingPermissionsPanel> {
@@ -67,8 +67,8 @@ public class SharingPermissionsPanel implements SharingPermissionView {
     @UiField(provided = true) ColumnModel<Sharing> cm;
     @UiField VerticalLayoutContainer container;
     @UiField(provided = true) final SharingAppearance appearance;
+    private UserSearchField searchField;
 
-    private final EventBus eventBus;
     private FastMap<List<Sharing>> originalList;
     private final FastMap<SharedResource> resources;
     private final SharingPresenter presenter;
@@ -83,14 +83,16 @@ public class SharingPermissionsPanel implements SharingPermissionView {
     @Inject
     SharingPermissionsPanel(@Assisted SharingPresenter dataSharingPresenter,
                             @Assisted FastMap<SharedResource> resources,
-                            final SharingAppearance appearance) {
+                            final SharingAppearance appearance,
+                            UserSearchField searchField) {
         this.presenter = dataSharingPresenter;
         this.resources = resources;
         this.appearance = appearance;
-        eventBus = EventBus.getInstance();
+        this.searchField = searchField;
         init();
         widget = uiBinder.createAndBindUi(this);
         initToolbar();
+        searchField.addUserSearchResultSelectedEventHandler(this);
     }
 
     @Override
@@ -101,25 +103,12 @@ public class SharingPermissionsPanel implements SharingPermissionView {
     private void init() {
         listStore = new ListStore<>(new DataSharingKeyProvider());
         cm = buildColumnModel();
-        eventBus.addHandler(UserSearchResultSelected.TYPE,
-                            new UserSearchResultSelected.UserSearchResultSelectedEventHandler() {
-
-                                @Override
-                                public void
-                                        onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected) {
-                                    if (userSearchResultSelected.getTag()
-                                                                .equals(UserSearchResultSelected.USER_SEARCH_EVENT_TAG.SHARING.toString())) {
-                                        addCollaborator(userSearchResultSelected.getCollaborator());
-                                    }
-
-                                }
-                            });
     }
 
     private void initToolbar() {
         toolbar.setHorizontalSpacing(5);
         addExplainPanel();
-        toolbar.add(new UserSearchField(UserSearchResultSelected.USER_SEARCH_EVENT_TAG.SHARING).asWidget());
+        toolbar.add(searchField);
         toolbar.add(new FillToolItem());
         toolbar.add(buildChooseCollabButton());
     }
@@ -145,10 +134,10 @@ public class SharingPermissionsPanel implements SharingPermissionView {
 
                             @Override
                             public void onSelect(SelectEvent event) {
-                                List<Collaborator> selected = result.getSelectedCollaborators();
+                                List<Subject> selected = result.getSelectedSubjects();
                                 if (selected != null && selected.size() > 0) {
-                                    for (Collaborator c : selected) {
-                                        addCollaborator(c);
+                                    for (Subject c : selected) {
+                                        addSubject(c);
                                     }
                                 }
                             }
@@ -225,8 +214,8 @@ public class SharingPermissionsPanel implements SharingPermissionView {
         toolbar.add(explainPanel);
     }
 
-    private void addCollaborator(Collaborator user) {
-        String userName = user.getUserName();
+    private void addSubject(Subject user) {
+        String userName = user.getId();
         if (userName != null && userName.equalsIgnoreCase(UserInfo.getInstance().getUsername())) {
             AlertMessageBox amb = new AlertMessageBox(appearance.warning(),
                                                       appearance.selfShareWarning());
@@ -267,6 +256,11 @@ public class SharingPermissionsPanel implements SharingPermissionView {
             sharingMap.put(sharing.getUserName(), null);
             store.remove(sharing);
         }
+    }
+
+    @Override
+    public void onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected) {
+        addSubject(userSearchResultSelected.getSubject());
     }
 
     public void loadSharingData(FastMap<List<Sharing>> sharingMap) {
@@ -470,7 +464,7 @@ public class SharingPermissionsPanel implements SharingPermissionView {
             }
             // Check if user does not have all resources shared yet, due to varying permissions/shares.
             if (resources.size() != models.size()) {
-                Collaborator user = models.get(0).getCollaborator();
+                Subject user = models.get(0).getSubject();
                 for (String id : resources.keySet()) {
                     final SharedResource resource = resources.get(id);
                     final String systemId = resource.getSystemId();

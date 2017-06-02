@@ -1,14 +1,13 @@
 package org.iplantc.de.collaborators.client.views;
 
-import org.iplantc.de.client.events.EventBus;
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupDetailsView;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
 import org.iplantc.de.collaborators.client.events.DeleteMembersSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
-import org.iplantc.de.collaborators.client.models.CollaboratorKeyProvider;
+import org.iplantc.de.collaborators.client.models.SubjectKeyProvider;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 
@@ -45,29 +44,15 @@ import java.util.List;
 /**
  * @author aramsey
  */
+
 public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
-                                                               Editor<Group> {
+                                                               Editor<Group>,
+                                                               UserSearchResultSelected.UserSearchResultSelectedEventHandler {
 
     interface GroupDetailsViewImplUiBinder extends UiBinder<Widget, GroupDetailsViewImpl> {
     }
 
     interface EditorDriver extends SimpleBeanEditorDriver<Group, GroupDetailsViewImpl> {}
-
-    private class CollaboratorSelectedHandler
-            implements UserSearchResultSelected.UserSearchResultSelectedEventHandler {
-        @Override
-        public void onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected) {
-            if (UserSearchResultSelected.USER_SEARCH_EVENT_TAG.GROUP.toString().equals(userSearchResultSelected.getTag())) {
-                Collaborator collaborator = userSearchResultSelected.getCollaborator();
-                if (MODE.EDIT == mode) {
-                    mask();
-                    fireEvent(new AddGroupMemberSelected(getGroup(), collaborator));
-                } else {
-                    listStore.add(collaborator);
-                }
-            }
-        }
-    }
 
     final EditorDriver editorDriver = GWT.create(EditorDriver.class);
     static GroupDetailsViewImplUiBinder uiBinder = GWT.create(GroupDetailsViewImplUiBinder.class);
@@ -79,29 +64,26 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
     @UiField(provided = true) UserSearchField searchField;
     @UiField ToolBar toolbar;
     @UiField @Ignore TextButton deleteBtn;
-    @UiField ListStore<Collaborator> listStore;
-    @UiField Grid<Collaborator> grid;
-    @UiField ColumnModel<Collaborator> cm;
+    @UiField ListStore<Subject> listStore;
+    @UiField Grid<Subject> grid;
+    @UiField ColumnModel<Subject> cm;
     @UiField(provided = true) GroupView.GroupViewAppearance appearance;
 
-    EventBus eventBus;
-    HandlerRegistration handlerRegistration;
-
-    private CheckBoxSelectionModel<Collaborator> checkBoxModel;
+    private CheckBoxSelectionModel<Subject> checkBoxModel;
     String baseID;
     private MODE mode;
 
     @Inject
     public GroupDetailsViewImpl(GroupView.GroupViewAppearance appearance,
-                            EventBus eventBus) {
+                                UserSearchField searchField) {
         this.appearance = appearance;
-        this.eventBus = eventBus;
-        searchField = new UserSearchField(UserSearchResultSelected.USER_SEARCH_EVENT_TAG.GROUP);
-        checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Collaborator>());
+        this.searchField = searchField;
+        checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Subject>());
         initWidget(uiBinder.createAndBindUi(this));
 
         groupNameLabel.setHTML(appearance.groupNameLabel());
 
+        searchField.addUserSearchResultSelectedEventHandler(this);
         checkBoxModel.setSelectionMode(Style.SelectionMode.MULTI);
         grid.setSelectionModel(checkBoxModel);
         grid.getView().setEmptyText(appearance.noCollaborators());
@@ -111,34 +93,42 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
                 setGridCheckBoxDebugIds();
             }
         });
-        grid.getSelectionModel().addSelectionChangedHandler(new SelectionChangedEvent.SelectionChangedHandler<Collaborator>() {
+        grid.getSelectionModel().addSelectionChangedHandler(new SelectionChangedEvent.SelectionChangedHandler<Subject>() {
             @Override
-            public void onSelectionChanged(SelectionChangedEvent<Collaborator> event) {
+            public void onSelectionChanged(SelectionChangedEvent<Subject> event) {
                 deleteBtn.setEnabled(!event.getSelection().isEmpty());
             }
         });
 
-        handlerRegistration =
-                eventBus.addHandler(UserSearchResultSelected.TYPE, new CollaboratorSelectedHandler());
-
         editorDriver.initialize(this);
+    }
+
+    @Override
+    public void onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected) {
+        Subject subject = userSearchResultSelected.getSubject();
+        if (MODE.EDIT == mode) {
+            mask();
+            fireEvent(new AddGroupMemberSelected(getGroup(), subject));
+        } else {
+            listStore.add(subject);
+        }
     }
 
     @UiHandler("deleteBtn")
     void onDeleteButtonSelected(SelectEvent event) {
-        List<Collaborator> selectedItems = grid.getSelectionModel().getSelectedItems();
+        List<Subject> selectedItems = grid.getSelectionModel().getSelectedItems();
         if (selectedItems != null && !selectedItems.isEmpty()) {
             fireEvent(new DeleteMembersSelected(getGroup(), selectedItems));
         }
     }
 
     @UiFactory
-    ListStore<Collaborator> createListStore() {
-        return new ListStore<Collaborator>(new CollaboratorKeyProvider());
+    ListStore<Subject> createListStore() {
+        return new ListStore<Subject>(new SubjectKeyProvider());
     }
 
     @UiFactory
-    ColumnModel<Collaborator> buildColumnModel() {
+    ColumnModel<Subject> buildColumnModel() {
         return new CollaboratorsColumnModel(checkBoxModel);
     }
 
@@ -169,12 +159,6 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
         editorDriver.edit(group);
     }
 
-    @Override
-    public void clearHandlers() {
-        handlerRegistration.removeHandler();
-    }
-
-    @Override
     public Group getGroup() {
         return editorDriver.flush();
     }
@@ -185,12 +169,12 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
     }
 
     @Override
-    public List<Collaborator> getCollaborators() {
+    public List<Subject> getMembers() {
         return listStore.getAll();
     }
 
     @Override
-    public void addMembers(List<Collaborator> members) {
+    public void addMembers(List<Subject> members) {
         if (members != null) {
             listStore.addAll(members);
         }

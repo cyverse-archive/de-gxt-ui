@@ -1,6 +1,6 @@
 package org.iplantc.de.collaborators.client.views.dialogs;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView.MODE;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
@@ -69,18 +69,12 @@ public class ManageCollaboratorsDialog extends IPlantDialog {
     }
 
     @Override
-    protected void onHide() {
-        presenter.cleanup();
-        super.onHide();
-    }
-
-    @Override
     public void show() throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "This method is not supported. Use show(MODE mode) method instead.");
     }
 
-    public List<Collaborator> getSelectedCollaborators() {
+    public List<Subject> getSelectedSubjects() {
         return presenter.getSelectedCollaborators();
     }
 }

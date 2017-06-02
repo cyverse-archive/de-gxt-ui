@@ -1,6 +1,6 @@
 package org.iplantc.de.collaborators.client.views;
 
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
@@ -8,8 +8,8 @@ import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
 import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
-import org.iplantc.de.collaborators.client.events.UserSearchResultSelected.USER_SEARCH_EVENT_TAG;
-import org.iplantc.de.collaborators.client.models.CollaboratorKeyProvider;
+import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
+import org.iplantc.de.collaborators.client.models.SubjectKeyProvider;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 
@@ -49,16 +49,16 @@ import java.util.List;
  * @author jstroot
  */
 public class ManageCollaboratorsViewImpl extends Composite implements ManageCollaboratorsView,
-                                                                      SelectionChangedHandler<Collaborator> {
+                                                                      SelectionChangedHandler<Subject> {
 
     @UiTemplate("ManageCollaboratorsView.ui.xml")
     interface MyUiBinder extends UiBinder<Widget, ManageCollaboratorsViewImpl> {
     }
-    @UiField ColumnModel<Collaborator> cm;
-    @UiField ListStore<Collaborator> listStore;
+    @UiField ColumnModel<Subject> cm;
+    @UiField ListStore<Subject> listStore;
     @UiField BorderLayoutContainer con;
     @UiField TextButton deleteBtn;
-    @UiField Grid<Collaborator> grid;
+    @UiField Grid<Subject> grid;
     @UiField TextButton manageBtn;
     @UiField(provided = true) UserSearchField searchField;
     @UiField HorizontalLayoutContainer searchPanel;
@@ -68,18 +68,19 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @UiField(provided = true) ManageCollaboratorsView.Appearance appearance;
 
     private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
-    private final CheckBoxSelectionModel<Collaborator> checkBoxModel;
+    private final CheckBoxSelectionModel<Subject> checkBoxModel;
     private MODE mode;
     private String baseID;
 
     @Inject
     public ManageCollaboratorsViewImpl(@Assisted final MODE mode,
                                        ManageCollaboratorsView.Appearance appearance,
-                                       GroupView groupView) {
+                                       GroupView groupView,
+                                       UserSearchField searchField) {
         this.appearance = appearance;
         this.groupView = groupView;
-        searchField = new UserSearchField(USER_SEARCH_EVENT_TAG.MANAGE);
-        checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Collaborator>());
+        this.searchField = searchField;
+        checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Subject>());
         initWidget(uiBinder.createAndBindUi(this));
 
         grid.setSelectionModel(checkBoxModel);
@@ -96,13 +97,13 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @Override
-    public void addCollaborators(List<Collaborator> models) {
+    public void addCollaborators(List<Subject> models) {
         listStore.addAll(models);
         setGridCheckBoxDebugIds();
     }
 
     @Override
-    public List<Collaborator> getCollaborators() {
+    public List<Subject> getCollaborators() {
         return listStore.getAll();
     }
 
@@ -112,7 +113,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @Override
-    public List<Collaborator> getSelectedCollaborators() {
+    public List<Subject> getSelectedCollaborators() {
         return grid.getSelectionModel().getSelectedItems();
     }
 
@@ -142,7 +143,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @Override
-    public void loadData(List<Collaborator> models) {
+    public void loadData(List<Subject> models) {
         listStore.clear();
         listStore.addAll(models);
     }
@@ -156,7 +157,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @Override
-    public void onSelectionChanged(SelectionChangedEvent<Collaborator> event) {
+    public void onSelectionChanged(SelectionChangedEvent<Subject> event) {
         if (event.getSelection() != null
                 && event.getSelection().size() > 0
                 && MODE.MANAGE.equals(mode)) {
@@ -167,9 +168,9 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @Override
-    public void removeCollaborators(List<Collaborator> models) {
+    public void removeCollaborators(List<Subject> models) {
         if (models != null && !models.isEmpty()) {
-            for (Collaborator c : models) {
+            for (Subject c : models) {
                 if (listStore.findModel(c) != null) {
                     listStore.remove(c);
                 }
@@ -219,12 +220,12 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @UiFactory
-    ListStore<Collaborator> createListStore() {
-        return new ListStore<>(new CollaboratorKeyProvider());
+    ListStore<Subject> createListStore() {
+        return new ListStore<>(new SubjectKeyProvider());
     }
 
     @UiFactory
-    ColumnModel<Collaborator> buildColumnModel() {
+    ColumnModel<Subject> buildColumnModel() {
         return new CollaboratorsColumnModel(checkBoxModel);
     }
 
@@ -260,5 +261,10 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @Override
     public HandlerRegistration addGroupNameSelectedHandler(GroupNameSelected.GroupNameSelectedHandler handler) {
         return groupView.addGroupNameSelectedHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addUserSearchResultSelectedEventHandler(UserSearchResultSelected.UserSearchResultSelectedEventHandler handler) {
+        return searchField.addUserSearchResultSelectedEventHandler(handler);
     }
 }

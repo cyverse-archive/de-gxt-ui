@@ -15,7 +15,7 @@ import org.iplantc.de.client.models.analysis.sharing.AnalysisUnsharingRequest;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisUnsharingRequestList;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisUserPermissions;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisUserPermissionsList;
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.diskResources.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
@@ -47,7 +47,7 @@ public class AnalysisSharingPresenter implements SharingPresenter {
 
 
     private final class LoadPermissionsCallback extends AnalysisCallback<String> {
-        private final class GetUserInfoCallback implements AsyncCallback<FastMap<Collaborator>> {
+        private final class GetUserInfoCallback implements AsyncCallback<FastMap<Subject>> {
             private final AnalysisUserPermissionsList analysisPermsList;
 
             private GetUserInfoCallback(AnalysisUserPermissionsList analysisPermsList) {
@@ -60,15 +60,15 @@ public class AnalysisSharingPresenter implements SharingPresenter {
             }
 
             @Override
-            public void onSuccess(FastMap<Collaborator> results) {
+            public void onSuccess(FastMap<Subject> results) {
                 FastMap<List<Sharing>> sharingMap = new FastMap<>();
                 for (AnalysisUserPermissions analysisUserPerms : analysisPermsList.getResourceUserPermissionsList()) {
                     for (UserPermission userPerms: analysisUserPerms.getPermissions()) {
 
                         String userName = userPerms.getSubject().getId();
-                        Collaborator user = results.get(userName);
+                        Subject user = results.get(userName);
                         if (user == null) {
-                            user = collaboratorsUtil.getDummyCollaborator(userName);
+                            user = collaboratorsUtil.getDummySubject(userName);
                         }
 
                         List<Sharing> shares = sharingMap.get(userName);

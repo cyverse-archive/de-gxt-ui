@@ -8,7 +8,7 @@ import org.iplantc.de.admin.desktop.client.workshopAdmin.gin.factory.WorkshopAdm
 import org.iplantc.de.admin.desktop.client.workshopAdmin.model.MemberProperties;
 import org.iplantc.de.admin.desktop.client.workshopAdmin.service.WorkshopAdminServiceFacade;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.Member;
 import org.iplantc.de.client.models.groups.MemberSaveResult;
@@ -38,15 +38,15 @@ public class WorkshopAdminPresenterImpl implements WorkshopAdminView.Presenter {
     final class UserSearchResultSelectedEventHandler
             implements UserSearchResultSelected.UserSearchResultSelectedEventHandler {
 
-        private Member memberFromCollaborator(Collaborator collaborator) {
+        private Member memberFromCollaborator(Subject subject) {
             Member member = groupAutoBeanFactory.getMember().as();
-            member.setId(collaborator.getUserName());
+            member.setId(subject.getId());
             member.setAttributes(new ArrayList<String>());
-            member.setEmail(collaborator.getEmail());
-            member.setFirstName(collaborator.getFirstName());
-            member.setInstitution(collaborator.getInstitution());
-            member.setLastName(collaborator.getLastName());
-            member.setName(collaborator.getName());
+            member.setEmail(subject.getEmail());
+            member.setFirstName(subject.getFirstName());
+            member.setInstitution(subject.getInstitution());
+            member.setLastName(subject.getLastName());
+            member.setName(subject.getName());
             return member;
         }
 
@@ -65,13 +65,8 @@ public class WorkshopAdminPresenterImpl implements WorkshopAdminView.Presenter {
         @Override
         public void onUserSearchResultSelected(UserSearchResultSelected event) {
 
-            // Ignore the event if it wasn't initiated by the workshop admin panel.
-            if (!event.matchesTag(WorkshopAdminView.userSearchEventTag)) {
-                return;
-            }
-
             // Add the user to the list if not there already.
-            Member member = memberFromCollaborator(event.getCollaborator());
+            Member member = memberFromCollaborator(event.getSubject());
             if (!listContainsMember(listStore.getAll(), member)) {
                 listStore.add(member);
             }
@@ -119,7 +114,7 @@ public class WorkshopAdminPresenterImpl implements WorkshopAdminView.Presenter {
         this.groupAutoBeanFactory = groupAutoBeanFactory;
         this.appearance = appearance;
 
-        view.addGlobalEventHandler(UserSearchResultSelected.TYPE, new UserSearchResultSelectedEventHandler());
+        view.addUserSearchResultSelectedEventHandler(new UserSearchResultSelectedEventHandler());
         view.addLocalEventHandler(DeleteMembersClickedEvent.TYPE, new DeleteMembersClickedEventHandler());
         view.addLocalEventHandler(SaveMembersClickedEvent.TYPE, new SaveMembersClickedEventHandler());
         view.addLocalEventHandler(RefreshMembersClickedEvent.TYPE, new RefreshMembersClickedEventHandler());
