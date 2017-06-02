@@ -13,6 +13,7 @@ import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
+import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.GroupView;
@@ -70,12 +71,17 @@ public class ManageCollaboratorsPresenterTest {
     @Mock AsyncProviderWrapper<GroupDetailsDialog> groupDetailsDialogProvider;
     @Mock AutoBean<Group> groupAutoBeanMock;
     @Mock Stream<Group> groupStreamMock;
+    @Mock Group defaultGroup;
+    @Mock UpdateMemberResult updateResultMock;
+    @Mock Stream<UpdateMemberResult> updateMemberResultStreamMock;
+    @Mock List<UpdateMemberResult> updateMemberResultsMock;
 
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> collabListCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<Group>> groupCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Group>>> groupListCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<GroupDetailsDialog>> groupDetailsDialogCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<List<UpdateMemberResult>>> updateMemberCaptor;
 
 
     private ManageCollaboratorsPresenter uut;
@@ -87,6 +93,8 @@ public class ManageCollaboratorsPresenterTest {
         when(groupMock.getName()).thenReturn("name");
         when(groupFactoryMock.getGroup()).thenReturn(groupAutoBeanMock);
         when(groupAutoBeanMock.as()).thenReturn(groupMock);
+        when(defaultGroup.getName()).thenReturn(Group.DEFAULT_GROUP);
+        when(groupFactoryMock.getDefaultGroup()).thenReturn(defaultGroup);
 
         uut = new ManageCollaboratorsPresenter(factoryMock,
                                                groupFactoryMock,
@@ -126,13 +134,16 @@ public class ManageCollaboratorsPresenterTest {
 
     @Test
     public void addAsCollaborators() {
+        when(updateMemberResultsMock.stream()).thenReturn(updateMemberResultStreamMock);
+        when(updateMemberResultStreamMock.filter(any())).thenReturn(updateMemberResultStreamMock);
+        when(updateMemberResultStreamMock.collect(any())).thenReturn(null);
 
         /** CALL METHOD UNDER TEST **/
         uut.addAsCollaborators(subjectListMock);
 
-        verify(collabServiceFacadeMock).addCollaborators(eq(subjectListMock), voidCallbackCaptor.capture());
+        verify(groupServiceFacadeMock).addMembers(eq(defaultGroup), eq(subjectListMock), updateMemberCaptor.capture());
 
-        voidCallbackCaptor.getValue().onSuccess(null);
+        updateMemberCaptor.getValue().onSuccess(updateMemberResultsMock);
         verify(viewMock).addCollaborators(eq(subjectListMock));
         verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));
     }

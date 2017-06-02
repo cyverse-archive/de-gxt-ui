@@ -8,6 +8,7 @@ import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
+import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.GroupView;
@@ -128,16 +129,23 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
      */
     @Override
     public void addAsCollaborators(final List<Subject> models) {
-        collabServiceFacade.addCollaborators(models, new AsyncCallback<Void>() {
+        groupServiceFacade.addMembers(groupFactory.getDefaultGroup(), models, new AsyncCallback<List<UpdateMemberResult>>() {
 
             @Override
-            public void onSuccess(Void result) {
-                // remove added models from search results
-                view.addCollaborators(models);
-                String names = getCollaboratorNames(models);
+            public void onSuccess(List<UpdateMemberResult> result) {
+                List<UpdateMemberResult> failures = result.stream()
+                                                          .filter(item -> !item.isSuccess())
+                                                          .collect(Collectors.toList());
+                if (failures != null && !failures.isEmpty()) {
+                    announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.unableToAddMembers(failures)));
+                } else {
+                    // remove added models from search results
+                    view.addCollaborators(models);
+                    String names = getCollaboratorNames(models);
 
-                announcer.schedule(new SuccessAnnouncementConfig(
-                                       I18N.DISPLAY.collaboratorAddConfirm(names)));
+                    announcer.schedule(new SuccessAnnouncementConfig(I18N.DISPLAY.collaboratorAddConfirm(
+                            names)));
+                }
             }
 
             @Override
@@ -208,8 +216,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     @Override
     public void loadCurrentCollaborators() {
         view.maskCollaborators(null);
-        Group defaultGroup = groupFactory.getGroup().as();
-        defaultGroup.setName(Group.DEFAULT_GROUP);
+        Group defaultGroup = groupFactory.getDefaultGroup();
         groupServiceFacade.getMembers(defaultGroup, new AsyncCallback<List<Subject>>() {
 
             @Override
