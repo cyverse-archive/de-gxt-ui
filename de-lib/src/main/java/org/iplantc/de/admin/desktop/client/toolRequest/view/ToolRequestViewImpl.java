@@ -1,6 +1,7 @@
 package org.iplantc.de.admin.desktop.client.toolRequest.view;
 
 import org.iplantc.de.admin.desktop.client.toolRequest.ToolRequestView;
+import org.iplantc.de.admin.desktop.client.toolRequest.view.cells.RequestNameCell;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.client.models.toolRequests.ToolRequest;
 import org.iplantc.de.client.models.toolRequests.ToolRequestAutoBeanFactory;
@@ -17,8 +18,11 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.Style.SelectionMode;
 import com.sencha.gxt.data.shared.ListStore;
+import com.sencha.gxt.data.shared.SortDir;
+import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -64,6 +68,8 @@ public class ToolRequestViewImpl extends Composite implements ToolRequestView, S
         initWidget(uiBinder.createAndBindUi(this));
         grid.getSelectionModel().addSelectionChangedHandler(this);
         grid.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        //show latest tool request first
+        store.addSortInfo(new Store.StoreSortInfo<ToolRequest>(trProps.dateSubmitted(), SortDir.DESC));
     }
 
     @Override
@@ -79,7 +85,7 @@ public class ToolRequestViewImpl extends Composite implements ToolRequestView, S
     @UiFactory
     ColumnModel<ToolRequest> createColumnModel() {
         List<ColumnConfig<ToolRequest, ?>> list = Lists.newArrayList();
-        ColumnConfig<ToolRequest, String> nameCol = new ColumnConfig<>(trProps.name(),
+        ColumnConfig<ToolRequest, ToolRequest> nameCol = new ColumnConfig<>(new IdentityValueProvider<>(),
                                                                        appearance.nameColumnWidth(),
                                                                        appearance.nameColumnLabel());
         ColumnConfig<ToolRequest, String> statusCol = new ColumnConfig<>(trProps.status(),
@@ -99,6 +105,7 @@ public class ToolRequestViewImpl extends Composite implements ToolRequestView, S
                                                                           appearance.versionColumnLabel());
 
         list.add(nameCol);
+        nameCol.setCell(new RequestNameCell());
         list.add(statusCol);
         list.add(dateSubmittedCol);
         list.add(dateUpdatedCol);

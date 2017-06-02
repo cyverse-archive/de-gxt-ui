@@ -8,6 +8,7 @@ import org.iplantc.de.client.models.toolRequests.ToolRequestDetails;
 import org.iplantc.de.client.models.toolRequests.ToolRequestUpdate;
 
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
@@ -95,6 +96,8 @@ public interface ToolRequestView extends IsWidget, IsMaskable {
         String versionLabel();
 
         String makePublic();
+
+        void renderRequestName(SafeHtmlBuilder safeHtmlBuilder, ToolRequest toolRequest);
     }
 
     public interface Presenter
@@ -107,6 +110,10 @@ public interface ToolRequestView extends IsWidget, IsMaskable {
             String getToolRequestsLoadingMask();
 
             String toolRequestUpdateSuccessMessage();
+
+            String publishFailed();
+
+            String publishSuccess();
         }
 
         /**
