@@ -1,5 +1,6 @@
 package org.iplantc.de.collaborators.client.presenter;
 
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
@@ -40,6 +41,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     String originalGroup;
 
     @Inject IplantAnnouncer announcer;
+    @Inject UserInfo userInfo;
 
     @Inject
     public GroupDetailsPresenterImpl(GroupDetailsView view,
@@ -118,7 +120,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
             public void onSuccess(Group result) {
                 ensureHandlers().fireEvent(new GroupSaved(result));
                 List<Subject> subjects = view.getMembers();
-                updateGroupMembers(group, subjects);
+                addGroupMembers(group, subjects);
             }
         });
     }
@@ -138,7 +140,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
         });
     }
 
-    void updateGroupMembers(Group group, List<Subject> subjects) {
+    void addGroupMembers(Group group, List<Subject> subjects) {
         if (subjects != null && !subjects.isEmpty()) {
             serviceFacade.addMembers(group, subjects, new AsyncCallback<List<UpdateMemberResult>>() {
                 @Override
@@ -169,6 +171,10 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
         Subject subject = event.getSubject();
 
         if (group != null && !Strings.isNullOrEmpty(group.getName()) && subject != null) {
+            if (isAddingSelf(subject) || isAddingCurrentGroup(subject)) {
+                view.unmask();
+                return;
+            }
             view.mask(appearance.loadingMask());
             serviceFacade.addMembers(group, wrapSubjectInList(subject), new AsyncCallback<List<UpdateMemberResult>>() {
                 @Override
@@ -191,6 +197,17 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
                 }
             });
         }
+    }
+
+    boolean isAddingCurrentGroup(Subject subject) {
+        if (subject instanceof Group) {
+            return originalGroup.equals(subject.getName());
+        }
+        return false;
+    }
+
+    boolean isAddingSelf(Subject subject) {
+        return userInfo.getUsername().equals(subject.getId());
     }
 
     List<Subject> wrapSubjectInList(Subject subject) {

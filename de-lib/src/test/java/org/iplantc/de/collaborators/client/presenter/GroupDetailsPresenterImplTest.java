@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
@@ -60,6 +61,7 @@ public class GroupDetailsPresenterImplTest {
     @Mock Subject subjectMock;
     @Mock Iterator<Subject> collaboratorIteratorMock;
     @Mock Iterator<UpdateMemberResult> resultIteratorMock;
+    @Mock UserInfo userInfoMock;
 
     @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> collabListCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<Group>> groupCallbackCaptor;
@@ -98,6 +100,7 @@ public class GroupDetailsPresenterImplTest {
         };
         uut.announcer = announcerMock;
         uut.originalGroup = "original";
+        uut.userInfo = userInfoMock;
     }
 
     @Test
@@ -158,7 +161,7 @@ public class GroupDetailsPresenterImplTest {
         when(updateMemberResultStreamMock.collect(any())).thenReturn(failedUpdateResultsMock);
         when(appearanceMock.unableToAddMembers(any())).thenReturn("announcement");
         /** CALL METHOD UNDER TEST **/
-        uut.updateGroupMembers(groupMock, subjectListMock);
+        uut.addGroupMembers(groupMock, subjectListMock);
 
         verify(serviceFacadeMock).addMembers(eq(groupMock),
                                              eq(subjectListMock),
@@ -175,6 +178,9 @@ public class GroupDetailsPresenterImplTest {
         AddGroupMemberSelected eventMock = mock(AddGroupMemberSelected.class);
         when(eventMock.getGroup()).thenReturn(groupMock);
         when(eventMock.getSubject()).thenReturn(subjectMock);
+        when(subjectMock.getName()).thenReturn("name");
+        when(userInfoMock.getUsername()).thenReturn("someid");
+        when(subjectMock.getId()).thenReturn("id");
         when(updateMemberResultsMock.stream()).thenReturn(updateMemberResultStreamMock);
         when(updateMemberResultStreamMock.filter(any())).thenReturn(updateMemberResultStreamMock);
         when(updateMemberResultStreamMock.collect(any())).thenReturn(null);
@@ -207,7 +213,7 @@ public class GroupDetailsPresenterImplTest {
 
     @Test
     public void deleteMember() {
-        when(appearanceMock.memberDeleteFail(subjectListMock, groupMock)).thenReturn("fail");
+        when(appearanceMock.memberDeleteFail(updateMemberResultsMock)).thenReturn("fail");
         when(updateMemberResultsMock.stream()).thenReturn(updateMemberResultStreamMock);
         when(updateMemberResultStreamMock.filter(any())).thenReturn(updateMemberResultStreamMock);
         when(updateMemberResultStreamMock.collect(any())).thenReturn(null);
