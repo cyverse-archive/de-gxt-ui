@@ -33,4 +33,7 @@ public interface ToolRequest extends HasName, HasSettableId {
     String getId();
 
     String getVersion();
+
+    @PropertyName("tool_id")
+    String getToolId();
 }
