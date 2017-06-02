@@ -88,5 +88,12 @@ public class ToolAdminServiceFacadeImpl implements ToolAdminServiceFacade {
         deService.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
     }
 
+    @Override
+    public void publishTool(String toolId, AsyncCallback<Void> callback) {
+        String address = TOOLS_ADMIN + "/" + toolId + "/publish";
 
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, "{}");
+        deService.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
+    }
 }
+

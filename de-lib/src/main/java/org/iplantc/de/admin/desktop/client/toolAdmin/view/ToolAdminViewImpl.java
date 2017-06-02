@@ -3,6 +3,7 @@ package org.iplantc.de.admin.desktop.client.toolAdmin.view;
 import org.iplantc.de.admin.desktop.client.toolAdmin.ToolAdminView;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.AddToolSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.DeleteToolSelectedEvent;
+import org.iplantc.de.admin.desktop.client.toolAdmin.events.PublishToolEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.SaveToolSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.ToolSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.model.ToolProperties;
@@ -150,6 +151,11 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
         return addHandler(handler, ToolSelectedEvent.TYPE);
     }
 
+    @Override
+    public HandlerRegistration addPublishToolEventHandler(PublishToolEvent.PublishToolEventHandler handler) {
+        return addHandler(handler, PublishToolEvent.TYPE);
+    }
+
     @UiFactory
     ColumnModel<Tool> createColumnModel() {
         List<ColumnConfig<Tool, ?>> list = Lists.newArrayList();
@@ -201,6 +207,14 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
                         fireEvent(event);
                         result.hide();
                         grid.getSelectionModel().deselect(grid.getSelectionModel().getSelectedItem());
+                    }
+                });
+
+                result.addPublishToolEventHandler(new PublishToolEvent.PublishToolEventHandler() {
+                    @Override
+                    public void onPublish(PublishToolEvent event) {
+                        fireEvent(event);
+                        result.hide();
                     }
                 });
             }
