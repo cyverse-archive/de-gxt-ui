@@ -12,7 +12,6 @@ import org.iplantc.de.collaborators.client.events.DeleteMembersSelected;
 import org.iplantc.de.collaborators.client.events.GroupSaved;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
-import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 
@@ -201,22 +200,29 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
             List<Subject> subjects = event.getSubjects();
             Group group = event.getGroup();
             if (subjects != null && !subjects.isEmpty()) {
-                subjects.forEach(subject -> deleteMember(subject, group));
+                deleteMembers(subjects, group);
             }
         }
     }
 
-    void deleteMember(Subject subject, Group group) {
-        serviceFacade.deleteMember(group, subject, new AsyncCallback<Void>() {
+    void deleteMembers(List<Subject> subjects, Group group) {
+        serviceFacade.deleteMembers(group, subjects, new AsyncCallback<List<UpdateMemberResult>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
             }
 
             @Override
-            public void onSuccess(Void result) {
-                announcer.schedule(new IplantAnnouncementConfig(appearance.memberDeleteSuccess(subject,
-                                                                                               group)));
+            public void onSuccess(List<UpdateMemberResult> result) {
+                List<UpdateMemberResult> failures = result.stream()
+                                                          .filter(item -> !item.isSuccess())
+                                                          .collect(Collectors.toList());
+                if (failures != null && !failures.isEmpty()) {
+                    announcer.schedule(new ErrorAnnouncementConfig(appearance.memberDeleteFail(subjects, group)));
+                } else {
+                    view.deleteMembers(subjects);
+                }
+                view.unmask();
             }
         });
     }

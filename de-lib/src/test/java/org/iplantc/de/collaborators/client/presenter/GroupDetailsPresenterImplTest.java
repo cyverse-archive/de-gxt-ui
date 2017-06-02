@@ -17,7 +17,6 @@ import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
 import org.iplantc.de.collaborators.client.events.GroupSaved;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
-import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -208,14 +207,17 @@ public class GroupDetailsPresenterImplTest {
 
     @Test
     public void deleteMember() {
-        when(appearanceMock.memberDeleteSuccess(subjectMock, groupMock)).thenReturn("success");
+        when(appearanceMock.memberDeleteFail(subjectListMock, groupMock)).thenReturn("fail");
+        when(updateMemberResultsMock.stream()).thenReturn(updateMemberResultStreamMock);
+        when(updateMemberResultStreamMock.filter(any())).thenReturn(updateMemberResultStreamMock);
+        when(updateMemberResultStreamMock.collect(any())).thenReturn(null);
 
         /** CALL METHOD UNDER TEST **/
-        uut.deleteMember(subjectMock, groupMock);
+        uut.deleteMembers(subjectListMock, groupMock);
 
-        verify(serviceFacadeMock).deleteMember(eq(groupMock), eq(subjectMock), voidCallbackCaptor.capture());
+        verify(serviceFacadeMock).deleteMembers(eq(groupMock), eq(subjectListMock), updateMembersCallbackCaptor.capture());
 
-        voidCallbackCaptor.getValue().onSuccess(null);
-        verify(announcerMock).schedule(isA(IplantAnnouncementConfig.class));
+        updateMembersCallbackCaptor.getValue().onSuccess(updateMemberResultsMock);
+        verify(viewMock).deleteMembers(subjectListMock);
     }
 }

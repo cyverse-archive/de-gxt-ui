@@ -181,6 +181,13 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
     }
 
     @Override
+    public void deleteMembers(List<Subject> members) {
+        if (members != null) {
+            members.forEach(subject -> listStore.remove(subject));
+        }
+    }
+
+    @Override
     public HandlerRegistration addAddGroupMemberSelectedHandler(AddGroupMemberSelected.AddGroupMemberSelectedHandler handler) {
         return addHandler(handler, AddGroupMemberSelected.TYPE);
     }

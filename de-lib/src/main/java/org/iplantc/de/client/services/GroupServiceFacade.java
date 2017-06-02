@@ -42,12 +42,12 @@ public interface GroupServiceFacade {
     void getMembers(Group group, AsyncCallback<List<Subject>> callback);
 
     /**
-     * Delete a single member from a Collaborator List
+     * Delete members from a Collaborator List
      * @param group
      * @param member
      * @param callback
      */
-    void deleteMember(Group group, Subject member, AsyncCallback<Void> callback);
+    void deleteMembers(Group group, List<Subject> member, AsyncCallback<List<UpdateMemberResult>> callback);
 
     /**
      * Adds  members to the Collaborator List

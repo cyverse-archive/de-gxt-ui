@@ -172,7 +172,9 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
     }
 
     @Override
-    public String memberDeleteSuccess(Subject subject, Group group) {
-        return displayStrings.memberDeleteSuccess(subject.getName(), group.getName());
+    public String memberDeleteFail(List<Subject> subjects, Group group) {
+        List<String> memberNames = subjects.stream().map(Subject::getName).collect(
+                Collectors.toList());
+        return displayStrings.memberDeleteFail(memberNames, group.getName());
     }
 }
