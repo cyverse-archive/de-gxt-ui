@@ -221,7 +221,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
                                                           .filter(item -> !item.isSuccess())
                                                           .collect(Collectors.toList());
                 if (failures != null && !failures.isEmpty()) {
-                    announcer.schedule(new ErrorAnnouncementConfig(appearance.memberDeleteFail(subjects, group)));
+                    announcer.schedule(new ErrorAnnouncementConfig(appearance.memberDeleteFail(failures)));
                 } else {
                     view.deleteMembers(subjects);
                 }

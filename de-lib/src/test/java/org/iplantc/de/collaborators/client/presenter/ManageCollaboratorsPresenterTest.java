@@ -169,14 +169,17 @@ public class ManageCollaboratorsPresenterTest {
     public void onRemoveCollaboratorSelected() {
         RemoveCollaboratorSelected eventMock = mock(RemoveCollaboratorSelected.class);
         when(eventMock.getSubjects()).thenReturn(subjectListMock);
+        when(updateMemberResultsMock.stream()).thenReturn(updateMemberResultStreamMock);
+        when(updateMemberResultStreamMock.filter(any())).thenReturn(updateMemberResultStreamMock);
+        when(updateMemberResultStreamMock.collect(any())).thenReturn(null);
 
         /** CALL METHOD UNDER TEST **/
         uut.onRemoveCollaboratorSelected(eventMock);
         verify(eventMock).getSubjects();
 
-        verify(collabServiceFacadeMock).removeCollaborators(eq(subjectListMock), voidCallbackCaptor.capture());
+        verify(groupServiceFacadeMock).deleteMembers(eq(defaultGroup), eq(subjectListMock), updateMemberCaptor.capture());
 
-        voidCallbackCaptor.getValue().onSuccess(null);
+        updateMemberCaptor.getValue().onSuccess(updateMemberResultsMock);
         verify(viewMock).removeCollaborators(eq(subjectListMock));
     }
 

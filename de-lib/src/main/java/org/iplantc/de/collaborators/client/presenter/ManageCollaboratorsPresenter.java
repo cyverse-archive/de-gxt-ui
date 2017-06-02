@@ -188,10 +188,16 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     @Override
     public void onRemoveCollaboratorSelected(RemoveCollaboratorSelected event) {
         List<Subject> models = event.getSubjects();
-        collabServiceFacade.removeCollaborators(models, new AsyncCallback<Void>() {
+        groupServiceFacade.deleteMembers(groupFactory.getDefaultGroup(), models, new AsyncCallback<List<UpdateMemberResult>>() {
 
             @Override
-            public void onSuccess(Void result) {
+            public void onSuccess(List<UpdateMemberResult> result) {
+                List<UpdateMemberResult> failures = result.stream()
+                                                          .filter(item -> !item.isSuccess())
+                                                          .collect(Collectors.toList());
+                if (failures != null && !failures.isEmpty()) {
+                    announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.memberDeleteFail(failures)));
+                }
                 view.removeCollaborators(models);
                 String names = getCollaboratorNames(models);
                 announcer.schedule(new SuccessAnnouncementConfig(I18N.DISPLAY.collaboratorRemoveConfirm(names)));

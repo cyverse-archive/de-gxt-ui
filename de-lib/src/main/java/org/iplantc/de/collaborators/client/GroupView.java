@@ -1,6 +1,5 @@
 package org.iplantc.de.collaborators.client;
 
-import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
@@ -76,7 +75,7 @@ public interface GroupView extends IsWidget,
 
         String groupCreatedSuccess(Group group);
 
-        String memberDeleteFail(List<Subject> subject, Group group);
+        String memberDeleteFail(List<UpdateMemberResult> subject);
     }
 
     /**
