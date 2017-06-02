@@ -91,6 +91,11 @@ public class GroupDetailsPresenterImplTest {
             HandlerManager ensureHandlers() {
                 return handlerManagerMock;
             }
+
+            @Override
+            List<Subject> wrapSubjectInList(Subject subject) {
+                return subjectListMock;
+            }
         };
         uut.announcer = announcerMock;
         uut.originalGroup = "original";
@@ -156,9 +161,9 @@ public class GroupDetailsPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         uut.updateGroupMembers(groupMock, subjectListMock);
 
-        verify(serviceFacadeMock).updateMembers(eq(groupMock),
-                                                eq(subjectListMock),
-                                                updateMembersCallbackCaptor.capture());
+        verify(serviceFacadeMock).addMembers(eq(groupMock),
+                                             eq(subjectListMock),
+                                             updateMembersCallbackCaptor.capture());
 
         updateMembersCallbackCaptor.getValue().onSuccess(updateMemberResultsMock);
         verify(appearanceMock).unableToAddMembers(eq(failedUpdateResultsMock));
@@ -171,17 +176,21 @@ public class GroupDetailsPresenterImplTest {
         AddGroupMemberSelected eventMock = mock(AddGroupMemberSelected.class);
         when(eventMock.getGroup()).thenReturn(groupMock);
         when(eventMock.getSubject()).thenReturn(subjectMock);
+        when(updateMemberResultsMock.stream()).thenReturn(updateMemberResultStreamMock);
+        when(updateMemberResultStreamMock.filter(any())).thenReturn(updateMemberResultStreamMock);
+        when(updateMemberResultStreamMock.collect(any())).thenReturn(null);
+        when(appearanceMock.unableToAddMembers(any())).thenReturn("announcement");
         when(groupMock.getName()).thenReturn("name");
 
         /** CALL METHOD UNDER TEST **/
         uut.onAddGroupMemberSelected(eventMock);
 
-        verify(serviceFacadeMock).addMember(eq(groupMock),
-                                            eq(subjectMock),
-                                            voidCallbackCaptor.capture());
+        verify(serviceFacadeMock).addMembers(eq(groupMock),
+                                             eq(subjectListMock),
+                                             updateMembersCallbackCaptor.capture());
 
-        voidCallbackCaptor.getValue().onSuccess(null);
-        verify(viewMock).addMembers(any());
+        updateMembersCallbackCaptor.getValue().onSuccess(updateMemberResultsMock);
+        verify(viewMock).addMembers(subjectListMock);
     }
 
     @Test

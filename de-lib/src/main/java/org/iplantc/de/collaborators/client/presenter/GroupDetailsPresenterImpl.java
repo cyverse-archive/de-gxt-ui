@@ -138,7 +138,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
 
     void updateGroupMembers(Group group, List<Subject> subjects) {
         if (subjects != null && !subjects.isEmpty()) {
-            serviceFacade.updateMembers(group, subjects, new AsyncCallback<List<UpdateMemberResult>>() {
+            serviceFacade.addMembers(group, subjects, new AsyncCallback<List<UpdateMemberResult>>() {
                 @Override
                 public void onFailure(Throwable caught) {
                     ErrorHandler.post(caught);
@@ -150,7 +150,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
                     List<UpdateMemberResult> failures = result.stream()
                                                              .filter(item -> !item.isSuccess())
                                                              .collect(Collectors.toList());
-                    if (failures == null || !failures.isEmpty()) {
+                    if (failures != null && !failures.isEmpty()) {
                         announcer.schedule(new ErrorAnnouncementConfig(appearance.unableToAddMembers(failures)));
                     } else {
                         announcer.schedule(new SuccessAnnouncementConfig(appearance.groupCreatedSuccess(group)));
@@ -167,7 +167,8 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
         Subject subject = event.getSubject();
 
         if (group != null && !Strings.isNullOrEmpty(group.getName()) && subject != null) {
-            serviceFacade.addMember(group, subject, new AsyncCallback<Void>() {
+            view.mask(appearance.loadingMask());
+            serviceFacade.addMembers(group, wrapSubjectInList(subject), new AsyncCallback<List<UpdateMemberResult>>() {
                 @Override
                 public void onFailure(Throwable caught) {
                     ErrorHandler.post(caught);
@@ -175,12 +176,23 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
                 }
 
                 @Override
-                public void onSuccess(Void result) {
-                    view.addMembers(Lists.newArrayList(subject));
+                public void onSuccess(List<UpdateMemberResult> result) {
+                    List<UpdateMemberResult> failures = result.stream()
+                                                              .filter(item -> !item.isSuccess())
+                                                              .collect(Collectors.toList());
+                    if (failures != null && !failures.isEmpty()) {
+                        announcer.schedule(new ErrorAnnouncementConfig(appearance.unableToAddMembers(failures)));
+                    } else {
+                        view.addMembers(wrapSubjectInList(subject));
+                    }
                     view.unmask();
                 }
             });
         }
+    }
+
+    List<Subject> wrapSubjectInList(Subject subject) {
+        return Lists.newArrayList(subject);
     }
 
     @Override

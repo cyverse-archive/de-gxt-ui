@@ -42,13 +42,6 @@ public interface GroupServiceFacade {
     void getMembers(Group group, AsyncCallback<List<Subject>> callback);
 
     /**
-     * Add a single member to a Collaborator List
-     * @param group
-     * @param callback
-     */
-    void addMember(Group group, Subject member, AsyncCallback<Void> callback);
-
-    /**
      * Delete a single member from a Collaborator List
      * @param group
      * @param member
@@ -57,11 +50,11 @@ public interface GroupServiceFacade {
     void deleteMember(Group group, Subject member, AsyncCallback<Void> callback);
 
     /**
-     * Replaces all members in the Collaborator List with the specified list instead
+     * Adds  members to the Collaborator List
      * @param group
      * @param subjects
      */
-    void updateMembers(Group group, List<Subject> subjects, AsyncCallback<List<UpdateMemberResult>> callback);
+    void addMembers(Group group, List<Subject> subjects, AsyncCallback<List<UpdateMemberResult>> callback);
 
     /**
      * Update the details of a Collaborator List

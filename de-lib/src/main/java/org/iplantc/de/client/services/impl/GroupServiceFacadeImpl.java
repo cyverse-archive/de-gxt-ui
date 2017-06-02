@@ -4,7 +4,6 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.DELETE;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PATCH;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
-import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PUT;
 
 import org.iplantc.de.client.models.collaborators.CollaboratorAutoBeanFactory;
 import org.iplantc.de.client.models.collaborators.Subject;
@@ -17,8 +16,8 @@ import org.iplantc.de.client.models.groups.UpdateMemberResultList;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.GroupCallbackConverter;
-import org.iplantc.de.client.services.converters.SubjectMemberListCallbackConverter;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
+import org.iplantc.de.client.services.converters.SubjectMemberListCallbackConverter;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
@@ -96,17 +95,6 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void addMember(Group group, Subject member, AsyncCallback<Void> callback) {
-        String groupName = group.getName();
-        String subjectId = member.getId();
-
-        String address = LISTS + "/" + URL.encode(groupName) + "/members/" + subjectId;
-
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(PUT, address);
-        deService.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
-    }
-
-    @Override
     public void deleteMember(Group group, Subject member, AsyncCallback<Void> callback) {
         String groupName = group.getName();
         String subjectId = member.getId();
@@ -118,9 +106,9 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void updateMembers(Group group,
-                              List<Subject> subjects,
-                              AsyncCallback<List<UpdateMemberResult>> callback) {
+    public void addMembers(Group group,
+                           List<Subject> subjects,
+                           AsyncCallback<List<UpdateMemberResult>> callback) {
         String groupName = group.getName();
         UpdateMemberRequest request = factory.getUpdateMemberRequest().as();
         List<String> ids = subjects.stream()
