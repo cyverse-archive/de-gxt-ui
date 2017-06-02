@@ -24,8 +24,8 @@ public class ToolRequestViewDefaultAppearance implements ToolRequestView.ToolReq
 
 
     interface Templates extends SafeHtmlTemplates {
-        @SafeHtmlTemplates.Template("<img qtip='{request.name}' src='{0}'/>")
-        SafeHtml makePublicRequest(SafeUri img, ToolRequest request);
+        @SafeHtmlTemplates.Template("<img qtip='{1}' src='{0}'/> <span>{1}</span> ")
+        SafeHtml makePublicRequest(SafeUri img, String name);
     }
 
     public ToolRequestViewDefaultAppearance() {
@@ -238,7 +238,10 @@ public class ToolRequestViewDefaultAppearance implements ToolRequestView.ToolReq
         if (Strings.isNullOrEmpty(toolRequest.getToolId())) {
             safeHtmlBuilder.appendEscaped(toolRequest.getName());
         } else {
-            templates.makePublicRequest(iplantResources.publish().getSafeUri(), toolRequest);
+            safeHtmlBuilder.appendHtmlConstant(templates.makePublicRequest(iplantResources.submitForPublic()
+                                                                                          .getSafeUri(),
+                                                                           toolRequest.getName())
+                                                        .asString());
         }
 
     }
