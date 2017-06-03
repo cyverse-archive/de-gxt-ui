@@ -27,5 +27,6 @@ public interface CollaboratorsModule {
         String GROUP_TOOLBAR = ".toolbar";
         String GROUP_DELETE_BTN = ".groupDeleteBtn";
         String GROUP_GRID = ".grid";
+        String SUBJECT_NAME_CELL = ".subjectNameCell";
     }
 }

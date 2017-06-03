@@ -159,9 +159,9 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     String getCollaboratorNames(List<Subject> subjects) {
         Stream<Subject> stream = subjects.stream();
 
-        Stream<String> stringStream = stream.map(Subject::getId);
+        Stream<String> stringStream = stream.map(Subject::getSubjectDisplayName);
         List<String> names = stringStream.collect(Collectors.toList());
-        return Joiner.on(",").join(names);
+        return Joiner.on(", ").join(names);
     }
 
     @Override

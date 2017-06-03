@@ -4,7 +4,7 @@ import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.models.SubjectNameComparator;
 import org.iplantc.de.collaborators.client.models.SubjectProperties;
-import org.iplantc.de.collaborators.client.views.cells.NameCell;
+import org.iplantc.de.collaborators.client.views.cells.SubjectNameCell;
 import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.gwt.core.client.GWT;
@@ -51,7 +51,7 @@ public class CollaboratorsColumnModel extends ColumnModel<Subject> {
         ColumnConfig<Subject, Subject> name = new ColumnConfig<>(new IdentityValueProvider<Subject>("firstname"),
                                                                  150);
         name.setHeader(I18N.DISPLAY.name());
-        name.setCell(new NameCell());
+        name.setCell(new SubjectNameCell());
 
         name.setComparator(new SubjectNameComparator());
         configs.add(name);
