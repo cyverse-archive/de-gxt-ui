@@ -176,4 +176,14 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
                 Collectors.toList());
         return displayStrings.memberDeleteFail(memberNames);
     }
+
+    @Override
+    public String collaboratorsSelfAdd() {
+        return iplantDisplayStrings.collaboratorSelfAdd();
+    }
+
+    @Override
+    public String groupSelfAdd() {
+        return displayStrings.groupSelfAdd();
+    }
 }

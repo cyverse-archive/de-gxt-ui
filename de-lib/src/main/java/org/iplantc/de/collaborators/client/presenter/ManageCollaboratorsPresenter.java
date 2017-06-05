@@ -133,9 +133,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
             @Override
             public void onSuccess(List<UpdateMemberResult> result) {
-                List<UpdateMemberResult> failures = result.stream()
-                                                          .filter(item -> !item.isSuccess())
-                                                          .collect(Collectors.toList());
+                List<UpdateMemberResult> failures = getFailResults(result);
                 if (failures != null && !failures.isEmpty()) {
                     announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.unableToAddMembers(failures)));
                 } else {
@@ -176,13 +174,17 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
             @Override
             public void onSuccess(List<Group> result) {
-                List<Group> filteredGroups = result.stream()
-                                            .filter(group -> !Group.DEFAULT_GROUP.equals(group.getName()))
-                                            .collect(Collectors.toList());
+                List<Group> filteredGroups = excludeDefaultGroup(result);
                 view.addCollabLists(filteredGroups);
                 view.unmaskCollabLists();
             }
         });
+    }
+
+    List<Group> excludeDefaultGroup(List<Group> result) {
+        return result.stream()
+                     .filter(group -> !Group.DEFAULT_GROUP.equals(group.getName()))
+                     .collect(Collectors.toList());
     }
 
     @Override
@@ -192,16 +194,15 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
             @Override
             public void onSuccess(List<UpdateMemberResult> result) {
-                List<UpdateMemberResult> failures = result.stream()
-                                                          .filter(item -> !item.isSuccess())
-                                                          .collect(Collectors.toList());
+                List<UpdateMemberResult> failures = getFailResults(result);
                 if (failures != null && !failures.isEmpty()) {
                     announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.memberDeleteFail(failures)));
+                } else {
+                    view.removeCollaborators(models);
+                    String names = getCollaboratorNames(models);
+                    announcer.schedule(new SuccessAnnouncementConfig(I18N.DISPLAY.collaboratorRemoveConfirm(
+                            names)));
                 }
-                view.removeCollaborators(models);
-                String names = getCollaboratorNames(models);
-                announcer.schedule(new SuccessAnnouncementConfig(I18N.DISPLAY.collaboratorRemoveConfirm(names)));
-
             }
 
             @Override
@@ -210,6 +211,12 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
             }
         });
 
+    }
+
+    List<UpdateMemberResult> getFailResults(List<UpdateMemberResult> result) {
+        return result.stream()
+                                                              .filter(item -> !item.isSuccess())
+                                                              .collect(Collectors.toList());
     }
 
     /*

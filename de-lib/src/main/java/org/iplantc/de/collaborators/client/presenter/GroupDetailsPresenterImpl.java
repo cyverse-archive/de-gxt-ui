@@ -151,9 +151,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
 
                 @Override
                 public void onSuccess(List<UpdateMemberResult> result) {
-                    List<UpdateMemberResult> failures = result.stream()
-                                                             .filter(item -> !item.isSuccess())
-                                                             .collect(Collectors.toList());
+                    List<UpdateMemberResult> failures = getFailResults(result);
                     if (failures != null && !failures.isEmpty()) {
                         announcer.schedule(new ErrorAnnouncementConfig(appearance.unableToAddMembers(failures)));
                     } else {
@@ -171,7 +169,13 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
         Subject subject = event.getSubject();
 
         if (group != null && !Strings.isNullOrEmpty(group.getName()) && subject != null) {
-            if (isAddingSelf(subject) || isAddingCurrentGroup(subject)) {
+            if (isAddingSelf(subject)) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.collaboratorsSelfAdd()));
+                view.unmask();
+                return;
+            }
+            if (isAddingCurrentGroup(subject)) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.groupSelfAdd()));
                 view.unmask();
                 return;
             }
@@ -185,9 +189,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
 
                 @Override
                 public void onSuccess(List<UpdateMemberResult> result) {
-                    List<UpdateMemberResult> failures = result.stream()
-                                                              .filter(item -> !item.isSuccess())
-                                                              .collect(Collectors.toList());
+                    List<UpdateMemberResult> failures = getFailResults(result);
                     if (failures != null && !failures.isEmpty()) {
                         announcer.schedule(new ErrorAnnouncementConfig(appearance.unableToAddMembers(failures)));
                     } else {
@@ -200,8 +202,8 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     }
 
     boolean isAddingCurrentGroup(Subject subject) {
-        if (subject instanceof Group) {
-            return originalGroup.equals(subject.getName());
+        if (Subject.GROUP_IDENTIFIER.equals(subject.getSourceId())) {
+            return originalGroup.equals(subject.getSubjectDisplayName());
         }
         return false;
     }
@@ -234,9 +236,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
 
             @Override
             public void onSuccess(List<UpdateMemberResult> result) {
-                List<UpdateMemberResult> failures = result.stream()
-                                                          .filter(item -> !item.isSuccess())
-                                                          .collect(Collectors.toList());
+                List<UpdateMemberResult> failures = getFailResults(result);
                 if (failures != null && !failures.isEmpty()) {
                     announcer.schedule(new ErrorAnnouncementConfig(appearance.memberDeleteFail(failures)));
                 } else {
@@ -245,6 +245,12 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
                 view.unmask();
             }
         });
+    }
+
+    List<UpdateMemberResult> getFailResults(List<UpdateMemberResult> result) {
+        return result.stream()
+                                                              .filter(item -> !item.isSuccess())
+                                                              .collect(Collectors.toList());
     }
 
     HandlerManager createHandlerManager() {

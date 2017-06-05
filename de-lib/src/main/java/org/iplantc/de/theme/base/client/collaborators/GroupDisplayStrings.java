@@ -29,4 +29,6 @@ public interface GroupDisplayStrings extends Messages {
     String groupCreatedSuccess(String name);
 
     String memberDeleteFail(@PluralCount List<String> memberNames);
+
+    String groupSelfAdd();
 }

@@ -76,6 +76,10 @@ public interface GroupView extends IsWidget,
         String groupCreatedSuccess(Group group);
 
         String memberDeleteFail(List<UpdateMemberResult> subject);
+
+        String collaboratorsSelfAdd();
+
+        String groupSelfAdd();
     }
 
     /**
