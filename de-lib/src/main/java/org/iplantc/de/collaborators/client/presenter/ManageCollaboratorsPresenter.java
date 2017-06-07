@@ -134,26 +134,33 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         selectedCollaboratorLists.forEach(new Consumer<Group>() {
             @Override
             public void accept(Group group) {
-                groupServiceFacade.addMembers(group, Lists.newArrayList(subject), new AsyncCallback<List<UpdateMemberResult>>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        ErrorHandler.post(caught);
-                    }
-
-                    @Override
-                    public void onSuccess(List<UpdateMemberResult> result) {
-                        List<UpdateMemberResult> failures = getFailResults(result);
-                        if (failures != null && !failures.isEmpty()) {
-                            announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.unableToAddMembers(failures)));
-                        } else {
-                            String names = getCollaboratorNames(Lists.newArrayList(subject));
-
-                            announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.memberAddSuccess(subject, group)));
-                        }
-                    }
-                });
+                addMemberToGroup(group, subject);
             }
         });
+    }
+
+    void addMemberToGroup(Group group, Subject subject) {
+        groupServiceFacade.addMembers(group, wrapSubjectInList(subject), new AsyncCallback<List<UpdateMemberResult>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(List<UpdateMemberResult> result) {
+                List<UpdateMemberResult> failures = getFailResults(result);
+                if (failures != null && !failures.isEmpty()) {
+                    announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.unableToAddMembers(failures)));
+                } else {
+                    String names = getCollaboratorNames(wrapSubjectInList(subject));
+                    announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.memberAddSuccess(subject, group)));
+                }
+            }
+        });
+    }
+
+    List<Subject> wrapSubjectInList(Subject subject) {
+        return Lists.newArrayList(subject);
     }
 
     /*
@@ -236,7 +243,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                 } else {
                     view.removeCollaborators(models);
                     String names = getCollaboratorNames(models);
-                    announcer.schedule(new SuccessAnnouncementConfig(I18N.DISPLAY.collaboratorRemoveConfirm(
+                    announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.collaboratorRemoveConfirm(
                             names)));
                 }
             }

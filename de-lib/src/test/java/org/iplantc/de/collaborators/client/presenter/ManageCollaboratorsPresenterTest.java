@@ -44,6 +44,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
@@ -75,6 +76,7 @@ public class ManageCollaboratorsPresenterTest {
     @Mock UpdateMemberResult updateResultMock;
     @Mock Stream<UpdateMemberResult> updateMemberResultStreamMock;
     @Mock List<UpdateMemberResult> updateMemberResultsMock;
+    @Mock Consumer<Group> groupConsumerMock;
 
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> collabListCallbackCaptor;
@@ -82,6 +84,7 @@ public class ManageCollaboratorsPresenterTest {
     @Captor ArgumentCaptor<AsyncCallback<List<Group>>> groupListCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<GroupDetailsDialog>> groupDetailsDialogCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<UpdateMemberResult>>> updateMemberCaptor;
+    @Captor ArgumentCaptor<Consumer<Group>> groupConsumerCaptor;
 
 
     private ManageCollaboratorsPresenter uut;
@@ -104,6 +107,16 @@ public class ManageCollaboratorsPresenterTest {
             @Override
             String getCollaboratorNames(List<Subject> subjects) {
                 return "names";
+            }
+
+            @Override
+            List<Subject> wrapSubjectInList(Subject subject) {
+                return subjectListMock;
+            }
+
+            @Override
+            List<UpdateMemberResult> getFailResults(List<UpdateMemberResult> result) {
+                return updateMemberResultsMock;
             }
         };
 
@@ -134,9 +147,9 @@ public class ManageCollaboratorsPresenterTest {
 
     @Test
     public void addAsCollaborators() {
-        when(updateMemberResultsMock.stream()).thenReturn(updateMemberResultStreamMock);
-        when(updateMemberResultStreamMock.filter(any())).thenReturn(updateMemberResultStreamMock);
-        when(updateMemberResultStreamMock.collect(any())).thenReturn(null);
+        when(updateMemberResultsMock.isEmpty()).thenReturn(true);
+        when(groupAppearanceMock.collaboratorRemoveConfirm(any())).thenReturn("success");
+        when(groupAppearanceMock.memberDeleteFail(updateMemberResultsMock)).thenReturn("fail");
 
         /** CALL METHOD UNDER TEST **/
         uut.addAsCollaborators(subjectListMock);
@@ -169,9 +182,9 @@ public class ManageCollaboratorsPresenterTest {
     public void onRemoveCollaboratorSelected() {
         RemoveCollaboratorSelected eventMock = mock(RemoveCollaboratorSelected.class);
         when(eventMock.getSubjects()).thenReturn(subjectListMock);
-        when(updateMemberResultsMock.stream()).thenReturn(updateMemberResultStreamMock);
-        when(updateMemberResultStreamMock.filter(any())).thenReturn(updateMemberResultStreamMock);
-        when(updateMemberResultStreamMock.collect(any())).thenReturn(null);
+        when(updateMemberResultsMock.isEmpty()).thenReturn(true);
+        when(groupAppearanceMock.collaboratorRemoveConfirm(any())).thenReturn("success");
+        when(groupAppearanceMock.memberDeleteFail(updateMemberResultsMock)).thenReturn("fail");
 
         /** CALL METHOD UNDER TEST **/
         uut.onRemoveCollaboratorSelected(eventMock);
@@ -246,6 +259,36 @@ public class ManageCollaboratorsPresenterTest {
 
         groupDetailsDialogCaptor.getValue().onSuccess(groupDetailsDialogMock);
         verify(groupDetailsDialogMock).show(eq(groupMock));
+    }
+
+    @Test
+    public void addMemberToGroups() {
+        when(groupListMock.size()).thenReturn(1);
+        when(updateMemberResultsMock.isEmpty()).thenReturn(true);
+        ManageCollaboratorsPresenter spy = spy(uut);
+
+        /** CALL METHOD UNDER TEST **/
+        spy.addMemberToGroups(subjectMock, groupListMock);
+
+        verify(groupListMock).forEach(groupConsumerCaptor.capture());
+        groupConsumerCaptor.getValue().accept(groupMock);
+
+        verify(spy).addMemberToGroup(eq(groupMock), eq(subjectMock));
+    }
+
+    @Test
+    public void addMemberToGroup() {
+        when(updateMemberResultsMock.isEmpty()).thenReturn(true);
+        when(groupAppearanceMock.memberAddSuccess(any(), any())).thenReturn("success");
+        when(groupAppearanceMock.unableToAddMembers(any())).thenReturn("fail");
+
+        /** CALL METHOD UNDER TEST **/
+        uut.addMemberToGroup(groupMock, subjectMock);
+
+        verify(groupServiceFacadeMock).addMembers(eq(groupMock), eq(subjectListMock), updateMemberCaptor.capture());
+
+        updateMemberCaptor.getValue().onSuccess(updateMemberResultsMock);
+        verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));
     }
 
 

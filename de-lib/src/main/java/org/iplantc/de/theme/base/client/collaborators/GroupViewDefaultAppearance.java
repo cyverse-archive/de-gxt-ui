@@ -197,4 +197,9 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
     public String noCollabListSelected() {
         return displayStrings.noCollabListSelected();
     }
+
+    @Override
+    public String collaboratorRemoveConfirm(String names) {
+        return iplantDisplayStrings.collaboratorRemoveConfirm(names);
+    }
 }
