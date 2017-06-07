@@ -189,6 +189,11 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
         return new ColumnModel<>(list);
     }
 
+    /**
+     * TODO SS Move launching new view to Presenter
+     * @param tool
+     * @param mode
+     */
     @Override
     public void editToolDetails(final Tool tool, final ToolAdminDetailsDialog.Mode mode) {
         toolDetailsDialog.get(new AsyncCallback<ToolAdminDetailsDialog>() {
@@ -221,6 +226,10 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
         });
     }
 
+    /**
+     * TODO SS Move launching new view to Presenter
+     * @param event
+     */
     @UiHandler("addButton")
     void addButtonClicked(SelectEvent event) {
         toolDetailsDialog.get(new AsyncCallback<ToolAdminDetailsDialog>() {

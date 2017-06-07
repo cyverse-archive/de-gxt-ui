@@ -89,10 +89,17 @@ public class ToolAdminServiceFacadeImpl implements ToolAdminServiceFacade {
     }
 
     @Override
-    public void publishTool(String toolId, AsyncCallback<Void> callback) {
-        String address = TOOLS_ADMIN + "/" + toolId + "/publish";
+    public void publishTool(Tool tool, AsyncCallback<Void> callback) {
+        String address = TOOLS_ADMIN + "/" + tool.getId() + "/publish";
 
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, "{}");
+        //null out values not needed by service
+        Splittable s = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tool));
+        Splittable.NULL.assign(s, "is_public");
+        Splittable.NULL.assign(s, "permission");
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST,
+                                                            address,
+                                                            s.getPayload());
         deService.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
     }
 }

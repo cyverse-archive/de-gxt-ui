@@ -153,7 +153,7 @@ public class ToolAdminDetailsDialog extends IPlantDialog implements IsHideable,
                         hasHandlers.fireEvent(saveToolSelectedEvent);
                         break;
                     case MAKEPUBLIC:
-                        PublishToolEvent publishEvent = new PublishToolEvent(view.getTool().getId());
+                        PublishToolEvent publishEvent = new PublishToolEvent(view.getTool());
                         hasHandlers.fireEvent(publishEvent);
                         break;
                 }

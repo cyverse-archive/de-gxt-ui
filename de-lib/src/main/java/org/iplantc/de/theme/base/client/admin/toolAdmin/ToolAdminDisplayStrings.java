@@ -214,4 +214,8 @@ public interface ToolAdminDisplayStrings extends Messages {
     SafeHtml toolVolumeWarning();
 
     String dialogMakePublicText();
+
+    String timeLimit();
+
+    String restricted();
 }

@@ -125,7 +125,8 @@
                 </form:FieldLabel>
             </container:child>
             <container:child layoutData="{layoutData}">
-                <button:TextButton ui:field="makePublicBtn" text="{appearance.makePublic}"/>
+                <button:TextButton ui:field="makePublicBtn" text="{appearance.makePublic}"
+                                   visible="false"/>
             </container:child>
 
         </container:VerticalLayoutContainer>

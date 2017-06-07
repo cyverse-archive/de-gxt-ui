@@ -14,12 +14,14 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.FieldSet;
 import com.sencha.gxt.widget.core.client.form.IntegerField;
+import com.sencha.gxt.widget.core.client.form.StringComboBox;
 import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.tips.QuickTip;
 
@@ -30,6 +32,10 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
 
     private static ToolContainerEditorBinder uiBinder = GWT.create(ToolContainerEditorBinder.class);
 
+    public enum NetworkMode {
+        None, Bridge;
+    }
+
     @UiField TextField nameEditor;
     @UiField TextField workingDirectoryEditor;
     @Ignore
@@ -37,7 +43,8 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
     @UiField TextField entryPointEditor;
     @UiField IntegerField memoryLimitEditor;
     @UiField IntegerField cpuSharesEditor;
-    @UiField TextField networkModeEditor;
+    @UiField
+    StringComboBox networkModeEditor;
     @Ignore
     @UiField FieldLabel containerDevicesLabel;
     @Ignore
@@ -106,6 +113,10 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
         this.imageEditor = toolImageEditor;
         initWidget(uiBinder.createAndBindUi(this));
 
+        networkModeEditor.add(NetworkMode.None.toString());
+        networkModeEditor.add(NetworkMode.Bridge.toString());
+        networkModeEditor.setTriggerAction(ComboBoxCell.TriggerAction.ALL);
+
         entryPointWarningHTML.setHTML(appearance.toolEntryPointWarning());
         toolVolumesWarningHTML.setHTML(appearance.toolVolumeWarning());
         containerDevicesLabel.setHTML(appearance.containerDevicesLabel());
@@ -114,7 +125,6 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
 
         nameEditor.addValueChangeHandler(new EmptyStringValueChangeHandler(nameEditor));
         entryPointEditor.addValueChangeHandler(new EmptyStringValueChangeHandler(entryPointEditor));
-        networkModeEditor.addValueChangeHandler(new EmptyStringValueChangeHandler(networkModeEditor));
         workingDirectoryEditor.addValueChangeHandler(new EmptyStringValueChangeHandler(workingDirectoryEditor));
 
         setUpLabelToolTips();

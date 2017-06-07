@@ -1,5 +1,7 @@
 package org.iplantc.de.admin.desktop.client.toolAdmin.events;
 
+import org.iplantc.de.client.models.tool.Tool;
+
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -11,18 +13,18 @@ public class PublishToolEvent extends GwtEvent<PublishToolEvent.PublishToolEvent
 
     public static Type<PublishToolEventHandler> TYPE = new Type<>();
 
-    private String toolId;
+    private Tool tool;
 
-    public PublishToolEvent(String toolId) {
-        this.toolId = toolId;
+    public PublishToolEvent(Tool tool) {
+        this.tool = tool;
     }
 
-    public String getToolId() {
-        return toolId;
+    public Tool getTool() {
+        return tool;
     }
 
-    public void setToolId(String toolId) {
-        this.toolId = toolId;
+    public void setTool(Tool tool) {
+        this.tool = tool;
     }
 
     public interface PublishToolEventHandler extends EventHandler {
