@@ -1,5 +1,6 @@
 package org.iplantc.de.theme.base.client.collaborators;
 
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.collaborators.client.GroupView;
@@ -185,5 +186,15 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
     @Override
     public String groupSelfAdd() {
         return displayStrings.groupSelfAdd();
+    }
+
+    @Override
+    public String memberAddSuccess(Subject subject, Group group) {
+        return displayStrings.memberAddSuccess(subject.getSubjectDisplayName(), group.getName());
+    }
+
+    @Override
+    public String noCollabListSelected() {
+        return displayStrings.noCollabListSelected();
     }
 }

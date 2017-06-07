@@ -43,6 +43,7 @@ import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -112,12 +113,47 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         Subject subject = userSearchResultSelected.getSubject();
         if (!userInfo.getUsername()
                      .equals(subject.getId())) {
-            if (!collaboratorsUtil.isCurrentCollaborator(subject, view.getCollaborators())) {
-                addAsCollaborators(Arrays.asList(subject));
+            if (view.hasCollaboratorsTabSelected()) {
+                if (!collaboratorsUtil.isCurrentCollaborator(subject, view.getCollaborators())) {
+                    addAsCollaborators(Arrays.asList(subject));
+                }
+            } else {
+                List<Group> selectedCollaboratorLists = view.getSelectedCollaboratorLists();
+                if (selectedCollaboratorLists != null && !selectedCollaboratorLists.isEmpty()) {
+                    addMemberToGroups(subject, selectedCollaboratorLists);
+                } else {
+                    announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.noCollabListSelected()));
+                }
             }
         } else {
             announcer.schedule(new ErrorAnnouncementConfig(I18N.DISPLAY.collaboratorSelfAdd()));
         }
+    }
+
+    void addMemberToGroups(Subject subject, List<Group> selectedCollaboratorLists) {
+        selectedCollaboratorLists.forEach(new Consumer<Group>() {
+            @Override
+            public void accept(Group group) {
+                groupServiceFacade.addMembers(group, Lists.newArrayList(subject), new AsyncCallback<List<UpdateMemberResult>>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        ErrorHandler.post(caught);
+                    }
+
+                    @Override
+                    public void onSuccess(List<UpdateMemberResult> result) {
+                        List<UpdateMemberResult> failures = getFailResults(result);
+                        if (failures != null && !failures.isEmpty()) {
+                            announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.unableToAddMembers(failures)));
+                        } else {
+                            String names = getCollaboratorNames(Lists.newArrayList(subject));
+
+                            announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.memberAddSuccess(subject, group)));
+                        }
+                    }
+                });
+            }
+        });
     }
 
     /*

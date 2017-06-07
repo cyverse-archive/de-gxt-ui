@@ -140,6 +140,12 @@ public interface ManageCollaboratorsView extends IsWidget,
     void updateCollabList(Group group);
 
     /**
+     * Get the list of selected Collaborator Lists from the Collaborator List tab
+     * @return
+     */
+    List<Group> getSelectedCollaboratorLists();
+
+    /**
      *  The collection of modes the ManageCollaboratorsView can step into
      */
     enum MODE {
@@ -198,4 +204,11 @@ public interface ManageCollaboratorsView extends IsWidget,
      * @return
      */
     List<Subject> getCollaborators();
+
+    /**
+     * Returns true if the Collaborators tab is selected (as opposed to the
+     * Collaborator Lists tab)
+     * @return
+     */
+    boolean hasCollaboratorsTabSelected();
 }
