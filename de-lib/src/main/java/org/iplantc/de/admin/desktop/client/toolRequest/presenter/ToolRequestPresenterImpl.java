@@ -146,7 +146,7 @@ public class ToolRequestPresenterImpl implements ToolRequestView.Presenter, Publ
 
     @Override
     public void onPublish(PublishToolEvent event) {
-        toolAdminServiceFacade.publishTool(event.getToolId(), new AsyncCallback<Void>() {
+        toolAdminServiceFacade.publishTool(event.getTool(), new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable throwable) {
                 ErrorHandler.post(appearance.publishFailed(), throwable);

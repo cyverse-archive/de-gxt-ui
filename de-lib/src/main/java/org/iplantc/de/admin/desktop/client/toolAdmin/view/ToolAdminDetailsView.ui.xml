@@ -63,12 +63,29 @@
             </form:FieldLabel>
         </container:child>
         <container:child layoutData="{layoutData}">
-            <form:FieldLabel ui:field="locationLabel">
+            <form:FieldLabel text="{appearance.toolImportLocationLabel}" ui:field="locationLabel">
                 <form:widget>
                     <form:TextField readOnly="false"
                                     enabled="true"
-                                    allowBlank="false"
+                                    allowBlank="true"
                                     ui:field="locationEditor"/>
+                </form:widget>
+            </form:FieldLabel>
+        </container:child>
+        <container:child layoutData="{layoutData}">
+            <form:FieldLabel text="{appearance.timeLimit}">
+                <form:widget>
+                    <form:IntegerField readOnly="false"
+                                    enabled="true"
+                                    allowBlank="true"
+                                    ui:field="timeLimitEditor"/>
+                </form:widget>
+            </form:FieldLabel>
+        </container:child>
+        <container:child layoutData="{layoutData}">
+            <form:FieldLabel ui:field="Restricted" text="{appearance.restricted}">
+                <form:widget>
+                    <form:CheckBox ui:field="restrictedEditor"/>
                 </form:widget>
             </form:FieldLabel>
         </container:child>

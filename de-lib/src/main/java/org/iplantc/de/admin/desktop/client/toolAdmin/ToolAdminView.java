@@ -71,7 +71,7 @@ public interface ToolAdminView extends IsWidget,
 
         String toolImportVersionLabel();
 
-        SafeHtml toolImportLocationLabel();
+        String toolImportLocationLabel();
 
         String containerDetailsFieldSetLabel();
 
@@ -208,6 +208,10 @@ public interface ToolAdminView extends IsWidget,
         SafeHtml toolVolumeWarning();
 
         String dialogMakePublicText();
+
+        String timeLimit();
+
+        String restricted();
     }
 
     interface Presenter {
