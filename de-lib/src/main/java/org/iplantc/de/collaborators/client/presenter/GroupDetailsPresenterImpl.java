@@ -108,6 +108,11 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
         }
     }
 
+    @Override
+    public void setViewDebugId(String debugId) {
+        view.asWidget().ensureDebugId(debugId);
+    }
+
     void addGroup(Group group) {
         serviceFacade.addGroup(group, new AsyncCallback<Group>() {
             @Override

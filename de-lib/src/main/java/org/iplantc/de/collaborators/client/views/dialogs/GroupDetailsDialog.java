@@ -81,4 +81,11 @@ public class GroupDetailsDialog extends IPlantDialog implements GroupSaved.HasGr
     public HandlerRegistration addGroupSavedHandler(GroupSaved.GroupSavedHandler handler) {
         return presenter.addGroupSavedHandler(handler);
     }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        presenter.setViewDebugId(baseID + CollaboratorsModule.Ids.GROUP_DETAILS_VIEW);
+    }
 }
