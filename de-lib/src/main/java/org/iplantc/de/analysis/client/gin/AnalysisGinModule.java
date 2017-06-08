@@ -13,7 +13,6 @@ import org.iplantc.de.analysis.client.presenter.proxy.AnalysisRpcProxy;
 import org.iplantc.de.analysis.client.presenter.sharing.AnalysisSharingPresenter;
 import org.iplantc.de.analysis.client.views.AnalysesToolBarImpl;
 import org.iplantc.de.analysis.client.views.AnalysesViewImpl;
-import org.iplantc.de.analysis.client.views.AnalysisColumnModel;
 import org.iplantc.de.analysis.client.views.AnalysisStepsView;
 import org.iplantc.de.analysis.client.views.parameters.AnalysisParamViewColumnModel;
 import org.iplantc.de.analysis.client.views.parameters.AnalysisParametersViewImpl;
@@ -35,7 +34,6 @@ public class AnalysisGinModule extends AbstractGinModule {
     @Override
     protected void configure() {
         bind(new TypeLiteral<ListStore<Analysis>>() {}).toProvider(AnalysisModuleListStoreProvider.class);
-        bind(AnalysisColumnModel.class);
         bind(AnalysisParamViewColumnModel.class);
         bind(AnalysesView.Presenter.class).to(AnalysesPresenterImpl.class);
         bind(AnalysisParametersView.Presenter.class).to(AnalysisParametersPresenterImpl.class);

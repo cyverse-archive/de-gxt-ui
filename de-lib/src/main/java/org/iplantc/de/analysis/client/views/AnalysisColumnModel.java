@@ -15,8 +15,8 @@ import org.iplantc.de.analysis.client.views.cells.StartDateTimeCell;
 import org.iplantc.de.client.models.analysis.Analysis;
 
 import com.google.common.collect.Lists;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.ValueProvider;
@@ -36,9 +36,13 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
                                                               HTAnalysisExpandEvent.HasHTAnalysisExpandEventHandlers,
                                                               AnalysisUserSupportRequestedEvent.HasAnalysisUserSupportRequestedEventHandlers{
 
-    @Inject
-    AnalysisColumnModel(final CheckBoxSelectionModel<Analysis> checkBoxSelectionModel,
-                        final AnalysesView.Appearance appearance) {
+    AnalysisColumnModel(final CheckBoxSelectionModel<Analysis> checkBoxSelectionModel) {
+        this(checkBoxSelectionModel,
+             GWT.<AnalysesView.Appearance>create(AnalysesView.Appearance.class));
+    }
+
+    public AnalysisColumnModel(CheckBoxSelectionModel<Analysis> checkBoxSelectionModel,
+                               AnalysesView.Appearance appearance) {
         super(createColumnConfigList(checkBoxSelectionModel, appearance));
 
         // Set handler managers on appropriate cells so they can fire events.
