@@ -134,6 +134,29 @@ public class ManageToolsViewDefaultAppearance implements ManageToolsToolbarView.
     public String appsLoadError() {
         return toolMessages.appsLoadError();
     }
+    public String toolAdded(String name) {
+        return toolMessages.toolAdded(name);
+    }
+
+    @Override
+    public String toolUpdated(String name) {
+        return toolMessages.toolUpdated(name);
+    }
+
+    @Override
+    public String editDialogWidth() {
+        return "600px";
+    }
+
+    @Override
+    public String editDialogHeight() {
+        return "300px";
+    }
+
+    @Override
+    public String toolDeleted(String name) {
+        return toolMessages.toolDeleted(name);
+    }
 
     @Override
     public String submitForPublicUse() {

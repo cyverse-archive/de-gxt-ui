@@ -62,6 +62,16 @@ public interface ManageToolsView extends IsWidget,
         String confirmDelete();
 
         String appsLoadError();
+
+        String toolAdded(String name);
+
+        String toolUpdated(String name);
+
+        String editDialogWidth();
+
+        String editDialogHeight();
+
+        String toolDeleted(String name);
     }
 
 
