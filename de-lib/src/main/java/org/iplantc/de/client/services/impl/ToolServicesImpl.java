@@ -101,11 +101,16 @@ public class ToolServicesImpl implements ToolServices {
     }
 
     @Override
-    public void deleteTool(Tool tool, AppsCallback<String> callback) {
+    public void deleteTool(Tool tool, AppsCallback<Void> callback) {
         String address = TOOLS + "/" + tool.getId();
         ServiceCallWrapper wrapper = new ServiceCallWrapper(BaseServiceCallWrapper.Type.DELETE, address);
 
-        deServiceFacade.getServiceData(wrapper, callback);
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, Void>(callback) {
+            @Override
+            protected Void convertFrom(String object) {
+                return null;
+            }
+        });
     }
 
     @Override

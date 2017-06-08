@@ -53,7 +53,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
     ManageToolsView.ManageToolsViewAppearance appearance;
 
-    ToolServices dcService = ServicesInjector.INSTANCE.getDeployedComponentServices();
+    ToolServices toolServices = ServicesInjector.INSTANCE.getDeployedComponentServices();
 
     @Inject
     AsyncProviderWrapper<EditToolDialog> editDialogProvider;
@@ -112,7 +112,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     @Override
     public void loadTools(Boolean isPublic) {
         toolsView.mask(appearance.mask());
-        dcService.searchTools(isPublic, null, new AppsCallback<List<Tool>>() {
+        toolServices.searchTools(isPublic, null, new AppsCallback<List<Tool>>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 ErrorHandler.post(exception);
@@ -128,7 +128,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
     @Override
     public void addTool(Tool tool, final Command dialogCallbackCommand) {
-        dcService.addTool(tool, new AppsCallback<Tool>() {
+        toolServices.addTool(tool, new AppsCallback<Tool>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 ErrorHandler.post(exception);
@@ -137,7 +137,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
             @Override
             public void onSuccess(Tool s) {
                 announcer.schedule(new SuccessAnnouncementConfig(
-                        "Your tool " + s.getName() + " is added."));
+                        appearance.toolAdded(s.getName())));
                 dialogCallbackCommand.execute();
                 toolsView.addTool(s);
             }
@@ -146,7 +146,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
     @Override
     public void updateTool(final Tool tool, final Command dialogCallbackCommand) {
-        dcService.updateTool(tool, new AppsCallback<Tool>() {
+        toolServices.updateTool(tool, new AppsCallback<Tool>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 ErrorHandler.post(exception);
@@ -155,7 +155,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
             @Override
             public void onSuccess(Tool result) {
                 announcer.schedule(new SuccessAnnouncementConfig(
-                        "Your tool " + result.getName() + " is updated."));
+                        appearance.toolUpdated(result.getName())));
                 dialogCallbackCommand.execute();
                 toolsView.updateTool(result);
             }
@@ -182,7 +182,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
             @Override
             public void onSuccess(EditToolDialog etd) {
-                etd.setSize("600px", "300px");
+                etd.setSize(appearance.editDialogWidth(), appearance.editDialogHeight());
                 etd.show(ManageToolsViewPresenter.this);
             }
         });
@@ -210,16 +210,16 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
         cmb.show();
     }
 
-    private void doDelete(final Tool tool) {
-        dcService.deleteTool(tool, new AppsCallback<String>() {
+    void doDelete(final Tool tool) {
+        toolServices.deleteTool(tool, new AppsCallback<Void>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 ErrorHandler.post(exception);
             }
 
             @Override
-            public void onSuccess(String s) {
-                announcer.schedule(new SuccessAnnouncementConfig("Tool deleted successfully!"));
+            public void onSuccess(Void s) {
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.toolDeleted(tool.getName())));
                 toolsView.removeTool(tool);
             }
         });
@@ -282,7 +282,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
             @Override
             public void onSuccess(EditToolDialog etd) {
-                etd.setSize("600px", "300px");
+                etd.setSize(appearance.editDialogWidth(), appearance.editDialogHeight());
                 etd.editTool(getSelectedTool());
                 etd.show(ManageToolsViewPresenter.this);
             }
@@ -312,7 +312,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
     @Override
     public void onShowToolInfo(ShowToolInfoEvent event) {
-        dcService.getAppsForTool(event.getTool().getId(), new AppsCallback<List<App>>() {
+        toolServices.getAppsForTool(event.getTool().getId(), new AppsCallback<List<App>>() {
 
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {

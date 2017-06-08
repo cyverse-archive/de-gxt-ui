@@ -76,6 +76,12 @@ public interface ToolMessages extends Messages {
     String makePublicInstruction();
 
     String appsLoadError();
+
+    String toolAdded(String name);
+
+    String toolUpdated(String name);
+
+    String toolDeleted(String name);
 }
         
     
