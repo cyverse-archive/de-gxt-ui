@@ -4,6 +4,7 @@
 package org.iplantc.de.collaborators.client.util;
 
 import org.iplantc.de.client.models.collaborators.Subject;
+import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 
 import com.google.gwt.cell.client.AbstractCell;
@@ -23,6 +24,8 @@ import com.google.inject.Inject;
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
 import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
+import com.sencha.gxt.data.shared.SortDir;
+import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.data.shared.StringLabelProvider;
 import com.sencha.gxt.data.shared.loader.BeforeLoadEvent;
 import com.sencha.gxt.data.shared.loader.BeforeLoadEvent.BeforeLoadHandler;
@@ -33,12 +36,35 @@ import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.ListView;
 import com.sencha.gxt.widget.core.client.form.ComboBox;
 
+import java.util.Comparator;
+
 /**
  * @author sriram
  *
  */
 public class UserSearchField implements IsWidget,
                                         UserSearchResultSelected.HasUserSearchResultSelectedEventHandlers {
+
+    class SubjectSortComparator implements Comparator<Subject> {
+
+        @Override
+        public int compare(Subject o1, Subject o2) {
+            boolean firstIsGroup = Group.GROUP_IDENTIFIER.equals(o1.getSourceId());
+            boolean secondIsGroup = Group.GROUP_IDENTIFIER.equals(o2.getSourceId());
+            if (firstIsGroup && secondIsGroup) {
+                return o1.getSubjectDisplayName().compareToIgnoreCase(o2.getSubjectDisplayName());
+            }
+            if (firstIsGroup && !secondIsGroup) {
+                return -1;
+            }
+            int lastNameComp = o1.getLastName().compareToIgnoreCase(o2.getLastName());
+            if (lastNameComp != 0) {
+                return lastNameComp;
+            } else {
+                return o1.getFirstName().compareToIgnoreCase(o2.getFirstName());
+            }
+        }
+    }
 
     public class UsersLoadConfig extends PagingLoadConfigBean {
         private String query;
@@ -161,6 +187,7 @@ public class UserSearchField implements IsWidget,
 
     private ListStore<Subject> buildStore() {
         ListStore<Subject> store = new ListStore<Subject>(item -> item.getId());
+        store.addSortInfo(new Store.StoreSortInfo<Subject>(new SubjectSortComparator(), SortDir.ASC));
         return store;
     }
 
