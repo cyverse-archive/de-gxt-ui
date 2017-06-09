@@ -212,6 +212,8 @@ public interface ToolAdminView extends IsWidget,
         String timeLimit();
 
         String restricted();
+
+        String defaultImgPrefix();
     }
 
     interface Presenter {

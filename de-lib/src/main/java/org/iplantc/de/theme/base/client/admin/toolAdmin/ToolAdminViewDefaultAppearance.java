@@ -526,4 +526,9 @@ public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminVi
     public String restricted() {
         return displayStrings.restricted();
     }
+
+    @Override
+    public String defaultImgPrefix() {
+        return displayStrings.defaultImgPrefix();
+    }
 }

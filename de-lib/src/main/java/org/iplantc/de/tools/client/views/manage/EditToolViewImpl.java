@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
 import org.iplantc.de.client.models.tool.ToolContainer;
 import org.iplantc.de.client.models.tool.ToolImage;
 import org.iplantc.de.tools.shared.ToolsModule;
+import org.iplantc.de.commons.client.validators.ImageNameValidator;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -101,6 +102,7 @@ public class EditToolViewImpl extends Composite implements EditToolView {
         versionLbl.setHTML(buildRequiredFieldLabel(versionLbl.getText()));
         imgLbl.setHTML(buildRequiredFieldLabel(imgLbl.getText()));
         toolId = new Hidden();
+        imgName.addValidator(new ImageNameValidator());
     }
 
     private SafeHtml buildRequiredFieldLabel(final String label) {
