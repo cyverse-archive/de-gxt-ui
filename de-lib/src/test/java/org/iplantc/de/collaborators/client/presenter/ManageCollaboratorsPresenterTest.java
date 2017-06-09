@@ -7,9 +7,11 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import org.iplantc.de.client.events.EventBus;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
@@ -22,9 +24,11 @@ import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.CollaboratorsLoadedEvent;
 import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
+import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.shared.AsyncProviderWrapper;
@@ -77,6 +81,7 @@ public class ManageCollaboratorsPresenterTest {
     @Mock Stream<UpdateMemberResult> updateMemberResultStreamMock;
     @Mock List<UpdateMemberResult> updateMemberResultsMock;
     @Mock Consumer<Group> groupConsumerMock;
+    @Mock UserInfo userInfoMock;
 
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> collabListCallbackCaptor;
@@ -126,6 +131,7 @@ public class ManageCollaboratorsPresenterTest {
         uut.addCollabHandlerRegistration = addCollabHandlerRegistrationMock;
         uut.announcer = announcerMock;
         uut.groupDetailsDialog = groupDetailsDialogProvider;
+        uut.userInfo = userInfoMock;
     }
 
     @Test
@@ -148,8 +154,7 @@ public class ManageCollaboratorsPresenterTest {
     @Test
     public void addAsCollaborators() {
         when(updateMemberResultsMock.isEmpty()).thenReturn(true);
-        when(groupAppearanceMock.collaboratorRemoveConfirm(any())).thenReturn("success");
-        when(groupAppearanceMock.memberDeleteFail(updateMemberResultsMock)).thenReturn("fail");
+        when(groupAppearanceMock.collaboratorAddConfirm(any())).thenReturn("success");
 
         /** CALL METHOD UNDER TEST **/
         uut.addAsCollaborators(subjectListMock);
@@ -291,5 +296,84 @@ public class ManageCollaboratorsPresenterTest {
         verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));
     }
 
+    @Test
+    public void onUserSearchResultSelected_selfAdd() {
+        UserSearchResultSelected eventMock = mock(UserSearchResultSelected.class);
+        when(eventMock.getSubject()).thenReturn(subjectMock);
+        when(subjectMock.getId()).thenReturn("id");
+        when(userInfoMock.getUsername()).thenReturn("id");
+        when(groupAppearanceMock.collaboratorsSelfAdd()).thenReturn("selfAdd");
+
+        /** CALL METHOD UNDER TEST **/
+        uut.onUserSearchResultSelected(eventMock);
+        verify(announcerMock).schedule(isA(ErrorAnnouncementConfig.class));
+    }
+
+    @Test
+    public void onUserSearchResultSelected_collaboratorTab_alreadyAddedCollaborator() {
+        UserSearchResultSelected eventMock = mock(UserSearchResultSelected.class);
+        when(eventMock.getSubject()).thenReturn(subjectMock);
+        when(subjectMock.getId()).thenReturn("newID");
+        when(userInfoMock.getUsername()).thenReturn("id");
+        when(viewMock.hasCollaboratorsTabSelected()).thenReturn(true);
+        when(viewMock.getCollaborators()).thenReturn(subjectListMock);
+        when(collaboratorsUtilMock.isCurrentCollaborator(any(), any())).thenReturn(true);
+
+        /** CALL METHOD UNDER TEST **/
+        uut.onUserSearchResultSelected(eventMock);
+
+        verifyZeroInteractions(announcerMock);
+    }
+
+    @Test
+    public void onUserSearchResultSelected_collaboratorTab_newCollaborator() {
+        ManageCollaboratorsPresenter spy = spy(uut);
+        UserSearchResultSelected eventMock = mock(UserSearchResultSelected.class);
+        when(eventMock.getSubject()).thenReturn(subjectMock);
+        when(subjectMock.getId()).thenReturn("newID");
+        when(userInfoMock.getUsername()).thenReturn("id");
+        when(viewMock.hasCollaboratorsTabSelected()).thenReturn(true);
+        when(viewMock.getCollaborators()).thenReturn(subjectListMock);
+        when(collaboratorsUtilMock.isCurrentCollaborator(any(), any())).thenReturn(false);
+
+        /** CALL METHOD UNDER TEST **/
+        spy.onUserSearchResultSelected(eventMock);
+
+        verify(spy).addAsCollaborators(any());
+    }
+
+    @Test
+    public void onUserSearchResultSelected_collaboratorListTab_withLists() {
+        ManageCollaboratorsPresenter spy = spy(uut);
+        UserSearchResultSelected eventMock = mock(UserSearchResultSelected.class);
+        when(eventMock.getSubject()).thenReturn(subjectMock);
+        when(subjectMock.getId()).thenReturn("newID");
+        when(userInfoMock.getUsername()).thenReturn("id");
+        when(viewMock.hasCollaboratorsTabSelected()).thenReturn(false);
+        when(viewMock.getSelectedCollaboratorLists()).thenReturn(groupListMock);
+        when(groupListMock.isEmpty()).thenReturn(false);
+
+        /** CALL METHOD UNDER TEST **/
+        spy.onUserSearchResultSelected(eventMock);
+
+        verify(spy).addMemberToGroups(eq(subjectMock), eq(groupListMock));
+    }
+
+    @Test
+    public void onUserSearchResultSelected_collaboratorListTab_noLists() {
+        UserSearchResultSelected eventMock = mock(UserSearchResultSelected.class);
+        when(eventMock.getSubject()).thenReturn(subjectMock);
+        when(subjectMock.getId()).thenReturn("newID");
+        when(userInfoMock.getUsername()).thenReturn("id");
+        when(viewMock.hasCollaboratorsTabSelected()).thenReturn(false);
+        when(viewMock.getSelectedCollaboratorLists()).thenReturn(groupListMock);
+        when(groupListMock.isEmpty()).thenReturn(true);
+        when(groupAppearanceMock.noCollabListSelected()).thenReturn("error");
+
+        /** CALL METHOD UNDER TEST **/
+        uut.onUserSearchResultSelected(eventMock);
+
+        verify(announcerMock).schedule(isA(ErrorAnnouncementConfig.class));
+    }
 
 }
