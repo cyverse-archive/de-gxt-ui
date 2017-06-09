@@ -54,10 +54,11 @@
             </form:FieldLabel>
         </container:child>
         <container:child layoutData="{layoutData}">
-            <form:FieldLabel text="{appearance.toolImportVersionLabel}">
+            <form:FieldLabel ui:field="versionLabel">
                 <form:widget>
                     <form:TextField readOnly="false"
                                     enabled="true"
+                                    allowBlank="false"
                                     ui:field="versionEditor"/>
                 </form:widget>
             </form:FieldLabel>

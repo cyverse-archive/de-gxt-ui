@@ -69,7 +69,7 @@ public interface ToolAdminView extends IsWidget,
 
         String toolImportAttributionLabel();
 
-        String toolImportVersionLabel();
+        SafeHtml toolImportVersionLabel();
 
         String toolImportLocationLabel();
 
