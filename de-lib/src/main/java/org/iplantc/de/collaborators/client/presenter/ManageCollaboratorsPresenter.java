@@ -27,7 +27,6 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
-import org.iplantc.de.resources.client.messages.I18N;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Joiner;
@@ -126,7 +125,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                 }
             }
         } else {
-            announcer.schedule(new ErrorAnnouncementConfig(I18N.DISPLAY.collaboratorSelfAdd()));
+            announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.collaboratorsSelfAdd()));
         }
     }
 
@@ -184,14 +183,14 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                     view.addCollaborators(models);
                     String names = getCollaboratorNames(models);
 
-                    announcer.schedule(new SuccessAnnouncementConfig(I18N.DISPLAY.collaboratorAddConfirm(
+                    announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.collaboratorAddConfirm(
                             names)));
                 }
             }
 
             @Override
             public void onFailure(Throwable caught) {
-                ErrorHandler.post(I18N.ERROR.addCollabErrorMsg(), caught);
+                ErrorHandler.post(groupAppearance.addCollabErrorMsg(), caught);
             }
         });
 

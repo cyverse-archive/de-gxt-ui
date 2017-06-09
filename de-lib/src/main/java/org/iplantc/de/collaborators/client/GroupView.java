@@ -87,6 +87,10 @@ public interface GroupView extends IsWidget,
         String noCollabListSelected();
 
         String collaboratorRemoveConfirm(String names);
+
+        String collaboratorAddConfirm(String names);
+
+        String addCollabErrorMsg();
     }
 
     /**
