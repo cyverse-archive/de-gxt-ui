@@ -167,8 +167,8 @@ public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminVi
     }
 
     @Override
-    public String toolImportVersionLabel() {
-        return displayStrings.toolImportVersionLabel();
+    public SafeHtml toolImportVersionLabel() {
+        return templates.requiredFieldLabel(displayStrings.toolImportVersionLabel());
     }
 
     @Override

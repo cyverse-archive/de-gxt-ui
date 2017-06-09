@@ -41,7 +41,7 @@ public class ToolAdminDetailsView extends Composite implements Editor<Tool> {
 
     @UiField VerticalLayoutContainer layoutContainer;
     @Ignore
-    @UiField FieldLabel nameLabel, typeLabel, locationLabel;
+    @UiField FieldLabel nameLabel, typeLabel, locationLabel, versionLabel;
     @UiField TextArea descriptionEditor;
     @UiField TextField nameEditor;
     @UiField TextField typeEditor;
@@ -68,6 +68,7 @@ public class ToolAdminDetailsView extends Composite implements Editor<Tool> {
 
         nameLabel.setHTML(appearance.toolImportNameLabel());
         typeLabel.setHTML(appearance.toolImportTypeLabel());
+        versionLabel.setHTML(appearance.toolImportVersionLabel());
 
         descriptionEditor.setHeight(250);
 
