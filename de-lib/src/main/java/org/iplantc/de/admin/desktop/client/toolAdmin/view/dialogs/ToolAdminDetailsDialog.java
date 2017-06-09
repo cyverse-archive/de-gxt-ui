@@ -10,6 +10,7 @@ import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
 import org.iplantc.de.client.models.tool.ToolContainer;
 import org.iplantc.de.client.models.tool.ToolDevice;
+import org.iplantc.de.client.models.tool.ToolImage;
 import org.iplantc.de.client.models.tool.ToolImplementation;
 import org.iplantc.de.client.models.tool.ToolTestData;
 import org.iplantc.de.client.models.tool.ToolVolume;
@@ -97,7 +98,9 @@ public class ToolAdminDetailsDialog extends IPlantDialog implements IsHideable,
         toolContainer.setDeviceList(Lists.<ToolDevice>newArrayList());
         toolContainer.setContainerVolumes(Lists.<ToolVolume>newArrayList());
         toolContainer.setContainerVolumesFrom(Lists.<ToolVolumesFrom>newArrayList());
-        toolContainer.setImage(factory.getImage().as());
+        ToolImage image = factory.getImage().as();
+        image.setName(appearance.defaultImgPrefix());
+        toolContainer.setImage(image);
 
         final ToolImplementation toolImplementation = factory.getImplementation().as();
         final ToolTestData toolTestData = factory.getTest().as();
