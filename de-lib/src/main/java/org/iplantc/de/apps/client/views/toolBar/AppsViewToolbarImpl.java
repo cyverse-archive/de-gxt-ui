@@ -5,6 +5,7 @@ import static org.iplantc.de.apps.client.events.AppSearchResultLoadEvent.TYPE;
 import org.iplantc.de.apps.client.AppsToolbarView;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent.AppSearchResultLoadEventHandler;
 import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
+import org.iplantc.de.apps.client.events.ManageToolsClickedEvent;
 import org.iplantc.de.apps.client.events.SwapViewButtonClickedEvent;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
@@ -108,6 +109,8 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
     MenuItem wfRun;
     @UiField
     TextButton wfMenu;
+    @UiField
+    TextButton manageToolsBtn;
     @UiField TextButton swapViewBtn;
     @UiField(provided = true)
     final AppsToolbarAppearance appearance;
@@ -195,6 +198,12 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
     public HandlerRegistration addRefreshAppsSelectedEventHandler(RefreshAppsSelectedEvent.RefreshAppsSelectedEventHandler handler) {
         return addHandler(handler, RefreshAppsSelectedEvent.TYPE);
     }
+
+    @Override
+    public HandlerRegistration addManageToolsClickedEventHandler(ManageToolsClickedEvent.ManageToolsClickedEventHandler handler) {
+        return addHandler(handler, ManageToolsClickedEvent.TYPE);
+    }
+
 
     // </editor-fold>
 
@@ -368,6 +377,8 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
         editWf.ensureDebugId(baseID + Ids.MENU_ITEM_WF + Ids.MENU_ITEM_EDIT_WF);
         deleteWf.ensureDebugId(baseID + Ids.MENU_ITEM_WF + Ids.MENU_ITEM_DELETE_WF);
 
+        manageToolsBtn.ensureDebugId(baseID + Ids.MANAGE_TOOLS_BTN);
+
         appSearch.ensureDebugId(baseID + Ids.MENU_ITEM_SEARCH);
         swapViewBtn.ensureDebugId(baseID + Ids.SWAP_VIEW_BTN);
     }
@@ -503,6 +514,11 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
     void shareWithCollaborator(SelectionEvent<Item> event) {
         fireEvent(new ShareAppsSelected(currentSelection));
     }
+
+    @UiHandler("manageToolsBtn")
+    void onManageToolClicked(SelectEvent event) {
+         fireEvent(new ManageToolsClickedEvent());
+    }                                    
 
     @UiHandler("swapViewBtn")
     public void onSwapViewClick(SelectEvent e) {

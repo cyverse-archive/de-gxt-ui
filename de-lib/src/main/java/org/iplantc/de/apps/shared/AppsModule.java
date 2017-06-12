@@ -48,6 +48,7 @@ public interface AppsModule {
         String SWAP_VIEW_BTN = ".swapBtn";
         String APP_STATUS_CELL = ".status";
         String MENU_ITEM_REFRESH = ".refresh";
+        String MANAGE_TOOLS_BTN = ".manageTools";
     }
 }
 

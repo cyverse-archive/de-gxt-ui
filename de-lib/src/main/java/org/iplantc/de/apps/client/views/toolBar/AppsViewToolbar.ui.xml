@@ -97,6 +97,12 @@
 		</toolbar:child>
 		<toolbar:child>
 			<button:TextButton
+				ui:field="manageToolsBtn"
+				text="{appearance.manageTools}"
+				icon="{appearance.tool}" />
+		</toolbar:child>
+		<toolbar:child>
+			<button:TextButton
 					ui:field="swapViewBtn"
 					text="{strings.swapView}"
 					icon="{icons.copy}" />

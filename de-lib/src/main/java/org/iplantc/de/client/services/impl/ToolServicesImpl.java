@@ -3,7 +3,7 @@ package org.iplantc.de.client.services.impl;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
 import org.iplantc.de.client.services.ToolServices;
-import org.iplantc.de.client.services.converters.GetDeployedComponentsCallbackConverter;
+import org.iplantc.de.client.services.converters.ToolsCallbackConverter;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
@@ -35,8 +35,8 @@ public class ToolServicesImpl implements ToolServices {
     }
 
     @Override
-    public void getDeployedComponents(FilterPagingLoadConfig loadConfig,
-                                      AsyncCallback<List<Tool>> callback) {
+    public void searchTools(FilterPagingLoadConfig loadConfig,
+                            AsyncCallback<List<Tool>> callback) {
         String address = TOOLS + "?";
         // Get the proxy's search params.
         String searchTerm = null;
@@ -55,7 +55,16 @@ public class ToolServicesImpl implements ToolServices {
                    + "&sort-field=" + sortInfo.getSortField().toLowerCase()
                    + "&sort-dir=" + sortInfo.getSortDir().toString();
 
-        GetDeployedComponentsCallbackConverter callbackCnvt = new GetDeployedComponentsCallbackConverter(callback, factory);
+        ToolsCallbackConverter callbackCnvt = new ToolsCallbackConverter(callback, factory);
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
+
+        deServiceFacade.getServiceData(wrapper, callbackCnvt);
+    }
+
+    @Override
+    public void getTools(AsyncCallback<List<Tool>> callback) {
+        String address = TOOLS;
+        ToolsCallbackConverter callbackCnvt = new ToolsCallbackConverter(callback, factory);
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
 
         deServiceFacade.getServiceData(wrapper, callbackCnvt);

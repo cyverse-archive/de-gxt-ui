@@ -2,6 +2,7 @@ package org.iplantc.de.apps.client;
 
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
+import org.iplantc.de.apps.client.events.ManageToolsClickedEvent;
 import org.iplantc.de.apps.client.events.SwapViewButtonClickedEvent;
 import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
@@ -46,7 +47,8 @@ public interface AppsToolbarView extends IsWidget,
                                          ShareAppsSelected.HasShareAppSelectedHandlers,
                                          OntologyHierarchySelectionChangedEvent.OntologyHierarchySelectionChangedEventHandler,
                                          SwapViewButtonClickedEvent.HasSwapViewButtonClickedEventHandlers,
-                                         RefreshAppsSelectedEvent.HasRefreshAppsSelectedEventHandlers {
+                                         RefreshAppsSelectedEvent.HasRefreshAppsSelectedEventHandlers,
+                                         ManageToolsClickedEvent.HasManageToolsClickedEventHandlers {
 
     interface AppsToolbarAppearance {
 
@@ -103,10 +105,16 @@ public interface AppsToolbarView extends IsWidget,
         String refresh();
 
         ImageResource refreshIcon();
+
+        String manageTools();
+
+        ImageResource tool();
+
     }
 
     interface Presenter extends BeforeLoadEvent.HasBeforeLoadHandlers<FilterPagingLoadConfig>,
-                                AppSearchResultLoadEvent.HasAppSearchResultLoadEventHandlers {
+                                AppSearchResultLoadEvent.HasAppSearchResultLoadEventHandlers,
+                                ManageToolsClickedEvent.ManageToolsClickedEventHandler {
 
         AppsToolbarView getView();
 

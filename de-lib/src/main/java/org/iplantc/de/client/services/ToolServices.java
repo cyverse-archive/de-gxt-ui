@@ -10,5 +10,7 @@ import java.util.List;
 
 public interface ToolServices {
 
-    void getDeployedComponents(FilterPagingLoadConfig loadConfig, AsyncCallback<List<Tool>> callback);
+    void searchTools(FilterPagingLoadConfig loadConfig, AsyncCallback<List<Tool>> callback);
+
+    void getTools(AsyncCallback<List<Tool>> callback);
 }
