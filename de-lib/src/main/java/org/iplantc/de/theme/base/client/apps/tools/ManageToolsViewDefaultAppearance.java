@@ -1,7 +1,7 @@
 package org.iplantc.de.theme.base.client.apps.tools;
 
-import org.iplantc.de.apps.client.views.ManageToolsToolbarView;
-import org.iplantc.de.apps.client.views.ManageToolsView;
+import org.iplantc.de.apps.client.views.tools.ManageToolsToolbarView;
+import org.iplantc.de.apps.client.views.tools.ManageToolsView;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.theme.base.client.apps.ToolMessages;
@@ -113,6 +113,10 @@ public class ManageToolsViewDefaultAppearance implements ManageToolsToolbarView.
         return 50;
     }
 
+    public String tag() {
+        return toolMessages.tag();
+    }
+
     @Override
     public String submitForPublicUse() {
         return toolMessages.submitForUse();
@@ -146,5 +150,30 @@ public class ManageToolsViewDefaultAppearance implements ManageToolsToolbarView.
     @Override
     public String addTool() {
         return toolMessages.addTool();
+    }
+
+    @Override
+    public ImageResource addIcon() {
+        return iplantResources.add();
+    }
+
+    @Override
+    public ImageResource requestToolIcon() {
+        return iplantResources.add();
+    }
+
+    @Override
+    public ImageResource editIcon() {
+        return iplantResources.edit();
+    }
+
+    @Override
+    public ImageResource deleteIcon() {
+        return iplantResources.delete();
+    }
+
+    @Override
+    public ImageResource useInAppIcon() {
+        return iplantResources.arrowUp();
     }
 }

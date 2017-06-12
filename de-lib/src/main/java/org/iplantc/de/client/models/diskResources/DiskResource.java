@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 import org.iplantc.de.client.models.HasPath;
 import org.iplantc.de.client.models.HasSettableId;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 
 import java.util.Date;
 

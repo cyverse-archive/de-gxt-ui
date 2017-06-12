@@ -1,8 +1,8 @@
 package org.iplantc.de.diskResource.client.views.toolbar;
 
-import static org.iplantc.de.client.models.diskResources.PermissionValue.own;
-import static org.iplantc.de.client.models.diskResources.PermissionValue.read;
-import static org.iplantc.de.client.models.diskResources.PermissionValue.write;
+import static org.iplantc.de.client.models.sharing.PermissionValue.own;
+import static org.iplantc.de.client.models.sharing.PermissionValue.read;
+import static org.iplantc.de.client.models.sharing.PermissionValue.write;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;

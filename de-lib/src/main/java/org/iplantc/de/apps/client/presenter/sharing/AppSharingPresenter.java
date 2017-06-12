@@ -15,7 +15,7 @@ import org.iplantc.de.client.models.apps.sharing.AppUnSharingRequestList;
 import org.iplantc.de.client.models.apps.sharing.AppUserPermissions;
 import org.iplantc.de.client.models.apps.sharing.AppUserPermissionsList;
 import org.iplantc.de.client.models.collaborators.Collaborator;
-import org.iplantc.de.client.models.diskResources.PermissionValue;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
 import org.iplantc.de.client.models.sharing.SharingSubject;

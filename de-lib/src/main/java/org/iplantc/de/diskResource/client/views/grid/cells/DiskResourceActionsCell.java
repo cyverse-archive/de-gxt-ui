@@ -1,6 +1,6 @@
 package org.iplantc.de.diskResource.client.views.grid.cells;
 
-import static org.iplantc.de.client.models.diskResources.PermissionValue.own;
+import static org.iplantc.de.client.models.sharing.PermissionValue.own;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;

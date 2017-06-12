@@ -5,7 +5,6 @@
 package org.iplantc.de.client.models.sharing;
 
 import org.iplantc.de.client.models.collaborators.Collaborator;
-import org.iplantc.de.client.models.diskResources.PermissionValue;
 
 /**
  * @author sriram
