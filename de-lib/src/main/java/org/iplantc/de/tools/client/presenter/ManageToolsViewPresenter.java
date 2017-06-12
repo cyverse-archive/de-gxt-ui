@@ -25,6 +25,7 @@ import org.iplantc.de.tools.client.views.dialogs.EditToolDialog;
 import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolSharingDialog;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
+import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -262,7 +263,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
             @Override
             public void onSuccess(NewToolRequestDialog o) {
-                    o.show();
+                    o.show(NewToolRequestFormView.Mode.NEWTOOL);
             }
         });
     }
@@ -295,7 +296,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
             @Override
             public void onSuccess(NewToolRequestDialog o) {
                 o.setTool(getSelectedTool());
-                o.show();
+                o.show(NewToolRequestFormView.Mode.MAKEPUBLIC);
             }
         });
     }

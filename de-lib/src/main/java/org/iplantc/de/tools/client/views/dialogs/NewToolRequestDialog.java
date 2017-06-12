@@ -16,8 +16,6 @@ import com.google.inject.Inject;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 
-import javax.ws.rs.HEAD;
-
 /**
  * @author sriram
  *
@@ -27,10 +25,12 @@ public class NewToolRequestDialog extends IPlantDialog {
 
     private Tool tool;
     private final NewToolRequestFormView.Presenter presenter;
+    private final NewToolRequestFormView.NewToolRequestFormViewAppearance appearance;
 
     @Inject
-    NewToolRequestDialog(final NewToolRequestFormPresenterFactory presenterFactory) {
-        setHeading(I18N.DISPLAY.requestNewTool());
+    NewToolRequestDialog(final NewToolRequestFormPresenterFactory presenterFactory,
+                         NewToolRequestFormView.NewToolRequestFormViewAppearance appearance) {
+        this.appearance = appearance;
         setPixelSize(480, 400);
         this.setResizable(false);
         setPredefinedButtons(PredefinedButton.OK, PredefinedButton.CANCEL);
@@ -62,16 +62,29 @@ public class NewToolRequestDialog extends IPlantDialog {
 
     }
 
-    @Override
-    public void show() {
-        super.show();
-        ensureDebugId(ToolsModule.RequestToolIds.TOOL_REQUEST);
-    }
 
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
         presenter.setViewDebugId(baseID + ToolsModule.RequestToolIds.TOOL_REQUEST_VIEW);
+    }
+
+    public void show(NewToolRequestFormView.Mode mode) {
+        presenter.setMode(mode);
+         switch (mode) {
+             case NEWTOOL:
+                 setHeading(appearance.newToolRequest());
+                 break;
+             case MAKEPUBLIC:
+                 setHeading(appearance.makePublicRequest());
+                 break;
+         }
+        super.show();
+    }
+
+    @Override
+    public void show() {
+        throw new UnsupportedOperationException("Method not supported!");
     }
 
     public void setTool(Tool tool) {

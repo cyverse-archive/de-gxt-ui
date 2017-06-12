@@ -1,8 +1,8 @@
 package org.iplantc.de.admin.desktop.client.toolRequest.service.impl;
 
-import org.iplantc.de.client.models.toolRequest.ToolRequest;
-import org.iplantc.de.client.models.toolRequest.ToolRequestAdminAutoBeanFactory;
-import org.iplantc.de.client.models.toolRequest.ToolRequestList;
+import org.iplantc.de.client.models.toolRequests.ToolRequest;
+import org.iplantc.de.client.models.toolRequests.ToolRequestAdminAutoBeanFactory;
+import org.iplantc.de.client.models.toolRequests.ToolRequestList;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;

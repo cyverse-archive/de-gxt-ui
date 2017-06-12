@@ -2,7 +2,7 @@ package org.iplantc.de.notifications.client.views.dialogs;
 
 import org.iplantc.de.client.models.requestStatus.RequestHistory;
 import org.iplantc.de.client.models.requestStatus.RequestHistoryProperties;
-import org.iplantc.de.client.models.toolRequest.ToolRequestStatus;
+import org.iplantc.de.client.models.toolRequests.ToolRequestStatus;
 import org.iplantc.de.commons.client.widgets.ContextualHelpPopup;
 import org.iplantc.de.notifications.client.views.cells.RequestStatusCell;
 import org.iplantc.de.resources.client.IplantResources;

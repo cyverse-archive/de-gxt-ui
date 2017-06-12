@@ -1,4 +1,4 @@
-package org.iplantc.de.theme.base.client.apps;
+package org.iplantc.de.theme.base.client.tools;
 
 import com.google.gwt.i18n.client.Messages;
 
@@ -66,6 +66,14 @@ public interface ToolMessages extends Messages {
     String shareTools();
     
     String confirmDelete();
+
+    String newToolRequest();
+
+    String makePublicRequest();
+
+    String newToolInstruction();
+
+    String makePublicInstruction();
 }
         
     

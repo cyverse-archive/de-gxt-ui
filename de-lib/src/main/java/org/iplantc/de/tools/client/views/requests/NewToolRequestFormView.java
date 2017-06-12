@@ -11,6 +11,22 @@ import com.sencha.gxt.widget.core.client.form.IsField;
  */
 public interface NewToolRequestFormView extends IsWidget {
 
+    void setMode(Mode mode);
+
+    enum Mode {
+        NEWTOOL, MAKEPUBLIC;
+    }
+
+    interface NewToolRequestFormViewAppearance  {
+        String newToolRequest();
+
+        String makePublicRequest();
+
+        String newToolInstruction();
+
+        String makePublicInstruction();
+    }
+
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
         /**
          * The method to be called when the user clicks the cancel button.
@@ -57,6 +73,8 @@ public interface NewToolRequestFormView extends IsWidget {
         void setViewDebugId(String baseID);
 
         void setTool(Tool tool);
+
+        void setMode(Mode mode);
     }
 
     enum SELECTION_MODE {

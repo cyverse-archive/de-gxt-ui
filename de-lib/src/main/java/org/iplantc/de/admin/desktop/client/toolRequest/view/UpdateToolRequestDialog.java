@@ -2,10 +2,10 @@ package org.iplantc.de.admin.desktop.client.toolRequest.view;
 
 import org.iplantc.de.admin.desktop.client.toolRequest.ToolRequestView;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
-import org.iplantc.de.client.models.toolRequest.ToolRequest;
-import org.iplantc.de.client.models.toolRequest.ToolRequestAutoBeanFactory;
-import org.iplantc.de.client.models.toolRequest.ToolRequestStatus;
-import org.iplantc.de.client.models.toolRequest.ToolRequestUpdate;
+import org.iplantc.de.client.models.toolRequests.ToolRequest;
+import org.iplantc.de.client.models.toolRequests.ToolRequestAutoBeanFactory;
+import org.iplantc.de.client.models.toolRequests.ToolRequestStatus;
+import org.iplantc.de.client.models.toolRequests.ToolRequestUpdate;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
 import com.google.gwt.core.client.GWT;
