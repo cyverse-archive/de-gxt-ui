@@ -14,29 +14,29 @@ import com.sencha.gxt.core.client.XTemplates;
  */
 public class ToolSearchFieldDefaultAppearance implements ToolSearchField.ToolSearchFieldAppearance {
 
-    interface DCTemplate extends XTemplates {
-        @XTemplate(source = "DCSearchResult.html")
+    interface ToolTemplate extends XTemplates {
+        @XTemplate(source = "ToolSearchResult.html")
         SafeHtml render(Tool c);
     }
 
-    private DCTemplate dcTemplate;
+    private ToolTemplate toolTemplate;
     private IplantDisplayStrings iplantDisplayStrings;
 
     public ToolSearchFieldDefaultAppearance() {
-        this((DCTemplate)GWT.create(DCTemplate.class),
+        this((ToolTemplate)GWT.create(ToolTemplate.class),
              (IplantDisplayStrings)GWT.create(IplantDisplayStrings.class));
     }
 
-    public ToolSearchFieldDefaultAppearance(DCTemplate dcTemplate,
+    public ToolSearchFieldDefaultAppearance(ToolTemplate toolTemplate,
                                             IplantDisplayStrings iplantDisplayStrings) {
 
-        this.dcTemplate = dcTemplate;
+        this.toolTemplate = toolTemplate;
         this.iplantDisplayStrings = iplantDisplayStrings;
     }
 
     @Override
     public SafeHtml render(Tool tool) {
-        return dcTemplate.render(tool);
+        return toolTemplate.render(tool);
     }
 
     @Override

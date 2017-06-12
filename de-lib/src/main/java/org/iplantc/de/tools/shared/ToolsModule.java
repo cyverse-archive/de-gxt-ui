@@ -21,8 +21,6 @@ public interface ToolsModule {
         String MENU_ITEM_SHARE_PUBLIC = ".sharePublic";
 
         String MENU_ITEM_REFRESH = ".refresh";
-
-
     }
 
     interface EditToolIds {
@@ -61,5 +59,6 @@ public interface ToolsModule {
         String binUpld = ".idBinUpld";
         String testDataUpld = ".idTestDataUpld";
         String otherDataUpld = ".idOtherDataUpld";
+        String TOOL_INFO_CELL = ".toolInfo";
     }
 }

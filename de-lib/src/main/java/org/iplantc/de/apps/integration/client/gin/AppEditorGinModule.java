@@ -7,7 +7,6 @@ import org.iplantc.de.apps.integration.client.view.AppIntegrationPalette;
 import org.iplantc.de.apps.integration.client.view.AppsEditorView;
 import org.iplantc.de.apps.integration.client.view.AppsEditorViewImpl;
 import org.iplantc.de.apps.integration.client.view.CommandLineOrderingView;
-import org.iplantc.de.apps.integration.client.view.deployedComponents.cells.DCNameHyperlinkCell;
 import org.iplantc.de.apps.integration.client.view.dialogs.CommandLineOrderingDialog;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.ArgumentGroupPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.DecimalInputPropertyEditor;
@@ -86,7 +85,6 @@ public class AppEditorGinModule extends AbstractGinModule {
         bind(ReferenceSequencePropertyEditor.class);
         bind(ArgumentGroupPropertyEditor.class);
         bind(ArgumentValidatorEditor.class);
-        bind(DCNameHyperlinkCell.class);
         bind(ToolSearchField.class);
         bind(AppTemplateContentPanel.class);
         bind(AddValidatorDialog.class);

@@ -1,6 +1,7 @@
 
 package org.iplantc.de.tools.client.views.manage;
 
+import org.iplantc.de.tools.client.events.ShowToolInfoEvent;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.tools.client.events.AddNewToolSelected;
@@ -74,6 +75,8 @@ public interface ManageToolsView extends IsWidget,
 
     HandlerRegistration addSelectionChangedHandler(SelectionChangedEvent.SelectionChangedHandler<Tool> handler);
 
+    HandlerRegistration addShowToolInfoEventHandlers(ShowToolInfoEvent.ShowToolInfoEventHandler handler);
+
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter,
                                        RefreshToolsSelectedEvent.RefreshToolsSelectedEventHandler,
                                        AddNewToolSelected.NewToolSelectedHandler,
@@ -82,7 +85,8 @@ public interface ManageToolsView extends IsWidget,
                                        ToolSelectionChangedEvent.ToolSelectionChangedEventHandler,
                                        ToolFilterChanged.ToolFilterChangedHandler,
                                        RequestToolSelected.RequestToolSelectedHandler, EditToolSelected.EditToolSelectedHandler,
-                                       RequestToMakeToolPublicSelected.RequestToMakeToolPublicSelectedHandler {
+                                       RequestToMakeToolPublicSelected.RequestToMakeToolPublicSelectedHandler,
+                                       ShowToolInfoEvent.ShowToolInfoEventHandler{
         void setViewDebugId(String baseId);
 
         void loadTools(Boolean isPublic);

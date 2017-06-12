@@ -1,13 +1,22 @@
 <module>
     <replace-with class="org.iplantc.de.theme.base.client.tools.ManageToolsViewDefaultAppearance">
-        <when-type-is class="org.iplantc.de.tools.client.views.manage.ManageToolsView.ManageToolsViewAppearance"/>
+        <when-type-is
+                class="org.iplantc.de.tools.client.views.manage.ManageToolsView.ManageToolsViewAppearance"/>
     </replace-with>
 
     <replace-with class="org.iplantc.de.theme.base.client.tools.ManageToolsViewDefaultAppearance">
-        <when-type-is class="org.iplantc.de.tools.client.views.manage.ManageToolsToolbarView.ManageToolsToolbarApperance"/>
+        <when-type-is
+                class="org.iplantc.de.tools.client.views.manage.ManageToolsToolbarView.ManageToolsToolbarApperance"/>
     </replace-with>
 
     <replace-with class="org.iplantc.de.theme.base.client.tools.EditToolViewDefaultAppearance">
-        <when-type-is class="org.iplantc.de.tools.client.views.manage.EditToolView.EditToolViewAppearance"/>
+        <when-type-is
+                class="org.iplantc.de.tools.client.views.manage.EditToolView.EditToolViewAppearance"/>
     </replace-with>
+
+    <replace-with class="org.iplantc.de.theme.base.client.tools.ToolInfoCellDefaultAppearance">
+        <when-type-is
+                class="org.iplantc.de.tools.client.views.cells.ToolInfoCell.ToolInfoCellAppearance"/>
+    </replace-with>
+
 </module>
