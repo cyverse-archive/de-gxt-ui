@@ -14,5 +14,7 @@ public interface ToolsDisplayStrings extends Messages {
     public String descriptionLabel();
 
     String toolInformation();
+
+    String appUsingTool();
 }
 

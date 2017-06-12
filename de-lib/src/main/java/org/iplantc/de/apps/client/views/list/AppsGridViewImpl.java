@@ -68,7 +68,7 @@ public class AppsGridViewImpl extends ContentPanel implements AppsListView,
         setWidget(ourUiBinder.createAndBindUi(this));
         this.acm = (AppColumnModel) cm;
         grid.getSelectionModel().addSelectionChangedHandler(this);
-
+        gridView.setEmptyText(appearance.noApps());
         new QuickTip(grid).getToolTipConfig().setTrackMouse(true);
     }
 

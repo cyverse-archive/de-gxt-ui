@@ -60,6 +60,8 @@ public interface ManageToolsView extends IsWidget,
         String deleteTool();
 
         String confirmDelete();
+
+        String appsLoadError();
     }
 
 

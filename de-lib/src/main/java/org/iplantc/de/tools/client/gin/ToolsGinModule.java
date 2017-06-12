@@ -1,6 +1,7 @@
 package org.iplantc.de.tools.client.gin;
 
 import org.iplantc.de.tools.client.gin.factory.NewToolRequestFormPresenterFactory;
+import org.iplantc.de.tools.client.gin.factory.ToolInfoViewFactory;
 import org.iplantc.de.tools.client.gin.factory.ToolSharingPresenterFactory;
 import org.iplantc.de.tools.client.presenter.ManageToolsViewPresenter;
 import org.iplantc.de.tools.client.presenter.NewToolRequestFormPresenterImpl;
@@ -12,6 +13,8 @@ import org.iplantc.de.tools.client.views.manage.ManageToolsToolbarView;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 import org.iplantc.de.tools.client.views.manage.ManageToolsViewImpl;
 import org.iplantc.de.tools.client.views.manage.ManageToolsViewToolbarImpl;
+import org.iplantc.de.tools.client.views.manage.ToolInfoView;
+import org.iplantc.de.tools.client.views.manage.ToolInfoViewImpl;
 import org.iplantc.de.tools.client.views.manage.ToolSharingPresenter;
 import org.iplantc.de.tools.client.views.manage.ToolSharingView;
 import org.iplantc.de.tools.client.views.manage.ToolSharingViewImpl;
@@ -26,16 +29,17 @@ public class ToolsGinModule extends AbstractGinModule {
     protected void configure() {
         bind(NewToolRequestFormView.class).to(NewToolRequestFormViewImpl.class);
 
-        install(new GinFactoryModuleBuilder()
-                    .implement(NewToolRequestFormView.Presenter.class, NewToolRequestFormPresenterImpl.class)
-                    .build(NewToolRequestFormPresenterFactory.class));
+        install(new GinFactoryModuleBuilder().implement(NewToolRequestFormView.Presenter.class,
+                                                        NewToolRequestFormPresenterImpl.class)
+                                             .build(NewToolRequestFormPresenterFactory.class));
         bind(ToolInfoCell.class);
         bind(ManageToolsToolbarView.class).to(ManageToolsViewToolbarImpl.class);
         bind(ManageToolsView.class).to(ManageToolsViewImpl.class);
         bind(ManageToolsView.Presenter.class).to(ManageToolsViewPresenter.class);
         bind(EditToolView.class).to(EditToolViewImpl.class);
         bind(ToolSharingView.class).to(ToolSharingViewImpl.class);
-
+        install(new GinFactoryModuleBuilder().implement(ToolInfoView.class, ToolInfoViewImpl.class)
+                                             .build(ToolInfoViewFactory.class));
         install(new GinFactoryModuleBuilder().implement(ToolSharingPresenter.class,
                                                         ToolSharingPresenterImpl.class)
                                              .build(ToolSharingPresenterFactory.class));

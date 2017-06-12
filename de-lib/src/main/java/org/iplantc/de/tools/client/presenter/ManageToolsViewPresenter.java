@@ -1,12 +1,13 @@
 package org.iplantc.de.tools.client.presenter;
 
 import org.iplantc.de.apps.client.models.ToolFilter;
-import org.iplantc.de.tools.client.views.dialogs.ToolInfoDialog;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.gin.ServicesInjector;
+import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.services.ToolServices;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.shared.AppsCallback;
@@ -23,6 +24,7 @@ import org.iplantc.de.tools.client.events.ToolFilterChanged;
 import org.iplantc.de.tools.client.events.ToolSelectionChangedEvent;
 import org.iplantc.de.tools.client.views.dialogs.EditToolDialog;
 import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
+import org.iplantc.de.tools.client.views.dialogs.ToolInfoDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolSharingDialog;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
@@ -38,6 +40,7 @@ import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -189,18 +192,19 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     @Override
     public void onDeleteToolsSelected(final DeleteToolSelected event) {
         Tool tool = currentSelection.get(0);
-        ConfirmMessageBox cmb = new ConfirmMessageBox(appearance.deleteTool(), appearance.confirmDelete());
+        ConfirmMessageBox cmb =
+                new ConfirmMessageBox(appearance.deleteTool(), appearance.confirmDelete());
         cmb.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
             @Override
             public void onDialogHide(DialogHideEvent event) {
-               switch (event.getHideButton()) {
-                   case YES:
-                       doDelete(tool);
-                       break;
-                   case NO:
-                       //do nothing
-                       break;
-               }
+                switch (event.getHideButton()) {
+                    case YES:
+                        doDelete(tool);
+                        break;
+                    case NO:
+                        //do nothing
+                        break;
+                }
             }
         });
         cmb.show();
@@ -263,26 +267,26 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
             @Override
             public void onSuccess(NewToolRequestDialog o) {
-                    o.show(NewToolRequestFormView.Mode.NEWTOOL);
+                o.show(NewToolRequestFormView.Mode.NEWTOOL);
             }
         });
     }
 
     @Override
     public void onEditToolSelected(EditToolSelected event) {
-       editDialogProvider.get(new AsyncCallback<EditToolDialog>() {
-           @Override
-           public void onFailure(Throwable throwable) {
+        editDialogProvider.get(new AsyncCallback<EditToolDialog>() {
+            @Override
+            public void onFailure(Throwable throwable) {
 
-           }
+            }
 
-           @Override
-           public void onSuccess(EditToolDialog etd) {
-               etd.setSize("600px", "300px");
-               etd.editTool(getSelectedTool());
-               etd.show(ManageToolsViewPresenter.this);
-           }
-       });
+            @Override
+            public void onSuccess(EditToolDialog etd) {
+                etd.setSize("600px", "300px");
+                etd.editTool(getSelectedTool());
+                etd.show(ManageToolsViewPresenter.this);
+            }
+        });
     }
 
     @Override
@@ -308,16 +312,34 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
     @Override
     public void onShowToolInfo(ShowToolInfoEvent event) {
-       toolInfoDialogProvider.get(new AsyncCallback<ToolInfoDialog>() {
-           @Override
-           public void onFailure(Throwable throwable) {
+        dcService.getAppsForTool(event.getTool().getId(), new AppsCallback<List<App>>() {
 
-           }
+            @Override
+            public void onFailure(Integer statusCode, Throwable exception) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.appsLoadError()));
+                showToolInfo(Arrays.asList());
 
-           @Override
-           public void onSuccess(ToolInfoDialog o) {
-              o.show(getSelectedTool());
-           }
-       });
+            }
+
+            @Override
+            public void onSuccess(final List<App> result) {
+                showToolInfo(result);
+            }
+        });
+
+    }
+
+    private void showToolInfo(final List<App> result) {
+        toolInfoDialogProvider.get(new AsyncCallback<ToolInfoDialog>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+
+            }
+
+            @Override
+            public void onSuccess(ToolInfoDialog o) {
+                o.show(getSelectedTool(), result);
+            }
+        });
     }
 }

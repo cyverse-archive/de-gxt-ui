@@ -36,6 +36,14 @@ public class ToolInfoCell extends AbstractCell<Tool>
         String attributionLabel();
 
         String descriptionLabel();
+
+        String tabWidth();
+
+        String tabHeight();
+
+        String toolInformation();
+
+        String appsUsingTool();
     }
 
     private final ToolInfoCell.ToolInfoCellAppearance appearance;

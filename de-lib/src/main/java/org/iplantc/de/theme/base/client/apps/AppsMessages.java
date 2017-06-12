@@ -151,4 +151,6 @@ public interface AppsMessages extends Messages {
     String agaveRedirectCheckFail();
 
     String manageTools();
+
+    String noApps();
 }
