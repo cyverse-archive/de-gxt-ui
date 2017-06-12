@@ -10,6 +10,7 @@ import org.iplantc.de.tools.client.events.BeforeToolSearchEvent;
 import org.iplantc.de.tools.client.events.DeleteToolSelected;
 import org.iplantc.de.tools.client.events.EditToolSelected;
 import org.iplantc.de.tools.client.events.RefreshToolsSelectedEvent;
+import org.iplantc.de.tools.client.events.RequestToMakeToolPublicSelected;
 import org.iplantc.de.tools.client.events.RequestToolSelected;
 import org.iplantc.de.tools.client.events.ShareToolsSelected;
 import org.iplantc.de.tools.client.events.ToolFilterChanged;
@@ -204,7 +205,7 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
 
     @UiHandler("sharePublic")
     void onSharePublicClicked(SelectionEvent<Item> event) {
-
+        fireEvent(new RequestToMakeToolPublicSelected());
     }
 
     @UiHandler("refreshButton")
@@ -258,7 +259,13 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
         return addHandler(handler, EditToolSelected.TYPE);
     }
 
-   @Override
+    @Override
+    public HandlerRegistration addRequestToMakeToolPublicSelectedHandler(RequestToMakeToolPublicSelected.RequestToMakeToolPublicSelectedHandler handler) {
+        return addHandler(handler, RequestToMakeToolPublicSelected.TYPE);
+    }
+
+
+    @Override
     public void setSelection(List<Tool> currentSelection) {
         setButtonState(currentSelection);
     }

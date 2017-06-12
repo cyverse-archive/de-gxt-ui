@@ -106,28 +106,6 @@
                         </form:widget>
                     </form:FieldLabel>
                 </con:child>
-                <con:child layoutData="{layoutData}">
-                    <form:FieldLabel ui:field="archLbl" labelAlign="TOP"
-                                     labelSeparator="">
-                        <form:widget>
-                            <form:ComboBox debugId="idCboArch" ui:field="archCbo"
-                                           allowBlank="true" forceSelection="true"
-                                           triggerAction="ALL"
-                                           editable="false"/>
-                        </form:widget>
-                    </form:FieldLabel>
-                </con:child>
-                <con:child layoutData="{layoutData}">
-                    <form:FieldLabel ui:field="multiLbl" labelAlign="TOP"
-                                     labelSeparator="">
-                        <form:widget>
-                            <form:ComboBox debugId="idCboMultiThreaded"
-                                           ui:field="multiThreadCbo" allowBlank="true"
-                                           forceSelection="true"
-                                           triggerAction="ALL" editable="false"/>
-                        </form:widget>
-                    </form:FieldLabel>
-                </con:child>
             </con:VerticalLayoutContainer>
         </form:FieldSet>
         <form:FieldSet heading="{strings.otherTab}"
