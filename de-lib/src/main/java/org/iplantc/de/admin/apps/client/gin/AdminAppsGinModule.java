@@ -28,7 +28,9 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.services.AppSearchFacade;
 import org.iplantc.de.client.services.AppServiceFacade;
+import org.iplantc.de.client.services.ToolServices;
 import org.iplantc.de.client.services.impl.AppUserServiceFacadeImpl;
+import org.iplantc.de.client.services.impl.ToolServicesImpl;
 
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
@@ -52,6 +54,7 @@ public class AdminAppsGinModule extends AbstractGinModule {
         bind(AppAdminServiceFacade.class).to(AppAdminServiceFacadeImpl.class);
         bind(AppServiceFacade.class).to(AppUserServiceFacadeImpl.class);
         bind(AppSearchFacade.class).to(AppAdminServiceFacadeImpl.class);
+        bind(ToolServices.class).to(ToolServicesImpl.class);
 
        // Main view
         install(new GinFactoryModuleBuilder()

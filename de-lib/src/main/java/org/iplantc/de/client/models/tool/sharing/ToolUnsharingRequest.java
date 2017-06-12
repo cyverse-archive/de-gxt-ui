@@ -9,9 +9,9 @@ public interface ToolUnsharingRequest {
 
     void setUser(String user);
 
-    void setTools(List<ToolPermission> tools);
+    void setTools(List<String> tools);
 
     String getUser();
 
-    List<ToolPermission> getTools();
+    List<String> getTools();
 }

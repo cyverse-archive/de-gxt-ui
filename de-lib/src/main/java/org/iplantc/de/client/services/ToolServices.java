@@ -11,9 +11,7 @@ import java.util.List;
 
 public interface ToolServices {
 
-    void searchTools(FilterPagingLoadConfig loadConfig, AppsCallback<List<Tool>> callback);
-
-    void getTools(AppsCallback<List<Tool>> callback);
+    void searchTools(Boolean isPublic, FilterPagingLoadConfig loadConfig, AppsCallback<List<Tool>> callback);
 
     void addTool(Tool tool, AppsCallback<Tool> callback);
 
@@ -24,4 +22,6 @@ public interface ToolServices {
     void shareTool(ToolSharingRequestList obj, AppsCallback<String> callback);
 
     void unShareTool(ToolUnSharingRequestList obj, AppsCallback<String> callback);
+
+    void updateTool(Tool tool, AppsCallback<Tool> appsCallback);
 }
