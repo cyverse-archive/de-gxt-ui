@@ -167,13 +167,13 @@ public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminVi
     }
 
     @Override
-    public String toolImportVersionLabel() {
-        return displayStrings.toolImportVersionLabel();
+    public SafeHtml toolImportVersionLabel() {
+        return templates.requiredFieldLabel(displayStrings.toolImportVersionLabel());
     }
 
     @Override
-    public SafeHtml toolImportLocationLabel() {
-        return templates.requiredFieldLabel(displayStrings.toolImportLocationLabel());
+    public String toolImportLocationLabel() {
+        return displayStrings.toolImportLocationLabel();
     }
 
     @Override
@@ -510,5 +510,20 @@ public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminVi
     @Override
     public SafeHtml toolVolumeWarning() {
         return displayStrings.toolVolumeWarning();
+    }
+
+    @Override
+    public String dialogMakePublicText() {
+        return displayStrings.dialogMakePublicText();
+    }
+
+    @Override
+    public String timeLimit() {
+        return displayStrings.timeLimit();
+    }
+
+    @Override
+    public String restricted() {
+        return displayStrings.restricted();
     }
 }

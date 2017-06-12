@@ -36,4 +36,14 @@ public class ToolRequestPresenterDefaultAppearance implements ToolRequestView.Pr
     public String toolRequestUpdateSuccessMessage() {
         return displayStrings.toolRequestUpdateSuccessMessage();
     }
+
+    @Override
+    public String publishFailed() {
+        return displayStrings.publishedFailed();
+    }
+
+    @Override
+    public String publishSuccess() {
+        return displayStrings.publishSuccess();
+    }
 }

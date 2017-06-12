@@ -63,4 +63,8 @@ public interface ToolRequestDisplayStrings extends Messages {
 
     @Key("versionColumnLabel")
     String versionColumnLabel();
+
+    String makePublic();
+    
 }
+

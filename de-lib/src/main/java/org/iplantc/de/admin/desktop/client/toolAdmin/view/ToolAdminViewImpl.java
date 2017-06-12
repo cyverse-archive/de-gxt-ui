@@ -3,6 +3,7 @@ package org.iplantc.de.admin.desktop.client.toolAdmin.view;
 import org.iplantc.de.admin.desktop.client.toolAdmin.ToolAdminView;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.AddToolSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.DeleteToolSelectedEvent;
+import org.iplantc.de.admin.desktop.client.toolAdmin.events.PublishToolEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.SaveToolSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.events.ToolSelectedEvent;
 import org.iplantc.de.admin.desktop.client.toolAdmin.model.ToolProperties;
@@ -150,6 +151,11 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
         return addHandler(handler, ToolSelectedEvent.TYPE);
     }
 
+    @Override
+    public HandlerRegistration addPublishToolEventHandler(PublishToolEvent.PublishToolEventHandler handler) {
+        return addHandler(handler, PublishToolEvent.TYPE);
+    }
+
     @UiFactory
     ColumnModel<Tool> createColumnModel() {
         List<ColumnConfig<Tool, ?>> list = Lists.newArrayList();
@@ -183,8 +189,13 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
         return new ColumnModel<>(list);
     }
 
+    /**
+     * TODO SS Move launching new view to Presenter
+     * @param tool
+     * @param mode
+     */
     @Override
-    public void editToolDetails(final Tool tool) {
+    public void editToolDetails(final Tool tool, final ToolAdminDetailsDialog.Mode mode) {
         toolDetailsDialog.get(new AsyncCallback<ToolAdminDetailsDialog>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -193,7 +204,7 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
 
             @Override
             public void onSuccess(final ToolAdminDetailsDialog result) {
-                result.show(tool);
+                result.show(tool, mode);
                 result.ensureDebugId(Belphegor.ToolAdminIds.TOOL_ADMIN_DIALOG);
                 result.addSaveToolSelectedEventHandler(new SaveToolSelectedEvent.SaveToolSelectedEventHandler() {
                     @Override
@@ -203,10 +214,22 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
                         grid.getSelectionModel().deselect(grid.getSelectionModel().getSelectedItem());
                     }
                 });
+
+                result.addPublishToolEventHandler(new PublishToolEvent.PublishToolEventHandler() {
+                    @Override
+                    public void onPublish(PublishToolEvent event) {
+                        fireEvent(event);
+                        result.hide();
+                    }
+                });
             }
         });
     }
 
+    /**
+     * TODO SS Move launching new view to Presenter
+     * @param event
+     */
     @UiHandler("addButton")
     void addButtonClicked(SelectEvent event) {
         toolDetailsDialog.get(new AsyncCallback<ToolAdminDetailsDialog>() {

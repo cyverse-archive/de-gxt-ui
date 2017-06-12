@@ -52,4 +52,6 @@ public interface ToolRequestDetails extends HasId, HasName, HasDescription {
 
     String getVersion();
 
+    @PropertyName("tool_id")
+    String getToolId();
 }

@@ -60,4 +60,13 @@ public interface Tool extends HasId, HasDescription, HasName {
 
     @PropertyName("time_limit_seconds")
     Integer getTimeLimit();
+
+    @PropertyName("restricted")
+    Boolean isRestricted();
+
+    @PropertyName("restricted")
+    void setRestricted(Boolean restricted);
+
+    @PropertyName("time_limit_seconds")
+    void setTimeLimit(Integer limit);
 }

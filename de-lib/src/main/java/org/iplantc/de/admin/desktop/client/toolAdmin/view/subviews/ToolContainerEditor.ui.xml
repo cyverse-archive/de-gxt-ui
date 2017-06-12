@@ -86,9 +86,8 @@
                     <container:child layoutData="{layoutData}">
                         <form:FieldLabel text="{appearance.containerNetworkModeLabel}">
                             <form:widget>
-                                <form:TextField readOnly="false"
-                                                enabled="true"
-                                                ui:field="networkModeEditor"/>
+                                <form:StringComboBox ui:field="networkModeEditor" allowBlank="false"
+                                                     editable="false"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
