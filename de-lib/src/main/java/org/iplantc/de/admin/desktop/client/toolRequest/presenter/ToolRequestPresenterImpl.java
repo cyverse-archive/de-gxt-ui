@@ -32,13 +32,13 @@ import java.util.List;
  */
 public class ToolRequestPresenterImpl implements ToolRequestView.Presenter, PublishToolEvent.PublishToolEventHandler {
 
-    private final ToolRequestView view;
-    private final ToolRequestServiceFacade toolReqService;
-    private final UserInfo userInfo;
-    private final ToolRequestPresenterAppearance appearance;
-    private final ToolAdminViewFactory adminFactory;
-    private ToolAdminView adminView;
-    private ToolAdminServiceFacade toolAdminServiceFacade;
+    ToolRequestView view;
+    ToolRequestServiceFacade toolReqService;
+    UserInfo userInfo;
+    ToolRequestPresenterAppearance appearance;
+    ToolAdminViewFactory adminFactory;
+    ToolAdminView adminView;
+    ToolAdminServiceFacade toolAdminServiceFacade;
     @Inject IplantAnnouncer announcer;
 
     @Inject
@@ -55,7 +55,6 @@ public class ToolRequestPresenterImpl implements ToolRequestView.Presenter, Publ
         this.adminFactory = adminFactory;
         this.toolAdminServiceFacade = toolAdminServiceFacade;
         view.setPresenter(this);
-        view.getDetailsPanel().addAdminMakeToolPublicEventHandler(this);
     }
 
     @Override
@@ -64,7 +63,7 @@ public class ToolRequestPresenterImpl implements ToolRequestView.Presenter, Publ
 
             @Override
             public void onSuccess(ToolRequestDetails result) {
-                IplantAnnouncer.getInstance().schedule(new SuccessAnnouncementConfig(appearance.toolRequestUpdateSuccessMessage()));
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.toolRequestUpdateSuccessMessage()));
                 view.update(update, result);
             }
 
@@ -98,6 +97,7 @@ public class ToolRequestPresenterImpl implements ToolRequestView.Presenter, Publ
     @Override
     public void go(HasOneWidget container) {
         view.mask(appearance.getToolRequestsLoadingMask());
+        view.getDetailsPanel().addAdminMakeToolPublicEventHandler(this);
         container.setWidget(view);
         toolReqService.getToolRequests(null, userInfo.getUsername(), new AsyncCallback<List<ToolRequest>>() {
 
@@ -130,6 +130,10 @@ public class ToolRequestPresenterImpl implements ToolRequestView.Presenter, Publ
         }));
         adminView.addPublishToolEventHandler(this);
 
+        getToolDetails(event);
+    }
+
+    protected void getToolDetails(AdminMakeToolPublicSelectedEvent event) {
         toolAdminServiceFacade.getToolDetails(event.getToolId(), new AsyncCallback<Tool>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -141,7 +145,6 @@ public class ToolRequestPresenterImpl implements ToolRequestView.Presenter, Publ
                 adminView.editToolDetails(result, ToolAdminDetailsDialog.Mode.MAKEPUBLIC);
             }
         });
-
     }
 
     @Override

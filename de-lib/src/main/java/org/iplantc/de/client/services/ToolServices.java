@@ -16,7 +16,7 @@ public interface ToolServices {
 
     void addTool(Tool tool, AppsCallback<Tool> callback);
 
-    void deleteTool(Tool tool, AppsCallback<String> callback);
+    void deleteTool(Tool tool, AppsCallback<Void> callback);
 
     void getPermissions(List<Tool> currentSelection, AppsCallback<String> callback);
 
