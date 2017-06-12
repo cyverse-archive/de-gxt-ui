@@ -36,7 +36,8 @@ public class ToolRequestViewDefaultAppearance implements ToolRequestView.ToolReq
 
     ToolRequestViewDefaultAppearance(final ToolRequestDisplayStrings displayStrings,
                                      final IplantDisplayStrings iplantDisplayStrings,
-                                     final IplantResources iplantResources, final Templates templates ) {
+                                     final IplantResources iplantResources,
+                                     final Templates templates) {
         this.displayStrings = displayStrings;
         this.iplantDisplayStrings = iplantDisplayStrings;
         this.iplantResources = iplantResources;

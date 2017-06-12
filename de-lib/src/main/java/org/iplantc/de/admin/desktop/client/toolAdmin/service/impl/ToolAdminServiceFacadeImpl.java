@@ -107,8 +107,7 @@ public class ToolAdminServiceFacadeImpl implements ToolAdminServiceFacade {
         Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tool));
         nullUnwantedValues(encode);
 
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST,
-                                                            address, encode.getPayload());
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
         deService.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
     }
 }

@@ -23,10 +23,6 @@ public class PublishToolEvent extends GwtEvent<PublishToolEvent.PublishToolEvent
         return tool;
     }
 
-    public void setTool(Tool tool) {
-        this.tool = tool;
-    }
-
     public interface PublishToolEventHandler extends EventHandler {
         void onPublish(PublishToolEvent event);
     }
