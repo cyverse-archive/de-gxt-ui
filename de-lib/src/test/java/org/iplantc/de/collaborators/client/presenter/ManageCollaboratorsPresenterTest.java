@@ -26,6 +26,7 @@ import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
+import org.iplantc.de.collaborators.client.presenter.callbacks.ParentAddMemberToGroupCallback;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -82,6 +83,8 @@ public class ManageCollaboratorsPresenterTest {
     @Mock List<UpdateMemberResult> updateMemberResultsMock;
     @Mock Consumer<Group> groupConsumerMock;
     @Mock UserInfo userInfoMock;
+    @Mock ManageCollaboratorsPresenter.AddMemberToGroupCallback memberToGroupCallbackMock;
+    @Mock List<ManageCollaboratorsPresenter.AddMemberToGroupCallback> memberToGroupCallbackListsMock;
 
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> collabListCallbackCaptor;
@@ -122,6 +125,16 @@ public class ManageCollaboratorsPresenterTest {
             @Override
             List<UpdateMemberResult> getFailResults(List<UpdateMemberResult> result) {
                 return updateMemberResultsMock;
+            }
+
+            @Override
+            List<AddMemberToGroupCallback> getAddMemberToGroupCallbackList() {
+                return memberToGroupCallbackListsMock;
+            }
+
+            @Override
+            AddMemberToGroupCallback getAddMemberToGroupCallback() {
+                return memberToGroupCallbackMock;
             }
         };
 
@@ -270,30 +283,18 @@ public class ManageCollaboratorsPresenterTest {
     public void addMemberToGroups() {
         when(groupListMock.size()).thenReturn(1);
         when(updateMemberResultsMock.isEmpty()).thenReturn(true);
-        ManageCollaboratorsPresenter spy = spy(uut);
+        when(groupAppearanceMock.memberAddToGroupsSuccess(any())).thenReturn("success");
+        when(groupAppearanceMock.unableToAddMembers(any())).thenReturn("fail");
 
         /** CALL METHOD UNDER TEST **/
-        spy.addMemberToGroups(subjectMock, groupListMock);
+        uut.addMemberToGroups(subjectMock, groupListMock);
 
         verify(groupListMock).forEach(groupConsumerCaptor.capture());
         groupConsumerCaptor.getValue().accept(groupMock);
 
-        verify(spy).addMemberToGroup(eq(groupMock), eq(subjectMock));
-    }
-
-    @Test
-    public void addMemberToGroup() {
-        when(updateMemberResultsMock.isEmpty()).thenReturn(true);
-        when(groupAppearanceMock.memberAddSuccess(any(), any())).thenReturn("success");
-        when(groupAppearanceMock.unableToAddMembers(any())).thenReturn("fail");
-
-        /** CALL METHOD UNDER TEST **/
-        uut.addMemberToGroup(groupMock, subjectMock);
-
         verify(groupServiceFacadeMock).addMembers(eq(groupMock), eq(subjectListMock), updateMemberCaptor.capture());
 
         updateMemberCaptor.getValue().onSuccess(updateMemberResultsMock);
-        verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));
     }
 
     @Test

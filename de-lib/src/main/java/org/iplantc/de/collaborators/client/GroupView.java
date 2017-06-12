@@ -91,6 +91,8 @@ public interface GroupView extends IsWidget,
         String collaboratorAddConfirm(String names);
 
         String addCollabErrorMsg();
+
+        String memberAddToGroupsSuccess(Subject subject);
     }
 
     /**

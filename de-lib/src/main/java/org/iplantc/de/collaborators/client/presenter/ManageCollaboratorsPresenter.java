@@ -21,6 +21,7 @@ import org.iplantc.de.collaborators.client.events.GroupSaved;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
+import org.iplantc.de.collaborators.client.presenter.callbacks.ParentAddMemberToGroupCallback;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -56,6 +57,25 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                                                      AddGroupSelected.AddGroupSelectedHandler,
                                                      GroupNameSelected.GroupNameSelectedHandler,
                                                      UserSearchResultSelected.UserSearchResultSelectedEventHandler {
+
+    public class AddMemberToGroupCallback implements AsyncCallback<List<UpdateMemberResult>> {
+        ParentAddMemberToGroupCallback parent;
+
+        @Override
+        public void onFailure(Throwable caught) {
+            ErrorHandler.post(caught);
+            parent.done(null);
+        }
+
+        @Override
+        public void onSuccess(List<UpdateMemberResult> result) {
+            parent.done(result);
+        }
+
+        public void setParent(ParentAddMemberToGroupCallback parent) {
+            this.parent = parent;
+        }
+    }
 
     @Inject CollaboratorsUtil collaboratorsUtil;
     @Inject EventBus eventBus;
@@ -130,32 +150,29 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     void addMemberToGroups(Subject subject, List<Group> selectedCollaboratorLists) {
+        List<AddMemberToGroupCallback> childCallbacks = getAddMemberToGroupCallbackList();
+
         selectedCollaboratorLists.forEach(new Consumer<Group>() {
             @Override
             public void accept(Group group) {
-                addMemberToGroup(group, subject);
+                AddMemberToGroupCallback callback = getAddMemberToGroupCallback();
+                groupServiceFacade.addMembers(group, wrapSubjectInList(subject), callback);
+                childCallbacks.add(callback);
             }
         });
-    }
 
-    void addMemberToGroup(Group group, Subject subject) {
-        groupServiceFacade.addMembers(group, wrapSubjectInList(subject), new AsyncCallback<List<UpdateMemberResult>>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
+        new ParentAddMemberToGroupCallback(childCallbacks) {
 
             @Override
-            public void onSuccess(List<UpdateMemberResult> result) {
-                List<UpdateMemberResult> failures = getFailResults(result);
+            public void handleSuccess(List<UpdateMemberResult> totalResults) {
+                List<UpdateMemberResult> failures = getFailResults(totalResults);
                 if (failures != null && !failures.isEmpty()) {
                     announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.unableToAddMembers(failures)));
                 } else {
-                    String names = getCollaboratorNames(wrapSubjectInList(subject));
-                    announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.memberAddSuccess(subject, group)));
+                    announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.memberAddToGroupsSuccess(subject)));
                 }
             }
-        });
+        };
     }
 
     List<Subject> wrapSubjectInList(Subject subject) {
@@ -379,5 +396,13 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                 });
             }
         });
+    }
+
+    AddMemberToGroupCallback getAddMemberToGroupCallback() {
+        return new AddMemberToGroupCallback();
+    }
+
+    List<AddMemberToGroupCallback> getAddMemberToGroupCallbackList() {
+        return Lists.newArrayList();
     }
 }

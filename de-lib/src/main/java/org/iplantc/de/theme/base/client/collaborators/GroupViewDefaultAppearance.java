@@ -217,4 +217,9 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
     public String addCollabErrorMsg() {
         return iplantErrorStrings.addCollabErrorMsg();
     }
+
+    @Override
+    public String memberAddToGroupsSuccess(Subject subject) {
+        return displayStrings.memberAddToGroupsSuccess(subject.getSubjectDisplayName());
+    }
 }
