@@ -156,7 +156,19 @@ public class ManageToolsViewPresenterTest {
 
         uut.go(containerMock);
         verify(containerMock).setWidget(eq(scMock));
-        verify(toolsViewMock, times(10)).getToolbar();
+
+        verify(manageToolsToolbarViewMock, times(1)).addBeforeToolSearchEventHandler(eq(toolsViewMock));
+        verify(manageToolsToolbarViewMock,
+               times(1)).addToolSearchResultLoadEventHandler(eq(toolsViewMock));
+        verify(manageToolsToolbarViewMock, times(1)).addRefreshToolsSelectedEventHandler(eq(uut));
+        verify(manageToolsToolbarViewMock, times(1)).addNewToolSelectedHandler(eq(uut));
+        verify(manageToolsToolbarViewMock, times(1)).addShareToolselectedHandler(eq(uut));
+        verify(manageToolsToolbarViewMock, times(1)).addDeleteToolsSelectedHandler(eq(uut));
+        verify(manageToolsToolbarViewMock, times(1)).addToolFilterChangedHandler(eq(uut));
+        verify(manageToolsToolbarViewMock, times(1)).addRequestToolSelectedHandler(eq(uut));
+        verify(manageToolsToolbarViewMock, times(1)).addEditToolSelectedHandler(eq(uut));
+        verify(manageToolsToolbarViewMock, times(1)).addRequestToMakeToolPublicSelectedHandler(eq(uut));
+
         verify(toolsViewMock, times(1)).addToolSelectionChangedEventHandler(uut);
         verify(toolsViewMock, times(1)).addShowToolInfoEventHandlers(uut);
     }
