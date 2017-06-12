@@ -208,9 +208,11 @@ class InitializationCallbacks {
                                      IplantAnnouncer announcer,
                                      DesktopView.Presenter.DesktopPresenterAppearance appearance) {
         if (userInfo.hasPreferencesError()) {
-            announcer.schedule(new ErrorAnnouncementConfig(SafeHtmlUtils.fromString(appearance.userPreferencesLoadError()),
-                                                           false,
-                                                           5000));
+            if (!userInfo.isNewUser()) {
+                announcer.schedule(new ErrorAnnouncementConfig(SafeHtmlUtils.fromString(appearance.userPreferencesLoadError()),
+                                                               false,
+                                                               5000));
+            }
             userSettings.setUserSettings(null);
         } else {
             userSettings.setUserSettings(userInfo.getUserPreferences());
