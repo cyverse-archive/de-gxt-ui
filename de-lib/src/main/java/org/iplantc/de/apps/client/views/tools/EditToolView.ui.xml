@@ -45,6 +45,14 @@
                 </container:child>
 
                 <container:child>
+                    <form:FieldLabel text="{appearance.version}">
+                        <form:widget>
+                            <form:TextField ui:field="version" allowBlank="false" />
+                        </form:widget>
+                    </form:FieldLabel>
+                </container:child>
+
+                <container:child>
                     <form:FieldLabel text="{appearance.imgName}">
                         <form:widget>
                             <form:TextField ui:field="imgName" allowBlank="false" />

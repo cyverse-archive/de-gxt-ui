@@ -96,4 +96,9 @@ public class EditToolViewDefaultAppearance implements EditToolView.EditToolViewA
     public String toolInfo() {
         return toolMessages.toolInfo();
     }
+
+    @Override
+    public String version() {
+        return toolMessages.version();
+    }
 }

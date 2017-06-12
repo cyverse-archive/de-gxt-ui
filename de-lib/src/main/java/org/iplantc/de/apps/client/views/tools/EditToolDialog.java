@@ -3,7 +3,6 @@ package org.iplantc.de.apps.client.views.tools;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -28,7 +27,6 @@ public class EditToolDialog extends IPlantDialog {
        getOkButton().addSelectHandler(new SelectEvent.SelectHandler() {
            @Override
            public void onSelect(SelectEvent event) {
-               Window.alert("testing" + editToolView.validate());
                Tool t = editToolView.getTool();
                presenter.addTool(t);
            }

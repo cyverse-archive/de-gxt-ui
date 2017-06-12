@@ -62,6 +62,9 @@ public interface ToolMessages extends Messages {
     String restrictions();
 
     String toolInfo();
+
+    String shareTools();
+    
 }
         
     

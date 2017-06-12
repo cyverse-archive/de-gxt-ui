@@ -45,6 +45,8 @@ public interface ManageToolsView extends IsWidget,
         int tagWidth();
 
         String tag();
+
+        String shareTools();
     }
 
 
@@ -60,11 +62,10 @@ public interface ManageToolsView extends IsWidget,
                                        RefreshToolsSelectedEvent.RefreshToolsSelectedEventHandler,
                                        AddNewToolSelected.NewToolSelectedHandler,
                                        DeleteToolSelected.DeleteToolsSelectedHandler,
-                                       ShareToolsSelected.ShareToolsSelectedHandler {
+                                       ShareToolsSelected.ShareToolsSelectedHandler,
+                                       ToolSelectionChangedEvent.ToolSelectionChangedEventHandler {
         void loadTools();
 
         void addTool(Tool tool);
-
-        void removeTool(Tool tool);
     }
 }

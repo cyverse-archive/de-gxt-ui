@@ -7,6 +7,7 @@ import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.services.ToolServices;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.resources.client.messages.I18N;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.base.Strings;
 import com.google.gwt.event.shared.HasHandlers;
@@ -50,11 +51,11 @@ public class ToolSearchRPCProxy extends
         // Cache the search text for this callback; used to sort the results.
         final String searchText = lastQueryText;
         hasHandlers.fireEvent(new BeforeToolSearchEvent());
-        dcService.searchTools(loadConfig, new AsyncCallback<List<Tool>>() {
+        dcService.searchTools(loadConfig, new AppsCallback<List<Tool>>() {
 
             @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(I18N.ERROR.dcLoadError(), caught);
+            public void onFailure(Integer statusCode, Throwable exception) {
+                ErrorHandler.post(I18N.ERROR.dcLoadError(), exception);
 
             }
 
