@@ -68,12 +68,13 @@ public class ToolServicesImpl implements ToolServices {
                     Iterables.getFirst(loadConfig.getSortInfo(), new SortInfoBean("NAME", SortDir.ASC));
 
             address += "search=" + URL.encodeQueryString(searchTerm) + "&sort-field=" + sortInfo.getSortField().toLowerCase()
-                       + "&sort-dir=" + sortInfo.getSortDir().toString() + "&public=" + isPublic;
-        } else {
-            if(isPublic != null) {
-                address += "public=" + isPublic;
-            }
+                       + "&sort-dir=" + sortInfo.getSortDir().toString();
         }
+
+        if(isPublic != null) {
+            address += "&public=" + isPublic;
+        }
+
 
         ToolsCallbackConverter callbackCnvt = new ToolsCallbackConverter(callback, factory);
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);

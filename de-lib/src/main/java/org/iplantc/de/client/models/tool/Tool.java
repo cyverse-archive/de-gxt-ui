@@ -59,5 +59,5 @@ public interface Tool extends HasId, HasDescription, HasName {
     boolean isPublic();
 
     @PropertyName("time_limit_seconds")
-    long getTimeLimit();
+    Integer getTimeLimit();
 }

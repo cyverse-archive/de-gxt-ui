@@ -1,6 +1,5 @@
 package org.iplantc.de.apps.integration.client.view.dialogs;
 
-import org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingView;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
@@ -17,10 +16,10 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
  */
 public class ToolInfoDialog extends IPlantDialog {
 
-    private DeployedComponentsListingView.DeployedComponentsListingViewAppearance appearance;
+    private ToolListingDialog.ToolsListingViewAppearance appearance;
 
     @Inject
-    public ToolInfoDialog(DeployedComponentsListingView.DeployedComponentsListingViewAppearance appearance) {
+    public ToolInfoDialog(ToolListingDialog.ToolsListingViewAppearance appearance) {
         this.appearance = appearance;
         getButtonBar().clear();
         setModal(true);

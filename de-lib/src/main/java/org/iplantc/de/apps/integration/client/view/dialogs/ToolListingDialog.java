@@ -7,30 +7,73 @@ import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids.CA
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids.INSTALLED_TOOLS_DLG;
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids.OK;
 
-import org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingView;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
+import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
-import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent.SelectionChangedHandler;
-
-import java.util.List;
 
 /**
  * @author sriram
  */
-public class DCListingDialog extends IPlantDialog implements SelectionChangedHandler<Tool> {
+public class ToolListingDialog extends IPlantDialog implements SelectionChangedEvent.SelectionChangedHandler<Tool> {
 
-    private Tool selectedComponent = null;
-    private DeployedComponentsListingView.DeployedComponentsListingViewAppearance appearance;
+
+    public interface ToolsListingViewAppearance {
+
+        String nameColumnHeader();
+
+        String versionColumnHeader();
+
+        String pathColumnHeader();
+
+        String attributionLabel();
+
+        String descriptionLabel();
+
+        String loadingMask();
+
+        String searchEmptyText();
+
+        SafeHtml detailsRenderer();
+
+        String newToolReq();
+
+        ImageResource add();
+
+        String infoDialogWidth();
+
+        String infoDialogHeight();
+
+        int nameColumnWidth();
+
+        int versionColumnWidth();
+
+        int pathColumnWidth();
+
+        int dcListingDialogWidth();
+
+        int dcListingDialogHeight();
+
+        String dcListingDialogHeading();
+    }
+
+
+    private ToolsListingViewAppearance appearance;
+
+    ManageToolsView.Presenter toolsPresenter;
+
+    Tool selectedTool;
 
     @Inject
-    DCListingDialog(DeployedComponentsListingView.Presenter toolsPresenter,
-                    DeployedComponentsListingView.DeployedComponentsListingViewAppearance appearance) {
+    ToolListingDialog(ManageToolsView.Presenter toolsPresenter,
+                      ToolsListingViewAppearance appearance) {
         this.appearance = appearance;
         setPixelSize(appearance.dcListingDialogWidth(), appearance.dcListingDialogHeight());
         setResizable(false);
@@ -42,7 +85,6 @@ public class DCListingDialog extends IPlantDialog implements SelectionChangedHan
 
             @Override
             public void onSelect(SelectEvent event) {
-                selectedComponent = null;
                 hide();
             }
         });
@@ -59,19 +101,13 @@ public class DCListingDialog extends IPlantDialog implements SelectionChangedHan
         toolsPresenter.addSelectionChangedHandler(this);
     }
 
-    public Tool getSelectedComponent() {
-        return selectedComponent;
+    public Tool getSelectedTool() {
+        return selectedTool;
     }
 
     @Override
     public void onSelectionChanged(SelectionChangedEvent<Tool> event) {
-        List<Tool> items = event.getSelection();
-        if (items != null && items.size() > 0) {
-            getButton(PredefinedButton.OK).setEnabled(true);
-            selectedComponent = items.get(0);
-        } else {
-            getButton(PredefinedButton.OK).setEnabled(false);
-            selectedComponent = null;
-        }
+        getOkButton().enable();
+        selectedTool = event.getSelection().get(0);
     }
 }

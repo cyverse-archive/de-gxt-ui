@@ -70,3 +70,4 @@ public interface AppTemplate extends HasQualifiedId, HasLabel, HasName, HasDescr
     Boolean isRetainInputs();
 
 }
+

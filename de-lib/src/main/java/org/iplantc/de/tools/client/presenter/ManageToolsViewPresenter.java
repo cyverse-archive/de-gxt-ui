@@ -25,6 +25,7 @@ import org.iplantc.de.tools.client.views.dialogs.ToolSharingDialog;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 
 import com.google.common.collect.Lists;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -32,6 +33,7 @@ import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
+import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 
 import java.util.List;
 
@@ -148,6 +150,11 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
                 toolsView.updateTool(result);
             }
         });
+    }
+
+    @Override
+    public Tool getSelectedTool() {
+        return currentSelection.get(0);
     }
 
     @Override
@@ -285,5 +292,10 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
                 o.show();
             }
         });
+    }
+
+    @Override
+    public HandlerRegistration addSelectionChangedHandler(SelectionChangedEvent.SelectionChangedHandler<Tool> handler) {
+        return toolsView.addSelectionChangedHandler(handler);
     }
 }

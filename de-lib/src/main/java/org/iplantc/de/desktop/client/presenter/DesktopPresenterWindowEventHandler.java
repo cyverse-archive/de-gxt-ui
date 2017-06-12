@@ -14,6 +14,8 @@ import org.iplantc.de.client.events.diskResources.OpenFolderEvent;
 import org.iplantc.de.client.models.HasPath;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.analysis.Analysis;
+import org.iplantc.de.client.models.apps.integration.AppTemplate;
+import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
@@ -43,7 +45,7 @@ import org.iplantc.de.diskResource.client.views.dialogs.FileUploadByUrlDialog;
 import org.iplantc.de.fileViewers.client.callbacks.EnsemblUtil;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
 import org.iplantc.de.systemMessages.client.events.ShowSystemMessagesEvent;
-import org.iplantc.de.tools.client.events.UseInNewAppEvent;
+import org.iplantc.de.tools.client.events.UseToolInNewAppEvent;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -51,10 +53,13 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +71,7 @@ import java.util.Map;
  */
 public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppEventHandler,
                                                            CreateNewAppEvent.CreateNewAppEventHandler,
-                                                           UseInNewAppEvent.UseInNewAppEventHandler,
+                                                           UseToolInNewAppEvent.UseToolInNewAppEventHandler,
                                                            CreateNewWorkflowEvent.CreateNewWorkflowEventHandler,
                                                            EditWorkflowEvent.EditWorkflowEventHandler,
                                                            ShowFilePreviewEvent.ShowFilePreviewEventHandler,
@@ -90,6 +95,8 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
     @Inject DiskResourceUtil diskResourceUtil;
     @Inject DiskResourceServiceFacade diskResourceServiceFacade;
     @Inject DesktopView.Presenter.DesktopPresenterAppearance appearance;
+    @Inject
+    AppTemplateAutoBeanFactory templateAutoBeanFactory;
 
     private DesktopWindowManager desktopWindowManager;
     private DesktopPresenterImpl presenter;
@@ -342,7 +349,7 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
         registrations.add(handlerRegistration);
         handlerRegistration = eventBus.addHandler(RequestSendToEnsemblEvent.TYPE, this);
         registrations.add(handlerRegistration);
-        handlerRegistration = eventBus.addHandler(UseInNewAppEvent.TYPE,this);
+        handlerRegistration = eventBus.addHandler(UseToolInNewAppEvent.TYPE, this);
         registrations.add(handlerRegistration);
         handlerRegistration = eventBus.addHandler(RequestImportFromUrlEvent.TYPE, this);
         registrations.add(handlerRegistration);
@@ -353,7 +360,14 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
     }
 
     @Override
-    public void createNewApp(UseInNewAppEvent event) {
-        presenter.show(ConfigFactory.appsIntegrationWindowConfig(null), true);
+    public void useToolInNewApp(UseToolInNewAppEvent event) {
+        AppsIntegrationWindowConfig aiwc = ConfigFactory.appsIntegrationWindowConfig(null);
+        AppTemplate newAppTemplate = templateAutoBeanFactory.defaultAppTemplate().as();
+        newAppTemplate.setName(appearance.newApp());
+        newAppTemplate.getArgumentGroups().get(0).setLabel(appearance.sectionOne());
+        newAppTemplate.setTools(Arrays.asList(event.getTool()));
+        aiwc.setAppTemplate(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(newAppTemplate)));
+
+        presenter.show(aiwc, true);
     }
 }
