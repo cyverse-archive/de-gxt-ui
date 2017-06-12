@@ -1,7 +1,11 @@
 package org.iplantc.de.apps.client.views.tools;
 
+import org.iplantc.de.apps.client.events.selection.RequestToolSelected;
+import org.iplantc.de.apps.client.events.tools.AddNewToolSelected;
 import org.iplantc.de.apps.client.events.tools.BeforeToolSearchEvent;
+import org.iplantc.de.apps.client.events.tools.DeleteToolSelected;
 import org.iplantc.de.apps.client.events.tools.RefreshToolsSelectedEvent;
+import org.iplantc.de.apps.client.events.tools.ShareToolsSelected;
 import org.iplantc.de.apps.client.events.tools.ToolSearchResultLoadEvent;
 import org.iplantc.de.apps.client.events.tools.ToolSelectionChangedEvent;
 import org.iplantc.de.apps.integration.client.presenter.ToolSearchRPCProxy;
@@ -9,6 +13,7 @@ import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.tool.Tool;
 
+import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -80,6 +85,8 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
     final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>> loader;
     final ToolSearchRPCProxy toolSearchRPCProxy = new ToolSearchRPCProxy();
 
+    protected List<Tool> currentSelection = Lists.newArrayList();
+
     @Inject
     public ManageToolsViewToolbarImpl(final ManageToolsToolbarView.ManageToolsToolbarAppearance apperance) {
         loader = new PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>>(toolSearchRPCProxy);
@@ -101,16 +108,18 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
         shareMenuButton.ensureDebugId(baseID + AppsModule.ToolIds.MENU_SHARE);
         shareCollab.ensureDebugId(baseID + AppsModule.ToolIds.MENU_ITEM_SHARE_COLLABS);
         sharePublic.ensureDebugId(baseID + AppsModule.ToolIds.MENU_ITEM_SHARE_PUBLIC);
+
+        refreshButton.ensureDebugId(baseID + AppsModule.ToolIds.MENU_ITEM_REFRESH);
     }
 
     @UiHandler("addTool")
     void onAddClicked(SelectionEvent<Item> event) {
-
+        fireEvent(new AddNewToolSelected());
     }
 
     @UiHandler("requestTool")
     void onRequestToolClicked(SelectionEvent<Item> event) {
-
+        fireEvent(new RequestToolSelected());
     }
 
     @UiHandler("edit")
@@ -120,7 +129,7 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
 
     @UiHandler("delete")
     void onDeleteClicked(SelectionEvent<Item> event) {
-
+        fireEvent(new DeleteToolSelected(currentSelection));
     }
 
     @UiHandler("useInApp")
@@ -160,7 +169,24 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
     }
 
     @Override
+    public HandlerRegistration addNewToolSelectedHandler(AddNewToolSelected.NewToolSelectedHandler handler) {
+        return addHandler(handler, AddNewToolSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addDeleteToolsSelectedHandler(DeleteToolSelected.DeleteToolsSelectedHandler handler) {
+        return addHandler(handler, DeleteToolSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addShareToolselectedHandler(ShareToolsSelected.ShareToolsSelectedHandler handler) {
+        return addHandler(handler,ShareToolsSelected.TYPE);
+    }
+
+    @Override
     public void onToolSelectionChanged(ToolSelectionChangedEvent event) {
+        currentSelection.clear();
+        currentSelection = event.getToolSelection();
         setButtonState(event.getToolSelection());
     }
 
@@ -216,6 +242,5 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
     private boolean hasReadPermission(Tool tool) {
         return tool.getPermission().equalsIgnoreCase(PermissionValue.read.toString());
     }
-
 
 }
