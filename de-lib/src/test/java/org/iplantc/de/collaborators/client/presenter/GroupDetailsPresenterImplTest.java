@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
@@ -17,7 +18,6 @@ import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
 import org.iplantc.de.collaborators.client.events.GroupSaved;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
-import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -61,6 +61,7 @@ public class GroupDetailsPresenterImplTest {
     @Mock Subject subjectMock;
     @Mock Iterator<Subject> collaboratorIteratorMock;
     @Mock Iterator<UpdateMemberResult> resultIteratorMock;
+    @Mock UserInfo userInfoMock;
 
     @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> collabListCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<Group>> groupCallbackCaptor;
@@ -91,8 +92,15 @@ public class GroupDetailsPresenterImplTest {
             HandlerManager ensureHandlers() {
                 return handlerManagerMock;
             }
+
+            @Override
+            List<Subject> wrapSubjectInList(Subject subject) {
+                return subjectListMock;
+            }
         };
         uut.announcer = announcerMock;
+        uut.originalGroup = "original";
+        uut.userInfo = userInfoMock;
     }
 
     @Test
@@ -153,11 +161,11 @@ public class GroupDetailsPresenterImplTest {
         when(updateMemberResultStreamMock.collect(any())).thenReturn(failedUpdateResultsMock);
         when(appearanceMock.unableToAddMembers(any())).thenReturn("announcement");
         /** CALL METHOD UNDER TEST **/
-        uut.updateGroupMembers(groupMock, subjectListMock);
+        uut.addGroupMembers(groupMock, subjectListMock);
 
-        verify(serviceFacadeMock).updateMembers(eq(groupMock),
-                                                eq(subjectListMock),
-                                                updateMembersCallbackCaptor.capture());
+        verify(serviceFacadeMock).addMembers(eq(groupMock),
+                                             eq(subjectListMock),
+                                             updateMembersCallbackCaptor.capture());
 
         updateMembersCallbackCaptor.getValue().onSuccess(updateMemberResultsMock);
         verify(appearanceMock).unableToAddMembers(eq(failedUpdateResultsMock));
@@ -170,17 +178,24 @@ public class GroupDetailsPresenterImplTest {
         AddGroupMemberSelected eventMock = mock(AddGroupMemberSelected.class);
         when(eventMock.getGroup()).thenReturn(groupMock);
         when(eventMock.getSubject()).thenReturn(subjectMock);
+        when(subjectMock.getName()).thenReturn("name");
+        when(userInfoMock.getUsername()).thenReturn("someid");
+        when(subjectMock.getId()).thenReturn("id");
+        when(updateMemberResultsMock.stream()).thenReturn(updateMemberResultStreamMock);
+        when(updateMemberResultStreamMock.filter(any())).thenReturn(updateMemberResultStreamMock);
+        when(updateMemberResultStreamMock.collect(any())).thenReturn(null);
+        when(appearanceMock.unableToAddMembers(any())).thenReturn("announcement");
         when(groupMock.getName()).thenReturn("name");
 
         /** CALL METHOD UNDER TEST **/
         uut.onAddGroupMemberSelected(eventMock);
 
-        verify(serviceFacadeMock).addMember(eq(groupMock),
-                                            eq(subjectMock),
-                                            voidCallbackCaptor.capture());
+        verify(serviceFacadeMock).addMembers(eq(groupMock),
+                                             eq(subjectListMock),
+                                             updateMembersCallbackCaptor.capture());
 
-        voidCallbackCaptor.getValue().onSuccess(null);
-        verify(viewMock).addMembers(any());
+        updateMembersCallbackCaptor.getValue().onSuccess(updateMemberResultsMock);
+        verify(viewMock).addMembers(subjectListMock);
     }
 
     @Test
@@ -190,7 +205,7 @@ public class GroupDetailsPresenterImplTest {
 
         /** CALL METHOD UNDER TEST **/
         spy.updateGroup(groupMock);
-        verify(serviceFacadeMock).updateGroup(eq(groupMock), groupCallbackCaptor.capture());
+        verify(serviceFacadeMock).updateGroup(eq("original"), eq(groupMock), groupCallbackCaptor.capture());
         groupCallbackCaptor.getValue().onSuccess(groupMock);
 
         verify(handlerManagerMock).fireEvent(isA(GroupSaved.class));
@@ -198,14 +213,17 @@ public class GroupDetailsPresenterImplTest {
 
     @Test
     public void deleteMember() {
-        when(appearanceMock.memberDeleteSuccess(subjectMock, groupMock)).thenReturn("success");
+        when(appearanceMock.memberDeleteFail(updateMemberResultsMock)).thenReturn("fail");
+        when(updateMemberResultsMock.stream()).thenReturn(updateMemberResultStreamMock);
+        when(updateMemberResultStreamMock.filter(any())).thenReturn(updateMemberResultStreamMock);
+        when(updateMemberResultStreamMock.collect(any())).thenReturn(null);
 
         /** CALL METHOD UNDER TEST **/
-        uut.deleteMember(subjectMock, groupMock);
+        uut.deleteMembers(subjectListMock, groupMock);
 
-        verify(serviceFacadeMock).deleteMember(eq(groupMock), eq(subjectMock), voidCallbackCaptor.capture());
+        verify(serviceFacadeMock).deleteMembers(eq(groupMock), eq(subjectListMock), updateMembersCallbackCaptor.capture());
 
-        voidCallbackCaptor.getValue().onSuccess(null);
-        verify(announcerMock).schedule(isA(IplantAnnouncementConfig.class));
+        updateMembersCallbackCaptor.getValue().onSuccess(updateMemberResultsMock);
+        verify(viewMock).deleteMembers(subjectListMock);
     }
 }

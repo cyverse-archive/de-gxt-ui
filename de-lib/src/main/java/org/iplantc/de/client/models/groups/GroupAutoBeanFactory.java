@@ -25,4 +25,10 @@ public interface GroupAutoBeanFactory extends AutoBeanFactory {
     AutoBean<UpdateMemberResult> getUpdateMemberResult();
 
     AutoBean<UpdateMemberResultList> getUpdateMemberResultList();
+
+    default Group getDefaultGroup() {
+        Group group = getGroup().as();
+        group.setName(Group.DEFAULT_GROUP);
+        return group;
+    }
 }

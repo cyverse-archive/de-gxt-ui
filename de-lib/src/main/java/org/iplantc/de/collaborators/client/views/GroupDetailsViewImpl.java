@@ -9,6 +9,7 @@ import org.iplantc.de.collaborators.client.events.DeleteMembersSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.models.SubjectKeyProvider;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
+import org.iplantc.de.collaborators.client.views.cells.SubjectNameCell;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 
 import com.google.gwt.core.client.GWT;
@@ -33,6 +34,7 @@ import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.TextArea;
 import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.grid.CheckBoxSelectionModel;
+import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
@@ -145,6 +147,12 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
         toolbar.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_TOOLBAR);
         deleteBtn.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_DELETE_BTN);
         grid.ensureDebugId(baseID + CollaboratorsModule.Ids.GROUP_GRID);
+
+        for (ColumnConfig<Subject, ?> cc : cm.getColumns()) {
+            if (cc.getCell() instanceof SubjectNameCell) {
+                ((SubjectNameCell)cc.getCell()).setBaseDebugId(baseID);
+            }
+        }
     }
 
     void setGridCheckBoxDebugIds() {
@@ -177,6 +185,14 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
     public void addMembers(List<Subject> members) {
         if (members != null) {
             listStore.addAll(members);
+            setGridCheckBoxDebugIds();
+        }
+    }
+
+    @Override
+    public void deleteMembers(List<Subject> members) {
+        if (members != null) {
+            members.forEach(subject -> listStore.remove(subject));
         }
     }
 

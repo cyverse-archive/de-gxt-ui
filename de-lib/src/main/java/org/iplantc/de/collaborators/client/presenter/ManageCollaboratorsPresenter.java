@@ -7,6 +7,8 @@ import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
+import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.GroupView;
@@ -60,6 +62,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     @Inject IplantAnnouncer announcer;
     @Inject UserInfo userInfo;
     private ManageCollaboratorsViewFactory factory;
+    private GroupAutoBeanFactory groupFactory;
     private GroupServiceFacade groupServiceFacade;
     private CollaboratorsServiceFacade collabServiceFacade;
     private GroupView.GroupViewAppearance groupAppearance;
@@ -70,10 +73,12 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     @Inject
     public ManageCollaboratorsPresenter(ManageCollaboratorsViewFactory factory,
+                                        GroupAutoBeanFactory groupFactory,
                                         GroupServiceFacade groupServiceFacade,
                                         CollaboratorsServiceFacade collabServiceFacade,
                                         GroupView.GroupViewAppearance groupAppearance) {
         this.factory = factory;
+        this.groupFactory = groupFactory;
         this.groupServiceFacade = groupServiceFacade;
         this.collabServiceFacade = collabServiceFacade;
         this.groupAppearance = groupAppearance;
@@ -97,7 +102,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         this.view = factory.create(mode);
         view.addRemoveCollaboratorSelectedHandler(this);
         loadCurrentCollaborators();
-//        updateListView();
+        updateListView();
         addEventHandlers();
         container.setWidget(view.asWidget());
     }
@@ -124,16 +129,21 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
      */
     @Override
     public void addAsCollaborators(final List<Subject> models) {
-        collabServiceFacade.addCollaborators(models, new AsyncCallback<Void>() {
+        groupServiceFacade.addMembers(groupFactory.getDefaultGroup(), models, new AsyncCallback<List<UpdateMemberResult>>() {
 
             @Override
-            public void onSuccess(Void result) {
-                // remove added models from search results
-                view.addCollaborators(models);
-                String names = getCollaboratorNames(models);
+            public void onSuccess(List<UpdateMemberResult> result) {
+                List<UpdateMemberResult> failures = getFailResults(result);
+                if (failures != null && !failures.isEmpty()) {
+                    announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.unableToAddMembers(failures)));
+                } else {
+                    // remove added models from search results
+                    view.addCollaborators(models);
+                    String names = getCollaboratorNames(models);
 
-                announcer.schedule(new SuccessAnnouncementConfig(
-                                       I18N.DISPLAY.collaboratorAddConfirm(names)));
+                    announcer.schedule(new SuccessAnnouncementConfig(I18N.DISPLAY.collaboratorAddConfirm(
+                            names)));
+                }
             }
 
             @Override
@@ -147,9 +157,9 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     String getCollaboratorNames(List<Subject> subjects) {
         Stream<Subject> stream = subjects.stream();
 
-        Stream<String> stringStream = stream.map(Subject::getId);
+        Stream<String> stringStream = stream.map(Subject::getSubjectDisplayName);
         List<String> names = stringStream.collect(Collectors.toList());
-        return Joiner.on(",").join(names);
+        return Joiner.on(", ").join(names);
     }
 
     @Override
@@ -164,23 +174,35 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
             @Override
             public void onSuccess(List<Group> result) {
-                view.addCollabLists(result);
+                List<Group> filteredGroups = excludeDefaultGroup(result);
+                view.addCollabLists(filteredGroups);
                 view.unmaskCollabLists();
             }
         });
     }
 
+    List<Group> excludeDefaultGroup(List<Group> result) {
+        return result.stream()
+                     .filter(group -> !Group.DEFAULT_GROUP.equals(group.getName()))
+                     .collect(Collectors.toList());
+    }
+
     @Override
     public void onRemoveCollaboratorSelected(RemoveCollaboratorSelected event) {
         List<Subject> models = event.getSubjects();
-        collabServiceFacade.removeCollaborators(models, new AsyncCallback<Void>() {
+        groupServiceFacade.deleteMembers(groupFactory.getDefaultGroup(), models, new AsyncCallback<List<UpdateMemberResult>>() {
 
             @Override
-            public void onSuccess(Void result) {
-                view.removeCollaborators(models);
-                String names = getCollaboratorNames(models);
-                announcer.schedule(new SuccessAnnouncementConfig(I18N.DISPLAY.collaboratorRemoveConfirm(names)));
-
+            public void onSuccess(List<UpdateMemberResult> result) {
+                List<UpdateMemberResult> failures = getFailResults(result);
+                if (failures != null && !failures.isEmpty()) {
+                    announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.memberDeleteFail(failures)));
+                } else {
+                    view.removeCollaborators(models);
+                    String names = getCollaboratorNames(models);
+                    announcer.schedule(new SuccessAnnouncementConfig(I18N.DISPLAY.collaboratorRemoveConfirm(
+                            names)));
+                }
             }
 
             @Override
@@ -189,6 +211,10 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
             }
         });
 
+    }
+
+    List<UpdateMemberResult> getFailResults(List<UpdateMemberResult> result) {
+        return result.stream().filter(item -> !item.isSuccess()).collect(Collectors.toList());
     }
 
     /*
@@ -201,7 +227,8 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     @Override
     public void loadCurrentCollaborators() {
         view.maskCollaborators(null);
-        collabServiceFacade.getCollaborators(new AsyncCallback<List<Subject>>() {
+        Group defaultGroup = groupFactory.getDefaultGroup();
+        groupServiceFacade.getMembers(defaultGroup, new AsyncCallback<List<Subject>>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -254,16 +281,19 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     void deleteGroup(Group group) {
-        groupServiceFacade.deleteGroup(group.getName(), new AsyncCallback<Group>() {
+        view.maskCollabLists(groupAppearance.loadingMask());
+        groupServiceFacade.deleteGroup(group, new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
+                view.unmaskCollabLists();
             }
 
             @Override
             public void onSuccess(Group result) {
-                view.removeCollabList(result);
+                view.removeCollabList(group);
                 announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.groupDeleteSuccess(result)));
+                view.unmaskCollabLists();
             }
         });
     }

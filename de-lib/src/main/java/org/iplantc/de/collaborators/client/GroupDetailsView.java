@@ -47,6 +47,8 @@ public interface GroupDetailsView extends IsWidget,
          * Handling saving the Collaborator List
          */
         void saveGroupSelected();
+
+        void setViewDebugId(String debugId);
     }
 
     /**
@@ -78,4 +80,10 @@ public interface GroupDetailsView extends IsWidget,
      * @param members
      */
     void addMembers(List<Subject> members);
+
+    /**
+     * Delete the specified members from the Collaborator List
+     * @param members
+     */
+    void deleteMembers(List<Subject> members);
 }

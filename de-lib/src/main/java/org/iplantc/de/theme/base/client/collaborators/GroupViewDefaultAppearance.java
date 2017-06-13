@@ -1,6 +1,5 @@
 package org.iplantc.de.theme.base.client.collaborators;
 
-import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.collaborators.client.GroupView;
@@ -172,7 +171,19 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
     }
 
     @Override
-    public String memberDeleteSuccess(Subject subject, Group group) {
-        return displayStrings.memberDeleteSuccess(subject.getName(), group.getName());
+    public String memberDeleteFail(List<UpdateMemberResult> subjects) {
+        List<String> memberNames = subjects.stream().map(UpdateMemberResult::getSubjectName).collect(
+                Collectors.toList());
+        return displayStrings.memberDeleteFail(memberNames);
+    }
+
+    @Override
+    public String collaboratorsSelfAdd() {
+        return iplantDisplayStrings.collaboratorSelfAdd();
+    }
+
+    @Override
+    public String groupSelfAdd() {
+        return displayStrings.groupSelfAdd();
     }
 }

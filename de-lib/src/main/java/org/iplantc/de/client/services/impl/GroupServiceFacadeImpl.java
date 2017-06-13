@@ -2,8 +2,8 @@ package org.iplantc.de.client.services.impl;
 
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.DELETE;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PATCH;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
-import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PUT;
 
 import org.iplantc.de.client.models.collaborators.CollaboratorAutoBeanFactory;
 import org.iplantc.de.client.models.collaborators.Subject;
@@ -16,8 +16,7 @@ import org.iplantc.de.client.models.groups.UpdateMemberResultList;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.GroupCallbackConverter;
-import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
-import org.iplantc.de.client.services.converters.SubjectListCallbackConverter;
+import org.iplantc.de.client.services.converters.SubjectMemberListCallbackConverter;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
@@ -78,8 +77,8 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void deleteGroup(String name, AsyncCallback<Group> callback) {
-        String address = LISTS + "/" + URL.encodeQueryString(name);
+    public void deleteGroup(Group group, AsyncCallback<Group> callback) {
+        String address = LISTS + "/" + URL.encode(group.getName());
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address);
         deService.getServiceData(wrapper, new GroupCallbackConverter(callback, factory));
@@ -88,38 +87,14 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     @Override
     public void getMembers(Group group, AsyncCallback<List<Subject>> callback) {
         String groupName = group.getName();
-        String address = LISTS + "/" + URL.encodeQueryString(groupName) + "/members";
+        String address = LISTS + "/" + URL.encode(groupName) + "/members";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, new SubjectListCallbackConverter(callback, collabFactory));
+        deService.getServiceData(wrapper, new SubjectMemberListCallbackConverter(callback, collabFactory));
     }
 
     @Override
-    public void addMember(Group group, Subject member, AsyncCallback<Void> callback) {
-        String groupName = group.getName();
-        String subjectId = member.getId();
-
-        String address = LISTS + "/" + groupName + "/members/" + subjectId;
-
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(PUT, address);
-        deService.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
-    }
-
-    @Override
-    public void deleteMember(Group group, Subject member, AsyncCallback<Void> callback) {
-        String groupName = group.getName();
-        String subjectId = member.getId();
-
-        String address = LISTS + "/" + groupName + "/members/" + subjectId;
-
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address);
-        deService.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
-    }
-
-    @Override
-    public void updateMembers(Group group,
-                              List<Subject> subjects,
-                              AsyncCallback<List<UpdateMemberResult>> callback) {
+    public void deleteMembers(Group group, List<Subject> subjects, AsyncCallback<List<UpdateMemberResult>> callback) {
         String groupName = group.getName();
         UpdateMemberRequest request = factory.getUpdateMemberRequest().as();
         List<String> ids = subjects.stream()
@@ -127,11 +102,35 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
                                    .collect(Collectors.toList());
         request.setMembers(ids);
 
-        String address = LISTS + "/" + groupName + "/members";
+        String address = LISTS + "/" + URL.encode(groupName) + "/members/deleter";
 
         Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
 
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(PUT, address, encode.getPayload());
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
+        deService.getServiceData(wrapper, new AsyncCallbackConverter<String, List<UpdateMemberResult>>(callback) {
+            @Override
+            protected List<UpdateMemberResult> convertFrom(String object) {
+                AutoBean<UpdateMemberResultList> listAutoBean = AutoBeanCodex.decode(factory, UpdateMemberResultList.class, object);
+                return listAutoBean.as().getResults();
+            }
+        });    }
+
+    @Override
+    public void addMembers(Group group,
+                           List<Subject> subjects,
+                           AsyncCallback<List<UpdateMemberResult>> callback) {
+        String groupName = group.getName();
+        UpdateMemberRequest request = factory.getUpdateMemberRequest().as();
+        List<String> ids = subjects.stream()
+                                   .map(collaborator -> collaborator.getId())
+                                   .collect(Collectors.toList());
+        request.setMembers(ids);
+
+        String address = LISTS + "/" + URL.encode(groupName) + "/members";
+
+        Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
         deService.getServiceData(wrapper, new AsyncCallbackConverter<String, List<UpdateMemberResult>>(callback) {
             @Override
             protected List<UpdateMemberResult> convertFrom(String object) {
@@ -142,12 +141,12 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void updateGroup(Group group, AsyncCallback<Group> callback) {
-        String address = LISTS;
+    public void updateGroup(String originalGroup, Group group, AsyncCallback<Group> callback) {
+        String address = LISTS + "/" + URL.encode(originalGroup);
 
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(group));
 
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(PUT, address, encode.getPayload());
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(PATCH, address, encode.getPayload());
         deService.getServiceData(wrapper, new GroupCallbackConverter(callback, factory));
     }
 
