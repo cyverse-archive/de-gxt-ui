@@ -9,6 +9,7 @@ import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.tools.client.views.manage.ToolSharingPresenter;
 
+import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -40,6 +41,8 @@ public class ToolSharingDialog extends IPlantDialog {
     }
 
     public void show(final List<Tool> resourcesToShare) {
+        GWT.log("size --> " + resourcesToShare.size());
+        GWT.log("sharing --> " + resourcesToShare.get(0).getName());
         presenter = factory.create(resourcesToShare);
         presenter.go(this);
         super.show();

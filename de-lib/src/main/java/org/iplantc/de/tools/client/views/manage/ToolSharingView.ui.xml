@@ -15,10 +15,9 @@
                        autoFill="true"/>
     </ui:with>
     <ui:with field="appearance"
-             type="org.iplantc.de.apps.client.views.tools.ManageToolsView.ManageToolsViewAppearance" />
+             type="org.iplantc.de.tools.client.views.manage.ManageToolsView.ManageToolsViewAppearance" />
 
-
-    <container:VerticalLayoutContainer ui:field="container">
+   <container:VerticalLayoutContainer ui:field="container">
         <container:child>
             <gxt:FramedPanel ui:field="ToolListPnl"
                              collapsible="false"

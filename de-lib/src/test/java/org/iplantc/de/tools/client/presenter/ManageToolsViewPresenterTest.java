@@ -310,7 +310,7 @@ public class ManageToolsViewPresenterTest {
         when(iteratorMock.next()).thenReturn(t1Mock);
         when(currentSelectionMock.iterator()).thenReturn(iteratorMock);
 
-        uut.onShareToolselected(stsMock);
+        uut.onShareToolsSelected(stsMock);
 
         verify(shareDialogProviderMock).get(sharingDialogCaptor.capture());
         sharingDialogCaptor.getValue().onSuccess(toolSharingDialogMock);

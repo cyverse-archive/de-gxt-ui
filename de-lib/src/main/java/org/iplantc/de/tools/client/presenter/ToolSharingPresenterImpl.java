@@ -5,7 +5,7 @@ import org.iplantc.de.tools.client.views.manage.ToolSharingPresenter;
 import org.iplantc.de.tools.client.views.manage.ToolSharingView;
 import org.iplantc.de.client.gin.factory.SharingPermissionViewFactory;
 import org.iplantc.de.client.models.collaborators.Collaborator;
-import org.iplantc.de.client.models.diskResources.PermissionValue;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
 import org.iplantc.de.client.models.sharing.UserPermission;

@@ -4,6 +4,7 @@
  */
 package org.iplantc.de.tools.client.views.manage;
 
+import org.iplantc.de.admin.desktop.client.toolAdmin.model.ToolProperties;
 import org.iplantc.de.client.models.tool.Tool;
 
 import com.google.gwt.core.client.GWT;
@@ -14,7 +15,6 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.widget.core.client.FramedPanel;
@@ -30,8 +30,7 @@ public class ToolSharingViewImpl implements ToolSharingView {
 
     private static ToolSharingViewUiBinder uiBinder = GWT.create(ToolSharingViewUiBinder.class);
 
-    @UiField
-    ManageToolsView.ManageToolsViewAppearance appearance;
+    private ManageToolsView.ManageToolsViewAppearance toolsViewAppearance;
 
     @UiTemplate("ToolSharingView.ui.xml")
     interface ToolSharingViewUiBinder extends UiBinder<Widget, ToolSharingViewImpl> {
@@ -48,8 +47,13 @@ public class ToolSharingViewImpl implements ToolSharingView {
     @UiField
     Grid<Tool> ToolGrid;
 
+    final private ToolProperties toolProperties;
+
     @Inject
-    public ToolSharingViewImpl() {
+    public ToolSharingViewImpl(ToolProperties toolProperties,
+                               ManageToolsView.ManageToolsViewAppearance toolsViewAppearance) {
+        this.toolsViewAppearance = toolsViewAppearance;
+        this.toolProperties = toolProperties;
         widget = uiBinder.createAndBindUi(this);
     }
 
@@ -76,23 +80,8 @@ public class ToolSharingViewImpl implements ToolSharingView {
     public ColumnModel<Tool> buildToolColumnModel() {
         List<ColumnConfig<Tool, ?>> list = new ArrayList<>();
 
-        ColumnConfig<Tool, String> name = new ColumnConfig<>(new ValueProvider<Tool, String>() {
-
-            @Override
-            public String getValue(Tool object) {
-                return object.getName();
-            }
-
-            @Override
-            public void setValue(Tool object, String value) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public String getPath() {
-                return "name";
-            }
-        }, 180, appearance.name());
+        ColumnConfig<Tool, String> name =
+                new ColumnConfig<>(toolProperties.name(), 180, toolsViewAppearance.name());
         list.add(name);
         return new ColumnModel<>(list);
     }

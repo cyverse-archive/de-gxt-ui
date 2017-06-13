@@ -106,7 +106,7 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
     EventBus eventBus;
 
     @Inject
-    public ManageToolsViewToolbarImpl(final ManageToolsToolbarView.ManageToolsToolbarApperance apperance) {
+    public ManageToolsViewToolbarImpl(final ManageToolsToolbarView.ManageToolsToolbarAppearance appearance) {
         loader = new PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>>(toolSearchRPCProxy);
         toolSearch = new ToolSearchField(loader);
         toolSearchRPCProxy.setHasHandlers(this);

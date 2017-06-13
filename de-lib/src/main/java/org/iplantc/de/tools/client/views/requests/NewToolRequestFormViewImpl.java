@@ -439,16 +439,14 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
     @Override
     protected void onEnsureDebugId(String baseID) {
         toolLink.ensureDebugId(baseID + ToolsModule.RequestToolIds.toolLink);
-        toolUpld.ensureDebugId(baseID + ToolsModule.RequestToolIds.toolUpld);
-        toolSlt.ensureDebugId(baseID + ToolsModule.RequestToolIds.toolSlt);
-        testUpld.ensureDebugId(baseID + ToolsModule.RequestToolIds.testUpld);
-        testSlt.ensureDebugId(baseID + ToolsModule.RequestToolIds.testSlt);
-        otherUpld.ensureDebugId(baseID + ToolsModule.RequestToolIds.otherUpld);
-        otherSlt.ensureDebugId(baseID + ToolsModule.RequestToolIds.otherSlt);
+        toolUpldRdo.ensureDebugId(baseID + ToolsModule.RequestToolIds.toolUpld);
+        toolSltRdo.ensureDebugId(baseID + ToolsModule.RequestToolIds.toolSlt);
+        testUpldRdo.ensureDebugId(baseID + ToolsModule.RequestToolIds.testUpld);
+        otherUpldRdo.ensureDebugId(baseID + ToolsModule.RequestToolIds.otherUpld);
+        otherSltRdo.ensureDebugId(baseID + ToolsModule.RequestToolIds.otherSlt);
         toolName.ensureDebugId(baseID + ToolsModule.RequestToolIds.toolName);
         toolDesc.ensureDebugId(baseID + ToolsModule.RequestToolIds.toolDesc);
         toolAttrib.ensureDebugId(baseID + ToolsModule.RequestToolIds.toolAttrib);
-        binLink.ensureDebugId(baseID + ToolsModule.RequestToolIds.binLink);
         toolDoc.ensureDebugId(baseID + ToolsModule.RequestToolIds.toolDoc);
         toolVersion.ensureDebugId(baseID + ToolsModule.RequestToolIds.toolVer);
         runInfo.ensureDebugId(baseID + ToolsModule.RequestToolIds.runInfo);

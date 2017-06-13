@@ -21,6 +21,7 @@ public interface ToolsModule {
         String MENU_ITEM_SHARE_PUBLIC = ".sharePublic";
 
         String MENU_ITEM_REFRESH = ".refresh";
+        String TOOL_INFO_CELL = ".toolInfoCell";
     }
 
     interface EditToolIds {
