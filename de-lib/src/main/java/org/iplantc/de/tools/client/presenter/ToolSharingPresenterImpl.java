@@ -1,13 +1,10 @@
 package org.iplantc.de.tools.client.presenter;
 
-import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
-import org.iplantc.de.tools.client.views.manage.ToolSharingPresenter;
-import org.iplantc.de.tools.client.views.manage.ToolSharingView;
-import org.iplantc.de.client.gin.factory.SharingPermissionViewFactory;
-import org.iplantc.de.client.models.collaborators.Collaborator;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
+import org.iplantc.de.client.models.sharing.SharingSubject;
 import org.iplantc.de.client.models.sharing.UserPermission;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
@@ -21,12 +18,17 @@ import org.iplantc.de.client.models.tool.sharing.ToolUserPermissions;
 import org.iplantc.de.client.models.tool.sharing.ToolUserPermissionsList;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.ToolServices;
-import org.iplantc.de.client.sharing.SharingPermissionView;
-import org.iplantc.de.client.sharing.SharingPresenter;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.gin.factory.SharingPermissionViewFactory;
+import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.presenter.SharingPresenter;
+import org.iplantc.de.commons.client.views.sharing.SharingPermissionView;
 import org.iplantc.de.shared.AppsCallback;
+import org.iplantc.de.tools.client.views.manage.ToolSharingPresenter;
+import org.iplantc.de.tools.client.views.manage.ToolSharingView;
+import org.iplantc.de.tools.shared.ToolsModule;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -46,7 +48,7 @@ import java.util.List;
 public class ToolSharingPresenterImpl implements ToolSharingPresenter {
 
     private final class LoadPermissionsCallback extends AppsCallback<String> {
-        private final class GetUserInfoCallback implements AsyncCallback<FastMap<Collaborator>> {
+        private final class GetUserInfoCallback implements AsyncCallback<FastMap<Subject>> {
             private final ToolUserPermissionsList toolPermsList;
 
             private GetUserInfoCallback(ToolUserPermissionsList toolPermsList) {
@@ -59,15 +61,15 @@ public class ToolSharingPresenterImpl implements ToolSharingPresenter {
             }
 
             @Override
-            public void onSuccess(FastMap<Collaborator> results) {
+            public void onSuccess(FastMap<Subject> results) {
                 FastMap<List<Sharing>> sharingMap = new FastMap<>();
                 for (ToolUserPermissions toolUserPerms : toolPermsList.getResourceUserPermissionsList()) {
                     for (UserPermission userPerms : toolUserPerms.getPermissions()) {
                         String userName = userPerms.getSubject().getId();
 
-                        Collaborator user = results.get(userName);
+                        Subject user = results.get(userName);
                         if (user == null) {
-                            user = collaboratorsUtil.getDummyCollaborator(userName);
+                            user = collaboratorsUtil.getDummySubject(userName);
                         }
 
                         List<Sharing> shares = sharingMap.get(userName);
@@ -135,7 +137,7 @@ public class ToolSharingPresenterImpl implements ToolSharingPresenter {
     private final CollaboratorsUtil collaboratorsUtil;
     private CollaboratorsServiceFacade collaboratorsServiceFacade;
     private final ToolSharingView sharingView;
-    private final Appearance appearance;
+    private final SharingPresenter.Appearance appearance;
     private final List<Tool> selectedTools;
 
     @Inject
@@ -202,6 +204,12 @@ public class ToolSharingPresenterImpl implements ToolSharingPresenter {
         }
     }
 
+    @Override
+    public void setViewDebugId(String debugId) {
+        sharingView.asWidget().ensureDebugId(debugId + ToolsModule.ToolIds.SHARING_VIEW);
+        permissionsPanel.asWidget().ensureDebugId(debugId + ToolsModule.ToolIds.SHARING_VIEW + ToolsModule.ToolIds.SHARING_PERMS);
+    }
+
     private ToolSharingRequestList buildSharingRequest() {
         ToolSharingRequestList sharingRequestList = null;
 
@@ -214,8 +222,11 @@ public class ToolSharingPresenterImpl implements ToolSharingPresenter {
 
             for (String userName : sharingMap.keySet()) {
                 ToolSharingRequest sharingRequest = sharingAutoBeanFactory.toolSharingRequest().as();
+                SharingSubject sharingSubject = sharingAutoBeanFactory.getSharingSubject().as();
                 List<Sharing> shareList = sharingMap.get(userName);
-                sharingRequest.setUser(userName);
+                sharingSubject.setSourceId(getSourceId(shareList));
+                sharingSubject.setId(userName);
+                sharingRequest.setSubject(sharingSubject);
                 sharingRequest.setToolPermissions(buildShareToolPermissionList(shareList));
                 requests.add(sharingRequest);
             }
@@ -240,7 +251,10 @@ public class ToolSharingPresenterImpl implements ToolSharingPresenter {
 
                 ToolUnsharingRequest unsharingRequest =
                         sharingAutoBeanFactory.toolUnSharingRequest().as();
-                unsharingRequest.setUser(userName);
+                SharingSubject sharingSubject = sharingAutoBeanFactory.getSharingSubject().as();
+                sharingSubject.setId(userName);
+                sharingSubject.setSourceId(getSourceId(shareList));
+                unsharingRequest.setSubject(sharingSubject);
                 unsharingRequest.setTools(buildUnshareToolPermissionList(shareList));
                 requests.add(unsharingRequest);
             }
@@ -250,6 +264,11 @@ public class ToolSharingPresenterImpl implements ToolSharingPresenter {
         }
 
         return unsharingRequestList;
+    }
+
+    String getSourceId(List<Sharing> shareList) {
+        Sharing share = shareList.get(0);
+        return share.getSourceId();
     }
 
     private List<String> buildUnshareToolPermissionList(List<Sharing> unshareList) {

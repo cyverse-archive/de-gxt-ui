@@ -1,5 +1,7 @@
 package org.iplantc.de.client.models.tool.sharing;
 
+import org.iplantc.de.client.models.sharing.SharingSubject;
+
 import java.util.List;
 
 /**
@@ -7,11 +9,11 @@ import java.util.List;
  */
 public interface ToolUnsharingRequest {
 
-    void setUser(String user);
+    SharingSubject getSubject();
 
     void setTools(List<String> tools);
 
-    String getUser();
+    void setSubject(SharingSubject subject);
 
     List<String> getTools();
 }

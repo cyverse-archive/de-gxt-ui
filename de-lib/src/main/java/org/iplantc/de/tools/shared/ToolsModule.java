@@ -22,6 +22,9 @@ public interface ToolsModule {
 
         String MENU_ITEM_REFRESH = ".refresh";
         String TOOL_INFO_CELL = ".toolInfoCell";
+
+        String SHARING_VIEW = ".view";
+        String SHARING_PERMS = ".permPanel";
     }
 
     interface EditToolIds {
