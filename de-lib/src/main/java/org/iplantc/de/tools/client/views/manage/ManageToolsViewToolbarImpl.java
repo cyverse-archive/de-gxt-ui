@@ -308,9 +308,9 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
                     addTool.setEnabled(true);
                     requestTool.setEnabled(true);
                     edit.setEnabled(false);
-                    delete.setEnabled(true);
+                    delete.setEnabled(false);
                     useInApp.setEnabled(false);
-                    shareMenuButton.setEnabled(false);
+                    shareMenuButton.setEnabled(true);
                     shareCollab.setEnabled(true);
                     sharePublic.setEnabled(false);
             }
@@ -328,10 +328,6 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
 
     private boolean hasWritePermission(Tool tool) {
         return tool.getPermission().equalsIgnoreCase(PermissionValue.write.toString());
-    }
-
-    private boolean hasReadPermission(Tool tool) {
-        return tool.getPermission().equalsIgnoreCase(PermissionValue.read.toString());
     }
 
 }
