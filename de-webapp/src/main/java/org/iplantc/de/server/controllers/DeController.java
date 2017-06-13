@@ -1,6 +1,5 @@
 package org.iplantc.de.server.controllers;
 
-import org.iplantc.de.client.DiscoveryEnvironment;
 import org.iplantc.de.server.DiscoveryEnvironmentMaintenance;
 import org.iplantc.de.server.IpRanges;
 
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -30,6 +28,7 @@ public class DeController {
     @Value("${org.iplantc.discoveryenvironment.maintenance-file}") private String maintenanceFile;
     @Value("${org.iplantc.discoveryenvironment.environment.prod-deployment}") private String isProduction;
     @Value("${org.iplantc.discoveryenvironment.local-ip-ranges}") private String localIpRanges;
+    @Value("${org.iplantc.discoveryenvironment.session-timeout}") private String sessionTimeout;
 
     @RequestMapping("/")
     public String redirectToDe(final HttpServletRequest request) throws MalformedURLException {
@@ -71,6 +70,7 @@ public class DeController {
         }
         final boolean isProd = Boolean.parseBoolean(isProduction);
         model.addAttribute("isProduction", isProd);
+        session.setMaxInactiveInterval(Integer.parseInt(sessionTimeout));
 
         return "de";
     }
