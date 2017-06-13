@@ -20,6 +20,7 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -61,7 +62,7 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     interface MyUiBinder extends UiBinder<BorderLayoutContainer, AnalysesViewImpl> {
     }
 
-    @UiField(provided = true) final ColumnModel<Analysis> cm;
+    @UiField ColumnModel<Analysis> cm;
     @UiField(provided = true) final ListStore<Analysis> listStore;
     @UiField(provided = true) final AnalysisToolBarView toolBar;
     @UiField Appearance appearance;
@@ -69,19 +70,20 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     @UiField LiveGridView<Analysis> gridView;
     @UiField ToolBar pagingToolBar;
     @UiField Status selectionStatus;
+    CheckBoxSelectionModel<Analysis> checkBoxModel;
+
     @Inject AsyncProviderWrapper<AnalysisCommentsDialog> analysisCommentsDlgProvider;
 
     AnalysisSearchField searchField;
 
     @Inject
-    AnalysesViewImpl(final AnalysisColumnModel cm,
-                     final AnalysisToolBarFactory toolBarFactory,
+    AnalysesViewImpl(final AnalysisToolBarFactory toolBarFactory,
                      @Assisted final ListStore<Analysis> listStore,
                      @Assisted final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader) {
         this.listStore = listStore;
-        this.cm = cm;
         this.toolBar = toolBarFactory.create(loader);
-
+        checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Analysis>());
+        
         MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
         initWidget(uiBinder.createAndBindUi(this));
 
@@ -90,9 +92,9 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
 
         // Init Grid
         grid.setLoader(loader);
-        grid.getSelectionModel().setSelectionMode(Style.SelectionMode.MULTI);
         grid.setLoadMask(true);
-        grid.setSelectionModel(new CheckBoxSelectionModel<>(new IdentityValueProvider<Analysis>()));
+        grid.setSelectionModel(checkBoxModel);
+        checkBoxModel.setSelectionMode(Style.SelectionMode.MULTI);
 
         // Init Toolbar
         pagingToolBar.insert(new LiveToolItem(grid), 0);
@@ -101,7 +103,6 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
         // Wire up eventHandlers
         grid.getSelectionModel().addSelectionChangedHandler(this);
         grid.getSelectionModel().addSelectionChangedHandler(toolBar);
-        cm.addAnalysisCommentSelectedEventHandler(this);
         this.searchField = toolBar.getSearchField();
 
     }
@@ -127,6 +128,13 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
         return ((AnalysisColumnModel) cm).addHTAnalysisExpandEventHandler(handler);
     }
     //</editor-fold>
+
+    @UiFactory
+    ColumnModel<Analysis> createColumnModel() {
+        AnalysisColumnModel columnModel = new AnalysisColumnModel(checkBoxModel);
+        columnModel.addAnalysisCommentSelectedEventHandler(this);
+        return columnModel;
+    }
 
     @Override
     public void filterByAnalysisId(String analysisId, String name) {
