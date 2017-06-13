@@ -214,9 +214,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     List<UpdateMemberResult> getFailResults(List<UpdateMemberResult> result) {
-        return result.stream()
-                                                              .filter(item -> !item.isSuccess())
-                                                              .collect(Collectors.toList());
+        return result.stream().filter(item -> !item.isSuccess()).collect(Collectors.toList());
     }
 
     /*

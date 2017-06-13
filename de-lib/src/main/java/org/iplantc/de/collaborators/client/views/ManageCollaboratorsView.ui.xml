@@ -75,11 +75,6 @@
 				</container:north>
 				<!-- This is the main panel -->
 				<container:center layoutData="{centerData}">
-					<!--<gxt:FramedPanel ui:field="collaboratorListPnl"-->
-									 <!--pixelSize="445,175" collapsible="false"-->
-									 <!--headerVisible="true"-->
-					<!--heading="My Collaborators">-->
-
 					<de:DETabPanel ui:field="tabPanel">
 						<de:child config="{collaboratorTabConfig}">
 							<container:VerticalLayoutContainer pixelSize="445,150">
@@ -108,7 +103,6 @@
 							<client:GroupView ui:field="groupView"/>
 						</de:child>
 					</de:DETabPanel>
-					<!--</gxt:FramedPanel>-->
 				</container:center>
 			</container:BorderLayoutContainer>
 		</container:child>

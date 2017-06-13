@@ -54,8 +54,8 @@ public class UserSearchField implements IsWidget,
             if (firstIsGroup && secondIsGroup) {
                 return o1.getSubjectDisplayName().compareToIgnoreCase(o2.getSubjectDisplayName());
             }
-            if (firstIsGroup && !secondIsGroup) {
-                return -1;
+            if (firstIsGroup  != secondIsGroup) {
+                return firstIsGroup ? -1 : 1;
             }
             int lastNameComp = o1.getLastName().compareToIgnoreCase(o2.getLastName());
             if (lastNameComp != 0) {

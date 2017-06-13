@@ -63,7 +63,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @UiField(provided = true) UserSearchField searchField;
     @UiField HorizontalLayoutContainer searchPanel;
     @UiField ToolBar toolbar;
-//    @UiField FramedPanel collaboratorListPnl;
     @UiField(provided = true) GroupView groupView;
     @UiField(provided = true) ManageCollaboratorsView.Appearance appearance;
 
