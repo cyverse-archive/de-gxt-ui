@@ -131,6 +131,16 @@ public class AppsToolbarViewDefaultAppearance implements AppsToolbarView.AppsToo
     }
 
     @Override
+    public String manageTools() {
+        return appsMessages.manageTools();
+    }
+
+    @Override
+    public ImageResource tool() {
+        return iplantResources.tool();
+    }
+
+    @Override
     public String warning() {
         return iplantDisplayStrings.warning();
     }

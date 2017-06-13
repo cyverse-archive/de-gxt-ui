@@ -212,4 +212,12 @@ public interface ToolAdminDisplayStrings extends Messages {
 
     @Key("toolVolumeWarning")
     SafeHtml toolVolumeWarning();
+
+    String dialogMakePublicText();
+
+    String timeLimit();
+
+    String restricted();
+
+    String defaultImgPrefix();
 }

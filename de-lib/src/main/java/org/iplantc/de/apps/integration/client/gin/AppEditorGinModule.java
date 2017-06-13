@@ -1,16 +1,13 @@
 package org.iplantc.de.apps.integration.client.gin;
 
-import org.iplantc.de.apps.integration.client.gin.factory.DeployedComponentListingViewFactory;
 import org.iplantc.de.apps.integration.client.presenter.AppsEditorPresenterImpl;
-import org.iplantc.de.apps.integration.client.presenter.DeployedComponentPresenterImpl;
 import org.iplantc.de.apps.integration.client.view.AppEditorToolbar;
 import org.iplantc.de.apps.integration.client.view.AppEditorToolbarImpl;
 import org.iplantc.de.apps.integration.client.view.AppIntegrationPalette;
 import org.iplantc.de.apps.integration.client.view.AppsEditorView;
 import org.iplantc.de.apps.integration.client.view.AppsEditorViewImpl;
-import org.iplantc.de.apps.integration.client.view.deployedComponents.cells.DCNameHyperlinkCell;
-import org.iplantc.de.apps.integration.client.view.dialogs.CommandLineOrderingDialog;
 import org.iplantc.de.apps.integration.client.view.CommandLineOrderingView;
+import org.iplantc.de.apps.integration.client.view.dialogs.CommandLineOrderingDialog;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.ArgumentGroupPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.DecimalInputPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.DecimalSelectionPropertyEditor;
@@ -34,8 +31,6 @@ import org.iplantc.de.apps.integration.client.view.propertyEditors.TextSelection
 import org.iplantc.de.apps.integration.client.view.propertyEditors.TreeSelectionPropertyEditor;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.widgets.AddValidatorDialog;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.widgets.ArgumentValidatorEditor;
-import org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingView;
-import org.iplantc.de.apps.integration.client.view.tools.DeployedComponentsListingViewImpl;
 import org.iplantc.de.apps.integration.client.view.tools.ToolSearchField;
 import org.iplantc.de.apps.integration.client.view.widgets.AppTemplateContentPanel;
 import org.iplantc.de.resources.client.IplantContextualHelpAccessStyle;
@@ -44,7 +39,6 @@ import org.iplantc.de.resources.client.messages.IplantErrorStrings;
 import org.iplantc.de.resources.client.uiapps.integration.AppIntegrationErrorMessages;
 
 import com.google.gwt.inject.client.AbstractGinModule;
-import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.inject.Provides;
 
 /**
@@ -64,7 +58,6 @@ public class AppEditorGinModule extends AbstractGinModule {
         bind(AppEditorToolbar.class).to(AppEditorToolbarImpl.class);
         bind(AppsEditorView.Presenter.class).to(AppsEditorPresenterImpl.class);
         bind(AppIntegrationPalette.class);
-        bind(DeployedComponentsListingView.Presenter.class).to(DeployedComponentPresenterImpl.class);
 
         // Bind the appearance for the ArgumentGroupEditors
         bind(AppIntegrationErrorMessages.class).to(IplantErrorStrings.class);
@@ -92,7 +85,6 @@ public class AppEditorGinModule extends AbstractGinModule {
         bind(ReferenceSequencePropertyEditor.class);
         bind(ArgumentGroupPropertyEditor.class);
         bind(ArgumentValidatorEditor.class);
-        bind(DCNameHyperlinkCell.class);
         bind(ToolSearchField.class);
         bind(AppTemplateContentPanel.class);
         bind(AddValidatorDialog.class);
@@ -100,8 +92,5 @@ public class AppEditorGinModule extends AbstractGinModule {
         bind(CommandLineOrderingDialog.class);
 
 
-        install(new GinFactoryModuleBuilder()
-                    .implement(DeployedComponentsListingView.class, DeployedComponentsListingViewImpl.class)
-                    .build(DeployedComponentListingViewFactory.class));
-    }
+   }
 }

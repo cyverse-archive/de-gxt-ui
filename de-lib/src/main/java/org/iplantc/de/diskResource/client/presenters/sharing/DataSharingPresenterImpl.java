@@ -5,7 +5,7 @@ import org.iplantc.de.client.models.HasPaths;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
-import org.iplantc.de.client.models.diskResources.PermissionValue;
+
 import org.iplantc.de.client.models.diskResources.sharing.DataPermission;
 import org.iplantc.de.client.models.diskResources.sharing.DataSharingAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.sharing.DataSharingRequest;
@@ -15,6 +15,7 @@ import org.iplantc.de.client.models.diskResources.sharing.DataUnsharingRequestLi
 import org.iplantc.de.client.models.diskResources.sharing.DataUserPermission;
 import org.iplantc.de.client.models.diskResources.sharing.DataUserPermissionList;
 import org.iplantc.de.client.models.sharing.OldUserPermission;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;

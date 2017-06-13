@@ -56,6 +56,7 @@ public class ConfigFactory {
         return aiwc.as();
     }
 
+
     public static AppsWindowConfig appsWindowConfig() {
         AppsWindowConfig awc = applyWindowType(WindowType.APPS, factory.appsWindowConfig()).as();
         return awc;
@@ -183,6 +184,7 @@ public class ConfigFactory {
             case DATA_VIEWER:
             case HELP:
             case WORKFLOW_INTEGRATION:
+            case MANAGETOOLS:
                 // Default unsupported
                 break;
         }
@@ -249,9 +251,21 @@ public class ConfigFactory {
                 config = AutoBeanCodex.decode(factory, SystemMessagesWindowConfig.class,
                         ws.getWindowConfig()).as();
                 break;
+
+            case MANAGETOOLS:
+                config = AutoBeanCodex.decode(factory,
+                                              ManageToolsWindowConfig.class,
+                                              ws.getWindowConfig()).as();
+                break;
         }
 
         return config;
+    }
+
+    public static ManageToolsWindowConfig manageToolsWindowConfig() {
+        ManageToolsWindowConfig mtwc =
+                applyWindowType(WindowType.MANAGETOOLS, factory.manageToolsWindowConfig()).as();
+        return mtwc;
     }
 
     private static <C extends WindowConfig> AutoBean<C> applyWindowType(WindowType type, AutoBean<C> wc) {

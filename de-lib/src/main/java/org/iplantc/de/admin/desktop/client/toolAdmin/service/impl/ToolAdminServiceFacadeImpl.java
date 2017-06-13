@@ -59,6 +59,11 @@ public class ToolAdminServiceFacadeImpl implements ToolAdminServiceFacade {
     public void addTool(ToolList toolList, AsyncCallback<Void> callback) {
         String address = TOOLS_ADMIN;
 
+        toolList.getToolList().stream().forEach(tool -> {
+            final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tool));
+            nullUnwantedValues(encode);
+        });
+
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(toolList));
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
         deService.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
@@ -76,8 +81,14 @@ public class ToolAdminServiceFacadeImpl implements ToolAdminServiceFacade {
         }
 
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tool));
+        nullUnwantedValues(encode);
         ServiceCallWrapper wrapper = new ServiceCallWrapper(PATCH, address, encode.getPayload());
         deService.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
+    }
+
+    private void nullUnwantedValues(Splittable encode) {
+        Splittable.NULL.assign(encode, "is_public");
+        Splittable.NULL.assign(encode, "permission");
     }
 
     @Override
@@ -88,5 +99,16 @@ public class ToolAdminServiceFacadeImpl implements ToolAdminServiceFacade {
         deService.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
     }
 
+    @Override
+    public void publishTool(Tool tool, AsyncCallback<Void> callback) {
+        String address = TOOLS_ADMIN + "/" + tool.getId() + "/publish";
 
+        //null out values not needed by service
+        Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tool));
+        nullUnwantedValues(encode);
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
+        deService.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
+    }
 }
+

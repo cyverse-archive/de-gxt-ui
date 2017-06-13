@@ -3,6 +3,7 @@ package org.iplantc.de.admin.desktop.client.toolAdmin.view.subviews;
 import org.iplantc.de.admin.desktop.client.toolAdmin.ToolAdminView;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.client.models.tool.ToolImage;
+import org.iplantc.de.commons.client.validators.ImageNameValidator;
 import org.iplantc.de.commons.client.validators.UrlValidator;
 import org.iplantc.de.commons.client.widgets.EmptyStringValueChangeHandler;
 
@@ -39,9 +40,10 @@ public class ToolImageEditor extends Composite implements Editor<ToolImage> {
 
         initWidget(uiBinder.createAndBindUi(this));
 
+        nameEditor.addValidator(new ImageNameValidator());
         nameLabel.setHTML(appearance.containerImageNameLabel());
-        urlEditor.addValidator(new UrlValidator());
 
+        urlEditor.addValidator(new UrlValidator());
         tagEditor.addValueChangeHandler(new EmptyStringValueChangeHandler(tagEditor));
         urlEditor.addValueChangeHandler(new EmptyStringValueChangeHandler(urlEditor));
     }

@@ -21,4 +21,12 @@ public interface ToolImage extends HasName {
     String getUrl();
 
     boolean isDeprecated();
+
+    @PropertyName("auth")
+    String getAuth();
+
+    @PropertyName("auth")
+    void setAuth(String auth);
 }
+
+

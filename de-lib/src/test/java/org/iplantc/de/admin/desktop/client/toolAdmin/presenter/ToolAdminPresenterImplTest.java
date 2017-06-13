@@ -19,6 +19,7 @@ import org.iplantc.de.admin.desktop.client.toolAdmin.model.ToolProperties;
 import org.iplantc.de.admin.desktop.client.toolAdmin.service.ToolAdminServiceFacade;
 import org.iplantc.de.admin.desktop.client.toolAdmin.view.dialogs.DeleteToolDialog;
 import org.iplantc.de.admin.desktop.client.toolAdmin.view.dialogs.OverwriteToolDialog;
+import org.iplantc.de.admin.desktop.client.toolAdmin.view.dialogs.ToolAdminDetailsDialog;
 import org.iplantc.de.client.models.errorHandling.ServiceErrorCode;
 import org.iplantc.de.client.models.errorHandling.SimpleServiceError;
 import org.iplantc.de.client.models.tool.Tool;
@@ -243,7 +244,7 @@ public class ToolAdminPresenterImplTest {
 
         /** CALL METHOD UNDER TEST **/
         value.onSuccess(toolMock);
-        verify(viewMock).editToolDetails(eq(toolMock));
+        verify(viewMock).editToolDetails(eq(toolMock), eq(ToolAdminDetailsDialog.Mode.EDIT));
 
         verifyNoMoreInteractions(toolAdminServiceFacadeMock, viewMock);
     }

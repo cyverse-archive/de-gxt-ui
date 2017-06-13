@@ -1,11 +1,17 @@
 package org.iplantc.de.theme.base.client.admin.toolRequest;
 
 import org.iplantc.de.admin.desktop.client.toolRequest.ToolRequestView;
+import org.iplantc.de.client.models.toolRequests.ToolRequest;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
+import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeUri;
 
 /**
  * @author jstroot
@@ -14,19 +20,28 @@ public class ToolRequestViewDefaultAppearance implements ToolRequestView.ToolReq
     private final ToolRequestDisplayStrings displayStrings;
     private final IplantResources iplantResources;
     private final IplantDisplayStrings iplantDisplayStrings;
+    private final Templates templates;
+
+
+    interface Templates extends SafeHtmlTemplates {
+        @SafeHtmlTemplates.Template("<img qtip='{1}' src='{0}'/> <span>{1}</span> ")
+        SafeHtml makePublicRequest(SafeUri img, String name);
+    }
 
     public ToolRequestViewDefaultAppearance() {
         this(GWT.<ToolRequestDisplayStrings> create(ToolRequestDisplayStrings.class),
              GWT.<IplantDisplayStrings> create(IplantDisplayStrings.class),
-             GWT.<IplantResources> create(IplantResources.class));
+             GWT.<IplantResources> create(IplantResources.class), GWT.<Templates>create(Templates.class));
     }
 
     ToolRequestViewDefaultAppearance(final ToolRequestDisplayStrings displayStrings,
                                      final IplantDisplayStrings iplantDisplayStrings,
-                                     final IplantResources iplantResources) {
+                                     final IplantResources iplantResources,
+                                     final Templates templates) {
         this.displayStrings = displayStrings;
         this.iplantDisplayStrings = iplantDisplayStrings;
         this.iplantResources = iplantResources;
+        this.templates = templates;
     }
 
     @Override
@@ -212,5 +227,23 @@ public class ToolRequestViewDefaultAppearance implements ToolRequestView.ToolReq
     @Override
     public String versionLabel() {
         return displayStrings.versionColumnLabel();
+    }
+
+    @Override
+    public String makePublic() {
+        return displayStrings.makePublic();
+    }
+
+    @Override
+    public void renderRequestName(SafeHtmlBuilder safeHtmlBuilder, ToolRequest toolRequest) {
+        if (Strings.isNullOrEmpty(toolRequest.getToolId())) {
+            safeHtmlBuilder.appendEscaped(toolRequest.getName());
+        } else {
+            safeHtmlBuilder.appendHtmlConstant(templates.makePublicRequest(iplantResources.submitForPublic()
+                                                                                          .getSafeUri(),
+                                                                           toolRequest.getName())
+                                                        .asString());
+        }
+
     }
 }

@@ -10,6 +10,7 @@ import org.iplantc.de.desktop.client.views.windows.DEAppsWindow;
 import org.iplantc.de.desktop.client.views.windows.DeDiskResourceWindow;
 import org.iplantc.de.desktop.client.views.windows.FileViewerWindow;
 import org.iplantc.de.desktop.client.views.windows.IPlantWindowInterface;
+import org.iplantc.de.desktop.client.views.windows.ManageToolsWindow;
 import org.iplantc.de.desktop.client.views.windows.MyAnalysesWindow;
 import org.iplantc.de.desktop.client.views.windows.NotificationWindow;
 import org.iplantc.de.desktop.client.views.windows.PipelineEditorWindow;
@@ -39,6 +40,7 @@ public class WindowFactory {
     @Inject AsyncProviderWrapper<SimpleDownloadWindow> simpleDownloadWindowAsyncProvider;
     @Inject AsyncProviderWrapper<PipelineEditorWindow> pipelineEditorWindowAsyncProvider;
     @Inject AsyncProviderWrapper<SystemMessagesWindow> systemMessagesWindowAsyncProvider;
+    @Inject AsyncProviderWrapper<ManageToolsWindow> ManageToolsWindowAsyncProvider;
 
     @Inject
     WindowFactory() { }
@@ -87,6 +89,8 @@ public class WindowFactory {
                 break;
             case SYSTEM_MESSAGES:
                 ret = systemMessagesWindowAsyncProvider;
+            case MANAGETOOLS:
+                ret = ManageToolsWindowAsyncProvider;
             default:
                 break;
         }

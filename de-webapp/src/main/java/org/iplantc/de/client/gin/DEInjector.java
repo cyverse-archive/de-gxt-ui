@@ -14,7 +14,7 @@ import org.iplantc.de.fileViewers.client.gin.FileViewerGinModule;
 import org.iplantc.de.notifications.client.gin.NotificationGinModule;
 import org.iplantc.de.preferences.client.gin.PreferencesGinModule;
 import org.iplantc.de.tags.client.gin.TagsGinModule;
-import org.iplantc.de.tools.requests.client.gin.ToolRequestGinModule;
+import org.iplantc.de.tools.client.gin.ToolsGinModule;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.inject.client.GinModules;
@@ -28,7 +28,7 @@ import com.google.gwt.inject.client.Ginjector;
               AnalysisGinModule.class,
               AppLaunchGinModule.class,
               AppsGinModule.class,
-              ToolRequestGinModule.class,
+              ToolsGinModule.class,
               AppEditorGinModule.class,
               DiskResourceGinModule.class,
               CommentsGinModule.class,

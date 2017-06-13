@@ -8,6 +8,9 @@ import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 
 public interface Tool extends HasId, HasDescription, HasName {
 
+    @PropertyName("id")
+    void setId(String id);
+
     @PropertyName("location")
     String getLocation();
 
@@ -46,4 +49,24 @@ public interface Tool extends HasId, HasDescription, HasName {
     @PropertyName("container")
     void setContainer(ToolContainer container);
 
+    @PropertyName("permission")
+    void setPermission(String permission);
+
+    @PropertyName("permission")
+    String getPermission();
+
+    @PropertyName("is_public")
+    boolean isPublic();
+
+    @PropertyName("time_limit_seconds")
+    Integer getTimeLimit();
+
+    @PropertyName("restricted")
+    Boolean isRestricted();
+
+    @PropertyName("restricted")
+    void setRestricted(Boolean restricted);
+
+    @PropertyName("time_limit_seconds")
+    void setTimeLimit(Integer limit);
 }

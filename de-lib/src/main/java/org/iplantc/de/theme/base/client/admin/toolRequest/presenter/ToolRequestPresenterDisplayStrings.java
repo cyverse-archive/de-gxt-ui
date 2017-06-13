@@ -9,4 +9,8 @@ import com.google.gwt.i18n.client.Messages;
 public interface ToolRequestPresenterDisplayStrings extends Messages{
     @Key("toolRequestUpdateSuccessMessage")
     String toolRequestUpdateSuccessMessage();
+
+    String publishedFailed();
+
+    String publishSuccess();
 }

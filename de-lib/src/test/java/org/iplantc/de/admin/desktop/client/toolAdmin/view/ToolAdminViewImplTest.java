@@ -72,7 +72,7 @@ public class ToolAdminViewImplTest {
         ToolAdminViewImpl spy = spy(uut);
 
         /** CALL METHOD UNDER TEST **/
-        spy.editToolDetails(toolMock);
+        spy.editToolDetails(toolMock, ToolAdminDetailsDialog.Mode.EDIT);
         verify(toolDetailsDialogMock).get(asyncCallbackDialogCaptor.capture());
 
         AsyncCallback<ToolAdminDetailsDialog> asyncCallback = asyncCallbackDialogCaptor.getValue();
@@ -80,7 +80,7 @@ public class ToolAdminViewImplTest {
 
         /** CALL METHOD UNDER TEST **/
         asyncCallback.onSuccess(resultMock);
-        verify(resultMock).show(eq(toolMock));
+        verify(resultMock).show(eq(toolMock), eq(ToolAdminDetailsDialog.Mode.EDIT));
         verify(resultMock).addSaveToolSelectedEventHandler(saveToolSelectedEventHandlerArgumentCaptor.capture());
 
         SaveToolSelectedEvent.SaveToolSelectedEventHandler saveHandlerMock =

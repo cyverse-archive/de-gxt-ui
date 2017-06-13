@@ -10,6 +10,13 @@ import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
  */
 public interface NewToolRequest {
 
+
+    @PropertyName("tool_id")
+    String getToolId();
+
+    @PropertyName("tool_id")
+    void setToolId(String id);
+
     /**
      * This is optional.
      */
@@ -55,13 +62,6 @@ public interface NewToolRequest {
 
     void setAttribution(String attribution);
 
-    /**
-     * This is optional.
-     */
-    Boolean getMultithreaded();
-
-    void setMultithreaded(Boolean multithreaded);
-
     @PropertyName("test_data_path")
     String getTestDataFile();
 
@@ -91,9 +91,5 @@ public interface NewToolRequest {
 
     @PropertyName("additional_data_file")
     void setAdditionalDataFile(String filePath);
-
-    Architecture getArchitecture();
-
-    void setArchitecture(Architecture architecture);
 
 }

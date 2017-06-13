@@ -16,7 +16,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
+import com.sencha.gxt.widget.core.client.form.CheckBox;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
+import com.sencha.gxt.widget.core.client.form.IntegerField;
 import com.sencha.gxt.widget.core.client.form.TextArea;
 import com.sencha.gxt.widget.core.client.form.TextField;
 
@@ -39,13 +41,17 @@ public class ToolAdminDetailsView extends Composite implements Editor<Tool> {
 
     @UiField VerticalLayoutContainer layoutContainer;
     @Ignore
-    @UiField FieldLabel nameLabel, typeLabel, locationLabel;
+    @UiField FieldLabel nameLabel, typeLabel, locationLabel, versionLabel;
     @UiField TextArea descriptionEditor;
     @UiField TextField nameEditor;
     @UiField TextField typeEditor;
     @UiField TextField attributionEditor;
     @UiField TextField versionEditor;
     @UiField TextField locationEditor;
+    @UiField
+    CheckBox restrictedEditor;
+    @UiField
+    IntegerField timeLimitEditor;
     @UiField (provided = true) ToolImplementationEditor implementationEditor;
     @UiField (provided = true) ToolContainerEditor containerEditor;
     @UiField (provided = true) ToolAdminView.ToolAdminViewAppearance appearance;
@@ -62,7 +68,7 @@ public class ToolAdminDetailsView extends Composite implements Editor<Tool> {
 
         nameLabel.setHTML(appearance.toolImportNameLabel());
         typeLabel.setHTML(appearance.toolImportTypeLabel());
-        locationLabel.setHTML(appearance.toolImportLocationLabel());
+        versionLabel.setHTML(appearance.toolImportVersionLabel());
 
         descriptionEditor.setHeight(250);
 

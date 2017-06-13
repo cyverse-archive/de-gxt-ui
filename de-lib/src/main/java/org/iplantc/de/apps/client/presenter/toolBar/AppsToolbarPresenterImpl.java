@@ -6,6 +6,7 @@ import org.iplantc.de.apps.client.events.CreateNewAppEvent;
 import org.iplantc.de.apps.client.events.CreateNewWorkflowEvent;
 import org.iplantc.de.apps.client.events.EditAppEvent;
 import org.iplantc.de.apps.client.events.EditWorkflowEvent;
+import org.iplantc.de.apps.client.events.ManageToolsClickedEvent;
 import org.iplantc.de.apps.client.events.selection.CreateNewAppSelected;
 import org.iplantc.de.apps.client.events.selection.CreateNewWorkflowSelected;
 import org.iplantc.de.apps.client.events.selection.EditAppSelected;
@@ -14,6 +15,8 @@ import org.iplantc.de.apps.client.events.selection.RequestToolSelected;
 import org.iplantc.de.apps.client.events.selection.ShareAppsSelected;
 import org.iplantc.de.apps.client.gin.factory.AppsToolbarViewFactory;
 import org.iplantc.de.apps.client.presenter.toolBar.proxy.AppSearchRpcProxy;
+
+import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 import org.iplantc.de.apps.client.views.sharing.dialog.AppSharingDialog;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
@@ -22,10 +25,16 @@ import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.views.window.configs.ConfigAutoBeanFactory;
+import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
+import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
-import org.iplantc.de.tools.requests.client.views.dialogs.NewToolRequestDialog;
+import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
+import org.iplantc.de.tools.client.views.manage.ManageToolsView;
+import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -48,16 +57,30 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
                                                  CreateNewWorkflowSelected.CreateNewWorkflowSelectedHandler,
                                                  EditAppSelected.EditAppSelectedHandler,
                                                  RequestToolSelected.RequestToolSelectedHandler,
-                                     EditWorkflowSelected.EditWorkflowSelectedHandler,
-                                     ShareAppsSelected.ShareAppsSelectedHandler {
+                                                 EditWorkflowSelected.EditWorkflowSelectedHandler,
+                                                 ShareAppsSelected.ShareAppsSelectedHandler {
 
     protected PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader;
-    @Inject IplantAnnouncer announcer;
-    @Inject AppsToolbarView.AppsToolbarAppearance appearance;
-    @Inject EventBus eventBus;
-    @Inject Provider<NewToolRequestDialog> newToolRequestDialogProvider;
-    @Inject AsyncProviderWrapper<AppSharingDialog> appSharingDialogProvider;
-    @Inject UserInfo userInfo;
+    @Inject
+    IplantAnnouncer announcer;
+    @Inject
+    AppsToolbarView.AppsToolbarAppearance appearance;
+    @Inject
+    EventBus eventBus;
+    @Inject
+    Provider<NewToolRequestDialog> newToolRequestDialogProvider;
+    @Inject
+    AsyncProviderWrapper<AppSharingDialog> appSharingDialogProvider;
+    @Inject
+    UserInfo userInfo;
+    @Inject
+    ManageToolsView toolsView;
+    @Inject
+    ManageToolsView.Presenter toolsPresenter;
+
+    private static ConfigAutoBeanFactory factory = GWT.create(ConfigAutoBeanFactory.class);
+
+
     private final AppUserServiceFacade appService;
     private final AppSearchRpcProxy proxy;
     private final AppsToolbarView view;
@@ -140,7 +163,7 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
 
     @Override
     public void onRequestToolSelected(RequestToolSelected event) {
-        newToolRequestDialogProvider.get().show();
+        newToolRequestDialogProvider.get().show(NewToolRequestFormView.Mode.NEWTOOL);
     }
 
     @Override
@@ -156,5 +179,10 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
                 result.show(event.getSelectedApps());
             }
         });
+    }
+
+    @Override
+    public void onManageToolsClicked(ManageToolsClickedEvent event) {
+        eventBus.fireEvent(new WindowShowRequestEvent(ConfigFactory.manageToolsWindowConfig(), true));
     }
 }

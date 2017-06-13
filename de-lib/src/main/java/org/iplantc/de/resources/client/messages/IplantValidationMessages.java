@@ -327,4 +327,8 @@ public interface IplantValidationMessages extends Messages {
     @DefaultMessage("The new name cannot be same as the old name.")
     @Key("newNameSameAsOldName")
     String newNameSameAsOldName();
+
+    String imgNameReqd();
+
+    String imgNameInvalid();
 }
