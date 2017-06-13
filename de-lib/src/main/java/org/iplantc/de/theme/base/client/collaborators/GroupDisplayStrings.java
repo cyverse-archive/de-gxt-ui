@@ -31,4 +31,10 @@ public interface GroupDisplayStrings extends Messages {
     String memberDeleteFail(@PluralCount List<String> memberNames);
 
     String groupSelfAdd();
+
+    String memberAddSuccess(String subjectDisplayName, String groupName);
+
+    String noCollabListSelected();
+
+    String memberAddToGroupsSuccess(String subjectDisplayName);
 }

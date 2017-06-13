@@ -1,5 +1,6 @@
 package org.iplantc.de.collaborators.client;
 
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
@@ -80,6 +81,18 @@ public interface GroupView extends IsWidget,
         String collaboratorsSelfAdd();
 
         String groupSelfAdd();
+
+        String memberAddSuccess(Subject subject, Group group);
+
+        String noCollabListSelected();
+
+        String collaboratorRemoveConfirm(String names);
+
+        String collaboratorAddConfirm(String names);
+
+        String addCollabErrorMsg();
+
+        String memberAddToGroupsSuccess(Subject subject);
     }
 
     /**

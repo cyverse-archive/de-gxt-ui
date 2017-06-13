@@ -1,10 +1,12 @@
 package org.iplantc.de.theme.base.client.collaborators;
 
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
+import org.iplantc.de.resources.client.messages.IplantErrorStrings;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
@@ -27,23 +29,27 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
     }
 
     private IplantDisplayStrings iplantDisplayStrings;
+    private IplantErrorStrings iplantErrorStrings;
     private IplantResources iplantResources;
     private GroupDisplayStrings displayStrings;
     private Templates templates;
 
     public GroupViewDefaultAppearance() {
         this(GWT.<IplantDisplayStrings>create(IplantDisplayStrings.class),
+             GWT.<IplantErrorStrings> create(IplantErrorStrings.class),
              GWT.<IplantResources>create(IplantResources.class),
              GWT.<GroupDisplayStrings>create(GroupDisplayStrings.class),
              GWT.<Templates> create(Templates.class));
     }
 
     public GroupViewDefaultAppearance(IplantDisplayStrings iplantDisplayStrings,
+                                      IplantErrorStrings iplantErrorStrings,
                                       IplantResources iplantResources,
                                       GroupDisplayStrings displayStrings,
                                       Templates templates) {
 
         this.iplantDisplayStrings = iplantDisplayStrings;
+        this.iplantErrorStrings = iplantErrorStrings;
         this.iplantResources = iplantResources;
         this.displayStrings = displayStrings;
         this.templates = templates;
@@ -185,5 +191,35 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
     @Override
     public String groupSelfAdd() {
         return displayStrings.groupSelfAdd();
+    }
+
+    @Override
+    public String memberAddSuccess(Subject subject, Group group) {
+        return displayStrings.memberAddSuccess(subject.getSubjectDisplayName(), group.getName());
+    }
+
+    @Override
+    public String noCollabListSelected() {
+        return displayStrings.noCollabListSelected();
+    }
+
+    @Override
+    public String collaboratorRemoveConfirm(String names) {
+        return iplantDisplayStrings.collaboratorRemoveConfirm(names);
+    }
+
+    @Override
+    public String collaboratorAddConfirm(String names) {
+        return iplantDisplayStrings.collaboratorAddConfirm(names);
+    }
+
+    @Override
+    public String addCollabErrorMsg() {
+        return iplantErrorStrings.addCollabErrorMsg();
+    }
+
+    @Override
+    public String memberAddToGroupsSuccess(Subject subject) {
+        return displayStrings.memberAddToGroupsSuccess(subject.getSubjectDisplayName());
     }
 }

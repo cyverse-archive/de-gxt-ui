@@ -12,6 +12,7 @@ import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.models.SubjectKeyProvider;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
+import org.iplantc.de.commons.client.widgets.DETabPanel;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
@@ -63,6 +64,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @UiField(provided = true) UserSearchField searchField;
     @UiField HorizontalLayoutContainer searchPanel;
     @UiField ToolBar toolbar;
+    @UiField DETabPanel tabPanel;
     @UiField(provided = true) GroupView groupView;
     @UiField(provided = true) ManageCollaboratorsView.Appearance appearance;
 
@@ -107,6 +109,11 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @Override
+    public boolean hasCollaboratorsTabSelected() {
+        return tabPanel.getActiveWidget() != groupView;
+    }
+
+    @Override
     public MODE getMode() {
         return mode;
     }
@@ -141,6 +148,11 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @Override
     public void updateCollabList(Group group) {
         groupView.updateCollabList(group);
+    }
+
+    @Override
+    public List<Group> getSelectedCollaboratorLists() {
+        return groupView.getSelectedCollabLists();
     }
 
     @Override

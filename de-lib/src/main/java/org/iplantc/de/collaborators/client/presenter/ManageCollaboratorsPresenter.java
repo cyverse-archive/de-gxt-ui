@@ -21,13 +21,13 @@ import org.iplantc.de.collaborators.client.events.GroupSaved;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
+import org.iplantc.de.collaborators.client.presenter.callbacks.ParentAddMemberToGroupCallback;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
-import org.iplantc.de.resources.client.messages.I18N;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Joiner;
@@ -43,6 +43,7 @@ import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -56,6 +57,25 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                                                      AddGroupSelected.AddGroupSelectedHandler,
                                                      GroupNameSelected.GroupNameSelectedHandler,
                                                      UserSearchResultSelected.UserSearchResultSelectedEventHandler {
+
+    public class AddMemberToGroupCallback implements AsyncCallback<List<UpdateMemberResult>> {
+        ParentAddMemberToGroupCallback parent;
+
+        @Override
+        public void onFailure(Throwable caught) {
+            ErrorHandler.post(caught);
+            parent.done(null);
+        }
+
+        @Override
+        public void onSuccess(List<UpdateMemberResult> result) {
+            parent.done(result);
+        }
+
+        public void setParent(ParentAddMemberToGroupCallback parent) {
+            this.parent = parent;
+        }
+    }
 
     @Inject CollaboratorsUtil collaboratorsUtil;
     @Inject EventBus eventBus;
@@ -112,12 +132,51 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         Subject subject = userSearchResultSelected.getSubject();
         if (!userInfo.getUsername()
                      .equals(subject.getId())) {
-            if (!collaboratorsUtil.isCurrentCollaborator(subject, view.getCollaborators())) {
-                addAsCollaborators(Arrays.asList(subject));
+            if (view.hasCollaboratorsTabSelected()) {
+                if (!collaboratorsUtil.isCurrentCollaborator(subject, view.getCollaborators())) {
+                    addAsCollaborators(Arrays.asList(subject));
+                }
+            } else {
+                List<Group> selectedCollaboratorLists = view.getSelectedCollaboratorLists();
+                if (selectedCollaboratorLists != null && !selectedCollaboratorLists.isEmpty()) {
+                    addMemberToGroups(subject, selectedCollaboratorLists);
+                } else {
+                    announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.noCollabListSelected()));
+                }
             }
         } else {
-            announcer.schedule(new ErrorAnnouncementConfig(I18N.DISPLAY.collaboratorSelfAdd()));
+            announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.collaboratorsSelfAdd()));
         }
+    }
+
+    void addMemberToGroups(Subject subject, List<Group> selectedCollaboratorLists) {
+        List<AddMemberToGroupCallback> childCallbacks = getAddMemberToGroupCallbackList();
+
+        selectedCollaboratorLists.forEach(new Consumer<Group>() {
+            @Override
+            public void accept(Group group) {
+                AddMemberToGroupCallback callback = getAddMemberToGroupCallback();
+                groupServiceFacade.addMembers(group, wrapSubjectInList(subject), callback);
+                childCallbacks.add(callback);
+            }
+        });
+
+        new ParentAddMemberToGroupCallback(childCallbacks) {
+
+            @Override
+            public void handleSuccess(List<UpdateMemberResult> totalResults) {
+                List<UpdateMemberResult> failures = getFailResults(totalResults);
+                if (failures != null && !failures.isEmpty()) {
+                    announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.unableToAddMembers(failures)));
+                } else {
+                    announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.memberAddToGroupsSuccess(subject)));
+                }
+            }
+        };
+    }
+
+    List<Subject> wrapSubjectInList(Subject subject) {
+        return Lists.newArrayList(subject);
     }
 
     /*
@@ -141,14 +200,14 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                     view.addCollaborators(models);
                     String names = getCollaboratorNames(models);
 
-                    announcer.schedule(new SuccessAnnouncementConfig(I18N.DISPLAY.collaboratorAddConfirm(
+                    announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.collaboratorAddConfirm(
                             names)));
                 }
             }
 
             @Override
             public void onFailure(Throwable caught) {
-                ErrorHandler.post(I18N.ERROR.addCollabErrorMsg(), caught);
+                ErrorHandler.post(groupAppearance.addCollabErrorMsg(), caught);
             }
         });
 
@@ -200,7 +259,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                 } else {
                     view.removeCollaborators(models);
                     String names = getCollaboratorNames(models);
-                    announcer.schedule(new SuccessAnnouncementConfig(I18N.DISPLAY.collaboratorRemoveConfirm(
+                    announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.collaboratorRemoveConfirm(
                             names)));
                 }
             }
@@ -337,5 +396,13 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                 });
             }
         });
+    }
+
+    AddMemberToGroupCallback getAddMemberToGroupCallback() {
+        return new AddMemberToGroupCallback();
+    }
+
+    List<AddMemberToGroupCallback> getAddMemberToGroupCallbackList() {
+        return Lists.newArrayList();
     }
 }
