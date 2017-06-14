@@ -200,6 +200,11 @@ public class AppSharingPresenter implements SharingPresenter {
         permissionsPanel.asWidget().ensureDebugId(debugId + AppsModule.Ids.SHARING_VIEW + AppsModule.Ids.SHARING_PERMS);
     }
 
+    @Override
+    public boolean canShareWithGroup() {
+        return true;
+    }
+
     private AppSharingRequestList buildSharingRequest() {
         AppSharingRequestList sharingRequestList = null;
 

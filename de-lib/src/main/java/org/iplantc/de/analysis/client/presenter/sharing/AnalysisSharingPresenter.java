@@ -204,6 +204,11 @@ public class AnalysisSharingPresenter implements SharingPresenter {
         permissionsPanel.asWidget().ensureDebugId(debugId + AnalysisModule.Ids.SHARING_VIEW + AnalysisModule.Ids.SHARING_PERMS);
     }
 
+    @Override
+    public boolean canShareWithGroup() {
+        return false;
+    }
+
     private AnalysisSharingRequestList buildSharingRequest() {
         AnalysisSharingRequestList sharingRequestList = null;
 
