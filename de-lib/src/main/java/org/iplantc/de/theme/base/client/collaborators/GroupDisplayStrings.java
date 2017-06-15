@@ -37,4 +37,6 @@ public interface GroupDisplayStrings extends Messages {
     String noCollabListSelected();
 
     String memberAddToGroupsSuccess(String subjectDisplayName);
+
+    String groupNameValidationMsg(String restrictedChars);
 }

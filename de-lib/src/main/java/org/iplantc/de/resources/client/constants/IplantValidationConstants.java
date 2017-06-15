@@ -24,4 +24,6 @@ public interface IplantValidationConstants extends Constants {
 
     int maxToolNameLength();
 
+    String restrictedGroupNameChars();
+
 }

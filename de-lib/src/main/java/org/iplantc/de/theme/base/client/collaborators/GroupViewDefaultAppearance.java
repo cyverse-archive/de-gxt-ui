@@ -7,6 +7,7 @@ import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.resources.client.messages.IplantErrorStrings;
+import org.iplantc.de.resources.client.messages.IplantValidationMessages;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
@@ -30,6 +31,7 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
 
     private IplantDisplayStrings iplantDisplayStrings;
     private IplantErrorStrings iplantErrorStrings;
+    private IplantValidationMessages iplantValidationMessages;
     private IplantResources iplantResources;
     private GroupDisplayStrings displayStrings;
     private Templates templates;
@@ -37,6 +39,7 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
     public GroupViewDefaultAppearance() {
         this(GWT.<IplantDisplayStrings>create(IplantDisplayStrings.class),
              GWT.<IplantErrorStrings> create(IplantErrorStrings.class),
+             GWT.<IplantValidationMessages> create(IplantValidationMessages.class),
              GWT.<IplantResources>create(IplantResources.class),
              GWT.<GroupDisplayStrings>create(GroupDisplayStrings.class),
              GWT.<Templates> create(Templates.class));
@@ -44,12 +47,14 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
 
     public GroupViewDefaultAppearance(IplantDisplayStrings iplantDisplayStrings,
                                       IplantErrorStrings iplantErrorStrings,
+                                      IplantValidationMessages iplantValidationMessages,
                                       IplantResources iplantResources,
                                       GroupDisplayStrings displayStrings,
                                       Templates templates) {
 
         this.iplantDisplayStrings = iplantDisplayStrings;
         this.iplantErrorStrings = iplantErrorStrings;
+        this.iplantValidationMessages = iplantValidationMessages;
         this.iplantResources = iplantResources;
         this.displayStrings = displayStrings;
         this.templates = templates;
@@ -221,5 +226,15 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
     @Override
     public String memberAddToGroupsSuccess(Subject subject) {
         return displayStrings.memberAddToGroupsSuccess(subject.getSubjectDisplayName());
+    }
+
+    @Override
+    public String groupNameValidationMsg(String restrictedChars) {
+        return displayStrings.groupNameValidationMsg(restrictedChars);
+    }
+
+    @Override
+    public String invalidChars(String restrictedChars) {
+        return iplantValidationMessages.invalidChars(restrictedChars);
     }
 }
