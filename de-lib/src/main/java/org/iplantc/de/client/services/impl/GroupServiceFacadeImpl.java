@@ -78,7 +78,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
     @Override
     public void deleteGroup(Group group, AsyncCallback<Group> callback) {
-        String address = LISTS + "/" + URL.encode(group.getName());
+        String address = LISTS + "/" + URL.encodePathSegment(group.getName());
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address);
         deService.getServiceData(wrapper, new GroupCallbackConverter(callback, factory));
@@ -87,7 +87,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     @Override
     public void getMembers(Group group, AsyncCallback<List<Subject>> callback) {
         String groupName = group.getName();
-        String address = LISTS + "/" + URL.encode(groupName) + "/members";
+        String address = LISTS + "/" + URL.encodePathSegment(groupName) + "/members";
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new SubjectMemberListCallbackConverter(callback, collabFactory));
@@ -102,7 +102,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
                                    .collect(Collectors.toList());
         request.setMembers(ids);
 
-        String address = LISTS + "/" + URL.encode(groupName) + "/members/deleter";
+        String address = LISTS + "/" + URL.encodePathSegment(groupName) + "/members/deleter";
 
         Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
 
@@ -126,7 +126,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
                                    .collect(Collectors.toList());
         request.setMembers(ids);
 
-        String address = LISTS + "/" + URL.encode(groupName) + "/members";
+        String address = LISTS + "/" + URL.encodePathSegment(groupName) + "/members";
 
         Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
 
@@ -142,7 +142,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
     @Override
     public void updateGroup(String originalGroup, Group group, AsyncCallback<Group> callback) {
-        String address = LISTS + "/" + URL.encode(originalGroup);
+        String address = LISTS + "/" + URL.encodePathSegment(originalGroup);
 
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(group));
 
