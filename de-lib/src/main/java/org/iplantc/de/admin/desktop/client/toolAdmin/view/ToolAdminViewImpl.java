@@ -37,9 +37,7 @@ import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.button.TextButton;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.sencha.gxt.widget.core.client.event.ViewReadyEvent;
 import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
@@ -115,14 +113,11 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
         deleteButton.ensureDebugId(baseID + Belphegor.ToolAdminIds.DELETE);
         filterField.setId(baseID + Belphegor.ToolAdminIds.FILTER);
         grid.ensureDebugId(baseID + Belphegor.ToolAdminIds.GRID);
-        grid.addViewReadyHandler(new ViewReadyEvent.ViewReadyHandler() {
-            @Override
-            public void onViewReady(ViewReadyEvent event) {
-                StaticIdHelper.getInstance()
-                              .gridColumnHeaders(baseID + Belphegor.ToolAdminIds.GRID
-                                                 + Belphegor.ToolAdminIds.COL_HEADER, grid);
-            }
-        });
+        grid.addViewReadyHandler(event -> StaticIdHelper.getInstance()
+                                                        .gridColumnHeaders(
+                                                                baseID + Belphegor.ToolAdminIds.GRID
+                                                                + Belphegor.ToolAdminIds.COL_HEADER,
+                                                                grid));
 
         for (ColumnConfig<Tool, ?> cc : cm.getColumns()) {
             if (cc.getCell() instanceof ToolAdminNameCell) {
@@ -206,21 +201,15 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
             public void onSuccess(final ToolAdminDetailsDialog result) {
                 result.show(tool, mode);
                 result.ensureDebugId(Belphegor.ToolAdminIds.TOOL_ADMIN_DIALOG);
-                result.addSaveToolSelectedEventHandler(new SaveToolSelectedEvent.SaveToolSelectedEventHandler() {
-                    @Override
-                    public void onSaveToolSelected(SaveToolSelectedEvent event) {
-                        fireEvent(event);
-                        result.hide();
-                        grid.getSelectionModel().deselect(grid.getSelectionModel().getSelectedItem());
-                    }
+                result.addSaveToolSelectedEventHandler(event -> {
+                    fireEvent(event);
+                    result.hide();
+                    grid.getSelectionModel().deselect(grid.getSelectionModel().getSelectedItem());
                 });
 
-                result.addPublishToolEventHandler(new PublishToolEvent.PublishToolEventHandler() {
-                    @Override
-                    public void onPublish(PublishToolEvent event) {
-                        fireEvent(event);
-                        result.hide();
-                    }
+                result.addPublishToolEventHandler(event -> {
+                    fireEvent(event);
+                    result.hide();
                 });
             }
         });
@@ -242,13 +231,11 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
             public void onSuccess(final ToolAdminDetailsDialog result) {
                 result.show();
                 result.ensureDebugId(Belphegor.ToolAdminIds.TOOL_ADMIN_DIALOG);
-                result.addSaveToolSelectedEventHandler(new SaveToolSelectedEvent.SaveToolSelectedEventHandler() {
-                    @Override
-                    public void onSaveToolSelected(SaveToolSelectedEvent event) {
-                        AddToolSelectedEvent addToolSelectedEvent = new AddToolSelectedEvent(event.getTool());
-                        fireEvent(addToolSelectedEvent);
-                        result.hide();
-                    }
+                result.addSaveToolSelectedEventHandler(event1 -> {
+                    AddToolSelectedEvent addToolSelectedEvent =
+                            new AddToolSelectedEvent(event1.getTool());
+                    fireEvent(addToolSelectedEvent);
+                    result.hide();
                 });
             }
         });
@@ -260,16 +247,12 @@ public class ToolAdminViewImpl extends Composite implements ToolAdminView {
         if (tool != null) {
             final ConfirmMessageBox deleteMsgBox =
                     new ConfirmMessageBox("Confirm", "Delete " + tool.getName() + "?");
-            deleteMsgBox.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
-                @Override
-                public void onDialogHide(DialogHideEvent event) {
-                    if (event.getHideButton().equals(Dialog.PredefinedButton.OK) || event.getHideButton()
-                                                                                         .equals(Dialog.PredefinedButton.YES)) {
-                        DeleteToolSelectedEvent deleteToolSelectedEvent =
-                                new DeleteToolSelectedEvent(tool);
-                        fireEvent(deleteToolSelectedEvent);
-                        deleteMsgBox.hide();
-                    }
+            deleteMsgBox.addDialogHideHandler(event1 -> {
+                if (event1.getHideButton().equals(Dialog.PredefinedButton.OK) || event1.getHideButton()
+                                                                                       .equals(Dialog.PredefinedButton.YES)) {
+                    DeleteToolSelectedEvent deleteToolSelectedEvent = new DeleteToolSelectedEvent(tool);
+                    fireEvent(deleteToolSelectedEvent);
+                    deleteMsgBox.hide();
                 }
             });
             deleteMsgBox.show();

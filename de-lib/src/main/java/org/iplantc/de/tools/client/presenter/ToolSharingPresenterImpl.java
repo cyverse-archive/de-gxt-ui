@@ -30,7 +30,6 @@ import org.iplantc.de.tools.client.views.manage.ToolSharingPresenter;
 import org.iplantc.de.tools.client.views.manage.ToolSharingView;
 import org.iplantc.de.tools.shared.ToolsModule;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
@@ -213,8 +212,6 @@ public class ToolSharingPresenterImpl implements ToolSharingPresenter {
     private ToolSharingRequestList buildSharingRequest() {
         ToolSharingRequestList sharingRequestList = null;
 
-        GWT.log("perm panel->" + permissionsPanel);
-
         FastMap<List<Sharing>> sharingMap = permissionsPanel.getSharingMap();
 
         if (sharingMap != null && sharingMap.size() > 0) {
@@ -222,10 +219,8 @@ public class ToolSharingPresenterImpl implements ToolSharingPresenter {
 
             for (String userName : sharingMap.keySet()) {
                 ToolSharingRequest sharingRequest = sharingAutoBeanFactory.toolSharingRequest().as();
-                SharingSubject sharingSubject = sharingAutoBeanFactory.getSharingSubject().as();
                 List<Sharing> shareList = sharingMap.get(userName);
-                sharingSubject.setSourceId(getSourceId(shareList));
-                sharingSubject.setId(userName);
+                SharingSubject sharingSubject = buildSharingSubject(userName, shareList);
                 sharingRequest.setSubject(sharingSubject);
                 sharingRequest.setToolPermissions(buildShareToolPermissionList(shareList));
                 requests.add(sharingRequest);
@@ -236,6 +231,13 @@ public class ToolSharingPresenterImpl implements ToolSharingPresenter {
         }
 
         return sharingRequestList;
+    }
+
+    private SharingSubject buildSharingSubject(String userName, List<Sharing> shareList) {
+        SharingSubject sharingSubject = sharingAutoBeanFactory.getSharingSubject().as();
+        sharingSubject.setSourceId(getSourceId(shareList));
+        sharingSubject.setId(userName);
+        return sharingSubject;
     }
 
     private ToolUnSharingRequestList buildUnSharingRequest() {
@@ -251,9 +253,7 @@ public class ToolSharingPresenterImpl implements ToolSharingPresenter {
 
                 ToolUnsharingRequest unsharingRequest =
                         sharingAutoBeanFactory.toolUnSharingRequest().as();
-                SharingSubject sharingSubject = sharingAutoBeanFactory.getSharingSubject().as();
-                sharingSubject.setId(userName);
-                sharingSubject.setSourceId(getSourceId(shareList));
+                SharingSubject sharingSubject = buildSharingSubject(userName, shareList);
                 unsharingRequest.setSubject(sharingSubject);
                 unsharingRequest.setTools(buildUnshareToolPermissionList(shareList));
                 requests.add(unsharingRequest);

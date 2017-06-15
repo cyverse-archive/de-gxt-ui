@@ -14,7 +14,6 @@ import org.iplantc.de.tools.shared.ToolsModule;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -54,15 +53,6 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
     private static final NewToolRequestFormViewUiBinder uiBinder =
             GWT.create(NewToolRequestFormViewUiBinder.class);
     private final IplantValidationConstants validationConstants;
-
-    private static SafeHtml buildRequiredFieldLabel(final String label) {
-        if (label == null) {
-            return null;
-        }
-
-        return SafeHtmlUtils.fromTrustedString(
-                "<span style='color:red; top:-5px;' >*</span> " + label); //$NON-NLS-1$
-    }
 
     @UiField
     VerticalLayoutContainer container;
@@ -178,13 +168,13 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
     }
 
     private void initRequiredLabels() {
-        toolNameLbl.setHTML(buildRequiredFieldLabel(I18N.DISPLAY.toolNameLabel()));
-        toolDescLbl.setHTML(buildRequiredFieldLabel(I18N.DISPLAY.toolDesc()));
-        srcLbl.setHTML(buildRequiredFieldLabel(I18N.DISPLAY.srcLinkPrompt()));
-        docUrlLbl.setHTML(buildRequiredFieldLabel(I18N.DISPLAY.docLink()));
-        versionLbl.setHTML(buildRequiredFieldLabel(I18N.DISPLAY.version()));
-        cmdLineLbl.setHTML(buildRequiredFieldLabel(I18N.DISPLAY.cmdLineRun()));
-        testLbl.setHTML(buildRequiredFieldLabel((I18N.DISPLAY.upldTestData())));
+        toolNameLbl.setHTML(appearance.buildRequiredFieldLabel(I18N.DISPLAY.toolNameLabel()));
+        toolDescLbl.setHTML(appearance.buildRequiredFieldLabel(I18N.DISPLAY.toolDesc()));
+        srcLbl.setHTML(appearance.buildRequiredFieldLabel(I18N.DISPLAY.srcLinkPrompt()));
+        docUrlLbl.setHTML(appearance.buildRequiredFieldLabel(I18N.DISPLAY.docLink()));
+        versionLbl.setHTML(appearance.buildRequiredFieldLabel(I18N.DISPLAY.version()));
+        cmdLineLbl.setHTML(appearance.buildRequiredFieldLabel(I18N.DISPLAY.cmdLineRun()));
+        testLbl.setHTML(appearance.buildRequiredFieldLabel((I18N.DISPLAY.upldTestData())));
     }
 
     private void initValidators() {

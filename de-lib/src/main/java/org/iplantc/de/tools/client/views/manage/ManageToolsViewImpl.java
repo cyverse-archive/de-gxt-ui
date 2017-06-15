@@ -22,7 +22,6 @@ import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
-import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
@@ -32,7 +31,6 @@ import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 
 import java.util.Arrays;
 import java.util.List;
-import javax.ws.rs.HEAD;
 
 /**
  * Created by sriram on 4/21/17.
@@ -81,12 +79,8 @@ public class ManageToolsViewImpl extends Composite implements ManageToolsView {
         this.properties = properties;
         uiBinder.createAndBindUi(this);
         grid.getSelectionModel().setSelectionMode(Style.SelectionMode.MULTI);
-        grid.getSelectionModel().addSelectionChangedHandler(new SelectionChangedEvent.SelectionChangedHandler<Tool>() {
-            @Override
-            public void onSelectionChanged(SelectionChangedEvent<Tool> event) {
-                fireEvent(new ToolSelectionChangedEvent(event.getSelection()));
-            }
-        });
+
+        grid.getSelectionModel().addSelectionChangedHandler(event -> fireEvent(new ToolSelectionChangedEvent(event.getSelection())));
     }
 
     @Override
@@ -97,12 +91,7 @@ public class ManageToolsViewImpl extends Composite implements ManageToolsView {
 
     @UiFactory
     ListStore<Tool> buildListStore() {
-        return new ListStore<>(new ModelKeyProvider<Tool>() {
-            @Override
-            public String getKey(Tool item) {
-                return item.getId();
-            }
-        });
+        return new ListStore<>(item -> item.getId());
     }
 
     @UiFactory

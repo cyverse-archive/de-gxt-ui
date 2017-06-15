@@ -16,7 +16,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.data.shared.ListStore;
-import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.widget.core.client.FramedPanel;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
@@ -88,13 +87,7 @@ public class ToolSharingViewImpl implements ToolSharingView {
 
     @UiFactory
     public ListStore<Tool> buildToolStore() {
-        ListStore<Tool> toolListStore = new ListStore<>(new ModelKeyProvider<Tool>() {
-
-            @Override
-            public String getKey(Tool item) {
-                return item.getId();
-            }
-        });
+        ListStore<Tool> toolListStore = new ListStore<>(item -> item.getId());
         return toolListStore;
     }
 

@@ -10,7 +10,6 @@ import org.iplantc.de.tools.client.gin.factory.NewToolRequestFormPresenterFactor
 import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
 import org.iplantc.de.tools.shared.ToolsModule;
 
-import com.google.gwt.user.client.Command;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -36,12 +35,8 @@ public class NewToolRequestDialog extends IPlantDialog {
         setPredefinedButtons(PredefinedButton.OK, PredefinedButton.CANCEL);
         setHideOnButtonClick(false);
         setOkButtonText(I18N.DISPLAY.submit());
-        presenter = presenterFactory.createPresenter(new Command() {
-            @Override
-            public void execute() {
-                hide();
-
-            }
+        presenter = presenterFactory.createPresenter(() -> {
+            hide();
         });
         presenter.go(this);
         addOkButtonSelectHandler(new SelectHandler() {

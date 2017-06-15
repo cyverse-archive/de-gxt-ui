@@ -159,6 +159,26 @@ public class ManageToolsViewDefaultAppearance implements ManageToolsToolbarView.
     }
 
     @Override
+    public int sharingDialogWidth() {
+        return 600;
+    }
+
+    @Override
+    public int sharingDialogHeight() {
+        return 500;
+    }
+
+    @Override
+    public String manageSharing() {
+        return toolMessages.manageSharing();
+    }
+
+    @Override
+    public String done() {
+        return toolMessages.done();
+    }
+
+    @Override
     public String submitForPublicUse() {
         return toolMessages.submitForUse();
     }

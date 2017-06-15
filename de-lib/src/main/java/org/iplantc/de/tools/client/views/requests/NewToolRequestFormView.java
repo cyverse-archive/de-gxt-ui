@@ -3,6 +3,7 @@ package org.iplantc.de.tools.client.views.requests;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.diskResource.client.views.widgets.FileSelectorField;
 
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import com.sencha.gxt.widget.core.client.form.IsField;
@@ -25,6 +26,8 @@ public interface NewToolRequestFormView extends IsWidget {
         String newToolInstruction();
 
         String makePublicInstruction();
+
+        SafeHtml buildRequiredFieldLabel(String label);
     }
 
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
