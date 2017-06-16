@@ -60,7 +60,7 @@ public interface GroupView extends IsWidget,
 
         int groupDetailsHeight();
 
-        String groupDetailsHeading(Group group);
+        String groupDetailsHeading(Subject subject);
 
         String completeRequiredFieldsError();
 

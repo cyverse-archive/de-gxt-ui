@@ -57,11 +57,21 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     }
 
     @Override
-    public void go(HasOneWidget container, Group group, GroupDetailsView.MODE mode) {
+    public void go(HasOneWidget container, Subject subject, GroupDetailsView.MODE mode) {
         this.mode = mode;
         container.setWidget(view);
+        Group group = convertSubjectToGroup(subject);
 
         getGroupMembers(group);
+    }
+
+    Group convertSubjectToGroup(Subject subject) {
+        Group group = factory.getGroup().as();
+        group.setId(subject.getId());
+        group.setName(subject.getName());
+        group.setDescription(subject.getInstitution());
+
+        return group;
     }
 
     void getGroupMembers(Group group) {

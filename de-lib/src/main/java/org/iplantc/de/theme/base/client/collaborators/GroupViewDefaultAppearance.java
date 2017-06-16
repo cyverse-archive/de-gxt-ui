@@ -136,11 +136,11 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
     }
 
     @Override
-    public String groupDetailsHeading(Group group) {
-        if (group == null || Strings.isNullOrEmpty(group.getName())) {
+    public String groupDetailsHeading(Subject subject) {
+        if (subject == null || Strings.isNullOrEmpty(subject.getName())) {
             return displayStrings.newGroupDetailsHeading();
         } else {
-            return displayStrings.editGroupDetailsHeading(group.getName());
+            return displayStrings.editGroupDetailsHeading(subject.getName());
         }
     }
 

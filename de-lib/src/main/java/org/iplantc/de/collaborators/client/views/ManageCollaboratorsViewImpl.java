@@ -292,7 +292,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
 
     @Override
     public HandlerRegistration addGroupNameSelectedHandler(GroupNameSelected.GroupNameSelectedHandler handler) {
-        return groupView.addGroupNameSelectedHandler(handler);
+        return ((CollaboratorsColumnModel)cm).addGroupNameSelectedHandler(handler);
     }
 
     @Override

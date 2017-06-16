@@ -1,6 +1,6 @@
 package org.iplantc.de.collaborators.client.views.dialogs;
 
-import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.collaborators.client.GroupDetailsView;
 import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.events.GroupSaved;
@@ -61,7 +61,7 @@ public class GroupDetailsDialog extends IPlantDialog implements GroupSaved.HasGr
      * Used for displaying GroupDetailsView to edit an existing Group
      * @param group
      */
-    public void show(Group group) {
+    public void show(Subject group) {
         presenter.go(this, group, mode);
         setHeading(appearance.groupDetailsHeading(group));
         super.show();

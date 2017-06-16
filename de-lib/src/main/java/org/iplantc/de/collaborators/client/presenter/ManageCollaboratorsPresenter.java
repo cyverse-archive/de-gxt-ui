@@ -371,14 +371,14 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     @Override
     public void onGroupNameSelected(GroupNameSelected event) {
-        Group group = event.getGroup();
+        Subject subject = event.getSubject();
         groupDetailsDialog.get(new AsyncCallback<GroupDetailsDialog>() {
             @Override
             public void onFailure(Throwable caught) {}
 
             @Override
             public void onSuccess(GroupDetailsDialog result) {
-                result.show(group);
+                result.show(subject);
                 result.addGroupSavedHandler(new GroupSaved.GroupSavedHandler() {
                     @Override
                     public void onGroupSaved(GroupSaved event) {

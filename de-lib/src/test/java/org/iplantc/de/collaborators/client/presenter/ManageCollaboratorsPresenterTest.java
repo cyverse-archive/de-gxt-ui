@@ -268,7 +268,7 @@ public class ManageCollaboratorsPresenterTest {
     @Test
     public void onGroupNameSelected() {
         GroupNameSelected eventMock = mock(GroupNameSelected.class);
-        when(eventMock.getGroup()).thenReturn(groupMock);
+        when(eventMock.getSubject()).thenReturn(groupMock);
 
         /** CALL METHOD UNDER TEST **/
         uut.onGroupNameSelected(eventMock);
