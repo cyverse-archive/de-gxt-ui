@@ -11,6 +11,7 @@ import org.iplantc.de.collaborators.client.models.SubjectKeyProvider;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.client.views.cells.SubjectNameCell;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
+import org.iplantc.de.commons.client.validators.GroupNameValidator;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;
@@ -84,6 +85,7 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
         initWidget(uiBinder.createAndBindUi(this));
 
         groupNameLabel.setHTML(appearance.groupNameLabel());
+        nameEditor.addValidator(new GroupNameValidator());
 
         searchField.addUserSearchResultSelectedEventHandler(this);
         checkBoxModel.setSelectionMode(Style.SelectionMode.MULTI);

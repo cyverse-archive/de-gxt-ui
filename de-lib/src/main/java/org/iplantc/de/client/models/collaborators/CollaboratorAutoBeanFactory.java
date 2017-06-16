@@ -12,14 +12,10 @@ import com.google.web.bindery.autobean.shared.AutoBeanFactory;
  */
 public interface CollaboratorAutoBeanFactory extends AutoBeanFactory {
 
-    AutoBean<CollaboratorsList> getCollaboratorsList();
-
     AutoBean<SubjectList> getSubjectList();
 
     AutoBean<Subject> getSubject();
 
     AutoBean<SubjectMemberList> getSubjectMemberList();
-
-    AutoBean<OldCollaborator> getOldCollaborator();
 
 }

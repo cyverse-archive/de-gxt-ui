@@ -30,4 +30,6 @@ public interface SharingMessages extends Messages {
     String whoHasAccess();
 
     String groupByUser();
+
+    String groupSharingNotSupported();
 }

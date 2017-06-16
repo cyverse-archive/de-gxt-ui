@@ -16,7 +16,6 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -38,7 +37,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     private GroupView.GroupViewAppearance appearance;
     private HandlerManager handlerManager;
     GroupDetailsView.MODE mode;
-    String originalGroup;
+    Group originalGroup;
 
     @Inject IplantAnnouncer announcer;
     @Inject UserInfo userInfo;
@@ -67,7 +66,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
 
     void getGroupMembers(Group group) {
         if (GroupDetailsView.MODE.EDIT == mode) {
-            this.originalGroup = group.getName();
+            this.originalGroup = getGroupCopy(group);
             view.mask(appearance.loadingMask());
             serviceFacade.getMembers(group, new AsyncCallback<List<Subject>>() {
                 @Override
@@ -86,6 +85,13 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
             group = factory.getGroup().as();
         }
         view.edit(group, mode);
+    }
+
+    Group getGroupCopy(Group group) {
+        Group copy = factory.getGroup().as();
+        copy.setName(group.getName());
+        copy.setDescription(group.getDescription());
+        return copy;
     }
 
     @Override
@@ -131,7 +137,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     }
 
     void updateGroup(Group group) {
-        serviceFacade.updateGroup(originalGroup, group, new AsyncCallback<Group>() {
+        serviceFacade.updateGroup(originalGroup.getName(), group, new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
@@ -170,10 +176,9 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
 
     @Override
     public void onAddGroupMemberSelected(AddGroupMemberSelected event) {
-        Group group = event.getGroup();
         Subject subject = event.getSubject();
 
-        if (group != null && !Strings.isNullOrEmpty(group.getName()) && subject != null) {
+        if (subject != null) {
             if (isAddingSelf(subject)) {
                 announcer.schedule(new ErrorAnnouncementConfig(appearance.collaboratorsSelfAdd()));
                 view.unmask();
@@ -185,7 +190,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
                 return;
             }
             view.mask(appearance.loadingMask());
-            serviceFacade.addMembers(group, wrapSubjectInList(subject), new AsyncCallback<List<UpdateMemberResult>>() {
+            serviceFacade.addMembers(originalGroup, wrapSubjectInList(subject), new AsyncCallback<List<UpdateMemberResult>>() {
                 @Override
                 public void onFailure(Throwable caught) {
                     ErrorHandler.post(caught);
@@ -208,7 +213,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
 
     boolean isAddingCurrentGroup(Subject subject) {
         if (Subject.GROUP_IDENTIFIER.equals(subject.getSourceId())) {
-            return originalGroup.equals(subject.getSubjectDisplayName());
+            return originalGroup.getName().equals(subject.getSubjectDisplayName());
         }
         return false;
     }

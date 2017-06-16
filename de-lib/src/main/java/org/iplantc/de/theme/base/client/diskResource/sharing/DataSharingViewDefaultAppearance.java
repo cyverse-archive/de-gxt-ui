@@ -209,4 +209,9 @@ public class DataSharingViewDefaultAppearance implements SharingAppearance {
     public String selectFilesFolders() {
         return sharingMessages.selectFilesFolders();
     }
+
+    @Override
+    public String groupSharingNotSupported() {
+        return sharingMessages.groupSharingNotSupported();
+    }
 }

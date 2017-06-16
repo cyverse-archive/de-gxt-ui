@@ -99,7 +99,7 @@ public class GroupDetailsPresenterImplTest {
             }
         };
         uut.announcer = announcerMock;
-        uut.originalGroup = "original";
+        uut.originalGroup = groupMock;
         uut.userInfo = userInfoMock;
     }
 
@@ -201,6 +201,7 @@ public class GroupDetailsPresenterImplTest {
     @Test
     public void updateGroup() {
         when(viewMock.getMembers()).thenReturn(subjectListMock);
+        when(groupMock.getName()).thenReturn("original");
         GroupDetailsPresenterImpl spy = Mockito.spy(uut);
 
         /** CALL METHOD UNDER TEST **/

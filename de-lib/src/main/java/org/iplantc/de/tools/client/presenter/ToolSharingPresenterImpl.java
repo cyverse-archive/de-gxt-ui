@@ -210,6 +210,11 @@ public class ToolSharingPresenterImpl implements ToolSharingPresenter {
         permissionsPanel.asWidget().ensureDebugId(debugId + ToolsModule.ToolIds.SHARING_VIEW + ToolsModule.ToolIds.SHARING_PERMS);
     }
 
+    @Override
+    public boolean canShareWithGroup() {
+        return true;
+    }
+
     private ToolSharingRequestList buildSharingRequest() {
         ToolSharingRequestList sharingRequestList = null;
 

@@ -68,4 +68,6 @@ public interface SharingAppearance {
     String whoHasAccess();
 
     String selectFilesFolders();
+
+    String groupSharingNotSupported();
 }

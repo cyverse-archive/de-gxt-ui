@@ -2,6 +2,7 @@ package org.iplantc.de.commons.client.views.sharing;
 
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Subject;
+import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
@@ -10,6 +11,8 @@ import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.client.views.dialogs.ManageCollaboratorsDialog;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.presenter.SharingPresenter;
 import org.iplantc.de.commons.share.CommonsModule;
 import org.iplantc.de.diskResource.client.model.DataSharingKeyProvider;
@@ -82,6 +85,7 @@ public class SharingPermissionsPanel extends Composite
     private final SharingPresenter presenter;
     private FastMap<List<Sharing>> sharingMap;
 
+    @Inject IplantAnnouncer announcer;
     @Inject AsyncProviderWrapper<ManageCollaboratorsDialog> collaboratorsDialogProvider;
 
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
@@ -208,6 +212,13 @@ public class SharingPermissionsPanel extends Composite
                     new AlertMessageBox(appearance.warning(), appearance.selfShareWarning());
             amb.show();
             return;
+        }
+
+        if (Group.GROUP_IDENTIFIER.equals(user.getSourceId())) {
+            if (!presenter.canShareWithGroup()) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.groupSharingNotSupported()));
+                return;
+            }
         }
 
         // Only add users not already displayed in the grid.

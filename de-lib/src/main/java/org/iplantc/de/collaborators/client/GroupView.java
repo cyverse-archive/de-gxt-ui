@@ -93,6 +93,10 @@ public interface GroupView extends IsWidget,
         String addCollabErrorMsg();
 
         String memberAddToGroupsSuccess(Subject subject);
+
+        String groupNameValidationMsg(String restrictedChars);
+
+        String invalidChars(String restrictedChar);
     }
 
     /**

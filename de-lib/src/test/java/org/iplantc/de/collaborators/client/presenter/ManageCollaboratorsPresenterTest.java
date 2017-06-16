@@ -158,7 +158,7 @@ public class ManageCollaboratorsPresenterTest {
         verify(factoryMock).create(eq(ManageCollaboratorsView.MODE.MANAGE));
         verify(viewMock).addRemoveCollaboratorSelectedHandler(eq(spy));
         verify(spy).loadCurrentCollaborators();
-        verify(spy).updateListView();
+//        verify(spy).updateListView();
         verify(spy).addEventHandlers();
         verify(viewMock).addDeleteGroupSelectedHandler(eq(spy));
         verify(containerMock).setWidget(eq(viewWidgetMock));

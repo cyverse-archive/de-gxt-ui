@@ -212,6 +212,11 @@ public class DataSharingPresenterImpl implements SharingPresenter {
         permissionsPanel.asWidget().ensureDebugId(debugId + DiskResourceModule.Ids.SHARING_VIEW + DiskResourceModule.Ids.SHARING_PERMS);
     }
 
+    @Override
+    public boolean canShareWithGroup() {
+        return false;
+    }
+
     private List<DataPermission> buildShareDataPermissionList(List<Sharing> shareList) {
         List<DataPermission> dataPermList = new ArrayList<>();
 
