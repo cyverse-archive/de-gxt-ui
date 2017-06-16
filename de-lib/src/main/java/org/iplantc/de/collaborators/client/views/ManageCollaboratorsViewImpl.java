@@ -60,6 +60,8 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @UiField ListStore<Subject> listStore;
     @UiField BorderLayoutContainer con;
     @UiField TextButton deleteBtn;
+    @UiField TextButton addGroup;
+    @UiField TextButton deleteGroup;
     @UiField Grid<Subject> grid;
     @UiField TextButton manageBtn;
     @UiField(provided = true) UserSearchField searchField;
@@ -225,6 +227,8 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
         super.onEnsureDebugId(baseID);
         this.baseID = baseID;
         deleteBtn.ensureDebugId(baseID + CollaboratorsModule.Ids.DELETE);
+        addGroup.ensureDebugId(baseID + CollaboratorsModule.Ids.ADD_GROUP);
+        deleteGroup.ensureDebugId(baseID + CollaboratorsModule.Ids.DELETE_GROUP);
         //Checkbox column config is at index 0
         grid.getView().getHeader().getHead(0).getElement().setId(baseID + CollaboratorsModule.Ids.CHECKBOX_HEADER);
         searchField.setViewDebugId(CollaboratorsModule.Ids.SEARCH_LIST);
@@ -252,6 +256,16 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
         fireEvent(new RemoveCollaboratorSelected(grid.getSelectionModel().getSelectedItems()));
     }
 
+    @UiHandler("addGroup")
+    void addGroupSelected(SelectEvent event) {
+        fireEvent(new AddGroupSelected());
+    }
+
+    @UiHandler("deleteGroup")
+    void deleteGroupSelected(SelectEvent event) {
+//        fireEvent(new DeleteGroupSelected(grid.getSelectionModel().getSelectedItem()));
+    }
+
     @UiHandler("manageBtn")
     void manageCollaborators(SelectEvent event) {
         setMode(MODE.MANAGE);
@@ -268,12 +282,12 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
 
     @Override
     public HandlerRegistration addDeleteGroupSelectedHandler(DeleteGroupSelected.DeleteGroupSelectedHandler handler) {
-        return groupView.addDeleteGroupSelectedHandler(handler);
+        return addHandler(handler, DeleteGroupSelected.TYPE);
     }
 
     @Override
     public HandlerRegistration addAddGroupSelectedHandler(AddGroupSelected.AddGroupSelectedHandler handler) {
-        return groupView.addAddGroupSelectedHandler(handler);
+        return addHandler(handler, AddGroupSelected.TYPE);
     }
 
     @Override
