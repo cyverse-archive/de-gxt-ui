@@ -291,7 +291,7 @@ public interface DiskResourceServiceFacade {
      * @param diskResourcePaths the paths to query
      * @param callback callback object
      */
-    void shareWithAnonymous(final HasPaths diskResourcePaths, final DECallback<String> callback);
+    void shareWithAnonymous(final HasPaths diskResourcePaths, final DECallback<List<String>> callback);
 
     /**
      * Copy metadata to list of files / folders

@@ -172,9 +172,14 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
 
     @Override
     public void onRequestSendToEnsembl(RequestSendToEnsemblEvent event) {
-        checkNotNull(event.getFile());
-        showFile(event.getFile());
-        new EnsemblUtil(event.getFile(), event.getInfoType().toString(), null).sendToEnsembl(diskResourceServiceFacade);
+        final List<DiskResource> resourcesToSend = event.getResourcesToSend();
+
+        checkNotNull(resourcesToSend);
+        if (resourcesToSend.size() == 1) {
+            showFile((File)resourcesToSend.iterator().next());
+        }
+
+        new EnsemblUtil(resourcesToSend, null).sendToEnsembl(diskResourceServiceFacade);
     }
 
     @Override

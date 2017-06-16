@@ -41,6 +41,7 @@ import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.grid.GridView;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -190,8 +191,7 @@ public class ExternalVisualizationURLViewerImpl extends AbstractFileViewer imple
             @Override
             public void onSelect(SelectEvent event) {
                 mask(appearance.sendToEnsemblLoadingMask());
-                EnsemblUtil util = new EnsemblUtil(file,
-                                                   infoType,
+                EnsemblUtil util = new EnsemblUtil(Collections.singletonList(file),
                                                    ExternalVisualizationURLViewerImpl.this);
                 util.sendToEnsembl(diskResourceServiceFacade);
             }

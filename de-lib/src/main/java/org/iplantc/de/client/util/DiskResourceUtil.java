@@ -413,6 +413,10 @@ public class DiskResourceUtil {
                 || InfoType.BIGBED.equals(infoType) || InfoType.BIGWIG.equals(infoType);
     }
 
+    public boolean isGenomeIndexFile(String path) {
+        return path != null && (path.endsWith(".bai") || path.endsWith(".tbi"));
+    }
+
     private String getInfoType(Splittable obj) {
         if (obj == null)
             return null;

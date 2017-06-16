@@ -969,11 +969,31 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
     }
 
     @Override
-    public void shareWithAnonymous(HasPaths diskResourcePaths, DECallback<String> callback) {
+    public void shareWithAnonymous(final HasPaths diskResourcePaths, DECallback<List<String>> callback) {
         String address = deProperties.getDataMgmtBaseUrl() + "anon-files"; //$NON-NLS-1$
         final String body = encode(diskResourcePaths);
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, body);
-        callService(wrapper, callback);
+
+        callService(wrapper, new DECallbackConverter<String, List<String>>(callback) {
+            @Override
+            protected List<String> convertFrom(final String json) {
+                Splittable obj = StringQuoter.split(json);
+                Splittable pathSplittable = obj.get("paths");
+
+                List<String> urlList = Lists.newArrayList();
+                for (String path : diskResourcePaths.getPaths()) {
+                    Splittable url = pathSplittable.get(path);
+                    if (url != null) {
+                        urlList.add(url.asString());
+                    }
+                }
+
+                urlList.sort(String::compareToIgnoreCase);
+
+                return urlList;
+            }
+
+        });
     }
 
     @Override

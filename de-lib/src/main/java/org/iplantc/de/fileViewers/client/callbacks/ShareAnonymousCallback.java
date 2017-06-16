@@ -1,29 +1,31 @@
 package org.iplantc.de.fileViewers.client.callbacks;
 
 import org.iplantc.de.client.models.IsMaskable;
-import org.iplantc.de.client.models.diskResources.File;
-import org.iplantc.de.client.util.JsonUtil;
+import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.commons.client.widgets.ContextualHelpPopup;
 import org.iplantc.de.shared.DataCallback;
 
+import com.google.common.base.Joiner;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextArea;
 
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.FormPanel.LabelAlign;
-import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.tips.QuickTip;
 
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class ShareAnonymousCallback extends DataCallback<String> {
+
+public class ShareAnonymousCallback extends DataCallback<List<String>> {
 
     public interface ShareAnonymousCallbackAppearance {
 
@@ -40,15 +42,13 @@ public class ShareAnonymousCallback extends DataCallback<String> {
     }
 
     private final IsMaskable container;
-    private final File file;
-    private final JsonUtil jsonUtil;
+    private final DiskResourceUtil diskResourceUtil;
     private final ShareAnonymousCallbackAppearance appearance =
             GWT.create(ShareAnonymousCallbackAppearance.class);
 
-    public ShareAnonymousCallback(final File file, final IsMaskable container) {
+    public ShareAnonymousCallback(final IsMaskable container, final DiskResourceUtil diskResourceUtil) {
         this.container = container;
-        this.file = file;
-        this.jsonUtil = JsonUtil.getInstance();
+        this.diskResourceUtil = diskResourceUtil;
     }
 
     @Override
@@ -60,17 +60,18 @@ public class ShareAnonymousCallback extends DataCallback<String> {
     }
 
     @Override
-    public void onSuccess(String result) {
+    public void onSuccess(List<String> urls) {
         if (container != null) {
             container.unmask();
         }
-        JSONObject obj = jsonUtil.getObject(result);
-        JSONObject paths = jsonUtil.getObject(obj, "paths");
-        showShareLink(jsonUtil.getString(paths, file.getPath()));
+
+        showShareLink(urls.stream()
+                          .filter(path -> !diskResourceUtil.isGenomeIndexFile(path))
+                          .collect(Collectors.toList()));
     }
 
 
-    private void showShareLink(String linkId) {
+    private void showShareLink(List<String> linkIds) {
         // Open dialog window with text selected.
         IPlantDialog dlg = new IPlantDialog(true);
         dlg.setHeading(appearance.sendToEnsemblMenuItem());
@@ -78,14 +79,14 @@ public class ShareAnonymousCallback extends DataCallback<String> {
 
         dlg.setHideOnButtonClick(true);
         dlg.setResizable(false);
-        dlg.setSize("535", "175");
+        dlg.setSize("640", "320");
 
         FieldLabel fl = new FieldLabel();
         fl.setHTML(SafeHtmlUtils.fromTrustedString(appearance.ensemblUrl()));
-        TextField textBox = new TextField();
-        textBox.setWidth(500);
+        TextArea textBox = new TextArea();
+        textBox.setPixelSize(600, 180);
         textBox.setReadOnly(true);
-        textBox.setValue(linkId);
+        textBox.setValue(Joiner.on('\n').join(linkIds));
         fl.setWidget(textBox);
         fl.setLabelAlign(LabelAlign.TOP);
 
@@ -100,7 +101,7 @@ public class ShareAnonymousCallback extends DataCallback<String> {
         notification.setHTML(appearance.notificationWithContextHelp());
         new QuickTip(notification);
 
-        notification.setWidth(500);
+        notification.setWidth(600);
         container.add(notification);
         dlg.setWidget(container);
         dlg.setFocusWidget(textBox);
@@ -110,7 +111,7 @@ public class ShareAnonymousCallback extends DataCallback<String> {
 
     private void attachHelp(final IPlantDialog dlg) {
         final ContextualHelpPopup popup = new ContextualHelpPopup();
-        popup.setWidth(450);
+        popup.setWidth(480);
         popup.add(new HTML(appearance.sendToEnsemblUrlHelp()));
         dlg.getHelpToolButton().addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
