@@ -41,7 +41,7 @@ public class SharingPermissionNameCellDefaultAppearance implements SharingPermis
     @Override
     public void render(SafeHtmlBuilder safeHtmlBuilder, Sharing sharing, String debugID) {
         String subjectName = sharing.getSubject().getSubjectDisplayName();
-        if (sharing.getSourceId().equals(Subject.GROUP_IDENTIFIER)) {
+        if (Subject.GROUP_IDENTIFIER.equals(sharing.getSourceId())) {
             safeHtmlBuilder.append(templates.group(iplantResources.viewCurrentCollabs().getSafeUri(), subjectName, debugID));
         } else {
             safeHtmlBuilder.append(templates.subject(subjectName, debugID));
