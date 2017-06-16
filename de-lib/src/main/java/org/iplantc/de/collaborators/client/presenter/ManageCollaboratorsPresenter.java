@@ -122,7 +122,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         this.view = factory.create(mode);
         view.addRemoveCollaboratorSelectedHandler(this);
         loadCurrentCollaborators();
-//        updateListView();
+        getGroups();
         addEventHandlers();
         container.setWidget(view.asWidget());
     }
@@ -213,9 +213,8 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     @Override
-    public void updateListView() {
-        view.maskCollabLists(groupAppearance.loadingMask());
-        groupServiceFacade.getGroups(new AsyncCallback<List<Group>>() {
+    public void getGroups() {
+        groupServiceFacade.getGroups(new AsyncCallback<List<Subject>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
@@ -223,17 +222,17 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
             }
 
             @Override
-            public void onSuccess(List<Group> result) {
-                List<Group> filteredGroups = excludeDefaultGroup(result);
-                view.addCollabLists(filteredGroups);
+            public void onSuccess(List<Subject> result) {
+                List<Subject> filteredGroups = excludeDefaultGroup(result);
+                view.addCollaborators(filteredGroups);
                 view.unmaskCollabLists();
             }
         });
     }
 
-    List<Group> excludeDefaultGroup(List<Group> result) {
+    List<Subject> excludeDefaultGroup(List<Subject> result) {
         return result.stream()
-                     .filter(group -> !Group.DEFAULT_GROUP.equals(group.getName()))
+                     .filter(subject -> !Group.DEFAULT_GROUP.equals(subject.getName()))
                      .collect(Collectors.toList());
     }
 
@@ -289,7 +288,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
             public void onSuccess(List<Subject> result) {
                 view.unmaskCollaborators();
                 if (result != null && !result.isEmpty()) {
-                    view.loadData(result);
+                    view.addCollaborators(result);
                 }
                 eventBus.fireEvent(new CollaboratorsLoadedEvent());
             }

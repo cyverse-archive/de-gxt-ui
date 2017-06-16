@@ -9,13 +9,13 @@ import org.iplantc.de.client.models.collaborators.CollaboratorAutoBeanFactory;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
-import org.iplantc.de.client.models.groups.GroupList;
 import org.iplantc.de.client.models.groups.UpdateMemberRequest;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.models.groups.UpdateMemberResultList;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.GroupCallbackConverter;
+import org.iplantc.de.client.services.converters.GroupListToSubjectListCallbackConverter;
 import org.iplantc.de.client.services.converters.SubjectMemberListCallbackConverter;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
@@ -53,17 +53,11 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void getGroups(AsyncCallback<List<Group>> callback) {
+    public void getGroups(AsyncCallback<List<Subject>> callback) {
         String address = LISTS;
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        deService.getServiceData(wrapper, new AsyncCallbackConverter<String, List<Group>>(callback) {
-            @Override
-            protected List<Group> convertFrom(String object) {
-                AutoBean<GroupList> decode = AutoBeanCodex.decode(factory, GroupList.class, object);
-                return decode.as().getGroups();
-            }
-        });
+        deService.getServiceData(wrapper, new GroupListToSubjectListCallbackConverter(callback, factory));
     }
 
     @Override

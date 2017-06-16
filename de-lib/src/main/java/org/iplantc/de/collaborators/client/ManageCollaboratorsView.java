@@ -85,7 +85,7 @@ public interface ManageCollaboratorsView extends IsWidget,
         /**
          * Fetch the list of all Collaborator Lists for this user
          */
-        void updateListView();
+        void getGroups();
 
         /**
          * Fetch the list of current collaborators

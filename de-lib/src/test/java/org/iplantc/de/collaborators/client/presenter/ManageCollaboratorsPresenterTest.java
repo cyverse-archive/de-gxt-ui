@@ -88,7 +88,7 @@ public class ManageCollaboratorsPresenterTest {
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> collabListCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<Group>> groupCallbackCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<List<Group>>> groupListCallbackCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> subjectListCallbackConverter;
     @Captor ArgumentCaptor<AsyncCallback<GroupDetailsDialog>> groupDetailsDialogCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<UpdateMemberResult>>> updateMemberCaptor;
     @Captor ArgumentCaptor<Consumer<Group>> groupConsumerCaptor;
@@ -157,7 +157,7 @@ public class ManageCollaboratorsPresenterTest {
         verify(factoryMock).create(eq(ManageCollaboratorsView.MODE.MANAGE));
         verify(viewMock).addRemoveCollaboratorSelectedHandler(eq(spy));
         verify(spy).loadCurrentCollaborators();
-//        verify(spy).updateListView();
+        verify(spy).getGroups();
         verify(spy).addEventHandlers();
         verify(viewMock).addDeleteGroupSelectedHandler(eq(spy));
         verify(containerMock).setWidget(eq(viewWidgetMock));
@@ -186,11 +186,11 @@ public class ManageCollaboratorsPresenterTest {
         when(groupStreamMock.collect(any())).thenReturn(groupListMock);
 
         /** CALL METHOD UNDER TEST **/
-        uut.updateListView();
+        uut.getGroups();
 
-        verify(groupServiceFacadeMock).getGroups(groupListCallbackCaptor.capture());
+        verify(groupServiceFacadeMock).getGroups(subjectListCallbackConverter.capture());
 
-        groupListCallbackCaptor.getValue().onSuccess(groupListMock);
+        subjectListCallbackConverter.getValue().onSuccess(subjectListMock);
         verify(viewMock).addCollabLists(eq(groupListMock));
 
     }
