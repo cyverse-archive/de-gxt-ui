@@ -4,8 +4,8 @@ import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
 import org.iplantc.de.client.models.tool.ToolContainer;
 import org.iplantc.de.client.models.tool.ToolImage;
-import org.iplantc.de.tools.shared.ToolsModule;
 import org.iplantc.de.commons.client.validators.ImageNameValidator;
+import org.iplantc.de.tools.shared.ToolsModule;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -16,8 +16,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 import com.sencha.gxt.widget.core.client.FramedPanel;
 import com.sencha.gxt.widget.core.client.container.VBoxLayoutContainer;
@@ -119,7 +117,6 @@ public class EditToolViewImpl extends Composite implements EditToolView {
         List<IsField<?>> fields = FormPanelHelper.getFields(form);
         for (IsField<?> f : fields) {
             if (!f.isValid(false)) {
-                GWT.log(f.toString() + "-> " + f.getValue());
                 valid = false;
                 break;
             }
@@ -145,7 +142,6 @@ public class EditToolViewImpl extends Composite implements EditToolView {
         container.setImage(image);
         tool.setContainer(container);
 
-        GWT.log("json ->" + AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tool)).getPayload());
         return tool;
     }
 

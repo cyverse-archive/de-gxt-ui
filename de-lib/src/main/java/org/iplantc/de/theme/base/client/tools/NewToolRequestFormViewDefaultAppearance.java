@@ -3,6 +3,8 @@ package org.iplantc.de.theme.base.client.tools;
 import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 
 /**
  * Created by sriram on 5/25/17.
@@ -37,5 +39,15 @@ public class NewToolRequestFormViewDefaultAppearance implements NewToolRequestFo
     @Override
     public String makePublicInstruction() {
         return toolMessages.makePublicInstruction();
+    }
+
+    @Override
+    public SafeHtml buildRequiredFieldLabel(final String label) {
+        if (label == null) {
+            return null;
+        }
+
+        return SafeHtmlUtils.fromTrustedString(
+                "<span style='color:red; top:-5px;' >*</span> " + label); //$NON-NLS-1$
     }
 }

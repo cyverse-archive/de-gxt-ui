@@ -26,8 +26,6 @@ import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
-import com.sencha.gxt.widget.core.client.event.ViewReadyEvent;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
@@ -117,13 +115,9 @@ public class ToolRequestViewImpl extends Composite implements ToolRequestView, S
     @UiHandler("updateBtn")
     void onUpdateBtnClicked(SelectEvent event) {
         final UpdateToolRequestDialog updateToolRequestDialog = new UpdateToolRequestDialog(grid.getSelectionModel().getSelectedItem(), factory);
-        updateToolRequestDialog.addOkButtonSelectHandler(new SelectHandler() {
-
-            @Override
-            public void onSelect(SelectEvent event) {
-                ToolRequestUpdate tru = updateToolRequestDialog.getToolRequestUpdate();
-                presenter.updateToolRequest(grid.getSelectionModel().getSelectedItem().getId(), tru);
-            }
+        updateToolRequestDialog.addOkButtonSelectHandler(event1 -> {
+            ToolRequestUpdate tru = updateToolRequestDialog.getToolRequestUpdate();
+            presenter.updateToolRequest(grid.getSelectionModel().getSelectedItem().getId(), tru);
         });
         updateToolRequestDialog.setSize(appearance.updateToolRequestDlgWidth(), appearance.updateToolRequestDlgHeight());
         updateToolRequestDialog.show();
@@ -181,14 +175,9 @@ public class ToolRequestViewImpl extends Composite implements ToolRequestView, S
 
         updateBtn.ensureDebugId(baseID + Belphegor.ToolRequestIds.UPDATE);
         grid.ensureDebugId(baseID + Belphegor.ToolRequestIds.GRID);
-        grid.addViewReadyHandler(new ViewReadyEvent.ViewReadyHandler() {
-            @Override
-            public void onViewReady(ViewReadyEvent event) {
-                StaticIdHelper.getInstance()
-                              .gridColumnHeaders(baseID + Belphegor.ToolRequestIds.GRID
-                                                 + Belphegor.ToolRequestIds.COL_HEADER, grid);
-            }
-        });
+        grid.addViewReadyHandler(event -> StaticIdHelper.getInstance()
+                                                .gridColumnHeaders(baseID + Belphegor.ToolRequestIds.GRID
+                                         + Belphegor.ToolRequestIds.COL_HEADER, grid));
 
         detailsPanel.ensureDebugId(baseID + Belphegor.ToolRequestIds.DETAILS_PANEL);
 

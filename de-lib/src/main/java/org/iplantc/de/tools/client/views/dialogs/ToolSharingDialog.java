@@ -4,12 +4,12 @@
 
 package org.iplantc.de.tools.client.views.dialogs;
 
-import org.iplantc.de.tools.client.gin.factory.ToolSharingPresenterFactory;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
+import org.iplantc.de.tools.client.gin.factory.ToolSharingPresenterFactory;
+import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 import org.iplantc.de.tools.client.views.manage.ToolSharingPresenter;
 
-import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -21,17 +21,19 @@ public class ToolSharingDialog extends IPlantDialog {
 
     ToolSharingPresenter presenter;
     ToolSharingPresenterFactory factory;
+    ManageToolsView.ManageToolsViewAppearance appearance;
     
     @Inject
-    ToolSharingDialog(ToolSharingPresenterFactory factory) {
+    ToolSharingDialog(ToolSharingPresenterFactory factory, ManageToolsView.ManageToolsViewAppearance appearance) {
         super(false);
         this.factory = factory;
-        setPixelSize(600, 500);
+        this.appearance = appearance;
+        setPixelSize(appearance.sharingDialogWidth(), appearance.sharingDialogHeight());
         setHideOnButtonClick(true);
         setModal(true);
         setResizable(false);
-        setHeading("Manage Sharing");
-        setOkButtonText("Done");
+        setHeading(appearance.manageSharing());
+        setOkButtonText(appearance.done());
         getOkButton().addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
@@ -41,8 +43,6 @@ public class ToolSharingDialog extends IPlantDialog {
     }
 
     public void show(final List<Tool> resourcesToShare) {
-        GWT.log("size --> " + resourcesToShare.size());
-        GWT.log("sharing --> " + resourcesToShare.get(0).getName());
         presenter = factory.create(resourcesToShare);
         presenter.go(this);
         super.show();

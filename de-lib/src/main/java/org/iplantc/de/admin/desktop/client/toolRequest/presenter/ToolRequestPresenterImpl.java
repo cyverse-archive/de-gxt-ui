@@ -23,7 +23,6 @@ import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.data.shared.ListStore;
-import com.sencha.gxt.data.shared.ModelKeyProvider;
 
 import java.util.List;
 
@@ -122,12 +121,7 @@ public class ToolRequestPresenterImpl implements ToolRequestView.Presenter, Publ
 
     @Override
     public void onAdminMakeToolPublicSelected(AdminMakeToolPublicSelectedEvent event) {
-        adminView = adminFactory.create(new ListStore<>(new ModelKeyProvider<Tool>() {
-            @Override
-            public String getKey(Tool item) {
-                return item.getId();
-            }
-        }));
+        adminView = adminFactory.create(new ListStore<>(item -> item.getId()));
         adminView.addPublishToolEventHandler(this);
 
         getToolDetails(event);

@@ -7,7 +7,6 @@ import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 import org.iplantc.de.tools.shared.ToolsModule;
 
 import com.google.common.base.Strings;
-import com.google.gwt.user.client.Command;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -34,9 +33,13 @@ public class EditToolDialog extends IPlantDialog {
                Tool t = editToolView.getTool();
                if(Strings.isNullOrEmpty(t.getId())) {
                    t.setId(null); //remove id field from splittable
-                   presenter.addTool(t, new DialogCallbackCommand());
+                   presenter.addTool(t, () -> {
+                       EditToolDialog.this.hide();
+                   });
                } else {
-                   presenter.updateTool(t, new DialogCallbackCommand());
+                   presenter.updateTool(t, () -> {
+                       EditToolDialog.this.hide();
+                   });
                }
            }
        });
@@ -64,14 +67,6 @@ public class EditToolDialog extends IPlantDialog {
         throw new UnsupportedOperationException("Method not supported!");
     }
 
-    private class DialogCallbackCommand implements Command {
-
-        @Override
-        public void execute() {
-            EditToolDialog.this.hide();
-        }
-    }
-    
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);

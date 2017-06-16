@@ -41,7 +41,7 @@ public class ToolAdminServiceFacadeImpl implements ToolAdminServiceFacade {
 
     @Override
     public void getTools(String searchTerm, AsyncCallback<List<Tool>> callback) {
-        String address = TOOLS + "?search=" + URL.encodeQueryString(searchTerm);
+        String address = TOOLS_ADMIN + "?search=" + URL.encodeQueryString(searchTerm);
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new ToolListCallbackConverter(callback, factory));
@@ -49,7 +49,7 @@ public class ToolAdminServiceFacadeImpl implements ToolAdminServiceFacade {
 
     @Override
     public void getToolDetails(String toolId, AsyncCallback<Tool> callback) {
-        String address = TOOLS + "/" + toolId;
+        String address = TOOLS_ADMIN + "/" + toolId;
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new ToolCallbackConverter(callback, factory));

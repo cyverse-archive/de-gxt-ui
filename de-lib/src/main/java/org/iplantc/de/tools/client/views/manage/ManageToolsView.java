@@ -72,6 +72,14 @@ public interface ManageToolsView extends IsWidget,
         String editDialogHeight();
 
         String toolDeleted(String name);
+
+        int sharingDialogWidth();
+
+        int sharingDialogHeight();
+
+        String manageSharing();
+
+        String done();
     }
 
 

@@ -82,6 +82,10 @@ public interface ToolMessages extends Messages {
     String toolUpdated(String name);
 
     String toolDeleted(String name);
+
+    String manageSharing();
+
+    String done();
 }
         
     

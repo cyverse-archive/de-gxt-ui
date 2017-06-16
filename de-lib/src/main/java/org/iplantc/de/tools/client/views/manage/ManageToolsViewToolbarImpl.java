@@ -21,9 +21,6 @@ import org.iplantc.de.tools.shared.ToolsModule;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -32,7 +29,6 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-import com.sencha.gxt.data.shared.LabelProvider;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
@@ -107,32 +103,19 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
 
     @Inject
     public ManageToolsViewToolbarImpl(final ManageToolsToolbarView.ManageToolsToolbarAppearance appearance) {
-        loader = new PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Tool>>(toolSearchRPCProxy);
+        loader = new PagingLoader<>(toolSearchRPCProxy);
         toolSearch = new ToolSearchField(loader);
         toolSearchRPCProxy.setHasHandlers(this);
-        filterCombo = new SimpleComboBox<ToolFilter>(new LabelProvider<ToolFilter>() {
-            @Override
-            public String getLabel(ToolFilter item) {
-                return item.getFilterString();
-            }
-        });
+        filterCombo = new SimpleComboBox<>(item -> item.getFilterString());
         filterCombo.add(Arrays.asList(ToolFilter.ALL, ToolFilter.MY_TOOLS, ToolFilter.PUBLIC));
         filterCombo.setEditable(false);
         filterCombo.setValue(ToolFilter.ALL);
-        filterCombo.addSelectionHandler(new SelectionHandler<ToolFilter>() {
-            @Override
-            public void onSelection(SelectionEvent<ToolFilter> selectionEvent) {
-                onFilterChange(selectionEvent.getSelectedItem());
-                clearSearch();
-            }
+        filterCombo.addSelectionHandler(selectionEvent -> {
+            onFilterChange(selectionEvent.getSelectedItem());
+            clearSearch();
         });
 
-        filterCombo.addValueChangeHandler(new ValueChangeHandler<ToolFilter>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<ToolFilter> valueChangeEvent) {
-                valueChangeEvent.getValue();
-            }
-        });
+        filterCombo.addValueChangeHandler(valueChangeEvent -> valueChangeEvent.getValue());
 
         initWidget(uiBinder.createAndBindUi(this));
     }

@@ -9,10 +9,6 @@ import org.iplantc.de.client.models.toolRequests.ToolRequestUpdate;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -20,7 +16,6 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-import com.sencha.gxt.data.shared.LabelProvider;
 import com.sencha.gxt.widget.core.client.form.SimpleComboBox;
 import com.sencha.gxt.widget.core.client.form.TextArea;
 import com.sencha.gxt.widget.core.client.form.TextField;
@@ -51,25 +46,13 @@ public class UpdateToolRequestDialog extends IPlantDialog {
         getOkButton().setText(appearance.submitBtnText());
         add(uiBinder.createAndBindUi(this));
         currentStatusLabel.setText(toolRequest.getStatus());
-        statusField.addKeyPressHandler(new KeyPressHandler() {
-
-            @Override
-            public void onKeyPress(KeyPressEvent event) {
-                statusCombo.reset();
-            }
-        });
+        statusField.addKeyPressHandler(event -> statusCombo.reset());
         commentsEditor.setHeight(200);
     }
 
     @UiFactory
     SimpleComboBox<ToolRequestStatus> createComboBox() {
-        SimpleComboBox<ToolRequestStatus> cb = new SimpleComboBox<>(new LabelProvider<ToolRequestStatus>() {
-
-            @Override
-            public String getLabel(ToolRequestStatus item) {
-                return item.name();
-            }
-        });
+        SimpleComboBox<ToolRequestStatus> cb = new SimpleComboBox<>(item -> item.name());
 
         cb.add(ToolRequestStatus.Submitted);
         cb.add(ToolRequestStatus.Pending);
@@ -79,15 +62,11 @@ public class UpdateToolRequestDialog extends IPlantDialog {
         cb.add(ToolRequestStatus.Completion);
         cb.add(ToolRequestStatus.Failed);
 
-        cb.addSelectionHandler(new SelectionHandler<ToolRequestStatus>() {
-
-            @Override
-            public void onSelection(SelectionEvent<ToolRequestStatus> event) {
-                if (statusField != null) {
-                    statusField.clear();
-                }
-
+        cb.addSelectionHandler(event -> {
+            if (statusField != null) {
+                statusField.clear();
             }
+
         });
         return cb;
     }
