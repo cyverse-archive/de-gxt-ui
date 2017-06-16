@@ -73,7 +73,6 @@ public class DiskResourceViewToolbar_onFolderSelectedTest {
             mockRefreshButton,
             mockTrashMenu;
     @Mock DiskResourceSearchField searchFieldMock;
-    private final boolean containsFile = false;
     private final boolean isReadable = true;
     private boolean isSelectionInTrash = false;
     private final boolean isSelectionOwner = true;
@@ -85,11 +84,6 @@ public class DiskResourceViewToolbar_onFolderSelectedTest {
 
     @Before public void setup() {
         uut = new DiskResourceViewToolbarImpl(searchFieldMock, mock(UserInfo.class), mockAppearance, mockPresenter){
-            @Override
-            boolean containsFile(List<DiskResource> selection) {
-                return containsFile;
-            }
-
             @Override
             boolean isOwnerList(List<DiskResource> selection) {
                 return isSelectionOwner;
