@@ -30,9 +30,11 @@ public class CollaboratorsUtil {
         return INSTANCE;
     }
 
-    //TODO Do I still need this for Subject?
     public Subject getDummySubject(String userName) {
-        return factory.getSubject().as();
+        Subject subject = factory.getSubject().as();
+        subject.setId(userName);
+        subject.setName(userName);
+        return subject;
     }
 
     public boolean isCurrentCollaborator(Subject c, List<Subject> subjects) {

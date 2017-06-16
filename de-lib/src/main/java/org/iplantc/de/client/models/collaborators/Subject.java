@@ -58,7 +58,7 @@ public interface Subject extends HasSettableId, HasName {
     void setSourceId(String sourceId);
 
     default boolean isCollaboratorList() {
-        return getSourceId().equals(GROUP_IDENTIFIER);
+        return GROUP_IDENTIFIER.equals(getSourceId());
     }
 
     default String getSubjectDisplayName() {
