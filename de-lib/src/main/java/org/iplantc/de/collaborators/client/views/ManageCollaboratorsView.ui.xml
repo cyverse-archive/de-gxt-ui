@@ -11,6 +11,8 @@
 
 	<ui:with field="appearance"
 			 type="org.iplantc.de.collaborators.client.ManageCollaboratorsView.Appearance"/>
+	<ui:with field="groupAppearance"
+			 type="org.iplantc.de.collaborators.client.GroupView.GroupViewAppearance"/>
 
  	<!-- Main Panel -->
 	<ui:with field="listStore" type="com.sencha.gxt.data.shared.ListStore" />
@@ -91,6 +93,16 @@
 														   icon="{appearance.deleteIcon}"
 														   enabled="false"/>
 									</toolbar:ToolBar>
+									<toolbar:child>
+										<button:TextButton ui:field="addGroup"
+														   text="{groupAppearance.addGroup}"
+														   icon="{groupAppearance.addIcon}"/>
+									</toolbar:child>
+									<toolbar:child>
+										<button:TextButton ui:field="deleteGroup"
+														   text="{groupAppearance.deleteGroup}"
+														   icon="{groupAppearance.deleteIcon}"/>
+									</toolbar:child>
 								</container:child>
 								<container:child layoutData="{middleData}">
 									<grid:Grid ui:field="grid"

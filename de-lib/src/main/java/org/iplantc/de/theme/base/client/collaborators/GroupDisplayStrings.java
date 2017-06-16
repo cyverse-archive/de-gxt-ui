@@ -39,4 +39,8 @@ public interface GroupDisplayStrings extends Messages {
     String memberAddToGroupsSuccess(String subjectDisplayName);
 
     String groupNameValidationMsg(String restrictedChars);
+
+    String addGroup();
+
+    String deleteGroup();
 }

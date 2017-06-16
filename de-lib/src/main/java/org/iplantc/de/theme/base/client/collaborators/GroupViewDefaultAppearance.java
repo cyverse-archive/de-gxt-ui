@@ -62,7 +62,7 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
 
     @Override
     public String addGroup() {
-        return iplantDisplayStrings.add();
+        return displayStrings.addGroup();
     }
 
     @Override
@@ -72,7 +72,7 @@ public class GroupViewDefaultAppearance implements GroupView.GroupViewAppearance
 
     @Override
     public String deleteGroup() {
-        return iplantDisplayStrings.delete();
+        return displayStrings.deleteGroup();
     }
 
     @Override
