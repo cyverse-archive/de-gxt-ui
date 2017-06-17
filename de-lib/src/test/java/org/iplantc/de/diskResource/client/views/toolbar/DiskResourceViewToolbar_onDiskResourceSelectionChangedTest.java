@@ -86,8 +86,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
     @Mock DiskResourceSearchField searchFieldMock;
     @Mock DiskResourceUtil diskResourceUtilMock;
 
-    private boolean containsFile = false;
-    private boolean containsOnlyFolders = false;
     private final boolean isReadable = true;
     private boolean isSelectionInTrash = false;
     private boolean isSelectionOwner = true;
@@ -99,11 +97,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
 
     @Before public void setup() {
         uut = new DiskResourceViewToolbarImpl(searchFieldMock, mock(UserInfo.class), mockAppearance, mockPresenter){
-            @Override
-            boolean containsFile(List<DiskResource> selection) {
-                return containsFile;
-            }
-
             @Override
             boolean isOwnerList(List<DiskResource> selection) {
                 return isSelectionOwner;
@@ -118,11 +111,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
             boolean isSelectionInTrash(List<DiskResource> selection) {
                 return isSelectionInTrash;
             }
-
-            @Override
-            boolean containsOnlyFolders(List<DiskResource> selection) {
-                return containsOnlyFolders;
-            }
         };
         mockMenuItems(uut);
         uut.diskResourceUtil = diskResourceUtilMock;
@@ -136,7 +124,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
      */
     @Test public void testOnDiskResourceSelectionChanged_emptySelection(){
         this.isSelectionInTrash = false;
-        this.containsFile = true;
         // Setup mock event
         DiskResourceSelectionChangedEvent mockEvent = mock(DiskResourceSelectionChangedEvent.class);
         final ArrayList<DiskResource> selection = Lists.newArrayList();
@@ -183,13 +170,13 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
      */
     @Test public void testOnDiskResourceSelectionChanged_file_notInTrash_read() {
         this.isSelectionInTrash = false;
-        this.containsFile = true;
         File mockFile = mock(File.class);
         // Setup mock event
         DiskResourceSelectionChangedEvent mockEvent = mock(DiskResourceSelectionChangedEvent.class);
         final ArrayList<DiskResource> selection = Lists.newArrayList();
         selection.add(mockFile);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFile(selection)).thenReturn(true);
 
         /*=================== Read ====================*/
         this.isSelectionOwner = false;
@@ -240,13 +227,13 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
      */
     @Test public void testOnDiskResourceSelectionChanged_file_notInTrash_write() {
         this.isSelectionInTrash = false;
-        this.containsFile = true;
         File mockFile = mock(File.class);
         // Setup mock event
         DiskResourceSelectionChangedEvent mockEvent = mock(DiskResourceSelectionChangedEvent.class);
         final ArrayList<DiskResource> selection = Lists.newArrayList();
         selection.add(mockFile);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFile(selection)).thenReturn(true);
 
         /*==================== Write ==================*/
         this.isSelectionOwner = false;
@@ -295,13 +282,13 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
      */
     @Test public void testOnDiskResourceSelectionChanged_file_notInTrash_own() {
         this.isSelectionInTrash = false;
-        this.containsFile = true;
         File mockFile = mock(File.class);
         // Setup mock event
         DiskResourceSelectionChangedEvent mockEvent = mock(DiskResourceSelectionChangedEvent.class);
         final ArrayList<DiskResource> selection = Lists.newArrayList();
         selection.add(mockFile);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFile(selection)).thenReturn(true);
 
         /*==================== Own ====================*/
         this.isSelectionOwner = true;
@@ -350,13 +337,13 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
      */
     @Test public void testOnDiskResourceSelectionChanged_file_inTrash_read() {
         this.isSelectionInTrash = true;
-        this.containsFile = true;
         File mockFile = mock(File.class);
         // Setup mock event
         DiskResourceSelectionChangedEvent mockEvent = mock(DiskResourceSelectionChangedEvent.class);
         final ArrayList<DiskResource> selection = Lists.newArrayList();
         selection.add(mockFile);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFile(selection)).thenReturn(true);
 
         /*=================== Read ====================*/
         this.isSelectionOwner = false;
@@ -405,13 +392,13 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
      */
     @Test public void testOnDiskResourceSelectionChanged_file_inTrash_write() {
         this.isSelectionInTrash = true;
-        this.containsFile = true;
         File mockFile = mock(File.class);
         // Setup mock event
         DiskResourceSelectionChangedEvent mockEvent = mock(DiskResourceSelectionChangedEvent.class);
         final ArrayList<DiskResource> selection = Lists.newArrayList();
         selection.add(mockFile);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFile(selection)).thenReturn(true);
 
         /*==================== Write ==================*/
         this.isSelectionOwner = false;
@@ -460,13 +447,13 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
      */
     @Test public void testOnDiskResourceSelectionChanged_file_inTrash_own(){
         this.isSelectionInTrash = true;
-        this.containsFile = true;
         File mockFile = mock(File.class);
         // Setup mock event
         DiskResourceSelectionChangedEvent mockEvent = mock(DiskResourceSelectionChangedEvent.class);
         final ArrayList<DiskResource> selection = Lists.newArrayList();
         selection.add(mockFile);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFile(selection)).thenReturn(true);
 
         /*==================== Own ====================*/
         this.isSelectionOwner = true;
@@ -522,10 +509,10 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         final ArrayList<DiskResource> selection = Lists.newArrayList();
         selection.add(mockFolder);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFolder(selection)).thenReturn(true);
 
         /*=================== Read ====================*/
         this.isSelectionOwner = false;
-        this.containsOnlyFolders = true;
         when(mockFolder.getPermission()).thenReturn(read);
         uut.onDiskResourceSelectionChanged(mockEvent);
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
@@ -577,10 +564,10 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         final ArrayList<DiskResource> selection = Lists.newArrayList();
         selection.add(mockFolder);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFolder(selection)).thenReturn(true);
 
         /*=================== Write ====================*/
         this.isSelectionOwner = false;
-        this.containsOnlyFolders = true;
         when(mockFolder.getPermission()).thenReturn(write);
         uut.onDiskResourceSelectionChanged(mockEvent);
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
@@ -633,10 +620,10 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         final ArrayList<DiskResource> selection = Lists.newArrayList();
         selection.add(mockFolder);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFolder(selection)).thenReturn(true);
 
         /*=================== Own ====================*/
         this.isSelectionOwner = true;
-        this.containsOnlyFolders = true;
         when(mockFolder.getPermission()).thenReturn(own);
         uut.onDiskResourceSelectionChanged(mockEvent);
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
@@ -743,10 +730,10 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         final ArrayList<DiskResource> selection = Lists.newArrayList();
         selection.add(mockFolder);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFolder(selection)).thenReturn(true);
 
         /*=================== Write ====================*/
         this.isSelectionOwner = false;
-        this.containsOnlyFolders = true;
         when(mockFolder.getPermission()).thenReturn(write);
         uut.onDiskResourceSelectionChanged(mockEvent);
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
@@ -799,10 +786,10 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         final ArrayList<DiskResource> selection = Lists.newArrayList();
         selection.add(mockFolder);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFolder(selection)).thenReturn(true);
 
         /*=================== Own ====================*/
         this.isSelectionOwner = true;
-        this.containsOnlyFolders = true;
         when(mockFolder.getPermission()).thenReturn(own);
         uut.onDiskResourceSelectionChanged(mockEvent);
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
@@ -850,7 +837,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
      */
     @Test public void testOnDiskResourceSelectionChanged_multiFiles_notInTrash_read() {
         this.isSelectionInTrash = false;
-        this.containsFile = true;
         File mockFile1 = mock(File.class);
         File mockFile2 = mock(File.class);
         // Setup mock event
@@ -859,6 +845,7 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         selection.add(mockFile1);
         selection.add(mockFile2);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFile(selection)).thenReturn(true);
 
         /*=================== Read ====================*/
         this.isSelectionOwner = false;
@@ -895,7 +882,7 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verify(mockCreatePublicLink).setEnabled(false);
         verify(mockShareFolderLocation).setEnabled(false);
         verify(mockSendToCoge).setEnabled(false);
-        verify(mockSendToEnsembl).setEnabled(false);
+        verify(mockSendToEnsembl).setEnabled(true);
         verify(mockSendToTreeViewer).setEnabled(false);
 
         // Trash Menu Items
@@ -908,7 +895,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
      */
     @Test public void testOnDiskResourceSelectionChanged_multiFiles_notInTrash_write() {
         this.isSelectionInTrash = false;
-        this.containsFile = true;
         File mockFile1 = mock(File.class);
         File mockFile2 = mock(File.class);
         // Setup mock event
@@ -917,6 +903,7 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         selection.add(mockFile1);
         selection.add(mockFile2);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFile(selection)).thenReturn(true);
 
         /*==================== Write ==================*/
         this.isSelectionOwner = false;
@@ -954,7 +941,7 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verify(mockCreatePublicLink).setEnabled(false);
         verify(mockShareFolderLocation).setEnabled(false);
         verify(mockSendToCoge).setEnabled(false);
-        verify(mockSendToEnsembl).setEnabled(false);
+        verify(mockSendToEnsembl).setEnabled(true);
         verify(mockSendToTreeViewer).setEnabled(false);
 
         // Trash Menu Items
@@ -967,7 +954,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
      */
     @Test public void testOnDiskResourceSelectionChanged_multiFiles_notInTrash_own() {
         this.isSelectionInTrash = false;
-        this.containsFile = true;
         File mockFile1 = mock(File.class);
         File mockFile2 = mock(File.class);
         // Setup mock event
@@ -976,6 +962,7 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         selection.add(mockFile1);
         selection.add(mockFile2);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFile(selection)).thenReturn(true);
 
         /*==================== Own ====================*/
         this.isSelectionOwner = true;
@@ -1013,7 +1000,7 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         verify(mockCreatePublicLink).setEnabled(true);
         verify(mockShareFolderLocation).setEnabled(false);
         verify(mockSendToCoge).setEnabled(false);
-        verify(mockSendToEnsembl).setEnabled(false);
+        verify(mockSendToEnsembl).setEnabled(true);
         verify(mockSendToTreeViewer).setEnabled(false);
 
         // Trash Menu Items
@@ -1034,7 +1021,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
      */
     @Test public void testOnDiskResourceSelectionChanged_multiFiles_inTrash_read() {
         this.isSelectionInTrash = true;
-        this.containsFile = true;
         File mockFile1 = mock(File.class);
         File mockFile2 = mock(File.class);
         // Setup mock event
@@ -1043,6 +1029,7 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         selection.add(mockFile1);
         selection.add(mockFile2);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFile(selection)).thenReturn(true);
 
         /*=================== Read ====================*/
         this.isSelectionOwner = false;
@@ -1092,7 +1079,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
      */
     @Test public void testOnDiskResourceSelectionChanged_multiFiles_inTrash_write() {
         this.isSelectionInTrash = true;
-        this.containsFile = true;
         File mockFile1 = mock(File.class);
         File mockFile2 = mock(File.class);
         // Setup mock event
@@ -1101,6 +1087,7 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         selection.add(mockFile1);
         selection.add(mockFile2);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFile(selection)).thenReturn(true);
 
         /*==================== Write ==================*/
         this.isSelectionOwner = false;
@@ -1150,7 +1137,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
      */
     @Test public void testOnDiskResourceSelectionChanged_multiFiles_inTrash_own(){
         this.isSelectionInTrash = true;
-        this.containsFile = true;
         File mockFile1 = mock(File.class);
         File mockFile2 = mock(File.class);
         // Setup mock event
@@ -1159,6 +1145,7 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         selection.add(mockFile1);
         selection.add(mockFile2);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFile(selection)).thenReturn(true);
 
         /*==================== Own ====================*/
         this.isSelectionOwner = true;
@@ -1224,6 +1211,7 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         selection.add(mockFolder1);
         selection.add(mockFolder2);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFolder(selection)).thenReturn(true);
 
         /*=================== Read ====================*/
         this.isSelectionOwner = false;
@@ -1281,10 +1269,10 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         selection.add(mockFolder1);
         selection.add(mockFolder2);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFolder(selection)).thenReturn(true);
 
         /*=================== Write ====================*/
         this.isSelectionOwner = false;
-        this.containsOnlyFolders = true;
         when(mockFolder1.getPermission()).thenReturn(write);
         when(mockFolder2.getPermission()).thenReturn(write);
         uut.onDiskResourceSelectionChanged(mockEvent);
@@ -1339,10 +1327,10 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         selection.add(mockFolder1);
         selection.add(mockFolder2);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFolder(selection)).thenReturn(true);
 
         /*=================== Own ====================*/
         this.isSelectionOwner = true;
-        this.containsOnlyFolders = true;
         when(mockFolder1.getPermission()).thenReturn(own);
         when(mockFolder2.getPermission()).thenReturn(own);
         uut.onDiskResourceSelectionChanged(mockEvent);
@@ -1392,10 +1380,10 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         final ArrayList<DiskResource> selection = Lists.newArrayList();
         selection.add(redMockFolder1);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFolder(selection)).thenReturn(true);
         when(diskResourceUtilMock.containsFilteredItems(selection)).thenReturn(true);
           /*=================== Own ====================*/
         this.isSelectionOwner = true;
-        this.containsOnlyFolders = true;
         when(redMockFolder1.getPermission()).thenReturn(own);
         uut.onDiskResourceSelectionChanged(mockEvent);
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
@@ -1444,10 +1432,10 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         final ArrayList<DiskResource> selection = Lists.newArrayList();
         selection.add(redMockFile1);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFile(selection)).thenReturn(true);
         when(diskResourceUtilMock.containsFilteredItems(selection)).thenReturn(true);
           /*=================== Own ====================*/
         this.isSelectionOwner = true;
-        this.containsOnlyFolders = false;
         when(redMockFile1.getPermission()).thenReturn(own);
         uut.onDiskResourceSelectionChanged(mockEvent);
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
@@ -1499,10 +1487,10 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         selection.add(redMockFile1);
         selection.add(mockFile2);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFile(selection)).thenReturn(true);
         when(diskResourceUtilMock.containsFilteredItems(selection)).thenReturn(true);
           /*=================== Own ====================*/
         this.isSelectionOwner = true;
-        this.containsOnlyFolders = false;
         when(redMockFile1.getPermission()).thenReturn(own);
         uut.onDiskResourceSelectionChanged(mockEvent);
         verifyOnDiskResourceSelectionChangedNeverUsedItems();
@@ -1620,10 +1608,10 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         selection.add(mockFolder1);
         selection.add(mockFolder2);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFolder(selection)).thenReturn(true);
 
         /*=================== Write ====================*/
         this.isSelectionOwner = false;
-        this.containsOnlyFolders = true;
         when(mockFolder1.getPermission()).thenReturn(write);
         when(mockFolder2.getPermission()).thenReturn(write);
         uut.onDiskResourceSelectionChanged(mockEvent);
@@ -1678,10 +1666,10 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         selection.add(mockFolder1);
         selection.add(mockFolder2);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFolder(selection)).thenReturn(true);
 
         /*=================== Own ====================*/
         this.isSelectionOwner = true;
-        this.containsOnlyFolders = true;
         when(mockFolder1.getPermission()).thenReturn(own);
         when(mockFolder2.getPermission()).thenReturn(own);
         uut.onDiskResourceSelectionChanged(mockEvent);
@@ -1743,11 +1731,11 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         selection.add(mockFolder1);
         selection.add(mockFile1);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFolder(selection)).thenReturn(true);
+        when(diskResourceUtilMock.containsFile(selection)).thenReturn(true);
 
         /*=================== Read ====================*/
         this.isSelectionOwner = false;
-        this.containsOnlyFolders = false;
-        this.containsFile = true;
         when(mockFolder1.getPermission()).thenReturn(read);
         when(mockFile1.getPermission()).thenReturn(read);
         uut.onDiskResourceSelectionChanged(mockEvent);
@@ -1798,11 +1786,11 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
         selection.add(mockFolder1);
         selection.add(mockFile1);
         when(mockEvent.getSelection()).thenReturn(selection);
+        when(diskResourceUtilMock.containsFolder(selection)).thenReturn(true);
+        when(diskResourceUtilMock.containsFile(selection)).thenReturn(true);
 
         /*=================== Read ====================*/
         this.isSelectionOwner = false;
-        this.containsOnlyFolders = false;
-        this.containsFile = true;
         when(mockFolder1.getPermission()).thenReturn(own);
         when(mockFile1.getPermission()).thenReturn(own);
         uut.onDiskResourceSelectionChanged(mockEvent);

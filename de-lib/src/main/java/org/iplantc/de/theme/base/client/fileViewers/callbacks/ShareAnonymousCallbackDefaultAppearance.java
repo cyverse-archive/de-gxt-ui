@@ -52,6 +52,11 @@ public class ShareAnonymousCallbackDefaultAppearance implements ShareAnonymousCa
     }
 
     @Override
+    public int notificationWithContextWidth() {
+        return 600;
+    }
+
+    @Override
     public String sendToEnsemblMenuItem() {
         return displayStrings.sendToEnsemblMenuItem();
     }
@@ -59,6 +64,31 @@ public class ShareAnonymousCallbackDefaultAppearance implements ShareAnonymousCa
     @Override
     public String sendToEnsemblUrlHelp() {
         return helpStrings.sendToEnsemblUrlHelp();
+    }
+
+    @Override
+    public int sendToEnsemblUrlHelpPopupWidth() {
+        return 480;
+    }
+
+    @Override
+    public String ensemblUrlDialogWidth() {
+        return "640";
+    }
+
+    @Override
+    public String ensemblUrlDialogHeight() {
+        return "320";
+    }
+
+    @Override
+    public int ensemblUrlTextAreaWidth() {
+        return 600;
+    }
+
+    @Override
+    public int ensemblUrlTextAreaHeight() {
+        return 180;
     }
 
 }

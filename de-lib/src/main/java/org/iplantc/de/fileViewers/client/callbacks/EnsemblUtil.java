@@ -1,26 +1,22 @@
 package org.iplantc.de.fileViewers.client.callbacks;
 
-import org.iplantc.de.client.models.HasPath;
 import org.iplantc.de.client.models.HasPaths;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
-import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.views.dialogs.IplantInfoBox;
 import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 
 import com.sencha.gxt.core.shared.FastMap;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class EnsemblUtil {
@@ -33,60 +29,49 @@ public class EnsemblUtil {
     }
 
     private final IsMaskable container;
-    private final File file;
-    private final String infoType;
+    private final List<DiskResource> resourcesToSend;
     private final EnsemblUtilAppearance appearance;
     private final DiskResourceUtil diskResourceUtil;
 
-    public EnsemblUtil(final File file, final String infoType, final IsMaskable container) {
-        this(file, infoType, container, GWT.<EnsemblUtilAppearance>create(EnsemblUtilAppearance.class));
+    public EnsemblUtil(final List<DiskResource> resourcesToSend, final IsMaskable container) {
+        this(resourcesToSend,
+             container,
+             DiskResourceUtil.getInstance(),
+             GWT.<EnsemblUtilAppearance>create(EnsemblUtilAppearance.class));
     }
 
-    EnsemblUtil(final File file,
-                final String infoType,
+    EnsemblUtil(final List<DiskResource> resourcesToSend,
                 final IsMaskable container,
+                final DiskResourceUtil diskResourceUtil,
                 final EnsemblUtilAppearance appearance) {
-        this.file = file;
+        this.resourcesToSend = resourcesToSend;
         this.container = container;
-        this.infoType = infoType;
         this.appearance = appearance;
-        this.diskResourceUtil = DiskResourceUtil.getInstance();
+        this.diskResourceUtil = diskResourceUtil;
     }
 
     public void sendToEnsembl(final DiskResourceServiceFacade diskResourceServiceFacade) {
-        List<HasPath> list = new ArrayList<>();
-        final HasPaths diskResourcePaths =
-                diskResourceServiceFacade.getDiskResourceFactory().pathsList().as();
-        final String path = file.getPath();
-        String filename = diskResourceUtil.parseNameFromPath(path);
-        String parent = diskResourceUtil.parseParent(path);
-        String indexFile = null;
-        String indexFilePath = null;
-        if (infoType.equals(InfoType.BAM.toString())) {
-            indexFile = filename + ".bai";
-        } else if (infoType.equals(InfoType.VCF.toString())) {
-            indexFile = filename + ".tbi";
-        } else if (infoType.equals(InfoType.GFF.toString()) || infoType.equals(InfoType.BED.toString())
-                   || infoType.equals(InfoType.BIGBED.toString())
-                   || infoType.equals(InfoType.BIGWIG.toString())) {
-            indexFile = null;
+        final FastMap<TYPE> pathMap = new FastMap<>();
+
+        for (DiskResource resource : resourcesToSend) {
+            final String path = resource.getPath();
+            final String infoType = resource.getInfoType();
+
+            pathMap.put(path, TYPE.FILE);
+
+            String indexFilePath = null;
+            if (InfoType.BAM.toString().equals(infoType)) {
+                indexFilePath = path + ".bai";
+            } else if (InfoType.VCF.toString().equals(infoType)) {
+                indexFilePath = path + ".tbi";
+            }
+
+            if (!Strings.isNullOrEmpty(indexFilePath)) {
+                pathMap.put(indexFilePath, TYPE.FILE);
+            }
         }
 
-        list.add(file);
-
-        if (indexFile != null) {
-            indexFilePath = parent + "/" + indexFile;
-            list.add(CommonModelUtils.getInstance().createHasPathFromString((indexFilePath)));
-
-        }
-
-        if (!Strings.isNullOrEmpty(indexFilePath)) {
-            diskResourcePaths.setPaths(Arrays.asList(path, indexFilePath));
-        } else {
-            diskResourcePaths.setPaths(Arrays.asList(path));
-        }
-
-        diskResourceServiceFacade.getStat(diskResourceUtil.asStringPathTypeMap(list, TYPE.FILE),
+        diskResourceServiceFacade.getStat(pathMap,
                                           new DataCallback<FastMap<DiskResource>>() {
 
                                               @Override
@@ -105,10 +90,15 @@ public class EnsemblUtil {
 
                                               @Override
                                               public void onSuccess(FastMap<DiskResource> result) {
+                                                  HasPaths diskResourcePaths =
+                                                          diskResourceServiceFacade.getDiskResourceFactory()
+                                                                                   .pathsList()
+                                                                                   .as();
+                                                  diskResourcePaths.setPaths(Lists.newArrayList(pathMap.keySet()));
 
                                                   diskResourceServiceFacade.shareWithAnonymous(
                                                           diskResourcePaths,
-                                                          new ShareAnonymousCallback(file, container));
+                                                          new ShareAnonymousCallback(container, diskResourceUtil));
                                               }
                                           });
     }

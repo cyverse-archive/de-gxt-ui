@@ -3,7 +3,6 @@ package org.iplantc.de.diskResource.client.views.toolbar;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.models.viewer.MimeType;
@@ -283,6 +282,8 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
         final boolean isSelectionInTrash = isSelectionInTrash(selectedDiskResources);
         final boolean isFolderSelect = !isSelectionEmpty
                                        && firstItem instanceof Folder;
+        final boolean containsFile = diskResourceUtil.containsFile(selectedDiskResources);
+        final boolean containsFolder = diskResourceUtil.containsFolder(selectedDiskResources);
 
         moveToTrashMiEnabled = !isSelectionEmpty && isOwner && !isSelectionInTrash && !containsFilteredItems;
 
@@ -290,39 +291,38 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
         moveMiEnabled = !isSelectionEmpty && isOwner && !isSelectionInTrash && !containsFilteredItems;
         deleteMiEnabled = !isSelectionEmpty && isOwner && !containsFilteredItems;
         editFileMiEnabled = !isSelectionEmpty && isSingleSelection
-                && containsFile(selectedDiskResources) && isOwner && !isSelectionInTrash && !containsFilteredItems;
+                            && containsFile && isOwner && !isSelectionInTrash && !containsFilteredItems;
         editCommentsMiEnabled = !isSelectionEmpty && isSingleSelection && !isSelectionInTrash
                 && isReadable && !containsFilteredItems;
         editInfoTypeMiEnabled = !isSelectionEmpty && isSingleSelection && !isSelectionInTrash
-                && containsFile(selectedDiskResources) && isOwner && !containsFilteredItems;
+                                && containsFile && isOwner && !containsFilteredItems;
         metadataMiEnabled = !isSelectionEmpty && isSingleSelection && !isSelectionInTrash && !containsFilteredItems;
 
-        simpleDownloadMiEnabled = !isSelectionEmpty && containsFile(selectedDiskResources) && !containsFilteredItems;
+        simpleDownloadMiEnabled = !isSelectionEmpty && containsFile && !containsFilteredItems;
         bulkDownloadMiEnabled = !isSelectionEmpty && !containsFilteredItems;
         sendToCogeMiEnabled = !isSelectionEmpty
                 && isSingleSelection
-                && containsFile(selectedDiskResources)
+                && containsFile
                 && !isSelectionInTrash
                 && diskResourceUtil.isGenomeVizInfoType(getInfoTypeFromSingletonCollection(selectedDiskResources))
                 && !containsFilteredItems;
         sendToEnsemblMiEnabled = !isSelectionEmpty
-                && isSingleSelection
-                && containsFile(selectedDiskResources)
+                && !containsFolder
                 && !isSelectionInTrash
-                && diskResourceUtil.isEnsemblInfoType(getInfoTypeFromSingletonCollection(selectedDiskResources))
-                && !containsFilteredItems;
+                && !containsFilteredItems
+                && containsOnlyEnsemblFiles(selectedDiskResources);
         sendToTreeViewerMiEnabled = !isSelectionEmpty
                 && isSingleSelection
-                && containsFile(selectedDiskResources)
+                && containsFile
                 && !isSelectionInTrash
                 && diskResourceUtil.isTreeInfoType(getInfoTypeFromSingletonCollection(selectedDiskResources))
                 && !containsFilteredItems;
 
         shareWithCollaboratorsMiEnabled = !isSelectionEmpty && isOwner && !isSelectionInTrash && !containsFilteredItems;
         createPublicLinkMiEnabled = !isSelectionEmpty && isOwner && !isSelectionInTrash
-                && containsFile(selectedDiskResources) && !containsFilteredItems;
+                                    && containsFile && !containsFilteredItems;
         shareFolderLocationMiEnabled = !isSelectionEmpty && isSingleSelection && !isSelectionInTrash
-                && containsOnlyFolders(selectedDiskResources) && !containsFilteredItems;
+                                       && !containsFile && !containsFilteredItems;
 
         restoreMiEnabled = !isSelectionEmpty && isSelectionInTrash && isOwner && !containsFilteredItems;
 
@@ -769,16 +769,20 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
         return diskResourceUtil.canUploadTo(folder);
     }
 
-    boolean containsFile(final List<DiskResource> selection) {
-        return diskResourceUtil.containsFile(selection);
-    }
+    boolean containsOnlyEnsemblFiles(final List<DiskResource> selection) {
+        boolean hasOneGenomeFile = selection.stream().anyMatch(resource -> {
+            InfoType infoType = InfoType.fromTypeString(resource.getInfoType());
+            return diskResourceUtil.isEnsemblInfoType(infoType);
+        });
 
-    boolean containsOnlyFolders(List<DiskResource> selection) {
-        for (DiskResource dr : selection) {
-            if (dr instanceof File)
-                return false;
-        }
-        return true;
+        boolean allGenomeAndIndexFiles = selection.stream().allMatch(resource -> {
+            final String path = resource.getPath();
+            InfoType infoType = InfoType.fromTypeString(resource.getInfoType());
+
+            return diskResourceUtil.isGenomeIndexFile(path) || diskResourceUtil.isEnsemblInfoType(infoType);
+        });
+
+        return hasOneGenomeFile && allGenomeAndIndexFiles;
     }
 
     boolean isOwnerList(final List<DiskResource> selection) {

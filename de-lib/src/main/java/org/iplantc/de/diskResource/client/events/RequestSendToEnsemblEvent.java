@@ -1,11 +1,12 @@
 package org.iplantc.de.diskResource.client.events;
 
-import org.iplantc.de.client.models.diskResources.File;
-import org.iplantc.de.client.models.viewer.InfoType;
+import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.diskResource.client.events.RequestSendToEnsemblEvent.RequestSendToEnsemblEventHandler;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
+
+import java.util.List;
 
 public class RequestSendToEnsemblEvent extends GwtEvent<RequestSendToEnsemblEventHandler> {
 
@@ -16,12 +17,10 @@ public class RequestSendToEnsemblEvent extends GwtEvent<RequestSendToEnsemblEven
         void onRequestSendToEnsembl(RequestSendToEnsemblEvent event);
     }
 
-    private final File file;
-    private final InfoType infoType;
+    private final List<DiskResource> resourcesToSend;
 
-    public RequestSendToEnsemblEvent(File file, InfoType infoType) {
-        this.file = file;
-        this.infoType = infoType;
+    public RequestSendToEnsemblEvent(List<DiskResource> resourcesToSend) {
+        this.resourcesToSend = resourcesToSend;
     }
 
     @Override
@@ -35,12 +34,7 @@ public class RequestSendToEnsemblEvent extends GwtEvent<RequestSendToEnsemblEven
 
     }
 
-    public File getFile() {
-        return file;
+    public List<DiskResource> getResourcesToSend() {
+        return resourcesToSend;
     }
-
-    public InfoType getInfoType() {
-        return infoType;
-    }
-
 }

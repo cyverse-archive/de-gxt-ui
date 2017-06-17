@@ -508,15 +508,19 @@ public class DiskResourcePresenterImpl implements
 
     @Override
     public void onSendToEnsemblSelected(SendToEnsemblSelected event) {
-        // There is typically only one resource used.
-        for (DiskResource resource : event.getResourcesToSend()) {
-            InfoType infoType = InfoType.fromTypeString(resource.getInfoType());
-            if (infoType == null || !diskResourceUtil.isEnsemblInfoType(infoType)) {
+        final List<DiskResource> resourcesToSend = event.getResourcesToSend();
 
-                announcer.schedule(new ErrorAnnouncementConfig(appearance.unsupportedEnsemblInfoType()));
-                return;
-            }
-            eventBus.fireEvent(new RequestSendToEnsemblEvent((File)resource, infoType));
+        boolean allGenomeAndIndexTypes = resourcesToSend.stream().allMatch(resource -> {
+            final String path = resource.getPath();
+            InfoType infoType = InfoType.fromTypeString(resource.getInfoType());
+
+            return diskResourceUtil.isGenomeIndexFile(path) || diskResourceUtil.isEnsemblInfoType(infoType);
+        });
+
+        if (allGenomeAndIndexTypes) {
+            eventBus.fireEvent(new RequestSendToEnsemblEvent(resourcesToSend));
+        } else {
+            announcer.schedule(new ErrorAnnouncementConfig(appearance.unsupportedEnsemblInfoType()));
         }
     }
 
