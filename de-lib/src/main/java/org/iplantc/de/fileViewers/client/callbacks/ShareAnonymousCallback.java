@@ -16,7 +16,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
-import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.FormPanel.LabelAlign;
 import com.sencha.gxt.widget.core.client.tips.QuickTip;
@@ -35,10 +34,21 @@ public class ShareAnonymousCallback extends DataCallback<List<String>> {
 
         SafeHtml notificationWithContextHelp();
 
+        int notificationWithContextWidth();
+
         String sendToEnsemblMenuItem();
 
         String sendToEnsemblUrlHelp();
 
+        int sendToEnsemblUrlHelpPopupWidth();
+
+        String ensemblUrlDialogWidth();
+
+        String ensemblUrlDialogHeight();
+
+        int ensemblUrlTextAreaWidth();
+
+        int ensemblUrlTextAreaHeight();
     }
 
     private final IsMaskable container;
@@ -79,12 +89,12 @@ public class ShareAnonymousCallback extends DataCallback<List<String>> {
 
         dlg.setHideOnButtonClick(true);
         dlg.setResizable(false);
-        dlg.setSize("640", "320");
+        dlg.setSize(appearance.ensemblUrlDialogWidth(), appearance.ensemblUrlDialogHeight());
 
         FieldLabel fl = new FieldLabel();
         fl.setHTML(SafeHtmlUtils.fromTrustedString(appearance.ensemblUrl()));
         TextArea textBox = new TextArea();
-        textBox.setPixelSize(600, 180);
+        textBox.setPixelSize(appearance.ensemblUrlTextAreaWidth(), appearance.ensemblUrlTextAreaHeight());
         textBox.setReadOnly(true);
         textBox.setValue(Joiner.on('\n').join(linkIds));
         fl.setWidget(textBox);
@@ -101,7 +111,7 @@ public class ShareAnonymousCallback extends DataCallback<List<String>> {
         notification.setHTML(appearance.notificationWithContextHelp());
         new QuickTip(notification);
 
-        notification.setWidth(600);
+        notification.setWidth(appearance.notificationWithContextWidth());
         container.add(notification);
         dlg.setWidget(container);
         dlg.setFocusWidget(textBox);
@@ -111,15 +121,11 @@ public class ShareAnonymousCallback extends DataCallback<List<String>> {
 
     private void attachHelp(final IPlantDialog dlg) {
         final ContextualHelpPopup popup = new ContextualHelpPopup();
-        popup.setWidth(480);
+        popup.setWidth(appearance.sendToEnsemblUrlHelpPopupWidth());
         popup.add(new HTML(appearance.sendToEnsemblUrlHelp()));
-        dlg.getHelpToolButton().addSelectHandler(new SelectEvent.SelectHandler() {
-            @Override
-            public void onSelect(SelectEvent event) {
-                popup.showAt(dlg.getHelpToolButton().getAbsoluteLeft(),
-                             dlg.getHelpToolButton().getAbsoluteTop() + 15);
-            }
-        });
+        dlg.getHelpToolButton()
+           .addSelectHandler(event -> popup.showAt(dlg.getHelpToolButton().getAbsoluteLeft(),
+                                                   dlg.getHelpToolButton().getAbsoluteTop() + 15));
     }
 
 }
