@@ -93,7 +93,7 @@ public class Application extends AbstractAnnotationConfigDispatcherServletInitia
         dispatcher.setLoadOnStartup(0);
         dispatcher.addMapping("/de/websocket");
         dispatcher.setInitParameter("org.atmosphere.cpr.packages", "org.iplantc.de.server");
-        LOG.error("************** Started AtmosphereServlet ***********");
+        LOG.info("************** Started AtmosphereServlet ***********");
     }
 
 
