@@ -38,4 +38,25 @@ public interface GroupAutoBeanFactory extends AutoBeanFactory {
         group.setName(Group.DEFAULT_GROUP);
         return group;
     }
+
+    default Group convertSubjectToGroup(Subject subject) {
+        Group group = getGroup().as();
+        if (subject != null) {
+            group.setId(subject.getId());
+            group.setName(subject.getName());
+            group.setDescription(subject.getInstitution());
+        }
+        return group;
+    }
+
+    default Subject convertGroupToSubject(Group group) {
+        Subject subject = getSubject().as();
+        if (group != null) {
+            subject.setId(group.getId());
+            subject.setName(group.getName());
+            subject.setSourceId(Group.GROUP_IDENTIFIER);
+            subject.setInstitution(group.getDescription());
+        }
+        return subject;
+    }
 }

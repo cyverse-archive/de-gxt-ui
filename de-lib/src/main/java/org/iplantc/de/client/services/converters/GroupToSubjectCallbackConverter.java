@@ -21,11 +21,7 @@ public class GroupToSubjectCallbackConverter extends AsyncCallbackConverter<Stri
     @Override
     protected Subject convertFrom(String object) {
         final Group group = AutoBeanCodex.decode(factory, Group.class, object).as();
-        Subject subject = factory.getSubject().as();
-        subject.setId(group.getId());
-        subject.setName(group.getName());
-        subject.setSourceId(Group.GROUP_IDENTIFIER);
-        subject.setInstitution(group.getDescription());
+        Subject subject = factory.convertGroupToSubject(group);
         return subject;
     }
 }
