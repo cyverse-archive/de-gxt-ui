@@ -26,7 +26,6 @@ import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
-import org.iplantc.de.collaborators.client.presenter.callbacks.ParentAddMemberToGroupCallback;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -341,40 +340,6 @@ public class ManageCollaboratorsPresenterTest {
         spy.onUserSearchResultSelected(eventMock);
 
         verify(spy).addAsCollaborators(any());
-    }
-
-    @Test
-    public void onUserSearchResultSelected_collaboratorListTab_withLists() {
-        ManageCollaboratorsPresenter spy = spy(uut);
-        UserSearchResultSelected eventMock = mock(UserSearchResultSelected.class);
-        when(eventMock.getSubject()).thenReturn(subjectMock);
-        when(subjectMock.getId()).thenReturn("newID");
-        when(userInfoMock.getUsername()).thenReturn("id");
-        when(viewMock.hasCollaboratorsTabSelected()).thenReturn(false);
-        when(viewMock.getSelectedCollaboratorLists()).thenReturn(groupListMock);
-        when(groupListMock.isEmpty()).thenReturn(false);
-
-        /** CALL METHOD UNDER TEST **/
-        spy.onUserSearchResultSelected(eventMock);
-
-        verify(spy).addMemberToGroups(eq(subjectMock), eq(groupListMock));
-    }
-
-    @Test
-    public void onUserSearchResultSelected_collaboratorListTab_noLists() {
-        UserSearchResultSelected eventMock = mock(UserSearchResultSelected.class);
-        when(eventMock.getSubject()).thenReturn(subjectMock);
-        when(subjectMock.getId()).thenReturn("newID");
-        when(userInfoMock.getUsername()).thenReturn("id");
-        when(viewMock.hasCollaboratorsTabSelected()).thenReturn(false);
-        when(viewMock.getSelectedCollaboratorLists()).thenReturn(groupListMock);
-        when(groupListMock.isEmpty()).thenReturn(true);
-        when(groupAppearanceMock.noCollabListSelected()).thenReturn("error");
-
-        /** CALL METHOD UNDER TEST **/
-        uut.onUserSearchResultSelected(eventMock);
-
-        verify(announcerMock).schedule(isA(ErrorAnnouncementConfig.class));
     }
 
 }

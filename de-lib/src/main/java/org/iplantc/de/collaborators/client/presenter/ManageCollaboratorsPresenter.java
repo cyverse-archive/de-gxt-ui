@@ -132,17 +132,8 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         Subject subject = userSearchResultSelected.getSubject();
         if (!userInfo.getUsername()
                      .equals(subject.getId())) {
-            if (view.hasCollaboratorsTabSelected()) {
-                if (!collaboratorsUtil.isCurrentCollaborator(subject, view.getCollaborators())) {
-                    addAsCollaborators(Arrays.asList(subject));
-                }
-            } else {
-                List<Group> selectedCollaboratorLists = view.getSelectedCollaboratorLists();
-                if (selectedCollaboratorLists != null && !selectedCollaboratorLists.isEmpty()) {
-                    addMemberToGroups(subject, selectedCollaboratorLists);
-                } else {
-                    announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.noCollabListSelected()));
-                }
+            if (!collaboratorsUtil.isCurrentCollaborator(subject, view.getCollaborators())) {
+                addAsCollaborators(Arrays.asList(subject));
             }
         } else {
             announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.collaboratorsSelfAdd()));
