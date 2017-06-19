@@ -314,7 +314,8 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     @Override
     public void onDeleteGroupSelected(DeleteGroupSelected event) {
-        Group group = event.getGroup();
+        Subject subject = event.getGroup();
+        Group group = groupFactory.convertSubjectToGroup(subject);
         if (group == null) {
             return;
         }
@@ -332,7 +333,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     void deleteGroup(Group group) {
-        view.maskCollabLists(groupAppearance.loadingMask());
+        view.maskCollaborators(groupAppearance.loadingMask());
         groupServiceFacade.deleteGroup(group, new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -342,9 +343,9 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
             @Override
             public void onSuccess(Group result) {
-                view.removeCollabList(group);
+                view.removeCollaborators(wrapSubjectInList(group));
                 announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.groupDeleteSuccess(result)));
-                view.unmaskCollabLists();
+                view.unmaskCollaborators();
             }
         });
     }

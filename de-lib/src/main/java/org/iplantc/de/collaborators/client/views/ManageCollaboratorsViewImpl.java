@@ -189,8 +189,9 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     public void removeCollaborators(List<Subject> models) {
         if (models != null && !models.isEmpty()) {
             for (Subject c : models) {
-                if (listStore.findModel(c) != null) {
-                    listStore.remove(c);
+                Subject found = listStore.findModel(c);
+                if (found != null) {
+                    listStore.remove(found);
                 }
             }
         }
@@ -253,6 +254,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
 
     @UiHandler("deleteBtn")
     void deleteCollaborator(SelectEvent event) {
+        GWT.log("Selected item " + grid.getSelectionModel().getSelectedItem().getName());
         fireEvent(new RemoveCollaboratorSelected(grid.getSelectionModel().getSelectedItems()));
     }
 
@@ -263,7 +265,8 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
 
     @UiHandler("deleteGroup")
     void deleteGroupSelected(SelectEvent event) {
-//        fireEvent(new DeleteGroupSelected(grid.getSelectionModel().getSelectedItem()));
+        GWT.log("Selected item " + grid.getSelectionModel().getSelectedItem().getName());
+        fireEvent(new DeleteGroupSelected(grid.getSelectionModel().getSelectedItem()));
     }
 
     @UiHandler("manageBtn")

@@ -1,6 +1,6 @@
 package org.iplantc.de.collaborators.client.events;
 
-import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.models.collaborators.Subject;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -20,9 +20,9 @@ public class DeleteGroupSelected extends GwtEvent<DeleteGroupSelected.DeleteGrou
     }
 
     public static Type<DeleteGroupSelectedHandler> TYPE = new Type<DeleteGroupSelectedHandler>();
-    private Group group;
+    private Subject group;
 
-    public DeleteGroupSelected(Group group) {
+    public DeleteGroupSelected(Subject group) {
         this.group = group;
     }
 
@@ -34,7 +34,7 @@ public class DeleteGroupSelected extends GwtEvent<DeleteGroupSelected.DeleteGrou
         handler.onDeleteGroupSelected(this);
     }
 
-    public Group getGroup() {
+    public Subject getGroup() {
         return group;
     }
 }
