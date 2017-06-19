@@ -39,7 +39,7 @@
                     <container:child>
                         <form:FieldLabel text="{appearance.description}">
                             <form:widget>
-                                <form:TextArea ui:field="desc" allowBlank="true"/>
+                                <form:TextArea ui:field="description" allowBlank="true"/>
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
@@ -68,7 +68,13 @@
                             </form:widget>
                         </form:FieldLabel>
                     </container:child>
-
+                    <container:child>
+                        <form:FieldLabel text="{appearance.entryPoint}">
+                            <form:widget>
+                                <form:TextField ui:field="entryPoint" allowBlank="true"/>
+                            </form:widget>
+                        </form:FieldLabel>
+                    </container:child>
                     <container:child>
                         <form:FieldLabel text="{appearance.dockerUrl}">
                             <form:widget>

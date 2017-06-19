@@ -44,6 +44,8 @@ public interface EditToolView extends IsWidget{
         String version();
 
         SafeHtml buildRequiredFieldLabel(String label);
+
+        String entryPoint();
     }
 
     boolean validate();

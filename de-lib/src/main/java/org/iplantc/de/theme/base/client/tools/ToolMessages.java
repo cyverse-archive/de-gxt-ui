@@ -86,6 +86,8 @@ public interface ToolMessages extends Messages {
     String manageSharing();
 
     String done();
+
+    String entryPoint();
 }
         
     
