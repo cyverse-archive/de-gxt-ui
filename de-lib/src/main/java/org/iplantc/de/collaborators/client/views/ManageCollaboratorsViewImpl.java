@@ -151,8 +151,8 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
     
     @Override
-    public void updateCollabList(Group group) {
-        groupView.updateCollabList(group);
+    public void updateCollabList(Subject group) {
+        listStore.update(group);
     }
 
     @Override

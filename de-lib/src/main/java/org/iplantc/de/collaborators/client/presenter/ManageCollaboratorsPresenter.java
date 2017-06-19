@@ -362,7 +362,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                     @Override
                     public void onGroupSaved(GroupSaved event) {
                         Group group = event.getGroup();
-                        view.addCollabLists(Lists.newArrayList(group));
+                        view.addCollaborators(wrapSubjectInList(groupFactory.convertGroupToSubject(group)));
                     }
                 });
             }
@@ -383,7 +383,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                     @Override
                     public void onGroupSaved(GroupSaved event) {
                         Group group = event.getGroup();
-                        view.updateCollabList(group);
+                        view.updateCollabList(groupFactory.convertGroupToSubject(group));
                     }
                 });
             }

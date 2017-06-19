@@ -134,10 +134,10 @@ public interface ManageCollaboratorsView extends IsWidget,
     void unmaskCollabLists();
 
     /**
-     * Update an existing Collaborator List in the GroupView
+     * Update an existing Collaborator List in the view
      * @param group
      */
-    void updateCollabList(Group group);
+    void updateCollabList(Subject group);
 
     /**
      * Get the list of selected Collaborator Lists from the Collaborator List tab
