@@ -209,7 +209,11 @@ class GridViewDnDHandler implements DndDragStartHandler,
             ret = getSelectedUploadFolder();
         } else {
             int dropIndex = presenter.findGridRowIndex(targetRow);
-            DiskResource selDiskResource = presenter.getAllDiskResources().get(dropIndex);
+            List<DiskResource> allDiskResources = presenter.getAllDiskResources();
+            if (dropIndex > allDiskResources.size() - 1) {
+                return null;
+            }
+            DiskResource selDiskResource = allDiskResources.get(dropIndex);
             ret = (selDiskResource instanceof Folder) ? (Folder)selDiskResource : null;
         }
 
