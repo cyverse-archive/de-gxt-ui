@@ -381,8 +381,8 @@ public class DiskResourceUtil {
             return false;
         }
 
-        return dr.getPermission().equals(PermissionValue.own)
-                || dr.getPermission().equals(PermissionValue.write);
+        return PermissionValue.own.equals(dr.getPermission())
+                || PermissionValue.write.equals(dr.getPermission());
     }
 
     public boolean checkManifest(Splittable obj) {
