@@ -531,4 +531,9 @@ public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminVi
     public String defaultImgPrefix() {
         return displayStrings.defaultImgPrefix();
     }
+
+    @Override
+    public String pidsLimit() {
+        return displayStrings.pidsLimit();
+    }
 }

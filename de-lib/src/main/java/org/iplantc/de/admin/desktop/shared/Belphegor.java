@@ -194,6 +194,7 @@ public interface Belphegor {
         String NO = ".noBtn";
         String NAME_CELL = ".nameCell";
         String COL_HEADER = ".colHeader";
+        String PIDS_LIMIT = ".pidsLimit";
     }
 
     interface WorkshopAdminIds {

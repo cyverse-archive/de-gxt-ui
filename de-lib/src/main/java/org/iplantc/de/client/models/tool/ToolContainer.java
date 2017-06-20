@@ -12,12 +12,6 @@ import java.util.List;
 
 public interface ToolContainer extends HasName {
 
-    @PropertyName("container")
-    ToolContainer getToolContainer();
-
-    @PropertyName("container")
-    void setToolContainer(ToolContainer container);
-
     @PropertyName("working_directory")
     String getWorkingDirectory();
 
@@ -71,4 +65,10 @@ public interface ToolContainer extends HasName {
 
     @PropertyName("container_volumes_from")
     void setContainerVolumesFrom(List<ToolVolumesFrom> toolVolumesFroms);
+
+    @PropertyName("pids_limit")
+    void setPidsLimit(Integer pidLimit);
+
+    @PropertyName("pids_limit")
+    Integer getPidsLimit();
 }
