@@ -72,6 +72,10 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
     @Ignore
     @UiField FieldSet containerFieldSet;
     @UiField (provided = true) ToolAdminView.ToolAdminViewAppearance appearance;
+    
+    /**
+     * A PIDs limit for the tool
+     */
     @UiField IntegerField pidsLimitEditor;
 
     @Override

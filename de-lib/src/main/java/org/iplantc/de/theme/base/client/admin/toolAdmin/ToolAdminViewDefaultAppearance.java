@@ -532,6 +532,11 @@ public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminVi
         return displayStrings.defaultImgPrefix();
     }
 
+    /**
+     * Field Label for PIDs limit field
+     *
+     * @return
+     */
     @Override
     public String pidsLimit() {
         return displayStrings.pidsLimit();

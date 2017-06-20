@@ -215,6 +215,11 @@ public interface ToolAdminView extends IsWidget,
 
         String defaultImgPrefix();
 
+        /**
+         * Field Label for PIDs limit field
+         *
+         * @return
+         */
         String pidsLimit();
     }
 
