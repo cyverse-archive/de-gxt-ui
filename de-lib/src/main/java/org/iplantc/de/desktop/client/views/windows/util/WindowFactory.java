@@ -89,6 +89,7 @@ public class WindowFactory {
                 break;
             case SYSTEM_MESSAGES:
                 ret = systemMessagesWindowAsyncProvider;
+                break;
             case MANAGETOOLS:
                 ret = ManageToolsWindowAsyncProvider;
             default:
