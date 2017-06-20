@@ -288,7 +288,9 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
             @Override
             public void onSuccess(List<Subject> result) {
                 view.unmaskCollaborators();
-                view.loadData(result);
+                if (result != null && !result.isEmpty()) {
+                    view.loadData(result);
+                }
                 eventBus.fireEvent(new CollaboratorsLoadedEvent());
             }
 
