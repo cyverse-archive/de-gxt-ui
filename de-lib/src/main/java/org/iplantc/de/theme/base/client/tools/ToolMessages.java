@@ -87,6 +87,11 @@ public interface ToolMessages extends Messages {
 
     String done();
 
+    /**
+     * The field label for entrypoint
+     *
+     * @return  label for entrypoint field
+     */
     String entryPoint();
 }
         

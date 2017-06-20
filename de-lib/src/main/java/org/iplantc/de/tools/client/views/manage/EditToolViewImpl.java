@@ -86,6 +86,9 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
     @UiField
     TextField time;
 
+    /**
+     * Entrypoint for a tool container
+     */
     @Path("container.entryPoint")
     @UiField
     TextField entryPoint;

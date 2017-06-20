@@ -45,6 +45,11 @@ public interface EditToolView extends IsWidget{
 
         SafeHtml buildRequiredFieldLabel(String label);
 
+        /**
+         * The field label for entrypoint
+         *
+         * @return  label for entrypoint field
+         */
         String entryPoint();
     }
 

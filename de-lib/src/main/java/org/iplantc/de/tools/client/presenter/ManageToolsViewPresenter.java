@@ -6,8 +6,6 @@ import org.iplantc.de.client.gin.ServicesInjector;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
-import org.iplantc.de.client.models.tool.ToolContainer;
-import org.iplantc.de.client.models.tool.ToolImage;
 import org.iplantc.de.client.services.ToolServices;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -189,12 +187,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
             @Override
             public void onSuccess(EditToolDialog etd) {
                 etd.setSize(appearance.editDialogWidth(), appearance.editDialogHeight());
-                Tool tool = factory.getTool().as();
-                ToolImage image = factory.getImage().as();
-                ToolContainer container = factory.getContainer().as();
-                container.setImage(image);
-                tool.setContainer(container);
-                etd.editTool(tool);
+                etd.editTool(factory.getTool().as());
                 etd.show(ManageToolsViewPresenter.this);
             }
         });
