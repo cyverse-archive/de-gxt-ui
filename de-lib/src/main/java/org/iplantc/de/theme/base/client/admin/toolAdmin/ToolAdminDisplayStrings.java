@@ -220,4 +220,6 @@ public interface ToolAdminDisplayStrings extends Messages {
     String restricted();
 
     String defaultImgPrefix();
+
+    String pidsLimit();
 }

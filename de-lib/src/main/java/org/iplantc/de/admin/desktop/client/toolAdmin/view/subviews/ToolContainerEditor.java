@@ -72,6 +72,11 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
     @Ignore
     @UiField FieldSet containerFieldSet;
     @UiField (provided = true) ToolAdminView.ToolAdminViewAppearance appearance;
+    
+    /**
+     * A PIDs limit for the tool
+     */
+    @UiField IntegerField pidsLimitEditor;
 
     @Override
     protected void onEnsureDebugId(String baseID) {
@@ -97,6 +102,7 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
         containerVolumesEditor.ensureDebugId(baseID + Belphegor.ToolAdminIds.CONTAINER_VOLUMES);
         containerVolumesFromEditor.ensureDebugId(baseID + Belphegor.ToolAdminIds.CONTAINER_VOLUMES_FROM);
         imageEditor.ensureDebugId(baseID + Belphegor.ToolAdminIds.TOOL_IMAGE);
+        pidsLimitEditor.ensureDebugId(baseID + Belphegor.ToolAdminIds.PIDS_LIMIT);
     }
 
     @Inject
