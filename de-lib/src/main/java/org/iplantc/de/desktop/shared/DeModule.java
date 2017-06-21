@@ -63,5 +63,6 @@ public interface DeModule {
         String SIMPLE_DOWNLOAD = "simpleDownloadWindow";
         String SYSTEM_MESSAGES = "systemMessageWindow";
         String ABOUT_WINDOW = "aboutWindow";
+        String MANAGE_TOOLS_WINDOW = "manageToolsWindow";
     }
 }

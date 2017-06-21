@@ -14,7 +14,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -22,7 +21,8 @@ import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
-import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
+import com.sencha.gxt.widget.core.client.Composite;
+import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
@@ -58,11 +58,11 @@ public class ManageToolsViewImpl extends Composite implements ManageToolsView {
     @UiField
     GridView<Tool> gridView;
 
-    @UiField
-    VerticalLayoutContainer container;
-
     @UiField(provided = true)
     ManageToolsToolbarView toolbar;
+
+    @UiField
+    BorderLayoutContainer container;
 
     private static final ManageToolsViewUiBinder uiBinder = GWT.create(ManageToolsViewUiBinder.class);
 
@@ -77,17 +77,11 @@ public class ManageToolsViewImpl extends Composite implements ManageToolsView {
         this.toolbar = toolbar;
         this.infoCell = nameCell;
         this.properties = properties;
-        uiBinder.createAndBindUi(this);
+        initWidget(uiBinder.createAndBindUi(this));
         grid.getSelectionModel().setSelectionMode(Style.SelectionMode.MULTI);
 
         grid.getSelectionModel().addSelectionChangedHandler(event -> fireEvent(new ToolSelectionChangedEvent(event.getSelection())));
     }
-
-    @Override
-    public Widget asWidget() {
-        return container;
-    }
-
 
     @UiFactory
     ListStore<Tool> buildListStore() {
@@ -177,7 +171,6 @@ public class ManageToolsViewImpl extends Composite implements ManageToolsView {
 
     @Override
     public HandlerRegistration addShowToolInfoEventHandlers(ShowToolInfoEvent.ShowToolInfoEventHandler handler) {
-
         infoCell.addShowToolInfoEventHandlers(handler);
         return addHandler(handler, ShowToolInfoEvent.TYPE);
     }
@@ -224,6 +217,12 @@ public class ManageToolsViewImpl extends Composite implements ManageToolsView {
     @Override
     public HandlerRegistration addToolSelectionChangedEventHandler(ToolSelectionChangedEvent.ToolSelectionChangedEventHandler handler) {
         return addHandler(handler, ToolSelectionChangedEvent.TYPE);
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+        toolbar.asWidget().ensureDebugId(baseID);
     }
 
 }
