@@ -161,6 +161,18 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @Override
+    public void removeCollaboratorsById(List<String> userIds) {
+        if (userIds != null && !userIds.isEmpty()) {
+            for (String id : userIds) {
+                Subject found = listStore.findModelWithKey(id);
+                if (found != null) {
+                    listStore.remove(found);
+                }
+            }
+        }
+    }
+
+    @Override
     public void loadData(List<Subject> models) {
         listStore.clear();
         listStore.addAll(models);

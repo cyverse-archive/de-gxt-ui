@@ -146,6 +146,12 @@ public interface ManageCollaboratorsView extends IsWidget,
     List<Group> getSelectedCollaboratorLists();
 
     /**
+     * Remove the collaborators with the specified IDs
+     * @param userIds
+     */
+    void removeCollaboratorsById(List<String> userIds);
+
+    /**
      *  The collection of modes the ManageCollaboratorsView can step into
      */
     enum MODE {

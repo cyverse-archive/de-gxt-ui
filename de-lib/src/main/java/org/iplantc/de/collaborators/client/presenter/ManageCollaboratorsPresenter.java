@@ -15,13 +15,13 @@ import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.CollaboratorsLoadedEvent;
-import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
 import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.events.GroupSaved;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
 import org.iplantc.de.collaborators.client.presenter.callbacks.ParentAddMemberToGroupCallback;
+import org.iplantc.de.collaborators.client.presenter.callbacks.ParentDeleteSubjectsCallback;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -37,12 +37,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
-import com.sencha.gxt.widget.core.client.Dialog;
-import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
-
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -53,7 +50,6 @@ import java.util.stream.Stream;
  */
 public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Presenter,
                                                      RemoveCollaboratorSelected.RemoveCollaboratorSelectedHandler,
-                                                     DeleteGroupSelected.DeleteGroupSelectedHandler,
                                                      AddGroupSelected.AddGroupSelectedHandler,
                                                      GroupNameSelected.GroupNameSelectedHandler,
                                                      UserSearchResultSelected.UserSearchResultSelectedEventHandler {
@@ -74,6 +70,57 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
         public void setParent(ParentAddMemberToGroupCallback parent) {
             this.parent = parent;
+        }
+    }
+
+    private class DeleteUsersChildCallback implements AsyncCallback<List<UpdateMemberResult>> {
+
+        private ParentDeleteSubjectsCallback parentCallback;
+
+        public DeleteUsersChildCallback(ParentDeleteSubjectsCallback parentCallback) {
+            this.parentCallback = parentCallback;
+        }
+
+        @Override
+        public void onSuccess(List<UpdateMemberResult> result) {
+            if (parentCallback != null) {
+                parentCallback.done(result);
+            }
+        }
+
+        @Override
+        public void onFailure(Throwable caught) {
+            if (parentCallback != null) {
+                parentCallback.done(caught);
+                return;
+            }
+            ErrorHandler.post(caught);
+            view.unmaskCollaborators();
+        }
+    }
+
+    private class DeleteGroupChildCallback implements AsyncCallback<Group> {
+        private ParentDeleteSubjectsCallback parentCallback;
+
+        public DeleteGroupChildCallback(ParentDeleteSubjectsCallback parentCallback) {
+            this.parentCallback = parentCallback;
+        }
+
+        @Override
+        public void onFailure(Throwable caught) {
+            if (parentCallback != null) {
+                parentCallback.done(caught);
+                return;
+            }
+            ErrorHandler.post(caught);
+            view.unmaskCollaborators();
+        }
+
+        @Override
+        public void onSuccess(Group result) {
+            if (parentCallback != null) {
+                parentCallback.done(result);
+            }
         }
     }
 
@@ -105,10 +152,10 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     void addEventHandlers() {
-        view.addDeleteGroupSelectedHandler(this);
         view.addAddGroupSelectedHandler(this);
         view.addGroupNameSelectedHandler(this);
         view.addUserSearchResultSelectedEventHandler(this);
+        view.addRemoveCollaboratorSelectedHandler(this);
     }
 
     /*
@@ -120,7 +167,6 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     @Override
     public void go(HasOneWidget container, ManageCollaboratorsView.MODE mode) {
         this.view = factory.create(mode);
-        view.addRemoveCollaboratorSelectedHandler(this);
         loadCurrentCollaborators();
         getGroups();
         addEventHandlers();
@@ -156,7 +202,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
             @Override
             public void handleSuccess(List<UpdateMemberResult> totalResults) {
-                List<UpdateMemberResult> failures = getFailResults(totalResults);
+                List<UpdateMemberResult> failures = mapIsSuccessResults(totalResults).get(false);
                 if (failures != null && !failures.isEmpty()) {
                     announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.unableToAddMembers(failures)));
                 } else {
@@ -183,7 +229,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
             @Override
             public void onSuccess(List<UpdateMemberResult> result) {
-                List<UpdateMemberResult> failures = getFailResults(result);
+                List<UpdateMemberResult> failures = mapIsSuccessResults(result).get(false);
                 if (failures != null && !failures.isEmpty()) {
                     announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.unableToAddMembers(failures)));
                 } else {
@@ -212,6 +258,17 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         return Joiner.on(", ").join(names);
     }
 
+    String getSubjectNames(List<UpdateMemberResult> userSuccesses, List<Group> groups) {
+        List<String> userNames = userSuccesses.stream()
+                                              .map(UpdateMemberResult::getSubjectName)
+                                              .collect(Collectors.toList());
+        List<String> groupNames = groups.stream()
+                                        .map(Group::getSubjectDisplayName)
+                                        .collect(Collectors.toList());
+        userNames.addAll(groupNames);
+        return Joiner.on(", ").join(userNames);
+    }
+
     @Override
     public void getGroups() {
         groupServiceFacade.getGroups(new AsyncCallback<List<Subject>>() {
@@ -238,32 +295,88 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     @Override
     public void onRemoveCollaboratorSelected(RemoveCollaboratorSelected event) {
+        view.maskCollaborators(groupAppearance.loadingMask());
         List<Subject> models = event.getSubjects();
-        groupServiceFacade.deleteMembers(groupFactory.getDefaultGroup(), models, new AsyncCallback<List<UpdateMemberResult>>() {
-
+        Map<Boolean, List<Subject>> mapIsGroup = models.stream()
+                                                   .collect(Collectors.partitioningBy(subject -> Group.GROUP_IDENTIFIER.equals(subject.getSourceId())));
+        List<Subject> selectedGroups = mapIsGroup.get(true);
+        List<Subject> selectedUsers = mapIsGroup.get(false);
+        ParentDeleteSubjectsCallback parentCallback = new ParentDeleteSubjectsCallback() {
             @Override
-            public void onSuccess(List<UpdateMemberResult> result) {
-                List<UpdateMemberResult> failures = getFailResults(result);
+            public void whenDone(List<UpdateMemberResult> totalResults,
+                                 List<Group> successGroups,
+                                 List<Throwable> failures) {
                 if (failures != null && !failures.isEmpty()) {
-                    announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.memberDeleteFail(failures)));
-                } else {
-                    view.removeCollaborators(models);
-                    String names = getCollaboratorNames(models);
-                    announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.collaboratorRemoveConfirm(
-                            names)));
+                    ErrorHandler.post(failures);
                 }
-            }
+                Map<Boolean, List<UpdateMemberResult>> mapIsSuccess =
+                        mapIsSuccessResults(totalResults);
+                List<UpdateMemberResult> userFailures = mapIsSuccess.get(false);
+                List<UpdateMemberResult> userSuccesses = mapIsSuccess.get(true);
+                if (userFailures != null && !userFailures.isEmpty()) {
+                    announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.memberDeleteFail(userFailures)));
+                }
+                String names = getSubjectNames(userSuccesses, successGroups);
+                announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.collaboratorRemoveConfirm(
+                        names)));
 
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
+                List<String> collaboratorIds = getCollaboratorIds(userSuccesses, successGroups);
+                view.removeCollaboratorsById(collaboratorIds);
+                view.unmaskCollaborators();
             }
-        });
+        };
 
+        int callbackSize = getCallbackSize(selectedUsers, selectedGroups);
+
+        parentCallback.setCallbackCounter(callbackSize);
+
+        removeCollaboratorsFromDefault(selectedUsers, parentCallback);
+        deleteGroups(selectedGroups, parentCallback);
     }
 
-    List<UpdateMemberResult> getFailResults(List<UpdateMemberResult> result) {
-        return result.stream().filter(item -> !item.isSuccess()).collect(Collectors.toList());
+    void deleteGroups(List<Subject> selectedGroups, ParentDeleteSubjectsCallback parentCallback) {
+        selectedGroups.forEach(subject -> {
+            Group group = groupFactory.convertSubjectToGroup(subject);
+            groupServiceFacade.deleteGroup(group, new DeleteGroupChildCallback(parentCallback));
+        });
+    }
+
+    void removeCollaboratorsFromDefault(List<Subject> selectedUsers,
+                                        ParentDeleteSubjectsCallback parentCallback) {
+        if (selectedUsers != null && !selectedUsers.isEmpty()) {
+            groupServiceFacade.deleteMembers(groupFactory.getDefaultGroup(),
+                                             selectedUsers,
+                                             new DeleteUsersChildCallback(parentCallback));
+        }
+    }
+
+    int getCallbackSize(List<Subject> selectedUsers, List<Subject> selectedGroups) {
+        int callbackSize = 0;
+        if (selectedUsers != null && !selectedUsers.isEmpty()) {
+            callbackSize++;
+        }
+        if (selectedGroups != null && !selectedGroups.isEmpty()) {
+            callbackSize += selectedGroups.size();
+        }
+
+        return callbackSize;
+    }
+
+    List<String> getCollaboratorIds(List<UpdateMemberResult> userSuccesses, List<Group> successGroups) {
+        List<String> collaboratorIds = Lists.newArrayList();
+        List<String> userIds = userSuccesses.stream()
+                                            .map(UpdateMemberResult::getSubjectId)
+                                            .collect(Collectors.toList());
+        List<String> groupIds = successGroups.stream()
+                                             .map(Group::getId)
+                                             .collect(Collectors.toList());
+        collaboratorIds.addAll(userIds);
+        collaboratorIds.addAll(groupIds);
+        return collaboratorIds;
+    }
+
+    Map<Boolean, List<UpdateMemberResult>> mapIsSuccessResults(List<UpdateMemberResult> totalResults) {
+        return totalResults.stream().collect(Collectors.partitioningBy(UpdateMemberResult::isSuccess));
     }
 
     /*
@@ -310,44 +423,6 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     @Override
     public List<Subject> getSelectedSubjects() {
         return view.getSelectedSubjects();
-    }
-
-    @Override
-    public void onDeleteGroupSelected(DeleteGroupSelected event) {
-        Subject subject = event.getGroup();
-        Group group = groupFactory.convertSubjectToGroup(subject);
-        if (group == null) {
-            return;
-        }
-        ConfirmMessageBox deleteAlert = new ConfirmMessageBox(groupAppearance.deleteGroupConfirmHeading(group),
-                                                              groupAppearance.deleteGroupConfirm(group));
-        deleteAlert.show();
-        deleteAlert.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
-            @Override
-            public void onDialogHide(DialogHideEvent event) {
-                if (event.getHideButton().equals(Dialog.PredefinedButton.YES)) {
-                    deleteGroup(group);
-                }
-            }
-        });
-    }
-
-    void deleteGroup(Group group) {
-        view.maskCollaborators(groupAppearance.loadingMask());
-        groupServiceFacade.deleteGroup(group, new AsyncCallback<Group>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-                view.unmaskCollabLists();
-            }
-
-            @Override
-            public void onSuccess(Group result) {
-                view.removeCollaborators(wrapSubjectInList(group));
-                announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.groupDeleteSuccess(result)));
-                view.unmaskCollaborators();
-            }
-        });
     }
 
     @Override
