@@ -74,7 +74,7 @@ public class ErrorHandler {
      * @param error the string message to include in the displayed dialog
      */
     public static void post(String error) {
-        post(error, null);
+        post(error, Lists.newArrayList());
     }
 
     /**
@@ -84,7 +84,16 @@ public class ErrorHandler {
      * @param caught
      */
     public static void post(Throwable caught) {
-        post(appearance.error(), caught);
+        post(Lists.newArrayList(caught));
+    }
+
+    /**
+     * Post a message box with error styles with a general error message summary and the given list of caught
+     * with additional error details.
+     * @param caughtList
+     */
+    public static void post(List<Throwable> caughtList) {
+        post(appearance.error(), caughtList);
     }
 
     /**
@@ -95,6 +104,10 @@ public class ErrorHandler {
      * @param caught
      */
     public static void post(String errorSummary, Throwable caught) {
+        post(errorSummary, Lists.newArrayList(caught));
+    }
+
+    public static void post(String errorSummary, List<Throwable> caught) {
         if (Strings.isNullOrEmpty(errorSummary)) {
             errorSummary = appearance.error();
         }
@@ -107,22 +120,23 @@ public class ErrorHandler {
      * additional error details.
      * 
      * @param errorSummary
-     * @param caught
+     * @param caughtList
      */
-    public static void post(SafeHtml errorSummary, Throwable caught) {
-        String errorDetails = getSystemDescription();
+    public static void post(final SafeHtml errorSummary, List<Throwable> caughtList) {
+        String systemDesc = getSystemDescription();
+        final StringBuilder errorDetails = new StringBuilder();
 
-        if (errorSummary == null) {
-            errorSummary = SafeHtmlUtils.fromString(appearance.error());
+        if (caughtList != null && !caughtList.isEmpty()) {
+            caughtList.forEach(caught -> {
+                GWT.log(errorSummary.asString(), caught);
+
+                errorDetails.append(parseExceptionJson(caught) + NEWLINE);
+            });
+
+            errorDetails.append(NEWLINE + systemDesc);
         }
 
-        if (caught != null) {
-            GWT.log(errorSummary.asString(), caught);
-
-            errorDetails = parseExceptionJson(caught) + NEWLINE + NEWLINE + errorDetails;
-        }
-
-        ErrorDialog ed3 = new ErrorDialog(errorSummary, errorDetails);
+        ErrorDialog ed3 = new ErrorDialog(errorSummary, errorDetails.toString());
         ed3.show();
     }
 
@@ -163,7 +177,7 @@ public class ErrorHandler {
 
 
         Throwable newCaught = new Exception(errDetails, caught);
-        post(errorMsg, newCaught);
+        post(errorMsg, Lists.newArrayList(newCaught));
     }
 
     private static String parseExceptionJson(Throwable caught) {
