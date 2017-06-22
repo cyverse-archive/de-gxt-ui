@@ -97,6 +97,16 @@ public class AppEditorDefaultAppearance implements AppEditor.AppEditorAppearance
     }
 
     @Override
+    public String appDelete() {
+        return displayStrings.appDelete();
+    }
+
+    @Override
+    public String appDeleted() {
+        return displayStrings.appDeleted();
+    }
+
+    @Override
     public String appDescription() {
         return displayStrings.appDescription();
     }

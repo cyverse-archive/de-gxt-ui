@@ -64,6 +64,10 @@ public class AppEditor extends Window implements Editor<App>, IsWidget, SaveAppS
 
         String appDisabled();
 
+        String appDelete();
+
+        String appDeleted();
+
         String appDescription();
 
         String templateLinkPopupHeading();
@@ -109,6 +113,9 @@ public class AppEditor extends Window implements Editor<App>, IsWidget, SaveAppS
     @UiField
     FieldLabel integratorEmailFieldLabel;
     @UiField CheckBoxAdapter disabled;
+
+    @UiField CheckBoxAdapter deleted;
+
     @UiField
     FieldLabel appDisabledCheckBoxLabel;
     @UiField FieldLabel appBetaCheckBoxLabel;
@@ -165,6 +172,7 @@ public class AppEditor extends Window implements Editor<App>, IsWidget, SaveAppS
         window.setHeading(app.getName());
         docHelp.setHTML(appearance.docHelpHtml());
         disabled.setText(appearance.appDisabled());
+        deleted.setText(appearance.appDeleted());
         if (this.doc != null) {
             appDoc.setValue(this.doc.getDocumentation());
         }
@@ -239,6 +247,7 @@ public class AppEditor extends Window implements Editor<App>, IsWidget, SaveAppS
         integratorEmail.setId(baseID + Belphegor.AppIds.EDITOR_WINDOW + Belphegor.AppIds.INTEGRATOR_EMAIL);
         integratorEmailFieldLabel.ensureDebugId(baseID + Belphegor.AppIds.EDITOR_WINDOW + Belphegor.AppIds.INTEGRATOR_EMAIL_LABEL);
         disabled.getCheckBox().ensureDebugId(baseID + Belphegor.AppIds.EDITOR_WINDOW + Belphegor.AppIds.DISABLED);
+        deleted.getCheckBox().ensureDebugId(baseID + Belphegor.AppIds.EDITOR_WINDOW + Belphegor.AppIds.DELETED);
         beta.getCheckBox().ensureDebugId(baseID + Belphegor.AppIds.EDITOR_WINDOW + Belphegor.AppIds.BETA);
         appDisabledCheckBoxLabel.ensureDebugId(baseID + Belphegor.AppIds.EDITOR_WINDOW + Belphegor.AppIds.DISABLED_LABEL);
         description.setId(baseID + Belphegor.AppIds.EDITOR_WINDOW + Belphegor.AppIds.DESCRIPTION);
