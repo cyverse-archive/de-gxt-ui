@@ -18,7 +18,6 @@ import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
-import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.CollaboratorsLoadedEvent;
@@ -71,7 +70,7 @@ public class ManageCollaboratorsPresenterTest {
     @Mock Widget viewWidgetMock;
     @Mock EventBus eventBusMock;
     @Mock IplantAnnouncer announcerMock;
-    @Mock GroupView.GroupViewAppearance groupAppearanceMock;
+    @Mock ManageCollaboratorsView.Appearance groupAppearanceMock;
     @Mock GroupDetailsDialog groupDetailsDialogMock;
     @Mock AsyncProviderWrapper<GroupDetailsDialog> groupDetailsDialogProvider;
     @Mock AutoBean<Group> groupAutoBeanMock;

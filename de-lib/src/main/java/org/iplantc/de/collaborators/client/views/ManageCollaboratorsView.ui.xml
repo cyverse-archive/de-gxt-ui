@@ -5,13 +5,13 @@
 			 xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
 			 xmlns:toolbar="urn:import:com.sencha.gxt.widget.core.client.toolbar"
 			 xmlns:userSearch="urn:import:org.iplantc.de.collaborators.client.util"
-			 xmlns:de="urn:import:org.iplantc.de.commons.client.widgets"
-			 xmlns:client="urn:import:org.iplantc.de.collaborators.client">
+			 xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
+			 xmlns:de="urn:import:org.iplantc.de.commons.client.widgets">
 
 	<ui:with field="appearance"
 			 type="org.iplantc.de.collaborators.client.ManageCollaboratorsView.Appearance"/>
 	<ui:with field="groupAppearance"
-			 type="org.iplantc.de.collaborators.client.GroupView.GroupViewAppearance"/>
+			 type="org.iplantc.de.collaborators.client.ManageCollaboratorsView.Appearance"/>
 
  	<!-- Main Panel -->
 	<ui:with field="listStore" type="com.sencha.gxt.data.shared.ListStore" />
@@ -81,8 +81,6 @@
 									 headerVisible="true"
 					heading="My Collaborators">
 
-					<!--<de:DETabPanel ui:field="tabPanel" visible="false">-->
-						<!--<de:child config="{collaboratorTabConfig}">-->
 							<container:VerticalLayoutContainer pixelSize="445,150">
 								<container:child>
 									<toolbar:ToolBar height="30" ui:field="toolbar">
@@ -101,11 +99,6 @@
 															   text="{groupAppearance.addGroup}"
 															   icon="{groupAppearance.addIcon}"/>
 										</toolbar:child>
-										<toolbar:child>
-											<button:TextButton ui:field="deleteGroup"
-															   text="{groupAppearance.deleteGroup}"
-															   icon="{groupAppearance.deleteIcon}"/>
-										</toolbar:child>
 									</toolbar:ToolBar>
 								</container:child>
 								<container:child layoutData="{middleData}">
@@ -119,11 +112,6 @@
 									</grid:Grid>
 								</container:child>
 							</container:VerticalLayoutContainer>
-						<!--</de:child>-->
-						<!--<de:child config="{collaboratorListTabConfig}">-->
-							<!--<client:GroupView ui:field="groupView"/>-->
-						<!--</de:child>-->
-					<!--</de:DETabPanel>-->
 					</gxt:FramedPanel>
 				</container:center>
 			</container:BorderLayoutContainer>

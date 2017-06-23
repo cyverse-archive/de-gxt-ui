@@ -3,7 +3,7 @@ package org.iplantc.de.collaborators.client.views;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.collaborators.client.GroupDetailsView;
-import org.iplantc.de.collaborators.client.GroupView;
+import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
 import org.iplantc.de.collaborators.client.events.DeleteMembersSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
@@ -70,14 +70,14 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
     @UiField ListStore<Subject> listStore;
     @UiField Grid<Subject> grid;
     @UiField ColumnModel<Subject> cm;
-    @UiField(provided = true) GroupView.GroupViewAppearance appearance;
+    @UiField(provided = true) ManageCollaboratorsView.Appearance appearance;
 
     private CheckBoxSelectionModel<Subject> checkBoxModel;
     String baseID;
     private MODE mode;
 
     @Inject
-    public GroupDetailsViewImpl(GroupView.GroupViewAppearance appearance,
+    public GroupDetailsViewImpl(ManageCollaboratorsView.Appearance appearance,
                                 UserSearchField searchField) {
         this.appearance = appearance;
         this.searchField = searchField;

@@ -9,7 +9,7 @@
 >
 
     <ui:with field="appearance"
-             type="org.iplantc.de.collaborators.client.GroupView.GroupViewAppearance"/>
+             type="org.iplantc.de.collaborators.client.ManageCollaboratorsView.Appearance"/>
 
     <!-- Main Panel -->
     <ui:with field="listStore" type="com.sencha.gxt.data.shared.ListStore"/>

@@ -1,6 +1,6 @@
 package org.iplantc.de.commons.client.validators;
 
-import org.iplantc.de.collaborators.client.GroupView;
+import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
 
 import com.google.gwt.core.client.GWT;
@@ -19,11 +19,11 @@ import java.util.List;
 public class GroupNameValidator extends AbstractValidator<String> {
 
     private final IplantValidationConstants valConstants;
-    private final GroupView.GroupViewAppearance appearance;
+    private final ManageCollaboratorsView.Appearance appearance;
 
     public GroupNameValidator() {
         this.valConstants = GWT.create(IplantValidationConstants.class);
-        this.appearance = GWT.create(GroupView.GroupViewAppearance.class);
+        this.appearance = GWT.create(ManageCollaboratorsView.Appearance.class);
     }
 
     @Override

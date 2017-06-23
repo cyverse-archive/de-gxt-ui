@@ -11,7 +11,6 @@ import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
-import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.CollaboratorsLoadedEvent;
@@ -132,7 +131,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     private GroupAutoBeanFactory groupFactory;
     private GroupServiceFacade groupServiceFacade;
     private CollaboratorsServiceFacade collabServiceFacade;
-    private GroupView.GroupViewAppearance groupAppearance;
+    private ManageCollaboratorsView.Appearance groupAppearance;
     ManageCollaboratorsView view;
     HandlerRegistration addCollabHandlerRegistration;
 
@@ -143,7 +142,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                                         GroupAutoBeanFactory groupFactory,
                                         GroupServiceFacade groupServiceFacade,
                                         CollaboratorsServiceFacade collabServiceFacade,
-                                        GroupView.GroupViewAppearance groupAppearance) {
+                                        ManageCollaboratorsView.Appearance groupAppearance) {
         this.factory = factory;
         this.groupFactory = groupFactory;
         this.groupServiceFacade = groupServiceFacade;
@@ -275,14 +274,14 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
-                view.unmaskCollabLists();
+                view.unmaskCollaborators();
             }
 
             @Override
             public void onSuccess(List<Subject> result) {
                 List<Subject> filteredGroups = excludeDefaultGroup(result);
                 view.addCollaborators(filteredGroups);
-                view.unmaskCollabLists();
+                view.unmaskCollaborators();
             }
         });
     }

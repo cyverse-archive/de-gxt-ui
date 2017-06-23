@@ -43,7 +43,7 @@ public final class SubjectNameCell extends AbstractCell<Subject> {
 
         Element eventTargetElement = Element.as(event.getEventTarget());
         if ((Event.as(event).getTypeInt() == Event.ONCLICK)
-            && eventTargetElement.getAttribute("name").equalsIgnoreCase(GroupNameCell.GroupNameCellAppearance.CLICKABLE_ELEMENT_NAME)) {
+            && eventTargetElement.getAttribute("name").equalsIgnoreCase(SubjectNameCellAppearance.CLICKABLE_ELEMENT_NAME)) {
             hasHandlers.fireEvent(new GroupNameSelected(value));
         }
     }
