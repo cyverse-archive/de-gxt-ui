@@ -81,6 +81,7 @@ public class DesktopWindowManager {
                 }
                 window.show(config, constructWindowId(config), true);
                 resizeOversizeWindow(window);
+                moveOutOfBoundsWindow(window);
                 if (sticky != null) {
                     windowManager.bringToFront(sticky);
                 }
