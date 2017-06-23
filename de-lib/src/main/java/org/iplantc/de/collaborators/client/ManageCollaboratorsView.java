@@ -103,6 +103,10 @@ public interface ManageCollaboratorsView extends IsWidget,
         String groupNameValidationMsg(String restrictedChars);
 
         String invalidChars(String restrictedChar);
+
+        String nameHeader();
+
+        String institutionOrDescriptionHeader();
     }
 
     /**

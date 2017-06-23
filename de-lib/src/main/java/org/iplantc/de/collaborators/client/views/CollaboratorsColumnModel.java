@@ -6,7 +6,6 @@ import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.models.SubjectNameComparator;
 import org.iplantc.de.collaborators.client.models.SubjectProperties;
 import org.iplantc.de.collaborators.client.views.cells.SubjectNameCell;
-import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
@@ -59,7 +58,7 @@ public class CollaboratorsColumnModel extends ColumnModel<Subject> implements Gr
 
         ColumnConfig<Subject, Subject> name = new ColumnConfig<>(new IdentityValueProvider<Subject>("firstname"),
                                                                  150);
-        name.setHeader(I18N.DISPLAY.name());
+        name.setHeader(appearance.nameHeader());
         name.setCell(new SubjectNameCell());
 
         name.setComparator(new SubjectNameComparator());
@@ -67,7 +66,7 @@ public class CollaboratorsColumnModel extends ColumnModel<Subject> implements Gr
 
         ColumnConfig<Subject, String> ins = new ColumnConfig<>(properties.institution(),
                                                                150);
-        ins.setHeader(I18N.DISPLAY.institution());
+        ins.setHeader(appearance.institutionOrDescriptionHeader());
         configs.add(ins);
 
         return configs;

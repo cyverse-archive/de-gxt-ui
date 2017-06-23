@@ -42,4 +42,6 @@ public interface CollaboratorsDisplayStrings extends Messages {
     String groupNameValidationMsg(String restrictedChars);
 
     String addGroup();
+
+    String institutionOrDescriptionHeader();
 }

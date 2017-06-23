@@ -269,4 +269,14 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
     public String invalidChars(String restrictedChars) {
         return iplantValidationMessages.invalidChars(restrictedChars);
     }
+
+    @Override
+    public String nameHeader() {
+        return iplantDisplayStrings.name();
+    }
+
+    @Override
+    public String institutionOrDescriptionHeader() {
+        return displayStrings.institutionOrDescriptionHeader();
+    }
 }
