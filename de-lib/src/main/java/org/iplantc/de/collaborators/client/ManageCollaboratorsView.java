@@ -76,9 +76,9 @@ public interface ManageCollaboratorsView extends IsWidget,
 
         String completeRequiredFieldsError();
 
-        String deleteGroupConfirmHeading(Group group);
+        String deleteGroupConfirmHeading(List<Subject> groups);
 
-        String deleteGroupConfirm(Group group);
+        String deleteGroupConfirm(List<Subject> groups);
 
         String unableToAddMembers(List<UpdateMemberResult> failures);
 

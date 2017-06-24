@@ -36,6 +36,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.widget.core.client.Dialog;
+import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
+import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -302,11 +306,29 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     @Override
     public void onRemoveCollaboratorSelected(RemoveCollaboratorSelected event) {
-        view.maskCollaborators(groupAppearance.loadingMask());
         List<Subject> models = event.getSubjects();
         Map<Boolean, List<Subject>> mapIsGroup = mapIsGroup(models);
         List<Subject> selectedGroups = mapIsGroup.get(true);
         List<Subject> selectedUsers = mapIsGroup.get(false);
+        if (selectedGroups != null && !selectedGroups.isEmpty()) {
+            ConfirmMessageBox deleteAlert = new ConfirmMessageBox(groupAppearance.deleteGroupConfirmHeading(selectedGroups),
+                                                                  groupAppearance.deleteGroupConfirm(selectedGroups));
+            deleteAlert.show();
+            deleteAlert.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
+                @Override
+                public void onDialogHide(DialogHideEvent event) {
+                    if (event.getHideButton().equals(Dialog.PredefinedButton.YES)) {
+                        removeCollaborators(selectedGroups, selectedUsers);
+                    }
+                }
+            });
+        } else {
+            removeCollaborators(null, selectedUsers);
+        }
+    }
+
+    void removeCollaborators(List<Subject> selectedGroups, List<Subject> selectedUsers) {
+        view.maskCollaborators(groupAppearance.loadingMask());
         ParentDeleteSubjectsCallback parentCallback = new ParentDeleteSubjectsCallback() {
             @Override
             public void whenDone(List<UpdateMemberResult> totalResults,
@@ -341,10 +363,12 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     void deleteGroups(List<Subject> selectedGroups, ParentDeleteSubjectsCallback parentCallback) {
-        selectedGroups.forEach(subject -> {
-            Group group = groupFactory.convertSubjectToGroup(subject);
-            groupServiceFacade.deleteGroup(group, new DeleteGroupChildCallback(parentCallback));
-        });
+        if (selectedGroups != null && !selectedGroups.isEmpty()) {
+            selectedGroups.forEach(subject -> {
+                Group group = groupFactory.convertSubjectToGroup(subject);
+                groupServiceFacade.deleteGroup(group, new DeleteGroupChildCallback(parentCallback));
+            });
+        }
     }
 
     void removeCollaboratorsFromDefault(List<Subject> selectedUsers,

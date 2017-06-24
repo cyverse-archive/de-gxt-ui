@@ -202,13 +202,15 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
     }
 
     @Override
-    public String deleteGroupConfirmHeading(Group group) {
-        return displayStrings.deleteGroupConfirmHeading(group.getName());
+    public String deleteGroupConfirmHeading(List<Subject> groups) {
+        List<String> groupNames = groups.stream().map(Subject::getSubjectDisplayName).collect(Collectors.toList());
+        return displayStrings.deleteGroupConfirmHeading(groupNames);
     }
 
     @Override
-    public String deleteGroupConfirm(Group group) {
-        return displayStrings.deleteGroupConfirm(group.getName());
+    public String deleteGroupConfirm(List<Subject> groups) {
+        List<String> groupNames = groups.stream().map(Subject::getSubjectDisplayName).collect(Collectors.toList());
+        return displayStrings.deleteGroupConfirm(groupNames);
     }
 
     @Override

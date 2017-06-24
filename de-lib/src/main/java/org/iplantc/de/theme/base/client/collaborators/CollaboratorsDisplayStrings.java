@@ -25,9 +25,9 @@ public interface CollaboratorsDisplayStrings extends Messages {
 
     String editGroupDetailsHeading(String name);
 
-    String deleteGroupConfirmHeading(String name);
+    String deleteGroupConfirmHeading(@PluralCount List<String> names);
 
-    String deleteGroupConfirm(String name);
+    String deleteGroupConfirm(@PluralCount List<String> names);
 
     String unableToAddMembers(@PluralCount List<String> memberString);
 
