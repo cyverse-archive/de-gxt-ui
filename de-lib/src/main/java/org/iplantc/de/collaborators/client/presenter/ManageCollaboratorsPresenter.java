@@ -177,22 +177,30 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         Subject subject = userSearchResultSelected.getSubject();
         if (!userInfo.getUsername()
                      .equals(subject.getId())) {
-            if (!collaboratorsUtil.isCurrentCollaborator(subject, view.getCollaborators())) {
-                addAsCollaborators(Arrays.asList(subject));
+            List<Subject> selectedSubjects = view.getSelectedSubjects();
+            List<Subject> selectedGroups = mapIsGroup(selectedSubjects).get(true);
+            if (selectedGroups != null && !selectedGroups.isEmpty()) {
+                addMemberToGroups(subject, selectedGroups);
+            } else {
+                if (!collaboratorsUtil.isCurrentCollaborator(subject, view.getCollaborators())) {
+                    addAsCollaborators(Arrays.asList(subject));
+                }
             }
+
         } else {
             announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.collaboratorsSelfAdd()));
         }
     }
 
-    void addMemberToGroups(Subject subject, List<Group> selectedCollaboratorLists) {
+    void addMemberToGroups(Subject member, List<Subject> selectedCollaboratorLists) {
         List<AddMemberToGroupCallback> childCallbacks = getAddMemberToGroupCallbackList();
 
-        selectedCollaboratorLists.forEach(new Consumer<Group>() {
+        selectedCollaboratorLists.forEach(new Consumer<Subject>() {
             @Override
-            public void accept(Group group) {
+            public void accept(Subject subject) {
                 AddMemberToGroupCallback callback = getAddMemberToGroupCallback();
-                groupServiceFacade.addMembers(group, wrapSubjectInList(subject), callback);
+                Group group = groupFactory.convertSubjectToGroup(subject);
+                groupServiceFacade.addMembers(group, wrapSubjectInList(member), callback);
                 childCallbacks.add(callback);
             }
         });
@@ -205,7 +213,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                 if (failures != null && !failures.isEmpty()) {
                     announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.unableToAddMembers(failures)));
                 } else {
-                    announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.memberAddToGroupsSuccess(subject)));
+                    announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.memberAddToGroupsSuccess(member)));
                 }
             }
         };
@@ -296,8 +304,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     public void onRemoveCollaboratorSelected(RemoveCollaboratorSelected event) {
         view.maskCollaborators(groupAppearance.loadingMask());
         List<Subject> models = event.getSubjects();
-        Map<Boolean, List<Subject>> mapIsGroup = models.stream()
-                                                   .collect(Collectors.partitioningBy(subject -> Group.GROUP_IDENTIFIER.equals(subject.getSourceId())));
+        Map<Boolean, List<Subject>> mapIsGroup = mapIsGroup(models);
         List<Subject> selectedGroups = mapIsGroup.get(true);
         List<Subject> selectedUsers = mapIsGroup.get(false);
         ParentDeleteSubjectsCallback parentCallback = new ParentDeleteSubjectsCallback() {
@@ -376,6 +383,11 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     Map<Boolean, List<UpdateMemberResult>> mapIsSuccessResults(List<UpdateMemberResult> totalResults) {
         return totalResults.stream().collect(Collectors.partitioningBy(UpdateMemberResult::isSuccess));
+    }
+
+    Map<Boolean, List<Subject>> mapIsGroup(List<Subject> models) {
+        return models.stream()
+                     .collect(Collectors.partitioningBy(subject -> Group.GROUP_IDENTIFIER.equals(subject.getSourceId())));
     }
 
     /*
