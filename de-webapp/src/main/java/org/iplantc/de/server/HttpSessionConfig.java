@@ -54,7 +54,7 @@ public class HttpSessionConfig {
     }
 
     private String getPassword() {
-        return environment.getProperty("org.iplantc.discoveryenvironement.redis.password");
+        return environment.getProperty("org.iplantc.discoveryenvironment.redis.password");
     }
 
 }
