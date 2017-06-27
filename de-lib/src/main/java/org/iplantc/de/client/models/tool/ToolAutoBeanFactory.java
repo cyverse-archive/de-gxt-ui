@@ -39,7 +39,7 @@ public interface ToolAutoBeanFactory extends AutoBeanFactory {
      *
      * @return  a tool
      */
-    default AutoBean<Tool> geTool() {
+    default AutoBean<Tool> getDefaultTool() {
         Tool tool = getTool().as();
         ToolImage image = getImage().as();
         ToolContainer container = getContainer().as();

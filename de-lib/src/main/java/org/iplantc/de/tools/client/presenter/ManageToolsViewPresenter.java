@@ -187,7 +187,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
             @Override
             public void onSuccess(EditToolDialog etd) {
                 etd.setSize(appearance.editDialogWidth(), appearance.editDialogHeight());
-                etd.editTool(factory.getTool().as());
+                etd.editTool(factory.getDefaultTool().as());
                 etd.show(ManageToolsViewPresenter.this);
             }
         });
