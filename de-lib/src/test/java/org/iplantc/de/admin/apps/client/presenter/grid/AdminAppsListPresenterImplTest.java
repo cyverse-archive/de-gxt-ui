@@ -22,6 +22,7 @@ import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEv
 import org.iplantc.de.apps.client.events.selection.AppInfoSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
 import org.iplantc.de.client.models.apps.App;
+import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.avu.Avu;
@@ -59,6 +60,8 @@ import java.util.List;
 public class AdminAppsListPresenterImplTest {
 
     @Mock AdminAppsGridViewFactory viewFactoryMock;
+    @Mock
+    AppAutoBeanFactory autoBeanFactory;
     @Mock AppAdminServiceFacade adminAppServiceMock;
     @Mock AdminAppsGridView viewMock;
     @Mock AppServiceFacade appServiceMock;
@@ -91,6 +94,7 @@ public class AdminAppsListPresenterImplTest {
         when(ontologyUtilMock.removeBetaAvu(listAvuMock)).thenReturn(avuListMock);
         uut = new AdminAppsGridPresenterImpl(viewFactoryMock, listStoreMock);
         uut.adminAppService = adminAppServiceMock;
+        uut.factory = autoBeanFactory;
         uut.appService = appServiceMock;
         uut.appearance = appearanceMock;
         uut.announcer = announcerMock;
@@ -151,6 +155,7 @@ public class AdminAppsListPresenterImplTest {
 
         AppInfoSelectedEvent eventMock = mock(AppInfoSelectedEvent.class);
         App appMock = mock(App.class);
+        when(appMock.isPublic()).thenReturn(true);
         when(eventMock.getApp()).thenReturn(appMock);
 
         /*** CALL METHOD UNDER TEST ***/
