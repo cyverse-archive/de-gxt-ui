@@ -1,5 +1,7 @@
 package org.iplantc.de.theme.base.client.apps.cells;
 
+import com.google.gwt.safehtml.shared.SafeUri;
+import com.google.gwt.safehtml.shared.UriUtils;
 import org.iplantc.de.apps.client.views.list.cells.AppCardCell;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.commons.client.util.MD5Util;
@@ -19,7 +21,7 @@ public class AppCardCellDefaultAppearance extends AppNameCellDefaultAppearance i
 
     interface Templates extends SafeHtmlTemplates {
         @SafeHtmlTemplates.Template("<img class='{0}' src='{1}' qtip='{2}' id='{3}'/>")
-        SafeHtml img(String className, String gravatar, String textToolTip, String debugId);
+        SafeHtml img(String className, SafeUri gravatar, String textToolTip, String debugId);
     }
 
     public interface AppCardCellStyles extends CssResource {
@@ -51,6 +53,6 @@ public class AppCardCellDefaultAppearance extends AppNameCellDefaultAppearance i
     public void render(Cell.Context context, App value, SafeHtmlBuilder sb, String cardUrl, String cardUrlOptions, String textToolTip, String debugID) {
         String hash = MD5Util.md5Hex(value.getId());
         String gravatar = cardUrl + hash + cardUrlOptions;
-        sb.append(templates.img(styles.icon(), gravatar, textToolTip, debugID));
+        sb.append(templates.img(styles.icon(), UriUtils.fromString(gravatar), textToolTip, debugID));
     }
 }

@@ -221,10 +221,10 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
         }
 
         if(Strings.isNullOrEmpty(object)){
-            appFeedback.setAverageRating(0);
+            appFeedback.setAverage(0);
         } else {
             final Splittable split = StringQuoter.split(object);
-            appFeedback.setAverageRating(split.get("average").asNumber());
+            appFeedback.setAverage(split.get("average").asNumber());
             appFeedback.setTotal((int)split.get("total").asNumber());
         }
         return appFeedback;

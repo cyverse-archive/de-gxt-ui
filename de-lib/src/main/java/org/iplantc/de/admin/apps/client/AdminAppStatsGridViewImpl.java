@@ -84,7 +84,7 @@ public class AdminAppStatsGridViewImpl extends Composite implements AdminAppStat
         ColumnConfig<App, Double> rating = new ColumnConfig<App, Double>(new ValueProvider<App, Double>() {
             @Override
             public Double getValue(App object) {
-                return object.getRating().getAverageRating();
+                return object.getRating().getAverage();
             }
 
             @Override

@@ -1,5 +1,6 @@
 package org.iplantc.de.theme.base.client.apps.cells;
 
+import com.google.gwt.safehtml.shared.SafeUri;
 import org.iplantc.de.apps.client.views.list.cells.AppCommentCell;
 import org.iplantc.de.apps.client.views.list.cells.AppFavoriteCell;
 import org.iplantc.de.apps.client.views.list.cells.AppInfoCell;
@@ -31,7 +32,7 @@ public class AppTileCellDefaultAppearance implements AppTileCell.AppTileCellAppe
         SafeHtml mod(String className);
 
         @SafeHtmlTemplates.Template("<img src='{0}'/>")
-        SafeHtml img(String gravatar);
+        SafeHtml img(SafeUri gravatar);
     }
 
     private final TileListResources resources;

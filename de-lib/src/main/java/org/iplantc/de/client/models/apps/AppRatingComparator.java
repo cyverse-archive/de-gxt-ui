@@ -19,8 +19,8 @@ public class AppRatingComparator implements Comparator<App> {
             return 1;
         }
 
-        double lhsRating = lhsFeedback.getAverageRating();
-        double rhsRating = rhsFeedback.getAverageRating();
+        double lhsRating = lhsFeedback.getAverage();
+        double rhsRating = rhsFeedback.getAverage();
 
         if (lhsFeedback.getUserRating() > 0) {
             lhsRating = lhsFeedback.getUserRating();
