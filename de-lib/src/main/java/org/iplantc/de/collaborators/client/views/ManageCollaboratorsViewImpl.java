@@ -222,7 +222,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
 
     @UiHandler("deleteBtn")
     void deleteCollaborator(SelectEvent event) {
-        GWT.log("Selected item " + grid.getSelectionModel().getSelectedItem().getName());
         fireEvent(new RemoveCollaboratorSelected(grid.getSelectionModel().getSelectedItems()));
     }
 

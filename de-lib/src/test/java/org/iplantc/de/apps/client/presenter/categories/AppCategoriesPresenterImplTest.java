@@ -157,10 +157,6 @@ public class AppCategoriesPresenterImplTest {
         verify(treeMock, times(2)).mask(anyString());
         verify(appServiceMock).getAppCategories(anyBoolean(), appCategoriesCaptor.capture());
 
-        // Call failure with arbitrary exception
-        appCategoriesCaptor.getValue().onFailure(500, null);
-        verify(tabPanelMock).unmask();
-
         appCategoriesCaptor.getValue().onSuccess(Collections.<AppCategory>emptyList());
         verify(treeStoreMock).addSortInfo(Matchers.<Store.StoreSortInfo<AppCategory>>any());
         verify(treeMock, times(2)).unmask(); // At this point, it has been called 2 times

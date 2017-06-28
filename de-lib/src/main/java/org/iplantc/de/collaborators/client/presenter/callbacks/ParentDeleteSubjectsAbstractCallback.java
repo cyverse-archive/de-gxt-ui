@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author aramsey
  */
-public abstract class ParentDeleteSubjectsCallback {
+public abstract class ParentDeleteSubjectsAbstractCallback {
     int doneCount;
     List<UpdateMemberResult> successUsers = Lists.newArrayList();
     List<Group> successGroups = Lists.newArrayList();

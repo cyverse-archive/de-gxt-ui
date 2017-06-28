@@ -20,6 +20,7 @@ import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
 import org.iplantc.de.collaborators.client.presenter.callbacks.ParentAddMemberToGroupCallback;
+import org.iplantc.de.collaborators.client.presenter.callbacks.ParentDeleteSubjectsAbstractCallback;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -126,8 +127,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         }
     }
 
-    public class ParentDeleteSubjectsCallback
-            extends org.iplantc.de.collaborators.client.presenter.callbacks.ParentDeleteSubjectsCallback {
+    public class ParentDeleteSubjectsCallback extends ParentDeleteSubjectsAbstractCallback {
         @Override
         public void whenDone(List<UpdateMemberResult> totalResults,
                              List<Group> successGroups,

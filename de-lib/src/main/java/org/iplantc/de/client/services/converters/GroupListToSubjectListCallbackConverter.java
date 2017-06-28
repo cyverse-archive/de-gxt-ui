@@ -35,11 +35,7 @@ public class GroupListToSubjectListCallbackConverter extends AsyncCallbackConver
         groupList.forEach(new Consumer<Group>() {
             @Override
             public void accept(Group group) {
-                Subject subject = factory.getSubject().as();
-                subject.setId(group.getId());
-                subject.setName(group.getName());
-                subject.setSourceId(Group.GROUP_IDENTIFIER);
-                subject.setInstitution(group.getDescription());
+                Subject subject = factory.convertGroupToSubject(group);
                 subjectList.add(subject);
             }
         });

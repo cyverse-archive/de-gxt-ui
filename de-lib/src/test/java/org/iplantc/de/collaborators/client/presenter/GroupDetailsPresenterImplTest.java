@@ -22,7 +22,6 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
@@ -88,6 +87,12 @@ public class GroupDetailsPresenterImplTest {
                                             serviceFacadeMock,
                                             factoryMock,
                                             appearanceMock) {
+
+            @Override
+            Group getGroupCopy(Group group) {
+                return groupMock;
+            }
+
             @Override
             HandlerManager ensureHandlers() {
                 return handlerManagerMock;
@@ -104,13 +109,12 @@ public class GroupDetailsPresenterImplTest {
     }
 
     @Test
-    public void go_editGroup() {
-        HasOneWidget containerMock = mock(HasOneWidget.class);
+    public void getGroupMembers_editGroup() {
+        uut.mode = GroupDetailsView.MODE.EDIT;
 
         /** CALL METHOD UNDER TEST **/
-        uut.go(containerMock, groupMock, GroupDetailsView.MODE.EDIT);
+        uut.getGroupMembers(groupMock);
 
-        verify(containerMock).setWidget(eq(viewMock));
         verify(serviceFacadeMock).getMembers(eq(groupMock), collabListCallbackCaptor.capture());
 
         collabListCallbackCaptor.getValue().onSuccess(subjectListMock);
@@ -119,13 +123,12 @@ public class GroupDetailsPresenterImplTest {
     }
 
     @Test
-    public void go_newGroup() {
-        HasOneWidget containerMock = mock(HasOneWidget.class);
+    public void getGroupMembers_newGroup() {
+        uut.mode = GroupDetailsView.MODE.ADD;
 
         /** CALL METHOD UNDER TEST **/
-        uut.go(containerMock, null, GroupDetailsView.MODE.ADD);
-
-        verify(containerMock).setWidget(eq(viewMock));
+        uut.getGroupMembers(null);
+        
         verify(viewMock).edit(eq(newGroupMock), eq(GroupDetailsView.MODE.ADD));
     }
 
