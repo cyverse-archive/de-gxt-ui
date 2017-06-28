@@ -154,6 +154,8 @@ public class ManageToolsViewToolbarImpl extends Composite implements ManageTools
         sharePublic.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_ITEM_SHARE_PUBLIC);
 
         refreshButton.ensureDebugId(baseID + ToolsModule.ToolIds.MENU_ITEM_REFRESH);
+
+        toolSearch.ensureDebugId(baseID + ToolsModule.ToolIds.TOOL_SEARCH);
     }
 
     @UiHandler("addTool")

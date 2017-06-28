@@ -3,6 +3,7 @@ package org.iplantc.de.desktop.client.views.windows;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
+import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 import org.iplantc.de.tools.shared.ToolsModule;
@@ -22,7 +23,8 @@ public class ManageToolsWindow extends IplantWindowBase {
                              final IplantDisplayStrings displayStrings) {
         this.toolsPresenter = toolsPresenter;
         setSize("800px", "600px");
-        setHeading("Manage Tools");
+        setHeading(displayStrings.manageTools());
+        ensureDebugId(DeModule.WindowIds.MANAGE_TOOLS_WINDOW);
     }
 
     @Override

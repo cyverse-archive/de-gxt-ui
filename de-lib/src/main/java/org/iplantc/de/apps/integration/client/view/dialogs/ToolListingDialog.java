@@ -46,6 +46,7 @@ public class ToolListingDialog extends IPlantDialog implements SelectionChangedE
     ToolListingDialog(ManageToolsView.Presenter toolsPresenter,
                       ToolsListingViewAppearance appearance) {
         this.appearance = appearance;
+        this.toolsPresenter = toolsPresenter;
         setPixelSize(appearance.dcListingDialogWidth(), appearance.dcListingDialogHeight());
         setResizable(false);
         setModal(true);
@@ -77,8 +78,20 @@ public class ToolListingDialog extends IPlantDialog implements SelectionChangedE
     }
 
     @Override
+    public void show() {
+        super.show();
+        ensureDebugId(INSTALLED_TOOLS_DLG);
+    }
+
+    @Override
     public void onSelectionChanged(SelectionChangedEvent<Tool> event) {
         getOkButton().enable();
         selectedTool = event.getSelection().get(0);
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+        toolsPresenter.setViewDebugId(baseID);
     }
 }

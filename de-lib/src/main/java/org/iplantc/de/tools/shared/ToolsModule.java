@@ -11,7 +11,7 @@ public interface ToolsModule {
 
         String MENU_TOOLS = ".toolsMenu";
         String MENU_ITEM_ADD_TOOLS = ".addTools";
-        String MENU_ITEM_REQUEST_TOOL = ".requestTool";
+        String MENU_ITEM_REQUEST_TOOL = ".newToolRequest";
         String MENU_ITEM_EDIT = ".editTool";
         String MENU_ITEM_DELETE = ".deleteTool";
         String MENU_ITEM_USE_IN_APPS = ".useInApps";
@@ -25,6 +25,7 @@ public interface ToolsModule {
 
         String SHARING_VIEW = ".view";
         String SHARING_PERMS = ".permPanel";
+        String TOOL_SEARCH =".search";
     }
 
     interface EditToolIds {
