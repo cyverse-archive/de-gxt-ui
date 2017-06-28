@@ -117,4 +117,8 @@ public interface BelphegorDisplayStrings extends Messages {
     String rating();
 
     String loading();
+
+    String appDeleted();
+
+    String appDelete();
 }

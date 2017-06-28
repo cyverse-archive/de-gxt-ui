@@ -191,27 +191,35 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
 
     @Override
     public void onAppInfoSelected(final AppInfoSelectedEvent event) {
-        adminAppService.getAppDoc(event.getApp(), new AsyncCallback<AppDoc>() {
+        App selectedApp = event.getApp();
+        //get doc only for public apps!
+        if (selectedApp.isPublic()) {
+            adminAppService.getAppDoc(selectedApp, new AsyncCallback<AppDoc>() {
+                @Override
+                public void onFailure(Throwable caught) {
+                    AutoBean<AppDoc> doc = AutoBeanCodex.decode(factory, AppDoc.class, "{}");
+                    showAppEditor(event, doc.as());
+                    isDocUpdate = false;
+                    ErrorHandler.post(caught);
+                }
 
-            @Override
-            public void onFailure(Throwable caught) {
-                AutoBean<AppDoc> doc = AutoBeanCodex.decode(factory, AppDoc.class, "{}");
-                final AppEditor appEditor = new AppEditor(event.getApp(), doc.as());
-                appEditor.addSaveAppSelectedHandler(AdminAppsGridPresenterImpl.this);
-                appEditor.show();
-                isDocUpdate = false;
-                ErrorHandler.post(caught);
-            }
+                @Override
+                public void onSuccess(final AppDoc result) {
+                    // Get result
+                    showAppEditor(event, result);
+                    isDocUpdate = true;
+                }
+            });
+        } else {
+            AutoBean<AppDoc> doc = AutoBeanCodex.decode(factory, AppDoc.class, "{}");
+            showAppEditor(event,doc.as());
+        }
+    }
 
-            @Override
-            public void onSuccess(final AppDoc result) {
-                // Get result
-                final AppEditor appEditor = new AppEditor(event.getApp(), result);
-                appEditor.addSaveAppSelectedHandler(AdminAppsGridPresenterImpl.this);
-                appEditor.show();
-                isDocUpdate = true;
-            }
-        });
+    protected void showAppEditor(AppInfoSelectedEvent event, AppDoc as) {
+        final AppEditor appEditor = new AppEditor(event.getApp(), as);
+        appEditor.addSaveAppSelectedHandler(AdminAppsGridPresenterImpl.this);
+        appEditor.show();
     }
 
 

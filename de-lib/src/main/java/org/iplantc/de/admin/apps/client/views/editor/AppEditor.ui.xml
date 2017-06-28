@@ -72,6 +72,16 @@
                 </container:child>
 
                 <container:child layoutData="{verticalLayoutData}">
+                    <form:FieldLabel ui:field="appDeletedCheckBoxLabel"
+                                     labelAlign="TOP"
+                                     text="{appearance.appDelete}">
+                        <form:widget>
+                            <fields:CheckBoxAdapter ui:field="deleted"/>
+                        </form:widget>
+                    </form:FieldLabel>
+                </container:child>
+
+                <container:child layoutData="{verticalLayoutData}">
                     <form:FieldLabel ui:field="appBetaCheckBoxLabel"
                                      labelAlign="TOP"
                                      text="{appearance.betaLabel}">

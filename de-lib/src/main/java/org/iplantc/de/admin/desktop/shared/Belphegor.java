@@ -67,6 +67,7 @@ public interface Belphegor {
         String CLOSE_BTN = ".closeBtn";
         String BETA = ".beta";
         String COL_HEADER = ".colHeader";
+        String DELETED = ".deleted";
     }
 
     interface AppStatIds {
