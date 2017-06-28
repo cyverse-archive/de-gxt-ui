@@ -1,6 +1,7 @@
 package org.iplantc.de.collaborators.client.presenter;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -47,6 +48,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -79,10 +81,16 @@ public class ManageCollaboratorsPresenterTest {
     @Mock UpdateMemberResult updateResultMock;
     @Mock Stream<UpdateMemberResult> updateMemberResultStreamMock;
     @Mock List<UpdateMemberResult> updateMemberResultsMock;
+    @Mock UpdateMemberResult updateMemberResultMock;
     @Mock Consumer<Group> groupConsumerMock;
     @Mock UserInfo userInfoMock;
     @Mock ManageCollaboratorsPresenter.AddMemberToGroupCallback memberToGroupCallbackMock;
     @Mock List<ManageCollaboratorsPresenter.AddMemberToGroupCallback> memberToGroupCallbackListsMock;
+    @Mock Map<Boolean, List<Subject>> mapIsGroupMock;
+    @Mock Map<Boolean, List<UpdateMemberResult>> mapIsSuccessMock;
+    @Mock ManageCollaboratorsPresenter.ParentDeleteSubjectsCallback parentCallbackMock;
+    @Mock List<Throwable> throwablesMock;
+    @Mock List<String> stringListMock;
 
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> collabListCallbackCaptor;
@@ -91,9 +99,12 @@ public class ManageCollaboratorsPresenterTest {
     @Captor ArgumentCaptor<AsyncCallback<GroupDetailsDialog>> groupDetailsDialogCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<UpdateMemberResult>>> updateMemberCaptor;
     @Captor ArgumentCaptor<Consumer<Group>> groupConsumerCaptor;
+    @Captor ArgumentCaptor<Consumer<Subject>> subjectConsumerCaptor;
+    @Captor ArgumentCaptor<ManageCollaboratorsPresenter.ParentDeleteSubjectsCallback> parentCallbackCaptor;
 
 
     private ManageCollaboratorsPresenter uut;
+    private ManageCollaboratorsPresenter.ParentDeleteSubjectsCallback parentCallback;
 
     @Before
     public void setUp() {
@@ -104,6 +115,7 @@ public class ManageCollaboratorsPresenterTest {
         when(groupAutoBeanMock.as()).thenReturn(groupMock);
         when(defaultGroup.getName()).thenReturn(Group.DEFAULT_GROUP);
         when(groupFactoryMock.getDefaultGroup()).thenReturn(defaultGroup);
+        when(groupAppearanceMock.loadingMask()).thenReturn("loading");
 
         uut = new ManageCollaboratorsPresenter(factoryMock,
                                                groupFactoryMock,
@@ -121,13 +133,39 @@ public class ManageCollaboratorsPresenterTest {
             }
 
             @Override
-            List<UpdateMemberResult> getFailResults(List<UpdateMemberResult> result) {
-                return updateMemberResultsMock;
+            List<AddMemberToGroupCallback> getAddMemberToGroupCallbackList() {
+                return memberToGroupCallbackListsMock;
             }
 
             @Override
-            List<AddMemberToGroupCallback> getAddMemberToGroupCallbackList() {
-                return memberToGroupCallbackListsMock;
+            List<Subject> excludeDefaultGroup(List<Subject> result) {
+                return subjectListMock;
+            }
+
+            @Override
+            Map<Boolean, List<Subject>> mapIsGroup(List<Subject> models) {
+                return mapIsGroupMock;
+            }
+
+            @Override
+            Map<Boolean, List<UpdateMemberResult>> mapIsSuccessResults(List<UpdateMemberResult> totalResults) {
+                return mapIsSuccessMock;
+            }
+
+            @Override
+            ParentDeleteSubjectsCallback getParentDeleteSubjectsCallback() {
+                return parentCallbackMock;
+            }
+
+            @Override
+            String getSubjectNames(List<UpdateMemberResult> userSuccesses, List<Group> groups) {
+                return "names";
+            }
+
+            @Override
+            List<String> getCollaboratorIds(List<UpdateMemberResult> userSuccesses,
+                                            List<Group> successGroups) {
+                return stringListMock;
             }
 
             @Override
@@ -143,6 +181,8 @@ public class ManageCollaboratorsPresenterTest {
         uut.announcer = announcerMock;
         uut.groupDetailsDialog = groupDetailsDialogProvider;
         uut.userInfo = userInfoMock;
+
+        parentCallback = uut.new ParentDeleteSubjectsCallback();
     }
 
     @Test
@@ -158,14 +198,26 @@ public class ManageCollaboratorsPresenterTest {
         verify(spy).loadCurrentCollaborators();
         verify(spy).getGroups();
         verify(spy).addEventHandlers();
-        verify(viewMock).addDeleteGroupSelectedHandler(eq(spy));
         verify(containerMock).setWidget(eq(viewWidgetMock));
+    }
+
+    @Test
+    public void addEventHandlers() {
+
+        /** CALL METHOD UNDER TEST **/
+        uut.addEventHandlers();
+
+        verify(viewMock).addAddGroupSelectedHandler(eq(uut));
+        verify(viewMock).addGroupNameSelectedHandler(eq(uut));
+        verify(viewMock).addUserSearchResultSelectedEventHandler(eq(uut));
+        verify(viewMock).addRemoveCollaboratorSelectedHandler(eq(uut));
     }
 
     @Test
     public void addAsCollaborators() {
         when(updateMemberResultsMock.isEmpty()).thenReturn(true);
         when(groupAppearanceMock.collaboratorAddConfirm(any())).thenReturn("success");
+        when(mapIsSuccessMock.get(anyBoolean())).thenReturn(updateMemberResultsMock);
 
         /** CALL METHOD UNDER TEST **/
         uut.addAsCollaborators(subjectListMock);
@@ -178,7 +230,7 @@ public class ManageCollaboratorsPresenterTest {
     }
 
     @Test
-    public void updateListView() {
+    public void getGroups() {
         when(groupAppearanceMock.loadingMask()).thenReturn("loading");
         when(groupListMock.stream()).thenReturn(groupStreamMock);
         when(groupStreamMock.filter(any())).thenReturn(groupStreamMock);
@@ -190,26 +242,97 @@ public class ManageCollaboratorsPresenterTest {
         verify(groupServiceFacadeMock).getGroups(subjectListCallbackConverter.capture());
 
         subjectListCallbackConverter.getValue().onSuccess(subjectListMock);
-        verify(viewMock).addCollabLists(eq(groupListMock));
-
+        verify(viewMock).addCollaborators(eq(subjectListMock));
+        verify(viewMock).unmaskCollaborators();
     }
 
     @Test
     public void onRemoveCollaboratorSelected() {
         RemoveCollaboratorSelected eventMock = mock(RemoveCollaboratorSelected.class);
+        ManageCollaboratorsPresenter spy = spy(uut);
         when(eventMock.getSubjects()).thenReturn(subjectListMock);
-        when(updateMemberResultsMock.isEmpty()).thenReturn(true);
-        when(groupAppearanceMock.collaboratorRemoveConfirm(any())).thenReturn("success");
-        when(groupAppearanceMock.memberDeleteFail(updateMemberResultsMock)).thenReturn("fail");
+        when(mapIsGroupMock.get(anyBoolean())).thenReturn(subjectListMock);
+        when(subjectListMock.isEmpty()).thenReturn(true);
+        when(groupAppearanceMock.deleteGroupConfirm(any())).thenReturn("delete");
+        when(groupAppearanceMock.deleteGroupConfirmHeading(any())).thenReturn("deleteHeader");
 
         /** CALL METHOD UNDER TEST **/
-        uut.onRemoveCollaboratorSelected(eventMock);
+        spy.onRemoveCollaboratorSelected(eventMock);
         verify(eventMock).getSubjects();
 
-        verify(groupServiceFacadeMock).deleteMembers(eq(defaultGroup), eq(subjectListMock), updateMemberCaptor.capture());
+        verify(spy).removeCollaborators(any(), eq(subjectListMock));
+    }
 
-        updateMemberCaptor.getValue().onSuccess(updateMemberResultsMock);
-        verify(viewMock).removeCollaborators(eq(subjectListMock));
+    @Test
+    public void removeCollaborators() {
+        ManageCollaboratorsPresenter spy = spy(uut);
+        when(spy.getCallbackSize(any(), any())).thenReturn(2);
+        when(groupAppearanceMock.memberDeleteFail(any())).thenReturn("fail");
+        when(groupAppearanceMock.collaboratorRemoveConfirm(anyString())).thenReturn("removed");
+        when(updateMemberResultMock.getSubjectName()).thenReturn("name");
+
+        /** CALL METHOD UNDER TEST **/
+        spy.removeCollaborators(subjectListMock, subjectListMock);
+        verify(viewMock).maskCollaborators(eq("loading"));
+        verify(parentCallbackMock).setCallbackCounter(eq(2));
+        verify(spy).removeCollaboratorsFromDefault(eq(subjectListMock), eq(parentCallbackMock));
+        verify(spy).deleteGroups(eq(subjectListMock), eq(parentCallbackMock));
+    }
+
+    @Test
+    public void publicDeleteSubjectsCallback_noFailures() {
+        when(throwablesMock.isEmpty()).thenReturn(true);
+        when(updateMemberResultsMock.isEmpty()).thenReturn(true);
+        when(groupAppearanceMock.collaboratorRemoveConfirm(anyString())).thenReturn("confirmed");
+        when(mapIsSuccessMock.get(anyBoolean())).thenReturn(updateMemberResultsMock);
+
+        /** CALL METHOD UNDER TEST **/
+        parentCallback.whenDone(updateMemberResultsMock, groupListMock, throwablesMock);
+
+        verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));
+        verify(viewMock).removeCollaboratorsById(stringListMock);
+        verify(viewMock).unmaskCollaborators();
+    }
+
+    @Test
+    public void publicDeleteSubjectsCallback_withFailures() {
+        when(throwablesMock.isEmpty()).thenReturn(true);
+        when(updateMemberResultsMock.isEmpty()).thenReturn(false);
+        when(groupAppearanceMock.collaboratorRemoveConfirm(anyString())).thenReturn("removed");
+        when(groupAppearanceMock.memberDeleteFail(any())).thenReturn("fail");
+        when(mapIsSuccessMock.get(anyBoolean())).thenReturn(updateMemberResultsMock);
+
+        /** CALL METHOD UNDER TEST **/
+        parentCallback.whenDone(updateMemberResultsMock, groupListMock, throwablesMock);
+
+        verify(announcerMock).schedule(isA(ErrorAnnouncementConfig.class));
+        verify(viewMock).removeCollaboratorsById(stringListMock);
+        verify(viewMock).unmaskCollaborators();
+    }
+
+    @Test
+    public void deleteGroups() {
+        when(groupFactoryMock.convertSubjectToGroup(any())).thenReturn(groupMock);
+        when(subjectListMock.isEmpty()).thenReturn(false);
+
+        /**CALL METHOD UNDER TEST **/
+        uut.deleteGroups(subjectListMock, parentCallbackMock);
+
+        verify(subjectListMock).forEach(subjectConsumerCaptor.capture());
+        subjectConsumerCaptor.getValue().accept(subjectMock);
+        verify(groupServiceFacadeMock).deleteGroup(eq(groupMock), isA(ManageCollaboratorsPresenter.DeleteGroupChildCallback.class));
+    }
+
+    @Test
+    public void removeCollaboratorsFromDefault() {
+        when(groupFactoryMock.getDefaultGroup()).thenReturn(defaultGroup);
+        when(subjectListMock.isEmpty()).thenReturn(false);
+
+        /** CALL METHOD UNDER TEST **/
+        uut.removeCollaboratorsFromDefault(subjectListMock, parentCallbackMock);
+        verify(groupServiceFacadeMock).deleteMembers(eq(defaultGroup),
+                                                     eq(subjectListMock),
+                                                     isA(ManageCollaboratorsPresenter.DeleteUsersChildCallback.class));
     }
 
     @Test
@@ -223,7 +346,7 @@ public class ManageCollaboratorsPresenterTest {
 
         collabListCallbackCaptor.getValue().onSuccess(subjectListMock);
         verify(viewMock).unmaskCollaborators();
-        verify(viewMock).loadData(eq(subjectListMock));
+        verify(viewMock).addCollaborators(eq(subjectListMock));
         verify(eventBusMock).fireEvent(isA(CollaboratorsLoadedEvent.class));
     }
 
@@ -233,22 +356,6 @@ public class ManageCollaboratorsPresenterTest {
         /** CALL METHOD UNDER TEST **/
         uut.setCurrentMode(ManageCollaboratorsView.MODE.SELECT);
         verify(viewMock).setMode(eq(ManageCollaboratorsView.MODE.SELECT));
-    }
-
-    @Test
-    public void onDeleteGroupSelected() {
-        when(groupMock.getName()).thenReturn("name");
-        when(groupAppearanceMock.groupDeleteSuccess(groupMock)).thenReturn("success");
-
-        /** CALL METHOD UNDER TEST **/
-        uut.deleteGroup(groupMock);
-
-        verify(groupServiceFacadeMock).deleteGroup(eq(groupMock), groupCallbackCaptor.capture());
-
-        groupCallbackCaptor.getValue().onSuccess(groupMock);
-        verify(viewMock).removeCollabList(eq(groupMock));
-        verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));
-
     }
 
     @Test
@@ -279,16 +386,17 @@ public class ManageCollaboratorsPresenterTest {
 
     @Test
     public void addMemberToGroups() {
-        when(groupListMock.size()).thenReturn(1);
+        when(subjectListMock.size()).thenReturn(1);
         when(updateMemberResultsMock.isEmpty()).thenReturn(true);
         when(groupAppearanceMock.memberAddToGroupsSuccess(any())).thenReturn("success");
         when(groupAppearanceMock.unableToAddMembers(any())).thenReturn("fail");
+        when(groupFactoryMock.convertSubjectToGroup(any())).thenReturn(groupMock);
 
         /** CALL METHOD UNDER TEST **/
-        uut.addMemberToGroups(subjectMock, groupListMock);
+        uut.addMemberToGroups(subjectMock, subjectListMock);
 
-        verify(groupListMock).forEach(groupConsumerCaptor.capture());
-        groupConsumerCaptor.getValue().accept(groupMock);
+        verify(subjectListMock).forEach(subjectConsumerCaptor.capture());
+        subjectConsumerCaptor.getValue().accept(subjectMock);
 
         verify(groupServiceFacadeMock).addMembers(eq(groupMock), eq(subjectListMock), updateMemberCaptor.capture());
 
@@ -309,12 +417,11 @@ public class ManageCollaboratorsPresenterTest {
     }
 
     @Test
-    public void onUserSearchResultSelected_collaboratorTab_alreadyAddedCollaborator() {
+    public void onUserSearchResultSelected_alreadyAddedCollaborator() {
         UserSearchResultSelected eventMock = mock(UserSearchResultSelected.class);
         when(eventMock.getSubject()).thenReturn(subjectMock);
         when(subjectMock.getId()).thenReturn("newID");
         when(userInfoMock.getUsername()).thenReturn("id");
-        when(viewMock.hasCollaboratorsTabSelected()).thenReturn(true);
         when(viewMock.getCollaborators()).thenReturn(subjectListMock);
         when(collaboratorsUtilMock.isCurrentCollaborator(any(), any())).thenReturn(true);
 
@@ -325,13 +432,12 @@ public class ManageCollaboratorsPresenterTest {
     }
 
     @Test
-    public void onUserSearchResultSelected_collaboratorTab_newCollaborator() {
+    public void onUserSearchResultSelected_newCollaborator() {
         ManageCollaboratorsPresenter spy = spy(uut);
         UserSearchResultSelected eventMock = mock(UserSearchResultSelected.class);
         when(eventMock.getSubject()).thenReturn(subjectMock);
         when(subjectMock.getId()).thenReturn("newID");
         when(userInfoMock.getUsername()).thenReturn("id");
-        when(viewMock.hasCollaboratorsTabSelected()).thenReturn(true);
         when(viewMock.getCollaborators()).thenReturn(subjectListMock);
         when(collaboratorsUtilMock.isCurrentCollaborator(any(), any())).thenReturn(false);
 
@@ -339,6 +445,24 @@ public class ManageCollaboratorsPresenterTest {
         spy.onUserSearchResultSelected(eventMock);
 
         verify(spy).addAsCollaborators(any());
+    }
+
+    @Test
+    public void onUserSearchResultSelected_newCollaborator_quickAdd() {
+        ManageCollaboratorsPresenter spy = spy(uut);
+        UserSearchResultSelected eventMock = mock(UserSearchResultSelected.class);
+        when(eventMock.getSubject()).thenReturn(subjectMock);
+        when(subjectMock.getId()).thenReturn("newID");
+        when(userInfoMock.getUsername()).thenReturn("id");
+        when(viewMock.getSelectedSubjects()).thenReturn(subjectListMock);
+        when(subjectListMock.isEmpty()).thenReturn(false);
+        when(mapIsGroupMock.get(anyBoolean())).thenReturn(subjectListMock);
+        when(collaboratorsUtilMock.isCurrentCollaborator(any(), any())).thenReturn(false);
+
+        /** CALL METHOD UNDER TEST **/
+        spy.onUserSearchResultSelected(eventMock);
+
+        verify(spy).addMemberToGroups(eq(subjectMock), eq(subjectListMock));
     }
 
 }

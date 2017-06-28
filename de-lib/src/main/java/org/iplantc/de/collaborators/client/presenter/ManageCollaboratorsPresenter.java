@@ -20,7 +20,6 @@ import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
 import org.iplantc.de.collaborators.client.presenter.callbacks.ParentAddMemberToGroupCallback;
-import org.iplantc.de.collaborators.client.presenter.callbacks.ParentDeleteSubjectsCallback;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -76,7 +75,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         }
     }
 
-    private class DeleteUsersChildCallback implements AsyncCallback<List<UpdateMemberResult>> {
+    class DeleteUsersChildCallback implements AsyncCallback<List<UpdateMemberResult>> {
 
         private ParentDeleteSubjectsCallback parentCallback;
 
@@ -102,7 +101,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         }
     }
 
-    private class DeleteGroupChildCallback implements AsyncCallback<Group> {
+    class DeleteGroupChildCallback implements AsyncCallback<Group> {
         private ParentDeleteSubjectsCallback parentCallback;
 
         public DeleteGroupChildCallback(ParentDeleteSubjectsCallback parentCallback) {
@@ -124,6 +123,32 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
             if (parentCallback != null) {
                 parentCallback.done(result);
             }
+        }
+    }
+
+    public class ParentDeleteSubjectsCallback
+            extends org.iplantc.de.collaborators.client.presenter.callbacks.ParentDeleteSubjectsCallback {
+        @Override
+        public void whenDone(List<UpdateMemberResult> totalResults,
+                             List<Group> successGroups,
+                             List<Throwable> failures) {
+            if (failures != null && !failures.isEmpty()) {
+                ErrorHandler.post(failures);
+            }
+            Map<Boolean, List<UpdateMemberResult>> mapIsSuccess =
+                    mapIsSuccessResults(totalResults);
+            List<UpdateMemberResult> userFailures = mapIsSuccess.get(false);
+            List<UpdateMemberResult> userSuccesses = mapIsSuccess.get(true);
+            if (userFailures != null && !userFailures.isEmpty()) {
+                announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.memberDeleteFail(userFailures)));
+            }
+            String names = getSubjectNames(userSuccesses, successGroups);
+            announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.collaboratorRemoveConfirm(
+                    names)));
+
+            List<String> collaboratorIds = getCollaboratorIds(userSuccesses, successGroups);
+            view.removeCollaboratorsById(collaboratorIds);
+            view.unmaskCollaborators();
         }
     }
 
@@ -329,30 +354,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     void removeCollaborators(List<Subject> selectedGroups, List<Subject> selectedUsers) {
         view.maskCollaborators(groupAppearance.loadingMask());
-        ParentDeleteSubjectsCallback parentCallback = new ParentDeleteSubjectsCallback() {
-            @Override
-            public void whenDone(List<UpdateMemberResult> totalResults,
-                                 List<Group> successGroups,
-                                 List<Throwable> failures) {
-                if (failures != null && !failures.isEmpty()) {
-                    ErrorHandler.post(failures);
-                }
-                Map<Boolean, List<UpdateMemberResult>> mapIsSuccess =
-                        mapIsSuccessResults(totalResults);
-                List<UpdateMemberResult> userFailures = mapIsSuccess.get(false);
-                List<UpdateMemberResult> userSuccesses = mapIsSuccess.get(true);
-                if (userFailures != null && !userFailures.isEmpty()) {
-                    announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.memberDeleteFail(userFailures)));
-                }
-                String names = getSubjectNames(userSuccesses, successGroups);
-                announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.collaboratorRemoveConfirm(
-                        names)));
-
-                List<String> collaboratorIds = getCollaboratorIds(userSuccesses, successGroups);
-                view.removeCollaboratorsById(collaboratorIds);
-                view.unmaskCollaborators();
-            }
-        };
+        ParentDeleteSubjectsCallback parentCallback = getParentDeleteSubjectsCallback();
 
         int callbackSize = getCallbackSize(selectedUsers, selectedGroups);
 
@@ -499,6 +501,10 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                 });
             }
         });
+    }
+
+    ParentDeleteSubjectsCallback getParentDeleteSubjectsCallback() {
+        return new ParentDeleteSubjectsCallback();
     }
 
     AddMemberToGroupCallback getAddMemberToGroupCallback() {
