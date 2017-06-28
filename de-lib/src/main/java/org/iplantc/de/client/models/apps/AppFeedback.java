@@ -5,7 +5,7 @@ import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 public interface AppFeedback {
 
     @PropertyName("average")
-    double getAverageRating();
+    double getAverage();
 
     @PropertyName("user")
     int getUserRating();
@@ -14,7 +14,7 @@ public interface AppFeedback {
     long getCommentId();
 
     @PropertyName("average")
-    void setAverageRating(double averageRating);
+    void setAverage(double averageRating);
 
     @PropertyName("user")
     void setUserRating(int userRating);

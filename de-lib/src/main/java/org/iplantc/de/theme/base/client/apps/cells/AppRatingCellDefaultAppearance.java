@@ -107,7 +107,7 @@ public class AppRatingCellDefaultAppearance implements AppRatingCell.AppRatingCe
     public void onMouseOut(Element parent, App value) {
         int rating = (int)((value.getRating().getUserRating() != 0) ? value.getRating().getUserRating()
                                                                    : Math.floor(value.getRating()
-                                                                                     .getAverageRating()));
+                                                                                     .getAverage()));
         int total = value.getRating().getTotal();
 
         for (int i = 0; i < parent.getChildCount(); i++) {
@@ -190,7 +190,7 @@ public class AppRatingCellDefaultAppearance implements AppRatingCell.AppRatingCe
         } else {
             rating = (int)((app.getRating().getUserRating() != 0) ?
                            app.getRating().getUserRating() :
-                           Math.floor(app.getRating().getAverageRating()));
+                           Math.floor(app.getRating().getAverage()));
             total = app.getRating().getTotal();
             userRating = app.getRating().getUserRating();
         }

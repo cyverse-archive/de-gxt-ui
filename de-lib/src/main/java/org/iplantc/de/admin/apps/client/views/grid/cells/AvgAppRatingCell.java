@@ -17,6 +17,6 @@ public class AvgAppRatingCell extends AbstractCell<AppFeedback> {
         }
 
         sb.append(SafeHtmlUtils.fromString(NumberFormat.getFormat("0.00").format(
-                value.getAverageRating())));
+                value.getAverage())));
     }
 }

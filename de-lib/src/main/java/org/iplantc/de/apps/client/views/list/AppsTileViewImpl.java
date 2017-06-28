@@ -66,8 +66,8 @@ public class AppsTileViewImpl extends ContentPanel
 
         @Override
         public int compare(App o1, App o2) {
-            if (o1.getRating().getAverageRating() < o2.getRating().getAverageRating()) return -1;
-            if (o1.getRating().getAverageRating() > o2.getRating().getAverageRating()) return 1;
+            if (o1.getRating().getAverage() < o2.getRating().getAverage()) return -1;
+            if (o1.getRating().getAverage() > o2.getRating().getAverage()) return 1;
             return 0;
         }
     }
