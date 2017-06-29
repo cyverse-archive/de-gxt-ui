@@ -27,7 +27,7 @@ public abstract class ParentFilteredHierarchyCallback {
         }
     }
 
-    public synchronized void done() {
+    public void done() {
         doneCount++;
 
         if (doneCount == childCallbacks.size()) {

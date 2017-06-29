@@ -20,7 +20,7 @@ public abstract class ParentDeleteSubjectsAbstractCallback {
         this.doneCount = doneCount;
     }
 
-    public synchronized void updateCounter() {
+    public void updateCounter() {
         doneCount--;
 
         if (doneCount == 0) {
