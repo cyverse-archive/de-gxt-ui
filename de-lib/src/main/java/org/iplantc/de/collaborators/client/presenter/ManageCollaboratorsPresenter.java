@@ -22,6 +22,7 @@ import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
 import org.iplantc.de.collaborators.client.presenter.callbacks.ParentAddMemberToGroupCallback;
 import org.iplantc.de.collaborators.client.presenter.callbacks.ParentDeleteSubjectsAbstractCallback;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
+import org.iplantc.de.collaborators.client.views.CollaboratorDNDHandler;
 import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -31,6 +32,7 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -194,7 +196,8 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
      */
     @Override
     public void go(HasOneWidget container, ManageCollaboratorsView.MODE mode) {
-        this.view = factory.create(mode);
+        CollaboratorDNDHandler dndHandler = new CollaboratorDNDHandler(groupAppearance, this);
+        this.view = factory.create(mode, dndHandler);
         loadCurrentCollaborators();
         getGroups();
         addEventHandlers();
@@ -502,6 +505,32 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
             }
         });
     }
+    
+    public void subjectsDNDToList(Subject targetSubject, List<Subject> sourceSubjects) {
+        view.maskCollaborators(groupAppearance.loadingMask());
+        Group group = groupFactory.convertSubjectToGroup(targetSubject);
+        groupServiceFacade.addMembers(group, sourceSubjects, new AsyncCallback<List<UpdateMemberResult>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(List<UpdateMemberResult> result) {
+                Map<Boolean, List<UpdateMemberResult>> mapIsSuccess =
+                        mapIsSuccessResults(result);
+                List<UpdateMemberResult> userFailures = mapIsSuccess.get(false);
+                List<UpdateMemberResult> userSuccesses = mapIsSuccess.get(true);
+                if (userFailures != null && !userFailures.isEmpty()) {
+                    announcer.schedule(new ErrorAnnouncementConfig(groupAppearance.unableToAddMembers(userFailures)));
+                }
+                announcer.schedule(new SuccessAnnouncementConfig(groupAppearance.membersAddedToGroupSuccess(
+                        targetSubject, userSuccesses)));
+
+                view.unmaskCollaborators();
+            }
+        });
+    }
 
     ParentDeleteSubjectsCallback createParentDeleteSubjectsCallback() {
         return new ParentDeleteSubjectsCallback();
@@ -513,5 +542,9 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     List<AddMemberToGroupCallback> createAddMemberToGroupCallbackList() {
         return Lists.newArrayList();
+    }
+
+    public Subject getSubjectFromElement(Element eventTarget) {
+        return view.getSubjectFromElement(Element.as(eventTarget));
     }
 }

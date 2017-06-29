@@ -44,4 +44,8 @@ public interface CollaboratorsDisplayStrings extends Messages {
     String addGroup();
 
     String institutionOrDescriptionHeader();
+
+    String onlyDNDToListSupported();
+
+    String membersAddedToGroupSuccess(String groupName, @PluralCount List<String> names);
 }
