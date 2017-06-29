@@ -222,12 +222,12 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     void addMemberToGroups(Subject member, List<Subject> selectedCollaboratorLists) {
-        List<AddMemberToGroupCallback> childCallbacks = getAddMemberToGroupCallbackList();
+        List<AddMemberToGroupCallback> childCallbacks = createAddMemberToGroupCallbackList();
 
         selectedCollaboratorLists.forEach(new Consumer<Subject>() {
             @Override
             public void accept(Subject subject) {
-                AddMemberToGroupCallback callback = getAddMemberToGroupCallback();
+                AddMemberToGroupCallback callback = createAddMemberToGroupCallback();
                 Group group = groupFactory.convertSubjectToGroup(subject);
                 groupServiceFacade.addMembers(group, wrapSubjectInList(member), callback);
                 childCallbacks.add(callback);
@@ -354,7 +354,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     void removeCollaborators(List<Subject> selectedGroups, List<Subject> selectedUsers) {
         view.maskCollaborators(groupAppearance.loadingMask());
-        ParentDeleteSubjectsCallback parentCallback = getParentDeleteSubjectsCallback();
+        ParentDeleteSubjectsCallback parentCallback = createParentDeleteSubjectsCallback();
 
         int callbackSize = getCallbackSize(selectedUsers, selectedGroups);
 
@@ -503,15 +503,15 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         });
     }
 
-    ParentDeleteSubjectsCallback getParentDeleteSubjectsCallback() {
+    ParentDeleteSubjectsCallback createParentDeleteSubjectsCallback() {
         return new ParentDeleteSubjectsCallback();
     }
 
-    AddMemberToGroupCallback getAddMemberToGroupCallback() {
+    AddMemberToGroupCallback createAddMemberToGroupCallback() {
         return new AddMemberToGroupCallback();
     }
 
-    List<AddMemberToGroupCallback> getAddMemberToGroupCallbackList() {
+    List<AddMemberToGroupCallback> createAddMemberToGroupCallbackList() {
         return Lists.newArrayList();
     }
 }

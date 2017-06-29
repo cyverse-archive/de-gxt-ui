@@ -133,7 +133,7 @@ public class ManageCollaboratorsPresenterTest {
             }
 
             @Override
-            List<AddMemberToGroupCallback> getAddMemberToGroupCallbackList() {
+            List<AddMemberToGroupCallback> createAddMemberToGroupCallbackList() {
                 return memberToGroupCallbackListsMock;
             }
 
@@ -153,7 +153,7 @@ public class ManageCollaboratorsPresenterTest {
             }
 
             @Override
-            ParentDeleteSubjectsCallback getParentDeleteSubjectsCallback() {
+            ParentDeleteSubjectsCallback createParentDeleteSubjectsCallback() {
                 return parentCallbackMock;
             }
 
@@ -169,7 +169,7 @@ public class ManageCollaboratorsPresenterTest {
             }
 
             @Override
-            AddMemberToGroupCallback getAddMemberToGroupCallback() {
+            AddMemberToGroupCallback createAddMemberToGroupCallback() {
                 return memberToGroupCallbackMock;
             }
         };
