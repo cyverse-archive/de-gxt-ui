@@ -3,16 +3,19 @@ package org.iplantc.de.server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
-
 import redis.clients.jedis.JedisPoolConfig;
 
 /**
+ * Configure Spring to use Redis for HTTP Session Management
+ * <p>
  * Created by sriram on 6/16/17.
+ * 
  */
 
 @EnableRedisHttpSession
@@ -22,35 +25,27 @@ public class HttpSessionConfig {
     @Autowired
     private Environment environment;
 
+    @Value("${org.iplantc.discoveryenvironment.redis.host}")
+    String redisHost;
+    @Value("${org.iplantc.discoveryenvironment.redis.port}")
+    int redisPort;
+    @Value("${org.iplantc.discoveryenvironment.redis.db.number}")
+    int dbNumber;
+    @Value("${org.iplantc.discoveryenvironment.redis.password}")
+    String password;
+
     private final Logger LOG = LoggerFactory.getLogger(HttpSessionConfig.class);
 
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
         JedisConnectionFactory factory = new JedisConnectionFactory();
         factory.setPoolConfig(buildPoolConfig());
-        factory.setHostName(getHostName());
-        factory.setPort(getPort());
-        factory.setDatabase(getDbNumber());
+        factory.setHostName(redisHost);
+        factory.setPort(redisPort);
+        factory.setDatabase(dbNumber);
         factory.setUsePool(true);
-        factory.setPassword(getPassword());
+        factory.setPassword(password);
         return factory;
-    }
-
-    private String getHostName() {
-        return environment.getProperty("org.iplantc.discoveryenvironment.redis.host");
-    }
-
-    private int getPort() {
-        return Integer.parseInt(environment.getProperty("org.iplantc.discoveryenvironment.redis.port"));
-    }
-
-    private int getDbNumber() {
-        return Integer.parseInt(environment.getProperty(
-                "org.iplantc.discoveryenvironment.redis.db.number"));
-    }
-
-    private String getPassword() {
-        return environment.getProperty("org.iplantc.discoveryenvironment.redis.password");
     }
 
     private JedisPoolConfig buildPoolConfig() {
