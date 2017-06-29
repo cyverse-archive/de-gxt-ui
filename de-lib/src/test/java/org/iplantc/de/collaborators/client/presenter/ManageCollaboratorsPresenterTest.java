@@ -27,6 +27,7 @@ import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
+import org.iplantc.de.collaborators.client.views.CollaboratorDNDHandler;
 import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -91,6 +92,7 @@ public class ManageCollaboratorsPresenterTest {
     @Mock ManageCollaboratorsPresenter.ParentDeleteSubjectsCallback parentCallbackMock;
     @Mock List<Throwable> throwablesMock;
     @Mock List<String> stringListMock;
+    @Mock CollaboratorDNDHandler dndHandlerMock;
 
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> collabListCallbackCaptor;
@@ -108,7 +110,7 @@ public class ManageCollaboratorsPresenterTest {
 
     @Before
     public void setUp() {
-        when(factoryMock.create(ManageCollaboratorsView.MODE.MANAGE)).thenReturn(viewMock);
+        when(factoryMock.create(ManageCollaboratorsView.MODE.MANAGE, dndHandlerMock)).thenReturn(viewMock);
         when(viewMock.asWidget()).thenReturn(viewWidgetMock);
         when(groupMock.getName()).thenReturn("name");
         when(groupFactoryMock.getGroup()).thenReturn(groupAutoBeanMock);
@@ -169,6 +171,11 @@ public class ManageCollaboratorsPresenterTest {
             }
 
             @Override
+            CollaboratorDNDHandler getCollaboratorDNDHandler() {
+                return dndHandlerMock;
+            }
+
+            @Override
             AddMemberToGroupCallback createAddMemberToGroupCallback() {
                 return memberToGroupCallbackMock;
             }
@@ -187,13 +194,14 @@ public class ManageCollaboratorsPresenterTest {
 
     @Test
     public void go() {
+        when(groupFactoryMock.getDefaultGroup()).thenReturn(groupMock);
         HasOneWidget containerMock = mock(HasOneWidget.class);
         ManageCollaboratorsPresenter spy = spy(uut);
 
         /** CALL METHOD UNDER TEST **/
         spy.go(containerMock, ManageCollaboratorsView.MODE.MANAGE);
 
-        verify(factoryMock).create(eq(ManageCollaboratorsView.MODE.MANAGE));
+        verify(factoryMock).create(eq(ManageCollaboratorsView.MODE.MANAGE), eq(dndHandlerMock));
         verify(viewMock).addRemoveCollaboratorSelectedHandler(eq(spy));
         verify(spy).loadCurrentCollaborators();
         verify(spy).getGroups();
@@ -463,6 +471,26 @@ public class ManageCollaboratorsPresenterTest {
         spy.onUserSearchResultSelected(eventMock);
 
         verify(spy).addMemberToGroups(eq(subjectMock), eq(subjectListMock));
+    }
+
+    @Test
+    public void subjectsDNDToList() {
+        when(groupAppearanceMock.loadingMask()).thenReturn("loading");
+        when(groupAppearanceMock.unableToAddMembers(any())).thenReturn("fail");
+        when(groupAppearanceMock.membersAddedToGroupSuccess(any(), any())).thenReturn("success");
+        when(groupFactoryMock.convertSubjectToGroup(any())).thenReturn(groupMock);
+        when(updateMemberResultsMock.isEmpty()).thenReturn(true);
+
+        /** CALL METHOD UNDER TEST **/
+        uut.subjectsDNDToList(subjectMock, subjectListMock);
+
+        verify(viewMock).maskCollaborators(anyString());
+        verify(groupServiceFacadeMock).addMembers(eq(groupMock), eq(subjectListMock), updateMemberCaptor.capture());
+
+        updateMemberCaptor.getValue().onSuccess(updateMemberResultsMock);
+        verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));
+        verify(viewMock).unmaskCollaborators();
+
     }
 
 }

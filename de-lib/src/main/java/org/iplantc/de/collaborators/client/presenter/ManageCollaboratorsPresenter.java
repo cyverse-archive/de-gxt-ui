@@ -196,7 +196,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
      */
     @Override
     public void go(HasOneWidget container, ManageCollaboratorsView.MODE mode) {
-        CollaboratorDNDHandler dndHandler = new CollaboratorDNDHandler(groupAppearance, this);
+        CollaboratorDNDHandler dndHandler = getCollaboratorDNDHandler();
         this.view = factory.create(mode, dndHandler);
         loadCurrentCollaborators();
         getGroups();
@@ -513,6 +513,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
+                view.unmaskCollaborators();
             }
 
             @Override
@@ -546,5 +547,9 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     public Subject getSubjectFromElement(Element eventTarget) {
         return view.getSubjectFromElement(Element.as(eventTarget));
+    }
+
+    CollaboratorDNDHandler getCollaboratorDNDHandler() {
+        return new CollaboratorDNDHandler(groupAppearance, this);
     }
 }
