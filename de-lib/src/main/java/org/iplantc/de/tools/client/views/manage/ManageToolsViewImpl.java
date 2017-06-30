@@ -222,6 +222,7 @@ public class ManageToolsViewImpl extends Composite implements ManageToolsView {
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
+        infoCell.setBaseDebugId(baseID);
         toolbar.asWidget().ensureDebugId(baseID);
     }
 
