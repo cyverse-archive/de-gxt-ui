@@ -64,5 +64,6 @@ public interface DeModule {
         String SYSTEM_MESSAGES = "systemMessageWindow";
         String ABOUT_WINDOW = "aboutWindow";
         String MANAGE_TOOLS_WINDOW = "manageToolsWindow";
+        String COLLABORATION_WINDOW = "collaborationWindow";
     }
 }

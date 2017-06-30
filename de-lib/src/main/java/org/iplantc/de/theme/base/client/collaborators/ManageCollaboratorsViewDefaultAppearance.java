@@ -292,4 +292,24 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
         List<String> names = userSuccesses.stream().map(UpdateMemberResult::getSubjectName).collect(Collectors.toList());
         return displayStrings.membersAddedToGroupSuccess(group.getSubjectDisplayName(), names);
     }
+
+    @Override
+    public String windowHeading() {
+        return displayStrings.collaborationWindowHeading();
+    }
+
+    @Override
+    public String windowWidth() {
+        return "600px";
+    }
+
+    @Override
+    public String windowHeight() {
+        return "400px";
+    }
+
+    @Override
+    public int windowMinWidth() {
+        return 200;
+    }
 }

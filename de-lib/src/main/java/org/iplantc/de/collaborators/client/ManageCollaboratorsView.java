@@ -112,6 +112,14 @@ public interface ManageCollaboratorsView extends IsWidget,
         String onlyDNDToListSupported();
 
         String membersAddedToGroupSuccess(Subject group, List<UpdateMemberResult> userSuccesses);
+
+        String windowHeading();
+
+        String windowWidth();
+
+        String windowHeight();
+
+        int windowMinWidth();
     }
 
     /**

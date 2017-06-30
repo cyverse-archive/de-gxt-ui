@@ -35,5 +35,7 @@ public interface ConfigAutoBeanFactory extends AutoBeanFactory {
     AutoBean<PathListWindowConfig> pathListWindowConfig();
 
     AutoBean<ManageToolsWindowConfig> manageToolsWindowConfig();
+
+    AutoBean<CollaborationWindowConfig> collaborationWindowConfig();
     
 }
