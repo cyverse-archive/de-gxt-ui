@@ -47,6 +47,7 @@ public interface AppIntegrationModule {
         String SEARCH = ".search";
         String NEW_TOOL_REQUEST = ".newToolRequest";
         String INSTALLED_TOOLS_DLG = ".installedToolsDlg";
+        String OK = ".okBtn";
         String FILE_FOLDER_PANEL = ".fileFolderPanel";
         String TEXT_NUMERICAL_PANEL = ".textNumericalPanel";
         String LIST_PANEL = ".listPanel";

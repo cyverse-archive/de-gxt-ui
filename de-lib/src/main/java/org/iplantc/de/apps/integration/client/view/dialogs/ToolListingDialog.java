@@ -4,6 +4,7 @@
 package org.iplantc.de.apps.integration.client.view.dialogs;
 
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids.INSTALLED_TOOLS_DLG;
+import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids.OK;
 
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
@@ -65,6 +66,7 @@ public class ToolListingDialog extends IPlantDialog implements SelectionChangedE
                 hide();
             }
         });
+        getButton(PredefinedButton.OK).ensureDebugId(INSTALLED_TOOLS_DLG + OK);
         toolsPresenter.go(this);
         toolsPresenter.addSelectionChangedHandler(this);
     }
