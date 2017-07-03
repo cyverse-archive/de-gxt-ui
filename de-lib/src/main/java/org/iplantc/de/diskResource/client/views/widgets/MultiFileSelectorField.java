@@ -1,5 +1,50 @@
 package org.iplantc.de.diskResource.client.views.widgets;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.editor.client.EditorDelegate;
+import com.google.gwt.editor.client.EditorError;
+import com.google.gwt.editor.client.ValueAwareEditor;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiFactory;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.sencha.gxt.core.shared.FastMap;
+import com.sencha.gxt.data.shared.ListStore;
+import com.sencha.gxt.dnd.core.client.DND.Operation;
+import com.sencha.gxt.dnd.core.client.*;
+import com.sencha.gxt.dnd.core.client.DndDragEnterEvent.DndDragEnterHandler;
+import com.sencha.gxt.dnd.core.client.DndDragMoveEvent.DndDragMoveHandler;
+import com.sencha.gxt.dnd.core.client.DndDropEvent.DndDropHandler;
+import com.sencha.gxt.widget.core.client.Composite;
+import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
+import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
+import com.sencha.gxt.widget.core.client.event.DialogHideEvent.DialogHideHandler;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
+import com.sencha.gxt.widget.core.client.form.IsField;
+import com.sencha.gxt.widget.core.client.form.error.DefaultEditorError;
+import com.sencha.gxt.widget.core.client.form.error.SideErrorHandler;
+import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
+import com.sencha.gxt.widget.core.client.grid.ColumnModel;
+import com.sencha.gxt.widget.core.client.grid.Grid;
+import com.sencha.gxt.widget.core.client.grid.GridView;
+import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
+import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent.SelectionChangedHandler;
+import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasPath;
 import org.iplantc.de.client.models.UserSettings;
@@ -24,63 +69,8 @@ import org.iplantc.de.resources.client.constants.IplantValidationConstants;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DataCallback;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.editor.client.EditorDelegate;
-import com.google.gwt.editor.client.EditorError;
-import com.google.gwt.editor.client.ValueAwareEditor;
-import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiFactory;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-
-import com.sencha.gxt.core.shared.FastMap;
-import com.sencha.gxt.data.shared.ListStore;
-import com.sencha.gxt.dnd.core.client.DND.Operation;
-import com.sencha.gxt.dnd.core.client.DndDragEnterEvent;
-import com.sencha.gxt.dnd.core.client.DndDragEnterEvent.DndDragEnterHandler;
-import com.sencha.gxt.dnd.core.client.DndDragMoveEvent;
-import com.sencha.gxt.dnd.core.client.DndDragMoveEvent.DndDragMoveHandler;
-import com.sencha.gxt.dnd.core.client.DndDropEvent;
-import com.sencha.gxt.dnd.core.client.DndDropEvent.DndDropHandler;
-import com.sencha.gxt.dnd.core.client.DropTarget;
-import com.sencha.gxt.dnd.core.client.StatusProxy;
-import com.sencha.gxt.widget.core.client.Composite;
-import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
-import com.sencha.gxt.widget.core.client.button.TextButton;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent.DialogHideHandler;
-import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.sencha.gxt.widget.core.client.form.IsField;
-import com.sencha.gxt.widget.core.client.form.error.DefaultEditorError;
-import com.sencha.gxt.widget.core.client.form.error.SideErrorHandler;
-import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
-import com.sencha.gxt.widget.core.client.grid.ColumnModel;
-import com.sencha.gxt.widget.core.client.grid.Grid;
-import com.sencha.gxt.widget.core.client.grid.GridView;
-import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
-import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent.SelectionChangedHandler;
-import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 /**
  * @author jstroot
@@ -590,7 +580,7 @@ public class MultiFileSelectorField extends Composite implements
 
     private String getSplCharWarning() {
         return "<span style='color:red;width:65%;font-size:9px;'>"
-                + appearance.analysisFailureWarning(validationConstants.warnedDiskResourceNameChars())
+                + appearance.analysisFailureWarning(validationConstants.warnedDiskResourceNameChars() + validationConstants.newlineToPrint() + validationConstants.tabToPrint())
                 + "</span>";
     }
 

@@ -10,8 +10,6 @@ import com.google.gwt.i18n.client.Constants;
  */
 public interface IplantValidationConstants extends Constants {
 
-    String restrictedCmdLineArgChars();
-
     String restrictedCmdLineArgCharsExclNewline();
 
     String restrictedCmdLineChars();
@@ -25,5 +23,9 @@ public interface IplantValidationConstants extends Constants {
     int maxToolNameLength();
 
     String restrictedGroupNameChars();
+
+    String newlineToPrint();
+
+    String tabToPrint();
 
 }
