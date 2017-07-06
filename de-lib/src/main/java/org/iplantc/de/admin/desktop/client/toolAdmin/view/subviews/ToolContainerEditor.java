@@ -119,8 +119,8 @@ public class ToolContainerEditor extends Composite implements Editor<ToolContain
         this.imageEditor = toolImageEditor;
         initWidget(uiBinder.createAndBindUi(this));
 
-        networkModeEditor.add(NetworkMode.None.toString());
-        networkModeEditor.add(NetworkMode.Bridge.toString());
+        networkModeEditor.add(NetworkMode.None.toString().toLowerCase());
+        networkModeEditor.add(NetworkMode.Bridge.toString().toLowerCase());
         networkModeEditor.setTriggerAction(ComboBoxCell.TriggerAction.ALL);
 
         entryPointWarningHTML.setHTML(appearance.toolEntryPointWarning());
