@@ -37,6 +37,7 @@ import javax.inject.Inject;
 public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
     private final String LISTS = "org.iplantc.services.collaboratorLists";
+    private final String TEAMS = "org.iplantc.services.teams";
 
     private GroupAutoBeanFactory factory;
     private CollaboratorAutoBeanFactory collabFactory;

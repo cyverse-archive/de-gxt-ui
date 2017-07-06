@@ -1,0 +1,7 @@
+<module>
+    <!-- View -->
+    <replace-with class="org.iplantc.de.theme.base.client.teams.TeamsViewDefaultAppearance">
+        <when-type-is class="org.iplantc.de.teams.client.TeamsView.TeamsViewAppearance"/>
+    </replace-with>
+
+</module>

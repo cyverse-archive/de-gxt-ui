@@ -33,6 +33,14 @@ public interface GroupAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<UpdateMemberResultList> getUpdateMemberResultList();
 
+    AutoBean<Privilege> getPrivilege();
+
+    AutoBean<PrivilegeList> getPrivilegeList();
+
+    AutoBean<UpdateTeamRequest> getUpdateTeamRequest();
+
+    AutoBean<UpdateTeamRequestList> getUpdateTeamRequestList();
+
     default Group getDefaultGroup() {
         Group group = getGroup().as();
         group.setName(Group.DEFAULT_GROUP);
