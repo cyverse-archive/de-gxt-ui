@@ -30,4 +30,49 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
         this.iplantResources = iplantResources;
         this.displayStrings = displayStrings;
     }
+
+    @Override
+    public String teamsMenu() {
+        return displayStrings.teamsMenu();
+    }
+
+    @Override
+    public String createNewTeam() {
+        return displayStrings.createNewTeam();
+    }
+
+    @Override
+    public String manageTeam() {
+        return displayStrings.manageTeam();
+    }
+
+    @Override
+    public String leaveTeam() {
+        return displayStrings.leaveTeam();
+    }
+
+    @Override
+    public int nameColumnWidth() {
+        return 300;
+    }
+
+    @Override
+    public String nameColumnLabel() {
+        return iplantDisplayStrings.name();
+    }
+
+    @Override
+    public int descColumnWidth() {
+        return 500;
+    }
+
+    @Override
+    public String descColumnLabel() {
+        return iplantDisplayStrings.description();
+    }
+
+    @Override
+    public int infoColWidth() {
+        return 20;
+    }
 }

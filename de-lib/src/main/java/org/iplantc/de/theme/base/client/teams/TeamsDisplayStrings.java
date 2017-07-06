@@ -7,4 +7,11 @@ import com.google.gwt.i18n.client.Messages;
  * @author aramsey
  */
 public interface TeamsDisplayStrings extends Messages {
+    String teamsMenu();
+
+    String createNewTeam();
+
+    String manageTeam();
+
+    String leaveTeam();
 }

@@ -15,6 +15,23 @@ public interface TeamsView extends IsWidget,
      */
     interface TeamsViewAppearance {
 
+        String teamsMenu();
+
+        String createNewTeam();
+
+        String manageTeam();
+
+        String leaveTeam();
+
+        int nameColumnWidth();
+
+        String nameColumnLabel();
+
+        int descColumnWidth();
+
+        String descColumnLabel();
+
+        int infoColWidth();
     }
 
     /**
