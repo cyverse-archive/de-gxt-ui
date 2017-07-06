@@ -14,4 +14,6 @@ public interface TeamsDisplayStrings extends Messages {
     String manageTeam();
 
     String leaveTeam();
+
+    String teamInfoBtnToolTip();
 }

@@ -15,5 +15,6 @@ public interface Teams {
         String LEAVE_TEAM = ".leaveTeamMI";
         String FILTER_TEAMS = ".filterTeams";
         String GRID = ".grid";
+        String TEAM_INFO_CELL = ".infoCell";
     }
 }

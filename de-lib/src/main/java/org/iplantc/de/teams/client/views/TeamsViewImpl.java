@@ -2,13 +2,16 @@ package org.iplantc.de.teams.client.views;
 
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.teams.client.TeamsView;
+import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
 import org.iplantc.de.teams.client.models.GroupProperties;
 import org.iplantc.de.teams.client.models.TeamsFilter;
+import org.iplantc.de.teams.client.views.cells.TeamInfoCell;
 import org.iplantc.de.teams.shared.Teams;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -53,12 +56,15 @@ public class TeamsViewImpl extends Composite implements TeamsView {
     @UiField GridView<Group> gridView;
     @UiField ListStore<Group> listStore;
     private GroupProperties properties;
+    private TeamInfoCell infoCell;
 
     @Inject
     public TeamsViewImpl(TeamsViewAppearance appearance,
-                         GroupProperties properties) {
+                         GroupProperties properties,
+                         TeamInfoCell infoCell) {
         this.appearance = appearance;
         this.properties = properties;
+        this.infoCell = infoCell;
 
         initWidget(uiBinder.createAndBindUi(this));
         grid.getSelectionModel().setSelectionMode(Style.SelectionMode.MULTI);
@@ -85,6 +91,7 @@ public class TeamsViewImpl extends Composite implements TeamsView {
         ColumnConfig<Group, String> descCol = new ColumnConfig<>(properties.description(),
                                                                  appearance.descColumnWidth(),
                                                                  appearance.descColumnLabel());
+        infoCol.setCell(infoCell);
         list.add(infoCol);
         list.add(nameCol);
         list.add(descCol);
@@ -123,5 +130,16 @@ public class TeamsViewImpl extends Composite implements TeamsView {
         leaveTeamMI.ensureDebugId(teamsMenuId + Teams.Ids.LEAVE_TEAM);
         teamFilter.asWidget().ensureDebugId(teamsMenuId + Teams.Ids.FILTER_TEAMS);
         grid.ensureDebugId(baseID + Teams.Ids.GRID);
+
+        for (ColumnConfig<Group, ?> cc : cm.getColumns()) {
+            if (cc.getCell() instanceof TeamInfoCell) {
+                ((TeamInfoCell)cc.getCell()).setBaseDebugId(baseID);
+            }
+        }
+    }
+
+    @Override
+    public HandlerRegistration addTeamInfoButtonSelectedHandler(TeamInfoButtonSelected.TeamInfoButtonSelectedHandler handler) {
+        return infoCell.addTeamInfoButtonSelectedHandler(handler);
     }
 }

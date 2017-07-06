@@ -1,6 +1,7 @@
 package org.iplantc.de.teams.client;
 
 import org.iplantc.de.client.models.IsMaskable;
+import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
@@ -8,7 +9,8 @@ import com.google.gwt.user.client.ui.IsWidget;
  * An interface for the UI's Team view in the Collaboration window
  */
 public interface TeamsView extends IsWidget,
-                                   IsMaskable {
+                                   IsMaskable,
+                                   TeamInfoButtonSelected.HasTeamInfoButtonSelectedHandlers {
 
     /**
      * An appearance class for all string related items in the Teams view
