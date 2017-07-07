@@ -100,7 +100,7 @@ public class AppLoggerUtil {
         requestMap.put("server-port", Integer.toString(request.getURI().getPort()));
         requestMap.put("server-name", request.getURI().getHost());
         requestMap.put("query-string", request.getURI().getQuery());
-        requestMap.put("query-params", getQueryStringMap(request.getURI().getQuery()));
+        requestMap.put("query-params", getQueryStringMap(request.getURI().getRawQuery()));
         requestMap.put("scheme", request.getURI().getScheme());
         requestMap.put("request-method", request.getMethod());
         return requestMap;
