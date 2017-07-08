@@ -2,6 +2,7 @@ package org.iplantc.de.teams.client.views;
 
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.teams.client.TeamsView;
+import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
 import org.iplantc.de.teams.client.models.GroupProperties;
 import org.iplantc.de.teams.client.models.TeamsFilter;
@@ -11,6 +12,7 @@ import org.iplantc.de.teams.shared.Teams;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
@@ -75,6 +77,12 @@ public class TeamsViewImpl extends Composite implements TeamsView {
         SimpleComboBox<TeamsFilter> combo = new SimpleComboBox<>(new StringLabelProvider<TeamsFilter>());
         combo.add(Lists.newArrayList(TeamsFilter.MY_TEAMS, TeamsFilter.ALL));
         combo.setValue(TeamsFilter.MY_TEAMS);
+        combo.addSelectionHandler(new SelectionHandler<TeamsFilter>() {
+            @Override
+            public void onSelection(SelectionEvent<TeamsFilter> event) {
+                fireEvent(new TeamFilterSelectionChanged(combo.getCurrentValue()));
+            }
+        });
 
         return combo;
     }
@@ -141,5 +149,27 @@ public class TeamsViewImpl extends Composite implements TeamsView {
     @Override
     public HandlerRegistration addTeamInfoButtonSelectedHandler(TeamInfoButtonSelected.TeamInfoButtonSelectedHandler handler) {
         return infoCell.addTeamInfoButtonSelectedHandler(handler);
+    }
+
+    @Override
+    public void addTeams(List<Group> result) {
+        if (result != null && !result.isEmpty()) {
+            listStore.addAll(result);
+        }
+    }
+
+    @Override
+    public void clearTeams() {
+        listStore.clear();
+    }
+
+    @Override
+    public TeamsFilter getCurrentFilter() {
+        return teamFilter.getCurrentValue();
+    }
+
+    @Override
+    public HandlerRegistration addTeamFilterSelectionChangedHandler(TeamFilterSelectionChanged.TeamFilterSelectionChangedHandler handler) {
+        return addHandler(handler, TeamFilterSelectionChanged.TYPE);
     }
 }

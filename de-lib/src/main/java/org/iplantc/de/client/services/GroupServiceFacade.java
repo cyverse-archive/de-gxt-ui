@@ -18,7 +18,20 @@ public interface GroupServiceFacade {
      * @param searchTerm
      * @param callback
      */
-    void getGroups(AsyncCallback<List<Subject>> callback);
+    void getLists(AsyncCallback<List<Subject>> callback);
+
+    /**
+     * Get the list of all Teams for which the user has View permissions
+     * @param callback
+     */
+    void getTeams(AsyncCallback<List<Group>> callback);
+
+    /**
+     * Get the the list of all Teams that a user belongs to
+     * @param callback
+     */
+    void getMyTeams(AsyncCallback<List<Group>> callback);
+
 
     /**
      * Create a Collaborator List

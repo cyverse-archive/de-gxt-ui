@@ -1,16 +1,23 @@
 package org.iplantc.de.teams.client;
 
 import org.iplantc.de.client.models.IsMaskable;
+import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.commons.client.widgets.DETabPanel;
+import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
+import org.iplantc.de.teams.client.models.TeamsFilter;
 
 import com.google.gwt.user.client.ui.IsWidget;
+
+import java.util.List;
 
 /**
  * An interface for the UI's Team view in the Collaboration window
  */
 public interface TeamsView extends IsWidget,
                                    IsMaskable,
-                                   TeamInfoButtonSelected.HasTeamInfoButtonSelectedHandlers {
+                                   TeamInfoButtonSelected.HasTeamInfoButtonSelectedHandlers,
+                                   TeamFilterSelectionChanged.HasTeamFilterSelectionChangedHandlers {
 
     /**
      * An appearance class for all string related items in the Teams view
@@ -34,6 +41,8 @@ public interface TeamsView extends IsWidget,
         String descColumnLabel();
 
         int infoColWidth();
+
+        String loadingMask();
     }
 
     /**
@@ -41,5 +50,12 @@ public interface TeamsView extends IsWidget,
      */
     interface Presenter {
 
+        void go();
     }
+
+    void addTeams(List<Group> result);
+
+    void clearTeams();
+
+    TeamsFilter getCurrentFilter();
 }

@@ -251,7 +251,7 @@ public class ManageCollaboratorsPresenterTest {
         /** CALL METHOD UNDER TEST **/
         uut.getGroups();
 
-        verify(groupServiceFacadeMock).getGroups(subjectListCallbackConverter.capture());
+        verify(groupServiceFacadeMock).getLists(subjectListCallbackConverter.capture());
 
         subjectListCallbackConverter.getValue().onSuccess(subjectListMock);
         verify(viewMock).addCollaborators(eq(subjectListMock));

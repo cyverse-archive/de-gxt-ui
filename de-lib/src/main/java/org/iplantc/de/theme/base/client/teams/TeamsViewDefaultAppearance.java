@@ -75,4 +75,9 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     public int infoColWidth() {
         return 20;
     }
+
+    @Override
+    public String loadingMask() {
+        return iplantDisplayStrings.loadingMask();
+    }
 }

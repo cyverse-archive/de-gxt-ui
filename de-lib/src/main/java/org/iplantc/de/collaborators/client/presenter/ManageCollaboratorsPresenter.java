@@ -311,7 +311,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     @Override
     public void getGroups() {
-        groupServiceFacade.getGroups(new AsyncCallback<List<Subject>>() {
+        groupServiceFacade.getLists(new AsyncCallback<List<Subject>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
