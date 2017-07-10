@@ -53,7 +53,14 @@ public interface GroupServiceFacade {
      * @param group
      * @param callback
      */
-    void getMembers(Group group, AsyncCallback<List<Subject>> callback);
+    void getListMembers(Group group, AsyncCallback<List<Subject>> callback);
+
+    /**
+     * Get the list of members who belong to a Team
+     * @param group
+     * @param callback
+     */
+    void getTeamMembers(Group group, AsyncCallback<List<Subject>> callback);
 
     /**
      * Delete members from a Collaborator List

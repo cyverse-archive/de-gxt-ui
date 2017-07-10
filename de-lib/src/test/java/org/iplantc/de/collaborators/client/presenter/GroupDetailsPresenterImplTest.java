@@ -122,7 +122,7 @@ public class GroupDetailsPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         uut.getGroupMembers(groupMock);
 
-        verify(serviceFacadeMock).getMembers(eq(groupMock), collabListCallbackCaptor.capture());
+        verify(serviceFacadeMock).getListMembers(eq(groupMock), collabListCallbackCaptor.capture());
 
         collabListCallbackCaptor.getValue().onSuccess(subjectListMock);
         verify(viewMock).addMembers(eq(subjectListMock));

@@ -75,7 +75,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
         if (GroupDetailsView.MODE.EDIT == mode) {
             this.originalGroup = getGroupCopy(group);
             view.mask(appearance.loadingMask());
-            serviceFacade.getMembers(group, new AsyncCallback<List<Subject>>() {
+            serviceFacade.getListMembers(group, new AsyncCallback<List<Subject>>() {
                 @Override
                 public void onFailure(Throwable caught) {
                     ErrorHandler.post(caught);

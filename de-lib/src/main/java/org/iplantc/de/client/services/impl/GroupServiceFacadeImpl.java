@@ -111,9 +111,19 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void getMembers(Group group, AsyncCallback<List<Subject>> callback) {
+    public void getListMembers(Group group, AsyncCallback<List<Subject>> callback) {
+        getMembers(group, LISTS, callback);
+    }
+
+    @Override
+    public void getTeamMembers(Group group, AsyncCallback<List<Subject>> callback) {
+        getMembers(group, TEAMS, callback);
+    }
+
+    void getMembers(Group group, String address, AsyncCallback<List<Subject>> callback) {
         String groupName = group.getName();
-        String address = LISTS + "/" + URL.encodePathSegment(groupName) + "/members";
+        address += "/" + URL.encodePathSegment(groupName) + "/members";
+
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new SubjectMemberListCallbackConverter(callback, collabFactory));
