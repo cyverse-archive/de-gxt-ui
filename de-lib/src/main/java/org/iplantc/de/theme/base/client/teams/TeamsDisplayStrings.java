@@ -16,4 +16,14 @@ public interface TeamsDisplayStrings extends Messages {
     String leaveTeam();
 
     String teamInfoBtnToolTip();
+
+    String teamNameLabel();
+
+    String teamDescLabel();
+
+    String detailsHeading(String subjectDisplayName);
+
+    String membersLabel();
+
+    String detailsGridEmptyText();
 }

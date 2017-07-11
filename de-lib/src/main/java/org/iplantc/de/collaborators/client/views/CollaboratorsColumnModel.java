@@ -65,8 +65,10 @@ public class CollaboratorsColumnModel extends ColumnModel<Subject> implements Gr
 
         List<ColumnConfig<Subject, ?>> configs = new ArrayList<>();
 
-        ColumnConfig<Subject, Subject> colCheckBox = checkBoxModel.getColumn();
-        configs.add(colCheckBox);
+        if (checkBoxModel != null) {
+            ColumnConfig<Subject, Subject> colCheckBox = checkBoxModel.getColumn();
+            configs.add(colCheckBox);
+        }
 
         ColumnConfig<Subject, Subject> name = new ColumnConfig<>(new IdentityValueProvider<Subject>("firstname"),
                                                                  150);

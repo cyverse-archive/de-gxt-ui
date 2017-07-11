@@ -1,5 +1,6 @@
 package org.iplantc.de.theme.base.client.teams;
 
+import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.teams.client.TeamsView;
@@ -79,5 +80,40 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     @Override
     public String loadingMask() {
         return iplantDisplayStrings.loadingMask();
+    }
+
+    @Override
+    public String teamNameLabel() {
+        return displayStrings.teamNameLabel();
+    }
+
+    @Override
+    public String teamDescLabel() {
+        return displayStrings.teamDescLabel();
+    }
+
+    @Override
+    public int teamDetailsWidth() {
+        return 500;
+    }
+
+    @Override
+    public int teamDetailsHeight() {
+        return 500;
+    }
+
+    @Override
+    public String detailsHeading(Group group) {
+        return displayStrings.detailsHeading(group.getSubjectDisplayName());
+    }
+
+    @Override
+    public String membersLabel() {
+        return displayStrings.membersLabel();
+    }
+
+    @Override
+    public String detailsGridEmptyText() {
+        return displayStrings.detailsGridEmptyText();
     }
 }

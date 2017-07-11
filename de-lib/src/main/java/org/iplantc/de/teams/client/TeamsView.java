@@ -43,6 +43,20 @@ public interface TeamsView extends IsWidget,
         int infoColWidth();
 
         String loadingMask();
+
+        String teamNameLabel();
+
+        String teamDescLabel();
+
+        int teamDetailsWidth();
+
+        int teamDetailsHeight();
+
+        String detailsHeading(Group group);
+
+        String membersLabel();
+
+        String detailsGridEmptyText();
     }
 
     /**

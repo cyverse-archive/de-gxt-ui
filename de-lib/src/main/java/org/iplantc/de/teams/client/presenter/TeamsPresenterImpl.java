@@ -1,13 +1,16 @@
 package org.iplantc.de.teams.client.presenter;
 
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.widgets.DETabPanel;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
 import org.iplantc.de.teams.client.models.TeamsFilter;
+import org.iplantc.de.teams.client.views.dialogs.TeamDetailsDialog;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -27,6 +30,8 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
     private TeamsView.TeamsViewAppearance appearance;
     private GroupServiceFacade serviceFacade;
     private TeamsView view;
+
+    @Inject AsyncProviderWrapper<TeamDetailsDialog> detailsDlgProvider;
     TeamsFilter currentFilter;
 
     @Inject
@@ -49,7 +54,28 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
 
     @Override
     public void onTeamInfoButtonSelected(TeamInfoButtonSelected event) {
+        Group group = event.getGroup();
+        serviceFacade.getTeamMembers(group, new AsyncCallback<List<Subject>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
 
+            @Override
+            public void onSuccess(List<Subject> result) {
+                detailsDlgProvider.get(new AsyncCallback<TeamDetailsDialog>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        ErrorHandler.post(caught);
+                    }
+
+                    @Override
+                    public void onSuccess(TeamDetailsDialog dialog) {
+                        dialog.show(group, result);
+                    }
+                });
+            }
+        });
     }
 
     @Override

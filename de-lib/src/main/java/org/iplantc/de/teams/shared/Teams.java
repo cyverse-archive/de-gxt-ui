@@ -16,5 +16,6 @@ public interface Teams {
         String FILTER_TEAMS = ".filterTeams";
         String GRID = ".grid";
         String TEAM_INFO_CELL = ".infoCell";
+        String TEAM_DETAILS_DLG = "teamDetailsDlg";
     }
 }

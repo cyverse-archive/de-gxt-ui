@@ -33,11 +33,11 @@ public class TeamInfoCellDefaultAppearance implements TeamInfoCell.TeamInfoCellA
 
     interface Templates extends SafeHtmlTemplates {
 
-        @SafeHtmlTemplates.Template("<img class='{0}' qtip='{2}' src='{1}'/>")
-        SafeHtml cell(String imgClassName, SafeUri img, String toolTip);
+        @SafeHtmlTemplates.Template("<img class='{0}' name='{3}' qtip='{2}' src='{1}'/>")
+        SafeHtml cell(String imgClassName, SafeUri img, String toolTip, String name);
 
-        @SafeHtmlTemplates.Template("<img id='{3}' class='{0}' qtip='{2}' src='{1}'/>")
-        SafeHtml debugCell(String imgClassName, SafeUri img, String toolTip, String debugId);
+        @SafeHtmlTemplates.Template("<img class='{0}' name='{4}' qtip='{2}' src='{1}' id='{3}'/>")
+        SafeHtml debugCell(String imgClassName, SafeUri img, String toolTip, String debugId, String name);
     }
 
     private final TeamInfoCellDefaultAppearance.Templates templates;
@@ -71,9 +71,10 @@ public class TeamInfoCellDefaultAppearance implements TeamInfoCell.TeamInfoCellA
         tooltip = displayStrings.teamInfoBtnToolTip();
         final SafeUri safeUri = iplantResources.info().getSafeUri();
         if (DebugInfo.isDebugIdEnabled()) {
-            sb.append(templates.debugCell(imgClassName, safeUri, tooltip, debugId));
+            sb.append(templates.debugCell(imgClassName, safeUri, tooltip, debugId,
+                                          TeamInfoCell.TeamInfoCellAppearance.CLICKABLE_ELEMENT_NAME));
         } else {
-            sb.append(templates.cell(imgClassName, safeUri, tooltip));
+            sb.append(templates.cell(imgClassName, safeUri, tooltip, TeamInfoCell.TeamInfoCellAppearance.CLICKABLE_ELEMENT_NAME));
         }
     }
 }
