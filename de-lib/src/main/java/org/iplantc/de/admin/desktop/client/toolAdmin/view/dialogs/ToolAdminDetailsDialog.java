@@ -8,16 +8,8 @@ import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
-import org.iplantc.de.client.models.tool.ToolContainer;
-import org.iplantc.de.client.models.tool.ToolDevice;
-import org.iplantc.de.client.models.tool.ToolImage;
-import org.iplantc.de.client.models.tool.ToolImplementation;
-import org.iplantc.de.client.models.tool.ToolTestData;
-import org.iplantc.de.client.models.tool.ToolVolume;
-import org.iplantc.de.client.models.tool.ToolVolumesFrom;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
-import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.user.client.ui.HTML;
@@ -94,24 +86,9 @@ public class ToolAdminDetailsDialog extends IPlantDialog implements IsHideable,
 
     @Override
     public void show() {
-        final ToolContainer toolContainer = factory.getContainer().as();
-        toolContainer.setDeviceList(Lists.<ToolDevice>newArrayList());
-        toolContainer.setContainerVolumes(Lists.<ToolVolume>newArrayList());
-        toolContainer.setContainerVolumesFrom(Lists.<ToolVolumesFrom>newArrayList());
-        ToolImage image = factory.getImage().as();
-        image.setName(appearance.defaultImgPrefix());
-        toolContainer.setImage(image);
-
-        final ToolImplementation toolImplementation = factory.getImplementation().as();
-        final ToolTestData toolTestData = factory.getTest().as();
-        toolTestData.setInputFiles(Lists.<String>newArrayList());
-        toolTestData.setOutputFiles(Lists.<String>newArrayList());
-        toolImplementation.setTest(toolTestData);
-
-        final Tool tool = factory.getTool().as();
+        final Tool tool = factory.getDefaultTool().as();
         tool.setType(appearance.toolImportTypeDefaultValue());
-        tool.setContainer(toolContainer);
-        tool.setImplementation(toolImplementation);
+        tool.getContainer().getImage().setName(appearance.defaultImgPrefix());
 
         show(tool, Mode.EDIT);
     }
