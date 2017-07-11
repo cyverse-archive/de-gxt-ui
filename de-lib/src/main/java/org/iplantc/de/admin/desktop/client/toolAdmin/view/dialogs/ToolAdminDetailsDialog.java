@@ -8,8 +8,13 @@ import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
+import org.iplantc.de.client.models.tool.ToolContainer;
+import org.iplantc.de.client.models.tool.ToolImage;
+import org.iplantc.de.client.models.tool.ToolImplementation;
+import org.iplantc.de.client.models.tool.ToolTestData;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
+import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.user.client.ui.HTML;
@@ -23,7 +28,7 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
 /**
  * @author jstroot
  * @author aramsey
- * @author sriram 
+ * @author sriram
  */
 public class ToolAdminDetailsDialog extends IPlantDialog implements IsHideable,
                                                                     SaveToolSelectedEvent.HasSaveToolSelectedEventHandlers,
@@ -86,9 +91,24 @@ public class ToolAdminDetailsDialog extends IPlantDialog implements IsHideable,
 
     @Override
     public void show() {
-        final Tool tool = factory.getDefaultTool().as();
+        final ToolContainer toolContainer = factory.getContainer().as();
+        toolContainer.setDeviceList(Lists.newArrayList());
+        toolContainer.setContainerVolumes(Lists.newArrayList());
+        toolContainer.setContainerVolumesFrom(Lists.newArrayList());
+        ToolImage image = factory.getImage().as();
+        image.setName(appearance.defaultImgPrefix());
+        toolContainer.setImage(image);
+
+        final ToolImplementation toolImplementation = factory.getImplementation().as();
+        final ToolTestData toolTestData = factory.getTest().as();
+        toolTestData.setInputFiles(Lists.newArrayList());
+        toolTestData.setOutputFiles(Lists.newArrayList());
+        toolImplementation.setTest(toolTestData);
+
+        final Tool tool = factory.getTool().as();
         tool.setType(appearance.toolImportTypeDefaultValue());
-        tool.getContainer().getImage().setName(appearance.defaultImgPrefix());
+        tool.setContainer(toolContainer);
+        tool.setImplementation(toolImplementation);
 
         show(tool, Mode.EDIT);
     }

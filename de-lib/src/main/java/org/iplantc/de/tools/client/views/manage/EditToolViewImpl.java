@@ -12,7 +12,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -93,8 +92,6 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
     @UiField
     TextField entryPoint;
 
-    Hidden id;
-
     @UiField
     EditToolView.EditToolViewAppearance appearance;
 
@@ -118,7 +115,6 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
         nameLbl.setHTML(buildRequiredFieldLabel(nameLbl.getText()));
         versionLbl.setHTML(buildRequiredFieldLabel(versionLbl.getText()));
         imgLbl.setHTML(buildRequiredFieldLabel(imgLbl.getText()));
-        id = new Hidden();
         imgName.addValidator(new ImageNameValidator());
         editorDriver.initialize(this);
     }

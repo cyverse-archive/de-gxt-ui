@@ -11,6 +11,7 @@ import org.iplantc.de.apps.client.models.ToolFilter;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.tool.Tool;
+import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
 import org.iplantc.de.client.services.ToolServices;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AppsCallback;
@@ -35,6 +36,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 
@@ -112,6 +114,9 @@ public class ManageToolsViewPresenterTest {
     @Mock
     ManageToolsToolbarView manageToolsToolbarViewMock;
 
+    @Mock
+    ToolAutoBeanFactory factoryMock;
+
     @Captor
     ArgumentCaptor<AppsCallback<List<Tool>>> toolListCaptor;
 
@@ -144,6 +149,7 @@ public class ManageToolsViewPresenterTest {
         uut.toolInfoDialogProvider = toolInfoDialogProviderMock;
         uut.eventBus = eventBusMock;
         uut.currentSelection = currentSelectionMock;
+        uut.factory = factoryMock;
     }
 
     @Test
@@ -269,8 +275,12 @@ public class ManageToolsViewPresenterTest {
     @Test
     public void testOnNewToolSelected() {
         AddNewToolSelected antsMock = mock(AddNewToolSelected.class);
+        AutoBean<Tool> abt = mock(AutoBean.class);
+        Tool t = mock(Tool.class);
         when(appearanceMock.editDialogHeight()).thenReturn("300px");
         when(appearanceMock.editDialogWidth()).thenReturn("600px");
+        when(factoryMock.getDefaultTool()).thenReturn(abt);
+        when(abt.as()).thenReturn(t);
 
         uut.onNewToolSelected(antsMock);
 
