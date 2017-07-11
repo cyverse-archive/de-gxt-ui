@@ -545,7 +545,7 @@ public abstract class AbstractDiskResourceSelector<R extends DiskResource> exten
                                         }
 
                                         if (checkForSplChar(input.getValue()).length() > 0) {
-                                            setInfoErrorText(appearance.analysisFailureWarning(vConstants.warnedDiskResourceNameChars()));
+                                            setInfoErrorText(appearance.analysisFailureWarning(vConstants.warnedDiskResourceNameChars() + vConstants.newlineToPrint() + vConstants.tabToPrint()));
                                         }
                                     }
                                 });

@@ -1,10 +1,9 @@
 package org.iplantc.de.theme.base.client.fileViewers;
 
+import com.google.gwt.core.client.GWT;
 import org.iplantc.de.fileViewers.client.views.PathListViewer;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * @author jstroot
@@ -27,7 +26,7 @@ public class PathListViewerDefaultAppearance extends AbstractStructuredTextViewe
 
     @Override
     public String analysisFailureWarning(String warnedNameCharacters) {
-        return displayStrings.analysisFailureWarning(validationConstants.warnedDiskResourceNameChars());
+        return displayStrings.analysisFailureWarning(validationConstants.warnedDiskResourceNameChars() + validationConstants.newlineToPrint() + validationConstants.tabToPrint());
     }
 
     @Override

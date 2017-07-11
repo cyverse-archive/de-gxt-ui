@@ -82,6 +82,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+
 /**
  * @author jstroot
  */
@@ -590,7 +591,7 @@ public class MultiFileSelectorField extends Composite implements
 
     private String getSplCharWarning() {
         return "<span style='color:red;width:65%;font-size:9px;'>"
-                + appearance.analysisFailureWarning(validationConstants.warnedDiskResourceNameChars())
+                + appearance.analysisFailureWarning(validationConstants.warnedDiskResourceNameChars() + validationConstants.newlineToPrint() + validationConstants.tabToPrint())
                 + "</span>";
     }
 

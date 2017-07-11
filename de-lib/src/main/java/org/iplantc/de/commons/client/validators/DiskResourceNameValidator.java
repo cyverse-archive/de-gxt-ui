@@ -63,8 +63,14 @@ public class DiskResourceNameValidator extends AbstractValidator<String> impleme
         }
 
         if (restrictedFound.length() > 0) {
-            String errorMsg = validationMessages.drNameValidationMsg(new String(restrictedChars)) + " " //$NON-NLS-1$
-                    + validationMessages.invalidChars(restrictedFound.toString());
+            String errorMsg = (validationConstants.restrictedDiskResourceNameChars().contains("\n") ?
+                               validationConstants.newlineToPrint() :
+                               "") + (validationConstants.restrictedDiskResourceNameChars()
+                                                         .contains("\t") ?
+                                      validationConstants.tabToPrint() :
+                                      "")
+                              + validationMessages.drNameValidationMsg(validationConstants.restrictedDiskResourceNameChars())
+                    + " "+validationMessages.invalidChars(restrictedFound.toString());
 
             return createError(new DefaultEditorError(editor, errorMsg, value));
         }
