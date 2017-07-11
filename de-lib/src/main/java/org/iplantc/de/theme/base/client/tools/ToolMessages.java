@@ -86,6 +86,13 @@ public interface ToolMessages extends Messages {
     String manageSharing();
 
     String done();
+
+    /**
+     * The field label for entrypoint
+     *
+     * @return  label for entrypoint field
+     */
+    String entryPoint();
 }
         
     

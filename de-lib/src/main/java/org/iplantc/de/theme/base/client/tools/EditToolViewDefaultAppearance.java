@@ -106,4 +106,9 @@ public class EditToolViewDefaultAppearance implements EditToolView.EditToolViewA
     public SafeHtml buildRequiredFieldLabel(String label) {
         return SafeHtmlUtils.fromTrustedString("<span style='color:red; top:-5px;' >*</span> " + label);
     }
+
+    @Override
+    public String entryPoint() {
+        return toolMessages.entryPoint();
+    }
 }

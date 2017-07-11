@@ -1,13 +1,12 @@
 package org.iplantc.de.tools.client.views.manage;
 
 import org.iplantc.de.client.models.tool.Tool;
-import org.iplantc.de.client.models.tool.ToolAutoBeanFactory;
-import org.iplantc.de.client.models.tool.ToolContainer;
-import org.iplantc.de.client.models.tool.ToolImage;
 import org.iplantc.de.commons.client.validators.ImageNameValidator;
 import org.iplantc.de.tools.shared.ToolsModule;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.editor.client.Editor;
+import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -30,10 +29,7 @@ import java.util.List;
 /**
  * Created by sriram on 4/27/17.
  */
-public class EditToolViewImpl extends Composite implements EditToolView {
-
-    @Inject
-    ToolAutoBeanFactory factory;
+public class EditToolViewImpl extends Composite implements EditToolView, Editor<Tool> {
 
     @UiField
     VBoxLayoutContainer container;
@@ -45,45 +41,68 @@ public class EditToolViewImpl extends Composite implements EditToolView {
     TextField name;
 
     @UiField
-    TextArea desc;
+    TextArea description;
 
+    @Path("container.image.name")
     @UiField
     TextField  imgName;
 
+    @Path("container.image.tag")
     @UiField
     TextField tag;
 
+    @Path("container.image.url")
     @UiField
     TextField url;
 
     @UiField
     TextField version;
 
+    @Ignore
     @UiField
     FieldLabel nameLbl;
 
+    @Ignore
     @UiField
     FieldLabel versionLbl;
 
+    @Ignore
     @UiField
     FieldLabel imgLbl;
 
+    @Ignore
     @UiField
     TextField cpu;
 
+    @Ignore
     @UiField
     TextField memory;
 
+    @Ignore
     @UiField
     TextField network;
 
+    @Ignore
     @UiField
     TextField time;
 
-    Hidden toolId;
+    /**
+     * Entrypoint for a tool container
+     */
+    @Path("container.entryPoint")
+    @UiField
+    TextField entryPoint;
+
+    Hidden id;
 
     @UiField
     EditToolView.EditToolViewAppearance appearance;
+
+    interface EditorDriver extends SimpleBeanEditorDriver<Tool, EditToolViewImpl> {
+    }
+
+    private final EditToolViewImpl.EditorDriver editorDriver =
+            GWT.create(EditToolViewImpl.EditorDriver.class);
 
 
     @UiTemplate("EditToolView.ui.xml")
@@ -99,8 +118,9 @@ public class EditToolViewImpl extends Composite implements EditToolView {
         nameLbl.setHTML(buildRequiredFieldLabel(nameLbl.getText()));
         versionLbl.setHTML(buildRequiredFieldLabel(versionLbl.getText()));
         imgLbl.setHTML(buildRequiredFieldLabel(imgLbl.getText()));
-        toolId = new Hidden();
+        id = new Hidden();
         imgName.addValidator(new ImageNameValidator());
+        editorDriver.initialize(this);
     }
 
     private SafeHtml buildRequiredFieldLabel(final String label) {
@@ -109,6 +129,16 @@ public class EditToolViewImpl extends Composite implements EditToolView {
         }
 
         return appearance.buildRequiredFieldLabel(label); //$NON-NLS-1$
+    }
+
+    @Override
+    public Tool getTool() {
+        return editorDriver.flush();
+    }
+
+    @Override
+    public void editTool(Tool t) {
+        editorDriver.edit(t);
     }
 
     @Override
@@ -126,44 +156,10 @@ public class EditToolViewImpl extends Composite implements EditToolView {
     }
 
     @Override
-    public Tool getTool() {
-        Tool tool = factory.getTool().as();
-        tool.setId(toolId.getValue());
-        tool.setName(name.getValue());
-        tool.setDescription(desc.getValue());
-        tool.setVersion(version.getValue());
-
-        ToolImage image = factory.getImage().as();
-        image.setName(imgName.getValue());
-        image.setTag(tag.getValue());
-        image.setUrl(url.getValue());
-
-        ToolContainer container = factory.getContainer().as();
-        container.setImage(image);
-        tool.setContainer(container);
-
-        return tool;
-    }
-
-    @Override
-    public void editTool(Tool t) {
-        toolId.setValue(t.getId());
-        name.setValue(t.getName());
-        desc.setValue(t.getDescription());
-        version.setValue(t.getVersion());
-        imgName.setValue(t.getContainer().getImage().getName());
-        tag.setValue(t.getContainer().getImage().getTag());
-        url.setValue(t.getLocation());
-        url.setEnabled(false);
-        imgName.setEnabled(false);
-        tag.setEnabled(false);
-    }
-
-    @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
         name.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_NAME);
-        desc.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_DESC);
+        description.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_DESC);
         version.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_VER);
         imgName.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_IMG);
         tag.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_TAG);
