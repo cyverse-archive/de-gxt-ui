@@ -9,6 +9,12 @@ timestamps {
       try {
           stage "Prepare"
           checkout scm
+          git_commit = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
+          echo git_commit
+
+          descriptive_version = sh(returnStdout: true, script: 'git describe --long --tags --dirty --always').trim()
+          echo descriptive_version
+
           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'jenkins-sencha-credentials', usernameVariable: 'SENCHA_USERNAME', passwordVariable: 'SENCHA_PASSWORD']]) {
             writeFile file: 'sencha_gradle.properties', text: "sencha_support_user=${env.SENCHA_USERNAME}\nsencha_support_password=${env.SENCHA_PASSWORD}"
           }
@@ -37,11 +43,6 @@ timestamps {
               fingerprint 'target/de-copy.war'
 
               stage "Package Public Image and Push"
-              git_commit = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
-              echo git_commit
-
-              descriptive_version = sh(returnStdout: true, script: 'git describe --long --tags --dirty --always').trim()
-              echo descriptive_version
 
               milestone 100
               dockerRepo = "${dockerUser}/${repo}:${env.BRANCH_NAME}"
