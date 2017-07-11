@@ -1,5 +1,16 @@
 package org.iplantc.de.diskResource.client.views.widgets;
 
+import org.iplantc.de.client.models.HasPaths;
+import org.iplantc.de.client.models.diskResources.DiskResource;
+import org.iplantc.de.client.models.diskResources.TYPE;
+import org.iplantc.de.client.models.errorHandling.ServiceErrorCode;
+import org.iplantc.de.client.models.errorHandling.SimpleServiceError;
+import org.iplantc.de.client.services.DiskResourceServiceFacade;
+import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.commons.client.widgets.IPlantSideErrorHandler;
+import org.iplantc.de.resources.client.constants.IplantValidationConstants;
+import org.iplantc.de.shared.DataCallback;
+
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -23,6 +34,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+
 import com.sencha.gxt.core.client.dom.XElement;
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.dnd.core.client.DND.Operation;
@@ -46,16 +58,6 @@ import com.sencha.gxt.widget.core.client.form.IsField;
 import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.form.Validator;
 import com.sencha.gxt.widget.core.client.form.error.DefaultEditorError;
-import org.iplantc.de.client.models.HasPaths;
-import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.models.diskResources.TYPE;
-import org.iplantc.de.client.models.errorHandling.ServiceErrorCode;
-import org.iplantc.de.client.models.errorHandling.SimpleServiceError;
-import org.iplantc.de.client.services.DiskResourceServiceFacade;
-import org.iplantc.de.client.util.DiskResourceUtil;
-import org.iplantc.de.commons.client.widgets.IPlantSideErrorHandler;
-import org.iplantc.de.resources.client.constants.IplantValidationConstants;
-import org.iplantc.de.shared.DataCallback;
 
 import java.util.Arrays;
 import java.util.Collection;

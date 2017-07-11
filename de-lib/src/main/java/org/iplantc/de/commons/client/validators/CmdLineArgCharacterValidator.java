@@ -1,12 +1,14 @@
 package org.iplantc.de.commons.client.validators;
 
+import org.iplantc.de.resources.client.constants.IplantValidationConstants;
+import org.iplantc.de.resources.client.messages.IplantValidationMessages;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.EditorError;
+
 import com.sencha.gxt.widget.core.client.form.error.DefaultEditorError;
 import com.sencha.gxt.widget.core.client.form.validator.AbstractValidator;
-import org.iplantc.de.resources.client.constants.IplantValidationConstants;
-import org.iplantc.de.resources.client.messages.IplantValidationMessages;
 
 import java.util.Collections;
 import java.util.List;
