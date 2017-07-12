@@ -45,7 +45,7 @@ public class SubjectNameCellDefaultAppearance implements SubjectNameCell.Subject
     public void render(SafeHtmlBuilder safeHtmlBuilder, Subject subject, String debugID) {
         String subjectName = subject.getSubjectDisplayName();
         if (subject.getSourceId().equals(Subject.GROUP_IDENTIFIER)) {
-            safeHtmlBuilder.append(templates.group(iplantResources.viewCurrentCollabs().getSafeUri(),
+            safeHtmlBuilder.append(templates.group(iplantResources.list().getSafeUri(),
                                                    SubjectNameCell.SubjectNameCellAppearance.CLICKABLE_ELEMENT_NAME,
                                                    subjectName,
                                                    defaultStyle,
