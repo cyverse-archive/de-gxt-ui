@@ -1,11 +1,8 @@
 package org.iplantc.de.collaborators.client.views;
 
 import org.iplantc.de.client.models.collaborators.Subject;
-import org.iplantc.de.client.models.groups.Group;
-import org.iplantc.de.collaborators.client.GroupView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
-import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
 import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
@@ -15,8 +12,6 @@ import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 import org.iplantc.de.commons.client.widgets.DETabPanel;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -60,6 +55,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @UiField ListStore<Subject> listStore;
     @UiField BorderLayoutContainer con;
     @UiField TextButton deleteBtn;
+    @UiField TextButton addGroup;
     @UiField Grid<Subject> grid;
     @UiField TextButton manageBtn;
     @UiField(provided = true) UserSearchField searchField;
@@ -67,7 +63,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @UiField ToolBar toolbar;
     private DETabPanel tabPanel;
     @UiField FramedPanel collaboratorListPnl;
-    private GroupView groupView;
 
     @UiField(provided = true) ManageCollaboratorsView.Appearance appearance;
 
@@ -79,10 +74,8 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @Inject
     public ManageCollaboratorsViewImpl(@Assisted final MODE mode,
                                        ManageCollaboratorsView.Appearance appearance,
-                                       GroupView groupView,
                                        UserSearchField searchField) {
         this.appearance = appearance;
-        this.groupView = groupView;
         this.searchField = searchField;
         checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Subject>());
         initWidget(uiBinder.createAndBindUi(this));
@@ -112,50 +105,30 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @Override
-    public boolean hasCollaboratorsTabSelected() {
-        return tabPanel.getActiveWidget() != groupView;
-    }
-
-    @Override
     public MODE getMode() {
         return mode;
     }
 
     @Override
     public List<Subject> getSelectedSubjects() {
-        List<Group> selectedCollabLists = groupView.getSelectedCollabLists();
-        List<Subject> selectedCollaborators = grid.getSelectionModel().getSelectedItems();
-        return Lists.newArrayList(Iterables.concat(selectedCollabLists, selectedCollaborators));
+        return grid.getSelectionModel().getSelectedItems();
     }
 
     @Override
-    public void addCollabLists(List<Group> result) {
-        groupView.addCollabLists(result);
+    public void updateCollabList(Subject group) {
+        listStore.update(group);
     }
 
     @Override
-    public void removeCollabList(Group result) {
-        groupView.removeCollabList(result);
-    }
-
-    @Override
-    public void maskCollabLists(String loadingMask) {
-        groupView.mask(loadingMask);
-    }
-
-    @Override
-    public void unmaskCollabLists() {
-        groupView.unmask();
-    }
-    
-    @Override
-    public void updateCollabList(Group group) {
-        groupView.updateCollabList(group);
-    }
-
-    @Override
-    public List<Group> getSelectedCollaboratorLists() {
-        return groupView.getSelectedCollabLists();
+    public void removeCollaboratorsById(List<String> userIds) {
+        if (userIds != null && !userIds.isEmpty()) {
+            for (String id : userIds) {
+                Subject found = listStore.findModelWithKey(id);
+                if (found != null) {
+                    listStore.remove(found);
+                }
+            }
+        }
     }
 
     @Override
@@ -187,8 +160,9 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     public void removeCollaborators(List<Subject> models) {
         if (models != null && !models.isEmpty()) {
             for (Subject c : models) {
-                if (listStore.findModel(c) != null) {
-                    listStore.remove(c);
+                Subject found = listStore.findModel(c);
+                if (found != null) {
+                    listStore.remove(found);
                 }
             }
         }
@@ -197,7 +171,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @Override
     public void setMode(MODE mode) {
         this.mode = mode;
-        groupView.setMode(mode);
         switch (mode) {
             case MANAGE:
                 grid.getView().setEmptyText(appearance.noCollaborators());
@@ -225,10 +198,10 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
         super.onEnsureDebugId(baseID);
         this.baseID = baseID;
         deleteBtn.ensureDebugId(baseID + CollaboratorsModule.Ids.DELETE);
+        addGroup.ensureDebugId(baseID + CollaboratorsModule.Ids.ADD_GROUP);
         //Checkbox column config is at index 0
         grid.getView().getHeader().getHead(0).getElement().setId(baseID + CollaboratorsModule.Ids.CHECKBOX_HEADER);
         searchField.setViewDebugId(CollaboratorsModule.Ids.SEARCH_LIST);
-        groupView.asWidget().ensureDebugId(baseID + CollaboratorsModule.Ids.GROUPS_VIEW);
     }
 
     void setGridCheckBoxDebugIds() {
@@ -252,6 +225,11 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
         fireEvent(new RemoveCollaboratorSelected(grid.getSelectionModel().getSelectedItems()));
     }
 
+    @UiHandler("addGroup")
+    void addGroupSelected(SelectEvent event) {
+        fireEvent(new AddGroupSelected());
+    }
+
     @UiHandler("manageBtn")
     void manageCollaborators(SelectEvent event) {
         setMode(MODE.MANAGE);
@@ -267,18 +245,13 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @Override
-    public HandlerRegistration addDeleteGroupSelectedHandler(DeleteGroupSelected.DeleteGroupSelectedHandler handler) {
-        return groupView.addDeleteGroupSelectedHandler(handler);
-    }
-
-    @Override
     public HandlerRegistration addAddGroupSelectedHandler(AddGroupSelected.AddGroupSelectedHandler handler) {
-        return groupView.addAddGroupSelectedHandler(handler);
+        return addHandler(handler, AddGroupSelected.TYPE);
     }
 
     @Override
     public HandlerRegistration addGroupNameSelectedHandler(GroupNameSelected.GroupNameSelectedHandler handler) {
-        return groupView.addGroupNameSelectedHandler(handler);
+        return ((CollaboratorsColumnModel)cm).addGroupNameSelectedHandler(handler);
     }
 
     @Override

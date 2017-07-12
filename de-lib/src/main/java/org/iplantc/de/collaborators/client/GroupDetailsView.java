@@ -35,7 +35,7 @@ public interface GroupDetailsView extends IsWidget,
          * Initialize the presenter and add the GroupDetailsView to the specified container
          * @param container
          */
-        void go(HasOneWidget container, Group group, MODE mode);
+        void go(HasOneWidget container, Subject group, MODE mode);
 
         /**
          * Check whether the GroupDetailsView is valid

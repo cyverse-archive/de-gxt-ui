@@ -2,12 +2,14 @@ package org.iplantc.de.collaborators.client.views;
 
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
+import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.models.SubjectNameComparator;
 import org.iplantc.de.collaborators.client.models.SubjectProperties;
 import org.iplantc.de.collaborators.client.views.cells.SubjectNameCell;
-import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.widget.core.client.grid.CheckBoxSelectionModel;
@@ -20,9 +22,10 @@ import java.util.List;
 /**
  * @author jstroot
  */
-public class CollaboratorsColumnModel extends ColumnModel<Subject> {
+public class CollaboratorsColumnModel extends ColumnModel<Subject> implements GroupNameSelected.HasGroupNameSelectedHandlers {
 
     private final ManageCollaboratorsView.Appearance appearance;
+    private HandlerManager handlerManager;
 
     public CollaboratorsColumnModel(final CheckBoxSelectionModel<Subject> checkBoxModel) {
         this(checkBoxModel,
@@ -36,6 +39,11 @@ public class CollaboratorsColumnModel extends ColumnModel<Subject> {
         super(createColumnConfigList(checkBoxModel,
                                      properties,
                                      appearance));
+        for (ColumnConfig<Subject, ?> cc :configs) {
+            if (cc.getCell() instanceof SubjectNameCell) {
+                ((SubjectNameCell)cc.getCell()).setHasHandlers(ensureHandlers());
+            }
+        }
         this.appearance = appearance;
     }
 
@@ -50,7 +58,7 @@ public class CollaboratorsColumnModel extends ColumnModel<Subject> {
 
         ColumnConfig<Subject, Subject> name = new ColumnConfig<>(new IdentityValueProvider<Subject>("firstname"),
                                                                  150);
-        name.setHeader(I18N.DISPLAY.name());
+        name.setHeader(appearance.nameHeader());
         name.setCell(new SubjectNameCell());
 
         name.setComparator(new SubjectNameComparator());
@@ -58,10 +66,22 @@ public class CollaboratorsColumnModel extends ColumnModel<Subject> {
 
         ColumnConfig<Subject, String> ins = new ColumnConfig<>(properties.institution(),
                                                                150);
-        ins.setHeader(I18N.DISPLAY.institution());
+        ins.setHeader(appearance.institutionOrDescriptionHeader());
         configs.add(ins);
 
         return configs;
 
+    }
+
+    @Override
+    public HandlerRegistration addGroupNameSelectedHandler(GroupNameSelected.GroupNameSelectedHandler handler) {
+        return ensureHandlers().addHandler(GroupNameSelected.TYPE, handler);
+    }
+
+    protected HandlerManager ensureHandlers() {
+        if (handlerManager == null) {
+            handlerManager = new HandlerManager(this);
+        }
+        return handlerManager;
     }
 }

@@ -28,7 +28,7 @@ public abstract class ParentAddMemberToGroupCallback {
         }
     }
 
-    public synchronized void done(List<UpdateMemberResult> results) {
+    public void done(List<UpdateMemberResult> results) {
         doneCount++;
 
         if (results != null && !results.isEmpty()) {

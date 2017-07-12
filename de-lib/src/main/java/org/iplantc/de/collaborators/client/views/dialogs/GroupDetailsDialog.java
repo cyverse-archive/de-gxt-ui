@@ -1,8 +1,8 @@
 package org.iplantc.de.collaborators.client.views.dialogs;
 
-import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.collaborators.client.GroupDetailsView;
-import org.iplantc.de.collaborators.client.GroupView;
+import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.GroupSaved;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
@@ -21,12 +21,12 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
 public class GroupDetailsDialog extends IPlantDialog implements GroupSaved.HasGroupSavedHandlers {
 
     GroupDetailsView.Presenter presenter;
-    GroupView.GroupViewAppearance appearance;
+    ManageCollaboratorsView.Appearance appearance;
     GroupDetailsView.MODE mode = GroupDetailsView.MODE.EDIT;
 
     @Inject
     public GroupDetailsDialog(GroupDetailsView.Presenter presenter,
-                              GroupView.GroupViewAppearance appearance) {
+                              ManageCollaboratorsView.Appearance appearance) {
         this.presenter = presenter;
         this.appearance = appearance;
 
@@ -61,7 +61,7 @@ public class GroupDetailsDialog extends IPlantDialog implements GroupSaved.HasGr
      * Used for displaying GroupDetailsView to edit an existing Group
      * @param group
      */
-    public void show(Group group) {
+    public void show(Subject group) {
         presenter.go(this, group, mode);
         setHeading(appearance.groupDetailsHeading(group));
         super.show();

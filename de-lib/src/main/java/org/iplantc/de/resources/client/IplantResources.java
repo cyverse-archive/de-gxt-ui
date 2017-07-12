@@ -200,6 +200,9 @@ public interface IplantResources extends ClientBundle,
     @Source("group.png")
     ImageResource viewCurrentCollabs();
 
+    @Source("list.png")
+    ImageResource list();
+
     @Source("down.png")
     DataResource down();
 

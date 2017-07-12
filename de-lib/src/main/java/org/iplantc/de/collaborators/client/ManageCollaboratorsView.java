@@ -2,8 +2,8 @@ package org.iplantc.de.collaborators.client;
 
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
-import org.iplantc.de.collaborators.client.events.DeleteGroupSelected;
 import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
@@ -24,7 +24,6 @@ import java.util.List;
  */
 public interface ManageCollaboratorsView extends IsWidget,
                                                  RemoveCollaboratorSelected.HasRemoveCollaboratorSelectedHandlers,
-                                                 DeleteGroupSelected.HasDeleteGroupSelectedHandlers,
                                                  AddGroupSelected.HasAddGroupSelectedHandlers,
                                                  GroupNameSelected.HasGroupNameSelectedHandlers,
                                                  UserSearchResultSelected.HasUserSearchResultSelectedEventHandlers {
@@ -61,7 +60,53 @@ public interface ManageCollaboratorsView extends IsWidget,
 
         String collaboratorListTab();
 
+        String addGroup();
+
+        ImageResource addIcon();
+
+        SafeHtml groupNameLabel();
+
+        String groupDescriptionLabel();
+
+        int groupDetailsWidth();
+
+        int groupDetailsHeight();
+
+        String groupDetailsHeading(Subject subject);
+
+        String completeRequiredFieldsError();
+
+        String deleteGroupConfirmHeading(List<Subject> groups);
+
+        String deleteGroupConfirm(List<Subject> groups);
+
+        String unableToAddMembers(List<UpdateMemberResult> failures);
+
         String loadingMask();
+
+        String groupCreatedSuccess(Group group);
+
+        String memberDeleteFail(List<UpdateMemberResult> subject);
+
+        String collaboratorsSelfAdd();
+
+        String groupSelfAdd();
+
+        String collaboratorRemoveConfirm(String names);
+
+        String collaboratorAddConfirm(String names);
+
+        String addCollabErrorMsg();
+
+        String memberAddToGroupsSuccess(Subject subject);
+
+        String groupNameValidationMsg(String restrictedChars);
+
+        String invalidChars(String restrictedChar);
+
+        String nameHeader();
+
+        String institutionOrDescriptionHeader();
     }
 
     /**
@@ -85,7 +130,7 @@ public interface ManageCollaboratorsView extends IsWidget,
         /**
          * Fetch the list of all Collaborator Lists for this user
          */
-        void updateListView();
+        void getGroups();
 
         /**
          * Fetch the list of current collaborators
@@ -112,38 +157,16 @@ public interface ManageCollaboratorsView extends IsWidget,
     }
 
     /**
-     * Add a set of Collaborator Lists to the GroupView
-     * @param result
-     */
-    void addCollabLists(List<Group> result);
-
-    /**
-     * Remove a set of Collaborator Lists from the GroupView
-     * @param result
-     */
-    void removeCollabList(Group result);
-
-    /**
-     * Mask only the Collaborator List view
-     */
-    void maskCollabLists(String loadingMask);
-
-    /**
-     * Unmask only the Collaborator List view
-     */
-    void unmaskCollabLists();
-
-    /**
-     * Update an existing Collaborator List in the GroupView
+     * Update an existing Collaborator List in the view
      * @param group
      */
-    void updateCollabList(Group group);
+    void updateCollabList(Subject group);
 
     /**
-     * Get the list of selected Collaborator Lists from the Collaborator List tab
-     * @return
+     * Remove the collaborators with the specified IDs
+     * @param userIds
      */
-    List<Group> getSelectedCollaboratorLists();
+    void removeCollaboratorsById(List<String> userIds);
 
     /**
      *  The collection of modes the ManageCollaboratorsView can step into
@@ -204,11 +227,4 @@ public interface ManageCollaboratorsView extends IsWidget,
      * @return
      */
     List<Subject> getCollaborators();
-
-    /**
-     * Returns true if the Collaborators tab is selected (as opposed to the
-     * Collaborator Lists tab)
-     * @return
-     */
-    boolean hasCollaboratorsTabSelected();
 }

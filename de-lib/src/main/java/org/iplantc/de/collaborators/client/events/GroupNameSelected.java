@@ -1,6 +1,6 @@
 package org.iplantc.de.collaborators.client.events;
 
-import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.models.collaborators.Subject;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -20,10 +20,10 @@ public class GroupNameSelected extends GwtEvent<GroupNameSelected.GroupNameSelec
     }
 
     public static Type<GroupNameSelectedHandler> TYPE = new Type<GroupNameSelectedHandler>();
-    private Group group;
+    private Subject subject;
 
-    public GroupNameSelected(Group group) {
-        this.group = group;
+    public GroupNameSelected(Subject subject) {
+        this.subject = subject;
     }
 
     public Type<GroupNameSelectedHandler> getAssociatedType() {
@@ -34,7 +34,7 @@ public class GroupNameSelected extends GwtEvent<GroupNameSelected.GroupNameSelec
         handler.onGroupNameSelected(this);
     }
 
-    public Group getGroup() {
-        return group;
+    public Subject getSubject() {
+        return subject;
     }
 }

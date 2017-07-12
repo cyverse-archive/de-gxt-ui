@@ -19,7 +19,6 @@ public interface CollaboratorsModule {
         String GRID = ".collabListGrid";
         String GROUPS_VIEW = ".collabListsView";
         String GROUP_DETAILS_DLG = "collabListDetails";
-        String GROUP_NAME_CELL = ".groupNameCell";
         String GROUP_NAME_LABEL = ".groupNameLabel";
         String GROUP_DESC_LABEL = ".groupDescLabel";
         String GROUP_NAME = ".groupName";

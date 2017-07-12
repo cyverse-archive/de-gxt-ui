@@ -7,7 +7,7 @@ import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.GroupDetailsView;
-import org.iplantc.de.collaborators.client.GroupView;
+import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
 import org.iplantc.de.collaborators.client.events.DeleteMembersSelected;
 import org.iplantc.de.collaborators.client.events.GroupSaved;
@@ -34,7 +34,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     private GroupDetailsView view;
     private GroupServiceFacade serviceFacade;
     private GroupAutoBeanFactory factory;
-    private GroupView.GroupViewAppearance appearance;
+    private ManageCollaboratorsView.Appearance appearance;
     private HandlerManager handlerManager;
     GroupDetailsView.MODE mode;
     Group originalGroup;
@@ -46,7 +46,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     public GroupDetailsPresenterImpl(GroupDetailsView view,
                                      GroupServiceFacade serviceFacade,
                                      GroupAutoBeanFactory factory,
-                                     GroupView.GroupViewAppearance appearance) {
+                                     ManageCollaboratorsView.Appearance appearance) {
         this.view = view;
         this.serviceFacade = serviceFacade;
         this.factory = factory;
@@ -57,9 +57,10 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     }
 
     @Override
-    public void go(HasOneWidget container, Group group, GroupDetailsView.MODE mode) {
+    public void go(HasOneWidget container, Subject subject, GroupDetailsView.MODE mode) {
         this.mode = mode;
         container.setWidget(view);
+        Group group = factory.convertSubjectToGroup(subject);
 
         getGroupMembers(group);
     }
