@@ -202,5 +202,12 @@ org.iplantc.discoveryenvironment.notification.amqp.exchange.auto-delete = {{ key
 org.iplantc.discoveryenvironment.analysis.support.user = {{ key (printf "%s/de/support-user" $base) }}
 org.iplantc.discoveryenvironment.support = {{ key (printf "%s/terrain/base" $base) }}/support-email
 
+###############################################################################
+# DE Session Store Settings
+###############################################################################
+org.iplantc.discoveryenvironment.redis.host = {{ key (printf "%s/de/redis-host"  $base) }}
+org.iplantc.discoveryenvironment.redis.port = {{ key (printf "%s/de/redis-port" $base) }}
+org.iplantc.discoveryenvironment.redis.db.number = {{ key (printf "%s/de/redis-db-number" $base) }}
+org.iplantc.discoveryenvironment.redis.password = {{ key (printf "%s/de/redis-password" $base) }}
 
 {{- end -}}
