@@ -19,6 +19,7 @@ import org.iplantc.de.apps.integration.client.presenter.visitors.RegisterEventHa
 import org.iplantc.de.apps.integration.client.view.AppEditorToolbar;
 import org.iplantc.de.apps.integration.client.view.AppsEditorView;
 import org.iplantc.de.apps.integration.client.view.dialogs.CommandLineOrderingDialog;
+import org.iplantc.de.apps.integration.shared.AppIntegrationModule;
 import org.iplantc.de.apps.widgets.client.events.ArgumentAddedEvent;
 import org.iplantc.de.apps.widgets.client.events.ArgumentAddedEvent.ArgumentAddedEventHandler;
 import org.iplantc.de.apps.widgets.client.events.ArgumentGroupAddedEvent;
@@ -641,6 +642,8 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
         dlg.setSize("500", "350");
         dlg.setResizable(false);
         dlg.show();
+        dlg.ensureDebugId(AppIntegrationModule.Ids.PREVIEW_JSON_DLG);
+        dlg.getOkButton().ensureDebugId(AppIntegrationModule.Ids.PREVIEW_JSON_DLG + AppIntegrationModule.Ids.OK);
         doJsonFormattting(dlg.getBody(),
                           JsonUtil.prettyPrint(split.getPayload(), null, 4),
                           dlg.getBody().getOffsetWidth(),
@@ -653,6 +656,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
         AppLaunchPreviewView preview = previewViewProvider.get();
         preview.edit(flushViewAndClean(), null);
         preview.show();
+        preview.asWidget().ensureDebugId(AppIntegrationModule.Ids.PREVIEW_APP_DLG);
     }
 
     @Override

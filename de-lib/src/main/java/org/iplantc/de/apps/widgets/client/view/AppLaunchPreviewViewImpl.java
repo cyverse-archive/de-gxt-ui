@@ -1,5 +1,6 @@
 package org.iplantc.de.apps.widgets.client.view;
 
+import org.iplantc.de.apps.integration.shared.AppIntegrationModule;
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent.RequestAnalysisLaunchEventHandler;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.JobExecution;
@@ -15,6 +16,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.Window;
+import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 /**
@@ -28,6 +30,7 @@ public class AppLaunchPreviewViewImpl extends Window implements AppLaunchPreview
 
     @Ignore
     @UiField(provided = true) AppTemplateForm wizard;
+    @UiField TextButton launchButton;
 
     private final EditorDriver editorDriver = GWT.create(EditorDriver.class);
 
@@ -68,5 +71,16 @@ public class AppLaunchPreviewViewImpl extends Window implements AppLaunchPreview
     void onLaunchButtonClicked(SelectEvent event) {
         // Flush the editor driver to perform validations.
         editorDriver.flush();
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        Widget closeBtn = getHeader().getTool(0);
+        if (closeBtn != null) {
+            closeBtn.ensureDebugId(baseID + AppIntegrationModule.Ids.CLOSE_BTN);
+        }
+        launchButton.ensureDebugId(baseID + AppIntegrationModule.Ids.LAUNCH_BTN);
     }
 }
