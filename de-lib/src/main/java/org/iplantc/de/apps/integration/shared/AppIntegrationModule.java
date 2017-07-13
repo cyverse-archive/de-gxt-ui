@@ -55,6 +55,10 @@ public interface AppIntegrationModule {
         String REFERENCE_GENOME_PANEL = ".referenceGenomePanel";
         String HELP_BTN = ".help";
         String COLLAPSE_BTN = ".collapseBtn";
+        String PREVIEW_JSON_DLG = "previewJsonDlg";
+        String CLOSE_BTN = ".closeBtn";
+        String PREVIEW_APP_DLG = "previewAppDlg";
+        String LAUNCH_BTN = ".launchBtn";
     }
 
     interface PropertyPanelIds {
