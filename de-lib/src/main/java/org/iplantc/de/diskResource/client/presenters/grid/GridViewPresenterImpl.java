@@ -5,17 +5,20 @@ import org.iplantc.de.client.events.diskResources.OpenFolderEvent;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasPath;
 import org.iplantc.de.client.models.dataLink.DataLink;
+import org.iplantc.de.client.models.dataLink.DataLinkFactory;
+import org.iplantc.de.client.models.dataLink.DataLinkList;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
-import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.comments.view.dialogs.CommentsDialog;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -72,9 +75,13 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
@@ -162,18 +169,22 @@ public class GridViewPresenterImpl implements Presenter,
 
         @Override
         public void onSuccess(final List<DataLink> result) {
-            shareLinkDialogProvider.get(new AsyncCallback<ShareResourceLinkDialog>() {
-                @Override
-                public void onFailure(Throwable caught) {
-                    ErrorHandler.post(caught);
-                }
-
-                @Override
-                public void onSuccess(ShareResourceLinkDialog dlg) {
-                    dlg.show(result.get(0).getDownloadUrl());
-                }
-            });
+            showPublicLink(result);
         }
+    }
+
+    protected void showPublicLink(final List<DataLink> result) {
+        shareLinkDialogProvider.get(new AsyncCallback<ShareResourceLinkDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(ShareResourceLinkDialog dlg) {
+                dlg.show(result.get(0).getDownloadUrl());
+            }
+        });
     }
 
     @Inject
@@ -201,6 +212,9 @@ public class GridViewPresenterImpl implements Presenter,
     @Inject
     MetadataCopyDialog mCopyDialog;
 
+    @Inject
+    DataLinkFactory dlFactory;
+
     EventBus eventBus;
     private final Appearance appearance;
     private final ListStore<DiskResource> listStore;
@@ -210,6 +224,7 @@ public class GridViewPresenterImpl implements Presenter,
     private boolean filePreviewEnabled = true;
     private DiskResourceView.Presenter parentPresenter;
     private HandlerManager handlerManager;
+    private final JsonUtil jsonUtil;
 
     @Inject
     GridViewPresenterImpl(final GridViewFactory gridViewFactory,
@@ -223,6 +238,7 @@ public class GridViewPresenterImpl implements Presenter,
         this.navigationPresenter = navigationPresenter;
         this.listStore = getDiskResourceListStore();
         this.eventBus = eventBus;
+        this.jsonUtil = JsonUtil.getInstance();
         GridView.FolderContentsRpcProxy folderContentsRpcProxy =
                 folderContentsProxyFactory.createWithEntityType(infoTypeFilters, entityType);
         setupHandlers();
@@ -483,8 +499,55 @@ public class GridViewPresenterImpl implements Presenter,
                 }
             });
         } else {
-            diskResourceService.createDataLinks(Arrays.asList(toBeShared.getPath()),
-                                                new CreateDataLinksCallback());
+            diskResourceService.listDataLinks(diskResourceUtil.asStringPathList(Arrays.asList(toBeShared)),
+                                              new DataCallback<String>() {
+
+                                                  @Override
+                                                  public void onFailure(Integer statusCode,
+                                                                        Throwable exception) {
+                                                      ErrorHandler.post(appearance.createDataLinksError(),
+                                                                        exception);
+                                                  }
+
+                                                  @Override
+                                                  public void onSuccess(String result) {
+                                                      List<DataLink> dlList = processResult(result);
+                                                      if (dlList == null || dlList.isEmpty()) {
+                                                          diskResourceService.createDataLinks(Arrays.asList(
+                                                                  toBeShared.getPath()),
+                                                                                              new CreateDataLinksCallback());
+                                                      } else {
+                                                          showPublicLink(dlList);
+                                                      }
+
+                                                  }
+
+                                                  private List<DataLink> processResult(String result) {
+                                                      JSONObject response = jsonUtil.getObject(result);
+                                                      JSONObject tickets =
+                                                              jsonUtil.getObject(response, "tickets");
+
+                                                      Splittable placeHolder;
+                                                      List<DataLink> dlList = null;
+                                                      for (String key : tickets.keySet()) {
+                                                          placeHolder = StringQuoter.createSplittable();
+                                                          JSONArray dlIds =
+                                                                  jsonUtil.getArray(tickets, key);
+                                                          Splittable splittable =
+                                                                  StringQuoter.split(dlIds.toString());
+                                                          splittable.assign(placeHolder, "tickets");
+                                                          AutoBean<DataLinkList> ticketsAB =
+                                                                  AutoBeanCodex.decode(dlFactory,
+                                                                                       DataLinkList.class,
+                                                                                       placeHolder);
+
+                                                          dlList = ticketsAB.as().getTickets();
+
+                                                      }
+                                                      return dlList;
+                                                  }
+                                              });
+
         }
     }
 
