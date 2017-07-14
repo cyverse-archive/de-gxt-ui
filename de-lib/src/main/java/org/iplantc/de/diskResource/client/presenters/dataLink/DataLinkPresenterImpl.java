@@ -60,8 +60,7 @@ public class DataLinkPresenterImpl implements DataLinkView.Presenter {
     void getExistingDataLinks(List<DiskResource> resources) {
         view.addRoots(resources);
         drService.listDataLinks(diskResourceUtil.asStringPathList(resources),
-                                new ListDataLinksCallback(
-                view.getTree(),dlFactory));
+                                new ListDataLinksCallback(view.getTree()));
     }
 
     @Override

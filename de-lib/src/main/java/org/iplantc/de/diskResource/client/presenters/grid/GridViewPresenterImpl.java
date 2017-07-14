@@ -6,7 +6,6 @@ import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasPath;
 import org.iplantc.de.client.models.dataLink.DataLink;
 import org.iplantc.de.client.models.dataLink.DataLinkFactory;
-import org.iplantc.de.client.models.dataLink.DataLinkList;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
@@ -75,13 +74,9 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
@@ -500,7 +495,7 @@ public class GridViewPresenterImpl implements Presenter,
             });
         } else {
             diskResourceService.listDataLinks(diskResourceUtil.asStringPathList(Arrays.asList(toBeShared)),
-                                              new DataCallback<String>() {
+                                              new DataCallback<FastMap<List<DataLink>>>() {
 
                                                   @Override
                                                   public void onFailure(Integer statusCode,
@@ -510,8 +505,9 @@ public class GridViewPresenterImpl implements Presenter,
                                                   }
 
                                                   @Override
-                                                  public void onSuccess(String result) {
-                                                      List<DataLink> dlList = processResult(result);
+                                                  public void onSuccess(FastMap<List<DataLink>> result) {
+                                                      List<DataLink> dlList =
+                                                              result.get(toBeShared.getPath());
                                                       if (dlList == null || dlList.isEmpty()) {
                                                           diskResourceService.createDataLinks(Arrays.asList(
                                                                   toBeShared.getPath()),
@@ -520,31 +516,6 @@ public class GridViewPresenterImpl implements Presenter,
                                                           showPublicLink(dlList);
                                                       }
 
-                                                  }
-
-                                                  private List<DataLink> processResult(String result) {
-                                                      JSONObject response = jsonUtil.getObject(result);
-                                                      JSONObject tickets =
-                                                              jsonUtil.getObject(response, "tickets");
-
-                                                      Splittable placeHolder;
-                                                      List<DataLink> dlList = null;
-                                                      for (String key : tickets.keySet()) {
-                                                          placeHolder = StringQuoter.createSplittable();
-                                                          JSONArray dlIds =
-                                                                  jsonUtil.getArray(tickets, key);
-                                                          Splittable splittable =
-                                                                  StringQuoter.split(dlIds.toString());
-                                                          splittable.assign(placeHolder, "tickets");
-                                                          AutoBean<DataLinkList> ticketsAB =
-                                                                  AutoBeanCodex.decode(dlFactory,
-                                                                                       DataLinkList.class,
-                                                                                       placeHolder);
-
-                                                          dlList = ticketsAB.as().getTickets();
-
-                                                      }
-                                                      return dlList;
                                                   }
                                               });
 
