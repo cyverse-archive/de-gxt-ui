@@ -38,7 +38,7 @@ public class TeamDetailsView extends Composite implements Editor<Group> {
 
     @UiField @Ignore FieldLabel teamNameLabel;
     @UiField @Ignore FieldLabel teamDescLabel;
-    @UiField TextField nameEditor;
+    @UiField TextField extensionEditor;
     @UiField TextArea descriptionEditor;
     @UiField ListStore<Subject> listStore;
     @UiField Grid<Subject> grid;

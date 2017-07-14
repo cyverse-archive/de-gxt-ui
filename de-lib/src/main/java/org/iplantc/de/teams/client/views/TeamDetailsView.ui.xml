@@ -32,7 +32,7 @@
             <form:FieldLabel ui:field="teamNameLabel"
                              text="{appearance.teamNameLabel}">
                 <form:widget>
-                    <form:TextField ui:field="nameEditor"
+                    <form:TextField ui:field="extensionEditor"
                                     enabled="false"/>
                 </form:widget>
             </form:FieldLabel>

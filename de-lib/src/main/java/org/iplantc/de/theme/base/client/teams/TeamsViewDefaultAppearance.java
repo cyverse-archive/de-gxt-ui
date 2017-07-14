@@ -104,7 +104,7 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
 
     @Override
     public String detailsHeading(Group group) {
-        return displayStrings.detailsHeading(group.getSubjectDisplayName());
+        return displayStrings.detailsHeading(group.getExtension());
     }
 
     @Override

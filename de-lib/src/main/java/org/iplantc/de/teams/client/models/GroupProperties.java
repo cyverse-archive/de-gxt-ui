@@ -16,6 +16,8 @@ public interface GroupProperties extends PropertyAccess<Group> {
 
     ValueProvider<Group, String> name();
 
+    ValueProvider<Group, String> extension();
+
     ValueProvider<Group, String> description();
 
 }
