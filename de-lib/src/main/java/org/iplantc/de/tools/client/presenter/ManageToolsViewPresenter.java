@@ -131,7 +131,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     }
 
     @Override
-    public void addTool(Tool tool, final Command dialogCallbackCommand) {
+    public void addTool(final Tool tool, final Command dialogCallbackCommand) {
         toolServices.addTool(tool, new AppsCallback<Tool>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
@@ -139,11 +139,14 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
             }
 
             @Override
-            public void onSuccess(Tool s) {
+            public void onSuccess(Tool result) {
                 announcer.schedule(new SuccessAnnouncementConfig(
-                        appearance.toolAdded(s.getName())));
+                        appearance.toolAdded(result.getName())));
                 dialogCallbackCommand.execute();
-                toolsView.addTool(s);
+                tool.setId(result.getId());
+                tool.setPermission(result.getPermission());
+                tool.setType(result.getType());
+                toolsView.addTool(tool);
             }
         });
     }
