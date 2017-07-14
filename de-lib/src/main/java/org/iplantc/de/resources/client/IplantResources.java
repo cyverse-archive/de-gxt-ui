@@ -198,7 +198,7 @@ public interface IplantResources extends ClientBundle,
 	 * @return image.
 	 */
     @Source("group.png")
-    ImageResource viewCurrentCollabs();
+    ImageResource group();
 
     @Source("list.png")
     ImageResource list();

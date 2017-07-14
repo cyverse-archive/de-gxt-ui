@@ -44,13 +44,18 @@ public class SubjectNameCellDefaultAppearance implements SubjectNameCell.Subject
     @Override
     public void render(SafeHtmlBuilder safeHtmlBuilder, Subject subject, String debugID, boolean clickableGroupName) {
         String subjectName = subject.getSubjectDisplayName();
-        if (subject.getSourceId().equals(Subject.GROUP_IDENTIFIER)) {
-            safeHtmlBuilder.append(templates.group(iplantResources.list().getSafeUri(),
-                                                    SubjectNameCell.SubjectNameCellAppearance.CLICKABLE_ELEMENT_NAME,
-                                                    subjectName,
-                                                    clickableGroupName ? defaultStyle.nameStyle() : "",
-                                                    debugID));
-
+        if (subject.isGroup()) {
+            SafeUri uri;
+            if (subject.isCollaboratorList()) {
+                uri = iplantResources.list().getSafeUri();
+            } else {
+                uri = iplantResources.group().getSafeUri();
+            }
+            safeHtmlBuilder.append(templates.group(uri,
+                                                   SubjectNameCell.SubjectNameCellAppearance.CLICKABLE_ELEMENT_NAME,
+                                                   subjectName,
+                                                   clickableGroupName ? defaultStyle.nameStyle() : "",
+                                                   debugID));
         } else {
             safeHtmlBuilder.append(templates.subject(subjectName, debugID));
         }

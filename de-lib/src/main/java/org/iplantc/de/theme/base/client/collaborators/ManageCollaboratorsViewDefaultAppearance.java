@@ -140,7 +140,7 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
 
     @Override
     public ImageResource groupsIcon() {
-        return iplantResources.viewCurrentCollabs();
+        return iplantResources.group();
     }
 
     @Override

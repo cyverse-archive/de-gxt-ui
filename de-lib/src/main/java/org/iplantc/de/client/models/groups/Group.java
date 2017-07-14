@@ -21,14 +21,4 @@ public interface Group extends Subject, HasDescription {
     String getDisplayName();
 
     String getExtension();
-
-    default String getSubjectDisplayName() {
-        String groupName = getName();
-        if (!hasCollaboratorListLongName(groupName)) {
-            return groupName;
-        } else {
-            return getCollaboratorListDisplayName(groupName);
-        }
-    }
-
 }
