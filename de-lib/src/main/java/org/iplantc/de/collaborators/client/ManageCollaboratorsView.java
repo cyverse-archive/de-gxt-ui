@@ -8,6 +8,7 @@ import org.iplantc.de.collaborators.client.events.GroupNameSelected;
 import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -107,6 +108,10 @@ public interface ManageCollaboratorsView extends IsWidget,
         String nameHeader();
 
         String institutionOrDescriptionHeader();
+
+        String onlyDNDToListSupported();
+
+        String membersAddedToGroupSuccess(Subject group, List<UpdateMemberResult> userSuccesses);
     }
 
     /**
@@ -227,4 +232,11 @@ public interface ManageCollaboratorsView extends IsWidget,
      * @return
      */
     List<Subject> getCollaborators();
+
+    /**
+     * Return the corresponding Subject in the grid for the given element
+     * @param as
+     * @return
+     */
+    Subject getSubjectFromElement(Element as);
 }

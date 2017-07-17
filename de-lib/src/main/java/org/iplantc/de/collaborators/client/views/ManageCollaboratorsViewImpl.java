@@ -13,6 +13,7 @@ import org.iplantc.de.commons.client.widgets.DETabPanel;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
@@ -26,6 +27,8 @@ import com.google.inject.assistedinject.Assisted;
 import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.Style.SelectionMode;
 import com.sencha.gxt.data.shared.ListStore;
+import com.sencha.gxt.dnd.core.client.DragSource;
+import com.sencha.gxt.dnd.core.client.DropTarget;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.FramedPanel;
 import com.sencha.gxt.widget.core.client.button.TextButton;
@@ -36,6 +39,7 @@ import com.sencha.gxt.widget.core.client.event.ViewReadyEvent;
 import com.sencha.gxt.widget.core.client.grid.CheckBoxSelectionModel;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
+import com.sencha.gxt.widget.core.client.grid.GridView;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent.SelectionChangedHandler;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
@@ -57,8 +61,10 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @UiField TextButton deleteBtn;
     @UiField TextButton addGroup;
     @UiField Grid<Subject> grid;
+    @UiField GridView<Subject> gridView;
     @UiField TextButton manageBtn;
     @UiField(provided = true) UserSearchField searchField;
+    private CollaboratorDNDHandler dndHandler;
     @UiField HorizontalLayoutContainer searchPanel;
     @UiField ToolBar toolbar;
     private DETabPanel tabPanel;
@@ -74,9 +80,11 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @Inject
     public ManageCollaboratorsViewImpl(@Assisted final MODE mode,
                                        ManageCollaboratorsView.Appearance appearance,
-                                       UserSearchField searchField) {
+                                       UserSearchField searchField,
+                                       @Assisted CollaboratorDNDHandler dndHandler) {
         this.appearance = appearance;
         this.searchField = searchField;
+        this.dndHandler = dndHandler;
         checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Subject>());
         initWidget(uiBinder.createAndBindUi(this));
 
@@ -102,6 +110,16 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @Override
     public List<Subject> getCollaborators() {
         return listStore.getAll();
+    }
+
+    @Override
+    public Subject getSubjectFromElement(Element as) {
+        Element row = gridView.findRow(as);
+        int dropIndex = gridView.findRowIndex(row);
+        if (dropIndex > listStore.size() - 1) {
+            return null;
+        }
+        return listStore.get(dropIndex);
     }
 
     @Override
@@ -237,6 +255,14 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
 
     private void init() {
         grid.getSelectionModel().addSelectionChangedHandler(this);
+
+        DropTarget gridDropTarget = new DropTarget(grid);
+        gridDropTarget.setAllowSelfAsSource(true);
+        gridDropTarget.addDropHandler(dndHandler);
+        gridDropTarget.addDragEnterHandler(dndHandler);
+        gridDropTarget.addDragMoveHandler(dndHandler);
+        DragSource gridDragSource = new DragSource(grid);
+        gridDragSource.addDragStartHandler(dndHandler);
     }
 
     @Override

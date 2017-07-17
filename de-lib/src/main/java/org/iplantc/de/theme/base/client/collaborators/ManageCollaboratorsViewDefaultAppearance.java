@@ -281,4 +281,15 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
     public String institutionOrDescriptionHeader() {
         return displayStrings.institutionOrDescriptionHeader();
     }
+
+    @Override
+    public String onlyDNDToListSupported() {
+        return displayStrings.onlyDNDToListSupported();
+    }
+
+    @Override
+    public String membersAddedToGroupSuccess(Subject group, List<UpdateMemberResult> userSuccesses) {
+        List<String> names = userSuccesses.stream().map(UpdateMemberResult::getSubjectName).collect(Collectors.toList());
+        return displayStrings.membersAddedToGroupSuccess(group.getSubjectDisplayName(), names);
+    }
 }
