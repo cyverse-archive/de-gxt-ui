@@ -33,8 +33,6 @@ import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.client.util.JsonUtil;
-import org.iplantc.de.collaborators.client.views.dialogs.ManageCollaboratorsDialog;
-import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.commons.client.CommonUiConstants;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -165,7 +163,6 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     @Inject NotifyInfo notifyInfo;
     @Inject DiskResourceUtil diskResourceUtil;
     @Inject AsyncProviderWrapper<PreferencesDialog> preferencesDialogProvider;
-    @Inject AsyncProviderWrapper<ManageCollaboratorsDialog> collaboratorsDialogProvider;
     private DesktopPresenterAppearance appearance;
 
     private final EventBus eventBus;
@@ -461,22 +458,9 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         desktopWindowManager.show(WindowType.APPS);
     }
 
-    /**
-     * FIXME REFACTOR JDS The manage collaborators presenter should be used here, not the view.
-     */
     @Override
     public void onCollaboratorsClick() {
-        collaboratorsDialogProvider.get(new AsyncCallback<ManageCollaboratorsDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(ManageCollaboratorsDialog result) {
-                result.show(ManageCollaboratorsView.MODE.MANAGE);
-            }
-        });
+        desktopWindowManager.show(WindowType.COLLABORATION);
     }
 
     @Override

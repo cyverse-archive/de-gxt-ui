@@ -38,6 +38,12 @@ public class ConfigFactory {
         return awc;
     }
 
+    public static CollaborationWindowConfig collaborationWindowConfig() {
+        CollaborationWindowConfig collabWindowConfig = applyWindowType(WindowType.COLLABORATION, factory.collaborationWindowConfig())
+                .as();
+        return collabWindowConfig;
+    }
+
     public static AppsIntegrationWindowConfig appsIntegrationWindowConfig(HasQualifiedId app) {
         AutoBean<AppsIntegrationWindowConfig> aiwc = applyWindowType(WindowType.APP_INTEGRATION,
                 factory.appsIntegrationWindowConfig());
@@ -179,6 +185,10 @@ public class ConfigFactory {
                 config = systemMessagesWindowConfig(null);
                 break;
 
+            case COLLABORATION:
+                config = collaborationWindowConfig();
+                break;
+
             case APP_INTEGRATION:
             case APP_WIZARD:
             case DATA_VIEWER:
@@ -255,6 +265,11 @@ public class ConfigFactory {
             case MANAGETOOLS:
                 config = AutoBeanCodex.decode(factory,
                                               ManageToolsWindowConfig.class,
+                                              ws.getWindowConfig()).as();
+                break;
+            case COLLABORATION:
+                config = AutoBeanCodex.decode(factory,
+                                              CollaborationWindowConfig.class,
                                               ws.getWindowConfig()).as();
                 break;
         }
