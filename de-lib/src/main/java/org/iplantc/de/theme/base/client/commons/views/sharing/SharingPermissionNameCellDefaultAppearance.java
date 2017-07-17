@@ -42,7 +42,7 @@ public class SharingPermissionNameCellDefaultAppearance implements SharingPermis
     public void render(SafeHtmlBuilder safeHtmlBuilder, Sharing sharing, String debugID) {
         String subjectName = sharing.getSubject().getSubjectDisplayName();
         if (Subject.GROUP_IDENTIFIER.equals(sharing.getSourceId())) {
-            safeHtmlBuilder.append(templates.group(iplantResources.viewCurrentCollabs().getSafeUri(), subjectName, debugID));
+            safeHtmlBuilder.append(templates.group(iplantResources.list().getSafeUri(), subjectName, debugID));
         } else {
             safeHtmlBuilder.append(templates.subject(subjectName, debugID));
         }
