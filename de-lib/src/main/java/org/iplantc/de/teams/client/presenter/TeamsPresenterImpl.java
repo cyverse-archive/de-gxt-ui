@@ -6,6 +6,7 @@ import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.teams.client.TeamsView;
+import org.iplantc.de.teams.client.events.CreateTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
 import org.iplantc.de.teams.client.models.TeamsFilter;
@@ -22,7 +23,8 @@ import java.util.List;
  */
 public class TeamsPresenterImpl implements TeamsView.Presenter,
                                            TeamInfoButtonSelected.TeamInfoButtonSelectedHandler,
-                                           TeamFilterSelectionChanged.TeamFilterSelectionChangedHandler {
+                                           TeamFilterSelectionChanged.TeamFilterSelectionChangedHandler,
+                                           CreateTeamSelected.CreateTeamSelectedHandler {
 
     private TeamsView.TeamsViewAppearance appearance;
     private GroupServiceFacade serviceFacade;
@@ -41,6 +43,7 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
         
         view.addTeamInfoButtonSelectedHandler(this);
         view.addTeamFilterSelectionChangedHandler(this);
+        view.addCreateTeamSelectedHandler(this);
     }
 
     @Override
@@ -130,5 +133,10 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
                 view.unmask();
             }
         });
+    }
+
+    @Override
+    public void onCreateTeamSelected(CreateTeamSelected event) {
+        
     }
 }

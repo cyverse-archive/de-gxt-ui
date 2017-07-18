@@ -2,6 +2,7 @@ package org.iplantc.de.teams.client.views;
 
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.teams.client.TeamsView;
+import org.iplantc.de.teams.client.events.CreateTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
 import org.iplantc.de.teams.client.models.GroupProperties;
@@ -113,7 +114,7 @@ public class TeamsViewImpl extends Composite implements TeamsView {
 
     @UiHandler("newTeamMI")
     void onNewTeamSelected(SelectionEvent<Item> event) {
-
+        fireEvent(new CreateTeamSelected());
     }
 
     @UiHandler("manageTeamMI")
@@ -171,5 +172,10 @@ public class TeamsViewImpl extends Composite implements TeamsView {
     @Override
     public HandlerRegistration addTeamFilterSelectionChangedHandler(TeamFilterSelectionChanged.TeamFilterSelectionChangedHandler handler) {
         return addHandler(handler, TeamFilterSelectionChanged.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addCreateTeamSelectedHandler(CreateTeamSelected.CreateTeamSelectedHandler handler) {
+        return addHandler(handler, CreateTeamSelected.TYPE);
     }
 }
