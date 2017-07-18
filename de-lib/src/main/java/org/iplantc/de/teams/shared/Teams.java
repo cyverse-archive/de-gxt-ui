@@ -17,5 +17,6 @@ public interface Teams {
         String GRID = ".grid";
         String TEAM_INFO_CELL = ".infoCell";
         String TEAM_DETAILS_DLG = "teamDetailsDlg";
+        String EDIT_TEAM_DIALOG = "editTeamDlg";
     }
 }

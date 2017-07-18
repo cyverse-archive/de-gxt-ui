@@ -26,4 +26,6 @@ public interface TeamsDisplayStrings extends Messages {
     String membersLabel();
 
     String detailsGridEmptyText();
+
+    String editTeamHeader(String teamName);
 }

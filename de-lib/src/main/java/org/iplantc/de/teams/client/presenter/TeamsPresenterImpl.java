@@ -10,6 +10,7 @@ import org.iplantc.de.teams.client.events.CreateTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
 import org.iplantc.de.teams.client.models.TeamsFilter;
+import org.iplantc.de.teams.client.views.dialogs.EditTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.TeamDetailsDialog;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -31,6 +32,7 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
     private TeamsView view;
 
     @Inject AsyncProviderWrapper<TeamDetailsDialog> detailsDlgProvider;
+    @Inject AsyncProviderWrapper<EditTeamDialog> editTeamDlgProvider;
     TeamsFilter currentFilter;
 
     @Inject
@@ -137,6 +139,16 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
 
     @Override
     public void onCreateTeamSelected(CreateTeamSelected event) {
-        
+        editTeamDlgProvider.get(new AsyncCallback<EditTeamDialog>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(throwable);
+            }
+
+            @Override
+            public void onSuccess(EditTeamDialog dialog) {
+                dialog.show(null);
+            }
+        });
     }
 }

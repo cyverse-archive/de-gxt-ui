@@ -116,4 +116,23 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     public String detailsGridEmptyText() {
         return displayStrings.detailsGridEmptyText();
     }
+
+    @Override
+    public int editTeamWidth() {
+        return 500;
+    }
+
+    @Override
+    public int editTeamHeight() {
+        return 700;
+    }
+
+    @Override
+    public String editTeamHeading(Group group) {
+        if (group == null) {
+            return displayStrings.createNewTeam();
+        } else {
+            return displayStrings.editTeamHeader(group.getSubjectDisplayName());
+        }
+    }
 }

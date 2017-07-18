@@ -58,6 +58,12 @@ public interface TeamsView extends IsWidget,
         String membersLabel();
 
         String detailsGridEmptyText();
+
+        int editTeamWidth();
+
+        int editTeamHeight();
+
+        String editTeamHeading(Group group);
     }
 
     /**
