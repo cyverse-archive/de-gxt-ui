@@ -2,7 +2,6 @@ package org.iplantc.de.teams.client;
 
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.groups.Group;
-import org.iplantc.de.commons.client.widgets.DETabPanel;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
 import org.iplantc.de.teams.client.models.TeamsFilter;
@@ -64,12 +63,26 @@ public interface TeamsView extends IsWidget,
      */
     interface Presenter {
 
+        /**
+         * Initialize the Team presenter to begin fetching teams
+         */
         void go();
     }
 
+    /**
+     * Add the specified groups to the Teams view
+     * @param result
+     */
     void addTeams(List<Group> result);
 
+    /**
+     * Remove any teams from the ListStore
+     */
     void clearTeams();
 
+    /**
+     * Return the filter currently set in the Team view
+     * @return
+     */
     TeamsFilter getCurrentFilter();
 }

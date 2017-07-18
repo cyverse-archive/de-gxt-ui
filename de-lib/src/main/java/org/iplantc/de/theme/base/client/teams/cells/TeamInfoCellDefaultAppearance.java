@@ -71,7 +71,10 @@ public class TeamInfoCellDefaultAppearance implements TeamInfoCell.TeamInfoCellA
         tooltip = displayStrings.teamInfoBtnToolTip();
         final SafeUri safeUri = iplantResources.info().getSafeUri();
         if (DebugInfo.isDebugIdEnabled()) {
-            sb.append(templates.debugCell(imgClassName, safeUri, tooltip, debugId,
+            sb.append(templates.debugCell(imgClassName,
+                                          safeUri,
+                                          tooltip,
+                                          debugId,
                                           TeamInfoCell.TeamInfoCellAppearance.CLICKABLE_ELEMENT_NAME));
         } else {
             sb.append(templates.cell(imgClassName, safeUri, tooltip, TeamInfoCell.TeamInfoCellAppearance.CLICKABLE_ELEMENT_NAME));

@@ -4,7 +4,6 @@ import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.commons.client.widgets.DETabPanel;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
@@ -14,8 +13,6 @@ import org.iplantc.de.teams.client.views.dialogs.TeamDetailsDialog;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-
-import com.sencha.gxt.widget.core.client.TabItemConfig;
 
 import java.util.List;
 
@@ -49,7 +46,7 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
     @Override
     public void go() {
         currentFilter = view.getCurrentFilter();
-        getMyTeams();
+        getSelectedTeams();
     }
 
     @Override
@@ -88,7 +85,11 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
 
         currentFilter = filter;
 
-        if (TeamsFilter.MY_TEAMS.equals(filter)) {
+        getSelectedTeams();
+    }
+
+    void getSelectedTeams() {
+        if (TeamsFilter.MY_TEAMS.equals(currentFilter)) {
             getMyTeams();
         } else {
             getAllTeams();

@@ -3,8 +3,8 @@ package org.iplantc.de.teams.client.presenter;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import org.iplantc.de.client.models.collaborators.Subject;
@@ -74,7 +74,7 @@ public class TeamsPresenterImplTest {
 
         /** CALL METHOD UNDER TEST **/
         spy.go();
-        verify(spy).getMyTeams();
+        verify(spy).getSelectedTeams();
     }
 
     @Test
@@ -96,29 +96,17 @@ public class TeamsPresenterImplTest {
 
     @Test
     public void onTeamFilterSelectionChanged_currentFilter() {
+        TeamsPresenterImpl spy = spy(uut);
         TeamFilterSelectionChanged eventMock = mock(TeamFilterSelectionChanged.class);
         when(eventMock.getFilter()).thenReturn(currentFilterMock);
 
         /** CALL METHOD UNDER TEST **/
-        uut.onTeamFilterSelectionChanged(eventMock);
-        verifyZeroInteractions(viewMock);
-
-    }
-
-    @Test
-    public void onTeamFilterSelectionChanged_newFilterAll() {
-        TeamsPresenterImpl spy = spy(uut);
-        TeamFilterSelectionChanged eventMock = mock(TeamFilterSelectionChanged.class);
-        TeamsFilter filterMock = TeamsFilter.ALL;
-        when(eventMock.getFilter()).thenReturn(filterMock);
-
-        /** CALL METHOD UNDER TEST **/
         spy.onTeamFilterSelectionChanged(eventMock);
-        verify(spy).getAllTeams();
+        verify(spy, times(0)).getSelectedTeams();
     }
 
     @Test
-    public void onTeamFilterSelectionChanged_newFilterMine() {
+    public void onTeamFilterSelectionChanged_newFilter() {
         TeamsPresenterImpl spy = spy(uut);
         TeamFilterSelectionChanged eventMock = mock(TeamFilterSelectionChanged.class);
         TeamsFilter filterMock = TeamsFilter.MY_TEAMS;
@@ -126,6 +114,26 @@ public class TeamsPresenterImplTest {
 
         /** CALL METHOD UNDER TEST **/
         spy.onTeamFilterSelectionChanged(eventMock);
+        verify(spy).getSelectedTeams();
+    }
+
+    @Test
+    public void getSelectedTeams_newFilterAll() {
+        TeamsPresenterImpl spy = spy(uut);
+        spy.currentFilter = TeamsFilter.ALL;
+
+        /** CALL METHOD UNDER TEST **/
+        spy.getSelectedTeams();
+        verify(spy).getAllTeams();
+    }
+
+    @Test
+    public void getSelectedTeams_newFilterMine() {
+        TeamsPresenterImpl spy = spy(uut);
+        spy.currentFilter = TeamsFilter.MY_TEAMS;
+
+        /** CALL METHOD UNDER TEST **/
+        spy.getSelectedTeams();
         verify(spy).getMyTeams();
     }
 
