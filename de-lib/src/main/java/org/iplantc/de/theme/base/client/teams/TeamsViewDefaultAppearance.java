@@ -6,6 +6,7 @@ import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.teams.client.TeamsView;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * The default appearance that will be used for the Teams view
@@ -134,5 +135,10 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
         } else {
             return displayStrings.editTeamHeader(group.getSubjectDisplayName());
         }
+    }
+
+    @Override
+    public ImageResource plusImage() {
+        return iplantResources.add();
     }
 }

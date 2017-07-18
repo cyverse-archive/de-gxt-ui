@@ -55,7 +55,8 @@
                         <button:menu>
                             <menu:Menu>
                                 <menu:MenuItem ui:field="newTeamMI"
-                                               text="{appearance.createNewTeam}"/>
+                                               text="{appearance.createNewTeam}"
+                                               icon="{appearance.plusImage}"/>
                                 <menu:MenuItem ui:field="manageTeamMI"
                                                text="{appearance.manageTeam}"/>
                                 <menu:MenuItem ui:field="leaveTeamMI"

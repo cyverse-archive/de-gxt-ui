@@ -7,6 +7,7 @@ import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
 import org.iplantc.de.teams.client.models.TeamsFilter;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import java.util.List;
@@ -64,6 +65,8 @@ public interface TeamsView extends IsWidget,
         int editTeamHeight();
 
         String editTeamHeading(Group group);
+
+        ImageResource plusImage();
     }
 
     /**
