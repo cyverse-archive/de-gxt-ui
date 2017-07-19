@@ -28,4 +28,14 @@ public interface TeamsDisplayStrings extends Messages {
     String detailsGridEmptyText();
 
     String editTeamHeader(String teamName);
+
+    String nonMembersSectionHeader();
+
+    String membersSectionHeader();
+
+    String nonMembersPrivilegeExplanation();
+
+    String memberOptOutExplanation();
+
+    String privilegeColumnLabel();
 }

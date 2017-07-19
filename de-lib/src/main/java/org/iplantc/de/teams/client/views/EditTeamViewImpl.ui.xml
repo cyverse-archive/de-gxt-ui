@@ -1,0 +1,143 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
+             xmlns:grid="urn:import:com.sencha.gxt.widget.core.client.grid"
+             xmlns:toolbar="urn:import:com.sencha.gxt.widget.core.client.toolbar"
+             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
+             xmlns:userSearch="urn:import:org.iplantc.de.collaborators.client.util"
+
+             xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
+>
+    <ui:with field="nonMembersListStore"
+             type="com.sencha.gxt.data.shared.ListStore"/>
+    <ui:with field="nonMembersCm"
+             type="com.sencha.gxt.widget.core.client.grid.ColumnModel"/>
+    <ui:with field="nonMembersGridView"
+             type="com.sencha.gxt.widget.core.client.grid.GridView">
+        <ui:attributes forceFit="true"
+                       autoFill="true"/>
+    </ui:with>
+
+
+    <ui:with field="membersListStore"
+             type="com.sencha.gxt.data.shared.ListStore"/>
+    <ui:with field="membersCm"
+             type="com.sencha.gxt.widget.core.client.grid.ColumnModel"/>
+    <ui:with field="membersGridView"
+             type="com.sencha.gxt.widget.core.client.grid.GridView">
+        <ui:attributes forceFit="true"
+                       autoFill="true"/>
+    </ui:with>
+
+    <ui:with field="boxDataNoFlex"
+             type="com.sencha.gxt.widget.core.client.container.BoxLayoutContainer.BoxLayoutData">
+        <ui:attributes margins="{centerMargins}"/>
+    </ui:with>
+    <ui:with field="centerMargins"
+             type="com.sencha.gxt.core.client.util.Margins">
+        <ui:attributes top="0"
+                       right="0"
+                       bottom="0"
+                       left="0"/>
+    </ui:with>
+
+    <ui:with field="margins"
+             type="com.sencha.gxt.core.client.util.Margins">
+        <ui:attributes top="0" right="5" bottom="0" left="5"/>
+    </ui:with>
+
+    <ui:with field="layoutData"
+             type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
+        <ui:attributes width="1" height="-1" margins="{margins}"/>
+    </ui:with>
+
+    <ui:with field="appearance"
+             type="org.iplantc.de.teams.client.TeamsView.TeamsViewAppearance"/>
+
+    <container:VerticalLayoutContainer>
+        <container:child layoutData="{layoutData}">
+            <form:FieldLabel ui:field="teamNameLabel"
+                             text="{appearance.teamNameLabel}">
+                <form:widget>
+                    <form:TextField ui:field="nameEditor"/>
+                </form:widget>
+            </form:FieldLabel>
+        </container:child>
+        <container:child layoutData="{layoutData}">
+            <form:FieldLabel ui:field="teamDescLabel"
+                             text="{appearance.teamDescLabel}">
+                <form:widget>
+                    <form:TextArea ui:field="descriptionEditor"/>
+                </form:widget>
+            </form:FieldLabel>
+        </container:child>
+
+        <container:child layoutData="{layoutData}">
+            <form:FieldSet ui:field="nonMembersFieldSet"
+                           heading="{appearance.nonMembersSectionHeader}"
+                           collapsible="false">
+                <container:VerticalLayoutContainer layoutData="{layoutData}">
+                    <container:child>
+                        <form:FieldLabel ui:field="nonMembersPrivilegeExplanation"
+                                         text="{appearance.nonMembersPrivilegeExplanation}"
+                                         labelSeparator=""
+                                         labelAlign="TOP"/>
+                    </container:child>
+                    <container:child>
+                        <toolbar:ToolBar layoutData="{boxDataNoFlex}"
+                                         ui:field="toolbar">
+                            <toolbar:child>
+                                <button:TextButton ui:field="removeNonMember"
+                                                   text="{appearance.removeButtonText}"
+                                                   icon="{appearance.deleteIcon}"/>
+                            </toolbar:child>
+                            <toolbar:child>
+                                <userSearch:UserSearchField ui:field="nonMemberSearch"/>
+                            </toolbar:child>
+                        </toolbar:ToolBar>
+                    </container:child>
+                    <container:child>
+                        <grid:Grid ui:field="nonMembersGrid"
+                                   store="{nonMembersListStore}"
+                                   cm="{nonMembersCm}"
+                                   view="{nonMembersGridView}"/>
+                    </container:child>
+                </container:VerticalLayoutContainer>
+            </form:FieldSet>
+        </container:child>
+
+        <container:child layoutData="{layoutData}">
+            <form:FieldSet ui:field="membersFieldSet"
+                           heading="{appearance.membersSectionHeader}"
+                           collapsible="false">
+                <container:VerticalLayoutContainer layoutData="{layoutData}">
+                    <container:child>
+                        <form:FieldLabel ui:field="memberOptOutExplanation"
+                                         text="{appearance.memberOptOutExplanation}"
+                                         labelSeparator=""
+                                         labelAlign="TOP"/>
+                    </container:child>
+                    <container:child>
+                        <toolbar:ToolBar layoutData="{boxDataNoFlex}"
+                                         ui:field="memberToolbar">
+                            <toolbar:child>
+                                <button:TextButton ui:field="removeMember"
+                                                   text="{appearance.removeButtonText}"
+                                                   icon="{appearance.deleteIcon}"/>
+                            </toolbar:child>
+                            <toolbar:child>
+                                <userSearch:UserSearchField ui:field="memberSearch"/>
+                            </toolbar:child>
+                        </toolbar:ToolBar>
+                    </container:child>
+                    <container:child>
+                        <grid:Grid ui:field="membersGrid"
+                                   store="{membersListStore}"
+                                   cm="{membersCm}"
+                                   view="{membersGridView}"/>
+                    </container:child>
+                </container:VerticalLayoutContainer>
+            </form:FieldSet>
+        </container:child>
+    </container:VerticalLayoutContainer>
+</ui:UiBinder>

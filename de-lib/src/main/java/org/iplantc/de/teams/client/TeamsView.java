@@ -67,6 +67,20 @@ public interface TeamsView extends IsWidget,
         String editTeamHeading(Group group);
 
         ImageResource plusImage();
+
+        String nonMembersSectionHeader();
+
+        String membersSectionHeader();
+
+        String nonMembersPrivilegeExplanation();
+
+        ImageResource deleteIcon();
+
+        String removeButtonText();
+
+        String memberOptOutExplanation();
+
+        String privilegeColumnLabel();
     }
 
     /**

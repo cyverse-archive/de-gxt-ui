@@ -141,4 +141,39 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     public ImageResource plusImage() {
         return iplantResources.add();
     }
+
+    @Override
+    public String nonMembersSectionHeader() {
+        return displayStrings.nonMembersSectionHeader();
+    }
+
+    @Override
+    public String membersSectionHeader() {
+        return displayStrings.membersSectionHeader();
+    }
+
+    @Override
+    public String nonMembersPrivilegeExplanation() {
+        return displayStrings.nonMembersPrivilegeExplanation();
+    }
+
+    @Override
+    public ImageResource deleteIcon() {
+        return iplantResources.deleteIcon();
+    }
+
+    @Override
+    public String removeButtonText() {
+        return iplantDisplayStrings.remove();
+    }
+
+    @Override
+    public String memberOptOutExplanation() {
+        return displayStrings.memberOptOutExplanation();
+    }
+
+    @Override
+    public String privilegeColumnLabel() {
+        return displayStrings.privilegeColumnLabel();
+    }
 }
