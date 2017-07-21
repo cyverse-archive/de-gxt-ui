@@ -14,6 +14,9 @@ public interface EditTeamView extends IsWidget,
                                       IsMaskable,
                                       UserSearchResultSelected.HasUserSearchResultSelectedEventHandlers {
 
+    String SEARCH_MEMBERS_TAG = "members";
+    String SEARCH_NON_MEMBERS_TAG = "nonMembers";
+
     interface Presenter {
 
         void go(HasOneWidget widget, Group group);
@@ -24,4 +27,6 @@ public interface EditTeamView extends IsWidget,
     void edit(Group group);
 
     void addNonMembers(List<Privilege> privilegeList);
+
+    void addMembers(List<Privilege> privilegeList);
 }

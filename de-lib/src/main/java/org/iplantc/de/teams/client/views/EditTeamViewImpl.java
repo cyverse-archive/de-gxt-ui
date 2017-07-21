@@ -77,8 +77,8 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
         initWidget(uiBinder.createAndBindUi(this));
         editorDriver.initialize(this);
 
-        nonMembersGrid.getView().setForceFit(true);
-        membersGrid.getView().setForceFit(true);
+        memberSearch.setTag(SEARCH_MEMBERS_TAG);
+        nonMemberSearch.setTag(SEARCH_NON_MEMBERS_TAG);
     }
 
     void createColumnModels() {
@@ -120,6 +120,11 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
         nonMembersListStore.addAll(privilegeList);
     }
 
+    @Override
+    public void addMembers(List<Privilege> privilegeList) {
+        membersListStore.addAll(privilegeList);
+    }
+
     @UiHandler("removeNonMember")
     void onRemoveNonMemberClicked(SelectEvent event) {
 
@@ -135,9 +140,9 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
         super.onEnsureDebugId(baseID);
     }
 
-    //FIXME eek, 2 handlers?
     @Override
     public HandlerRegistration addUserSearchResultSelectedEventHandler(UserSearchResultSelected.UserSearchResultSelectedEventHandler handler) {
+        memberSearch.addUserSearchResultSelectedEventHandler(handler);
         return nonMemberSearch.addUserSearchResultSelectedEventHandler(handler);
     }
 }

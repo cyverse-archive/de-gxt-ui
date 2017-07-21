@@ -91,6 +91,7 @@ public class UserSearchField implements IsWidget,
     private ListView<Subject, Subject> view;
     private UserSearchFieldAppearance appearance;
     private HandlerManager handlerManager;
+    private String tag;
 
     @Inject
     public UserSearchField(UserSearchFieldAppearance appearance,
@@ -109,6 +110,10 @@ public class UserSearchField implements IsWidget,
         initCombo(loader, cell);
     }
 
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
     private void initCombo(PagingLoader<UsersLoadConfig, PagingLoadResult<Subject>> loader,
             ComboBoxCell<Subject> cell) {
         combo = new ComboBox<Subject>(cell);
@@ -122,7 +127,7 @@ public class UserSearchField implements IsWidget,
             @Override
             public void onSelection(SelectionEvent<Subject> event) {
                 Subject subject = combo.getListView().getSelectionModel().getSelectedItem();
-                ensureHandlers().fireEvent(new UserSearchResultSelected(subject));
+                ensureHandlers().fireEvent(new UserSearchResultSelected(subject, tag));
                 combo.clear();
             }
         });

@@ -1,5 +1,7 @@
 package org.iplantc.de.teams.client.presenter;
 
+import static org.iplantc.de.teams.client.EditTeamView.SEARCH_MEMBERS_TAG;
+
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
@@ -48,10 +50,16 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     @Override
     public void onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected) {
         Subject subject = userSearchResultSelected.getSubject();
+        String tag = userSearchResultSelected.getTag();
         Privilege privilege = factory.getPrivilege().as();
         privilege.setSubject(subject);
         privilege.setName("read");
 
-        view.addNonMembers(Lists.newArrayList(privilege));
+        if (SEARCH_MEMBERS_TAG.equals(tag)) {
+            view.addMembers(Lists.newArrayList(privilege));
+        } else {
+            view.addNonMembers(Lists.newArrayList(privilege));
+        }
+
     }
 }
