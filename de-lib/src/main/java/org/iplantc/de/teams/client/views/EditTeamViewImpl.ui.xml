@@ -73,17 +73,18 @@
         </container:child>
 
         <container:child layoutData="{layoutData}">
-            <form:FieldSet ui:field="nonMembersFieldSet"
+            <form:FieldSet layoutData="{layoutData}"
+                           ui:field="nonMembersFieldSet"
                            heading="{appearance.nonMembersSectionHeader}"
                            collapsible="false">
-                <container:VerticalLayoutContainer layoutData="{layoutData}">
-                    <container:child>
+                <container:VerticalLayoutContainer>
+                    <container:child layoutData="{layoutData}">
                         <form:FieldLabel ui:field="nonMembersPrivilegeExplanation"
                                          text="{appearance.nonMembersPrivilegeExplanation}"
                                          labelSeparator=""
                                          labelAlign="TOP"/>
                     </container:child>
-                    <container:child>
+                    <container:child layoutData="{layoutData}">
                         <toolbar:ToolBar layoutData="{boxDataNoFlex}"
                                          ui:field="toolbar">
                             <toolbar:child>
@@ -96,7 +97,7 @@
                             </toolbar:child>
                         </toolbar:ToolBar>
                     </container:child>
-                    <container:child>
+                    <container:child layoutData="{layoutData}">
                         <grid:Grid ui:field="nonMembersGrid"
                                    store="{nonMembersListStore}"
                                    cm="{nonMembersCm}"
@@ -107,17 +108,18 @@
         </container:child>
 
         <container:child layoutData="{layoutData}">
-            <form:FieldSet ui:field="membersFieldSet"
+            <form:FieldSet layoutData="{layoutData}"
+                           ui:field="membersFieldSet"
                            heading="{appearance.membersSectionHeader}"
                            collapsible="false">
-                <container:VerticalLayoutContainer layoutData="{layoutData}">
-                    <container:child>
+                <container:VerticalLayoutContainer>
+                    <container:child  layoutData="{layoutData}">
                         <form:FieldLabel ui:field="memberOptOutExplanation"
                                          text="{appearance.memberOptOutExplanation}"
                                          labelSeparator=""
                                          labelAlign="TOP"/>
                     </container:child>
-                    <container:child>
+                    <container:child layoutData="{layoutData}">
                         <toolbar:ToolBar layoutData="{boxDataNoFlex}"
                                          ui:field="memberToolbar">
                             <toolbar:child>
@@ -130,7 +132,7 @@
                             </toolbar:child>
                         </toolbar:ToolBar>
                     </container:child>
-                    <container:child>
+                    <container:child layoutData="{layoutData}">
                         <grid:Grid ui:field="membersGrid"
                                    store="{membersListStore}"
                                    cm="{membersCm}"
