@@ -170,7 +170,22 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
         });    }
 
     @Override
-    public void addMembers(Group group,
+    public void addMembersToList(Group group,
+                                 List<Subject> subjects,
+                                 AsyncCallback<List<UpdateMemberResult>> callback) {
+        addMembersToGroup(LISTS, group, subjects, callback);
+    }
+
+    @Override
+    public void addMembersToTeam(Group group,
+                                 List<Subject> subjects,
+                                 AsyncCallback<List<UpdateMemberResult>> callback) {
+        addMembersToGroup(TEAMS, group, subjects, callback);
+
+    }
+
+    void addMembersToGroup(String address,
+                           Group group,
                            List<Subject> subjects,
                            AsyncCallback<List<UpdateMemberResult>> callback) {
         String groupName = group.getName();
@@ -180,7 +195,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
                                    .collect(Collectors.toList());
         request.setMembers(ids);
 
-        String address = LISTS + "/" + URL.encodePathSegment(groupName) + "/members";
+        address += "/" + URL.encodePathSegment(groupName) + "/members";
 
         Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
 

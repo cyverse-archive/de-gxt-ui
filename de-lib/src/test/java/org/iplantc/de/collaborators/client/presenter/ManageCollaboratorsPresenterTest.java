@@ -234,7 +234,7 @@ public class ManageCollaboratorsPresenterTest {
         /** CALL METHOD UNDER TEST **/
         uut.addAsCollaborators(subjectListMock);
 
-        verify(groupServiceFacadeMock).addMembers(eq(defaultGroup), eq(subjectListMock), updateMemberCaptor.capture());
+        verify(groupServiceFacadeMock).addMembersToList(eq(defaultGroup), eq(subjectListMock), updateMemberCaptor.capture());
 
         updateMemberCaptor.getValue().onSuccess(updateMemberResultsMock);
         verify(viewMock).addCollaborators(eq(subjectListMock));
@@ -415,7 +415,7 @@ public class ManageCollaboratorsPresenterTest {
         verify(subjectListMock).forEach(subjectConsumerCaptor.capture());
         subjectConsumerCaptor.getValue().accept(subjectMock);
 
-        verify(groupServiceFacadeMock).addMembers(eq(groupMock), eq(subjectListMock), updateMemberCaptor.capture());
+        verify(groupServiceFacadeMock).addMembersToList(eq(groupMock), eq(subjectListMock), updateMemberCaptor.capture());
 
         updateMemberCaptor.getValue().onSuccess(updateMemberResultsMock);
     }
@@ -494,7 +494,7 @@ public class ManageCollaboratorsPresenterTest {
         uut.subjectsDNDToList(subjectMock, subjectListMock);
 
         verify(viewMock).maskCollaborators(anyString());
-        verify(groupServiceFacadeMock).addMembers(eq(groupMock), eq(subjectListMock), updateMemberCaptor.capture());
+        verify(groupServiceFacadeMock).addMembersToList(eq(groupMock), eq(subjectListMock), updateMemberCaptor.capture());
 
         updateMemberCaptor.getValue().onSuccess(updateMemberResultsMock);
         verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));

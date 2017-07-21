@@ -4,11 +4,13 @@ import static org.iplantc.de.teams.client.EditTeamView.ALL_PUBLIC_USERS_NAME;
 import static org.iplantc.de.teams.client.EditTeamView.SEARCH_MEMBERS_TAG;
 
 import org.iplantc.de.client.models.IsHideable;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.Privilege;
 import org.iplantc.de.client.models.groups.PrivilegeType;
+import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -30,6 +32,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     private GroupServiceFacade serviceFacade;
     private GroupAutoBeanFactory factory;
     private TeamsView.TeamsViewAppearance appearance;
+    @Inject UserInfo userInfo;
 
     @Inject
     public EditTeamPresenterImpl(EditTeamView view,
@@ -98,12 +101,36 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
             @Override
             public void onSuccess(Group group) {
+                addMembersToTeam(group, hideable);
+            }
+        });
+    }
+
+    void addMembersToTeam(Group group, IsHideable hideable) {
+        Subject self = createSelfSubject();
+        List<Privilege> privileges = view.getMemberPrivileges();
+        List<Subject> membersToAdd = privileges.stream()
+                                               .map(Privilege::getSubject)
+                                               .collect(Collectors.toList());
+        membersToAdd.add(self);
+
+        serviceFacade.addMembersToTeam(group, membersToAdd, new AsyncCallback<List<UpdateMemberResult>>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(throwable);
+            }
+
+            @Override
+            public void onSuccess(List<UpdateMemberResult> updateMemberResults) {
                 hideable.hide();
             }
         });
     }
 
-        
+    Subject createSelfSubject() {
+        Subject subject = factory.getSubject().as();
+        subject.setId(userInfo.getUsername());
+        return subject;
     }
 
     @Override

@@ -85,7 +85,14 @@ public interface GroupServiceFacade {
      * @param group
      * @param subjects
      */
-    void addMembers(Group group, List<Subject> subjects, AsyncCallback<List<UpdateMemberResult>> callback);
+    void addMembersToList(Group group, List<Subject> subjects, AsyncCallback<List<UpdateMemberResult>> callback);
+
+    /**
+     * Adds  members to the Team
+     * @param group
+     * @param subjects
+     */
+    void addMembersToTeam(Group group, List<Subject> subjects, AsyncCallback<List<UpdateMemberResult>> callback);
 
     /**
      * Update the details of a Collaborator List

@@ -233,7 +233,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
             public void accept(Subject subject) {
                 AddMemberToGroupCallback callback = createAddMemberToGroupCallback();
                 Group group = groupFactory.convertSubjectToGroup(subject);
-                groupServiceFacade.addMembers(group, wrapSubjectInList(member), callback);
+                groupServiceFacade.addMembersToList(group, wrapSubjectInList(member), callback);
                 childCallbacks.add(callback);
             }
         });
@@ -265,7 +265,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
      */
     @Override
     public void addAsCollaborators(final List<Subject> models) {
-        groupServiceFacade.addMembers(groupFactory.getDefaultGroup(), models, new AsyncCallback<List<UpdateMemberResult>>() {
+        groupServiceFacade.addMembersToList(groupFactory.getDefaultGroup(), models, new AsyncCallback<List<UpdateMemberResult>>() {
 
             @Override
             public void onSuccess(List<UpdateMemberResult> result) {
@@ -525,7 +525,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     public void subjectsDNDToList(Subject targetSubject, List<Subject> sourceSubjects) {
         view.maskCollaborators(groupAppearance.loadingMask());
         Group group = groupFactory.convertSubjectToGroup(targetSubject);
-        groupServiceFacade.addMembers(group, sourceSubjects, new AsyncCallback<List<UpdateMemberResult>>() {
+        groupServiceFacade.addMembersToList(group, sourceSubjects, new AsyncCallback<List<UpdateMemberResult>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
