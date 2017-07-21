@@ -12,14 +12,17 @@ import org.iplantc.de.client.models.groups.CreateTeamRequest;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.GroupList;
+import org.iplantc.de.client.models.groups.Privilege;
 import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.groups.UpdateMemberRequest;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.models.groups.UpdateMemberResultList;
+import org.iplantc.de.client.models.groups.UpdatePrivilegeRequest;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.GroupCallbackConverter;
 import org.iplantc.de.client.services.converters.GroupListToSubjectListCallbackConverter;
+import org.iplantc.de.client.services.converters.PrivilegeListCallbackConverter;
 import org.iplantc.de.client.services.converters.SubjectMemberListCallbackConverter;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
@@ -217,6 +220,19 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(PATCH, address, encode.getPayload());
         deService.getServiceData(wrapper, new GroupCallbackConverter(callback, factory));
+    }
+
+    @Override
+    public void updateTeamPrivileges(Group group,
+                                     List<UpdatePrivilegeRequest> updates,
+                                     AsyncCallback<List<Privilege>> callback) {
+        String groupName = group.getName();
+        String address = TEAMS + "/" + URL.encodePathSegment(groupName) + "/privileges";
+
+        final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(updates));
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
+        deService.getServiceData(wrapper, new PrivilegeListCallbackConverter(callback, factory));
     }
 
 }

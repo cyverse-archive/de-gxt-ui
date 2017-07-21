@@ -37,9 +37,9 @@ public interface GroupAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<PrivilegeList> getPrivilegeList();
 
-    AutoBean<UpdateTeamRequest> getUpdateTeamRequest();
+    AutoBean<UpdatePrivilegeRequest> getUpdatePrivilegeRequest();
 
-    AutoBean<UpdateTeamRequestList> getUpdateTeamRequestList();
+    AutoBean<UpdatePrivilegeRequestList> getUpdatePrivilegeRequestList();
 
     AutoBean<CreateTeamRequest> getCreateTeamRequest();
 

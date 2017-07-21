@@ -11,6 +11,7 @@ import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.Privilege;
 import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
+import org.iplantc.de.client.models.groups.UpdatePrivilegeRequest;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -23,6 +24,7 @@ import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class EditTeamPresenterImpl implements EditTeamView.Presenter,
@@ -127,6 +129,35 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
             @Override
             public void onSuccess(List<UpdateMemberResult> updateMemberResults) {
+                List<Privilege> nonMemberPrivs = view.getNonMemberPrivileges();
+                privileges.addAll(nonMemberPrivs);
+                addPrivilegesToTeam(group, privileges, hideable);
+            }
+        });
+    }
+
+    void addPrivilegesToTeam(Group group, List<Privilege> privileges, IsHideable hideable) {
+        List<UpdatePrivilegeRequest> updateList = Lists.newArrayList();
+
+        privileges.forEach(new Consumer<Privilege>() {
+            @Override
+            public void accept(Privilege privilege) {
+                UpdatePrivilegeRequest update = factory.getUpdatePrivilegeRequest().as();
+                update.setSubjectId(privilege.getSubject().getId());
+                update.setPrivileges(Lists.newArrayList(privilege.getPrivilegeType()));
+                updateList.add(update);
+            }
+        });
+
+        serviceFacade.updateTeamPrivileges(group, updateList, new AsyncCallback<List<Privilege>>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(throwable);
+                mode = EditTeamView.MODE.EDIT;
+            }
+
+            @Override
+            public void onSuccess(List<Privilege> privileges) {
                 hideable.hide();
             }
         });
