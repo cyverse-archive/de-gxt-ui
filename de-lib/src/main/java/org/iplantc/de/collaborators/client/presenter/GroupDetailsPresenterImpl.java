@@ -127,7 +127,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     }
 
     void addGroup(Group group) {
-        serviceFacade.addGroup(group, new AsyncCallback<Group>() {
+        serviceFacade.addList(group, new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);

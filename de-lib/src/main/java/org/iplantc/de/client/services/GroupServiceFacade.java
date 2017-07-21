@@ -1,7 +1,9 @@
 package org.iplantc.de.client.services;
 
 import org.iplantc.de.client.models.collaborators.Subject;
+import org.iplantc.de.client.models.groups.CreateTeamRequest;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -38,7 +40,14 @@ public interface GroupServiceFacade {
      * @param group
      * @param callback
      */
-    void addGroup(Group group, AsyncCallback<Group> callback);
+    void addList(Group group, AsyncCallback<Group> callback);
+
+    /**
+     * Create a Team
+     * @param group
+     * @param callback
+     */
+    void addTeam(Group group, PrivilegeType publicPrivileges, AsyncCallback<Group> callback);
 
     /**
      * Delete a Collaborator List

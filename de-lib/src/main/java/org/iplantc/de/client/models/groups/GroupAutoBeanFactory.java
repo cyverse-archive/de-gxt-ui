@@ -41,6 +41,8 @@ public interface GroupAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<UpdateTeamRequestList> getUpdateTeamRequestList();
 
+    AutoBean<CreateTeamRequest> getCreateTeamRequest();
+
     default Group getDefaultGroup() {
         Group group = getGroup().as();
         group.setName(Group.DEFAULT_GROUP);

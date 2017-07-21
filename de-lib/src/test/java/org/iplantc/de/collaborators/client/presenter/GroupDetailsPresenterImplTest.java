@@ -156,7 +156,7 @@ public class GroupDetailsPresenterImplTest {
 
         /** CALL METHOD UNDER TEST **/
         uut.addGroup(groupMock);
-        verify(serviceFacadeMock).addGroup(eq(groupMock), groupCallbackCaptor.capture());
+        verify(serviceFacadeMock).addList(eq(groupMock), groupCallbackCaptor.capture());
         groupCallbackCaptor.getValue().onSuccess(groupMock);
 
         verify(handlerManagerMock).fireEvent(isA(GroupSaved.class));

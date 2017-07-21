@@ -148,6 +148,21 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
         return nameEditor.isValid();
     }
 
+    @Override
+    public Group getTeam() {
+        return editorDriver.flush();
+    }
+
+    @Override
+    public List<Privilege> getMemberPrivileges() {
+        return membersListStore.getAll();
+    }
+
+    @Override
+    public List<Privilege> getNonMemberPrivileges() {
+        return nonMembersListStore.getAll();
+    }
+
     @UiHandler("removeNonMember")
     void onRemoveNonMemberClicked(SelectEvent event) {
 

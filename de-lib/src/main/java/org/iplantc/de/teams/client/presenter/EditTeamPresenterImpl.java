@@ -1,5 +1,6 @@
 package org.iplantc.de.teams.client.presenter;
 
+import static org.iplantc.de.teams.client.EditTeamView.ALL_PUBLIC_USERS_NAME;
 import static org.iplantc.de.teams.client.EditTeamView.SEARCH_MEMBERS_TAG;
 
 import org.iplantc.de.client.models.IsHideable;
@@ -10,12 +11,17 @@ import org.iplantc.de.client.models.groups.Privilege;
 import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
+import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
 
 import com.google.common.collect.Lists;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                                               UserSearchResultSelected.UserSearchResultSelectedEventHandler {
@@ -41,7 +47,22 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     public void go(HasOneWidget widget, Group group) {
         widget.setWidget(view);
 
+        if (group == null) {
+            group = factory.getGroup().as();
+        }
+
         view.edit(group);
+        addPublicUser();
+    }
+
+    void addPublicUser() {
+        Privilege privilege = factory.getPrivilege().as();
+        Subject subject = factory.getSubject().as();
+        subject.setName(ALL_PUBLIC_USERS_NAME);
+        privilege.setSubject(subject);
+        privilege.setPrivilegeType(PrivilegeType.view);
+
+        view.addNonMembers(Lists.newArrayList(privilege));
     }
 
     @Override
@@ -55,7 +76,33 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     }
 
     @Override
-    public void saveTeamSelected(IsHideable hideable) {
+    public void saveTeamSelected(IsHideable hideable, EditTeamView.MODE mode) {
+        if (EditTeamView.MODE.CREATE == mode) {
+            createNewTeam(hideable);
+        }
+    }
+
+    void createNewTeam(IsHideable hideable) {
+        List<Privilege> nonMemberPrivileges = view.getNonMemberPrivileges();
+        Privilege publicUser = nonMemberPrivileges.stream()
+                                                  .filter(privilege -> ALL_PUBLIC_USERS_NAME.equals(
+                                                          privilege.getSubject().getName()))
+                                                  .collect(Collectors.toList())
+                                                  .get(0);
+        PrivilegeType privilege = publicUser.getPrivilegeType();
+        serviceFacade.addTeam(view.getTeam(), privilege, new AsyncCallback<Group>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(throwable);
+            }
+
+            @Override
+            public void onSuccess(Group group) {
+                hideable.hide();
+            }
+        });
+    }
+
         
     }
 

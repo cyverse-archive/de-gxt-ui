@@ -13,6 +13,7 @@ import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 public class EditTeamDialog extends IPlantDialog {
     private EditTeamView.Presenter presenter;
     private TeamsView.TeamsViewAppearance appearance;
+    EditTeamView.MODE mode;
 
     @Inject
     public EditTeamDialog(EditTeamView.Presenter presenter,
@@ -26,7 +27,7 @@ public class EditTeamDialog extends IPlantDialog {
         setHideOnButtonClick(false);
         addOkButtonSelectHandler(selectEvent -> {
             if (presenter.isViewValid()) {
-                presenter.saveTeamSelected(this);
+                presenter.saveTeamSelected(this, EditTeamDialog.this.mode);
             } else {
                 AlertMessageBox alertMsgBox =
                         new AlertMessageBox(appearance.completeRequiredFieldsHeading(), appearance.completeRequiredFieldsError());
@@ -38,6 +39,8 @@ public class EditTeamDialog extends IPlantDialog {
 
     public void show(Group group) {
         presenter.go(this, group);
+        mode = (group == null) ? EditTeamView.MODE.CREATE : EditTeamView.MODE.EDIT;
+
         setHeading(appearance.editTeamHeading(group));
         super.show();
 

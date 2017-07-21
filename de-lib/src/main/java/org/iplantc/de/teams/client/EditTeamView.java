@@ -18,6 +18,12 @@ public interface EditTeamView extends IsWidget,
                                       IsMaskable,
                                       UserSearchResultSelected.HasUserSearchResultSelectedEventHandlers {
 
+    enum MODE {
+        CREATE,
+        EDIT
+    }
+
+    String ALL_PUBLIC_USERS_NAME = "All Public Users";
     String SEARCH_MEMBERS_TAG = "members";
     String SEARCH_NON_MEMBERS_TAG = "nonMembers";
 
@@ -42,7 +48,7 @@ public interface EditTeamView extends IsWidget,
          */
         boolean isViewValid();
 
-        void saveTeamSelected(IsHideable hideable);
+        void saveTeamSelected(IsHideable hideable, MODE mode);
     }
 
     /**
@@ -68,4 +74,10 @@ public interface EditTeamView extends IsWidget,
      * @return
      */
     boolean isValid();
+
+    Group getTeam();
+
+    List<Privilege> getMemberPrivileges();
+
+    List<Privilege> getNonMemberPrivileges();
 }

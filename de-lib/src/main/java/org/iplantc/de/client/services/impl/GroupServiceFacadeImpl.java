@@ -8,9 +8,11 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.CollaboratorAutoBeanFactory;
 import org.iplantc.de.client.models.collaborators.Subject;
+import org.iplantc.de.client.models.groups.CreateTeamRequest;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.GroupList;
+import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.groups.UpdateMemberRequest;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.models.groups.UpdateMemberResultList;
@@ -22,6 +24,7 @@ import org.iplantc.de.client.services.converters.SubjectMemberListCallbackConver
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
+import com.google.common.collect.Lists;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -93,10 +96,25 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void addGroup(Group group, AsyncCallback<Group> callback) {
+    public void addList(Group group, AsyncCallback<Group> callback) {
         String address = LISTS;
 
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(group));
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
+        deService.getServiceData(wrapper, new GroupCallbackConverter(callback, factory));
+    }
+
+    @Override
+    public void addTeam(Group group, PrivilegeType publicPrivileges, AsyncCallback<Group> callback) {
+        String address = TEAMS;
+
+        CreateTeamRequest request = factory.getCreateTeamRequest().as();
+        request.setName(group.getName());
+        request.setDescription(group.getDescription());
+        request.setPublicPrivileges(Lists.newArrayList(publicPrivileges));
+
+        final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
         deService.getServiceData(wrapper, new GroupCallbackConverter(callback, factory));
