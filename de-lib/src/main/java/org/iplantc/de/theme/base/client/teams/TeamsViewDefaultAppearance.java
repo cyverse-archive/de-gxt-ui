@@ -125,7 +125,7 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
 
     @Override
     public int editTeamHeight() {
-        return 700;
+        return 500;
     }
 
     @Override

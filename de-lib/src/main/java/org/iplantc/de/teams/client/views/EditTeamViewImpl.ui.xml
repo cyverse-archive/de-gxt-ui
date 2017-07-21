@@ -53,93 +53,99 @@
 
     <ui:with field="appearance"
              type="org.iplantc.de.teams.client.TeamsView.TeamsViewAppearance"/>
+    <container:FlowLayoutContainer scrollMode="AUTO">
+        <container:VerticalLayoutContainer>
+            <container:child layoutData="{layoutData}">
+                <form:FieldLabel ui:field="teamNameLabel"
+                                 text="{appearance.teamNameLabel}">
+                    <form:widget>
+                        <form:TextField ui:field="nameEditor"/>
+                    </form:widget>
+                </form:FieldLabel>
+            </container:child>
+            <container:child layoutData="{layoutData}">
+                <form:FieldLabel ui:field="teamDescLabel"
+                                 text="{appearance.teamDescLabel}">
+                    <form:widget>
+                        <form:TextArea ui:field="descriptionEditor"/>
+                    </form:widget>
+                </form:FieldLabel>
+            </container:child>
 
-    <container:VerticalLayoutContainer>
-        <container:child layoutData="{layoutData}">
-            <form:FieldLabel ui:field="teamNameLabel"
-                             text="{appearance.teamNameLabel}">
-                <form:widget>
-                    <form:TextField ui:field="nameEditor"/>
-                </form:widget>
-            </form:FieldLabel>
-        </container:child>
-        <container:child layoutData="{layoutData}">
-            <form:FieldLabel ui:field="teamDescLabel"
-                             text="{appearance.teamDescLabel}">
-                <form:widget>
-                    <form:TextArea ui:field="descriptionEditor"/>
-                </form:widget>
-            </form:FieldLabel>
-        </container:child>
+            <!--Members Section-->
+            <container:child layoutData="{layoutData}">
+                <form:FieldSet layoutData="{layoutData}"
+                               ui:field="membersFieldSet"
+                               heading="{appearance.membersSectionHeader}"
+                               collapsible="false">
+                    <container:VerticalLayoutContainer>
+                        <container:child  layoutData="{layoutData}">
+                            <form:FieldLabel ui:field="memberOptOutExplanation"
+                                             text="{appearance.memberOptOutExplanation}"
+                                             labelSeparator=""
+                                             labelAlign="TOP"/>
+                        </container:child>
+                        <container:child layoutData="{layoutData}">
+                            <toolbar:ToolBar layoutData="{boxDataNoFlex}"
+                                             ui:field="memberToolbar">
+                                <toolbar:child>
+                                    <button:TextButton ui:field="removeMember"
+                                                       text="{appearance.removeButtonText}"
+                                                       icon="{appearance.deleteIcon}"/>
+                                </toolbar:child>
+                                <toolbar:child>
+                                    <userSearch:UserSearchField ui:field="memberSearch"/>
+                                </toolbar:child>
+                            </toolbar:ToolBar>
+                        </container:child>
+                        <container:child layoutData="{layoutData}">
+                            <grid:Grid ui:field="membersGrid"
+                                       store="{membersListStore}"
+                                       cm="{membersCm}"
+                                       view="{membersGridView}"
+                                       height="150px"/>
+                        </container:child>
+                    </container:VerticalLayoutContainer>
+                </form:FieldSet>
+            </container:child>
 
-        <container:child layoutData="{layoutData}">
-            <form:FieldSet layoutData="{layoutData}"
-                           ui:field="nonMembersFieldSet"
-                           heading="{appearance.nonMembersSectionHeader}"
-                           collapsible="false">
-                <container:VerticalLayoutContainer>
-                    <container:child layoutData="{layoutData}">
-                        <form:FieldLabel ui:field="nonMembersPrivilegeExplanation"
-                                         text="{appearance.nonMembersPrivilegeExplanation}"
-                                         labelSeparator=""
-                                         labelAlign="TOP"/>
-                    </container:child>
-                    <container:child layoutData="{layoutData}">
-                        <toolbar:ToolBar layoutData="{boxDataNoFlex}"
-                                         ui:field="toolbar">
-                            <toolbar:child>
-                                <button:TextButton ui:field="removeNonMember"
-                                                   text="{appearance.removeButtonText}"
-                                                   icon="{appearance.deleteIcon}"/>
-                            </toolbar:child>
-                            <toolbar:child>
-                                <userSearch:UserSearchField ui:field="nonMemberSearch"/>
-                            </toolbar:child>
-                        </toolbar:ToolBar>
-                    </container:child>
-                    <container:child layoutData="{layoutData}">
-                        <grid:Grid ui:field="nonMembersGrid"
-                                   store="{nonMembersListStore}"
-                                   cm="{nonMembersCm}"
-                                   view="{nonMembersGridView}"/>
-                    </container:child>
-                </container:VerticalLayoutContainer>
-            </form:FieldSet>
-        </container:child>
+            <!--Non-Members Section-->
+            <container:child layoutData="{layoutData}">
+                <form:FieldSet layoutData="{layoutData}"
+                               ui:field="nonMembersFieldSet"
+                               heading="{appearance.nonMembersSectionHeader}"
+                               collapsible="false">
+                    <container:VerticalLayoutContainer>
+                        <container:child layoutData="{layoutData}">
+                            <form:FieldLabel ui:field="nonMembersPrivilegeExplanation"
+                                             text="{appearance.nonMembersPrivilegeExplanation}"
+                                             labelSeparator=""
+                                             labelAlign="TOP"/>
+                        </container:child>
+                        <container:child layoutData="{layoutData}">
+                            <toolbar:ToolBar layoutData="{boxDataNoFlex}"
+                                             ui:field="toolbar">
+                                <toolbar:child>
+                                    <button:TextButton ui:field="removeNonMember"
+                                                       text="{appearance.removeButtonText}"
+                                                       icon="{appearance.deleteIcon}"/>
+                                </toolbar:child>
+                                <toolbar:child>
+                                    <userSearch:UserSearchField ui:field="nonMemberSearch"/>
+                                </toolbar:child>
+                            </toolbar:ToolBar>
+                        </container:child>
+                        <container:child layoutData="{layoutData}">
+                            <grid:Grid ui:field="nonMembersGrid"
+                                       store="{nonMembersListStore}"
+                                       cm="{nonMembersCm}"
+                                       view="{nonMembersGridView}"
+                                       height="150px"/>
+                        </container:child>
+                    </container:VerticalLayoutContainer>
+                </form:FieldSet>
+            </container:child>
 
-        <container:child layoutData="{layoutData}">
-            <form:FieldSet layoutData="{layoutData}"
-                           ui:field="membersFieldSet"
-                           heading="{appearance.membersSectionHeader}"
-                           collapsible="false">
-                <container:VerticalLayoutContainer>
-                    <container:child  layoutData="{layoutData}">
-                        <form:FieldLabel ui:field="memberOptOutExplanation"
-                                         text="{appearance.memberOptOutExplanation}"
-                                         labelSeparator=""
-                                         labelAlign="TOP"/>
-                    </container:child>
-                    <container:child layoutData="{layoutData}">
-                        <toolbar:ToolBar layoutData="{boxDataNoFlex}"
-                                         ui:field="memberToolbar">
-                            <toolbar:child>
-                                <button:TextButton ui:field="removeMember"
-                                                   text="{appearance.removeButtonText}"
-                                                   icon="{appearance.deleteIcon}"/>
-                            </toolbar:child>
-                            <toolbar:child>
-                                <userSearch:UserSearchField ui:field="memberSearch"/>
-                            </toolbar:child>
-                        </toolbar:ToolBar>
-                    </container:child>
-                    <container:child layoutData="{layoutData}">
-                        <grid:Grid ui:field="membersGrid"
-                                   store="{membersListStore}"
-                                   cm="{membersCm}"
-                                   view="{membersGridView}"/>
-                    </container:child>
-                </container:VerticalLayoutContainer>
-            </form:FieldSet>
-        </container:child>
-    </container:VerticalLayoutContainer>
+        </container:VerticalLayoutContainer>
+    </container:FlowLayoutContainer>
 </ui:UiBinder>
