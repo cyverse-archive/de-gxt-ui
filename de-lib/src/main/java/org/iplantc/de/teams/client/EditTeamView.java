@@ -10,6 +10,9 @@ import com.google.gwt.user.client.ui.IsWidget;
 
 import java.util.List;
 
+/**
+ * An interface for users to create and edit teams
+ */
 public interface EditTeamView extends IsWidget,
                                       IsMaskable,
                                       UserSearchResultSelected.HasUserSearchResultSelectedEventHandlers {
@@ -19,14 +22,35 @@ public interface EditTeamView extends IsWidget,
 
     interface Presenter {
 
+        /**
+         * Initialize the presenter which creates the view
+         * @param widget
+         * @param group
+         */
         void go(HasOneWidget widget, Group group);
 
+        /**
+         * Set the static ID for the view
+         * @param debugId
+         */
         void setViewDebugId(String debugId);
     }
 
+    /**
+     * Load up the details of the Team (group) into the view
+     * @param group
+     */
     void edit(Group group);
 
+    /**
+     * Add subjects and privileges to the non-members section
+     * @param privilegeList
+     */
     void addNonMembers(List<Privilege> privilegeList);
 
+    /**
+     * Add subjects and privileges to the members section
+     * @param privilegeList
+     */
     void addMembers(List<Privilege> privilegeList);
 }
