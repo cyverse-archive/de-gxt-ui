@@ -81,6 +81,10 @@ public interface TeamsView extends IsWidget,
         String memberOptOutExplanation();
 
         String privilegeColumnLabel();
+
+        String completeRequiredFieldsError();
+
+        String completeRequiredFieldsHeading();
     }
 
     /**

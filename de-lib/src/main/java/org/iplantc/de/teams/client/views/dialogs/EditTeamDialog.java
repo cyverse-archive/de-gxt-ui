@@ -8,6 +8,8 @@ import org.iplantc.de.teams.shared.Teams;
 
 import com.google.inject.Inject;
 
+import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
+
 public class EditTeamDialog extends IPlantDialog {
     private EditTeamView.Presenter presenter;
     private TeamsView.TeamsViewAppearance appearance;
@@ -21,7 +23,17 @@ public class EditTeamDialog extends IPlantDialog {
         setResizable(true);
         setPixelSize(appearance.editTeamWidth(), appearance.editTeamHeight());
         setOnEsc(false);
-        setHideOnButtonClick(true);
+        setHideOnButtonClick(false);
+        addOkButtonSelectHandler(selectEvent -> {
+            if (presenter.isViewValid()) {
+                presenter.saveTeamSelected(this);
+            } else {
+                AlertMessageBox alertMsgBox =
+                        new AlertMessageBox(appearance.completeRequiredFieldsHeading(), appearance.completeRequiredFieldsError());
+                alertMsgBox.show();
+            }
+        });
+        addCancelButtonSelectHandler(selectEvent -> hide());
     }
 
     public void show(Group group) {

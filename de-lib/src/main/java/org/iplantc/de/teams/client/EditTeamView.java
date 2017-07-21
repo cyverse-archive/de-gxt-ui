@@ -1,5 +1,6 @@
 package org.iplantc.de.teams.client;
 
+import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.Privilege;
@@ -34,6 +35,14 @@ public interface EditTeamView extends IsWidget,
          * @param debugId
          */
         void setViewDebugId(String debugId);
+
+        /**
+         * Returns true if the view has no validation errors
+         * @return
+         */
+        boolean isViewValid();
+
+        void saveTeamSelected(IsHideable hideable);
     }
 
     /**
@@ -53,4 +62,10 @@ public interface EditTeamView extends IsWidget,
      * @param privilegeList
      */
     void addMembers(List<Privilege> privilegeList);
+
+    /**
+     *
+     * @return
+     */
+    boolean isValid();
 }

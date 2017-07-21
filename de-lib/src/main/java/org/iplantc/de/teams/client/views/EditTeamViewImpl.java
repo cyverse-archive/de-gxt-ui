@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.groups.Privilege;
 import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
+import org.iplantc.de.commons.client.validators.GroupNameValidator;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.models.PrivilegeKeyProvider;
@@ -79,6 +80,8 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
         initWidget(uiBinder.createAndBindUi(this));
         editorDriver.initialize(this);
 
+        nameEditor.addValidator(new GroupNameValidator());
+
         memberSearch.setTag(SEARCH_MEMBERS_TAG);
         nonMemberSearch.setTag(SEARCH_NON_MEMBERS_TAG);
     }
@@ -138,6 +141,11 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     @Override
     public void addMembers(List<Privilege> privilegeList) {
         membersListStore.addAll(privilegeList);
+    }
+
+    @Override
+    public boolean isValid() {
+        return nameEditor.isValid();
     }
 
     @UiHandler("removeNonMember")

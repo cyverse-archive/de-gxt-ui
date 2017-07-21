@@ -176,4 +176,14 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     public String privilegeColumnLabel() {
         return displayStrings.privilegeColumnLabel();
     }
+
+    @Override
+    public String completeRequiredFieldsError() {
+        return iplantDisplayStrings.completeRequiredFieldsError();
+    }
+
+    @Override
+    public String completeRequiredFieldsHeading() {
+        return iplantDisplayStrings.warning();
+    }
 }
