@@ -48,7 +48,7 @@ public interface EditTeamView extends IsWidget,
          */
         boolean isViewValid();
 
-        void saveTeamSelected(IsHideable hideable, MODE mode);
+        void saveTeamSelected(IsHideable hideable);
     }
 
     /**

@@ -32,6 +32,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     private GroupServiceFacade serviceFacade;
     private GroupAutoBeanFactory factory;
     private TeamsView.TeamsViewAppearance appearance;
+    EditTeamView.MODE mode;
     @Inject UserInfo userInfo;
 
     @Inject
@@ -52,6 +53,9 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
         if (group == null) {
             group = factory.getGroup().as();
+            mode = EditTeamView.MODE.CREATE;
+        } else {
+            mode = EditTeamView.MODE.EDIT;
         }
 
         view.edit(group);
@@ -79,7 +83,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     }
 
     @Override
-    public void saveTeamSelected(IsHideable hideable, EditTeamView.MODE mode) {
+    public void saveTeamSelected(IsHideable hideable) {
         if (EditTeamView.MODE.CREATE == mode) {
             createNewTeam(hideable);
         }
@@ -118,6 +122,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
             @Override
             public void onFailure(Throwable throwable) {
                 ErrorHandler.post(throwable);
+                mode = EditTeamView.MODE.EDIT;
             }
 
             @Override
