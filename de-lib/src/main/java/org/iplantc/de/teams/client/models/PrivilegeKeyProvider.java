@@ -8,6 +8,6 @@ public class PrivilegeKeyProvider implements ModelKeyProvider<Privilege> {
     @Override
     public String getKey(Privilege privilege) {
         // Username + privilege
-        return privilege.getSubject().getId() + privilege.getName();
+        return privilege.getSubject().getId() + privilege.getPrivilegeType();
     }
 }

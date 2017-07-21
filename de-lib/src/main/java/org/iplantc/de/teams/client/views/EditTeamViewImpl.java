@@ -2,6 +2,7 @@ package org.iplantc.de.teams.client.views;
 
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.Privilege;
+import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.teams.client.EditTeamView;
@@ -20,6 +21,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
@@ -86,9 +88,10 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
         ColumnConfig<Privilege, String> nonMemberName = new ColumnConfig<>(privProps.name(),
                                                                            appearance.nameColumnWidth(),
                                                                            appearance.nameColumnLabel());
-        ColumnConfig<Privilege, String> nonMemberPrivilege = new ColumnConfig<>(privProps.privilege(),
+        ColumnConfig<Privilege, PrivilegeType> nonMemberPrivilege = new ColumnConfig<>(privProps.privilegeType(),
                                                                                 appearance.nameColumnWidth(),
                                                                                 appearance.privilegeColumnLabel());
+        nonMemberPrivilege.setCell(createPrivilegeComboBox());
         nonMemberConfigs.add(nonMemberName);
         nonMemberConfigs.add(nonMemberPrivilege);
         nonMembersCm = new ColumnModel<>(nonMemberConfigs);
@@ -98,12 +101,24 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
         ColumnConfig<Privilege, String> memberName = new ColumnConfig<>(privProps.name(),
                                                                         appearance.nameColumnWidth(),
                                                                         appearance.nameColumnLabel());
-        ColumnConfig<Privilege, String> memberPrivilege = new ColumnConfig<>(privProps.privilege(),
-                                                                             appearance.nameColumnWidth(),
-                                                                             appearance.privilegeColumnLabel());
+        ColumnConfig<Privilege, PrivilegeType> memberPrivilege = new ColumnConfig<>(privProps.privilegeType(),
+                                                                                    appearance.nameColumnWidth(),
+                                                                                    appearance.privilegeColumnLabel());
+        memberPrivilege.setCell(createPrivilegeComboBox());
         memberConfigs.add(memberName);
         memberConfigs.add(memberPrivilege);
         membersCm = new ColumnModel<>(memberConfigs);
+    }
+
+    ComboBoxCell<PrivilegeType> createPrivilegeComboBox() {
+        ListStore<PrivilegeType> comboListStore = new ListStore<>(PrivilegeType::getLabel);
+        List<PrivilegeType> types = Lists.newArrayList(PrivilegeType.admin,
+                                                       PrivilegeType.read,
+                                                       PrivilegeType.view,
+                                                       PrivilegeType.optin);
+        comboListStore.addAll(types);
+        ComboBoxCell<PrivilegeType> combo = new ComboBoxCell<>(comboListStore, PrivilegeType::getLabel);
+        return combo;
     }
 
     void createListStores() {

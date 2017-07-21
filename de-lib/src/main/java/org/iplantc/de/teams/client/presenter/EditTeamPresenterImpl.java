@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.Privilege;
+import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.teams.client.EditTeamView;
@@ -53,7 +54,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         String tag = userSearchResultSelected.getTag();
         Privilege privilege = factory.getPrivilege().as();
         privilege.setSubject(subject);
-        privilege.setName("read");
+        privilege.setPrivilegeType(PrivilegeType.read);
 
         if (SEARCH_MEMBERS_TAG.equals(tag)) {
             view.addMembers(Lists.newArrayList(privilege));
