@@ -5,6 +5,8 @@ import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.Privilege;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
+import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
+import org.iplantc.de.teams.client.events.RemoveNonMemberPrivilegeSelected;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -16,7 +18,9 @@ import java.util.List;
  */
 public interface EditTeamView extends IsWidget,
                                       IsMaskable,
-                                      UserSearchResultSelected.HasUserSearchResultSelectedEventHandlers {
+                                      UserSearchResultSelected.HasUserSearchResultSelectedEventHandlers,
+                                      RemoveMemberPrivilegeSelected.HasRemoveMemberPrivilegeSelectedHandlers,
+                                      RemoveNonMemberPrivilegeSelected.HasRemoveNonMemberPrivilegeSelectedHandlers {
 
     enum MODE {
         CREATE,
@@ -81,4 +85,16 @@ public interface EditTeamView extends IsWidget,
     List<Privilege> getMemberPrivileges();
 
     List<Privilege> getNonMemberPrivileges();
+
+    /**
+     * Remove the specified privilege from the Members section
+     * @param privilege
+     */
+    void removeMemberPrivilege(Privilege privilege);
+
+    /**
+     * Remove the specified privilege from the Non-Members section
+     * @param privilege
+     */
+    void removeNonMemberPrivilege(Privilege privilege);
 }

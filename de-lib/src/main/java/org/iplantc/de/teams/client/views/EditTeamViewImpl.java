@@ -8,6 +8,8 @@ import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.commons.client.validators.GroupNameValidator;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
+import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
+import org.iplantc.de.teams.client.events.RemoveNonMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.models.PrivilegeKeyProvider;
 import org.iplantc.de.teams.client.models.PrivilegeProperties;
 import org.iplantc.de.teams.shared.Teams;
@@ -167,14 +169,24 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
         return nonMembersListStore.getAll();
     }
 
+    @Override
+    public void removeMemberPrivilege(Privilege privilege) {
+        membersListStore.remove(privilege);
+    }
+
+    @Override
+    public void removeNonMemberPrivilege(Privilege privilege) {
+        nonMembersListStore.remove(privilege);
+    }
+
     @UiHandler("removeNonMember")
     void onRemoveNonMemberClicked(SelectEvent event) {
-
+        fireEvent(new RemoveNonMemberPrivilegeSelected(nonMembersGrid.getSelectionModel().getSelectedItem()));
     }
 
     @UiHandler("removeMember")
     void onRemoveMemberClicked(SelectEvent event) {
-
+        fireEvent(new RemoveMemberPrivilegeSelected(membersGrid.getSelectionModel().getSelectedItem()));
     }
 
     @Override
@@ -195,5 +207,16 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     public HandlerRegistration addUserSearchResultSelectedEventHandler(UserSearchResultSelected.UserSearchResultSelectedEventHandler handler) {
         memberSearch.addUserSearchResultSelectedEventHandler(handler);
         return nonMemberSearch.addUserSearchResultSelectedEventHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addRemoveMemberPrivilegeSelectedHandler(RemoveMemberPrivilegeSelected.RemoveMemberPrivilegeSelectedHandler handler) {
+        return addHandler(handler, RemoveMemberPrivilegeSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addRemoveNonMemberPrivilegeSelectedHandler(
+            RemoveNonMemberPrivilegeSelected.RemoveNonMemberPrivilegeSelectedHandler handler) {
+        return addHandler(handler, RemoveNonMemberPrivilegeSelected.TYPE);
     }
 }

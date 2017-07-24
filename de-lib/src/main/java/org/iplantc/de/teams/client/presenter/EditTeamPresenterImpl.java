@@ -19,6 +19,8 @@ import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
+import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
+import org.iplantc.de.teams.client.events.RemoveNonMemberPrivilegeSelected;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -30,7 +32,9 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class EditTeamPresenterImpl implements EditTeamView.Presenter,
-                                              UserSearchResultSelected.UserSearchResultSelectedEventHandler {
+                                              UserSearchResultSelected.UserSearchResultSelectedEventHandler,
+                                              RemoveMemberPrivilegeSelected.RemoveMemberPrivilegeSelectedHandler,
+                                              RemoveNonMemberPrivilegeSelected.RemoveNonMemberPrivilegeSelectedHandler {
 
     private EditTeamView view;
     private GroupServiceFacade serviceFacade;
@@ -50,6 +54,8 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         this.appearance = appearance;
 
         view.addUserSearchResultSelectedEventHandler(this);
+        view.addRemoveMemberPrivilegeSelectedHandler(this);
+        view.addRemoveNonMemberPrivilegeSelectedHandler(this);
     }
     @Override
     public void go(HasOneWidget widget, Group group) {
@@ -195,5 +201,21 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
             view.addNonMembers(Lists.newArrayList(privilege));
         }
 
+    }
+
+    @Override
+    public void onRemoveMemberPrivilegeSelected(RemoveMemberPrivilegeSelected event) {
+        Privilege privilege = event.getPrivilege();
+        if (EditTeamView.MODE.CREATE == mode) {
+            view.removeMemberPrivilege(privilege);
+        }
+    }
+
+    @Override
+    public void onRemoveNonMemberPrivilegeSelected(RemoveNonMemberPrivilegeSelected event) {
+        Privilege privilege = event.getPrivilege();
+        if (EditTeamView.MODE.CREATE == mode) {
+            view.removeNonMemberPrivilege(privilege);
+        }
     }
 }
