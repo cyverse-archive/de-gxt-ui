@@ -1,5 +1,6 @@
 package org.iplantc.de.teams.client.presenter;
 
+import static org.iplantc.de.teams.client.EditTeamView.ALL_PUBLIC_USERS_ID;
 import static org.iplantc.de.teams.client.EditTeamView.ALL_PUBLIC_USERS_NAME;
 import static org.iplantc.de.teams.client.EditTeamView.SEARCH_MEMBERS_TAG;
 
@@ -68,6 +69,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         Privilege privilege = factory.getPrivilege().as();
         Subject subject = factory.getSubject().as();
         subject.setName(ALL_PUBLIC_USERS_NAME);
+        subject.setId(ALL_PUBLIC_USERS_ID);
         privilege.setSubject(subject);
         privilege.setPrivilegeType(PrivilegeType.view);
 

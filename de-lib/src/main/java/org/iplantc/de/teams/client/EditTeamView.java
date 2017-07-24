@@ -24,6 +24,7 @@ public interface EditTeamView extends IsWidget,
     }
 
     String ALL_PUBLIC_USERS_NAME = "All Public Users";
+    String ALL_PUBLIC_USERS_ID = "GrouperAll";
     String SEARCH_MEMBERS_TAG = "members";
     String SEARCH_NON_MEMBERS_TAG = "nonMembers";
 
