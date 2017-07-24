@@ -8,6 +8,7 @@ import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.commons.client.validators.GroupNameValidator;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
+import org.iplantc.de.teams.client.events.AddPublicUserSelected;
 import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.events.RemoveNonMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.models.PrivilegeKeyProvider;
@@ -38,6 +39,7 @@ import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
+import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
 import java.util.List;
 
@@ -62,7 +64,9 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     @UiField Grid<Privilege> nonMembersGrid;
     @UiField(provided = true) ListStore<Privilege> nonMembersListStore;
     @UiField(provided = true) ColumnModel<Privilege> nonMembersCm;
+    @UiField ToolBar nonMemberToolbar;
     @UiField @Ignore TextButton removeNonMember;
+    @UiField @Ignore TextButton addPublicUser;
     @UiField(provided = true) UserSearchField memberSearch;
     @UiField Grid<Privilege> membersGrid;
     @UiField(provided = true) ListStore<Privilege> membersListStore;
@@ -127,13 +131,14 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     ComboBoxCell<PrivilegeType> createPrivilegeComboBox() {
         ListStore<PrivilegeType> comboListStore = new ListStore<>(PrivilegeType::getLabel);
         List<PrivilegeType> types = Lists.newArrayList(PrivilegeType.admin,
+                                                       PrivilegeType.optin,
                                                        PrivilegeType.read,
-                                                       PrivilegeType.view,
-                                                       PrivilegeType.optin);
+                                                       PrivilegeType.view);
         comboListStore.addAll(types);
         ComboBoxCell<PrivilegeType> combo = new ComboBoxCell<>(comboListStore, PrivilegeType::getLabel);
         combo.setTriggerAction(ComboBoxCell.TriggerAction.ALL);
         combo.setForceSelection(true);
+        combo.setAllowBlank(false);
         combo.setWidth(appearance.privilegeComboWidth());
         return combo;
     }
@@ -150,6 +155,14 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     @Override
     public void addNonMembers(List<Privilege> privilegeList) {
         nonMembersListStore.addAll(privilegeList);
+        checkForPublicUser();
+    }
+
+    void checkForPublicUser() {
+        List<Privilege> privileges = nonMembersListStore.getAll();
+        long publicUserCount = privileges.stream().filter(privilege -> EditTeamView.ALL_PUBLIC_USERS_ID.equals(privilege.getSubject().getId())).count();
+        addPublicUser.setVisible(publicUserCount == 0);
+        nonMemberToolbar.forceLayout();
     }
 
     @Override
@@ -185,6 +198,7 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     @Override
     public void removeNonMemberPrivilege(Privilege privilege) {
         nonMembersListStore.remove(privilege);
+        checkForPublicUser();
     }
 
     @UiHandler("removeNonMember")
@@ -195,6 +209,11 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     @UiHandler("removeMember")
     void onRemoveMemberClicked(SelectEvent event) {
         fireEvent(new RemoveMemberPrivilegeSelected(membersGrid.getSelectionModel().getSelectedItem()));
+    }
+
+    @UiHandler("addPublicUser")
+    void onAddPublicUserClicked(SelectEvent event) {
+        fireEvent(new AddPublicUserSelected());
     }
 
     @Override
@@ -231,7 +250,11 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     @Override
     public void onSelectionChanged(SelectionChangedEvent<Privilege> selectionChangedEvent) {
         removeMember.setEnabled(membersGrid.getSelectionModel().getSelectedItem() != null);
-        Privilege selectedItem = nonMembersGrid.getSelectionModel().getSelectedItem();
-        removeNonMember.setEnabled(selectedItem != null && !EditTeamView.ALL_PUBLIC_USERS_ID.equals(selectedItem.getSubject().getId()));
+        removeNonMember.setEnabled(nonMembersGrid.getSelectionModel().getSelectedItem() != null);
+    }
+
+    @Override
+    public HandlerRegistration addAddPublicUserSelectedHandler(AddPublicUserSelected.AddPublicUserSelectedHandler handler) {
+        return addHandler(handler, AddPublicUserSelected.TYPE);
     }
 }

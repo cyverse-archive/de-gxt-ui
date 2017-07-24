@@ -125,7 +125,7 @@
                         </container:child>
                         <container:child layoutData="{layoutData}">
                             <toolbar:ToolBar layoutData="{boxDataNoFlex}"
-                                             ui:field="toolbar">
+                                             ui:field="nonMemberToolbar">
                                 <toolbar:child>
                                     <button:TextButton ui:field="removeNonMember"
                                                        text="{appearance.removeButtonText}"
@@ -134,6 +134,10 @@
                                 </toolbar:child>
                                 <toolbar:child>
                                     <userSearch:UserSearchField ui:field="nonMemberSearch"/>
+                                </toolbar:child>
+                                <toolbar:child>
+                                    <button:TextButton ui:field="addPublicUser"
+                                                       text="{appearance.addPublicUser}"/>
                                 </toolbar:child>
                             </toolbar:ToolBar>
                         </container:child>

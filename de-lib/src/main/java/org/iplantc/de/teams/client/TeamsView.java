@@ -89,6 +89,8 @@ public interface TeamsView extends IsWidget,
         int privilegeComboWidth();
 
         int privilegeColumnWidth();
+
+        String addPublicUser();
     }
 
     /**

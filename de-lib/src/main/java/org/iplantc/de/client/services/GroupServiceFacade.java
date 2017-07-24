@@ -49,7 +49,7 @@ public interface GroupServiceFacade {
      * @param group
      * @param callback
      */
-    void addTeam(Group group, PrivilegeType publicPrivileges, AsyncCallback<Group> callback);
+    void addTeam(Group group, List<PrivilegeType> publicPrivileges, AsyncCallback<Group> callback);
 
     /**
      * Delete a Collaborator List

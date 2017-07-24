@@ -27,7 +27,6 @@ import org.iplantc.de.client.services.converters.SubjectMemberListCallbackConver
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
-import com.google.common.collect.Lists;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -109,13 +108,13 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void addTeam(Group group, PrivilegeType publicPrivileges, AsyncCallback<Group> callback) {
+    public void addTeam(Group group, List<PrivilegeType> publicPrivileges, AsyncCallback<Group> callback) {
         String address = TEAMS;
 
         CreateTeamRequest request = factory.getCreateTeamRequest().as();
         request.setName(group.getName());
         request.setDescription(group.getDescription());
-        request.setPublicPrivileges(Lists.newArrayList(publicPrivileges));
+        request.setPublicPrivileges(publicPrivileges);
 
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
 

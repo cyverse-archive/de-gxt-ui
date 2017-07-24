@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.Privilege;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
+import org.iplantc.de.teams.client.events.AddPublicUserSelected;
 import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.events.RemoveNonMemberPrivilegeSelected;
 
@@ -20,7 +21,8 @@ public interface EditTeamView extends IsWidget,
                                       IsMaskable,
                                       UserSearchResultSelected.HasUserSearchResultSelectedEventHandlers,
                                       RemoveMemberPrivilegeSelected.HasRemoveMemberPrivilegeSelectedHandlers,
-                                      RemoveNonMemberPrivilegeSelected.HasRemoveNonMemberPrivilegeSelectedHandlers {
+                                      RemoveNonMemberPrivilegeSelected.HasRemoveNonMemberPrivilegeSelectedHandlers,
+                                      AddPublicUserSelected.HasAddPublicUserSelectedHandlers {
 
     enum MODE {
         CREATE,

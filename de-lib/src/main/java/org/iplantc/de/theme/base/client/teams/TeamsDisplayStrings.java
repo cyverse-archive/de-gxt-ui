@@ -38,4 +38,6 @@ public interface TeamsDisplayStrings extends Messages {
     String memberOptOutExplanation();
 
     String privilegeColumnLabel();
+
+    String addPublicUser();
 }

@@ -19,6 +19,7 @@ import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
+import org.iplantc.de.teams.client.events.AddPublicUserSelected;
 import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.events.RemoveNonMemberPrivilegeSelected;
 
@@ -34,7 +35,8 @@ import java.util.stream.Collectors;
 public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                                               UserSearchResultSelected.UserSearchResultSelectedEventHandler,
                                               RemoveMemberPrivilegeSelected.RemoveMemberPrivilegeSelectedHandler,
-                                              RemoveNonMemberPrivilegeSelected.RemoveNonMemberPrivilegeSelectedHandler {
+                                              RemoveNonMemberPrivilegeSelected.RemoveNonMemberPrivilegeSelectedHandler,
+                                              AddPublicUserSelected.AddPublicUserSelectedHandler {
 
     private EditTeamView view;
     private GroupServiceFacade serviceFacade;
@@ -56,6 +58,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         view.addUserSearchResultSelectedEventHandler(this);
         view.addRemoveMemberPrivilegeSelectedHandler(this);
         view.addRemoveNonMemberPrivilegeSelectedHandler(this);
+        view.addAddPublicUserSelectedHandler(this);
     }
     @Override
     public void go(HasOneWidget widget, Group group) {
@@ -74,13 +77,18 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
     void addPublicUser() {
         Privilege privilege = factory.getPrivilege().as();
-        Subject subject = factory.getSubject().as();
-        subject.setName(ALL_PUBLIC_USERS_NAME);
-        subject.setId(ALL_PUBLIC_USERS_ID);
-        privilege.setSubject(subject);
+        Subject publicUser = createPublicUser();
+        privilege.setSubject(publicUser);
         privilege.setPrivilegeType(PrivilegeType.view);
 
         view.addNonMembers(Lists.newArrayList(privilege));
+    }
+
+    Subject createPublicUser() {
+        Subject subject = factory.getSubject().as();
+        subject.setName(ALL_PUBLIC_USERS_NAME);
+        subject.setId(ALL_PUBLIC_USERS_ID);
+        return subject;
     }
 
     @Override
@@ -102,13 +110,12 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
     void createNewTeam(IsHideable hideable) {
         List<Privilege> nonMemberPrivileges = view.getNonMemberPrivileges();
-        Privilege publicUser = nonMemberPrivileges.stream()
+        List<Privilege> publicUserList = nonMemberPrivileges.stream()
                                                   .filter(privilege -> ALL_PUBLIC_USERS_NAME.equals(
                                                           privilege.getSubject().getName()))
-                                                  .collect(Collectors.toList())
-                                                  .get(0);
-        PrivilegeType privilege = publicUser.getPrivilegeType();
-        serviceFacade.addTeam(view.getTeam(), privilege, new AsyncCallback<Group>() {
+                                                  .collect(Collectors.toList());
+        List<PrivilegeType> publicPrivs = getPublicUserPrivilege(publicUserList);
+        serviceFacade.addTeam(view.getTeam(), publicPrivs, new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable throwable) {
                 ErrorHandler.post(throwable);
@@ -124,6 +131,14 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                 addPrivilegesToTeam(group, allPrivs, hideable);
             }
         });
+    }
+
+    List<PrivilegeType> getPublicUserPrivilege(List<Privilege> publicUserList) {
+        if (publicUserList == null || publicUserList.isEmpty()) {
+            return null;
+        }
+        PrivilegeType privilege = publicUserList.get(0).getPrivilegeType();
+        return Lists.newArrayList(privilege);
     }
 
     void addMembersToTeam(Group group, IsHideable hideable) {
@@ -217,5 +232,10 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         if (EditTeamView.MODE.CREATE == mode) {
             view.removeNonMemberPrivilege(privilege);
         }
+    }
+
+    @Override
+    public void onAddPublicUserSelected(AddPublicUserSelected event) {
+        addPublicUser();
     }
 }

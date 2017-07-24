@@ -196,4 +196,9 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     public int privilegeColumnWidth() {
         return 300;
     }
+
+    @Override
+    public String addPublicUser() {
+        return displayStrings.addPublicUser();
+    }
 }
