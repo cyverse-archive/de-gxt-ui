@@ -18,5 +18,13 @@ public interface Teams {
         String TEAM_INFO_CELL = ".infoCell";
         String TEAM_DETAILS_DLG = "teamDetailsDlg";
         String EDIT_TEAM_DIALOG = "editTeamDlg";
+        String TEAM_NAME = ".name";
+        String TEAM_DESCRIPTION = ".description";
+        String REMOVE_MEMBER_BTN = ".removeMemberBtn";
+        String REMOVE_NON_MEMBER_BTN = ".removeNonMemberBtn";
+        String MEMBER_SEARCH = ".memberSearch";
+        String NON_MEMBER_SEARCH = ".nonMemberSearch";
+        String MEMBERS_GRID = ".membersGrid";
+        String NON_MEMBERS_GRID = ".nonMembersGrid";
     }
 }

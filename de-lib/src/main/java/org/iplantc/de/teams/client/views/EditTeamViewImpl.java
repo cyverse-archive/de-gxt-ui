@@ -10,6 +10,7 @@ import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.models.PrivilegeKeyProvider;
 import org.iplantc.de.teams.client.models.PrivilegeProperties;
+import org.iplantc.de.teams.shared.Teams;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
@@ -176,6 +177,15 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
+
+        nameEditor.ensureDebugId(baseID + Teams.Ids.TEAM_NAME);
+        descriptionEditor.ensureDebugId(baseID + Teams.Ids.TEAM_DESCRIPTION);
+        removeMember.ensureDebugId(baseID + Teams.Ids.REMOVE_MEMBER_BTN);
+        removeNonMember.ensureDebugId(baseID + Teams.Ids.REMOVE_NON_MEMBER_BTN);
+        memberSearch.asWidget().ensureDebugId(baseID + Teams.Ids.MEMBER_SEARCH);
+        nonMemberSearch.asWidget().ensureDebugId(baseID + Teams.Ids.NON_MEMBER_SEARCH);
+        membersGrid.ensureDebugId(baseID + Teams.Ids.MEMBERS_GRID);
+        nonMembersGrid.ensureDebugId(baseID + Teams.Ids.NON_MEMBERS_GRID);
     }
 
     @Override
