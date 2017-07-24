@@ -25,7 +25,6 @@ public class CollaborationWindow extends IplantWindowBase {
         this.appearance = appearance;
 
         // This must be set before we render view
-        ensureDebugId(DeModule.WindowIds.COLLABORATION_WINDOW);
         setSize(appearance.windowWidth(), appearance.windowHeight());
         setMinWidth(appearance.windowMinWidth());
         setHeading(appearance.windowHeading());
@@ -38,11 +37,20 @@ public class CollaborationWindow extends IplantWindowBase {
         final CollaborationWindowConfig collabWindowConfig = (CollaborationWindowConfig)windowConfig;
         presenter.go(this, ManageCollaboratorsView.MODE.MANAGE);
         super.show(windowConfig, tag, isMaximizable);
+
+        ensureDebugId(DeModule.WindowIds.COLLABORATION_WINDOW);
     }
 
     @Override
     public WindowState getWindowState() {
         CollaborationWindowConfig config = ConfigFactory.collaborationWindowConfig();
         return createWindowState(config);
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        presenter.setViewDebugId(baseID);
     }
 }

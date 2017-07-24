@@ -24,6 +24,7 @@ import org.iplantc.de.collaborators.client.presenter.callbacks.ParentDeleteSubje
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.collaborators.client.views.CollaboratorDNDHandler;
 import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
+import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -167,6 +168,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     HandlerRegistration addCollabHandlerRegistration;
 
     @Inject AsyncProviderWrapper<GroupDetailsDialog> groupDetailsDialog;
+    private String viewDebugId;
 
     @Inject
     public ManageCollaboratorsPresenter(ManageCollaboratorsViewFactory factory,
@@ -551,5 +553,9 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     CollaboratorDNDHandler getCollaboratorDNDHandler() {
         return new CollaboratorDNDHandler(groupAppearance, this);
+    }
+
+    public void setViewDebugId(String viewDebugId) {
+        view.asWidget().ensureDebugId(viewDebugId + CollaboratorsModule.Ids.VIEW);
     }
 }

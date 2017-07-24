@@ -8,10 +8,12 @@ import org.iplantc.de.collaborators.client.events.RemoveCollaboratorSelected;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.models.SubjectKeyProvider;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
+import org.iplantc.de.collaborators.client.views.cells.SubjectNameCell;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 import org.iplantc.de.commons.client.widgets.DETabPanel;
 
 import com.google.common.base.Strings;
+import com.google.gwt.cell.client.Cell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -37,6 +39,7 @@ import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.ViewReadyEvent;
 import com.sencha.gxt.widget.core.client.grid.CheckBoxSelectionModel;
+import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.grid.GridView;
@@ -220,6 +223,13 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
         //Checkbox column config is at index 0
         grid.getView().getHeader().getHead(0).getElement().setId(baseID + CollaboratorsModule.Ids.CHECKBOX_HEADER);
         searchField.setViewDebugId(CollaboratorsModule.Ids.SEARCH_LIST);
+
+        for (ColumnConfig<Subject, ?> columnConfig : cm.getColumns()) {
+            Cell<?> cell = columnConfig.getCell();
+            if (cell instanceof SubjectNameCell) {
+                ((SubjectNameCell)cell).setBaseDebugId(baseID);
+            }
+        }
     }
 
     void setGridCheckBoxDebugIds() {
