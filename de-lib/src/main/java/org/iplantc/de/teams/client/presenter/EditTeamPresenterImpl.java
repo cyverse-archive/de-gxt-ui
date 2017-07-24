@@ -13,6 +13,7 @@ import org.iplantc.de.client.models.groups.Privilege;
 import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.models.groups.UpdatePrivilegeRequest;
+import org.iplantc.de.client.models.groups.UpdatePrivilegeRequestList;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -109,7 +110,12 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
             @Override
             public void onSuccess(Group group) {
-                addMembersToTeam(group, hideable);
+                List<Privilege> nonMemberPrivs = view.getNonMemberPrivileges();
+                List<Privilege> memberPrivs = view.getMemberPrivileges();
+                List<Privilege> allPrivs = Lists.newArrayList();
+                allPrivs.addAll(memberPrivs);
+                allPrivs.addAll(nonMemberPrivs);
+                addPrivilegesToTeam(group, allPrivs, hideable);
             }
         });
     }
@@ -131,9 +137,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
             @Override
             public void onSuccess(List<UpdateMemberResult> updateMemberResults) {
-                List<Privilege> nonMemberPrivs = view.getNonMemberPrivileges();
-                privileges.addAll(nonMemberPrivs);
-                addPrivilegesToTeam(group, privileges, hideable);
+                hideable.hide();
             }
         });
     }
@@ -146,12 +150,18 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
             public void accept(Privilege privilege) {
                 UpdatePrivilegeRequest update = factory.getUpdatePrivilegeRequest().as();
                 update.setSubjectId(privilege.getSubject().getId());
-                update.setPrivileges(Lists.newArrayList(privilege.getPrivilegeType()));
+                PrivilegeType type = privilege.getPrivilegeType();
+                List<PrivilegeType> privileges = Lists.newArrayList();
+                privileges.add(type);
+                update.setPrivileges(privileges);
                 updateList.add(update);
             }
         });
 
-        serviceFacade.updateTeamPrivileges(group, updateList, new AsyncCallback<List<Privilege>>() {
+        UpdatePrivilegeRequestList allUpdates = factory.getUpdatePrivilegeRequestList().as();
+        allUpdates.setRequests(updateList);
+
+        serviceFacade.updateTeamPrivileges(group, allUpdates, new AsyncCallback<List<Privilege>>() {
             @Override
             public void onFailure(Throwable throwable) {
                 ErrorHandler.post(throwable);
@@ -160,7 +170,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
             @Override
             public void onSuccess(List<Privilege> privileges) {
-                hideable.hide();
+                addMembersToTeam(group, hideable);
             }
         });
     }

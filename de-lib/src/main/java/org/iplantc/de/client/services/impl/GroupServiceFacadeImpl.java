@@ -17,7 +17,7 @@ import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.groups.UpdateMemberRequest;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.models.groups.UpdateMemberResultList;
-import org.iplantc.de.client.models.groups.UpdatePrivilegeRequest;
+import org.iplantc.de.client.models.groups.UpdatePrivilegeRequestList;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.GroupCallbackConverter;
@@ -224,12 +224,12 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
     @Override
     public void updateTeamPrivileges(Group group,
-                                     List<UpdatePrivilegeRequest> updates,
+                                     UpdatePrivilegeRequestList request,
                                      AsyncCallback<List<Privilege>> callback) {
         String groupName = group.getName();
         String address = TEAMS + "/" + URL.encodePathSegment(groupName) + "/privileges";
 
-        final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(updates));
+        final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
         deService.getServiceData(wrapper, new PrivilegeListCallbackConverter(callback, factory));

@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.groups.Privilege;
 import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.models.groups.UpdatePrivilegeRequest;
+import org.iplantc.de.client.models.groups.UpdatePrivilegeRequestList;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -106,8 +107,8 @@ public interface GroupServiceFacade {
     /**
      * Update the privileges on a Team
      * @param group
-     * @param updates
+     * @param request
      * @param callback
      */
-    void updateTeamPrivileges(Group group, List<UpdatePrivilegeRequest> updates, AsyncCallback<List<Privilege>> callback);
+    void updateTeamPrivileges(Group group, UpdatePrivilegeRequestList request, AsyncCallback<List<Privilege>> callback);
 }
