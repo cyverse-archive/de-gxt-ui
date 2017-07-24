@@ -91,7 +91,8 @@
                                 <toolbar:child>
                                     <button:TextButton ui:field="removeMember"
                                                        text="{appearance.removeButtonText}"
-                                                       icon="{appearance.deleteIcon}"/>
+                                                       icon="{appearance.deleteIcon}"
+                                                       enabled="false"/>
                                 </toolbar:child>
                                 <toolbar:child>
                                     <userSearch:UserSearchField ui:field="memberSearch"/>
@@ -128,7 +129,8 @@
                                 <toolbar:child>
                                     <button:TextButton ui:field="removeNonMember"
                                                        text="{appearance.removeButtonText}"
-                                                       icon="{appearance.deleteIcon}"/>
+                                                       icon="{appearance.deleteIcon}"
+                                                       enabled="false"/>
                                 </toolbar:child>
                                 <toolbar:child>
                                     <userSearch:UserSearchField ui:field="nonMemberSearch"/>

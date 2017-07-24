@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
+import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
@@ -36,11 +37,13 @@ import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
+import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 
 import java.util.List;
 
 public class EditTeamViewImpl extends Composite implements EditTeamView,
-                                                           Editor<Group> {
+                                                           Editor<Group>,
+                                                           SelectionChangedEvent.SelectionChangedHandler<Privilege> {
 
     interface EditorDriver extends SimpleBeanEditorDriver<Group, EditTeamViewImpl> {
     }
@@ -87,6 +90,11 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
 
         memberSearch.setTag(SEARCH_MEMBERS_TAG);
         nonMemberSearch.setTag(SEARCH_NON_MEMBERS_TAG);
+
+        membersGrid.getSelectionModel().addSelectionChangedHandler(this);
+        membersGrid.getSelectionModel().setSelectionMode(Style.SelectionMode.SINGLE);
+        nonMembersGrid.getSelectionModel().addSelectionChangedHandler(this);
+        nonMembersGrid.getSelectionModel().setSelectionMode(Style.SelectionMode.SINGLE);
     }
 
     void createColumnModels() {
@@ -218,5 +226,12 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     public HandlerRegistration addRemoveNonMemberPrivilegeSelectedHandler(
             RemoveNonMemberPrivilegeSelected.RemoveNonMemberPrivilegeSelectedHandler handler) {
         return addHandler(handler, RemoveNonMemberPrivilegeSelected.TYPE);
+    }
+
+    @Override
+    public void onSelectionChanged(SelectionChangedEvent<Privilege> selectionChangedEvent) {
+        removeMember.setEnabled(membersGrid.getSelectionModel().getSelectedItem() != null);
+        Privilege selectedItem = nonMembersGrid.getSelectionModel().getSelectedItem();
+        removeNonMember.setEnabled(selectedItem != null && !EditTeamView.ALL_PUBLIC_USERS_ID.equals(selectedItem.getSubject().getId()));
     }
 }
