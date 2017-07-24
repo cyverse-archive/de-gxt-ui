@@ -85,6 +85,10 @@ public interface TeamsView extends IsWidget,
         String completeRequiredFieldsError();
 
         String completeRequiredFieldsHeading();
+
+        int privilegeComboWidth();
+
+        int privilegeColumnWidth();
     }
 
     /**

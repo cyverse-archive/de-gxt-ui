@@ -22,6 +22,7 @@ public class EditTeamDialog extends IPlantDialog {
 
         setResizable(true);
         setPixelSize(appearance.editTeamWidth(), appearance.editTeamHeight());
+        setMinWidth(appearance.editTeamWidth());
         setOnEsc(false);
         setHideOnButtonClick(false);
         addOkButtonSelectHandler(selectEvent -> {

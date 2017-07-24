@@ -93,7 +93,7 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
                                                                            appearance.nameColumnWidth(),
                                                                            appearance.nameColumnLabel());
         ColumnConfig<Privilege, PrivilegeType> nonMemberPrivilege = new ColumnConfig<>(privProps.privilegeType(),
-                                                                                appearance.nameColumnWidth(),
+                                                                                appearance.privilegeColumnWidth(),
                                                                                 appearance.privilegeColumnLabel());
         nonMemberPrivilege.setCell(createPrivilegeComboBox());
         nonMemberConfigs.add(nonMemberName);
@@ -106,7 +106,7 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
                                                                         appearance.nameColumnWidth(),
                                                                         appearance.nameColumnLabel());
         ColumnConfig<Privilege, PrivilegeType> memberPrivilege = new ColumnConfig<>(privProps.privilegeType(),
-                                                                                    appearance.nameColumnWidth(),
+                                                                                    appearance.privilegeColumnWidth(),
                                                                                     appearance.privilegeColumnLabel());
         memberPrivilege.setCell(createPrivilegeComboBox());
         memberConfigs.add(memberName);
@@ -122,6 +122,9 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
                                                        PrivilegeType.optin);
         comboListStore.addAll(types);
         ComboBoxCell<PrivilegeType> combo = new ComboBoxCell<>(comboListStore, PrivilegeType::getLabel);
+        combo.setTriggerAction(ComboBoxCell.TriggerAction.ALL);
+        combo.setForceSelection(true);
+        combo.setWidth(appearance.privilegeComboWidth());
         return combo;
     }
 

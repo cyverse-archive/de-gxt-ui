@@ -53,8 +53,7 @@
 
     <ui:with field="appearance"
              type="org.iplantc.de.teams.client.TeamsView.TeamsViewAppearance"/>
-    <container:FlowLayoutContainer scrollMode="AUTO">
-        <container:VerticalLayoutContainer>
+    <container:VerticalLayoutContainer scrollMode="AUTO">
             <container:child layoutData="{layoutData}">
                 <form:FieldLabel ui:field="teamNameLabel"
                                  text="{appearance.teamNameLabel}">
@@ -148,5 +147,4 @@
             </container:child>
 
         </container:VerticalLayoutContainer>
-    </container:FlowLayoutContainer>
 </ui:UiBinder>
