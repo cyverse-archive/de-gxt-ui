@@ -16,9 +16,12 @@ import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.GroupDetailsView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
+import org.iplantc.de.collaborators.client.events.DeleteMembersSelected;
 import org.iplantc.de.collaborators.client.events.GroupSaved;
+import org.iplantc.de.collaborators.client.views.dialogs.RetainPermissionsDialog;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -61,11 +64,14 @@ public class GroupDetailsPresenterImplTest {
     @Mock Iterator<Subject> collaboratorIteratorMock;
     @Mock Iterator<UpdateMemberResult> resultIteratorMock;
     @Mock UserInfo userInfoMock;
+    @Mock AsyncProviderWrapper<RetainPermissionsDialog> retainPermsDialogProvider;
+    @Mock RetainPermissionsDialog retainPermissionsDialogMock;
 
     @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> collabListCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<Group>> groupCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<UpdateMemberResult>>> updateMembersCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<RetainPermissionsDialog>> retainPermsDlgCaptor;
 
     private GroupDetailsPresenterImpl uut;
 
@@ -106,6 +112,7 @@ public class GroupDetailsPresenterImplTest {
         uut.announcer = announcerMock;
         uut.originalGroup = groupMock;
         uut.userInfo = userInfoMock;
+        uut.permissionsDlgProvider = retainPermsDialogProvider;
     }
 
     @Test
@@ -216,6 +223,24 @@ public class GroupDetailsPresenterImplTest {
     }
 
     @Test
+    public void onDeleteMembersSelectedTest() {
+        DeleteMembersSelected eventMock = mock(DeleteMembersSelected.class);
+        when(eventMock.getSubjects()).thenReturn(subjectListMock);
+        when(eventMock.getGroup()).thenReturn(groupMock);
+        when(subjectListMock.isEmpty()).thenReturn(false);
+        uut.mode = GroupDetailsView.MODE.EDIT;
+
+        /** CALL METHOD UNDER TEST **/
+        uut.onDeleteMembersSelected(eventMock);
+
+        verify(retainPermsDialogProvider).get(retainPermsDlgCaptor.capture());
+
+        retainPermsDlgCaptor.getValue().onSuccess(retainPermissionsDialogMock);
+        verify(retainPermissionsDialogMock).show();
+        verify(retainPermissionsDialogMock).addDialogHideHandler(any());
+    }
+
+    @Test
     public void deleteMember() {
         when(appearanceMock.memberDeleteFail(updateMemberResultsMock)).thenReturn("fail");
         when(updateMemberResultsMock.stream()).thenReturn(updateMemberResultStreamMock);
@@ -223,9 +248,9 @@ public class GroupDetailsPresenterImplTest {
         when(updateMemberResultStreamMock.collect(any())).thenReturn(null);
 
         /** CALL METHOD UNDER TEST **/
-        uut.deleteMembers(subjectListMock, groupMock);
+        uut.deleteMembers(subjectListMock, groupMock, true);
 
-        verify(serviceFacadeMock).deleteMembers(eq(groupMock), eq(subjectListMock), updateMembersCallbackCaptor.capture());
+        verify(serviceFacadeMock).deleteMembers(eq(groupMock), eq(subjectListMock), eq(true), updateMembersCallbackCaptor.capture());
 
         updateMembersCallbackCaptor.getValue().onSuccess(updateMemberResultsMock);
         verify(viewMock).deleteMembers(subjectListMock);
