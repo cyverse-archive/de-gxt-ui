@@ -11,10 +11,12 @@ import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.AddGroupMemberSelected;
 import org.iplantc.de.collaborators.client.events.DeleteMembersSelected;
 import org.iplantc.de.collaborators.client.events.GroupSaved;
+import org.iplantc.de.collaborators.client.views.dialogs.RetainPermissionsDialog;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HandlerManager;
@@ -22,6 +24,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
+
+import com.sencha.gxt.widget.core.client.Dialog;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +42,8 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     private HandlerManager handlerManager;
     GroupDetailsView.MODE mode;
     Group originalGroup;
+
+    @Inject AsyncProviderWrapper<RetainPermissionsDialog> permissionsDlgProvider;
 
     @Inject IplantAnnouncer announcer;
     @Inject UserInfo userInfo;
@@ -233,13 +239,37 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
             List<Subject> subjects = event.getSubjects();
             Group group = event.getGroup();
             if (subjects != null && !subjects.isEmpty()) {
-                deleteMembers(subjects, group);
+                permissionsDlgProvider.get(new AsyncCallback<RetainPermissionsDialog>() {
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        ErrorHandler.post(throwable);
+                    }
+
+                    @Override
+                    public void onSuccess(RetainPermissionsDialog dialog) {
+                        dialog.show();
+                        dialog.addDialogHideHandler(dialogHideEvent -> {
+                            Dialog.PredefinedButton button = dialogHideEvent.getHideButton();
+                            switch(button) {
+                                case YES:
+                                    deleteMembers(subjects, group, true);
+                                    break;
+                                case NO:
+                                    deleteMembers(subjects, group, false);
+                                    break;
+                                default:
+                                    dialog.hide();
+                                    break;
+                            }
+                        });
+                    }
+                });
             }
         }
     }
 
-    void deleteMembers(List<Subject> subjects, Group group) {
-        serviceFacade.deleteMembers(group, subjects, new AsyncCallback<List<UpdateMemberResult>>() {
+    void deleteMembers(List<Subject> subjects, Group group, boolean retainPermissions) {
+        serviceFacade.deleteMembers(group, subjects, retainPermissions, new AsyncCallback<List<UpdateMemberResult>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);

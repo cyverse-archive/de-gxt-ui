@@ -50,4 +50,12 @@ public interface CollaboratorsDisplayStrings extends Messages {
     String membersAddedToGroupSuccess(String groupName, @PluralCount List<String> names);
 
     String collaborationWindowHeading();
+
+    String retainPermissionsHeader();
+
+    String retainPermissionsMessage();
+
+    String retainPermissionsBtn();
+
+    String removePermissionsBtn();
 }

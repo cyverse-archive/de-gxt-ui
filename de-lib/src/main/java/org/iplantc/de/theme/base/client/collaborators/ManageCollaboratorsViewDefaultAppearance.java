@@ -312,4 +312,29 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
     public int windowMinWidth() {
         return 200;
     }
+
+    @Override
+    public String retainPermissionsHeader() {
+        return displayStrings.retainPermissionsHeader();
+    }
+
+    @Override
+    public String retainPermissionsMessage() {
+        return displayStrings.retainPermissionsMessage();
+    }
+
+    @Override
+    public String retainPermissionsBtn() {
+        return displayStrings.retainPermissionsBtn();
+    }
+
+    @Override
+    public String removePermissionsBtn() {
+        return displayStrings.removePermissionsBtn();
+    }
+
+    @Override
+    public int retainPermissionsWidth() {
+        return 350;
+    }
 }

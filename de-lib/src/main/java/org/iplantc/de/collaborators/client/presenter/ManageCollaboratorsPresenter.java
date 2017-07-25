@@ -24,6 +24,7 @@ import org.iplantc.de.collaborators.client.presenter.callbacks.ParentDeleteSubje
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.collaborators.client.views.CollaboratorDNDHandler;
 import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
+import org.iplantc.de.collaborators.client.views.dialogs.RetainPermissionsDialog;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -40,8 +41,6 @@ import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.Dialog;
-import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
 import java.util.Arrays;
 import java.util.List;
@@ -167,8 +166,8 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     ManageCollaboratorsView view;
     HandlerRegistration addCollabHandlerRegistration;
 
+    @Inject AsyncProviderWrapper<RetainPermissionsDialog> permissionsDlgProvider;
     @Inject AsyncProviderWrapper<GroupDetailsDialog> groupDetailsDialog;
-    private String viewDebugId;
 
     @Inject
     public ManageCollaboratorsPresenter(ManageCollaboratorsViewFactory factory,
@@ -341,23 +340,37 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         List<Subject> selectedGroups = mapIsGroup.get(true);
         List<Subject> selectedUsers = mapIsGroup.get(false);
         if (selectedGroups != null && !selectedGroups.isEmpty()) {
-            ConfirmMessageBox deleteAlert = new ConfirmMessageBox(groupAppearance.deleteGroupConfirmHeading(selectedGroups),
-                                                                  groupAppearance.deleteGroupConfirm(selectedGroups));
-            deleteAlert.show();
-            deleteAlert.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
+            permissionsDlgProvider.get(new AsyncCallback<RetainPermissionsDialog>() {
                 @Override
-                public void onDialogHide(DialogHideEvent event) {
-                    if (event.getHideButton().equals(Dialog.PredefinedButton.YES)) {
-                        removeCollaborators(selectedGroups, selectedUsers);
-                    }
+                public void onFailure(Throwable throwable) {
+                    ErrorHandler.post(throwable);
+                }
+
+                @Override
+                public void onSuccess(RetainPermissionsDialog dialog) {
+                    dialog.show();
+                    dialog.addDialogHideHandler(dialogHideEvent -> {
+                        Dialog.PredefinedButton button = dialogHideEvent.getHideButton();
+                        switch(button) {
+                            case YES:
+                                removeCollaborators(selectedGroups, selectedUsers, true);
+                                break;
+                            case NO:
+                                removeCollaborators(selectedGroups, selectedUsers, false);
+                                break;
+                            default:
+                                dialog.hide();
+                                break;
+                        }
+                    });
                 }
             });
         } else {
-            removeCollaborators(null, selectedUsers);
+            removeCollaborators(null, selectedUsers, false);
         }
     }
 
-    void removeCollaborators(List<Subject> selectedGroups, List<Subject> selectedUsers) {
+    void removeCollaborators(List<Subject> selectedGroups, List<Subject> selectedUsers, boolean retainPermissions) {
         view.maskCollaborators(groupAppearance.loadingMask());
         ParentDeleteSubjectsCallback parentCallback = createParentDeleteSubjectsCallback();
 
@@ -366,14 +379,14 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         parentCallback.setCallbackCounter(callbackSize);
 
         removeCollaboratorsFromDefault(selectedUsers, parentCallback);
-        deleteGroups(selectedGroups, parentCallback);
+        deleteGroups(selectedGroups, retainPermissions, parentCallback);
     }
 
-    void deleteGroups(List<Subject> selectedGroups, ParentDeleteSubjectsCallback parentCallback) {
+    void deleteGroups(List<Subject> selectedGroups, boolean retainPermissions, ParentDeleteSubjectsCallback parentCallback) {
         if (selectedGroups != null && !selectedGroups.isEmpty()) {
             selectedGroups.forEach(subject -> {
                 Group group = groupFactory.convertSubjectToGroup(subject);
-                groupServiceFacade.deleteGroup(group, new DeleteGroupChildCallback(parentCallback));
+                groupServiceFacade.deleteGroup(group, retainPermissions, new DeleteGroupChildCallback(parentCallback));
             });
         }
     }
@@ -383,6 +396,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         if (selectedUsers != null && !selectedUsers.isEmpty()) {
             groupServiceFacade.deleteMembers(groupFactory.getDefaultGroup(),
                                              selectedUsers,
+                                             false,
                                              new DeleteUsersChildCallback(parentCallback));
         }
     }
