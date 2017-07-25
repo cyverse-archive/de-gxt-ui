@@ -5,17 +5,19 @@ import org.iplantc.de.client.events.diskResources.OpenFolderEvent;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasPath;
 import org.iplantc.de.client.models.dataLink.DataLink;
+import org.iplantc.de.client.models.dataLink.DataLinkFactory;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
-import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.comments.view.dialogs.CommentsDialog;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -162,18 +164,22 @@ public class GridViewPresenterImpl implements Presenter,
 
         @Override
         public void onSuccess(final List<DataLink> result) {
-            shareLinkDialogProvider.get(new AsyncCallback<ShareResourceLinkDialog>() {
-                @Override
-                public void onFailure(Throwable caught) {
-                    ErrorHandler.post(caught);
-                }
-
-                @Override
-                public void onSuccess(ShareResourceLinkDialog dlg) {
-                    dlg.show(result.get(0).getDownloadUrl());
-                }
-            });
+            showPublicLink(result);
         }
+    }
+
+    protected void showPublicLink(final List<DataLink> result) {
+        shareLinkDialogProvider.get(new AsyncCallback<ShareResourceLinkDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(ShareResourceLinkDialog dlg) {
+                dlg.show(result.get(0).getDownloadUrl());
+            }
+        });
     }
 
     @Inject
@@ -201,6 +207,9 @@ public class GridViewPresenterImpl implements Presenter,
     @Inject
     MetadataCopyDialog mCopyDialog;
 
+    @Inject
+    DataLinkFactory dlFactory;
+
     EventBus eventBus;
     private final Appearance appearance;
     private final ListStore<DiskResource> listStore;
@@ -210,6 +219,7 @@ public class GridViewPresenterImpl implements Presenter,
     private boolean filePreviewEnabled = true;
     private DiskResourceView.Presenter parentPresenter;
     private HandlerManager handlerManager;
+    private final JsonUtil jsonUtil;
 
     @Inject
     GridViewPresenterImpl(final GridViewFactory gridViewFactory,
@@ -223,6 +233,7 @@ public class GridViewPresenterImpl implements Presenter,
         this.navigationPresenter = navigationPresenter;
         this.listStore = getDiskResourceListStore();
         this.eventBus = eventBus;
+        this.jsonUtil = JsonUtil.getInstance();
         GridView.FolderContentsRpcProxy folderContentsRpcProxy =
                 folderContentsProxyFactory.createWithEntityType(infoTypeFilters, entityType);
         setupHandlers();
@@ -483,8 +494,31 @@ public class GridViewPresenterImpl implements Presenter,
                 }
             });
         } else {
-            diskResourceService.createDataLinks(Arrays.asList(toBeShared.getPath()),
-                                                new CreateDataLinksCallback());
+            diskResourceService.listDataLinks(diskResourceUtil.asStringPathList(Arrays.asList(toBeShared)),
+                                              new DataCallback<FastMap<List<DataLink>>>() {
+
+                                                  @Override
+                                                  public void onFailure(Integer statusCode,
+                                                                        Throwable exception) {
+                                                      ErrorHandler.post(appearance.createDataLinksError(),
+                                                                        exception);
+                                                  }
+
+                                                  @Override
+                                                  public void onSuccess(FastMap<List<DataLink>> result) {
+                                                      List<DataLink> dlList =
+                                                              result.get(toBeShared.getPath());
+                                                      if (dlList == null || dlList.isEmpty()) {
+                                                          diskResourceService.createDataLinks(Arrays.asList(
+                                                                  toBeShared.getPath()),
+                                                                                              new CreateDataLinksCallback());
+                                                      } else {
+                                                          showPublicLink(dlList);
+                                                      }
+
+                                                  }
+                                              });
+
         }
     }
 

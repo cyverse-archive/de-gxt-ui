@@ -238,7 +238,8 @@ public interface DiskResourceServiceFacade {
      * 
      * @param diskResourceIds the disk resources whose tickets will be listed.
      */
-    public void listDataLinks(List<String> diskResourceIds, DECallback<String> callback);
+    public void listDataLinks(List<String> diskResourceIds,
+                              DECallback<FastMap<List<DataLink>>> callback);
 
     /**
      * Requests that the given Kif Share tickets will be deleted.

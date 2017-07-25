@@ -13,6 +13,7 @@ import org.iplantc.de.client.events.diskResources.FolderRefreshedEvent;
 import org.iplantc.de.client.models.HasPaths;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.dataLink.DataLink;
+import org.iplantc.de.client.models.dataLink.DataLinkFactory;
 import org.iplantc.de.client.models.dataLink.DataLinkList;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
@@ -34,6 +35,7 @@ import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.DataCallback;
@@ -79,6 +81,7 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
                                                                     DiskResourceServiceFacade {
 
     private final DiskResourceAutoBeanFactory factory;
+    private final DataLinkFactory dlFactory;
     private final DEProperties deProperties;
     private final DiscEnvApiService deServiceFacade;
     private final DEClientConstants constants;
@@ -91,8 +94,8 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
                                          final DEProperties deProperties,
                                          final DEClientConstants constants,
                                          final DiskResourceAutoBeanFactory factory,
-                                         final UserInfo userInfo,
-                                         final EventBus eventBus) {
+                                         final DataLinkFactory dlFactory,
+                                         final UserInfo userInfo) {
         super(new ModelKeyProvider<Folder>() {
 
             @Override
@@ -105,6 +108,7 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
         this.deProperties = deProperties;
         this.constants = constants;
         this.factory = factory;
+        this.dlFactory = dlFactory;
         this.userInfo = userInfo;
         GWT.log("DISK RESOURCE SERVICE FACADE CONSTRUCTOR");
     }
@@ -785,28 +789,20 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
         mdcMap.put(METRIC_TYPE_KEY, SHARE_EVENT);
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, fullAddress, body.toString());
         wrapper.setArguments(args);
-        deServiceFacade.getServiceData(wrapper,
-                                       mdcMap,
-                                       new DECallbackConverter<String, List<DataLink>>(callback) {
-            @Override
-            protected List<DataLink> convertFrom(String object) {
-                AutoBean<DataLinkList> tickets = AutoBeanCodex.decode(factory, DataLinkList.class, object);
-                return tickets.as().getTickets();
-            }
-        });
+        deServiceFacade.getServiceData(wrapper, mdcMap, new StringToListCallbackConverter(callback));
 
     }
 
     @Override
-    public void listDataLinks(List<String> diskResourceIds, DECallback<String> callback) {
+    public void listDataLinks(List<String> diskResourceIds,
+                              DECallback<FastMap<List<DataLink>>> callback) {
         String fullAddress = deProperties.getDataMgmtBaseUrl() + "list-tickets"; //$NON-NLS-1$
 
         JSONObject body = new JSONObject();
         body.put("paths", buildArrayFromStrings(diskResourceIds));
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, fullAddress, body.toString());
-        callService(wrapper, callback);
-
+        callService(wrapper, new StringToMapCallbackConverter(callback));
     }
 
     @Override
@@ -1043,5 +1039,44 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
                                            constants.mdTemplateDownloadServlet(),
                                            URL.encodeQueryString(templateid));
         return address;
+    }
+
+    private class StringToListCallbackConverter extends DECallbackConverter<String, List<DataLink>> {
+        public StringToListCallbackConverter(DECallback<List<DataLink>> callback) {
+            super(callback);
+        }
+
+        @Override
+        protected List<DataLink> convertFrom(String object) {
+            AutoBean<DataLinkList> tickets = AutoBeanCodex.decode(factory, DataLinkList.class, object);
+            return tickets.as().getTickets();
+        }
+    }
+
+    private class StringToMapCallbackConverter
+            extends DECallbackConverter<String, FastMap<List<DataLink>>> {
+        public StringToMapCallbackConverter(DECallback<FastMap<List<DataLink>>> callback) {
+            super(callback);
+        }
+
+        @Override
+        protected FastMap<List<DataLink>> convertFrom(String object) {
+            JsonUtil jsonUtil = JsonUtil.getInstance();
+            JSONObject response = jsonUtil.getObject(object);
+            JSONObject tickets = jsonUtil.getObject(response, "tickets");
+            FastMap<List<DataLink>> linksMap = new FastMap();
+            tickets.keySet().forEach(key -> {
+                Splittable placeHolder = StringQuoter.createSplittable();
+                JSONArray dlIds = jsonUtil.getArray(tickets, key);
+                Splittable splittable = StringQuoter.split(dlIds.toString());
+                splittable.assign(placeHolder, "tickets");
+                AutoBean<DataLinkList> ticketsAB =
+                        AutoBeanCodex.decode(dlFactory, DataLinkList.class, placeHolder);
+
+                List<DataLink> dlList = ticketsAB.as().getTickets();
+                linksMap.put(key, dlList);
+            });
+            return linksMap;
+        }
     }
 }

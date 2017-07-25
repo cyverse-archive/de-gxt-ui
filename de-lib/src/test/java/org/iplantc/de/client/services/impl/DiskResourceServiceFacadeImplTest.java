@@ -15,6 +15,7 @@ import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.events.diskResources.FolderRefreshedEvent;
 import org.iplantc.de.client.models.UserInfo;
+import org.iplantc.de.client.models.dataLink.DataLinkFactory;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
@@ -47,6 +48,8 @@ public class DiskResourceServiceFacadeImplTest {
     @Mock DEProperties dePropertiesMock;
     @Mock DEClientConstants deConstantsMock;
     @Mock DiskResourceAutoBeanFactory drAutoBeanFactoryMock;
+    @Mock
+    DataLinkFactory dataLinkFactoryMock;
     @Mock UserInfo userInfoMock;
     @Mock EventBus eventBusMock;
     @Mock DECallback<List<Folder>> folderListCallbackMock;
@@ -63,8 +66,8 @@ public class DiskResourceServiceFacadeImplTest {
                                                                                   dePropertiesMock,
                                                                                   deConstantsMock,
                                                                                   drAutoBeanFactoryMock,
-                                                                                  userInfoMock,
-                                                                                  eventBusMock) {
+                                                                                  dataLinkFactoryMock,
+                                                                                  userInfoMock) {
             public Folder findModel(Folder model) {
                 return folderMock;
             }
@@ -98,8 +101,8 @@ public class DiskResourceServiceFacadeImplTest {
                                                                                   dePropertiesMock,
                                                                                   deConstantsMock,
                                                                                   drAutoBeanFactoryMock,
-                                                                                  userInfoMock,
-                                                                                  eventBusMock) {
+                                                                                  dataLinkFactoryMock,
+                                                                                  userInfoMock) {
             public Folder findModel(Folder model) {
                 return folderMock;
             }
@@ -131,8 +134,8 @@ public class DiskResourceServiceFacadeImplTest {
                                                                                   dePropertiesMock,
                                                                                   deConstantsMock,
                                                                                   drAutoBeanFactoryMock,
-                                                                                  userInfoMock,
-                                                                                  eventBusMock) {
+                                                                                  dataLinkFactoryMock,
+                                                                                  userInfoMock) {
             public Folder findModel(Folder model) {
                 return folderMock;
             }
@@ -154,8 +157,8 @@ public class DiskResourceServiceFacadeImplTest {
                                                                                   dePropertiesMock,
                                                                                   deConstantsMock,
                                                                                   drAutoBeanFactoryMock,
-                                                                                  userInfoMock,
-                                                                                  eventBusMock) {
+                                                                                  dataLinkFactoryMock,
+                                                                                  userInfoMock) {
             public Folder findModel(Folder model) {
                 return folderMock;
             }

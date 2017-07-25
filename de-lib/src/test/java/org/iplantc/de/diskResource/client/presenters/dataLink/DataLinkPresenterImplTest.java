@@ -20,6 +20,8 @@ import org.iplantc.de.shared.DECallback;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 
+import com.sencha.gxt.core.shared.FastMap;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,6 +53,8 @@ public class DataLinkPresenterImplTest {
 
     @Captor ArgumentCaptor<DECallback<String>> stringCallbackCaptor;
     @Captor ArgumentCaptor<DECallback<List<DataLink>>> dataLinkCallbackCaptor;
+    @Captor
+    ArgumentCaptor<DECallback<FastMap<List<DataLink>>>> mapLinkCallbackCaptor;
 
 
     private DataLinkPresenterImpl uut;
@@ -96,7 +100,7 @@ public class DataLinkPresenterImplTest {
         uut.getExistingDataLinks(resourcesMock);
 
         verify(viewMock).addRoots(eq(resourcesMock));
-        verify(drServiceMock).listDataLinks(eq(stringListMock), stringCallbackCaptor.capture());
+        verify(drServiceMock).listDataLinks(eq(stringListMock), mapLinkCallbackCaptor.capture());
     }
 
     @Test
