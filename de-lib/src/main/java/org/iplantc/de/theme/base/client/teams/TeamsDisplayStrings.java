@@ -40,4 +40,16 @@ public interface TeamsDisplayStrings extends Messages {
     String privilegeColumnLabel();
 
     String addPublicUser();
+
+    String saveTeamHeader();
+
+    String updatingTeamMsg();
+
+    String updatingPrivilegesMsg();
+
+    String updatingMembershipMsg();
+
+    String miscTeamUpdates();
+
+    String teamSuccessfullySaved();
 }

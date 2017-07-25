@@ -201,4 +201,34 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     public String addPublicUser() {
         return displayStrings.addPublicUser();
     }
+
+    @Override
+    public String saveTeamHeader() {
+        return displayStrings.saveTeamHeader();
+    }
+
+    @Override
+    public String updatingTeamMsg() {
+        return displayStrings.updatingTeamMsg();
+    }
+
+    @Override
+    public String updatingPrivilegesMsg() {
+        return displayStrings.updatingPrivilegesMsg();
+    }
+
+    @Override
+    public String updatingMembershipMsg() {
+        return displayStrings.updatingMembershipMsg();
+    }
+
+    @Override
+    public String teamSuccessfullySaved() {
+        return displayStrings.teamSuccessfullySaved();
+    }
+
+    @Override
+    public String miscTeamUpdates() {
+        return displayStrings.miscTeamUpdates();
+    }
 }

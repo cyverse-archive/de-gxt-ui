@@ -17,11 +17,13 @@ import org.iplantc.de.client.models.groups.UpdatePrivilegeRequestList;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.AddPublicUserSelected;
 import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.events.RemoveNonMemberPrivilegeSelected;
+import org.iplantc.de.teams.client.views.dialogs.SaveTeamProgressDialog;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -43,7 +45,9 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     private GroupAutoBeanFactory factory;
     private TeamsView.TeamsViewAppearance appearance;
     EditTeamView.MODE mode;
+    SaveTeamProgressDialog progressDlg;
     @Inject UserInfo userInfo;
+    @Inject AsyncProviderWrapper<SaveTeamProgressDialog> progressDialogProvider;
 
     @Inject
     public EditTeamPresenterImpl(EditTeamView view,
@@ -104,11 +108,24 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     @Override
     public void saveTeamSelected(IsHideable hideable) {
         if (EditTeamView.MODE.CREATE == mode) {
-            createNewTeam(hideable);
+            progressDialogProvider.get(new AsyncCallback<SaveTeamProgressDialog>() {
+                @Override
+                public void onFailure(Throwable throwable) {
+                    ErrorHandler.post(throwable);
+                }
+
+                @Override
+                public void onSuccess(SaveTeamProgressDialog dialog) {
+                    progressDlg = dialog;
+                    createNewTeam(hideable);
+                }
+            });
         }
     }
 
     void createNewTeam(IsHideable hideable) {
+        view.mask(appearance.loadingMask());
+        progressDlg.startProgress(3);
         List<Privilege> nonMemberPrivileges = view.getNonMemberPrivileges();
         List<Privilege> publicUserList = nonMemberPrivileges.stream()
                                                   .filter(privilege -> ALL_PUBLIC_USERS_NAME.equals(
@@ -119,6 +136,8 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
             @Override
             public void onFailure(Throwable throwable) {
                 ErrorHandler.post(throwable);
+                view.unmask();
+                progressDlg.hide();
             }
 
             @Override
@@ -142,28 +161,33 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     }
 
     void addMembersToTeam(Group group, IsHideable hideable) {
+        progressDlg.updateProgress();
         Subject self = createSelfSubject();
         List<Privilege> privileges = view.getMemberPrivileges();
         List<Subject> membersToAdd = privileges.stream()
                                                .map(Privilege::getSubject)
                                                .collect(Collectors.toList());
         membersToAdd.add(self);
-
         serviceFacade.addMembersToTeam(group, membersToAdd, new AsyncCallback<List<UpdateMemberResult>>() {
             @Override
             public void onFailure(Throwable throwable) {
                 ErrorHandler.post(throwable);
                 mode = EditTeamView.MODE.EDIT;
+                view.unmask();
+                progressDlg.hide();
             }
 
             @Override
             public void onSuccess(List<UpdateMemberResult> updateMemberResults) {
                 hideable.hide();
+                progressDlg.updateProgress();
+                view.unmask();
             }
         });
     }
 
     void addPrivilegesToTeam(Group group, List<Privilege> privileges, IsHideable hideable) {
+        progressDlg.updateProgress();
         List<UpdatePrivilegeRequest> updateList = Lists.newArrayList();
 
         privileges.forEach(new Consumer<Privilege>() {
@@ -187,6 +211,8 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
             public void onFailure(Throwable throwable) {
                 ErrorHandler.post(throwable);
                 mode = EditTeamView.MODE.EDIT;
+                view.unmask();
+                progressDlg.hide();
             }
 
             @Override

@@ -26,5 +26,7 @@ public interface Teams {
         String NON_MEMBER_SEARCH = ".nonMemberSearch";
         String MEMBERS_GRID = ".membersGrid";
         String NON_MEMBERS_GRID = ".nonMembersGrid";
+        String SAVE_PROGRESS_DLG = "saveProgressDlg";
+        String OK_BTN = ".okBtn";
     }
 }

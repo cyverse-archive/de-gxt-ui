@@ -91,6 +91,18 @@ public interface TeamsView extends IsWidget,
         int privilegeColumnWidth();
 
         String addPublicUser();
+
+        String saveTeamHeader();
+
+        String updatingTeamMsg();
+
+        String updatingPrivilegesMsg();
+
+        String updatingMembershipMsg();
+
+        String teamSuccessfullySaved();
+
+        String miscTeamUpdates();
     }
 
     /**
