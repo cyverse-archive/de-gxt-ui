@@ -8,6 +8,7 @@ import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.teams.client.events.AddPublicUserSelected;
 import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.events.RemoveNonMemberPrivilegeSelected;
+import org.iplantc.de.teams.client.events.TeamSaved;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -34,7 +35,7 @@ public interface EditTeamView extends IsWidget,
     String SEARCH_MEMBERS_TAG = "members";
     String SEARCH_NON_MEMBERS_TAG = "nonMembers";
 
-    interface Presenter {
+    interface Presenter extends TeamSaved.HasTeamSavedHandlers {
 
         /**
          * Initialize the presenter which creates the view

@@ -9,10 +9,12 @@ import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.CreateTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
+import org.iplantc.de.teams.client.events.TeamSaved;
 import org.iplantc.de.teams.client.models.TeamsFilter;
 import org.iplantc.de.teams.client.views.dialogs.EditTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.TeamDetailsDialog;
 
+import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
@@ -148,6 +150,13 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
             @Override
             public void onSuccess(EditTeamDialog dialog) {
                 dialog.show(null);
+                dialog.addTeamSavedHandler(new TeamSaved.TeamSavedHandler() {
+                    @Override
+                    public void onTeamSaved(TeamSaved event) {
+                        Group team = event.getGroup();
+                        view.addTeams(Lists.newArrayList(team));
+                    }
+                });
             }
         });
     }

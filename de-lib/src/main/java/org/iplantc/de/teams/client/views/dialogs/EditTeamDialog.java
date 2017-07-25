@@ -4,13 +4,15 @@ import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
+import org.iplantc.de.teams.client.events.TeamSaved;
 import org.iplantc.de.teams.shared.Teams;
 
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 
-public class EditTeamDialog extends IPlantDialog {
+public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSavedHandlers {
     private EditTeamView.Presenter presenter;
     private TeamsView.TeamsViewAppearance appearance;
 
@@ -56,5 +58,10 @@ public class EditTeamDialog extends IPlantDialog {
         super.onEnsureDebugId(baseID);
 
         presenter.setViewDebugId(Teams.Ids.EDIT_TEAM_DIALOG);
+    }
+
+    @Override
+    public HandlerRegistration addTeamSavedHandler(TeamSaved.TeamSavedHandler handler) {
+        return presenter.addTeamSavedHandler(handler);
     }
 }

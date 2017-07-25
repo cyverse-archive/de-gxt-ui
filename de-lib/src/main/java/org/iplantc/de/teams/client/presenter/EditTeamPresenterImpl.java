@@ -23,9 +23,12 @@ import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.AddPublicUserSelected;
 import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.events.RemoveNonMemberPrivilegeSelected;
+import org.iplantc.de.teams.client.events.TeamSaved;
 import org.iplantc.de.teams.client.views.dialogs.SaveTeamProgressDialog;
 
 import com.google.common.collect.Lists;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
@@ -46,6 +49,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     private TeamsView.TeamsViewAppearance appearance;
     EditTeamView.MODE mode;
     SaveTeamProgressDialog progressDlg;
+    HandlerManager handlerManager;
     @Inject UserInfo userInfo;
     @Inject AsyncProviderWrapper<SaveTeamProgressDialog> progressDialogProvider;
 
@@ -182,6 +186,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                 hideable.hide();
                 progressDlg.updateProgress();
                 view.unmask();
+                ensureHandlers().fireEvent(new TeamSaved(group));
             }
         });
     }
@@ -264,4 +269,18 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     public void onAddPublicUserSelected(AddPublicUserSelected event) {
         addPublicUser();
     }
+
+    @Override
+    public HandlerRegistration addTeamSavedHandler(TeamSaved.TeamSavedHandler handler) {
+        return ensureHandlers().addHandler(TeamSaved.TYPE, handler);
+    }
+
+    HandlerManager ensureHandlers() {
+        return handlerManager == null ? handlerManager = createHandlerManager() : handlerManager;
+    }
+
+    private HandlerManager createHandlerManager() {
+        return new HandlerManager(this);
+    }
+
 }
