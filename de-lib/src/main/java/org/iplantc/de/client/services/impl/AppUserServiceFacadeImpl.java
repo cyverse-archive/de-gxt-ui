@@ -29,6 +29,7 @@ import org.iplantc.de.client.services.converters.AppCategoryListCallbackConverte
 import org.iplantc.de.client.services.converters.AppTemplateCallbackConverter;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.BaseServiceCallWrapper.Type;
@@ -439,4 +440,18 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, payload);
         deServiceFacade.getServiceData(wrapper, callback);
    }
+
+    @Override
+    public void isPublishable(String system_id, String id, DECallback<Boolean> callback) {
+        String address = APPS + "/" + system_id + "/" + id + "/is-publishable";
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, Boolean>(callback) {
+            @Override
+            public Boolean convertFrom(String result) {
+                JSONObject obj = JsonUtil.getInstance().getObject(result);
+                Boolean isPub = JsonUtil.getInstance().getBoolean(obj, "publishable", false);
+                return isPub;
+            }
+        });
+    }
 }

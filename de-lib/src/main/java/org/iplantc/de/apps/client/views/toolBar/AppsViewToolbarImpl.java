@@ -22,12 +22,10 @@ import org.iplantc.de.apps.client.events.selection.RefreshAppsSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.RequestToolSelected;
 import org.iplantc.de.apps.client.events.selection.RunAppSelected;
 import org.iplantc.de.apps.client.events.selection.ShareAppsSelected;
-import org.iplantc.de.apps.client.views.submit.dialog.SubmitAppForPublicDialog;
 import org.iplantc.de.apps.shared.AppsModule.Ids;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.sharing.PermissionValue;
-import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -103,7 +101,6 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
     MenuItem requestTool;
     @UiField
     MenuItem shareCollab, sharePublic;
-    @Inject AsyncProviderWrapper<SubmitAppForPublicDialog> submitAppDialogAsyncProvider;
     @UiField
     MenuItem wfRun;
     @UiField
@@ -499,21 +496,8 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
     @UiHandler({ "sharePublic" })
     void submitClicked(SelectionEvent<Item> event) {
         Preconditions.checkState(currentSelection.size() == 1);
-
-/*        submitAppDialogAsyncProvider.get(new AsyncCallback<SubmitAppForPublicDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(SubmitAppForPublicDialog result) {
-                result.show(currentSelection.iterator().next());
-            }
-        });*/
         fireEvent(new PublishAppSelected(currentSelection.iterator().next()));
-
-    }
+   }
 
     // </editor-fold>
 

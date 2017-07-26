@@ -91,5 +91,5 @@ public interface AppUserServiceFacade extends AppServiceFacade, AppSearchFacade 
     
     void unshareApp(AppUnSharingRequestList request, DECallback<String> callback);
 
-
+    void isPublishable(String system_id, String id, DECallback<Boolean> callback);
 }

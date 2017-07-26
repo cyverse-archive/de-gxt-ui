@@ -112,6 +112,8 @@ public interface AppsToolbarView extends IsWidget,
 
         ImageResource tool();
 
+        String cannotPublish();
+
     }
 
     interface Presenter extends BeforeLoadEvent.HasBeforeLoadHandlers<FilterPagingLoadConfig>,
