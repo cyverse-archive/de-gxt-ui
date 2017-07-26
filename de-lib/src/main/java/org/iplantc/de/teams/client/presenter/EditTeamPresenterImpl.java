@@ -130,12 +130,8 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     void createNewTeam(IsHideable hideable) {
         view.mask(appearance.loadingMask());
         progressDlg.startProgress(3);
-        List<Privilege> nonMemberPrivileges = view.getNonMemberPrivileges();
-        List<Privilege> publicUserList = nonMemberPrivileges.stream()
-                                                  .filter(privilege -> ALL_PUBLIC_USERS_NAME.equals(
-                                                          privilege.getSubject().getName()))
-                                                  .collect(Collectors.toList());
-        List<PrivilegeType> publicPrivs = getPublicUserPrivilege(publicUserList);
+
+        List<PrivilegeType> publicPrivs = getPublicUserPrivilege();
         serviceFacade.addTeam(view.getTeam(), publicPrivs, new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable throwable) {
@@ -148,7 +144,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
             public void onSuccess(Group group) {
                 List<Privilege> nonMemberPrivs = view.getNonMemberPrivileges();
                 List<Privilege> memberPrivs = view.getMemberPrivileges();
-                List<Privilege> allPrivs = Lists.newArrayList();
+                List<Privilege> allPrivs = createEmptyPrivilegeList();
                 allPrivs.addAll(memberPrivs);
                 allPrivs.addAll(nonMemberPrivs);
                 addPrivilegesToTeam(group, allPrivs, hideable);
@@ -156,7 +152,12 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         });
     }
 
-    List<PrivilegeType> getPublicUserPrivilege(List<Privilege> publicUserList) {
+    List<PrivilegeType> getPublicUserPrivilege() {
+        List<Privilege> nonMemberPrivileges = view.getNonMemberPrivileges();
+        List<Privilege> publicUserList = nonMemberPrivileges.stream()
+                                                            .filter(privilege -> ALL_PUBLIC_USERS_NAME.equals(
+                                                                    privilege.getSubject().getName()))
+                                                            .collect(Collectors.toList());
         if (publicUserList == null || publicUserList.isEmpty()) {
             return null;
         }
@@ -168,9 +169,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         progressDlg.updateProgress();
         Subject self = createSelfSubject();
         List<Privilege> privileges = view.getMemberPrivileges();
-        List<Subject> membersToAdd = privileges.stream()
-                                               .map(Privilege::getSubject)
-                                               .collect(Collectors.toList());
+        List<Subject> membersToAdd = getSubjectsFromPrivileges(privileges);
         membersToAdd.add(self);
         serviceFacade.addMembersToTeam(group, membersToAdd, new AsyncCallback<List<UpdateMemberResult>>() {
             @Override
@@ -193,20 +192,8 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
     void addPrivilegesToTeam(Group group, List<Privilege> privileges, IsHideable hideable) {
         progressDlg.updateProgress();
-        List<UpdatePrivilegeRequest> updateList = Lists.newArrayList();
 
-        privileges.forEach(new Consumer<Privilege>() {
-            @Override
-            public void accept(Privilege privilege) {
-                UpdatePrivilegeRequest update = factory.getUpdatePrivilegeRequest().as();
-                update.setSubjectId(privilege.getSubject().getId());
-                PrivilegeType type = privilege.getPrivilegeType();
-                List<PrivilegeType> privileges = Lists.newArrayList();
-                privileges.add(type);
-                update.setPrivileges(privileges);
-                updateList.add(update);
-            }
-        });
+        List<UpdatePrivilegeRequest> updateList = convertPrivilegesToUpdateRequest(privileges);
 
         UpdatePrivilegeRequestList allUpdates = factory.getUpdatePrivilegeRequestList().as();
         allUpdates.setRequests(updateList);
@@ -270,6 +257,35 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         addPublicUser();
     }
 
+    List<UpdatePrivilegeRequest> convertPrivilegesToUpdateRequest(List<Privilege> privileges) {
+        List<UpdatePrivilegeRequest> updateList = Lists.newArrayList();
+
+        privileges.forEach(new Consumer<Privilege>() {
+            @Override
+            public void accept(Privilege privilege) {
+                UpdatePrivilegeRequest update = factory.getUpdatePrivilegeRequest().as();
+                update.setSubjectId(privilege.getSubject().getId());
+                PrivilegeType type = privilege.getPrivilegeType();
+                List<PrivilegeType> privileges = Lists.newArrayList();
+                privileges.add(type);
+                update.setPrivileges(privileges);
+                updateList.add(update);
+            }
+        });
+
+        return updateList;
+    }
+
+    List<Privilege> createEmptyPrivilegeList() {
+        return Lists.newArrayList();
+    }
+
+    List<Subject> getSubjectsFromPrivileges(List<Privilege> privileges) {
+        return privileges.stream()
+                         .map(Privilege::getSubject)
+                         .collect(Collectors.toList());
+    }
+
     @Override
     public HandlerRegistration addTeamSavedHandler(TeamSaved.TeamSavedHandler handler) {
         return ensureHandlers().addHandler(TeamSaved.TYPE, handler);
@@ -279,7 +295,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         return handlerManager == null ? handlerManager = createHandlerManager() : handlerManager;
     }
 
-    private HandlerManager createHandlerManager() {
+    HandlerManager createHandlerManager() {
         return new HandlerManager(this);
     }
 
