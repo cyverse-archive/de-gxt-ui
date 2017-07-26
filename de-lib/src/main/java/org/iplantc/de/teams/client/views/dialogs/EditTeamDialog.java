@@ -12,6 +12,9 @@ import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 
+/**
+ * The main dialog that presents the form to users for creating/editing a team
+ */
 public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSavedHandlers {
     private EditTeamView.Presenter presenter;
     private TeamsView.TeamsViewAppearance appearance;

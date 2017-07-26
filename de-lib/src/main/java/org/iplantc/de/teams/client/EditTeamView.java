@@ -78,15 +78,27 @@ public interface EditTeamView extends IsWidget,
     void addMembers(List<Privilege> privilegeList);
 
     /**
-     *
+     * Returns true if the view has no validation errors (e.g. missing required information)
      * @return
      */
     boolean isValid();
 
+    /**
+     * Get the team name and description in Group form from the view
+     * @return
+     */
     Group getTeam();
 
+    /**
+     * Get the list of privileges being assigned to members
+     * @return
+     */
     List<Privilege> getMemberPrivileges();
 
+    /**
+     * Get the list of privileges being assigned to non-members
+     * @return
+     */
     List<Privilege> getNonMemberPrivileges();
 
     /**

@@ -1,5 +1,8 @@
 package org.iplantc.de.client.models.groups;
 
+/**
+ * Enum to manage grouper permissions with readable labels
+ */
 public enum PrivilegeType {
     admin("Can help manage the team"),
     read("Can view the team and its members"),

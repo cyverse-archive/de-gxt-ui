@@ -7,6 +7,9 @@ import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 
 import java.util.List;
 
+/**
+ * Autobean representation of what the groups service expects for requests to create a team
+ */
 public interface CreateTeamRequest extends HasName, HasDescription {
 
     @PropertyName("public_privileges")
