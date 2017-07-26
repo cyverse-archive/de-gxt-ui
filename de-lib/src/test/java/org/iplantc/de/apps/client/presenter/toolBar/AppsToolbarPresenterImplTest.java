@@ -19,16 +19,20 @@ import org.iplantc.de.apps.client.events.selection.CreateNewAppSelected;
 import org.iplantc.de.apps.client.events.selection.CreateNewWorkflowSelected;
 import org.iplantc.de.apps.client.events.selection.EditAppSelected;
 import org.iplantc.de.apps.client.events.selection.EditWorkflowSelected;
+import org.iplantc.de.apps.client.events.selection.PublishAppSelected;
 import org.iplantc.de.apps.client.events.selection.RequestToolSelected;
 import org.iplantc.de.apps.client.gin.factory.AppsToolbarViewFactory;
+import org.iplantc.de.apps.client.views.submit.dialog.SubmitAppForPublicDialog;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.services.AppUserServiceFacade;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
 import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.inject.Provider;
 
@@ -38,6 +42,7 @@ import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -63,6 +68,16 @@ public class AppsToolbarPresenterImplTest {
     @Captor ArgumentCaptor<DECallback<String>> stringCallbackCaptor;
     @Mock Provider<NewToolRequestDialog> requestToolDlgProviderMock;
 
+    @Mock
+    AsyncProviderWrapper<SubmitAppForPublicDialog> submitAppDialogAsyncProviderMock;
+    @Captor
+    ArgumentCaptor<AsyncCallback<SubmitAppForPublicDialog>> submitDialogCaptor;
+    @Captor
+    ArgumentCaptor<DECallback<Boolean>> booleanCallbackCaptor;
+
+    @Mock
+    AppsToolbarView.AppsToolbarAppearance appearanceMock;
+    
     private AppsToolbarPresenterImpl uut;
 
     @Before public void setUp() {
@@ -72,6 +87,8 @@ public class AppsToolbarPresenterImplTest {
         uut.eventBus = eventBusMock;
         uut.userInfo = userInfoMock;
         uut.newToolRequestDialogProvider = requestToolDlgProviderMock;
+        uut.submitAppDialogAsyncProvider = submitAppDialogAsyncProviderMock;
+        uut.appearance = appearanceMock;
     }
 
     @Test public void testConstructorEventHandlerWiring() {
@@ -83,7 +100,7 @@ public class AppsToolbarPresenterImplTest {
         verify(viewMock).addRequestToolSelectedHandler(eq(uut));
         verify(viewMock).addEditWorkflowSelectedHandler(eq(uut));
         verify(viewMock).addShareAppSelectedHandler(eq(uut));
-
+        verify(viewMock).addPublishAppSelectedHandler(eq(uut));
         verifyNoMoreInteractions(viewFactoryMock,
                                  viewMock);
     }
@@ -191,6 +208,48 @@ public class AppsToolbarPresenterImplTest {
 
         verifyZeroInteractions(eventBusMock,
                                appServiceMock);
+    }
+
+    @Test
+    public void verifyServiceCalled_onPublishSelected_Publishable() {
+        PublishAppSelected eventMock = mock(PublishAppSelected.class);
+        SubmitAppForPublicDialog dlgMock = mock(SubmitAppForPublicDialog.class);
+        App app = mock(App.class);
+        when(app.getSystemId()).thenReturn("DE");
+        when(app.getId()).thenReturn("1");
+        when(eventMock.getApp()).thenReturn(app);
+
+        uut.onPublishAppSelected(eventMock);
+
+        verify(appServiceMock).isPublishable(eq("DE"), eq("1"), booleanCallbackCaptor.capture());
+
+        booleanCallbackCaptor.getValue().onSuccess(true);
+        verify(submitAppDialogAsyncProviderMock).get(submitDialogCaptor.capture());
+        submitDialogCaptor.getValue().onSuccess(dlgMock);
+        verify(dlgMock).show(eq(app));
+    }
+
+    @Test
+    @Ignore
+    //TODO: Fix this test
+    /**
+     * This test will fail currently because AlertMessageBox initalization fails. Have to dig up mocking library.
+     */ public void verifyServiceCalled_onPublishSelected_NotPublishable() {
+        PublishAppSelected eventMock = mock(PublishAppSelected.class);
+        SubmitAppForPublicDialog dlgMock = mock(SubmitAppForPublicDialog.class);
+        App app = mock(App.class);
+        when(app.getSystemId()).thenReturn("DE");
+        when(app.getId()).thenReturn("1");
+        when(eventMock.getApp()).thenReturn(app);
+        when(appearanceMock.sharePublic()).thenReturn("Make public...");
+        when(appearanceMock.cannotPublish()).thenReturn(
+                "Selected app cannot be published. This app either contains tool(s) that are private or deprecated. If this is a workflow, it may contain one or more app(s) that are not public.");
+
+        uut.onPublishAppSelected(eventMock);
+
+        verify(appServiceMock).isPublishable(eq("DE"), eq("1"), booleanCallbackCaptor.capture());
+        booleanCallbackCaptor.getValue().onSuccess(false);
+        verifyZeroInteractions(submitAppDialogAsyncProviderMock);
     }
 
 }
