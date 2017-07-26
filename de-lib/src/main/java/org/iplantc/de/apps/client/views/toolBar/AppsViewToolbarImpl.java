@@ -17,6 +17,7 @@ import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
 import org.iplantc.de.apps.client.events.selection.EditAppSelected;
 import org.iplantc.de.apps.client.events.selection.EditWorkflowSelected;
 import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
+import org.iplantc.de.apps.client.events.selection.PublishAppSelected;
 import org.iplantc.de.apps.client.events.selection.RefreshAppsSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.RequestToolSelected;
 import org.iplantc.de.apps.client.events.selection.RunAppSelected;
@@ -26,7 +27,6 @@ import org.iplantc.de.apps.shared.AppsModule.Ids;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.sharing.PermissionValue;
-import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Preconditions;
@@ -39,7 +39,6 @@ import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -203,6 +202,12 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
     public HandlerRegistration addManageToolsClickedEventHandler(ManageToolsClickedEvent.ManageToolsClickedEventHandler handler) {
         return addHandler(handler, ManageToolsClickedEvent.TYPE);
     }
+
+    @Override
+    public HandlerRegistration addPublishAppSelectedHandler(PublishAppSelected.PublishAppSelectedHandler handler) {
+        return addHandler(handler, PublishAppSelected.TYPE);
+    }
+
 
 
     // </editor-fold>
@@ -495,7 +500,7 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
     void submitClicked(SelectionEvent<Item> event) {
         Preconditions.checkState(currentSelection.size() == 1);
 
-        submitAppDialogAsyncProvider.get(new AsyncCallback<SubmitAppForPublicDialog>() {
+/*        submitAppDialogAsyncProvider.get(new AsyncCallback<SubmitAppForPublicDialog>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
@@ -505,7 +510,9 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
             public void onSuccess(SubmitAppForPublicDialog result) {
                 result.show(currentSelection.iterator().next());
             }
-        });
+        });*/
+        fireEvent(new PublishAppSelected(currentSelection.iterator().next()));
+
     }
 
     // </editor-fold>

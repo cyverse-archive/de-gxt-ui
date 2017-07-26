@@ -11,12 +11,11 @@ import org.iplantc.de.apps.client.events.selection.CreateNewAppSelected;
 import org.iplantc.de.apps.client.events.selection.CreateNewWorkflowSelected;
 import org.iplantc.de.apps.client.events.selection.EditAppSelected;
 import org.iplantc.de.apps.client.events.selection.EditWorkflowSelected;
+import org.iplantc.de.apps.client.events.selection.PublishAppSelected;
 import org.iplantc.de.apps.client.events.selection.RequestToolSelected;
 import org.iplantc.de.apps.client.events.selection.ShareAppsSelected;
 import org.iplantc.de.apps.client.gin.factory.AppsToolbarViewFactory;
 import org.iplantc.de.apps.client.presenter.toolBar.proxy.AppSearchRpcProxy;
-
-import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 import org.iplantc.de.apps.client.views.sharing.dialog.AppSharingDialog;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
@@ -58,7 +57,8 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
                                                  EditAppSelected.EditAppSelectedHandler,
                                                  RequestToolSelected.RequestToolSelectedHandler,
                                                  EditWorkflowSelected.EditWorkflowSelectedHandler,
-                                                 ShareAppsSelected.ShareAppsSelectedHandler {
+                                                 ShareAppsSelected.ShareAppsSelectedHandler,
+                                                 PublishAppSelected.PublishAppSelectedHandler {
 
     protected PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader;
     @Inject
@@ -100,6 +100,7 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
         view.addEditAppSelectedHandler(this);
         view.addRequestToolSelectedHandler(this);
         view.addEditWorkflowSelectedHandler(this);
+        view.addPublishAppSelectedHandler(this);
     }
 
     @Override
@@ -184,5 +185,10 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
     @Override
     public void onManageToolsClicked(ManageToolsClickedEvent event) {
         eventBus.fireEvent(new WindowShowRequestEvent(ConfigFactory.manageToolsWindowConfig(), true));
+    }
+
+    @Override
+    public void onPublishAppSelected(PublishAppSelected event) {
+
     }
 }
