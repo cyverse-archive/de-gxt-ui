@@ -32,5 +32,6 @@ public interface CollaboratorsModule {
         String RETAIN_PERMS_BTN = ".retainBtn";
         String REMOVE_PERMS_BTN = ".removeBtn";
         String CANCEL_BTN = ".cancelBtn";
+        String HELP_BTN = ".helpBtn";
     }
 }
