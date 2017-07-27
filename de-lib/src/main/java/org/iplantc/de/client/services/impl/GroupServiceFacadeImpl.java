@@ -212,8 +212,19 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void updateGroup(String originalGroup, Group group, AsyncCallback<Group> callback) {
-        String address = LISTS + "/" + URL.encodePathSegment(originalGroup);
+    public void updateList(String originalGroup, Group group, AsyncCallback<Group> callback) {
+        String address = LISTS;
+        updateGroup(address, originalGroup, group, callback);
+    }
+
+    @Override
+    public void updateTeam(String originalGroup, Group group, AsyncCallback<Group> callback) {
+        String address = TEAMS;
+        updateGroup(address, originalGroup, group, callback);
+    }
+
+    void updateGroup(String address, String originalGroup, Group group, AsyncCallback<Group> callback) {
+        address += "/" + URL.encodePathSegment(originalGroup);
 
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(group));
 

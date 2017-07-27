@@ -144,7 +144,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     }
 
     void updateGroup(Group group) {
-        serviceFacade.updateGroup(originalGroup.getName(), group, new AsyncCallback<Group>() {
+        serviceFacade.updateList(originalGroup.getName(), group, new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
