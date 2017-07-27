@@ -34,6 +34,8 @@ import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class EditTeamPresenterImpl implements EditTeamView.Presenter,
@@ -49,6 +51,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     EditTeamView.MODE mode;
     SaveTeamProgressDialog progressDlg;
     HandlerManager handlerManager;
+    String originalGroup;
     @Inject UserInfo userInfo;
     @Inject AsyncProviderWrapper<SaveTeamProgressDialog> progressDialogProvider;
 
@@ -84,6 +87,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         } else {
             mode = EditTeamView.MODE.EDIT;
             getTeamPrivileges(group);
+            originalGroup = group.getName();
         }
 
         view.edit(group);
@@ -100,12 +104,110 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
             @Override
             public void onSuccess(List<Privilege> privileges) {
-                List<Privilege> filteredPrivs = filterPrivs(privileges);
-                renamePublicUser(filteredPrivs);
-                view.addNonMembers(filteredPrivs);
+                if (privileges != null && !privileges.isEmpty()) {
+                    List<Privilege> filteredPrivs = filterPrivs(privileges);
+                    renamePublicUser(filteredPrivs);
+                    getTeamMembers(group, filteredPrivs);
+                } else {
+                    view.unmask();
+                }
+            }
+        });
+    }
+
+    void getTeamMembers(Group group, List<Privilege> privileges) {
+        serviceFacade.getTeamMembers(group, new AsyncCallback<List<Subject>>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(throwable);
+                view.unmask();
+            }
+
+            @Override
+            public void onSuccess(List<Subject> subjects) {
+                Map<Boolean, List<Privilege>> mapIsMemberPriv = getMapIsMemberPrivilege(privileges, subjects);
+                view.addMembers(mapIsMemberPriv.get(true));
+                view.addNonMembers(mapIsMemberPriv.get(false));
                 view.unmask();
             }
         });
+    }
+
+    @Override
+    public void saveTeamSelected(IsHideable hideable) {
+        progressDialogProvider.get(new AsyncCallback<SaveTeamProgressDialog>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(throwable);
+            }
+
+            @Override
+            public void onSuccess(SaveTeamProgressDialog dialog) {
+                progressDlg = dialog;
+                if (EditTeamView.MODE.CREATE == mode) {
+                    createNewTeam(hideable);
+                } else {
+                    updateTeam(hideable);
+                }
+            }
+        });
+    }
+
+    public Map<Boolean,List<Privilege>> getMapIsMemberPrivilege(List<Privilege> privileges, List<Subject> members) {
+        members = members.stream().filter(subject -> !userInfo.getUsername().equals(subject.getId())).collect(
+                Collectors.toList());
+        privileges = privileges.stream().filter(privilege -> !userInfo.getUsername().equals(privilege.getSubject().getId())).collect(
+                Collectors.toList());;
+        List<String> memberIds = Lists.newArrayList();
+        List<Privilege> allPrivs = Lists.newArrayList();
+        if (members != null && !members.isEmpty()) {
+            memberIds = members.stream().map(Subject::getId).collect(Collectors.toList());
+
+            allPrivs = addMembersWithPublicPrivilege(privileges, members);
+        }
+
+        List<String> finalMemberIds = memberIds;
+        return allPrivs.stream()
+                         .collect(Collectors.partitioningBy(privilege -> finalMemberIds.contains(privilege.getSubject().getId())));
+
+    }
+
+    /**
+     * The grouper privilege endpoints return the smallest list possible.  If the public user
+     * has view permissions, for example, and the team creator assigns view permissions to individual
+     * users, those privileges will not be returned from the privileges endpoint since those privileges
+     * are already implied by the public user privileges.
+     * @param privileges
+     * @param members
+     * @return
+     */
+    List<Privilege> addMembersWithPublicPrivilege(List<Privilege> privileges, List<Subject> members) {
+        List<Privilege> publicPrivs = getPublicUserPrivilege(privileges);
+        if (publicPrivs == null || publicPrivs.isEmpty()) {
+            return privileges;
+        }
+
+        List<String> privilegeIds = privileges.stream()
+                                              .map(privilege -> privilege.getSubject().getId())
+                                              .collect(Collectors.toList());
+        List<Subject> membersWithoutPrivs = members.stream()
+                                                   .filter(subject -> !privilegeIds.contains(subject.getId()))
+                                                   .collect(Collectors.toList());
+
+        PrivilegeType publicPrivType = publicPrivs.get(0).getPrivilegeType();
+        List<Privilege> allPrivs = Lists.newArrayList();
+        membersWithoutPrivs.forEach(new Consumer<Subject>() {
+            @Override
+            public void accept(Subject subject) {
+                Privilege privilege = factory.getPrivilege().as();
+                privilege.setSubject(subject);
+                privilege.setPrivilegeType(publicPrivType);
+                allPrivs.add(privilege);
+            }
+        });
+
+        allPrivs.addAll(privileges);
+        return allPrivs;
     }
 
     void renamePublicUser(List<Privilege> filteredPrivs) {
@@ -158,22 +260,23 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         return view.isValid();
     }
 
-    @Override
-    public void saveTeamSelected(IsHideable hideable) {
-        if (EditTeamView.MODE.CREATE == mode) {
-            progressDialogProvider.get(new AsyncCallback<SaveTeamProgressDialog>() {
-                @Override
-                public void onFailure(Throwable throwable) {
-                    ErrorHandler.post(throwable);
-                }
+    void updateTeam(IsHideable hideable) {
+        view.mask(appearance.loadingMask());
+        progressDlg.startProgress(3);
 
-                @Override
-                public void onSuccess(SaveTeamProgressDialog dialog) {
-                    progressDlg = dialog;
-                    createNewTeam(hideable);
-                }
-            });
-        }
+        Group group = view.getTeam();
+        serviceFacade.updateTeam(originalGroup, group, new AsyncCallback<Group>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(throwable);
+                view.unmask();
+            }
+
+            @Override
+            public void onSuccess(Group group) {
+                addPrivilegesToTeam(group, hideable);
+            }
+        });
     }
 
     void createNewTeam(IsHideable hideable) {
@@ -191,12 +294,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
             @Override
             public void onSuccess(Group group) {
-                List<Privilege> nonMemberPrivs = view.getNonMemberPrivileges();
-                List<Privilege> memberPrivs = view.getMemberPrivileges();
-                List<Privilege> allPrivs = createEmptyPrivilegeList();
-                allPrivs.addAll(memberPrivs);
-                allPrivs.addAll(nonMemberPrivs);
-                addPrivilegesToTeam(group, allPrivs, hideable);
+                addPrivilegesToTeam(group, hideable);
             }
         });
     }
@@ -242,10 +340,16 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         });
     }
 
-    void addPrivilegesToTeam(Group group, List<Privilege> privileges, IsHideable hideable) {
+    void addPrivilegesToTeam(Group group, IsHideable hideable) {
         progressDlg.updateProgress();
 
-        List<UpdatePrivilegeRequest> updateList = convertPrivilegesToUpdateRequest(privileges);
+        List<Privilege> nonMemberPrivs = view.getNonMemberPrivileges();
+        List<Privilege> memberPrivs = view.getMemberPrivileges();
+        List<Privilege> allPrivs = createEmptyPrivilegeList();
+        allPrivs.addAll(memberPrivs);
+        allPrivs.addAll(nonMemberPrivs);
+
+        List<UpdatePrivilegeRequest> updateList = convertPrivilegesToUpdateRequest(allPrivs);
 
         UpdatePrivilegeRequestList allUpdates = factory.getUpdatePrivilegeRequestList().as();
         allUpdates.setRequests(updateList);

@@ -136,4 +136,10 @@ public interface TeamsView extends IsWidget,
      * @return
      */
     TeamsFilter getCurrentFilter();
+
+    /**
+     * Update the details of a team in the grid
+     * @param team
+     */
+    void updateTeam(Group team);
 }

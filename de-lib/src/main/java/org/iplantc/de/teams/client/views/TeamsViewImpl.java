@@ -174,6 +174,11 @@ public class TeamsViewImpl extends Composite implements TeamsView {
     }
 
     @Override
+    public void updateTeam(Group team) {
+        listStore.update(team);
+    }
+
+    @Override
     public HandlerRegistration addTeamFilterSelectionChangedHandler(TeamFilterSelectionChanged.TeamFilterSelectionChangedHandler handler) {
         return addHandler(handler, TeamFilterSelectionChanged.TYPE);
     }

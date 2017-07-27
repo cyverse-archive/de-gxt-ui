@@ -145,7 +145,10 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
 
     void createListStores() {
         nonMembersListStore = new ListStore<>(new PrivilegeKeyProvider());
+        nonMembersListStore.setAutoCommit(true);
+
         membersListStore = new ListStore<>(new PrivilegeKeyProvider());
+        membersListStore.setAutoCommit(true);
     }
 
     public void edit(Group group) {
