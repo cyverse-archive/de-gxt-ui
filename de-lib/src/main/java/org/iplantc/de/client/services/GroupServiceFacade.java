@@ -112,4 +112,11 @@ public interface GroupServiceFacade {
      * @param callback
      */
     void updateTeamPrivileges(Group group, UpdatePrivilegeRequestList request, AsyncCallback<List<Privilege>> callback);
+
+    /**
+     * Get the list of privileges on a Team
+     * @param group
+     * @param callback
+     */
+    void getTeamPrivileges(Group group, AsyncCallback<List<Privilege>> callback);
 }

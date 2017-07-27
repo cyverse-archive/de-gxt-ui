@@ -234,4 +234,13 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
         deService.getServiceData(wrapper, new PrivilegeListCallbackConverter(callback, factory));
     }
 
+    @Override
+    public void getTeamPrivileges(Group group, AsyncCallback<List<Privilege>> callback) {
+        String groupName = group.getName();
+        String address = TEAMS + "/" + URL.encodePathSegment(groupName) + "/privileges";
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
+        deService.getServiceData(wrapper, new PrivilegeListCallbackConverter(callback, factory));
+    }
+
 }
