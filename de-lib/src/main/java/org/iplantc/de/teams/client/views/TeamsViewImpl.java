@@ -3,6 +3,7 @@ package org.iplantc.de.teams.client.views;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.CreateTeamSelected;
+import org.iplantc.de.teams.client.events.EditTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
 import org.iplantc.de.teams.client.models.GroupProperties;
@@ -119,7 +120,10 @@ public class TeamsViewImpl extends Composite implements TeamsView {
 
     @UiHandler("manageTeamMI")
     void onManageTeamSelected(SelectionEvent<Item> event) {
-
+        Group selectedGroup = grid.getSelectionModel().getSelectedItem();
+        if (selectedGroup != null) {
+            fireEvent(new EditTeamSelected(selectedGroup));
+        }
     }
 
     @UiHandler("leaveTeamMI")
@@ -177,5 +181,10 @@ public class TeamsViewImpl extends Composite implements TeamsView {
     @Override
     public HandlerRegistration addCreateTeamSelectedHandler(CreateTeamSelected.CreateTeamSelectedHandler handler) {
         return addHandler(handler, CreateTeamSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addEditTeamSelectedHandler(EditTeamSelected.EditTeamSelectedHandler handler) {
+        return addHandler(handler, EditTeamSelected.TYPE);
     }
 }

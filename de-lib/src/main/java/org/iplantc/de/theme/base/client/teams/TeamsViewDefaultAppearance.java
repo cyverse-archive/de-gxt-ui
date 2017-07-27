@@ -231,4 +231,9 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     public String miscTeamUpdates() {
         return displayStrings.miscTeamUpdates();
     }
+
+    @Override
+    public ImageResource editIcon() {
+        return iplantResources.edit();
+    }
 }

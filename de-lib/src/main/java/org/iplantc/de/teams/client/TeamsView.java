@@ -3,6 +3,7 @@ package org.iplantc.de.teams.client;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.teams.client.events.CreateTeamSelected;
+import org.iplantc.de.teams.client.events.EditTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
 import org.iplantc.de.teams.client.models.TeamsFilter;
@@ -19,7 +20,8 @@ public interface TeamsView extends IsWidget,
                                    IsMaskable,
                                    TeamInfoButtonSelected.HasTeamInfoButtonSelectedHandlers,
                                    TeamFilterSelectionChanged.HasTeamFilterSelectionChangedHandlers,
-                                   CreateTeamSelected.HasCreateTeamSelectedHandlers {
+                                   CreateTeamSelected.HasCreateTeamSelectedHandlers,
+                                   EditTeamSelected.HasEditTeamSelectedHandlers {
 
     /**
      * An appearance class for all string related items in the Teams view
@@ -103,6 +105,8 @@ public interface TeamsView extends IsWidget,
         String teamSuccessfullySaved();
 
         String miscTeamUpdates();
+
+        ImageResource editIcon();
     }
 
     /**
