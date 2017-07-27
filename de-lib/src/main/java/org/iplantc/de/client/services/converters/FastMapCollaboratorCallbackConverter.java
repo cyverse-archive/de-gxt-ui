@@ -34,6 +34,7 @@ public class FastMapCollaboratorCallbackConverter extends AsyncCallbackConverter
                 JSONObject userJson = jsonUtil.getObject(users, username);
                 Subject subject = AutoBeanCodex.decode(factory, Subject.class,
                                                                       userJson.toString()).as();
+                subject.setDisplayName(subject.getName());
                 userResults.put(username, subject);
             }
         }

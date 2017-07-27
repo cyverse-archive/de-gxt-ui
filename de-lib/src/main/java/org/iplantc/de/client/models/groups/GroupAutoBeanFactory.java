@@ -52,6 +52,7 @@ public interface GroupAutoBeanFactory extends AutoBeanFactory {
         if (subject != null) {
             group.setId(subject.getId());
             group.setName(subject.getName());
+            group.setDisplayName(subject.getDisplayName());
             group.setDescription(subject.getInstitution());
         }
         return group;
@@ -62,6 +63,7 @@ public interface GroupAutoBeanFactory extends AutoBeanFactory {
         if (group != null) {
             subject.setId(group.getId());
             subject.setName(group.getName());
+            subject.setDisplayName(group.getDisplayName());
             subject.setSourceId(Group.GROUP_IDENTIFIER);
             subject.setInstitution(group.getDescription());
         }
