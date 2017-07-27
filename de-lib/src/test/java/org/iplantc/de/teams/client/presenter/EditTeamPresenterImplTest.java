@@ -102,7 +102,7 @@ public class EditTeamPresenterImplTest {
                                         appearanceMock,
                                         dePropertiesMock) {
             @Override
-            List<PrivilegeType> getPublicUserPrivilege() {
+            List<PrivilegeType> getPublicUserPrivilegeType() {
                 return privilegeTypeListMock;
             }
 
@@ -231,7 +231,7 @@ public class EditTeamPresenterImplTest {
         when(nonMemberPrivsMock.get(0)).thenReturn(privilegeMock);
         when(privilegeMock.getPrivilegeType()).thenReturn(PrivilegeType.read);
 
-        uut.getPublicUserPrivilege();
+        uut.getPublicUserPrivilegeType();
     }
 
     @Test

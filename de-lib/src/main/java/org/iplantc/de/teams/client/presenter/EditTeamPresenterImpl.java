@@ -1,5 +1,6 @@
 package org.iplantc.de.teams.client.presenter;
 
+import static org.iplantc.de.teams.client.EditTeamView.GROUPER_ID;
 import static org.iplantc.de.teams.client.EditTeamView.SEARCH_MEMBERS_TAG;
 
 import org.iplantc.de.client.models.IsHideable;
@@ -79,12 +80,56 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         if (group == null) {
             group = factory.getGroup().as();
             mode = EditTeamView.MODE.CREATE;
+            addPublicUser();
         } else {
             mode = EditTeamView.MODE.EDIT;
+            getTeamPrivileges(group);
         }
 
         view.edit(group);
-        addPublicUser();
+    }
+
+    public void getTeamPrivileges(Group group) {
+        view.mask(appearance.loadingMask());
+        serviceFacade.getTeamPrivileges(group, new AsyncCallback<List<Privilege>>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(throwable);
+                view.unmask();
+            }
+
+            @Override
+            public void onSuccess(List<Privilege> privileges) {
+                List<Privilege> filteredPrivs = filterPrivs(privileges);
+                renamePublicUser(filteredPrivs);
+                view.addNonMembers(filteredPrivs);
+                view.unmask();
+            }
+        });
+    }
+
+    void renamePublicUser(List<Privilege> filteredPrivs) {
+        List<Privilege> publicPrivs = getPublicUserPrivilege(filteredPrivs);
+        if (publicPrivs != null && !publicPrivs.isEmpty()) {
+            Privilege publicPriv = publicPrivs.get(0);
+            publicPriv.getSubject().setName(ALL_PUBLIC_USERS_NAME);
+        }
+    }
+
+    List<Privilege> filterPrivs(List<Privilege> privileges) {
+        return privileges.stream()
+                         .filter(privilege -> (privilege.getPrivilegeType() != PrivilegeType.optout
+                                               && !isCurrentUserPrivilege(privilege))
+                                               && !isDeGrouperPrivilege(privilege))
+                         .collect(Collectors.toList());
+    }
+
+    boolean isCurrentUserPrivilege(Privilege privilege) {
+        return userInfo.getUsername().equals(privilege.getSubject().getId());
+    }
+
+    boolean isDeGrouperPrivilege(Privilege privilege) {
+        return GROUPER_ID.equals(privilege.getSubject().getId());
     }
 
     void addPublicUser() {
@@ -135,7 +180,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         view.mask(appearance.loadingMask());
         progressDlg.startProgress(3);
 
-        List<PrivilegeType> publicPrivs = getPublicUserPrivilege();
+        List<PrivilegeType> publicPrivs = getPublicUserPrivilegeType();
         serviceFacade.addTeam(view.getTeam(), publicPrivs, new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable throwable) {
@@ -156,17 +201,20 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         });
     }
 
-    List<PrivilegeType> getPublicUserPrivilege() {
+    List<PrivilegeType> getPublicUserPrivilegeType() {
         List<Privilege> nonMemberPrivileges = view.getNonMemberPrivileges();
-        List<Privilege> publicUserList = nonMemberPrivileges.stream()
-                                                            .filter(privilege -> ALL_PUBLIC_USERS_NAME.equals(
-                                                                    privilege.getSubject().getName()))
-                                                            .collect(Collectors.toList());
+        List<Privilege> publicUserList = getPublicUserPrivilege(nonMemberPrivileges);
         if (publicUserList == null || publicUserList.isEmpty()) {
             return null;
         }
         PrivilegeType privilege = publicUserList.get(0).getPrivilegeType();
         return Lists.newArrayList(privilege);
+    }
+
+    List<Privilege> getPublicUserPrivilege(List<Privilege> privileges) {
+        return privileges.stream()
+                           .filter(privilege -> ALL_PUBLIC_USERS_ID.equals(privilege.getSubject().getId()))
+                           .collect(Collectors.toList());
     }
 
     void addMembersToTeam(Group group, IsHideable hideable) {
