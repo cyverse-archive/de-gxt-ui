@@ -90,7 +90,7 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
 
     @Override
     public String collaborators() {
-        return iplantDisplayStrings.collaborators();
+        return displayStrings.collaborationWindowHeading();
     }
 
     @Override
