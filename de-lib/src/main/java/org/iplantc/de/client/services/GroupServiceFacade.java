@@ -30,9 +30,10 @@ public interface GroupServiceFacade {
     /**
      * Delete a Collaborator List
      * @param group
+     * @param retainPermissions
      * @param callback
      */
-    void deleteGroup(Group group, AsyncCallback<Group> callback);
+    void deleteGroup(Group group, boolean retainPermissions, AsyncCallback<Group> callback);
 
     /**
      * Get the list of members who belong to a Collaborator List
@@ -45,9 +46,10 @@ public interface GroupServiceFacade {
      * Delete members from a Collaborator List
      * @param group
      * @param member
+     * @param retainPermissions
      * @param callback
      */
-    void deleteMembers(Group group, List<Subject> member, AsyncCallback<List<UpdateMemberResult>> callback);
+    void deleteMembers(Group group, List<Subject> member, boolean retainPermissions, AsyncCallback<List<UpdateMemberResult>> callback);
 
     /**
      * Adds  members to the Collaborator List

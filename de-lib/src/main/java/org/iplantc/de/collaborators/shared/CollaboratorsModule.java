@@ -28,5 +28,9 @@ public interface CollaboratorsModule {
         String GROUP_GRID = ".grid";
         String SUBJECT_NAME_CELL = ".subjectNameCell";
         String GROUP_DETAILS_VIEW = ".view";
+        String RETAIN_PERMS_DLG = "retainPermsDlg";
+        String RETAIN_PERMS_BTN = ".retainBtn";
+        String REMOVE_PERMS_BTN = ".removeBtn";
+        String CANCEL_BTN = ".cancelBtn";
     }
 }

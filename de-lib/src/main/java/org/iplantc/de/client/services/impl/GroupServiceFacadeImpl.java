@@ -71,8 +71,8 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void deleteGroup(Group group, AsyncCallback<Group> callback) {
-        String address = LISTS + "/" + URL.encodePathSegment(group.getName());
+    public void deleteGroup(Group group, boolean retainPermissions, AsyncCallback<Group> callback) {
+        String address = LISTS + "/" + URL.encodePathSegment(group.getName()) + "?retain-permissions=" + retainPermissions;
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address);
         deService.getServiceData(wrapper, new GroupCallbackConverter(callback, factory));
@@ -88,7 +88,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void deleteMembers(Group group, List<Subject> subjects, AsyncCallback<List<UpdateMemberResult>> callback) {
+    public void deleteMembers(Group group, List<Subject> subjects, boolean retainPermissions, AsyncCallback<List<UpdateMemberResult>> callback) {
         String groupName = group.getName();
         UpdateMemberRequest request = factory.getUpdateMemberRequest().as();
         List<String> ids = subjects.stream()
@@ -96,7 +96,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
                                    .collect(Collectors.toList());
         request.setMembers(ids);
 
-        String address = LISTS + "/" + URL.encodePathSegment(groupName) + "/members/deleter";
+        String address = LISTS + "/" + URL.encodePathSegment(groupName) + "/members/deleter?retain-permissions=" + retainPermissions;
 
         Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
 

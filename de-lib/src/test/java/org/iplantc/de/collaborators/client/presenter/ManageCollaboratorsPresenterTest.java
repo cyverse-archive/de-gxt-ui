@@ -29,6 +29,7 @@ import org.iplantc.de.collaborators.client.gin.ManageCollaboratorsViewFactory;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.collaborators.client.views.CollaboratorDNDHandler;
 import org.iplantc.de.collaborators.client.views.dialogs.GroupDetailsDialog;
+import org.iplantc.de.collaborators.client.views.dialogs.RetainPermissionsDialog;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
@@ -93,6 +94,8 @@ public class ManageCollaboratorsPresenterTest {
     @Mock List<Throwable> throwablesMock;
     @Mock List<String> stringListMock;
     @Mock CollaboratorDNDHandler dndHandlerMock;
+    @Mock AsyncProviderWrapper<RetainPermissionsDialog> retainPermsDialogProvider;
+    @Mock RetainPermissionsDialog retainPermissionsDialogMock;
 
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> collabListCallbackCaptor;
@@ -103,7 +106,7 @@ public class ManageCollaboratorsPresenterTest {
     @Captor ArgumentCaptor<Consumer<Group>> groupConsumerCaptor;
     @Captor ArgumentCaptor<Consumer<Subject>> subjectConsumerCaptor;
     @Captor ArgumentCaptor<ManageCollaboratorsPresenter.ParentDeleteSubjectsCallback> parentCallbackCaptor;
-
+    @Captor ArgumentCaptor<AsyncCallback<RetainPermissionsDialog>> retainPermsDlgCaptor;
 
     private ManageCollaboratorsPresenter uut;
     private ManageCollaboratorsPresenter.ParentDeleteSubjectsCallback parentCallback;
@@ -188,6 +191,7 @@ public class ManageCollaboratorsPresenterTest {
         uut.announcer = announcerMock;
         uut.groupDetailsDialog = groupDetailsDialogProvider;
         uut.userInfo = userInfoMock;
+        uut.permissionsDlgProvider = retainPermsDialogProvider;
 
         parentCallback = uut.new ParentDeleteSubjectsCallback();
     }
@@ -260,7 +264,7 @@ public class ManageCollaboratorsPresenterTest {
         ManageCollaboratorsPresenter spy = spy(uut);
         when(eventMock.getSubjects()).thenReturn(subjectListMock);
         when(mapIsGroupMock.get(anyBoolean())).thenReturn(subjectListMock);
-        when(subjectListMock.isEmpty()).thenReturn(true);
+        when(subjectListMock.isEmpty()).thenReturn(false);
         when(groupAppearanceMock.deleteGroupConfirm(any())).thenReturn("delete");
         when(groupAppearanceMock.deleteGroupConfirmHeading(any())).thenReturn("deleteHeader");
 
@@ -268,7 +272,11 @@ public class ManageCollaboratorsPresenterTest {
         spy.onRemoveCollaboratorSelected(eventMock);
         verify(eventMock).getSubjects();
 
-        verify(spy).removeCollaborators(any(), eq(subjectListMock));
+        verify(retainPermsDialogProvider).get(retainPermsDlgCaptor.capture());
+
+        retainPermsDlgCaptor.getValue().onSuccess(retainPermissionsDialogMock);
+        verify(retainPermissionsDialogMock).show();
+        verify(retainPermissionsDialogMock).addDialogHideHandler(any());
     }
 
     @Test
@@ -280,11 +288,11 @@ public class ManageCollaboratorsPresenterTest {
         when(updateMemberResultMock.getSubjectName()).thenReturn("name");
 
         /** CALL METHOD UNDER TEST **/
-        spy.removeCollaborators(subjectListMock, subjectListMock);
+        spy.removeCollaborators(subjectListMock, subjectListMock, true);
         verify(viewMock).maskCollaborators(eq("loading"));
         verify(parentCallbackMock).setCallbackCounter(eq(2));
         verify(spy).removeCollaboratorsFromDefault(eq(subjectListMock), eq(parentCallbackMock));
-        verify(spy).deleteGroups(eq(subjectListMock), eq(parentCallbackMock));
+        verify(spy).deleteGroups(eq(subjectListMock), eq(true), eq(parentCallbackMock));
     }
 
     @Test
@@ -324,11 +332,11 @@ public class ManageCollaboratorsPresenterTest {
         when(subjectListMock.isEmpty()).thenReturn(false);
 
         /**CALL METHOD UNDER TEST **/
-        uut.deleteGroups(subjectListMock, parentCallbackMock);
+        uut.deleteGroups(subjectListMock, true, parentCallbackMock);
 
         verify(subjectListMock).forEach(subjectConsumerCaptor.capture());
         subjectConsumerCaptor.getValue().accept(subjectMock);
-        verify(groupServiceFacadeMock).deleteGroup(eq(groupMock), isA(ManageCollaboratorsPresenter.DeleteGroupChildCallback.class));
+        verify(groupServiceFacadeMock).deleteGroup(eq(groupMock), eq(true), isA(ManageCollaboratorsPresenter.DeleteGroupChildCallback.class));
     }
 
     @Test
@@ -340,6 +348,7 @@ public class ManageCollaboratorsPresenterTest {
         uut.removeCollaboratorsFromDefault(subjectListMock, parentCallbackMock);
         verify(groupServiceFacadeMock).deleteMembers(eq(defaultGroup),
                                                      eq(subjectListMock),
+                                                     anyBoolean(),
                                                      isA(ManageCollaboratorsPresenter.DeleteUsersChildCallback.class));
     }
 
