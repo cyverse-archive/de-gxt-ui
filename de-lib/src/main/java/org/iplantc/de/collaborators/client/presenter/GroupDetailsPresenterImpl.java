@@ -269,7 +269,7 @@ public class GroupDetailsPresenterImpl implements GroupDetailsView.Presenter {
     }
 
     void deleteMembers(List<Subject> subjects, Group group, boolean retainPermissions) {
-        serviceFacade.deleteMembers(group, subjects, retainPermissions, new AsyncCallback<List<UpdateMemberResult>>() {
+        serviceFacade.deleteListMembers(group, subjects, retainPermissions, new AsyncCallback<List<UpdateMemberResult>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);

@@ -250,7 +250,7 @@ public class GroupDetailsPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         uut.deleteMembers(subjectListMock, groupMock, true);
 
-        verify(serviceFacadeMock).deleteMembers(eq(groupMock), eq(subjectListMock), eq(true), updateMembersCallbackCaptor.capture());
+        verify(serviceFacadeMock).deleteListMembers(eq(groupMock), eq(subjectListMock), eq(true), updateMembersCallbackCaptor.capture());
 
         updateMembersCallbackCaptor.getValue().onSuccess(updateMemberResultsMock);
         verify(viewMock).deleteMembers(subjectListMock);

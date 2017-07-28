@@ -81,7 +81,16 @@ public interface GroupServiceFacade {
      * @param retainPermissions
      * @param callback
      */
-    void deleteMembers(Group group, List<Subject> member, boolean retainPermissions, AsyncCallback<List<UpdateMemberResult>> callback);
+    void deleteListMembers(Group group, List<Subject> member, boolean retainPermissions, AsyncCallback<List<UpdateMemberResult>> callback);
+
+    /**
+     * Delete members from a Team
+     * @param group
+     * @param member
+     * @param retainPermissions
+     * @param callback
+     */
+    void deleteTeamMembers(Group group, List<Subject> member, boolean retainPermissions, AsyncCallback<List<UpdateMemberResult>> callback);
 
     /**
      * Adds  members to the Collaborator List

@@ -150,7 +150,19 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void deleteMembers(Group group, List<Subject> subjects, boolean retainPermissions, AsyncCallback<List<UpdateMemberResult>> callback) {
+    public void deleteListMembers(Group group, List<Subject> subjects, boolean retainPermissions, AsyncCallback<List<UpdateMemberResult>> callback) {
+        deleteMembers(LISTS, group, subjects, retainPermissions, callback);
+    }
+
+    @Override
+    public void deleteTeamMembers(Group group,
+                                  List<Subject> member,
+                                  boolean retainPermissions,
+                                  AsyncCallback<List<UpdateMemberResult>> callback) {
+        deleteMembers(TEAMS, group, member, retainPermissions, callback);
+    }
+
+    void deleteMembers(String address, Group group, List<Subject> subjects, boolean retainPermissions, AsyncCallback<List<UpdateMemberResult>> callback) {
         String groupName = group.getName();
         UpdateMemberRequest request = factory.getUpdateMemberRequest().as();
         List<String> ids = subjects.stream()
@@ -158,7 +170,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
                                    .collect(Collectors.toList());
         request.setMembers(ids);
 
-        String address = LISTS + "/" + URL.encodePathSegment(groupName) + "/members/deleter?retain-permissions=" + retainPermissions;
+        address += "/" + URL.encodePathSegment(groupName) + "/members/deleter?retain-permissions=" + retainPermissions;
 
         Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
 
@@ -169,7 +181,8 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
                 AutoBean<UpdateMemberResultList> listAutoBean = AutoBeanCodex.decode(factory, UpdateMemberResultList.class, object);
                 return listAutoBean.as().getResults();
             }
-        });    }
+        });
+    }
 
     @Override
     public void addMembersToList(Group group,

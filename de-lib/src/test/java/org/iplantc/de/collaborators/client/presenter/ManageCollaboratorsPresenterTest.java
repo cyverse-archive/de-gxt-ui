@@ -346,10 +346,10 @@ public class ManageCollaboratorsPresenterTest {
 
         /** CALL METHOD UNDER TEST **/
         uut.removeCollaboratorsFromDefault(subjectListMock, parentCallbackMock);
-        verify(groupServiceFacadeMock).deleteMembers(eq(defaultGroup),
-                                                     eq(subjectListMock),
-                                                     anyBoolean(),
-                                                     isA(ManageCollaboratorsPresenter.DeleteUsersChildCallback.class));
+        verify(groupServiceFacadeMock).deleteListMembers(eq(defaultGroup),
+                                                         eq(subjectListMock),
+                                                         anyBoolean(),
+                                                         isA(ManageCollaboratorsPresenter.DeleteUsersChildCallback.class));
     }
 
     @Test
