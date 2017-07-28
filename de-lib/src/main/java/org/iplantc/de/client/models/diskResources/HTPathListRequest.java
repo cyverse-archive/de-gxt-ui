@@ -1,11 +1,13 @@
 package org.iplantc.de.client.models.diskResources;
 
+import org.iplantc.de.client.models.HasPaths;
+
 import java.util.List;
 
 /**
  * Created by sriram on 7/27/17.
  */
-public interface HTPathListRequest {
+public interface HTPathListRequest extends HasPaths {
 
     String getDest();
 
@@ -22,9 +24,4 @@ public interface HTPathListRequest {
     List<String> getInfoTypes();
 
     void setInfoTypes(List<String> infoTypes);
-
-    void setPaths(List<String> paths);
-
-    List<String> getPaths();
-
 }
