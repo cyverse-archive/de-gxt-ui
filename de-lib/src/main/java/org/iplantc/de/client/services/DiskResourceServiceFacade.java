@@ -352,5 +352,5 @@ public interface DiskResourceServiceFacade {
      * @param request
      * @param callback
      */
-    void requestHTPathlistFile(HTPathListRequest request, DECallback<String> callback);
+    void requestHTPathlistFile(HTPathListRequest request, DECallback<File> callback);
 }

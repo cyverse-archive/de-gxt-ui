@@ -24,7 +24,6 @@ import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.services.PermIdRequestUserServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
-import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -56,7 +55,6 @@ import org.iplantc.de.diskResource.client.views.toolbar.dialogs.TabFileConfigDia
 import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.base.Preconditions;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
@@ -130,6 +128,9 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     @Inject
     DiskResourceErrorAutoBeanFactory drFactory;
     FileEditorServiceFacade feFacade;
+
+    @Inject
+    IplantAnnouncer announcer;
 
     private final GenomeSearchDialog genomeSearchView;
     private final BulkMetadataDialogFactory bulkMetadataViewFactory;
@@ -446,25 +447,17 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     private void requestHTPathListCreation(HTPathListAutomationDialog dialog,
                                            HTPathListRequest request) {
         dialog.mask(htAppearance.processing());
-        drFacade.requestHTPathlistFile(request, new DataCallback<String>() {
+        drFacade.requestHTPathlistFile(request, new DataCallback<File>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 ErrorHandler.post(htAppearance.requestFailed(), exception);
             }
 
             @Override
-            public void onSuccess(String result) {
+            public void onSuccess(File result) {
                 dialog.hide();
-                IplantAnnouncer.getInstance()
-                               .schedule(new SuccessAnnouncementConfig(htAppearance.requestSuccess()));
-                JSONObject jsonObject = JsonUtil.getInstance()
-                                                .getObject(JsonUtil.getInstance().getObject(result),
-                                                           "file");
-                File f = AutoBeanCodex.decode(drAbFactory,
-                                              File.class,
-                                              JsonUtil.getInstance().getRawValueAsString(jsonObject))
-                                      .as();
-                eventBus.fireEvent(new ShowFilePreviewEvent(f, null));
+                announcer.schedule(new SuccessAnnouncementConfig(htAppearance.requestSuccess()));
+                eventBus.fireEvent(new ShowFilePreviewEvent(result, null));
             }
         });
     }
