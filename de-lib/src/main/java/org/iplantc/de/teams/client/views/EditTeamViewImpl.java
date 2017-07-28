@@ -153,6 +153,7 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
 
     public void edit(Group group) {
         editorDriver.edit(group);
+        nameEditor.setValue(group.getSubjectDisplayName());
     }
 
     @Override
