@@ -15,6 +15,7 @@ import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.apps.AppFeedback;
 import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.apps.PublishAppRequest;
+import org.iplantc.de.client.models.apps.Publishable;
 import org.iplantc.de.client.models.apps.QualifiedAppId;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
@@ -29,7 +30,6 @@ import org.iplantc.de.client.services.converters.AppCategoryListCallbackConverte
 import org.iplantc.de.client.services.converters.AppTemplateCallbackConverter;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.util.DiskResourceUtil;
-import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.BaseServiceCallWrapper.Type;
@@ -442,15 +442,15 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
    }
 
     @Override
-    public void isPublishable(String system_id, String id, DECallback<Boolean> callback) {
+    public void isPublishable(String system_id, String id, DECallback<Publishable> callback) {
         String address = APPS + "/" + system_id + "/" + id + "/is-publishable";
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
-        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, Boolean>(callback) {
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, Publishable>(callback) {
             @Override
-            public Boolean convertFrom(String result) {
-                JSONObject obj = JsonUtil.getInstance().getObject(result);
-                Boolean isPub = JsonUtil.getInstance().getBoolean(obj, "publishable", false);
-                return isPub;
+            public Publishable convertFrom(String result) {
+                Publishable pub =
+                        AutoBeanCodex.decode(appAutoBeanFactory, Publishable.class, result).as();
+                return pub;
             }
         });
     }

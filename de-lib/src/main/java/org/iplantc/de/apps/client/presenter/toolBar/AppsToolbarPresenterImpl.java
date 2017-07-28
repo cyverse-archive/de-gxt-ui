@@ -21,6 +21,7 @@ import org.iplantc.de.apps.client.views.submit.dialog.SubmitAppForPublicDialog;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
+import org.iplantc.de.client.models.apps.Publishable;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -194,15 +195,15 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
     @Override
     public void onPublishAppSelected(PublishAppSelected event) {
         final App app = event.getApp();
-        appService.isPublishable(app.getSystemId(), app.getId(), new AppsCallback<Boolean>() {
+        appService.isPublishable(app.getSystemId(), app.getId(), new AppsCallback<Publishable>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 ErrorHandler.post(exception);
             }
 
             @Override
-            public void onSuccess(Boolean result) {
-                if (result) {
+            public void onSuccess(Publishable result) {
+                if (result.isPublishable()) {
                     submitAppDialogAsyncProvider.get(new AsyncCallback<SubmitAppForPublicDialog>() {
                         @Override
                         public void onFailure(Throwable caught) {
@@ -215,11 +216,16 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
                         }
                     });
                 } else {
-                    AlertMessageBox amb =
-                            new AlertMessageBox(appearance.sharePublic(), appearance.cannotPublish());
-                    amb.show();
+                    displayPublishError(result);
                 }
             }
         });
+    }
+
+    protected void displayPublishError(Publishable result) {
+        AlertMessageBox amb = new AlertMessageBox(appearance.sharePublic(),
+                                                  appearance.cannotPublish()
+                                                  + result.getReason());
+        amb.show();
     }
 }
