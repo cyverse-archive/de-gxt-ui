@@ -73,7 +73,7 @@ public interface Subject extends HasSettableId, HasName {
         if (Strings.isNullOrEmpty(subjectName)) {
             subjectName = getFirstName() + " " + getLastName();
         }
-        if (!isGroup() || !hasGroupLongName(subjectName)) {
+        if (!isGroup() && !hasGroupLongName(subjectName)) {
             return subjectName;
         } else {
            return getGroupShortName();
@@ -109,7 +109,7 @@ public interface Subject extends HasSettableId, HasName {
      * @return
      */
     default boolean hasGroupLongName(String name) {
-        return isGroup() && getName() != null && getName().contains(GROUP_NAME_DELIMITER);
+        return getName() != null && getName().contains(GROUP_NAME_DELIMITER);
     }
 
     /**
