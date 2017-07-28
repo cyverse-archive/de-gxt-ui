@@ -11,16 +11,17 @@ import org.iplantc.de.apps.client.events.selection.CreateNewAppSelected;
 import org.iplantc.de.apps.client.events.selection.CreateNewWorkflowSelected;
 import org.iplantc.de.apps.client.events.selection.EditAppSelected;
 import org.iplantc.de.apps.client.events.selection.EditWorkflowSelected;
+import org.iplantc.de.apps.client.events.selection.PublishAppSelected;
 import org.iplantc.de.apps.client.events.selection.RequestToolSelected;
 import org.iplantc.de.apps.client.events.selection.ShareAppsSelected;
 import org.iplantc.de.apps.client.gin.factory.AppsToolbarViewFactory;
 import org.iplantc.de.apps.client.presenter.toolBar.proxy.AppSearchRpcProxy;
-
-import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 import org.iplantc.de.apps.client.views.sharing.dialog.AppSharingDialog;
+import org.iplantc.de.apps.client.views.submit.dialog.SubmitAppForPublicDialog;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
+import org.iplantc.de.client.models.apps.Publishable;
 import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -46,6 +47,7 @@ import com.sencha.gxt.data.shared.loader.BeforeLoadEvent;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
+import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 
 /**
  * TODO Search will stay here until it is necessary to fold it out
@@ -58,7 +60,8 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
                                                  EditAppSelected.EditAppSelectedHandler,
                                                  RequestToolSelected.RequestToolSelectedHandler,
                                                  EditWorkflowSelected.EditWorkflowSelectedHandler,
-                                                 ShareAppsSelected.ShareAppsSelectedHandler {
+                                                 ShareAppsSelected.ShareAppsSelectedHandler,
+                                                 PublishAppSelected.PublishAppSelectedHandler {
 
     protected PagingLoader<FilterPagingLoadConfig, PagingLoadResult<App>> loader;
     @Inject
@@ -77,6 +80,8 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
     ManageToolsView toolsView;
     @Inject
     ManageToolsView.Presenter toolsPresenter;
+    @Inject
+    AsyncProviderWrapper<SubmitAppForPublicDialog> submitAppDialogAsyncProvider;
 
     private static ConfigAutoBeanFactory factory = GWT.create(ConfigAutoBeanFactory.class);
 
@@ -100,6 +105,7 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
         view.addEditAppSelectedHandler(this);
         view.addRequestToolSelectedHandler(this);
         view.addEditWorkflowSelectedHandler(this);
+        view.addPublishAppSelectedHandler(this);
     }
 
     @Override
@@ -184,5 +190,42 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
     @Override
     public void onManageToolsClicked(ManageToolsClickedEvent event) {
         eventBus.fireEvent(new WindowShowRequestEvent(ConfigFactory.manageToolsWindowConfig(), true));
+    }
+
+    @Override
+    public void onPublishAppSelected(PublishAppSelected event) {
+        final App app = event.getApp();
+        appService.isPublishable(app.getSystemId(), app.getId(), new AppsCallback<Publishable>() {
+            @Override
+            public void onFailure(Integer statusCode, Throwable exception) {
+                ErrorHandler.post(exception);
+            }
+
+            @Override
+            public void onSuccess(Publishable result) {
+                if (result.isPublishable()) {
+                    submitAppDialogAsyncProvider.get(new AsyncCallback<SubmitAppForPublicDialog>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            ErrorHandler.post(caught);
+                        }
+
+                        @Override
+                        public void onSuccess(SubmitAppForPublicDialog result) {
+                            result.show(app);
+                        }
+                    });
+                } else {
+                    displayPublishError(result);
+                }
+            }
+        });
+    }
+
+    protected void displayPublishError(Publishable result) {
+        AlertMessageBox amb = new AlertMessageBox(appearance.sharePublic(),
+                                                  appearance.cannotPublish()
+                                                  + result.getReason());
+        amb.show();
     }
 }

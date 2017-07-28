@@ -141,6 +141,11 @@ public class AppsToolbarViewDefaultAppearance implements AppsToolbarView.AppsToo
     }
 
     @Override
+    public String cannotPublish() {
+        return appsMessages.cannotPublish();
+    }
+
+    @Override
     public String warning() {
         return iplantDisplayStrings.warning();
     }

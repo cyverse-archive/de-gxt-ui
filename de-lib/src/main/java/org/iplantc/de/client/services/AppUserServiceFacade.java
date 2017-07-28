@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.apps.AppFeedback;
 import org.iplantc.de.client.models.apps.PublishAppRequest;
+import org.iplantc.de.client.models.apps.Publishable;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.sharing.AppSharingRequestList;
 import org.iplantc.de.client.models.apps.sharing.AppUnSharingRequestList;
@@ -91,5 +92,5 @@ public interface AppUserServiceFacade extends AppServiceFacade, AppSearchFacade 
     
     void unshareApp(AppUnSharingRequestList request, DECallback<String> callback);
 
-
+    void isPublishable(String system_id, String id, DECallback<Publishable> callback);
 }

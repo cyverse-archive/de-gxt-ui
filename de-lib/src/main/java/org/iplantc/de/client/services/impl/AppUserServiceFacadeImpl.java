@@ -15,6 +15,7 @@ import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.apps.AppFeedback;
 import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.apps.PublishAppRequest;
+import org.iplantc.de.client.models.apps.Publishable;
 import org.iplantc.de.client.models.apps.QualifiedAppId;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
@@ -439,4 +440,18 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, payload);
         deServiceFacade.getServiceData(wrapper, callback);
    }
+
+    @Override
+    public void isPublishable(String system_id, String id, DECallback<Publishable> callback) {
+        String address = APPS + "/" + system_id + "/" + id + "/is-publishable";
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, Publishable>(callback) {
+            @Override
+            public Publishable convertFrom(String result) {
+                Publishable pub =
+                        AutoBeanCodex.decode(appAutoBeanFactory, Publishable.class, result).as();
+                return pub;
+            }
+        });
+    }
 }

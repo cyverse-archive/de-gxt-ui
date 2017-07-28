@@ -153,4 +153,6 @@ public interface AppsMessages extends Messages {
     String manageTools();
 
     String noApps();
+
+    String cannotPublish();
 }
