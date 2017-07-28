@@ -19,6 +19,7 @@ import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.RequestSimpleDownloadEvent;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
 import org.iplantc.de.diskResource.client.gin.factory.BulkMetadataDialogFactory;
+import org.iplantc.de.diskResource.client.gin.factory.HTPathListAutomationDialogFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewFactory;
 import org.iplantc.de.diskResource.client.views.dialogs.CreateFolderDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
@@ -61,6 +62,9 @@ public class ToolbarViewPresenterImplTest {
     @Mock
     AutoBean<Folder> folderAb;
 
+    @Mock
+    HTPathListAutomationDialogFactory htPathListAutomationViewFactory;
+
 
 
     private ToolbarViewPresenterImpl uut;
@@ -71,6 +75,7 @@ public class ToolbarViewPresenterImplTest {
         uut = new ToolbarViewPresenterImpl(viewFactoryMock,
                                            genomeSearchView,
                                            bulkMetadataViewFactor,
+                                           htPathListAutomationViewFactory,
                                            gFactory,
                                            parentPresenterMock){
             @Override
