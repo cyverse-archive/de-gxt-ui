@@ -11,16 +11,19 @@ import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
+import org.iplantc.de.client.models.diskResources.HTPathListRequest;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
-import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
 import org.iplantc.de.client.models.genomes.GenomeAutoBeanFactory;
 import org.iplantc.de.client.models.genomes.GenomeList;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestType;
+import org.iplantc.de.client.models.sharing.PermissionValue;
+import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.models.viewer.MimeType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.services.PermIdRequestUserServiceFacade;
+import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -41,11 +44,13 @@ import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelecte
 import org.iplantc.de.diskResource.client.gin.factory.BulkMetadataDialogFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DataLinkPresenterFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
+import org.iplantc.de.diskResource.client.gin.factory.HTPathListAutomationDialogFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewFactory;
 import org.iplantc.de.diskResource.client.views.dialogs.BulkMetadataDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.CreateFolderDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.CreateNcbiSraFolderStructureDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
+import org.iplantc.de.diskResource.client.views.dialogs.HTPathListAutomationDialog;
 import org.iplantc.de.diskResource.client.views.toolbar.dialogs.TabFileConfigDialog;
 import org.iplantc.de.shared.DataCallback;
 
@@ -58,6 +63,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
+import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 import com.sencha.gxt.widget.core.client.box.MessageBox;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
@@ -111,6 +117,11 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     @Inject
     DiskResourceAutoBeanFactory drAbFactory;
 
+    @Inject
+    HTPathListAutomationDialog.HTPathListAutomationAppearance htAppearance;
+    @Inject
+    DiskResourceUtil diskResourceUtil;
+
     PermIdRequestUserServiceFacade prFacade =
             ServicesInjector.INSTANCE.getPermIdRequestUserServiceFacade();
 
@@ -118,11 +129,15 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     DiskResourceErrorAutoBeanFactory drFactory;
     FileEditorServiceFacade feFacade;
 
+    @Inject
+    IplantAnnouncer announcer;
+
     private final GenomeSearchDialog genomeSearchView;
     private final BulkMetadataDialogFactory bulkMetadataViewFactory;
     final private GenomeAutoBeanFactory gFactory;
     private final DiskResourceView.Presenter parentPresenter;
     private final ToolbarView view;
+    private final HTPathListAutomationDialogFactory htPathListAutomationViewFactory;
 
     Logger LOG = Logger.getLogger(ToolbarViewPresenterImpl.class.getSimpleName());
 
@@ -130,11 +145,13 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     ToolbarViewPresenterImpl(final ToolbarViewFactory viewFactory,
                              GenomeSearchDialog genomeSearchView,
                              BulkMetadataDialogFactory bulkMetadataViewFactory,
+                             HTPathListAutomationDialogFactory htPathListAutomationViewFactory,
                              GenomeAutoBeanFactory gFactory,
                              @Assisted DiskResourceView.Presenter parentPresenter) {
         this.parentPresenter = parentPresenter;
         this.view = viewFactory.create(this);
         this.bulkMetadataViewFactory = bulkMetadataViewFactory;
+        this.htPathListAutomationViewFactory = htPathListAutomationViewFactory;
         this.feFacade = ServicesInjector.INSTANCE.getFileEditorServiceFacade();
         view.addSimpleDownloadSelectedHandler(this);
         this.genomeSearchView = genomeSearchView;
@@ -390,6 +407,57 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
                 IplantAnnouncer.getInstance()
                                .schedule(new SuccessAnnouncementConfig(appearance.doiRequestSuccess()));
 
+            }
+        });
+    }
+
+    @Override
+    public void onAutomateHTPathlist() {
+        drFacade.getInfoTypes(new DataCallback<List<InfoType>>() {
+
+            @Override
+            public void onFailure(Integer statusCode, Throwable arg0) {
+                ErrorHandler.post(arg0);
+            }
+
+            @Override
+            public void onSuccess(List<InfoType> infoTypes) {
+                HTPathListAutomationDialog dialog =
+                        htPathListAutomationViewFactory.create(drSelectorFactory, infoTypes);
+                dialog.setSize(htAppearance.dialogWidth(), htAppearance.dialogHeight());
+                dialog.addOkButtonSelectHandler(event -> {
+                    if (dialog.isValid()) {
+                        HTPathListRequest request = dialog.getRequest();
+                        requestHTPathListCreation(dialog, request);
+                    } else {
+                        AlertMessageBox amb = new AlertMessageBox(htAppearance.heading(),
+                                                                  htAppearance.validationMessage());
+                        amb.show();
+                    }
+                });
+                dialog.addCancelButtonSelectHandler(event -> {
+                    dialog.hide();
+                });
+                dialog.show();
+            }
+        });
+
+    }
+
+    private void requestHTPathListCreation(HTPathListAutomationDialog dialog,
+                                           HTPathListRequest request) {
+        dialog.mask(htAppearance.processing());
+        drFacade.requestHTPathlistFile(request, new DataCallback<File>() {
+            @Override
+            public void onFailure(Integer statusCode, Throwable exception) {
+                ErrorHandler.post(htAppearance.requestFailed(), exception);
+            }
+
+            @Override
+            public void onSuccess(File result) {
+                dialog.hide();
+                announcer.schedule(new SuccessAnnouncementConfig(htAppearance.requestSuccess()));
+                eventBus.fireEvent(new ShowFilePreviewEvent(result, null));
             }
         });
     }

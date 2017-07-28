@@ -21,6 +21,7 @@ import org.iplantc.de.client.models.diskResources.DiskResourceExistMap;
 import org.iplantc.de.client.models.diskResources.DiskResourceMetadataList;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
+import org.iplantc.de.client.models.diskResources.HTPathListRequest;
 import org.iplantc.de.client.models.diskResources.MetadataTemplate;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfoList;
@@ -1041,6 +1042,48 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
         return address;
     }
 
+    @Override
+    public void requestHTPathlistFile(HTPathListRequest request, DECallback<File> callback) {
+        StringBuilder address =
+                new StringBuilder(deProperties.getDataMgmtBaseUrl() + "path-list-creator?");
+        address.append("dest=" + URL.encodeQueryString(request.getDest()));
+        if(!Strings.isNullOrEmpty(request.getPattern())) {
+            address.append("&name-pattern=" + URL.encodeQueryString(request.getPattern()));
+        }
+        address.append("&folders-only=" + request.isFoldersOnly());
+        address.append("&recursive=" + true);
+        if (request.getInfoTypes() != null && request.getInfoTypes().size() > 0) {
+            for (String infotype : request.getInfoTypes()) {
+                address.append("&info-type=" + infotype);
+            }
+        }
+        Splittable s = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
+        Splittable spath = StringQuoter.createSplittable();
+        s.get("paths").assign(spath,"paths");
+        ServiceCallWrapper wrapper =
+                new ServiceCallWrapper(POST, address.toString(), spath.getPayload());
+        callService(wrapper, new StringToFileCallbackConverter(callback));
+    }
+
+    private class StringToFileCallbackConverter extends DECallbackConverter<String, File> {
+
+        public StringToFileCallbackConverter(DECallback<File> callback) {
+            super(callback);
+        }
+
+        @Override
+        protected File convertFrom(String result) {
+            JSONObject jsonObject =
+                    JsonUtil.getInstance().getObject(JsonUtil.getInstance().getObject(result), "file");
+            File f = AutoBeanCodex.decode(factory,
+                                          File.class,
+                                          JsonUtil.getInstance().getRawValueAsString(jsonObject)).as();
+
+            return f;
+        }
+
+    }
+
     private class StringToListCallbackConverter extends DECallbackConverter<String, List<DataLink>> {
         public StringToListCallbackConverter(DECallback<List<DataLink>> callback) {
             super(callback);
@@ -1079,4 +1122,6 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
             return linksMap;
         }
     }
+
+
 }

@@ -109,9 +109,6 @@ public interface DiskResourceMessages extends Messages {
     @Key("folderSelectDialogHeaderText")
     String folderSelectDialogHeaderText();
 
-    @Key("newPathListMenuText")
-    String newPathListMenuText();
-
     @Key("selectedItem")
     String selectedItem();
 
@@ -204,4 +201,32 @@ public interface DiskResourceMessages extends Messages {
     String doiRequestSuccess();
 
     String fileUploadsSuccess(@PluralCount List<String> files);
+
+    String inputLbl();
+
+    String folderPathOnlyLbl();
+
+    String selectorEmptyText();
+
+    String patternMatchLbl();
+
+    String infoTypeLbl();
+
+    String destLbl();
+
+    String patternMatchEmptyText();
+
+    String Htheading();
+
+    String processing();
+
+    String requestSuccess();
+
+    String requestFailed();
+
+    String folderPathOnlyPrompt();
+
+    String validationMessage();
+
+    String select();
 }
