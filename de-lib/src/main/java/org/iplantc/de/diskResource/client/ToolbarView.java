@@ -235,6 +235,8 @@ public interface ToolbarView extends IsWidget,
         String downloadTemplateMenuItem();
 
         String doiUserAgreement();
+
+        String automateHTPathListMenuItem();
     }
 
     interface Presenter {
@@ -316,6 +318,8 @@ public interface ToolbarView extends IsWidget,
                                                 String destFolder);
 
         void onDoiRequest(String uuid);
+
+        void onAutomateHTPathlist();
 
     }
 

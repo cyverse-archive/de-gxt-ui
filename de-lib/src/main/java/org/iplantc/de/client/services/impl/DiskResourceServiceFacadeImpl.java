@@ -21,6 +21,7 @@ import org.iplantc.de.client.models.diskResources.DiskResourceExistMap;
 import org.iplantc.de.client.models.diskResources.DiskResourceMetadataList;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
+import org.iplantc.de.client.models.diskResources.HTPathListRequest;
 import org.iplantc.de.client.models.diskResources.MetadataTemplate;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfoList;
@@ -1039,6 +1040,26 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
                                            constants.mdTemplateDownloadServlet(),
                                            URL.encodeQueryString(templateid));
         return address;
+    }
+
+    @Override
+    public void requestHTPathlistFile(HTPathListRequest request, DECallback<String> callback) {
+        StringBuilder address =
+                new StringBuilder(deProperties.getDataMgmtBaseUrl() + "path-list-creator?");
+        address.append("dest=" + URL.encodeQueryString(request.getDest()));
+        address.append("&name-pattern=" + URL.encodeQueryString(request.getPattern()));
+        address.append("&folders-only=" + request.isFoldersOnly());
+        address.append("&recursive=" + true);
+        if (request.getInfoTypes() != null && request.getInfoTypes().size() > 0) {
+            for (String infotype : request.getInfoTypes()) {
+                address.append("&info-type=" + infotype);
+            }
+        }
+        Splittable s = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
+        Splittable spath = StringQuoter.createSplittable();
+        ServiceCallWrapper wrapper =
+                new ServiceCallWrapper(POST, address.toString(), spath.getPayload());
+        callService(wrapper, callback);
     }
 
     private class StringToListCallbackConverter extends DECallbackConverter<String, List<DataLink>> {

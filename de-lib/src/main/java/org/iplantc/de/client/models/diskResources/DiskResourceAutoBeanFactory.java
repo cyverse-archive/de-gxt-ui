@@ -58,4 +58,6 @@ public interface DiskResourceAutoBeanFactory extends AutoBeanFactory {
     AutoBean<MetadataTemplate> metadataTemplate();
 
     AutoBean<Avu> avu();
+
+    AutoBean<HTPathListRequest> htPathListRequest();
 }

@@ -101,7 +101,7 @@ public class ToolbarViewDefaultAppearance implements ToolbarView.Appearance {
 
     @Override
     public String newPathListMenuText() {
-        return diskResourceMessages.newPathListMenuText();
+        return displayMessages.newPathListMenuText();
     }
 
     @Override
@@ -512,5 +512,10 @@ public class ToolbarViewDefaultAppearance implements ToolbarView.Appearance {
     @Override
     public String doiUserAgreement() {
         return displayMessages.doiUserAgreement();
+    }
+
+    @Override
+    public String automateHTPathListMenuItem() {
+        return displayMessages.automateHTPathListMenuItem();
     }
 }

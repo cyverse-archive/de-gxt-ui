@@ -139,4 +139,8 @@ public interface ToolbarDisplayMessages extends Messages {
     String downloadTemplateMenuItem();
 
     String doiUserAgreement();
+
+    String automateHTPathListMenuItem();
+
+    String newPathListMenuText();
 }

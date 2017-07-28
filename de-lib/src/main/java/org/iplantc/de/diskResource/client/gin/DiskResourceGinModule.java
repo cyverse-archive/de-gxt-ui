@@ -22,6 +22,7 @@ import org.iplantc.de.diskResource.client.gin.factory.DiskResourceViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.FolderContentsRpcProxyFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewPresenterFactory;
+import org.iplantc.de.diskResource.client.gin.factory.HTPathListAutomationDialogFactory;
 import org.iplantc.de.diskResource.client.gin.factory.NavigationViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewPresenterFactory;
@@ -134,6 +135,7 @@ public class DiskResourceGinModule extends AbstractGinModule {
                     .build(DetailsViewFactory.class));
 
         install(new GinFactoryModuleBuilder().build(BulkMetadataDialogFactory.class));
+        install(new GinFactoryModuleBuilder().build(HTPathListAutomationDialogFactory.class));
 
         bind(MetadataView.class).to(DiskResourceMetadataViewImpl.class);
         bind(MetadataView.Presenter.class).to(MetadataPresenterImpl.class);

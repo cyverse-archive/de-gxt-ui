@@ -88,7 +88,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     @UiField
     MenuItem newWindowMi, newWindowAtLocMi, newFolderMi, newPlainTextFileMi,
             newTabularDataFileMi, moveToTrashMi, newRFileMi, newPerlFileMi, newPythonFileMi,
-            newShellScriptFileMi, newMdFileMi;
+            newShellScriptFileMi, newMdFileMi, automateHTFileMi;
     @UiField
     MenuItem openTrashMi, restoreMi, emptyTrashMi;
     @UiField
@@ -650,6 +650,11 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
             }
         });
 
+    }
+
+    @UiHandler("automateHTFileMi")
+    void onAutomateHTPathList(SelectionEvent<Item> event) {
+        presenter.onAutomateHTPathlist();
     }
     // </editor-fold>
 
