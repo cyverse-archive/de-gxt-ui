@@ -38,7 +38,7 @@ project(':de-webapp') {
         compile("com.fasterxml.jackson.core:jackson-databind:2.4.5")
         compile("org.apache.velocity:velocity:1.6.2")
         compile("redis.clients:jedis:2.6.0")
-        compile('com.rabbitmq:amqp-client:3.6.0')
+        compile('com.rabbitmq:amqp-client:4.2.0')
 
 
         providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
