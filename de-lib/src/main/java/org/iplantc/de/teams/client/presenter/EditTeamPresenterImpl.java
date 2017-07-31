@@ -356,7 +356,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     }
 
     public Map<Boolean,List<Privilege>> getMapIsMemberPrivilege(List<Privilege> privileges, List<Subject> members) {
-        List<String> memberIds = Lists.newArrayList();
+        List<String> memberIds = createEmptyStringList();
         if (members != null && !members.isEmpty()) {
             memberIds = members.stream().map(Subject::getId).collect(Collectors.toList());
 
@@ -517,6 +517,10 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     }
 
     List<Privilege> createEmptyPrivilegeList() {
+        return Lists.newArrayList();
+    }
+
+    List<String> createEmptyStringList() {
         return Lists.newArrayList();
     }
 
