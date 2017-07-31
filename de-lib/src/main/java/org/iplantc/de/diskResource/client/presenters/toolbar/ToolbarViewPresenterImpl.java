@@ -76,7 +76,6 @@ import java.util.logging.Logger;
  */
 public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDownloadSelectedHandler {
 
-
     private final class BulkMetadataCallback extends DataCallback<String> {
 
 
@@ -138,6 +137,9 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     private final DiskResourceView.Presenter parentPresenter;
     private final ToolbarView view;
     private final HTPathListAutomationDialogFactory htPathListAutomationViewFactory;
+
+    HTPathListAutomationDialog dialog;
+
 
     Logger LOG = Logger.getLogger(ToolbarViewPresenterImpl.class.getSimpleName());
 
@@ -412,7 +414,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     }
 
     @Override
-    public void onAutomateHTPathlist() {
+    public void onAutomateHTPathList() {
         drFacade.getInfoTypes(new DataCallback<List<InfoType>>() {
 
             @Override
@@ -422,17 +424,14 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
             @Override
             public void onSuccess(List<InfoType> infoTypes) {
-                HTPathListAutomationDialog dialog =
-                        htPathListAutomationViewFactory.create(drSelectorFactory, infoTypes);
+                dialog = htPathListAutomationViewFactory.create(drSelectorFactory, infoTypes);
                 dialog.setSize(htAppearance.dialogWidth(), htAppearance.dialogHeight());
                 dialog.addOkButtonSelectHandler(event -> {
                     if (dialog.isValid()) {
                         HTPathListRequest request = dialog.getRequest();
                         requestHTPathListCreation(dialog, request);
                     } else {
-                        AlertMessageBox amb = new AlertMessageBox(htAppearance.heading(),
-                                                                  htAppearance.validationMessage());
-                        amb.show();
+                        showHTProcessingError();
                     }
                 });
                 dialog.addCancelButtonSelectHandler(event -> {
@@ -444,7 +443,14 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
     }
 
-    private void requestHTPathListCreation(HTPathListAutomationDialog dialog,
+    protected void showHTProcessingError() {
+        AlertMessageBox amb =
+                new AlertMessageBox(htAppearance.heading(), htAppearance.validationMessage());
+        amb.show();
+    }
+
+
+    protected void requestHTPathListCreation(HTPathListAutomationDialog dialog,
                                            HTPathListRequest request) {
         dialog.mask(htAppearance.processing());
         drFacade.requestHTPathlistFile(request, new DataCallback<File>() {

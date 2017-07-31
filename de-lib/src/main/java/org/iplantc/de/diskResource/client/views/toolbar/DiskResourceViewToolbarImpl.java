@@ -654,7 +654,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("automateHTFileMi")
     void onAutomateHTPathList(SelectionEvent<Item> event) {
-        presenter.onAutomateHTPathlist();
+        presenter.onAutomateHTPathList();
     }
     // </editor-fold>
 
