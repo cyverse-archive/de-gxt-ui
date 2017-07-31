@@ -76,12 +76,15 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         view.addRemoveNonMemberPrivilegeSelectedHandler(this);
         view.addAddPublicUserSelectedHandler(this);
     }
+
     @Override
     public void go(HasOneWidget widget, Group group) {
         widget.setWidget(view);
 
         if (group == null) {
             group = factory.getGroup().as();
+            group.setSourceId(Group.GROUP_IDENTIFIER);
+
             mode = EditTeamView.MODE.CREATE;
             addPublicUser();
         } else {
@@ -91,14 +94,6 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         }
 
         view.edit(group);
-    }
-
-    Group copy(Group group) {
-        Group copy = factory.getGroup().as();
-        copy.setName(group.getName());
-        copy.setDisplayName(group.getDisplayName());
-        copy.setDescription(group.getDescription());
-        return copy;
     }
 
     public void getTeamPrivileges(Group group) {
@@ -113,7 +108,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
             @Override
             public void onSuccess(List<Privilege> privileges) {
                 if (privileges != null && !privileges.isEmpty()) {
-                    List<Privilege> filteredPrivs = filterPrivs(privileges);
+                    List<Privilege> filteredPrivs = filterExtraPrivileges(privileges);
                     renamePublicUser(filteredPrivs);
                     getTeamMembers(group, filteredPrivs);
                 } else {
@@ -133,7 +128,8 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
             @Override
             public void onSuccess(List<Subject> subjects) {
-                Map<Boolean, List<Privilege>> mapIsMemberPriv = getMapIsMemberPrivilege(privileges, subjects);
+                List<Subject> filteredSubjects = filterOutCurrentUser(subjects);
+                Map<Boolean, List<Privilege>> mapIsMemberPriv = getMapIsMemberPrivilege(privileges, filteredSubjects);
                 view.addMembers(mapIsMemberPriv.get(true));
                 view.addNonMembers(mapIsMemberPriv.get(false));
                 view.unmask();
@@ -159,112 +155,6 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                 }
             }
         });
-    }
-
-    public Map<Boolean,List<Privilege>> getMapIsMemberPrivilege(List<Privilege> privileges, List<Subject> members) {
-        members = members.stream().filter(subject -> !userInfo.getUsername().equals(subject.getId())).collect(
-                Collectors.toList());
-        privileges = privileges.stream().filter(privilege -> !userInfo.getUsername().equals(privilege.getSubject().getId())).collect(
-                Collectors.toList());
-        List<String> memberIds = Lists.newArrayList();
-        if (members != null && !members.isEmpty()) {
-            memberIds = members.stream().map(Subject::getId).collect(Collectors.toList());
-
-            privileges = addMembersWithPublicPrivilege(privileges, members);
-        }
-
-        List<String> finalMemberIds = memberIds;
-        return privileges.stream()
-                         .collect(Collectors.partitioningBy(privilege -> finalMemberIds.contains(privilege.getSubject().getId())));
-
-    }
-
-    /**
-     * The grouper privilege endpoints return the smallest list possible.  If the public user
-     * has view permissions, for example, and the team creator assigns view permissions to individual
-     * users, those privileges will not be returned from the privileges endpoint since those privileges
-     * are already implied by the public user privileges.
-     * @param privileges
-     * @param members
-     * @return
-     */
-    List<Privilege> addMembersWithPublicPrivilege(List<Privilege> privileges, List<Subject> members) {
-        List<Privilege> publicPrivs = getPublicUserPrivilege(privileges);
-        if (publicPrivs == null || publicPrivs.isEmpty()) {
-            return privileges;
-        }
-
-        List<String> privilegeIds = privileges.stream()
-                                              .map(privilege -> privilege.getSubject().getId())
-                                              .collect(Collectors.toList());
-        List<Subject> membersWithoutPrivs = members.stream()
-                                                   .filter(subject -> !privilegeIds.contains(subject.getId()))
-                                                   .collect(Collectors.toList());
-
-        PrivilegeType publicPrivType = publicPrivs.get(0).getPrivilegeType();
-        List<Privilege> allPrivs = Lists.newArrayList();
-        membersWithoutPrivs.forEach(new Consumer<Subject>() {
-            @Override
-            public void accept(Subject subject) {
-                Privilege privilege = factory.getPrivilege().as();
-                privilege.setSubject(subject);
-                privilege.setPrivilegeType(publicPrivType);
-                allPrivs.add(privilege);
-            }
-        });
-
-        allPrivs.addAll(privileges);
-        return allPrivs;
-    }
-
-    void renamePublicUser(List<Privilege> filteredPrivs) {
-        List<Privilege> publicPrivs = getPublicUserPrivilege(filteredPrivs);
-        if (publicPrivs != null && !publicPrivs.isEmpty()) {
-            Privilege publicPriv = publicPrivs.get(0);
-            publicPriv.getSubject().setName(ALL_PUBLIC_USERS_NAME);
-        }
-    }
-
-    List<Privilege> filterPrivs(List<Privilege> privileges) {
-        return privileges.stream()
-                         .filter(privilege -> (privilege.getPrivilegeType() != PrivilegeType.optout
-                                               && !isCurrentUserPrivilege(privilege))
-                                               && !isDeGrouperPrivilege(privilege))
-                         .collect(Collectors.toList());
-    }
-
-    boolean isCurrentUserPrivilege(Privilege privilege) {
-        return userInfo.getUsername().equals(privilege.getSubject().getId());
-    }
-
-    boolean isDeGrouperPrivilege(Privilege privilege) {
-        return GROUPER_ID.equals(privilege.getSubject().getId());
-    }
-
-    void addPublicUser() {
-        Privilege privilege = factory.getPrivilege().as();
-        Subject publicUser = createPublicUser();
-        privilege.setSubject(publicUser);
-        privilege.setPrivilegeType(PrivilegeType.view);
-
-        view.addNonMembers(Lists.newArrayList(privilege));
-    }
-
-    Subject createPublicUser() {
-        Subject subject = factory.getSubject().as();
-        subject.setName(ALL_PUBLIC_USERS_NAME);
-        subject.setId(ALL_PUBLIC_USERS_ID);
-        return subject;
-    }
-
-    @Override
-    public void setViewDebugId(String debugId) {
-        view.asWidget().ensureDebugId(debugId);
-    }
-
-    @Override
-    public boolean isViewValid() {
-        return view.isValid();
     }
 
     void updateTeam(IsHideable hideable) {
@@ -306,47 +196,6 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         });
     }
 
-    List<PrivilegeType> getPublicUserPrivilegeType() {
-        List<Privilege> nonMemberPrivileges = view.getNonMemberPrivileges();
-        List<Privilege> publicUserList = getPublicUserPrivilege(nonMemberPrivileges);
-        if (publicUserList == null || publicUserList.isEmpty()) {
-            return null;
-        }
-        PrivilegeType privilege = publicUserList.get(0).getPrivilegeType();
-        return Lists.newArrayList(privilege);
-    }
-
-    List<Privilege> getPublicUserPrivilege(List<Privilege> privileges) {
-        return privileges.stream()
-                           .filter(privilege -> ALL_PUBLIC_USERS_ID.equals(privilege.getSubject().getId()))
-                           .collect(Collectors.toList());
-    }
-
-    void addMembersToTeam(Group group, IsHideable hideable) {
-        progressDlg.updateProgress();
-        Subject self = createSelfSubject();
-        List<Privilege> privileges = view.getMemberPrivileges();
-        List<Subject> membersToAdd = getSubjectsFromPrivileges(privileges);
-        membersToAdd.add(self);
-        serviceFacade.addMembersToTeam(group, membersToAdd, new AsyncCallback<List<UpdateMemberResult>>() {
-            @Override
-            public void onFailure(Throwable throwable) {
-                ErrorHandler.post(throwable);
-                mode = EditTeamView.MODE.EDIT;
-                view.unmask();
-                progressDlg.hide();
-            }
-
-            @Override
-            public void onSuccess(List<UpdateMemberResult> updateMemberResults) {
-                hideable.hide();
-                progressDlg.updateProgress();
-                view.unmask();
-                ensureHandlers().fireEvent(new TeamSaved(group));
-            }
-        });
-    }
-
     void addPrivilegesToTeam(Group group, IsHideable hideable) {
         progressDlg.updateProgress();
 
@@ -377,10 +226,29 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         });
     }
 
-    Subject createSelfSubject() {
-        Subject subject = factory.getSubject().as();
-        subject.setId(userInfo.getUsername());
-        return subject;
+    void addMembersToTeam(Group group, IsHideable hideable) {
+        progressDlg.updateProgress();
+        Subject self = createSelfSubject();
+        List<Privilege> privileges = view.getMemberPrivileges();
+        List<Subject> membersToAdd = getSubjectsFromPrivileges(privileges);
+        membersToAdd.add(self);
+        serviceFacade.addMembersToTeam(group, membersToAdd, new AsyncCallback<List<UpdateMemberResult>>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(throwable);
+                mode = EditTeamView.MODE.EDIT;
+                view.unmask();
+                progressDlg.hide();
+            }
+
+            @Override
+            public void onSuccess(List<UpdateMemberResult> updateMemberResults) {
+                hideable.hide();
+                progressDlg.updateProgress();
+                view.unmask();
+                ensureHandlers().fireEvent(new TeamSaved(group));
+            }
+        });
     }
 
     @Override
@@ -473,8 +341,70 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     }
 
     @Override
+    public void setViewDebugId(String debugId) {
+        view.asWidget().ensureDebugId(debugId);
+    }
+
+    @Override
+    public boolean isViewValid() {
+        return view.isValid();
+    }
+
+    @Override
     public void onAddPublicUserSelected(AddPublicUserSelected event) {
         addPublicUser();
+    }
+
+    public Map<Boolean,List<Privilege>> getMapIsMemberPrivilege(List<Privilege> privileges, List<Subject> members) {
+        List<String> memberIds = Lists.newArrayList();
+        if (members != null && !members.isEmpty()) {
+            memberIds = members.stream().map(Subject::getId).collect(Collectors.toList());
+
+            privileges = addMembersWithPublicPrivilege(privileges, members);
+        }
+
+        List<String> finalMemberIds = memberIds;
+        return privileges.stream()
+                         .collect(Collectors.partitioningBy(privilege -> finalMemberIds.contains(privilege.getSubject().getId())));
+
+    }
+
+    /**
+     * The grouper privilege endpoints return the smallest list possible.  If the public user
+     * has view permissions, for example, and the team creator assigns view permissions to individual
+     * users, those privileges will not be returned from the privileges endpoint since those privileges
+     * are already implied by the public user privileges.
+     * @param privileges
+     * @param members
+     * @return
+     */
+    List<Privilege> addMembersWithPublicPrivilege(List<Privilege> privileges, List<Subject> members) {
+        List<Privilege> publicPrivs = getPublicUserPrivilege(privileges);
+        if (publicPrivs == null || publicPrivs.isEmpty()) {
+            return privileges;
+        }
+
+        List<String> privilegeIds = privileges.stream()
+                                              .map(privilege -> privilege.getSubject().getId())
+                                              .collect(Collectors.toList());
+        List<Subject> membersWithoutPrivs = members.stream()
+                                                   .filter(subject -> !privilegeIds.contains(subject.getId()))
+                                                   .collect(Collectors.toList());
+
+        PrivilegeType publicPrivType = publicPrivs.get(0).getPrivilegeType();
+        List<Privilege> allPrivs = Lists.newArrayList();
+        allPrivs.addAll(privileges);
+        membersWithoutPrivs.forEach(new Consumer<Subject>() {
+            @Override
+            public void accept(Subject subject) {
+                Privilege privilege = factory.getPrivilege().as();
+                privilege.setSubject(subject);
+                privilege.setPrivilegeType(publicPrivType);
+                allPrivs.add(privilege);
+            }
+        });
+
+        return allPrivs;
     }
 
     List<UpdatePrivilegeRequest> convertPrivilegesToUpdateRequest(List<Privilege> privileges) {
@@ -489,8 +419,38 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         }).collect(Collectors.toList());
     }
 
-    List<Privilege> createEmptyPrivilegeList() {
-        return Lists.newArrayList();
+    List<PrivilegeType> getPublicUserPrivilegeType() {
+        List<Privilege> nonMemberPrivileges = view.getNonMemberPrivileges();
+        List<Privilege> publicUserList = getPublicUserPrivilege(nonMemberPrivileges);
+        if (publicUserList == null || publicUserList.isEmpty()) {
+            return null;
+        }
+        PrivilegeType privilege = publicUserList.get(0).getPrivilegeType();
+        return Lists.newArrayList(privilege);
+    }
+
+    List<Privilege> getPublicUserPrivilege(List<Privilege> privileges) {
+        return privileges.stream()
+                         .filter(privilege -> ALL_PUBLIC_USERS_ID.equals(privilege.getSubject().getId()))
+                         .collect(Collectors.toList());
+    }
+
+    List<Privilege> filterExtraPrivileges(List<Privilege> privileges) {
+        return privileges.stream()
+                         .filter(privilege -> (privilege.getPrivilegeType() != PrivilegeType.optout
+                                               && !isCurrentUserPrivilege(privilege))
+                                               && !isDeGrouperPrivilege(privilege))
+                         .collect(Collectors.toList());
+    }
+
+    List<Subject> filterOutCurrentUser(List<Subject> subjects) {
+        return subjects.stream().filter(subject -> !isCurrentUser(subject)).collect(
+                Collectors.toList());
+    }
+
+    List<Privilege> filterOutCurrentUserPrivilege(List<Privilege> privileges) {
+        return privileges.stream().filter(privilege -> !isCurrentUserPrivilege(privilege)).collect(
+                Collectors.toList());
     }
 
     List<Subject> getSubjectsFromPrivileges(List<Privilege> privileges) {
@@ -499,10 +459,65 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                          .collect(Collectors.toList());
     }
 
+
     boolean hasPublicUser() {
         List<Privilege> nonMemberPrivs = view.getNonMemberPrivileges();
         long publicUserCount = nonMemberPrivs.stream().filter(privilege -> ALL_PUBLIC_USERS_ID.equals(privilege.getSubject().getId())).count();
         return publicUserCount > 0;
+    }
+
+    boolean isCurrentUser(Subject subject) {
+        return userInfo.getUsername().equals(subject.getId());
+    }
+
+    boolean isCurrentUserPrivilege(Privilege privilege) {
+        return userInfo.getUsername().equals(privilege.getSubject().getId());
+    }
+
+    boolean isDeGrouperPrivilege(Privilege privilege) {
+        return GROUPER_ID.equals(privilege.getSubject().getId());
+    }
+
+    Group copy(Group group) {
+        Group copy = factory.getGroup().as();
+        copy.setName(group.getName());
+        copy.setDisplayName(group.getDisplayName());
+        copy.setDescription(group.getDescription());
+        return copy;
+    }
+
+    Subject createSelfSubject() {
+        Subject subject = factory.getSubject().as();
+        subject.setId(userInfo.getUsername());
+        return subject;
+    }
+
+    void addPublicUser() {
+        Privilege privilege = factory.getPrivilege().as();
+        Subject publicUser = createPublicUser();
+        privilege.setSubject(publicUser);
+        privilege.setPrivilegeType(PrivilegeType.view);
+
+        view.addNonMembers(Lists.newArrayList(privilege));
+    }
+
+    Subject createPublicUser() {
+        Subject subject = factory.getSubject().as();
+        subject.setName(ALL_PUBLIC_USERS_NAME);
+        subject.setId(ALL_PUBLIC_USERS_ID);
+        return subject;
+    }
+
+    void renamePublicUser(List<Privilege> filteredPrivs) {
+        List<Privilege> publicPrivs = getPublicUserPrivilege(filteredPrivs);
+        if (publicPrivs != null && !publicPrivs.isEmpty()) {
+            Privilege publicPriv = publicPrivs.get(0);
+            publicPriv.getSubject().setName(ALL_PUBLIC_USERS_NAME);
+        }
+    }
+
+    List<Privilege> createEmptyPrivilegeList() {
+        return Lists.newArrayList();
     }
 
     @Override
