@@ -24,12 +24,13 @@ public final class SubjectNameCell extends AbstractCell<Subject> {
     public interface SubjectNameCellAppearance {
         String CLICKABLE_ELEMENT_NAME = "groupName";
 
-        void render(SafeHtmlBuilder safeHtmlBuilder, Subject subject, String debugID);
+        void render(SafeHtmlBuilder safeHtmlBuilder, Subject subject, String debugID, boolean clickableGroupName);
     }
 
     private final SubjectNameCellAppearance appearance = GWT.create(SubjectNameCellAppearance.class);
     private String baseDebugId;
     private HasHandlers hasHandlers;
+    private boolean clickableGroupName;
 
     @Override
     public void onBrowserEvent(Context context,
@@ -49,7 +50,12 @@ public final class SubjectNameCell extends AbstractCell<Subject> {
     }
 
     public SubjectNameCell() {
+        this(true);
+    }
+
+    public SubjectNameCell(boolean clickableGroupName) {
         super(CLICK);
+        this.clickableGroupName = clickableGroupName;
     }
 
     @Override
@@ -57,7 +63,7 @@ public final class SubjectNameCell extends AbstractCell<Subject> {
                        Subject value,
                        SafeHtmlBuilder sb) {
         String debugID = baseDebugId + "." + value.getId() + CollaboratorsModule.Ids.SUBJECT_NAME_CELL;
-        appearance.render(sb, value, debugID);
+        appearance.render(sb, value, debugID, clickableGroupName);
     }
 
     public void setBaseDebugId(String baseDebugId) {
