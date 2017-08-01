@@ -29,14 +29,25 @@ public class CollaboratorsColumnModel extends ColumnModel<Subject> implements Gr
 
     public CollaboratorsColumnModel(final CheckBoxSelectionModel<Subject> checkBoxModel) {
         this(checkBoxModel,
+             true,
              GWT.<SubjectProperties> create(SubjectProperties.class),
              GWT.<ManageCollaboratorsView.Appearance> create(ManageCollaboratorsView.Appearance.class));
     }
 
     public CollaboratorsColumnModel(final CheckBoxSelectionModel<Subject> checkBoxModel,
+                                    boolean clickableGroupName) {
+        this(checkBoxModel,
+             clickableGroupName,
+             GWT.<SubjectProperties> create(SubjectProperties.class),
+             GWT.<ManageCollaboratorsView.Appearance> create(ManageCollaboratorsView.Appearance.class));
+    }
+
+    public CollaboratorsColumnModel(final CheckBoxSelectionModel<Subject> checkBoxModel,
+                                    boolean clickableGroupName,
                                     final SubjectProperties properties,
                                     final ManageCollaboratorsView.Appearance appearance) {
         super(createColumnConfigList(checkBoxModel,
+                                     clickableGroupName,
                                      properties,
                                      appearance));
         for (ColumnConfig<Subject, ?> cc :configs) {
@@ -48,6 +59,7 @@ public class CollaboratorsColumnModel extends ColumnModel<Subject> implements Gr
     }
 
     static List<ColumnConfig<Subject, ?>> createColumnConfigList(final CheckBoxSelectionModel<Subject> checkBoxModel,
+                                                                 boolean clickableGroupName,
                                                                  final SubjectProperties properties,
                                                                  final ManageCollaboratorsView.Appearance appearance) {
 
@@ -59,7 +71,7 @@ public class CollaboratorsColumnModel extends ColumnModel<Subject> implements Gr
         ColumnConfig<Subject, Subject> name = new ColumnConfig<>(new IdentityValueProvider<Subject>("firstname"),
                                                                  150);
         name.setHeader(appearance.nameHeader());
-        name.setCell(new SubjectNameCell());
+        name.setCell(new SubjectNameCell(clickableGroupName));
 
         name.setComparator(new SubjectNameComparator());
         configs.add(name);

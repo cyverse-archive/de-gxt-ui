@@ -21,8 +21,8 @@ public class SubjectNameCellDefaultAppearance implements SubjectNameCell.Subject
         @XTemplates.XTemplate("<span id='{debugID}'>{name}</span>")
         SafeHtml subject(String name, String debugID);
 
-        @XTemplates.XTemplate("<img src='{uri}'/><span name='{elementName}' class='{style.nameStyle}' id='{debugID}'> {name}</span>")
-        SafeHtml group(SafeUri uri, String elementName, String name, DiskResourceNameCellStyle style, String debugID);
+        @XTemplates.XTemplate("<img src='{uri}'/><span name='{elementName}' class='{className}' id='{debugID}'> {name}</span>")
+        SafeHtml group(SafeUri uri, String elementName, String name, String className, String debugID);
     }
 
     private IplantResources iplantResources;
@@ -42,14 +42,15 @@ public class SubjectNameCellDefaultAppearance implements SubjectNameCell.Subject
     }
 
     @Override
-    public void render(SafeHtmlBuilder safeHtmlBuilder, Subject subject, String debugID) {
+    public void render(SafeHtmlBuilder safeHtmlBuilder, Subject subject, String debugID, boolean clickableGroupName) {
         String subjectName = subject.getSubjectDisplayName();
         if (subject.getSourceId().equals(Subject.GROUP_IDENTIFIER)) {
             safeHtmlBuilder.append(templates.group(iplantResources.list().getSafeUri(),
-                                                   SubjectNameCell.SubjectNameCellAppearance.CLICKABLE_ELEMENT_NAME,
-                                                   subjectName,
-                                                   defaultStyle,
-                                                   debugID));
+                                                    SubjectNameCell.SubjectNameCellAppearance.CLICKABLE_ELEMENT_NAME,
+                                                    subjectName,
+                                                    clickableGroupName ? defaultStyle.nameStyle() : "",
+                                                    debugID));
+
         } else {
             safeHtmlBuilder.append(templates.subject(subjectName, debugID));
         }

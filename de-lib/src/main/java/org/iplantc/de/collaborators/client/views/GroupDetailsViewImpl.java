@@ -133,7 +133,7 @@ public class GroupDetailsViewImpl extends Composite implements GroupDetailsView,
 
     @UiFactory
     ColumnModel<Subject> buildColumnModel() {
-        return new CollaboratorsColumnModel(checkBoxModel);
+        return new CollaboratorsColumnModel(checkBoxModel, false);
     }
 
     @Override
