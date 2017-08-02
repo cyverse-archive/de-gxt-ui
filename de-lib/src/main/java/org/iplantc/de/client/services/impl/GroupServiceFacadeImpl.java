@@ -267,4 +267,18 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
         deService.getServiceData(wrapper, new PrivilegeListCallbackConverter(callback, factory));
     }
 
+    @Override
+    public void searchTeams(String searchTerm, AsyncCallback<List<Group>> callback) {
+        String address = TEAMS + "?search=" + URL.encodeQueryString(searchTerm);
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
+        deService.getServiceData(wrapper, new AsyncCallbackConverter<String, List<Group>>(callback) {
+            @Override
+            protected List<Group> convertFrom(String object) {
+                GroupList groupList = AutoBeanCodex.decode(factory, GroupList.class, object).as();
+                return groupList.getGroups();
+            }
+        });
+    }
+
 }
