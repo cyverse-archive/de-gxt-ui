@@ -143,4 +143,11 @@ public interface GroupServiceFacade {
      * @param callback
      */
     void searchTeams(String searchTerm, AsyncCallback<List<Group>> callback);
+
+    /**
+     * Leave the selected Team
+     * @param group
+     * @param callback
+     */
+    void leaveTeam(Group group, AsyncCallback<List<UpdateMemberResult>> callback);
 }

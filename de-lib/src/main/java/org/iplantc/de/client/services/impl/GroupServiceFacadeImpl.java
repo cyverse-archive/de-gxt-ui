@@ -281,4 +281,20 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
         });
     }
 
+    @Override
+    public void leaveTeam(Group group, AsyncCallback<List<UpdateMemberResult>> callback) {
+        String groupName = group.getName();
+
+        String address = TEAMS + "/" + URL.encodePathSegment(groupName) + "/leave";
+        
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, "{}");
+        deService.getServiceData(wrapper, new AsyncCallbackConverter<String, List<UpdateMemberResult>>(callback) {
+            @Override
+            protected List<UpdateMemberResult> convertFrom(String object) {
+                AutoBean<UpdateMemberResultList> listAutoBean = AutoBeanCodex.decode(factory, UpdateMemberResultList.class, object);
+                return listAutoBean.as().getResults();
+            }
+        });
+    }
+
 }
