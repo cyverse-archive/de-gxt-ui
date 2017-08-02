@@ -3,6 +3,7 @@ package org.iplantc.de.teams.client.presenter;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
@@ -26,7 +27,8 @@ public class TeamSearchRpcProxy extends RpcProxy<FilterPagingLoadConfig, PagingL
     private TeamsView.TeamsViewAppearance appearance;
     private GroupServiceFacade searchFacade;
     private IplantAnnouncer announcer;
-    private HandlerManager handlerManager;
+    HandlerManager handlerManager;
+    String lastQueryText;
 
     @Inject
     TeamSearchRpcProxy(TeamsView.TeamsViewAppearance appearance,
@@ -40,7 +42,7 @@ public class TeamSearchRpcProxy extends RpcProxy<FilterPagingLoadConfig, PagingL
     @Override
     public void load(FilterPagingLoadConfig loadConfig,
                      AsyncCallback<PagingLoadResult<Group>> callback) {
-        String lastQueryText = "";
+        lastQueryText = "";
 
         List<FilterConfig> filterConfigs = loadConfig.getFilters();
         if (filterConfigs != null && !filterConfigs.isEmpty()) {
@@ -57,15 +59,21 @@ public class TeamSearchRpcProxy extends RpcProxy<FilterPagingLoadConfig, PagingL
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.teamSearchFailed()));
+                callback.onFailure(caught);
             }
 
             @Override
             public void onSuccess(List<Group> result) {
-                PagingLoadResultBean<Group> loadResult = new PagingLoadResultBean<>(result, result.size(), loadConfig.getOffset());
+                PagingLoadResultBean<Group> loadResult = getLoadResult(result, loadConfig);
                 ensureHandlers().fireEvent(new TeamSearchResultLoad(result));
                 callback.onSuccess(loadResult);
             }
         });
+    }
+
+    PagingLoadResultBean<Group> getLoadResult(List<Group> result, FilterPagingLoadConfig loadConfig) {
+        return new PagingLoadResultBean<>(result, result.size(), loadConfig.getOffset());
     }
 
 
