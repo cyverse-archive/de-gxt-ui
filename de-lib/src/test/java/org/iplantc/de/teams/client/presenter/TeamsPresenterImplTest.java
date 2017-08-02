@@ -1,5 +1,6 @@
 package org.iplantc.de.teams.client.presenter;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -14,11 +15,17 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
+import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
+import org.iplantc.de.teams.client.gin.TeamsViewFactory;
 import org.iplantc.de.teams.client.models.TeamsFilter;
 import org.iplantc.de.teams.client.views.dialogs.TeamDetailsDialog;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+
+import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
+import com.sencha.gxt.data.shared.loader.PagingLoadResult;
+import com.sencha.gxt.data.shared.loader.PagingLoader;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +51,9 @@ public class TeamsPresenterImplTest {
     @Mock List<Subject> subjectListMock;
     @Mock TeamDetailsDialog detailsDialogMock;
     @Mock AsyncProviderWrapper<TeamDetailsDialog> detailsDlgProviderMock;
+    @Mock TeamsViewFactory viewFactoryMock;
+    @Mock TeamSearchRpcProxy searchProxyMock;
+    @Mock PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Group>> loaderMock;
 
     @Captor ArgumentCaptor<AsyncCallback<TeamDetailsDialog>> detailsDlgProviderCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> subjectListCaptor;
@@ -54,8 +64,17 @@ public class TeamsPresenterImplTest {
     @Before
     public void setUp() {
         when(appearanceMock.loadingMask()).thenReturn("loading");
+        when(viewFactoryMock.create(any())).thenReturn(viewMock);
 
-        uut = new TeamsPresenterImpl(appearanceMock, serviceFacadeMock, viewMock);
+        uut = new TeamsPresenterImpl(appearanceMock,
+                                     serviceFacadeMock,
+                                     viewFactoryMock,
+                                     searchProxyMock){
+            @Override
+            PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Group>> getPagingLoader() {
+                return loaderMock;
+            }
+        };
         uut.currentFilter = currentFilterMock;
         uut.detailsDlgProvider = detailsDlgProviderMock;
 
@@ -63,8 +82,13 @@ public class TeamsPresenterImplTest {
     }
 
     public void verifyConstructor() {
+        verify(viewFactoryMock).create(eq(loaderMock));
         verify(viewMock).addTeamInfoButtonSelectedHandler(eq(uut));
         verify(viewMock).addTeamFilterSelectionChangedHandler(eq(uut));
+        verify(viewMock).addCreateTeamSelectedHandler(eq(uut));
+        verify(viewMock).addEditTeamSelectedHandler(eq(uut));
+        verify(searchProxyMock).addTeamSearchResultLoadHandler(eq(uut));
+        verify(searchProxyMock).addTeamSearchResultLoadHandler(eq(viewMock));
     }
 
     @Test
@@ -164,6 +188,19 @@ public class TeamsPresenterImplTest {
         verify(viewMock).clearTeams();
         verify(viewMock).addTeams(eq(groupListMock));
         verify(viewMock).unmask();
+    }
+
+    @Test
+    public void onTeamSearchResultLoad() {
+        TeamSearchResultLoad eventMock = mock(TeamSearchResultLoad.class);
+        when(eventMock.getSearchResults()).thenReturn(groupListMock);
+        when(groupListMock.isEmpty()).thenReturn(false);
+
+        /** CALL METHOD UNDER TEST **/
+        uut.onTeamSearchResultLoad(eventMock);
+
+        verify(viewMock).clearTeams();
+        verify(viewMock).addTeams(eq(groupListMock));
     }
 
 }
