@@ -218,4 +218,10 @@ org.iplantc.discoveryenvironment.groups.grouper-all-id = {{ key (printf "%s/de/g
 org.iplantc.discoveryenvironment.groups.grouper-all-display-name = {{ key (printf "%s/de/grouper-all-display-name"  $base) }}
 org.iplantc.discoveryenvironment.groups.grouper-id = {{ key (printf "%s/apps/grouper-user"  $base) }}
 
+###############################################################################
+# Intercom Settings
+###############################################################################
+org.iplantc.discoveryenvironment.intercom.appId = {{ key (printf "%s/de/intercom-app-id" $base) }}
+org.iplantc.discoveryenvironment.intercom.companyId = {{ key (printf "%s/de/intercom-company-id" $base) }}
+org.iplantc.discoveryenvironment.intercom.companyName = {{ key (printf "%s/de/intercom-company-name" $base) }}
 {{- end -}}

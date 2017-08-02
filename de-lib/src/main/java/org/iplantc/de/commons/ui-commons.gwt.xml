@@ -15,6 +15,9 @@
     <inherits name='org.iplantc.de.resources.ui-resources' />
     <inherits name='org.iplantc.de.DiscoveryEnvironmentCommon' />
 
+    <!--  Intercomm -->
+    <inherits name='org.iplantc.de.intercom.Intercom' />
+
     <source path="client"/>
     <source path="share"/>
 
