@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.teams.client.events.CreateTeamSelected;
 import org.iplantc.de.teams.client.events.EditTeamSelected;
+import org.iplantc.de.teams.client.events.LeaveTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
 import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
@@ -23,7 +24,8 @@ public interface TeamsView extends IsWidget,
                                    TeamFilterSelectionChanged.HasTeamFilterSelectionChangedHandlers,
                                    CreateTeamSelected.HasCreateTeamSelectedHandlers,
                                    EditTeamSelected.HasEditTeamSelectedHandlers,
-                                   TeamSearchResultLoad.TeamSearchResultLoadHandler {
+                                   TeamSearchResultLoad.TeamSearchResultLoadHandler,
+                                   LeaveTeamSelected.HasLeaveTeamSelectedHandlers {
 
     /**
      * An appearance class for all string related items in the Teams view
@@ -156,4 +158,10 @@ public interface TeamsView extends IsWidget,
      * @param team
      */
     void updateTeam(Group team);
+
+    /**
+     * Remove the specified team from the grid
+     * @param team
+     */
+    void removeTeam(Group team);
 }
