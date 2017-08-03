@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AsyncProviderWrapper;
@@ -245,8 +246,15 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
 
             @Override
             public void onSuccess(List<UpdateMemberResult> result) {
-                announcer.schedule(new IplantAnnouncementConfig(appearance.leaveTeamSuccess(group)));
-                view.removeTeam(group);
+                if (result != null && !result.isEmpty()) {
+                    UpdateMemberResult updateMemberResult = result.get(0);
+                    if (updateMemberResult.isSuccess()) {
+                        announcer.schedule(new IplantAnnouncementConfig(appearance.leaveTeamSuccess(group)));
+                        view.removeTeam(group);
+                    } else {
+                        announcer.schedule(new ErrorAnnouncementConfig(appearance.leaveTeamFail()));
+                    }
+                }
             }
         });
     }

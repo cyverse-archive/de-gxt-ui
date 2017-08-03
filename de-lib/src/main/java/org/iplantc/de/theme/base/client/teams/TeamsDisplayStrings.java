@@ -62,4 +62,6 @@ public interface TeamsDisplayStrings extends Messages {
     String leaveTeamWarning();
 
     String leaveTeamHeader(String subjectDisplayName);
+
+    String leaveTeamFail();
 }

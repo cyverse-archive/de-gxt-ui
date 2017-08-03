@@ -266,4 +266,9 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     public int leaveTeamWidth() {
         return 250;
     }
+
+    @Override
+    public String leaveTeamFail() {
+        return displayStrings.leaveTeamFail();
+    }
 }

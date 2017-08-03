@@ -123,6 +123,8 @@ public interface TeamsView extends IsWidget,
         String leaveTeamWarning();
 
         int leaveTeamWidth();
+
+        String leaveTeamFail();
     }
 
     /**
