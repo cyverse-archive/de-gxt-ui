@@ -29,5 +29,8 @@ public interface Teams {
         String SAVE_PROGRESS_DLG = "saveProgressDlg";
         String OK_BTN = ".okBtn";
         String SEARCH_FIELD = ".search";
+        String LEAVE_TEAM_DLG = "leaveTeamDlg";
+        String CANCEL_BTN = ".cancelBtn";
+        String LEAVE_TEAM_BTN = ".leaveTeamBtn";
     }
 }

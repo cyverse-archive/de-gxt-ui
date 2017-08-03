@@ -246,4 +246,24 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     public String teamSearchFailed() {
         return displayStrings.teamSearchFailed();
     }
+
+    @Override
+    public String leaveTeamSuccess(Group group) {
+        return displayStrings.leaveTeamSuccess(group.getSubjectDisplayName());
+    }
+
+    @Override
+    public String leaveTeamHeader(Group group) {
+        return displayStrings.leaveTeamHeader(group.getSubjectDisplayName());
+    }
+
+    @Override
+    public String leaveTeamWarning() {
+        return displayStrings.leaveTeamWarning();
+    }
+
+    @Override
+    public int leaveTeamWidth() {
+        return 250;
+    }
 }
