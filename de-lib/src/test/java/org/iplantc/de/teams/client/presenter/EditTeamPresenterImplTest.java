@@ -22,6 +22,7 @@ import org.iplantc.de.client.models.groups.UpdatePrivilegeRequestList;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.views.dialogs.SaveTeamProgressDialog;
@@ -71,6 +72,7 @@ public class EditTeamPresenterImplTest {
     @Mock Stream<Subject> subjectStreamMock;
     @Mock List<UpdateMemberResult> updateMemberResultListMock;
     @Mock AutoBean<Group> groupAutoBeanMock;
+    @Mock DEProperties dePropertiesMock;
 
     @Captor ArgumentCaptor<AsyncCallback<Group>> groupCaptor;
     @Captor ArgumentCaptor<AsyncCallback<SaveTeamProgressDialog>> progressDialogCaptor;
@@ -91,11 +93,14 @@ public class EditTeamPresenterImplTest {
         when(factoryMock.getGroup()).thenReturn(groupAutoBeanMock);
         when(groupAutoBeanMock.as()).thenReturn(groupMock);
         when(appearanceMock.loadingMask()).thenReturn("loading");
+        when(dePropertiesMock.getGrouperAllId()).thenReturn("GrouperAll");
+        when(dePropertiesMock.getGrouperAllDisplayName()).thenReturn("All Public Users");
 
         uut = new EditTeamPresenterImpl(viewMock,
                                         serviceFacadeMock,
                                         factoryMock,
-                                        appearanceMock) {
+                                        appearanceMock,
+                                        dePropertiesMock) {
             @Override
             List<PrivilegeType> getPublicUserPrivilege() {
                 return privilegeTypeListMock;

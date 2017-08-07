@@ -211,4 +211,10 @@ org.iplantc.discoveryenvironment.redis.port = {{ key (printf "%s/de/redis-port" 
 org.iplantc.discoveryenvironment.redis.db.number = {{ key (printf "%s/de/redis-db-number" $base) }}
 org.iplantc.discoveryenvironment.redis.password = {{ key (printf "%s/de/redis-password" $base) }}
 
+###############################################################################
+# Groups Settings
+###############################################################################
+org.iplantc.discoveryenvironment.groups.grouper-all-id = {{ key (printf "%s/de/grouper-id"  $base) }}
+org.iplantc.discoveryenvironment.groups.grouper-all-display-name = {{ key (printf "%s/de/grouper-all-display-name"  $base) }}
+
 {{- end -}}

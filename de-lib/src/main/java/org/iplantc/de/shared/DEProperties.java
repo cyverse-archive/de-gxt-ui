@@ -124,6 +124,12 @@ public class DEProperties {
 
     private static final String BASE_TRASH_PATH = "org.iplantc.basetrash.path";
 
+    private static final String GROUPER_ALL_ID =
+            "org.iplantc.discoveryenvironment.groups.grouper-all-id";
+
+    private static final String GROUPER_ALL_DISPLAY_NAME =
+            "org.iplantc.discoveryenvironment.groups.grouper-all-display-name";
+
     /**
      * The single instance of this class.
      */
@@ -188,6 +194,10 @@ public class DEProperties {
     private String cardUrl;
 
     private String cardUrlOptions;
+
+    private String grouperAllId;
+
+    private String grouperAllDisplayName;
 
     public String getPathListFileIdentifier() {
         return pathListFileIdentifier;
@@ -284,6 +294,8 @@ public class DEProperties {
         keys.add(APPS_CARD_URL_OPTIONS);
         keys.add(CYVERSE_SUPPORT_USER);
         keys.add(SUPPORT_SERVICE_URL);
+        keys.add(GROUPER_ALL_ID);
+        keys.add(GROUPER_ALL_DISPLAY_NAME);
         return keys;
     }
 
@@ -319,6 +331,8 @@ public class DEProperties {
         cardUrlOptions = properties.get(APPS_CARD_URL_OPTIONS);
         supportUser = properties.get(CYVERSE_SUPPORT_USER);
         supportServiceUrl = properties.get(SUPPORT_SERVICE_URL);
+        grouperAllId = properties.get(GROUPER_ALL_ID);
+        grouperAllDisplayName = properties.get(GROUPER_ALL_DISPLAY_NAME);
     }
 
     /**
@@ -479,5 +493,13 @@ public class DEProperties {
 
     public String getSupportServiceUrl() {
         return supportServiceUrl;
+    }
+
+    public String getGrouperAllId() {
+        return grouperAllId;
+    }
+
+    public String getGrouperAllDisplayName() {
+        return grouperAllDisplayName;
     }
 }

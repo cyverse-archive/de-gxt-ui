@@ -30,8 +30,6 @@ public interface EditTeamView extends IsWidget,
         EDIT
     }
 
-    String ALL_PUBLIC_USERS_NAME = "All Public Users";
-    String ALL_PUBLIC_USERS_ID = "GrouperAll";
     String SEARCH_MEMBERS_TAG = "members";
     String SEARCH_NON_MEMBERS_TAG = "nonMembers";
 
@@ -112,4 +110,10 @@ public interface EditTeamView extends IsWidget,
      * @param privilege
      */
     void removeNonMemberPrivilege(Privilege privilege);
+
+    /**
+     * Show the "Add All Public Users" button in the UI if the public user is not currently present
+     * @param isVisible
+     */
+    void setPublicUserButtonVisibility(boolean isVisible);
 }

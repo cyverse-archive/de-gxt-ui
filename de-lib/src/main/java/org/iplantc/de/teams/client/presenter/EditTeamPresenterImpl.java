@@ -1,7 +1,5 @@
 package org.iplantc.de.teams.client.presenter;
 
-import static org.iplantc.de.teams.client.EditTeamView.ALL_PUBLIC_USERS_ID;
-import static org.iplantc.de.teams.client.EditTeamView.ALL_PUBLIC_USERS_NAME;
 import static org.iplantc.de.teams.client.EditTeamView.SEARCH_MEMBERS_TAG;
 
 import org.iplantc.de.client.models.IsHideable;
@@ -18,6 +16,7 @@ import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.AddPublicUserSelected;
@@ -53,15 +52,21 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     @Inject UserInfo userInfo;
     @Inject AsyncProviderWrapper<SaveTeamProgressDialog> progressDialogProvider;
 
+    final String ALL_PUBLIC_USERS_NAME;
+    final String ALL_PUBLIC_USERS_ID;
+
     @Inject
     public EditTeamPresenterImpl(EditTeamView view,
                                  GroupServiceFacade serviceFacade,
                                  GroupAutoBeanFactory factory,
-                                 TeamsView.TeamsViewAppearance appearance) {
+                                 TeamsView.TeamsViewAppearance appearance,
+                                 DEProperties deProperties) {
         this.view = view;
         this.serviceFacade = serviceFacade;
         this.factory = factory;
         this.appearance = appearance;
+        this.ALL_PUBLIC_USERS_NAME = deProperties.getGrouperAllDisplayName();
+        this.ALL_PUBLIC_USERS_ID = deProperties.getGrouperAllId();
 
         view.addUserSearchResultSelectedEventHandler(this);
         view.addRemoveMemberPrivilegeSelectedHandler(this);
@@ -232,6 +237,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
             view.addMembers(Lists.newArrayList(privilege));
         } else {
             view.addNonMembers(Lists.newArrayList(privilege));
+            view.setPublicUserButtonVisibility(!hasPublicUser());
         }
 
     }
@@ -249,6 +255,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         Privilege privilege = event.getPrivilege();
         if (EditTeamView.MODE.CREATE == mode) {
             view.removeNonMemberPrivilege(privilege);
+            view.setPublicUserButtonVisibility(!hasPublicUser());
         }
     }
 
@@ -284,6 +291,12 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         return privileges.stream()
                          .map(Privilege::getSubject)
                          .collect(Collectors.toList());
+    }
+
+    boolean hasPublicUser() {
+        List<Privilege> nonMemberPrivs = view.getNonMemberPrivileges();
+        long publicUserCount = nonMemberPrivs.stream().filter(privilege -> ALL_PUBLIC_USERS_ID.equals(privilege.getSubject().getId())).count();
+        return publicUserCount > 0;
     }
 
     @Override

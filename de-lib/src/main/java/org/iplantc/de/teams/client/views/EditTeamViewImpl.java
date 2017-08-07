@@ -155,14 +155,6 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     @Override
     public void addNonMembers(List<Privilege> privilegeList) {
         nonMembersListStore.addAll(privilegeList);
-        checkForPublicUser();
-    }
-
-    void checkForPublicUser() {
-        List<Privilege> privileges = nonMembersListStore.getAll();
-        long publicUserCount = privileges.stream().filter(privilege -> EditTeamView.ALL_PUBLIC_USERS_ID.equals(privilege.getSubject().getId())).count();
-        addPublicUser.setVisible(publicUserCount == 0);
-        nonMemberToolbar.forceLayout();
     }
 
     @Override
@@ -198,7 +190,12 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     @Override
     public void removeNonMemberPrivilege(Privilege privilege) {
         nonMembersListStore.remove(privilege);
-        checkForPublicUser();
+    }
+
+    @Override
+    public void setPublicUserButtonVisibility(boolean isVisible) {
+        addPublicUser.setVisible(isVisible);
+        nonMemberToolbar.forceLayout();
     }
 
     @UiHandler("removeNonMember")
