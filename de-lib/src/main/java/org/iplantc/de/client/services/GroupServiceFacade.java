@@ -47,6 +47,7 @@ public interface GroupServiceFacade {
     /**
      * Create a Team
      * @param group
+     * @param publicPrivileges
      * @param callback
      */
     void addTeam(Group group, List<PrivilegeType> publicPrivileges, AsyncCallback<Group> callback);
