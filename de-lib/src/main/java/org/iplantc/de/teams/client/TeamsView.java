@@ -116,9 +116,9 @@ public interface TeamsView extends IsWidget,
 
         String teamSearchFailed();
 
-        String leaveTeamSuccess(Group group);
+        String leaveTeamSuccess(Group team);
 
-        String leaveTeamHeader(Group group);
+        String leaveTeamHeader(Group team);
 
         String leaveTeamWarning();
 

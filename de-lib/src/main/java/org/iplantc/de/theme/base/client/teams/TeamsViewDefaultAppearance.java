@@ -248,13 +248,13 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     }
 
     @Override
-    public String leaveTeamSuccess(Group group) {
-        return displayStrings.leaveTeamSuccess(group.getSubjectDisplayName());
+    public String leaveTeamSuccess(Group team) {
+        return displayStrings.leaveTeamSuccess(team.getSubjectDisplayName());
     }
 
     @Override
-    public String leaveTeamHeader(Group group) {
-        return displayStrings.leaveTeamHeader(group.getSubjectDisplayName());
+    public String leaveTeamHeader(Group team) {
+        return displayStrings.leaveTeamHeader(team.getSubjectDisplayName());
     }
 
     @Override

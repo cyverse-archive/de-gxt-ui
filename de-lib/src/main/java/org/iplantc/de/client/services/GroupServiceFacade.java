@@ -5,7 +5,6 @@ import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.Privilege;
 import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
-import org.iplantc.de.client.models.groups.UpdatePrivilegeRequest;
 import org.iplantc.de.client.models.groups.UpdatePrivilegeRequestList;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -19,135 +18,134 @@ public interface GroupServiceFacade {
 
     /**
      * Get the list of Collaborator Lists a user has matching the specified search term
-     * @param searchTerm
-     * @param callback
+     * @param subjectListCallback
      */
-    void getLists(AsyncCallback<List<Subject>> callback);
+    void getLists(AsyncCallback<List<Subject>> subjectListCallback);
 
     /**
      * Get the list of all Teams for which the user has View permissions
-     * @param callback
+     * @param teamListCallback
      */
-    void getTeams(AsyncCallback<List<Group>> callback);
+    void getTeams(AsyncCallback<List<Group>> teamListCallback);
 
     /**
      * Get the the list of all Teams that a user belongs to
-     * @param callback
+     * @param teamListCallback
      */
-    void getMyTeams(AsyncCallback<List<Group>> callback);
+    void getMyTeams(AsyncCallback<List<Group>> teamListCallback);
 
 
     /**
      * Create a Collaborator List
-     * @param group
-     * @param callback
+     * @param collabList
+     * @param collabListCallback
      */
-    void addList(Group group, AsyncCallback<Group> callback);
+    void addList(Group collabList, AsyncCallback<Group> collabListCallback);
 
     /**
      * Create a Team
-     * @param group
+     * @param team
      * @param publicPrivileges
-     * @param callback
+     * @param teamCallback
      */
-    void addTeam(Group group, List<PrivilegeType> publicPrivileges, AsyncCallback<Group> callback);
+    void addTeam(Group team, List<PrivilegeType> publicPrivileges, AsyncCallback<Group> teamCallback);
 
     /**
      * Delete a Collaborator List
-     * @param group
+     * @param team
      * @param retainPermissions
-     * @param callback
+     * @param teamCallback
      */
-    void deleteGroup(Group group, boolean retainPermissions, AsyncCallback<Group> callback);
+    void deleteGroup(Group team, boolean retainPermissions, AsyncCallback<Group> teamCallback);
 
     /**
      * Get the list of members who belong to a Collaborator List
-     * @param group
-     * @param callback
+     * @param team
+     * @param subjectListCallback
      */
-    void getListMembers(Group group, AsyncCallback<List<Subject>> callback);
+    void getListMembers(Group team, AsyncCallback<List<Subject>> subjectListCallback);
 
     /**
      * Get the list of members who belong to a Team
-     * @param group
-     * @param callback
+     * @param team
+     * @param subjectListCallback
      */
-    void getTeamMembers(Group group, AsyncCallback<List<Subject>> callback);
+    void getTeamMembers(Group team, AsyncCallback<List<Subject>> subjectListCallback);
 
     /**
      * Delete members from a Collaborator List
-     * @param group
-     * @param member
+     * @param team
+     * @param members
      * @param retainPermissions
-     * @param callback
+     * @param updatesCallback
      */
-    void deleteListMembers(Group group, List<Subject> member, boolean retainPermissions, AsyncCallback<List<UpdateMemberResult>> callback);
+    void deleteListMembers(Group team, List<Subject> members, boolean retainPermissions, AsyncCallback<List<UpdateMemberResult>> updatesCallback);
 
     /**
      * Delete members from a Team
-     * @param group
+     * @param team
      * @param member
      * @param retainPermissions
-     * @param callback
+     * @param updatesCallback
      */
-    void deleteTeamMembers(Group group, List<Subject> member, boolean retainPermissions, AsyncCallback<List<UpdateMemberResult>> callback);
+    void deleteTeamMembers(Group team, List<Subject> member, boolean retainPermissions, AsyncCallback<List<UpdateMemberResult>> updatesCallback);
 
     /**
      * Adds  members to the Collaborator List
-     * @param group
+     * @param collabList
      * @param subjects
      */
-    void addMembersToList(Group group, List<Subject> subjects, AsyncCallback<List<UpdateMemberResult>> callback);
+    void addMembersToList(Group collabList, List<Subject> subjects, AsyncCallback<List<UpdateMemberResult>> updatesCallback);
 
     /**
      * Adds  members to the Team
-     * @param group
+     * @param team
      * @param subjects
      */
-    void addMembersToTeam(Group group, List<Subject> subjects, AsyncCallback<List<UpdateMemberResult>> callback);
+    void addMembersToTeam(Group team, List<Subject> subjects, AsyncCallback<List<UpdateMemberResult>> updatesCallback);
 
     /**
      * Update the details of a Collaborator List
-     * @param originalGroup
-     * @param group
-     * @param callback
+     * @param originalList
+     * @param updatedList
+     * @param collabListCallback
      */
-    void updateList(String originalGroup, Group group, AsyncCallback<Group> callback);
+    void updateList(String originalList, Group updatedList, AsyncCallback<Group> collabListCallback);
 
     /**
      * Update the details of a Team
-     * @param originalGroup
-     * @param group
-     * @param callback
+     * @param originalTeam
+     * @param updatedTeam
+     * @param teamCallback
      */
-    void updateTeam(String originalGroup, Group group, AsyncCallback<Group> callback);
+    void updateTeam(String originalTeam, Group updatedTeam, AsyncCallback<Group> teamCallback);
 
     /**
      * Update the privileges on a Team
-     * @param group
-     * @param request
-     * @param callback
+     * @param team
+     * @param updatePrivilegeRequests
+     * @param privilegeListCallback
      */
-    void updateTeamPrivileges(Group group, UpdatePrivilegeRequestList request, AsyncCallback<List<Privilege>> callback);
+    void updateTeamPrivileges(Group team, UpdatePrivilegeRequestList updatePrivilegeRequests, AsyncCallback<List<Privilege>> privilegeListCallback);
 
     /**
      * Get the list of privileges on a Team
-     * @param group
-     * @param callback
+     * @param team
+     * @param privilegeListCallback
      */
-    void getTeamPrivileges(Group group, AsyncCallback<List<Privilege>> callback);
+    void getTeamPrivileges(Group team, AsyncCallback<List<Privilege>> privilegeListCallback);
 
     /**
      * Get the list of Teams that match the provided search term
      * @param searchTerm
-     * @param callback
+     * @param teamListCallback
      */
-    void searchTeams(String searchTerm, AsyncCallback<List<Group>> callback);
+    void searchTeams(String searchTerm, AsyncCallback<List<Group>> teamListCallback);
 
     /**
      * Leave the selected Team
-     * @param group
-     * @param callback
+     * @param team
+     * @param updatesCallback
      */
-    void leaveTeam(Group group, AsyncCallback<List<UpdateMemberResult>> callback);
+    void leaveTeam(Group team, AsyncCallback<List<UpdateMemberResult>> updatesCallback);
 }

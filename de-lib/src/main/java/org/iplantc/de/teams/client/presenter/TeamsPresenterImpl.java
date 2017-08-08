@@ -214,13 +214,13 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
 
     @Override
     public void onLeaveTeamSelected(LeaveTeamSelected event) {
-        Group group = event.getGroup();
         leaveTeamDlgProvider.get(new AsyncCallback<LeaveTeamDialog>() {
             @Override
             public void onFailure(Throwable caught) {}
 
             @Override
             public void onSuccess(LeaveTeamDialog dialog) {
+                Group group = event.getGroup();
                 dialog.show(group);
                 dialog.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
                     @Override
@@ -237,8 +237,8 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
         });
     }
 
-    void leaveTeam(Group group) {
-        serviceFacade.leaveTeam(group, new AsyncCallback<List<UpdateMemberResult>>() {
+    void leaveTeam(Group team) {
+        serviceFacade.leaveTeam(team, new AsyncCallback<List<UpdateMemberResult>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
@@ -249,8 +249,8 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
                 if (result != null && !result.isEmpty()) {
                     UpdateMemberResult updateMemberResult = result.get(0);
                     if (updateMemberResult.isSuccess()) {
-                        announcer.schedule(new IplantAnnouncementConfig(appearance.leaveTeamSuccess(group)));
-                        view.removeTeam(group);
+                        announcer.schedule(new IplantAnnouncementConfig(appearance.leaveTeamSuccess(team)));
+                        view.removeTeam(team);
                     } else {
                         announcer.schedule(new ErrorAnnouncementConfig(appearance.leaveTeamFail()));
                     }

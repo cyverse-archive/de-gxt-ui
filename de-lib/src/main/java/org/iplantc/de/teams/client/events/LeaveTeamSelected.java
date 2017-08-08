@@ -6,6 +6,10 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
+/**
+ * A GWT event that fires when the user indicates they wish to leave a team, with the
+ * team passed in as a parameter
+ */
 public class LeaveTeamSelected extends GwtEvent<LeaveTeamSelected.LeaveTeamSelectedHandler> {
 
     public static interface LeaveTeamSelectedHandler extends EventHandler {

@@ -8,6 +8,10 @@ import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 
+/**
+ * A dialog that warns users trying to leave a team of the consequences of the operation
+ * before executing the operation
+ */
 public class LeaveTeamDialog extends ConfirmMessageBox {
 
     private TeamsView.TeamsViewAppearance appearance;

@@ -138,17 +138,17 @@ public class TeamsViewImpl extends Composite implements TeamsView {
 
     @UiHandler("manageTeamMI")
     void onManageTeamSelected(SelectionEvent<Item> event) {
-        Group selectedGroup = grid.getSelectionModel().getSelectedItem();
-        if (selectedGroup != null) {
-            fireEvent(new EditTeamSelected(selectedGroup));
+        Group selectedTeam = grid.getSelectionModel().getSelectedItem();
+        if (selectedTeam != null) {
+            fireEvent(new EditTeamSelected(selectedTeam));
         }
     }
 
     @UiHandler("leaveTeamMI")
     void onLeaveTeamSelected(SelectionEvent<Item> event) {
-        Group selectedGroup = grid.getSelectionModel().getSelectedItem();
-        if (selectedGroup != null) {
-            fireEvent(new LeaveTeamSelected(selectedGroup));
+        Group selectedTeam = grid.getSelectionModel().getSelectedItem();
+        if (selectedTeam != null) {
+            fireEvent(new LeaveTeamSelected(selectedTeam));
         }
     }
 
