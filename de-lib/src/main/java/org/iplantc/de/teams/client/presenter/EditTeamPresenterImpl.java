@@ -35,7 +35,6 @@ import com.google.inject.Inject;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class EditTeamPresenterImpl implements EditTeamView.Presenter,
@@ -392,17 +391,16 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                                                    .collect(Collectors.toList());
 
         PrivilegeType publicPrivType = publicPrivs.get(0).getPrivilegeType();
+
         List<Privilege> allPrivs = Lists.newArrayList();
+        List<Privilege> missingMemberPrivs = membersWithoutPrivs.stream().map(subject -> {
+            Privilege privilege = factory.getPrivilege().as();
+            privilege.setSubject(subject);
+            privilege.setPrivilegeType(publicPrivType);
+            return privilege;
+        }).collect(Collectors.toList());
         allPrivs.addAll(privileges);
-        membersWithoutPrivs.forEach(new Consumer<Subject>() {
-            @Override
-            public void accept(Subject subject) {
-                Privilege privilege = factory.getPrivilege().as();
-                privilege.setSubject(subject);
-                privilege.setPrivilegeType(publicPrivType);
-                allPrivs.add(privilege);
-            }
-        });
+        allPrivs.addAll(missingMemberPrivs);
 
         return allPrivs;
     }
@@ -413,7 +411,9 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
             update.setSubjectId(privilege.getSubject().getId());
             PrivilegeType type = privilege.getPrivilegeType();
             List<PrivilegeType> privilegeTypes = Lists.newArrayList();
-            privilegeTypes.add(type);
+            if (type != null) {
+                privilegeTypes.add(type);
+            }
             update.setPrivileges(privilegeTypes);
             return update;
         }).collect(Collectors.toList());
@@ -445,11 +445,6 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
     List<Subject> filterOutCurrentUser(List<Subject> subjects) {
         return subjects.stream().filter(subject -> !isCurrentUser(subject)).collect(
-                Collectors.toList());
-    }
-
-    List<Privilege> filterOutCurrentUserPrivilege(List<Privilege> privileges) {
-        return privileges.stream().filter(privilege -> !isCurrentUserPrivilege(privilege)).collect(
                 Collectors.toList());
     }
 
