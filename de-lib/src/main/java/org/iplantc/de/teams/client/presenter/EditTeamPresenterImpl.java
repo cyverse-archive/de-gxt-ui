@@ -33,7 +33,6 @@ import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class EditTeamPresenterImpl implements EditTeamView.Presenter,
@@ -245,6 +244,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     @Override
     public void onRemoveMemberPrivilegeSelected(RemoveMemberPrivilegeSelected event) {
         Privilege privilege = event.getPrivilege();
+        // No service calls required in CREATE mode, remove directly from store
         if (EditTeamView.MODE.CREATE == mode) {
             view.removeMemberPrivilege(privilege);
         }
@@ -253,6 +253,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     @Override
     public void onRemoveNonMemberPrivilegeSelected(RemoveNonMemberPrivilegeSelected event) {
         Privilege privilege = event.getPrivilege();
+        // No service calls required in CREATE mode, remove directly from store
         if (EditTeamView.MODE.CREATE == mode) {
             view.removeNonMemberPrivilege(privilege);
             view.setPublicUserButtonVisibility(!hasPublicUser());
@@ -265,22 +266,15 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     }
 
     List<UpdatePrivilegeRequest> convertPrivilegesToUpdateRequest(List<Privilege> privileges) {
-        List<UpdatePrivilegeRequest> updateList = Lists.newArrayList();
-
-        privileges.forEach(new Consumer<Privilege>() {
-            @Override
-            public void accept(Privilege privilege) {
-                UpdatePrivilegeRequest update = factory.getUpdatePrivilegeRequest().as();
-                update.setSubjectId(privilege.getSubject().getId());
-                PrivilegeType type = privilege.getPrivilegeType();
-                List<PrivilegeType> privileges = Lists.newArrayList();
-                privileges.add(type);
-                update.setPrivileges(privileges);
-                updateList.add(update);
-            }
-        });
-
-        return updateList;
+        return privileges.stream().map(privilege -> {
+            UpdatePrivilegeRequest update = factory.getUpdatePrivilegeRequest().as();
+            update.setSubjectId(privilege.getSubject().getId());
+            PrivilegeType type = privilege.getPrivilegeType();
+            List<PrivilegeType> privilegeTypes = Lists.newArrayList();
+            privilegeTypes.add(type);
+            update.setPrivileges(privilegeTypes);
+            return update;
+        }).collect(Collectors.toList());
     }
 
     List<Privilege> createEmptyPrivilegeList() {
