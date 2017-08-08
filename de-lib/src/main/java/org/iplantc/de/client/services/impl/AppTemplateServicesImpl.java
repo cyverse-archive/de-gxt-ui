@@ -34,6 +34,8 @@ import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.services.impl.models.AnalysisSubmissionResponse;
 import org.iplantc.de.client.util.AppTemplateUtils;
 import org.iplantc.de.client.util.JsonUtil;
+import org.iplantc.de.intercom.client.IntercomFacade;
+import org.iplantc.de.intercom.client.TrackingEventType;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.DEProperties;
@@ -181,6 +183,7 @@ public class AppTemplateServicesImpl implements AppTemplateServices, AppBuilderM
                 return AutoBeanCodex.decode(factory, AnalysisSubmissionResponse.class, payload).as();
             }
         });
+        IntercomFacade.trackEvent(TrackingEventType.JOB_LAUNCHED,assembledPayload);
     }
 
     @Override

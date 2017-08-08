@@ -135,6 +135,7 @@ public class DEProperties {
     /**
      * Intercom settings
      */
+    private static final String INTERCOM_ENABLED ="org.iplantc.discoveryenvironment.intercom.enabled";
     private static final String INTERCOM_APP_ID = "org.iplantc.discoveryenvironment.intercom.appId";
 
     private static final String INTERCOM_COMPANY_ID =
@@ -265,6 +266,9 @@ public class DEProperties {
 
     private String intercomAppId;
 
+    private boolean intercomEnabled;
+
+
     /**
      * Force the constructor to be private.
      */
@@ -322,6 +326,7 @@ public class DEProperties {
         keys.add(INTERCOM_APP_ID);
         keys.add(INTERCOM_COMPANY_ID);
         keys.add(INTERCOM_COMPANY_NAME);
+        keys.add(INTERCOM_ENABLED);
         return keys;
     }
 
@@ -363,6 +368,7 @@ public class DEProperties {
         intercomAppId = properties.get(INTERCOM_APP_ID);
         companyId = properties.get(INTERCOM_COMPANY_ID);
         companyName = properties.get(INTERCOM_COMPANY_NAME);
+        intercomEnabled = getBoolean(properties, INTERCOM_ENABLED, false);
     }
 
     /**
@@ -547,5 +553,9 @@ public class DEProperties {
 
     public String getCompanyName() {
         return companyName;
+    }
+
+    public boolean isIntercomEnabled() {
+        return intercomEnabled;
     }
 }

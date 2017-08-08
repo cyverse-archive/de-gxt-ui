@@ -5,6 +5,8 @@ import org.iplantc.de.commons.client.CommonUiConstants;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.views.widgets.ServiceDownPanel;
 import org.iplantc.de.desktop.shared.DeModule;
+import org.iplantc.de.intercom.client.IntercomFacade;
+import org.iplantc.de.intercom.client.TrackingEventType;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
@@ -225,6 +227,7 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
 
     protected void doHide() {
         hide();
+        logWindowCloseToIntercom(config);
     }
 
     @Override
@@ -405,6 +408,168 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
         if (currentWidget != null) {
             this.setWidget(currentWidget);
             currentWidget = null;
+        }
+    }
+
+    /**
+     * Log window opening event to Intercom
+     *
+     * @param config Config of the window that was opened.
+     */
+    @Override
+    public void logWindowOpenToIntercom(WindowConfig config) {
+        if (config != null) {
+            switch (config.getWindowType()) {
+
+                case DATA:
+                    IntercomFacade.trackEvent(TrackingEventType.DATA_WINDOW_OPEN,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case ANALYSES:
+                    IntercomFacade.trackEvent(TrackingEventType.ANALYSIS_WINDOW_OPEN,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+                case APPS:
+                    IntercomFacade.trackEvent(TrackingEventType.APPS_WINDOW_OPEN,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case MANAGETOOLS:
+                    IntercomFacade.trackEvent(TrackingEventType.MANAGE_TOOLS_WINDOW_OPEN,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case APP_INTEGRATION:
+                    IntercomFacade.trackEvent(TrackingEventType.APP_INT_WINDOW_OPEN,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+                case ABOUT:
+                    IntercomFacade.trackEvent(TrackingEventType.ABOUT_WINDOW_OPEN,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case APP_WIZARD:
+                    IntercomFacade.trackEvent(TrackingEventType.APP_WIZARD_OPEN,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case HELP:
+                    IntercomFacade.trackEvent(TrackingEventType.HELP_BUTTON_CLICKED,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case NOTIFICATIONS:
+                    IntercomFacade.trackEvent(TrackingEventType.NOTIFICATION_WINDOW_OPEN,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case SIMPLE_DOWNLOAD:
+                    IntercomFacade.trackEvent(TrackingEventType.SIMPLE_DOWNLOAD_WINDOW_OPEN,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case WORKFLOW_INTEGRATION:
+                    IntercomFacade.trackEvent(TrackingEventType.WORKFLOW_INT_WINDOW_OPEN,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case SYSTEM_MESSAGES:
+                    IntercomFacade.trackEvent(TrackingEventType.SYS_MESSAGE_WINDOW_OPEN,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case COLLABORATION:
+                    IntercomFacade.trackEvent(TrackingEventType.COLLAB_WINDOW_OPEN,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case DATA_VIEWER:
+                    IntercomFacade.trackEvent(TrackingEventType.DATA_VIEWER_WINDOW_OPEN,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+
+            }
+        }
+    }
+
+
+    /**
+     * Log window closing event to Intercom
+     *
+     * @param config Config of the window that was closed.
+     */
+    @Override
+    public void logWindowCloseToIntercom(WindowConfig config) {
+        if (config != null) {
+            switch (config.getWindowType()) {
+
+                case DATA:
+                    IntercomFacade.trackEvent(TrackingEventType.DATA_WINDOW_CLOSED,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case ANALYSES:
+                    IntercomFacade.trackEvent(TrackingEventType.ANALYSIS_WINDOW_CLOSE,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+                case APPS:
+                    IntercomFacade.trackEvent(TrackingEventType.APPS_WINDOW_CLOSED,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case MANAGETOOLS:
+                    IntercomFacade.trackEvent(TrackingEventType.MANAGE_TOOLS_WINDOW_CLOSED,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case APP_INTEGRATION:
+                    IntercomFacade.trackEvent(TrackingEventType.APP_INT_WINDOW_CLOSED,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+                case ABOUT:
+                    IntercomFacade.trackEvent(TrackingEventType.ABOUT_WINDOW_CLOSED,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case APP_WIZARD:
+                    IntercomFacade.trackEvent(TrackingEventType.APP_WIZARD_CLOSED,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case NOTIFICATIONS:
+                    IntercomFacade.trackEvent(TrackingEventType.NOTIFICATION_WINDOW_CLOSED,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case SIMPLE_DOWNLOAD:
+                    IntercomFacade.trackEvent(TrackingEventType.SIMPLE_DOWNLOAD_WINDOW_CLOSED,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case WORKFLOW_INTEGRATION:
+                    IntercomFacade.trackEvent(TrackingEventType.WORKFLOW_INT_WINDOW_CLOSED,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case SYSTEM_MESSAGES:
+                    IntercomFacade.trackEvent(TrackingEventType.SYS_MESSAGE_WINDOW_CLOSED,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case COLLABORATION:
+                    IntercomFacade.trackEvent(TrackingEventType.COLLAB_WINDOW_CLOSED,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+                case DATA_VIEWER:
+                    IntercomFacade.trackEvent(TrackingEventType.DATA_VIEWER_WINDOW_CLOSED,
+                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
+                    break;
+
+
+            }
         }
     }
 

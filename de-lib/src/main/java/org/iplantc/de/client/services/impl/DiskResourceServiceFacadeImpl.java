@@ -37,6 +37,8 @@ import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.client.util.JsonUtil;
+import org.iplantc.de.intercom.client.IntercomFacade;
+import org.iplantc.de.intercom.client.TrackingEventType;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.DataCallback;
@@ -582,12 +584,14 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
     @Override
     public void importFromUrl(final String url, final DiskResource dest, DECallback<String> callback) {
         String fullAddress = deProperties.getFileIoBaseUrl() + "urlupload"; //$NON-NLS-1$
-        JSONObject body = new JSONObject();
-        body.put("dest", new JSONString(dest.getPath())); //$NON-NLS-1$
-        body.put("address", new JSONString(url)); //$NON-NLS-1$
 
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, fullAddress, body.toString());
+        Splittable bodySp = StringQuoter.createSplittable();
+        StringQuoter.create(dest.getPath()).assign(bodySp, "dest");
+        StringQuoter.create(url).assign(bodySp, "address");
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, fullAddress, bodySp.getPayload());
         callService(wrapper, callback);
+        IntercomFacade.trackEvent(TrackingEventType.URL_IMPORT_SUBMITTED, bodySp);
     }
 
     @Override

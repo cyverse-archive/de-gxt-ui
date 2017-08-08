@@ -172,6 +172,7 @@ public class DesktopWindowManager {
                 if (sticky != null) {
                     windowManager.bringToFront(sticky);
                 }
+                window.logWindowOpenToIntercom(config);
             }
         });
     }

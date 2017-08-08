@@ -11,6 +11,8 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.widgets.IPCFileUploadField;
 import org.iplantc.de.diskResource.client.events.FileUploadedEvent;
 import org.iplantc.de.diskResource.client.views.dialogs.DuplicateDiskResourceCallback;
+import org.iplantc.de.intercom.client.IntercomFacade;
+import org.iplantc.de.intercom.client.TrackingEventType;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -108,6 +110,12 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
         IPCFileUploadField field = fufList.get(formList.indexOf(event.getSource()));
         String results2 = event.getResults();
         String fieldValue = field.getValue();
+
+        Splittable bodySp = StringQuoter.createSplittable();
+        StringQuoter.create(fieldValue).assign(bodySp, "name");
+        StringQuoter.create(uploadDest.getPath()).assign(bodySp, "destination");
+        IntercomFacade.trackEvent(TrackingEventType.SIMPLE_UPLOAD_SUBMITTED,bodySp);
+
         if (Strings.isNullOrEmpty(results2)) {
             IplantAnnouncer.getInstance()
                            .schedule(new ErrorAnnouncementConfig(appearance.fileUploadsFailed(Lists.newArrayList(
