@@ -30,7 +30,6 @@ public interface EditTeamView extends IsWidget,
         EDIT
     }
 
-    String GROUPER_ID = "de_grouper";
     String SEARCH_MEMBERS_TAG = "members";
     String SEARCH_NON_MEMBERS_TAG = "nonMembers";
 

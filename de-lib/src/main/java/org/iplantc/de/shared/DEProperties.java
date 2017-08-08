@@ -130,6 +130,8 @@ public class DEProperties {
     private static final String GROUPER_ALL_DISPLAY_NAME =
             "org.iplantc.discoveryenvironment.groups.grouper-all-display-name";
 
+    private static final String GROUPER_ID = "org.iplantc.discoveryenvironment.groups.grouper-id";
+
     /**
      * The single instance of this class.
      */
@@ -198,6 +200,8 @@ public class DEProperties {
     private String grouperAllId;
 
     private String grouperAllDisplayName;
+
+    private String grouperId;
 
     public String getPathListFileIdentifier() {
         return pathListFileIdentifier;
@@ -296,6 +300,7 @@ public class DEProperties {
         keys.add(SUPPORT_SERVICE_URL);
         keys.add(GROUPER_ALL_ID);
         keys.add(GROUPER_ALL_DISPLAY_NAME);
+        keys.add(GROUPER_ID);
         return keys;
     }
 
@@ -333,6 +338,7 @@ public class DEProperties {
         supportServiceUrl = properties.get(SUPPORT_SERVICE_URL);
         grouperAllId = properties.get(GROUPER_ALL_ID);
         grouperAllDisplayName = properties.get(GROUPER_ALL_DISPLAY_NAME);
+        grouperId = properties.get(GROUPER_ID);
     }
 
     /**
@@ -501,5 +507,9 @@ public class DEProperties {
 
     public String getGrouperAllDisplayName() {
         return grouperAllDisplayName;
+    }
+
+    public String getGrouperId() {
+        return grouperId;
     }
 }

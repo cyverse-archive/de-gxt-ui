@@ -1,6 +1,5 @@
 package org.iplantc.de.teams.client.presenter;
 
-import static org.iplantc.de.teams.client.EditTeamView.GROUPER_ID;
 import static org.iplantc.de.teams.client.EditTeamView.SEARCH_MEMBERS_TAG;
 
 import org.iplantc.de.client.models.IsHideable;
@@ -56,6 +55,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
     final String ALL_PUBLIC_USERS_NAME;
     final String ALL_PUBLIC_USERS_ID;
+    final String GROUPER_ID;
 
     @Inject
     public EditTeamPresenterImpl(EditTeamView view,
@@ -69,6 +69,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         this.appearance = appearance;
         this.ALL_PUBLIC_USERS_NAME = deProperties.getGrouperAllDisplayName();
         this.ALL_PUBLIC_USERS_ID = deProperties.getGrouperAllId();
+        this.GROUPER_ID = deProperties.getGrouperId();
 
         view.addUserSearchResultSelectedEventHandler(this);
         view.addRemoveMemberPrivilegeSelectedHandler(this);
