@@ -14,7 +14,7 @@ import org.iplantc.de.teams.client.events.CreateTeamSelected;
 import org.iplantc.de.teams.client.events.EditTeamSelected;
 import org.iplantc.de.teams.client.events.LeaveTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
-import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
+import org.iplantc.de.teams.client.events.TeamNameSelected;
 import org.iplantc.de.teams.client.events.TeamSaved;
 import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
 import org.iplantc.de.teams.client.gin.TeamsViewFactory;
@@ -40,8 +40,7 @@ import java.util.List;
  *
  * @author aramsey
  */
-public class TeamsPresenterImpl implements TeamsView.Presenter,
-                                           TeamInfoButtonSelected.TeamInfoButtonSelectedHandler,
+public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected.TeamNameSelectedHandler,
                                            TeamFilterSelectionChanged.TeamFilterSelectionChangedHandler,
                                            CreateTeamSelected.CreateTeamSelectedHandler,
                                            EditTeamSelected.EditTeamSelectedHandler,
@@ -69,7 +68,7 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
         this.searchProxy = searchProxy;
         this.view = viewFactory.create(getPagingLoader());
 
-        view.addTeamInfoButtonSelectedHandler(this);
+        view.addTeamNameSelectedHandler(this);
         view.addTeamFilterSelectionChangedHandler(this);
         view.addCreateTeamSelectedHandler(this);
         view.addEditTeamSelectedHandler(this);
@@ -85,7 +84,7 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
     }
 
     @Override
-    public void onTeamInfoButtonSelected(TeamInfoButtonSelected event) {
+    public void onTeamNameSelected(TeamNameSelected event) {
         Group group = event.getGroup();
         serviceFacade.getTeamMembers(group, new AsyncCallback<List<Subject>>() {
             @Override

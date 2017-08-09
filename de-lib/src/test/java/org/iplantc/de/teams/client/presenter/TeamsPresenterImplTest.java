@@ -19,7 +19,7 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.LeaveTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
-import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
+import org.iplantc.de.teams.client.events.TeamNameSelected;
 import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
 import org.iplantc.de.teams.client.gin.TeamsViewFactory;
 import org.iplantc.de.teams.client.models.TeamsFilter;
@@ -101,7 +101,7 @@ public class TeamsPresenterImplTest {
 
     public void verifyConstructor() {
         verify(viewFactoryMock).create(eq(loaderMock));
-        verify(viewMock).addTeamInfoButtonSelectedHandler(eq(uut));
+        verify(viewMock).addTeamNameSelectedHandler(eq(uut));
         verify(viewMock).addTeamFilterSelectionChangedHandler(eq(uut));
         verify(viewMock).addCreateTeamSelectedHandler(eq(uut));
         verify(viewMock).addEditTeamSelectedHandler(eq(uut));
@@ -121,11 +121,11 @@ public class TeamsPresenterImplTest {
 
     @Test
     public void onTeamInfoButtonSelected() {
-        TeamInfoButtonSelected eventMock = mock(TeamInfoButtonSelected.class);
+        TeamNameSelected eventMock = mock(TeamNameSelected.class);
         when(eventMock.getGroup()).thenReturn(groupMock);
 
         /** CALL METHOD UNDER TEST **/
-        uut.onTeamInfoButtonSelected(eventMock);
+        uut.onTeamNameSelected(eventMock);
 
         verify(serviceFacadeMock).getTeamMembers(eq(groupMock), subjectListCaptor.capture());
 
