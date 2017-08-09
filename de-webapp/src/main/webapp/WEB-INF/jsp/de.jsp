@@ -126,9 +126,9 @@ response.setDateHeader("Expires", 0);
     #intercom-container .intercom-launcher-frame {
         bottom: 45px !important;
     }
-    
-    #intercom-container .intercom-messenger-frame {
-        bottom: 145px !important;
+
+    #intercom-container .intercom-app-launcher-enabled .intercom-messenger-frame {
+        bottom: calc(20px + 100px) !important;
     }
 </style>
 </head>
