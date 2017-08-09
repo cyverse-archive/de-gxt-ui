@@ -11,6 +11,8 @@ import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.diskResource.client.DiskResourceView;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourcePresenterFactory;
+import org.iplantc.de.intercom.client.IntercomFacade;
+import org.iplantc.de.intercom.client.TrackingEventType;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.common.base.Strings;
@@ -76,6 +78,7 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
             @Override
             public void onSelect(SelectEvent event) {
                 WindowUtil.open(constants.faqUrl() + DATA);
+                IntercomFacade.trackEvent(TrackingEventType.DATA_FAQ_CLICKED, null);
             }
         });
     }

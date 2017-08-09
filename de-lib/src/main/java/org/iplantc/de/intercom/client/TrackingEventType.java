@@ -60,12 +60,19 @@ public interface TrackingEventType {
 
     String MANAGE_TOOLS_WINDOW_CLOSED = "Manage Tools Window Closed";
 
-    String COLLAB_WINDOW_OPEN = "Collab Window Open";
+    String COLLAB_WINDOW_OPEN = "Collaborator Window Open";
 
-    String COLLAB_WINDOW_CLOSED = "Collab Window Closed";
+    String COLLAB_WINDOW_CLOSED = "Collaborator Window Closed";
 
     String URL_IMPORT_SUBMITTED = "URL Import Submitted";
 
     String SIMPLE_UPLOAD_SUBMITTED = "Simple Upload Submitted";
 
+    String ANALYSIS_USER_SUPPORT_REQUESTED = "Analysis User Support Requested";
+
+    String DATA_FAQ_CLICKED = "Data FAQ Clicked";
+
+    String APPS_FAQ_CLICKED = "Apps FAQ Clicked";
+
+    String ANALYSES_FAQ_CLICKED = "Analyses FAQ Clicked";
 }
