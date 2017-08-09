@@ -55,7 +55,8 @@
             <grid:Grid ui:field="grid"
                        store="{listStore}"
                        cm="{cm}"
-                       view="{gridView}"/>
+                       view="{gridView}"
+                       height="{appearance.gridHeight}"/>
         </container:child>
     </container:VerticalLayoutContainer>
 </ui:UiBinder>

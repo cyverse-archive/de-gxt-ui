@@ -33,6 +33,7 @@ import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
+import com.sencha.gxt.widget.core.client.form.FieldSet;
 import com.sencha.gxt.widget.core.client.form.TextArea;
 import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
@@ -60,10 +61,13 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     @UiField @Ignore FieldLabel teamDescLabel;
     @UiField TextField nameEditor;
     @UiField TextArea descriptionEditor;
+    @UiField ToolBar memberToolbar;
     @UiField @Ignore TextButton removeMember;
+    @UiField @Ignore FieldLabel memberOptOutExplanation;
     @UiField Grid<Privilege> nonMembersGrid;
     @UiField(provided = true) ListStore<Privilege> nonMembersListStore;
     @UiField(provided = true) ColumnModel<Privilege> nonMembersCm;
+    @UiField FieldSet nonMembersFieldSet;
     @UiField ToolBar nonMemberToolbar;
     @UiField @Ignore TextButton removeNonMember;
     @UiField @Ignore TextButton addPublicUser;
@@ -200,6 +204,18 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     public void setPublicUserButtonVisibility(boolean isVisible) {
         addPublicUser.setVisible(isVisible);
         nonMemberToolbar.forceLayout();
+    }
+
+    @Override
+    public void showAdminMode(boolean adminMode) {
+        if (adminMode) {
+            nonMembersFieldSet.show();
+            memberOptOutExplanation.show();
+            memberToolbar.show();
+
+            nameEditor.enable();
+            descriptionEditor.enable();
+        }
     }
 
     @UiHandler("removeNonMember")

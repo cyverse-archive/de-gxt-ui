@@ -100,7 +100,7 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
 
     @Override
     public int teamDetailsHeight() {
-        return 500;
+        return 350;
     }
 
     @Override
@@ -270,5 +270,10 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     @Override
     public String leaveTeamFail() {
         return displayStrings.leaveTeamFail();
+    }
+
+    @Override
+    public String gridHeight() {
+        return "150px";
     }
 }
