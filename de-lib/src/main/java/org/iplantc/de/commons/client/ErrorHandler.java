@@ -64,7 +64,8 @@ public class ErrorHandler {
     private static final List<String> messageStrings =
             Lists.newArrayList("message",
                                "msg",
-                               "reason");
+                               "reason",
+                               "grouper_result_message");
 
 
 
