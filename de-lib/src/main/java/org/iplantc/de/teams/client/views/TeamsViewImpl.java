@@ -6,11 +6,11 @@ import org.iplantc.de.teams.client.events.CreateTeamSelected;
 import org.iplantc.de.teams.client.events.EditTeamSelected;
 import org.iplantc.de.teams.client.events.LeaveTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
-import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
+import org.iplantc.de.teams.client.events.TeamNameSelected;
 import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
 import org.iplantc.de.teams.client.models.GroupProperties;
 import org.iplantc.de.teams.client.models.TeamsFilter;
-import org.iplantc.de.teams.client.views.cells.TeamInfoCell;
+import org.iplantc.de.teams.client.views.cells.TeamNameCell;
 import org.iplantc.de.teams.client.views.widgets.TeamSearchField;
 import org.iplantc.de.teams.shared.Teams;
 
@@ -64,17 +64,17 @@ public class TeamsViewImpl extends Composite implements TeamsView {
     @UiField GridView<Group> gridView;
     @UiField ListStore<Group> listStore;
     private GroupProperties properties;
-    private TeamInfoCell infoCell;
+    private TeamNameCell nameCell;
     private PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Group>> loader;
 
     @Inject
     public TeamsViewImpl(TeamsViewAppearance appearance,
                          GroupProperties properties,
-                         TeamInfoCell infoCell,
+                         TeamNameCell nameCell,
                          @Assisted PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Group>> loader) {
         this.appearance = appearance;
         this.properties = properties;
-        this.infoCell = infoCell;
+        this.nameCell = nameCell;
         this.loader = loader;
 
         initWidget(uiBinder.createAndBindUi(this));
@@ -101,17 +101,13 @@ public class TeamsViewImpl extends Composite implements TeamsView {
     @UiFactory
     ColumnModel<Group> createColumnModel() {
         List<ColumnConfig<Group, ?>> list = Lists.newArrayList();
-        ColumnConfig<Group, Group> infoCol = new ColumnConfig<>(new IdentityValueProvider<Group>(""),
-                                                                appearance.infoColWidth());
-
-        ColumnConfig<Group, String> nameCol = new ColumnConfig<>(properties.extension(),
+        ColumnConfig<Group, Group> nameCol = new ColumnConfig<>(new IdentityValueProvider<>("extension"),
                                                                  appearance.nameColumnWidth(),
                                                                  appearance.nameColumnLabel());
         ColumnConfig<Group, String> descCol = new ColumnConfig<>(properties.description(),
                                                                  appearance.descColumnWidth(),
                                                                  appearance.descColumnLabel());
-        infoCol.setCell(infoCell);
-        list.add(infoCol);
+        nameCol.setCell(nameCell);
         list.add(nameCol);
         list.add(descCol);
         return new ColumnModel<>(list);
@@ -149,15 +145,15 @@ public class TeamsViewImpl extends Composite implements TeamsView {
         grid.ensureDebugId(baseID + Teams.Ids.GRID);
 
         for (ColumnConfig<Group, ?> cc : cm.getColumns()) {
-            if (cc.getCell() instanceof TeamInfoCell) {
-                ((TeamInfoCell)cc.getCell()).setBaseDebugId(baseID);
+            if (cc.getCell() instanceof TeamNameCell) {
+                ((TeamNameCell)cc.getCell()).setBaseDebugId(baseID);
             }
         }
     }
 
     @Override
-    public HandlerRegistration addTeamInfoButtonSelectedHandler(TeamInfoButtonSelected.TeamInfoButtonSelectedHandler handler) {
-        return infoCell.addTeamInfoButtonSelectedHandler(handler);
+    public HandlerRegistration addTeamNameSelectedHandler(TeamNameSelected.TeamNameSelectedHandler handler) {
+        return nameCell.addTeamNameSelectedHandler(handler);
     }
 
     @Override

@@ -3,7 +3,7 @@ package org.iplantc.de.teams.client.views.cells;
 import static com.google.gwt.dom.client.BrowserEvents.CLICK;
 
 import org.iplantc.de.client.models.groups.Group;
-import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
+import org.iplantc.de.teams.client.events.TeamNameSelected;
 import org.iplantc.de.teams.shared.Teams;
 
 import com.google.gwt.cell.client.AbstractCell;
@@ -20,24 +20,24 @@ import com.google.gwt.user.client.Event;
  * The cell within the Teams view that will show the user the info icon and display Team info once clicked
  * @author aramsey
  */
-public class TeamInfoCell extends AbstractCell<Group> implements TeamInfoButtonSelected.HasTeamInfoButtonSelectedHandlers{
+public class TeamNameCell extends AbstractCell<Group> implements TeamNameSelected.HasTeamNameSelectedHandlers {
 
-    public interface TeamInfoCellAppearance {
+    public interface TeamNameCellAppearance {
         String CLICKABLE_ELEMENT_NAME = "teamName";
 
         void render(SafeHtmlBuilder sb, Group group, String debugId);
     }
 
-    private final TeamInfoCellAppearance appearance;
+    private final TeamNameCellAppearance appearance;
     private String baseId;
     private HandlerManager handlerManager;
 
 
-    public TeamInfoCell() {
-        this(GWT.create(TeamInfoCellAppearance.class));
+    public TeamNameCell() {
+        this(GWT.create(TeamNameCellAppearance.class));
     }
 
-    public TeamInfoCell(TeamInfoCellAppearance appearance) {
+    public TeamNameCell(TeamNameCellAppearance appearance) {
         super(CLICK);
         this.appearance = appearance;
     }
@@ -62,8 +62,8 @@ public class TeamInfoCell extends AbstractCell<Group> implements TeamInfoButtonS
         Element eventTargetElement = Element.as(event.getEventTarget());
         if ((Event.as(event).getTypeInt() == Event.ONCLICK)
             && eventTargetElement.getAttribute("name")
-                                 .equalsIgnoreCase(TeamInfoCellAppearance.CLICKABLE_ELEMENT_NAME)) {
-            handlerManager.fireEvent(new TeamInfoButtonSelected(value));
+                                 .equalsIgnoreCase(TeamNameCellAppearance.CLICKABLE_ELEMENT_NAME)) {
+            handlerManager.fireEvent(new TeamNameSelected(value));
         }
     }
 
@@ -72,8 +72,8 @@ public class TeamInfoCell extends AbstractCell<Group> implements TeamInfoButtonS
     }
 
     @Override
-    public HandlerRegistration addTeamInfoButtonSelectedHandler(TeamInfoButtonSelected.TeamInfoButtonSelectedHandler handler) {
-        return ensureHandlers().addHandler(TeamInfoButtonSelected.TYPE, handler);
+    public HandlerRegistration addTeamNameSelectedHandler(TeamNameSelected.TeamNameSelectedHandler handler) {
+        return ensureHandlers().addHandler(TeamNameSelected.TYPE, handler);
     }
 
     protected HandlerManager ensureHandlers() {

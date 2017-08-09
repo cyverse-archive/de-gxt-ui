@@ -1,0 +1,7 @@
+.team_name {
+    cursor: pointer;
+}
+
+.team_name:hover {
+    text-decoration: underline;
+}
