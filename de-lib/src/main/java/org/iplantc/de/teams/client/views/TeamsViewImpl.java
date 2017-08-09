@@ -36,13 +36,12 @@ import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.SimpleComboBox;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.grid.GridView;
-import com.sencha.gxt.widget.core.client.menu.Item;
-import com.sencha.gxt.widget.core.client.menu.MenuItem;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
 import java.util.List;
@@ -57,10 +56,7 @@ public class TeamsViewImpl extends Composite implements TeamsView {
 
     @UiField(provided = true) TeamsViewAppearance appearance;
     @UiField ToolBar toolbar;
-    @UiField TextButton teamsMenu;
-    @UiField MenuItem newTeamMI;
-    @UiField MenuItem manageTeamMI;
-    @UiField MenuItem leaveTeamMI;
+    @UiField TextButton createTeam;
     @UiField SimpleComboBox<TeamsFilter> teamFilter;
     @UiField TeamSearchField searchField;
     @UiField ColumnModel<Group> cm;
@@ -131,25 +127,9 @@ public class TeamsViewImpl extends Composite implements TeamsView {
         return new TeamSearchField(loader);
     }
 
-    @UiHandler("newTeamMI")
-    void onNewTeamSelected(SelectionEvent<Item> event) {
+    @UiHandler("createTeam")
+    void onNewTeamSelected(SelectEvent event) {
         fireEvent(new CreateTeamSelected());
-    }
-
-    @UiHandler("manageTeamMI")
-    void onManageTeamSelected(SelectionEvent<Item> event) {
-        Group selectedTeam = grid.getSelectionModel().getSelectedItem();
-        if (selectedTeam != null) {
-            fireEvent(new EditTeamSelected(selectedTeam));
-        }
-    }
-
-    @UiHandler("leaveTeamMI")
-    void onLeaveTeamSelected(SelectionEvent<Item> event) {
-        Group selectedTeam = grid.getSelectionModel().getSelectedItem();
-        if (selectedTeam != null) {
-            fireEvent(new LeaveTeamSelected(selectedTeam));
-        }
     }
 
     @Override
@@ -163,11 +143,7 @@ public class TeamsViewImpl extends Composite implements TeamsView {
 
         String toolbarId = baseID + Teams.Ids.TEAMS_TOOLBAR;
         toolbar.ensureDebugId(toolbarId);
-        String teamsMenuId = toolbarId + Teams.Ids.TEAMS_MENU;
-        teamsMenu.ensureDebugId(teamsMenuId);
-        newTeamMI.ensureDebugId(teamsMenuId + Teams.Ids.CREATE_TEAM);
-        manageTeamMI.ensureDebugId(teamsMenuId + Teams.Ids.MANAGE_TEAM);
-        leaveTeamMI.ensureDebugId(teamsMenuId + Teams.Ids.LEAVE_TEAM);
+        createTeam.ensureDebugId(toolbarId + Teams.Ids.CREATE_TEAM);
         teamFilter.asWidget().ensureDebugId(toolbarId + Teams.Ids.FILTER_TEAMS);
         searchField.asWidget().ensureDebugId(toolbarId + Teams.Ids.SEARCH_FIELD);
         grid.ensureDebugId(baseID + Teams.Ids.GRID);
