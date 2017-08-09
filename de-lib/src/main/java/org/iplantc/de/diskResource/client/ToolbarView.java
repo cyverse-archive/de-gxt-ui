@@ -319,7 +319,7 @@ public interface ToolbarView extends IsWidget,
 
         void onDoiRequest(String uuid);
 
-        void onAutomateHTPathlist();
+        void onAutomateHTPathList();
 
     }
 
