@@ -3,8 +3,6 @@ package org.iplantc.de.teams.client.views;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.CreateTeamSelected;
-import org.iplantc.de.teams.client.events.EditTeamSelected;
-import org.iplantc.de.teams.client.events.LeaveTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamNameSelected;
 import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
@@ -191,15 +189,5 @@ public class TeamsViewImpl extends Composite implements TeamsView {
     @Override
     public HandlerRegistration addCreateTeamSelectedHandler(CreateTeamSelected.CreateTeamSelectedHandler handler) {
         return addHandler(handler, CreateTeamSelected.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration addEditTeamSelectedHandler(EditTeamSelected.EditTeamSelectedHandler handler) {
-        return addHandler(handler, EditTeamSelected.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration addLeaveTeamSelectedHandler(LeaveTeamSelected.LeaveTeamSelectedHandler handler) {
-        return addHandler(handler, LeaveTeamSelected.TYPE);
     }
 }

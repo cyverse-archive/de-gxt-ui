@@ -27,7 +27,8 @@ public interface EditTeamView extends IsWidget,
 
     enum MODE {
         CREATE,
-        EDIT
+        EDIT,
+        VIEW
     }
 
     String SEARCH_MEMBERS_TAG = "members";
@@ -116,4 +117,11 @@ public interface EditTeamView extends IsWidget,
      * @param isVisible
      */
     void setPublicUserButtonVisibility(boolean isVisible);
+
+    /**
+     * Enables aspects of the Edit Team view that are only applicable to those with admin privileges
+     * @param adminMode
+     */
+    void showAdminMode(boolean adminMode);
+
 }

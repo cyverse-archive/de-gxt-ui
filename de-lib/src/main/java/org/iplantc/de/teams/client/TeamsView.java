@@ -3,8 +3,6 @@ package org.iplantc.de.teams.client;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.teams.client.events.CreateTeamSelected;
-import org.iplantc.de.teams.client.events.EditTeamSelected;
-import org.iplantc.de.teams.client.events.LeaveTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamNameSelected;
 import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
@@ -22,9 +20,7 @@ public interface TeamsView extends IsWidget,
                                    IsMaskable, TeamNameSelected.HasTeamNameSelectedHandlers,
                                    TeamFilterSelectionChanged.HasTeamFilterSelectionChangedHandlers,
                                    CreateTeamSelected.HasCreateTeamSelectedHandlers,
-                                   EditTeamSelected.HasEditTeamSelectedHandlers,
-                                   TeamSearchResultLoad.TeamSearchResultLoadHandler,
-                                   LeaveTeamSelected.HasLeaveTeamSelectedHandlers {
+                                   TeamSearchResultLoad.TeamSearchResultLoadHandler {
 
     /**
      * An appearance class for all string related items in the Teams view
@@ -124,6 +120,8 @@ public interface TeamsView extends IsWidget,
         int leaveTeamWidth();
 
         String leaveTeamFail();
+
+        String gridHeight();
     }
 
     /**

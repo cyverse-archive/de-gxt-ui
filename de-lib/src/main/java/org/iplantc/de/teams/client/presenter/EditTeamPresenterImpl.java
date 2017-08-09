@@ -54,6 +54,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     @Inject UserInfo userInfo;
     @Inject AsyncProviderWrapper<SaveTeamProgressDialog> progressDialogProvider;
 
+    boolean isAdmin;
     final String ALL_PUBLIC_USERS_NAME;
     final String ALL_PUBLIC_USERS_ID;
     final String GROUPER_ID;
@@ -88,8 +89,9 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
             mode = EditTeamView.MODE.CREATE;
             addPublicUser();
+            view.showAdminMode(true);
         } else {
-            mode = EditTeamView.MODE.EDIT;
+            mode = EditTeamView.MODE.VIEW;
             getTeamPrivileges(group);
             originalGroup = copy(group);
         }
@@ -108,6 +110,9 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
             @Override
             public void onSuccess(List<Privilege> privileges) {
+                isAdmin = isAdmin(privileges);
+                mode = isAdmin ? EditTeamView.MODE.EDIT : EditTeamView.MODE.VIEW;
+                view.showAdminMode(isAdmin);
                 if (privileges != null && !privileges.isEmpty()) {
                     List<Privilege> filteredPrivs = filterExtraPrivileges(privileges);
                     renamePublicUser(filteredPrivs);
@@ -117,6 +122,17 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                 }
             }
         });
+    }
+
+    boolean isAdmin(List<Privilege> privileges) {
+        if (privileges == null || privileges.isEmpty()) {
+            return false;
+        }
+        List<Privilege> adminPrivs = privileges.stream()
+                                            .filter(privilege -> isCurrentUserPrivilege(privilege) &&
+                                                                 privilege.getPrivilegeType().equals(PrivilegeType.admin))
+                                            .collect(Collectors.toList());
+        return adminPrivs != null && !adminPrivs.isEmpty();
     }
 
     void getTeamMembers(Group group, List<Privilege> privileges) {
@@ -140,6 +156,9 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
     @Override
     public void saveTeamSelected(IsHideable hideable) {
+        if (mode == EditTeamView.MODE.VIEW) {
+            hideable.hide();
+        }
         progressDialogProvider.get(new AsyncCallback<SaveTeamProgressDialog>() {
             @Override
             public void onFailure(Throwable throwable) {
@@ -440,8 +459,8 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     List<Privilege> filterExtraPrivileges(List<Privilege> privileges) {
         return privileges.stream()
                          .filter(privilege -> (privilege.getPrivilegeType() != PrivilegeType.optout
-                                               && !isCurrentUserPrivilege(privilege))
-                                               && !isDeGrouperPrivilege(privilege))
+                                               && !isCurrentUserPrivilege(privilege)
+                                               && !isDeGrouperPrivilege(privilege)))
                          .collect(Collectors.toList());
     }
 
