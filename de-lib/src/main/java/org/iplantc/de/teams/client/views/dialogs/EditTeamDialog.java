@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
+import org.iplantc.de.teams.client.events.LeaveTeamCompleted;
 import org.iplantc.de.teams.client.events.TeamSaved;
 import org.iplantc.de.teams.shared.Teams;
 
@@ -18,7 +19,8 @@ import com.sencha.gxt.widget.core.client.toolbar.FillToolItem;
 /**
  * The main dialog that presents the form to users for creating/editing a team
  */
-public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSavedHandlers {
+public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSavedHandlers,
+                                                            LeaveTeamCompleted.HasLeaveTeamCompletedHandlers {
     private EditTeamView.Presenter presenter;
     private TeamsView.TeamsViewAppearance appearance;
 
@@ -58,9 +60,9 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
 
     void setButtons() {
         TextButton leaveBtn = new TextButton("Leave Team");
-        leaveBtn.addSelectHandler(event -> presenter.onLeaveButtonSelected());
+        leaveBtn.addSelectHandler(event -> presenter.onLeaveButtonSelected(this));
         TextButton deleteBtn = new TextButton("Delete Team");
-        deleteBtn.addSelectHandler(event -> presenter.onDeleteButtonSelected());
+        deleteBtn.addSelectHandler(event -> presenter.onDeleteButtonSelected(this));
 
         buttonBar.setPack(BoxLayoutContainer.BoxLayoutPack.START);
         addButton(leaveBtn);
@@ -86,5 +88,10 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
     @Override
     public HandlerRegistration addTeamSavedHandler(TeamSaved.TeamSavedHandler handler) {
         return presenter.addTeamSavedHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addLeaveTeamCompletedHandler(LeaveTeamCompleted.LeaveTeamCompletedHandler handler) {
+        return presenter.addLeaveTeamCompletedHandler(handler);
     }
 }

@@ -178,7 +178,10 @@ public class TeamsViewImpl extends Composite implements TeamsView {
 
     @Override
     public void removeTeam(Group team) {
-        listStore.remove(team);
+        Group found = listStore.findModel(team);
+        if (found != null) {
+            listStore.remove(found);
+        }
     }
 
     @Override

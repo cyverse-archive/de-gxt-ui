@@ -1,11 +1,8 @@
 package org.iplantc.de.teams.client.presenter;
 
 import org.iplantc.de.client.models.groups.Group;
-import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
-import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.teams.client.TeamsView;
@@ -17,7 +14,6 @@ import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
 import org.iplantc.de.teams.client.gin.TeamsViewFactory;
 import org.iplantc.de.teams.client.models.TeamsFilter;
 import org.iplantc.de.teams.client.views.dialogs.EditTeamDialog;
-import org.iplantc.de.teams.client.views.dialogs.LeaveTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.TeamDetailsDialog;
 
 import com.google.common.collect.Lists;
@@ -47,7 +43,6 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
 
     @Inject AsyncProviderWrapper<TeamDetailsDialog> detailsDlgProvider;
     @Inject AsyncProviderWrapper<EditTeamDialog> editTeamDlgProvider;
-    @Inject AsyncProviderWrapper<LeaveTeamDialog> leaveTeamDlgProvider;
     @Inject IplantAnnouncer announcer;
     TeamsFilter currentFilter;
 
@@ -92,6 +87,10 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
                         Group team = event.getGroup();
                         view.updateTeam(team);
                     }
+                });
+                dialog.addLeaveTeamCompletedHandler(event -> {
+                    Group team = event.getTeam();
+                    view.removeTeam(team);
                 });
             }
         });
@@ -172,53 +171,10 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
                         view.addTeams(Lists.newArrayList(team));
                     }
                 });
-            }
-        });
-    }
-
-//    @Override
-//    public void onLeaveTeamSelected(LeaveTeamSelected event) {
-//        leaveTeamDlgProvider.get(new AsyncCallback<LeaveTeamDialog>() {
-//            @Override
-//            public void onFailure(Throwable caught) {}
-//
-//            @Override
-//            public void onSuccess(LeaveTeamDialog dialog) {
-//                Group group = event.getGroup();
-//                dialog.show(group);
-//                dialog.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
-//                    @Override
-//                    public void onDialogHide(DialogHideEvent event) {
-//                        Dialog.PredefinedButton hideButton = event.getHideButton();
-//                        if (Dialog.PredefinedButton.YES.equals(hideButton)) {
-//                            leaveTeam(group);
-//                        } else {
-//                            dialog.hide();
-//                        }
-//                    }
-//                });
-//            }
-//        });
-//    }
-
-    void leaveTeam(Group team) {
-        serviceFacade.leaveTeam(team, new AsyncCallback<List<UpdateMemberResult>>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(List<UpdateMemberResult> result) {
-                if (result != null && !result.isEmpty()) {
-                    UpdateMemberResult updateMemberResult = result.get(0);
-                    if (updateMemberResult.isSuccess()) {
-                        announcer.schedule(new IplantAnnouncementConfig(appearance.leaveTeamSuccess(team)));
-                        view.removeTeam(team);
-                    } else {
-                        announcer.schedule(new ErrorAnnouncementConfig(appearance.leaveTeamFail()));
-                    }
-                }
+                dialog.addLeaveTeamCompletedHandler(event -> {
+                    Group team = event.getTeam();
+                    view.removeTeam(team);
+                });
             }
         });
     }
