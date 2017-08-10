@@ -1,0 +1,11 @@
+<module>
+    <!-- View -->
+    <replace-with class="org.iplantc.de.theme.base.client.teams.TeamsViewDefaultAppearance">
+        <when-type-is class="org.iplantc.de.teams.client.TeamsView.TeamsViewAppearance"/>
+    </replace-with>
+
+    <replace-with class="org.iplantc.de.theme.base.client.teams.cells.TeamInfoCellDefaultAppearance">
+        <when-type-is class="org.iplantc.de.teams.client.views.cells.TeamInfoCell.TeamInfoCellAppearance"/>
+    </replace-with>
+
+</module>

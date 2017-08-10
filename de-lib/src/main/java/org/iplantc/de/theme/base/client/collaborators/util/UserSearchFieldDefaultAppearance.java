@@ -44,8 +44,14 @@ public class UserSearchFieldDefaultAppearance implements UserSearchField.UserSea
     @Override
     public void render(Cell.Context context, Subject subject, SafeHtmlBuilder sb) {
         String name = subject.getSubjectDisplayName();
-        if (subject.isCollaboratorList()) {
-            sb.append(userTemplate.render(name, null, iplantResources.list().getSafeUri()));
+        if (subject.isGroup()) {
+            SafeUri uri;
+            if (subject.isCollaboratorList()) {
+                uri = iplantResources.list().getSafeUri();
+            } else {
+                uri = iplantResources.group().getSafeUri();
+            }
+            sb.append(userTemplate.render(name, null, uri));
         } else {
             sb.append(userTemplate.render(name, subject.getInstitution(), null));
         }

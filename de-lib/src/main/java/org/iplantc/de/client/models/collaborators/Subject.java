@@ -3,7 +3,6 @@ package org.iplantc.de.client.models.collaborators;
 import org.iplantc.de.client.models.HasSettableId;
 
 import com.google.common.base.Strings;
-import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.HasName;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -19,7 +18,9 @@ import java.util.List;
 public interface Subject extends HasSettableId, HasName {
 
     String GROUP_IDENTIFIER = "g:gsa";
-    String GROUP_LONG_NAME_REGEX = ".*collaborator-lists:(.+)";
+    String GROUP_NAME_DELIMITER = ":";
+    String LIST_LONG_NAME_REGEX = ".*collaborator-lists:(.+)";
+    String TEAM_LONG_NAME_REGEX = ".*teams:.+:(.+)";
 
     @AutoBean.PropertyName("first_name")
     String getFirstName();
@@ -57,7 +58,13 @@ public interface Subject extends HasSettableId, HasName {
     @AutoBean.PropertyName("source_id")
     void setSourceId(String sourceId);
 
-    default boolean isCollaboratorList() {
+    @AutoBean.PropertyName("display_name")
+    String getDisplayName();
+
+    @AutoBean.PropertyName("display_name")
+    void setDisplayName(String name);
+
+    default boolean isGroup() {
         return GROUP_IDENTIFIER.equals(getSourceId());
     }
 
@@ -66,29 +73,58 @@ public interface Subject extends HasSettableId, HasName {
         if (Strings.isNullOrEmpty(subjectName)) {
             subjectName = getFirstName() + " " + getLastName();
         }
-        if (!isCollaboratorList() || !hasCollaboratorListLongName(subjectName)) {
+        if (!isGroup() || !hasGroupLongName(subjectName)) {
             return subjectName;
         } else {
-            return getCollaboratorListDisplayName(subjectName);
+           return getGroupShortName();
         }
     }
 
-    default boolean hasCollaboratorListLongName(String name) {
-        RegExp regex = RegExp.compile(GROUP_LONG_NAME_REGEX);
-        return regex.test(name);
+    /**
+     * The "name" field in a Subject (or Group) autobean should have the displayable short name.
+     * For example, the list called "iplant:de:de-2:users:aramsey:collaborator-lists:test-list"
+     * should only have "test-list" in the "name" field.
+     * However if the subject is a team, the team name (to distinguish teams with the same
+     * names created by different people) is in the format of `subject_id:team_name`.  The UI
+     * for now only wants to display the team name.
+     * @return
+     */
+    default String getGroupShortName() {
+        String name = getName();
+        if (Strings.isNullOrEmpty(name)) {
+            return "";
+        }
+        int lastIndex = name.lastIndexOf(GROUP_NAME_DELIMITER);
+        if (lastIndex > 0) {
+            return name.substring(lastIndex + 1);
+        }
+        return name;
     }
 
     /**
-     * Currently subject.getName from the GET /subjects endpoints returns the full name, for example
-     * iplant:de:de-2:users:aramsey:collaborator-lists:test
-     *
-     * Instead, we want to return the part that comes after "collaborator-lists:"
+     * A group name created from the DE is not allowed to have a : character in it
+     * If the : character exists in the name, the name field might contain the full extended name that
+     * includes the grouper folder structure or it might be a team
      * @param name
      * @return
      */
-    default String getCollaboratorListDisplayName(String name) {
-        RegExp regex = RegExp.compile(GROUP_LONG_NAME_REGEX);
-        MatchResult match = regex.exec(name);
-        return match.getGroup(1);
+    default boolean hasGroupLongName(String name) {
+        return isGroup() && getName() != null && getName().contains(GROUP_NAME_DELIMITER);
+    }
+
+    /**
+     * Since collaborator lists and teams are both groups, the only way to distinguish the
+     * two is by the "display_name" field which contains the entire grouper folder structure e.g.
+     * iplant:de:de-2:users:aramsey:collaborator-lists:test-list
+     * @return
+     */
+    default boolean isCollaboratorList() {
+        RegExp regex = RegExp.compile(LIST_LONG_NAME_REGEX);
+        return regex.test(getDisplayName());
+    }
+
+    default boolean isTeam() {
+        RegExp regex = RegExp.compile(TEAM_LONG_NAME_REGEX);
+        return regex.test(getDisplayName());
     }
 }

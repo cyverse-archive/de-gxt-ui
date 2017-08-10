@@ -18,7 +18,20 @@ public interface GroupServiceFacade {
      * @param searchTerm
      * @param callback
      */
-    void getGroups(AsyncCallback<List<Subject>> callback);
+    void getLists(AsyncCallback<List<Subject>> callback);
+
+    /**
+     * Get the list of all Teams for which the user has View permissions
+     * @param callback
+     */
+    void getTeams(AsyncCallback<List<Group>> callback);
+
+    /**
+     * Get the the list of all Teams that a user belongs to
+     * @param callback
+     */
+    void getMyTeams(AsyncCallback<List<Group>> callback);
+
 
     /**
      * Create a Collaborator List
@@ -40,7 +53,14 @@ public interface GroupServiceFacade {
      * @param group
      * @param callback
      */
-    void getMembers(Group group, AsyncCallback<List<Subject>> callback);
+    void getListMembers(Group group, AsyncCallback<List<Subject>> callback);
+
+    /**
+     * Get the list of members who belong to a Team
+     * @param group
+     * @param callback
+     */
+    void getTeamMembers(Group group, AsyncCallback<List<Subject>> callback);
 
     /**
      * Delete members from a Collaborator List

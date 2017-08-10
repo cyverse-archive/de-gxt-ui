@@ -251,7 +251,7 @@ public class ManageCollaboratorsPresenterTest {
         /** CALL METHOD UNDER TEST **/
         uut.getGroups();
 
-        verify(groupServiceFacadeMock).getGroups(subjectListCallbackConverter.capture());
+        verify(groupServiceFacadeMock).getLists(subjectListCallbackConverter.capture());
 
         subjectListCallbackConverter.getValue().onSuccess(subjectListMock);
         verify(viewMock).addCollaborators(eq(subjectListMock));
@@ -359,7 +359,7 @@ public class ManageCollaboratorsPresenterTest {
         uut.loadCurrentCollaborators();
 
         verify(viewMock).maskCollaborators(anyString());
-        verify(groupServiceFacadeMock).getMembers(eq(defaultGroup), collabListCallbackCaptor.capture());
+        verify(groupServiceFacadeMock).getListMembers(eq(defaultGroup), collabListCallbackCaptor.capture());
 
         collabListCallbackCaptor.getValue().onSuccess(subjectListMock);
         verify(viewMock).unmaskCollaborators();

@@ -14,6 +14,7 @@ import org.iplantc.de.fileViewers.client.gin.FileViewerGinModule;
 import org.iplantc.de.notifications.client.gin.NotificationGinModule;
 import org.iplantc.de.preferences.client.gin.PreferencesGinModule;
 import org.iplantc.de.tags.client.gin.TagsGinModule;
+import org.iplantc.de.teams.client.gin.TeamsGinModule;
 import org.iplantc.de.tools.client.gin.ToolsGinModule;
 
 import com.google.gwt.core.client.GWT;
@@ -35,6 +36,7 @@ import com.google.gwt.inject.client.Ginjector;
               TagsGinModule.class,
               FileViewerGinModule.class,
               CollaboratorsGinModule.class,
+              TeamsGinModule.class,
               NotificationGinModule.class,
               PreferencesGinModule.class,
               CommonsGinModule.class })

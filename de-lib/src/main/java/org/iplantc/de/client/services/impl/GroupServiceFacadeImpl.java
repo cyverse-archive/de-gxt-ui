@@ -5,10 +5,12 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PATCH;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.CollaboratorAutoBeanFactory;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
+import org.iplantc.de.client.models.groups.GroupList;
 import org.iplantc.de.client.models.groups.UpdateMemberRequest;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.models.groups.UpdateMemberResultList;
@@ -37,10 +39,12 @@ import javax.inject.Inject;
 public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
     private final String LISTS = "org.iplantc.services.collaboratorLists";
+    private final String TEAMS = "org.iplantc.services.teams";
 
     private GroupAutoBeanFactory factory;
     private CollaboratorAutoBeanFactory collabFactory;
     private DiscEnvApiService deService;
+    @Inject UserInfo userInfo;
 
     @Inject
     public GroupServiceFacadeImpl(GroupAutoBeanFactory factory,
@@ -53,11 +57,39 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void getGroups(AsyncCallback<List<Subject>> callback) {
+    public void getLists(AsyncCallback<List<Subject>> callback) {
         String address = LISTS;
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new GroupListToSubjectListCallbackConverter(callback, factory));
+    }
+
+    @Override
+    public void getTeams(AsyncCallback<List<Group>> callback) {
+        String address = TEAMS;
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
+        deService.getServiceData(wrapper, new AsyncCallbackConverter<String, List<Group>>(callback) {
+            @Override
+            protected List<Group> convertFrom(String object) {
+                GroupList groupList = AutoBeanCodex.decode(factory, GroupList.class, object).as();
+                return groupList.getGroups();
+            }
+        });
+    }
+
+    @Override
+    public void getMyTeams(AsyncCallback<List<Group>> callback) {
+        String address = TEAMS + "?member=" + userInfo.getUsername();
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
+        deService.getServiceData(wrapper, new AsyncCallbackConverter<String, List<Group>>(callback) {
+            @Override
+            protected List<Group> convertFrom(String object) {
+                GroupList groupList = AutoBeanCodex.decode(factory, GroupList.class, object).as();
+                return groupList.getGroups();
+            }
+        });
     }
 
     @Override
@@ -79,9 +111,19 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void getMembers(Group group, AsyncCallback<List<Subject>> callback) {
+    public void getListMembers(Group group, AsyncCallback<List<Subject>> callback) {
+        getMembers(group, LISTS, callback);
+    }
+
+    @Override
+    public void getTeamMembers(Group group, AsyncCallback<List<Subject>> callback) {
+        getMembers(group, TEAMS, callback);
+    }
+
+    void getMembers(Group group, String address, AsyncCallback<List<Subject>> callback) {
         String groupName = group.getName();
-        String address = LISTS + "/" + URL.encodePathSegment(groupName) + "/members";
+        address += "/" + URL.encodePathSegment(groupName) + "/members";
+
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new SubjectMemberListCallbackConverter(callback, collabFactory));

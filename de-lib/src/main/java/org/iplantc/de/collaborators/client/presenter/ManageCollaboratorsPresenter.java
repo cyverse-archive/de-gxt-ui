@@ -311,7 +311,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
     @Override
     public void getGroups() {
-        groupServiceFacade.getGroups(new AsyncCallback<List<Subject>>() {
+        groupServiceFacade.getLists(new AsyncCallback<List<Subject>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
@@ -446,7 +446,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     public void loadCurrentCollaborators() {
         view.maskCollaborators(null);
         Group defaultGroup = groupFactory.getDefaultGroup();
-        groupServiceFacade.getMembers(defaultGroup, new AsyncCallback<List<Subject>>() {
+        groupServiceFacade.getListMembers(defaultGroup, new AsyncCallback<List<Subject>>() {
 
             @Override
             public void onFailure(Throwable caught) {
