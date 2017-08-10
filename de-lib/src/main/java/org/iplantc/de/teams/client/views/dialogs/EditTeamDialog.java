@@ -11,6 +11,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
+import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.container.BoxLayoutContainer;
+import com.sencha.gxt.widget.core.client.toolbar.FillToolItem;
 
 /**
  * The main dialog that presents the form to users for creating/editing a team
@@ -29,17 +32,7 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
         setPixelSize(appearance.editTeamWidth(), appearance.editTeamHeight());
         setMinWidth(appearance.editTeamWidth());
         setOnEsc(false);
-        setHideOnButtonClick(false);
-        addOkButtonSelectHandler(selectEvent -> {
-            if (presenter.isViewValid()) {
-                presenter.saveTeamSelected(this);
-            } else {
-                AlertMessageBox alertMsgBox =
-                        new AlertMessageBox(appearance.completeRequiredFieldsHeading(), appearance.completeRequiredFieldsError());
-                alertMsgBox.show();
-            }
-        });
-        addCancelButtonSelectHandler(selectEvent -> hide());
+        setButtons();
     }
 
     public void show(Group group) {
@@ -61,6 +54,33 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
         super.onEnsureDebugId(baseID);
 
         presenter.setViewDebugId(Teams.Ids.EDIT_TEAM_DIALOG);
+    }
+
+    void setButtons() {
+        TextButton leaveBtn = new TextButton("Leave Team");
+        leaveBtn.addSelectHandler(event -> presenter.onLeaveButtonSelected());
+        TextButton deleteBtn = new TextButton("Delete Team");
+        deleteBtn.addSelectHandler(event -> presenter.onDeleteButtonSelected());
+
+        buttonBar.setPack(BoxLayoutContainer.BoxLayoutPack.START);
+        addButton(leaveBtn);
+        addButton(deleteBtn);
+        addButton(new FillToolItem());
+        addButton(getButton(PredefinedButton.OK));
+        addButton(getButton(PredefinedButton.CANCEL));
+        buttonBar.forceLayout();
+
+        setHideOnButtonClick(false);
+        addOkButtonSelectHandler(selectEvent -> {
+            if (presenter.isViewValid()) {
+                presenter.saveTeamSelected(this);
+            } else {
+                AlertMessageBox alertMsgBox =
+                        new AlertMessageBox(appearance.completeRequiredFieldsHeading(), appearance.completeRequiredFieldsError());
+                alertMsgBox.show();
+            }
+        });
+        addCancelButtonSelectHandler(selectEvent -> hide());
     }
 
     @Override
