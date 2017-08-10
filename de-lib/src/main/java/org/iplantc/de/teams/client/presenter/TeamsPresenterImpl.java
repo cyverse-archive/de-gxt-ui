@@ -6,11 +6,15 @@ import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.teams.client.TeamsView;
+import org.iplantc.de.teams.client.events.CreateTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
+import org.iplantc.de.teams.client.events.TeamSaved;
 import org.iplantc.de.teams.client.models.TeamsFilter;
+import org.iplantc.de.teams.client.views.dialogs.EditTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.TeamDetailsDialog;
 
+import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
@@ -22,13 +26,15 @@ import java.util.List;
  */
 public class TeamsPresenterImpl implements TeamsView.Presenter,
                                            TeamInfoButtonSelected.TeamInfoButtonSelectedHandler,
-                                           TeamFilterSelectionChanged.TeamFilterSelectionChangedHandler {
+                                           TeamFilterSelectionChanged.TeamFilterSelectionChangedHandler,
+                                           CreateTeamSelected.CreateTeamSelectedHandler {
 
     private TeamsView.TeamsViewAppearance appearance;
     private GroupServiceFacade serviceFacade;
     private TeamsView view;
 
     @Inject AsyncProviderWrapper<TeamDetailsDialog> detailsDlgProvider;
+    @Inject AsyncProviderWrapper<EditTeamDialog> editTeamDlgProvider;
     TeamsFilter currentFilter;
 
     @Inject
@@ -41,6 +47,7 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
         
         view.addTeamInfoButtonSelectedHandler(this);
         view.addTeamFilterSelectionChangedHandler(this);
+        view.addCreateTeamSelectedHandler(this);
     }
 
     @Override
@@ -128,6 +135,28 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
                 view.clearTeams();
                 view.addTeams(result);
                 view.unmask();
+            }
+        });
+    }
+
+    @Override
+    public void onCreateTeamSelected(CreateTeamSelected event) {
+        editTeamDlgProvider.get(new AsyncCallback<EditTeamDialog>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(throwable);
+            }
+
+            @Override
+            public void onSuccess(EditTeamDialog dialog) {
+                dialog.show(null);
+                dialog.addTeamSavedHandler(new TeamSaved.TeamSavedHandler() {
+                    @Override
+                    public void onTeamSaved(TeamSaved event) {
+                        Group team = event.getGroup();
+                        view.addTeams(Lists.newArrayList(team));
+                    }
+                });
             }
         });
     }

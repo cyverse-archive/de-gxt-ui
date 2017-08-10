@@ -156,7 +156,7 @@ public class GroupDetailsPresenterImplTest {
 
         /** CALL METHOD UNDER TEST **/
         uut.addGroup(groupMock);
-        verify(serviceFacadeMock).addGroup(eq(groupMock), groupCallbackCaptor.capture());
+        verify(serviceFacadeMock).addList(eq(groupMock), groupCallbackCaptor.capture());
         groupCallbackCaptor.getValue().onSuccess(groupMock);
 
         verify(handlerManagerMock).fireEvent(isA(GroupSaved.class));
@@ -173,9 +173,9 @@ public class GroupDetailsPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         uut.addGroupMembers(groupMock, subjectListMock);
 
-        verify(serviceFacadeMock).addMembers(eq(groupMock),
-                                             eq(subjectListMock),
-                                             updateMembersCallbackCaptor.capture());
+        verify(serviceFacadeMock).addMembersToList(eq(groupMock),
+                                                   eq(subjectListMock),
+                                                   updateMembersCallbackCaptor.capture());
 
         updateMembersCallbackCaptor.getValue().onSuccess(updateMemberResultsMock);
         verify(appearanceMock).unableToAddMembers(eq(failedUpdateResultsMock));
@@ -200,9 +200,9 @@ public class GroupDetailsPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         uut.onAddGroupMemberSelected(eventMock);
 
-        verify(serviceFacadeMock).addMembers(eq(groupMock),
-                                             eq(subjectListMock),
-                                             updateMembersCallbackCaptor.capture());
+        verify(serviceFacadeMock).addMembersToList(eq(groupMock),
+                                                   eq(subjectListMock),
+                                                   updateMembersCallbackCaptor.capture());
 
         updateMembersCallbackCaptor.getValue().onSuccess(updateMemberResultsMock);
         verify(viewMock).addMembers(subjectListMock);

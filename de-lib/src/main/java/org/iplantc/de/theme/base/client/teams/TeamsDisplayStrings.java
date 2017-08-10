@@ -26,4 +26,30 @@ public interface TeamsDisplayStrings extends Messages {
     String membersLabel();
 
     String detailsGridEmptyText();
+
+    String editTeamHeader(String teamName);
+
+    String nonMembersSectionHeader();
+
+    String membersSectionHeader();
+
+    String nonMembersPrivilegeExplanation();
+
+    String memberOptOutExplanation();
+
+    String privilegeColumnLabel();
+
+    String addPublicUser();
+
+    String saveTeamHeader();
+
+    String updatingTeamMsg();
+
+    String updatingPrivilegesMsg();
+
+    String updatingMembershipMsg();
+
+    String miscTeamUpdates();
+
+    String teamSuccessfullySaved();
 }

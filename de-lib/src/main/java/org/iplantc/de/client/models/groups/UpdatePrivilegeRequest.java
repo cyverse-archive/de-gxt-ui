@@ -8,7 +8,7 @@ import java.util.List;
  * The autobean representation of the request body to update privileges on a team
  * @author aramsey
  */
-public interface UpdateTeamRequest {
+public interface UpdatePrivilegeRequest {
 
     @PropertyName("subject_id")
     String getSubjectId();
@@ -16,6 +16,6 @@ public interface UpdateTeamRequest {
     @PropertyName("subject_id")
     void setSubjectId(String id);
 
-    List<String> getPrivileges();
-    void setPrivileges(List<String> privileges);
+    List<PrivilegeType> getPrivileges();
+    void setPrivileges(List<PrivilegeType> privileges);
 }

@@ -2,10 +2,12 @@ package org.iplantc.de.teams.client;
 
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.teams.client.events.CreateTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
 import org.iplantc.de.teams.client.models.TeamsFilter;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import java.util.List;
@@ -16,7 +18,8 @@ import java.util.List;
 public interface TeamsView extends IsWidget,
                                    IsMaskable,
                                    TeamInfoButtonSelected.HasTeamInfoButtonSelectedHandlers,
-                                   TeamFilterSelectionChanged.HasTeamFilterSelectionChangedHandlers {
+                                   TeamFilterSelectionChanged.HasTeamFilterSelectionChangedHandlers,
+                                   CreateTeamSelected.HasCreateTeamSelectedHandlers {
 
     /**
      * An appearance class for all string related items in the Teams view
@@ -56,6 +59,50 @@ public interface TeamsView extends IsWidget,
         String membersLabel();
 
         String detailsGridEmptyText();
+
+        int editTeamWidth();
+
+        int editTeamHeight();
+
+        String editTeamHeading(Group group);
+
+        ImageResource plusImage();
+
+        String nonMembersSectionHeader();
+
+        String membersSectionHeader();
+
+        String nonMembersPrivilegeExplanation();
+
+        ImageResource deleteIcon();
+
+        String removeButtonText();
+
+        String memberOptOutExplanation();
+
+        String privilegeColumnLabel();
+
+        String completeRequiredFieldsError();
+
+        String completeRequiredFieldsHeading();
+
+        int privilegeComboWidth();
+
+        int privilegeColumnWidth();
+
+        String addPublicUser();
+
+        String saveTeamHeader();
+
+        String updatingTeamMsg();
+
+        String updatingPrivilegesMsg();
+
+        String updatingMembershipMsg();
+
+        String teamSuccessfullySaved();
+
+        String miscTeamUpdates();
     }
 
     /**

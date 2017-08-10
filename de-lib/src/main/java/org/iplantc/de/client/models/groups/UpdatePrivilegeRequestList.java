@@ -5,13 +5,13 @@ import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 import java.util.List;
 
 /**
- * The autobean representation of a list of type UpdateTeamRequest
+ * The autobean representation of a list of type UpdatePrivilegeRequest
  * @author aramsey
  */
-public interface UpdateTeamRequestList {
+public interface UpdatePrivilegeRequestList {
     @PropertyName("updates")
-    List<UpdateTeamRequest> getRequests();
+    List<UpdatePrivilegeRequest> getRequests();
 
     @PropertyName("updates")
-    void setRequests(List<UpdateTeamRequest> requests);
+    void setRequests(List<UpdatePrivilegeRequest> requests);
 }

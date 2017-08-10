@@ -8,16 +8,21 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.CollaboratorAutoBeanFactory;
 import org.iplantc.de.client.models.collaborators.Subject;
+import org.iplantc.de.client.models.groups.CreateTeamRequest;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.GroupList;
+import org.iplantc.de.client.models.groups.Privilege;
+import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.groups.UpdateMemberRequest;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.models.groups.UpdateMemberResultList;
+import org.iplantc.de.client.models.groups.UpdatePrivilegeRequestList;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.GroupCallbackConverter;
 import org.iplantc.de.client.services.converters.GroupListToSubjectListCallbackConverter;
+import org.iplantc.de.client.services.converters.PrivilegeListCallbackConverter;
 import org.iplantc.de.client.services.converters.SubjectMemberListCallbackConverter;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
@@ -93,10 +98,25 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void addGroup(Group group, AsyncCallback<Group> callback) {
+    public void addList(Group group, AsyncCallback<Group> callback) {
         String address = LISTS;
 
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(group));
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
+        deService.getServiceData(wrapper, new GroupCallbackConverter(callback, factory));
+    }
+
+    @Override
+    public void addTeam(Group group, List<PrivilegeType> publicPrivileges, AsyncCallback<Group> callback) {
+        String address = TEAMS;
+
+        CreateTeamRequest request = factory.getCreateTeamRequest().as();
+        request.setName(group.getName());
+        request.setDescription(group.getDescription());
+        request.setPublicPrivileges(publicPrivileges);
+
+        final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
         deService.getServiceData(wrapper, new GroupCallbackConverter(callback, factory));
@@ -152,7 +172,22 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
         });    }
 
     @Override
-    public void addMembers(Group group,
+    public void addMembersToList(Group group,
+                                 List<Subject> subjects,
+                                 AsyncCallback<List<UpdateMemberResult>> callback) {
+        addMembersToGroup(LISTS, group, subjects, callback);
+    }
+
+    @Override
+    public void addMembersToTeam(Group group,
+                                 List<Subject> subjects,
+                                 AsyncCallback<List<UpdateMemberResult>> callback) {
+        addMembersToGroup(TEAMS, group, subjects, callback);
+
+    }
+
+    void addMembersToGroup(String address,
+                           Group group,
                            List<Subject> subjects,
                            AsyncCallback<List<UpdateMemberResult>> callback) {
         String groupName = group.getName();
@@ -162,7 +197,7 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
                                    .collect(Collectors.toList());
         request.setMembers(ids);
 
-        String address = LISTS + "/" + URL.encodePathSegment(groupName) + "/members";
+        address += "/" + URL.encodePathSegment(groupName) + "/members";
 
         Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
 
@@ -184,6 +219,19 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(PATCH, address, encode.getPayload());
         deService.getServiceData(wrapper, new GroupCallbackConverter(callback, factory));
+    }
+
+    @Override
+    public void updateTeamPrivileges(Group group,
+                                     UpdatePrivilegeRequestList request,
+                                     AsyncCallback<List<Privilege>> callback) {
+        String groupName = group.getName();
+        String address = TEAMS + "/" + URL.encodePathSegment(groupName) + "/privileges";
+
+        final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
+        deService.getServiceData(wrapper, new PrivilegeListCallbackConverter(callback, factory));
     }
 
 }

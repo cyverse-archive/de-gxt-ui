@@ -2,7 +2,11 @@ package org.iplantc.de.client.services;
 
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.models.groups.Privilege;
+import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
+import org.iplantc.de.client.models.groups.UpdatePrivilegeRequest;
+import org.iplantc.de.client.models.groups.UpdatePrivilegeRequestList;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -38,7 +42,15 @@ public interface GroupServiceFacade {
      * @param group
      * @param callback
      */
-    void addGroup(Group group, AsyncCallback<Group> callback);
+    void addList(Group group, AsyncCallback<Group> callback);
+
+    /**
+     * Create a Team
+     * @param group
+     * @param publicPrivileges
+     * @param callback
+     */
+    void addTeam(Group group, List<PrivilegeType> publicPrivileges, AsyncCallback<Group> callback);
 
     /**
      * Delete a Collaborator List
@@ -76,7 +88,14 @@ public interface GroupServiceFacade {
      * @param group
      * @param subjects
      */
-    void addMembers(Group group, List<Subject> subjects, AsyncCallback<List<UpdateMemberResult>> callback);
+    void addMembersToList(Group group, List<Subject> subjects, AsyncCallback<List<UpdateMemberResult>> callback);
+
+    /**
+     * Adds  members to the Team
+     * @param group
+     * @param subjects
+     */
+    void addMembersToTeam(Group group, List<Subject> subjects, AsyncCallback<List<UpdateMemberResult>> callback);
 
     /**
      * Update the details of a Collaborator List
@@ -86,4 +105,11 @@ public interface GroupServiceFacade {
      */
     void updateGroup(String originalGroup, Group group, AsyncCallback<Group> callback);
 
+    /**
+     * Update the privileges on a Team
+     * @param group
+     * @param request
+     * @param callback
+     */
+    void updateTeamPrivileges(Group group, UpdatePrivilegeRequestList request, AsyncCallback<List<Privilege>> callback);
 }

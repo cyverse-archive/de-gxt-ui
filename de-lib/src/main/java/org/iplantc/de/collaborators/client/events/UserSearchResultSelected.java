@@ -27,9 +27,11 @@ public class UserSearchResultSelected extends GwtEvent<UserSearchResultSelectedE
 
     public static final GwtEvent.Type<UserSearchResultSelectedEventHandler> TYPE = new GwtEvent.Type<UserSearchResultSelected.UserSearchResultSelectedEventHandler>();
     private final Subject subject;
+    private String tag;
 
-    public UserSearchResultSelected(Subject subject) {
+    public UserSearchResultSelected(Subject subject, String tag) {
         this.subject = subject;
+        this.tag = tag;
     }
 
     @Override
@@ -44,5 +46,9 @@ public class UserSearchResultSelected extends GwtEvent<UserSearchResultSelectedE
 
     public Subject getSubject() {
         return subject;
+    }
+
+    public String getTag() {
+        return tag;
     }
 }

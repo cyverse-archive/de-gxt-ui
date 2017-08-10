@@ -6,6 +6,7 @@ import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.teams.client.TeamsView;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * The default appearance that will be used for the Teams view
@@ -115,5 +116,119 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     @Override
     public String detailsGridEmptyText() {
         return displayStrings.detailsGridEmptyText();
+    }
+
+    @Override
+    public int editTeamWidth() {
+        return 600;
+    }
+
+    @Override
+    public int editTeamHeight() {
+        return 500;
+    }
+
+    @Override
+    public String editTeamHeading(Group group) {
+        if (group == null) {
+            return displayStrings.createNewTeam();
+        } else {
+            return displayStrings.editTeamHeader(group.getSubjectDisplayName());
+        }
+    }
+
+    @Override
+    public ImageResource plusImage() {
+        return iplantResources.add();
+    }
+
+    @Override
+    public String nonMembersSectionHeader() {
+        return displayStrings.nonMembersSectionHeader();
+    }
+
+    @Override
+    public String membersSectionHeader() {
+        return displayStrings.membersSectionHeader();
+    }
+
+    @Override
+    public String nonMembersPrivilegeExplanation() {
+        return displayStrings.nonMembersPrivilegeExplanation();
+    }
+
+    @Override
+    public ImageResource deleteIcon() {
+        return iplantResources.deleteIcon();
+    }
+
+    @Override
+    public String removeButtonText() {
+        return iplantDisplayStrings.remove();
+    }
+
+    @Override
+    public String memberOptOutExplanation() {
+        return displayStrings.memberOptOutExplanation();
+    }
+
+    @Override
+    public String privilegeColumnLabel() {
+        return displayStrings.privilegeColumnLabel();
+    }
+
+    @Override
+    public String completeRequiredFieldsError() {
+        return iplantDisplayStrings.completeRequiredFieldsError();
+    }
+
+    @Override
+    public String completeRequiredFieldsHeading() {
+        return iplantDisplayStrings.warning();
+    }
+
+    @Override
+    public int privilegeComboWidth() {
+        return 250;
+    }
+
+    @Override
+    public int privilegeColumnWidth() {
+        return 300;
+    }
+
+    @Override
+    public String addPublicUser() {
+        return displayStrings.addPublicUser();
+    }
+
+    @Override
+    public String saveTeamHeader() {
+        return displayStrings.saveTeamHeader();
+    }
+
+    @Override
+    public String updatingTeamMsg() {
+        return displayStrings.updatingTeamMsg();
+    }
+
+    @Override
+    public String updatingPrivilegesMsg() {
+        return displayStrings.updatingPrivilegesMsg();
+    }
+
+    @Override
+    public String updatingMembershipMsg() {
+        return displayStrings.updatingMembershipMsg();
+    }
+
+    @Override
+    public String teamSuccessfullySaved() {
+        return displayStrings.teamSuccessfullySaved();
+    }
+
+    @Override
+    public String miscTeamUpdates() {
+        return displayStrings.miscTeamUpdates();
     }
 }
