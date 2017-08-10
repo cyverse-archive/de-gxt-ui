@@ -210,6 +210,7 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     public void showAdminMode(boolean adminMode) {
         if (adminMode) {
             nonMembersFieldSet.show();
+            nonMembersFieldSet.forceLayout();
             memberOptOutExplanation.show();
             memberToolbar.show();
 
