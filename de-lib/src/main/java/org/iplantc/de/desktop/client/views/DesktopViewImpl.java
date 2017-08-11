@@ -12,6 +12,8 @@ import org.iplantc.de.desktop.client.views.widgets.TaskButton;
 import org.iplantc.de.desktop.client.views.widgets.UnseenNotificationsView;
 import org.iplantc.de.desktop.client.views.windows.IPlantWindowInterface;
 import org.iplantc.de.desktop.shared.DeModule;
+import org.iplantc.de.intercom.client.IntercomFacade;
+import org.iplantc.de.intercom.client.TrackingEventType;
 import org.iplantc.de.resources.client.messages.IplantNewUserTourStrings;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
@@ -213,11 +215,9 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
         notificationsBtn.ensureDebugId(baseID + DeModule.Ids.NOTIFICATION_BUTTON);
         userSettingsBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU);
         helpBtn.ensureDebugId(baseID + DeModule.Ids.HELP_MENU);
-   //   forumsBtn.ensureDebugId(baseID + DeModule.Ids.FORUMS_BUTTON);
         dataWinBtn.ensureDebugId(baseID + DeModule.Ids.DATA_BTN);
         appsWinBtn.ensureDebugId(baseID + DeModule.Ids.APPS_BTN);
         analysisWinBtn.ensureDebugId(baseID + DeModule.Ids.ANALYSES_BTN);
-   //   feedbackBtn.ensureDebugId(baseID + DeModule.Ids.FEEDBACK_BTN);
         taskBar.ensureDebugId(baseID + DeModule.Ids.TASK_BAR);
 
 
@@ -227,7 +227,6 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
         systemMsgsLink.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.SYS_MSGS_LINK);
         documentationLink.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.USER_MANUAL_LINK);
         introBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.INTRO_LINK);
-    //  contactSupportBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.SUPPORT_BTN);
         aboutBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.ABOUT_LINK);
         logoutBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.LOGOUT_LINK);
 
@@ -373,6 +372,7 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
 
     @UiHandler("documentationLink")
     void onDocumentationClick(ClickEvent event){
+        IntercomFacade.trackEvent(TrackingEventType.HELP_BUTTON_CLICKED,null);
         presenter.onDocumentationClick();
     }
 
@@ -380,11 +380,6 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
     void onIntroClick(ClickEvent event){
         presenter.onIntroClick();
     }
-
-/*    @UiHandler("contactSupportBtn")
-    void onContactSupportClick(ClickEvent event) {
-        presenter.onContactSupportClick();
-    }*/
 
     @UiHandler("aboutBtn")
     void onAboutClick(ClickEvent event){
