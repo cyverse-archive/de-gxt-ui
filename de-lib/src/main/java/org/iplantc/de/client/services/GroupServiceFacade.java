@@ -81,7 +81,16 @@ public interface GroupServiceFacade {
      * @param retainPermissions
      * @param callback
      */
-    void deleteMembers(Group group, List<Subject> member, boolean retainPermissions, AsyncCallback<List<UpdateMemberResult>> callback);
+    void deleteListMembers(Group group, List<Subject> member, boolean retainPermissions, AsyncCallback<List<UpdateMemberResult>> callback);
+
+    /**
+     * Delete members from a Team
+     * @param group
+     * @param member
+     * @param retainPermissions
+     * @param callback
+     */
+    void deleteTeamMembers(Group group, List<Subject> member, boolean retainPermissions, AsyncCallback<List<UpdateMemberResult>> callback);
 
     /**
      * Adds  members to the Collaborator List
@@ -103,7 +112,15 @@ public interface GroupServiceFacade {
      * @param group
      * @param callback
      */
-    void updateGroup(String originalGroup, Group group, AsyncCallback<Group> callback);
+    void updateList(String originalGroup, Group group, AsyncCallback<Group> callback);
+
+    /**
+     * Update the details of a Team
+     * @param originalGroup
+     * @param group
+     * @param callback
+     */
+    void updateTeam(String originalGroup, Group group, AsyncCallback<Group> callback);
 
     /**
      * Update the privileges on a Team
@@ -112,4 +129,11 @@ public interface GroupServiceFacade {
      * @param callback
      */
     void updateTeamPrivileges(Group group, UpdatePrivilegeRequestList request, AsyncCallback<List<Privilege>> callback);
+
+    /**
+     * Get the list of privileges on a Team
+     * @param group
+     * @param callback
+     */
+    void getTeamPrivileges(Group group, AsyncCallback<List<Privilege>> callback);
 }

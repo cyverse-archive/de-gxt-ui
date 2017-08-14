@@ -214,7 +214,8 @@ org.iplantc.discoveryenvironment.redis.password = {{ key (printf "%s/de/redis-pa
 ###############################################################################
 # Groups Settings
 ###############################################################################
-org.iplantc.discoveryenvironment.groups.grouper-all-id = {{ key (printf "%s/de/grouper-id"  $base) }}
+org.iplantc.discoveryenvironment.groups.grouper-all-id = {{ key (printf "%s/de/grouper-all-id"  $base) }}
 org.iplantc.discoveryenvironment.groups.grouper-all-display-name = {{ key (printf "%s/de/grouper-all-display-name"  $base) }}
+org.iplantc.discoveryenvironment.groups.grouper-id = {{ key (printf "%s/apps/grouper-user"  $base) }}
 
 {{- end -}}

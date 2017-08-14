@@ -58,7 +58,8 @@
                                                text="{appearance.createNewTeam}"
                                                icon="{appearance.plusImage}"/>
                                 <menu:MenuItem ui:field="manageTeamMI"
-                                               text="{appearance.manageTeam}"/>
+                                               text="{appearance.manageTeam}"
+                                               icon="{appearance.editIcon}"/>
                                 <menu:MenuItem ui:field="leaveTeamMI"
                                                text="{appearance.leaveTeam}"/>
                             </menu:Menu>

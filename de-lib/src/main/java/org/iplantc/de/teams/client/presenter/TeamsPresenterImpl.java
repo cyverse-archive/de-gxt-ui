@@ -7,6 +7,7 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.CreateTeamSelected;
+import org.iplantc.de.teams.client.events.EditTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
 import org.iplantc.de.teams.client.events.TeamSaved;
@@ -27,7 +28,8 @@ import java.util.List;
 public class TeamsPresenterImpl implements TeamsView.Presenter,
                                            TeamInfoButtonSelected.TeamInfoButtonSelectedHandler,
                                            TeamFilterSelectionChanged.TeamFilterSelectionChangedHandler,
-                                           CreateTeamSelected.CreateTeamSelectedHandler {
+                                           CreateTeamSelected.CreateTeamSelectedHandler,
+                                           EditTeamSelected.EditTeamSelectedHandler {
 
     private TeamsView.TeamsViewAppearance appearance;
     private GroupServiceFacade serviceFacade;
@@ -48,6 +50,7 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
         view.addTeamInfoButtonSelectedHandler(this);
         view.addTeamFilterSelectionChangedHandler(this);
         view.addCreateTeamSelectedHandler(this);
+        view.addEditTeamSelectedHandler(this);
     }
 
     @Override
@@ -155,6 +158,29 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
                     public void onTeamSaved(TeamSaved event) {
                         Group team = event.getGroup();
                         view.addTeams(Lists.newArrayList(team));
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
+    public void onEditTeamSelected(EditTeamSelected event) {
+        Group group = event.getGroup();
+        editTeamDlgProvider.get(new AsyncCallback<EditTeamDialog>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(throwable);
+            }
+
+            @Override
+            public void onSuccess(EditTeamDialog dialog) {
+                dialog.show(group);
+                dialog.addTeamSavedHandler(new TeamSaved.TeamSavedHandler() {
+                    @Override
+                    public void onTeamSaved(TeamSaved event) {
+                        Group team = event.getGroup();
+                        view.updateTeam(team);
                     }
                 });
             }

@@ -394,10 +394,10 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     void removeCollaboratorsFromDefault(List<Subject> selectedUsers,
                                         ParentDeleteSubjectsCallback parentCallback) {
         if (selectedUsers != null && !selectedUsers.isEmpty()) {
-            groupServiceFacade.deleteMembers(groupFactory.getDefaultGroup(),
-                                             selectedUsers,
-                                             false,
-                                             new DeleteUsersChildCallback(parentCallback));
+            groupServiceFacade.deleteListMembers(groupFactory.getDefaultGroup(),
+                                                 selectedUsers,
+                                                 false,
+                                                 new DeleteUsersChildCallback(parentCallback));
         }
     }
 
