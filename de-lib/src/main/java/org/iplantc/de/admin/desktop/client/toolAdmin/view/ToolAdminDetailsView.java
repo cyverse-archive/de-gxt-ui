@@ -41,7 +41,7 @@ public class ToolAdminDetailsView extends Composite implements Editor<Tool> {
 
     @UiField VerticalLayoutContainer layoutContainer;
     @Ignore
-    @UiField FieldLabel nameLabel, typeLabel, locationLabel, versionLabel;
+    @UiField FieldLabel nameLabel, typeLabel, locationLabel, versionLabel, timeLimitLabel;
     @UiField TextArea descriptionEditor;
     @UiField TextField nameEditor;
     @UiField TextField typeEditor;
@@ -69,6 +69,7 @@ public class ToolAdminDetailsView extends Composite implements Editor<Tool> {
         nameLabel.setHTML(appearance.toolImportNameLabel());
         typeLabel.setHTML(appearance.toolImportTypeLabel());
         versionLabel.setHTML(appearance.toolImportVersionLabel());
+        timeLimitLabel.setHTML(appearance.timeLimit());
 
         descriptionEditor.setHeight(250);
 
@@ -85,7 +86,7 @@ public class ToolAdminDetailsView extends Composite implements Editor<Tool> {
 
     public boolean isValid() {
         return containerEditor.isValid() && implementationEditor.isValid() && nameEditor.isValid()
-               && typeEditor.isValid() && locationEditor.isValid();
+               && typeEditor.isValid() && locationEditor.isValid() && versionEditor.isValid() && timeLimitEditor.isValid();
     }
 
     @Override

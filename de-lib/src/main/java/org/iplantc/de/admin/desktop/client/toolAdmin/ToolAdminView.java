@@ -209,7 +209,7 @@ public interface ToolAdminView extends IsWidget,
 
         String dialogMakePublicText();
 
-        String timeLimit();
+        SafeHtml timeLimit();
 
         String restricted();
 
@@ -221,6 +221,8 @@ public interface ToolAdminView extends IsWidget,
          * @return
          */
         String pidsLimit();
+
+        String timeLimitEmptyText();
     }
 
     interface Presenter {

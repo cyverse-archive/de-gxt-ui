@@ -74,12 +74,13 @@
             </form:FieldLabel>
         </container:child>
         <container:child layoutData="{layoutData}">
-            <form:FieldLabel text="{appearance.timeLimit}">
+            <form:FieldLabel ui:field="timeLimitLabel">
                 <form:widget>
                     <form:IntegerField readOnly="false"
-                                    enabled="true"
-                                    allowBlank="true"
-                                    ui:field="timeLimitEditor"/>
+                                       enabled="true"
+                                       allowBlank="false"
+                                       ui:field="timeLimitEditor"
+                                       emptyText="{appearance.timeLimitEmptyText}"/>
                 </form:widget>
             </form:FieldLabel>
         </container:child>
