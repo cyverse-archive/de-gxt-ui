@@ -34,6 +34,7 @@ import com.google.inject.Inject;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class EditTeamPresenterImpl implements EditTeamView.Presenter,
@@ -384,9 +385,9 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
             return privileges;
         }
 
-        List<String> privilegeIds = privileges.stream()
-                                              .map(privilege -> privilege.getSubject().getId())
-                                              .collect(Collectors.toList());
+        Set<String> privilegeIds = privileges.stream()
+                                             .map(privilege -> privilege.getSubject().getId())
+                                             .collect(Collectors.toSet());
         List<Subject> membersWithoutPrivs = members.stream()
                                                    .filter(subject -> !privilegeIds.contains(subject.getId()))
                                                    .collect(Collectors.toList());

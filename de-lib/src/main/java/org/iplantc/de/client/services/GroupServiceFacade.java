@@ -115,7 +115,7 @@ public interface GroupServiceFacade {
     void updateList(String originalGroup, Group group, AsyncCallback<Group> callback);
 
     /**
-     * Update the details of a Collaborator List
+     * Update the details of a Team
      * @param originalGroup
      * @param group
      * @param callback
