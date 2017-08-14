@@ -2,12 +2,17 @@ package org.iplantc.de.teams.client.presenter;
 
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
+import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.CreateTeamSelected;
 import org.iplantc.de.teams.client.events.EditTeamSelected;
+import org.iplantc.de.teams.client.events.LeaveTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
 import org.iplantc.de.teams.client.events.TeamSaved;
@@ -15,6 +20,7 @@ import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
 import org.iplantc.de.teams.client.gin.TeamsViewFactory;
 import org.iplantc.de.teams.client.models.TeamsFilter;
 import org.iplantc.de.teams.client.views.dialogs.EditTeamDialog;
+import org.iplantc.de.teams.client.views.dialogs.LeaveTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.TeamDetailsDialog;
 
 import com.google.common.collect.Lists;
@@ -24,6 +30,8 @@ import com.google.inject.Inject;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
+import com.sencha.gxt.widget.core.client.Dialog;
+import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
 import java.util.List;
 
@@ -37,7 +45,8 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
                                            TeamFilterSelectionChanged.TeamFilterSelectionChangedHandler,
                                            CreateTeamSelected.CreateTeamSelectedHandler,
                                            EditTeamSelected.EditTeamSelectedHandler,
-                                           TeamSearchResultLoad.TeamSearchResultLoadHandler {
+                                           TeamSearchResultLoad.TeamSearchResultLoadHandler,
+                                           LeaveTeamSelected.LeaveTeamSelectedHandler {
 
     private TeamsView.TeamsViewAppearance appearance;
     private GroupServiceFacade serviceFacade;
@@ -46,6 +55,8 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
 
     @Inject AsyncProviderWrapper<TeamDetailsDialog> detailsDlgProvider;
     @Inject AsyncProviderWrapper<EditTeamDialog> editTeamDlgProvider;
+    @Inject AsyncProviderWrapper<LeaveTeamDialog> leaveTeamDlgProvider;
+    @Inject IplantAnnouncer announcer;
     TeamsFilter currentFilter;
 
     @Inject
@@ -62,6 +73,7 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
         view.addTeamFilterSelectionChangedHandler(this);
         view.addCreateTeamSelectedHandler(this);
         view.addEditTeamSelectedHandler(this);
+        view.addLeaveTeamSelectedHandler(this);
         searchProxy.addTeamSearchResultLoadHandler(this);
         searchProxy.addTeamSearchResultLoadHandler(view);
     }
@@ -196,6 +208,53 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
                         view.updateTeam(team);
                     }
                 });
+            }
+        });
+    }
+
+    @Override
+    public void onLeaveTeamSelected(LeaveTeamSelected event) {
+        leaveTeamDlgProvider.get(new AsyncCallback<LeaveTeamDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(LeaveTeamDialog dialog) {
+                Group group = event.getGroup();
+                dialog.show(group);
+                dialog.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
+                    @Override
+                    public void onDialogHide(DialogHideEvent event) {
+                        Dialog.PredefinedButton hideButton = event.getHideButton();
+                        if (Dialog.PredefinedButton.YES.equals(hideButton)) {
+                            leaveTeam(group);
+                        } else {
+                            dialog.hide();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    void leaveTeam(Group team) {
+        serviceFacade.leaveTeam(team, new AsyncCallback<List<UpdateMemberResult>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(List<UpdateMemberResult> result) {
+                if (result != null && !result.isEmpty()) {
+                    UpdateMemberResult updateMemberResult = result.get(0);
+                    if (updateMemberResult.isSuccess()) {
+                        announcer.schedule(new IplantAnnouncementConfig(appearance.leaveTeamSuccess(team)));
+                        view.removeTeam(team);
+                    } else {
+                        announcer.schedule(new ErrorAnnouncementConfig(appearance.leaveTeamFail()));
+                    }
+                }
             }
         });
     }

@@ -56,4 +56,12 @@ public interface TeamsDisplayStrings extends Messages {
     String searchFieldEmptyText();
 
     String teamSearchFailed();
+
+    String leaveTeamSuccess(String subjectDisplayName);
+
+    String leaveTeamWarning();
+
+    String leaveTeamHeader(String subjectDisplayName);
+
+    String leaveTeamFail();
 }

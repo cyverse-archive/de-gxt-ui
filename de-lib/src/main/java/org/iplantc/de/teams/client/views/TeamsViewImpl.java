@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.CreateTeamSelected;
 import org.iplantc.de.teams.client.events.EditTeamSelected;
+import org.iplantc.de.teams.client.events.LeaveTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
 import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
@@ -137,15 +138,18 @@ public class TeamsViewImpl extends Composite implements TeamsView {
 
     @UiHandler("manageTeamMI")
     void onManageTeamSelected(SelectionEvent<Item> event) {
-        Group selectedGroup = grid.getSelectionModel().getSelectedItem();
-        if (selectedGroup != null) {
-            fireEvent(new EditTeamSelected(selectedGroup));
+        Group selectedTeam = grid.getSelectionModel().getSelectedItem();
+        if (selectedTeam != null) {
+            fireEvent(new EditTeamSelected(selectedTeam));
         }
     }
 
     @UiHandler("leaveTeamMI")
     void onLeaveTeamSelected(SelectionEvent<Item> event) {
-
+        Group selectedTeam = grid.getSelectionModel().getSelectedItem();
+        if (selectedTeam != null) {
+            fireEvent(new LeaveTeamSelected(selectedTeam));
+        }
     }
 
     @Override
@@ -203,6 +207,11 @@ public class TeamsViewImpl extends Composite implements TeamsView {
     }
 
     @Override
+    public void removeTeam(Group team) {
+        listStore.remove(team);
+    }
+
+    @Override
     public HandlerRegistration addTeamFilterSelectionChangedHandler(TeamFilterSelectionChanged.TeamFilterSelectionChangedHandler handler) {
         return addHandler(handler, TeamFilterSelectionChanged.TYPE);
     }
@@ -215,5 +224,10 @@ public class TeamsViewImpl extends Composite implements TeamsView {
     @Override
     public HandlerRegistration addEditTeamSelectedHandler(EditTeamSelected.EditTeamSelectedHandler handler) {
         return addHandler(handler, EditTeamSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addLeaveTeamSelectedHandler(LeaveTeamSelected.LeaveTeamSelectedHandler handler) {
+        return addHandler(handler, LeaveTeamSelected.TYPE);
     }
 }
