@@ -136,4 +136,11 @@ public interface GroupServiceFacade {
      * @param callback
      */
     void getTeamPrivileges(Group group, AsyncCallback<List<Privilege>> callback);
+
+    /**
+     * Get the list of Teams that match the provided search term
+     * @param searchTerm
+     * @param callback
+     */
+    void searchTeams(String searchTerm, AsyncCallback<List<Group>> callback);
 }

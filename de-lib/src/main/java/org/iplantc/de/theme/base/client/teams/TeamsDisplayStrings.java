@@ -52,4 +52,8 @@ public interface TeamsDisplayStrings extends Messages {
     String miscTeamUpdates();
 
     String teamSuccessfullySaved();
+
+    String searchFieldEmptyText();
+
+    String teamSearchFailed();
 }

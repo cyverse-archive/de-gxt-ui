@@ -11,6 +11,8 @@ import org.iplantc.de.teams.client.events.EditTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
 import org.iplantc.de.teams.client.events.TeamSaved;
+import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
+import org.iplantc.de.teams.client.gin.TeamsViewFactory;
 import org.iplantc.de.teams.client.models.TeamsFilter;
 import org.iplantc.de.teams.client.views.dialogs.EditTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.TeamDetailsDialog;
@@ -19,21 +21,28 @@ import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
+import com.sencha.gxt.data.shared.loader.PagingLoadResult;
+import com.sencha.gxt.data.shared.loader.PagingLoader;
+
 import java.util.List;
 
 /**
  * The presenter to handle all the logic for the Teams view
+ *
  * @author aramsey
  */
 public class TeamsPresenterImpl implements TeamsView.Presenter,
                                            TeamInfoButtonSelected.TeamInfoButtonSelectedHandler,
                                            TeamFilterSelectionChanged.TeamFilterSelectionChangedHandler,
                                            CreateTeamSelected.CreateTeamSelectedHandler,
-                                           EditTeamSelected.EditTeamSelectedHandler {
+                                           EditTeamSelected.EditTeamSelectedHandler,
+                                           TeamSearchResultLoad.TeamSearchResultLoadHandler {
 
     private TeamsView.TeamsViewAppearance appearance;
     private GroupServiceFacade serviceFacade;
     private TeamsView view;
+    private TeamSearchRpcProxy searchProxy;
 
     @Inject AsyncProviderWrapper<TeamDetailsDialog> detailsDlgProvider;
     @Inject AsyncProviderWrapper<EditTeamDialog> editTeamDlgProvider;
@@ -42,15 +51,19 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
     @Inject
     public TeamsPresenterImpl(TeamsView.TeamsViewAppearance appearance,
                               GroupServiceFacade serviceFacade,
-                              TeamsView view) {
+                              TeamsViewFactory viewFactory,
+                              TeamSearchRpcProxy searchProxy) {
         this.appearance = appearance;
         this.serviceFacade = serviceFacade;
-        this.view = view;
-        
+        this.searchProxy = searchProxy;
+        this.view = viewFactory.create(getPagingLoader());
+
         view.addTeamInfoButtonSelectedHandler(this);
         view.addTeamFilterSelectionChangedHandler(this);
         view.addCreateTeamSelectedHandler(this);
         view.addEditTeamSelectedHandler(this);
+        searchProxy.addTeamSearchResultLoadHandler(this);
+        searchProxy.addTeamSearchResultLoadHandler(view);
     }
 
     @Override
@@ -89,7 +102,7 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
     public void onTeamFilterSelectionChanged(TeamFilterSelectionChanged event) {
         TeamsFilter filter = event.getFilter();
 
-        if (currentFilter.equals(filter)) {
+        if (filter == null || filter.equals(currentFilter)) {
             return;
         }
 
@@ -185,5 +198,19 @@ public class TeamsPresenterImpl implements TeamsView.Presenter,
                 });
             }
         });
+    }
+
+    PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Group>> getPagingLoader() {
+        return new PagingLoader<>(searchProxy);
+    }
+
+    @Override
+    public void onTeamSearchResultLoad(TeamSearchResultLoad event) {
+        List<Group> teams = event.getSearchResults();
+        if (teams != null && !teams.isEmpty()) {
+            currentFilter = null;
+            view.clearTeams();
+            view.addTeams(teams);
+        }
     }
 }

@@ -236,4 +236,14 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     public ImageResource editIcon() {
         return iplantResources.edit();
     }
+
+    @Override
+    public String searchFieldEmptyText() {
+        return displayStrings.searchFieldEmptyText();
+    }
+
+    @Override
+    public String teamSearchFailed() {
+        return displayStrings.teamSearchFailed();
+    }
 }

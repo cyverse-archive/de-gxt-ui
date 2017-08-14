@@ -6,6 +6,7 @@ import org.iplantc.de.teams.client.events.CreateTeamSelected;
 import org.iplantc.de.teams.client.events.EditTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
+import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
 import org.iplantc.de.teams.client.models.TeamsFilter;
 
 import com.google.gwt.resources.client.ImageResource;
@@ -21,7 +22,8 @@ public interface TeamsView extends IsWidget,
                                    TeamInfoButtonSelected.HasTeamInfoButtonSelectedHandlers,
                                    TeamFilterSelectionChanged.HasTeamFilterSelectionChangedHandlers,
                                    CreateTeamSelected.HasCreateTeamSelectedHandlers,
-                                   EditTeamSelected.HasEditTeamSelectedHandlers {
+                                   EditTeamSelected.HasEditTeamSelectedHandlers,
+                                   TeamSearchResultLoad.TeamSearchResultLoadHandler {
 
     /**
      * An appearance class for all string related items in the Teams view
@@ -107,6 +109,10 @@ public interface TeamsView extends IsWidget,
         String miscTeamUpdates();
 
         ImageResource editIcon();
+
+        String searchFieldEmptyText();
+
+        String teamSearchFailed();
     }
 
     /**

@@ -6,9 +6,11 @@ import org.iplantc.de.teams.client.events.CreateTeamSelected;
 import org.iplantc.de.teams.client.events.EditTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
 import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
+import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
 import org.iplantc.de.teams.client.models.GroupProperties;
 import org.iplantc.de.teams.client.models.TeamsFilter;
 import org.iplantc.de.teams.client.views.cells.TeamInfoCell;
+import org.iplantc.de.teams.client.views.widgets.TeamSearchField;
 import org.iplantc.de.teams.shared.Teams;
 
 import com.google.common.collect.Lists;
@@ -22,11 +24,15 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.StringLabelProvider;
+import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
+import com.sencha.gxt.data.shared.loader.PagingLoadResult;
+import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.form.SimpleComboBox;
@@ -55,23 +61,28 @@ public class TeamsViewImpl extends Composite implements TeamsView {
     @UiField MenuItem manageTeamMI;
     @UiField MenuItem leaveTeamMI;
     @UiField SimpleComboBox<TeamsFilter> teamFilter;
+    @UiField TeamSearchField searchField;
     @UiField ColumnModel<Group> cm;
     @UiField Grid<Group> grid;
     @UiField GridView<Group> gridView;
     @UiField ListStore<Group> listStore;
     private GroupProperties properties;
     private TeamInfoCell infoCell;
+    private PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Group>> loader;
 
     @Inject
     public TeamsViewImpl(TeamsViewAppearance appearance,
                          GroupProperties properties,
-                         TeamInfoCell infoCell) {
+                         TeamInfoCell infoCell,
+                         @Assisted PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Group>> loader) {
         this.appearance = appearance;
         this.properties = properties;
         this.infoCell = infoCell;
+        this.loader = loader;
 
         initWidget(uiBinder.createAndBindUi(this));
         grid.getSelectionModel().setSelectionMode(Style.SelectionMode.MULTI);
+        grid.setLoader(loader);
     }
 
     @UiFactory
@@ -82,6 +93,7 @@ public class TeamsViewImpl extends Composite implements TeamsView {
         combo.addSelectionHandler(new SelectionHandler<TeamsFilter>() {
             @Override
             public void onSelection(SelectionEvent<TeamsFilter> event) {
+                searchField.setValue("");
                 fireEvent(new TeamFilterSelectionChanged(combo.getCurrentValue()));
             }
         });
@@ -113,6 +125,11 @@ public class TeamsViewImpl extends Composite implements TeamsView {
         return new ListStore<>(properties.id());
     }
 
+    @UiFactory
+    TeamSearchField createSearchField() {
+        return new TeamSearchField(loader);
+    }
+
     @UiHandler("newTeamMI")
     void onNewTeamSelected(SelectionEvent<Item> event) {
         fireEvent(new CreateTeamSelected());
@@ -132,16 +149,23 @@ public class TeamsViewImpl extends Composite implements TeamsView {
     }
 
     @Override
+    public void onTeamSearchResultLoad(TeamSearchResultLoad event) {
+        teamFilter.setText("");
+    }
+
+    @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
 
-        toolbar.ensureDebugId(baseID + Teams.Ids.TEAMS_TOOLBAR);
-        String teamsMenuId = toolbar.getId() + Teams.Ids.TEAMS_MENU;
+        String toolbarId = baseID + Teams.Ids.TEAMS_TOOLBAR;
+        toolbar.ensureDebugId(toolbarId);
+        String teamsMenuId = toolbarId + Teams.Ids.TEAMS_MENU;
         teamsMenu.ensureDebugId(teamsMenuId);
         newTeamMI.ensureDebugId(teamsMenuId + Teams.Ids.CREATE_TEAM);
         manageTeamMI.ensureDebugId(teamsMenuId + Teams.Ids.MANAGE_TEAM);
         leaveTeamMI.ensureDebugId(teamsMenuId + Teams.Ids.LEAVE_TEAM);
-        teamFilter.asWidget().ensureDebugId(teamsMenuId + Teams.Ids.FILTER_TEAMS);
+        teamFilter.asWidget().ensureDebugId(toolbarId + Teams.Ids.FILTER_TEAMS);
+        searchField.asWidget().ensureDebugId(toolbarId + Teams.Ids.SEARCH_FIELD);
         grid.ensureDebugId(baseID + Teams.Ids.GRID);
 
         for (ColumnConfig<Group, ?> cc : cm.getColumns()) {
