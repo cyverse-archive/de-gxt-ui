@@ -1,6 +1,7 @@
 package org.iplantc.de.client.models.collaborators;
 
 import org.iplantc.de.client.models.HasSettableId;
+import org.iplantc.de.client.models.groups.Group;
 
 import com.google.common.base.Strings;
 import com.google.gwt.regexp.shared.RegExp;
@@ -65,7 +66,7 @@ public interface Subject extends HasSettableId, HasName {
     void setDisplayName(String name);
 
     default boolean isGroup() {
-        return GROUP_IDENTIFIER.equals(getSourceId());
+        return GROUP_IDENTIFIER.equals(getSourceId()) || this instanceof Group;
     }
 
     default String getSubjectDisplayName() {
@@ -73,10 +74,10 @@ public interface Subject extends HasSettableId, HasName {
         if (Strings.isNullOrEmpty(subjectName)) {
             subjectName = getFirstName() + " " + getLastName();
         }
-        if (!isGroup() && !hasGroupLongName(subjectName)) {
-            return subjectName;
+        if (hasGroupLongName(subjectName)) {
+            return getGroupShortName();
         } else {
-           return getGroupShortName();
+           return subjectName;
         }
     }
 
@@ -109,7 +110,7 @@ public interface Subject extends HasSettableId, HasName {
      * @return
      */
     default boolean hasGroupLongName(String name) {
-        return getName() != null && getName().contains(GROUP_NAME_DELIMITER);
+        return isGroup() && name != null && name.contains(GROUP_NAME_DELIMITER);
     }
 
     /**
