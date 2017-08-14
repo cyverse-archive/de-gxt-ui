@@ -87,7 +87,6 @@ class RuntimeCallbacks {
 
         @Override
         public void onSuccess(String arg0) {
-            LOG.info("Logout success:" + arg0);
             logout();
         }
 
