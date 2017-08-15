@@ -222,4 +222,6 @@ public interface ToolAdminDisplayStrings extends Messages {
     String defaultImgPrefix();
 
     String pidsLimit();
+
+    String timeLimitEmptyText();
 }

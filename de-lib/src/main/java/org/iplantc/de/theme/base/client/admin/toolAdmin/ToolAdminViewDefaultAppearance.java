@@ -518,8 +518,8 @@ public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminVi
     }
 
     @Override
-    public String timeLimit() {
-        return displayStrings.timeLimit();
+    public SafeHtml timeLimit() {
+        return templates.requiredFieldLabel(displayStrings.timeLimit());
     }
 
     @Override
@@ -541,4 +541,10 @@ public class ToolAdminViewDefaultAppearance implements ToolAdminView.ToolAdminVi
     public String pidsLimit() {
         return displayStrings.pidsLimit();
     }
+
+    @Override
+    public String timeLimitEmptyText() {
+        return displayStrings.timeLimitEmptyText();
+    }
+
 }
