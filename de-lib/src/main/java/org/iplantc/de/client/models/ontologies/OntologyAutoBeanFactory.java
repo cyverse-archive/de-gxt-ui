@@ -10,6 +10,8 @@ public interface OntologyAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<Ontology> getOntology();
 
+    AutoBean<OntologyClass> getOntologyClass();
+
     AutoBean<OntologyHierarchy> getHierarchy();
 
     AutoBean<OntologyHierarchyList> getHierarchyList();
@@ -18,4 +20,7 @@ public interface OntologyAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<OntologyVersionDetail> getVersionDetail();
 
+    AutoBean<OntologyLookupServiceResponse> getOntologyLookupServiceResponse();
+
+    AutoBean<OntologyLookupServiceDoc> getOntologyLookupServiceDoc();
 }

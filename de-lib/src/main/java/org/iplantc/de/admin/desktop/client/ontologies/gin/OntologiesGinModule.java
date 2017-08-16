@@ -10,6 +10,8 @@ import org.iplantc.de.admin.desktop.client.ontologies.views.AppCategorizeView;
 import org.iplantc.de.admin.desktop.client.ontologies.views.AppCategorizeViewImpl;
 import org.iplantc.de.admin.desktop.client.ontologies.views.OntologiesViewImpl;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
+import org.iplantc.de.client.services.OntologyLookupServiceFacade;
+import org.iplantc.de.client.services.impl.OntologyLookupServiceFacadeImpl;
 
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
@@ -29,6 +31,7 @@ public class OntologiesGinModule extends AbstractGinModule {
                 OntologiesViewFactory.class));
         bind(OntologiesView.Presenter.class).to(OntologiesPresenterImpl.class);
         bind(OntologyServiceFacade.class).to(OntologyServiceFacadeImpl.class);
+        bind(OntologyLookupServiceFacade.class).to(OntologyLookupServiceFacadeImpl.class);
         bind(AppCategorizeView.class).to(AppCategorizeViewImpl.class);
     }
 }
