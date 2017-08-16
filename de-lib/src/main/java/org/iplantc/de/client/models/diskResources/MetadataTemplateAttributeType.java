@@ -6,6 +6,7 @@ public enum MetadataTemplateAttributeType {
     INTEGER("Integer"),
     MULTILINE("Multiline Text"),
     NUMBER("Number"),
+    OLS_ONTOLOGY_TERM("OLS Ontology Term"),
     STRING("String"),
     TIMESTAMP("Timestamp"),
     URL("URL/URI");
