@@ -2,6 +2,7 @@ package org.iplantc.de.diskResource.client.views.metadata;
 
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
+import org.iplantc.de.client.models.diskResources.MetadataTemplateAttributeType;
 import org.iplantc.de.client.models.diskResources.TemplateAttributeSelectionItem;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.validators.UrlValidator;
@@ -424,21 +425,21 @@ public class MetadataTemplateView implements IsWidget {
     private Field<?> getAttributeValueWidget(String tag) {
         MetadataTemplateAttribute attribute = templateTagAttrMap.get(tag);
         String type = attribute.getType();
-        if (type.equalsIgnoreCase("timestamp")) { //$NON-NLS-1$
+        if (MetadataTemplateAttributeType.TIMESTAMP.toString().equalsIgnoreCase(type)) {
             return buildDateField(tag, attribute);
-        } else if (type.equalsIgnoreCase("boolean")) { //$NON-NLS-1$
+        } else if (MetadataTemplateAttributeType.BOOLEAN.toString().equalsIgnoreCase(type)) {
             return buildBooleanField(tag, attribute);
-        } else if (type.equalsIgnoreCase("number")) { //$NON-NLS-1$
+        } else if (MetadataTemplateAttributeType.NUMBER.toString().equalsIgnoreCase(type)) {
             return buildNumberField(tag, attribute);
-        } else if (type.equalsIgnoreCase("integer")) { //$NON-NLS-1$
+        } else if (MetadataTemplateAttributeType.INTEGER.toString().equalsIgnoreCase(type)) {
             return buildIntegerField(tag, attribute);
-        } else if (type.equalsIgnoreCase("string")) { //$NON-NLS-1$
+        } else if (MetadataTemplateAttributeType.STRING.toString().equalsIgnoreCase(type)) {
             return buildTextField(tag, attribute);
-        } else if (type.equalsIgnoreCase("multiline text")) { //$NON-NLS-1$
+        } else if (MetadataTemplateAttributeType.MULTILINE.toString().equalsIgnoreCase(type)) {
             return buildTextArea(tag, attribute);
-        } else if (type.equalsIgnoreCase("URL/URI")) { //$NON-NLS-1$
+        } else if (MetadataTemplateAttributeType.URL.toString().equalsIgnoreCase(type)) {
             return buildURLField(tag, attribute);
-        } else if (type.equalsIgnoreCase("Enum")) {
+        } else if (MetadataTemplateAttributeType.ENUM.toString().equalsIgnoreCase(type)) {
             return buildListField(tag, attribute);
         } else {
             return null;
