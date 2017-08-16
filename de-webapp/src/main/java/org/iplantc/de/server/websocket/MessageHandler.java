@@ -1,7 +1,6 @@
 package org.iplantc.de.server.websocket;
 
 import org.iplantc.de.server.util.CasUtils;
-import org.iplantc.de.server.websocket.ReceiveNotificationsDirect;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
@@ -18,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by sriram on 4/8/16.
@@ -54,11 +54,13 @@ public abstract class MessageHandler extends WebSocketHandlerAdapter {
             public void onDisconnect(AtmosphereResourceEvent event) {
                 try {
                     if (msgChannel != null) {
-                        msgChannel.abort();
+                        msgChannel.close();
                     }
                 } catch (IOException e) {
                     logger.error("Exception aborting channel",e);
 
+                } catch (TimeoutException e) {
+                    e.printStackTrace();
                 }
             }
         });
