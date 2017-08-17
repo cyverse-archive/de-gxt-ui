@@ -463,9 +463,6 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
      */
     List<Privilege> addMembersWithPublicPrivilege(List<Privilege> privileges, List<Subject> members) {
         List<Privilege> publicPrivs = getPublicUserPrivilege(privileges);
-        if (publicPrivs == null || publicPrivs.isEmpty()) {
-            return privileges;
-        }
 
         Set<String> privilegeIds = privileges.stream()
                                              .map(privilege -> privilege.getSubject().getId())
@@ -474,7 +471,12 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                                                    .filter(subject -> !privilegeIds.contains(subject.getId()))
                                                    .collect(Collectors.toList());
 
-        PrivilegeType publicPrivType = publicPrivs.get(0).getPrivilegeType();
+        PrivilegeType publicPrivType;
+        if (publicPrivs == null || publicPrivs.isEmpty()) {
+            publicPrivType = null;
+        } else {
+            publicPrivType = publicPrivs.get(0).getPrivilegeType();
+        }
 
         List<Privilege> allPrivs = Lists.newArrayList();
         List<Privilege> missingMemberPrivs = membersWithoutPrivs.stream().map(subject -> {
