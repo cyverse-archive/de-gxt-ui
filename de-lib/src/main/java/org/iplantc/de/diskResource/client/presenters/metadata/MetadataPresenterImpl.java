@@ -124,9 +124,9 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
     @Inject
     public MetadataPresenterImpl(final MetadataView view,
                                  final DiskResourceServiceFacade drService,
-                                 OntologyAutoBeanFactory ontologyFactory,
-                                 OntologyLookupServiceProxy searchProxy,
-                                 MetadataTermSearchField.MetadataTermSearchFieldAppearance searchFieldAppearance) {
+                                 final OntologyAutoBeanFactory ontologyFactory,
+                                 final OntologyLookupServiceProxy searchProxy,
+                                 final MetadataTermSearchField.MetadataTermSearchFieldAppearance searchFieldAppearance) {
 
         this.view = view;
         this.drService = drService;

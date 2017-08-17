@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class OntologyLookupServiceFacadeImpl implements OntologyLookupServiceFacade {
-    private final String OLS_BASE_URL = "org.iplantc.services.ontology-lookup-service.base";
+    private static final String OLS_BASE_URL = "org.iplantc.services.ontology-lookup-service.base";
 
     @Inject OntologyAutoBeanFactory factory;
     @Inject private DiscEnvApiService deService;

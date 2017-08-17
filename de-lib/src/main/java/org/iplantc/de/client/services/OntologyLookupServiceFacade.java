@@ -13,5 +13,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public interface OntologyLookupServiceFacade {
 
+    /**
+     * Searches for the user's term in the OLS, fetching paged results with the given load config.
+     *
+     * @param loadConfig The load config for fetching paged search results.
+     * @param callback The OLS search response callback.
+     */
     void searchOntologyLookupService(OntologyLookupServiceLoadConfig loadConfig, AsyncCallback<OntologyLookupServiceResponse> callback);
 }

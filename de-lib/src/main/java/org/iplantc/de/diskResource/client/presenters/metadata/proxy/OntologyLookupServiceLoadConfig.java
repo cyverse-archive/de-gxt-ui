@@ -12,12 +12,12 @@ import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
  * @author psarando
  */
 public class OntologyLookupServiceLoadConfig extends FilterPagingLoadConfigBean {
-    private static String FILTER_FIELD_QUERY = "q";
-    private static String FILTER_FIELD_ONTOLOGY = "ontology";
-    private static String FILTER_FIELD_ENTITY_TYPE = "type";
-    private static String FILTER_FIELD_CHILDREN = "childrenOf";
-    private static String FILTER_FIELD_ALL_CHILDREN = "allChildrenOf";
-    private static String FILTER_FIELD_RESPONSE_FIELDS = "fieldList";
+    private static final String FILTER_FIELD_QUERY = "q";
+    private static final String FILTER_FIELD_ONTOLOGY = "ontology";
+    private static final String FILTER_FIELD_ENTITY_TYPE = "type";
+    private static final String FILTER_FIELD_CHILDREN = "childrenOf";
+    private static final String FILTER_FIELD_ALL_CHILDREN = "allChildrenOf";
+    private static final String FILTER_FIELD_RESPONSE_FIELDS = "fieldList";
 
     /**
      * OLS searches may be restricted to one of these entity types.

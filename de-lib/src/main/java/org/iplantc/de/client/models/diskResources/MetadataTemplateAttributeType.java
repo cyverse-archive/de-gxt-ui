@@ -1,5 +1,10 @@
 package org.iplantc.de.client.models.diskResources;
 
+/**
+ * The Attribute types the UI can display in a Metadata Template form.
+ *
+ * @author psarando
+ */
 public enum MetadataTemplateAttributeType {
     BOOLEAN("Boolean"),
     ENUM("Enum"),
