@@ -33,6 +33,8 @@ public class OntologyLookupServiceProxy extends RpcProxy<OntologyLookupServiceLo
 
         if (Strings.isNullOrEmpty(queryText)) {
             // nothing to search
+            callback.onSuccess(new PagingLoadResultBean<>());
+
             return;
         }
 
