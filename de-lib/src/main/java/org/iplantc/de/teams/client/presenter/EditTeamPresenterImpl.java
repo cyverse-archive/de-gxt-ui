@@ -24,6 +24,7 @@ import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.AddPublicUserSelected;
 import org.iplantc.de.teams.client.events.LeaveTeamCompleted;
+import org.iplantc.de.teams.client.events.PrivilegeAndMembershipLoaded;
 import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.events.RemoveNonMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.events.TeamSaved;
@@ -31,6 +32,7 @@ import org.iplantc.de.teams.client.views.dialogs.LeaveTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.SaveTeamProgressDialog;
 
 import com.google.common.collect.Lists;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -124,11 +126,10 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                 mode = isAdmin ? EditTeamView.MODE.EDIT : EditTeamView.MODE.VIEW;
                 view.showAdminMode(isAdmin);
                 if (privileges != null && !privileges.isEmpty()) {
-                    List<Privilege> filteredPrivs = filterExtraPrivileges(privileges);
-                    renamePublicUser(filteredPrivs);
-                    getTeamMembers(group, filteredPrivs);
+                    getTeamMembers(group, privileges);
                 } else {
                     view.unmask();
+                    ensureHandlers().fireEvent(new PrivilegeAndMembershipLoaded(false, false, false));
                 }
             }
         });
@@ -155,8 +156,11 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
             @Override
             public void onSuccess(List<Subject> subjects) {
+                ensureHandlers().fireEvent(new PrivilegeAndMembershipLoaded(isAdmin, hasOptInPrivilege(privileges), isMember(subjects)));
+                List<Privilege> filteredPrivs = filterExtraPrivileges(privileges);
+                renamePublicUser(filteredPrivs);
                 List<Subject> filteredSubjects = filterOutCurrentUser(subjects);
-                Map<Boolean, List<Privilege>> mapIsMemberPriv = getMapIsMemberPrivilege(privileges, filteredSubjects);
+                Map<Boolean, List<Privilege>> mapIsMemberPriv = getMapIsMemberPrivilege(filteredPrivs, filteredSubjects);
                 view.addMembers(mapIsMemberPriv.get(true));
                 view.addNonMembers(mapIsMemberPriv.get(false));
                 view.unmask();
@@ -540,6 +544,11 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                          .collect(Collectors.toList());
     }
 
+    boolean hasOptInPrivilege(List<Privilege> privileges) {
+        return privileges.stream()
+                         .filter(privilege -> PrivilegeType.optin.equals(privilege.getPrivilegeType()))
+                         .count() > 0;
+    }
 
     boolean hasPublicUser() {
         List<Privilege> nonMemberPrivs = view.getNonMemberPrivileges();
@@ -549,6 +558,12 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
     boolean isCurrentUser(Subject subject) {
         return userInfo.getUsername().equals(subject.getId());
+    }
+
+    boolean isMember(List<Subject> members) {
+        return members.stream()
+               .filter(member -> userInfo.getUsername().equals(member.getId()))
+               .count() > 0;
     }
 
     boolean isCurrentUserPrivilege(Privilege privilege) {
@@ -614,6 +629,11 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     @Override
     public HandlerRegistration addLeaveTeamCompletedHandler(LeaveTeamCompleted.LeaveTeamCompletedHandler handler) {
         return ensureHandlers().addHandler(LeaveTeamCompleted.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addPrivilegeAndMembershipLoadedHandler(PrivilegeAndMembershipLoaded.PrivilegeAndMembershipLoadedHandler handler) {
+        return ensureHandlers().addHandler(PrivilegeAndMembershipLoaded.TYPE, handler);
     }
 
     HandlerManager ensureHandlers() {

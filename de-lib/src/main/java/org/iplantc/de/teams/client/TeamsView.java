@@ -122,6 +122,12 @@ public interface TeamsView extends IsWidget,
         String leaveTeamFail();
 
         String gridHeight();
+
+        String deleteTeam();
+
+        String joinTeam();
+
+        String requestToJoinTeam();
     }
 
     /**

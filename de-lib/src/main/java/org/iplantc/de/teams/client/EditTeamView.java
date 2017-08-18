@@ -7,6 +7,7 @@ import org.iplantc.de.client.models.groups.Privilege;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.teams.client.events.AddPublicUserSelected;
 import org.iplantc.de.teams.client.events.LeaveTeamCompleted;
+import org.iplantc.de.teams.client.events.PrivilegeAndMembershipLoaded;
 import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.events.RemoveNonMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.events.TeamSaved;
@@ -36,7 +37,8 @@ public interface EditTeamView extends IsWidget,
     String SEARCH_NON_MEMBERS_TAG = "nonMembers";
 
     interface Presenter extends TeamSaved.HasTeamSavedHandlers,
-                                LeaveTeamCompleted.HasLeaveTeamCompletedHandlers {
+                                LeaveTeamCompleted.HasLeaveTeamCompletedHandlers,
+                                PrivilegeAndMembershipLoaded.HasPrivilegeAndMembershipLoadedHandlers {
 
         /**
          * Initialize the presenter which creates the view
