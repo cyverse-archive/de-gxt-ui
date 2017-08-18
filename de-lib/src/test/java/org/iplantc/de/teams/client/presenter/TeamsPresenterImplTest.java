@@ -2,7 +2,6 @@ package org.iplantc.de.teams.client.presenter;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -11,20 +10,18 @@ import static org.mockito.Mockito.when;
 
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
-import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.services.GroupServiceFacade;
-import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.teams.client.TeamsView;
-import org.iplantc.de.teams.client.events.LeaveTeamSelected;
+import org.iplantc.de.teams.client.events.LeaveTeamCompleted;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
-import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
+import org.iplantc.de.teams.client.events.TeamNameSelected;
+import org.iplantc.de.teams.client.events.TeamSaved;
 import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
 import org.iplantc.de.teams.client.gin.TeamsViewFactory;
 import org.iplantc.de.teams.client.models.TeamsFilter;
-import org.iplantc.de.teams.client.views.dialogs.LeaveTeamDialog;
-import org.iplantc.de.teams.client.views.dialogs.TeamDetailsDialog;
+import org.iplantc.de.teams.client.views.dialogs.EditTeamDialog;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -32,8 +29,6 @@ import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
-import com.sencha.gxt.widget.core.client.Dialog;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -57,23 +52,18 @@ public class TeamsPresenterImplTest {
     @Mock Group groupMock;
     @Mock List<Group> groupListMock;
     @Mock List<Subject> subjectListMock;
-    @Mock List<UpdateMemberResult> updateMemberResultListMock;
-    @Mock UpdateMemberResult updateMemberResultMock;
-    @Mock TeamDetailsDialog detailsDialogMock;
-    @Mock LeaveTeamDialog leaveDialogMock;
-    @Mock AsyncProviderWrapper<TeamDetailsDialog> detailsDlgProviderMock;
-    @Mock AsyncProviderWrapper<LeaveTeamDialog> leaveDlgProviderMock;
+    @Mock EditTeamDialog editTeamDialogMock;
+    @Mock AsyncProviderWrapper<EditTeamDialog> editDlgProviderMock;
     @Mock TeamsViewFactory viewFactoryMock;
     @Mock TeamSearchRpcProxy searchProxyMock;
     @Mock PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Group>> loaderMock;
     @Mock IplantAnnouncer announcerMock;
 
-    @Captor ArgumentCaptor<AsyncCallback<TeamDetailsDialog>> detailsDlgProviderCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<LeaveTeamDialog>> leaveDlgProviderCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<EditTeamDialog>> editDlgProviderCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> subjectListCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Group>>> groupListCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<List<UpdateMemberResult>>> updateMemberCaptor;
-    @Captor ArgumentCaptor<DialogHideEvent.DialogHideHandler> dialogHideCaptor;
+    @Captor ArgumentCaptor<TeamSaved.TeamSavedHandler> teamSaveCaptor;
+    @Captor ArgumentCaptor<LeaveTeamCompleted.LeaveTeamCompletedHandler> leaveTeamCaptor;
 
     TeamsPresenterImpl uut;
 
@@ -92,19 +82,17 @@ public class TeamsPresenterImplTest {
             }
         };
         uut.currentFilter = currentFilterMock;
-        uut.detailsDlgProvider = detailsDlgProviderMock;
-        uut.leaveTeamDlgProvider = leaveDlgProviderMock;
         uut.announcer = announcerMock;
+        uut.editTeamDlgProvider = editDlgProviderMock;
 
         verifyConstructor();
     }
 
     public void verifyConstructor() {
         verify(viewFactoryMock).create(eq(loaderMock));
-        verify(viewMock).addTeamInfoButtonSelectedHandler(eq(uut));
+        verify(viewMock).addTeamNameSelectedHandler(eq(uut));
         verify(viewMock).addTeamFilterSelectionChangedHandler(eq(uut));
         verify(viewMock).addCreateTeamSelectedHandler(eq(uut));
-        verify(viewMock).addEditTeamSelectedHandler(eq(uut));
         verify(searchProxyMock).addTeamSearchResultLoadHandler(eq(uut));
         verify(searchProxyMock).addTeamSearchResultLoadHandler(eq(viewMock));
     }
@@ -120,20 +108,29 @@ public class TeamsPresenterImplTest {
     }
 
     @Test
-    public void onTeamInfoButtonSelected() {
-        TeamInfoButtonSelected eventMock = mock(TeamInfoButtonSelected.class);
-        when(eventMock.getGroup()).thenReturn(groupMock);
+    public void onTeamNameSelected() {
+        TeamNameSelected eventMock = mock(TeamNameSelected.class);
+        TeamSaved saveEventMock = mock(TeamSaved.class);
+        LeaveTeamCompleted leaveEventMock = mock(LeaveTeamCompleted.class);
+        when(leaveEventMock.getTeam()).thenReturn(groupMock);
+        when(saveEventMock.getGroup()).thenReturn(groupMock);
+        when(eventMock.getTeam()).thenReturn(groupMock);
 
         /** CALL METHOD UNDER TEST **/
-        uut.onTeamInfoButtonSelected(eventMock);
+        uut.onTeamNameSelected(eventMock);
 
-        verify(serviceFacadeMock).getTeamMembers(eq(groupMock), subjectListCaptor.capture());
+        verify(editDlgProviderMock).get(editDlgProviderCaptor.capture());
 
-        subjectListCaptor.getValue().onSuccess(subjectListMock);
-        verify(detailsDlgProviderMock).get(detailsDlgProviderCaptor.capture());
+        editDlgProviderCaptor.getValue().onSuccess(editTeamDialogMock);
+        verify(editTeamDialogMock).show(eq(groupMock));
 
-        detailsDlgProviderCaptor.getValue().onSuccess(detailsDialogMock);
-        verify(detailsDialogMock).show(eq(groupMock), eq(subjectListMock));
+        verify(editTeamDialogMock).addTeamSavedHandler(teamSaveCaptor.capture());
+        teamSaveCaptor.getValue().onTeamSaved(saveEventMock);
+        verify(viewMock).updateTeam(eq(groupMock));
+
+        verify(editTeamDialogMock).addLeaveTeamCompletedHandler(leaveTeamCaptor.capture());
+        leaveTeamCaptor.getValue().onLeaveTeamCompleted(leaveEventMock);
+        verify(viewMock).removeTeam(eq(groupMock));
     }
 
     @Test
@@ -220,47 +217,4 @@ public class TeamsPresenterImplTest {
         verify(viewMock).clearTeams();
         verify(viewMock).addTeams(eq(groupListMock));
     }
-
-    @Test
-    public void onLeaveTeamSelected() {
-        LeaveTeamSelected eventMock = mock(LeaveTeamSelected.class);
-        when(eventMock.getGroup()).thenReturn(groupMock);
-        DialogHideEvent hideEventMock = mock(DialogHideEvent.class);
-        when(hideEventMock.getHideButton()).thenReturn(Dialog.PredefinedButton.YES);
-
-        TeamsPresenterImpl spy = spy(uut);
-
-        /** CALL METHOD UNDER TEST **/
-        spy.onLeaveTeamSelected(eventMock);
-
-        verify(leaveDlgProviderMock).get(leaveDlgProviderCaptor.capture());
-
-        leaveDlgProviderCaptor.getValue().onSuccess(leaveDialogMock);
-
-        verify(leaveDialogMock).show(eq(groupMock));
-        verify(leaveDialogMock).addDialogHideHandler(dialogHideCaptor.capture());
-
-        dialogHideCaptor.getValue().onDialogHide(hideEventMock);
-        verify(spy).leaveTeam(eq(groupMock));
-    }
-
-    @Test
-    public void leaveTeam() {
-        when(updateMemberResultListMock.isEmpty()).thenReturn(false);
-        when(updateMemberResultListMock.get(0)).thenReturn(updateMemberResultMock);
-        when(updateMemberResultMock.isSuccess()).thenReturn(true);
-        when(appearanceMock.leaveTeamSuccess(any())).thenReturn("success");
-        when(appearanceMock.leaveTeamFail()).thenReturn("fail");
-
-        /** CALL METHOD UNDER TEST **/
-        uut.leaveTeam(groupMock);
-
-        verify(serviceFacadeMock).leaveTeam(eq(groupMock), updateMemberCaptor.capture());
-
-        updateMemberCaptor.getValue().onSuccess(updateMemberResultListMock);
-
-        verify(announcerMock).schedule(isA(IplantAnnouncementConfig.class));
-        verify(viewMock).removeTeam(eq(groupMock));
-    }
-
 }

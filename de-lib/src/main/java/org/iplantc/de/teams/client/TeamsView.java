@@ -3,10 +3,8 @@ package org.iplantc.de.teams.client;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.teams.client.events.CreateTeamSelected;
-import org.iplantc.de.teams.client.events.EditTeamSelected;
-import org.iplantc.de.teams.client.events.LeaveTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
-import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
+import org.iplantc.de.teams.client.events.TeamNameSelected;
 import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
 import org.iplantc.de.teams.client.models.TeamsFilter;
 
@@ -19,13 +17,10 @@ import java.util.List;
  * An interface for the UI's Team view in the Collaboration window
  */
 public interface TeamsView extends IsWidget,
-                                   IsMaskable,
-                                   TeamInfoButtonSelected.HasTeamInfoButtonSelectedHandlers,
+                                   IsMaskable, TeamNameSelected.HasTeamNameSelectedHandlers,
                                    TeamFilterSelectionChanged.HasTeamFilterSelectionChangedHandlers,
                                    CreateTeamSelected.HasCreateTeamSelectedHandlers,
-                                   EditTeamSelected.HasEditTeamSelectedHandlers,
-                                   TeamSearchResultLoad.TeamSearchResultLoadHandler,
-                                   LeaveTeamSelected.HasLeaveTeamSelectedHandlers {
+                                   TeamSearchResultLoad.TeamSearchResultLoadHandler {
 
     /**
      * An appearance class for all string related items in the Teams view
@@ -125,6 +120,14 @@ public interface TeamsView extends IsWidget,
         int leaveTeamWidth();
 
         String leaveTeamFail();
+
+        String gridHeight();
+
+        String deleteTeam();
+
+        String joinTeam();
+
+        String requestToJoinTeam();
     }
 
     /**
