@@ -29,6 +29,9 @@ public class DeController {
     @Value("${org.iplantc.discoveryenvironment.environment.prod-deployment}") private String isProduction;
     @Value("${org.iplantc.discoveryenvironment.local-ip-ranges}") private String localIpRanges;
     @Value("${org.iplantc.discoveryenvironment.session-timeout}") private String sessionTimeout;
+    @Value("${org.iplantc.discoveryenvironment.intercom.appId}")
+    private String intercomAppId;
+    @Value("${org.iplantc.discoveryenvironment.intercom.enabled}") private String intercomEnabled;
 
     @RequestMapping("/")
     public String redirectToDe(final HttpServletRequest request) throws MalformedURLException {
@@ -70,6 +73,8 @@ public class DeController {
         }
         final boolean isProd = Boolean.parseBoolean(isProduction);
         model.addAttribute("isProduction", isProd);
+        session.setAttribute("intercomAppId", intercomAppId);
+        session.setAttribute("intercomEnabled", Boolean.parseBoolean(intercomEnabled));
         session.setMaxInactiveInterval(Integer.parseInt(sessionTimeout));
 
         return "de";

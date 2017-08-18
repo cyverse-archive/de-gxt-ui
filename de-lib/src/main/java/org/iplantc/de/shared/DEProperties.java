@@ -133,6 +133,18 @@ public class DEProperties {
     private static final String GROUPER_ID = "org.iplantc.discoveryenvironment.groups.grouper-id";
 
     /**
+     * Intercom settings
+     */
+    private static final String INTERCOM_ENABLED ="org.iplantc.discoveryenvironment.intercom.enabled";
+    private static final String INTERCOM_APP_ID = "org.iplantc.discoveryenvironment.intercom.appId";
+
+    private static final String INTERCOM_COMPANY_ID =
+            "org.iplantc.discoveryenvironment.intercom.companyId";
+
+    private static final String INTERCOM_COMPANY_NAME =
+            "org.iplantc.discoveryenvironment.intercom.companyName";
+
+    /**
      * The single instance of this class.
      */
     private static DEProperties instance;
@@ -197,11 +209,16 @@ public class DEProperties {
 
     private String cardUrlOptions;
 
+
     private String grouperAllId;
 
     private String grouperAllDisplayName;
 
     private String grouperId;
+
+    private String companyId;
+
+    private String companyName;
 
     public String getPathListFileIdentifier() {
         return pathListFileIdentifier;
@@ -246,6 +263,11 @@ public class DEProperties {
     private String supportUser;
 
     private String supportServiceUrl;
+
+    private String intercomAppId;
+
+    private boolean intercomEnabled;
+
 
     /**
      * Force the constructor to be private.
@@ -301,6 +323,10 @@ public class DEProperties {
         keys.add(GROUPER_ALL_ID);
         keys.add(GROUPER_ALL_DISPLAY_NAME);
         keys.add(GROUPER_ID);
+        keys.add(INTERCOM_APP_ID);
+        keys.add(INTERCOM_COMPANY_ID);
+        keys.add(INTERCOM_COMPANY_NAME);
+        keys.add(INTERCOM_ENABLED);
         return keys;
     }
 
@@ -339,6 +365,10 @@ public class DEProperties {
         grouperAllId = properties.get(GROUPER_ALL_ID);
         grouperAllDisplayName = properties.get(GROUPER_ALL_DISPLAY_NAME);
         grouperId = properties.get(GROUPER_ID);
+        intercomAppId = properties.get(INTERCOM_APP_ID);
+        companyId = properties.get(INTERCOM_COMPANY_ID);
+        companyName = properties.get(INTERCOM_COMPANY_NAME);
+        intercomEnabled = getBoolean(properties, INTERCOM_ENABLED, false);
     }
 
     /**
@@ -511,5 +541,21 @@ public class DEProperties {
 
     public String getGrouperId() {
         return grouperId;
+    }
+
+    public String getIntercomAppId() {
+        return intercomAppId;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public boolean isIntercomEnabled() {
+        return intercomEnabled;
     }
 }

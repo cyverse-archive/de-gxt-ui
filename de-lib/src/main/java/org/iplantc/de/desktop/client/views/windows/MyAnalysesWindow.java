@@ -9,6 +9,8 @@ import org.iplantc.de.commons.client.views.window.configs.AnalysisWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.shared.DeModule;
+import org.iplantc.de.intercom.client.IntercomFacade;
+import org.iplantc.de.intercom.client.TrackingEventType;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.common.collect.Lists;
@@ -48,6 +50,7 @@ public class MyAnalysesWindow extends IplantWindowBase {
             @Override
             public void onSelect(SelectEvent event) {
                 WindowUtil.open(constants.faqUrl() + ANALYSES);
+                IntercomFacade.trackEvent(TrackingEventType.ANALYSES_FAQ_CLICKED, null);
             }
         });
     }

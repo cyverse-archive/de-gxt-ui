@@ -7,6 +7,8 @@ import static com.google.gwt.dom.client.BrowserEvents.MOUSEOVER;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisExecutionStatus;
+import org.iplantc.de.intercom.client.IntercomFacade;
+import org.iplantc.de.intercom.client.TrackingEventType;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
@@ -17,6 +19,8 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Event;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 /**
  * Created by sriram on 11/17/16.
@@ -82,6 +86,8 @@ public class AnalysisUserSupportCell extends AbstractCell<Analysis> {
         if (hasHandlers != null && value.isShareable()
             && !value.getStatus().equalsIgnoreCase(AnalysisExecutionStatus.CANCELED.toString())) {
             hasHandlers.fireEvent(new AnalysisUserSupportRequestedEvent(value));
+            IntercomFacade.trackEvent(TrackingEventType.ANALYSIS_USER_SUPPORT_REQUESTED, AutoBeanCodex.encode(
+                    AutoBeanUtils.getAutoBean(value)));
         }
 
    }

@@ -55,6 +55,7 @@ import org.iplantc.de.desktop.client.views.widgets.PreferencesDialog;
 import org.iplantc.de.desktop.client.views.windows.IPlantWindowInterface;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.fileViewers.client.callbacks.LoadGenomeInCoGeCallback;
+import org.iplantc.de.intercom.client.IntercomFacade;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
 import org.iplantc.de.notifications.client.utils.NotifyInfo;
 import org.iplantc.de.notifications.client.views.dialogs.RequestHistoryDialog;
@@ -338,6 +339,8 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
    @Override
     public void doLogout(boolean sessionTimeout) {
        cleanUp();
+       IntercomFacade.logout();
+
         //session is timed-out, following rpc call will fail and cause 401.
         if(!sessionTimeout) {
             userSessionService.logout(new RuntimeCallbacks.LogoutCallback(userSessionService,

@@ -11,6 +11,7 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.views.dialogs.AgaveAuthPrompt;
 import org.iplantc.de.desktop.client.DesktopView;
+import org.iplantc.de.intercom.client.IntercomFacade;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.exceptions.HttpException;
 
@@ -41,6 +42,7 @@ class InitializationCallbacks {
         private Panel panel;
         private final UserInfo userInfo;
         private final DesktopPresenterImpl presenter;
+        private final DEProperties deProps = DEProperties.getInstance();
         Logger LOG = Logger.getLogger(BootstrapCallback.class.getName());
 
         public BootstrapCallback(DesktopPresenterImpl presenter,
@@ -99,6 +101,11 @@ class InitializationCallbacks {
                 }
             }
             checkUserPreferences(presenter, panel, userInfo, userSettings, announcer, appearance);
+            IntercomFacade.login(userInfo.getUsername(),
+                                 userInfo.getEmail(),
+                                 deProps.getIntercomAppId(),
+                                 deProps.getCompanyId(),
+                                 deProps.getCompanyName());
         }
 
         ConfirmMessageBox getIntroConfirmation() {

@@ -53,8 +53,10 @@ public class NotifyInfo extends IplantAnnouncer {
 
         IplantAnnouncement popup = announcements.peek();
 
+        //we support a minimum of 800 x 600
         int x = XDOM.getViewportWidth() - popup.getOffsetWidth() - 10;
-        int y = XDOM.getViewportHeight() - popup.getOffsetHeight() - 64;
+        int y =
+                75; //moving the notification to the top, just below the  Notifications, User and Help Icons in Desktop
         popup.setPagePosition(x, y);
     }
 }

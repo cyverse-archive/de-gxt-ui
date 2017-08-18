@@ -50,4 +50,8 @@ public interface IPlantWindowInterface extends HasActivateHandlers<Window>,
     void serviceDown(SelectEvent.SelectHandler handler);
 
     void serviceUp();
+
+    void logWindowOpenToIntercom(WindowConfig config);
+
+    void logWindowCloseToIntercom(WindowConfig config);
 }

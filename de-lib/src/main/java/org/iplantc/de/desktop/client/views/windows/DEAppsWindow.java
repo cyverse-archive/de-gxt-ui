@@ -8,6 +8,8 @@ import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.shared.DeModule;
+import org.iplantc.de.intercom.client.IntercomFacade;
+import org.iplantc.de.intercom.client.TrackingEventType;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.inject.Inject;
@@ -46,6 +48,7 @@ public class DEAppsWindow extends IplantWindowBase {
             @Override
             public void onSelect(SelectEvent event) {
                 WindowUtil.open(constants.faqUrl() + APPS);
+                IntercomFacade.trackEvent(TrackingEventType.APPS_FAQ_CLICKED, null);
             }
         });
     }
