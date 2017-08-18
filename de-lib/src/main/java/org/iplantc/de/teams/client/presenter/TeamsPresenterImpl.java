@@ -69,7 +69,7 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
 
     @Override
     public void onTeamNameSelected(TeamNameSelected event) {
-        Group group = event.getGroup();
+        Group group = event.getTeam();
         editTeamDlgProvider.get(new AsyncCallback<EditTeamDialog>() {
             @Override
             public void onFailure(Throwable throwable) {

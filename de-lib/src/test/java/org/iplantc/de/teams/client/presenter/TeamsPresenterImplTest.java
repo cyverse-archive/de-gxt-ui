@@ -114,7 +114,7 @@ public class TeamsPresenterImplTest {
         LeaveTeamCompleted leaveEventMock = mock(LeaveTeamCompleted.class);
         when(leaveEventMock.getTeam()).thenReturn(groupMock);
         when(saveEventMock.getGroup()).thenReturn(groupMock);
-        when(eventMock.getGroup()).thenReturn(groupMock);
+        when(eventMock.getTeam()).thenReturn(groupMock);
 
         /** CALL METHOD UNDER TEST **/
         uut.onTeamNameSelected(eventMock);
