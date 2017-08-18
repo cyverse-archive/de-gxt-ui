@@ -7,6 +7,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
+ * An event that will fire when a user selects a team name in the Collaboration window
  * @author aramsey
  */
 public class TeamNameSelected extends GwtEvent<TeamNameSelected.TeamNameSelectedHandler> {
@@ -20,10 +21,10 @@ public class TeamNameSelected extends GwtEvent<TeamNameSelected.TeamNameSelected
     }
 
     public static Type<TeamNameSelectedHandler> TYPE = new Type<TeamNameSelectedHandler>();
-    private Group group;
+    private Group team;
 
-    public TeamNameSelected(Group group) {
-        this.group = group;
+    public TeamNameSelected(Group team) {
+        this.team = team;
     }
 
     public Type<TeamNameSelectedHandler> getAssociatedType() {
@@ -34,7 +35,7 @@ public class TeamNameSelected extends GwtEvent<TeamNameSelected.TeamNameSelected
         handler.onTeamNameSelected(this);
     }
 
-    public Group getGroup() {
-        return group;
+    public Group getTeam() {
+        return team;
     }
 }

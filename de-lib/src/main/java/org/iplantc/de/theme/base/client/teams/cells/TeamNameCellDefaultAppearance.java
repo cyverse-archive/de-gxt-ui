@@ -12,7 +12,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
 /**
- * The default appearance for the Team info button
+ * The default appearance for what the user sees when hovering over a team name
  *
  * @author aramsey
  */
