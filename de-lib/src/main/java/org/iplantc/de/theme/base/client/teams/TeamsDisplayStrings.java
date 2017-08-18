@@ -64,4 +64,10 @@ public interface TeamsDisplayStrings extends Messages {
     String leaveTeamHeader(String subjectDisplayName);
 
     String leaveTeamFail();
+
+    String deleteTeam();
+
+    String joinTeam();
+
+    String requestToJoinTeam();
 }

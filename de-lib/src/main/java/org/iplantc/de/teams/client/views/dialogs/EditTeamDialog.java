@@ -5,6 +5,7 @@ import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.LeaveTeamCompleted;
+import org.iplantc.de.teams.client.events.PrivilegeAndMembershipLoaded;
 import org.iplantc.de.teams.client.events.TeamSaved;
 import org.iplantc.de.teams.shared.Teams;
 
@@ -20,9 +21,14 @@ import com.sencha.gxt.widget.core.client.toolbar.FillToolItem;
  * The main dialog that presents the form to users for creating/editing a team
  */
 public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSavedHandlers,
-                                                            LeaveTeamCompleted.HasLeaveTeamCompletedHandlers {
+                                                            LeaveTeamCompleted.HasLeaveTeamCompletedHandlers,
+                                                            PrivilegeAndMembershipLoaded.PrivilegeAndMembershipLoadedHandler {
     private EditTeamView.Presenter presenter;
     private TeamsView.TeamsViewAppearance appearance;
+    private TextButton leaveBtn;
+    private TextButton deleteBtn;
+    private TextButton joinBtn;
+    private TextButton requestToJoinBtn;
 
     @Inject
     public EditTeamDialog(EditTeamView.Presenter presenter,
@@ -34,7 +40,9 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
         setPixelSize(appearance.editTeamWidth(), appearance.editTeamHeight());
         setMinWidth(appearance.editTeamWidth());
         setOnEsc(false);
+        setHideOnButtonClick(false);
         setButtons();
+        setHandlers();
     }
 
     public void show(Group group) {
@@ -59,20 +67,32 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
     }
 
     void setButtons() {
-        TextButton leaveBtn = new TextButton("Leave Team");
-        leaveBtn.addSelectHandler(event -> presenter.onLeaveButtonSelected(this));
-        TextButton deleteBtn = new TextButton("Delete Team");
-        deleteBtn.addSelectHandler(event -> presenter.onDeleteButtonSelected(this));
+        leaveBtn = new TextButton(appearance.leaveTeam());
+        deleteBtn = new TextButton(appearance.deleteTeam());
+        joinBtn = new TextButton(appearance.joinTeam());
+        requestToJoinBtn = new TextButton(appearance.requestToJoinTeam());
+
+        leaveBtn.setVisible(false);
+        deleteBtn.setVisible(false);
+        joinBtn.setVisible(false);
+        requestToJoinBtn.setVisible(false);
 
         buttonBar.setPack(BoxLayoutContainer.BoxLayoutPack.START);
         addButton(leaveBtn);
         addButton(deleteBtn);
+        addButton(joinBtn);
+        addButton(requestToJoinBtn);
         addButton(new FillToolItem());
         addButton(getButton(PredefinedButton.OK));
         addButton(getButton(PredefinedButton.CANCEL));
         buttonBar.forceLayout();
+    }
 
-        setHideOnButtonClick(false);
+    void setHandlers() {
+        presenter.addPrivilegeAndMembershipLoadedHandler(this);
+        leaveBtn.addSelectHandler(event -> presenter.onLeaveButtonSelected(this));
+        deleteBtn.addSelectHandler(event -> presenter.onDeleteButtonSelected(this));
+
         addOkButtonSelectHandler(selectEvent -> {
             if (presenter.isViewValid()) {
                 presenter.saveTeamSelected(this);
@@ -83,6 +103,15 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
             }
         });
         addCancelButtonSelectHandler(selectEvent -> hide());
+    }
+
+    @Override
+    public void onPrivilegeAndMembershipLoaded(PrivilegeAndMembershipLoaded event) {
+        leaveBtn.setVisible(event.enableLeaveTeam());
+        deleteBtn.setVisible(event.enableDeleteTeam());
+        joinBtn.setVisible(event.enableJoinTeam());
+        requestToJoinBtn.setVisible(event.enableRequestToJoinTeam());
+        buttonBar.forceLayout();
     }
 
     @Override
