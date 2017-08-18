@@ -14,7 +14,6 @@ import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
 import org.iplantc.de.teams.client.gin.TeamsViewFactory;
 import org.iplantc.de.teams.client.models.TeamsFilter;
 import org.iplantc.de.teams.client.views.dialogs.EditTeamDialog;
-import org.iplantc.de.teams.client.views.dialogs.TeamDetailsDialog;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -40,8 +39,7 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
     private GroupServiceFacade serviceFacade;
     private TeamsView view;
     private TeamSearchRpcProxy searchProxy;
-
-    @Inject AsyncProviderWrapper<TeamDetailsDialog> detailsDlgProvider;
+    
     @Inject AsyncProviderWrapper<EditTeamDialog> editTeamDlgProvider;
     @Inject IplantAnnouncer announcer;
     TeamsFilter currentFilter;
