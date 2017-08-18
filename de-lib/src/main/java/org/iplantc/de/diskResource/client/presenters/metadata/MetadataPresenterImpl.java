@@ -350,7 +350,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
                             templateViewDialog));
                     templateViewDialog.setHeading(result.getName());
                     templateViewDialog.setModal(false);
-                    templateViewDialog.setSize("600px", "400px");
+                    templateViewDialog.setSize("640px", "480px");
                     templateViewDialog.addMdTermDictionary(templateAttributes);
                     templateViewDialog.show(MetadataPresenterImpl.this,
                                             view.getUserMetadata(),

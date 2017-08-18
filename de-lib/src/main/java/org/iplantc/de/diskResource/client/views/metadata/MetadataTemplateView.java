@@ -371,7 +371,7 @@ public class MetadataTemplateView implements IsWidget {
         HorizontalPanel panel = new HorizontalPanel();
         panel.add(field);
         panel.setSpacing(10);
-        field.setWidth("480px");
+        field.setWidth("540px");
         TextButton addBtn = new TextButton("+");
         addBtn.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
