@@ -71,12 +71,6 @@ public interface EditTeamView extends IsWidget,
          * @param hideable
          */
         void onLeaveButtonSelected(IsHideable hideable);
-
-        /**
-         * This method is called when the "Delete Team" button is selected
-         * @param hideable
-         */
-        void onDeleteButtonSelected(IsHideable hideable);
     }
 
     /**

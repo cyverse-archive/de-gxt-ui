@@ -91,7 +91,6 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
     void setHandlers() {
         presenter.addPrivilegeAndMembershipLoadedHandler(this);
         leaveBtn.addSelectHandler(event -> presenter.onLeaveButtonSelected(this));
-        deleteBtn.addSelectHandler(event -> presenter.onDeleteButtonSelected(this));
 
         addOkButtonSelectHandler(selectEvent -> {
             if (presenter.isViewValid()) {

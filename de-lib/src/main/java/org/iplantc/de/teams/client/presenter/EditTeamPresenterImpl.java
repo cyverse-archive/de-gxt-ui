@@ -32,7 +32,6 @@ import org.iplantc.de.teams.client.views.dialogs.LeaveTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.SaveTeamProgressDialog;
 
 import com.google.common.collect.Lists;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -133,17 +132,6 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                 }
             }
         });
-    }
-
-    boolean isAdmin(List<Privilege> privileges) {
-        if (privileges == null || privileges.isEmpty()) {
-            return false;
-        }
-        List<Privilege> adminPrivs = privileges.stream()
-                                            .filter(privilege -> isCurrentUserPrivilege(privilege) &&
-                                                                 privilege.getPrivilegeType().equals(PrivilegeType.admin))
-                                            .collect(Collectors.toList());
-        return adminPrivs != null && !adminPrivs.isEmpty();
     }
 
     void getTeamMembers(Group group, List<Privilege> privileges) {
@@ -423,11 +411,6 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     }
 
     @Override
-    public void onDeleteButtonSelected(IsHideable hideable) {
-
-    }
-
-    @Override
     public void setViewDebugId(String debugId) {
         view.asWidget().ensureDebugId(debugId);
     }
@@ -548,6 +531,17 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         return privileges.stream()
                          .filter(privilege -> PrivilegeType.optin.equals(privilege.getPrivilegeType()))
                          .count() > 0;
+    }
+
+    boolean isAdmin(List<Privilege> privileges) {
+        if (privileges == null || privileges.isEmpty()) {
+            return false;
+        }
+        List<Privilege> adminPrivs = privileges.stream()
+                                               .filter(privilege -> isCurrentUserPrivilege(privilege) &&
+                                                                    privilege.getPrivilegeType().equals(PrivilegeType.admin))
+                                               .collect(Collectors.toList());
+        return adminPrivs != null && !adminPrivs.isEmpty();
     }
 
     boolean hasPublicUser() {
