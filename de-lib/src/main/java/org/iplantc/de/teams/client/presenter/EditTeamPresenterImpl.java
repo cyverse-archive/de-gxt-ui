@@ -145,6 +145,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
             @Override
             public void onSuccess(List<Subject> subjects) {
                 ensureHandlers().fireEvent(new PrivilegeAndMembershipLoaded(isAdmin, hasOptInPrivilege(privileges), isMember(subjects)));
+//                List<Privilege> updatedPrivs = convertReadAndOptInToSinglePrivilege(privileges);
                 List<Privilege> filteredPrivs = filterExtraPrivileges(privileges);
                 renamePublicUser(filteredPrivs);
                 List<Subject> filteredSubjects = filterOutCurrentUser(subjects);
@@ -485,7 +486,11 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
             PrivilegeType type = privilege.getPrivilegeType();
             List<PrivilegeType> privilegeTypes = Lists.newArrayList();
             if (type != null) {
-                privilegeTypes.add(type);
+                if (type.equals(PrivilegeType.readOptin)) {
+                    privilegeTypes.addAll(Lists.newArrayList(PrivilegeType.read, PrivilegeType.optin));
+                } else {
+                    privilegeTypes.add(type);
+                }
             }
             update.setPrivileges(privilegeTypes);
             return update;
@@ -508,12 +513,62 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                          .collect(Collectors.toList());
     }
 
+    /**
+     * In summary:
+     * - Filter out Grouper's admin privileges
+     * - Filter out every member's optout privileges which are automatically given
+     * - Read and Optin privileges should be combined into the fake "readOptin" privilege
+     *
+     * @param privileges
+     * @return the filtered list of privileges
+     */
     List<Privilege> filterExtraPrivileges(List<Privilege> privileges) {
-        return privileges.stream()
-                         .filter(privilege -> (privilege.getPrivilegeType() != PrivilegeType.optout
-                                               && !isCurrentUserPrivilege(privilege)
-                                               && !isDeGrouperPrivilege(privilege)))
-                         .collect(Collectors.toList());
+        Map<String, Subject> subjectMap = privileges.stream().collect(Collectors.toMap(privilege -> privilege.getSubject().getId(),
+                                                                                       Privilege::getSubject,
+                                                                                       (subj1, subj2) -> subj1));
+        Map<String, Set<PrivilegeType>> userIdToPrivTypes = privileges.stream()
+                                                                      .collect(Collectors.groupingBy(privilege -> privilege.getSubject().getId(),
+                                                                                                     Collectors.mapping(Privilege::getPrivilegeType,
+                                                                                                                        Collectors.toSet())));
+        userIdToPrivTypes.remove(userInfo.getUsername());
+        userIdToPrivTypes.remove(GROUPER_ID);
+        Map<String, Set<PrivilegeType>> reducedPrivTypes = userIdToPrivTypes.entrySet()
+                                                                            .stream()
+                                                                            .collect(Collectors.toMap(
+                                                                                    entry -> entry.getKey(),
+                                                                                    entry -> reducePrivilegeTypes(
+                                                                                            entry.getValue())));
+        List<Privilege> finalPrivileges = Lists.newArrayList();
+        reducedPrivTypes.keySet().forEach(userId -> {
+            Set<PrivilegeType> privTypes = reducedPrivTypes.get(userId);
+            privTypes.forEach(privilegeType -> {
+                Privilege privilege = convertToPrivilege(subjectMap, userId, privilegeType);
+                finalPrivileges.add(privilege);
+            });
+        });
+
+        return finalPrivileges;
+    }
+
+    Privilege convertToPrivilege(Map<String, Subject> subjectMap,
+                                 String userId,
+                                 PrivilegeType privilegeType) {
+        Privilege privilege = factory.getPrivilege().as();
+        privilege.setPrivilegeType(privilegeType);
+        privilege.setSubject(subjectMap.get(userId));
+        return privilege;
+    }
+
+    Set<PrivilegeType> reducePrivilegeTypes(Set<PrivilegeType> types) {
+        List<PrivilegeType> subList = Lists.newArrayList(PrivilegeType.read, PrivilegeType.optin);
+        if (types.containsAll(subList)) {
+            types.add(PrivilegeType.readOptin);
+            types.removeAll(subList);
+        }
+        if (types.contains(PrivilegeType.optout)) {
+            types.remove(PrivilegeType.optout);
+        }
+        return types;
     }
 
     List<Subject> filterOutCurrentUser(List<Subject> subjects) {

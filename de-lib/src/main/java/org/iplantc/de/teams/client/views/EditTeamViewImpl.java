@@ -135,8 +135,9 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     ComboBoxCell<PrivilegeType> createPrivilegeComboBox() {
         ListStore<PrivilegeType> comboListStore = new ListStore<>(PrivilegeType::getLabel);
         List<PrivilegeType> types = Lists.newArrayList(PrivilegeType.admin,
-                                                       PrivilegeType.optin,
+                                                       PrivilegeType.readOptin,
                                                        PrivilegeType.read,
+                                                       PrivilegeType.optin,
                                                        PrivilegeType.view);
         comboListStore.addAll(types);
         ComboBoxCell<PrivilegeType> combo = new ComboBoxCell<>(comboListStore, PrivilegeType::getLabel);
