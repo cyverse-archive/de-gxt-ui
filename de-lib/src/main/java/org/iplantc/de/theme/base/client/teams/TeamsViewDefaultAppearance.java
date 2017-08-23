@@ -302,4 +302,23 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
         }
         return 125;
     }
+
+    public String deleteTeamWarning() {
+        return displayStrings.deleteTeamWarning();
+    }
+
+    @Override
+    public int deleteTeamWidth() {
+        return 250;
+    }
+
+    @Override
+    public String deleteTeamHeader(Group team) {
+        return displayStrings.deleteTeamHeader(team.getSubjectDisplayName());
+    }
+
+    @Override
+    public String deleteTeamSuccess(Group team) {
+        return displayStrings.deleteTeamSuccess(team.getSubjectDisplayName());
+    }
 }

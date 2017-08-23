@@ -70,4 +70,10 @@ public interface TeamsDisplayStrings extends Messages {
     String joinTeam();
 
     String requestToJoinTeam();
+
+    String deleteTeamWarning();
+
+    String deleteTeamHeader(String teamName);
+
+    String deleteTeamSuccess(String subjectDisplayName);
 }
