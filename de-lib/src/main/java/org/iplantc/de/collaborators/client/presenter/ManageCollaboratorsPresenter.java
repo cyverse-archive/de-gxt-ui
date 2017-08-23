@@ -385,8 +385,8 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     void deleteGroups(List<Subject> selectedGroups, boolean retainPermissions, ParentDeleteSubjectsCallback parentCallback) {
         if (selectedGroups != null && !selectedGroups.isEmpty()) {
             selectedGroups.forEach(subject -> {
-                Group group = groupFactory.convertSubjectToGroup(subject);
-                groupServiceFacade.deleteGroup(group, retainPermissions, new DeleteGroupChildCallback(parentCallback));
+                Group collabList = groupFactory.convertSubjectToGroup(subject);
+                groupServiceFacade.deleteList(collabList, retainPermissions, new DeleteGroupChildCallback(parentCallback));
             });
         }
     }
