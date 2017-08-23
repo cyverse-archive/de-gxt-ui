@@ -100,6 +100,11 @@ public abstract class NotificationCallbackWrapper extends NotificationCallback<S
                     msg.setContext(payload.getPayload());
                     break;
 
+                case TEAM:
+                    GWT.log("TEAM category");
+                    msg.setContext(payload.getPayload());
+                    break;
+
                 default:
                     break;
             }

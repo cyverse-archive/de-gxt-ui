@@ -100,6 +100,10 @@ public class NotificationUtil {
                 GWT.log("TOOL category");
                 msg.setContext(payload.getPayload());
                 break;
+            case TEAM:
+                GWT.log("TEAM category");
+                msg.setContext(payload.getPayload());
+                break;
 
             default:
                 break;
