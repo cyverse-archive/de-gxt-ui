@@ -138,6 +138,10 @@ public interface TeamsView extends IsWidget,
         String deleteTeamHeader(Group team);
 
         String deleteTeamSuccess(Group team);
+
+        String joinTeamSuccess(Group team);
+
+        String joinTeamFail(Group team);
     }
 
     /**

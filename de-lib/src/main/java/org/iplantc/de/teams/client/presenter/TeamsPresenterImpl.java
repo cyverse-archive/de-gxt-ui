@@ -79,12 +79,9 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
             @Override
             public void onSuccess(EditTeamDialog dialog) {
                 dialog.show(group);
-                dialog.addTeamSavedHandler(new TeamSaved.TeamSavedHandler() {
-                    @Override
-                    public void onTeamSaved(TeamSaved event) {
-                        Group team = event.getGroup();
-                        view.updateTeam(team);
-                    }
+                dialog.addTeamSavedHandler(event1 -> {
+                    Group team = event1.getGroup();
+                    view.updateTeam(team);
                 });
                 dialog.addLeaveTeamCompletedHandler(event -> {
                     Group team = event.getTeam();
@@ -93,6 +90,12 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
                 dialog.addDeleteTeamCompletedHandler(event -> {
                     Group team  = event.getTeam();
                     view.removeTeam(team);
+                });
+                dialog.addJoinTeamCompletedHandler(event -> {
+                    if (TeamsFilter.MY_TEAMS.equals(currentFilter)) {
+                        Group team = event.getTeam();
+                        view.addTeams(Lists.newArrayList(team));
+                    }
                 });
             }
         });

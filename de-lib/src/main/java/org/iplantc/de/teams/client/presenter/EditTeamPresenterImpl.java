@@ -24,6 +24,7 @@ import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.AddPublicUserSelected;
 import org.iplantc.de.teams.client.events.DeleteTeamCompleted;
+import org.iplantc.de.teams.client.events.JoinTeamCompleted;
 import org.iplantc.de.teams.client.events.LeaveTeamCompleted;
 import org.iplantc.de.teams.client.events.PrivilegeAndMembershipLoaded;
 import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
@@ -451,6 +452,30 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     }
 
     @Override
+    public void onJoinButtonSelected(IsHideable hideable) {
+        serviceFacade.joinTeam(originalGroup, new AsyncCallback<List<UpdateMemberResult>>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(throwable);
+            }
+
+            @Override
+            public void onSuccess(List<UpdateMemberResult> updateMemberResults) {
+                if (updateMemberResults != null && !updateMemberResults.isEmpty()) {
+                    UpdateMemberResult updateMemberResult = updateMemberResults.get(0);
+                    if (updateMemberResult.isSuccess()) {
+                        announcer.schedule(new IplantAnnouncementConfig(appearance.joinTeamSuccess(originalGroup)));
+                        hideable.hide();
+                        ensureHandlers().fireEvent(new JoinTeamCompleted(originalGroup));
+                    } else {
+                        announcer.schedule(new ErrorAnnouncementConfig(appearance.joinTeamFail(originalGroup)));
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
     public void setViewDebugId(String debugId) {
         view.asWidget().ensureDebugId(debugId);
     }
@@ -737,6 +762,11 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     @Override
     public HandlerRegistration addDeleteTeamCompletedHandler(DeleteTeamCompleted.DeleteTeamCompletedHandler handler) {
         return ensureHandlers().addHandler(DeleteTeamCompleted.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addJoinTeamCompletedHandler(JoinTeamCompleted.JoinTeamCompletedHandler handler) {
+        return ensureHandlers().addHandler(JoinTeamCompleted.TYPE, handler);
     }
 
     HandlerManager ensureHandlers() {

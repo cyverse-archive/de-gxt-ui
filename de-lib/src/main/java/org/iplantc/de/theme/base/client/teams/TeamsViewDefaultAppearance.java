@@ -321,4 +321,14 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     public String deleteTeamSuccess(Group team) {
         return displayStrings.deleteTeamSuccess(team.getSubjectDisplayName());
     }
+
+    @Override
+    public String joinTeamSuccess(Group team) {
+        return displayStrings.joinTeamSuccess(team.getSubjectDisplayName());
+    }
+
+    @Override
+    public String joinTeamFail(Group team) {
+        return displayStrings.joinTeamFail(team.getSubjectDisplayName());
+    }
 }
