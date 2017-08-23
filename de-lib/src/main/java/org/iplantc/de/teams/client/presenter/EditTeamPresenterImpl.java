@@ -31,6 +31,7 @@ import org.iplantc.de.teams.client.events.TeamSaved;
 import org.iplantc.de.teams.client.views.dialogs.LeaveTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.SaveTeamProgressDialog;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -100,6 +101,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
             mode = EditTeamView.MODE.CREATE;
             addPublicUser();
+            addSelfSubject();
             view.showAdminMode(true);
         } else {
             mode = EditTeamView.MODE.VIEW;
@@ -145,11 +147,9 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
             @Override
             public void onSuccess(List<Subject> subjects) {
                 ensureHandlers().fireEvent(new PrivilegeAndMembershipLoaded(isAdmin, hasOptInPrivilege(privileges), isMember(subjects)));
-//                List<Privilege> updatedPrivs = convertReadAndOptInToSinglePrivilege(privileges);
                 List<Privilege> filteredPrivs = filterExtraPrivileges(privileges);
                 renamePublicUser(filteredPrivs);
-                List<Subject> filteredSubjects = filterOutCurrentUser(subjects);
-                Map<Boolean, List<Privilege>> mapIsMemberPriv = getMapIsMemberPrivilege(filteredPrivs, filteredSubjects);
+                Map<Boolean, List<Privilege>> mapIsMemberPriv = getMapIsMemberPrivilege(filteredPrivs, subjects);
                 view.addMembers(mapIsMemberPriv.get(true));
                 view.addNonMembers(mapIsMemberPriv.get(false));
                 view.unmask();
@@ -251,10 +251,8 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
     void addMembersToTeam(Group group, IsHideable hideable) {
         progressDlg.updateProgress();
-        Subject self = createSelfSubject();
         List<Privilege> privileges = view.getMemberPrivileges();
         List<Subject> membersToAdd = getSubjectsFromPrivileges(privileges);
-        membersToAdd.add(self);
         serviceFacade.addMembersToTeam(group, membersToAdd, new AsyncCallback<List<UpdateMemberResult>>() {
             @Override
             public void onFailure(Throwable throwable) {
@@ -530,7 +528,6 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                                                                       .collect(Collectors.groupingBy(privilege -> privilege.getSubject().getId(),
                                                                                                      Collectors.mapping(Privilege::getPrivilegeType,
                                                                                                                         Collectors.toSet())));
-        userIdToPrivTypes.remove(userInfo.getUsername());
         userIdToPrivTypes.remove(GROUPER_ID);
         Map<String, Set<PrivilegeType>> reducedPrivTypes = userIdToPrivTypes.entrySet()
                                                                             .stream()
@@ -619,10 +616,6 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         return userInfo.getUsername().equals(privilege.getSubject().getId());
     }
 
-    boolean isDeGrouperPrivilege(Privilege privilege) {
-        return GROUPER_ID.equals(privilege.getSubject().getId());
-    }
-
     Group copy(Group group) {
         Group copy = factory.getGroup().as();
         copy.setId(group.getId());
@@ -632,10 +625,25 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         return copy;
     }
 
-    Subject createSelfSubject() {
+    void addSelfSubject() {
+        Privilege privilege = factory.getPrivilege().as();
         Subject subject = factory.getSubject().as();
         subject.setId(userInfo.getUsername());
-        return subject;
+        String name = getSelfFullName();
+        subject.setName(name);
+
+        privilege.setPrivilegeType(PrivilegeType.admin);
+        privilege.setSubject(subject);
+
+        view.addMembers(Lists.newArrayList(privilege));
+    }
+
+    String getSelfFullName() {
+        String firstName = userInfo.getFirstName();
+        String lastName = userInfo.getLastName();
+        String name = Strings.isNullOrEmpty(firstName) ? "" : firstName + " ";
+        name += Strings.isNullOrEmpty(lastName) ? "" : lastName;
+        return name;
     }
 
     void addPublicUser() {
