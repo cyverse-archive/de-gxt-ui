@@ -80,4 +80,14 @@ public interface TeamsDisplayStrings extends Messages {
     String joinTeamSuccess(String teamName);
 
     String joinTeamFail(String teamName);
+
+    String requestMessageLabel();
+
+    String sendRequestButton();
+
+    String joinTeamHeader(String teamName);
+
+    String joinTeamText(String teamName);
+
+    String requestToJoinSubmitted(String teamName);
 }

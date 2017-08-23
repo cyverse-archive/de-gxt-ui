@@ -34,5 +34,8 @@ public interface Teams {
         String LEAVE_TEAM_BTN = ".leaveTeamBtn";
         String DELETE_TEAM_DLG = "deleteTeamDlg";
         String DELETE_TEAM_BTN = ".deleteTeamBtn";
+        String JOIN_TEAM_DLG = "joinTeamDlg";
+        String SEND_REQUEST_BTN = ".sendRequestBtn";
+        String JOIN_REQUEST_MESSAGE = ".requestMessage";
     }
 }

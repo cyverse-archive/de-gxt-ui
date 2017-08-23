@@ -331,4 +331,34 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     public String joinTeamFail(Group team) {
         return displayStrings.joinTeamFail(team.getSubjectDisplayName());
     }
+
+    @Override
+    public String requestMessageLabel() {
+        return displayStrings.requestMessageLabel();
+    }
+
+    @Override
+    public int joinTeamWidth() {
+        return 500;
+    }
+
+    @Override
+    public String sendRequestButton() {
+        return displayStrings.sendRequestButton();
+    }
+
+    @Override
+    public String joinTeamHeader(Group team) {
+        return displayStrings.joinTeamHeader(team.getSubjectDisplayName());
+    }
+
+    @Override
+    public String joinTeamText(Group team) {
+        return displayStrings.joinTeamText(team.getSubjectDisplayName());
+    }
+
+    @Override
+    public String requestToJoinSubmitted(Group team) {
+        return displayStrings.requestToJoinSubmitted(team.getSubjectDisplayName());
+    }
 }
