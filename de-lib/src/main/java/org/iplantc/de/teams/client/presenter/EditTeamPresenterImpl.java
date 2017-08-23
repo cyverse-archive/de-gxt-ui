@@ -23,11 +23,13 @@ import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.AddPublicUserSelected;
+import org.iplantc.de.teams.client.events.DeleteTeamCompleted;
 import org.iplantc.de.teams.client.events.LeaveTeamCompleted;
 import org.iplantc.de.teams.client.events.PrivilegeAndMembershipLoaded;
 import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.events.RemoveNonMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.events.TeamSaved;
+import org.iplantc.de.teams.client.views.dialogs.DeleteTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.LeaveTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.SaveTeamProgressDialog;
 
@@ -46,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.xml.stream.events.DTD;
 
 public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                                               UserSearchResultSelected.UserSearchResultSelectedEventHandler,
@@ -65,6 +68,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     @Inject IplantAnnouncer announcer;
     @Inject AsyncProviderWrapper<SaveTeamProgressDialog> progressDialogProvider;
     @Inject AsyncProviderWrapper<LeaveTeamDialog> leaveTeamDlgProvider;
+    @Inject AsyncProviderWrapper<DeleteTeamDialog> deleteTeamDlgProvider;
 
     boolean isAdmin;
     boolean isMember;
@@ -411,6 +415,43 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     }
 
     @Override
+    public void onDeleteButtonSelected(IsHideable hideable) {
+        deleteTeamDlgProvider.get(new AsyncCallback<DeleteTeamDialog>() {
+            @Override
+            public void onFailure(Throwable throwable) { }
+
+            @Override
+            public void onSuccess(DeleteTeamDialog dialog) {
+                dialog.show(originalGroup);
+                dialog.addDialogHideHandler(event -> {
+                    Dialog.PredefinedButton hideButton = event.getHideButton();
+                    if (Dialog.PredefinedButton.YES.equals(hideButton)) {
+                        deleteTeam(originalGroup, hideable);
+                    } else {
+                        dialog.hide();
+                    }
+                });
+            }
+        });
+    }
+
+    void deleteTeam(Group team, IsHideable hideable) {
+        serviceFacade.deleteTeam(team, new AsyncCallback<Group>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(throwable);
+            }
+
+            @Override
+            public void onSuccess(Group group) {
+                announcer.schedule(new IplantAnnouncementConfig(appearance.deleteTeamSuccess(team)));
+                hideable.hide();
+                ensureHandlers().fireEvent(new DeleteTeamCompleted(team));
+            }
+        });
+    }
+
+    @Override
     public void setViewDebugId(String debugId) {
         view.asWidget().ensureDebugId(debugId);
     }
@@ -692,6 +733,11 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     @Override
     public HandlerRegistration addPrivilegeAndMembershipLoadedHandler(PrivilegeAndMembershipLoaded.PrivilegeAndMembershipLoadedHandler handler) {
         return ensureHandlers().addHandler(PrivilegeAndMembershipLoaded.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addDeleteTeamCompletedHandler(DeleteTeamCompleted.DeleteTeamCompletedHandler handler) {
+        return ensureHandlers().addHandler(DeleteTeamCompleted.TYPE, handler);
     }
 
     HandlerManager ensureHandlers() {

@@ -90,6 +90,10 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
                     Group team = event.getTeam();
                     view.removeTeam(team);
                 });
+                dialog.addDeleteTeamCompletedHandler(event -> {
+                    Group team  = event.getTeam();
+                    view.removeTeam(team);
+                });
             }
         });
     }
