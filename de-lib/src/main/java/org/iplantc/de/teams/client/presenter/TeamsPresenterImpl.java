@@ -173,10 +173,6 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
                         view.addTeams(Lists.newArrayList(team));
                     }
                 });
-                dialog.addLeaveTeamCompletedHandler(event -> {
-                    Group team = event.getTeam();
-                    view.removeTeam(team);
-                });
             }
         });
     }
