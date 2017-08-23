@@ -2,6 +2,7 @@ package org.iplantc.de.teams.client.presenter;
 
 import static org.iplantc.de.teams.client.EditTeamView.SEARCH_MEMBERS_TAG;
 
+import org.iplantc.de.client.models.HasMessage;
 import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Subject;
@@ -31,6 +32,7 @@ import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.events.RemoveNonMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.events.TeamSaved;
 import org.iplantc.de.teams.client.views.dialogs.DeleteTeamDialog;
+import org.iplantc.de.teams.client.views.dialogs.JoinTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.LeaveTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.SaveTeamProgressDialog;
 
@@ -69,6 +71,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     @Inject AsyncProviderWrapper<SaveTeamProgressDialog> progressDialogProvider;
     @Inject AsyncProviderWrapper<LeaveTeamDialog> leaveTeamDlgProvider;
     @Inject AsyncProviderWrapper<DeleteTeamDialog> deleteTeamDlgProvider;
+    @Inject AsyncProviderWrapper<JoinTeamDialog> joinTeamDlgProvider;
 
     boolean isAdmin;
     boolean isMember;
@@ -463,9 +466,40 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                         hideable.hide();
                         ensureHandlers().fireEvent(new JoinTeamCompleted(originalGroup));
                     } else {
-                        announcer.schedule(new ErrorAnnouncementConfig(appearance.joinTeamFail(originalGroup)));
+                        onRequestToJoin(originalGroup, hideable);
                     }
                 }
+            }
+        });
+    }
+
+    void onRequestToJoin(Group team, IsHideable hideable) {
+        joinTeamDlgProvider.get(new AsyncCallback<JoinTeamDialog>() {
+            @Override
+            public void onFailure(Throwable throwable) {}
+
+            @Override
+            public void onSuccess(JoinTeamDialog dialog) {
+                dialog.show(team);
+                dialog.addOkButtonSelectHandler(event -> requestToJoin(team, dialog.getRequestMessage(), hideable));
+            }
+        });
+    }
+
+    void requestToJoin(Group team, String message, IsHideable hideable) {
+        HasMessage hasMessage = factory.getHasMessage().as();
+        hasMessage.setMessage(message);
+        serviceFacade.requestToJoinTeam(team, hasMessage, new AsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(throwable);
+                hideable.hide();
+            }
+
+            @Override
+            public void onSuccess(Void aVoid) {
+                hideable.hide();
+                announcer.schedule(new IplantAnnouncementConfig(appearance.requestToJoinSubmitted(team)));
             }
         });
     }

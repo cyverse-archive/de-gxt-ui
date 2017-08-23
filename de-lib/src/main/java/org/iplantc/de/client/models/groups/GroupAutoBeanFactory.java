@@ -1,5 +1,6 @@
 package org.iplantc.de.client.models.groups;
 
+import org.iplantc.de.client.models.HasMessage;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.collaborators.SubjectList;
 
@@ -42,6 +43,8 @@ public interface GroupAutoBeanFactory extends AutoBeanFactory {
     AutoBean<UpdatePrivilegeRequestList> getUpdatePrivilegeRequestList();
 
     AutoBean<CreateTeamRequest> getCreateTeamRequest();
+
+    AutoBean<HasMessage> getHasMessage();
 
     default Group getDefaultGroup() {
         Group group = getGroup().as();
