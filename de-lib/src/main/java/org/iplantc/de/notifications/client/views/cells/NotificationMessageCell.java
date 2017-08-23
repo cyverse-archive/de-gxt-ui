@@ -35,6 +35,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
@@ -57,11 +58,13 @@ public class NotificationMessageCell extends AbstractCell<NotificationMessage> {
     private final NotificationMessageCellAppearance appearance =
             GWT.create(NotificationMessageCellAppearance.class);
 
-    private final DiskResourceAutoBeanFactory drFactory = GWT.create(DiskResourceAutoBeanFactory.class);
-    private final AnalysesAutoBeanFactory analysesFactory = GWT.create(AnalysesAutoBeanFactory.class);
-    private final NotificationAutoBeanFactory notificationFactory = GWT.create(NotificationAutoBeanFactory.class);
-    private final DiskResourceUtil diskResourceUtil = DiskResourceUtil.getInstance();
+    @Inject DiskResourceAutoBeanFactory drFactory;
+    @Inject AnalysesAutoBeanFactory analysesFactory;
+    @Inject NotificationAutoBeanFactory notificationFactory;
+    @Inject DiskResourceUtil diskResourceUtil;
+    @Inject EventBus eventBus;
 
+    @Inject
     public NotificationMessageCell() {
         super("click"); //$NON-NLS-1$
     }
@@ -83,7 +86,7 @@ public class NotificationMessageCell extends AbstractCell<NotificationMessage> {
                 String context1 = value.getContext();
 
                 //mark this message as seen
-                EventBus.getInstance().fireEvent(new NotificationClickedEvent(value));
+                eventBus.fireEvent(new NotificationClickedEvent(value));
                 value.setSeen(true);
                 valueUpdater.update(value);
                 switch (category) {
@@ -100,8 +103,7 @@ public class NotificationMessageCell extends AbstractCell<NotificationMessage> {
                             final String appId = payload.getId();
                             appsConfig.setSelectedAppCategory(new QualifiedId(systemId, appCategoryId));
                             appsConfig.setSelectedApp(new QualifiedId(systemId, appId));
-                            EventBus.getInstance()
-                                    .fireEvent(new WindowShowRequestEvent(appsConfig, true));
+                            eventBus.fireEvent(new WindowShowRequestEvent(appsConfig, true));
                         }
 
                         break;
@@ -116,8 +118,7 @@ public class NotificationMessageCell extends AbstractCell<NotificationMessage> {
                         HasPath folder = diskResourceUtil.getFolderPathFromFile(file);
                         dataWindowConfig.setSelectedFolder(folder);
                         dataWindowConfig.setSelectedDiskResources(selectedResources);
-                        EventBus.getInstance()
-                                .fireEvent(new WindowShowRequestEvent(dataWindowConfig, true));
+                        eventBus.fireEvent(new WindowShowRequestEvent(dataWindowConfig, true));
 
                         break;
 
@@ -127,8 +128,7 @@ public class NotificationMessageCell extends AbstractCell<NotificationMessage> {
 
                         AnalysisWindowConfig analysisWindowConfig = ConfigFactory.analysisWindowConfig();
                         analysisWindowConfig.setSelectedAnalyses(Lists.newArrayList(hAb.as()));
-                        EventBus.getInstance()
-                                .fireEvent(new WindowShowRequestEvent(analysisWindowConfig, true));
+                        eventBus.fireEvent(new WindowShowRequestEvent(analysisWindowConfig, true));
 
                         break;
                     case PERMANENTIDREQUEST:
