@@ -138,11 +138,6 @@ public class EditTeamPresenterImplTest {
             }
 
             @Override
-            Subject createSelfSubject() {
-                return subjectMock;
-            }
-
-            @Override
             List<Subject> getSubjectsFromPrivileges(List<Privilege> privileges) {
                 return subjectListMock;
             }
@@ -395,7 +390,6 @@ public class EditTeamPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         uut.addMembersToTeam(groupMock, hideableMock);
 
-        verify(subjectListMock).add(subjectMock);
         verify(serviceFacadeMock).addMembersToTeam(eq(groupMock),
                                                    eq(subjectListMock),
                                                    updateResultCaptor.capture());

@@ -120,7 +120,7 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
 
     @Override
     public int editTeamWidth() {
-        return 600;
+        return 650;
     }
 
     @Override
@@ -189,12 +189,12 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
 
     @Override
     public int privilegeComboWidth() {
-        return 250;
+        return 300;
     }
 
     @Override
     public int privilegeColumnWidth() {
-        return 300;
+        return 350;
     }
 
     @Override
