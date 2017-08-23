@@ -31,7 +31,6 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
     private TeamsView.TeamsViewAppearance appearance;
     private TextButton leaveBtn;
     private TextButton deleteBtn;
-    private TextButton joinBtn;
     private TextButton requestToJoinBtn;
 
     @Inject
@@ -73,18 +72,15 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
     void setButtons() {
         leaveBtn = new TextButton(appearance.leaveTeam());
         deleteBtn = new TextButton(appearance.deleteTeam());
-        joinBtn = new TextButton(appearance.joinTeam());
         requestToJoinBtn = new TextButton(appearance.requestToJoinTeam());
 
         leaveBtn.setVisible(false);
         deleteBtn.setVisible(false);
-        joinBtn.setVisible(false);
         requestToJoinBtn.setVisible(false);
 
         buttonBar.setPack(BoxLayoutContainer.BoxLayoutPack.START);
         addButton(leaveBtn);
         addButton(deleteBtn);
-        addButton(joinBtn);
         addButton(requestToJoinBtn);
         addButton(new FillToolItem());
         addButton(getButton(PredefinedButton.OK));
@@ -96,7 +92,7 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
         presenter.addPrivilegeAndMembershipLoadedHandler(this);
         leaveBtn.addSelectHandler(event -> presenter.onLeaveButtonSelected(this));
         deleteBtn.addSelectHandler(event -> presenter.onDeleteButtonSelected(this));
-        joinBtn.addSelectHandler(event -> presenter.onJoinButtonSelected(this));
+        requestToJoinBtn.addSelectHandler(event -> presenter.onJoinButtonSelected(this));
 
         addOkButtonSelectHandler(selectEvent -> {
             if (presenter.isViewValid()) {

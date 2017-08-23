@@ -36,6 +36,10 @@ public class PrivilegeAndMembershipLoaded
         return isAdmin;
     }
 
+    public boolean enableRequestToJoinTeam() {
+        return !isMember && !isAdmin;
+    }
+
     public Type<PrivilegeAndMembershipLoadedHandler> getAssociatedType() {
         return TYPE;
     }

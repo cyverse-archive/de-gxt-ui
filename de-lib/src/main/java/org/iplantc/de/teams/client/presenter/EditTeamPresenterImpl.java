@@ -131,12 +131,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                 isAdmin = isAdmin(privileges);
                 mode = isAdmin ? EditTeamView.MODE.EDIT : EditTeamView.MODE.VIEW;
                 view.showAdminMode(isAdmin);
-                if (privileges != null && !privileges.isEmpty()) {
-                    getTeamMembers(group, privileges);
-                } else {
-                    view.unmask();
-                    ensureHandlers().fireEvent(new PrivilegeAndMembershipLoaded(false, false));
-                }
+                getTeamMembers(group, privileges);
             }
         });
     }
@@ -643,12 +638,6 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         return privileges.stream()
                          .map(Privilege::getSubject)
                          .collect(Collectors.toList());
-    }
-
-    boolean hasOptInPrivilege(List<Privilege> privileges) {
-        return privileges.stream()
-                         .filter(privilege -> PrivilegeType.optin.equals(privilege.getPrivilegeType()))
-                         .count() > 0;
     }
 
     boolean isAdmin(List<Privilege> privileges) {
