@@ -5,6 +5,7 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PATCH;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
+import org.iplantc.de.client.models.HasMessage;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.CollaboratorAutoBeanFactory;
 import org.iplantc.de.client.models.collaborators.Subject;
@@ -23,6 +24,7 @@ import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.GroupCallbackConverter;
 import org.iplantc.de.client.services.converters.GroupListToSubjectListCallbackConverter;
 import org.iplantc.de.client.services.converters.PrivilegeListCallbackConverter;
+import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
 import org.iplantc.de.client.services.converters.SubjectMemberListCallbackConverter;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
@@ -273,6 +275,32 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new PrivilegeListCallbackConverter(callback, factory));
+    }
+
+    @Override
+    public void joinTeam(Group team, AsyncCallback<List<UpdateMemberResult>> updatesCallback) {
+        String teamName = team.getName();
+        String address = TEAMS + "/" + URL.encodePathSegment(teamName) + "/join";
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, "{}");
+        deService.getServiceData(wrapper, new AsyncCallbackConverter<String, List<UpdateMemberResult>>(updatesCallback) {
+            @Override
+            protected List<UpdateMemberResult> convertFrom(String object) {
+                AutoBean<UpdateMemberResultList> listAutoBean = AutoBeanCodex.decode(factory, UpdateMemberResultList.class, object);
+                return listAutoBean.as().getResults();
+            }
+        });
+    }
+
+    @Override
+    public void requestToJoinTeam(Group team, HasMessage requestMessage, AsyncCallback<Void> voidCallback) {
+        String teamName = team.getName();
+        String address = TEAMS + "/" + URL.encodePathSegment(teamName) + "/join-request";
+
+        final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(requestMessage));
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
+        deService.getServiceData(wrapper, new StringToVoidCallbackConverter(voidCallback));
     }
 
     @Override

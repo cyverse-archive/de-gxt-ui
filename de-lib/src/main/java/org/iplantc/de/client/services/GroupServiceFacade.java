@@ -1,5 +1,6 @@
 package org.iplantc.de.client.services;
 
+import org.iplantc.de.client.models.HasMessage;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.Privilege;
@@ -141,6 +142,21 @@ public interface GroupServiceFacade {
      * @param privilegeListCallback
      */
     void getTeamPrivileges(Group team, AsyncCallback<List<Privilege>> privilegeListCallback);
+
+    /**
+     * With optin privileges, join the team
+     * @param team
+     * @param updatesCallback
+     */
+    void joinTeam(Group team, AsyncCallback<List<UpdateMemberResult>> updatesCallback);
+
+    /**
+     * Without optin privileges, request to join the team
+     * @param team
+     * @param requestMessage
+     * @param voidCallback
+     */
+    void requestToJoinTeam(Group team, HasMessage requestMessage, AsyncCallback<Void> voidCallback);
 
     /**
      * Get the list of Teams that match the provided search term
