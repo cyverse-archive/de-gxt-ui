@@ -14,6 +14,7 @@ import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.models.notifications.payload.PayloadApps;
 import org.iplantc.de.client.models.notifications.payload.PayloadAppsList;
 import org.iplantc.de.client.models.notifications.payload.PayloadRequest;
+import org.iplantc.de.client.models.notifications.payload.PayloadTeam;
 import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.views.window.configs.AnalysisWindowConfig;
@@ -144,6 +145,11 @@ public class NotificationMessageCell extends AbstractCell<NotificationMessage> {
                         RequestHistoryDialog dlg =
                                 new RequestHistoryDialog(toolRequest.getName(), history);
                         dlg.show();
+
+                        break;
+                    case TEAM:
+                        PayloadTeam teamJoinRequest = AutoBeanCodex.decode(notificationFactory, PayloadTeam.class, context1).as();
+
 
                         break;
 

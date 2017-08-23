@@ -12,4 +12,9 @@
         <when-type-is class="org.iplantc.de.notifications.client.views.cells.RequestStatusCell.RequestStatusCellAppearance"/>
     </replace-with>
 
+    <replace-with class="org.iplantc.de.theme.base.client.notifications.JoinTeamRequestDefaultAppearance">
+        <when-type-is class="org.iplantc.de.notifications.client.views.JoinTeamRequestView.JoinTeamRequestAppearance"/>
+    </replace-with>
+
+
 </module>
