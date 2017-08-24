@@ -25,6 +25,7 @@ import org.iplantc.de.client.models.notifications.payload.PayloadAnalysis;
 import org.iplantc.de.client.models.notifications.payload.PayloadApps;
 import org.iplantc.de.client.models.notifications.payload.PayloadAppsList;
 import org.iplantc.de.client.models.notifications.payload.PayloadRequest;
+import org.iplantc.de.client.models.notifications.payload.PayloadTeam;
 import org.iplantc.de.client.models.requestStatus.RequestHistory;
 import org.iplantc.de.client.services.DEUserSupportServiceFacade;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
@@ -43,6 +44,7 @@ import org.iplantc.de.commons.client.views.dialogs.IplantErrorDialog;
 import org.iplantc.de.commons.client.views.window.configs.AnalysisWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.AppWizardConfig;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.CollaborationWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
@@ -58,6 +60,7 @@ import org.iplantc.de.fileViewers.client.callbacks.LoadGenomeInCoGeCallback;
 import org.iplantc.de.intercom.client.IntercomFacade;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
 import org.iplantc.de.notifications.client.utils.NotifyInfo;
+import org.iplantc.de.notifications.client.views.dialogs.JoinTeamRequestDialog;
 import org.iplantc.de.notifications.client.views.dialogs.RequestHistoryDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
@@ -164,6 +167,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     @Inject NotifyInfo notifyInfo;
     @Inject DiskResourceUtil diskResourceUtil;
     @Inject AsyncProviderWrapper<PreferencesDialog> preferencesDialogProvider;
+    @Inject AsyncProviderWrapper<JoinTeamRequestDialog> joinRequestDlgProvider;
     private DesktopPresenterAppearance appearance;
 
     private final EventBus eventBus;
@@ -563,6 +567,26 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                 RequestHistoryDialog dlg = new RequestHistoryDialog(NotificationCategory.TOOLREQUEST.toString(),
                                                                     history);
                 dlg.show();
+                break;
+            case TEAM:
+                PayloadTeam payloadTeam = AutoBeanCodex.decode(notificationFactory, PayloadTeam.class, context).as();
+
+                if (selectedItem.getMessage().equals("team_join_request")) {
+                    joinRequestDlgProvider.get(new AsyncCallback<JoinTeamRequestDialog>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+                        }
+
+                        @Override
+                        public void onSuccess(JoinTeamRequestDialog dialog) {
+                            dialog.show(payloadTeam);
+                        }
+                    });
+                } else {
+                    CollaborationWindowConfig window = ConfigFactory.collaborationWindowConfig();
+                    show(window, true);
+
+                }
                 break;
             default:
                 break;

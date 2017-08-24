@@ -8,6 +8,7 @@ import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.models.notifications.payload.PayloadAnalysis;
 import org.iplantc.de.client.models.notifications.payload.PayloadAppsList;
 import org.iplantc.de.client.models.notifications.payload.PayloadData;
+import org.iplantc.de.client.models.notifications.payload.PayloadTeam;
 import org.iplantc.de.client.util.CommonModelUtils;
 
 import com.google.gwt.core.client.GWT;
@@ -102,6 +103,8 @@ public class NotificationUtil {
                 break;
             case TEAM:
                 GWT.log("TEAM category");
+                PayloadTeam payloadTeam = AutoBeanCodex.decode(notFactory, PayloadTeam.class, payload).as();
+                payloadTeam.setAction(n.getEmailTemplate());
                 msg.setContext(payload.getPayload());
                 break;
 

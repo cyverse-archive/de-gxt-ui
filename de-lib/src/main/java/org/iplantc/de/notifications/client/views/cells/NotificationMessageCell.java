@@ -15,18 +15,17 @@ import org.iplantc.de.client.models.notifications.payload.PayloadApps;
 import org.iplantc.de.client.models.notifications.payload.PayloadAppsList;
 import org.iplantc.de.client.models.notifications.payload.PayloadRequest;
 import org.iplantc.de.client.models.notifications.payload.PayloadTeam;
-import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.views.window.configs.AnalysisWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.CollaborationWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConfig;
-import org.iplantc.de.desktop.client.presenter.util.NotificationUtil;
 import org.iplantc.de.notifications.client.events.NotificationClickedEvent;
-import org.iplantc.de.notifications.client.events.NotificationCountUpdateEvent;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
-import org.iplantc.de.notifications.client.views.NotificationView;
+import org.iplantc.de.notifications.client.views.dialogs.JoinTeamRequestDialog;
 import org.iplantc.de.notifications.client.views.dialogs.RequestHistoryDialog;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.cell.client.AbstractCell;
@@ -36,6 +35,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
@@ -44,11 +44,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
  * A cell to render notification messages in a Grid
- * 
+ *
  * @author sriram
- * 
  */
 public class NotificationMessageCell extends AbstractCell<NotificationMessage> {
 
@@ -64,6 +62,8 @@ public class NotificationMessageCell extends AbstractCell<NotificationMessage> {
     @Inject NotificationAutoBeanFactory notificationFactory;
     @Inject DiskResourceUtil diskResourceUtil;
     @Inject EventBus eventBus;
+
+    @Inject AsyncProviderWrapper<JoinTeamRequestDialog> joinRequestDlgProvider;
 
     @Inject
     public NotificationMessageCell() {
@@ -148,9 +148,23 @@ public class NotificationMessageCell extends AbstractCell<NotificationMessage> {
 
                         break;
                     case TEAM:
-                        PayloadTeam teamJoinRequest = AutoBeanCodex.decode(notificationFactory, PayloadTeam.class, context1).as();
+                        PayloadTeam payloadTeam = AutoBeanCodex.decode(notificationFactory, PayloadTeam.class, context1).as();
 
+                        if (payloadTeam.getAction().equals("team_join_request")) {
+                            joinRequestDlgProvider.get(new AsyncCallback<JoinTeamRequestDialog>() {
+                                @Override
+                                public void onFailure(Throwable caught) {
+                                }
 
+                                @Override
+                                public void onSuccess(JoinTeamRequestDialog dialog) {
+                                    dialog.show(payloadTeam);
+                                }
+                            });
+                        } else {
+                            CollaborationWindowConfig window = ConfigFactory.collaborationWindowConfig();
+                            eventBus.fireEvent(new WindowShowRequestEvent(window, true));
+                        }
                         break;
 
                     default:

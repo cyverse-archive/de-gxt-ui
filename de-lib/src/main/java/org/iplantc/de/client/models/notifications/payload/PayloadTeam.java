@@ -24,4 +24,7 @@ public interface PayloadTeam {
 
     @PropertyName("team_name")
     String getTeamName();
+
+    String getAction();
+    void setAction(String action);
 }
