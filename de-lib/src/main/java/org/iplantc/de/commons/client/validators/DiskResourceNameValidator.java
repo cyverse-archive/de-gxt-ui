@@ -46,7 +46,10 @@ public class DiskResourceNameValidator extends AbstractValidator<String> impleme
         // check for spaces at the beginning and at the end of the file name
         if (value.startsWith(" ") || value.endsWith(" ")) { //$NON-NLS-1$ //$NON-NLS-2$
             return createError(new DefaultEditorError(editor,
-                                                      validationMessages.drNameValidationMsg(new String(restrictedChars)),
+                                                      validationMessages.drNameValidationMsg(
+                                                              validationConstants.newlineToPrint()
+                                                              + validationConstants.tabToPrint()
+                                                              + new String(restrictedChars)),
                                                       value));
         }
 
