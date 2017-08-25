@@ -304,6 +304,20 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
+    public void denyRequestToJoinTeam(Group team,
+                                      HasMessage denyMessage,
+                                      String requesterId,
+                                      AsyncCallback<Void> voidCallback) {
+        String teamName = team.getName();
+        String address = TEAMS + "/" + URL.encodePathSegment(teamName) + "/join-request/" + requesterId + "/deny";
+
+        final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(denyMessage));
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
+        deService.getServiceData(wrapper, new StringToVoidCallbackConverter(voidCallback));
+    }
+
+    @Override
     public void searchTeams(String searchTerm, AsyncCallback<List<Group>> callback) {
         String address = TEAMS + "?search=" + URL.encodeQueryString(searchTerm);
 

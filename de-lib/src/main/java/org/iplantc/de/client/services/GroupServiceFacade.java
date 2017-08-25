@@ -159,6 +159,14 @@ public interface GroupServiceFacade {
     void requestToJoinTeam(Group team, HasMessage requestMessage, AsyncCallback<Void> voidCallback);
 
     /**
+     * Deny a user's request to join a team
+     * @param team
+     * @param denyMessage
+     * @param requesterId
+     * @param voidCallback
+     */
+    void denyRequestToJoinTeam(Group team, HasMessage denyMessage, String requesterId, AsyncCallback<Void> voidCallback);
+    /**
      * Get the list of Teams that match the provided search term
      * @param searchTerm
      * @param teamListCallback
