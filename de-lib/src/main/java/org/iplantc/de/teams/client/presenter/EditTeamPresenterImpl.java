@@ -230,6 +230,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         List<Privilege> allPrivs = createEmptyPrivilegeList();
         allPrivs.addAll(memberPrivs);
         allPrivs.addAll(nonMemberPrivs);
+        allPrivs = filterCurrentUserPrivilege(allPrivs);
 
         List<UpdatePrivilegeRequest> updateList = convertPrivilegesToUpdateRequest(allPrivs);
 
@@ -699,6 +700,10 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         return members.stream()
                .filter(member -> userInfo.getUsername().equals(member.getId()))
                .count() > 0;
+    }
+
+    List<Privilege> filterCurrentUserPrivilege(List<Privilege> privileges) {
+        return privileges.stream().filter(privilege -> !isCurrentUserPrivilege(privilege)).collect(Collectors.toList());
     }
 
     boolean isCurrentUserPrivilege(Privilege privilege) {

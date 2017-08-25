@@ -1,5 +1,6 @@
 package org.iplantc.de.teams.client.views;
 
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.Privilege;
 import org.iplantc.de.client.models.groups.PrivilegeType;
@@ -80,16 +81,19 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     @UiField(provided = true) UserSearchField nonMemberSearch;
     private PrivilegeProperties privProps;
     @UiField(provided = true) TeamsView.TeamsViewAppearance appearance;
+    String currentUserId;
 
     @Inject
     public EditTeamViewImpl(TeamsView.TeamsViewAppearance appearance,
                             UserSearchField nonMemberSearch,
                             UserSearchField memberSearch,
-                            PrivilegeProperties privProps) {
+                            PrivilegeProperties privProps,
+                            UserInfo userInfo) {
         this.appearance = appearance;
         this.nonMemberSearch = nonMemberSearch;
         this.memberSearch = memberSearch;
         this.privProps = privProps;
+        this.currentUserId = userInfo.getUsername();
         createListStores();
         createColumnModels();
 
@@ -270,8 +274,10 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
 
     @Override
     public void onSelectionChanged(SelectionChangedEvent<Privilege> selectionChangedEvent) {
-        removeMember.setEnabled(membersGrid.getSelectionModel().getSelectedItem() != null);
-        removeNonMember.setEnabled(nonMembersGrid.getSelectionModel().getSelectedItem() != null);
+        Privilege memberSelection = membersGrid.getSelectionModel().getSelectedItem();
+        removeMember.setEnabled(memberSelection != null && !memberSelection.getSubject().getId().equals(currentUserId));
+        Privilege nonMemberSelection = nonMembersGrid.getSelectionModel().getSelectedItem();
+        removeNonMember.setEnabled(nonMemberSelection != null && !nonMemberSelection.getSubject().getId().equals(currentUserId));
     }
 
     @Override
