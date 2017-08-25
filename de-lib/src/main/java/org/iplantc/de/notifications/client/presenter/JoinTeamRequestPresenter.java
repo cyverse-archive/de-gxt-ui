@@ -1,5 +1,6 @@
 package org.iplantc.de.notifications.client.presenter;
 
+import org.iplantc.de.client.models.HasMessage;
 import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
@@ -16,7 +17,9 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.notifications.client.events.JoinTeamApproved;
+import org.iplantc.de.notifications.client.events.JoinTeamDenied;
 import org.iplantc.de.notifications.client.views.JoinTeamRequestView;
+import org.iplantc.de.notifications.client.views.dialogs.DenyJoinRequestDialog;
 import org.iplantc.de.notifications.client.views.dialogs.SetMemberPrivilegeDialog;
 import org.iplantc.de.notifications.shared.Notifications;
 import org.iplantc.de.shared.AsyncProviderWrapper;
@@ -31,7 +34,8 @@ import com.sencha.gxt.widget.core.client.Dialog;
 import java.util.List;
 
 public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
-                                                 JoinTeamApproved.JoinTeamApprovedHandler {
+                                                 JoinTeamApproved.JoinTeamApprovedHandler,
+                                                 JoinTeamDenied.JoinTeamDeniedHandler {
 
     private GroupServiceFacade serviceFacade;
     private GroupAutoBeanFactory factory;
@@ -41,6 +45,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
     private PayloadTeam payloadTeam;
 
     @Inject AsyncProviderWrapper<SetMemberPrivilegeDialog> setPrivilegeDlgProvider;
+    @Inject AsyncProviderWrapper<DenyJoinRequestDialog> denyRequestDlgProvider;
     @Inject IplantAnnouncer announcer;
 
     @Inject
@@ -54,6 +59,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
         this.appearance = appearance;
 
         view.addJoinTeamApprovedHandler(this);
+        view.addJoinTeamDeniedHandler(this);
     }
 
     @Override
@@ -139,5 +145,43 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
 
         requestList.setRequests(Lists.newArrayList(request));
         return requestList;
+    }
+
+    @Override
+    public void onJoinTeamDenied(JoinTeamDenied event) {
+        denyRequestDlgProvider.get(new AsyncCallback<DenyJoinRequestDialog>() {
+            @Override
+            public void onFailure(Throwable throwable) {}
+
+            @Override
+            public void onSuccess(DenyJoinRequestDialog dialog) {
+                dialog.show(payloadTeam.getRequesterName(), payloadTeam.getTeamName());
+                dialog.addOkButtonSelectHandler(event -> {
+                    denyRequest(dialog.getDenyMessage(), dialog);
+                });
+            }
+        });
+    }
+
+    void denyRequest(String denyMessage, IsHideable hideable) {
+        Group team = factory.getGroup().as();
+        team.setName(payloadTeam.getTeamName());
+
+        HasMessage message = factory.getHasMessage().as();
+        message.setMessage(denyMessage);
+
+        serviceFacade.denyRequestToJoinTeam(team, message, payloadTeam.getRequesterId(), new AsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(throwable);
+            }
+
+            @Override
+            public void onSuccess(Void aVoid) {
+                announcer.schedule(new IplantAnnouncementConfig(appearance.denyRequestSuccess(payloadTeam.getRequesterName(), payloadTeam.getTeamName())));
+                requestDlg.hide();
+                hideable.hide();
+            }
+        });
     }
 }

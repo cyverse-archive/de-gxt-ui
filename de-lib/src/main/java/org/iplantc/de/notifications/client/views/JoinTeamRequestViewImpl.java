@@ -5,6 +5,7 @@ package org.iplantc.de.notifications.client.views;
 
 import org.iplantc.de.client.models.notifications.payload.PayloadTeam;
 import org.iplantc.de.notifications.client.events.JoinTeamApproved;
+import org.iplantc.de.notifications.client.events.JoinTeamDenied;
 import org.iplantc.de.notifications.shared.Notifications;
 
 import com.google.gwt.core.client.GWT;
@@ -75,6 +76,11 @@ public class JoinTeamRequestViewImpl extends Composite implements Editor<Payload
         fireEvent(new JoinTeamApproved());
     }
 
+    @UiHandler("denyBtn")
+    public void onRejectBtnSelected(SelectEvent event) {
+        fireEvent(new JoinTeamDenied());
+    }
+
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
@@ -86,5 +92,10 @@ public class JoinTeamRequestViewImpl extends Composite implements Editor<Payload
     @Override
     public HandlerRegistration addJoinTeamApprovedHandler(JoinTeamApproved.JoinTeamApprovedHandler handler) {
         return addHandler(handler, JoinTeamApproved.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addJoinTeamDeniedHandler(JoinTeamDenied.JoinTeamDeniedHandler handler) {
+        return addHandler(handler, JoinTeamDenied.TYPE);
     }
 }

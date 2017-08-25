@@ -36,4 +36,6 @@ public interface JoinTeamRequestDisplayStrings extends Messages {
     String denyRequestLabel(String requesterName);
 
     String denyRequestMessage(String requesterName, String teamName);
+
+    String denyRequestSuccess(String requesterName, String teamName);
 }

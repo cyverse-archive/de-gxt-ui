@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.notifications.payload.PayloadTeam;
 import org.iplantc.de.notifications.client.events.JoinTeamApproved;
+import org.iplantc.de.notifications.client.events.JoinTeamDenied;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -13,7 +14,8 @@ import com.google.gwt.user.client.ui.IsWidget;
  */
 public interface JoinTeamRequestView extends IsWidget,
                                              IsMaskable,
-                                             JoinTeamApproved.HasJoinTeamApprovedHandlers {
+                                             JoinTeamApproved.HasJoinTeamApprovedHandlers,
+                                             JoinTeamDenied.HasJoinTeamDeniedHandlers {
 
     /**
      * An appearance class for all string related items in the JoinTeamRequest view
@@ -59,6 +61,8 @@ public interface JoinTeamRequestView extends IsWidget,
         String denyRequestLabel(String requesterName);
 
         String denyRequestMessage(String requesterName, String teamName);
+
+        String denyRequestSuccess(String requesterName, String teamName);
     }
 
     /**

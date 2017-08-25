@@ -115,4 +115,9 @@ public class JoinTeamRequestDefaultAppearance implements JoinTeamRequestView.Joi
     public String denyRequestMessage(String requesterName, String teamName) {
         return displayStrings.denyRequestMessage(requesterName, teamName);
     }
+
+    @Override
+    public String denyRequestSuccess(String requesterName, String teamName) {
+        return displayStrings.denyRequestSuccess(requesterName, teamName);
+    }
 }
