@@ -39,6 +39,18 @@ public interface JoinTeamRequestView extends IsWidget,
         int joinTeamRequestHeight();
 
         String buttonBarWidth();
+
+        String setPrivilegesHeading();
+
+        String setPrivilegesText(String requesterName, String teamName);
+
+        int privilegeComboWidth();
+
+        String addMemberFail(String requesterName, String teamName);
+
+        String joinTeamSuccess(String requesterName, String teamName);
+
+        int privilegeDlgWidth();
     }
 
     /**

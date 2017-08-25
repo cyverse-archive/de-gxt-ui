@@ -70,4 +70,34 @@ public class JoinTeamRequestDefaultAppearance implements JoinTeamRequestView.Joi
     public String buttonBarWidth() {
         return joinTeamRequestWidth() + "px";
     }
+
+    @Override
+    public String setPrivilegesHeading() {
+        return displayStrings.setPrivilegesHeading();
+    }
+
+    @Override
+    public String setPrivilegesText(String requesterName, String teamName) {
+        return displayStrings.setPrivilegesText(requesterName, teamName);
+    }
+
+    @Override
+    public int privilegeComboWidth() {
+        return 300;
+    }
+
+    @Override
+    public String addMemberFail(String requesterName, String teamName) {
+        return displayStrings.addMemberFail(requesterName, teamName);
+    }
+
+    @Override
+    public String joinTeamSuccess(String requesterName, String teamName) {
+        return displayStrings.joinTeamSuccess(requesterName, teamName);
+    }
+
+    @Override
+    public int privilegeDlgWidth() {
+        return 350;
+    }
 }

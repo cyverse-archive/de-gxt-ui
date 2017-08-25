@@ -21,5 +21,7 @@ public class Notifications {
         String JOIN_REQUEST_VIEW = ".view";
         String APPROVE_BTN = ".approveBtn";
         String REJECT_BTN = ".rejectBtn";
+        String SET_PRIVILEGE_DLG = "setPrivilegeDlg";
+        String OK_BTN = ".okBtn";
     }
 }
