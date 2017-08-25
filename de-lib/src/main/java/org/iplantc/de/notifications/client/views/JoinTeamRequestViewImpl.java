@@ -4,13 +4,16 @@
 package org.iplantc.de.notifications.client.views;
 
 import org.iplantc.de.client.models.notifications.payload.PayloadTeam;
+import org.iplantc.de.notifications.client.events.JoinTeamApproved;
 import org.iplantc.de.notifications.shared.Notifications;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -20,6 +23,7 @@ import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.ButtonBar;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 
 /**
@@ -66,11 +70,21 @@ public class JoinTeamRequestViewImpl extends Composite implements Editor<Payload
         editorDriver.edit(payloadTeam);
     }
 
+    @UiHandler("approveBtn")
+    public void onApproveBtnSelected(SelectEvent event) {
+        fireEvent(new JoinTeamApproved());
+    }
+
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
 
         approveBtn.ensureDebugId(baseID + Notifications.JoinRequestIds.APPROVE_BTN);
         rejectBtn.ensureDebugId(baseID + Notifications.JoinRequestIds.REJECT_BTN);
+    }
+
+    @Override
+    public HandlerRegistration addJoinTeamApprovedHandler(JoinTeamApproved.JoinTeamApprovedHandler handler) {
+        return addHandler(handler, JoinTeamApproved.TYPE);
     }
 }

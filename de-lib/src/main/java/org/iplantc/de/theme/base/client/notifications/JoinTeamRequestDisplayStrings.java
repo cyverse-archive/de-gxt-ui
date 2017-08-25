@@ -26,4 +26,8 @@ public interface JoinTeamRequestDisplayStrings extends Messages {
     String setPrivilegesHeading();
 
     String setPrivilegesText(String requesterName, String teamName);
+
+    String addMemberFail(String requesterName, String teamName);
+
+    String joinTeamSuccess(String requesterName, String teamName);
 }

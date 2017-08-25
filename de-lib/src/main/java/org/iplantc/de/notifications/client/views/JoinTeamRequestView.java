@@ -3,6 +3,7 @@ package org.iplantc.de.notifications.client.views;
 import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.notifications.payload.PayloadTeam;
+import org.iplantc.de.notifications.client.events.JoinTeamApproved;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -11,7 +12,8 @@ import com.google.gwt.user.client.ui.IsWidget;
  * A view interface for team admins to accept or reject join request from team non-members
  */
 public interface JoinTeamRequestView extends IsWidget,
-                                             IsMaskable {
+                                             IsMaskable,
+                                             JoinTeamApproved.HasJoinTeamApprovedHandlers {
 
     /**
      * An appearance class for all string related items in the JoinTeamRequest view
