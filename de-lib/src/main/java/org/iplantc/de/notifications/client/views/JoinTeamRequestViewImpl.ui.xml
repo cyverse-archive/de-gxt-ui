@@ -20,8 +20,8 @@
                               pack="CENTER">
                 <button:TextButton ui:field="approveBtn"
                                    text="{appearance.approveBtnText}"/>
-                <button:TextButton ui:field="rejectBtn"
-                                   text="{appearance.rejectBtnText}"/>
+                <button:TextButton ui:field="denyBtn"
+                                   text="{appearance.denyBtnText}"/>
             </button:ButtonBar>
         </container:child>
         <container:child>

@@ -17,7 +17,7 @@ public interface JoinTeamRequestDisplayStrings extends Messages {
 
     String approveBtnText();
 
-    String rejectBtnText();
+    String denyBtnText();
 
     String teamLabel();
 
@@ -30,4 +30,10 @@ public interface JoinTeamRequestDisplayStrings extends Messages {
     String addMemberFail(String requesterName, String teamName);
 
     String joinTeamSuccess(String requesterName, String teamName);
+
+    String denyRequestHeader();
+
+    String denyRequestLabel(String requesterName);
+
+    String denyRequestMessage(String requesterName, String teamName);
 }

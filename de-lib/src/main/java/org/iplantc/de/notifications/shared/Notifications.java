@@ -20,8 +20,9 @@ public class Notifications {
         String JOIN_REQUEST_DLG = "joinRequestDlg";
         String JOIN_REQUEST_VIEW = ".view";
         String APPROVE_BTN = ".approveBtn";
-        String REJECT_BTN = ".rejectBtn";
+        String DENY_BTN = ".denyBtn";
         String SET_PRIVILEGE_DLG = "setPrivilegeDlg";
         String OK_BTN = ".okBtn";
+        String DENY_REQUEST_DLG = "denyRequestDlg";
     }
 }

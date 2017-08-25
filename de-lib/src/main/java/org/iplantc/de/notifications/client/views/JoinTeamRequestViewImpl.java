@@ -54,7 +54,7 @@ public class JoinTeamRequestViewImpl extends Composite implements Editor<Payload
     @UiField @Ignore FieldLabel messageLabel;
     @UiField Label requesterMessageEditor;
     @UiField @Ignore TextButton approveBtn;
-    @UiField @Ignore TextButton rejectBtn;
+    @UiField @Ignore TextButton denyBtn;
     @UiField(provided = true) JoinTeamRequestAppearance appearance;
 
     @Inject
@@ -80,7 +80,7 @@ public class JoinTeamRequestViewImpl extends Composite implements Editor<Payload
         super.onEnsureDebugId(baseID);
 
         approveBtn.ensureDebugId(baseID + Notifications.JoinRequestIds.APPROVE_BTN);
-        rejectBtn.ensureDebugId(baseID + Notifications.JoinRequestIds.REJECT_BTN);
+        denyBtn.ensureDebugId(baseID + Notifications.JoinRequestIds.DENY_BTN);
     }
 
     @Override

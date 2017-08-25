@@ -32,7 +32,7 @@ public interface JoinTeamRequestView extends IsWidget,
 
         String approveBtnText();
 
-        String rejectBtnText();
+        String denyBtnText();
 
         String teamLabel();
 
@@ -53,6 +53,12 @@ public interface JoinTeamRequestView extends IsWidget,
         String joinTeamSuccess(String requesterName, String teamName);
 
         int privilegeDlgWidth();
+
+        String denyRequestHeader();
+
+        String denyRequestLabel(String requesterName);
+
+        String denyRequestMessage(String requesterName, String teamName);
     }
 
     /**

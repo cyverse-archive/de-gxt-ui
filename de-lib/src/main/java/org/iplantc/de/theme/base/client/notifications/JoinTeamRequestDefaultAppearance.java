@@ -47,8 +47,8 @@ public class JoinTeamRequestDefaultAppearance implements JoinTeamRequestView.Joi
     }
 
     @Override
-    public String rejectBtnText() {
-        return displayStrings.rejectBtnText();
+    public String denyBtnText() {
+        return displayStrings.denyBtnText();
     }
 
     @Override
@@ -99,5 +99,20 @@ public class JoinTeamRequestDefaultAppearance implements JoinTeamRequestView.Joi
     @Override
     public int privilegeDlgWidth() {
         return 350;
+    }
+
+    @Override
+    public String denyRequestHeader() {
+        return displayStrings.denyRequestHeader();
+    }
+
+    @Override
+    public String denyRequestLabel(String requesterName) {
+        return displayStrings.denyRequestLabel(requesterName);
+    }
+
+    @Override
+    public String denyRequestMessage(String requesterName, String teamName) {
+        return displayStrings.denyRequestMessage(requesterName, teamName);
     }
 }
