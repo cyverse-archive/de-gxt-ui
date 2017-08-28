@@ -1,5 +1,6 @@
 package org.iplantc.de.notifications.client.views.dialogs;
 
+import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.models.notifications.payload.PayloadTeam;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.notifications.client.views.JoinTeamRequestView;
@@ -37,8 +38,8 @@ public class JoinTeamRequestDialog extends IPlantDialog {
         presenter.setViewDebugId(baseID);
     }
 
-    public void show(PayloadTeam payloadTeam) {
-        presenter.go(this, this, payloadTeam);
+    public void show(NotificationMessage message, PayloadTeam payloadTeam) {
+        presenter.go(this, this, message, payloadTeam);
         super.show();
     }
 }

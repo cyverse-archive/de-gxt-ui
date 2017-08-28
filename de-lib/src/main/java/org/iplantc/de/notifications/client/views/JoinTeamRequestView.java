@@ -2,6 +2,7 @@ package org.iplantc.de.notifications.client.views;
 
 import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.IsMaskable;
+import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.models.notifications.payload.PayloadTeam;
 import org.iplantc.de.notifications.client.events.JoinTeamApproved;
 import org.iplantc.de.notifications.client.events.JoinTeamDenied;
@@ -80,9 +81,10 @@ public interface JoinTeamRequestView extends IsWidget,
          * Method for starting up the view with the specified payload
          * @param container
          * @param requestDlg
+         * @param message
          * @param payloadTeam
          */
-        void go(HasOneWidget container, IsHideable requestDlg, PayloadTeam payloadTeam);
+        void go(HasOneWidget container, IsHideable requestDlg, NotificationMessage message, PayloadTeam payloadTeam);
 
         /**
          * Sets the JoinTeamRequestView debug ID

@@ -10,6 +10,7 @@ import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.models.groups.UpdatePrivilegeRequest;
 import org.iplantc.de.client.models.groups.UpdatePrivilegeRequestList;
+import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.models.notifications.payload.PayloadTeam;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -43,6 +44,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
     private JoinTeamRequestView view;
     private IsHideable requestDlg;
     private PayloadTeam payloadTeam;
+    private NotificationMessage message;
 
     @Inject AsyncProviderWrapper<ApproveJoinRequestDialog> setPrivilegeDlgProvider;
     @Inject AsyncProviderWrapper<DenyJoinRequestDialog> denyRequestDlgProvider;
@@ -63,8 +65,9 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
     }
 
     @Override
-    public void go(HasOneWidget container, IsHideable requestDlg, PayloadTeam payloadTeam) {
+    public void go(HasOneWidget container, IsHideable requestDlg, NotificationMessage message, PayloadTeam payloadTeam) {
         this.requestDlg = requestDlg;
+        this.message = message;
         this.payloadTeam = payloadTeam;
 
         container.setWidget(view);

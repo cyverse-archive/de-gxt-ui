@@ -234,7 +234,7 @@ public class NotificationUtil {
 
                             @Override
                             public void onSuccess(JoinTeamRequestDialog dialog) {
-                                dialog.show(payloadTeam);
+                                dialog.show(message, payloadTeam);
                             }
                         });
                     } else if (payloadTeam.getAction().equals(PayloadTeam.ACTION_DENY)) {
