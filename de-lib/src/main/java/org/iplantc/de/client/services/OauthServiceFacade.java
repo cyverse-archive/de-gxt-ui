@@ -10,4 +10,11 @@ import java.util.Map;
 public interface OauthServiceFacade {
 
     void getRedirectUris(AsyncCallback<Map<String,String>> callback);
+
+    /**
+     * Delete Users Hpc OAuth token
+     *
+     * @param callback callback object
+     */
+    void deleteHpcToken(AsyncCallback<Void> callback);
 }

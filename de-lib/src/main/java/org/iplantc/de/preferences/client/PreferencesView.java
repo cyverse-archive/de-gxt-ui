@@ -3,6 +3,7 @@ package org.iplantc.de.preferences.client;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
+import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
 
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -11,7 +12,8 @@ import com.google.gwt.user.client.ui.IsWidget;
  * @author aramsey
  */
 public interface PreferencesView extends IsWidget,
-                                         PrefDlgRetryUserSessionClicked.HasPrefDlgRetryUserSessionClickedHandlers {
+                                         PrefDlgRetryUserSessionClicked.HasPrefDlgRetryUserSessionClickedHandlers,
+                                         ResetHpcTokenClicked.HasResetHpcLabelClickedHandlers{
 
     interface PreferencesViewAppearance {
 
@@ -70,6 +72,12 @@ public interface PreferencesView extends IsWidget,
         String preferencesFailure();
 
         String preferencesSuccess();
+
+        String resetHpc();
+
+        SafeHtml resetHpcPrompt();
+
+        String hpcResetFailure();
     }
 
     void userSessionSuccess();

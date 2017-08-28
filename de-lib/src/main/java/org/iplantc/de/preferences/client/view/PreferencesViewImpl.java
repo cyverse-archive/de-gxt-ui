@@ -2,6 +2,7 @@ package org.iplantc.de.preferences.client.view;
 
 import org.iplantc.de.apps.widgets.client.view.editors.validation.AnalysisOutputValidator;
 import org.iplantc.de.client.KeyBoardShortcutConstants;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -10,6 +11,7 @@ import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldF
 import org.iplantc.de.diskResource.client.views.widgets.FolderSelectorField;
 import org.iplantc.de.preferences.client.PreferencesView;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
+import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
 import org.iplantc.de.preferences.shared.Preferences;
 
 import com.google.gwt.core.client.GWT;
@@ -67,6 +69,12 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @UiField(provided = true) FolderSelectorField defaultOutputFolder;
     @UiField TextField notifyShortCut;
     @UiField(provided = true) PreferencesViewAppearance appearance;
+    @UiField(provided = true)
+    @Ignore
+    HTML resetHpcfield;
+    @UiField
+    @Ignore
+    TextButton hpcResetBtn;
 
     private final KeyBoardShortcutConstants KB_CONSTANTS;
     private final Map<TextField, String> kbMap;
@@ -82,11 +90,13 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @Inject
     PreferencesViewImpl(final DiskResourceSelectorFieldFactory folderSelectorFieldFactory,
                         final PreferencesViewAppearance appearance,
-                        final KeyBoardShortcutConstants kbConstants) {
+                        final KeyBoardShortcutConstants kbConstants,
+                        final UserInfo userInfo) {
         this.appearance = appearance;
         this.defaultOutputFolder = folderSelectorFieldFactory.defaultFolderSelector();
         this.defaultOutputFolder.hideResetButton();
         this.KB_CONSTANTS = kbConstants;
+        this.resetHpcfield = new HTML(appearance.resetHpcPrompt());
         initWidget(uiBinder.createAndBindUi(this));
 
         kbMap = new HashMap<>();
@@ -107,12 +117,25 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         savedSessionFailed.setHTML(appearance.sessionConnectionFailed());
 
         editorDriver.initialize(this);
+
+        if (userInfo.hasAgaveRedirect()) {
+            hpcResetBtn.disable();  //User has not yet authenticated to HPC yet. So cannot reset
+        } else {
+            hpcResetBtn.enable();
+        }
     }
 
     @Override
     public HandlerRegistration addPrefDlgRetryUserSessionClickedHandlers(PrefDlgRetryUserSessionClicked.PrefDlgRetryUserSessionClickedHandler handler) {
         return addHandler(handler, PrefDlgRetryUserSessionClicked.TYPE);
     }
+
+    @Override
+    public HandlerRegistration addResetHpcTokenClickedHandlers(ResetHpcTokenClicked.ResetHpcTokenClickedHandler handler) {
+        return addHandler(handler, ResetHpcTokenClicked.TYPE);
+    }
+
+
     @Ignore
     public UserSettings getValue() {
         return flushedValue;
@@ -257,5 +280,10 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         saveSession.setVisible(false);
         savedSessionFailed.setVisible(true);
         retrySession.setVisible(true);
+    }
+
+    @UiHandler("hpcResetBtn")
+    void onResetHpcToken(SelectEvent event) {
+        fireEvent(new ResetHpcTokenClicked());
     }
 }
