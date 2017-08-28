@@ -2,7 +2,9 @@ package org.iplantc.de.notifications.client.presenter;
 
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.HasUUIDs;
 import org.iplantc.de.client.models.notifications.Notification;
+import org.iplantc.de.client.models.notifications.NotificationAutoBeanFactory;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.services.MessageServiceFacade;
@@ -27,9 +29,6 @@ import org.iplantc.de.notifications.client.views.NotificationView;
 import org.iplantc.de.shared.NotificationCallback;
 
 import com.google.common.collect.Lists;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -108,6 +107,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
     private final ListStore<NotificationMessage> listStore;
     private final NotificationToolbarView toolbar;
     private final NotificationView view;
+    private NotificationAutoBeanFactory factory;
     private NotificationView.NotificationViewAppearance appearance;
     NotificationCategory currentCategory;
     @Inject MessageServiceFacade messageServiceFacade;
@@ -249,15 +249,11 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
         };
         // do we have any notifications to delete?
         if (notifications != null && !notifications.isEmpty()) {
-            JSONObject obj = new JSONObject();
-            JSONArray arr = new JSONArray();
-            int i = 0;
-            for (NotificationMessage n : notifications) {
-                arr.set(i++, new JSONString(n.getId()));
-            }
-            obj.put("uuids", arr);
+            HasUUIDs hasUUIDs = factory.getHasUUIDs().as();
+            List<String> uuids = notifications.stream().map(NotificationMessage::getId).collect(Collectors.toList());
+            hasUUIDs.setUUIDs(uuids);
 
-            messageServiceFacade.deleteMessages(obj, new NotificationCallback<String>() {
+            messageServiceFacade.deleteMessages(hasUUIDs, new NotificationCallback<String>() {
                 @Override
                 public void onFailure(Integer statusCode, Throwable caught) {
                     ErrorHandler.post(appearance.notificationDeleteFail(), caught);

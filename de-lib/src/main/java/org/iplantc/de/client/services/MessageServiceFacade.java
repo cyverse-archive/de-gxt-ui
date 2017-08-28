@@ -3,6 +3,7 @@ package org.iplantc.de.client.services;
 import java.util.List;
 
 import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.HasUUIDs;
 import org.iplantc.de.client.models.notifications.Counts;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.notifications.NotificationList;
@@ -36,10 +37,10 @@ public interface MessageServiceFacade {
     /**
      * Delete messages from the server.
      *
-     * @param arrDeleteIds array of notification ids to delete from the server.
+     * @param deleteIds array of notification ids to delete from the server.
      * @param callback called on RPC completion.
      */
-    void deleteMessages(JSONObject deleteIds, DECallback<String> callback);
+    void deleteMessages(HasUUIDs deleteIds, DECallback<String> callback);
 
     /**
      * Retrieves the message counts from the server where the seen parameter is false.
