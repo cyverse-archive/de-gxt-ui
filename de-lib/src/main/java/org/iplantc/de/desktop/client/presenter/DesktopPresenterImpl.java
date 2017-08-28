@@ -3,6 +3,7 @@ package org.iplantc.de.desktop.client.presenter;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasPath;
+import org.iplantc.de.client.models.HasUUIDs;
 import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.QualifiedId;
 import org.iplantc.de.client.models.UserInfo;
@@ -545,6 +546,27 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                                                                         history);
                     dlg.show();
 
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onJoinTeamRequestProcessed(NotificationMessage message) {
+        view.getNotificationStore().remove(message);
+        //If the notifications window is open, the NotificationPresenter will handle this
+        if (!desktopWindowManager.isOpen(WindowType.NOTIFICATIONS)) {
+            HasUUIDs hasUUIDs = notificationFactory.getHasUUIDs().as();
+            hasUUIDs.setUUIDs(Lists.newArrayList(message.getId()));
+            messageServiceFacade.deleteMessages(hasUUIDs, new NotificationCallback<String>() {
+                @Override
+                public void onFailure(Integer statusCode, Throwable exception) {
+                    ErrorHandler.post(exception);
+                }
+
+                @Override
+                public void onSuccess(String result) {
+                    //do nothing intentionally
                 }
             });
         }

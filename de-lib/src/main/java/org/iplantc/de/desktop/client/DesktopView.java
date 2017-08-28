@@ -224,6 +224,8 @@ public interface DesktopView extends IsWidget {
 
         void onFaqSelect();
 
+        void onJoinTeamRequestProcessed(NotificationMessage message);
+
     }
 
     interface UserSettingsMenuPresenter {

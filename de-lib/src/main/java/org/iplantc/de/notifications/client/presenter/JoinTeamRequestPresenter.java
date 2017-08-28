@@ -1,5 +1,6 @@
 package org.iplantc.de.notifications.client.presenter;
 
+import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasMessage;
 import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.collaborators.Subject;
@@ -19,6 +20,7 @@ import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.notifications.client.events.JoinTeamApproved;
 import org.iplantc.de.notifications.client.events.JoinTeamDenied;
+import org.iplantc.de.notifications.client.events.JoinTeamRequestProcessed;
 import org.iplantc.de.notifications.client.views.JoinTeamRequestView;
 import org.iplantc.de.notifications.client.views.dialogs.DenyJoinRequestDialog;
 import org.iplantc.de.notifications.client.views.dialogs.ApproveJoinRequestDialog;
@@ -44,11 +46,12 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
     private JoinTeamRequestView view;
     private IsHideable requestDlg;
     private PayloadTeam payloadTeam;
-    private NotificationMessage message;
+    private NotificationMessage notificationMessage;
 
     @Inject AsyncProviderWrapper<ApproveJoinRequestDialog> setPrivilegeDlgProvider;
     @Inject AsyncProviderWrapper<DenyJoinRequestDialog> denyRequestDlgProvider;
     @Inject IplantAnnouncer announcer;
+    @Inject EventBus eventBus;
 
     @Inject
     public JoinTeamRequestPresenter(JoinTeamRequestView view,
@@ -65,9 +68,9 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
     }
 
     @Override
-    public void go(HasOneWidget container, IsHideable requestDlg, NotificationMessage message, PayloadTeam payloadTeam) {
+    public void go(HasOneWidget container, IsHideable requestDlg, NotificationMessage notificationMessage, PayloadTeam payloadTeam) {
         this.requestDlg = requestDlg;
-        this.message = message;
+        this.notificationMessage = notificationMessage;
         this.payloadTeam = payloadTeam;
 
         container.setWidget(view);
@@ -135,6 +138,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
                 announcer.schedule(new IplantAnnouncementConfig(appearance.joinTeamSuccess(payloadTeam.getRequesterName(), payloadTeam.getTeamName())));
                 requestDlg.hide();
                 privilegeDlg.hide();
+                eventBus.fireEvent(new JoinTeamRequestProcessed(notificationMessage));
             }
         });
     }
@@ -184,6 +188,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
                 announcer.schedule(new IplantAnnouncementConfig(appearance.denyRequestSuccess(payloadTeam.getRequesterName(), payloadTeam.getTeamName())));
                 requestDlg.hide();
                 hideable.hide();
+                eventBus.fireEvent(new JoinTeamRequestProcessed(notificationMessage));
             }
         });
     }

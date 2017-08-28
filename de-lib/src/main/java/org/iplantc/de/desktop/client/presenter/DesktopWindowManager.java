@@ -271,4 +271,10 @@ public class DesktopWindowManager {
     public void stickWindowToTop(Window window) {
         this.sticky = window;
     }
+
+    public boolean isOpen(WindowType windowType) {
+        return windowManager.getWindows().stream()
+                            .filter(window -> ((Window)window).getStateId().startsWith(windowType.toString()))
+                            .count() > 0;
+    }
 }
