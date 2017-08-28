@@ -275,9 +275,12 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     @Override
     public void onSelectionChanged(SelectionChangedEvent<Privilege> selectionChangedEvent) {
         Privilege memberSelection = membersGrid.getSelectionModel().getSelectedItem();
-        removeMember.setEnabled(memberSelection != null && !memberSelection.getSubject().getId().equals(currentUserId));
+        boolean isSelfMember = memberSelection.getSubject().getId().equals(currentUserId);
+        removeMember.setEnabled(memberSelection != null && !isSelfMember);
+
         Privilege nonMemberSelection = nonMembersGrid.getSelectionModel().getSelectedItem();
-        removeNonMember.setEnabled(nonMemberSelection != null && !nonMemberSelection.getSubject().getId().equals(currentUserId));
+        boolean isSelfNonMember = nonMemberSelection.getSubject().getId().equals(currentUserId);
+        removeNonMember.setEnabled(nonMemberSelection != null && !isSelfNonMember);
     }
 
     @Override

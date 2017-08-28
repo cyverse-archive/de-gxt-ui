@@ -4,6 +4,9 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
+/**
+ * An event that is fired when a user denies another user's request to join a team
+ */
 public class JoinTeamDenied extends GwtEvent<JoinTeamDenied.JoinTeamDeniedHandler> {
     public static interface JoinTeamDeniedHandler extends EventHandler {
         void onJoinTeamDenied(JoinTeamDenied event);

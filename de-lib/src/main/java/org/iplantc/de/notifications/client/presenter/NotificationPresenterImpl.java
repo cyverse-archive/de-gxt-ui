@@ -255,7 +255,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
         // do we have any notifications to delete?
         if (notifications != null && !notifications.isEmpty()) {
             HasUUIDs hasUUIDs = factory.getHasUUIDs().as();
-            List<String> uuids = notifications.stream().map(NotificationMessage::getId).collect(Collectors.toList());
+            List<String> uuids = convertNotificationsToIds(notifications);
             hasUUIDs.setUUIDs(uuids);
 
             messageServiceFacade.deleteMessages(hasUUIDs, new NotificationCallback<String>() {
@@ -272,6 +272,10 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
                 }
             });
         }
+    }
+
+    List<String> convertNotificationsToIds(List<NotificationMessage> notifications) {
+        return notifications.stream().map(NotificationMessage::getId).collect(Collectors.toList());
     }
 
     @Override

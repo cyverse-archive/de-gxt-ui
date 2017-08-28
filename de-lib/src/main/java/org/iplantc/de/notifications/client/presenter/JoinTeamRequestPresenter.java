@@ -48,7 +48,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
     private PayloadTeam payloadTeam;
     private NotificationMessage notificationMessage;
 
-    @Inject AsyncProviderWrapper<ApproveJoinRequestDialog> setPrivilegeDlgProvider;
+    @Inject AsyncProviderWrapper<ApproveJoinRequestDialog> approveRequestDlgProvider;
     @Inject AsyncProviderWrapper<DenyJoinRequestDialog> denyRequestDlgProvider;
     @Inject IplantAnnouncer announcer;
     @Inject EventBus eventBus;
@@ -84,7 +84,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
 
     @Override
     public void onJoinTeamApproved(JoinTeamApproved event) {
-        setPrivilegeDlgProvider.get(new AsyncCallback<ApproveJoinRequestDialog>() {
+        approveRequestDlgProvider.get(new AsyncCallback<ApproveJoinRequestDialog>() {
             @Override
             public void onFailure(Throwable caught) {}
 
@@ -100,7 +100,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
         });
     }
 
-    void addMemberWithPrivilege(PrivilegeType privilegeType, IsHideable privilegeDlg) {
+    void addMemberWithPrivilege(PrivilegeType privilegeType, IsHideable approveDlg) {
         Group team = factory.getGroup().as();
         team.setName(payloadTeam.getTeamName());
 
@@ -116,7 +116,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
             @Override
             public void onSuccess(List<UpdateMemberResult> result) {
                 if (result != null && !result.isEmpty() && result.get(0).isSuccess()) {
-                    addPrivilege(team, privilegeType, privilegeDlg);
+                    addPrivilege(team, privilegeType, approveDlg);
                 } else {
                     announcer.schedule(new ErrorAnnouncementConfig(appearance.addMemberFail(payloadTeam.getRequesterName(), payloadTeam.getTeamName())));
                 }
@@ -124,7 +124,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
         });
     }
 
-    void addPrivilege(Group team, PrivilegeType privilegeType, IsHideable privilegeDlg) {
+    void addPrivilege(Group team, PrivilegeType privilegeType, IsHideable approveDlg) {
         UpdatePrivilegeRequestList requestList = getUpdatePrivilegeRequestList(privilegeType);
 
         serviceFacade.updateTeamPrivileges(team, requestList, new AsyncCallback<List<Privilege>>() {
@@ -137,7 +137,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
             public void onSuccess(List<Privilege> result) {
                 announcer.schedule(new IplantAnnouncementConfig(appearance.joinTeamSuccess(payloadTeam.getRequesterName(), payloadTeam.getTeamName())));
                 requestDlg.hide();
-                privilegeDlg.hide();
+                approveDlg.hide();
                 eventBus.fireEvent(new JoinTeamRequestProcessed(notificationMessage));
             }
         });
@@ -170,7 +170,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
         });
     }
 
-    void denyRequest(String denyMessage, IsHideable hideable) {
+    void denyRequest(String denyMessage, IsHideable denyDlg) {
         Group team = factory.getGroup().as();
         team.setName(payloadTeam.getTeamName());
 
@@ -187,7 +187,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
             public void onSuccess(Void aVoid) {
                 announcer.schedule(new IplantAnnouncementConfig(appearance.denyRequestSuccess(payloadTeam.getRequesterName(), payloadTeam.getTeamName())));
                 requestDlg.hide();
-                hideable.hide();
+                denyDlg.hide();
                 eventBus.fireEvent(new JoinTeamRequestProcessed(notificationMessage));
             }
         });

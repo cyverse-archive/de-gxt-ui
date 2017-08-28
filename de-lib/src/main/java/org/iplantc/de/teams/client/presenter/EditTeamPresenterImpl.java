@@ -467,14 +467,14 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                         hideable.hide();
                         ensureHandlers().fireEvent(new JoinTeamCompleted(originalGroup));
                     } else {
-                        onRequestToJoin(originalGroup, hideable);
+                        showRequestToJoinDlg(originalGroup, hideable);
                     }
                 }
             }
         });
     }
 
-    void onRequestToJoin(Group team, IsHideable hideable) {
+    void showRequestToJoinDlg(Group team, IsHideable hideable) {
         joinTeamDlgProvider.get(new AsyncCallback<JoinTeamDialog>() {
             @Override
             public void onFailure(Throwable throwable) {}

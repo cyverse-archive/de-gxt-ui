@@ -1,11 +1,6 @@
 package org.iplantc.de.notifications.client.views.cells;
 
-import org.iplantc.de.client.events.EventBus;
-import org.iplantc.de.client.models.analysis.AnalysesAutoBeanFactory;
-import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
-import org.iplantc.de.client.models.notifications.NotificationAutoBeanFactory;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
-import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.notifications.client.utils.NotificationUtil;
 
 import com.google.gwt.cell.client.AbstractCell;
@@ -31,12 +26,7 @@ public class NotificationMessageCell extends AbstractCell<NotificationMessage> {
     private final NotificationMessageCellAppearance appearance =
             GWT.create(NotificationMessageCellAppearance.class);
 
-    @Inject DiskResourceAutoBeanFactory drFactory;
-    @Inject AnalysesAutoBeanFactory analysesFactory;
-    @Inject NotificationAutoBeanFactory notificationFactory;
-    @Inject DiskResourceUtil diskResourceUtil;
     @Inject NotificationUtil notificationUtil;
-    @Inject EventBus eventBus;
 
     @Inject
     public NotificationMessageCell() {

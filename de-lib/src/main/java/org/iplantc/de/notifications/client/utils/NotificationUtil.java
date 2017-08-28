@@ -62,13 +62,20 @@ public class NotificationUtil {
     public NotificationUtil() {
     }
 
-    public NotificationMessage getMessage(Notification n,
-                                                 final NotificationAutoBeanFactory notFactory) {
+    /**
+     * A utility method for preparing NotificationMessages to be viewed/handled properly in
+     * the NotificationView
+     * @param notification
+     * @param notFactory
+     * @return
+     */
+    public NotificationMessage getMessage(Notification notification,
+                                          final NotificationAutoBeanFactory notFactory) {
 
-        NotificationMessage msg = n.getMessage();
-        msg.setSeen(n.isSeen());
-        msg.setCategory(NotificationCategory.fromTypeString(n.getCategory()));
-        Splittable payload = n.getNotificationPayload();
+        NotificationMessage msg = notification.getMessage();
+        msg.setSeen(notification.isSeen());
+        msg.setCategory(NotificationCategory.fromTypeString(notification.getCategory()));
+        Splittable payload = notification.getNotificationPayload();
 
         if (payload == null) {
             return msg;
@@ -141,7 +148,7 @@ public class NotificationUtil {
             case TEAM:
                 GWT.log("TEAM category");
                 PayloadTeam payloadTeam = AutoBeanCodex.decode(notFactory, PayloadTeam.class, payload).as();
-                String action = n.getEmailTemplate();
+                String action = notification.getEmailTemplate();
                 payloadTeam.setAction(action);
                 if (action.equals(PayloadTeam.ACTION_ADD)) {
                     msg.setMessage(msg.getMessage() + " " + payloadTeam.getTeamName());
@@ -156,6 +163,10 @@ public class NotificationUtil {
         return msg;
     }
 
+    /**
+     * A utility method for handling what should happen when a notification is clicked
+     * @param message
+     */
     public void onNotificationClick(NotificationMessage message) {
 
         if (message.getContext() != null
