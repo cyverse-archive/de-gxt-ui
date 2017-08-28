@@ -20,13 +20,13 @@ import java.util.List;
 /**
  * A dialog that allows the user approving a join team request to give the requester privileges on the team
  */
-public class SetMemberPrivilegeDialog extends MessageBox implements IsHideable {
+public class ApproveJoinRequestDialog extends MessageBox implements IsHideable {
 
     private JoinTeamRequestView.JoinTeamRequestAppearance appearance;
     SimpleComboBox<PrivilegeType> privilegeCombo;
 
     @Inject
-    public SetMemberPrivilegeDialog(JoinTeamRequestView.JoinTeamRequestAppearance appearance) {
+    public ApproveJoinRequestDialog(JoinTeamRequestView.JoinTeamRequestAppearance appearance) {
         super(appearance.setPrivilegesHeading());
         this.appearance = appearance;
 

@@ -20,7 +20,7 @@ import org.iplantc.de.notifications.client.events.JoinTeamApproved;
 import org.iplantc.de.notifications.client.events.JoinTeamDenied;
 import org.iplantc.de.notifications.client.views.JoinTeamRequestView;
 import org.iplantc.de.notifications.client.views.dialogs.DenyJoinRequestDialog;
-import org.iplantc.de.notifications.client.views.dialogs.SetMemberPrivilegeDialog;
+import org.iplantc.de.notifications.client.views.dialogs.ApproveJoinRequestDialog;
 import org.iplantc.de.notifications.shared.Notifications;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
@@ -44,7 +44,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
     private IsHideable requestDlg;
     private PayloadTeam payloadTeam;
 
-    @Inject AsyncProviderWrapper<SetMemberPrivilegeDialog> setPrivilegeDlgProvider;
+    @Inject AsyncProviderWrapper<ApproveJoinRequestDialog> setPrivilegeDlgProvider;
     @Inject AsyncProviderWrapper<DenyJoinRequestDialog> denyRequestDlgProvider;
     @Inject IplantAnnouncer announcer;
 
@@ -78,12 +78,12 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
 
     @Override
     public void onJoinTeamApproved(JoinTeamApproved event) {
-        setPrivilegeDlgProvider.get(new AsyncCallback<SetMemberPrivilegeDialog>() {
+        setPrivilegeDlgProvider.get(new AsyncCallback<ApproveJoinRequestDialog>() {
             @Override
             public void onFailure(Throwable caught) {}
 
             @Override
-            public void onSuccess(SetMemberPrivilegeDialog dialog) {
+            public void onSuccess(ApproveJoinRequestDialog dialog) {
                 dialog.show(payloadTeam.getRequesterName(), payloadTeam.getTeamName());
                 dialog.addDialogHideHandler(event -> {
                     if (event.getHideButton().equals(Dialog.PredefinedButton.OK) && dialog.getPrivilegeType() != null) {
