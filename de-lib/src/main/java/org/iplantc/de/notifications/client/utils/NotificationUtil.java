@@ -28,6 +28,7 @@ import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConfig;
 import org.iplantc.de.notifications.client.events.NotificationClickedEvent;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
+import org.iplantc.de.notifications.client.views.dialogs.DenyJoinRequestDetailsDialog;
 import org.iplantc.de.notifications.client.views.dialogs.JoinTeamRequestDialog;
 import org.iplantc.de.notifications.client.views.dialogs.RequestHistoryDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
@@ -55,6 +56,7 @@ public class NotificationUtil {
     @Inject DiskResourceUtil diskResourceUtil;
     @Inject EventBus eventBus;
     @Inject AsyncProviderWrapper<JoinTeamRequestDialog> joinRequestDlgProvider;
+    @Inject AsyncProviderWrapper<DenyJoinRequestDetailsDialog> denyDetailsDlgProvider;
 
     @Inject
     public NotificationUtil() {
@@ -141,8 +143,8 @@ public class NotificationUtil {
                 PayloadTeam payloadTeam = AutoBeanCodex.decode(notFactory, PayloadTeam.class, payload).as();
                 String action = n.getEmailTemplate();
                 payloadTeam.setAction(action);
-                if (!action.equals("join_team_request")) {
-                    msg.setMessage(msg.getMessage() + " (" + payloadTeam.getTeamName() + ")");
+                if (action.equals(PayloadTeam.ACTION_ADD)) {
+                    msg.setMessage(msg.getMessage() + " " + payloadTeam.getTeamName());
                 }
                 msg.setContext(payload.getPayload());
                 break;
@@ -224,7 +226,7 @@ public class NotificationUtil {
                 case TEAM:
                     PayloadTeam payloadTeam = AutoBeanCodex.decode(notificationFactory, PayloadTeam.class, context1).as();
 
-                    if (payloadTeam.getAction().equals("team_join_request")) {
+                    if (payloadTeam.getAction().equals(PayloadTeam.ACTION_JOIN)) {
                         joinRequestDlgProvider.get(new AsyncCallback<JoinTeamRequestDialog>() {
                             @Override
                             public void onFailure(Throwable caught) {
@@ -233,6 +235,16 @@ public class NotificationUtil {
                             @Override
                             public void onSuccess(JoinTeamRequestDialog dialog) {
                                 dialog.show(payloadTeam);
+                            }
+                        });
+                    } else if (payloadTeam.getAction().equals(PayloadTeam.ACTION_DENY)) {
+                        denyDetailsDlgProvider.get(new AsyncCallback<DenyJoinRequestDetailsDialog>() {
+                            @Override
+                            public void onFailure(Throwable throwable) { }
+
+                            @Override
+                            public void onSuccess(DenyJoinRequestDetailsDialog dialog) {
+                                dialog.show(payloadTeam.getTeamName(), payloadTeam.getAdminMessage());
                             }
                         });
                     } else {
