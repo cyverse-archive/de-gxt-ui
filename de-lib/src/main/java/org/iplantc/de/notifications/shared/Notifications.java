@@ -24,5 +24,6 @@ public class Notifications {
         String SET_PRIVILEGE_DLG = "setPrivilegeDlg";
         String OK_BTN = ".okBtn";
         String DENY_REQUEST_DLG = "denyRequestDlg";
+        String DENY_DETAILS_DLG = "denyDetailsDlg";
     }
 }

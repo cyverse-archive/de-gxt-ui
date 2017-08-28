@@ -7,6 +7,10 @@ import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
  */
 public interface PayloadTeam {
 
+    String ACTION_JOIN = "team_join_request";
+    String ACTION_DENY = "team_join_denial";
+    String ACTION_ADD = "added_to_team";
+
     @PropertyName("email_address")
     String getEmailAddress();
 
@@ -24,6 +28,9 @@ public interface PayloadTeam {
 
     @PropertyName("team_name")
     String getTeamName();
+
+    @PropertyName("admin_message")
+    String getAdminMessage();
 
     String getAction();
     void setAction(String action);

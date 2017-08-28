@@ -63,6 +63,12 @@ public interface JoinTeamRequestView extends IsWidget,
         String denyRequestMessage(String requesterName, String teamName);
 
         String denyRequestSuccess(String requesterName, String teamName);
+
+        String denyDetailsHeader();
+
+        String denyDetailsMessage(String teamName);
+
+        String denyAdminLabel();
     }
 
     /**
