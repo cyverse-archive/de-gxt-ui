@@ -102,11 +102,15 @@ public class TeamsViewImpl extends Composite implements TeamsView {
         ColumnConfig<Group, Group> nameCol = new ColumnConfig<>(new IdentityValueProvider<>("extension"),
                                                                  appearance.nameColumnWidth(),
                                                                  appearance.nameColumnLabel());
+        ColumnConfig<Group, String> creatorCol = new ColumnConfig<>(properties.creator(),
+                                                                    appearance.creatorColumnWidth(),
+                                                                    appearance.creatorColumnLabel());
         ColumnConfig<Group, String> descCol = new ColumnConfig<>(properties.description(),
                                                                  appearance.descColumnWidth(),
                                                                  appearance.descColumnLabel());
         nameCol.setCell(nameCell);
         list.add(nameCol);
+        list.add(creatorCol);
         list.add(descCol);
         return new ColumnModel<>(list);
     }

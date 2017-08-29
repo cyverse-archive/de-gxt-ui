@@ -1,8 +1,11 @@
 package org.iplantc.de.teams.client.presenter;
 
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.teams.client.TeamsView;
@@ -19,11 +22,13 @@ import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The presenter to handle all the logic for the Teams view
@@ -38,6 +43,7 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
     private TeamsView.TeamsViewAppearance appearance;
     private GroupServiceFacade serviceFacade;
     private TeamsView view;
+    private CollaboratorsServiceFacade collaboratorsFacade;
     private TeamSearchRpcProxy searchProxy;
     
     @Inject AsyncProviderWrapper<EditTeamDialog> editTeamDlgProvider;
@@ -47,10 +53,12 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
     @Inject
     public TeamsPresenterImpl(TeamsView.TeamsViewAppearance appearance,
                               GroupServiceFacade serviceFacade,
+                              CollaboratorsServiceFacade collaboratorsFacade,
                               TeamsViewFactory viewFactory,
                               TeamSearchRpcProxy searchProxy) {
         this.appearance = appearance;
         this.serviceFacade = serviceFacade;
+        this.collaboratorsFacade = collaboratorsFacade;
         this.searchProxy = searchProxy;
         this.view = viewFactory.create(getPagingLoader());
 
@@ -133,9 +141,7 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
 
             @Override
             public void onSuccess(List<Group> result) {
-                view.clearTeams();
-                view.addTeams(result);
-                view.unmask();
+                getTeamCreatorNames(result);
             }
         });
     }
@@ -151,11 +157,39 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
 
             @Override
             public void onSuccess(List<Group> result) {
-                view.clearTeams();
-                view.addTeams(result);
-                view.unmask();
+                getTeamCreatorNames(result);
             }
         });
+    }
+
+    void getTeamCreatorNames(List<Group> teams) {
+        if (teams != null && !teams.isEmpty()) {
+
+            List<String> subjectIds = getCreatorIds(teams);
+            collaboratorsFacade.getUserInfo(subjectIds, new AsyncCallback<FastMap<Subject>>() {
+                @Override
+                public void onFailure(Throwable throwable) {
+                    announcer.schedule(new ErrorAnnouncementConfig(appearance.getCreatorNamesFailed()));
+                    addTeamsToView(teams);
+                }
+
+                @Override
+                public void onSuccess(FastMap<Subject> creatorFastMap) {
+                    addCreatorToTeams(teams, creatorFastMap);
+                    addTeamsToView(teams);
+                }
+            });
+        } else {
+            addTeamsToView(null);
+        }
+    }
+
+    void addTeamsToView(List<Group> teams) {
+        view.clearTeams();
+        if (teams != null && !teams.isEmpty()) {
+            view.addTeams(teams);
+        }
+        view.unmask();
     }
 
     @Override
@@ -192,5 +226,29 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
             view.clearTeams();
             view.addTeams(teams);
         }
+    }
+
+    void addCreatorToTeams(List<Group> teams, FastMap<Subject> creatorFastMap) {
+        teams.forEach(group -> group.setCreator(creatorFastMap.get(getCreatorId(group)).getSubjectDisplayName()));
+    }
+
+    List<String> getCreatorIds(List<Group> teams) {
+        return teams.stream().map(this::getCreatorId).distinct().collect(Collectors.toList());
+    }
+
+    /**
+     * A team name is always in the format of {creator_id}:{team_name}
+     *
+     * @param team
+     * @return
+     */
+    String getCreatorId(Group team) {
+        String teamName = team.getName();
+
+        int lastIndex = teamName.lastIndexOf(Subject.GROUP_NAME_DELIMITER);
+        if (lastIndex > 0) {
+            return teamName.substring(0, lastIndex);
+        }
+        return null;
     }
 }

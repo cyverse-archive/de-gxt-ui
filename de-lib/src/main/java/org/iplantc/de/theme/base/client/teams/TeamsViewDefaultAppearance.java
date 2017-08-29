@@ -371,4 +371,19 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     public String institutionColumnLabel() {
         return iplantDisplayStrings.institution();
     }
+
+    @Override
+    public String getCreatorNamesFailed() {
+        return displayStrings.getCreatorNamesFailed();
+    }
+
+    @Override
+    public int creatorColumnWidth() {
+        return 200;
+    }
+
+    @Override
+    public String creatorColumnLabel() {
+        return displayStrings.creatorColumnLabel();
+    }
 }

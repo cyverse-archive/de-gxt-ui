@@ -16,4 +16,12 @@ public interface Group extends Subject, HasDescription {
     void setType(String type);
 
     String getExtension();
+
+    /**
+     * This is an artificial key in that it will never be populated unless specifically done
+     * in the UI code, i.e. the service will never return this key or a value for the key
+     * @return
+     */
+    String getCreator();
+    void setCreator(String creator);
 }

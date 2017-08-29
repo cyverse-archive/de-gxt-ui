@@ -90,4 +90,8 @@ public interface TeamsDisplayStrings extends Messages {
     String joinTeamText(String teamName);
 
     String requestToJoinSubmitted(String teamName);
+
+    String getCreatorNamesFailed();
+
+    String creatorColumnLabel();
 }

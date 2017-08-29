@@ -158,6 +158,12 @@ public interface TeamsView extends IsWidget,
         int institutionColumnWidth();
 
         String institutionColumnLabel();
+
+        String getCreatorNamesFailed();
+
+        int creatorColumnWidth();
+
+        String creatorColumnLabel();
     }
 
     /**
