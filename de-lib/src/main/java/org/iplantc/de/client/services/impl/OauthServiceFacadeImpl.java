@@ -30,7 +30,8 @@ public class OauthServiceFacadeImpl implements OauthServiceFacade {
 
     @Inject
     public OauthServiceFacadeImpl(final DiscEnvApiService deServiceFacade,
-                                  CommonModelAutoBeanFactory factory, final DEClientConstants constants) {
+                                  CommonModelAutoBeanFactory factory,
+                                  final DEClientConstants constants) {
         this.deServiceFacade = deServiceFacade;
         this.factory = factory;
         this.constants = constants;

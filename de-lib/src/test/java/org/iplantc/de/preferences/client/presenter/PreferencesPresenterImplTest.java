@@ -58,8 +58,10 @@ public class PreferencesPresenterImplTest {
         when(viewMock.getValue()).thenReturn(userSettingsMock);
 
         uut = new PreferencesPresenterImpl(viewMock,
-                                           serviceFacadeMock, oauthServiceFacadeMock,
-                                           appearanceMock, constantsMock);
+                                           serviceFacadeMock,
+                                           oauthServiceFacadeMock,
+                                           appearanceMock,
+                                           constantsMock);
 
         uut.desktopPresenter = desktopPresenterMock;
     }
