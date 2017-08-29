@@ -55,7 +55,7 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
 
     @Override
     public int nameColumnWidth() {
-        return 300;
+        return 200;
     }
 
     @Override
@@ -120,7 +120,7 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
 
     @Override
     public int editTeamWidth() {
-        return 650;
+        return 800;
     }
 
     @Override
@@ -360,5 +360,15 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     @Override
     public String requestToJoinSubmitted(Group team) {
         return displayStrings.requestToJoinSubmitted(team.getSubjectDisplayName());
+    }
+
+    @Override
+    public int institutionColumnWidth() {
+        return 200;
+    }
+
+    @Override
+    public String institutionColumnLabel() {
+        return iplantDisplayStrings.institution();
     }
 }

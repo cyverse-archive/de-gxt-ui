@@ -82,6 +82,7 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     private PrivilegeProperties privProps;
     @UiField(provided = true) TeamsView.TeamsViewAppearance appearance;
     String currentUserId;
+    List<ColumnConfig<Privilege, PrivilegeType>> privilegeColumns = Lists.newArrayList();
 
     @Inject
     public EditTeamViewImpl(TeamsView.TeamsViewAppearance appearance,
@@ -122,7 +123,12 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
         ColumnConfig<Privilege, PrivilegeType> nonMemberPrivilege = new ColumnConfig<>(privProps.privilegeType(),
                                                                                 appearance.privilegeColumnWidth(),
                                                                                 appearance.privilegeColumnLabel());
-        nonMemberPrivilege.setCell(createPrivilegeComboBox());
+
+        nonMemberNameCell = new SubjectNameCell(false);
+        nonMemberName.setCell(nonMemberNameCell);
+        nonMemberName.setComparator(new TeamMemberComparator());
+        nonMemberPrivilege.setCell(createPrivilegeComboBox(false));
+        nonMemberPrivilege.setHideable(false);
         nonMemberConfigs.add(nonMemberName);
         nonMemberConfigs.add(nonMemberInstitution);
         nonMemberConfigs.add(nonMemberPrivilege);
@@ -139,11 +145,19 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
         ColumnConfig<Privilege, PrivilegeType> memberPrivilege = new ColumnConfig<>(privProps.privilegeType(),
                                                                                     appearance.privilegeColumnWidth(),
                                                                                     appearance.privilegeColumnLabel());
-        memberPrivilege.setCell(createPrivilegeComboBox());
+
+        memberNameCell = new SubjectNameCell(false);
+        memberName.setCell(memberNameCell);
+        memberName.setComparator(new TeamMemberComparator());
+        memberPrivilege.setCell(createPrivilegeComboBox(true));
+        memberPrivilege.setHideable(false);
         memberConfigs.add(memberName);
         memberConfigs.add(memberInstitution);
         memberConfigs.add(memberPrivilege);
         membersCm = new ColumnModel<>(memberConfigs);
+
+        privilegeColumns.add(nonMemberPrivilege);
+        privilegeColumns.add(memberPrivilege);
     }
 
     ComboBoxCell<PrivilegeType> createPrivilegeComboBox() {
@@ -230,6 +244,10 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
 
             nameEditor.enable();
             descriptionEditor.enable();
+        } else {
+            privilegeColumns.forEach(columnConfig -> columnConfig.setHidden(true));
+            nonMembersGrid.getView().refresh(true);
+            membersGrid.getView().refresh(true);
         }
         vlc.forceLayout();
     }
