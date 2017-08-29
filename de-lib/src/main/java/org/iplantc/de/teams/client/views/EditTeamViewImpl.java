@@ -1,11 +1,13 @@
 package org.iplantc.de.teams.client.views;
 
 import org.iplantc.de.client.models.UserInfo;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.Privilege;
 import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
+import org.iplantc.de.collaborators.client.views.cells.SubjectNameCell;
 import org.iplantc.de.commons.client.validators.GroupNameValidator;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
@@ -82,6 +84,8 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     private PrivilegeProperties privProps;
     @UiField(provided = true) TeamsView.TeamsViewAppearance appearance;
     String currentUserId;
+    private SubjectNameCell memberNameCell;
+    private SubjectNameCell nonMemberNameCell;
     List<ColumnConfig<Privilege, PrivilegeType>> privilegeColumns = Lists.newArrayList();
 
     @Inject
@@ -114,16 +118,15 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
 
     void createColumnModels() {
         List<ColumnConfig<Privilege, ?>> nonMemberConfigs = Lists.newArrayList();
-        ColumnConfig<Privilege, String> nonMemberName = new ColumnConfig<>(privProps.name(),
+        ColumnConfig<Privilege, Subject> nonMemberName = new ColumnConfig<>(privProps.name(),
                                                                            appearance.nameColumnWidth(),
                                                                            appearance.nameColumnLabel());
-        ColumnConfig<Privilege, String> nonMemberInstitution = new ColumnConfig<Privilege, String>(privProps.institution(),
-                                                                                                   appearance.institutionColumnWidth(),
-                                                                                                   appearance.institutionColumnLabel());
+        ColumnConfig<Privilege, String> nonMemberInstitution = new ColumnConfig<>(privProps.institution(),
+                                                                                  appearance.institutionColumnWidth(),
+                                                                                  appearance.institutionColumnLabel());
         ColumnConfig<Privilege, PrivilegeType> nonMemberPrivilege = new ColumnConfig<>(privProps.privilegeType(),
                                                                                 appearance.privilegeColumnWidth(),
                                                                                 appearance.privilegeColumnLabel());
-
         nonMemberNameCell = new SubjectNameCell(false);
         nonMemberName.setCell(nonMemberNameCell);
         nonMemberName.setComparator(new TeamMemberComparator());
@@ -136,12 +139,12 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
 
 
         List<ColumnConfig<Privilege, ?>> memberConfigs = Lists.newArrayList();
-        ColumnConfig<Privilege, String> memberName = new ColumnConfig<>(privProps.name(),
+        ColumnConfig<Privilege, Subject> memberName = new ColumnConfig<>(privProps.name(),
                                                                         appearance.nameColumnWidth(),
                                                                         appearance.nameColumnLabel());
-        ColumnConfig<Privilege, String> memberInstitution = new ColumnConfig<Privilege, String>(privProps.institution(),
-                                                                                                   appearance.institutionColumnWidth(),
-                                                                                                   appearance.institutionColumnLabel());
+        ColumnConfig<Privilege, String> memberInstitution = new ColumnConfig<>(privProps.institution(),
+                                                                               appearance.institutionColumnWidth(),
+                                                                               appearance.institutionColumnLabel());
         ColumnConfig<Privilege, PrivilegeType> memberPrivilege = new ColumnConfig<>(privProps.privilegeType(),
                                                                                     appearance.privilegeColumnWidth(),
                                                                                     appearance.privilegeColumnLabel());
@@ -290,6 +293,8 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
         nonMemberSearch.asWidget().ensureDebugId(baseID + Teams.Ids.NON_MEMBER_SEARCH);
         membersGrid.ensureDebugId(baseID + Teams.Ids.MEMBERS_GRID);
         nonMembersGrid.ensureDebugId(baseID + Teams.Ids.NON_MEMBERS_GRID);
+        memberNameCell.setBaseDebugId(baseID + Teams.Ids.MEMBERS_GRID);
+        nonMemberNameCell.setBaseDebugId(baseID + Teams.Ids.NON_MEMBERS_GRID);
     }
 
     @Override

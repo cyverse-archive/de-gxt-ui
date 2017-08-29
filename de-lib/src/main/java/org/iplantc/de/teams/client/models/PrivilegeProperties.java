@@ -1,5 +1,6 @@
 package org.iplantc.de.teams.client.models;
 
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Privilege;
 import org.iplantc.de.client.models.groups.PrivilegeType;
 
@@ -14,8 +15,8 @@ public interface PrivilegeProperties extends PropertyAccess<Privilege> {
 
     ValueProvider<Privilege, String> type();
 
-    @Path("subject.getName")
-    ValueProvider<Privilege, String> name();
+    @Path("subject")
+    ValueProvider<Privilege, Subject> name();
 
     @Path("subject.getInstitution")
     ValueProvider<Privilege, String> institution();
