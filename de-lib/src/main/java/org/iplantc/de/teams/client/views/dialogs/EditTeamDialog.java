@@ -114,6 +114,9 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
         leaveBtn.setVisible(isMember);
         requestToJoinBtn.setVisible(!isAdmin && !isMember);
         setHeight(appearance.editTeamAdjustedHeight(isAdmin, isMember));
+        if (!isAdmin) {
+            buttonBar.remove(getButton(PredefinedButton.OK));
+        }
 
         buttonBar.forceLayout();
     }
