@@ -44,9 +44,9 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
     private GroupAutoBeanFactory factory;
     private JoinTeamRequestView.JoinTeamRequestAppearance appearance;
     private JoinTeamRequestView view;
-    private IsHideable requestDlg;
-    private PayloadTeam payloadTeam;
-    private NotificationMessage notificationMessage;
+    IsHideable requestDlg;
+    PayloadTeam payloadTeam;
+    NotificationMessage notificationMessage;
 
     @Inject AsyncProviderWrapper<ApproveJoinRequestDialog> approveRequestDlgProvider;
     @Inject AsyncProviderWrapper<DenyJoinRequestDialog> denyRequestDlgProvider;
@@ -107,7 +107,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
         Subject member = factory.getSubject().as();
         member.setId(payloadTeam.getRequesterId());
 
-        serviceFacade.addMembersToTeam(team, Lists.newArrayList(member), new AsyncCallback<List<UpdateMemberResult>>() {
+        serviceFacade.addMembersToTeam(team, wrapSubjectInList(member), new AsyncCallback<List<UpdateMemberResult>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
@@ -191,5 +191,9 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
                 eventBus.fireEvent(new JoinTeamRequestProcessed(notificationMessage));
             }
         });
+    }
+
+    List<Subject> wrapSubjectInList(Subject member) {
+        return Lists.newArrayList(member);
     }
 }
