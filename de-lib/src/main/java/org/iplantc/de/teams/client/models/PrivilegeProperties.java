@@ -17,4 +17,6 @@ public interface PrivilegeProperties extends PropertyAccess<Privilege> {
     @Path("subject.getName")
     ValueProvider<Privilege, String> name();
 
+    @Path("subject.getInstitution")
+    ValueProvider<Privilege, String> institution();
 }

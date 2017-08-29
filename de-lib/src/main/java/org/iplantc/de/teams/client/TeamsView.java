@@ -154,6 +154,10 @@ public interface TeamsView extends IsWidget,
         String joinTeamText(Group team);
 
         String requestToJoinSubmitted(Group team);
+
+        int institutionColumnWidth();
+
+        String institutionColumnLabel();
     }
 
     /**

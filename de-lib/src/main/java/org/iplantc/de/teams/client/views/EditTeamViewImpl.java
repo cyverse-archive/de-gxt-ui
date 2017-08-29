@@ -116,11 +116,15 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
         ColumnConfig<Privilege, String> nonMemberName = new ColumnConfig<>(privProps.name(),
                                                                            appearance.nameColumnWidth(),
                                                                            appearance.nameColumnLabel());
+        ColumnConfig<Privilege, String> nonMemberInstitution = new ColumnConfig<Privilege, String>(privProps.institution(),
+                                                                                                   appearance.institutionColumnWidth(),
+                                                                                                   appearance.institutionColumnLabel());
         ColumnConfig<Privilege, PrivilegeType> nonMemberPrivilege = new ColumnConfig<>(privProps.privilegeType(),
                                                                                 appearance.privilegeColumnWidth(),
                                                                                 appearance.privilegeColumnLabel());
         nonMemberPrivilege.setCell(createPrivilegeComboBox());
         nonMemberConfigs.add(nonMemberName);
+        nonMemberConfigs.add(nonMemberInstitution);
         nonMemberConfigs.add(nonMemberPrivilege);
         nonMembersCm = new ColumnModel<>(nonMemberConfigs);
 
@@ -129,11 +133,15 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
         ColumnConfig<Privilege, String> memberName = new ColumnConfig<>(privProps.name(),
                                                                         appearance.nameColumnWidth(),
                                                                         appearance.nameColumnLabel());
+        ColumnConfig<Privilege, String> memberInstitution = new ColumnConfig<Privilege, String>(privProps.institution(),
+                                                                                                   appearance.institutionColumnWidth(),
+                                                                                                   appearance.institutionColumnLabel());
         ColumnConfig<Privilege, PrivilegeType> memberPrivilege = new ColumnConfig<>(privProps.privilegeType(),
                                                                                     appearance.privilegeColumnWidth(),
                                                                                     appearance.privilegeColumnLabel());
         memberPrivilege.setCell(createPrivilegeComboBox());
         memberConfigs.add(memberName);
+        memberConfigs.add(memberInstitution);
         memberConfigs.add(memberPrivilege);
         membersCm = new ColumnModel<>(memberConfigs);
     }
