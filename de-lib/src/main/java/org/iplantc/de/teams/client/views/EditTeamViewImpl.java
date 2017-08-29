@@ -31,6 +31,7 @@ import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.FieldSet;
@@ -57,6 +58,7 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     private static MyUiBinder uiBinder = GWT.create(EditTeamViewImpl.MyUiBinder.class);
     private final EditorDriver editorDriver = GWT.create(EditTeamViewImpl.EditorDriver.class);
 
+    @UiField VerticalLayoutContainer vlc;
     @UiField @Ignore FieldLabel teamNameLabel;
     @UiField @Ignore FieldLabel teamDescLabel;
     @UiField TextField nameEditor;
@@ -211,13 +213,13 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     public void showAdminMode(boolean adminMode) {
         if (adminMode) {
             nonMembersFieldSet.show();
-            nonMembersFieldSet.forceLayout();
             memberOptOutExplanation.show();
             memberToolbar.show();
 
             nameEditor.enable();
             descriptionEditor.enable();
         }
+        vlc.forceLayout();
     }
 
     @UiHandler("removeNonMember")

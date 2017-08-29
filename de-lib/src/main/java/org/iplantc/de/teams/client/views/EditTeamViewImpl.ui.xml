@@ -53,7 +53,8 @@
 
     <ui:with field="appearance"
              type="org.iplantc.de.teams.client.TeamsView.TeamsViewAppearance"/>
-    <container:VerticalLayoutContainer scrollMode="AUTO">
+    <container:VerticalLayoutContainer ui:field="vlc"
+                                       scrollMode="AUTO">
             <container:child layoutData="{layoutData}">
                 <form:FieldLabel ui:field="teamNameLabel"
                                  text="{appearance.teamNameLabel}">
