@@ -156,5 +156,14 @@
                 </form:FieldLabel>
             </container:VerticalLayoutContainer>
         </form:FieldSet>
+        <form:FieldSet heading="{appearance.resetHpc}"
+                       collapsible="true">
+            <form:widget>
+                <g:VerticalPanel spacing="5">
+                <g:HTML ui:field="resetHpcfield"/>
+                <button:TextButton text="{appearance.resetHpc}" ui:field="hpcResetBtn" />
+                </g:VerticalPanel>
+            </form:widget>
+        </form:FieldSet>
     </container:VerticalLayoutContainer>
 </ui:UiBinder>

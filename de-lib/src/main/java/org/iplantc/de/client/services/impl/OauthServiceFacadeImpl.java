@@ -1,9 +1,13 @@
 package org.iplantc.de.client.services.impl;
 
+import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.DELETE;
+
+import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.CommonModelAutoBeanFactory;
 import org.iplantc.de.client.models.RootLevelMap;
 import org.iplantc.de.client.services.OauthServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
+import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
@@ -22,12 +26,15 @@ public class OauthServiceFacadeImpl implements OauthServiceFacade {
 
     private final DiscEnvApiService deServiceFacade;
     private CommonModelAutoBeanFactory factory;
+    private final DEClientConstants constants;
 
     @Inject
     public OauthServiceFacadeImpl(final DiscEnvApiService deServiceFacade,
-                                  CommonModelAutoBeanFactory factory) {
+                                  CommonModelAutoBeanFactory factory,
+                                  final DEClientConstants constants) {
         this.deServiceFacade = deServiceFacade;
         this.factory = factory;
+        this.constants = constants;
     }
 
     @Override
@@ -44,5 +51,13 @@ public class OauthServiceFacadeImpl implements OauthServiceFacade {
                 return rootLevelMap.getRootMap();
             }
         });
+    }
+
+    @Override
+    public void deleteHpcToken(AsyncCallback<Void> callback) {
+        String address = OAUTH + "/token-info/"
+                         + constants.hpcSystemId();
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address);
+        deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
     }
 }

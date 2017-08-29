@@ -118,4 +118,10 @@ public interface DesktopMessages extends Messages {
     String newApp();
 
     String sectionOne();
+
+    String resetHpc();
+
+    SafeHtml resetHpcPrompt();
+
+    String hpcResetFailure();
 }

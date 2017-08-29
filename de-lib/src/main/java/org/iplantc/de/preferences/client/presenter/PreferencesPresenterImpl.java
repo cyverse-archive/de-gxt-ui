@@ -1,8 +1,10 @@
 package org.iplantc.de.preferences.client.presenter;
 
+import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.userSettings.UserSetting;
+import org.iplantc.de.client.services.OauthServiceFacade;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -10,35 +12,46 @@ import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.preferences.client.PreferencesView;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
+import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author aramsey
  */
 public class PreferencesPresenterImpl implements PreferencesView.Presenter,
-                                                 PrefDlgRetryUserSessionClicked.PrefDlgRetryUserSessionClickedHandler {
+                                                 PrefDlgRetryUserSessionClicked.PrefDlgRetryUserSessionClickedHandler,
+                                                 ResetHpcTokenClicked.ResetHpcTokenClickedHandler {
 
 
     private final PreferencesView view;
     private final UserSessionServiceFacade serviceFacade;
+    private final OauthServiceFacade oauthServiceFacade;
     private final PreferencesView.PreferencesViewAppearance appearance;
     DesktopView.Presenter desktopPresenter;
     UserSettings userSettings;
     @Inject IplantAnnouncer announcer;
+    private final DEClientConstants constants;
 
     @Inject
     public PreferencesPresenterImpl(PreferencesView view,
                                     UserSessionServiceFacade serviceFacade,
-                                    PreferencesView.PreferencesViewAppearance appearance) {
+                                    OauthServiceFacade oauthServiceFacade,
+                                    PreferencesView.PreferencesViewAppearance appearance,
+                                    DEClientConstants constants) {
         this.view = view;
         this.serviceFacade = serviceFacade;
+        this.oauthServiceFacade = oauthServiceFacade;
         this.appearance = appearance;
+        this.constants = constants;
 
         this.view.addPrefDlgRetryUserSessionClickedHandlers(this);
+        this.view.addResetHpcTokenClickedHandlers(this);
     }
 
     @Override
@@ -112,5 +125,38 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
     @Override
     public void setViewDebugId(String baseId) {
         view.asWidget().ensureDebugId(baseId);
+    }
+
+    @Override
+    public void onResetHpcClicked(ResetHpcTokenClicked event) {
+        oauthServiceFacade.deleteHpcToken(new AsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.hpcResetFailure()));
+            }
+
+            @Override
+            public void onSuccess(Void result) {
+                redirectForOAuth();
+
+            }
+        });
+    }
+
+    /**
+     * Redirects users to OAuth page
+     */
+    void redirectForOAuth() {
+        oauthServiceFacade.getRedirectUris(new AsyncCallback<Map<String, String>>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.hpcResetFailure()));
+            }
+
+            @Override
+            public void onSuccess(Map<String, String> map) {
+                Window.Location.replace(map.get(constants.hpcSystemId()));
+            }
+        });
     }
 }
