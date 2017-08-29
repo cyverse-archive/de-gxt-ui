@@ -250,6 +250,17 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     }
 
     @Override
+    public void onSelectionChanged(SelectionChangedEvent<Privilege> selectionChangedEvent) {
+        Privilege memberSelection = membersGrid.getSelectionModel().getSelectedItem();
+        boolean isSelfMember = memberSelection != null && currentUserId.equals(memberSelection.getSubject().getId());
+        removeMember.setEnabled(memberSelection != null && !isSelfMember);
+
+        Privilege nonMemberSelection = nonMembersGrid.getSelectionModel().getSelectedItem();
+        boolean isSelfNonMember = nonMemberSelection != null && currentUserId.equals(nonMemberSelection.getSubject().getId());
+        removeNonMember.setEnabled(nonMemberSelection != null && !isSelfNonMember);
+    }
+
+    @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
 
@@ -278,17 +289,6 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     public HandlerRegistration addRemoveNonMemberPrivilegeSelectedHandler(
             RemoveNonMemberPrivilegeSelected.RemoveNonMemberPrivilegeSelectedHandler handler) {
         return addHandler(handler, RemoveNonMemberPrivilegeSelected.TYPE);
-    }
-
-    @Override
-    public void onSelectionChanged(SelectionChangedEvent<Privilege> selectionChangedEvent) {
-        Privilege memberSelection = membersGrid.getSelectionModel().getSelectedItem();
-        boolean isSelfMember = memberSelection.getSubject().getId().equals(currentUserId);
-        removeMember.setEnabled(memberSelection != null && !isSelfMember);
-
-        Privilege nonMemberSelection = nonMembersGrid.getSelectionModel().getSelectedItem();
-        boolean isSelfNonMember = nonMemberSelection.getSubject().getId().equals(currentUserId);
-        removeNonMember.setEnabled(nonMemberSelection != null && !isSelfNonMember);
     }
 
     @Override
