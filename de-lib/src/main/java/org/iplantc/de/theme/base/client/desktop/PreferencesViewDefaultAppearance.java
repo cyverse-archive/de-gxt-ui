@@ -193,4 +193,9 @@ public class PreferencesViewDefaultAppearance implements PreferencesView.Prefere
     public String hpcResetFailure() {
         return desktopMessages.hpcResetFailure();
     }
+
+    @Override
+    public String resetHpcHelp() {
+        return help.resetHpcHelp();
+    }
 }

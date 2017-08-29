@@ -31,4 +31,6 @@ public interface DesktopContextualHelpMessages extends Messages {
 
     @Key("notifyEmail")
     String notifyEmail();
+
+    String resetHpcHelp();
 }
