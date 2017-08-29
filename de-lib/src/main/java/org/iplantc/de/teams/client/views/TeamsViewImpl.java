@@ -3,14 +3,12 @@ package org.iplantc.de.teams.client.views;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.CreateTeamSelected;
-import org.iplantc.de.teams.client.events.EditTeamSelected;
-import org.iplantc.de.teams.client.events.LeaveTeamSelected;
 import org.iplantc.de.teams.client.events.TeamFilterSelectionChanged;
-import org.iplantc.de.teams.client.events.TeamInfoButtonSelected;
+import org.iplantc.de.teams.client.events.TeamNameSelected;
 import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
 import org.iplantc.de.teams.client.models.GroupProperties;
 import org.iplantc.de.teams.client.models.TeamsFilter;
-import org.iplantc.de.teams.client.views.cells.TeamInfoCell;
+import org.iplantc.de.teams.client.views.cells.TeamNameCell;
 import org.iplantc.de.teams.client.views.widgets.TeamSearchField;
 import org.iplantc.de.teams.shared.Teams;
 
@@ -36,13 +34,12 @@ import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.SimpleComboBox;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.grid.GridView;
-import com.sencha.gxt.widget.core.client.menu.Item;
-import com.sencha.gxt.widget.core.client.menu.MenuItem;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
 import java.util.List;
@@ -57,10 +54,7 @@ public class TeamsViewImpl extends Composite implements TeamsView {
 
     @UiField(provided = true) TeamsViewAppearance appearance;
     @UiField ToolBar toolbar;
-    @UiField TextButton teamsMenu;
-    @UiField MenuItem newTeamMI;
-    @UiField MenuItem manageTeamMI;
-    @UiField MenuItem leaveTeamMI;
+    @UiField TextButton createTeam;
     @UiField SimpleComboBox<TeamsFilter> teamFilter;
     @UiField TeamSearchField searchField;
     @UiField ColumnModel<Group> cm;
@@ -68,17 +62,17 @@ public class TeamsViewImpl extends Composite implements TeamsView {
     @UiField GridView<Group> gridView;
     @UiField ListStore<Group> listStore;
     private GroupProperties properties;
-    private TeamInfoCell infoCell;
+    private TeamNameCell nameCell;
     private PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Group>> loader;
 
     @Inject
     public TeamsViewImpl(TeamsViewAppearance appearance,
                          GroupProperties properties,
-                         TeamInfoCell infoCell,
+                         TeamNameCell nameCell,
                          @Assisted PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Group>> loader) {
         this.appearance = appearance;
         this.properties = properties;
-        this.infoCell = infoCell;
+        this.nameCell = nameCell;
         this.loader = loader;
 
         initWidget(uiBinder.createAndBindUi(this));
@@ -105,17 +99,13 @@ public class TeamsViewImpl extends Composite implements TeamsView {
     @UiFactory
     ColumnModel<Group> createColumnModel() {
         List<ColumnConfig<Group, ?>> list = Lists.newArrayList();
-        ColumnConfig<Group, Group> infoCol = new ColumnConfig<>(new IdentityValueProvider<Group>(""),
-                                                                appearance.infoColWidth());
-
-        ColumnConfig<Group, String> nameCol = new ColumnConfig<>(properties.extension(),
+        ColumnConfig<Group, Group> nameCol = new ColumnConfig<>(new IdentityValueProvider<>("extension"),
                                                                  appearance.nameColumnWidth(),
                                                                  appearance.nameColumnLabel());
         ColumnConfig<Group, String> descCol = new ColumnConfig<>(properties.description(),
                                                                  appearance.descColumnWidth(),
                                                                  appearance.descColumnLabel());
-        infoCol.setCell(infoCell);
-        list.add(infoCol);
+        nameCol.setCell(nameCell);
         list.add(nameCol);
         list.add(descCol);
         return new ColumnModel<>(list);
@@ -131,25 +121,9 @@ public class TeamsViewImpl extends Composite implements TeamsView {
         return new TeamSearchField(loader);
     }
 
-    @UiHandler("newTeamMI")
-    void onNewTeamSelected(SelectionEvent<Item> event) {
+    @UiHandler("createTeam")
+    void onNewTeamSelected(SelectEvent event) {
         fireEvent(new CreateTeamSelected());
-    }
-
-    @UiHandler("manageTeamMI")
-    void onManageTeamSelected(SelectionEvent<Item> event) {
-        Group selectedTeam = grid.getSelectionModel().getSelectedItem();
-        if (selectedTeam != null) {
-            fireEvent(new EditTeamSelected(selectedTeam));
-        }
-    }
-
-    @UiHandler("leaveTeamMI")
-    void onLeaveTeamSelected(SelectionEvent<Item> event) {
-        Group selectedTeam = grid.getSelectionModel().getSelectedItem();
-        if (selectedTeam != null) {
-            fireEvent(new LeaveTeamSelected(selectedTeam));
-        }
     }
 
     @Override
@@ -163,25 +137,21 @@ public class TeamsViewImpl extends Composite implements TeamsView {
 
         String toolbarId = baseID + Teams.Ids.TEAMS_TOOLBAR;
         toolbar.ensureDebugId(toolbarId);
-        String teamsMenuId = toolbarId + Teams.Ids.TEAMS_MENU;
-        teamsMenu.ensureDebugId(teamsMenuId);
-        newTeamMI.ensureDebugId(teamsMenuId + Teams.Ids.CREATE_TEAM);
-        manageTeamMI.ensureDebugId(teamsMenuId + Teams.Ids.MANAGE_TEAM);
-        leaveTeamMI.ensureDebugId(teamsMenuId + Teams.Ids.LEAVE_TEAM);
+        createTeam.ensureDebugId(toolbarId + Teams.Ids.CREATE_TEAM);
         teamFilter.asWidget().ensureDebugId(toolbarId + Teams.Ids.FILTER_TEAMS);
         searchField.asWidget().ensureDebugId(toolbarId + Teams.Ids.SEARCH_FIELD);
         grid.ensureDebugId(baseID + Teams.Ids.GRID);
 
         for (ColumnConfig<Group, ?> cc : cm.getColumns()) {
-            if (cc.getCell() instanceof TeamInfoCell) {
-                ((TeamInfoCell)cc.getCell()).setBaseDebugId(baseID);
+            if (cc.getCell() instanceof TeamNameCell) {
+                ((TeamNameCell)cc.getCell()).setBaseDebugId(baseID);
             }
         }
     }
 
     @Override
-    public HandlerRegistration addTeamInfoButtonSelectedHandler(TeamInfoButtonSelected.TeamInfoButtonSelectedHandler handler) {
-        return infoCell.addTeamInfoButtonSelectedHandler(handler);
+    public HandlerRegistration addTeamNameSelectedHandler(TeamNameSelected.TeamNameSelectedHandler handler) {
+        return nameCell.addTeamNameSelectedHandler(handler);
     }
 
     @Override
@@ -208,7 +178,10 @@ public class TeamsViewImpl extends Composite implements TeamsView {
 
     @Override
     public void removeTeam(Group team) {
-        listStore.remove(team);
+        Group found = listStore.findModel(team);
+        if (found != null) {
+            listStore.remove(found);
+        }
     }
 
     @Override
@@ -219,15 +192,5 @@ public class TeamsViewImpl extends Composite implements TeamsView {
     @Override
     public HandlerRegistration addCreateTeamSelectedHandler(CreateTeamSelected.CreateTeamSelectedHandler handler) {
         return addHandler(handler, CreateTeamSelected.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration addEditTeamSelectedHandler(EditTeamSelected.EditTeamSelectedHandler handler) {
-        return addHandler(handler, EditTeamSelected.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration addLeaveTeamSelectedHandler(LeaveTeamSelected.LeaveTeamSelectedHandler handler) {
-        return addHandler(handler, LeaveTeamSelected.TYPE);
     }
 }

@@ -53,13 +53,15 @@
 
     <ui:with field="appearance"
              type="org.iplantc.de.teams.client.TeamsView.TeamsViewAppearance"/>
-    <container:VerticalLayoutContainer scrollMode="AUTO">
+    <container:VerticalLayoutContainer ui:field="vlc"
+                                       scrollMode="AUTO">
             <container:child layoutData="{layoutData}">
                 <form:FieldLabel ui:field="teamNameLabel"
                                  text="{appearance.teamNameLabel}">
                     <form:widget>
                         <form:TextField ui:field="nameEditor"
-                                        allowBlank="false"/>
+                                        allowBlank="false"
+                                        enabled="false"/>
                     </form:widget>
                 </form:FieldLabel>
             </container:child>
@@ -67,7 +69,8 @@
                 <form:FieldLabel ui:field="teamDescLabel"
                                  text="{appearance.teamDescLabel}">
                     <form:widget>
-                        <form:TextArea ui:field="descriptionEditor"/>
+                        <form:TextArea ui:field="descriptionEditor"
+                                       enabled="false"/>
                     </form:widget>
                 </form:FieldLabel>
             </container:child>
@@ -83,11 +86,13 @@
                             <form:FieldLabel ui:field="memberOptOutExplanation"
                                              text="{appearance.memberOptOutExplanation}"
                                              labelSeparator=""
-                                             labelAlign="TOP"/>
+                                             labelAlign="TOP"
+                                             visible="false"/>
                         </container:child>
                         <container:child layoutData="{layoutData}">
                             <toolbar:ToolBar layoutData="{boxDataNoFlex}"
-                                             ui:field="memberToolbar">
+                                             ui:field="memberToolbar"
+                                             visible="false">
                                 <toolbar:child>
                                     <button:TextButton ui:field="removeMember"
                                                        text="{appearance.removeButtonText}"
@@ -115,7 +120,8 @@
                 <form:FieldSet layoutData="{layoutData}"
                                ui:field="nonMembersFieldSet"
                                heading="{appearance.nonMembersSectionHeader}"
-                               collapsible="false">
+                               collapsible="false"
+                               visible="false">
                     <container:VerticalLayoutContainer>
                         <container:child layoutData="{layoutData}">
                             <form:FieldLabel ui:field="nonMembersPrivilegeExplanation"
@@ -146,7 +152,7 @@
                                        store="{nonMembersListStore}"
                                        cm="{nonMembersCm}"
                                        view="{nonMembersGridView}"
-                                       height="150px"/>
+                                       height="{appearance.gridHeight}"/>
                         </container:child>
                     </container:VerticalLayoutContainer>
                 </form:FieldSet>

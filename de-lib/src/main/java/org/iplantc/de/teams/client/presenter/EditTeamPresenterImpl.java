@@ -15,22 +15,32 @@ import org.iplantc.de.client.models.groups.UpdatePrivilegeRequestList;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
+import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.AddPublicUserSelected;
+import org.iplantc.de.teams.client.events.LeaveTeamCompleted;
+import org.iplantc.de.teams.client.events.PrivilegeAndMembershipLoaded;
 import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.events.RemoveNonMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.events.TeamSaved;
+import org.iplantc.de.teams.client.views.dialogs.LeaveTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.SaveTeamProgressDialog;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
+
+import com.sencha.gxt.widget.core.client.Dialog;
+import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
 import java.util.List;
 import java.util.Map;
@@ -52,8 +62,12 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     HandlerManager handlerManager;
     Group originalGroup;
     @Inject UserInfo userInfo;
+    @Inject IplantAnnouncer announcer;
     @Inject AsyncProviderWrapper<SaveTeamProgressDialog> progressDialogProvider;
+    @Inject AsyncProviderWrapper<LeaveTeamDialog> leaveTeamDlgProvider;
 
+    boolean isAdmin;
+    boolean isMember;
     final String ALL_PUBLIC_USERS_NAME;
     final String ALL_PUBLIC_USERS_ID;
     final String GROUPER_ID;
@@ -88,8 +102,10 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
             mode = EditTeamView.MODE.CREATE;
             addPublicUser();
+            addSelfSubject();
+            view.showAdminMode(true);
         } else {
-            mode = EditTeamView.MODE.EDIT;
+            mode = EditTeamView.MODE.VIEW;
             getTeamPrivileges(group);
             originalGroup = copy(group);
         }
@@ -108,12 +124,14 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
             @Override
             public void onSuccess(List<Privilege> privileges) {
+                isAdmin = isAdmin(privileges);
+                mode = isAdmin ? EditTeamView.MODE.EDIT : EditTeamView.MODE.VIEW;
+                view.showAdminMode(isAdmin);
                 if (privileges != null && !privileges.isEmpty()) {
-                    List<Privilege> filteredPrivs = filterExtraPrivileges(privileges);
-                    renamePublicUser(filteredPrivs);
-                    getTeamMembers(group, filteredPrivs);
+                    getTeamMembers(group, privileges);
                 } else {
                     view.unmask();
+                    ensureHandlers().fireEvent(new PrivilegeAndMembershipLoaded(false, false));
                 }
             }
         });
@@ -129,8 +147,10 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
             @Override
             public void onSuccess(List<Subject> subjects) {
-                List<Subject> filteredSubjects = filterOutCurrentUser(subjects);
-                Map<Boolean, List<Privilege>> mapIsMemberPriv = getMapIsMemberPrivilege(privileges, filteredSubjects);
+                ensureHandlers().fireEvent(new PrivilegeAndMembershipLoaded(isAdmin, isMember(subjects)));
+                List<Privilege> filteredPrivs = filterExtraPrivileges(privileges);
+                renamePublicUser(filteredPrivs);
+                Map<Boolean, List<Privilege>> mapIsMemberPriv = getMapIsMemberPrivilege(filteredPrivs, subjects);
                 view.addMembers(mapIsMemberPriv.get(true));
                 view.addNonMembers(mapIsMemberPriv.get(false));
                 view.unmask();
@@ -140,6 +160,9 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
     @Override
     public void saveTeamSelected(IsHideable hideable) {
+        if (mode == EditTeamView.MODE.VIEW) {
+            hideable.hide();
+        }
         progressDialogProvider.get(new AsyncCallback<SaveTeamProgressDialog>() {
             @Override
             public void onFailure(Throwable throwable) {
@@ -229,10 +252,8 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
     void addMembersToTeam(Group group, IsHideable hideable) {
         progressDlg.updateProgress();
-        Subject self = createSelfSubject();
         List<Privilege> privileges = view.getMemberPrivileges();
         List<Subject> membersToAdd = getSubjectsFromPrivileges(privileges);
-        membersToAdd.add(self);
         serviceFacade.addMembersToTeam(group, membersToAdd, new AsyncCallback<List<UpdateMemberResult>>() {
             @Override
             public void onFailure(Throwable throwable) {
@@ -342,6 +363,54 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     }
 
     @Override
+    public void onLeaveButtonSelected(IsHideable hideable) {
+        leaveTeamDlgProvider.get(new AsyncCallback<LeaveTeamDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(LeaveTeamDialog dialog) {
+                dialog.show(originalGroup);
+                dialog.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
+                    @Override
+                    public void onDialogHide(DialogHideEvent event) {
+                        Dialog.PredefinedButton hideButton = event.getHideButton();
+                        if (Dialog.PredefinedButton.YES.equals(hideButton)) {
+                            leaveTeam(originalGroup, hideable);
+                        } else {
+                            dialog.hide();
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
+    void leaveTeam(Group team, IsHideable hideable) {
+        serviceFacade.leaveTeam(team, new AsyncCallback<List<UpdateMemberResult>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(List<UpdateMemberResult> result) {
+                if (result != null && !result.isEmpty()) {
+                    UpdateMemberResult updateMemberResult = result.get(0);
+                    if (updateMemberResult.isSuccess()) {
+                        announcer.schedule(new IplantAnnouncementConfig(appearance.leaveTeamSuccess(team)));
+                        hideable.hide();
+                        ensureHandlers().fireEvent(new LeaveTeamCompleted(team));
+                    } else {
+                        announcer.schedule(new ErrorAnnouncementConfig(appearance.leaveTeamFail()));
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
     public void setViewDebugId(String debugId) {
         view.asWidget().ensureDebugId(debugId);
     }
@@ -381,9 +450,6 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
      */
     List<Privilege> addMembersWithPublicPrivilege(List<Privilege> privileges, List<Subject> members) {
         List<Privilege> publicPrivs = getPublicUserPrivilege(privileges);
-        if (publicPrivs == null || publicPrivs.isEmpty()) {
-            return privileges;
-        }
 
         Set<String> privilegeIds = privileges.stream()
                                              .map(privilege -> privilege.getSubject().getId())
@@ -392,7 +458,12 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                                                    .filter(subject -> !privilegeIds.contains(subject.getId()))
                                                    .collect(Collectors.toList());
 
-        PrivilegeType publicPrivType = publicPrivs.get(0).getPrivilegeType();
+        PrivilegeType publicPrivType;
+        if (publicPrivs == null || publicPrivs.isEmpty()) {
+            publicPrivType = null;
+        } else {
+            publicPrivType = publicPrivs.get(0).getPrivilegeType();
+        }
 
         List<Privilege> allPrivs = Lists.newArrayList();
         List<Privilege> missingMemberPrivs = membersWithoutPrivs.stream().map(subject -> {
@@ -414,7 +485,11 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
             PrivilegeType type = privilege.getPrivilegeType();
             List<PrivilegeType> privilegeTypes = Lists.newArrayList();
             if (type != null) {
-                privilegeTypes.add(type);
+                if (type.equals(PrivilegeType.readOptin)) {
+                    privilegeTypes.addAll(Lists.newArrayList(PrivilegeType.read, PrivilegeType.optin));
+                } else {
+                    privilegeTypes.add(type);
+                }
             }
             update.setPrivileges(privilegeTypes);
             return update;
@@ -437,12 +512,61 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                          .collect(Collectors.toList());
     }
 
+    /**
+     * In summary:
+     * - Filter out Grouper's admin privileges
+     * - Filter out every member's optout privileges which are automatically given
+     * - Read and Optin privileges should be combined into the fake "readOptin" privilege
+     *
+     * @param privileges
+     * @return the filtered list of privileges
+     */
     List<Privilege> filterExtraPrivileges(List<Privilege> privileges) {
-        return privileges.stream()
-                         .filter(privilege -> (privilege.getPrivilegeType() != PrivilegeType.optout
-                                               && !isCurrentUserPrivilege(privilege))
-                                               && !isDeGrouperPrivilege(privilege))
-                         .collect(Collectors.toList());
+        Map<String, Subject> subjectMap = privileges.stream().collect(Collectors.toMap(privilege -> privilege.getSubject().getId(),
+                                                                                       Privilege::getSubject,
+                                                                                       (subj1, subj2) -> subj1));
+        Map<String, Set<PrivilegeType>> userIdToPrivTypes = privileges.stream()
+                                                                      .collect(Collectors.groupingBy(privilege -> privilege.getSubject().getId(),
+                                                                                                     Collectors.mapping(Privilege::getPrivilegeType,
+                                                                                                                        Collectors.toSet())));
+        userIdToPrivTypes.remove(GROUPER_ID);
+        Map<String, Set<PrivilegeType>> reducedPrivTypes = userIdToPrivTypes.entrySet()
+                                                                            .stream()
+                                                                            .collect(Collectors.toMap(
+                                                                                    entry -> entry.getKey(),
+                                                                                    entry -> reducePrivilegeTypes(
+                                                                                            entry.getValue())));
+        List<Privilege> finalPrivileges = Lists.newArrayList();
+        reducedPrivTypes.keySet().forEach(userId -> {
+            Set<PrivilegeType> privTypes = reducedPrivTypes.get(userId);
+            privTypes.forEach(privilegeType -> {
+                Privilege privilege = convertToPrivilege(subjectMap, userId, privilegeType);
+                finalPrivileges.add(privilege);
+            });
+        });
+
+        return finalPrivileges;
+    }
+
+    Privilege convertToPrivilege(Map<String, Subject> subjectMap,
+                                 String userId,
+                                 PrivilegeType privilegeType) {
+        Privilege privilege = factory.getPrivilege().as();
+        privilege.setPrivilegeType(privilegeType);
+        privilege.setSubject(subjectMap.get(userId));
+        return privilege;
+    }
+
+    Set<PrivilegeType> reducePrivilegeTypes(Set<PrivilegeType> types) {
+        List<PrivilegeType> subList = Lists.newArrayList(PrivilegeType.read, PrivilegeType.optin);
+        if (types.containsAll(subList)) {
+            types.add(PrivilegeType.readOptin);
+            types.removeAll(subList);
+        }
+        if (types.contains(PrivilegeType.optout)) {
+            types.remove(PrivilegeType.optout);
+        }
+        return types;
     }
 
     List<Subject> filterOutCurrentUser(List<Subject> subjects) {
@@ -456,6 +580,22 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                          .collect(Collectors.toList());
     }
 
+    boolean hasOptInPrivilege(List<Privilege> privileges) {
+        return privileges.stream()
+                         .filter(privilege -> PrivilegeType.optin.equals(privilege.getPrivilegeType()))
+                         .count() > 0;
+    }
+
+    boolean isAdmin(List<Privilege> privileges) {
+        if (privileges == null || privileges.isEmpty()) {
+            return false;
+        }
+        List<Privilege> adminPrivs = privileges.stream()
+                                               .filter(privilege -> isCurrentUserPrivilege(privilege) &&
+                                                                    privilege.getPrivilegeType().equals(PrivilegeType.admin))
+                                               .collect(Collectors.toList());
+        return adminPrivs != null && !adminPrivs.isEmpty();
+    }
 
     boolean hasPublicUser() {
         List<Privilege> nonMemberPrivs = view.getNonMemberPrivileges();
@@ -467,26 +607,44 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         return userInfo.getUsername().equals(subject.getId());
     }
 
+    boolean isMember(List<Subject> members) {
+        return members.stream()
+               .filter(member -> userInfo.getUsername().equals(member.getId()))
+               .count() > 0;
+    }
+
     boolean isCurrentUserPrivilege(Privilege privilege) {
         return userInfo.getUsername().equals(privilege.getSubject().getId());
     }
 
-    boolean isDeGrouperPrivilege(Privilege privilege) {
-        return GROUPER_ID.equals(privilege.getSubject().getId());
-    }
-
     Group copy(Group group) {
         Group copy = factory.getGroup().as();
+        copy.setId(group.getId());
         copy.setName(group.getName());
         copy.setDisplayName(group.getDisplayName());
         copy.setDescription(group.getDescription());
         return copy;
     }
 
-    Subject createSelfSubject() {
+    void addSelfSubject() {
+        Privilege privilege = factory.getPrivilege().as();
         Subject subject = factory.getSubject().as();
         subject.setId(userInfo.getUsername());
-        return subject;
+        String name = getSelfFullName();
+        subject.setName(name);
+
+        privilege.setPrivilegeType(PrivilegeType.admin);
+        privilege.setSubject(subject);
+
+        view.addMembers(Lists.newArrayList(privilege));
+    }
+
+    String getSelfFullName() {
+        String firstName = userInfo.getFirstName();
+        String lastName = userInfo.getLastName();
+        String name = Strings.isNullOrEmpty(firstName) ? "" : firstName + " ";
+        name += Strings.isNullOrEmpty(lastName) ? "" : lastName;
+        return name;
     }
 
     void addPublicUser() {
@@ -526,6 +684,16 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         return ensureHandlers().addHandler(TeamSaved.TYPE, handler);
     }
 
+    @Override
+    public HandlerRegistration addLeaveTeamCompletedHandler(LeaveTeamCompleted.LeaveTeamCompletedHandler handler) {
+        return ensureHandlers().addHandler(LeaveTeamCompleted.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addPrivilegeAndMembershipLoadedHandler(PrivilegeAndMembershipLoaded.PrivilegeAndMembershipLoadedHandler handler) {
+        return ensureHandlers().addHandler(PrivilegeAndMembershipLoaded.TYPE, handler);
+    }
+
     HandlerManager ensureHandlers() {
         return handlerManager == null ? handlerManager = createHandlerManager() : handlerManager;
     }
@@ -533,5 +701,4 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     HandlerManager createHandlerManager() {
         return new HandlerManager(this);
     }
-
 }

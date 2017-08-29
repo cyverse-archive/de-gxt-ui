@@ -100,7 +100,7 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
 
     @Override
     public int teamDetailsHeight() {
-        return 500;
+        return 350;
     }
 
     @Override
@@ -120,7 +120,7 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
 
     @Override
     public int editTeamWidth() {
-        return 600;
+        return 650;
     }
 
     @Override
@@ -189,12 +189,12 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
 
     @Override
     public int privilegeComboWidth() {
-        return 250;
+        return 300;
     }
 
     @Override
     public int privilegeColumnWidth() {
-        return 300;
+        return 350;
     }
 
     @Override
@@ -270,5 +270,36 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     @Override
     public String leaveTeamFail() {
         return displayStrings.leaveTeamFail();
+    }
+
+    @Override
+    public String gridHeight() {
+        return "150px";
+    }
+
+    @Override
+    public String deleteTeam() {
+        return displayStrings.deleteTeam();
+    }
+
+    @Override
+    public String joinTeam() {
+        return displayStrings.joinTeam();
+    }
+
+    @Override
+    public String requestToJoinTeam() {
+        return displayStrings.requestToJoinTeam();
+    }
+
+    @Override
+    public int editTeamAdjustedHeight(boolean isAdmin, boolean isMember) {
+        if (isAdmin) {
+            return 500;
+        }
+        if (isMember) {
+            return 350;
+        }
+        return 125;
     }
 }

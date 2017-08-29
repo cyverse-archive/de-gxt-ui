@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -21,11 +22,14 @@ import org.iplantc.de.client.models.groups.UpdatePrivilegeRequest;
 import org.iplantc.de.client.models.groups.UpdatePrivilegeRequestList;
 import org.iplantc.de.client.services.GroupServiceFacade;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
+import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
+import org.iplantc.de.teams.client.views.dialogs.LeaveTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.SaveTeamProgressDialog;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -33,6 +37,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.web.bindery.autobean.shared.AutoBean;
+
+import com.sencha.gxt.widget.core.client.Dialog;
+import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -82,12 +89,19 @@ public class EditTeamPresenterImplTest {
     @Mock List<String> stringIdsMock;
     @Mock Stream<String> stringStreamMock;
     @Mock Spliterator<Subject> subjectSpliteratorMock;
+    @Mock LeaveTeamDialog leaveDialogMock;
+    @Mock AsyncProviderWrapper<LeaveTeamDialog> leaveDlgProviderMock;
+    @Mock UpdateMemberResult updateMemberResultMock;
+    @Mock IplantAnnouncer announcerMock;
 
     @Captor ArgumentCaptor<AsyncCallback<Group>> groupCaptor;
     @Captor ArgumentCaptor<AsyncCallback<SaveTeamProgressDialog>> progressDialogCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<UpdateMemberResult>>> updateResultCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Privilege>>> privilegeListCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> subjectListCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<LeaveTeamDialog>> leaveDlgProviderCaptor;
+    @Captor ArgumentCaptor<DialogHideEvent.DialogHideHandler> dialogHideCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<List<UpdateMemberResult>>> updateMemberCaptor;
 
     EditTeamPresenterImpl uut;
 
@@ -124,11 +138,6 @@ public class EditTeamPresenterImplTest {
             }
 
             @Override
-            Subject createSelfSubject() {
-                return subjectMock;
-            }
-
-            @Override
             List<Subject> getSubjectsFromPrivileges(List<Privilege> privileges) {
                 return subjectListMock;
             }
@@ -146,6 +155,8 @@ public class EditTeamPresenterImplTest {
         uut.userInfo = userInfoMock;
         uut.progressDialogProvider = progressDialogProviderMock;
         uut.progressDlg = progressDlgMock;
+        uut.announcer = announcerMock;
+        uut.leaveTeamDlgProvider = leaveDlgProviderMock;
 
         verifyConstructor();
     }
@@ -158,15 +169,16 @@ public class EditTeamPresenterImplTest {
     }
 
     @Test
-    public void go_editMode() {
+    public void go_viewMode() {
         HasOneWidget widgetMock = mock(HasOneWidget.class);
         EditTeamPresenterImpl spy = spy(uut);
 
         /** CALL METHOD UNDER TEST **/
         spy.go(widgetMock, groupMock);
 
-        assertEquals(spy.mode, EditTeamView.MODE.EDIT);
+        assertEquals(spy.mode, EditTeamView.MODE.VIEW);
         verify(spy).getTeamPrivileges(eq(groupMock));
+        verify(spy).copy(eq(groupMock));
         verify(viewMock).edit(eq(groupMock));
     }
 
@@ -181,6 +193,8 @@ public class EditTeamPresenterImplTest {
         assertEquals(spy.mode, EditTeamView.MODE.CREATE);
         verify(viewMock).edit(eq(groupMock));
         verify(spy).addPublicUser();
+        verify(viewMock).showAdminMode(eq(true));
+        verify(viewMock).edit(eq(groupMock));
     }
 
     @Test
@@ -203,9 +217,15 @@ public class EditTeamPresenterImplTest {
             @Override
             void renamePublicUser(List<Privilege> filteredPrivs) {
             }
+
+            @Override
+            boolean isAdmin(List<Privilege> privileges) {
+                return true;
+            }
         };
 
         EditTeamPresenterImpl spy = spy(uut);
+        when(privilegeListMock.isEmpty()).thenReturn(false);
 
         /** CALL METHOD UNDER TEST **/
         spy.getTeamPrivileges(groupMock);
@@ -215,9 +235,9 @@ public class EditTeamPresenterImplTest {
 
         privilegeListCaptor.getValue().onSuccess(privilegeListMock);
 
-        verify(spy).filterExtraPrivileges(eq(privilegeListMock));
-        verify(spy).renamePublicUser(eq(filteredPrivListMock));
-        verify(spy).getTeamMembers(eq(groupMock), eq(filteredPrivListMock));
+        assertEquals(EditTeamView.MODE.EDIT, spy.mode);
+        verify(viewMock).showAdminMode(eq(true));
+        verify(spy).getTeamMembers(eq(groupMock), eq(privilegeListMock));
     }
 
     @Test
@@ -240,14 +260,42 @@ public class EditTeamPresenterImplTest {
                                                                          List<Subject> members) {
                 return mapIsMemberPrivMock;
             }
+
+            @Override
+            boolean hasOptInPrivilege(List<Privilege> privileges) {
+                return true;
+            }
+
+            @Override
+            boolean isMember(List<Subject> members) {
+                return true;
+            }
+
+            @Override
+            List<Privilege> filterExtraPrivileges(List<Privilege> privileges) {
+                return filteredPrivListMock;
+            }
+
+            @Override
+            List<Privilege> getPublicUserPrivilege(List<Privilege> privileges) {
+                return filteredPrivListMock;
+            }
+
+            @Override
+            void renamePublicUser(List<Privilege> filteredPrivs) {
+            }
         };
 
+        EditTeamPresenterImpl spy = spy(uut);
+
         /** CALL METHOD UNDER TEST **/
-        uut.getTeamMembers(groupMock, privilegeListMock);
+        spy.getTeamMembers(groupMock, privilegeListMock);
 
         verify(serviceFacadeMock).getTeamMembers(eq(groupMock), subjectListCaptor.capture());
 
         subjectListCaptor.getValue().onSuccess(subjectListMock);
+        verify(spy).filterExtraPrivileges(eq(privilegeListMock));
+        verify(spy).renamePublicUser(eq(filteredPrivListMock));
         verify(viewMock).addMembers(memberPrivsMock);
         verify(viewMock).addNonMembers(nonMemberPrivsMock);
         verify(viewMock).unmask();
@@ -342,7 +390,6 @@ public class EditTeamPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         uut.addMembersToTeam(groupMock, hideableMock);
 
-        verify(subjectListMock).add(subjectMock);
         verify(serviceFacadeMock).addMembersToTeam(eq(groupMock),
                                                    eq(subjectListMock),
                                                    updateResultCaptor.capture());
@@ -488,5 +535,50 @@ public class EditTeamPresenterImplTest {
 
         privilegeListCaptor.getValue().onSuccess(privilegeListMock);
         verify(viewMock).removeNonMemberPrivilege(eq(privilegeMock));
+    }
+
+
+    @Test
+    public void onLeaveTeamSelected() {
+        IsHideable hideableMock = mock(IsHideable.class);
+        DialogHideEvent hideEventMock = mock(DialogHideEvent.class);
+        when(hideEventMock.getHideButton()).thenReturn(Dialog.PredefinedButton.YES);
+
+        EditTeamPresenterImpl spy = spy(uut);
+        spy.originalGroup = groupMock;
+
+        /** CALL METHOD UNDER TEST **/
+        spy.onLeaveButtonSelected(hideableMock);
+
+        verify(leaveDlgProviderMock).get(leaveDlgProviderCaptor.capture());
+
+        leaveDlgProviderCaptor.getValue().onSuccess(leaveDialogMock);
+
+        verify(leaveDialogMock).show(eq(groupMock));
+        verify(leaveDialogMock).addDialogHideHandler(dialogHideCaptor.capture());
+
+        dialogHideCaptor.getValue().onDialogHide(hideEventMock);
+        verify(spy).leaveTeam(eq(groupMock), eq(hideableMock));
+    }
+
+    @Test
+    public void leaveTeam() {
+        when(updateMemberResultListMock.isEmpty()).thenReturn(false);
+        when(updateMemberResultListMock.get(0)).thenReturn(updateMemberResultMock);
+        when(updateMemberResultMock.isSuccess()).thenReturn(true);
+        when(appearanceMock.leaveTeamSuccess(any())).thenReturn("success");
+        when(appearanceMock.leaveTeamFail()).thenReturn("fail");
+        IsHideable hideableMock = mock(IsHideable.class);
+
+
+        /** CALL METHOD UNDER TEST **/
+        uut.leaveTeam(groupMock, hideableMock);
+
+        verify(serviceFacadeMock).leaveTeam(eq(groupMock), updateMemberCaptor.capture());
+
+        updateMemberCaptor.getValue().onSuccess(updateMemberResultListMock);
+
+        verify(announcerMock).schedule(isA(IplantAnnouncementConfig.class));
+        verify(hideableMock).hide();
     }
 }

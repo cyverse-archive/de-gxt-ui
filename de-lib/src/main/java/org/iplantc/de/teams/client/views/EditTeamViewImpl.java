@@ -31,8 +31,10 @@ import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
+import com.sencha.gxt.widget.core.client.form.FieldSet;
 import com.sencha.gxt.widget.core.client.form.TextArea;
 import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
@@ -56,14 +58,18 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     private static MyUiBinder uiBinder = GWT.create(EditTeamViewImpl.MyUiBinder.class);
     private final EditorDriver editorDriver = GWT.create(EditTeamViewImpl.EditorDriver.class);
 
+    @UiField VerticalLayoutContainer vlc;
     @UiField @Ignore FieldLabel teamNameLabel;
     @UiField @Ignore FieldLabel teamDescLabel;
     @UiField TextField nameEditor;
     @UiField TextArea descriptionEditor;
+    @UiField ToolBar memberToolbar;
     @UiField @Ignore TextButton removeMember;
+    @UiField @Ignore FieldLabel memberOptOutExplanation;
     @UiField Grid<Privilege> nonMembersGrid;
     @UiField(provided = true) ListStore<Privilege> nonMembersListStore;
     @UiField(provided = true) ColumnModel<Privilege> nonMembersCm;
+    @UiField FieldSet nonMembersFieldSet;
     @UiField ToolBar nonMemberToolbar;
     @UiField @Ignore TextButton removeNonMember;
     @UiField @Ignore TextButton addPublicUser;
@@ -131,8 +137,9 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     ComboBoxCell<PrivilegeType> createPrivilegeComboBox() {
         ListStore<PrivilegeType> comboListStore = new ListStore<>(PrivilegeType::getLabel);
         List<PrivilegeType> types = Lists.newArrayList(PrivilegeType.admin,
-                                                       PrivilegeType.optin,
+                                                       PrivilegeType.readOptin,
                                                        PrivilegeType.read,
+                                                       PrivilegeType.optin,
                                                        PrivilegeType.view);
         comboListStore.addAll(types);
         ComboBoxCell<PrivilegeType> combo = new ComboBoxCell<>(comboListStore, PrivilegeType::getLabel);
@@ -200,6 +207,19 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     public void setPublicUserButtonVisibility(boolean isVisible) {
         addPublicUser.setVisible(isVisible);
         nonMemberToolbar.forceLayout();
+    }
+
+    @Override
+    public void showAdminMode(boolean adminMode) {
+        if (adminMode) {
+            nonMembersFieldSet.show();
+            memberOptOutExplanation.show();
+            memberToolbar.show();
+
+            nameEditor.enable();
+            descriptionEditor.enable();
+        }
+        vlc.forceLayout();
     }
 
     @UiHandler("removeNonMember")

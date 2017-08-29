@@ -51,21 +51,9 @@
             <toolbar:ToolBar layoutData="{boxDataNoFlex}"
                              ui:field="toolbar">
                 <toolbar:child>
-                    <button:TextButton ui:field="teamsMenu"
-                                       text="{appearance.teamsMenu}">
-                        <button:menu>
-                            <menu:Menu>
-                                <menu:MenuItem ui:field="newTeamMI"
-                                               text="{appearance.createNewTeam}"
-                                               icon="{appearance.plusImage}"/>
-                                <menu:MenuItem ui:field="manageTeamMI"
-                                               text="{appearance.manageTeam}"
-                                               icon="{appearance.editIcon}"/>
-                                <menu:MenuItem ui:field="leaveTeamMI"
-                                               text="{appearance.leaveTeam}"/>
-                            </menu:Menu>
-                        </button:menu>
-                    </button:TextButton>
+                    <button:TextButton ui:field="createTeam"
+                                       text="{appearance.createNewTeam}"
+                                       icon="{appearance.plusImage}"/>
                 </toolbar:child>
                 <toolbar:child>
                     <form:SimpleComboBox ui:field="teamFilter"
