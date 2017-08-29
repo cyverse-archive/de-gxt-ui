@@ -291,4 +291,15 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     public String requestToJoinTeam() {
         return displayStrings.requestToJoinTeam();
     }
+
+    @Override
+    public int editTeamAdjustedHeight(boolean isAdmin, boolean isMember) {
+        if (isAdmin) {
+            return 500;
+        }
+        if (isMember) {
+            return 350;
+        }
+        return 125;
+    }
 }

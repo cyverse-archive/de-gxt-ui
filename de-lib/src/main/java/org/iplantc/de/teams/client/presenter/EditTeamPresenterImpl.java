@@ -67,6 +67,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     @Inject AsyncProviderWrapper<LeaveTeamDialog> leaveTeamDlgProvider;
 
     boolean isAdmin;
+    boolean isMember;
     final String ALL_PUBLIC_USERS_NAME;
     final String ALL_PUBLIC_USERS_ID;
     final String GROUPER_ID;
@@ -130,7 +131,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                     getTeamMembers(group, privileges);
                 } else {
                     view.unmask();
-                    ensureHandlers().fireEvent(new PrivilegeAndMembershipLoaded(false, false, false));
+                    ensureHandlers().fireEvent(new PrivilegeAndMembershipLoaded(false, false));
                 }
             }
         });
@@ -146,7 +147,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
             @Override
             public void onSuccess(List<Subject> subjects) {
-                ensureHandlers().fireEvent(new PrivilegeAndMembershipLoaded(isAdmin, hasOptInPrivilege(privileges), isMember(subjects)));
+                ensureHandlers().fireEvent(new PrivilegeAndMembershipLoaded(isAdmin, isMember(subjects)));
                 List<Privilege> filteredPrivs = filterExtraPrivileges(privileges);
                 renamePublicUser(filteredPrivs);
                 Map<Boolean, List<Privilege>> mapIsMemberPriv = getMapIsMemberPrivilege(filteredPrivs, subjects);

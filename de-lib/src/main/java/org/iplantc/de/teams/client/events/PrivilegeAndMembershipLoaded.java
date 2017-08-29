@@ -20,31 +20,20 @@ public class PrivilegeAndMembershipLoaded
             new Type<PrivilegeAndMembershipLoadedHandler>();
 
     private boolean isMember;
-    private boolean hasOptInPrivilege;
     private boolean isAdmin;
 
     public PrivilegeAndMembershipLoaded(boolean isAdmin,
-                                        boolean hasOptInPrivilege,
                                         boolean isMember) {
         this.isAdmin = isAdmin;
-        this.hasOptInPrivilege = hasOptInPrivilege;
         this.isMember = isMember;
     }
 
-    public boolean enableLeaveTeam() {
+    public boolean isMember() {
         return isMember;
     }
 
-    public boolean enableDeleteTeam() {
+    public boolean isAdmin() {
         return isAdmin;
-    }
-
-    public boolean enableJoinTeam() {
-        return !isMember && !isAdmin && hasOptInPrivilege;
-    }
-
-    public boolean enableRequestToJoinTeam() {
-        return !isMember && !isAdmin && !hasOptInPrivilege;
     }
 
     public Type<PrivilegeAndMembershipLoadedHandler> getAssociatedType() {

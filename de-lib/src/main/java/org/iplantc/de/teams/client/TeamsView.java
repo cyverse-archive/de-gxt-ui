@@ -128,6 +128,8 @@ public interface TeamsView extends IsWidget,
         String joinTeam();
 
         String requestToJoinTeam();
+
+        int editTeamAdjustedHeight(boolean isAdmin, boolean isMember);
     }
 
     /**
