@@ -94,6 +94,8 @@ public class PreferencesDialog extends IPlantDialog implements DialogHideEvent.D
         c.add(new HTML(appearance.saveSessionHelp()), new HtmlData(".saveSessionHelp"));
         c.add(new HTML(appearance.defaultOutputFolder()), new HtmlData(".defaultOp"));
         c.add(new HTML(appearance.defaultOutputFolderHelp()), new HtmlData(".defaultOpHelp"));
+        c.add(new HTML(appearance.resetHpc()), new HtmlData(".resetHpc"));
+        c.add(new HTML(appearance.resetHpcHelp()),  new HtmlData(".resetHpcHelp"));
         return c.asWidget();
     }
 

@@ -78,6 +78,8 @@ public interface PreferencesView extends IsWidget,
         SafeHtml resetHpcPrompt();
 
         String hpcResetFailure();
+
+        String resetHpcHelp();
     }
 
     void userSessionSuccess();
