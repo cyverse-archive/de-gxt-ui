@@ -22,5 +22,6 @@ public interface Preferences {
         String DEFAULT_OUTPUT_FOLDER = ".defaultOutputFolder";
         String BROWSE_OUTPUT_FOLDER = ".browseButton";
         String DEFAULT_OUTPUT_FIELD = ".inputField";
+        String RESET_HPC = ".resetHpc";
     }
 }
