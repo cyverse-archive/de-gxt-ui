@@ -1,7 +1,5 @@
 package org.iplantc.de.client.models.viewer;
 
-import com.google.gwt.core.client.GWT;
-
 public enum InfoType {
 
     ACE("ace"),
@@ -80,7 +78,6 @@ public enum InfoType {
         try {
             return valueOf(typeString.toUpperCase().replaceAll("[-.+]", "_"));
         } catch (Exception e) {
-            GWT.log("Unable to find matching InfoType." + e.getMessage());
             return null;
         }
     }
