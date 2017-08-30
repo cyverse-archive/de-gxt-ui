@@ -64,9 +64,7 @@ public class ApproveJoinRequestDialog extends MessageBox implements IsHideable {
         ListStore<PrivilegeType> comboListStore = new ListStore<>(PrivilegeType::getLabel);
         List<PrivilegeType> types = Lists.newArrayList(PrivilegeType.admin,
                                                        PrivilegeType.readOptin,
-                                                       PrivilegeType.read,
-                                                       PrivilegeType.optin,
-                                                       PrivilegeType.view);
+                                                       PrivilegeType.read);
         comboListStore.addAll(types);
         ComboBoxCell<PrivilegeType> combo = new ComboBoxCell<>(comboListStore, PrivilegeType::getLabel);
         combo.setTriggerAction(ComboBoxCell.TriggerAction.ALL);
