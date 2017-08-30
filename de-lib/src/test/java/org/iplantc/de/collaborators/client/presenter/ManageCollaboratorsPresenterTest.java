@@ -148,7 +148,7 @@ public class ManageCollaboratorsPresenterTest {
             }
 
             @Override
-            Map<Boolean, List<Subject>> mapIsGroup(List<Subject> models) {
+            Map<Boolean, List<Subject>> mapIsCollabList(List<Subject> models) {
                 return mapIsGroupMock;
             }
 

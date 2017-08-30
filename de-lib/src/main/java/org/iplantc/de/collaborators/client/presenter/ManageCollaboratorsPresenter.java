@@ -211,7 +211,7 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         if (!userInfo.getUsername()
                      .equals(subject.getId())) {
             List<Subject> selectedSubjects = view.getSelectedSubjects();
-            List<Subject> selectedGroups = mapIsGroup(selectedSubjects).get(true);
+            List<Subject> selectedGroups = mapIsCollabList(selectedSubjects).get(true);
             if (selectedGroups != null && !selectedGroups.isEmpty()) {
                 addMemberToGroups(subject, selectedGroups);
             } else {
@@ -336,9 +336,9 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     @Override
     public void onRemoveCollaboratorSelected(RemoveCollaboratorSelected event) {
         List<Subject> models = event.getSubjects();
-        Map<Boolean, List<Subject>> mapIsGroup = mapIsGroup(models);
-        List<Subject> selectedGroups = mapIsGroup.get(true);
-        List<Subject> selectedUsers = mapIsGroup.get(false);
+        Map<Boolean, List<Subject>> mapIsCollabList = mapIsCollabList(models);
+        List<Subject> selectedGroups = mapIsCollabList.get(true);
+        List<Subject> selectedUsers = mapIsCollabList.get(false);
         if (selectedGroups != null && !selectedGroups.isEmpty()) {
             permissionsDlgProvider.get(new AsyncCallback<RetainPermissionsDialog>() {
                 @Override
@@ -430,9 +430,9 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
         return totalResults.stream().collect(Collectors.partitioningBy(UpdateMemberResult::isSuccess));
     }
 
-    Map<Boolean, List<Subject>> mapIsGroup(List<Subject> models) {
+    Map<Boolean, List<Subject>> mapIsCollabList(List<Subject> models) {
         return models.stream()
-                     .collect(Collectors.partitioningBy(subject -> Group.GROUP_IDENTIFIER.equals(subject.getSourceId())));
+                     .collect(Collectors.partitioningBy(Subject::isCollaboratorList));
     }
 
     /*
