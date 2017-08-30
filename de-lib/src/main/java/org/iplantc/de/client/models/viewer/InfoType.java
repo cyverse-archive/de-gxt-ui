@@ -75,8 +75,11 @@ public enum InfoType {
         if (typeString == null || typeString.isEmpty()) {
             return null;
         }
-
-        return valueOf(typeString.toUpperCase().replaceAll("[-.+]", "_"));
+        try {
+            return valueOf(typeString.toUpperCase().replaceAll("[-.+]", "_"));
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
