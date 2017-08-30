@@ -44,6 +44,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.data.shared.event.StoreAddEvent;
+import com.sencha.gxt.data.shared.event.StoreRemoveEvent;
 import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
@@ -56,7 +58,9 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                                               UserSearchResultSelected.UserSearchResultSelectedEventHandler,
                                               RemoveMemberPrivilegeSelected.RemoveMemberPrivilegeSelectedHandler,
                                               RemoveNonMemberPrivilegeSelected.RemoveNonMemberPrivilegeSelectedHandler,
-                                              AddPublicUserSelected.AddPublicUserSelectedHandler {
+                                              AddPublicUserSelected.AddPublicUserSelectedHandler,
+                                              StoreAddEvent.StoreAddHandler<Privilege>,
+                                              StoreRemoveEvent.StoreRemoveHandler<Privilege> {
 
     private EditTeamView view;
     private GroupServiceFacade serviceFacade;
@@ -97,6 +101,8 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         view.addRemoveMemberPrivilegeSelectedHandler(this);
         view.addRemoveNonMemberPrivilegeSelectedHandler(this);
         view.addAddPublicUserSelectedHandler(this);
+        view.addStoreAddHandler(this);
+        view.addStoreRemoveHandler(this);
     }
 
     @Override
@@ -319,7 +325,6 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
             }
         } else {
             view.addNonMembers(Lists.newArrayList(privilege));
-            view.setPublicUserButtonVisibility(!hasPublicUser());
         }
 
     }
@@ -361,7 +366,6 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         // No service calls required in CREATE mode, remove directly from store
         if (EditTeamView.MODE.CREATE == mode) {
             view.removeNonMemberPrivilege(privilege);
-            view.setPublicUserButtonVisibility(!hasPublicUser());
         } else {
             view.mask(appearance.loadingMask());
             removePrivilege(privilege, false);
@@ -389,7 +393,6 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                     view.removeMemberPrivilege(privilege);
                 } else {
                     view.removeNonMemberPrivilege(privilege);
-                    view.setPublicUserButtonVisibility(!hasPublicUser());
                 }
                 view.unmask();
             }
@@ -549,6 +552,16 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     @Override
     public void onAddPublicUserSelected(AddPublicUserSelected event) {
         addPublicUser();
+    }
+
+    @Override
+    public void onAdd(StoreAddEvent<Privilege> event) {
+        view.setPublicUserButtonVisibility(!hasPublicUser());
+    }
+
+    @Override
+    public void onRemove(StoreRemoveEvent<Privilege> event) {
+        view.setPublicUserButtonVisibility(!hasPublicUser());
     }
 
     public Map<Boolean,List<Privilege>> getMapIsMemberPrivilege(List<Privilege> privileges, List<Subject> members) {

@@ -32,6 +32,8 @@ import com.google.inject.Inject;
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
 import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.data.shared.ListStore;
+import com.sencha.gxt.data.shared.event.StoreAddEvent;
+import com.sencha.gxt.data.shared.event.StoreRemoveEvent;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
@@ -326,5 +328,15 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     @Override
     public HandlerRegistration addAddPublicUserSelectedHandler(AddPublicUserSelected.AddPublicUserSelectedHandler handler) {
         return addHandler(handler, AddPublicUserSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addStoreAddHandler(StoreAddEvent.StoreAddHandler<Privilege> handler) {
+        return nonMembersListStore.addStoreAddHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addStoreRemoveHandler(StoreRemoveEvent.StoreRemoveHandler<Privilege> handler) {
+        return nonMembersListStore.addStoreRemoveHandler(handler);
     }
 }
