@@ -223,6 +223,8 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         notifyShortCut.ensureDebugId(baseID + Preferences.Ids.NOTIFICATION_SC);
         closeShortCut.ensureDebugId(baseID + Preferences.Ids.CLOSE_SC);
 
+        hpcResetBtn.ensureDebugId(baseID + Preferences.Ids.RESET_HPC);
+
     }
 
     @UiHandler({"appsShortCut", "dataShortCut", "analysesShortCut", "notifyShortCut", "closeShortCut"})
