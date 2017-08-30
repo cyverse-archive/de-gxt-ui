@@ -46,6 +46,7 @@ import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class EditTeamViewImpl extends Composite implements EditTeamView,
@@ -56,6 +57,14 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     }
 
     interface MyUiBinder extends UiBinder<Widget, EditTeamViewImpl> {
+    }
+
+    class TeamMemberComparator implements Comparator<Subject> {
+
+        @Override
+        public int compare(Subject o1, Subject o2) {
+            return o1.getName().compareToIgnoreCase(o2.getName());
+        }
     }
 
     private static MyUiBinder uiBinder = GWT.create(EditTeamViewImpl.MyUiBinder.class);

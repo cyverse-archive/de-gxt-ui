@@ -42,12 +42,21 @@ import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.grid.GridView;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
  * @author aramsey
  */
 public class TeamsViewImpl extends Composite implements TeamsView {
+
+    class TeamNameComparator implements Comparator<Group> {
+
+        @Override
+        public int compare(Group o1, Group o2) {
+            return o1.getGroupShortName().compareToIgnoreCase(o2.getGroupShortName());
+        }
+    }
 
     interface MyUiBinder extends UiBinder<Widget, TeamsViewImpl> {}
     private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
@@ -109,6 +118,7 @@ public class TeamsViewImpl extends Composite implements TeamsView {
                                                                  appearance.descColumnWidth(),
                                                                  appearance.descColumnLabel());
         nameCol.setCell(nameCell);
+        nameCol.setComparator(new TeamNameComparator());
         list.add(nameCol);
         list.add(creatorCol);
         list.add(descCol);
