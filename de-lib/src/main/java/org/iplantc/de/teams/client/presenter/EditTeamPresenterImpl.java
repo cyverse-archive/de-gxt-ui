@@ -155,7 +155,8 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
             @Override
             public void onSuccess(List<Subject> subjects) {
-                ensureHandlers().fireEvent(new PrivilegeAndMembershipLoaded(isAdmin, isMember(subjects)));
+                boolean hasVisibleMembers = subjects != null && !subjects.isEmpty();
+                ensureHandlers().fireEvent(new PrivilegeAndMembershipLoaded(isAdmin, isMember(subjects), hasVisibleMembers));
                 List<Privilege> filteredPrivs = filterExtraPrivileges(privileges);
                 renamePublicUser(filteredPrivs);
                 Map<Boolean, List<Privilege>> mapIsMemberPriv = getMapIsMemberPrivilege(filteredPrivs, subjects);

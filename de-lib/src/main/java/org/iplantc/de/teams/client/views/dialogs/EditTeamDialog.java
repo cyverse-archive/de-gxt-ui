@@ -110,10 +110,11 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
     public void onPrivilegeAndMembershipLoaded(PrivilegeAndMembershipLoaded event) {
         boolean isAdmin = event.isAdmin();
         boolean isMember = event.isMember();
+        boolean hasVisibleMembers = event.hasVisibleMembers();
         deleteBtn.setVisible(isAdmin);
         leaveBtn.setVisible(isMember);
         requestToJoinBtn.setVisible(!isAdmin && !isMember);
-        setHeight(appearance.editTeamAdjustedHeight(isAdmin, isMember));
+        setHeight(appearance.editTeamAdjustedHeight(isAdmin, hasVisibleMembers));
         if (!isAdmin) {
             buttonBar.remove(getButton(PredefinedButton.OK));
         }
