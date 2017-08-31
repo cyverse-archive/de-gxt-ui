@@ -36,11 +36,12 @@ public class JoinTeamDialog extends IPlantDialog {
         getButton(PredefinedButton.OK).setText(appearance.sendRequestButton());
 
         VerticalLayoutContainer container = new VerticalLayoutContainer();
-
-        container.add(joinTeamText);
-        container.add(requestMessageLabel);
+        VerticalLayoutContainer.VerticalLayoutData layout = new VerticalLayoutContainer.VerticalLayoutData(1, 1);
 
         add(container);
+
+        container.add(joinTeamText);
+        container.add(requestMessageLabel, layout);
 
         ensureDebugId(Teams.Ids.JOIN_TEAM_DLG);
     }

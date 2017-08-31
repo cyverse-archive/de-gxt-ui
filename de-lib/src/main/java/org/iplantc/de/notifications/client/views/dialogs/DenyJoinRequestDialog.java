@@ -30,6 +30,7 @@ public class DenyJoinRequestDialog extends IPlantDialog {
 
     public void show(String requesterName, String teamName) {
         VerticalLayoutContainer container = new VerticalLayoutContainer();
+        VerticalLayoutContainer.VerticalLayoutData layout = new VerticalLayoutContainer.VerticalLayoutData(1, 1);
         FieldLabel denyFieldLabel = new FieldLabel();
         Label denyText = new Label(appearance.denyRequestMessage(requesterName, teamName));
         denyMessage = new TextArea();
@@ -37,7 +38,7 @@ public class DenyJoinRequestDialog extends IPlantDialog {
         denyFieldLabel.setText(appearance.denyRequestLabel(requesterName));
         denyFieldLabel.setWidget(denyMessage);
         container.add(denyText);
-        container.add(denyFieldLabel);
+        container.add(denyFieldLabel, layout);
 
         add(container);
 
