@@ -1,6 +1,7 @@
 package org.iplantc.de.theme.base.client.teams;
 
 import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.safehtml.shared.SafeHtml;
 
 /**
  * The interface for all the textual strings used in the Teams view
@@ -94,4 +95,6 @@ public interface TeamsDisplayStrings extends Messages {
     String getCreatorNamesFailed();
 
     String creatorColumnLabel();
+
+    SafeHtml editTeamHelpText();
 }

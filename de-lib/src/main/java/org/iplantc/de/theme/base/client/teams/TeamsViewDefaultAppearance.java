@@ -388,4 +388,9 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     public String creatorColumnLabel() {
         return displayStrings.creatorColumnLabel();
     }
+
+    @Override
+    public SafeHtml editTeamHelpText() {
+        return displayStrings.editTeamHelpText();
+    }
 }

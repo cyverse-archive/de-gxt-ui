@@ -165,6 +165,8 @@ public interface TeamsView extends IsWidget,
         int creatorColumnWidth();
 
         String creatorColumnLabel();
+
+        SafeHtml editTeamHelpText();
     }
 
     /**

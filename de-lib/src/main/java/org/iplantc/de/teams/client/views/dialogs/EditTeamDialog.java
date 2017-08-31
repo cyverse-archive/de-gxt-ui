@@ -12,6 +12,7 @@ import org.iplantc.de.teams.client.events.TeamSaved;
 import org.iplantc.de.teams.shared.Teams;
 
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
@@ -36,6 +37,7 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
     @Inject
     public EditTeamDialog(EditTeamView.Presenter presenter,
                           TeamsView.TeamsViewAppearance appearance) {
+        super(true);
         this.presenter = presenter;
         this.appearance = appearance;
 
@@ -46,6 +48,7 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
         setHideOnButtonClick(false);
         setButtons();
         setHandlers();
+        addHelp(new HTML(appearance.editTeamHelpText()));
     }
 
     public void show(Group group) {
