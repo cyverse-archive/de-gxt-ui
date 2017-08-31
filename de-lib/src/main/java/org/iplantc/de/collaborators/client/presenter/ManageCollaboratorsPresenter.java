@@ -482,6 +482,11 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     @Override
+    public ManageCollaboratorsView getView() {
+        return view;
+    }
+
+    @Override
     public void onAddGroupSelected(AddGroupSelected event) {
         groupDetailsDialog.get(new AsyncCallback<GroupDetailsDialog>() {
             @Override

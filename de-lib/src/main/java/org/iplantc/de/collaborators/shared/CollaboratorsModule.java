@@ -33,5 +33,7 @@ public interface CollaboratorsModule {
         String REMOVE_PERMS_BTN = ".removeBtn";
         String CANCEL_BTN = ".cancelBtn";
         String HELP_BTN = ".helpBtn";
+        String TEAMS_TAB = ".teamsTab";
+        String COLLABORATORS_TAB = ".collaboratorsTab";
     }
 }

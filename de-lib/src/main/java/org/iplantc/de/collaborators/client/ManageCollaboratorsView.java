@@ -177,6 +177,12 @@ public interface ManageCollaboratorsView extends IsWidget,
          * @return
          */
         List<Subject> getSelectedSubjects();
+
+        /**
+         * Returns the view
+         * @return
+         */
+        ManageCollaboratorsView getView();
     }
 
     /**

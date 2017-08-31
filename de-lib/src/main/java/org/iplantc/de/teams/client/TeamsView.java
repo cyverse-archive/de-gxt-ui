@@ -178,6 +178,12 @@ public interface TeamsView extends IsWidget,
          * Initialize the Team presenter to begin fetching teams
          */
         void go();
+
+        /**
+         * Returns the view
+         * @return
+         */
+        TeamsView getView();
     }
 
     /**
