@@ -67,6 +67,11 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
         super.onEnsureDebugId(baseID);
 
         presenter.setViewDebugId(Teams.Ids.EDIT_TEAM_DIALOG);
+        leaveBtn.asWidget().ensureDebugId(baseID + Teams.Ids.LEAVE_TEAM_BTN);
+        deleteBtn.asWidget().ensureDebugId(baseID + Teams.Ids.DELETE_TEAM_BTN);
+        requestToJoinBtn.asWidget().ensureDebugId(baseID + Teams.Ids.JOIN_TEAM_BTN);
+        getButton(PredefinedButton.OK).ensureDebugId(baseID + Teams.Ids.OK_BTN);
+        getButton(PredefinedButton.CANCEL).ensureDebugId(baseID + Teams.Ids.CANCEL_BTN);
     }
 
     void setButtons() {

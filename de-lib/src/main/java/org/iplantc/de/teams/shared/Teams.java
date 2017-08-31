@@ -37,5 +37,6 @@ public interface Teams {
         String JOIN_TEAM_DLG = "joinTeamDlg";
         String SEND_REQUEST_BTN = ".sendRequestBtn";
         String JOIN_REQUEST_MESSAGE = ".requestMessage";
+        String JOIN_TEAM_BTN = ".joinTeamBtn";
     }
 }
