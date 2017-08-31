@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.shared.Teams;
 
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
@@ -18,7 +19,7 @@ public class LeaveTeamDialog extends ConfirmMessageBox {
 
     @Inject
     public LeaveTeamDialog(TeamsView.TeamsViewAppearance appearance) {
-        super("", appearance.leaveTeamWarning());
+        super(SafeHtmlUtils.EMPTY_SAFE_HTML, appearance.leaveTeamWarning());
         this.appearance = appearance;
 
         setWidth(appearance.leaveTeamWidth());
