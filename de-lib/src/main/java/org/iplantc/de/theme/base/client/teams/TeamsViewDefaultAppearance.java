@@ -131,12 +131,15 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     }
 
     @Override
-    public String editTeamHeading(Group group) {
+    public String editTeamHeading(Group group, boolean isAdmin) {
         if (group == null) {
             return displayStrings.createNewTeam();
-        } else {
+        }
+        if (isAdmin) {
             return displayStrings.editTeamHeader(group.getSubjectDisplayName());
         }
+
+        return displayStrings.detailsHeading(group.getSubjectDisplayName());
     }
 
     @Override

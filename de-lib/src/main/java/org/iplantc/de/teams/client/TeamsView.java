@@ -66,7 +66,7 @@ public interface TeamsView extends IsWidget,
 
         int editTeamHeight();
 
-        String editTeamHeading(Group group);
+        String editTeamHeading(Group group, boolean isAdmin);
 
         ImageResource plusImage();
 

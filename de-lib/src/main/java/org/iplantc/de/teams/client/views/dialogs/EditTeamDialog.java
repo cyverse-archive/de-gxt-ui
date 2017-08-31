@@ -33,6 +33,7 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
     private TextButton leaveBtn;
     private TextButton deleteBtn;
     private TextButton requestToJoinBtn;
+    private Group team;
 
     @Inject
     public EditTeamDialog(EditTeamView.Presenter presenter,
@@ -51,10 +52,11 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
         addHelp(new HTML(appearance.editTeamHelpText()));
     }
 
-    public void show(Group group) {
-        presenter.go(this, group);
+    public void show(Group team) {
+        this.team = team;
+        presenter.go(this, team);
 
-        setHeading(appearance.editTeamHeading(group));
+        setHeading(appearance.editTeamHeading(team, false));
         super.show();
 
         ensureDebugId(Teams.Ids.EDIT_TEAM_DIALOG);
@@ -119,6 +121,7 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
         boolean isAdmin = event.isAdmin();
         boolean isMember = event.isMember();
         boolean hasVisibleMembers = event.hasVisibleMembers();
+        setHeading(appearance.editTeamHeading(team, isAdmin));
         deleteBtn.setVisible(isAdmin);
         leaveBtn.setVisible(isMember);
         requestToJoinBtn.setVisible(!isAdmin && !isMember);
