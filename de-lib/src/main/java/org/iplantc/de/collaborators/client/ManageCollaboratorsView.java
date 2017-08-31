@@ -140,9 +140,8 @@ public interface ManageCollaboratorsView extends IsWidget,
         /**
          * Method used to initialize the presenter
          * @param container The UI container the presenter will put its view into
-         * @param mode The mode (manage or select) to put the ManageCollaboratorsView into
          */
-        void go (HasOneWidget container, MODE mode);
+        void go (HasOneWidget container);
 
         /**
          * Add collaborators to the view

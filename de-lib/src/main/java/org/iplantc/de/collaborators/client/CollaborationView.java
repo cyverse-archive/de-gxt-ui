@@ -1,6 +1,7 @@
 package org.iplantc.de.collaborators.client;
 
 import org.iplantc.de.client.models.IsMaskable;
+import org.iplantc.de.commons.client.views.window.configs.CollaborationWindowConfig;
 import org.iplantc.de.commons.client.widgets.DETabPanel;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -33,8 +34,9 @@ public interface CollaborationView extends IsWidget,
         /**
          * Initialize the sub-view presenters and add the overall view to the container
          * @param container
+         * @param windowConfig
          */
-        void go(HasOneWidget container);
+        void go(HasOneWidget container, CollaborationWindowConfig windowConfig);
 
         /**
          * Set the debug id for the view

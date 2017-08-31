@@ -70,7 +70,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     private CollaboratorDNDHandler dndHandler;
     @UiField HorizontalLayoutContainer searchPanel;
     @UiField ToolBar toolbar;
-    private DETabPanel tabPanel;
     @UiField FramedPanel collaboratorListPnl;
 
     @UiField(provided = true) ManageCollaboratorsView.Appearance appearance;
@@ -81,8 +80,7 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     private String baseID;
 
     @Inject
-    public ManageCollaboratorsViewImpl(@Assisted final MODE mode,
-                                       ManageCollaboratorsView.Appearance appearance,
+    public ManageCollaboratorsViewImpl(ManageCollaboratorsView.Appearance appearance,
                                        UserSearchField searchField,
                                        @Assisted CollaboratorDNDHandler dndHandler) {
         this.appearance = appearance;
@@ -101,7 +99,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
             }
         });
         init();
-        setMode(mode);
     }
 
     @Override

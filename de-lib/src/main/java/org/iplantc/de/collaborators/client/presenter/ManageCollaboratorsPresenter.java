@@ -158,7 +158,6 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     @Inject EventBus eventBus;
     @Inject IplantAnnouncer announcer;
     @Inject UserInfo userInfo;
-    private ManageCollaboratorsViewFactory factory;
     private GroupAutoBeanFactory groupFactory;
     private GroupServiceFacade groupServiceFacade;
     private CollaboratorsServiceFacade collabServiceFacade;
@@ -175,11 +174,13 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                                         GroupServiceFacade groupServiceFacade,
                                         CollaboratorsServiceFacade collabServiceFacade,
                                         ManageCollaboratorsView.Appearance groupAppearance) {
-        this.factory = factory;
         this.groupFactory = groupFactory;
         this.groupServiceFacade = groupServiceFacade;
         this.collabServiceFacade = collabServiceFacade;
         this.groupAppearance = groupAppearance;
+        this.view = factory.create(getCollaboratorDNDHandler());
+
+        addEventHandlers();
     }
 
     void addEventHandlers() {
@@ -197,12 +198,13 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
      */
     @Override
     public void go(HasOneWidget container, ManageCollaboratorsView.MODE mode) {
-        CollaboratorDNDHandler dndHandler = getCollaboratorDNDHandler();
-        this.view = factory.create(mode, dndHandler);
+        view.setMode(mode);
         loadCurrentCollaborators();
         getGroups();
-        addEventHandlers();
-        container.setWidget(view.asWidget());
+
+        if (container != null) {
+            container.setWidget(view.asWidget());
+        }
     }
 
     @Override
