@@ -28,7 +28,7 @@ public class CollaborationPresenterImpl implements CollaborationView.Presenter {
 
     @Override
     public void go(HasOneWidget container, CollaborationWindowConfig windowConfig) {
-        collabPresenter.go(null, ManageCollaboratorsView.MODE.MANAGE);
+        collabPresenter.go();
         teamPresenter.go();
 
         container.setWidget(view);

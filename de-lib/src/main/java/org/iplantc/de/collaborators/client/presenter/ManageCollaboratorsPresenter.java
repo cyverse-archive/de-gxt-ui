@@ -37,7 +37,6 @@ import com.google.common.collect.Lists;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.Dialog;
@@ -197,14 +196,9 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
      * org.iplantc.de.commons.client.presenter.Presenter#go(com.google.gwt.user.client.ui.HasOneWidget )
      */
     @Override
-    public void go(HasOneWidget container, ManageCollaboratorsView.MODE mode) {
-        view.setMode(mode);
+    public void go() {
         loadCurrentCollaborators();
         getGroups();
-
-        if (container != null) {
-            container.setWidget(view.asWidget());
-        }
     }
 
     @Override
@@ -466,16 +460,6 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
 
         });
 
-    }
-
-    @Override
-    public void setCurrentMode(ManageCollaboratorsView.MODE m) {
-        view.setMode(m);
-    }
-
-    @Override
-    public ManageCollaboratorsView.MODE getCurrentMode() {
-        return view.getMode();
     }
 
     @Override

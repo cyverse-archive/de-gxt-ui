@@ -6,7 +6,6 @@ import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
-import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.client.views.dialogs.ManageCollaboratorsDialog;
@@ -137,7 +136,7 @@ public class SharingPermissionsPanel extends Composite
             @Override
             public void onSuccess(ManageCollaboratorsDialog result) {
                 result.setModal(true);
-                result.show(ManageCollaboratorsView.MODE.SELECT);
+                result.show();
                 result.addOkButtonSelectHandler(new SelectHandler() {
 
                     @Override
