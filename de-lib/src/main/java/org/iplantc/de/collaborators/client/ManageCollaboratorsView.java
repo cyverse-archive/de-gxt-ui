@@ -129,6 +129,10 @@ public interface ManageCollaboratorsView extends IsWidget,
         String removePermissionsBtn();
 
         int retainPermissionsWidth();
+
+        int chooseCollaboratorsWidth();
+
+        int chooseCollaboratorsHeight();
     }
 
     /**
