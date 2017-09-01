@@ -12,7 +12,7 @@ import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.client.views.CollaborationViewImpl;
 import org.iplantc.de.collaborators.client.views.GroupDetailsViewImpl;
 import org.iplantc.de.collaborators.client.views.ManageCollaboratorsViewImpl;
-import org.iplantc.de.collaborators.client.views.dialogs.ManageCollaboratorsDialog;
+import org.iplantc.de.collaborators.client.views.dialogs.ChooseCollaboratorsDialog;
 
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
@@ -32,7 +32,7 @@ public class CollaboratorsGinModule extends AbstractGinModule {
                                                         ManageCollaboratorsViewImpl.class)
                                              .build(ManageCollaboratorsViewFactory.class));
         bind(ManageCollaboratorsView.Presenter.class).to(ManageCollaboratorsPresenter.class);
-        bind(ManageCollaboratorsDialog.class);
+        bind(ChooseCollaboratorsDialog.class);
         bind(GroupServiceFacade.class).to(GroupServiceFacadeImpl.class);
         bind(GroupDetailsView.class).to(GroupDetailsViewImpl.class);
         bind(GroupDetailsView.Presenter.class).to(GroupDetailsPresenterImpl.class);

@@ -18,7 +18,7 @@ import javax.inject.Inject;
  * @author sriram, jstroot
  * 
  */
-public class ManageCollaboratorsDialog extends IPlantDialog {
+public class ChooseCollaboratorsDialog extends IPlantDialog {
 
 
     private final CollaborationView.Presenter presenter;
@@ -26,7 +26,7 @@ public class ManageCollaboratorsDialog extends IPlantDialog {
 
 
     @Inject
-    ManageCollaboratorsDialog(final ManageCollaboratorsView.Appearance appearance,
+    ChooseCollaboratorsDialog(final ManageCollaboratorsView.Appearance appearance,
                               CollaborationView.Presenter presenter) {
         super(true);
         this.appearance = appearance;
