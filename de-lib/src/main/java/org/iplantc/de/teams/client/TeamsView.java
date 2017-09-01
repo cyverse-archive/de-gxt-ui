@@ -184,6 +184,18 @@ public interface TeamsView extends IsWidget,
          * @return
          */
         TeamsView getView();
+
+        /**
+         * Show the check box column in the teams grid, so that users can select multiple
+         * teams at once
+         */
+        void showCheckBoxes();
+
+        /**
+         * Return the list of selected teams from the view
+         * @return
+         */
+        List<Group> getSelectedTeams();
     }
 
     /**
@@ -214,4 +226,16 @@ public interface TeamsView extends IsWidget,
      * @param team
      */
     void removeTeam(Group team);
+
+    /**
+     * Show the check box column in the grid, so that users can select multiple
+     * teams at once
+     */
+    void showCheckBoxes();
+
+    /**
+     * Return the list of selected teams
+     * @return
+     */
+    List<Group> getSelectedTeams();
 }

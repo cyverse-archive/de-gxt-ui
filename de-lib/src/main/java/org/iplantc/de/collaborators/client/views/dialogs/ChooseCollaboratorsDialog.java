@@ -36,7 +36,7 @@ public class ChooseCollaboratorsDialog extends IPlantDialog {
 
     @Override
     public void show() {
-        presenter.go(this, null);
+        presenter.go(this);
 
         super.show();
         ensureDebugId(CollaboratorsModule.Ids.DIALOG);
@@ -70,6 +70,6 @@ public class ChooseCollaboratorsDialog extends IPlantDialog {
     }
 
     public List<Subject> getSelectedSubjects() {
-        return null;
+        return presenter.getSelectedCollaborators();
     }
 }

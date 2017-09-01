@@ -1,11 +1,14 @@
 package org.iplantc.de.collaborators.client;
 
 import org.iplantc.de.client.models.IsMaskable;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.commons.client.views.window.configs.CollaborationWindowConfig;
 import org.iplantc.de.commons.client.widgets.DETabPanel;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+
+import java.util.List;
 
 /**
  * The primary view within the Collaboration window.  It is a composite of all other views within
@@ -32,7 +35,15 @@ public interface CollaborationView extends IsWidget,
     interface Presenter {
 
         /**
-         * Initialize the sub-view presenters and add the overall view to the container
+         * Initialize the sub-view presenters and add the overall view to the container,
+         * most likely for a dialog
+         * @param container
+         */
+        void go(HasOneWidget container);
+
+        /**
+         * Initialize the sub-view presenters and add the overall view to the container,
+         * most likely for the Collaboration window
          * @param container
          * @param windowConfig
          */
@@ -43,6 +54,12 @@ public interface CollaborationView extends IsWidget,
          * @param baseId
          */
         void setViewDebugId(String baseId);
+
+        /**
+         * Return all users and teams selected in the Collaboration View
+         * @return
+         */
+        List<Subject> getSelectedCollaborators();
     }
 
     /**
