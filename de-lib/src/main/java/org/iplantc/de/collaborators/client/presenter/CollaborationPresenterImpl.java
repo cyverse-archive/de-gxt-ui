@@ -60,16 +60,24 @@ public class CollaborationPresenterImpl implements CollaborationView.Presenter {
 
     @Override
     public List<Subject> getSelectedCollaborators() {
-        List<Subject> allCollaborators = Lists.newArrayList();
+        List<Subject> allCollaborators = createEmptySubjectList();
 
         List<Subject> collaborators = collabPresenter.getSelectedSubjects();
         List<Group> teams = teamPresenter.getSelectedTeams();
-        List<Subject> teamsToSubjects = teams.stream()
-                                             .map(team -> factory.convertGroupToSubject(team))
-                                             .collect(Collectors.toList());
+        List<Subject> teamsToSubjects = convertTeamsToSubjects(teams);
 
         allCollaborators.addAll(collaborators);
         allCollaborators.addAll(teamsToSubjects);
         return allCollaborators;
+    }
+
+    List<Subject> createEmptySubjectList() {
+        return Lists.newArrayList();
+    }
+
+    List<Subject> convertTeamsToSubjects(List<Group> teams) {
+        return teams.stream()
+                    .map(team -> factory.convertGroupToSubject(team))
+                    .collect(Collectors.toList());
     }
 }
