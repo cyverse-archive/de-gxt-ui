@@ -172,6 +172,12 @@ public interface ManageCollaboratorsView extends IsWidget,
          * @return
          */
         ManageCollaboratorsView getView();
+
+        /**
+         * Returns the tab type that identifies this view in the Collaboration window
+         * @return
+         */
+        CollaborationView.TAB getTabType();
     }
 
     /**

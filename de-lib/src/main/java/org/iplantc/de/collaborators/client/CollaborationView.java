@@ -17,6 +17,11 @@ import java.util.List;
 public interface CollaborationView extends IsWidget,
                                            IsMaskable {
 
+    enum TAB {
+        Collaborators,
+        Teams
+    }
+
     /**
      * An appearance class that handles only the strings necessary for the CollaborationView.
      * Any sub-views have their own appearance classes.
@@ -36,7 +41,7 @@ public interface CollaborationView extends IsWidget,
 
         /**
          * Initialize the sub-view presenters and add the overall view to the container,
-         * most likely for a dialog
+         * most likely for a dialog, specifically the ChooseCollaboratorsDialog
          * @param container
          */
         void go(HasOneWidget container);
@@ -67,5 +72,11 @@ public interface CollaborationView extends IsWidget,
      * @return
      */
     DETabPanel getCollaborationTabPanel();
+
+    /**
+     * Set which tab in the view should be active/selected
+     * @param selectedTab
+     */
+    void setActiveTab(TAB selectedTab);
 
 }

@@ -44,6 +44,9 @@ public class CollaborationPresenterImpl implements CollaborationView.Presenter {
 
     @Override
     public void go(HasOneWidget container, CollaborationWindowConfig windowConfig) {
+        if (windowConfig != null) {
+            view.setActiveTab(windowConfig.getSelectedTab());
+        }
         collabPresenter.go();
         teamPresenter.go();
 

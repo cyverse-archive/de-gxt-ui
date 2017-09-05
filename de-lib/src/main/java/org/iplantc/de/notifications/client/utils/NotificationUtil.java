@@ -21,6 +21,7 @@ import org.iplantc.de.client.models.notifications.payload.PayloadTeam;
 import org.iplantc.de.client.models.requestStatus.RequestHistory;
 import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.collaborators.client.CollaborationView;
 import org.iplantc.de.commons.client.views.window.configs.AnalysisWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.CollaborationWindowConfig;
@@ -260,6 +261,7 @@ public class NotificationUtil {
                         });
                     } else {
                         CollaborationWindowConfig window = ConfigFactory.collaborationWindowConfig();
+                        window.setSelectedTab(CollaborationView.TAB.Teams);
                         eventBus.fireEvent(new WindowShowRequestEvent(window, true));
                     }
                     break;

@@ -44,6 +44,14 @@ public class CollaborationViewImpl extends Composite implements CollaborationVie
     }
 
     @Override
+    public void setActiveTab(TAB selectedTab) {
+        if (selectedTab != null) {
+            Widget item = collaborationTabs.findItem(selectedTab.name(), true);
+            collaborationTabs.setActiveWidget(item);
+        }
+    }
+
+    @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
 
