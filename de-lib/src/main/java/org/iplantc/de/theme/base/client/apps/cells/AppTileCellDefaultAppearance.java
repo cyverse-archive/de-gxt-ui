@@ -1,7 +1,7 @@
 package org.iplantc.de.theme.base.client.apps.cells;
 
-import com.google.gwt.safehtml.shared.SafeUri;
 import org.iplantc.de.apps.client.views.list.cells.AppCommentCell;
+import org.iplantc.de.apps.client.views.list.cells.AppDotMenuCell;
 import org.iplantc.de.apps.client.views.list.cells.AppFavoriteCell;
 import org.iplantc.de.apps.client.views.list.cells.AppInfoCell;
 import org.iplantc.de.apps.client.views.list.cells.AppIntegratorCell;
@@ -18,6 +18,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeUri;
 
 /**
  * @author jstroot
@@ -70,6 +71,8 @@ public class AppTileCellDefaultAppearance implements AppTileCell.AppTileCellAppe
             sb.append(templates.mod(style.integratorMod()));
         } else if (hasCell instanceof AppRatingCell) {
             sb.append(templates.mod(style.ratingMod()));
+        } else if (hasCell instanceof AppDotMenuCell) {
+            sb.append(templates.mod(style.dotMenu()));
         }
         hasCell.getCell().render(context, hasCell.getValue(value), sb);
         sb.appendHtmlConstant("</div>");

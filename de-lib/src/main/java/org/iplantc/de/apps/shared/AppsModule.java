@@ -52,6 +52,7 @@ public interface AppsModule {
         String SHARING_VIEW = ".view";
         String SHARING_PERMS = ".permPanel";
         String MANAGE_TOOLS_BTN = ".manageTools";
+        String APP_DOT_MENU = ".dotMenu";
     }
 }
 

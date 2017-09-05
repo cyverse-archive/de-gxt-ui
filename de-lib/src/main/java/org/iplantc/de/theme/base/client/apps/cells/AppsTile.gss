@@ -104,3 +104,17 @@
     left: CENTER_MARGIN;
     bottom: 4px;
 }
+
+.dotMenu {
+    position: absolute;
+    right: 5px;
+    top: 10px;
+}
+
+.executionSystem {
+    position: absolute;
+    width:CARD_WIDTH;
+    bottom: 10px;
+    left: 10px;
+    text-align: center;
+}

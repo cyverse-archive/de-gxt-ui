@@ -27,6 +27,8 @@ public interface TileListResources extends ClientBundle {
         String ratingMod();
 
         String statusMod();
+
+        String dotMenu();
     }
 
     @Source("org/iplantc/de/theme/base/client/apps/cells/AppsTile.gss")
