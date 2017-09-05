@@ -266,7 +266,6 @@ public class SharingPermissionsPanel extends Composite
         originalList = new FastMap<>();
 
         listStore.clear();
-        setExplainPanelVisibility(false);
 
         for (String userName : sharingMap.keySet()) {
             List<Sharing> sharingList = sharingMap.get(userName);
@@ -281,12 +280,13 @@ public class SharingPermissionsPanel extends Composite
 
                 // Add a dummy display share to the grid.
                 Sharing displayShare = sharingList.get(0).copy();
-                if (hasVaryingPermissions(sharingList)) {
+                boolean permsVary = hasVaryingPermissions(sharingList);
+                if (permsVary) {
                     // Set the display permission to "varies" if this user's share list has varying
                     // permissions.
                     displayShare.setDisplayPermission(PermissionValue.varies);
-                    explainPanel.setVisible(true);
                 }
+                setExplainPanelVisibility(permsVary);
 
                 listStore.add(displayShare);
             }
@@ -335,6 +335,7 @@ public class SharingPermissionsPanel extends Composite
     @Override
     public void setExplainPanelVisibility(boolean visible) {
         explainPanel.setVisible(visible);
+        toolbar.forceLayout();
     }
 
     private ColumnConfig<Sharing, PermissionValue> buildPermissionColumn(DataSharingProperties props) {
@@ -489,9 +490,7 @@ public class SharingPermissionsPanel extends Composite
                 }
             }
 
-            if (!permsVary) {
-                setExplainPanelVisibility(false);
-            }
+            setExplainPanelVisibility(permsVary);
         }
     }
 
