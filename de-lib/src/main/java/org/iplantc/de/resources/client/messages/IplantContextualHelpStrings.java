@@ -11,7 +11,16 @@ public interface IplantContextualHelpStrings extends com.google.gwt.i18n.client.
    * 
    * @return translated "<p>The Collaborators window allows you to quickly find, add, and remove CyVerse users within your Collaborators list.</p><br/><p>Adding someone as your collaborator enhances the sharing feature, making it even easier to share data with one, a few, or all of your collaborators.</p><br/><p>To add a collaborator, begin typing their name or CyVerse username in the search field and a results drop-down will appear. Select your desired name to add them to your list of collaborators. You can also easily access this list when sharing.</p>"
    */
-  @DefaultMessage("<p>The Collaboration window allows you to quickly find, add, and remove CyVerse users within your set of Collaborators.</p><p>Adding someone as your collaborator enhances the sharing feature, making it even easier to share data with one, a few, or all of your collaborators.</p> <p>To add a collaborator, begin typing their name or CyVerse username in the search field and a results drop-down will appear. Select your desired name to add them to your set of collaborators. You can also easily access this set when sharing.</p><p>Additionally, if you have the need to frequently share data with several of the same collaborators, you can create a Collaborator List.  Click the \"Add List\" button to start creating your own custom lists of Collaborators.</p>")
+  @DefaultMessage("<p>The Collaboration window allows you different ways to quickly find, add, and remove CyVerse users within your set of Collaborators.</p>"
+                  + "<p>Adding someone as your collaborator enhances the sharing feature, making it even easier to share data with one, a few, or all of your collaborators.</p>"
+                  + "<br><p><u>Collaborators</u></p>"
+                  + "<p>Using the Collaborators tab allows you to organize your own private set and lists of collaborators.</p>"
+                  + "<p>To add a collaborator, begin typing their name or CyVerse username in the search field and a results drop-down will appear. Select your desired name to add them to your set of collaborators. You can also easily access this set when sharing.</p>"
+                  + "<p>Additionally, if you have the need to frequently share data with several of the same collaborators, you can create a Collaborator List.  Click the \"Add List\" button to start creating your own custom lists of Collaborators.</p>"
+                  + "<br><p><u>Teams</u></p>"
+                  + "<p>Using the Teams tab allows you to create, organize, and join public or private groups of collaborators.</p>"
+                  + "<p>Any teams you are a member of will show up under \"My Teams\".  You can find other public teams that you can join by selecting \"All Teams\".</p>"
+                  + "<p>You can also create your own team, defining your own team members and team privileges, by selecting \"Create Team\".</p>")
   @Key("collaboratorsHelp")
   String collaboratorsHelp();
 
