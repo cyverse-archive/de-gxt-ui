@@ -70,12 +70,22 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @UiField(provided = true) FolderSelectorField defaultOutputFolder;
     @UiField TextField notifyShortCut;
     @UiField(provided = true) PreferencesViewAppearance appearance;
+
     @UiField(provided = true)
     @Ignore
     HTML resetHpcfield;
+
     @UiField
     @Ignore
     TextButton hpcResetBtn;
+
+    @UiField(provided = true)
+    @Ignore
+    HTML webhooksfield;
+
+    @UiField
+    @Ignore
+    TextButton addSlackBtn;
 
     private final KeyBoardShortcutConstants KB_CONSTANTS;
     private final Map<TextField, String> kbMap;
@@ -99,6 +109,7 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         this.defaultOutputFolder.hideResetButton();
         this.KB_CONSTANTS = kbConstants;
         this.resetHpcfield = new HTML(appearance.resetHpcPrompt());
+        this.webhooksfield = new HTML(appearance.webhooksPrompt());
         initWidget(uiBinder.createAndBindUi(this));
 
         kbMap = new HashMap<>();
@@ -287,5 +298,10 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @UiHandler("hpcResetBtn")
     void onResetHpcToken(SelectEvent event) {
         fireEvent(new ResetHpcTokenClicked());
+    }
+
+    @UiHandler("addSlackBtn")
+    void onAddSlack(SelectEvent event) {
+        
     }
 }

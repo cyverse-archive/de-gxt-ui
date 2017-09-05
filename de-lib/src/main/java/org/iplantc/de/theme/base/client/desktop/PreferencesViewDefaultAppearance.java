@@ -198,4 +198,19 @@ public class PreferencesViewDefaultAppearance implements PreferencesView.Prefere
     public String resetHpcHelp() {
         return help.resetHpcHelp();
     }
+
+    @Override
+    public String webhooks() {
+        return desktopMessages.webhooks();
+    }
+
+    @Override
+    public String addSlack() {
+        return desktopMessages.addSlack();
+    }
+
+    @Override
+    public String webhooksPrompt() {
+        return desktopMessages.webhooksPrompt();
+    }
 }

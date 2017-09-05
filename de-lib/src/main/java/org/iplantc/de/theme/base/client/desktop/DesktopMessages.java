@@ -124,4 +124,10 @@ public interface DesktopMessages extends Messages {
     SafeHtml resetHpcPrompt();
 
     String hpcResetFailure();
+
+    String webhooks();
+
+    String addSlack();
+
+    String webhooksPrompt();
 }

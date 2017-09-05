@@ -86,6 +86,16 @@
                 </container:child>
             </container:VerticalLayoutContainer>
         </form:FieldSet>
+        <form:FieldSet heading="{appearance.webhooks}">
+            <form:widget>
+                <g:VerticalPanel spacing="5">
+                    <g:HTML ui:field="webhooksfield"/>
+                    <button:TextButton text="{appearance.addSlack}" ui:field="addSlackBtn" />
+                </g:VerticalPanel>
+            </form:widget>
+
+        </form:FieldSet>
+
         <form:FieldSet heading="{appearance.keyboardShortCut}"
                        collapsible="true">
             <container:VerticalLayoutContainer ui:field="kbContainer">

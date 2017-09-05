@@ -80,6 +80,12 @@ public interface PreferencesView extends IsWidget,
         String hpcResetFailure();
 
         String resetHpcHelp();
+
+        String webhooks();
+
+        String addSlack();
+
+        String webhooksPrompt();
     }
 
     void userSessionSuccess();
