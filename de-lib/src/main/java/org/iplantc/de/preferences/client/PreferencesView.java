@@ -2,6 +2,7 @@ package org.iplantc.de.preferences.client;
 
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.desktop.client.DesktopView;
+import org.iplantc.de.preferences.client.events.AddSlackWebhookClicked;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
 import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
 
@@ -13,7 +14,8 @@ import com.google.gwt.user.client.ui.IsWidget;
  */
 public interface PreferencesView extends IsWidget,
                                          PrefDlgRetryUserSessionClicked.HasPrefDlgRetryUserSessionClickedHandlers,
-                                         ResetHpcTokenClicked.HasResetHpcLabelClickedHandlers{
+                                         ResetHpcTokenClicked.HasResetHpcLabelClickedHandlers,
+                                         AddSlackWebhookClicked.HaAddSlackWebhookClickedHandlers {
 
     interface PreferencesViewAppearance {
 
@@ -86,6 +88,7 @@ public interface PreferencesView extends IsWidget,
         String addSlack();
 
         String webhooksPrompt();
+
     }
 
     void userSessionSuccess();
@@ -105,6 +108,8 @@ public interface PreferencesView extends IsWidget,
     void flush();
 
     void saveUserSettings();
+
+    void setWebhookValid(boolean valid);
 
     interface Presenter {
 

@@ -28,4 +28,6 @@ public interface UserSessionServiceFacade {
 
     void logout(AsyncCallback<String> callback);
 
+    void testWebhook(String url, AsyncCallback<String> callback);
+
 }

@@ -134,4 +134,10 @@ public class UserSessionServiceFacadeImpl implements UserSessionServiceFacade {
         deServiceFacade.getServiceData(wrapper, callback);
     }
 
+    @Override
+    public void testWebhook(String url, AsyncCallback<String> callback) {
+      ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, url, "{\"text\": \"This is a test message from DE.\"}");
+      deServiceFacade.getServiceData(wrapper,callback);
+    }
+
 }

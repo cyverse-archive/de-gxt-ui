@@ -8,9 +8,11 @@ import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.validators.UrlValidator;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
 import org.iplantc.de.diskResource.client.views.widgets.FolderSelectorField;
 import org.iplantc.de.preferences.client.PreferencesView;
+import org.iplantc.de.preferences.client.events.AddSlackWebhookClicked;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
 import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
 import org.iplantc.de.preferences.shared.Preferences;
@@ -87,6 +89,15 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @Ignore
     TextButton addSlackBtn;
 
+
+    @UiField
+    @Ignore
+    TextField hookUrl;
+
+    @UiField
+    @Ignore
+    TextButton hookDelBtn;
+
     private final KeyBoardShortcutConstants KB_CONSTANTS;
     private final Map<TextField, String> kbMap;
 
@@ -112,6 +123,9 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         this.webhooksfield = new HTML(appearance.webhooksPrompt());
         initWidget(uiBinder.createAndBindUi(this));
 
+        hookUrl.addValidator(new UrlValidator());
+        hookUrl.setValidateOnBlur(true);
+        
         kbMap = new HashMap<>();
         appsShortCut.addValidator(new MaxLengthValidator(1));
         dataShortCut.addValidator(new MaxLengthValidator(1));
@@ -146,6 +160,11 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @Override
     public HandlerRegistration addResetHpcTokenClickedHandlers(ResetHpcTokenClicked.ResetHpcTokenClickedHandler handler) {
         return addHandler(handler, ResetHpcTokenClicked.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addAddSlackWebhookClickedHandlers(AddSlackWebhookClicked.AddSlackWebhookClickedHandler handler) {
+        return addHandler(handler, AddSlackWebhookClicked.TYPE);
     }
 
 
@@ -302,6 +321,25 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
 
     @UiHandler("addSlackBtn")
     void onAddSlack(SelectEvent event) {
-        
+        if(hookUrl.isValid()) {
+            fireEvent(new AddSlackWebhookClicked(hookUrl.getValue()));
+        } else {
+            hookUrl.markInvalid("A valid URL is required!");
+        }
+
+    }
+
+    @Override
+    public void setWebhookValid(boolean valid) {
+        hookDelBtn.setVisible(valid);
+        addSlackBtn.setEnabled(!valid);
+        hookUrl.setEnabled(!valid);
+    }
+
+    @UiHandler("hookDelBtn")
+    public void onDeleteHook(SelectEvent event) {
+        //TODO: fire event to delete hook in database with a service call
+        hookUrl.clear();
+        addSlackBtn.enable();
     }
 }

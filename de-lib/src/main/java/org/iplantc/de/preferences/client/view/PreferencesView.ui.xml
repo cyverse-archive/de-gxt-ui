@@ -90,6 +90,10 @@
             <form:widget>
                 <g:VerticalPanel spacing="5">
                     <g:HTML ui:field="webhooksfield"/>
+                    <g:HorizontalPanel spacing="5">
+                        <form:TextField ui:field="hookUrl" visible="true" enabled="true"/>
+                        <button:TextButton text="X" ui:field="hookDelBtn" visible="false" enabled="true"/>
+                    </g:HorizontalPanel>
                     <button:TextButton text="{appearance.addSlack}" ui:field="addSlackBtn" />
                 </g:VerticalPanel>
             </form:widget>
