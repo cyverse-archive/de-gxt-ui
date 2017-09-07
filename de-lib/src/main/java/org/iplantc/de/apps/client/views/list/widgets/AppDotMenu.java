@@ -4,6 +4,7 @@ import org.iplantc.de.apps.client.events.selection.AppCommentSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppFavoriteSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppInfoSelectedEvent;
 import org.iplantc.de.apps.client.views.list.cells.AppDotMenuCell;
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.models.apps.App;
 
 import com.google.gwt.event.shared.HasHandlers;
@@ -47,5 +48,14 @@ public class AppDotMenu extends Menu {
         }
 
         super.showAt(x, y);
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        infoBtn.setId(baseID + AppsModule.Ids.APP_INFO_CELL);
+        favoriteBtn.setId(baseID + AppsModule.Ids.APP_FAVORITE_CELL);
+        commentBtn.setId(baseID + AppsModule.Ids.APP_COMMENT_CELL);
     }
 }

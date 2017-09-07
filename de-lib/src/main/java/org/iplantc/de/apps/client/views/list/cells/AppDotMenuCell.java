@@ -60,7 +60,7 @@ public class AppDotMenuCell extends AbstractCell<App> implements HasCell<App, Ap
 
     @Override
     public void render(Context context, App value, SafeHtmlBuilder sb) {
-        String debugId = baseDebugId + "." + value.getId() + AppsModule.Ids.APP_DOT_MENU;
+        String debugId = getDebugId(value);
         appearance.render(context, value, sb, debugId);
     }
 
@@ -95,11 +95,16 @@ public class AppDotMenuCell extends AbstractCell<App> implements HasCell<App, Ap
                 case Event.ONCLICK:
                     AppDotMenu menu = new AppDotMenu(appearance);
                     menu.show(value, hasHandlers, event.getClientX(), event.getClientY());
+                    menu.ensureDebugId(getDebugId(value));
                     break;
                 default:
                     break;
             }
         }
+    }
+
+    String getDebugId(App value) {
+        return baseDebugId + "." + value.getId() + AppsModule.Ids.APP_DOT_MENU;
     }
 
     public void setHasHandlers(HasHandlers hasHandlers) {
