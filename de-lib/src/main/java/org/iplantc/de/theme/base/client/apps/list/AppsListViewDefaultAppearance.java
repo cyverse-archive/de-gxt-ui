@@ -103,4 +103,9 @@ public class AppsListViewDefaultAppearance implements AppsListView.AppsListAppea
     public String executionSystemLabel() {
         return appsMessages.system();
     }
+
+    @Override
+    public int menuColumnWidth() {
+        return 30;
+    }
 }

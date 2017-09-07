@@ -22,7 +22,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeUri;
 
 /**
- * @author jstroot
+ * @author aramsey
  */
 public class AppTileCellDefaultAppearance implements AppTileCell.AppTileCellAppearance {
 

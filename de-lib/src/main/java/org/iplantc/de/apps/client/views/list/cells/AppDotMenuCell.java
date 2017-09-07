@@ -95,8 +95,8 @@ public class AppDotMenuCell extends AbstractCell<App> implements HasCell<App, Ap
         if (parent.isOrHasChild(eventTarget)) {
             switch (Event.as(event).getTypeInt()) {
                 case Event.ONCLICK:
-                    AppDotMenu menu = new AppDotMenu(appearance);
-                    menu.show(value, hasHandlers, event.getClientX(), event.getClientY());
+                    AppDotMenu menu = new AppDotMenu(appearance, value, hasHandlers);
+                    menu.showAt(event.getClientX(), event.getClientY());
                     menu.ensureDebugId(getDebugId(value));
                     break;
                 default:

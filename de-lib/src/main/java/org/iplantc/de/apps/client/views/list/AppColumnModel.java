@@ -76,7 +76,7 @@ public class AppColumnModel extends ColumnModel<App> implements AppInfoSelectedE
 
         ColumnConfig<App, App> rating = new ColumnConfig<>(new IdentityValueProvider<App>("rating"), 125, appearance.ratingColumnLabel()); //$NON-NLS-1$
 
-        ColumnConfig<App, App> dotMenu = new ColumnConfig<>(new IdentityValueProvider<App>(), 30); //$NON-NLS-1$
+        ColumnConfig<App, App> dotMenu = new ColumnConfig<>(new IdentityValueProvider<App>(), appearance.menuColumnWidth()); //$NON-NLS-1$
 
         dotMenu.setHeader("");
 

@@ -83,6 +83,8 @@ public interface AppsListView extends IsWidget,
         int executionSystemWidth();
 
         String executionSystemLabel();
+
+        int menuColumnWidth();
     }
 
     /**

@@ -23,35 +23,32 @@ public class AppDotMenu extends Menu {
     private MenuItem favoriteBtn;
     private MenuItem commentBtn;
 
-    public AppDotMenu(AppDotMenuCell.AppDotMenuAppearance appearance) {
+    public AppDotMenu(AppDotMenuCell.AppDotMenuAppearance appearance,
+                      App app,
+                      HasHandlers hasHandlers) {
         super();
         this.appearance = appearance;
 
-        addMenuItems();
+        addMenuItems(app);
+        addHandlers(hasHandlers, app);
     }
 
-    void addMenuItems() {
-        infoBtn = new MenuItem(appearance.infoText(), appearance.infoIcon());
-        favoriteBtn = new MenuItem();
-        commentBtn = new MenuItem(appearance.commentText(), appearance.commentIcon());
-
-        add(infoBtn);
-        add(favoriteBtn);
-        add(commentBtn);
-    }
-
-    public void show(App app, HasHandlers hasHandlers, int x, int y) {
-
-        favoriteBtn.setIcon(appearance.favoriteIcon(app));
-        favoriteBtn.setText(appearance.favoriteText(app));
-
+    void addHandlers(HasHandlers hasHandlers, App app) {
         if (hasHandlers != null) {
             infoBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new AppInfoSelectedEvent(app)));
             favoriteBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new AppFavoriteSelectedEvent(app)));
             commentBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new AppCommentSelectedEvent(app)));
         }
+    }
 
-        super.showAt(x, y);
+    void addMenuItems(App app) {
+        infoBtn = new MenuItem(appearance.infoText(), appearance.infoIcon());
+        favoriteBtn = new MenuItem(appearance.favoriteText(app), appearance.favoriteIcon(app));
+        commentBtn = new MenuItem(appearance.commentText(), appearance.commentIcon());
+
+        add(infoBtn);
+        add(favoriteBtn);
+        add(commentBtn);
     }
 
     @Override
