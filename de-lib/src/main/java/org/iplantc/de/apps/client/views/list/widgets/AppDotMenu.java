@@ -12,6 +12,10 @@ import com.google.gwt.event.shared.HasHandlers;
 import com.sencha.gxt.widget.core.client.menu.Menu;
 import com.sencha.gxt.widget.core.client.menu.MenuItem;
 
+/**
+ * A menu containing the App Info, App Favorite, and App Comment buttons as menu items
+ * @author aramsey
+ */
 public class AppDotMenu extends Menu {
 
     private AppDotMenuCell.AppDotMenuAppearance appearance;

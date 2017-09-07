@@ -9,6 +9,7 @@ import com.google.gwt.cell.client.HasCell;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
 /**
+ * A cell within the Apps listing that shows the execution system for the specified app
  * @author aramsey
  */
 public class AppExecutionSystemCell extends AbstractCell<String> implements HasCell<App, String> {

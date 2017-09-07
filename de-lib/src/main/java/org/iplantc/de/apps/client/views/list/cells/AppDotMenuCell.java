@@ -20,6 +20,8 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Event;
 
 /**
+ * A cell that contains the "dot" menu (3 vertical dots).  When clicked the menu
+ * containing the App Info, App Comment, and App Favorite buttons is revealed.
  * @author aramsey
  */
 public class AppDotMenuCell extends AbstractCell<App> implements HasCell<App, App> {
