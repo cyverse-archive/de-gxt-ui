@@ -2,6 +2,7 @@ package org.iplantc.de.theme.base.client.apps.cells;
 
 import org.iplantc.de.apps.client.views.list.cells.AppCommentCell;
 import org.iplantc.de.apps.client.views.list.cells.AppDotMenuCell;
+import org.iplantc.de.apps.client.views.list.cells.AppExecutionSystemCell;
 import org.iplantc.de.apps.client.views.list.cells.AppFavoriteCell;
 import org.iplantc.de.apps.client.views.list.cells.AppInfoCell;
 import org.iplantc.de.apps.client.views.list.cells.AppIntegratorCell;
@@ -71,6 +72,8 @@ public class AppTileCellDefaultAppearance implements AppTileCell.AppTileCellAppe
             sb.append(templates.mod(style.integratorMod()));
         } else if (hasCell instanceof AppRatingCell) {
             sb.append(templates.mod(style.ratingMod()));
+        } else if (hasCell instanceof AppExecutionSystemCell) {
+            sb.append(templates.mod(style.executionSystem()));
         } else if (hasCell instanceof AppDotMenuCell) {
             sb.append(templates.mod(style.dotMenu()));
         }

@@ -22,6 +22,7 @@ public class AppTileCell extends CompositeCell<App> {
     private AppStatusCell appStatusCell;
     private AppRatingCell appRatingCell;
     private AppIntegratorCell appIntegratorCell;
+    private AppExecutionSystemCell appExecutionSystemCell;
     private AppCardCell appCardCell;
     private AppDotMenuCell appDotMenuCell;
 
@@ -34,14 +35,18 @@ public class AppTileCell extends CompositeCell<App> {
                        AppRatingCell appRatingCell,
                        AppIntegratorCell appIntegratorCell,
                        AppDotMenuCell appDotMenuCell,
+                       AppExecutionSystemCell appExecutionSystemCell,
                        AppCardCell appCardCell) {
         super(Lists.newArrayList(appNameCell,
                                  appStatusCell,
                                  appRatingCell,
-                                 appIntegratorCell, appDotMenuCell,
+                                 appIntegratorCell,
+                                 appExecutionSystemCell,
+                                 appDotMenuCell,
                                  appCardCell));
 
         this.appNameCell = appNameCell;
+        this.appExecutionSystemCell = appExecutionSystemCell;
         this.appNameCell.setSeparateFavoriteCell(true);
         this.appStatusCell = appStatusCell;
         this.appRatingCell = appRatingCell;

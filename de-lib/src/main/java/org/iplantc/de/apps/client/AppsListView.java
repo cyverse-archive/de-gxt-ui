@@ -79,6 +79,10 @@ public interface AppsListView extends IsWidget,
         String appLoadError();
 
         String noApps();
+
+        int executionSystemWidth();
+
+        String executionSystemLabel();
     }
 
     /**

@@ -93,4 +93,14 @@ public class AppsListViewDefaultAppearance implements AppsListView.AppsListAppea
     public String noApps() {
         return appsMessages.noApps();
     }
+
+    @Override
+    public int executionSystemWidth() {
+        return 50;
+    }
+
+    @Override
+    public String executionSystemLabel() {
+        return appsMessages.system();
+    }
 }

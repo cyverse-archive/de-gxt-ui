@@ -61,6 +61,8 @@ public class AppColumnModel extends ColumnModel<App> implements AppInfoSelectedE
         AppProperties props = GWT.create(AppProperties.class);
         List<ColumnConfig<App, ?>> list = new ArrayList<>();
 
+        ColumnConfig<App, String> system = new ColumnConfig<>(props.systemId(), appearance.executionSystemWidth(), appearance.executionSystemLabel());
+
         ColumnConfig<App, App> status = new ColumnConfig<>(new IdentityValueProvider<App>(""), 25);
         status.setHeader("");
 
@@ -82,6 +84,7 @@ public class AppColumnModel extends ColumnModel<App> implements AppInfoSelectedE
         rating.setComparator(new AppRatingComparator());
         status.setSortable(false);
         dotMenu.setSortable(false);
+        system.setSortable(false);
 
         status.setMenuDisabled(true);
         status.setHideable(false);
@@ -109,6 +112,7 @@ public class AppColumnModel extends ColumnModel<App> implements AppInfoSelectedE
         list.add(name);
         list.add(integrator);
         list.add(rating);
+        list.add(system);
         list.add(dotMenu);
 
         return list;

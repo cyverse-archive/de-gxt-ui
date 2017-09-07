@@ -18,4 +18,6 @@ public interface AppProperties extends PropertyAccess<App>{
 
     @Editor.Path("rating.average")
     ValueProvider<App, Double> rating();
+
+    ValueProvider<App, String> systemId();
 }
