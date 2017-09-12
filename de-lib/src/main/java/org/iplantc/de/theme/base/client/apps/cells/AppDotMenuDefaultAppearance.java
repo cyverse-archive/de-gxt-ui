@@ -62,7 +62,7 @@ public class AppDotMenuDefaultAppearance implements AppDotMenuCell.AppDotMenuApp
     }
 
     @Override
-    public void render(Cell.Context context, App value, SafeHtmlBuilder sb, String debugId) {
+    public void render(Cell.Context context, SafeHtmlBuilder sb, String debugId) {
         String className = resources.css().dotMenu();
         SafeUri uri = dotMenuIcon().getSafeUri();
 

@@ -104,6 +104,9 @@
     <replace-with class="org.iplantc.de.theme.base.client.diskResource.grid.presenter.GridViewPresenterDefaultAppearance">
         <when-type-is class="org.iplantc.de.diskResource.client.GridView.Presenter.Appearance" />
     </replace-with>
+    <replace-with class="org.iplantc.de.theme.base.client.diskResource.grid.cells.DiskResourceDotMenuDefaultAppearance">
+        <when-type-is class="org.iplantc.de.diskResource.client.views.grid.cells.DiskResourceDotMenuCell.DiskResourceDotMenuAppearance" />
+    </replace-with>
 
     <!-- Toolbar -->
     <replace-with class="org.iplantc.de.theme.base.client.diskResource.toolbar.ToolbarViewDefaultAppearance">

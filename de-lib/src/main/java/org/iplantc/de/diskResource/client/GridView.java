@@ -57,7 +57,7 @@ public interface GridView extends IsWidget,
 
         String actionsColumnLabel();
 
-        int actionsColumnWidth();
+        int dotMenuColumnWidth();
 
         String createdDateColumnLabel();
 

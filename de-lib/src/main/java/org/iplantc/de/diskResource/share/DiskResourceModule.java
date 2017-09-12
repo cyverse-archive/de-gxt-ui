@@ -82,6 +82,7 @@ public interface DiskResourceModule {
         String SHARING_DLG = "dataSharingDlg";
         String SHARING_VIEW = ".view";
         String SHARING_PERMS = ".permPanel";
+        String DOT_MENU = ".dotMenu";
     }
 
     interface MetadataIds {

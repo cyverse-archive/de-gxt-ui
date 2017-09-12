@@ -28,7 +28,6 @@ public class AppDotMenuCell extends AbstractCell<App> implements HasCell<App, Ap
 
     public interface AppDotMenuAppearance  {
         void render(Context context,
-                    App value,
                     SafeHtmlBuilder sb,
                     String debugId);
 
@@ -63,7 +62,7 @@ public class AppDotMenuCell extends AbstractCell<App> implements HasCell<App, Ap
     @Override
     public void render(Context context, App value, SafeHtmlBuilder sb) {
         String debugId = getDebugId(value);
-        appearance.render(context, value, sb, debugId);
+        appearance.render(context, sb, debugId);
     }
 
     @Override
