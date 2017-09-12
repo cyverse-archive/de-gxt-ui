@@ -4,6 +4,7 @@ import static org.springframework.security.web.header.writers.frameoptions.XFram
 
 import org.iplantc.de.server.CacheControlFilter;
 import org.iplantc.de.server.DeCasAuthenticationEntryPoint;
+import org.iplantc.de.server.DeCasAuthenticationSuccessHandler;
 import org.iplantc.de.server.DeLandingPage;
 import org.iplantc.de.server.MDCFilter;
 import org.iplantc.de.server.auth.CasLogoutSuccessHandler;
@@ -26,6 +27,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
@@ -64,11 +66,19 @@ public class DeWebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public AuthenticationSuccessHandler deCasAuthenticationSuccessHandler() {
+        DeCasAuthenticationSuccessHandler handler = new DeCasAuthenticationSuccessHandler();
+        handler.setBaseUrl(serverName);
+        return handler;
+    }
+
+    @Bean
     public CasAuthenticationFilter deCasAuthenticationFilter() throws Exception {
         CasAuthenticationFilter casAuthenticationFilter = new CasAuthenticationFilter();
         casAuthenticationFilter.setAuthenticationManager(authenticationManager());
         casAuthenticationFilter.setFilterProcessesUrl(validation);
         casAuthenticationFilter.setSessionAuthenticationStrategy(deSessionStrategy());
+        casAuthenticationFilter.setAuthenticationSuccessHandler(deCasAuthenticationSuccessHandler());
         return casAuthenticationFilter;
     }
 
