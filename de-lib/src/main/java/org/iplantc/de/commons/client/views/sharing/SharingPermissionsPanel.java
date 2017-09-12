@@ -267,6 +267,8 @@ public class SharingPermissionsPanel extends Composite
 
         listStore.clear();
 
+        boolean hasAnyVaryingPerms = false;
+
         for (String userName : sharingMap.keySet()) {
             List<Sharing> sharingList = sharingMap.get(userName);
 
@@ -285,12 +287,13 @@ public class SharingPermissionsPanel extends Composite
                     // Set the display permission to "varies" if this user's share list has varying
                     // permissions.
                     displayShare.setDisplayPermission(PermissionValue.varies);
+                    hasAnyVaryingPerms = true;
                 }
-                setExplainPanelVisibility(permsVary);
 
                 listStore.add(displayShare);
             }
         }
+        setExplainPanelVisibility(hasAnyVaryingPerms);
     }
 
     @UiFactory
