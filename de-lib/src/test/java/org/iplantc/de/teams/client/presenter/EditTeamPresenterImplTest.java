@@ -29,6 +29,7 @@ import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
+import org.iplantc.de.teams.client.views.dialogs.DeleteTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.LeaveTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.SaveTeamProgressDialog;
 
@@ -90,7 +91,9 @@ public class EditTeamPresenterImplTest {
     @Mock Stream<String> stringStreamMock;
     @Mock Spliterator<Subject> subjectSpliteratorMock;
     @Mock LeaveTeamDialog leaveDialogMock;
+    @Mock DeleteTeamDialog deleteDialogMock;
     @Mock AsyncProviderWrapper<LeaveTeamDialog> leaveDlgProviderMock;
+    @Mock AsyncProviderWrapper<DeleteTeamDialog> deleteDlgProviderMock;
     @Mock UpdateMemberResult updateMemberResultMock;
     @Mock IplantAnnouncer announcerMock;
 
@@ -100,6 +103,7 @@ public class EditTeamPresenterImplTest {
     @Captor ArgumentCaptor<AsyncCallback<List<Privilege>>> privilegeListCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> subjectListCaptor;
     @Captor ArgumentCaptor<AsyncCallback<LeaveTeamDialog>> leaveDlgProviderCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<DeleteTeamDialog>> deleteDlgProviderCaptor;
     @Captor ArgumentCaptor<DialogHideEvent.DialogHideHandler> dialogHideCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<UpdateMemberResult>>> updateMemberCaptor;
 
@@ -157,6 +161,7 @@ public class EditTeamPresenterImplTest {
         uut.progressDlg = progressDlgMock;
         uut.announcer = announcerMock;
         uut.leaveTeamDlgProvider = leaveDlgProviderMock;
+        uut.deleteTeamDlgProvider = deleteDlgProviderMock;
 
         verifyConstructor();
     }
@@ -577,6 +582,45 @@ public class EditTeamPresenterImplTest {
         verify(serviceFacadeMock).leaveTeam(eq(groupMock), updateMemberCaptor.capture());
 
         updateMemberCaptor.getValue().onSuccess(updateMemberResultListMock);
+
+        verify(announcerMock).schedule(isA(IplantAnnouncementConfig.class));
+        verify(hideableMock).hide();
+    }
+
+    @Test
+    public void onDeleteButtonSelected() {
+        IsHideable hideableMock = mock(IsHideable.class);
+        DialogHideEvent hideEventMock = mock(DialogHideEvent.class);
+        when(hideEventMock.getHideButton()).thenReturn(Dialog.PredefinedButton.YES);
+
+        EditTeamPresenterImpl spy = spy(uut);
+        spy.originalGroup = groupMock;
+
+        /** CALL METHOD UNDER TEST **/
+        spy.onDeleteButtonSelected(hideableMock);
+
+        verify(deleteDlgProviderMock).get(deleteDlgProviderCaptor.capture());
+
+        deleteDlgProviderCaptor.getValue().onSuccess(deleteDialogMock);
+
+        verify(deleteDialogMock).show(eq(groupMock));
+        verify(deleteDialogMock).addDialogHideHandler(dialogHideCaptor.capture());
+
+        dialogHideCaptor.getValue().onDialogHide(hideEventMock);
+        verify(spy).deleteTeam(eq(groupMock), eq(hideableMock));
+    }
+
+    @Test
+    public void deleteTeam() {
+        IsHideable hideableMock = mock(IsHideable.class);
+        when(appearanceMock.deleteTeamSuccess(groupMock)).thenReturn("success!");
+
+        /** CALL METHOD UNDER TEST **/
+        uut.deleteTeam(groupMock,hideableMock);
+
+        verify(serviceFacadeMock).deleteTeam(eq(groupMock), groupCaptor.capture());
+
+        groupCaptor.getValue().onSuccess(groupMock);
 
         verify(announcerMock).schedule(isA(IplantAnnouncementConfig.class));
         verify(hideableMock).hide();

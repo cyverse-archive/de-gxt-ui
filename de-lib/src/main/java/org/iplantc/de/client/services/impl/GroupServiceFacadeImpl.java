@@ -123,8 +123,16 @@ public class GroupServiceFacadeImpl implements GroupServiceFacade {
     }
 
     @Override
-    public void deleteGroup(Group group, boolean retainPermissions, AsyncCallback<Group> callback) {
+    public void deleteList(Group group, boolean retainPermissions, AsyncCallback<Group> callback) {
         String address = LISTS + "/" + URL.encodePathSegment(group.getName()) + "?retain-permissions=" + retainPermissions;
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address);
+        deService.getServiceData(wrapper, new GroupCallbackConverter(callback, factory));
+    }
+
+    @Override
+    public void deleteTeam(Group group, AsyncCallback<Group> callback) {
+        String address = TEAMS + "/" + URL.encodePathSegment(group.getName());
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(DELETE, address);
         deService.getServiceData(wrapper, new GroupCallbackConverter(callback, factory));

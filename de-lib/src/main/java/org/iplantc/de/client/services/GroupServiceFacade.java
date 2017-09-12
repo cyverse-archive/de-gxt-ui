@@ -51,12 +51,19 @@ public interface GroupServiceFacade {
     void addTeam(Group team, List<PrivilegeType> publicPrivileges, AsyncCallback<Group> teamCallback);
 
     /**
-     * Delete a Collaborator List
-     * @param team
+     * Delete a collaborator list
+     * @param collabList
      * @param retainPermissions
+     * @param collabCallback
+     */
+    void deleteList(Group collabList, boolean retainPermissions, AsyncCallback<Group> collabCallback);
+
+    /**
+     * Delete a Team
+     * @param team
      * @param teamCallback
      */
-    void deleteGroup(Group team, boolean retainPermissions, AsyncCallback<Group> teamCallback);
+    void deleteTeam(Group team, AsyncCallback<Group> teamCallback);
 
     /**
      * Get the list of members who belong to a Collaborator List

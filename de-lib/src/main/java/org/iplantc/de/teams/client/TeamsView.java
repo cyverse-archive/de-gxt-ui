@@ -130,6 +130,14 @@ public interface TeamsView extends IsWidget,
         String requestToJoinTeam();
 
         int editTeamAdjustedHeight(boolean isAdmin, boolean isMember);
+
+        String deleteTeamWarning();
+
+        int deleteTeamWidth();
+
+        String deleteTeamHeader(Group team);
+
+        String deleteTeamSuccess(Group team);
     }
 
     /**

@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
+import org.iplantc.de.teams.client.events.DeleteTeamCompleted;
 import org.iplantc.de.teams.client.events.LeaveTeamCompleted;
 import org.iplantc.de.teams.client.events.PrivilegeAndMembershipLoaded;
 import org.iplantc.de.teams.client.events.TeamSaved;
@@ -22,7 +23,8 @@ import com.sencha.gxt.widget.core.client.toolbar.FillToolItem;
  */
 public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSavedHandlers,
                                                             LeaveTeamCompleted.HasLeaveTeamCompletedHandlers,
-                                                            PrivilegeAndMembershipLoaded.PrivilegeAndMembershipLoadedHandler {
+                                                            PrivilegeAndMembershipLoaded.PrivilegeAndMembershipLoadedHandler,
+                                                            DeleteTeamCompleted.HasDeleteTeamCompletedHandlers {
     private EditTeamView.Presenter presenter;
     private TeamsView.TeamsViewAppearance appearance;
     private TextButton leaveBtn;
@@ -91,6 +93,7 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
     void setHandlers() {
         presenter.addPrivilegeAndMembershipLoadedHandler(this);
         leaveBtn.addSelectHandler(event -> presenter.onLeaveButtonSelected(this));
+        deleteBtn.addSelectHandler(event -> presenter.onDeleteButtonSelected(this));
 
         addOkButtonSelectHandler(selectEvent -> {
             if (presenter.isViewValid()) {
@@ -124,5 +127,10 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
     @Override
     public HandlerRegistration addLeaveTeamCompletedHandler(LeaveTeamCompleted.LeaveTeamCompletedHandler handler) {
         return presenter.addLeaveTeamCompletedHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addDeleteTeamCompletedHandler(DeleteTeamCompleted.DeleteTeamCompletedHandler handler) {
+        return presenter.addDeleteTeamCompletedHandler(handler);
     }
 }

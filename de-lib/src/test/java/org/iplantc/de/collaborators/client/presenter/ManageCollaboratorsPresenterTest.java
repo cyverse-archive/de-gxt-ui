@@ -336,7 +336,7 @@ public class ManageCollaboratorsPresenterTest {
 
         verify(subjectListMock).forEach(subjectConsumerCaptor.capture());
         subjectConsumerCaptor.getValue().accept(subjectMock);
-        verify(groupServiceFacadeMock).deleteGroup(eq(groupMock), eq(true), isA(ManageCollaboratorsPresenter.DeleteGroupChildCallback.class));
+        verify(groupServiceFacadeMock).deleteList(eq(groupMock), eq(true), isA(ManageCollaboratorsPresenter.DeleteGroupChildCallback.class));
     }
 
     @Test
