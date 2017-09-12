@@ -1,4 +1,4 @@
-<div style="border: 1px #EFEFEF;">
+<div style="border: 1px solid #EFEFEF;">
 	<tpl if="img != null">
 		<img src="{img}">
 	</tpl>
@@ -6,5 +6,13 @@
 	<tpl if="institution != null">
 		<br/>
 		<span style="font-style: italic;">{institution} </span>
+	</tpl>
+	<tpl if="id != null">
+		<br/>
+		<span style="font-style: italic;">{id} </span>
+	</tpl>
+	<tpl if="email != null">
+		<br/>
+		<span style="font-style: italic;">{email} </span>
 	</tpl>
 </div>

@@ -123,7 +123,7 @@ public class UserSearchField implements IsWidget,
     }
 
     public interface UserSearchFieldAppearance {
-        void render(Cell.Context context, Subject subject, SafeHtmlBuilder sb);
+        void render(Cell.Context context, Subject subject, String searchTerm, SafeHtmlBuilder sb);
 
         String searchCollab();
 
@@ -209,7 +209,7 @@ public class UserSearchField implements IsWidget,
             @Override
             public void render(com.google.gwt.cell.client.Cell.Context context, Subject value,
                     SafeHtmlBuilder sb) {
-                appearance.render(context, value, sb);
+                appearance.render(context, value, "(" + searchProxy.getLastQueryText() + ")", sb);
             }
 
         });
