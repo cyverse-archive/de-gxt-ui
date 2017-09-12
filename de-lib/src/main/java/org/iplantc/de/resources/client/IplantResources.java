@@ -463,4 +463,7 @@ public interface IplantResources extends ClientBundle,
     @Source("tool.png")
     ImageResource tool();
 
+    @Source("dot_menu.png")
+    ImageResource dotMenu();
+
 }

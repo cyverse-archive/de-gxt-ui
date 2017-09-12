@@ -19,43 +19,39 @@ public class AppTileCell extends CompositeCell<App> {
     }
 
     private AppNameCell appNameCell;
-    private AppFavoriteCell appFavoriteCell;
-    private AppInfoCell appInfoCell;
     private AppStatusCell appStatusCell;
-    private AppCommentCell appCommentCell;
     private AppRatingCell appRatingCell;
     private AppIntegratorCell appIntegratorCell;
+    private AppExecutionSystemCell appExecutionSystemCell;
     private AppCardCell appCardCell;
+    private AppDotMenuCell appDotMenuCell;
 
     private AppTileCellAppearance appearance;
 
     @Inject
     public AppTileCell(AppTileCellAppearance appearance,
                        AppNameCell appNameCell,
-                       AppFavoriteCell appFavoriteCell,
-                       AppInfoCell appInfoCell,
                        AppStatusCell appStatusCell,
-                       AppCommentCell appCommentCell,
                        AppRatingCell appRatingCell,
                        AppIntegratorCell appIntegratorCell,
+                       AppDotMenuCell appDotMenuCell,
+                       AppExecutionSystemCell appExecutionSystemCell,
                        AppCardCell appCardCell) {
         super(Lists.newArrayList(appNameCell,
-                                appFavoriteCell,
-                                appInfoCell,
-                                appStatusCell,
-                                appCommentCell,
-                                appRatingCell,
-                                appIntegratorCell,
-                                appCardCell));
+                                 appStatusCell,
+                                 appRatingCell,
+                                 appIntegratorCell,
+                                 appExecutionSystemCell,
+                                 appDotMenuCell,
+                                 appCardCell));
 
         this.appNameCell = appNameCell;
+        this.appExecutionSystemCell = appExecutionSystemCell;
         this.appNameCell.setSeparateFavoriteCell(true);
-        this.appFavoriteCell = appFavoriteCell;
-        this.appInfoCell = appInfoCell;
         this.appStatusCell = appStatusCell;
-        this.appCommentCell = appCommentCell;
         this.appRatingCell = appRatingCell;
         this.appIntegratorCell = appIntegratorCell;
+        this.appDotMenuCell = appDotMenuCell;
         this.appCardCell = appCardCell;
         this.appearance = appearance;
     }
@@ -67,11 +63,9 @@ public class AppTileCell extends CompositeCell<App> {
 
     public void setHasHandlers(HasHandlers hasHandlers) {
         appNameCell.setHasHandlers(hasHandlers);
-        appFavoriteCell.setHasHandlers(hasHandlers);
-        appInfoCell.setHasHandlers(hasHandlers);
-        appCommentCell.setHasHandlers(hasHandlers);
         appRatingCell.setHasHandlers(hasHandlers);
         appCardCell.setHasHandlers(hasHandlers);
+        appDotMenuCell.setHasHandlers(hasHandlers);
     }
 
     public void setSearchRegexPattern(String pattern) {
@@ -81,9 +75,9 @@ public class AppTileCell extends CompositeCell<App> {
 
     public void setDebugBaseId(String baseID) {
         appNameCell.setBaseDebugId(baseID);
-        appInfoCell.setBaseDebugId(baseID);
         appCardCell.setBaseDebugId(baseID);
         appStatusCell.setBaseDebugId(baseID);
+        appDotMenuCell.setBaseDebugId(baseID);
     }
 
     public void setCardUrl(String appsCardUrl, String appsCardUrlOptions) {

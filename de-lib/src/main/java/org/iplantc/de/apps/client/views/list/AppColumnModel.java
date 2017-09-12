@@ -1,5 +1,6 @@
 package org.iplantc.de.apps.client.views.list;
 
+import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.events.selection.AppCommentSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppCommentSelectedEvent.AppCommentSelectedEventHandler;
 import org.iplantc.de.apps.client.events.selection.AppFavoriteSelectedEvent;
@@ -8,9 +9,7 @@ import org.iplantc.de.apps.client.events.selection.AppNameSelectedEvent;
 import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
 import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
 import org.iplantc.de.apps.client.models.AppProperties;
-import org.iplantc.de.apps.client.AppsListView;
-import org.iplantc.de.apps.client.views.list.cells.AppCommentCell;
-import org.iplantc.de.apps.client.views.list.cells.AppFavoriteCell;
+import org.iplantc.de.apps.client.views.list.cells.AppDotMenuCell;
 import org.iplantc.de.apps.client.views.list.cells.AppInfoCell;
 import org.iplantc.de.apps.client.views.list.cells.AppIntegratorCell;
 import org.iplantc.de.apps.client.views.list.cells.AppNameCell;
@@ -48,16 +47,12 @@ public class AppColumnModel extends ColumnModel<App> implements AppInfoSelectedE
         // Set handler managers on appropriate cells so they can fire events.
         for (ColumnConfig<App, ?> colConfig : configs) {
             Cell<?> cell = colConfig.getCell();
-            if (cell instanceof AppInfoCell) {
-                ((AppInfoCell)cell).setHasHandlers(ensureHandlers());
-            } else if (cell instanceof AppNameCell) {
+            if (cell instanceof AppNameCell) {
                 ((AppNameCell)cell).setHasHandlers(ensureHandlers());
-            } else if (cell instanceof AppFavoriteCell) {
-                ((AppFavoriteCell)cell).setHasHandlers(ensureHandlers());
-            } else if (cell instanceof AppCommentCell) {
-                ((AppCommentCell)cell).setHasHandlers(ensureHandlers());
             } else if(cell instanceof AppRatingCell) {
                 ((AppRatingCell)cell).setHasHandlers(ensureHandlers());
+            } else if (cell instanceof AppDotMenuCell) {
+                ((AppDotMenuCell)cell).setHasHandlers(ensureHandlers());
             }
         }
     }
@@ -66,8 +61,7 @@ public class AppColumnModel extends ColumnModel<App> implements AppInfoSelectedE
         AppProperties props = GWT.create(AppProperties.class);
         List<ColumnConfig<App, ?>> list = new ArrayList<>();
 
-        ColumnConfig<App, App> info = new ColumnConfig<>(new IdentityValueProvider<App>(""), 20);
-        info.setHeader("");
+        ColumnConfig<App, String> system = new ColumnConfig<>(props.systemId(), appearance.executionSystemWidth(), appearance.executionSystemLabel());
 
         ColumnConfig<App, App> status = new ColumnConfig<>(new IdentityValueProvider<App>(""), 25);
         status.setHeader("");
@@ -82,47 +76,44 @@ public class AppColumnModel extends ColumnModel<App> implements AppInfoSelectedE
 
         ColumnConfig<App, App> rating = new ColumnConfig<>(new IdentityValueProvider<App>("rating"), 125, appearance.ratingColumnLabel()); //$NON-NLS-1$
 
-        ColumnConfig<App, App> comment = new ColumnConfig<>(new IdentityValueProvider<App>("comment"), 30); //$NON-NLS-1$
+        ColumnConfig<App, App> dotMenu = new ColumnConfig<>(new IdentityValueProvider<App>(), appearance.menuColumnWidth()); //$NON-NLS-1$
 
-        comment.setHeader("");
+        dotMenu.setHeader("");
 
         name.setComparator(new AppNameComparator());
         rating.setComparator(new AppRatingComparator());
-        info.setSortable(false);
         status.setSortable(false);
-        comment.setSortable(false);
+        dotMenu.setSortable(false);
+        system.setSortable(false);
 
-        info.setMenuDisabled(true);
-        info.setHideable(false);
-        info.setResizable(false);
         status.setMenuDisabled(true);
         status.setHideable(false);
         status.setResizable(false);
         name.setResizable(true);
         // rating.setResizable(false);
-        comment.setResizable(false);
+        dotMenu.setResizable(false);
 
-        info.setFixed(true);
         status.setFixed(true);
         rating.setFixed(true);
-        comment.setFixed(true);
-        comment.setHideable(false);
+        dotMenu.setFixed(true);
+        dotMenu.setHideable(false);
 
-        info.setCell(new AppInfoCell());
         status.setCell(new AppStatusCell());
-        name.setCell(new AppNameCell());
+        AppNameCell appNameCell = new AppNameCell();
+        appNameCell.setSeparateFavoriteCell(true);
+        name.setCell(appNameCell);
         integrator.setCell(new AppIntegratorCell());
         rating.setCell(new AppRatingCell());
-        comment.setCell(new AppCommentCell());
+        dotMenu.setCell(new AppDotMenuCell());
 
         rating.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
-        list.add(info);
         list.add(status);
         list.add(name);
         list.add(integrator);
         list.add(rating);
-        list.add(comment);
+        list.add(system);
+        list.add(dotMenu);
 
         return list;
     }
@@ -168,6 +159,8 @@ public class AppColumnModel extends ColumnModel<App> implements AppInfoSelectedE
                 ((AppNameCell)cell).setBaseDebugId(baseID);
             } else if (cell instanceof AppStatusCell) {
                 ((AppStatusCell)cell).setBaseDebugId(baseID);
+            } else if (cell instanceof AppDotMenuCell) {
+                ((AppDotMenuCell)cell).setBaseDebugId(baseID);
             }
         }
 
