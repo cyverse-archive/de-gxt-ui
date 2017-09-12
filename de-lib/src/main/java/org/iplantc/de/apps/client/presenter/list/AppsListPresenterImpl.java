@@ -292,6 +292,9 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     @Override
     public void onAppCommentSelectedEvent(AppCommentSelectedEvent event) {
         final App app = event.getApp();
+        if (App.EXTERNAL_APP.equalsIgnoreCase(app.getAppType())) {
+            return;
+        }
         commentsDialogProvider.get(new AsyncCallback<CommentsDialog>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -310,6 +313,9 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     @Override
     public void onAppFavoriteSelected(AppFavoriteSelectedEvent event) {
         final App app = event.getApp();
+        if (App.EXTERNAL_APP.equalsIgnoreCase(app.getAppType())) {
+            return;
+        }
         appUserService.favoriteApp(app, !app.isFavorite(), new AppsCallback<Void>() {
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {

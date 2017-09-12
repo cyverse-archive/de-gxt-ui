@@ -42,7 +42,7 @@ public class AppDotMenuCell extends AbstractCell<App> implements HasCell<App, Ap
 
         ImageResource favoriteIcon(App app);
 
-        String commentText();
+        String commentText(App app);
 
         ImageResource commentIcon();
     }

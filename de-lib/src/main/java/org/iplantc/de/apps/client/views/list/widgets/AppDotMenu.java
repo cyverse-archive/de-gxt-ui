@@ -44,7 +44,7 @@ public class AppDotMenu extends Menu {
     void addMenuItems(App app) {
         infoBtn = new MenuItem(appearance.infoText(), appearance.infoIcon());
         favoriteBtn = new MenuItem(appearance.favoriteText(app), appearance.favoriteIcon(app));
-        commentBtn = new MenuItem(appearance.commentText(), appearance.commentIcon());
+        commentBtn = new MenuItem(appearance.commentText(app), appearance.commentIcon());
 
         add(infoBtn);
         add(favoriteBtn);

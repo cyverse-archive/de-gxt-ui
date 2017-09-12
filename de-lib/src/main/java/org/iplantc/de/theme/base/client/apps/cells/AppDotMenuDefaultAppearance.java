@@ -111,8 +111,12 @@ public class AppDotMenuDefaultAppearance implements AppDotMenuCell.AppDotMenuApp
     }
 
     @Override
-    public String commentText() {
-        return iplantDisplayStrings.comments();
+    public String commentText(App app) {
+        if (app.getAppType().equalsIgnoreCase(App.EXTERNAL_APP)) {
+            return appsMessages.featureNotSupported();
+        } else {
+            return iplantDisplayStrings.comments();
+        }
     }
 
     @Override
