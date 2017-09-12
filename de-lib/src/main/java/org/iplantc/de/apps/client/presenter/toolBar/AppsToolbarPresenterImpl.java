@@ -71,7 +71,7 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
     @Inject
     EventBus eventBus;
     @Inject
-    Provider<NewToolRequestDialog> newToolRequestDialogProvider;
+    AsyncProviderWrapper<NewToolRequestDialog> newToolRequestDialogProvider;
     @Inject
     AsyncProviderWrapper<AppSharingDialog> appSharingDialogProvider;
     @Inject
@@ -169,7 +169,17 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
 
     @Override
     public void onRequestToolSelected(RequestToolSelected event) {
-        newToolRequestDialogProvider.get().show(NewToolRequestFormView.Mode.NEWTOOL);
+        newToolRequestDialogProvider.get(new AsyncCallback<NewToolRequestDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+
+            }
+
+            @Override
+            public void onSuccess(NewToolRequestDialog result) {
+                result.show(NewToolRequestFormView.Mode.NEWTOOL);
+            }
+        });
     }
 
     @Override

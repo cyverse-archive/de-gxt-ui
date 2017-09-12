@@ -66,7 +66,13 @@ public class AppsToolbarPresenterImplTest {
     @Mock EventBus eventBusMock;
 
     @Captor ArgumentCaptor<DECallback<String>> stringCallbackCaptor;
-    @Mock Provider<NewToolRequestDialog> requestToolDlgProviderMock;
+
+    @Mock
+    AsyncProviderWrapper<NewToolRequestDialog> newToolRequestDialogProviderMock;
+    @Captor
+    ArgumentCaptor<AsyncCallback<NewToolRequestDialog>> newToolDialogCaptor;
+    @Mock
+    NewToolRequestDialog toolRequestMock;
 
     @Mock
     AsyncProviderWrapper<SubmitAppForPublicDialog> submitAppDialogAsyncProviderMock;
@@ -90,7 +96,7 @@ public class AppsToolbarPresenterImplTest {
         };
         uut.eventBus = eventBusMock;
         uut.userInfo = userInfoMock;
-        uut.newToolRequestDialogProvider = requestToolDlgProviderMock;
+        uut.newToolRequestDialogProvider = newToolRequestDialogProviderMock;
         uut.submitAppDialogAsyncProvider = submitAppDialogAsyncProviderMock;
         uut.appearance = appearanceMock;
     }
@@ -197,17 +203,17 @@ public class AppsToolbarPresenterImplTest {
 
     @Test public void verifyToolRequestDlgShown_onRequestToolSelected() {
         RequestToolSelected eventMock = mock(RequestToolSelected.class);
-        NewToolRequestDialog dlgMock = mock(NewToolRequestDialog.class);
-        when(requestToolDlgProviderMock.get()).thenReturn(dlgMock);
 
         /*** CALL METHOD UNDER TEST ***/
         uut.onRequestToolSelected(eventMock);
 
-        verify(requestToolDlgProviderMock).get();
-        verify(dlgMock).show(NewToolRequestFormView.Mode.NEWTOOL);
+        verify(newToolRequestDialogProviderMock).get(newToolDialogCaptor.capture());
+        newToolDialogCaptor.getValue().onSuccess(toolRequestMock);
 
-        verifyNoMoreInteractions(dlgMock,
-                                 requestToolDlgProviderMock,
+        verify(toolRequestMock).show(NewToolRequestFormView.Mode.NEWTOOL);
+
+        verifyNoMoreInteractions(toolRequestMock,
+                                 newToolRequestDialogProviderMock,
                                  eventMock);
 
         verifyZeroInteractions(eventBusMock,
