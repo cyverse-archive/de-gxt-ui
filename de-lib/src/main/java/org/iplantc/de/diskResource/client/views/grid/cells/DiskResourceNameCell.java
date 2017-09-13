@@ -1,5 +1,8 @@
 package org.iplantc.de.diskResource.client.views.grid.cells;
 
+import static com.google.gwt.dom.client.BrowserEvents.CLICK;
+import static com.google.gwt.dom.client.BrowserEvents.MOUSEOVER;
+
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
@@ -8,7 +11,6 @@ import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.diskResource.client.events.DiskResourceNameSelectedEvent;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 
-import static com.google.gwt.dom.client.BrowserEvents.*;
 import com.google.common.base.Strings;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
@@ -70,8 +72,6 @@ public class DiskResourceNameCell extends AbstractCell<DiskResource> {
 
     private Popup linkPopup;
 
-    private final DiskResourceFavoriteCell favCell;
-
     public DiskResourceNameCell(final DiskResourceUtil diskResourceUtil) {
         this(true, diskResourceUtil);
     }
@@ -89,7 +89,6 @@ public class DiskResourceNameCell extends AbstractCell<DiskResource> {
         super(CLICK, MOUSEOVER);
         this.diskResourceUtil = diskResourceUtil;
         this.appearance = appearance;
-        favCell = new DiskResourceFavoriteCell();
         this.previewEnabled = previewEnabled;
     }
 
@@ -98,9 +97,6 @@ public class DiskResourceNameCell extends AbstractCell<DiskResource> {
         if (value == null) {
             return;
         }
-
-        favCell.setBaseDebugId(baseID);
-        favCell.render(context, value, sb);
 
         boolean inTrash = diskResourceUtil.inTrash(value);
 
@@ -140,7 +136,6 @@ public class DiskResourceNameCell extends AbstractCell<DiskResource> {
         if (value == null) {
             return;
         }
-        favCell.onBrowserEvent(context, parent, value, event, valueUpdater);
         Element eventTarget = Element.as(event.getEventTarget());
         if (parent.isOrHasChild(eventTarget)) {
 
@@ -159,7 +154,6 @@ public class DiskResourceNameCell extends AbstractCell<DiskResource> {
 
     public void setHasHandlers(HasHandlers hasHandlers) {
         this.hasHandlers = hasHandlers;
-        favCell.setHasHandlers(hasHandlers);
     }
 
     private void doOnMouseOver(final Element eventTarget, DiskResource value) {
