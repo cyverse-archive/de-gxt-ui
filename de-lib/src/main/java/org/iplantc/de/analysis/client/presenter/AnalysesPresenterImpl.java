@@ -45,6 +45,8 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
+import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
+import org.iplantc.de.commons.client.views.dialogs.IPlantPromptDialog;
 import org.iplantc.de.shared.AnalysisCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
@@ -491,11 +493,21 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Override
     public void onRenameAnalysisSelected(RenameAnalysisSelected event) {
         Analysis selectedAnalysis = event.getAnalysis();
-        String newName = event.getNewName();
+        final String name = selectedAnalysis.getName();
+        final IPlantPromptDialog dlg = new IPlantPromptDialog(appearance.rename(), -1, name, new DiskResourceNameValidator());
+        dlg.setHeading(appearance.renameAnalysis());
+        dlg.addOkButtonSelectHandler(okSelect -> {
+            if (!selectedAnalysis.getName().equals(dlg.getFieldText())) {
+                renameAnalysis(selectedAnalysis, dlg.getFieldText());
+            }
+        });
+        dlg.show();
+    }
+
+    void renameAnalysis(Analysis selectedAnalysis, String newName) {
         analysisService.renameAnalysis(selectedAnalysis,
                                        newName,
                                        new RenameAnalysisCallback(selectedAnalysis, newName, listStore));
-
     }
 
     @Override

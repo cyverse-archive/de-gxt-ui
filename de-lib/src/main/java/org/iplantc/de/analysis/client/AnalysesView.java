@@ -51,10 +51,6 @@ public interface AnalysesView extends IsWidget,
 
         String paramValue();
 
-        String rename();
-
-        String renameAnalysis();
-
         String retrieveParametersLoadingMask();
 
         String searchFieldEmptyText();
@@ -177,6 +173,10 @@ public interface AnalysesView extends IsWidget,
             String warning();
 
             String analysesExecDeleteWarning();
+
+            String rename();
+
+            String renameAnalysis();
         }
 
         List<Analysis> getSelectedAnalyses();

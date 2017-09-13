@@ -104,4 +104,13 @@ public class AnalysesPresenterDefaultAppearance implements AnalysesView.Presente
         return iplantDisplayStrings.warning();
     }
 
+    public String rename() {
+        return iplantDisplayStrings.rename();
+    }
+
+    @Override
+    public String renameAnalysis() {
+        return analysesMessages.renameAnalysis();
+    }
+
 }

@@ -27,8 +27,6 @@ import org.iplantc.de.analysis.shared.AnalysisModule;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
-import org.iplantc.de.commons.client.views.dialogs.IPlantPromptDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Preconditions;
@@ -385,21 +383,8 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         Preconditions.checkState(currentSelection.size() == 1);
 
         final Analysis selectedAnalysis = currentSelection.iterator().next();
-        final String name = selectedAnalysis.getName();
-        final IPlantPromptDialog dlg = new IPlantPromptDialog(appearance.rename(),
-                                                              -1,
-                                                              name,
-                                                              new DiskResourceNameValidator());
-        dlg.setHeading(appearance.renameAnalysis());
-        dlg.addOkButtonSelectHandler(new SelectEvent.SelectHandler() {
-            @Override
-            public void onSelect(SelectEvent event) {
-                if (!selectedAnalysis.getName().equals(dlg.getFieldText())) {
-                    fireEvent(new RenameAnalysisSelected(selectedAnalysis, dlg.getFieldText()));
-                }
-            }
-        });
-        dlg.show();
+
+        fireEvent(new RenameAnalysisSelected(selectedAnalysis));
     }
 
     @UiHandler("updateCommentsMI")

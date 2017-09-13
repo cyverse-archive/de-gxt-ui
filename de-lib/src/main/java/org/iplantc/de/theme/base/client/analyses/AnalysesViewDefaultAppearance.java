@@ -105,16 +105,6 @@ public class AnalysesViewDefaultAppearance implements AnalysesView.Appearance {
     }
 
     @Override
-    public String rename() {
-        return iplantDisplayStrings.rename();
-    }
-
-    @Override
-    public String renameAnalysis() {
-        return analysesMessages.renameAnalysis();
-    }
-
-    @Override
     public String retrieveParametersLoadingMask() {
         return iplantDisplayStrings.loadingMask();
     }

@@ -22,11 +22,9 @@ public class RenameAnalysisSelected
 
     public static Type<RenameAnalysisSelectedHandler> TYPE = new Type<RenameAnalysisSelectedHandler>();
     private Analysis analysis;
-    private String newName;
 
-    public RenameAnalysisSelected(Analysis analysis, String newName) {
+    public RenameAnalysisSelected(Analysis analysis) {
         this.analysis = analysis;
-        this.newName = newName;
     }
 
     public Type<RenameAnalysisSelectedHandler> getAssociatedType() {
@@ -41,7 +39,4 @@ public class RenameAnalysisSelected
         return analysis;
     }
 
-    public String getNewName() {
-        return newName;
-    }
 }
