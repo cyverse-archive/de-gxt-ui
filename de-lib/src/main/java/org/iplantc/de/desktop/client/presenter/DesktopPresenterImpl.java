@@ -152,7 +152,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     @Inject DEProperties deProperties;
     @Inject Provider<ErrorHandler> errorHandlerProvider;
     @Inject AsyncProviderWrapper<DEUserSupportServiceFacade> userSupportServiceProvider;
-    @Inject Provider<FileEditorServiceFacade> fileEditorServiceProvider;
+    @Inject AsyncProviderWrapper<FileEditorServiceFacade> fileEditorServiceProvider;
     @Inject MessageServiceFacade messageServiceFacade;
     @Inject NotificationAutoBeanFactory notificationFactory;
     @Inject DiskResourceAutoBeanFactory diskResourceFactory;
@@ -410,7 +410,17 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         JSONArray pathArr = new JSONArray();
         pathArr.set(0, new JSONString(file.getPath()));
         obj.put("paths", pathArr);
-        fileEditorServiceProvider.get().loadGenomesInCoge(obj, new LoadGenomeInCoGeCallback(null));
+        fileEditorServiceProvider.get(new AsyncCallback<FileEditorServiceFacade>() {
+            @Override
+            public void onFailure(Throwable caught) {
+
+            }
+
+            @Override
+            public void onSuccess(FileEditorServiceFacade result) {
+		result.loadGenomesInCoge(obj, new LoadGenomeInCoGeCallback(null));
+            }
+        });
     }
 
     @Override
