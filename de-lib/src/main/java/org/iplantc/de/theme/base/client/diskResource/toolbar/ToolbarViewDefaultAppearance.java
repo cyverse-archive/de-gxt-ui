@@ -38,9 +38,6 @@ public class ToolbarViewDefaultAppearance implements ToolbarView.Appearance {
         @Source("../import.gif")
         ImageResource importDataIcon();
 
-        @Source("../comments.png")
-        ImageResource metadataIcon();
-
         @Source("../list-ingredients-16.png")
         ImageResource newPathListIcon();
 
@@ -281,7 +278,7 @@ public class ToolbarViewDefaultAppearance implements ToolbarView.Appearance {
 
     @Override
     public ImageResource metadataIcon() {
-        return resources.metadataIcon();
+        return iplantResources.metadataIcon();
     }
 
     @Override
