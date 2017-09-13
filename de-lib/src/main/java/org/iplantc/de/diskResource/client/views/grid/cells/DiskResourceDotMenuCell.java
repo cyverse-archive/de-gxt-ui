@@ -115,7 +115,7 @@ public class DiskResourceDotMenuCell extends AbstractCell<DiskResource> implemen
     }
 
     String getDebugId(DiskResource value) {
-        return baseDebugId + "." + value.getId() + DiskResourceModule.Ids.DOT_MENU;
+        return baseDebugId + "." + value.getPath() + DiskResourceModule.Ids.DOT_MENU;
     }
 
     public void setHasHandlers(HasHandlers hasHandlers) {
