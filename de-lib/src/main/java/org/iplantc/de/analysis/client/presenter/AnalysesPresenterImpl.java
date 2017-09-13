@@ -17,11 +17,13 @@ import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
 import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
 import org.iplantc.de.analysis.client.gin.factory.AnalysesViewFactory;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.presenter.proxy.AnalysisRpcProxy;
 import org.iplantc.de.analysis.client.views.AnalysisStepsView;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
+import org.iplantc.de.analysis.client.views.dialogs.AnalysisParametersDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisSharingDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisStepsInfoDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisUserSupportDialog;
@@ -101,7 +103,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               RelaunchAnalysisSelected.RelaunchAnalysisSelectedHandler,
                                               GoToAnalysisFolderSelected.GoToAnalysisFolderSelectedHandler,
                                               DeleteAnalysisSelected.DeleteAnalysisSelectedHandler,
-                                              CancelAnalysisSelected.CancelAnalysisSelectedHandler {
+                                              CancelAnalysisSelected.CancelAnalysisSelectedHandler,
+                                              ViewAnalysisParamsSelected.ViewAnalysisParamsSelectedHandler {
 
     private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
         private final Analysis ae;
@@ -229,6 +232,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     AsyncProviderWrapper<AnalysisUserSupportDialog> aSupportDialogProvider;
     @Inject AsyncProviderWrapper<AnalysisStepsInfoDialog> stepsInfoDialogProvider;
     @Inject AsyncProviderWrapper<AnalysisCommentsDialog> analysisCommentsDlgProvider;
+    @Inject AsyncProviderWrapper<AnalysisParametersDialog> analysisParametersDialogAsyncProvider;
 
     @Inject
     AnalysisUserSupportDialog.AnalysisUserSupportAppearance userSupportAppearance;
@@ -281,6 +285,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         toolBarView.addGoToAnalysisFolderSelectedHandler(this);
         toolBarView.addDeleteAnalysisSelectedHandler(this);
         toolBarView.addCancelAnalysisSelectedHandler(this);
+        toolBarView.addViewAnalysisParamsSelectedHandler(this);
 
         //Set default filter to ALL
         currentFilter = AnalysisFilter.ALL;
@@ -688,6 +693,22 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                         ausd.hide();
                     }
                 });
+            }
+        });
+    }
+
+    @Override
+    public void onViewAnalysisParamsSelected(ViewAnalysisParamsSelected event) {
+        Analysis selectedAnalysis = event.getAnalysis();
+        analysisParametersDialogAsyncProvider.get(new AsyncCallback<AnalysisParametersDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(AnalysisParametersDialog result) {
+                result.show(selectedAnalysis);
             }
         });
     }
