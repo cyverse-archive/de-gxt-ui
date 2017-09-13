@@ -21,6 +21,7 @@ import org.iplantc.de.analysis.client.gin.factory.AnalysesViewFactory;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.presenter.proxy.AnalysisRpcProxy;
 import org.iplantc.de.analysis.client.views.AnalysisStepsView;
+import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisSharingDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisStepsInfoDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisUserSupportDialog;
@@ -227,6 +228,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Inject
     AsyncProviderWrapper<AnalysisUserSupportDialog> aSupportDialogProvider;
     @Inject AsyncProviderWrapper<AnalysisStepsInfoDialog> stepsInfoDialogProvider;
+    @Inject AsyncProviderWrapper<AnalysisCommentsDialog> analysisCommentsDlgProvider;
 
     @Inject
     AnalysisUserSupportDialog.AnalysisUserSupportAppearance userSupportAppearance;
@@ -517,11 +519,31 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     @Override
     public void onAnalysisCommentUpdate(AnalysisCommentUpdate event) {
-        Analysis value = event.getAnalysis();
-        String comment = event.getComment();
-        analysisService.updateAnalysisComments(value,
+        Analysis selectedAnalysis = event.getAnalysis();
+
+        analysisCommentsDlgProvider.get(new AsyncCallback<AnalysisCommentsDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(AnalysisCommentsDialog result) {
+                result.addDialogHideHandler(hideEvent -> {
+                    if (Dialog.PredefinedButton.OK.equals(hideEvent.getHideButton())
+                        && result.isCommentChanged()) {
+                        updateAnalysisComments(selectedAnalysis, result.getComment());
+                    }
+                });
+                result.show(selectedAnalysis);
+            }
+        });
+    }
+
+    void updateAnalysisComments(Analysis selectedAnalysis, String comment) {
+        analysisService.updateAnalysisComments(selectedAnalysis,
                                                comment,
-                                               new UpdateCommentsCallback(value, comment, listStore));
+                                               new UpdateCommentsCallback(selectedAnalysis, comment, listStore));
     }
 
     @Override

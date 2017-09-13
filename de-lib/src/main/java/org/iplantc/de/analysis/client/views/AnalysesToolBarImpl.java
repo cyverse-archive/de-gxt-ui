@@ -102,7 +102,6 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
 
     @Inject
     UserInfo userInfo;
-    @Inject AsyncProviderWrapper<AnalysisCommentsDialog> analysisCommentsDlgProvider;
 
 
     List<Analysis> currentSelection;
@@ -396,26 +395,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
 
 
         final Analysis selectedAnalysis = currentSelection.iterator().next();
-        analysisCommentsDlgProvider.get(new AsyncCallback<AnalysisCommentsDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(AnalysisCommentsDialog result) {
-                result.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
-                    @Override
-                    public void onDialogHide(DialogHideEvent event) {
-                        if (Dialog.PredefinedButton.OK.equals(event.getHideButton())
-                            && result.isCommentChanged()) {
-                            fireEvent(new AnalysisCommentUpdate(selectedAnalysis, result.getComment()));
-                        }
-                    }
-                });
-                result.show(selectedAnalysis);
-            }
-        });
+        fireEvent(new AnalysisCommentUpdate(selectedAnalysis));
     }
 
     @UiHandler("viewParamsMI")

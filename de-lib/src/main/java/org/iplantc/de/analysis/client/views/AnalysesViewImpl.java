@@ -12,12 +12,9 @@ import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.gin.factory.AnalysisToolBarFactory;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
-import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.analysis.shared.AnalysisModule;
 import org.iplantc.de.client.models.analysis.Analysis;
-import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -25,7 +22,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -36,10 +32,8 @@ import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.Composite;
-import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.Status;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.grid.CheckBoxSelectionModel;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
@@ -74,8 +68,6 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     @UiField Status selectionStatus;
     CheckBoxSelectionModel<Analysis> checkBoxModel;
     private AnalysisColumnModel acm;
-
-    @Inject AsyncProviderWrapper<AnalysisCommentsDialog> analysisCommentsDlgProvider;
 
     AnalysisSearchField searchField;
 
@@ -159,29 +151,7 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
 
     @Override
     public void onAnalysisCommentSelected(final AnalysisCommentSelectedEvent event) {
-        // Show comments
-        analysisCommentsDlgProvider.get(new AsyncCallback<AnalysisCommentsDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(AnalysisCommentsDialog result) {
-                result.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
-                    @Override
-                    public void onDialogHide(DialogHideEvent hideEvent) {
-                        if (Dialog.PredefinedButton.OK.equals(hideEvent.getHideButton())
-                            && result.isCommentChanged()) {
-                            fireEvent(new AnalysisCommentUpdate(event.getValue(),
-                                                                result.getComment()));
-
-                        }
-                    }
-                });
-                result.show(event.getValue());
-            }
-        });
+        fireEvent(new AnalysisCommentUpdate(event.getValue()));
     }
 
     @Override

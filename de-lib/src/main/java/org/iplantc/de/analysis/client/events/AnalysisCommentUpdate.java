@@ -20,12 +20,10 @@ public class AnalysisCommentUpdate extends GwtEvent<AnalysisCommentUpdate.Analys
     }
 
     private Analysis analysis;
-    private String comment;
 
-    public AnalysisCommentUpdate(Analysis analysis, String comment) {
+    public AnalysisCommentUpdate(Analysis analysis) {
 
         this.analysis = analysis;
-        this.comment = comment;
     }
 
     public static Type<AnalysisCommentUpdateHandler> TYPE = new Type<AnalysisCommentUpdateHandler>();
@@ -40,9 +38,5 @@ public class AnalysisCommentUpdate extends GwtEvent<AnalysisCommentUpdate.Analys
 
     public Analysis getAnalysis() {
         return analysis;
-    }
-
-    public String getComment() {
-        return comment;
     }
 }
