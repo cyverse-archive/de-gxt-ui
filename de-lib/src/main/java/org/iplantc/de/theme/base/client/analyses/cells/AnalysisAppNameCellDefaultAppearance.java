@@ -33,8 +33,8 @@ public class AnalysisAppNameCellDefaultAppearance implements AnalysisAppNameCell
     }
 
     interface Templates extends SafeHtmlTemplates {
-        @SafeHtmlTemplates.Template("<span name='{0}' title='{3}' class='{1}'>{2}</span>")
-        SafeHtml cell(String elementName, String className, SafeHtml analysisAppName, String tooltip);
+        @SafeHtmlTemplates.Template("<span name='{0}' id ='{4}' title='{3}' class='{1}'>{2}</span>")
+        SafeHtml cell(String elementName, String className, SafeHtml analysisAppName, String tooltip, String debugId);
     }
 
     private final AnalysisAppNameCellResources resources;
@@ -75,7 +75,7 @@ public class AnalysisAppNameCellDefaultAppearance implements AnalysisAppNameCell
     }
 
     @Override
-    public void render(Cell.Context context, Analysis model, SafeHtmlBuilder sb) {
+    public void render(Cell.Context context, Analysis model, SafeHtmlBuilder sb, String debugId) {
         if (model == null)
             return;
 
@@ -90,6 +90,7 @@ public class AnalysisAppNameCellDefaultAppearance implements AnalysisAppNameCell
         sb.append(template.cell(ELEMENT_NAME,
                                 style,
                                 SafeHtmlUtils.fromString(model.getAppName()),
-                                tooltip));
+                                tooltip,
+                                debugId));
     }
 }

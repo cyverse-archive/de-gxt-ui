@@ -34,5 +34,8 @@ public interface AnalysisModule {
         String SHARING_PERMS = ".permPanel";
         String ANALYSIS_DOT_MENU = ".dotMenu";
         String GRID = ".grid";
+        String ANALYSIS_NAME_CELL = ".nameCell";
+        String APP_NAME_CELL = ".appNameCell";
+        String SUPPORT_CELL = ".supportCell";
     }
 }

@@ -5,6 +5,7 @@ import static com.google.gwt.dom.client.BrowserEvents.MOUSEOUT;
 import static com.google.gwt.dom.client.BrowserEvents.MOUSEOVER;
 
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
+import org.iplantc.de.analysis.shared.AnalysisModule;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisExecutionStatus;
 import org.iplantc.de.intercom.client.IntercomFacade;
@@ -29,7 +30,7 @@ public class AnalysisUserSupportCell extends AbstractCell<Analysis> {
 
     public interface AnalysisUserSupportCellAppearance {
         String ELEMENT_NAME = "support";
-        void render(Context context, Analysis value, SafeHtmlBuilder sb);
+        void render(Context context, Analysis value, SafeHtmlBuilder sb, String debugId);
 
         void doOnMouseOut(Element eventTarget, Analysis value);
 
@@ -38,6 +39,7 @@ public class AnalysisUserSupportCell extends AbstractCell<Analysis> {
 
     private final AnalysisUserSupportCellAppearance appearance;
     private HasHandlers hasHandlers;
+    private String baseDebugId;
 
     public AnalysisUserSupportCell() {
         this(GWT.<AnalysisUserSupportCellAppearance>create(AnalysisUserSupportCellAppearance.class));
@@ -50,7 +52,8 @@ public class AnalysisUserSupportCell extends AbstractCell<Analysis> {
 
     @Override
     public void render(Context context, Analysis value, SafeHtmlBuilder sb) {
-        appearance.render(context, value, sb);
+        String debugId = baseDebugId + "." + value.getId() + AnalysisModule.Ids.SUPPORT_CELL;
+        appearance.render(context, value, sb, debugId);
     }
 
     @Override
@@ -91,4 +94,8 @@ public class AnalysisUserSupportCell extends AbstractCell<Analysis> {
         }
 
    }
+
+    public void setBaseDebugId(String baseDebugId) {
+        this.baseDebugId = baseDebugId;
+    }
 }

@@ -5,6 +5,7 @@ import static com.google.gwt.dom.client.BrowserEvents.MOUSEOUT;
 import static com.google.gwt.dom.client.BrowserEvents.MOUSEOVER;
 
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
+import org.iplantc.de.analysis.shared.AnalysisModule;
 import org.iplantc.de.client.models.analysis.Analysis;
 
 import com.google.common.base.Strings;
@@ -31,11 +32,12 @@ public class AnalysisAppNameCell extends AbstractCell<Analysis> {
 
         void doOnMouseOver(Element eventTarget, Analysis value);
 
-        void render(Cell.Context context, Analysis model, SafeHtmlBuilder sb);
+        void render(Cell.Context context, Analysis model, SafeHtmlBuilder sb, String debugId);
     }
 
     private final AnalysisAppNameCellAppearance appearance;
     private HandlerManager hasHandlers;
+    private String baseDebugId;
 
     public AnalysisAppNameCell() {
         this(GWT.<AnalysisAppNameCellAppearance> create(AnalysisAppNameCellAppearance.class));
@@ -48,7 +50,8 @@ public class AnalysisAppNameCell extends AbstractCell<Analysis> {
 
     @Override
     public void render(Cell.Context context, Analysis model, SafeHtmlBuilder sb) {
-        appearance.render(context, model, sb);
+        String debugId = baseDebugId + "." + model.getId() + AnalysisModule.Ids.APP_NAME_CELL;
+        appearance.render(context, model, sb, debugId);
     }
 
     @Override
@@ -91,6 +94,10 @@ public class AnalysisAppNameCell extends AbstractCell<Analysis> {
                 hasHandlers.fireEvent(new AnalysisAppSelectedEvent(value));
             }
         }
+    }
+
+    public void setBaseDebugId(String baseDebugId) {
+        this.baseDebugId = baseDebugId;
     }
 
 }

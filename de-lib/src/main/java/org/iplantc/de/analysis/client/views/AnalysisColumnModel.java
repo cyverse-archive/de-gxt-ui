@@ -185,6 +185,12 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
             Cell<?> cell = cc.getCell();
             if (cell instanceof AnalysisDotMenuCell) {
                 ((AnalysisDotMenuCell)cell).setBaseDebugId(baseID);
+            } else if (cell instanceof AnalysisNameCell) {
+                ((AnalysisNameCell)cell).setBaseDebugId(baseID);
+            } else if (cell instanceof AnalysisAppNameCell) {
+                ((AnalysisAppNameCell)cell).setBaseDebugId(baseID);
+            } else if (cell instanceof AnalysisUserSupportCell) {
+                ((AnalysisUserSupportCell)cell).setBaseDebugId(baseID);
             }
         }
     }

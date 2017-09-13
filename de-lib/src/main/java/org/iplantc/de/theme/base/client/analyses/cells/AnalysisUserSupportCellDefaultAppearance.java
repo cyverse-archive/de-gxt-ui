@@ -37,11 +37,11 @@ public class AnalysisUserSupportCellDefaultAppearance implements AnalysisUserSup
     }
 
     interface Templates extends SafeHtmlTemplates {
-        @SafeHtmlTemplates.Template("<span name=\"{0}\" title=\"{3}\" class='{2}'>{1}</span>")
-        SafeHtml analysis(String elementName, SafeHtml analysisName, String className, String tooltip);
+        @SafeHtmlTemplates.Template("<span name=\"{0}\" id='{4}' title=\"{3}\" class='{2}'>{1}</span>")
+        SafeHtml analysis(String elementName, SafeHtml analysisName, String className, String tooltip, String debugId);
 
-        @SafeHtmlTemplates.Template("<span name=\"{0}\" title=\"{3}\" class='{2}'>{1}</span>")
-        SafeHtml analysisNoSharing(String elementName, SafeHtml analysisName, String className, String tooltip);
+        @SafeHtmlTemplates.Template("<span name=\"{0}\" id='{4}' title=\"{3}\" class='{2}'>{1}</span>")
+        SafeHtml analysisNoSharing(String elementName, SafeHtml analysisName, String className, String tooltip, String debugId);
 
     }
 
@@ -85,18 +85,20 @@ public class AnalysisUserSupportCellDefaultAppearance implements AnalysisUserSup
     }
 
     @Override
-    public void render(Cell.Context context, Analysis value, SafeHtmlBuilder sb) {
+    public void render(Cell.Context context, Analysis value, SafeHtmlBuilder sb, String debugId) {
         if (value.isShareable() && !value.getStatus()
                                          .equalsIgnoreCase(AnalysisExecutionStatus.CANCELED.toString())) {
             sb.append(template.analysis(ELEMENT_NAME,
                                         SafeHtmlUtils.fromString(value.getStatus()),
                                         resources.css().support(),
-                                        displayStrings.analysisHelp()));
+                                        displayStrings.analysisHelp(),
+                                        debugId));
         } else {
             sb.append(template.analysisNoSharing(ELEMENT_NAME,
                                                  SafeHtmlUtils.fromString(value.getStatus()),
                                                  resources.css().noSharing(),
-                                                 value.getStatus()));
+                                                 value.getStatus(),
+                                                 debugId));
         }
     }
 
