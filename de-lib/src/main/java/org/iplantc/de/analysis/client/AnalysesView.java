@@ -3,9 +3,10 @@ package org.iplantc.de.analysis.client;
 import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
-import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
+import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.client.models.analysis.Analysis;
@@ -26,7 +27,9 @@ public interface AnalysesView extends IsWidget,
                                       AnalysisNameSelectedEvent.HasAnalysisNameSelectedEventHandlers,
                                       HTAnalysisExpandEvent.HasHTAnalysisExpandEventHandlers,
                                       AnalysisUserSupportRequestedEvent.HasAnalysisUserSupportRequestedEventHandlers,
-                                      AnalysisCommentUpdate.HasAnalysisCommentUpdateHandlers {
+                                      AnalysisCommentUpdate.HasAnalysisCommentUpdateHandlers,
+                                      RelaunchAnalysisSelected.HasRelaunchAnalysisSelectedHandlers,
+                                      ShareAnalysisSelected.HasShareAnalysisSelectedHandlers {
 
     interface Appearance {
 
@@ -137,6 +140,8 @@ public interface AnalysesView extends IsWidget,
         String stepInfoDialogWidth();
 
         String stepInfoDialogHeight();
+
+        int dotMenuWidth();
     }
 
     interface Presenter {

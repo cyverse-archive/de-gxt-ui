@@ -6,8 +6,10 @@ import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisCommentSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
+import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.views.cells.AnalysisAppNameCell;
-import org.iplantc.de.analysis.client.views.cells.AnalysisCommentCell;
+import org.iplantc.de.analysis.client.views.cells.AnalysisDotMenuCell;
 import org.iplantc.de.analysis.client.views.cells.AnalysisNameCell;
 import org.iplantc.de.analysis.client.views.cells.AnalysisUserSupportCell;
 import org.iplantc.de.analysis.client.views.cells.EndDateTimeCell;
@@ -15,6 +17,7 @@ import org.iplantc.de.analysis.client.views.cells.StartDateTimeCell;
 import org.iplantc.de.client.models.analysis.Analysis;
 
 import com.google.common.collect.Lists;
+import com.google.gwt.cell.client.Cell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -34,7 +37,9 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
                                                               AnalysisAppSelectedEvent.HasAnalysisAppSelectedEventHandlers,
                                                               AnalysisCommentSelectedEvent.HasAnalysisCommentSelectedEventHandlers,
                                                               HTAnalysisExpandEvent.HasHTAnalysisExpandEventHandlers,
-                                                              AnalysisUserSupportRequestedEvent.HasAnalysisUserSupportRequestedEventHandlers{
+                                                              AnalysisUserSupportRequestedEvent.HasAnalysisUserSupportRequestedEventHandlers,
+                                                              RelaunchAnalysisSelected.HasRelaunchAnalysisSelectedHandlers,
+                                                              ShareAnalysisSelected.HasShareAnalysisSelectedHandlers {
 
     AnalysisColumnModel(final CheckBoxSelectionModel<Analysis> checkBoxSelectionModel) {
         this(checkBoxSelectionModel,
@@ -51,8 +56,8 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
                 ((AnalysisNameCell)cc.getCell()).setHasHandlers(ensureHandlers());
             } else if (cc.getCell() instanceof AnalysisAppNameCell) {
                 ((AnalysisAppNameCell)cc.getCell()).setHasHandlers(ensureHandlers());
-            } else if (cc.getCell() instanceof AnalysisCommentCell) {
-                ((AnalysisCommentCell)cc.getCell()).setHasHandlers(ensureHandlers());
+            } else if (cc.getCell() instanceof AnalysisDotMenuCell) {
+                ((AnalysisDotMenuCell)cc.getCell()).setHasHandlers(ensureHandlers());
             } else if(cc.getCell() instanceof  AnalysisUserSupportCell) {
                 ((AnalysisUserSupportCell)cc.getCell()).setHasHandlers(ensureHandlers());
             }
@@ -65,8 +70,6 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
         ColumnConfig<Analysis, Analysis> colCheckBox = checkBoxSelectionModel.getColumn();
         ColumnConfig<Analysis, Analysis> name = new ColumnConfig<>(new IdentityValueProvider<Analysis>("name"),
                                                                    150);
-        ColumnConfig<Analysis, Analysis> comment = new ColumnConfig<>(new IdentityValueProvider<Analysis>("description"),
-                                                                      30);
         ColumnConfig<Analysis, Analysis> app = new ColumnConfig<>(new IdentityValueProvider<Analysis>("app_name"),
                                                                   100);
         ColumnConfig<Analysis, Analysis> startDate = new ColumnConfig<>(new IdentityValueProvider<Analysis>("startdate"),
@@ -97,16 +100,18 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
                                                                      125);
         ColumnConfig<Analysis, Analysis> status = new ColumnConfig<Analysis, Analysis>(new IdentityValueProvider<Analysis>("status"),75);
 
+        ColumnConfig<Analysis, Analysis> dotMenu = new ColumnConfig<Analysis, Analysis>(new IdentityValueProvider<>(""), appearance.dotMenuWidth());
+
         name.setHeader(appearance.name());
         name.setCell(new AnalysisNameCell());
 
         username.setHeader("Owner");
 
-        comment.setMenuDisabled(true);
-        comment.setCell(new AnalysisCommentCell());
-        comment.setSortable(false);
-        comment.setHeader("");
-        comment.setHideable(false);
+        dotMenu.setMenuDisabled(true);
+        dotMenu.setCell(new AnalysisDotMenuCell());
+        dotMenu.setSortable(false);
+        dotMenu.setHeader("");
+        dotMenu.setHideable(false);
 
         app.setHeader(appearance.appName());
         app.setCell(new AnalysisAppNameCell());
@@ -127,11 +132,11 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
         ret.add(colCheckBox);
         ret.add(name);
         ret.add(username);
-        ret.add(comment);
         ret.add(app);
         ret.add(startDate);
         ret.add(endDate);
         ret.add(status);
+        ret.add(dotMenu);
         return ret;
     }
 
@@ -163,5 +168,24 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
     public HandlerRegistration addAnalysisUserSupportRequestedEventHandler(
             AnalysisUserSupportRequestedEvent.AnalysisUserSupportRequestedEventHandler handler) {
         return ensureHandlers().addHandler(AnalysisUserSupportRequestedEvent.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addRelaunchAnalysisSelectedHandler(RelaunchAnalysisSelected.RelaunchAnalysisSelectedHandler handler) {
+        return ensureHandlers().addHandler(RelaunchAnalysisSelected.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addShareAnalysisSelectedHandler(ShareAnalysisSelected.ShareAnalysisSelectedHandler handler) {
+        return ensureHandlers().addHandler(ShareAnalysisSelected.TYPE, handler);
+    }
+
+    public void ensureDebugId(String baseID) {
+        for (ColumnConfig<Analysis, ?> cc : configs) {
+            Cell<?> cell = cc.getCell();
+            if (cell instanceof AnalysisDotMenuCell) {
+                ((AnalysisDotMenuCell)cell).setBaseDebugId(baseID);
+            }
+        }
     }
 }

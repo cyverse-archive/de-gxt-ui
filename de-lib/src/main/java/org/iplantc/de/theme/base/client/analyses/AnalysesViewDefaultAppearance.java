@@ -322,4 +322,9 @@ public class AnalysesViewDefaultAppearance implements AnalysesView.Appearance {
     public String stepInfoDialogHeight() {
         return "300px";
     }
+
+    @Override
+    public int dotMenuWidth() {
+        return 40;
+    }
 }

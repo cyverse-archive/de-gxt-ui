@@ -32,5 +32,7 @@ public interface AnalysisModule {
         String SHARING_DLG = "analysisSharingDlg";
         String SHARING_VIEW = ".view";
         String SHARING_PERMS = ".permPanel";
+        String ANALYSIS_DOT_MENU = ".dotMenu";
+        String GRID = ".grid";
     }
 }

@@ -8,6 +8,8 @@ import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisCommentSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
+import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.gin.factory.AnalysisToolBarFactory;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
@@ -71,6 +73,7 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     @UiField ToolBar pagingToolBar;
     @UiField Status selectionStatus;
     CheckBoxSelectionModel<Analysis> checkBoxModel;
+    private AnalysisColumnModel acm;
 
     @Inject AsyncProviderWrapper<AnalysisCommentsDialog> analysisCommentsDlgProvider;
 
@@ -86,6 +89,8 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
         
         MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
         initWidget(uiBinder.createAndBindUi(this));
+
+        this.acm = (AnalysisColumnModel) cm;
 
         pagingToolBar.addStyleName(appearance.pagingToolbarStyle());
         pagingToolBar.setBorders(false);
@@ -215,6 +220,8 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
         toolBar.asWidget().ensureDebugId(baseID + AnalysisModule.Ids.MENUBAR);
+        grid.ensureDebugId(baseID + AnalysisModule.Ids.GRID);
+        acm.ensureDebugId(baseID + AnalysisModule.Ids.GRID);
     }
 
     private void setSelectionCount(int count) {
@@ -229,5 +236,15 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     @Override
     public HandlerRegistration addAnalysisCommentUpdateHandler(AnalysisCommentUpdate.AnalysisCommentUpdateHandler handler) {
         return addHandler(handler, AnalysisCommentUpdate.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addRelaunchAnalysisSelectedHandler(RelaunchAnalysisSelected.RelaunchAnalysisSelectedHandler handler) {
+        return acm.addRelaunchAnalysisSelectedHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addShareAnalysisSelectedHandler(ShareAnalysisSelected.ShareAnalysisSelectedHandler handler) {
+        return acm.addShareAnalysisSelectedHandler(handler);
     }
 }
