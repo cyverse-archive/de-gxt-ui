@@ -58,10 +58,6 @@ public class AnalysesViewDefaultAppearance implements AnalysesView.Appearance {
     public AnalysisInfoStyle css() {
         return resources.css();
    }
-    @Override
-    public String analysesExecDeleteWarning() {
-        return analysesMessages.analysesExecDeleteWarning();
-    }
 
     @Override
     public String appName() {
@@ -251,11 +247,6 @@ public class AnalysesViewDefaultAppearance implements AnalysesView.Appearance {
     @Override
     public String saveAs() {
         return iplantDisplayStrings.saveAs();
-    }
-
-    @Override
-    public String warning() {
-        return iplantDisplayStrings.warning();
     }
 
     @Override

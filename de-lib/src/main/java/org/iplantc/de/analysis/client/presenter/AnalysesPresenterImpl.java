@@ -70,6 +70,8 @@ import com.sencha.gxt.data.shared.loader.LoadEvent;
 import com.sencha.gxt.data.shared.loader.LoadHandler;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
+import com.sencha.gxt.widget.core.client.Dialog;
+import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 import java.util.ArrayList;
@@ -300,7 +302,17 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     @Override
     public void onDeleteAnalysisSelected(DeleteAnalysisSelected event) {
-        List<Analysis> analysesToDelete = event.getAnalyses();
+        ConfirmMessageBox cmb = new ConfirmMessageBox(appearance.warning(), appearance.analysesExecDeleteWarning());
+        cmb.setPredefinedButtons(Dialog.PredefinedButton.OK, Dialog.PredefinedButton.CANCEL);
+        cmb.addDialogHideHandler(hideEvent -> {
+            if (Dialog.PredefinedButton.OK.equals(hideEvent.getHideButton())) {
+               deleteAnalyses(event.getAnalyses());
+            }
+        });
+        cmb.show();
+    }
+
+    void deleteAnalyses(List<Analysis> analysesToDelete) {
         analysisService.deleteAnalyses(analysesToDelete, new AnalysisCallback<String>() {
 
             @Override

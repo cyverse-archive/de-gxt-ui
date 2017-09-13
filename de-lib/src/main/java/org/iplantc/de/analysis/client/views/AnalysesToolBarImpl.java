@@ -56,7 +56,6 @@ import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.Dialog;
-import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -362,18 +361,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         Preconditions.checkNotNull(currentSelection);
         Preconditions.checkState(!currentSelection.isEmpty());
 
-        ConfirmMessageBox cmb = new ConfirmMessageBox(appearance.warning(),
-                                                      appearance.analysesExecDeleteWarning());
-        cmb.setPredefinedButtons(Dialog.PredefinedButton.OK, Dialog.PredefinedButton.CANCEL);
-        cmb.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
-            @Override
-            public void onDialogHide(DialogHideEvent event) {
-                if (Dialog.PredefinedButton.OK.equals(event.getHideButton())){
-                    fireEvent(new DeleteAnalysisSelected(currentSelection));
-                }
-            }
-        });
-        cmb.show();
+        fireEvent(new DeleteAnalysisSelected(currentSelection));
     }
 
     @UiHandler("goToFolderMI")

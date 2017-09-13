@@ -33,8 +33,6 @@ public interface AnalysesView extends IsWidget,
 
     interface Appearance {
 
-        String analysesExecDeleteWarning();
-
         String appName();
 
         String endDate();
@@ -111,8 +109,6 @@ public interface AnalysesView extends IsWidget,
 
         String saveAs();
 
-        String warning();
-
         String viewAnalysisStepInfo();
 
         String stepType();
@@ -178,6 +174,9 @@ public interface AnalysesView extends IsWidget,
 
             String commentsDialogHeight();
 
+            String warning();
+
+            String analysesExecDeleteWarning();
         }
 
         List<Analysis> getSelectedAnalyses();
