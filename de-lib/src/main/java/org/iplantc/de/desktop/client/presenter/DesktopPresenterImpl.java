@@ -418,7 +418,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
 
             @Override
             public void onSuccess(FileEditorServiceFacade result) {
-		result.loadGenomesInCoge(obj, new LoadGenomeInCoGeCallback(null));
+                result.loadGenomesInCoge(obj, new LoadGenomeInCoGeCallback(null));
             }
         });
     }
