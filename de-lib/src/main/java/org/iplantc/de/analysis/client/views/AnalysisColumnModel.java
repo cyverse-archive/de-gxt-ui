@@ -4,10 +4,16 @@ import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisCommentSelectedEvent;
+import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
+import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
 import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
 import org.iplantc.de.analysis.client.views.cells.AnalysisAppNameCell;
 import org.iplantc.de.analysis.client.views.cells.AnalysisDotMenuCell;
 import org.iplantc.de.analysis.client.views.cells.AnalysisNameCell;
@@ -39,7 +45,13 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
                                                               HTAnalysisExpandEvent.HasHTAnalysisExpandEventHandlers,
                                                               AnalysisUserSupportRequestedEvent.HasAnalysisUserSupportRequestedEventHandlers,
                                                               RelaunchAnalysisSelected.HasRelaunchAnalysisSelectedHandlers,
-                                                              ShareAnalysisSelected.HasShareAnalysisSelectedHandlers {
+                                                              ShareAnalysisSelected.HasShareAnalysisSelectedHandlers,
+                                                              RenameAnalysisSelected.HasRenameAnalysisSelectedHandlers,
+                                                              GoToAnalysisFolderSelected.HasGoToAnalysisFolderSelectedHandlers,
+                                                              DeleteAnalysisSelected.HasDeleteAnalysisSelectedHandlers,
+                                                              CancelAnalysisSelected.HasCancelAnalysisSelectedHandlers,
+                                                              ViewAnalysisParamsSelected.HasViewAnalysisParamsSelectedHandlers,
+                                                              AnalysisJobInfoSelected.HasAnalysisJobInfoSelectedHandlers {
 
     AnalysisColumnModel(final CheckBoxSelectionModel<Analysis> checkBoxSelectionModel) {
         this(checkBoxSelectionModel,
@@ -178,6 +190,36 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
     @Override
     public HandlerRegistration addShareAnalysisSelectedHandler(ShareAnalysisSelected.ShareAnalysisSelectedHandler handler) {
         return ensureHandlers().addHandler(ShareAnalysisSelected.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addAnalysisJobInfoSelectedHandler(AnalysisJobInfoSelected.AnalysisJobInfoSelectedHandler handler) {
+        return ensureHandlers().addHandler(AnalysisJobInfoSelected.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addCancelAnalysisSelectedHandler(CancelAnalysisSelected.CancelAnalysisSelectedHandler handler) {
+        return ensureHandlers().addHandler(CancelAnalysisSelected.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addDeleteAnalysisSelectedHandler(DeleteAnalysisSelected.DeleteAnalysisSelectedHandler handler) {
+        return ensureHandlers().addHandler(DeleteAnalysisSelected.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addGoToAnalysisFolderSelectedHandler(GoToAnalysisFolderSelected.GoToAnalysisFolderSelectedHandler handler) {
+        return ensureHandlers().addHandler(GoToAnalysisFolderSelected.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addRenameAnalysisSelectedHandler(RenameAnalysisSelected.RenameAnalysisSelectedHandler handler) {
+        return ensureHandlers().addHandler(RenameAnalysisSelected.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addViewAnalysisParamsSelectedHandler(ViewAnalysisParamsSelected.ViewAnalysisParamsSelectedHandler handler) {
+        return ensureHandlers().addHandler(ViewAnalysisParamsSelected.TYPE, handler);
     }
 
     public void ensureDebugId(String baseID) {

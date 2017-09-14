@@ -5,7 +5,6 @@ import org.iplantc.de.analysis.client.views.cells.AnalysisDotMenuCell;
 import org.iplantc.de.apps.client.views.list.cells.AppDotMenuCell;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.resources.client.IplantResources;
-import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.core.client.GWT;
@@ -15,24 +14,20 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 public class AnalysisDotMenuDefaultAppearance implements AnalysisDotMenuCell.AnalysisDotMenuAppearance {
 
     private IplantResources iplantResources;
-    private IplantDisplayStrings iplantDisplayStrings;
     private AppDotMenuCell.AppDotMenuAppearance appDotMenuAppearance;
     private AnalysesView.Appearance analysisAppearance;
 
     public AnalysisDotMenuDefaultAppearance() {
         this(GWT.<IplantResources>create(IplantResources.class),
-             GWT.<IplantDisplayStrings>create(IplantDisplayStrings.class),
              GWT.<AppDotMenuCell.AppDotMenuAppearance>create(AppDotMenuCell.AppDotMenuAppearance.class),
              GWT.<AnalysesView.Appearance>create(AnalysesView.Appearance.class));
     }
 
     public AnalysisDotMenuDefaultAppearance(IplantResources iplantResources,
-                                            IplantDisplayStrings iplantDisplayStrings,
                                             AppDotMenuCell.AppDotMenuAppearance appDotMenuAppearance,
                                             AnalysesView.Appearance analysisAppearance) {
 
         this.iplantResources = iplantResources;
-        this.iplantDisplayStrings = iplantDisplayStrings;
         this.appDotMenuAppearance = appDotMenuAppearance;
         this.analysisAppearance = analysisAppearance;
     }
@@ -70,5 +65,65 @@ public class AnalysisDotMenuDefaultAppearance implements AnalysisDotMenuCell.Ana
     @Override
     public ImageResource shareIcon() {
         return iplantResources.share();
+    }
+
+    @Override
+    public String outputFolderText() {
+        return analysisAppearance.goToOutputFolder();
+    }
+
+    @Override
+    public ImageResource outputFolderIcon() {
+        return analysisAppearance.folderIcon();
+    }
+
+    @Override
+    public String parametersText() {
+        return analysisAppearance.viewParamLbl();
+    }
+
+    @Override
+    public ImageResource parametersIcon() {
+        return analysisAppearance.fileViewIcon();
+    }
+
+    @Override
+    public String infoText() {
+        return analysisAppearance.viewAnalysisStepInfo();
+    }
+
+    @Override
+    public ImageResource infoIcon() {
+        return analysisAppearance.fileViewIcon();
+    }
+
+    @Override
+    public String cancelText() {
+        return analysisAppearance.cancelAnalysis();
+    }
+
+    @Override
+    public ImageResource cancelIcon() {
+        return analysisAppearance.deleteIcon();
+    }
+
+    @Override
+    public String deleteText() {
+        return analysisAppearance.delete();
+    }
+
+    @Override
+    public ImageResource deleteIcon() {
+        return analysisAppearance.cancelIcon();
+    }
+
+    @Override
+    public String renameText() {
+        return analysisAppearance.renameMenuItem();
+    }
+
+    @Override
+    public ImageResource renameIcon() {
+        return analysisAppearance.fileRenameIcon();
     }
 }

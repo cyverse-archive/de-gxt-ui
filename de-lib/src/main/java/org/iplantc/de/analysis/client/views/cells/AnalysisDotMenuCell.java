@@ -21,7 +21,7 @@ import com.google.gwt.user.client.Event;
 
 /**
  * A cell that contains the "dot" menu (3 vertical dots).  When clicked the menu
- * containing the Analysis relaunch, share, and comment buttons is revealed.
+ * containing the various Analysis buttons is revealed.
  * @author aramsey
  */
 public class AnalysisDotMenuCell extends AbstractCell<Analysis> implements HasCell<Analysis, Analysis> {
@@ -40,6 +40,30 @@ public class AnalysisDotMenuCell extends AbstractCell<Analysis> implements HasCe
         String shareText();
 
         ImageResource shareIcon();
+
+        String outputFolderText();
+
+        ImageResource outputFolderIcon();
+
+        String parametersText();
+
+        ImageResource parametersIcon();
+
+        String infoText();
+
+        ImageResource infoIcon();
+
+        String cancelText();
+
+        ImageResource cancelIcon();
+
+        String deleteText();
+
+        ImageResource deleteIcon();
+
+        String renameText();
+
+        ImageResource renameIcon();
     }
 
     private AnalysisDotMenuAppearance appearance;

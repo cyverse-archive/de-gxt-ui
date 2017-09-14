@@ -275,6 +275,12 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         this.view.addRelaunchAnalysisSelectedHandler(this);
         this.view.addShareAnalysisSelectedHandler(this);
         this.view.addAnalysisCommentUpdateHandler(this);
+        this.view.addAnalysisJobInfoSelectedHandler(this);
+        this.view.addRenameAnalysisSelectedHandler(this);
+        this.view.addGoToAnalysisFolderSelectedHandler(this);
+        this.view.addDeleteAnalysisSelectedHandler(this);
+        this.view.addCancelAnalysisSelectedHandler(this);
+        this.view.addViewAnalysisParamsSelectedHandler(this);
         toolBarView.addAnalysisJobInfoSelectedHandler(this);
         toolBarView.addAnalysisCommentUpdateHandler(this);
         toolBarView.addShareAnalysisSelectedHandler(this);
