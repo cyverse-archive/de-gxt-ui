@@ -92,7 +92,7 @@ public class DiskResourceDotMenuDefaultAppearance implements DiskResourceDotMenu
 
     @Override
     public String shareText() {
-        return diskResourceMessages.share();
+        return diskResourceMessages.shareCollab();
     }
 
     @Override

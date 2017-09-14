@@ -230,5 +230,5 @@ public interface DiskResourceMessages extends Messages {
 
     String select();
 
-    String featureNotSupported();
+    String shareCollab();
 }
