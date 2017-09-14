@@ -130,4 +130,16 @@ public interface DesktopMessages extends Messages {
     String addSlack();
 
     String webhooksPrompt();
+
+    String dataNotification();
+
+    String appsNotification();
+
+    String analysesNotification();
+
+    String toolsNotification();
+
+    String permNotification();
+
+    String hookTopic();
 }

@@ -4,7 +4,8 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:selector="urn:import:org.iplantc.de.diskResource.client.views.widgets"
              xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
-             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form">
+             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
+             xmlns:tabs="urn:import:com.sencha.gxt.widget.core.client">
 
     <ui:with field="appearance" type="org.iplantc.de.preferences.client.PreferencesView.PreferencesViewAppearance" />
 
@@ -21,6 +22,13 @@
              type="com.sencha.gxt.core.client.util.Margins">
         <ui:attributes top="5" right="5" bottom="0" left="5" />
     </ui:with>
+    
+    <ui:with type="com.sencha.gxt.widget.core.client.TabItemConfig" field="general">
+            <ui:attributes text="General" />
+    </ui:with>
+    <ui:with type="com.sencha.gxt.widget.core.client.TabItemConfig" field="notification">
+        <ui:attributes text="Notification" />
+    </ui:with>
 
     <ui:with field="preferenceLayoutData"
              type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
@@ -34,26 +42,13 @@
              field="verticalLayoutData">
         <ui:attributes width="1" height="-1"/>
     </ui:with>
-    <container:VerticalLayoutContainer ui:field="container"
-                                       adjustForScroll="true"
-                                       scrollMode="AUTOY"
-                                       styleName="{style.user_pref}">
+    <tabs:TabPanel ui:field="tabs">
+        <tabs:child config="{general}">
+            <container:VerticalLayoutContainer adjustForScroll="true"
+                                               styleName="{style.user_pref}">
         <form:FieldSet heading="{appearance.preferences}"
                        collapsible="true">
-            <container:VerticalLayoutContainer ui:field="prefContainer"
-                                               height="170">
-                <container:child layoutData="{preferenceLayoutData}">
-                    <form:CheckBox ui:field="enableAnalysisEmailNotification"
-                                   debugId="idCboAnalysisNotifyEmail"
-                                   boxLabel="{appearance.notifyAnalysisEmail}"/>
-                </container:child>
-
-                <container:child layoutData="{preferenceLayoutData}">
-                    <form:CheckBox ui:field="enableImportEmailNotification"
-                                   debugId="idCboImportNotifyEmail"
-                                   boxLabel="{appearance.notifyImportEmail}"/>
-                </container:child>
-
+            <container:VerticalLayoutContainer height="120">
                 <container:child layoutData="{preferenceLayoutData}">
                     <form:CheckBox ui:field="rememberLastPath"
                                    debugId="cboLastPath"
@@ -86,23 +81,9 @@
                 </container:child>
             </container:VerticalLayoutContainer>
         </form:FieldSet>
-        <form:FieldSet heading="{appearance.webhooks}">
-            <form:widget>
-                <g:VerticalPanel spacing="5">
-                    <g:HTML ui:field="webhooksfield"/>
-                    <g:HorizontalPanel spacing="5">
-                        <form:TextField ui:field="hookUrl" visible="true" enabled="true"/>
-                        <button:TextButton text="X" ui:field="hookDelBtn" visible="false" enabled="true"/>
-                    </g:HorizontalPanel>
-                    <button:TextButton text="{appearance.addSlack}" ui:field="addSlackBtn" />
-                </g:VerticalPanel>
-            </form:widget>
-
-        </form:FieldSet>
-
         <form:FieldSet heading="{appearance.keyboardShortCut}"
                        collapsible="true">
-            <container:VerticalLayoutContainer ui:field="kbContainer">
+            <container:VerticalLayoutContainer >
                 <form:FieldLabel labelWidth="150"
                                  text="{appearance.openAppsWindow}">
                     <form:widget>
@@ -179,5 +160,56 @@
                 </g:VerticalPanel>
             </form:widget>
         </form:FieldSet>
-    </container:VerticalLayoutContainer>
+            </container:VerticalLayoutContainer>
+        </tabs:child>
+        <tabs:child config="{notification}">
+            <container:VerticalLayoutContainer adjustForScroll="true"
+                                               styleName="{style.user_pref}">
+                <form:FieldSet heading="Email Settings">
+                    <container:VerticalLayoutContainer height="80">
+                        <container:child layoutData="{preferenceLayoutData}">
+                            <form:CheckBox ui:field="enableAnalysisEmailNotification"
+                                           debugId="idCboAnalysisNotifyEmail"
+                                           boxLabel="{appearance.notifyAnalysisEmail}"/>
+                        </container:child>
+
+                        <container:child layoutData="{preferenceLayoutData}">
+                            <form:CheckBox ui:field="enableImportEmailNotification"
+                                           debugId="idCboImportNotifyEmail"
+                                           boxLabel="{appearance.notifyImportEmail}"/>
+                        </container:child>
+                    </container:VerticalLayoutContainer>
+                </form:FieldSet>
+                <form:FieldSet heading="{appearance.webhooks}">
+                    <form:widget>
+                        <g:VerticalPanel spacing="5">
+                            <g:HTML ui:field="webhooksfield"/>
+                            <g:HorizontalPanel spacing="5">
+                                <form:TextField ui:field="hookUrl" visible="true" enabled="true" width="250"/>
+                                <button:TextButton text="X" ui:field="hookDelBtn" visible="false"
+                                                   enabled="true"/>
+                            </g:HorizontalPanel>
+                            <button:TextButton text="{appearance.addSlack}" ui:field="addSlackBtn"/>
+                            <g:HTML text="{appearance.hookTopic}"/>
+                            <form:CheckBox ui:field="dataNotification"
+                                           debugId="idCboDataNotifi"
+                                           boxLabel="{appearance.dataNotification}"/>
+                            <form:CheckBox ui:field="appsNotification"
+                                           debugId="idCboAppsNotifi"
+                                           boxLabel="{appearance.appsNotification}"/>
+                            <form:CheckBox ui:field="analysesNotification"
+                                           debugId="idCboAnalysesNotifi"
+                                           boxLabel="{appearance.analysesNotification}"/>
+                            <form:CheckBox ui:field="toolsNotification"
+                                           debugId="idCboToolsNotifi"
+                                           boxLabel="{appearance.toolsNotification}"/>
+                            <form:CheckBox ui:field="permIdNotification"
+                                           debugId="idPermNotifi"
+                                           boxLabel="{appearance.permNotification}"/>
+                        </g:VerticalPanel>
+                    </form:widget>
+                </form:FieldSet>
+            </container:VerticalLayoutContainer>
+        </tabs:child>
+    </tabs:TabPanel>
 </ui:UiBinder>

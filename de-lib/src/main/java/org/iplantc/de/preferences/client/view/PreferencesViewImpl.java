@@ -32,6 +32,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.Composite;
+import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -50,13 +51,9 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
 
 
     @UiTemplate("PreferencesView.ui.xml")
-    interface MyUiBinder extends UiBinder<VerticalLayoutContainer, PreferencesViewImpl> { }
+    interface MyUiBinder extends UiBinder<TabPanel, PreferencesViewImpl> { }
 
     interface EditorDriver extends SimpleBeanEditorDriver<UserSettings, PreferencesViewImpl>{}
-
-    @UiField @Ignore VerticalLayoutContainer container;
-    @UiField @Ignore VerticalLayoutContainer kbContainer;
-    @UiField @Ignore VerticalLayoutContainer prefContainer;
 
     @UiField TextField analysesShortCut;
     @UiField TextField appsShortCut;

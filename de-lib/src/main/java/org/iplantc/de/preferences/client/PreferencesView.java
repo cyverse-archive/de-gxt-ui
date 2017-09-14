@@ -89,6 +89,18 @@ public interface PreferencesView extends IsWidget,
 
         String webhooksPrompt();
 
+        String dataNotification();
+
+        String appsNotification();
+
+        String analysesNotification();
+
+        String toolsNotification();
+
+        String permNotification();
+
+        String hookTopic();
+
     }
 
     void userSessionSuccess();

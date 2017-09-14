@@ -213,4 +213,34 @@ public class PreferencesViewDefaultAppearance implements PreferencesView.Prefere
     public String webhooksPrompt() {
         return desktopMessages.webhooksPrompt();
     }
+
+    @Override
+    public String dataNotification() {
+        return desktopMessages.dataNotification();
+    }
+
+    @Override
+    public String appsNotification() {
+        return desktopMessages.appsNotification();
+    }
+
+    @Override
+    public String analysesNotification() {
+        return desktopMessages.analysesNotification();
+    }
+
+    @Override
+    public String toolsNotification() {
+        return desktopMessages.toolsNotification();
+    }
+
+    @Override
+    public String permNotification() {
+        return desktopMessages.permNotification();
+    }
+
+    @Override
+    public String hookTopic() {
+        return desktopMessages.hookTopic();
+    }
 }
