@@ -3,6 +3,7 @@ package org.iplantc.de.diskResource.client.views.grid.cells;
 import static com.google.gwt.dom.client.BrowserEvents.CLICK;
 
 import org.iplantc.de.client.models.diskResources.DiskResource;
+import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.diskResource.client.views.widgets.DiskResourceDotMenu;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 
@@ -55,19 +56,23 @@ public class DiskResourceDotMenuCell extends AbstractCell<DiskResource> implemen
     private DiskResourceDotMenuAppearance appearance;
     private String baseDebugId;
     private HasHandlers hasHandlers;
+    private DiskResourceUtil diskResourceUtil;
 
     public DiskResourceDotMenuCell() {
-        this(GWT.create(DiskResourceDotMenuAppearance.class));
+        this(GWT.create(DiskResourceDotMenuAppearance.class),
+             GWT.create(DiskResourceUtil.class));
     }
 
-    public DiskResourceDotMenuCell(final DiskResourceDotMenuAppearance appearance) {
+    public DiskResourceDotMenuCell(final DiskResourceDotMenuAppearance appearance,
+                                   DiskResourceUtil diskResourceUtil) {
         super(CLICK);
         this.appearance = appearance;
+        this.diskResourceUtil = diskResourceUtil;
     }
 
     @Override
     public void render(Context context, DiskResource value, SafeHtmlBuilder sb) {
-        if (!value.isFilter()) {
+        if (!value.isFilter() && !diskResourceUtil.inTrash(value)) {
             String debugId = getDebugId(value);
             appearance.render(context, value, sb, debugId);
         }

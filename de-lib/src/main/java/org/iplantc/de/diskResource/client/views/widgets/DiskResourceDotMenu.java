@@ -1,6 +1,7 @@
 package org.iplantc.de.diskResource.client.views.widgets;
 
 import org.iplantc.de.client.models.diskResources.DiskResource;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.diskResource.client.events.RequestDiskResourceFavoriteEvent;
 import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelected;
@@ -34,6 +35,7 @@ public class DiskResourceDotMenu extends Menu {
         this.appearance = appearance;
 
         addMenuItems(diskResource);
+        checkButtonStatus(diskResource);
         addHandlers(hasHandlers, diskResource);
     }
 
@@ -59,6 +61,14 @@ public class DiskResourceDotMenu extends Menu {
         add(shareBtn);
         add(metadataBtn);
         add(commentBtn);
+    }
+
+    void checkButtonStatus(DiskResource diskResource) {
+        shareBtn.setEnabled(isOwner(diskResource));
+    }
+
+    boolean isOwner(DiskResource diskResource) {
+        return PermissionValue.own.equals(diskResource.getPermission());
     }
 
     @Override
