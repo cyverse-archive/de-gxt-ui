@@ -20,10 +20,13 @@ import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
 import org.iplantc.de.analysis.client.gin.factory.AnalysesViewFactory;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.presenter.proxy.AnalysisRpcProxy;
 import org.iplantc.de.analysis.client.views.AnalysisStepsView;
+import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
+import org.iplantc.de.analysis.client.views.dialogs.AnalysisParametersDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisSharingDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisStepsInfoDialog;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
@@ -39,6 +42,7 @@ import org.iplantc.de.client.models.analysis.support.AnalysisSupportRequestField
 import org.iplantc.de.client.services.AnalysisServiceFacade;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
+import org.iplantc.de.commons.client.views.dialogs.IPlantPromptDialog;
 import org.iplantc.de.shared.AnalysisCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
@@ -57,6 +61,10 @@ import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
+import com.sencha.gxt.widget.core.client.Dialog;
+import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
+import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -113,20 +121,29 @@ public class AnalysesPresenterImplTest {
     @Mock AnalysisStepsInfo analysisStepsInfoMock;
     @Mock AnalysisStepsInfoDialog analysisStepsInfoDialogMock;
     @Mock List<AnalysisStep> stepListMock;
+    @Mock AnalysisCommentsDialog commentsDlgMock;
     @Mock UserInfo userInfoMock;
     @Mock AnalysisSupportAutoBeanFactory supportFactoryMock;
-    @Mock
-    AutoBean<AnalysisSupportRequest> aSupportRequestBeanMock;
-    @Mock
-    AutoBean<AnalysisSupportRequestFields> aSupportRequestFieldsBeanMock;
+    @Mock AutoBean<AnalysisSupportRequest> aSupportRequestBeanMock;
+    @Mock AutoBean<AnalysisSupportRequestFields> aSupportRequestFieldsBeanMock;
+    @Mock ConfirmMessageBox deleteAnalysisDlg;
+    @Mock IPlantPromptDialog renameAnalysisDlg;
+    @Mock AnalysisParametersDialog analysisParametersDlgMock;
 
     @Mock AnalysisToolBarView toolbarView;
     @Mock AsyncProviderWrapper<AnalysisStepsInfoDialog> stepsInfoDialogMock;
+    @Mock AsyncProviderWrapper<AnalysisCommentsDialog> commentsDlgProviderMock;
+    @Mock AsyncProviderWrapper<AnalysisParametersDialog> analysisParamDlgProviderMock;
 
     @Captor ArgumentCaptor<AnalysisCallback<String>> stringCallbackCaptor;
     @Captor ArgumentCaptor<AnalysisCallback<Void>> voidCallbackCaptor;
     @Captor ArgumentCaptor<AnalysisCallback<AnalysisStepsInfo>> analysisStepsCaptor;
     @Captor ArgumentCaptor<AsyncCallback<AnalysisStepsInfoDialog>> stepsInfoDialogCaptor;
+    @Captor ArgumentCaptor<DialogHideEvent.DialogHideHandler> dialogHideCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<AnalysisCommentsDialog>> analysisCommentsDlgCaptor;
+    @Captor ArgumentCaptor<SelectEvent.SelectHandler> okSelectCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<AnalysisParametersDialog>> analysisParamDlgCaptor;
+
 
     private AnalysesPresenterImpl uut;
 
@@ -157,12 +174,10 @@ public class AnalysesPresenterImplTest {
         when(loadConfigMock.getFilters()).thenReturn(filterConfigsMock);
 
 
-        uut = new AnalysesPresenterImpl(viewFactoryMock,
-                                        proxyMock,
-                                        listStoreMock,
-                                        eventBus){
+        uut = new AnalysesPresenterImpl(viewFactoryMock, proxyMock, listStoreMock, eventBus) {
             @Override
-            PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> getPagingLoader(AnalysisRpcProxy proxy) {
+            PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> getPagingLoader(
+                    AnalysisRpcProxy proxy) {
                 return loaderMock;
             }
 
@@ -175,6 +190,16 @@ public class AnalysesPresenterImplTest {
             FilterConfigBean getFilterConfigBean() {
                 return filterConfigBeanMock;
             }
+
+            @Override
+            ConfirmMessageBox getDeleteAnalysisDlg() {
+                return deleteAnalysisDlg;
+            }
+
+            @Override
+            IPlantPromptDialog getRenameAnalysisDlg(String name) {
+                return renameAnalysisDlg;
+            }
         };
 
         uut.currentFilter = currentFilterMock;
@@ -186,6 +211,8 @@ public class AnalysesPresenterImplTest {
         uut.userInfo = userInfoMock;
         uut.supportFactory = supportFactoryMock;
         uut.stepsInfoDialogProvider = stepsInfoDialogMock;
+        uut.analysisCommentsDlgProvider = commentsDlgProviderMock;
+        uut.analysisParametersDialogAsyncProvider = analysisParamDlgProviderMock;
 
         verifyConstructor(uut);
     }
@@ -210,7 +237,8 @@ public class AnalysesPresenterImplTest {
         /** CALL METHOD UNDER TEST **/
         spy.onCancelAnalysisSelected(eventMock);
 
-        verify(analysisServiceMock, times(1)).stopAnalysis(eq(analysisMock), stringCallbackCaptor.capture());
+        verify(analysisServiceMock, times(1)).stopAnalysis(eq(analysisMock),
+                                                           stringCallbackCaptor.capture());
 
         stringCallbackCaptor.getValue().onSuccess("result");
         verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));
@@ -220,12 +248,27 @@ public class AnalysesPresenterImplTest {
     @Test
     public void deleteSelectedAnalyses() {
         AnalysesPresenterImpl spy = spy(uut);
+        DialogHideEvent hideEventMock = mock(DialogHideEvent.class);
+        when(hideEventMock.getHideButton()).thenReturn(Dialog.PredefinedButton.OK);
         DeleteAnalysisSelected eventMock = mock(DeleteAnalysisSelected.class);
         when(eventMock.getAnalyses()).thenReturn(analysisListMock);
 
         /** CALL METHOD UNDER TEST **/
         spy.onDeleteAnalysisSelected(eventMock);
 
+        verify(deleteAnalysisDlg).addDialogHideHandler(dialogHideCaptor.capture());
+
+        dialogHideCaptor.getValue().onDialogHide(hideEventMock);
+        verify(spy).deleteAnalyses(eq(analysisListMock));
+        verify(deleteAnalysisDlg).show();
+    }
+
+    @Test
+    public void deleteAnalysis() {
+        AnalysesPresenterImpl spy = spy(uut);
+
+        /** CALL METHOD UNDER TEST **/
+        spy.deleteAnalyses(analysisListMock);
         verify(analysisServiceMock).deleteAnalyses(eq(analysisListMock), stringCallbackCaptor.capture());
 
         stringCallbackCaptor.getValue().onSuccess("result");
@@ -342,14 +385,31 @@ public class AnalysesPresenterImplTest {
 
     @Test
     public void renameSelectedAnalysis() {
-        SafeHtml safeHtmlMock = mock(SafeHtml.class);
         RenameAnalysisSelected eventMock = mock(RenameAnalysisSelected.class);
+        SelectEvent selectEventMock = mock(SelectEvent.class);
         when(eventMock.getAnalysis()).thenReturn(analysisMock);
-        when(eventMock.getNewName()).thenReturn("newName");
+        when(renameAnalysisDlg.getFieldText()).thenReturn("newName");
+        when(analysisMock.getName()).thenReturn("oldName");
+
+        AnalysesPresenterImpl spy = spy(uut);
+
+        /** CALL METHOD UNDER TEST **/
+        spy.onRenameAnalysisSelected(eventMock);
+
+        verify(renameAnalysisDlg).addOkButtonSelectHandler(okSelectCaptor.capture());
+
+        okSelectCaptor.getValue().onSelect(selectEventMock);
+        verify(spy).renameAnalysis(eq(analysisMock), eq("newName"));
+        verify(renameAnalysisDlg).show();
+    }
+
+    @Test
+    public void renameAnalysis() {
+        SafeHtml safeHtmlMock = mock(SafeHtml.class);
         when(appearanceMock.analysisRenameSuccess()).thenReturn(safeHtmlMock);
 
         /** CALL METHOD UNDER TEST **/
-        uut.onRenameAnalysisSelected(eventMock);
+        uut.renameAnalysis(analysisMock, "newName");
 
         verify(analysisServiceMock).renameAnalysis(eq(analysisMock),
                                                    eq("newName"),
@@ -364,14 +424,35 @@ public class AnalysesPresenterImplTest {
 
     @Test
     public void updateAnalysisComment() {
-        SafeHtml safeHtmlMock = mock(SafeHtml.class);
         AnalysisCommentUpdate eventMock = mock(AnalysisCommentUpdate.class);
+        DialogHideEvent hideEventMock = mock(DialogHideEvent.class);
         when(eventMock.getAnalysis()).thenReturn(analysisMock);
-        when(eventMock.getComment()).thenReturn("comment");
+        when(hideEventMock.getHideButton()).thenReturn(Dialog.PredefinedButton.OK);
+        when(commentsDlgMock.isCommentChanged()).thenReturn(true);
+        when(commentsDlgMock.getComment()).thenReturn("comment");
+
+        AnalysesPresenterImpl spy = spy(uut);
+
+        /**CALL METHOD UNDER TEST **/
+        spy.onAnalysisCommentUpdate(eventMock);
+
+        verify(commentsDlgProviderMock).get(analysisCommentsDlgCaptor.capture());
+
+        analysisCommentsDlgCaptor.getValue().onSuccess(commentsDlgMock);
+        verify(commentsDlgMock).addDialogHideHandler(dialogHideCaptor.capture());
+
+        dialogHideCaptor.getValue().onDialogHide(hideEventMock);
+        verify(spy).updateAnalysisComments(eq(analysisMock), eq("comment"));
+        verify(commentsDlgMock).show(eq(analysisMock));
+    }
+
+    @Test
+    public void updateAnalysisComments() {
+        SafeHtml safeHtmlMock = mock(SafeHtml.class);
         when(appearanceMock.analysisCommentUpdateSuccess()).thenReturn(safeHtmlMock);
 
         /** CALL METHOD UNDER TEST **/
-        uut.onAnalysisCommentUpdate(eventMock);
+        uut.updateAnalysisComments(analysisMock, "comment");
 
         verify(analysisServiceMock).updateAnalysisComments(eq(analysisMock),
                                                            eq("comment"),
@@ -426,6 +507,19 @@ public class AnalysesPresenterImplTest {
         verify(requestFields).setApp(eq(APP_NAME));
         verify(requestFields).setComment(eq(THIS_IS_A_COMMENT));
         verify(requestFields).setOutputFolder(eq(RESULT));
+    }
+
+    @Test
+    public void onViewAnalysisParamsSelected() {
+        ViewAnalysisParamsSelected eventMock = mock(ViewAnalysisParamsSelected.class);
+        when(eventMock.getAnalysis()).thenReturn(analysisMock);
+
+        /** CALL METHOD UNDER TEST **/
+        uut.onViewAnalysisParamsSelected(eventMock);
+        verify(analysisParamDlgProviderMock).get(analysisParamDlgCaptor.capture());
+
+        analysisParamDlgCaptor.getValue().onSuccess(analysisParametersDlgMock);
+        verify(analysisParametersDlgMock).show(eq(analysisMock));
     }
 
 }

@@ -317,7 +317,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     @Override
     public void onDeleteAnalysisSelected(DeleteAnalysisSelected event) {
-        ConfirmMessageBox cmb = new ConfirmMessageBox(appearance.warning(), appearance.analysesExecDeleteWarning());
+        ConfirmMessageBox cmb = getDeleteAnalysisDlg();
         cmb.setPredefinedButtons(Dialog.PredefinedButton.OK, Dialog.PredefinedButton.CANCEL);
         cmb.addDialogHideHandler(hideEvent -> {
             if (Dialog.PredefinedButton.OK.equals(hideEvent.getHideButton())) {
@@ -507,7 +507,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     public void onRenameAnalysisSelected(RenameAnalysisSelected event) {
         Analysis selectedAnalysis = event.getAnalysis();
         final String name = selectedAnalysis.getName();
-        final IPlantPromptDialog dlg = new IPlantPromptDialog(appearance.rename(), -1, name, new DiskResourceNameValidator());
+        final IPlantPromptDialog dlg = getRenameAnalysisDlg(name);
         dlg.setHeading(appearance.renameAnalysis());
         dlg.addOkButtonSelectHandler(okSelect -> {
             if (!selectedAnalysis.getName().equals(dlg.getFieldText())) {
@@ -717,5 +717,13 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                 result.show(selectedAnalysis);
             }
         });
+    }
+
+    ConfirmMessageBox getDeleteAnalysisDlg() {
+        return new ConfirmMessageBox(appearance.warning(), appearance.analysesExecDeleteWarning());
+    }
+
+    IPlantPromptDialog getRenameAnalysisDlg(String name) {
+        return new IPlantPromptDialog(appearance.rename(), -1, name, new DiskResourceNameValidator());
     }
 }
