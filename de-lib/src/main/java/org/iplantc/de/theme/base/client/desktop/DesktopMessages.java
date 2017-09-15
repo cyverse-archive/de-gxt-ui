@@ -127,8 +127,6 @@ public interface DesktopMessages extends Messages {
 
     String webhooks();
 
-    String addSlack();
-
     String webhooksPrompt();
 
     String dataNotification();
@@ -142,4 +140,6 @@ public interface DesktopMessages extends Messages {
     String permNotification();
 
     String hookTopic();
+
+    String test();
 }

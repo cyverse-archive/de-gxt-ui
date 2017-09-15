@@ -205,11 +205,6 @@ public class PreferencesViewDefaultAppearance implements PreferencesView.Prefere
     }
 
     @Override
-    public String addSlack() {
-        return desktopMessages.addSlack();
-    }
-
-    @Override
     public String webhooksPrompt() {
         return desktopMessages.webhooksPrompt();
     }
@@ -242,5 +237,10 @@ public class PreferencesViewDefaultAppearance implements PreferencesView.Prefere
     @Override
     public String hookTopic() {
         return desktopMessages.hookTopic();
+    }
+
+    @Override
+    public String test() {
+        return desktopMessages.test();
     }
 }

@@ -12,7 +12,7 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.preferences.client.PreferencesView;
-import org.iplantc.de.preferences.client.events.AddSlackWebhookClicked;
+import org.iplantc.de.preferences.client.events.TestWebhookClicked;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
 import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
 
@@ -29,7 +29,7 @@ import java.util.Map;
 public class PreferencesPresenterImpl implements PreferencesView.Presenter,
                                                  PrefDlgRetryUserSessionClicked.PrefDlgRetryUserSessionClickedHandler,
                                                  ResetHpcTokenClicked.ResetHpcTokenClickedHandler,
-                                                 AddSlackWebhookClicked.AddSlackWebhookClickedHandler {
+                                                 TestWebhookClicked.TestWebhookClickedHandler {
 
 
     private final PreferencesView view;
@@ -55,7 +55,7 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
 
         this.view.addPrefDlgRetryUserSessionClickedHandlers(this);
         this.view.addResetHpcTokenClickedHandlers(this);
-        this.view.addAddSlackWebhookClickedHandlers(this);
+        this.view.addTestWebhookClickedHandlers(this);
     }
 
     @Override
@@ -165,21 +165,19 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
     }
 
     @Override
-    public void onAddSlackClicked(AddSlackWebhookClicked event) {
+    public void onTestClicked(TestWebhookClicked event) {
         serviceFacade.testWebhook(event.getUrl(), new AsyncCallback<String>() {
             @Override
             public void onFailure(Throwable throwable) {
                 ErrorHandler.post(
                         "Unable to add webhook. Please check the webhook url again and try to add again!",
                         throwable);
-                view.setWebhookValid(false);
             }
 
             @Override
             public void onSuccess(String s) {
                 //TODO: Add url to database using a service call
                announcer.schedule(new SuccessAnnouncementConfig("Webhook added successfully!"));
-               view.setWebhookValid(true);
             }
         });
     }

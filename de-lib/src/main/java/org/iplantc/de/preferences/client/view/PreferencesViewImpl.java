@@ -12,7 +12,7 @@ import org.iplantc.de.commons.client.validators.UrlValidator;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
 import org.iplantc.de.diskResource.client.views.widgets.FolderSelectorField;
 import org.iplantc.de.preferences.client.PreferencesView;
-import org.iplantc.de.preferences.client.events.AddSlackWebhookClicked;
+import org.iplantc.de.preferences.client.events.TestWebhookClicked;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
 import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
 import org.iplantc.de.preferences.shared.Preferences;
@@ -34,7 +34,6 @@ import com.google.inject.Inject;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.button.TextButton;
-import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.CheckBox;
 import com.sencha.gxt.widget.core.client.form.TextField;
@@ -84,7 +83,7 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
 
     @UiField
     @Ignore
-    TextButton addSlackBtn;
+    TextButton testBtn;
 
 
     @UiField
@@ -160,8 +159,8 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     }
 
     @Override
-    public HandlerRegistration addAddSlackWebhookClickedHandlers(AddSlackWebhookClicked.AddSlackWebhookClickedHandler handler) {
-        return addHandler(handler, AddSlackWebhookClicked.TYPE);
+    public HandlerRegistration addTestWebhookClickedHandlers(TestWebhookClicked.TestWebhookClickedHandler handler) {
+        return addHandler(handler, TestWebhookClicked.TYPE);
     }
 
 
@@ -316,27 +315,18 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         fireEvent(new ResetHpcTokenClicked());
     }
 
-    @UiHandler("addSlackBtn")
+    @UiHandler("testBtn")
     void onAddSlack(SelectEvent event) {
         if(hookUrl.isValid()) {
-            fireEvent(new AddSlackWebhookClicked(hookUrl.getValue()));
+            fireEvent(new TestWebhookClicked(hookUrl.getValue()));
         } else {
             hookUrl.markInvalid("A valid URL is required!");
         }
 
     }
 
-    @Override
-    public void setWebhookValid(boolean valid) {
-        hookDelBtn.setVisible(valid);
-        addSlackBtn.setEnabled(!valid);
-        hookUrl.setEnabled(!valid);
-    }
-
     @UiHandler("hookDelBtn")
     public void onDeleteHook(SelectEvent event) {
-        //TODO: fire event to delete hook in database with a service call
         hookUrl.clear();
-        addSlackBtn.enable();
     }
 }
