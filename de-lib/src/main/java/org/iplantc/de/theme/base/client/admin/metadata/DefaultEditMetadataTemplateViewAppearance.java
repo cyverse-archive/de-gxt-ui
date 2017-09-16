@@ -63,6 +63,81 @@ public class DefaultEditMetadataTemplateViewAppearance implements EditMetadataTe
     }
 
     @Override
+    public String enumValueOrValues() {
+        return displayStrings.enumValueOrValues();
+    }
+
+    @Override
+    public String editOLSQueryParamsDialogHeader() {
+        return displayStrings.editOLSQueryParamsDialogHeader();
+    }
+
+    @Override
+    public String editOLSQueryParamsDialogHeight() {
+        return "480px";
+    }
+
+    @Override
+    public String editOLSQueryParamsDialogWidth() {
+        return "640px";
+    }
+
+    @Override
+    public String allChildrenFieldLabel() {
+        return displayStrings.allChildrenFieldLabel();
+    }
+
+    @Override
+    public String allChildrenHelpLabel() {
+        return displayStrings.allChildrenHelpLabel();
+    }
+
+    @Override
+    public String childrenFieldLabel() {
+        return displayStrings.childrenFieldLabel();
+    }
+
+    @Override
+    public String childrenHelpLabel() {
+        return displayStrings.childrenHelpLabel();
+    }
+
+    @Override
+    public String entityTypeHelpLabel() {
+        return displayStrings.entityTypeHelpLabel();
+    }
+
+    @Override
+    public String iriColumnLabel() {
+        return displayStrings.iriColumnLabel();
+    }
+
+    @Override
+    public String ontologiesColumnHeader() {
+        return displayStrings.ontologiesColumnHeader();
+    }
+
+    @Override
+    public String ontologiesFieldLabel() {
+        return displayStrings.ontologiesFieldLabel();
+    }
+
+    @Override
+    public String ontologiesHelpLabel() {
+        return displayStrings.ontologiesHelpLabel();
+    }
+
+    @Override
+    public String querySettings() {
+        return displayStrings.querySettings();
+    }
+
+    @Override
+    public String valueOrValues() {
+        return iplantDisplayStrings.valueOrValues();
+    }
+
+    @Override
     public int tempNameMaxLength() {
         return 20;
     }

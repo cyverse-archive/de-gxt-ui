@@ -24,6 +24,36 @@ public interface EditMetadataTemplateView extends IsWidget, IsMaskable {
 
         String enumError();
 
+        String enumValueOrValues();
+
+        String editOLSQueryParamsDialogHeader();
+
+        String editOLSQueryParamsDialogHeight();
+
+        String editOLSQueryParamsDialogWidth();
+
+        String allChildrenFieldLabel();
+
+        String allChildrenHelpLabel();
+
+        String childrenFieldLabel();
+
+        String childrenHelpLabel();
+
+        String entityTypeHelpLabel();
+
+        String iriColumnLabel();
+
+        String ontologiesColumnHeader();
+
+        String ontologiesFieldLabel();
+
+        String ontologiesHelpLabel();
+
+        String querySettings();
+
+        String valueOrValues();
+
         int tempNameMaxLength();
     }
 

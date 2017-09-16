@@ -7,6 +7,9 @@ import org.iplantc.de.client.models.diskResources.MetadataTemplate;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttributeType;
 import org.iplantc.de.client.models.diskResources.TemplateAttributeSelectionItem;
+import org.iplantc.de.client.models.ontologies.OntologyAutoBeanFactory;
+import org.iplantc.de.client.models.ontologies.OntologyLookupServiceQueryParams;
+import org.iplantc.de.client.models.ontologies.OntologyLookupServiceQueryParams.EntityTypeFilterValue;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
@@ -29,6 +32,8 @@ import com.google.gwt.user.client.TakesValue;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 import com.sencha.gxt.cell.core.client.SimpleSafeHtmlCell;
 import com.sencha.gxt.cell.core.client.TextButtonCell;
@@ -95,6 +100,8 @@ public class EditMetadataTemplateViewImpl extends Composite implements IsWidget,
 
     private final MetadataTemplateAttributeProperties mta_props;
     private final DiskResourceAutoBeanFactory drFac;
+    private final OntologyAutoBeanFactory ontologyFactory;
+
     private GridEditing<MetadataTemplateAttribute> editing;
     private String templateId; // cache id when editing existing template
 
@@ -111,10 +118,12 @@ public class EditMetadataTemplateViewImpl extends Composite implements IsWidget,
     public EditMetadataTemplateViewImpl(final MetadataTemplateAttributeProperties mta_props,
                                         final TemplateAttributeSelectionItemProperties tasi_props,
                                         final DiskResourceAutoBeanFactory factory,
+                                        final OntologyAutoBeanFactory ontologyFactory,
                                         final EditMetadataTemplateViewAppearance appearance) {
         this.mta_props = mta_props;
         this.tasi_props = tasi_props;
         this.drFac = factory;
+        this.ontologyFactory = ontologyFactory;
         this.appearance = appearance;
         initWidget(uiBinder.createAndBindUi(this));
         createGridEditing();
@@ -173,8 +182,16 @@ public class EditMetadataTemplateViewImpl extends Composite implements IsWidget,
         valuesCol = new ColumnConfig<>(new ValueProvider<MetadataTemplateAttribute, String>() {
 
             @Override
-            public String getValue(MetadataTemplateAttribute object) {
-                return "Enum value(s)";
+            public String getValue(MetadataTemplateAttribute attribute) {
+                if (MetadataTemplateAttributeType.ENUM.toString().equals(attribute.getType())) {
+                    return appearance.enumValueOrValues();
+                }
+
+                if (MetadataTemplateAttributeType.OLS_ONTOLOGY_TERM.toString().equals(attribute.getType())) {
+                    return appearance.querySettings();
+                }
+
+                return "";
             }
 
             @Override
@@ -186,7 +203,7 @@ public class EditMetadataTemplateViewImpl extends Composite implements IsWidget,
             public String getPath() {
                 return "values";
             }
-        }, 100, "Value(s)");
+        }, 100, appearance.valueOrValues());
 
         SafeStyles btnPaddingStyle = SafeStylesUtils.fromTrustedString("padding: 1px 3px 0;");
         TextButtonCell button = buildValueEditButtonCell();
@@ -219,7 +236,12 @@ public class EditMetadataTemplateViewImpl extends Composite implements IsWidget,
                 Context c = event.getContext();
                 int row = c.getIndex();
                 MetadataTemplateAttribute mta = store.get(row);
-                editEnumValues(mta);
+
+                if (MetadataTemplateAttributeType.ENUM.toString().equals(mta.getType())) {
+                    editEnumValues(mta);
+                } else if (MetadataTemplateAttributeType.OLS_ONTOLOGY_TERM.toString().equals(mta.getType())) {
+                    editOntologyLookupServiceParams(mta);
+                }
             }
         });
         return button;
@@ -254,6 +276,46 @@ public class EditMetadataTemplateViewImpl extends Composite implements IsWidget,
             }
         });
 
+    }
+
+    private void editOntologyLookupServiceParams(final MetadataTemplateAttribute attribute) {
+        OntologyLookupServiceQueryParams params;
+        if (attribute.getSettings() != null) {
+            params = AutoBeanCodex.decode(ontologyFactory, OntologyLookupServiceQueryParams.class, attribute.getSettings()).as();
+        } else {
+            params = ontologyFactory.getOntologyLookupServiceQueryParams().as();
+
+            // Restrict queries to classes by default.
+            params.setEntityType(EntityTypeFilterValue.CLASS);
+        }
+
+        if (params.getOntologies() == null) {
+            params.setOntologies(new ArrayList<>());
+        }
+        if (params.getChildren() == null) {
+            params.setChildren(new ArrayList<>());
+        }
+        if (params.getAllChildren() == null) {
+            params.setAllChildren(new ArrayList<>());
+        }
+
+        final OntologyLookupServiceParamsView view = new OntologyLookupServiceParamsView();
+        view.edit(params);
+
+        final IPlantDialog dialog= new IPlantDialog();
+        dialog.setHeading(appearance.editOLSQueryParamsDialogHeader());
+        dialog.setSize(appearance.editOLSQueryParamsDialogWidth(), appearance.editOLSQueryParamsDialogHeight());
+        dialog.add(view);
+        dialog.setHideOnButtonClick(false);
+        dialog.addOkButtonSelectHandler(event -> {
+            attribute.setSettings(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(view.getParams())));
+            dialog.hide();
+        });
+        dialog.addCancelButtonSelectHandler(event -> {
+            dialog.hide();
+        });
+
+        dialog.show();
     }
 
     protected void createGridEditing() {
@@ -293,6 +355,7 @@ public class EditMetadataTemplateViewImpl extends Composite implements IsWidget,
                                     MetadataTemplateAttributeType.INTEGER.toString(),
                                     MetadataTemplateAttributeType.MULTILINE.toString(),
                                     MetadataTemplateAttributeType.URL.toString(),
+                                    MetadataTemplateAttributeType.OLS_ONTOLOGY_TERM.toString(),
                                     MetadataTemplateAttributeType.ENUM.toString()));
         typeCombo.setValue(MetadataTemplateAttributeType.STRING.toString());
         typeCombo.setEditable(false);
