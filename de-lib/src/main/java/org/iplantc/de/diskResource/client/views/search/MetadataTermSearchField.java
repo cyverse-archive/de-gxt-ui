@@ -81,6 +81,7 @@ public class MetadataTermSearchField implements Converter<String, OntologyLookup
 
     public MetadataTermSearchField(OntologyAutoBeanFactory factory,
                                    OntologyLookupServiceProxy searchProxy,
+                                   OntologyLookupServiceLoadConfig loadConfig,
                                    MetadataTermSearchFieldAppearance appearance) {
         this.factory = factory;
 
@@ -89,7 +90,7 @@ public class MetadataTermSearchField implements Converter<String, OntologyLookup
 
         createView(store, appearance);
 
-        createCombo(store, createLoader(searchProxy, store));
+        createCombo(store, createLoader(searchProxy, loadConfig, store));
     }
 
     private void createView(ListStore<OntologyLookupServiceDoc> store, MetadataTermSearchFieldAppearance appearance) {
@@ -104,11 +105,12 @@ public class MetadataTermSearchField implements Converter<String, OntologyLookup
 
     private PagingLoader<OntologyLookupServiceLoadConfig, PagingLoadResult<OntologyLookupServiceDoc>> createLoader(
             OntologyLookupServiceProxy searchProxy,
+            OntologyLookupServiceLoadConfig loadConfig,
             ListStore<OntologyLookupServiceDoc> store) {
         PagingLoader<OntologyLookupServiceLoadConfig, PagingLoadResult<OntologyLookupServiceDoc>> loader =
                 new PagingLoader<>(searchProxy);
 
-        loader.useLoadConfig(new OntologyLookupServiceLoadConfig());
+        loader.useLoadConfig(loadConfig);
         loader.addLoadHandler(new LoadResultListStoreBinding<>(store));
 
         loader.addBeforeLoadHandler(event -> {

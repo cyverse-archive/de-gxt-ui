@@ -317,7 +317,7 @@ public class MetadataTemplateView implements IsWidget {
     }
 
     private ComboBox<OntologyLookupServiceDoc> buildOntologyField(String tag, MetadataTemplateAttribute attribute) {
-        ComboBox<OntologyLookupServiceDoc> combo = presenter.createMetadataTermSearchField().asField();
+        ComboBox<OntologyLookupServiceDoc> combo = presenter.createMetadataTermSearchField(attribute).asField();
 
         combo.setAllowBlank(!attribute.isRequired());
 
