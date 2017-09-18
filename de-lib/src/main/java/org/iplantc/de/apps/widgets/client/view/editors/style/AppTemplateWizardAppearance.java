@@ -136,4 +136,6 @@ public interface AppTemplateWizardAppearance {
     String integerInputWidgetEmptyText();
 
     String doubleInputWidgetEmptyText();
+
+    String fileOutputEmptyText();
 }
