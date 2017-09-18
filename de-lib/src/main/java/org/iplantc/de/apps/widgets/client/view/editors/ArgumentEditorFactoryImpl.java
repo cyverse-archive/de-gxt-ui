@@ -10,7 +10,6 @@ import org.iplantc.de.apps.widgets.client.view.editors.arguments.ReferenceAnnota
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.ReferenceGenomeEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.ReferenceSequenceEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.SampleArgumentEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.tree.TreeSelectionEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.models.apps.refGenome.ReferenceGenome;
@@ -146,7 +145,7 @@ public class ArgumentEditorFactoryImpl implements AppTemplateForm.ArgumentEditor
                 subEditor = argumentEditorGinFactory.doubleSelectionEditor(appearance);
                 break;
             case TreeSelection:
-                subEditor = new TreeSelectionEditor(appearance, selectionItemProps);
+                subEditor = argumentEditorGinFactory.treeSelectionEditor(appearance);
                 break;
             case FileOutput:
                 subEditor = new FileOutputEditor(appearance, appsWidgetsLabels);

@@ -23,7 +23,6 @@ import org.iplantc.de.client.models.apps.integration.SelectionItemGroup;
 import org.iplantc.de.client.models.apps.integration.SelectionItemList;
 
 import com.google.common.collect.Lists;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.EditorDelegate;
 import com.google.gwt.editor.client.LeafValueEditor;
 import com.google.gwt.editor.client.ValueAwareEditor;
@@ -35,6 +34,8 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
@@ -176,6 +177,7 @@ public class TreeSelectionEditor extends Composite implements AppTemplateForm.Ar
 
     private final FieldLabel argumentLabel;
     private final AppTemplateWizardAppearance appearance;
+    private AppTemplateAutoBeanFactory factory;
 
     private EditorDelegate<Argument> delegate;
 
@@ -204,8 +206,12 @@ public class TreeSelectionEditor extends Composite implements AppTemplateForm.Ar
 
     private ArgumentEditorConverter<List<SelectionItem>> valueEditor;
 
-    public TreeSelectionEditor(AppTemplateWizardAppearance appearance, SelectionItemProperties props) {
+    @Inject
+    public TreeSelectionEditor(@Assisted AppTemplateWizardAppearance appearance,
+                               SelectionItemProperties props,
+                               AppTemplateAutoBeanFactory factory) {
         this.appearance = appearance;
+        this.factory = factory;
         TreeStore<SelectionItem> store = new TreeStore<>(new SelectionItemModelKeyProvider());
 
         tree = new SelectionItemTree(store, props.display());
@@ -349,7 +355,6 @@ public class TreeSelectionEditor extends Composite implements AppTemplateForm.Ar
      */
     public void setSelection(Splittable selection) {
         selectionItemsEditor.setSuppressEvent(true);
-        AppTemplateAutoBeanFactory factory = GWT.create(AppTemplateAutoBeanFactory.class);
         SelectionItemList siList = AutoBeanCodex.decode(factory, SelectionItemList.class, "{\"selectionItems\": " + selection.getPayload() + "}").as();
         List<SelectionItem> items = siList.getSelectionItems();
         tree.setSelection(items);
