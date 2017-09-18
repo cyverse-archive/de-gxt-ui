@@ -3,14 +3,12 @@ package org.iplantc.de.apps.widgets.client.view.editors;
 import org.iplantc.de.apps.widgets.client.gin.factory.ArgumentEditorGinFactory;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.ArgumentEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.ReferenceAnnotationEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.SampleArgumentEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.models.apps.refGenome.ReferenceGenome;
 import org.iplantc.de.client.services.AppBuilderMetadataServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
 import org.iplantc.de.shared.AppsCallback;
 
 import com.google.gwt.editor.client.EditorDelegate;
@@ -33,10 +31,6 @@ public class ArgumentEditorFactoryImpl implements AppTemplateForm.ArgumentEditor
 
     @Inject AppTemplateWizardAppearance appearance;
     @Inject AppBuilderMetadataServiceFacade appMetadataService;
-
-    @Inject AppsWidgetsPropertyPanelLabels appsWidgetsLabels;
-    @Inject ReferenceGenomeProperties refGenomeProps;
-    @Inject SelectionItemProperties selectionItemProps;
     @Inject ReferenceGenomeProperties referenceGenomeProperties;
     @Inject ArgumentEditorGinFactory argumentEditorGinFactory;
 
@@ -158,7 +152,7 @@ public class ArgumentEditorFactoryImpl implements AppTemplateForm.ArgumentEditor
                 subEditor = argumentEditorGinFactory.referenceSequenceEditor(appearance, getReferenceGenomeStore());
                 break;
             case ReferenceAnnotation:
-                subEditor = new ReferenceAnnotationEditor(appearance, getReferenceGenomeStore(), refGenomeProps);
+                subEditor = argumentEditorGinFactory.referenceAnnotationEditor(appearance, getReferenceGenomeStore());
                 break;
             default:
                 throw new IllegalStateException("Argument type must be known");
