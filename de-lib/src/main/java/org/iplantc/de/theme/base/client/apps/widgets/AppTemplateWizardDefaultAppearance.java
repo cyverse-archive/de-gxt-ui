@@ -5,6 +5,7 @@ import org.iplantc.de.apps.widgets.client.view.util.IPlantSimpleHtmlSanitizer;
 import org.iplantc.de.client.models.HasLabel;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
+import org.iplantc.de.resources.client.messages.IplantErrorStrings;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsDisplayMessages;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
@@ -98,6 +99,7 @@ public class AppTemplateWizardDefaultAppearance implements AppTemplateWizardAppe
     private AppsWidgetsDisplayMessages appsWidgetsDisplayMessages;
     private IplantDisplayStrings iplantDisplayStrings;
     private Style style;
+    private IplantErrorStrings iplantErrorStrings;
 
     public AppTemplateWizardDefaultAppearance() {
         this(GWT.<Resources>create(Resources.class),
@@ -105,7 +107,8 @@ public class AppTemplateWizardDefaultAppearance implements AppTemplateWizardAppe
              GWT.<AppsWidgetsPropertyPanelLabels>create(AppsWidgetsPropertyPanelLabels.class),
              GWT.<AppsWidgetsContextualHelpMessages>create(AppsWidgetsContextualHelpMessages.class),
              GWT.<AppsWidgetsDisplayMessages>create(AppsWidgetsDisplayMessages.class),
-             GWT.<IplantDisplayStrings>create(IplantDisplayStrings.class));
+             GWT.<IplantDisplayStrings>create(IplantDisplayStrings.class),
+             GWT.<IplantErrorStrings>create(IplantErrorStrings.class));
     }
 
     public AppTemplateWizardDefaultAppearance(Resources res,
@@ -113,13 +116,15 @@ public class AppTemplateWizardDefaultAppearance implements AppTemplateWizardAppe
                                               AppsWidgetsPropertyPanelLabels labels,
                                               AppsWidgetsContextualHelpMessages help,
                                               AppsWidgetsDisplayMessages appsWidgetsDisplayMessages,
-                                              IplantDisplayStrings iplantDisplayStrings) {
+                                              IplantDisplayStrings iplantDisplayStrings,
+                                              IplantErrorStrings iplantErrorStrings) {
         this.help = help;
         this.labels = labels;
         this.res = res;
         this.templates = templates;
         this.appsWidgetsDisplayMessages = appsWidgetsDisplayMessages;
         this.iplantDisplayStrings = iplantDisplayStrings;
+        this.iplantErrorStrings = iplantErrorStrings;
 
         this.style = res.css();
         style.ensureInjected();
@@ -333,6 +338,11 @@ public class AppTemplateWizardDefaultAppearance implements AppTemplateWizardAppe
     @Override
     public String emptyListSelectionText() {
         return appsWidgetsDisplayMessages.emptyListSelectionText();
+    }
+
+    @Override
+    public String defaultOutputFolderValidationError() {
+        return iplantErrorStrings.defaultOutputFolderValidationError();
     }
 
     @Override

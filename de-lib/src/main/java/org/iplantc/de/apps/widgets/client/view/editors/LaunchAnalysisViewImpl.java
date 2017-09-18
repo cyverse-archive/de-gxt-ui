@@ -100,7 +100,7 @@ public class LaunchAnalysisViewImpl implements LaunchAnalysisView {
             }
         });
         awFolderSel.setValidatePermissions(true);
-        awFolderSel.addValidator(new AnalysisOutputValidator());
+        awFolderSel.addValidator(new AnalysisOutputValidator(appearance));
         awFolderSel.addValidator(new EmptyValidator<String>());
         this.editorDriver.initialize(this);
     }

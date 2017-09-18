@@ -144,4 +144,6 @@ public interface AppTemplateWizardAppearance {
     String multiFileOutputEmptyText();
 
     String emptyListSelectionText();
+
+    String defaultOutputFolderValidationError();
 }
