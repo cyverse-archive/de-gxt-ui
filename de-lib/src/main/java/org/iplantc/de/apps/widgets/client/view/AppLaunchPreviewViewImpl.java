@@ -28,6 +28,7 @@ public class AppLaunchPreviewViewImpl extends Window implements AppLaunchPreview
     interface AppWizardPreviewUiBinder extends UiBinder<Widget, AppLaunchPreviewViewImpl> {}
     interface EditorDriver extends SimpleBeanEditorDriver<AppTemplate, AppLaunchPreviewView> { }
 
+    private AppLaunchViewAppearance appearance;
     @Ignore
     @UiField(provided = true) AppTemplateForm wizard;
     @UiField TextButton launchButton;
@@ -35,10 +36,13 @@ public class AppLaunchPreviewViewImpl extends Window implements AppLaunchPreview
     private final EditorDriver editorDriver = GWT.create(EditorDriver.class);
 
     @Inject
-    AppLaunchPreviewViewImpl(final AppWizardPreviewUiBinder binder, final AppTemplateForm wizard) {
+    AppLaunchPreviewViewImpl(AppLaunchViewAppearance appearance,
+                             AppWizardPreviewUiBinder binder,
+                             final AppTemplateForm wizard) {
+        this.appearance = appearance;
         this.wizard = wizard;
         setWidget(binder.createAndBindUi(this));
-        setSize("640", "375");
+        setSize(appearance.launchPreviewWidth(), appearance.launchPreviewHeight());
         setBorders(false);
         editorDriver.initialize(this);
     }
@@ -55,7 +59,7 @@ public class AppLaunchPreviewViewImpl extends Window implements AppLaunchPreview
 
     @Override
     public void edit(AppTemplate appTemplate, JobExecution je) {
-        setHeading("Preview of " + appTemplate.getName());
+        setHeading(appearance.launchPreviewHeader(appTemplate));
         editorDriver.edit(appTemplate);
     }
 

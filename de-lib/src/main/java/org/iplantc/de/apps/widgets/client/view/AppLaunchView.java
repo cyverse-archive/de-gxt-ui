@@ -48,6 +48,12 @@ public interface AppLaunchView extends IsWidget, Editor<AppTemplate>, HasRequest
         String analysisFailedToLaunch(String name);
 
         String diskResourcesDoNotExist(String missingPaths);
+
+        String launchPreviewWidth();
+
+        String launchPreviewHeight();
+
+        String launchPreviewHeader(AppTemplate appTemplate);
     }
 
     public interface Presenter extends AppTemplateFetched.HasAppTemplateFetchedHandlers {

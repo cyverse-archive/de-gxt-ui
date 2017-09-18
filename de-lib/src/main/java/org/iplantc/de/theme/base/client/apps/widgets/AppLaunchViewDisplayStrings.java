@@ -13,4 +13,6 @@ public interface AppLaunchViewDisplayStrings extends Messages {
     String waitTimes();
 
     String dontShow();
+
+    String launchPreviewHeader(String templateName);
 }

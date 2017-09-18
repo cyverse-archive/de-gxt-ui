@@ -1,6 +1,7 @@
 package org.iplantc.de.theme.base.client.apps.widgets;
 
 import org.iplantc.de.apps.widgets.client.view.AppLaunchView;
+import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.resources.client.messages.IplantErrorStrings;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsDisplayMessages;
@@ -97,5 +98,20 @@ public class AppLaunchViewDefaultAppearance implements AppLaunchView.AppLaunchVi
     @Override
     public String diskResourcesDoNotExist(String missingPaths) {
         return errorStrings.diskResourcesDoNotExist(missingPaths);
+    }
+
+    @Override
+    public String launchPreviewWidth() {
+        return "640px";
+    }
+
+    @Override
+    public String launchPreviewHeight() {
+        return "375px";
+    }
+
+    @Override
+    public String launchPreviewHeader(AppTemplate appTemplate) {
+        return displayStrings.launchPreviewHeader(appTemplate.getName());
     }
 }
