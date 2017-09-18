@@ -59,10 +59,10 @@ public class FlagArgumentPropertyEditor extends AbstractArgumentPropertyEditor {
 
     @Inject
     public FlagArgumentPropertyEditor(final PropertyEditorAppearance appearance,
-                                      final IplantValidationConstants validationConstants) {
+                                      final IplantValidationConstants validationConstants,
+                                      CheckBoxAdapter checkBoxAdapter) {
         this.appearance = appearance;
 
-        CheckBoxAdapter checkBoxAdapter = new CheckBoxAdapter();
         checkBoxAdapter.setHTML(new SafeHtmlBuilder().appendHtmlConstant("&nbsp;").appendEscaped(appearance.checkboxDefaultLabel()).toSafeHtml());
         defaultValueEditor = new ArgumentEditorConverter<>(checkBoxAdapter, new SplittableToBooleanConverter());
 

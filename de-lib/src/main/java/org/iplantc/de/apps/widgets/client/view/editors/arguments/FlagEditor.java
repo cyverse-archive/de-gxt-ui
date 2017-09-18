@@ -20,8 +20,10 @@ public class FlagEditor extends AbstractArgumentEditor {
     private LabelLeafEditor<String> cbLabelLeafEditor;
 
     @Inject
-    public FlagEditor(@Assisted AppTemplateWizardAppearance appearance) {
+    public FlagEditor(@Assisted AppTemplateWizardAppearance appearance,
+                      CheckBoxAdapter checkBox) {
         super(appearance);
+        this.checkBox = checkBox;
     }
 
     @Override
@@ -38,7 +40,6 @@ public class FlagEditor extends AbstractArgumentEditor {
 
     @Override
     protected void init() {
-        checkBox = new CheckBoxAdapter();
         cbDescriptionEditor = new LabelLeafEditor<String>(checkBox, this, appearance);
         cbLabelLeafEditor = new LabelLeafEditor<String>(checkBox, this, appearance);
         editorAdapter = new ArgumentEditorConverter<Boolean>(checkBox, new SplittableToBooleanConverter());
