@@ -3,7 +3,6 @@ package org.iplantc.de.apps.widgets.client.view.editors;
 import org.iplantc.de.apps.widgets.client.gin.factory.ArgumentEditorGinFactory;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.ArgumentEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.DoubleInputEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.DoubleSelectionEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.FileOutputEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.FolderOutputEditor;
@@ -136,7 +135,7 @@ public class ArgumentEditorFactoryImpl implements AppTemplateForm.ArgumentEditor
                 subEditor = argumentEditorGinFactory.integerInputEditor(appearance);
                 break;
             case Double:
-                subEditor = new DoubleInputEditor(appearance, appsWidgetsLabels);
+                subEditor = argumentEditorGinFactory.doubleInputEditor(appearance);
                 break;
             case Text:
                 subEditor = new TextInputEditor(appearance, appsWidgetsLabels);
