@@ -138,4 +138,6 @@ public interface AppTemplateWizardAppearance {
     String doubleInputWidgetEmptyText();
 
     String fileOutputEmptyText();
+
+    String folderOutputEmptyText();
 }

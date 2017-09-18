@@ -4,7 +4,9 @@ import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.Argu
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.SplittableToStringConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
-import org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.FolderOutputLabels;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.widget.core.client.form.TextField;
 
@@ -12,10 +14,11 @@ public class FolderOutputEditor extends AbstractArgumentEditor {
     private final ArgumentEditorConverter<String> editorAdapter;
     private final TextField textField;
 
-    public FolderOutputEditor(AppTemplateWizardAppearance appearance, final FolderOutputLabels labels) {
+    @Inject
+    public FolderOutputEditor(@Assisted AppTemplateWizardAppearance appearance) {
         super(appearance);
         textField = new TextField();
-        textField.setEmptyText(labels.folderOutputEmptyText());
+        textField.setEmptyText(appearance.folderOutputEmptyText());
         textField.addValidator(new DiskResourceNameValidator());
         editorAdapter = new ArgumentEditorConverter<String>(textField, new SplittableToStringConverter());
 

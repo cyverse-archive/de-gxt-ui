@@ -3,7 +3,6 @@ package org.iplantc.de.apps.widgets.client.view.editors;
 import org.iplantc.de.apps.widgets.client.gin.factory.ArgumentEditorGinFactory;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.ArgumentEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.FolderOutputEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.MultiFileOutputEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.ReferenceAnnotationEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.ReferenceGenomeEditor;
@@ -150,7 +149,7 @@ public class ArgumentEditorFactoryImpl implements AppTemplateForm.ArgumentEditor
                 subEditor = argumentEditorGinFactory.fileOutputEditor(appearance);
                 break;
             case FolderOutput:
-                subEditor = new FolderOutputEditor(appearance, appsWidgetsLabels);
+                subEditor = argumentEditorGinFactory.folderOutputEditor(appearance);
                 break;
             case MultiFileOutput:
                 subEditor = new MultiFileOutputEditor(appearance, appsWidgetsLabels);
