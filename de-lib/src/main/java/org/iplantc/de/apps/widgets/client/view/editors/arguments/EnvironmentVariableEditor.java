@@ -5,9 +5,9 @@ import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.Spli
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.commons.client.validators.CmdLineArgCharacterValidator;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
-import org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.EnvironmentVariableLabels;
 
-import com.google.gwt.core.client.GWT;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.widget.core.client.form.TextField;
 
@@ -17,12 +17,14 @@ import com.sencha.gxt.widget.core.client.form.TextField;
 public class EnvironmentVariableEditor extends AbstractArgumentEditor {
     private final ArgumentEditorConverter<String> editorAdapter;
     private final TextField textField;
-    IplantValidationConstants validationConstants = GWT.create(IplantValidationConstants.class);
+    IplantValidationConstants validationConstants;
 
-    public EnvironmentVariableEditor(AppTemplateWizardAppearance appearance, EnvironmentVariableLabels labels) {
+    @Inject
+    public EnvironmentVariableEditor(@Assisted AppTemplateWizardAppearance appearance,
+                                     IplantValidationConstants validationConstants) {
         super(appearance);
         textField = new TextField();
-        textField.setEmptyText(labels.envVarWidgetEmptyText());
+        textField.setEmptyText(appearance.envVarWidgetEmptyText());
         textField.addValidator(new CmdLineArgCharacterValidator(validationConstants.restrictedCmdLineChars()));
         editorAdapter = new ArgumentEditorConverter<>(textField, new SplittableToStringConverter());
 

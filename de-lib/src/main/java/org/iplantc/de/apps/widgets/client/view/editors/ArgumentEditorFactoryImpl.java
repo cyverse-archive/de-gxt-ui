@@ -5,7 +5,6 @@ import org.iplantc.de.apps.widgets.client.view.AppTemplateForm;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.ArgumentEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.DoubleInputEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.DoubleSelectionEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.EnvironmentVariableEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.FileOutputEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.FlagEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.FolderOutputEditor;
@@ -126,7 +125,7 @@ public class ArgumentEditorFactoryImpl implements AppTemplateForm.ArgumentEditor
                 subEditor = argumentEditorGinFactory.fileFolderInputEditor(appearance);
                 break;
             case EnvironmentVariable:
-                subEditor = new EnvironmentVariableEditor(appearance, appsWidgetsLabels);
+                subEditor = argumentEditorGinFactory.environmentVariableEditor(appearance);
                 break;
             case Flag:
                 subEditor = new FlagEditor(appearance);

@@ -7,6 +7,7 @@ import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
+import org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.EnvironmentVariableLabels;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
@@ -94,6 +95,7 @@ public class AppTemplateWizardDefaultAppearance implements AppTemplateWizardAppe
     private final AppsWidgetsPropertyPanelLabels labels;
     private final Resources res;
     private final AppTemplateWizardTemplates templates;
+    private EnvironmentVariableLabels environmentVariableLabels;
     private IplantDisplayStrings iplantDisplayStrings;
     private Style style;
 
@@ -102,6 +104,7 @@ public class AppTemplateWizardDefaultAppearance implements AppTemplateWizardAppe
              GWT.<AppTemplateWizardTemplates>create(AppTemplateWizardTemplates.class),
              GWT.<AppsWidgetsPropertyPanelLabels>create(AppsWidgetsPropertyPanelLabels.class),
              GWT.<AppsWidgetsContextualHelpMessages>create(AppsWidgetsContextualHelpMessages.class),
+             GWT.<EnvironmentVariableLabels>create(EnvironmentVariableLabels.class),
              GWT.<IplantDisplayStrings>create(IplantDisplayStrings.class));
     }
 
@@ -109,11 +112,13 @@ public class AppTemplateWizardDefaultAppearance implements AppTemplateWizardAppe
                                               AppTemplateWizardTemplates templates,
                                               AppsWidgetsPropertyPanelLabels labels,
                                               AppsWidgetsContextualHelpMessages help,
+                                              EnvironmentVariableLabels environmentVariableLabels,
                                               IplantDisplayStrings iplantDisplayStrings) {
         this.help = help;
         this.labels = labels;
         this.res = res;
         this.templates = templates;
+        this.environmentVariableLabels = environmentVariableLabels;
         this.iplantDisplayStrings = iplantDisplayStrings;
 
         this.style = res.css();
@@ -288,6 +293,11 @@ public class AppTemplateWizardDefaultAppearance implements AppTemplateWizardAppe
     @Override
     public int treeFilterWidth() {
         return 250;
+    }
+
+    @Override
+    public String envVarWidgetEmptyText() {
+        return environmentVariableLabels.envVarWidgetEmptyText();
     }
 
     @Override

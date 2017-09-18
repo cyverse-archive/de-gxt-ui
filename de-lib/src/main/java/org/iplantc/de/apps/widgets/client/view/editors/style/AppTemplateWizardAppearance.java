@@ -128,4 +128,6 @@ public interface AppTemplateWizardAppearance {
     String treeSelectorFilterEmptyText();
 
     int treeFilterWidth();
+
+    String envVarWidgetEmptyText();
 }
