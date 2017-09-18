@@ -346,6 +346,31 @@ public class AppTemplateWizardDefaultAppearance implements AppTemplateWizardAppe
     }
 
     @Override
+    public String analysisName() {
+        return appsWidgetsDisplayMessages.analysisName();
+    }
+
+    @Override
+    public String comments() {
+        return iplantDisplayStrings.comments();
+    }
+
+    @Override
+    public String selectOutputFolder() {
+        return appsWidgetsDisplayMessages.selectOutputFolder();
+    }
+
+    @Override
+    public String retainInputs() {
+        return appsWidgetsDisplayMessages.retainInputs();
+    }
+
+    @Override
+    public String launchAnalysisDetailsHeadingPrefix() {
+        return appsWidgetsDisplayMessages.launchAnalysisDetailsHeadingPrefix();
+    }
+
+    @Override
     public SafeHtml createChkBoxContextualHelpLabel(String labelToolTipText, String propertyToolTip) {
         return templates.fieldLabelImgFloatRightChkBox(SafeHtmlUtils.fromString(labelToolTipText),
                                                  res.help().getSafeUri(),

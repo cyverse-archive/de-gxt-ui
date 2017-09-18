@@ -146,4 +146,14 @@ public interface AppTemplateWizardAppearance {
     String emptyListSelectionText();
 
     String defaultOutputFolderValidationError();
+
+    String analysisName();
+
+    String comments();
+
+    String selectOutputFolder();
+
+    String retainInputs();
+
+    String launchAnalysisDetailsHeadingPrefix();
 }

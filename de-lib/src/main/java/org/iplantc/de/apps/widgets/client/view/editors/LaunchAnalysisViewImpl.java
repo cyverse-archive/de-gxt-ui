@@ -11,7 +11,6 @@ import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
 import org.iplantc.de.commons.client.widgets.PreventEntryAfterLimitHandler;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
 import org.iplantc.de.diskResource.client.views.widgets.FolderSelectorField;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsDisplayMessages;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -52,7 +51,7 @@ public class LaunchAnalysisViewImpl implements LaunchAnalysisView {
 
     @UiField(provided = true) @Ignore FolderSelectorField awFolderSel;
     @UiField @Ignore ContentPanel contentPanel;
-    @UiField(provided = true) AppsWidgetsDisplayMessages appWidgetStrings;
+    @UiField(provided = true) AppTemplateWizardAppearance appearance;
     @UiField TextArea description;
     @UiField TextField name;
     @UiField CheckBox retainInputs;
@@ -60,16 +59,14 @@ public class LaunchAnalysisViewImpl implements LaunchAnalysisView {
     @Path("outputDirectory")
     ConverterEditorAdapter<String, Folder, FolderSelectorField> outputDirectory;
 
-
-    @Inject AppTemplateWizardAppearance appearance;
-
     private final EditorDriver editorDriver = GWT.create(EditorDriver.class);
 
     @Inject
     public LaunchAnalysisViewImpl(final LaunchAnalysisWidgetUiBinder binder,
-                                  final AppsWidgetsDisplayMessages appWidgetStrings,
-                                  final DiskResourceSelectorFieldFactory folderSelectorFieldFactory) {
-        this.appWidgetStrings = appWidgetStrings;
+                                  final AppTemplateWizardAppearance appearance,
+                                  final DiskResourceSelectorFieldFactory folderSelectorFieldFactory,
+                                  DiskResourceAutoBeanFactory abFactory) {
+        this.appearance = appearance;
         this.awFolderSel = folderSelectorFieldFactory.defaultFolderSelector();
         this.awFolderSel.hideResetButton();
         binder.createAndBindUi(this);
@@ -89,8 +86,7 @@ public class LaunchAnalysisViewImpl implements LaunchAnalysisView {
             @Override
             public Folder convertModelValue(String object) {
                 if (!Strings.isNullOrEmpty(object)) {
-                    DiskResourceAutoBeanFactory factory = GWT.create(DiskResourceAutoBeanFactory.class);
-                    AutoBean<Folder> FolderBean = factory.folder();
+                    AutoBean<Folder> FolderBean = abFactory.folder();
                     Folder folder = FolderBean.as();
                     folder.setPath(object);
                     return folder;
@@ -158,7 +154,7 @@ public class LaunchAnalysisViewImpl implements LaunchAnalysisView {
         if (hasErrors()) {
             headerLabel.appendHtmlConstant(appearance.getErrorIconImg().getString());
         }
-        headerLabel.appendEscaped(appWidgetStrings.launchAnalysisDetailsHeadingPrefix() + appName);
+        headerLabel.appendEscaped(appearance.launchAnalysisDetailsHeadingPrefix() + appName);
         contentPanel.setHeading(headerLabel.toSafeHtml());
     }
 }
