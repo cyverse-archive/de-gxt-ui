@@ -1,8 +1,8 @@
 package org.iplantc.de.apps.widgets.client.view.editors.widgets;
 
 import org.iplantc.de.apps.widgets.client.events.ArgumentSelectedEvent;
-import org.iplantc.de.apps.widgets.client.view.editors.SelectionItemModelKeyProvider;
-import org.iplantc.de.apps.widgets.client.view.editors.SelectionItemProperties;
+import org.iplantc.de.apps.widgets.client.models.SelectionItemModelKeyProvider;
+import org.iplantc.de.apps.widgets.client.models.SelectionItemProperties;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.AbstractArgumentEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.ClearComboBoxSelectionKeyDownHandler;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.ArgumentEditorConverter;

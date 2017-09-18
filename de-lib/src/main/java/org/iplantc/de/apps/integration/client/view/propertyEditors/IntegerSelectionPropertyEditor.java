@@ -5,8 +5,8 @@ import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.Ids;
 import static org.iplantc.de.apps.integration.shared.AppIntegrationModule.PropertyPanelIds;
 
 import org.iplantc.de.apps.integration.client.view.propertyEditors.widgets.SelectionItemPropertyEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.SelectionItemModelKeyProvider;
-import org.iplantc.de.apps.widgets.client.view.editors.SelectionItemProperties;
+import org.iplantc.de.apps.widgets.client.models.SelectionItemModelKeyProvider;
+import org.iplantc.de.apps.widgets.client.models.SelectionItemProperties;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.ClearComboBoxSelectionKeyDownHandler;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.ArgumentEditorConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.SplittableToSelectionArgConverter;

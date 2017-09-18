@@ -1,6 +1,7 @@
 package org.iplantc.de.apps.widgets.client.view.editors;
 
 import org.iplantc.de.apps.widgets.client.gin.factory.ArgumentEditorGinFactory;
+import org.iplantc.de.apps.widgets.client.models.ReferenceGenomeProperties;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.ArgumentEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.SampleArgumentEditor;

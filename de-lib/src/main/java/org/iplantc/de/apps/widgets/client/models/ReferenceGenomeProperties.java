@@ -1,4 +1,4 @@
-package org.iplantc.de.apps.widgets.client.view.editors;
+package org.iplantc.de.apps.widgets.client.models;
 
 import org.iplantc.de.client.models.apps.refGenome.ReferenceGenome;
 

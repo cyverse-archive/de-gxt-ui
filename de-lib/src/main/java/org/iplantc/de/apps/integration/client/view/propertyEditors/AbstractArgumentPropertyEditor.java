@@ -7,13 +7,11 @@ import org.iplantc.de.apps.integration.client.events.UpdateCommandLinePreviewEve
 import org.iplantc.de.apps.integration.client.model.ArgumentPropertyEditor;
 import org.iplantc.de.apps.integration.client.model.DataSourceProperties;
 import org.iplantc.de.apps.integration.client.model.FileInfoTypeProperties;
-import org.iplantc.de.apps.integration.client.view.AppsEditorPanelAppearance;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.util.FinishEditing;
 import org.iplantc.de.apps.integration.client.view.propertyEditors.util.PrefixedHasTextEditor;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.ArgumentEditor;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.IArgumentEditorConverter;
-import org.iplantc.de.apps.widgets.client.view.editors.ReferenceGenomeProperties;
-import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
+import org.iplantc.de.apps.widgets.client.models.ReferenceGenomeProperties;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.models.apps.integration.DataSource;
 import org.iplantc.de.client.models.apps.integration.FileInfoType;
@@ -35,7 +33,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell.TriggerAction;
