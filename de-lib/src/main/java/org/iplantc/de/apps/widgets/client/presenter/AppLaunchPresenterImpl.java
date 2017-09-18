@@ -23,9 +23,6 @@ import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.util.RegExp;
 import org.iplantc.de.commons.client.views.window.configs.AppWizardConfig;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
-import org.iplantc.de.resources.client.messages.I18N;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsDisplayMessages;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsErrorMessages;
 import org.iplantc.de.shared.AppLaunchCallback;
 
 import com.google.common.base.Joiner;
@@ -59,7 +56,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
         public void onSuccess(AppTemplate result) {
             if (result.isAppDisabled()) {
                 ErrorAnnouncementConfig config = new ErrorAnnouncementConfig(appearance.appUnavailable());
-                IplantAnnouncer.getInstance().schedule(config);
+                announcer.schedule(config);
                 return;
             }
             appTemplate = result;
@@ -67,9 +64,8 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
         }
     }
 
-    @Inject AppsWidgetsDisplayMessages appsWidgetsDisplayMessages;
-    @Inject AppsWidgetsErrorMessages appsWidgetsErrMessages;
     @Inject IplantAnnouncer announcer;
+    @Inject CommonModelUtils commonModelUtils;
     AppTemplate appTemplate;
     private final AppTemplateServices atServices;
     HandlerManager handlerManager;
@@ -128,7 +124,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
                                 ? deClientConstants.deSystemId()
                                 : config.getSystemId();
         final String appId = config.getAppId();
-        return CommonModelUtils.getInstance().createHasQualifiedId(systemId, appId);
+        return commonModelUtils.createHasQualifiedId(systemId, appId);
     }
 
     @Override
@@ -145,7 +141,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
         // JDS Replace all Cmd Line restricted chars with underscores
         String regex = getRestrictedCharRegEx();
         String newName = appTemplate.getName().replaceAll(regex, "_");
-        je.setName(newName + "_" + appsWidgetsDisplayMessages.defaultAnalysisName()); //$NON-NLS-1$
+        je.setName(newName + "_" + appearance.defaultAnalysisName()); //$NON-NLS-1$
 
         final Folder defaultOutputFolder = userSettings.getDefaultOutputFolder();
         if(defaultOutputFolder != null){
@@ -190,20 +186,20 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
 
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
-                announcer.schedule(new ErrorAnnouncementConfig(appsWidgetsErrMessages.launchAnalysisFailure(je.getName())));
-                ErrorHandler.post(I18N.ERROR.analysisFailedToLaunch(at.getName()), caught);
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.launchAnalysisFailure(je.getName())));
+                ErrorHandler.post(appearance.analysisFailedToLaunch(at.getName()), caught);
                 view.analysisLaunchFailed();
             }
 
             @Override
             public void onSuccess(AnalysisSubmissionResponse result) {
-                announcer.schedule(new SuccessAnnouncementConfig(appsWidgetsDisplayMessages.launchAnalysisSuccess(je.getName())));
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.launchAnalysisSuccess(je.getName())));
                 ensureHandlers().fireEvent(new AnalysisLaunchEvent(at));
 
                 if (result != null) {
                     final List<String> missingPaths = result.getMissingPaths();
                     if (missingPaths != null && !missingPaths.isEmpty()) {
-                        ErrorHandler.post(I18N.ERROR.diskResourcesDoNotExist(Joiner.on(", ")
+                        ErrorHandler.post(appearance.diskResourcesDoNotExist(Joiner.on(", ")
                                                                                    .join(missingPaths)));
                     }
                 }

@@ -38,6 +38,16 @@ public interface AppLaunchView extends IsWidget, Editor<AppTemplate>, HasRequest
         String unableToRetrieveWorkflowGuide();
 
         String loadingMask();
+
+        String defaultAnalysisName();
+
+        String launchAnalysisFailure(String name);
+
+        String launchAnalysisSuccess(String name);
+
+        String analysisFailedToLaunch(String name);
+
+        String diskResourcesDoNotExist(String missingPaths);
     }
 
     public interface Presenter extends AppTemplateFetched.HasAppTemplateFetchedHandlers {
