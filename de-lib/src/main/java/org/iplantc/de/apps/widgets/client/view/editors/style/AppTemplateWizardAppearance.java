@@ -142,4 +142,6 @@ public interface AppTemplateWizardAppearance {
     String folderOutputEmptyText();
 
     String multiFileOutputEmptyText();
+
+    String emptyListSelectionText();
 }

@@ -95,6 +95,7 @@ public class AppTemplateWizardDefaultAppearance implements AppTemplateWizardAppe
     private final AppsWidgetsPropertyPanelLabels labels;
     private final Resources res;
     private final AppTemplateWizardTemplates templates;
+    private AppsWidgetsDisplayMessages appsWidgetsDisplayMessages;
     private IplantDisplayStrings iplantDisplayStrings;
     private Style style;
 
@@ -103,6 +104,7 @@ public class AppTemplateWizardDefaultAppearance implements AppTemplateWizardAppe
              GWT.<AppTemplateWizardTemplates>create(AppTemplateWizardTemplates.class),
              GWT.<AppsWidgetsPropertyPanelLabels>create(AppsWidgetsPropertyPanelLabels.class),
              GWT.<AppsWidgetsContextualHelpMessages>create(AppsWidgetsContextualHelpMessages.class),
+             GWT.<AppsWidgetsDisplayMessages>create(AppsWidgetsDisplayMessages.class),
              GWT.<IplantDisplayStrings>create(IplantDisplayStrings.class));
     }
 
@@ -110,11 +112,13 @@ public class AppTemplateWizardDefaultAppearance implements AppTemplateWizardAppe
                                               AppTemplateWizardTemplates templates,
                                               AppsWidgetsPropertyPanelLabels labels,
                                               AppsWidgetsContextualHelpMessages help,
+                                              AppsWidgetsDisplayMessages appsWidgetsDisplayMessages,
                                               IplantDisplayStrings iplantDisplayStrings) {
         this.help = help;
         this.labels = labels;
         this.res = res;
         this.templates = templates;
+        this.appsWidgetsDisplayMessages = appsWidgetsDisplayMessages;
         this.iplantDisplayStrings = iplantDisplayStrings;
 
         this.style = res.css();
@@ -308,22 +312,27 @@ public class AppTemplateWizardDefaultAppearance implements AppTemplateWizardAppe
 
     @Override
     public String doubleInputWidgetEmptyText() {
-        return appsWidgetsPropertyPanelLabels.doubleInputWidgetEmptyText();
+        return labels.doubleInputWidgetEmptyText();
     }
 
     @Override
     public String fileOutputEmptyText() {
-        return appsWidgetsPropertyPanelLabels.fileOutputEmptyText();
+        return labels.fileOutputEmptyText();
     }
 
     @Override
     public String folderOutputEmptyText() {
-        return appsWidgetsPropertyPanelLabels.folderOutputEmptyText();
+        return labels.folderOutputEmptyText();
     }
 
     @Override
     public String multiFileOutputEmptyText() {
-        return appsWidgetsPropertyPanelLabels.multiFileOutputEmptyText();
+        return labels.multiFileOutputEmptyText();
+    }
+
+    @Override
+    public String emptyListSelectionText() {
+        return appsWidgetsDisplayMessages.emptyListSelectionText();
     }
 
     @Override

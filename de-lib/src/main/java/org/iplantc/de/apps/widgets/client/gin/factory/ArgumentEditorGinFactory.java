@@ -22,6 +22,9 @@ import org.iplantc.de.apps.widgets.client.view.editors.arguments.TextInputEditor
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.TextSelectionEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.tree.TreeSelectionEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
+import org.iplantc.de.client.models.apps.refGenome.ReferenceGenome;
+
+import com.sencha.gxt.data.shared.ListStore;
 
 /**
  * @author jstroot
@@ -45,7 +48,7 @@ public interface ArgumentEditorGinFactory {
     FileOutputEditor fileOutputEditor(AppTemplateWizardAppearance appearance);
     FolderOutputEditor folderOutputEditor(AppTemplateWizardAppearance appearance);
     MultiFileOutputEditor multiFileOutputEditor(AppTemplateWizardAppearance appearance);
-    ReferenceGenomeEditor referenceGenomeEditor(AppTemplateWizardAppearance appearance);
-    ReferenceSequenceEditor referenceSequenceEditor(AppTemplateWizardAppearance appearance);
-    ReferenceAnnotationEditor referenceAnnotationEditor(AppTemplateWizardAppearance appearance);
+    ReferenceGenomeEditor referenceGenomeEditor(AppTemplateWizardAppearance appearance, ListStore<ReferenceGenome> listStore);
+    ReferenceSequenceEditor referenceSequenceEditor(AppTemplateWizardAppearance appearance, ListStore<ReferenceGenome> listStore);
+    ReferenceAnnotationEditor referenceAnnotationEditor(AppTemplateWizardAppearance appearance, ListStore<ReferenceGenome> listStore);
 }

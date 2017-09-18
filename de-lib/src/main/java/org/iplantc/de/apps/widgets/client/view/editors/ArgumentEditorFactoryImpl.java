@@ -4,8 +4,6 @@ import org.iplantc.de.apps.widgets.client.gin.factory.ArgumentEditorGinFactory;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.ArgumentEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.ReferenceAnnotationEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.ReferenceGenomeEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.ReferenceSequenceEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.SampleArgumentEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.client.models.apps.integration.Argument;
@@ -154,10 +152,10 @@ public class ArgumentEditorFactoryImpl implements AppTemplateForm.ArgumentEditor
                 subEditor = argumentEditorGinFactory.multiFileOutputEditor(appearance);
                 break;
             case ReferenceGenome:
-                subEditor = new ReferenceGenomeEditor(appearance, getReferenceGenomeStore(), refGenomeProps);
+                subEditor = argumentEditorGinFactory.referenceGenomeEditor(appearance, getReferenceGenomeStore());
                 break;
             case ReferenceSequence:
-                subEditor = new ReferenceSequenceEditor(appearance, getReferenceGenomeStore(), refGenomeProps);
+                subEditor = argumentEditorGinFactory.referenceSequenceEditor(appearance, getReferenceGenomeStore());
                 break;
             case ReferenceAnnotation:
                 subEditor = new ReferenceAnnotationEditor(appearance, getReferenceGenomeStore(), refGenomeProps);
