@@ -13,11 +13,6 @@
    <inherits name="org.iplantc.de.apps.Apps"/>
    
    <inherits name="com.google.gwt.inject.Inject"/>
-		
-   <!-- Deferred-Binding Rules -->
-   <replace-with class="org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearanceImpl">
-      <when-type-is class="org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance"/>
-   </replace-with>
    
    <!-- Specify the paths for translatable code                    -->
    <source path='client' />

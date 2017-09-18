@@ -23,12 +23,12 @@ public class InfoEditor extends AbstractArgumentEditor {
     @Override
     public void setValue(Argument value) {
         super.setValue(value);
-        argumentLabel.removeStyleName(appearance.getStyle().emptyGroupBgText());
+        argumentLabel.removeStyleName(appearance.emptyGroupBgTextClassName());
         argumentLabel.setLabelSeparator("");
         final String id = Strings.nullToEmpty(value.getId());
         if (id.equals(AppTemplateUtils.EMPTY_GROUP_ARG_ID)) {
             handlerRegistration.removeHandler();
-            argumentLabel.setStyleName(appearance.getStyle().emptyGroupBgText());
+            argumentLabel.setStyleName(appearance.emptyGroupBgTextClassName());
             argumentLabel.getElement().getStyle().setMarginTop(100, Style.Unit.PX);
             argumentLabel.getElement().getStyle().setMarginBottom(100, Style.Unit.PX);
         }

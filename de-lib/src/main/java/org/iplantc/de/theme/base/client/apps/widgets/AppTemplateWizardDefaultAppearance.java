@@ -1,7 +1,9 @@
-package org.iplantc.de.apps.widgets.client.view.editors.style;
+package org.iplantc.de.theme.base.client.apps.widgets;
 
+import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.apps.widgets.client.view.util.IPlantSimpleHtmlSanitizer;
 import org.iplantc.de.client.models.HasLabel;
+import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
@@ -11,8 +13,12 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.editor.client.EditorError;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.safehtml.shared.SafeUri;
 
 import com.sencha.gxt.widget.core.client.button.IconButton;
 import com.sencha.gxt.widget.core.client.button.IconButton.IconConfig;
@@ -23,15 +29,75 @@ import java.util.List;
  * @author jstroot
  * 
  */
-public class AppTemplateWizardAppearanceImpl implements AppTemplateWizardAppearance {
+public class AppTemplateWizardDefaultAppearance implements AppTemplateWizardAppearance {
+
+    interface AppTemplateWizardTemplates extends SafeHtmlTemplates {
+        @SafeHtmlTemplates.Template("<p style='text-overflow: ellipsis;overflow: hidden;white-space: nowrap;'>{0}</p>")
+        SafeHtml contentPanelHeader(SafeHtml label);
+
+        @SafeHtmlTemplates.Template("<p style='text-overflow: ellipsis;overflow: hidden;white-space: nowrap;'><span style='color: red;'>*&nbsp</span>{0}</p>")
+        SafeHtml contentPanelHeaderRequired(SafeHtml label);
+
+        @SafeHtmlTemplates.Template("{0}&nbsp;<img src='{1}' qtip='{2}' ></img>")
+        SafeHtml fieldLabelImg(SafeHtml label, SafeUri img, String toolTip);
+
+        @SafeHtmlTemplates.Template("{0}<img style='float: right;' src='{1}' qtip='{2}'></img>")
+        SafeHtml fieldLabelImgFloatRight(SafeHtml label, SafeUri img, String toolTip);
+
+        @SafeHtmlTemplates.Template("{0}&nbsp;<img src='{1}' title='{2}'></img>")
+        SafeHtml fieldLabelImgChkBox(SafeHtml label, SafeUri img, String toolTip);
+
+        @SafeHtmlTemplates.Template("{0}<img style='float: right;' src='{1}' title='{2}'></img>")
+        SafeHtml fieldLabelImgFloatRightChkBox(SafeHtml label, SafeUri img, String toolTip);
+
+        @SafeHtmlTemplates.Template("<span style='color: red;'>*&nbsp</span>")
+        SafeHtml fieldLabelRequired();
+
+    }
+
+    interface Style extends CssResource {
+
+        String appHeaderSelect();
+
+        String argument();
+
+        String argumentSelect();
+
+        String delete();
+
+        String deleteBtn();
+
+        String deleteHover();
+
+        String emptyGroupBgText();
+
+        String grab();
+
+        String grabbing();
+
+    }
+
+    interface Resources extends IplantResources {
+        @Source("AppTemplateWizard.gss")
+        Style css();
+
+        // KLUDGE Duplicated resource in apps theme as well.
+        @Source("delete_rating.png")
+        ImageResource deleteRating();
+
+        // KLUDGE Duplicated resource in apps theme as well.
+        @Source("delete_rating_hover.png")
+        ImageResource deleteRatingHover();
+    }
 
     private final AppsWidgetsContextualHelpMessages help;
     private final AppsWidgetsPropertyPanelLabels labels;
     private final Resources res;
     private final AppTemplateWizardTemplates templates;
     private IplantDisplayStrings iplantDisplayStrings;
+    private Style style;
 
-    public AppTemplateWizardAppearanceImpl() {
+    public AppTemplateWizardDefaultAppearance() {
         this(GWT.<Resources>create(Resources.class),
              GWT.<AppTemplateWizardTemplates>create(AppTemplateWizardTemplates.class),
              GWT.<AppsWidgetsPropertyPanelLabels>create(AppsWidgetsPropertyPanelLabels.class),
@@ -39,16 +105,19 @@ public class AppTemplateWizardAppearanceImpl implements AppTemplateWizardAppeara
              GWT.<IplantDisplayStrings>create(IplantDisplayStrings.class));
     }
 
-    public AppTemplateWizardAppearanceImpl(Resources res,
-                                           AppTemplateWizardTemplates templates,
-                                           AppsWidgetsPropertyPanelLabels labels,
-                                           AppsWidgetsContextualHelpMessages help,
-                                           IplantDisplayStrings iplantDisplayStrings) {
+    public AppTemplateWizardDefaultAppearance(Resources res,
+                                              AppTemplateWizardTemplates templates,
+                                              AppsWidgetsPropertyPanelLabels labels,
+                                              AppsWidgetsContextualHelpMessages help,
+                                              IplantDisplayStrings iplantDisplayStrings) {
         this.help = help;
         this.labels = labels;
         this.res = res;
         this.templates = templates;
         this.iplantDisplayStrings = iplantDisplayStrings;
+
+        this.style = res.css();
+        style.ensureInjected();
     }
 
     @Override
@@ -147,14 +216,48 @@ public class AppTemplateWizardAppearanceImpl implements AppTemplateWizardAppeara
     }
 
     @Override
-    public Style getStyle() {
-        res.css().ensureInjected();
-        return res.css();
+    public String appHeaderSelectClassName() {
+        return style.appHeaderSelect();
     }
 
     @Override
-    public AppTemplateWizardTemplates getTemplates() {
-        return templates;
+    public String argumentClassName() {
+        return style.argument();
+    }
+
+    @Override
+    public String argumentSelectClassName() {
+        return style.argumentSelect();
+    }
+
+    @Override
+    public String deleteClassName() {
+        return style.delete();
+    }
+
+    @Override
+    public String deleteBtnClassName() {
+        return style.deleteBtn();
+    }
+
+    @Override
+    public String deleteHoverClassName() {
+        return style.deleteHover();
+    }
+
+    @Override
+    public String emptyGroupBgTextClassName() {
+        return style.emptyGroupBgText();
+    }
+
+    @Override
+    public String grabClassName() {
+        return style.grab();
+    }
+
+    @Override
+    public String grabbingClassName() {
+        return style.grabbing();
     }
 
     @Override

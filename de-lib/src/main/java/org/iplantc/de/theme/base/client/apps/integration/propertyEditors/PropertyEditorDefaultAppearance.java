@@ -58,7 +58,7 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
     private IplantDisplayStrings iplantDisplayStrings;
     private AppsWidgetsDisplayMessages appsWidgetsDisplayMessages;
     private IplantValidationMessages iplantValidationMessages;
-    private AppTemplateWizardAppearance.Style style;
+    private AppTemplateWizardAppearance wizardAppearance;
 
     public PropertyEditorDefaultAppearance() {
         this ((AppsWidgetsPropertyPanelLabels)GWT.create(AppsWidgetsPropertyPanelLabels.class),
@@ -71,7 +71,7 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
               (IplantDisplayStrings)GWT.create(IplantDisplayStrings.class),
               (AppsWidgetsDisplayMessages)GWT.create(AppsWidgetsDisplayMessages.class),
               (IplantValidationMessages)GWT.create(IplantValidationMessages.class),
-              (AppTemplateWizardAppearance.Resources)GWT.create(AppTemplateWizardAppearance.Resources.class));
+              (AppTemplateWizardAppearance)GWT.create(AppTemplateWizardAppearance.class));
     }
 
     public PropertyEditorDefaultAppearance(AppsWidgetsPropertyPanelLabels propertyPanelLabels,
@@ -84,7 +84,7 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
                                            IplantDisplayStrings iplantDisplayStrings,
                                            AppsWidgetsDisplayMessages appsWidgetsDisplayMessages,
                                            IplantValidationMessages iplantValidationMessages,
-                                           AppTemplateWizardAppearance.Resources resources) {
+                                           AppTemplateWizardAppearance wizardAppearance) {
         this.propertyPanelLabels = propertyPanelLabels;
         this.panelAppearance = panelAppearance;
         this.argumentValidatorMessages = argumentValidatorMessages;
@@ -95,9 +95,7 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
         this.iplantDisplayStrings = iplantDisplayStrings;
         this.appsWidgetsDisplayMessages = appsWidgetsDisplayMessages;
         this.iplantValidationMessages = iplantValidationMessages;
-        this.style = resources.css();
-
-        style.ensureInjected();
+        this.wizardAppearance = wizardAppearance;
     }
 
     @Override
@@ -922,7 +920,7 @@ public class PropertyEditorDefaultAppearance implements PropertyEditorAppearance
 
     @Override
     public String appHeaderSelect() {
-        return style.appHeaderSelect();
+        return wizardAppearance.appHeaderSelectClassName();
     }
 
     @Override

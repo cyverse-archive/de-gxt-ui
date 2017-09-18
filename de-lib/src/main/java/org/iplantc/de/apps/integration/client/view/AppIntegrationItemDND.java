@@ -88,13 +88,13 @@ public class AppIntegrationItemDND extends DragSource {
             widget.addMouseDownHandler(new MouseDownHandler() {
                 @Override
                 public void onMouseDown(MouseDownEvent event) {
-                    widget.addStyleName(appearance.getStyle().grabbing());
+                    widget.addStyleName(appearance.grabbingClassName());
                 }
             });
             widget.addMouseUpHandler(new MouseUpHandler() {
                 @Override
                 public void onMouseUp(MouseUpEvent event) {
-                    widget.removeStyleName(appearance.getStyle().grabbing());
+                    widget.removeStyleName(appearance.grabbingClassName());
                 }
             });
         }
