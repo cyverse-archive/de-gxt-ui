@@ -132,4 +132,6 @@ public interface AppTemplateWizardAppearance {
     String envVarWidgetEmptyText();
 
     String textInputWidgetEmptyText();
+
+    String integerInputWidgetEmptyText();
 }

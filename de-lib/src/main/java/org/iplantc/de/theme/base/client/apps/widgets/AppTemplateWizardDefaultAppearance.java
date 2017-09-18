@@ -6,9 +6,8 @@ import org.iplantc.de.client.models.HasLabel;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
+import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsDisplayMessages;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
-import org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.EnvironmentVariableLabels;
-import org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.TextInputLabels;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
@@ -96,8 +95,6 @@ public class AppTemplateWizardDefaultAppearance implements AppTemplateWizardAppe
     private final AppsWidgetsPropertyPanelLabels labels;
     private final Resources res;
     private final AppTemplateWizardTemplates templates;
-    private EnvironmentVariableLabels environmentVariableLabels;
-    private TextInputLabels textInputLabels;
     private IplantDisplayStrings iplantDisplayStrings;
     private Style style;
 
@@ -106,8 +103,6 @@ public class AppTemplateWizardDefaultAppearance implements AppTemplateWizardAppe
              GWT.<AppTemplateWizardTemplates>create(AppTemplateWizardTemplates.class),
              GWT.<AppsWidgetsPropertyPanelLabels>create(AppsWidgetsPropertyPanelLabels.class),
              GWT.<AppsWidgetsContextualHelpMessages>create(AppsWidgetsContextualHelpMessages.class),
-             GWT.<EnvironmentVariableLabels>create(EnvironmentVariableLabels.class),
-             GWT.<TextInputLabels>create(TextInputLabels.class),
              GWT.<IplantDisplayStrings>create(IplantDisplayStrings.class));
     }
 
@@ -115,15 +110,11 @@ public class AppTemplateWizardDefaultAppearance implements AppTemplateWizardAppe
                                               AppTemplateWizardTemplates templates,
                                               AppsWidgetsPropertyPanelLabels labels,
                                               AppsWidgetsContextualHelpMessages help,
-                                              EnvironmentVariableLabels environmentVariableLabels,
-                                              TextInputLabels textInputLabels,
                                               IplantDisplayStrings iplantDisplayStrings) {
         this.help = help;
         this.labels = labels;
         this.res = res;
         this.templates = templates;
-        this.environmentVariableLabels = environmentVariableLabels;
-        this.textInputLabels = textInputLabels;
         this.iplantDisplayStrings = iplantDisplayStrings;
 
         this.style = res.css();
@@ -302,12 +293,17 @@ public class AppTemplateWizardDefaultAppearance implements AppTemplateWizardAppe
 
     @Override
     public String envVarWidgetEmptyText() {
-        return environmentVariableLabels.envVarWidgetEmptyText();
+        return labels.envVarWidgetEmptyText();
     }
 
     @Override
     public String textInputWidgetEmptyText() {
-        return textInputLabels.textInputWidgetEmptyText();
+        return labels.textInputWidgetEmptyText();
+    }
+
+    @Override
+    public String integerInputWidgetEmptyText() {
+        return labels.integerInputWidgetEmptyText();
     }
 
     @Override
