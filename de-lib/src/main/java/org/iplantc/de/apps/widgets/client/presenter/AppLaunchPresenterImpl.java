@@ -5,6 +5,7 @@ import org.iplantc.de.apps.widgets.client.events.AnalysisLaunchEvent.AnalysisLau
 import org.iplantc.de.apps.widgets.client.events.AppTemplateFetched;
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent.RequestAnalysisLaunchEventHandler;
 import org.iplantc.de.apps.widgets.client.view.AppLaunchView;
+import org.iplantc.de.apps.widgets.client.view.dialogs.HPCWaitTimeDialog;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.UserSettings;
@@ -25,18 +26,17 @@ import org.iplantc.de.commons.client.util.RegExp;
 import org.iplantc.de.commons.client.views.window.configs.AppWizardConfig;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
 import org.iplantc.de.shared.AppLaunchCallback;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.util.Format;
-import com.sencha.gxt.widget.core.client.Dialog;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
 import java.util.List;
 
@@ -81,6 +81,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
     HasOneWidget container;
 
     @Inject private IplantValidationConstants valConstants;
+    @Inject AsyncProviderWrapper<HPCWaitTimeDialog> hpcWaitDlgProvider;
     private final AppLaunchView view;
 
     @Inject
@@ -182,20 +183,16 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
     }
 
      void showWaitTimeNotice(final AppTemplate cleaned, final JobExecution je) {
-        Dialog id = new Dialog();
-        id.setHideOnButtonClick(true);
-        id.setHeading(appearance.waitTimes());
-        HTML htm = new HTML();
-        htm.setHTML(appearance.hpcAppWaitTimes());
-        id.add(htm);
-        id.setPredefinedButtons(Dialog.PredefinedButton.OK);
-        id.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
+        hpcWaitDlgProvider.get(new AsyncCallback<HPCWaitTimeDialog>() {
             @Override
-            public void onDialogHide(DialogHideEvent event) {
-                launchAnalysis(cleaned, je);
+            public void onFailure(Throwable throwable) {}
+
+            @Override
+            public void onSuccess(HPCWaitTimeDialog dialog) {
+                dialog.addDialogHideHandler(hideEvent -> launchAnalysis(cleaned, je));
+                dialog.show();
             }
         });
-        id.show();
     }
 
     HandlerManager ensureHandlers() {
