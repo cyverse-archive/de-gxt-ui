@@ -2,7 +2,7 @@ package org.iplantc.de.apps.widgets.client.view.editors.style;
 
 import org.iplantc.de.apps.widgets.client.view.util.IPlantSimpleHtmlSanitizer;
 import org.iplantc.de.client.models.HasLabel;
-import org.iplantc.de.resources.client.messages.I18N;
+import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
 
@@ -29,12 +29,26 @@ public class AppTemplateWizardAppearanceImpl implements AppTemplateWizardAppeara
     private final AppsWidgetsPropertyPanelLabels labels;
     private final Resources res;
     private final AppTemplateWizardTemplates templates;
+    private IplantDisplayStrings iplantDisplayStrings;
 
     public AppTemplateWizardAppearanceImpl() {
-        res = GWT.create(Resources.class);
-        templates = GWT.create(AppTemplateWizardTemplates.class);
-        labels = I18N.APPS_LABELS;
-        help = I18N.APPS_HELP;
+        this(GWT.<Resources>create(Resources.class),
+             GWT.<AppTemplateWizardTemplates>create(AppTemplateWizardTemplates.class),
+             GWT.<AppsWidgetsPropertyPanelLabels>create(AppsWidgetsPropertyPanelLabels.class),
+             GWT.<AppsWidgetsContextualHelpMessages>create(AppsWidgetsContextualHelpMessages.class),
+             GWT.<IplantDisplayStrings>create(IplantDisplayStrings.class));
+    }
+
+    public AppTemplateWizardAppearanceImpl(Resources res,
+                                           AppTemplateWizardTemplates templates,
+                                           AppsWidgetsPropertyPanelLabels labels,
+                                           AppsWidgetsContextualHelpMessages help,
+                                           IplantDisplayStrings iplantDisplayStrings) {
+        this.help = help;
+        this.labels = labels;
+        this.res = res;
+        this.templates = templates;
+        this.iplantDisplayStrings = iplantDisplayStrings;
     }
 
     @Override
@@ -161,6 +175,16 @@ public class AppTemplateWizardAppearanceImpl implements AppTemplateWizardAppeara
     @Override
     public String multiFilePrompt() {
         return help.multiFilePrompt();
+    }
+
+    @Override
+    public String treeSelectorFilterEmptyText() {
+        return iplantDisplayStrings.treeSelectorFilterEmptyText();
+    }
+
+    @Override
+    public int treeFilterWidth() {
+        return 250;
     }
 
     @Override

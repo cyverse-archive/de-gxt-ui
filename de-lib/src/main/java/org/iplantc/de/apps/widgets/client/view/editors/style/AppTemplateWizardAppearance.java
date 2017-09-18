@@ -174,4 +174,8 @@ public interface AppTemplateWizardAppearance {
     SafeHtml sanitizeHtml(String html);
 
     String multiFilePrompt();
+
+    String treeSelectorFilterEmptyText();
+
+    int treeFilterWidth();
 }

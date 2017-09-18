@@ -1,5 +1,7 @@
 package org.iplantc.de.apps.widgets.client.view.editors.arguments.tree;
 
+import static com.sencha.gxt.widget.core.client.form.FormPanel.LabelAlign.TOP;
+
 import org.iplantc.de.apps.widgets.client.events.ArgumentRequiredChangedEvent;
 import org.iplantc.de.apps.widgets.client.events.ArgumentRequiredChangedEvent.ArgumentRequiredChangedEventHandler;
 import org.iplantc.de.apps.widgets.client.events.ArgumentSelectedEvent;
@@ -19,7 +21,6 @@ import org.iplantc.de.client.models.apps.integration.ArgumentValidator;
 import org.iplantc.de.client.models.apps.integration.SelectionItem;
 import org.iplantc.de.client.models.apps.integration.SelectionItemGroup;
 import org.iplantc.de.client.models.apps.integration.SelectionItemList;
-import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
@@ -38,7 +39,6 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 
-import static com.sencha.gxt.widget.core.client.form.FormPanel.LabelAlign.TOP;
 import com.sencha.gxt.core.client.Style.SelectionMode;
 import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.data.shared.TreeStore;
@@ -175,6 +175,7 @@ public class TreeSelectionEditor extends Composite implements AppTemplateForm.Ar
 
 
     private final FieldLabel argumentLabel;
+    private final AppTemplateWizardAppearance appearance;
 
     private EditorDelegate<Argument> delegate;
 
@@ -204,6 +205,7 @@ public class TreeSelectionEditor extends Composite implements AppTemplateForm.Ar
     private ArgumentEditorConverter<List<SelectionItem>> valueEditor;
 
     public TreeSelectionEditor(AppTemplateWizardAppearance appearance, SelectionItemProperties props) {
+        this.appearance = appearance;
         TreeStore<SelectionItem> store = new TreeStore<>(new SelectionItemModelKeyProvider());
 
         tree = new SelectionItemTree(store, props.display());
@@ -434,8 +436,8 @@ public class TreeSelectionEditor extends Composite implements AppTemplateForm.Ar
         };
 
         treeFilter.bind(store);
-        treeFilter.setEmptyText(I18N.DISPLAY.treeSelectorFilterEmptyText());
-        treeFilter.setWidth(250);
+        treeFilter.setEmptyText(appearance.treeSelectorFilterEmptyText());
+        treeFilter.setWidth(appearance.treeFilterWidth());
         treeFilter.setValidationDelay(750);
 
         return treeFilter;
