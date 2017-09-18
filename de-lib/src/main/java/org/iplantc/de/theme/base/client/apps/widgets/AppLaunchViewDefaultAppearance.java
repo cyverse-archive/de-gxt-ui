@@ -114,4 +114,9 @@ public class AppLaunchViewDefaultAppearance implements AppLaunchView.AppLaunchVi
     public String launchPreviewHeader(AppTemplate appTemplate) {
         return displayStrings.launchPreviewHeader(appTemplate.getName());
     }
+
+    @Override
+    public String launchAnalysis() {
+        return iplantDisplayStrings.launchAnalysis();
+    }
 }

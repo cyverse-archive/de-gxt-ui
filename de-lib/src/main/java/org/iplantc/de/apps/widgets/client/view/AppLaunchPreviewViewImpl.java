@@ -28,9 +28,8 @@ public class AppLaunchPreviewViewImpl extends Window implements AppLaunchPreview
     interface AppWizardPreviewUiBinder extends UiBinder<Widget, AppLaunchPreviewViewImpl> {}
     interface EditorDriver extends SimpleBeanEditorDriver<AppTemplate, AppLaunchPreviewView> { }
 
-    private AppLaunchViewAppearance appearance;
-    @Ignore
-    @UiField(provided = true) AppTemplateForm wizard;
+    @UiField(provided = true) AppLaunchViewAppearance appearance;
+    @Ignore @UiField(provided = true) AppTemplateForm wizard;
     @UiField TextButton launchButton;
 
     private final EditorDriver editorDriver = GWT.create(EditorDriver.class);

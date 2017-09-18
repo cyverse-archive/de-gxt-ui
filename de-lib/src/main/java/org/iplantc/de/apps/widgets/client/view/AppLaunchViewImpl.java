@@ -42,15 +42,13 @@ public class AppLaunchViewImpl extends Composite implements AppLaunchView {
 
     @UiField @Ignore TextButton launchButton;
     @UiField(provided = true) @Path("") AppTemplateForm wizard;
-
+    @UiField(provided = true) AppLaunchViewAppearance appearance;
     private final AppTemplateUtils appTemplateUtils;
 
     private final EditorDriver editorDriver = GWT.create(EditorDriver.class);
 
     private final LaunchAnalysisView law;
     private CustomMask customMask;
-
-    AppLaunchViewAppearance appearance;
 
     @Inject
     public AppLaunchViewImpl(final AppWizardViewUIUiBinder binder,

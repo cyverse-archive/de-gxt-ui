@@ -54,6 +54,8 @@ public interface AppLaunchView extends IsWidget, Editor<AppTemplate>, HasRequest
         String launchPreviewHeight();
 
         String launchPreviewHeader(AppTemplate appTemplate);
+
+        String launchAnalysis();
     }
 
     public interface Presenter extends AppTemplateFetched.HasAppTemplateFetchedHandlers {

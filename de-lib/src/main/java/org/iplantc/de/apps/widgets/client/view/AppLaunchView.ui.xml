@@ -5,8 +5,8 @@
              xmlns:appTemplate="urn:import:org.iplantc.de.apps.widgets.client.view"
              xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button">
 
-    <ui:with type="org.iplantc.de.resources.client.messages.IplantDisplayStrings"
-             field="display" />
+    <ui:with type="org.iplantc.de.apps.widgets.client.view.AppLaunchView.AppLaunchViewAppearance"
+             field="appearance" />
 
     <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" 
              field="appTemplateFormLayoutData">
@@ -25,7 +25,7 @@
             <button:ButtonBar pack="END">
                 <button:child>
                     <button:TextButton ui:field="launchButton"
-                                       text="{display.launchAnalysis}"/>
+                                       text="{appearance.launchAnalysis}"/>
                 </button:child>
             </button:ButtonBar>
     	</container:child>
