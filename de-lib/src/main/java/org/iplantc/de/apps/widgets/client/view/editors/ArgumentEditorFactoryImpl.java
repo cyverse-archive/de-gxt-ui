@@ -10,7 +10,6 @@ import org.iplantc.de.apps.widgets.client.view.editors.arguments.FolderOutputEdi
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.IntegerInputEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.IntegerSelectionEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.MultiFileOutputEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.MultiLineTextEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.ReferenceAnnotationEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.ReferenceGenomeEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.ReferenceSequenceEditor;
@@ -132,7 +131,7 @@ public class ArgumentEditorFactoryImpl implements AppTemplateForm.ArgumentEditor
                 subEditor = argumentEditorGinFactory.infoEditor(appearance);
                 break;
             case MultiLineText:
-                subEditor = new MultiLineTextEditor(appearance, appsWidgetsLabels);
+                subEditor = argumentEditorGinFactory.multiLineTextEditor(appearance);
                 break;
             case Integer:
                 subEditor = new IntegerInputEditor(appearance, appsWidgetsLabels);

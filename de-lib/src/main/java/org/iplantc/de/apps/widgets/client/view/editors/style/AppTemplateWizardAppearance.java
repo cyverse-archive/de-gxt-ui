@@ -130,4 +130,6 @@ public interface AppTemplateWizardAppearance {
     int treeFilterWidth();
 
     String envVarWidgetEmptyText();
+
+    String textInputWidgetEmptyText();
 }
