@@ -40,8 +40,10 @@ import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.services.AppMetadataServiceFacade;
+import org.iplantc.de.client.services.OntologyLookupServiceFacade;
 import org.iplantc.de.client.services.OntologyServiceFacade;
 import org.iplantc.de.client.services.impl.AppMetadataServiceFacadeImpl;
+import org.iplantc.de.client.services.impl.OntologyLookupServiceFacadeImpl;
 import org.iplantc.de.client.services.impl.OntologyServiceFacadeImpl;
 import org.iplantc.de.commons.client.presenter.SharingPresenter;
 
@@ -71,6 +73,7 @@ public class AppsGinModule extends AbstractGinModule {
         bind(SubmitAppForPublicUseView.Presenter.class).to(SubmitAppForPublicPresenter.class);
         bind(AppMetadataServiceFacade.class).to(AppMetadataServiceFacadeImpl.class);
         bind(OntologyServiceFacade.class).to(OntologyServiceFacadeImpl.class);
+        bind(OntologyLookupServiceFacade.class).to(OntologyLookupServiceFacadeImpl.class);
 
         // Main View
         install(new GinFactoryModuleBuilder().implement(AppsView.class, AppsViewImpl.class)

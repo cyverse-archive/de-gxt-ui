@@ -8,6 +8,7 @@ import org.iplantc.de.client.models.diskResources.DiskResourceMetadataList;
 import org.iplantc.de.client.models.diskResources.MetadataTemplate;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
+import org.iplantc.de.client.models.ontologies.OntologyAutoBeanFactory;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -15,8 +16,10 @@ import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetadataUpdateCallback;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLookupServiceProxy;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.MetadataTemplateViewDialog;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.SelectMetadataTemplateDialog;
+import org.iplantc.de.diskResource.client.views.search.MetadataTermSearchField;
 import org.iplantc.de.resources.client.messages.I18N;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
@@ -101,6 +104,9 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
     private DiskResource resource;
     private final MetadataView view;
     private final DiskResourceServiceFacade drService;
+    private final OntologyAutoBeanFactory ontologyFactory;
+    private final OntologyLookupServiceProxy searchProxy;
+    private final MetadataTermSearchField.MetadataTermSearchFieldAppearance searchFieldAppearance;
     private List<MetadataTemplateInfo> templates;
 
     private List<Avu> userMdList;
@@ -117,10 +123,16 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
 
     @Inject
     public MetadataPresenterImpl(final MetadataView view,
-                                 final DiskResourceServiceFacade drService) {
+                                 final DiskResourceServiceFacade drService,
+                                 final OntologyAutoBeanFactory ontologyFactory,
+                                 final OntologyLookupServiceProxy searchProxy,
+                                 final MetadataTermSearchField.MetadataTermSearchFieldAppearance searchFieldAppearance) {
 
         this.view = view;
         this.drService = drService;
+        this.ontologyFactory = ontologyFactory;
+        this.searchProxy = searchProxy;
+        this.searchFieldAppearance = searchFieldAppearance;
         view.setPresenter(this);
     }
 
@@ -202,6 +214,11 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
     @Override
     public DiskResource getSelectedResource() {
         return resource;
+    }
+
+    @Override
+    public MetadataTermSearchField createMetadataTermSearchField() {
+        return new MetadataTermSearchField(ontologyFactory, searchProxy, searchFieldAppearance);
     }
 
     @Override
@@ -333,7 +350,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
                             templateViewDialog));
                     templateViewDialog.setHeading(result.getName());
                     templateViewDialog.setModal(false);
-                    templateViewDialog.setSize("600px", "400px");
+                    templateViewDialog.setSize("640px", "480px");
                     templateViewDialog.addMdTermDictionary(templateAttributes);
                     templateViewDialog.show(MetadataPresenterImpl.this,
                                             view.getUserMetadata(),

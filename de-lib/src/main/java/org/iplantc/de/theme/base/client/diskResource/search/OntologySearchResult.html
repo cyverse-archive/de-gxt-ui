@@ -1,0 +1,10 @@
+<div style="border: 1px solid #EFEFEF;">
+    <span style="font-weight: bold">{label}</span>
+    <br/>
+    <tpl if="ontology != null">
+        <span style="font-style: italic">{ontology}:&nbsp;</span>
+    </tpl>
+    <tpl if="iri != null">
+        <span style="font-style: italic;">{iri}</span>
+    </tpl>
+</div>

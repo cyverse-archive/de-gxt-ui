@@ -5,6 +5,7 @@ import org.iplantc.de.apps.widgets.client.view.editors.widgets.CheckBoxAdapter;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.MetadataTemplate;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
+import org.iplantc.de.client.models.diskResources.MetadataTemplateAttributeType;
 import org.iplantc.de.client.models.diskResources.TemplateAttributeSelectionItem;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -285,15 +286,15 @@ public class EditMetadataTemplateViewImpl extends Composite implements IsWidget,
             }
         });
         typeCombo.setTriggerAction(TriggerAction.ALL);
-        typeCombo.add(Arrays.asList("String",
-                                    "Timestamp",
-                                    "Boolean",
-                                    "Number",
-                                    "Integer",
-                                    "Multiline text",
-                                    "URL/URI",
-                                    "Enum"));
-        typeCombo.setValue("String");
+        typeCombo.add(Arrays.asList(MetadataTemplateAttributeType.STRING.toString(),
+                                    MetadataTemplateAttributeType.TIMESTAMP.toString(),
+                                    MetadataTemplateAttributeType.BOOLEAN.toString(),
+                                    MetadataTemplateAttributeType.NUMBER.toString(),
+                                    MetadataTemplateAttributeType.INTEGER.toString(),
+                                    MetadataTemplateAttributeType.MULTILINE.toString(),
+                                    MetadataTemplateAttributeType.URL.toString(),
+                                    MetadataTemplateAttributeType.ENUM.toString()));
+        typeCombo.setValue(MetadataTemplateAttributeType.STRING.toString());
         typeCombo.setEditable(false);
         typeCombo.setAllowBlank(false);
         return typeCombo;
@@ -317,7 +318,7 @@ public class EditMetadataTemplateViewImpl extends Composite implements IsWidget,
         mta.setName("Attribute" + Math.random());
         mta.setRequired(false);
         mta.setDescription("Test");
-        mta.setType("String");
+        mta.setType(MetadataTemplateAttributeType.STRING.toString());
 
         editing.cancelEditing();
         store.add(0, mta);
@@ -352,7 +353,7 @@ public class EditMetadataTemplateViewImpl extends Composite implements IsWidget,
                 return false;
             }
             List<TemplateAttributeSelectionItem> items = mta.getValues();
-            if (mta.getType().equals("Enum")) {
+            if (MetadataTemplateAttributeType.ENUM.toString().equalsIgnoreCase(mta.getType())) {
                 if (items == null || items.size() == 0) {
                     return false;
                 }

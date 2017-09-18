@@ -4,12 +4,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.iplantc.de.client.models.avu.Avu;
-import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
-import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
+import org.iplantc.de.client.models.ontologies.OntologyAutoBeanFactory;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.diskResource.client.MetadataView;
-import org.iplantc.de.diskResource.client.views.metadata.dialogs.MetadataTemplateViewDialog;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLookupServiceProxy;
+import org.iplantc.de.diskResource.client.views.search.MetadataTermSearchField;
 
 import com.google.gwtmockito.GxtMockitoTestRunner;
 
@@ -28,19 +27,17 @@ import java.util.List;
 @RunWith(GxtMockitoTestRunner.class)
 public class MetadataPresenterImplTest {
 
-    @Mock  DiskResource resource;
     @Mock  MetadataView view;
     @Mock  DiskResourceServiceFacade drService;
-    @Mock  List<MetadataTemplateInfo> templates;
-    @Mock  MetadataTemplateViewDialog templateView;
     @Mock  List<Avu> userMdList;
-    @Mock  DiskResourceAutoBeanFactory autoBeanFactory;
-    @Mock MetadataView.Presenter.Appearance appearance;
+    @Mock OntologyAutoBeanFactory autoBeanFactory;
+    @Mock OntologyLookupServiceProxy olsProxy;
+    @Mock MetadataTermSearchField.MetadataTermSearchFieldAppearance appearance;
 
     private MetadataPresenterImpl presenter;
     @Before
     public void setUp() {
-       presenter = new MetadataPresenterImpl(view,drService);
+        presenter = new MetadataPresenterImpl(view, drService, autoBeanFactory, olsProxy, appearance);
     }
 
     @Test

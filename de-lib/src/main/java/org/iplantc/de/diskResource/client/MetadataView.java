@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetadataUpdateCallback;
+import org.iplantc.de.diskResource.client.views.search.MetadataTermSearchField;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -136,6 +137,8 @@ public interface MetadataView extends IsWidget {
         Avu setAvuModelKey(Avu avu);
 
         DiskResource getSelectedResource();
+
+        MetadataTermSearchField createMetadataTermSearchField();
 
         void onTemplateSelected(String templateId);
 

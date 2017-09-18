@@ -141,6 +141,11 @@ org.iplantc.services.admin.ontologies = {{ key (printf "%s/terrain/base" $base) 
 org.iplantc.services.ontologies = {{ key (printf "%s/terrain/base" $base) }}/ontologies
 
 ###############################################################################
+# 3rd Party Service URL/Endpoint Settings
+###############################################################################
+org.iplantc.services.ontology-lookup-service.base = http://www.ebi.ac.uk/ols/api/select
+
+###############################################################################
 # Default workspace App Categories.
 ###############################################################################
 org.iplantc.discoveryenvironment.workspace.rootAppCategory = {{ key (printf "%s/de/root-app-category" $base) }}
