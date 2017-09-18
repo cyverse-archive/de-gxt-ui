@@ -8,6 +8,7 @@ import org.iplantc.de.apps.widgets.client.view.AppLaunchView;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.UserSettings;
+import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.integration.JobExecution;
@@ -29,10 +30,13 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.util.Format;
+import com.sencha.gxt.widget.core.client.Dialog;
+import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
 import java.util.List;
 
@@ -76,8 +80,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
     private AppLaunchView.AppLaunchViewAppearance appearance;
     HasOneWidget container;
 
-    @Inject
-    private IplantValidationConstants valConstants;
+    @Inject private IplantValidationConstants valConstants;
     private final AppLaunchView view;
 
     @Inject
@@ -170,7 +173,29 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
 
     @Override
     public void onAnalysisLaunchRequest(final AppTemplate at, final JobExecution je) {
-        launchAnalysis(at, je);
+        if(at.getAppType().equalsIgnoreCase(App.EXTERNAL_APP)
+           && userSettings.isEnableWaitTimeMessage()) {
+            showWaitTimeNotice(at, je);
+        } else {
+            launchAnalysis(at, je);
+        }
+    }
+
+     void showWaitTimeNotice(final AppTemplate cleaned, final JobExecution je) {
+        Dialog id = new Dialog();
+        id.setHideOnButtonClick(true);
+        id.setHeading(appearance.waitTimes());
+        HTML htm = new HTML();
+        htm.setHTML(appearance.hpcAppWaitTimes());
+        id.add(htm);
+        id.setPredefinedButtons(Dialog.PredefinedButton.OK);
+        id.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
+            @Override
+            public void onDialogHide(DialogHideEvent event) {
+                launchAnalysis(cleaned, je);
+            }
+        });
+        id.show();
     }
 
     HandlerManager ensureHandlers() {
