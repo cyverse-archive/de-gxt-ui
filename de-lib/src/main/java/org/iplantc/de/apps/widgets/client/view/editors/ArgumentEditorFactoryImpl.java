@@ -6,7 +6,6 @@ import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.ArgumentEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.DoubleInputEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.DoubleSelectionEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.FileOutputEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.FlagEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.FolderOutputEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.InfoEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.IntegerInputEditor;
@@ -128,7 +127,7 @@ public class ArgumentEditorFactoryImpl implements AppTemplateForm.ArgumentEditor
                 subEditor = argumentEditorGinFactory.environmentVariableEditor(appearance);
                 break;
             case Flag:
-                subEditor = new FlagEditor(appearance);
+                subEditor = argumentEditorGinFactory.flagEditor(appearance);
                 break;
             case Info:
                 subEditor = new InfoEditor(appearance);
