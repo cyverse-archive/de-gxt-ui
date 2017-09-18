@@ -6,16 +6,20 @@ import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAp
 import org.iplantc.de.commons.client.validators.DiskResourceUnixGlobValidator;
 import org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.MultiFileOutputLabels;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+
 import com.sencha.gxt.widget.core.client.form.TextField;
 
 public class MultiFileOutputEditor extends AbstractArgumentEditor {
     private final ArgumentEditorConverter<String> editorAdapter;
     private final TextField textField;
 
-    public MultiFileOutputEditor(AppTemplateWizardAppearance appearance, final MultiFileOutputLabels labels) {
+    @Inject
+    public MultiFileOutputEditor(@Assisted AppTemplateWizardAppearance appearance) {
         super(appearance);
         textField = new TextField();
-        textField.setEmptyText(labels.multiFileOutputEmptyText());
+        textField.setEmptyText(appearance.multiFileOutputEmptyText());
         textField.addValidator(new DiskResourceUnixGlobValidator());
         editorAdapter = new ArgumentEditorConverter<String>(textField, new SplittableToStringConverter());
 

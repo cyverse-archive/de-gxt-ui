@@ -140,4 +140,6 @@ public interface AppTemplateWizardAppearance {
     String fileOutputEmptyText();
 
     String folderOutputEmptyText();
+
+    String multiFileOutputEmptyText();
 }
