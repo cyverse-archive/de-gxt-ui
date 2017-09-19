@@ -9,4 +9,8 @@ public interface DataLinkFactory extends AutoBeanFactory {
     
     AutoBean<DataLinkList> dataLinkList();
 
+    AutoBean<HasTickets> tickets();
+
+    AutoBean<UpdateTicketResponse> updateTicketResponse();
+
 }

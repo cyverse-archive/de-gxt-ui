@@ -15,6 +15,8 @@ import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.dataLink.DataLink;
 import org.iplantc.de.client.models.dataLink.DataLinkFactory;
 import org.iplantc.de.client.models.dataLink.DataLinkList;
+import org.iplantc.de.client.models.dataLink.HasTickets;
+import org.iplantc.de.client.models.dataLink.UpdateTicketResponse;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.DiskResourceExistMap;
@@ -811,18 +813,23 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
     }
 
     @Override
-    public void deleteDataLinks(List<String> dataLinkIds, DECallback<String> callback) {
+    public void deleteDataLinks(List<String> dataLinkIds, DECallback<UpdateTicketResponse> callback) {
         String fullAddress = deProperties.getDataMgmtBaseUrl() + "delete-tickets"; //$NON-NLS-1$
 
-        JSONObject body = new JSONObject();
-        body.put("tickets", buildArrayFromStrings(dataLinkIds));
+        HasTickets tickets = dlFactory.tickets().as();
+        tickets.setTickets(dataLinkIds);
         HashMap<String, String> mdcMap = Maps.newHashMap();
         mdcMap.put(METRIC_TYPE_KEY, SHARE_EVENT);
 
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, fullAddress, body.toString());
-        deServiceFacade.getServiceData(wrapper,
-                                       mdcMap,
-                                       callback);
+        String payload = encode(tickets);
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, fullAddress, payload);
+        deServiceFacade.getServiceData(wrapper, mdcMap, new DECallbackConverter<String, UpdateTicketResponse>(callback) {
+            @Override
+            protected UpdateTicketResponse convertFrom(String object) {
+                return AutoBeanCodex.decode(dlFactory, UpdateTicketResponse.class, object).as();
+            }
+        });
     }
 
     JSONArray buildArrayFromStrings(List<?> items) {

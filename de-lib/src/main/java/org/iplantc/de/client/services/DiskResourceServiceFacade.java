@@ -2,6 +2,7 @@ package org.iplantc.de.client.services;
 
 import org.iplantc.de.client.models.HasPaths;
 import org.iplantc.de.client.models.dataLink.DataLink;
+import org.iplantc.de.client.models.dataLink.UpdateTicketResponse;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.DiskResourceExistMap;
@@ -247,7 +248,7 @@ public interface DiskResourceServiceFacade {
      * 
      * @param dataLinkIds the tickets which will be deleted.
      */
-    public void deleteDataLinks(List<String> dataLinkIds, DECallback<String> callback);
+    public void deleteDataLinks(List<String> dataLinkIds, DECallback<UpdateTicketResponse> callback);
 
     /**
      * Get a list of files types recognized
