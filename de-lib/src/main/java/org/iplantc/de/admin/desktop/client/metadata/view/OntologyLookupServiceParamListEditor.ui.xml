@@ -35,11 +35,9 @@
             <container:child layoutData="{layoutData}">
                 <toolbar:ToolBar>
                     <c:TextButton ui:field="addBtn"
-                                  debugId='idAddBtn'
                                   text="{appearance.addBtn}"
                                   icon="{appearance.addIcon}"/>
                     <c:TextButton ui:field="delBtn"
-                                  debugId='idDelBtn'
                                   text="{appearance.delBtn}"
                                   icon="{appearance.deleteIcon}"
                                   enabled="false"/>

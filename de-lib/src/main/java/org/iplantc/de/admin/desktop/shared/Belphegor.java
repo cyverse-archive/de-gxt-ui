@@ -234,6 +234,7 @@ public interface Belphegor {
         String DELETE = ".deleteBtn";
         String GRID = ".grid";
         String EDIT_DIALOG = "metadataTemplateDialog";
+        String OLS_PARAMS_EDIT_DIALOG = "olsParamsEditDialog";
         String OK = ".okBtn";
         String TEMPLATE_NAME = ".templateName";
         String CHECK_DELETED = ".checkDeleted";
@@ -242,6 +243,10 @@ public interface Belphegor {
         String NO = ".noBtn";
         String TEMPLATE_DESCRIPTION = ".description";
         String COL_HEADER = ".colHeader";
+        String ONTOLOGIES = ".ontologies";
+        String ONTOLOGY_CHILDREN = ".children";
+        String ONTOLOGY_ALL_CHILDREN = ".allChildren";
+        String ONTOLOGY_ENTITY_TYPE = ".entityType";
     }
 
     interface PermIds {

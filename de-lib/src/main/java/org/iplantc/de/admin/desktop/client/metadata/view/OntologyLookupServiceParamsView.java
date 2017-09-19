@@ -1,5 +1,6 @@
 package org.iplantc.de.admin.desktop.client.metadata.view;
 
+import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.client.models.ontologies.OntologyLookupServiceQueryParams;
 import org.iplantc.de.client.models.ontologies.OntologyLookupServiceQueryParams.EntityTypeFilterValue;
 
@@ -47,6 +48,18 @@ public class OntologyLookupServiceParamsView extends Composite implements Editor
         entityTypeEditor.setTriggerAction(ComboBoxCell.TriggerAction.ALL);
 
         editorDriver.initialize(this);
+
+        ensureDebugId(Belphegor.MetadataIds.OLS_PARAMS_EDIT_DIALOG + Belphegor.MetadataIds.VIEW);
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        ontologiesEditor.ensureDebugId(baseID + Belphegor.MetadataIds.ONTOLOGIES);
+        childrenEditor.ensureDebugId(baseID + Belphegor.MetadataIds.ONTOLOGY_CHILDREN);
+        allChildrenEditor.ensureDebugId(baseID + Belphegor.MetadataIds.ONTOLOGY_ALL_CHILDREN);
+        entityTypeEditor.ensureDebugId(baseID + Belphegor.MetadataIds.ONTOLOGY_ENTITY_TYPE);
     }
 
     @UiFactory

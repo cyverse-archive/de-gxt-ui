@@ -1,5 +1,7 @@
 package org.iplantc.de.admin.desktop.client.metadata.view;
 
+import org.iplantc.de.admin.desktop.shared.Belphegor;
+
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;
@@ -76,6 +78,14 @@ public class OntologyLookupServiceParamListEditor extends Composite implements I
     @Override
     public Editor<List<String>> asEditor() {
         return listStoreEditor;
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        addBtn.ensureDebugId(baseID + Belphegor.MetadataIds.ADD);
+        delBtn.ensureDebugId(baseID + Belphegor.MetadataIds.DELETE);
     }
 
     @UiFactory
