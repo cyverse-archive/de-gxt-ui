@@ -11,12 +11,16 @@ import org.iplantc.de.diskResource.client.DataLinkView;
 import org.iplantc.de.diskResource.client.events.selection.AdvancedSharingSelected;
 import org.iplantc.de.diskResource.client.events.selection.CreateDataLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelected;
+import org.iplantc.de.diskResource.client.events.selection.ShowDataLinkSelected;
 import org.iplantc.de.diskResource.client.gin.factory.DataLinkViewFactory;
 import org.iplantc.de.diskResource.client.presenters.callbacks.CreateDataLinkCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DeleteDataLinksCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.ListDataLinksCallback;
+import org.iplantc.de.diskResource.client.views.dialogs.DataLinkDialog;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.collect.Lists;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -28,13 +32,16 @@ import java.util.List;
  */
 public class DataLinkPresenterImpl implements DataLinkView.Presenter,
                                               CreateDataLinkSelected.CreateDataLinkSelectedHandler,
-                                              AdvancedSharingSelected.AdvancedSharingSelectedHandler {
+                                              AdvancedSharingSelected.AdvancedSharingSelectedHandler,
+                                              ShowDataLinkSelected.ShowDataLinkSelectedHandler {
 
     private final DataLinkView view;
     private final DiskResourceServiceFacade drService;
     private final DataLinkFactory dlFactory;
     private final DiskResourceUtil diskResourceUtil;
     private final DataLinkView.Appearance appearance;
+
+    @Inject AsyncProviderWrapper<DataLinkDialog> dataLinkDlgProvider;
 
     @Inject
     DataLinkPresenterImpl(final DiskResourceServiceFacade drService,
@@ -51,6 +58,7 @@ public class DataLinkPresenterImpl implements DataLinkView.Presenter,
 
         view.addCreateDataLinkSelectedHandler(this);
         view.addAdvancedSharingSelectedHandler(this);
+        view.addShowDataLinkSelectedHandler(this);
 
         // Remove Folders
         List<DiskResource> allowedResources = createDiskResourcesList();
@@ -92,12 +100,20 @@ public class DataLinkPresenterImpl implements DataLinkView.Presenter,
     }
 
     @Override
-    public String getSelectedDataLinkDownloadUrl() {
-        DiskResource model = view.getTree().getSelectionModel().getSelectedItem();
-        if (model instanceof DataLink) {
-            return ((DataLink)model).getDownloadUrl();
+    public void onShowDataLinkSelected(ShowDataLinkSelected event) {
+        DiskResource selectedResource = event.getSelectedResource();
+        if (selectedResource instanceof DataLink) {
+            String downloadUrl = ((DataLink)selectedResource).getDownloadUrl();
+            dataLinkDlgProvider.get(new AsyncCallback<DataLinkDialog>() {
+                @Override
+                public void onFailure(Throwable throwable) { }
+
+                @Override
+                public void onSuccess(DataLinkDialog dialog) {
+                    dialog.show(downloadUrl);
+                }
+            });
         }
-        return null;
     }
 
     @Override

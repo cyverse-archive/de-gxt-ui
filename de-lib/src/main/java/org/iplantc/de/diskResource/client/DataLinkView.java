@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.diskResource.client.events.selection.AdvancedSharingSelected;
 import org.iplantc.de.diskResource.client.events.selection.CreateDataLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelected;
+import org.iplantc.de.diskResource.client.events.selection.ShowDataLinkSelected;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -20,7 +21,8 @@ import java.util.List;
 public interface DataLinkView extends IsWidget,
                                       IsMaskable,
                                       CreateDataLinkSelected.HasCreateDataLinkSelectedHandlers,
-                                      AdvancedSharingSelected.HasAdvancedSharingSelectedHandlers {
+                                      AdvancedSharingSelected.HasAdvancedSharingSelectedHandlers,
+                                      ShowDataLinkSelected.HasShowDataLinkSelectedHandlers {
     interface Appearance {
 
         String dataLinkTitle();
@@ -68,8 +70,6 @@ public interface DataLinkView extends IsWidget,
 
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter,
                                        DeleteDataLinkSelected.DeleteDataLinkSelectedHandler {
-
-        String getSelectedDataLinkDownloadUrl();
 
     }
 

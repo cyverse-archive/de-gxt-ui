@@ -85,6 +85,9 @@ public interface DiskResourceModule {
         String DOT_MENU = ".dotMenu";
         String MENU_ITEM_AUTOMATE_HT_PATH = ".automateHTPath";
         String MENU_ITEM_EDIT_COMMENTS = ".editComments";
+        String DATA_LINK_DLG = "dataLinkDlg";
+        String OK_BTN = ".okBtn";
+        String DATA_LINK_URL = ".urlField";
     }
 
     interface MetadataIds {
