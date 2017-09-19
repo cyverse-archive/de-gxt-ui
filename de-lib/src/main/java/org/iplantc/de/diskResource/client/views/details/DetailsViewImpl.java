@@ -15,6 +15,7 @@ import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryE
 import org.iplantc.de.diskResource.client.events.selection.EditInfoTypeSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected;
 import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked;
+import org.iplantc.de.diskResource.client.events.selection.RemoveResourceTagSelected;
 import org.iplantc.de.diskResource.client.events.selection.ResetInfoTypeSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected;
@@ -22,7 +23,6 @@ import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelec
 import org.iplantc.de.tags.client.TagsView;
 import org.iplantc.de.tags.client.events.TagAddedEvent;
 import org.iplantc.de.tags.client.events.TagCreated;
-import org.iplantc.de.tags.client.events.TagCreated.TagCreatedHandler;
 import org.iplantc.de.tags.client.events.selection.RemoveTagSelected;
 import org.iplantc.de.tags.client.events.selection.TagSelected;
 
@@ -68,7 +68,7 @@ public class DetailsViewImpl extends Composite implements DetailsView,
                                                           Editor<DiskResource>,
                                                           TagSelected.TagSelectedHandler,
                                                           RemoveTagSelected.RemoveTagSelectedHandler,
-                                                          TagCreatedHandler,
+                                                          TagCreated.TagCreatedHandler,
                                                           TagAddedEvent.TagAddedEventHandler {
 
     interface DetailsViewImplUiBinder extends UiBinder<HTMLPanel, DetailsViewImpl> {
@@ -231,7 +231,7 @@ public class DetailsViewImpl extends Composite implements DetailsView,
     @Override
     public void onRemoveTagSelected(RemoveTagSelected event) {
         Preconditions.checkNotNull(boundValue, "Bound value should not be null right now");
-        presenter.removeTagFromResource(event.getTag(), boundValue);
+        fireEvent(new RemoveResourceTagSelected(boundValue, event.getTag()));
     }
 
     @Override
@@ -427,5 +427,10 @@ public class DetailsViewImpl extends Composite implements DetailsView,
     @Override
     public void onFetchDetailsCompleted(FetchDetailsCompleted event) {
         unmask();
+    }
+
+    @Override
+    public HandlerRegistration addRemoveResourceTagSelectedHandler(RemoveResourceTagSelected.RemoveResourceTagSelectedHandler handler) {
+        return addHandler(handler, RemoveResourceTagSelected.TYPE);
     }
 }

@@ -8,6 +8,7 @@ import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryE
 import org.iplantc.de.diskResource.client.events.selection.EditInfoTypeSelected.HasEditInfoTypeSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected.HasManageSharingSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked.HasMd5ValueClickedHandlers;
+import org.iplantc.de.diskResource.client.events.selection.RemoveResourceTagSelected;
 import org.iplantc.de.diskResource.client.events.selection.ResetInfoTypeSelected.HasResetInfoTypeSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected.HasSendToCogeSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected.HasSendToEnsemblSelectedHandlers;
@@ -33,8 +34,9 @@ public interface DetailsView extends IsWidget,
                                      HasSubmitDiskResourceQueryEventHandlers,
                                      HasSendToTreeViewerSelectedHandlers,
                                      HasSendToCogeSelectedHandlers,
-                            HasSendToEnsemblSelectedHandlers,
-                            HasMd5ValueClickedHandlers {
+                                     HasSendToEnsemblSelectedHandlers,
+                                     HasMd5ValueClickedHandlers,
+                                     RemoveResourceTagSelected.HasRemoveResourceTagSelectedHandlers {
     interface Appearance {
         interface DetailsViewStyle extends CssResource {
 
@@ -140,8 +142,5 @@ public interface DetailsView extends IsWidget,
         void attachTagToResource(Tag tag, DiskResource resource);
 
         DetailsView getView();
-
-        void removeTagFromResource(Tag tag, DiskResource resource);
-
     }
 }
