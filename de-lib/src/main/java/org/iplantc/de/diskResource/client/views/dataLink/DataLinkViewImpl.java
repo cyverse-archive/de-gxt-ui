@@ -1,5 +1,6 @@
 package org.iplantc.de.diskResource.client.views.dataLink;
 
+import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.dataLink.DataLink;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.diskResource.client.DataLinkView;
@@ -13,8 +14,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.resources.client.impl.ImageResourcePrototype;
-import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -26,7 +25,6 @@ import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.ValueProvider;
-import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -108,9 +106,8 @@ public class DataLinkViewImpl implements DataLinkView,
 
         // Set the tree's node close/open icons to an empty image. Images for our tree will be controlled
         // from the cell.
-        ImageResourcePrototype emptyImgResource = new ImageResourcePrototype("", UriUtils.fromString(""), 0, 0, 0, 0, false, false);
-        tree.getStyle().setNodeCloseIcon(emptyImgResource);
-        tree.getStyle().setNodeOpenIcon(emptyImgResource);
+        tree.getStyle().setNodeCloseIcon(appearance.emptyTreeNodeIcon());
+        tree.getStyle().setNodeOpenIcon(appearance.emptyTreeNodeIcon());
 
         tree.getSelectionModel().addSelectionHandler(new TreeSelectionHandler(createDataLinksBtn,
                                                                               showDataLinkButton,
@@ -189,13 +186,7 @@ public class DataLinkViewImpl implements DataLinkView,
     }
 
     @UiFactory TreeStore<DiskResource> createTreeStore() {
-        return new TreeStore<>(new ModelKeyProvider<DiskResource>() {
-
-            @Override
-            public String getKey(DiskResource item) {
-                return item.getId();
-            }
-        });
+        return new TreeStore<>(HasId::getId);
     }
 
     @UiFactory ValueProvider<DiskResource, DiskResource> createValueProvider() {

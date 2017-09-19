@@ -8,6 +8,7 @@ import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelecte
 import org.iplantc.de.diskResource.client.events.selection.ShowDataLinkSelected;
 
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.impl.ImageResourcePrototype;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import com.sencha.gxt.widget.core.client.tree.Tree;
@@ -67,6 +68,8 @@ public interface DataLinkView extends IsWidget,
         String backgroundClass();
 
         String dataLinkWarningClass();
+
+        ImageResourcePrototype emptyTreeNodeIcon();
     }
 
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {

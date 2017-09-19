@@ -9,6 +9,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.impl.ImageResourcePrototype;
+import com.google.gwt.safehtml.shared.UriUtils;
 
 /**
  * @author jstroot
@@ -133,6 +135,11 @@ public class DataLinkViewDefaultAppearance implements DataLinkView.Appearance {
     @Override
     public String dataLinkWarningClass() {
         return css.dataLinkWarning();
+    }
+
+    @Override
+    public ImageResourcePrototype emptyTreeNodeIcon() {
+        return new ImageResourcePrototype("", UriUtils.fromString(""), 0, 0, 0, 0, false, false);
     }
 
     @Override
