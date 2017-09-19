@@ -13,7 +13,6 @@ import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.gin.factory.BulkMetadataDialogFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DataLinkPresenterFactory;
-import org.iplantc.de.diskResource.client.gin.factory.DataLinkViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DataSharingPresenterFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DetailsViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourcePresenterFactory;
@@ -86,9 +85,7 @@ public class DiskResourceGinModule extends AbstractGinModule {
         install(new GinFactoryModuleBuilder()
                     .implement(DataLinkView.Presenter.class, DataLinkPresenterImpl.class)
                     .build(DataLinkPresenterFactory.class));
-        install(new GinFactoryModuleBuilder()
-                    .implement(DataLinkView.class, DataLinkViewImpl.class)
-                    .build(DataLinkViewFactory.class));
+        bind(DataLinkView.class).to(DataLinkViewImpl.class);
 
         // Disk Resource Views
         bind(new TypeLiteral<TreeStore<Folder>>() {}).toProvider(DiskResourceTreeStoreProvider.class);

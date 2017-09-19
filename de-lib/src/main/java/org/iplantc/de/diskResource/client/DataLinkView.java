@@ -22,7 +22,8 @@ public interface DataLinkView extends IsWidget,
                                       IsMaskable,
                                       CreateDataLinkSelected.HasCreateDataLinkSelectedHandlers,
                                       AdvancedSharingSelected.HasAdvancedSharingSelectedHandlers,
-                                      ShowDataLinkSelected.HasShowDataLinkSelectedHandlers {
+                                      ShowDataLinkSelected.HasShowDataLinkSelectedHandlers,
+                                      DeleteDataLinkSelected.HasDeleteDataLinkSelectedHandlers {
     interface Appearance {
 
         String dataLinkTitle();
@@ -68,8 +69,7 @@ public interface DataLinkView extends IsWidget,
         String dataLinkWarningClass();
     }
 
-    public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter,
-                                       DeleteDataLinkSelected.DeleteDataLinkSelectedHandler {
+    public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
 
     }
 

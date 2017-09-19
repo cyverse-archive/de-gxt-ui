@@ -1,7 +1,6 @@
 package org.iplantc.de.diskResource.client.presenters.dataLink;
 
 import org.iplantc.de.client.models.dataLink.DataLink;
-import org.iplantc.de.client.models.dataLink.DataLinkFactory;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
@@ -12,7 +11,6 @@ import org.iplantc.de.diskResource.client.events.selection.AdvancedSharingSelect
 import org.iplantc.de.diskResource.client.events.selection.CreateDataLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.ShowDataLinkSelected;
-import org.iplantc.de.diskResource.client.gin.factory.DataLinkViewFactory;
 import org.iplantc.de.diskResource.client.presenters.callbacks.CreateDataLinkCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DeleteDataLinksCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.ListDataLinksCallback;
@@ -33,11 +31,11 @@ import java.util.List;
 public class DataLinkPresenterImpl implements DataLinkView.Presenter,
                                               CreateDataLinkSelected.CreateDataLinkSelectedHandler,
                                               AdvancedSharingSelected.AdvancedSharingSelectedHandler,
-                                              ShowDataLinkSelected.ShowDataLinkSelectedHandler {
+                                              ShowDataLinkSelected.ShowDataLinkSelectedHandler,
+                                              DeleteDataLinkSelected.DeleteDataLinkSelectedHandler {
 
     private final DataLinkView view;
     private final DiskResourceServiceFacade drService;
-    private final DataLinkFactory dlFactory;
     private final DiskResourceUtil diskResourceUtil;
     private final DataLinkView.Appearance appearance;
 
@@ -45,21 +43,26 @@ public class DataLinkPresenterImpl implements DataLinkView.Presenter,
 
     @Inject
     DataLinkPresenterImpl(final DiskResourceServiceFacade drService,
-                          final DataLinkViewFactory dataLinkViewFactory,
-                          final DataLinkFactory dlFactory,
+                          final DataLinkView view,
                           final DiskResourceUtil diskResourceUtil,
                           final DataLinkView.Appearance appearance,
                           @Assisted List<DiskResource> resources) {
         this.drService = drService;
-        this.dlFactory = dlFactory;
         this.appearance = appearance;
         this.diskResourceUtil = diskResourceUtil;
-        view = dataLinkViewFactory.create(this, resources);
+        this.view = view;
 
         view.addCreateDataLinkSelectedHandler(this);
         view.addAdvancedSharingSelectedHandler(this);
         view.addShowDataLinkSelectedHandler(this);
+        view.addDeleteDataLinkSelectedHandler(this);
 
+        // Retrieve tickets for root nodes
+        getExistingDataLinks(resources);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    void getExistingDataLinks(List<DiskResource> resources) {
         // Remove Folders
         List<DiskResource> allowedResources = createDiskResourcesList();
         for(DiskResource m : resources){
@@ -67,14 +70,9 @@ public class DataLinkPresenterImpl implements DataLinkView.Presenter,
                 allowedResources.add(m);
             }
         }
-        // Retrieve tickets for root nodes
-        getExistingDataLinks(allowedResources);
-    }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    void getExistingDataLinks(List<DiskResource> resources) {
-        view.addRoots(resources);
-        drService.listDataLinks(diskResourceUtil.asStringPathList(resources),
+        view.addRoots(allowedResources);
+        drService.listDataLinks(diskResourceUtil.asStringPathList(allowedResources),
                                 new ListDataLinksCallback(view.getTree()));
     }
 

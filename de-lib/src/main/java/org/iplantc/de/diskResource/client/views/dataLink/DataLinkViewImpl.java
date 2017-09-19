@@ -23,7 +23,6 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.ValueProvider;
@@ -98,14 +97,13 @@ public class DataLinkViewImpl implements DataLinkView,
     private static final DataLinkPanelUiBinder uiBinder = GWT.create(DataLinkPanelUiBinder.class);
     private final Widget widget;
     @UiField(provided = true) final Appearance appearance;
-    private final DataLinkView.Presenter presenter;
+    private DataLinkPanelCell dataLinkPanelCell;
 
     @Inject
     DataLinkViewImpl(final DataLinkView.Appearance appearance,
-                     @Assisted final Presenter presenter,
-                     @Assisted final List<DiskResource> sharedResources) {
+                     DataLinkPanelCell dataLinkPanelCell) {
         this.appearance = appearance;
-        this.presenter = presenter;
+        this.dataLinkPanelCell = dataLinkPanelCell;
         widget = uiBinder.createAndBindUi(this);
 
         // Set the tree's node close/open icons to an empty image. Images for our tree will be controlled
@@ -118,9 +116,7 @@ public class DataLinkViewImpl implements DataLinkView,
                                                                               showDataLinkButton,
                                                                               advancedDataLinkButton,
                                                                               tree));
-        DataLinkPanelCell dataLinkPanelCell = new DataLinkPanelCell();
         dataLinkPanelCell.addDeleteDataLinkSelectedHandler(this);
-        dataLinkPanelCell.addDeleteDataLinkSelectedHandler(presenter);
         tree.setCell(dataLinkPanelCell);
         new QuickTip(widget);
 
@@ -219,5 +215,10 @@ public class DataLinkViewImpl implements DataLinkView,
     @Override
     public HandlerRegistration addShowDataLinkSelectedHandler(ShowDataLinkSelected.ShowDataLinkSelectedHandler handler) {
         return widget.addHandler(handler, ShowDataLinkSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addDeleteDataLinkSelectedHandler(DeleteDataLinkSelected.DeleteDataLinkSelectedHandler handler) {
+        return dataLinkPanelCell.addDeleteDataLinkSelectedHandler(handler);
     }
 }
