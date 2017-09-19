@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.dataLink.DataLink;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.diskResource.client.DataLinkView;
+import org.iplantc.de.diskResource.client.events.selection.AdvancedSharingSelected;
 import org.iplantc.de.diskResource.client.events.selection.CreateDataLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelected;
 import org.iplantc.de.diskResource.client.views.dataLink.cells.DataLinkPanelCell;
@@ -137,7 +138,10 @@ public class DataLinkViewImpl implements DataLinkView,
     //<editor-fold desc="UI Handlers">
     @UiHandler("advancedDataLinkButton")
     void onAdvancedDataLinkSelected(SelectEvent event) {
-        presenter.openSelectedDataLinkDownloadPage();
+        DiskResource selectedItem = tree.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            widget.fireEvent(new AdvancedSharingSelected(selectedItem));
+        }
     }
 
     @UiHandler("collapseAll")
@@ -223,5 +227,10 @@ public class DataLinkViewImpl implements DataLinkView,
     @Override
     public HandlerRegistration addCreateDataLinkSelectedHandler(CreateDataLinkSelected.CreateDataLinkSelectedHandler handler) {
         return widget.addHandler(handler, CreateDataLinkSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addAdvancedSharingSelectedHandler(AdvancedSharingSelected.AdvancedSharingSelectedHandler handler) {
+        return widget.addHandler(handler, AdvancedSharingSelected.TYPE);
     }
 }

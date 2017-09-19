@@ -2,6 +2,7 @@ package org.iplantc.de.diskResource.client;
 
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.diskResources.DiskResource;
+import org.iplantc.de.diskResource.client.events.selection.AdvancedSharingSelected;
 import org.iplantc.de.diskResource.client.events.selection.CreateDataLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelected;
 
@@ -18,7 +19,8 @@ import java.util.List;
  */
 public interface DataLinkView extends IsWidget,
                                       IsMaskable,
-                                      CreateDataLinkSelected.HasCreateDataLinkSelectedHandlers {
+                                      CreateDataLinkSelected.HasCreateDataLinkSelectedHandlers,
+                                      AdvancedSharingSelected.HasAdvancedSharingSelectedHandlers {
     interface Appearance {
 
         String dataLinkTitle();
@@ -69,7 +71,6 @@ public interface DataLinkView extends IsWidget,
 
         String getSelectedDataLinkDownloadUrl();
 
-        void openSelectedDataLinkDownloadPage();
     }
 
     void addRoots(List<DiskResource> roots);

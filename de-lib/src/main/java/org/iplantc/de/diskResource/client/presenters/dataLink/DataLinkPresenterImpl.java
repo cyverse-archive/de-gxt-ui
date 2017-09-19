@@ -8,6 +8,7 @@ import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.diskResource.client.DataLinkView;
+import org.iplantc.de.diskResource.client.events.selection.AdvancedSharingSelected;
 import org.iplantc.de.diskResource.client.events.selection.CreateDataLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelected;
 import org.iplantc.de.diskResource.client.gin.factory.DataLinkViewFactory;
@@ -26,7 +27,8 @@ import java.util.List;
  * @author jstroot
  */
 public class DataLinkPresenterImpl implements DataLinkView.Presenter,
-                                              CreateDataLinkSelected.CreateDataLinkSelectedHandler {
+                                              CreateDataLinkSelected.CreateDataLinkSelectedHandler,
+                                              AdvancedSharingSelected.AdvancedSharingSelectedHandler {
 
     private final DataLinkView view;
     private final DiskResourceServiceFacade drService;
@@ -48,6 +50,7 @@ public class DataLinkPresenterImpl implements DataLinkView.Presenter,
         view = dataLinkViewFactory.create(this, resources);
 
         view.addCreateDataLinkSelectedHandler(this);
+        view.addAdvancedSharingSelectedHandler(this);
 
         // Remove Folders
         List<DiskResource> allowedResources = createDiskResourcesList();
@@ -98,10 +101,10 @@ public class DataLinkPresenterImpl implements DataLinkView.Presenter,
     }
 
     @Override
-    public void openSelectedDataLinkDownloadPage() {
-        DiskResource model = view.getTree().getSelectionModel().getSelectedItem();
-        if (model instanceof DataLink) {
-            String url = ((DataLink)model).getDownloadPageUrl();
+    public void onAdvancedSharingSelected(AdvancedSharingSelected event) {
+        DiskResource selectedResource = event.getSelectedResource();
+        if (selectedResource instanceof DataLink) {
+            String url = ((DataLink)selectedResource).getDownloadPageUrl();
             WindowUtil.open(url);
         }
     }
