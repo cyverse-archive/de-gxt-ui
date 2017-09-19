@@ -3,9 +3,9 @@ package org.iplantc.de.diskResource.client.views.details;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
-import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.diskResource.client.DetailsView;
@@ -20,6 +20,7 @@ import org.iplantc.de.diskResource.client.events.selection.ResetInfoTypeSelected
 import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected;
+import org.iplantc.de.diskResource.client.events.selection.UpdateResourceTagSelected;
 import org.iplantc.de.tags.client.TagsView;
 import org.iplantc.de.tags.client.events.TagAddedEvent;
 import org.iplantc.de.tags.client.events.TagCreated;
@@ -237,13 +238,13 @@ public class DetailsViewImpl extends Composite implements DetailsView,
     @Override
     public void onTagAdded(TagAddedEvent event) {
         Preconditions.checkNotNull(boundValue, "Bound value should not be null right now");
-        presenter.attachTagToResource(event.getTag(), boundValue);
+        fireEvent(new UpdateResourceTagSelected(boundValue, event.getTag()));
     }
 
     @Override
     public void onTagCreated(TagCreated event) {
         Preconditions.checkNotNull(boundValue, "Bound value should not be null right now");
-        presenter.attachTagToResource(event.getTag(), boundValue);
+        fireEvent(new UpdateResourceTagSelected(boundValue, event.getTag()));
     }
 
     @Override
@@ -432,5 +433,10 @@ public class DetailsViewImpl extends Composite implements DetailsView,
     @Override
     public HandlerRegistration addRemoveResourceTagSelectedHandler(RemoveResourceTagSelected.RemoveResourceTagSelectedHandler handler) {
         return addHandler(handler, RemoveResourceTagSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addUpdateResourceTagSelectedHandler(UpdateResourceTagSelected.UpdateResourceTagSelectedHandler handler) {
+        return addHandler(handler, UpdateResourceTagSelected.TYPE);
     }
 }

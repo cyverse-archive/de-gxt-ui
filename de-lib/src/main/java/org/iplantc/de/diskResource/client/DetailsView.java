@@ -1,7 +1,6 @@
 package org.iplantc.de.diskResource.client;
 
 import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.models.tags.Tag;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent.DiskResourceSelectionChangedEventHandler;
 import org.iplantc.de.diskResource.client.events.FetchDetailsCompleted;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers;
@@ -13,6 +12,7 @@ import org.iplantc.de.diskResource.client.events.selection.ResetInfoTypeSelected
 import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected.HasSendToCogeSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected.HasSendToEnsemblSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected.HasSendToTreeViewerSelectedHandlers;
+import org.iplantc.de.diskResource.client.events.selection.UpdateResourceTagSelected;
 
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
@@ -36,7 +36,8 @@ public interface DetailsView extends IsWidget,
                                      HasSendToCogeSelectedHandlers,
                                      HasSendToEnsemblSelectedHandlers,
                                      HasMd5ValueClickedHandlers,
-                                     RemoveResourceTagSelected.HasRemoveResourceTagSelectedHandlers {
+                                     RemoveResourceTagSelected.HasRemoveResourceTagSelectedHandlers,
+                                     UpdateResourceTagSelected.HasUpdateResourceTagSelectedHandlers {
     interface Appearance {
         interface DetailsViewStyle extends CssResource {
 
@@ -138,8 +139,6 @@ public interface DetailsView extends IsWidget,
 
             String tagDetached(String value, String name);
         }
-
-        void attachTagToResource(Tag tag, DiskResource resource);
 
         DetailsView getView();
     }

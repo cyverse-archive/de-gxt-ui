@@ -8,6 +8,7 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.diskResource.client.DetailsView;
 import org.iplantc.de.diskResource.client.events.selection.RemoveResourceTagSelected;
+import org.iplantc.de.diskResource.client.events.selection.UpdateResourceTagSelected;
 import org.iplantc.de.diskResource.client.gin.factory.DetailsViewFactory;
 
 import com.google.common.collect.Lists;
@@ -18,7 +19,8 @@ import com.google.inject.Inject;
  * @author jstroot
  */
 public class DetailsViewPresenterImpl implements DetailsView.Presenter,
-                                                 RemoveResourceTagSelected.RemoveResourceTagSelectedHandler {
+                                                 RemoveResourceTagSelected.RemoveResourceTagSelectedHandler,
+                                                 UpdateResourceTagSelected.UpdateResourceTagSelectedHandler {
 
     @Inject IplantAnnouncer announcer;
     @Inject FileSystemMetadataServiceFacade metadataService;
@@ -31,12 +33,14 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
         this.view = viewFactory.create(this);
 
         view.addRemoveResourceTagSelectedHandler(this);
+        view.addUpdateResourceTagSelectedHandler(this);
     }
 
     @Override
-    public void attachTagToResource(final Tag tag,
-                                    final DiskResource resource) {
-           metadataService.attachTags(Lists.newArrayList(tag), resource, new AsyncCallback<Void>() {
+    public void onUpdateResourceTagSelected(UpdateResourceTagSelected event) {
+        DiskResource resource = event.getDiskResource();
+        Tag tag = event.getTag();
+        metadataService.attachTags(Lists.newArrayList(tag), resource, new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(appearance.tagAttachError(), caught);
