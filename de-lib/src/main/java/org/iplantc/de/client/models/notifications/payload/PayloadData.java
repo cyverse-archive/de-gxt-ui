@@ -13,6 +13,7 @@ import java.util.List;
  * 
  */
 public interface PayloadData {
+    String ACTION_UPLOAD_COMPLETE = "UPLOAD_COMPLETE";
     /**
      * XXX JDS This could be turned into an enum
      * 

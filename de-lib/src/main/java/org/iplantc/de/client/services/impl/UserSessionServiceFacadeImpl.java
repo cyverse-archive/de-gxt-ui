@@ -18,7 +18,6 @@ import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
 import com.google.gwt.http.client.Request;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -98,16 +97,6 @@ public class UserSessionServiceFacadeImpl implements UserSessionServiceFacade {
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(setting));
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
         deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
-    }
-
-    @Override
-    public void postClientNotification(JSONObject notification, AsyncCallback<String> callback) {
-        String address = deProperties.getUnproctedMuleServiceBaseUrl() + "send-notification";
-
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, notification.toString());
-
-        deServiceFacade.getServiceData(wrapper, callback);
-
     }
 
     @Override
