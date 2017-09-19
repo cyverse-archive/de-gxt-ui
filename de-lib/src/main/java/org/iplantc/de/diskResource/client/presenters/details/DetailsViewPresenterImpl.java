@@ -9,7 +9,6 @@ import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.diskResource.client.DetailsView;
 import org.iplantc.de.diskResource.client.events.selection.RemoveResourceTagSelected;
 import org.iplantc.de.diskResource.client.events.selection.UpdateResourceTagSelected;
-import org.iplantc.de.diskResource.client.gin.factory.DetailsViewFactory;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -29,8 +28,8 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
     private final DetailsView view;
 
     @Inject
-    DetailsViewPresenterImpl(final DetailsViewFactory viewFactory) {
-        this.view = viewFactory.create(this);
+    DetailsViewPresenterImpl(final DetailsView view) {
+        this.view = view;
 
         view.addRemoveResourceTagSelectedHandler(this);
         view.addUpdateResourceTagSelectedHandler(this);

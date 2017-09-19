@@ -49,7 +49,6 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.core.client.util.Format;
 import com.sencha.gxt.data.shared.event.StoreUpdateEvent;
@@ -106,18 +105,15 @@ public class DetailsViewImpl extends Composite implements DetailsView,
     private static final DetailsViewImplUiBinder ourUiBinder = GWT.create(DetailsViewImplUiBinder.class);
     private final Logger LOG = Logger.getLogger(DetailsViewImpl.class.getSimpleName());
     private final EditorDriver editorDriver = GWT.create(EditorDriver.class);
-    private final DetailsView.Presenter presenter;
     private final TagsView.Presenter tagsPresenter;
     private DiskResource boundValue;
 
     @Inject
     DetailsViewImpl(final DetailsView.Appearance appearance,
-                    final TagsView.Presenter tagsPresenter,
-                    @Assisted final DetailsView.Presenter presenter) {
+                    final TagsView.Presenter tagsPresenter) {
         this.tagsPresenter = tagsPresenter;
         this.tagListView = tagsPresenter.getView();
         this.appearance = appearance;
-        this.presenter = presenter;
 
         tagsPresenter.setEditable(true);
         tagsPresenter.setRemovable(true);
