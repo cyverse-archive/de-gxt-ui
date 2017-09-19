@@ -8,6 +8,7 @@ import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.diskResource.client.DataLinkView;
+import org.iplantc.de.diskResource.client.events.selection.CreateDataLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelected;
 import org.iplantc.de.diskResource.client.gin.factory.DataLinkViewFactory;
 import org.iplantc.de.diskResource.client.presenters.callbacks.CreateDataLinkCallback;
@@ -24,7 +25,8 @@ import java.util.List;
 /**
  * @author jstroot
  */
-public class DataLinkPresenterImpl implements DataLinkView.Presenter {
+public class DataLinkPresenterImpl implements DataLinkView.Presenter,
+                                              CreateDataLinkSelected.CreateDataLinkSelectedHandler {
 
     private final DataLinkView view;
     private final DiskResourceServiceFacade drService;
@@ -44,6 +46,8 @@ public class DataLinkPresenterImpl implements DataLinkView.Presenter {
         this.appearance = appearance;
         this.diskResourceUtil = diskResourceUtil;
         view = dataLinkViewFactory.create(this, resources);
+
+        view.addCreateDataLinkSelectedHandler(this);
 
         // Remove Folders
         List<DiskResource> allowedResources = createDiskResourcesList();
@@ -70,9 +74,9 @@ public class DataLinkPresenterImpl implements DataLinkView.Presenter {
                                   new DeleteDataLinksCallback(view));
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public void createDataLinks(List<DiskResource> selectedItems) {
+    public void onCreateDataLinkSelected(CreateDataLinkSelected event) {
+        List<DiskResource> selectedItems = event.getSelectedDiskResources();
         final List<String> drResourceIds = createDiskResourceIdsList();
         for(DiskResource dr : selectedItems){
             if(!(dr instanceof DataLink)){

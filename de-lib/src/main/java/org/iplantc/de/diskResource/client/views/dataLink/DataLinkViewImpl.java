@@ -4,12 +4,14 @@ import org.iplantc.de.client.models.dataLink.DataLink;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.diskResource.client.DataLinkView;
+import org.iplantc.de.diskResource.client.events.selection.CreateDataLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelected;
 import org.iplantc.de.diskResource.client.views.dataLink.cells.DataLinkPanelCell;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.impl.ImageResourcePrototype;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -167,8 +169,10 @@ public class DataLinkViewImpl implements DataLinkView,
 
     @UiHandler("createDataLinksBtn")
     void onCreateDataLinksSelected(SelectEvent event) {
-        presenter.createDataLinks(tree.getSelectionModel().getSelectedItems());
-
+        List<DiskResource> selectedItems = tree.getSelectionModel().getSelectedItems();
+        if (selectedItems != null && !selectedItems.isEmpty()) {
+            widget.fireEvent(new CreateDataLinkSelected(selectedItems));
+        }
     }
 
     @UiHandler("expandAll")
@@ -216,4 +220,8 @@ public class DataLinkViewImpl implements DataLinkView,
         return new IdentityValueProvider<>();
     }
 
+    @Override
+    public HandlerRegistration addCreateDataLinkSelectedHandler(CreateDataLinkSelected.CreateDataLinkSelectedHandler handler) {
+        return widget.addHandler(handler, CreateDataLinkSelected.TYPE);
+    }
 }
