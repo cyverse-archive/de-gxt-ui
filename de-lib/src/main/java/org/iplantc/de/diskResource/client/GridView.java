@@ -193,6 +193,14 @@ public interface GridView extends IsWidget,
             String fileSaveError(String fileName);
 
             String listingFailure();
+
+            String metadataSaved();
+
+            String copyMetadataNoResources();
+
+            String loadingMask();
+
+            String saving();
         }
 
         void deSelectDiskResources();

@@ -12,12 +12,12 @@ import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
+import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorCode;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
-import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.comments.view.dialogs.CommentsDialog;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -86,9 +86,6 @@ import com.sencha.gxt.data.shared.event.StoreUpdateEvent;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
-import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -113,7 +110,7 @@ public class GridViewPresenterImpl implements Presenter,
         public void onFailure(Throwable caught) {
             saveDialog.unmask();
             String fileName = saveDialog.getFileName();
-            if (caught.getMessage().contains("ERR_EXISTS")) {
+            if (caught.getMessage().contains(DiskResourceErrorCode.ERR_EXISTS.toString())) {
                 announcer.schedule(new ErrorAnnouncementConfig(appearance.fileExistsError(fileName)));
             } else {
                 ErrorHandler.post(appearance.fileSaveError(fileName), caught);
@@ -123,21 +120,15 @@ public class GridViewPresenterImpl implements Presenter,
         @Override
         public void onSuccess(String result) {
             saveDialog.hide();
-            IplantAnnouncer.getInstance()
-                           .schedule(new SuccessAnnouncementConfig("Metadata saved!", true, 3000));
-
+            announcer.schedule(new SuccessAnnouncementConfig(appearance.metadataSaved(), true, 3000));
         }
     }
 
     private final class CopyMetadataCallback implements AsyncCallback<String> {
-        private final DiskResource selected;
         private final IPlantDialog win;
-        private final List<HasPath> paths;
 
-        private CopyMetadataCallback(DiskResource selected, IPlantDialog win, List<HasPath> paths) {
-            this.selected = selected;
+        private CopyMetadataCallback(IPlantDialog win) {
             this.win = win;
-            this.paths = paths;
         }
 
         @Override
@@ -149,8 +140,7 @@ public class GridViewPresenterImpl implements Presenter,
 
         @Override
         public void onSuccess(String result) {
-            IplantAnnouncer.getInstance()
-                           .schedule(new SuccessAnnouncementConfig(appearance.copyMetadataSuccess()));
+            announcer.schedule(new SuccessAnnouncementConfig(appearance.copyMetadataSuccess()));
             win.hide();
         }
     }
@@ -182,30 +172,19 @@ public class GridViewPresenterImpl implements Presenter,
         });
     }
 
-    @Inject
-    IplantAnnouncer announcer;
-    @Inject
-    DiskResourceServiceFacade diskResourceService;
-    @Inject
-    DiskResourceUtil diskResourceUtil;
-    @Inject
-    FileSystemMetadataServiceFacade metadataService;
-    @Inject
-    AsyncProviderWrapper<InfoTypeEditorDialog> infoTypeDialogProvider;
-    @Inject
-    AsyncProviderWrapper<CommentsDialog> commentDialogProvider;
-    @Inject
-    AsyncProviderWrapper<ManageMetadataDialog> metadataDialogProvider;
-    @Inject
-    AsyncProviderWrapper<DataSharingDialog> dataSharingDialogProvider;
-    @Inject
-    AsyncProviderWrapper<ShareResourceLinkDialog> shareLinkDialogProvider;
-    @Inject
-    AsyncProviderWrapper<SaveAsDialog> saveAsDialogProvider;
-    @Inject
-    DiskResourceErrorAutoBeanFactory drFactory;
-    @Inject
-    MetadataCopyDialog mCopyDialog;
+    @Inject IplantAnnouncer announcer;
+    @Inject DiskResourceServiceFacade diskResourceService;
+    @Inject DiskResourceUtil diskResourceUtil;
+    @Inject FileSystemMetadataServiceFacade metadataService;
+    @Inject AsyncProviderWrapper<InfoTypeEditorDialog> infoTypeDialogProvider;
+    @Inject AsyncProviderWrapper<CommentsDialog> commentDialogProvider;
+    @Inject AsyncProviderWrapper<ManageMetadataDialog> metadataDialogProvider;
+    @Inject AsyncProviderWrapper<DataSharingDialog> dataSharingDialogProvider;
+    @Inject AsyncProviderWrapper<ShareResourceLinkDialog> shareLinkDialogProvider;
+    @Inject AsyncProviderWrapper<SaveAsDialog> saveAsDialogProvider;
+    @Inject DiskResourceErrorAutoBeanFactory drFactory;
+    @Inject MetadataCopyDialog mCopyDialog;
+    @Inject MetadataView.Presenter.Appearance metadataAppearance;
 
     @Inject
     DataLinkFactory dlFactory;
@@ -219,7 +198,6 @@ public class GridViewPresenterImpl implements Presenter,
     private boolean filePreviewEnabled = true;
     private DiskResourceView.Presenter parentPresenter;
     private HandlerManager handlerManager;
-    private final JsonUtil jsonUtil;
 
     @Inject
     GridViewPresenterImpl(final GridViewFactory gridViewFactory,
@@ -233,7 +211,6 @@ public class GridViewPresenterImpl implements Presenter,
         this.navigationPresenter = navigationPresenter;
         this.listStore = getDiskResourceListStore();
         this.eventBus = eventBus;
-        this.jsonUtil = JsonUtil.getInstance();
         GridView.FolderContentsRpcProxy folderContentsRpcProxy =
                 folderContentsProxyFactory.createWithEntityType(infoTypeFilters, entityType);
         setupHandlers();
@@ -309,19 +286,13 @@ public class GridViewPresenterImpl implements Presenter,
         final String infoType = event.getSelectedDiskResources().iterator().next().getInfoType();
         infoTypeDialogProvider.get(new AsyncCallback<InfoTypeEditorDialog>() {
             @Override
-            public void onFailure(Throwable caught) {
-                announcer.schedule(new ErrorAnnouncementConfig("AsyncProvider failed"));
-            }
+            public void onFailure(Throwable caught) {}
 
             @Override
             public void onSuccess(final InfoTypeEditorDialog result) {
-                result.addOkButtonSelectHandler(new SelectEvent.SelectHandler() {
-
-                    @Override
-                    public void onSelect(SelectEvent event1) {
-                        String newType = result.getSelectedValue().toString();
-                        setInfoType(event.getSelectedDiskResources().iterator().next(), newType);
-                    }
+                result.addOkButtonSelectHandler(selectEvent -> {
+                    String newType = result.getSelectedValue().toString();
+                    setInfoType(event.getSelectedDiskResources().iterator().next(), newType);
                 });
                 result.show(InfoType.fromTypeString(infoType));
             }
@@ -407,30 +378,19 @@ public class GridViewPresenterImpl implements Presenter,
 
     void copyMetadata(final DiskResource selected) {
         mCopyDialog.clearHandlers();
-        mCopyDialog.addOkButtonSelectHandler(new SelectHandler() {
-
-            @Override
-            public void onSelect(SelectEvent event) {
-                List<HasPath> paths = mCopyDialog.getValue();
-                if (paths == null || paths.size() == 0) {
-                    AlertMessageBox amb = new AlertMessageBox(appearance.copyMetadata(),
-                                                              "You must select at least a file or a folder!");
-                    amb.show();
-                    return;
-                }
-                mCopyDialog.mask("Loading...");
-                doCopyMetadata(mCopyDialog.getSource(), paths);
-
+        mCopyDialog.addOkButtonSelectHandler(selectEvent -> {
+            List<HasPath> paths = mCopyDialog.getValue();
+            if (paths == null || paths.size() == 0) {
+                AlertMessageBox amb = new AlertMessageBox(appearance.copyMetadata(),
+                                                          appearance.copyMetadataNoResources());
+                amb.show();
+                return;
             }
-        });
-        mCopyDialog.addCancelButtonSelectHandler(new SelectHandler() {
+            mCopyDialog.mask(appearance.loadingMask());
+            doCopyMetadata(mCopyDialog.getSource(), paths);
 
-            @Override
-            public void onSelect(SelectEvent event) {
-                mCopyDialog.hide();
-
-            }
         });
+        mCopyDialog.addCancelButtonSelectHandler(selectEvent -> mCopyDialog.hide());
         mCopyDialog.clear();
         mCopyDialog.setSource(selected);
         mCopyDialog.setHeader(selected.getPath());
@@ -461,16 +421,13 @@ public class GridViewPresenterImpl implements Presenter,
             @Override
             public void onSuccess(DataSharingDialog result) {
                 result.show(event.getDiskResourceToShare());
-                result.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
-                    @Override
-                    public void onDialogHide(DialogHideEvent event) {
-                        final List<DiskResource> selection = getSelectedDiskResources();
-                        if (selection != null && selection.size() == 1) {
-                            Iterator<DiskResource> it = selection.iterator();
-                            DiskResource next = it.next();
-                            if (!next.isFilter()) {
-                                fetchDetails(next);
-                            }
+                result.addDialogHideHandler(hideEvent -> {
+                    final List<DiskResource> selection = getSelectedDiskResources();
+                    if (selection != null && selection.size() == 1) {
+                        Iterator<DiskResource> it = selection.iterator();
+                        DiskResource next = it.next();
+                        if (!next.isFilter()) {
+                            fetchDetails(next);
                         }
                     }
                 });
@@ -647,9 +604,6 @@ public class GridViewPresenterImpl implements Presenter,
                                         public void onFailure(Integer statusCode, Throwable caught) {
                                             ErrorHandler.post(appearance.retrieveStatFailed(), caught);
                                             ensureHandlers().fireEvent(new FetchDetailsCompleted());
-
-                                            // This unmasks the sendTo.. toolbar buttons
-                                            // presenter.unmaskVizMenuOptions();
                                         }
 
                                         @Override
@@ -665,15 +619,8 @@ public class GridViewPresenterImpl implements Presenter,
                                                                        "This object cannot be null at this point.");
                                             updateDiskResource(diskResource);
                                             ensureHandlers().fireEvent(new FetchDetailsCompleted());
-
-                                            // presenter.getView().unmaskDetailsPanel();
-                                            // presenter.unmaskVizMenuOptions();
                                         }
                                     });
-        // Need to mask the SendTo... options from the toolbar
-        // view.maskSendToCoGe();
-        // view.maskSendToEnsembl();
-        // view.maskSendToTreeViewer();
 
     }
 
@@ -718,7 +665,7 @@ public class GridViewPresenterImpl implements Presenter,
     private void doCopyMetadata(final DiskResource selected, List<HasPath> paths) {
         diskResourceService.copyMetadata(selected.getId(),
                                          buildTargetPaths(paths),
-                                         new CopyMetadataCallback(selected, mCopyDialog, paths));
+                                         new CopyMetadataCallback(mCopyDialog));
     }
 
     @Override
@@ -732,28 +679,17 @@ public class GridViewPresenterImpl implements Presenter,
             @Override
             public void onSuccess(final SaveAsDialog saveDialog) {
 
-                saveDialog.addOkButtonSelectHandler(new SelectHandler() {
+                saveDialog.addOkButtonSelectHandler(selectEvent -> {
+                    saveDialog.mask(appearance.saving());
+                    String destination = saveDialog.getSelectedFolder().getPath() + "/"
+                                         + saveDialog.getFileName();
+                    diskResourceService.saveMetadata(event.getDiskResource().getId(),
+                                                     destination,
+                                                     true,
+                                                     new SaveMetadataCallback(saveDialog));
 
-                    @Override
-                    public void onSelect(SelectEvent select_event) {
-                        saveDialog.mask("Saving");
-                        String destination = saveDialog.getSelectedFolder().getPath() + "/"
-                                             + saveDialog.getFileName();
-                        diskResourceService.saveMetadata(event.getDiskResource().getId(),
-                                                         destination,
-                                                         true,
-                                                         new SaveMetadataCallback(saveDialog));
-
-                    }
                 });
-                saveDialog.addCancelButtonSelectHandler(new SelectHandler() {
-
-                    @Override
-                    public void onSelect(SelectEvent event) {
-                        saveDialog.hide();
-
-                    }
-                });
+                saveDialog.addCancelButtonSelectHandler(selectEvent -> saveDialog.hide());
                 saveDialog.show(null);
                 saveDialog.toFront();
             }
@@ -769,29 +705,24 @@ public class GridViewPresenterImpl implements Presenter,
 
     @Override
     public void onDownloadTemplateSelected(DownloadTemplateSelectedEvent event) {
-        final MetadataView.Presenter.Appearance appearance =
-                GWT.create(MetadataView.Presenter.Appearance.class);
         diskResourceService.getMetadataTemplateListing(new AsyncCallback<List<MetadataTemplateInfo>>() {
             @Override
             public void onFailure(Throwable caught) {
-                ErrorHandler.post(appearance.templateinfoError(), caught);
+                ErrorHandler.post(metadataAppearance.templateinfoError(), caught);
             }
 
             @Override
             public void onSuccess(List<MetadataTemplateInfo> result) {
                 final SelectMetadataTemplateDialog view =
-                        new SelectMetadataTemplateDialog(result, appearance, false);
-                view.getOkButton().addSelectHandler(new SelectHandler() {
-                    @Override
-                    public void onSelect(SelectEvent event) {
-                        final String encodedSimpleDownloadURL =
-                                diskResourceService.downloadTemplate(view.getSelectedTemplate().getId());
-                        WindowUtil.open(encodedSimpleDownloadURL, "width=100,height=100");
-                    }
+                        new SelectMetadataTemplateDialog(result, metadataAppearance, false);
+                view.getOkButton().addSelectHandler(selectEvent -> {
+                    final String encodedSimpleDownloadURL =
+                            diskResourceService.downloadTemplate(view.getSelectedTemplate().getId());
+                    WindowUtil.open(encodedSimpleDownloadURL, "width=100,height=100");
                 });
                 view.setModal(false);
                 view.setSize("400px", "400px");
-                view.setHeading(appearance.selectTemplate());
+                view.setHeading(metadataAppearance.selectTemplate());
                 view.show();
             }
         });

@@ -202,4 +202,24 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     public String listingFailure() {
         return displayStrings.listingFailure();
     }
+
+    @Override
+    public String metadataSaved() {
+        return displayStrings.metadataSaved();
+    }
+
+    @Override
+    public String copyMetadataNoResources() {
+        return displayStrings.copyMetadataNoResources();
+    }
+
+    @Override
+    public String loadingMask() {
+        return iplantDisplayStrings.loadingMask();
+    }
+
+    @Override
+    public String saving() {
+        return displayStrings.saving();
+    }
 }
