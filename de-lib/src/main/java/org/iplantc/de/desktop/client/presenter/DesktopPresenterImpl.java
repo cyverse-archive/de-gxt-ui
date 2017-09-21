@@ -1,11 +1,9 @@
 package org.iplantc.de.desktop.client.presenter;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.events.EventBus;
-import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasPath;
+import org.iplantc.de.client.models.HasUUIDs;
 import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.QualifiedId;
 import org.iplantc.de.client.models.UserInfo;
@@ -13,7 +11,6 @@ import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.analysis.AnalysesAutoBeanFactory;
-import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.notifications.Counts;
@@ -22,8 +19,6 @@ import org.iplantc.de.client.models.notifications.NotificationAutoBeanFactory;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.models.notifications.payload.PayloadAnalysis;
-import org.iplantc.de.client.models.notifications.payload.PayloadApps;
-import org.iplantc.de.client.models.notifications.payload.PayloadAppsList;
 import org.iplantc.de.client.models.notifications.payload.PayloadRequest;
 import org.iplantc.de.client.models.requestStatus.RequestHistory;
 import org.iplantc.de.client.services.DEUserSupportServiceFacade;
@@ -40,7 +35,6 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.dialogs.IplantErrorDialog;
-import org.iplantc.de.commons.client.views.window.configs.AnalysisWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.AppWizardConfig;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
@@ -48,7 +42,6 @@ import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConf
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.desktop.client.presenter.util.MessagePoller;
-import org.iplantc.de.desktop.client.presenter.util.NotificationUtil;
 import org.iplantc.de.desktop.client.presenter.util.NotificationWebSocketManager;
 import org.iplantc.de.desktop.client.presenter.util.SystemMessageWebSocketManager;
 import org.iplantc.de.desktop.client.views.widgets.PreferencesDialog;
@@ -56,7 +49,7 @@ import org.iplantc.de.desktop.client.views.windows.IPlantWindowInterface;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.fileViewers.client.callbacks.LoadGenomeInCoGeCallback;
 import org.iplantc.de.intercom.client.IntercomFacade;
-import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
+import org.iplantc.de.notifications.client.utils.NotificationUtil;
 import org.iplantc.de.notifications.client.utils.NotifyInfo;
 import org.iplantc.de.notifications.client.views.dialogs.RequestHistoryDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
@@ -88,7 +81,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
@@ -163,6 +155,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     @Inject UserSettings userSettings;
     @Inject NotifyInfo notifyInfo;
     @Inject DiskResourceUtil diskResourceUtil;
+    @Inject NotificationUtil notificationUtil;
     @Inject AsyncProviderWrapper<PreferencesDialog> preferencesDialogProvider;
     private DesktopPresenterAppearance appearance;
 
@@ -302,7 +295,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }
 
     private void loadMessageInView(Notification n) {
-        NotificationMessage newMessage = NotificationUtil.getMessage(n, notificationFactory);
+        NotificationMessage newMessage = notificationUtil.getMessage(n, notificationFactory);
         ListStore<NotificationMessage> nmStore = view.getNotificationStore();
         final NotificationMessage modelWithKey =
                 nmStore.findModelWithKey(Long.toString(newMessage.getTimestamp()));
@@ -516,68 +509,8 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
      */
     @Override
     public void onNotificationSelected(final NotificationMessage selectedItem) {
-        checkNotNull(selectedItem);
-        checkNotNull(selectedItem.getCategory());
-        checkNotNull(selectedItem.getContext());
-
-        String context = selectedItem.getContext();
-        switch(selectedItem.getCategory()){
-            case APPS:
-                final AppsWindowConfig appsConfig = ConfigFactory.appsWindowConfig();
-                final PayloadAppsList pal = AutoBeanCodex.decode(notificationFactory,
-                                                                 PayloadAppsList.class,
-                                                                 context).as();
-                if (pal != null && pal.getApps() != null && pal.getApps().size() > 0) {
-                    PayloadApps payload = pal.getApps().get(0);
-                    final String systemId = payload.getSystemId();
-                    final String appCategoryId = payload.getCategoryId();
-                    final String appId = payload.getId();
-                    appsConfig.setSelectedAppCategory(new QualifiedId(systemId, appCategoryId));
-                    appsConfig.setSelectedApp(new QualifiedId(systemId, appId));
-                    EventBus.getInstance()
-                            .fireEvent(new WindowShowRequestEvent(appsConfig, true));
-                }
-               break;
-            case DATA:
-                // execute data context
-                File file = AutoBeanCodex.decode(diskResourceFactory, File.class, context).as();
-                List<HasId> selectedResources = Lists.newArrayList();
-                selectedResources.add(file);
-
-                DiskResourceWindowConfig dataWindowConfig = ConfigFactory.diskResourceWindowConfig(false);
-                HasPath folder = diskResourceUtil.getFolderPathFromFile(file);
-                dataWindowConfig.setSelectedFolder(folder);
-                dataWindowConfig.setSelectedDiskResources(selectedResources);
-                show(dataWindowConfig, true);
-                break;
-            case ANALYSIS:
-                AutoBean<Analysis> hAb = AutoBeanCodex.decode(analysesFactory, Analysis.class, context);
-
-                AnalysisWindowConfig analysisWindowConfig = ConfigFactory.analysisWindowConfig();
-                analysisWindowConfig.setSelectedAnalyses(Lists.newArrayList(hAb.as()));
-                show(analysisWindowConfig, true);
-                break;
-            case PERMANENTIDREQUEST:
-                PayloadRequest request = AutoBeanCodex.decode(notificationFactory,
-                                                              PayloadRequest.class,
-                                                              context).as();
-                getRequestStatusHistory(request.getId(), NotificationCategory.PERMANENTIDREQUEST);
-                break;
-            case TOOLREQUEST:
-                PayloadRequest toolRequest = AutoBeanCodex.decode(notificationFactory,
-                                                                      PayloadRequest.class,
-                                                                      context).as();
-
-                List<RequestHistory> history = toolRequest.getHistory();
-
-                RequestHistoryDialog dlg = new RequestHistoryDialog(NotificationCategory.TOOLREQUEST.toString(),
-                                                                    history);
-                dlg.show();
-                break;
-            default:
-                break;
-        }
-       markAsSeen(selectedItem);
+        notificationUtil.onNotificationClick(selectedItem);
+        markAsSeen(selectedItem);
     }
 
     public void markAsSeen(final NotificationMessage selectedItem) {
@@ -623,6 +556,27 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                                                                         history);
                     dlg.show();
 
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onJoinTeamRequestProcessed(NotificationMessage message) {
+        view.getNotificationStore().remove(message);
+        //If the notifications window is open, the NotificationPresenter will handle this
+        if (!desktopWindowManager.isOpen(WindowType.NOTIFICATIONS)) {
+            HasUUIDs hasUUIDs = notificationFactory.getHasUUIDs().as();
+            hasUUIDs.setUUIDs(Lists.newArrayList(message.getId()));
+            messageServiceFacade.deleteMessages(hasUUIDs, new NotificationCallback<String>() {
+                @Override
+                public void onFailure(Integer statusCode, Throwable exception) {
+                    ErrorHandler.post(exception);
+                }
+
+                @Override
+                public void onSuccess(String result) {
+                    //do nothing intentionally
                 }
             });
         }

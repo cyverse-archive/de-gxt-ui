@@ -271,4 +271,15 @@ public class DesktopWindowManager {
     public void stickWindowToTop(Window window) {
         this.sticky = window;
     }
+
+    /**
+     * Returns true if the user has the specified WindowType already open in the DE
+     * @param windowType
+     * @return
+     */
+    public boolean isOpen(WindowType windowType) {
+        return windowManager.getWindows().stream()
+                            .filter(window -> ((Window)window).getStateId().startsWith(windowType.toString()))
+                            .count() > 0;
+    }
 }

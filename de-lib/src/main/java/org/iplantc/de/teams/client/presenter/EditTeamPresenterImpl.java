@@ -2,6 +2,7 @@ package org.iplantc.de.teams.client.presenter;
 
 import static org.iplantc.de.teams.client.EditTeamView.SEARCH_MEMBERS_TAG;
 
+import org.iplantc.de.client.models.HasMessage;
 import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.collaborators.Subject;
@@ -24,12 +25,14 @@ import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
 import org.iplantc.de.teams.client.events.AddPublicUserSelected;
 import org.iplantc.de.teams.client.events.DeleteTeamCompleted;
+import org.iplantc.de.teams.client.events.JoinTeamCompleted;
 import org.iplantc.de.teams.client.events.LeaveTeamCompleted;
 import org.iplantc.de.teams.client.events.PrivilegeAndMembershipLoaded;
 import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.events.RemoveNonMemberPrivilegeSelected;
 import org.iplantc.de.teams.client.events.TeamSaved;
 import org.iplantc.de.teams.client.views.dialogs.DeleteTeamDialog;
+import org.iplantc.de.teams.client.views.dialogs.JoinTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.LeaveTeamDialog;
 import org.iplantc.de.teams.client.views.dialogs.SaveTeamProgressDialog;
 
@@ -68,6 +71,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     @Inject AsyncProviderWrapper<SaveTeamProgressDialog> progressDialogProvider;
     @Inject AsyncProviderWrapper<LeaveTeamDialog> leaveTeamDlgProvider;
     @Inject AsyncProviderWrapper<DeleteTeamDialog> deleteTeamDlgProvider;
+    @Inject AsyncProviderWrapper<JoinTeamDialog> joinTeamDlgProvider;
 
     boolean isAdmin;
     boolean isMember;
@@ -130,12 +134,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                 isAdmin = isAdmin(privileges);
                 mode = isAdmin ? EditTeamView.MODE.EDIT : EditTeamView.MODE.VIEW;
                 view.showAdminMode(isAdmin);
-                if (privileges != null && !privileges.isEmpty()) {
-                    getTeamMembers(group, privileges);
-                } else {
-                    view.unmask();
-                    ensureHandlers().fireEvent(new PrivilegeAndMembershipLoaded(false, false));
-                }
+                getTeamMembers(group, privileges);
             }
         });
     }
@@ -231,6 +230,7 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         List<Privilege> allPrivs = createEmptyPrivilegeList();
         allPrivs.addAll(memberPrivs);
         allPrivs.addAll(nonMemberPrivs);
+        allPrivs = filterCurrentUserPrivilege(allPrivs);
 
         List<UpdatePrivilegeRequest> updateList = convertPrivilegesToUpdateRequest(allPrivs);
 
@@ -451,6 +451,61 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     }
 
     @Override
+    public void onJoinButtonSelected(IsHideable hideable) {
+        serviceFacade.joinTeam(originalGroup, new AsyncCallback<List<UpdateMemberResult>>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(throwable);
+            }
+
+            @Override
+            public void onSuccess(List<UpdateMemberResult> updateMemberResults) {
+                if (updateMemberResults != null && !updateMemberResults.isEmpty()) {
+                    UpdateMemberResult updateMemberResult = updateMemberResults.get(0);
+                    if (updateMemberResult.isSuccess()) {
+                        announcer.schedule(new IplantAnnouncementConfig(appearance.joinTeamSuccess(originalGroup)));
+                        hideable.hide();
+                        ensureHandlers().fireEvent(new JoinTeamCompleted(originalGroup));
+                    } else {
+                        showRequestToJoinDlg(originalGroup, hideable);
+                    }
+                }
+            }
+        });
+    }
+
+    void showRequestToJoinDlg(Group team, IsHideable hideable) {
+        joinTeamDlgProvider.get(new AsyncCallback<JoinTeamDialog>() {
+            @Override
+            public void onFailure(Throwable throwable) {}
+
+            @Override
+            public void onSuccess(JoinTeamDialog dialog) {
+                dialog.show(team);
+                dialog.addOkButtonSelectHandler(event -> requestToJoin(team, dialog.getRequestMessage(), hideable));
+            }
+        });
+    }
+
+    void requestToJoin(Group team, String message, IsHideable hideable) {
+        HasMessage hasMessage = factory.getHasMessage().as();
+        hasMessage.setMessage(message);
+        serviceFacade.requestToJoinTeam(team, hasMessage, new AsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(throwable);
+                hideable.hide();
+            }
+
+            @Override
+            public void onSuccess(Void aVoid) {
+                hideable.hide();
+                announcer.schedule(new IplantAnnouncementConfig(appearance.requestToJoinSubmitted(team)));
+            }
+        });
+    }
+
+    @Override
     public void setViewDebugId(String debugId) {
         view.asWidget().ensureDebugId(debugId);
     }
@@ -620,12 +675,6 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                          .collect(Collectors.toList());
     }
 
-    boolean hasOptInPrivilege(List<Privilege> privileges) {
-        return privileges.stream()
-                         .filter(privilege -> PrivilegeType.optin.equals(privilege.getPrivilegeType()))
-                         .count() > 0;
-    }
-
     boolean isAdmin(List<Privilege> privileges) {
         if (privileges == null || privileges.isEmpty()) {
             return false;
@@ -651,6 +700,10 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         return members.stream()
                .filter(member -> userInfo.getUsername().equals(member.getId()))
                .count() > 0;
+    }
+
+    List<Privilege> filterCurrentUserPrivilege(List<Privilege> privileges) {
+        return privileges.stream().filter(privilege -> !isCurrentUserPrivilege(privilege)).collect(Collectors.toList());
     }
 
     boolean isCurrentUserPrivilege(Privilege privilege) {
@@ -737,6 +790,11 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     @Override
     public HandlerRegistration addDeleteTeamCompletedHandler(DeleteTeamCompleted.DeleteTeamCompletedHandler handler) {
         return ensureHandlers().addHandler(DeleteTeamCompleted.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addJoinTeamCompletedHandler(JoinTeamCompleted.JoinTeamCompletedHandler handler) {
+        return ensureHandlers().addHandler(JoinTeamCompleted.TYPE, handler);
     }
 
     HandlerManager ensureHandlers() {

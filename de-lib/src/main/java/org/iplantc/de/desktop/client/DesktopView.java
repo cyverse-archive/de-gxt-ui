@@ -224,6 +224,14 @@ public interface DesktopView extends IsWidget {
 
         void onFaqSelect();
 
+        /**
+         * This method is called once a user has either approved or denied a request to join
+         * a team the user manages.  This method will delete the join notification so the request
+         * cannot accidentally be processed again.
+         * @param message
+         */
+        void onJoinTeamRequestProcessed(NotificationMessage message);
+
     }
 
     interface UserSettingsMenuPresenter {

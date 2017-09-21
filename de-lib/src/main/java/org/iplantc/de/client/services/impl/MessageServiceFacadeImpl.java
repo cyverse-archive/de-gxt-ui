@@ -5,6 +5,7 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
 import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.HasUUIDs;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.notifications.Counts;
 import org.iplantc.de.client.models.notifications.NotificationAutoBeanFactory;
@@ -22,10 +23,10 @@ import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
 import com.google.gwt.http.client.URL;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
@@ -113,10 +114,12 @@ public class MessageServiceFacadeImpl implements MessageServiceFacade {
     }
 
     @Override
-    public void deleteMessages(final JSONObject deleteIds, DECallback<String> callback) {
+    public void deleteMessages(HasUUIDs deleteIds, DECallback<String> callback) {
         String address = NOTIFICATIONS + "/delete"; //$NON-NLS-1$
+
+        Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(deleteIds));
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address,
-                                                            deleteIds.toString());
+                                                            encode.getPayload());
 
         deServiceFacade.getServiceData(wrapper, callback);
     }

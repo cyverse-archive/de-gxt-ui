@@ -8,6 +8,7 @@ import org.iplantc.de.commons.client.events.LastSelectedPathChangedEvent;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.diskResource.client.events.DefaultUploadCompleteHandler;
 import org.iplantc.de.diskResource.client.events.FileUploadedEvent;
+import org.iplantc.de.notifications.client.events.JoinTeamRequestProcessed;
 import org.iplantc.de.notifications.client.events.NotificationClickedEvent;
 import org.iplantc.de.notifications.client.events.NotificationCountUpdateEvent;
 import org.iplantc.de.shared.events.ServiceDown;
@@ -34,7 +35,8 @@ public class DesktopPresenterEventHandler implements LastSelectedPathChangedEven
                                                      UserLoggedOutEvent.UserLoggedOutEventHandler,
                                                      NotificationClickedEvent.NotificationClickedEventHandler,
                                                      ServiceDown.ServiceDownHandler,
-                                                     ServiceRestored.ServiceRestoredHandler {
+                                                     ServiceRestored.ServiceRestoredHandler,
+                                                     JoinTeamRequestProcessed.JoinTeamRequestProcessedHandler {
 
     @Inject EventBus eventBus;
     @Inject UserSessionServiceFacade userSessionService;
@@ -94,6 +96,8 @@ public class DesktopPresenterEventHandler implements LastSelectedPathChangedEven
         handlerRegistrations.add(handlerRegistration);
         handlerRegistration = eventBus.addHandler(ServiceRestored.TYPE, this);
         handlerRegistrations.add(handlerRegistration);
+        handlerRegistration = eventBus.addHandler(JoinTeamRequestProcessed.TYPE, this);
+        handlerRegistrations.add(handlerRegistration);
     }
 
     @Override
@@ -116,5 +120,10 @@ public class DesktopPresenterEventHandler implements LastSelectedPathChangedEven
     @Override
     public void onServiceRestored(ServiceRestored event) {
         presenter.serviceUp(event);
+    }
+
+    @Override
+    public void onJoinTeamRequestProcessed(JoinTeamRequestProcessed event) {
+        presenter.onJoinTeamRequestProcessed(event.getMessage());
     }
 }

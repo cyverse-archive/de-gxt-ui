@@ -1,7 +1,10 @@
 package org.iplantc.de.notifications.client.gin;
 
 import org.iplantc.de.notifications.client.gin.factory.NotificationViewFactory;
+import org.iplantc.de.notifications.client.presenter.JoinTeamRequestPresenter;
 import org.iplantc.de.notifications.client.presenter.NotificationPresenterImpl;
+import org.iplantc.de.notifications.client.views.JoinTeamRequestView;
+import org.iplantc.de.notifications.client.views.JoinTeamRequestViewImpl;
 import org.iplantc.de.notifications.client.views.NotificationToolbarView;
 import org.iplantc.de.notifications.client.views.NotificationToolbarViewImpl;
 import org.iplantc.de.notifications.client.views.NotificationView;
@@ -20,5 +23,7 @@ public class NotificationGinModule extends AbstractGinModule {
                 NotificationViewFactory.class));
         bind(NotificationToolbarView.class).to(NotificationToolbarViewImpl.class);
         bind(NotificationView.Presenter.class).to(NotificationPresenterImpl.class);
+        bind(JoinTeamRequestView.class).to(JoinTeamRequestViewImpl.class);
+        bind(JoinTeamRequestView.Presenter.class).to(JoinTeamRequestPresenter.class);
     }
 }

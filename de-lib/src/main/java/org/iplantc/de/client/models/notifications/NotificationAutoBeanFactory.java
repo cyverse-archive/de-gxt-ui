@@ -1,10 +1,12 @@
 package org.iplantc.de.client.models.notifications;
 
 
+import org.iplantc.de.client.models.HasUUIDs;
 import org.iplantc.de.client.models.notifications.payload.PayloadAnalysis;
 import org.iplantc.de.client.models.notifications.payload.PayloadAppsList;
 import org.iplantc.de.client.models.notifications.payload.PayloadData;
 import org.iplantc.de.client.models.notifications.payload.PayloadRequest;
+import org.iplantc.de.client.models.notifications.payload.PayloadTeam;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
@@ -33,4 +35,7 @@ public interface NotificationAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<PayloadAppsList> getNotificationPayloadAppsList();
 
+    AutoBean<PayloadTeam> getNotificationPayloadTeam();
+
+    AutoBean<HasUUIDs> getHasUUIDs();
  }

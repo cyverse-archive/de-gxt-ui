@@ -99,6 +99,7 @@ public class NotificationToolbarViewImpl extends Composite implements Notificati
         cboFilter.add(NotificationCategory.TOOLREQUEST);
         cboFilter.add(NotificationCategory.APPS);
         cboFilter.add(NotificationCategory.PERMANENTIDREQUEST);
+        cboFilter.add(NotificationCategory.TEAM);
         cboFilter.setValue(NotificationCategory.ALL);
 
         cboFilter.addSelectionHandler(new SelectionHandler<NotificationCategory>() {

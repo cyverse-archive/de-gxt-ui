@@ -70,12 +70,15 @@ public class NotificationViewImpl extends Composite implements NotificationView 
     @UiField BorderLayoutData northData;
 
     CheckBoxSelectionModel<NotificationMessage> checkBoxModel;
+    private NotificationMessageCell messageCell;
     private NotificationViewAppearance appearance;
 
     @Inject
     public NotificationViewImpl(@Assisted ListStore<NotificationMessage> listStore,
+                                NotificationMessageCell messageCell,
                                 NotificationViewAppearance appearance) {
         this.listStore = listStore;
+        this.messageCell = messageCell;
         this.appearance = appearance;
         initWidget(uiBinder.createAndBindUi(this));
         toolBar.getElement().getStyle().setProperty("borderBottom", "none");
@@ -208,7 +211,7 @@ public class NotificationViewImpl extends Composite implements NotificationView 
                 new ColumnConfig<>(new IdentityValueProvider<NotificationMessage>(),
                                    appearance.messagesColumnWidth(),
                                    appearance.messagesGridHeader());
-        colMessage.setCell(new NotificationMessageCell());
+        colMessage.setCell(messageCell);
         configs.add(colMessage);
         colMessage.setSortable(false);
 

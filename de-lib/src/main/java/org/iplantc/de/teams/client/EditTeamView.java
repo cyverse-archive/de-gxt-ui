@@ -7,6 +7,7 @@ import org.iplantc.de.client.models.groups.Privilege;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.teams.client.events.AddPublicUserSelected;
 import org.iplantc.de.teams.client.events.DeleteTeamCompleted;
+import org.iplantc.de.teams.client.events.JoinTeamCompleted;
 import org.iplantc.de.teams.client.events.LeaveTeamCompleted;
 import org.iplantc.de.teams.client.events.PrivilegeAndMembershipLoaded;
 import org.iplantc.de.teams.client.events.RemoveMemberPrivilegeSelected;
@@ -40,7 +41,8 @@ public interface EditTeamView extends IsWidget,
     interface Presenter extends TeamSaved.HasTeamSavedHandlers,
                                 LeaveTeamCompleted.HasLeaveTeamCompletedHandlers,
                                 PrivilegeAndMembershipLoaded.HasPrivilegeAndMembershipLoadedHandlers,
-                                DeleteTeamCompleted.HasDeleteTeamCompletedHandlers {
+                                DeleteTeamCompleted.HasDeleteTeamCompletedHandlers,
+                                JoinTeamCompleted.HasJoinTeamCompletedHandlers {
 
         /**
          * Initialize the presenter which creates the view
@@ -79,6 +81,12 @@ public interface EditTeamView extends IsWidget,
          * @param hideable
          */
         void onDeleteButtonSelected(IsHideable hideable);
+
+        /**
+         * This method is called when the user his the Join team button in the EditTeamDialog
+         * @param hideable
+         */
+        void onJoinButtonSelected(IsHideable hideable);
     }
 
     /**

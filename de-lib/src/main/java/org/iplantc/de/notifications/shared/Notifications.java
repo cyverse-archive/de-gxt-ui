@@ -14,4 +14,16 @@ public class Notifications {
         String RETRY_BTN = ".retryBtn";
         String NOTIFICATION_LIST = ".notificationList";
     }
+
+    public interface JoinRequestIds {
+        String CANCEL_BTN = ".cancelBtn";
+        String JOIN_REQUEST_DLG = "joinRequestDlg";
+        String JOIN_REQUEST_VIEW = ".view";
+        String APPROVE_BTN = ".approveBtn";
+        String DENY_BTN = ".denyBtn";
+        String SET_PRIVILEGE_DLG = "setPrivilegeDlg";
+        String OK_BTN = ".okBtn";
+        String DENY_REQUEST_DLG = "denyRequestDlg";
+        String DENY_DETAILS_DLG = "denyDetailsDlg";
+    }
 }

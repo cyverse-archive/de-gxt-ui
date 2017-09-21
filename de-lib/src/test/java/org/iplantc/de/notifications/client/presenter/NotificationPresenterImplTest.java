@@ -3,10 +3,13 @@ package org.iplantc.de.notifications.client.presenter;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.isA;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.iplantc.de.client.events.EventBus;
+import org.iplantc.de.client.models.HasUUIDs;
+import org.iplantc.de.client.models.notifications.NotificationAutoBeanFactory;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.services.MessageServiceFacade;
@@ -17,7 +20,6 @@ import org.iplantc.de.notifications.client.events.NotificationCountUpdateEvent;
 import org.iplantc.de.notifications.client.events.NotificationGridRefreshEvent;
 import org.iplantc.de.notifications.client.events.NotificationSelectionEvent;
 import org.iplantc.de.notifications.client.events.NotificationToolbarDeleteAllClickedEvent;
-import org.iplantc.de.notifications.client.events.NotificationToolbarDeleteClickedEvent;
 import org.iplantc.de.notifications.client.events.NotificationToolbarMarkAsSeenClickedEvent;
 import org.iplantc.de.notifications.client.gin.factory.NotificationViewFactory;
 import org.iplantc.de.notifications.client.model.NotificationMessageProperties;
@@ -26,9 +28,9 @@ import org.iplantc.de.notifications.client.views.NotificationView;
 import org.iplantc.de.shared.DECallback;
 
 import com.google.common.collect.Lists;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GxtMockitoTestRunner;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
@@ -42,6 +44,7 @@ import org.mockito.Mock;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author aramsey
@@ -61,8 +64,14 @@ public class NotificationPresenterImplTest {
     @Mock List<NotificationMessage> listMock;
     @Mock NotificationMessage notificationMessageMock;
     @Mock Iterator<NotificationMessage> iteratorMock;
-    @Mock
-    IplantAnnouncer iplantAnnouncerMock;
+    @Mock IplantAnnouncer iplantAnnouncerMock;
+    @Mock NotificationAutoBeanFactory factoryMock;
+    @Mock List<NotificationMessage> notificationsMock;
+    @Mock Stream<NotificationMessage> notificationStream;
+    @Mock Stream<String> stringStream;
+    @Mock List<String> idList;
+    @Mock AutoBean<HasUUIDs> uuiDsAutoBeanMock;
+    @Mock HasUUIDs uuiDsMock;
 
     @Captor ArgumentCaptor<DECallback<String>> deCallbackStringCaptor;
     @Captor ArgumentCaptor<AsyncCallback<String>> asyncCallbackStringCaptor;
@@ -80,7 +89,9 @@ public class NotificationPresenterImplTest {
         uut = new NotificationPresenterImpl(viewFactoryMock,
                                             appearanceMock,
                                             toolbarViewMock,
-                                            messagePropertiesMock) {
+                                            messagePropertiesMock,
+                                            factoryMock,
+                                            eventBusMock) {
             @Override
             ListStore<NotificationMessage> createListStore(NotificationMessageProperties messageProperties) {
                 return listStoreMock;
@@ -88,12 +99,16 @@ public class NotificationPresenterImplTest {
 
             @Override
             protected void fireCountUpdateEvent(String result) {
-                eventBus.fireEvent(mockCountUpdateEvent);
+                return;
+            }
+
+            @Override
+            List<String> convertNotificationsToIds(List<NotificationMessage> notifications) {
+                return idList;
             }
         };
         uut.currentCategory = currentCategoryMock;
         uut.messageServiceFacade = messageServiceFacadeMock;
-        uut.eventBus = eventBusMock;
         uut.announcer = iplantAnnouncerMock;
     }
 
@@ -177,29 +192,25 @@ public class NotificationPresenterImplTest {
     }
 
     @Test
-    public void testOnNotificationToolbarDeleteClicked() {
-        NotificationToolbarDeleteClickedEvent eventMock = mock(NotificationToolbarDeleteClickedEvent.class);
+    public void deleteNotifications() {
+        FilterPagingLoadConfig configMock = mock(FilterPagingLoadConfig.class);
+        when(factoryMock.getHasUUIDs()).thenReturn(uuiDsAutoBeanMock);
+        when(uuiDsAutoBeanMock.as()).thenReturn(uuiDsMock);
+        when(viewMock.getCurrentLoadConfig()).thenReturn(configMock);
 
-        when(listMock.isEmpty()).thenReturn(false);
-        when(listMock.size()).thenReturn(1);
-        when(iteratorMock.hasNext()).thenReturn(true, false);
-        when(iteratorMock.next()).thenReturn(notificationMessageMock);
-        when(listMock.iterator()).thenReturn(iteratorMock);
-        when(viewMock.getSelectedItems()).thenReturn(listMock);
+        uut.deleteNotifications(notificationsMock);
 
-        uut.onNotificationToolbarDeleteClicked(eventMock);
-
-
-        verify(messageServiceFacadeMock).deleteMessages(isA(JSONObject.class), deCallbackStringCaptor.capture());
+        verify(messageServiceFacadeMock).deleteMessages(eq(uuiDsMock), deCallbackStringCaptor.capture());
 
         deCallbackStringCaptor.getValue().onSuccess("result");
+        verify(viewMock).loadNotifications(eq(configMock));
         verify(eventBusMock).fireEvent(isA(DeleteNotificationsUpdateEvent.class));
-
     }
 
     @Test
     public void testOnNotificationToolbarMarkAsReadClicked() {
         NotificationToolbarMarkAsSeenClickedEvent eventMock = mock(NotificationToolbarMarkAsSeenClickedEvent.class);
+        NotificationPresenterImpl spy = spy(uut);
 
         when(listMock.isEmpty()).thenReturn(false);
         when(listMock.size()).thenReturn(1);
@@ -209,13 +220,12 @@ public class NotificationPresenterImplTest {
         when(viewMock.getSelectedItems()).thenReturn(listMock);
         when(appearanceMock.notificationMarkAsSeenSuccess()).thenReturn("Notifications marked as seen!");
 
-        uut.onNotificationToolbarMarkAsSeenClicked(eventMock);
+        spy.onNotificationToolbarMarkAsSeenClicked(eventMock);
 
         verify(messageServiceFacadeMock).markAsSeen(isA(List.class), deCallbackStringCaptor.capture());
 
         deCallbackStringCaptor.getValue().onSuccess("result");
         verify(iplantAnnouncerMock).schedule(isA(SuccessAnnouncementConfig.class));
-        verify(eventBusMock).fireEvent(isA(NotificationCountUpdateEvent.class));
-
+        verify(spy).fireCountUpdateEvent(eq("result"));
    }
 }

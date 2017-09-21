@@ -2,7 +2,9 @@ package org.iplantc.de.notifications.client.presenter;
 
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.HasUUIDs;
 import org.iplantc.de.client.models.notifications.Notification;
+import org.iplantc.de.client.models.notifications.NotificationAutoBeanFactory;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.services.MessageServiceFacade;
@@ -13,6 +15,7 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.notifications.client.events.DeleteNotificationsUpdateEvent;
+import org.iplantc.de.notifications.client.events.JoinTeamRequestProcessed;
 import org.iplantc.de.notifications.client.events.NotificationCountUpdateEvent;
 import org.iplantc.de.notifications.client.events.NotificationGridRefreshEvent;
 import org.iplantc.de.notifications.client.events.NotificationSelectionEvent;
@@ -27,10 +30,6 @@ import org.iplantc.de.notifications.client.views.NotificationView;
 import org.iplantc.de.shared.NotificationCallback;
 
 import com.google.common.collect.Lists;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
@@ -55,6 +54,7 @@ import com.sencha.gxt.widget.core.client.button.TextButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A presenter for notification window
@@ -67,8 +67,8 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
                                                   NotificationToolbarSelectionEvent.NotificationToolbarSelectionEventHandler,
                                                   NotificationToolbarDeleteClickedEvent.NotificationToolbarDeleteClickedEventHandler,
                                                   NotificationToolbarDeleteAllClickedEvent.NotificationToolbarDeleteAllClickedEventHandler,
-                                                  NotificationToolbarMarkAsSeenClickedEvent.NotificationToolbarMarkAsSeenClickedEventHandler
-                                                 {
+                                                  NotificationToolbarMarkAsSeenClickedEvent.NotificationToolbarMarkAsSeenClickedEventHandler,
+                                                  JoinTeamRequestProcessed.JoinTeamRequestProcessedHandler {
 
     private final class NotificationsServiceCallback extends NotificationCallbackWrapper {
         private final AsyncCallback<PagingLoadResult<NotificationMessage>> callback;
@@ -108,21 +108,26 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
     private final ListStore<NotificationMessage> listStore;
     private final NotificationToolbarView toolbar;
     private final NotificationView view;
+    private NotificationAutoBeanFactory factory;
+    private EventBus eventBus;
     private NotificationView.NotificationViewAppearance appearance;
     NotificationCategory currentCategory;
     @Inject MessageServiceFacade messageServiceFacade;
     @Inject JsonUtil jsonUtil;
-    @Inject EventBus eventBus;
     @Inject IplantAnnouncer announcer;
 
     @Inject
     public NotificationPresenterImpl(final NotificationViewFactory viewFactory,
                                      NotificationView.NotificationViewAppearance appearance,
                                      NotificationToolbarView toolbar,
-                                     NotificationMessageProperties messageProperties) {
+                                     NotificationMessageProperties messageProperties,
+                                     NotificationAutoBeanFactory factory,
+                                     EventBus eventBus) {
         this.appearance = appearance;
         this.listStore = createListStore(messageProperties);
         this.view = viewFactory.create(listStore);
+        this.factory = factory;
+        this.eventBus = eventBus;
         currentCategory = NotificationCategory.ALL;
         this.toolbar = toolbar;
         view.setNorthWidget(toolbar);
@@ -132,6 +137,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
     }
 
     private void addEventHandlers() {
+        eventBus.addHandler(JoinTeamRequestProcessed.TYPE, this);
         view.addNotificationGridRefreshEventHandler(this);
         view.addNotificationSelectionEventHandler(this);
         toolbar.addNotificationToolbarDeleteAllClickedEventHandler(this);
@@ -241,23 +247,18 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
     @Override
     public void onNotificationToolbarDeleteClicked(NotificationToolbarDeleteClickedEvent event) {
         final List<NotificationMessage> notifications = view.getSelectedItems();
-        final Command callback = new Command() {
-            @Override
-            public void execute() {
-                view.loadNotifications(view.getCurrentLoadConfig());
-            }
-        };
+
+        deleteNotifications(notifications);
+    }
+
+    void deleteNotifications(List<NotificationMessage> notifications) {
         // do we have any notifications to delete?
         if (notifications != null && !notifications.isEmpty()) {
-            JSONObject obj = new JSONObject();
-            JSONArray arr = new JSONArray();
-            int i = 0;
-            for (NotificationMessage n : notifications) {
-                arr.set(i++, new JSONString(n.getId()));
-            }
-            obj.put("uuids", arr);
+            HasUUIDs hasUUIDs = factory.getHasUUIDs().as();
+            List<String> uuids = convertNotificationsToIds(notifications);
+            hasUUIDs.setUUIDs(uuids);
 
-            messageServiceFacade.deleteMessages(obj, new NotificationCallback<String>() {
+            messageServiceFacade.deleteMessages(hasUUIDs, new NotificationCallback<String>() {
                 @Override
                 public void onFailure(Integer statusCode, Throwable caught) {
                     ErrorHandler.post(appearance.notificationDeleteFail(), caught);
@@ -265,12 +266,16 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
 
                 @Override
                 public void onSuccess(String result) {
-                    callback.execute();
+                    view.loadNotifications(view.getCurrentLoadConfig());
                     DeleteNotificationsUpdateEvent event = new DeleteNotificationsUpdateEvent(notifications);
                     eventBus.fireEvent(event);
                 }
             });
         }
+    }
+
+    List<String> convertNotificationsToIds(List<NotificationMessage> notifications) {
+        return notifications.stream().map(NotificationMessage::getId).collect(Collectors.toList());
     }
 
     @Override
@@ -359,5 +364,11 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
                 listStore));
         loader.useLoadConfig(buildDefaultLoadConfig());
         return loader;
+    }
+
+    @Override
+    public void onJoinTeamRequestProcessed(JoinTeamRequestProcessed event) {
+        NotificationMessage notification = event.getMessage();
+        deleteNotifications(Lists.newArrayList(notification));
     }
 }

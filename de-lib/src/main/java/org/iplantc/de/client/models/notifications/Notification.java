@@ -35,4 +35,7 @@ public interface Notification {
 
     String getSubject();
     void setSubject(String subject);
+
+    @PropertyName("email_template")
+    String getEmailTemplate();
 }
