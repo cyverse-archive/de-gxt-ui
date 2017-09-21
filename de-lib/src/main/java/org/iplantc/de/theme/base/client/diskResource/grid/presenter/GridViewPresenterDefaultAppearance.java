@@ -151,8 +151,8 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     }
 
     @Override
-    public String copyMetadata() {
-        return displayStrings.copyMetadata();
+    public String copyMetadata(String path) {
+        return displayStrings.copyMetadata(path);
     }
 
     @Override
@@ -221,5 +221,15 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     @Override
     public String saving() {
         return displayStrings.saving();
+    }
+
+    @Override
+    public String copyMetadataDlgWidth() {
+        return "400px";
+    }
+
+    @Override
+    public String copyMetadataDlgHeight() {
+        return "350px";
     }
 }

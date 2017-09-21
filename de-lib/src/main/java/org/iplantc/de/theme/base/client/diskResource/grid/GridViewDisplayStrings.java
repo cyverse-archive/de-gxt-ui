@@ -65,7 +65,7 @@ public interface GridViewDisplayStrings extends Messages {
 
     String commentsManageFailure();
 
-    String copyMetadata();
+    String copyMetadata(String path);
 
     String copyMetadataSuccess();
 

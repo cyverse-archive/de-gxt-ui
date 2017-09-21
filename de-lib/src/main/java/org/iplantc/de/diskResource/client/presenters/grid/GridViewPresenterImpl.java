@@ -183,11 +183,10 @@ public class GridViewPresenterImpl implements Presenter,
     @Inject AsyncProviderWrapper<ShareResourceLinkDialog> shareLinkDialogProvider;
     @Inject AsyncProviderWrapper<SaveAsDialog> saveAsDialogProvider;
     @Inject DiskResourceErrorAutoBeanFactory drFactory;
-    @Inject MetadataCopyDialog mCopyDialog;
+    @Inject AsyncProviderWrapper<MetadataCopyDialog> copyMetadataDlgProvider;
     @Inject MetadataView.Presenter.Appearance metadataAppearance;
 
-    @Inject
-    DataLinkFactory dlFactory;
+    @Inject DataLinkFactory dlFactory;
 
     EventBus eventBus;
     private final Appearance appearance;
@@ -373,29 +372,29 @@ public class GridViewPresenterImpl implements Presenter,
     @Override
     public void onRequestCopyMetadataSelected(CopyMetadataSelected event) {
         final DiskResource selected = event.getDiskResource();
-        copyMetadata(selected);
-    }
 
-    void copyMetadata(final DiskResource selected) {
-        mCopyDialog.clearHandlers();
-        mCopyDialog.addOkButtonSelectHandler(selectEvent -> {
-            List<HasPath> paths = mCopyDialog.getValue();
-            if (paths == null || paths.size() == 0) {
-                AlertMessageBox amb = new AlertMessageBox(appearance.copyMetadata(),
-                                                          appearance.copyMetadataNoResources());
-                amb.show();
-                return;
+        copyMetadataDlgProvider.get(new AsyncCallback<MetadataCopyDialog>() {
+            @Override
+            public void onFailure(Throwable throwable) {}
+
+            @Override
+            public void onSuccess(MetadataCopyDialog dialog) {
+                dialog.addOkButtonSelectHandler(selectEvent -> {
+                    List<HasPath> paths = dialog.getValue();
+                    if (paths == null || paths.size() == 0) {
+                        AlertMessageBox amb = new AlertMessageBox(appearance.copyMetadata(selected.getPath()),
+                                                                  appearance.copyMetadataNoResources());
+                        amb.show();
+                        return;
+                    }
+                    dialog.mask(appearance.loadingMask());
+                    copyMetadata(dialog.getSource(), paths, dialog);
+
+                });
+                dialog.addCancelButtonSelectHandler(selectEvent -> dialog.hide());
+                dialog.show(selected);
             }
-            mCopyDialog.mask(appearance.loadingMask());
-            doCopyMetadata(mCopyDialog.getSource(), paths);
-
         });
-        mCopyDialog.addCancelButtonSelectHandler(selectEvent -> mCopyDialog.hide());
-        mCopyDialog.clear();
-        mCopyDialog.setSource(selected);
-        mCopyDialog.setHeader(selected.getPath());
-        mCopyDialog.unmask();
-        mCopyDialog.show();
     }
 
     private Splittable buildTargetPaths(List<HasPath> paths) {
@@ -662,10 +661,10 @@ public class GridViewPresenterImpl implements Presenter,
                                   .equalsIgnoreCase(NavigationView.FAVORITES_FOLDER_NAME);
     }
 
-    private void doCopyMetadata(final DiskResource selected, List<HasPath> paths) {
+    private void copyMetadata(final DiskResource selected, List<HasPath> paths, MetadataCopyDialog dialog) {
         diskResourceService.copyMetadata(selected.getId(),
                                          buildTargetPaths(paths),
-                                         new CopyMetadataCallback(mCopyDialog));
+                                         new CopyMetadataCallback(dialog));
     }
 
     @Override

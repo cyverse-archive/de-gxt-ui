@@ -172,7 +172,7 @@ public interface GridView extends IsWidget,
 
             String commentsManageFailure();
 
-            String copyMetadata();
+            String copyMetadata(String path);
 
             String copyMetadataSuccess();
 
@@ -201,6 +201,10 @@ public interface GridView extends IsWidget,
             String loadingMask();
 
             String saving();
+
+            String copyMetadataDlgWidth();
+
+            String copyMetadataDlgHeight();
         }
 
         void deSelectDiskResources();
