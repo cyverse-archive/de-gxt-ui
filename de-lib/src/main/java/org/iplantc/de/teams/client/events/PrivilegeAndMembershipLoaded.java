@@ -20,12 +20,13 @@ public class PrivilegeAndMembershipLoaded
             new Type<PrivilegeAndMembershipLoadedHandler>();
 
     private boolean isMember;
+    private boolean hasVisibleMembers;
     private boolean isAdmin;
 
-    public PrivilegeAndMembershipLoaded(boolean isAdmin,
-                                        boolean isMember) {
+    public PrivilegeAndMembershipLoaded(boolean isAdmin, boolean isMember, boolean hasVisibleMembers) {
         this.isAdmin = isAdmin;
         this.isMember = isMember;
+        this.hasVisibleMembers = hasVisibleMembers;
     }
 
     public boolean isMember() {
@@ -46,5 +47,9 @@ public class PrivilegeAndMembershipLoaded
 
     protected void dispatch(PrivilegeAndMembershipLoadedHandler handler) {
         handler.onPrivilegeAndMembershipLoaded(this);
+    }
+
+    public boolean hasVisibleMembers() {
+        return hasVisibleMembers;
     }
 }

@@ -188,7 +188,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
         FilterPagingLoadConfig config = view.getCurrentLoadConfig();
         FilterConfig filterBean = new FilterConfigBean();
         if (!NotificationCategory.ALL.equals(currentCategory)) {
-            filterBean.setField(currentCategory.toString());
+            filterBean.setField(currentCategory.name());
         }
 
         List<FilterConfig> filters = new ArrayList<>();

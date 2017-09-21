@@ -7,6 +7,8 @@ import org.iplantc.de.teams.client.TeamsView;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 
 /**
  * The default appearance that will be used for the Teams view
@@ -55,7 +57,7 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
 
     @Override
     public int nameColumnWidth() {
-        return 300;
+        return 200;
     }
 
     @Override
@@ -120,7 +122,7 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
 
     @Override
     public int editTeamWidth() {
-        return 650;
+        return 800;
     }
 
     @Override
@@ -129,12 +131,15 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     }
 
     @Override
-    public String editTeamHeading(Group group) {
+    public String editTeamHeading(Group group, boolean isAdmin) {
         if (group == null) {
             return displayStrings.createNewTeam();
-        } else {
+        }
+        if (isAdmin) {
             return displayStrings.editTeamHeader(group.getSubjectDisplayName());
         }
+
+        return displayStrings.detailsHeading(group.getSubjectDisplayName());
     }
 
     @Override
@@ -258,8 +263,8 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     }
 
     @Override
-    public String leaveTeamWarning() {
-        return displayStrings.leaveTeamWarning();
+    public SafeHtml leaveTeamWarning() {
+        return SafeHtmlUtils.fromTrustedString(displayStrings.leaveTeamWarning());
     }
 
     @Override
@@ -303,8 +308,8 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
         return 125;
     }
 
-    public String deleteTeamWarning() {
-        return displayStrings.deleteTeamWarning();
+    public SafeHtml deleteTeamWarning() {
+        return SafeHtmlUtils.fromTrustedString(displayStrings.deleteTeamWarning());
     }
 
     @Override
@@ -360,5 +365,35 @@ public class TeamsViewDefaultAppearance implements TeamsView.TeamsViewAppearance
     @Override
     public String requestToJoinSubmitted(Group team) {
         return displayStrings.requestToJoinSubmitted(team.getSubjectDisplayName());
+    }
+
+    @Override
+    public int institutionColumnWidth() {
+        return 200;
+    }
+
+    @Override
+    public String institutionColumnLabel() {
+        return iplantDisplayStrings.institution();
+    }
+
+    @Override
+    public String getCreatorNamesFailed() {
+        return displayStrings.getCreatorNamesFailed();
+    }
+
+    @Override
+    public int creatorColumnWidth() {
+        return 200;
+    }
+
+    @Override
+    public String creatorColumnLabel() {
+        return displayStrings.creatorColumnLabel();
+    }
+
+    @Override
+    public SafeHtml editTeamHelpText() {
+        return displayStrings.editTeamHelpText();
     }
 }

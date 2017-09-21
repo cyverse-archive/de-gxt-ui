@@ -9,6 +9,7 @@ import org.iplantc.de.teams.client.events.TeamSearchResultLoad;
 import org.iplantc.de.teams.client.models.TeamsFilter;
 
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import java.util.List;
@@ -65,7 +66,7 @@ public interface TeamsView extends IsWidget,
 
         int editTeamHeight();
 
-        String editTeamHeading(Group group);
+        String editTeamHeading(Group group, boolean isAdmin);
 
         ImageResource plusImage();
 
@@ -115,7 +116,7 @@ public interface TeamsView extends IsWidget,
 
         String leaveTeamHeader(Group team);
 
-        String leaveTeamWarning();
+        SafeHtml leaveTeamWarning();
 
         int leaveTeamWidth();
 
@@ -131,7 +132,7 @@ public interface TeamsView extends IsWidget,
 
         int editTeamAdjustedHeight(boolean isAdmin, boolean isMember);
 
-        String deleteTeamWarning();
+        SafeHtml deleteTeamWarning();
 
         int deleteTeamWidth();
 
@@ -154,6 +155,18 @@ public interface TeamsView extends IsWidget,
         String joinTeamText(Group team);
 
         String requestToJoinSubmitted(Group team);
+
+        int institutionColumnWidth();
+
+        String institutionColumnLabel();
+
+        String getCreatorNamesFailed();
+
+        int creatorColumnWidth();
+
+        String creatorColumnLabel();
+
+        SafeHtml editTeamHelpText();
     }
 
     /**

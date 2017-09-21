@@ -426,9 +426,10 @@ public class EditTeamPresenterImplTest {
     }
 
     @Test
-    public void addPrivilegesToTeam() {
+    public void addPrivilegesToTeam_createMode() {
         IsHideable hideableMock = mock(IsHideable.class);
         EditTeamPresenterImpl spy = spy(uut);
+        spy.mode = EditTeamView.MODE.CREATE;
 
         /** CALL METHOD UNDER TEST **/
         spy.addPrivilegesToTeam(groupMock, hideableMock);
@@ -441,6 +442,24 @@ public class EditTeamPresenterImplTest {
         privilegeListCaptor.getValue().onSuccess(privilegeListMock);
         verify(spy).addMembersToTeam(eq(groupMock),
                                      eq(hideableMock));
+    }
+
+    @Test
+    public void addPrivilegesToTeam_editMode() {
+        IsHideable hideableMock = mock(IsHideable.class);
+
+        /** CALL METHOD UNDER TEST **/
+        uut.addPrivilegesToTeam(groupMock, hideableMock);
+
+        verify(updateRequestListMock).setRequests(listUpdateRequestMock);
+        verify(serviceFacadeMock).updateTeamPrivileges(eq(groupMock),
+                                                       eq(updateRequestListMock),
+                                                       privilegeListCaptor.capture());
+
+        privilegeListCaptor.getValue().onSuccess(privilegeListMock);
+        verify(hideableMock).hide();
+        verify(progressDlgMock).finishProgress();
+        verify(viewMock).unmask();
     }
 
     @Test
@@ -721,5 +740,18 @@ public class EditTeamPresenterImplTest {
         voidCaptor.getValue().onSuccess(null);
         verify(hideableMock).hide();
         verify(announcerMock).schedule(isA(IplantAnnouncementConfig.class));
+    }
+
+    @Test
+    public void addSingleMemberToTeam() {
+
+        /** CALL METHOD UNDER TEST **/
+        uut.addSingleMemberToTeam(groupMock, subjectMock, privilegeMock);
+
+        verify(serviceFacadeMock).addMembersToTeam(eq(groupMock), anyList(), updateMemberCaptor.capture());
+
+        updateMemberCaptor.getValue().onSuccess(updateMemberResultListMock);
+        verify(viewMock).unmask();
+        verify(viewMock).addMembers(anyList());
     }
 }

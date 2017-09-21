@@ -20,4 +20,6 @@ public interface GroupProperties extends PropertyAccess<Group> {
 
     ValueProvider<Group, String> description();
 
+    ValueProvider<Group, String> creator();
+
 }

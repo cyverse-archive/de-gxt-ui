@@ -44,6 +44,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.data.shared.event.StoreAddEvent;
+import com.sencha.gxt.data.shared.event.StoreRemoveEvent;
 import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
@@ -56,7 +58,9 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                                               UserSearchResultSelected.UserSearchResultSelectedEventHandler,
                                               RemoveMemberPrivilegeSelected.RemoveMemberPrivilegeSelectedHandler,
                                               RemoveNonMemberPrivilegeSelected.RemoveNonMemberPrivilegeSelectedHandler,
-                                              AddPublicUserSelected.AddPublicUserSelectedHandler {
+                                              AddPublicUserSelected.AddPublicUserSelectedHandler,
+                                              StoreAddEvent.StoreAddHandler<Privilege>,
+                                              StoreRemoveEvent.StoreRemoveHandler<Privilege> {
 
     private EditTeamView view;
     private GroupServiceFacade serviceFacade;
@@ -97,6 +101,8 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         view.addRemoveMemberPrivilegeSelectedHandler(this);
         view.addRemoveNonMemberPrivilegeSelectedHandler(this);
         view.addAddPublicUserSelectedHandler(this);
+        view.addStoreAddHandler(this);
+        view.addStoreRemoveHandler(this);
     }
 
     @Override
@@ -149,7 +155,8 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
             @Override
             public void onSuccess(List<Subject> subjects) {
-                ensureHandlers().fireEvent(new PrivilegeAndMembershipLoaded(isAdmin, isMember(subjects)));
+                boolean hasVisibleMembers = subjects != null && !subjects.isEmpty();
+                ensureHandlers().fireEvent(new PrivilegeAndMembershipLoaded(isAdmin, isMember(subjects), hasVisibleMembers));
                 List<Privilege> filteredPrivs = filterExtraPrivileges(privileges);
                 renamePublicUser(filteredPrivs);
                 Map<Boolean, List<Privilege>> mapIsMemberPriv = getMapIsMemberPrivilege(filteredPrivs, subjects);
@@ -248,7 +255,17 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
 
             @Override
             public void onSuccess(List<Privilege> privileges) {
-                addMembersToTeam(group, hideable);
+                /* Only in Create mode do all members need to be added to a team
+                 * In Edit mode, members are added immediately using the addSingleMemberToTeam method
+                 */
+                if (mode == EditTeamView.MODE.CREATE) {
+                    addMembersToTeam(group, hideable);
+                } else {
+                    progressDlg.finishProgress();
+                    hideable.hide();
+                    view.unmask();
+                    ensureHandlers().fireEvent(new TeamSaved(group));
+                }
             }
         });
     }
@@ -276,6 +293,23 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         });
     }
 
+    void addSingleMemberToTeam(Group team, Subject member, Privilege privilege) {
+        view.mask(appearance.loadingMask());
+        serviceFacade.addMembersToTeam(team, Lists.newArrayList(member), new AsyncCallback<List<UpdateMemberResult>>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                ErrorHandler.post(throwable);
+                view.unmask();
+            }
+
+            @Override
+            public void onSuccess(List<UpdateMemberResult> updateMemberResults) {
+                view.unmask();
+                view.addMembers(Lists.newArrayList(privilege));
+            }
+        });
+    }
+
     @Override
     public void onUserSearchResultSelected(UserSearchResultSelected userSearchResultSelected) {
         Subject subject = userSearchResultSelected.getSubject();
@@ -285,10 +319,13 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         privilege.setPrivilegeType(PrivilegeType.read);
 
         if (SEARCH_MEMBERS_TAG.equals(tag)) {
-            view.addMembers(Lists.newArrayList(privilege));
+            if (mode == EditTeamView.MODE.EDIT) {
+                addSingleMemberToTeam(originalGroup, subject, privilege);
+            } else {
+                view.addMembers(Lists.newArrayList(privilege));
+            }
         } else {
             view.addNonMembers(Lists.newArrayList(privilege));
-            view.setPublicUserButtonVisibility(!hasPublicUser());
         }
 
     }
@@ -330,7 +367,6 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
         // No service calls required in CREATE mode, remove directly from store
         if (EditTeamView.MODE.CREATE == mode) {
             view.removeNonMemberPrivilege(privilege);
-            view.setPublicUserButtonVisibility(!hasPublicUser());
         } else {
             view.mask(appearance.loadingMask());
             removePrivilege(privilege, false);
@@ -358,7 +394,6 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
                     view.removeMemberPrivilege(privilege);
                 } else {
                     view.removeNonMemberPrivilege(privilege);
-                    view.setPublicUserButtonVisibility(!hasPublicUser());
                 }
                 view.unmask();
             }
@@ -518,6 +553,16 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     @Override
     public void onAddPublicUserSelected(AddPublicUserSelected event) {
         addPublicUser();
+    }
+
+    @Override
+    public void onAdd(StoreAddEvent<Privilege> event) {
+        view.setPublicUserButtonVisibility(!hasPublicUser());
+    }
+
+    @Override
+    public void onRemove(StoreRemoveEvent<Privilege> event) {
+        view.setPublicUserButtonVisibility(!hasPublicUser());
     }
 
     public Map<Boolean,List<Privilege>> getMapIsMemberPrivilege(List<Privilege> privileges, List<Subject> members) {

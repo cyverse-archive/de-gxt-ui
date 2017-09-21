@@ -12,6 +12,7 @@ import org.iplantc.de.teams.client.events.TeamSaved;
 import org.iplantc.de.teams.shared.Teams;
 
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
@@ -32,10 +33,12 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
     private TextButton leaveBtn;
     private TextButton deleteBtn;
     private TextButton requestToJoinBtn;
+    private Group team;
 
     @Inject
     public EditTeamDialog(EditTeamView.Presenter presenter,
                           TeamsView.TeamsViewAppearance appearance) {
+        super(true);
         this.presenter = presenter;
         this.appearance = appearance;
 
@@ -46,12 +49,14 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
         setHideOnButtonClick(false);
         setButtons();
         setHandlers();
+        addHelp(new HTML(appearance.editTeamHelpText()));
     }
 
-    public void show(Group group) {
-        presenter.go(this, group);
+    public void show(Group team) {
+        this.team = team;
+        presenter.go(this, team);
 
-        setHeading(appearance.editTeamHeading(group));
+        setHeading(appearance.editTeamHeading(team, false));
         super.show();
 
         ensureDebugId(Teams.Ids.EDIT_TEAM_DIALOG);
@@ -67,6 +72,11 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
         super.onEnsureDebugId(baseID);
 
         presenter.setViewDebugId(Teams.Ids.EDIT_TEAM_DIALOG);
+        leaveBtn.asWidget().ensureDebugId(baseID + Teams.Ids.LEAVE_TEAM_BTN);
+        deleteBtn.asWidget().ensureDebugId(baseID + Teams.Ids.DELETE_TEAM_BTN);
+        requestToJoinBtn.asWidget().ensureDebugId(baseID + Teams.Ids.JOIN_TEAM_BTN);
+        getButton(PredefinedButton.OK).ensureDebugId(baseID + Teams.Ids.OK_BTN);
+        getButton(PredefinedButton.CANCEL).ensureDebugId(baseID + Teams.Ids.CANCEL_BTN);
     }
 
     void setButtons() {
@@ -110,10 +120,15 @@ public class EditTeamDialog extends IPlantDialog implements TeamSaved.HasTeamSav
     public void onPrivilegeAndMembershipLoaded(PrivilegeAndMembershipLoaded event) {
         boolean isAdmin = event.isAdmin();
         boolean isMember = event.isMember();
+        boolean hasVisibleMembers = event.hasVisibleMembers();
+        setHeading(appearance.editTeamHeading(team, isAdmin));
         deleteBtn.setVisible(isAdmin);
         leaveBtn.setVisible(isMember);
         requestToJoinBtn.setVisible(!isAdmin && !isMember);
-        setHeight(appearance.editTeamAdjustedHeight(isAdmin, isMember));
+        setHeight(appearance.editTeamAdjustedHeight(isAdmin, hasVisibleMembers));
+        if (!isAdmin) {
+            buttonBar.remove(getButton(PredefinedButton.OK));
+        }
 
         buttonBar.forceLayout();
     }

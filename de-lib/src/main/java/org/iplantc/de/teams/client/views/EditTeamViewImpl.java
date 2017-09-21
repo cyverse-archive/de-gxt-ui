@@ -1,11 +1,13 @@
 package org.iplantc.de.teams.client.views;
 
 import org.iplantc.de.client.models.UserInfo;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.groups.Privilege;
 import org.iplantc.de.client.models.groups.PrivilegeType;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
+import org.iplantc.de.collaborators.client.views.cells.SubjectNameCell;
 import org.iplantc.de.commons.client.validators.GroupNameValidator;
 import org.iplantc.de.teams.client.EditTeamView;
 import org.iplantc.de.teams.client.TeamsView;
@@ -30,6 +32,8 @@ import com.google.inject.Inject;
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
 import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.data.shared.ListStore;
+import com.sencha.gxt.data.shared.event.StoreAddEvent;
+import com.sencha.gxt.data.shared.event.StoreRemoveEvent;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
@@ -44,6 +48,7 @@ import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class EditTeamViewImpl extends Composite implements EditTeamView,
@@ -54,6 +59,14 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     }
 
     interface MyUiBinder extends UiBinder<Widget, EditTeamViewImpl> {
+    }
+
+    class TeamMemberComparator implements Comparator<Subject> {
+
+        @Override
+        public int compare(Subject o1, Subject o2) {
+            return o1.getName().compareToIgnoreCase(o2.getName());
+        }
     }
 
     private static MyUiBinder uiBinder = GWT.create(EditTeamViewImpl.MyUiBinder.class);
@@ -82,6 +95,9 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     private PrivilegeProperties privProps;
     @UiField(provided = true) TeamsView.TeamsViewAppearance appearance;
     String currentUserId;
+    private SubjectNameCell memberNameCell;
+    private SubjectNameCell nonMemberNameCell;
+    List<ColumnConfig<Privilege, PrivilegeType>> privilegeColumns = Lists.newArrayList();
 
     @Inject
     public EditTeamViewImpl(TeamsView.TeamsViewAppearance appearance,
@@ -113,45 +129,74 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
 
     void createColumnModels() {
         List<ColumnConfig<Privilege, ?>> nonMemberConfigs = Lists.newArrayList();
-        ColumnConfig<Privilege, String> nonMemberName = new ColumnConfig<>(privProps.name(),
+        ColumnConfig<Privilege, Subject> nonMemberName = new ColumnConfig<>(privProps.name(),
                                                                            appearance.nameColumnWidth(),
                                                                            appearance.nameColumnLabel());
+        ColumnConfig<Privilege, String> nonMemberInstitution = new ColumnConfig<>(privProps.institution(),
+                                                                                  appearance.institutionColumnWidth(),
+                                                                                  appearance.institutionColumnLabel());
         ColumnConfig<Privilege, PrivilegeType> nonMemberPrivilege = new ColumnConfig<>(privProps.privilegeType(),
                                                                                 appearance.privilegeColumnWidth(),
                                                                                 appearance.privilegeColumnLabel());
-        nonMemberPrivilege.setCell(createPrivilegeComboBox());
+        nonMemberNameCell = new SubjectNameCell(false);
+        nonMemberName.setCell(nonMemberNameCell);
+        nonMemberName.setComparator(new TeamMemberComparator());
+        nonMemberPrivilege.setCell(createPrivilegeComboBox(false));
+        nonMemberPrivilege.setHideable(false);
         nonMemberConfigs.add(nonMemberName);
+        nonMemberConfigs.add(nonMemberInstitution);
         nonMemberConfigs.add(nonMemberPrivilege);
         nonMembersCm = new ColumnModel<>(nonMemberConfigs);
 
 
         List<ColumnConfig<Privilege, ?>> memberConfigs = Lists.newArrayList();
-        ColumnConfig<Privilege, String> memberName = new ColumnConfig<>(privProps.name(),
+        ColumnConfig<Privilege, Subject> memberName = new ColumnConfig<>(privProps.name(),
                                                                         appearance.nameColumnWidth(),
                                                                         appearance.nameColumnLabel());
+        ColumnConfig<Privilege, String> memberInstitution = new ColumnConfig<>(privProps.institution(),
+                                                                               appearance.institutionColumnWidth(),
+                                                                               appearance.institutionColumnLabel());
         ColumnConfig<Privilege, PrivilegeType> memberPrivilege = new ColumnConfig<>(privProps.privilegeType(),
                                                                                     appearance.privilegeColumnWidth(),
                                                                                     appearance.privilegeColumnLabel());
-        memberPrivilege.setCell(createPrivilegeComboBox());
+
+        memberNameCell = new SubjectNameCell(false);
+        memberName.setCell(memberNameCell);
+        memberName.setComparator(new TeamMemberComparator());
+        memberPrivilege.setCell(createPrivilegeComboBox(true));
+        memberPrivilege.setHideable(false);
         memberConfigs.add(memberName);
+        memberConfigs.add(memberInstitution);
         memberConfigs.add(memberPrivilege);
         membersCm = new ColumnModel<>(memberConfigs);
+
+        privilegeColumns.add(nonMemberPrivilege);
+        privilegeColumns.add(memberPrivilege);
     }
 
-    ComboBoxCell<PrivilegeType> createPrivilegeComboBox() {
+    ComboBoxCell<PrivilegeType> createPrivilegeComboBox(boolean forMembers) {
         ListStore<PrivilegeType> comboListStore = new ListStore<>(PrivilegeType::getLabel);
-        List<PrivilegeType> types = Lists.newArrayList(PrivilegeType.admin,
-                                                       PrivilegeType.readOptin,
-                                                       PrivilegeType.read,
-                                                       PrivilegeType.optin,
-                                                       PrivilegeType.view);
-        comboListStore.addAll(types);
+        comboListStore.addAll(forMembers ? getMemberPrivilegeList() : getNonMemberPrivilegeList());
         ComboBoxCell<PrivilegeType> combo = new ComboBoxCell<>(comboListStore, PrivilegeType::getLabel);
         combo.setTriggerAction(ComboBoxCell.TriggerAction.ALL);
         combo.setForceSelection(true);
         combo.setAllowBlank(false);
         combo.setWidth(appearance.privilegeComboWidth());
         return combo;
+    }
+
+    List<PrivilegeType> getMemberPrivilegeList() {
+        return Lists.newArrayList(PrivilegeType.admin,
+                                  PrivilegeType.readOptin,
+                                  PrivilegeType.read);
+    }
+
+    List<PrivilegeType> getNonMemberPrivilegeList() {
+        return Lists.newArrayList(PrivilegeType.admin,
+                                  PrivilegeType.readOptin,
+                                  PrivilegeType.read,
+                                  PrivilegeType.optin,
+                                  PrivilegeType.view);
     }
 
     void createListStores() {
@@ -164,7 +209,7 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
 
     public void edit(Group group) {
         editorDriver.edit(group);
-        nameEditor.setValue(group.getSubjectDisplayName());
+        nameEditor.setValue(group.getGroupShortName());
     }
 
     @Override
@@ -222,6 +267,10 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
 
             nameEditor.enable();
             descriptionEditor.enable();
+        } else {
+            privilegeColumns.forEach(columnConfig -> columnConfig.setHidden(true));
+            nonMembersGrid.getView().refresh(true);
+            membersGrid.getView().refresh(true);
         }
         vlc.forceLayout();
     }
@@ -242,6 +291,17 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     }
 
     @Override
+    public void onSelectionChanged(SelectionChangedEvent<Privilege> selectionChangedEvent) {
+        Privilege memberSelection = membersGrid.getSelectionModel().getSelectedItem();
+        boolean isSelfMember = memberSelection != null && currentUserId.equals(memberSelection.getSubject().getId());
+        removeMember.setEnabled(memberSelection != null && !isSelfMember);
+
+        Privilege nonMemberSelection = nonMembersGrid.getSelectionModel().getSelectedItem();
+        boolean isSelfNonMember = nonMemberSelection != null && currentUserId.equals(nonMemberSelection.getSubject().getId());
+        removeNonMember.setEnabled(nonMemberSelection != null && !isSelfNonMember);
+    }
+
+    @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
 
@@ -253,6 +313,8 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
         nonMemberSearch.asWidget().ensureDebugId(baseID + Teams.Ids.NON_MEMBER_SEARCH);
         membersGrid.ensureDebugId(baseID + Teams.Ids.MEMBERS_GRID);
         nonMembersGrid.ensureDebugId(baseID + Teams.Ids.NON_MEMBERS_GRID);
+        memberNameCell.setBaseDebugId(baseID + Teams.Ids.MEMBERS_GRID);
+        nonMemberNameCell.setBaseDebugId(baseID + Teams.Ids.NON_MEMBERS_GRID);
     }
 
     @Override
@@ -273,18 +335,17 @@ public class EditTeamViewImpl extends Composite implements EditTeamView,
     }
 
     @Override
-    public void onSelectionChanged(SelectionChangedEvent<Privilege> selectionChangedEvent) {
-        Privilege memberSelection = membersGrid.getSelectionModel().getSelectedItem();
-        boolean isSelfMember = memberSelection.getSubject().getId().equals(currentUserId);
-        removeMember.setEnabled(memberSelection != null && !isSelfMember);
-
-        Privilege nonMemberSelection = nonMembersGrid.getSelectionModel().getSelectedItem();
-        boolean isSelfNonMember = nonMemberSelection.getSubject().getId().equals(currentUserId);
-        removeNonMember.setEnabled(nonMemberSelection != null && !isSelfNonMember);
+    public HandlerRegistration addAddPublicUserSelectedHandler(AddPublicUserSelected.AddPublicUserSelectedHandler handler) {
+        return addHandler(handler, AddPublicUserSelected.TYPE);
     }
 
     @Override
-    public HandlerRegistration addAddPublicUserSelectedHandler(AddPublicUserSelected.AddPublicUserSelectedHandler handler) {
-        return addHandler(handler, AddPublicUserSelected.TYPE);
+    public HandlerRegistration addStoreAddHandler(StoreAddEvent.StoreAddHandler<Privilege> handler) {
+        return nonMembersListStore.addStoreAddHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addStoreRemoveHandler(StoreRemoveEvent.StoreRemoveHandler<Privilege> handler) {
+        return nonMembersListStore.addStoreRemoveHandler(handler);
     }
 }

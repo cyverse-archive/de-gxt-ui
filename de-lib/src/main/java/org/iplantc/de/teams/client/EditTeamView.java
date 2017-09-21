@@ -17,6 +17,9 @@ import org.iplantc.de.teams.client.events.TeamSaved;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
+import com.sencha.gxt.data.shared.event.StoreAddEvent;
+import com.sencha.gxt.data.shared.event.StoreRemoveEvent;
+
 import java.util.List;
 
 /**
@@ -27,7 +30,9 @@ public interface EditTeamView extends IsWidget,
                                       UserSearchResultSelected.HasUserSearchResultSelectedEventHandlers,
                                       RemoveMemberPrivilegeSelected.HasRemoveMemberPrivilegeSelectedHandlers,
                                       RemoveNonMemberPrivilegeSelected.HasRemoveNonMemberPrivilegeSelectedHandlers,
-                                      AddPublicUserSelected.HasAddPublicUserSelectedHandlers {
+                                      AddPublicUserSelected.HasAddPublicUserSelectedHandlers,
+                                      StoreAddEvent.HasStoreAddHandlers<Privilege>,
+                                      StoreRemoveEvent.HasStoreRemoveHandler<Privilege> {
 
     enum MODE {
         CREATE,

@@ -56,6 +56,10 @@ public class SaveTeamProgressDialog extends ProgressMessageBox {
         stepNumber++;
     }
 
+    public void finishProgress() {
+        updateProgress( (totalSteps / totalSteps), appearance.teamSuccessfullySaved());
+    }
+
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);

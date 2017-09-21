@@ -38,13 +38,14 @@ public final class SubjectNameCell extends AbstractCell<Subject> {
                                Subject value,
                                NativeEvent event,
                                ValueUpdater<Subject> valueUpdater) {
-        if (value == null || !Group.GROUP_IDENTIFIER.equals(value.getSourceId())) {
+        if (value == null || !Group.GROUP_IDENTIFIER.equals(value.getSourceId()) || !clickableGroupName) {
             return;
         }
 
         Element eventTargetElement = Element.as(event.getEventTarget());
-        if ((Event.as(event).getTypeInt() == Event.ONCLICK)
-            && eventTargetElement.getAttribute("name").equalsIgnoreCase(SubjectNameCellAppearance.CLICKABLE_ELEMENT_NAME)) {
+        if (Event.as(event).getTypeInt() == Event.ONCLICK
+            && eventTargetElement.getAttribute("name").equalsIgnoreCase(SubjectNameCellAppearance.CLICKABLE_ELEMENT_NAME)
+            && hasHandlers != null) {
             hasHandlers.fireEvent(new GroupNameSelected(value));
         }
     }
