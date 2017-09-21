@@ -3,6 +3,7 @@ package org.iplantc.de.client.services;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.userSettings.UserSetting;
+import org.iplantc.de.client.models.webhooks.WebhookList;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.json.client.JSONObject;
@@ -29,5 +30,9 @@ public interface UserSessionServiceFacade {
     void logout(AsyncCallback<String> callback);
 
     void testWebhook(String url, AsyncCallback<String> callback);
+
+    void updateWebhooks(WebhookList hooks, AsyncCallback<WebhookList> callback);
+
+    void getWebhooks(AsyncCallback<WebhookList> callback);
 
 }

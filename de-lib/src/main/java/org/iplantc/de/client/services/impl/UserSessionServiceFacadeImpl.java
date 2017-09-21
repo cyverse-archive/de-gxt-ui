@@ -10,6 +10,7 @@ import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.userSettings.UserSetting;
 import org.iplantc.de.client.models.userSettings.UserSettingAutoBeanFactory;
+import org.iplantc.de.client.models.webhooks.WebhookList;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
@@ -136,8 +137,20 @@ public class UserSessionServiceFacadeImpl implements UserSessionServiceFacade {
 
     @Override
     public void testWebhook(String url, AsyncCallback<String> callback) {
+        //this needs to be moved up to service
       ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, url, "{\"text\": \"This is a test message from DE.\"}");
       deServiceFacade.getServiceData(wrapper,callback);
+    }
+
+    @Override
+    public void updateWebhooks(WebhookList hooks, AsyncCallback<WebhookList> callback) {
+        
+    }
+
+
+    @Override
+    public void getWebhooks(AsyncCallback<WebhookList> callback) {
+
     }
 
 }
