@@ -122,7 +122,7 @@ public class TeamsPresenterImplTest {
 
         /** CALL METHOD UNDER TEST **/
         spy.go();
-        verify(spy).getSelectedTeams();
+        verify(spy).getFilteredTeams();
     }
 
     @Test
@@ -159,7 +159,7 @@ public class TeamsPresenterImplTest {
 
         /** CALL METHOD UNDER TEST **/
         spy.onTeamFilterSelectionChanged(eventMock);
-        verify(spy, times(0)).getSelectedTeams();
+        verify(spy, times(0)).getFilteredTeams();
     }
 
     @Test
@@ -171,7 +171,7 @@ public class TeamsPresenterImplTest {
 
         /** CALL METHOD UNDER TEST **/
         spy.onTeamFilterSelectionChanged(eventMock);
-        verify(spy).getSelectedTeams();
+        verify(spy).getFilteredTeams();
     }
 
     @Test
@@ -180,7 +180,7 @@ public class TeamsPresenterImplTest {
         spy.currentFilter = TeamsFilter.ALL;
 
         /** CALL METHOD UNDER TEST **/
-        spy.getSelectedTeams();
+        spy.getFilteredTeams();
         verify(spy).getAllTeams();
     }
 
@@ -190,7 +190,7 @@ public class TeamsPresenterImplTest {
         spy.currentFilter = TeamsFilter.MY_TEAMS;
 
         /** CALL METHOD UNDER TEST **/
-        spy.getSelectedTeams();
+        spy.getFilteredTeams();
         verify(spy).getMyTeams();
     }
 

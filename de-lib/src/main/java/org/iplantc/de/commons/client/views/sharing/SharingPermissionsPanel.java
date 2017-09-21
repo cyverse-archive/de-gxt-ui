@@ -6,10 +6,9 @@ import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
-import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
-import org.iplantc.de.collaborators.client.views.dialogs.ManageCollaboratorsDialog;
+import org.iplantc.de.collaborators.client.views.dialogs.ChooseCollaboratorsDialog;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -86,7 +85,7 @@ public class SharingPermissionsPanel extends Composite
     private FastMap<List<Sharing>> sharingMap;
 
     @Inject IplantAnnouncer announcer;
-    @Inject AsyncProviderWrapper<ManageCollaboratorsDialog> collaboratorsDialogProvider;
+    @Inject AsyncProviderWrapper<ChooseCollaboratorsDialog> collaboratorsDialogProvider;
 
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
@@ -128,16 +127,16 @@ public class SharingPermissionsPanel extends Composite
 
     @UiHandler("chooseCollabBtn")
     void chooseCollabBtnSelected(SelectEvent event) {
-        collaboratorsDialogProvider.get(new AsyncCallback<ManageCollaboratorsDialog>() {
+        collaboratorsDialogProvider.get(new AsyncCallback<ChooseCollaboratorsDialog>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
             }
 
             @Override
-            public void onSuccess(ManageCollaboratorsDialog result) {
+            public void onSuccess(ChooseCollaboratorsDialog result) {
                 result.setModal(true);
-                result.show(ManageCollaboratorsView.MODE.SELECT);
+                result.show();
                 result.addOkButtonSelectHandler(new SelectHandler() {
 
                     @Override

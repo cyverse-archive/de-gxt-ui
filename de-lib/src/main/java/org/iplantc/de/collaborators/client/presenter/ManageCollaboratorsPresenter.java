@@ -11,6 +11,7 @@ import org.iplantc.de.client.models.groups.GroupAutoBeanFactory;
 import org.iplantc.de.client.models.groups.UpdateMemberResult;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
+import org.iplantc.de.collaborators.client.CollaborationView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.AddGroupSelected;
 import org.iplantc.de.collaborators.client.events.CollaboratorsLoadedEvent;
@@ -37,7 +38,6 @@ import com.google.common.collect.Lists;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.Dialog;
@@ -158,7 +158,6 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     @Inject EventBus eventBus;
     @Inject IplantAnnouncer announcer;
     @Inject UserInfo userInfo;
-    private ManageCollaboratorsViewFactory factory;
     private GroupAutoBeanFactory groupFactory;
     private GroupServiceFacade groupServiceFacade;
     private CollaboratorsServiceFacade collabServiceFacade;
@@ -175,11 +174,13 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
                                         GroupServiceFacade groupServiceFacade,
                                         CollaboratorsServiceFacade collabServiceFacade,
                                         ManageCollaboratorsView.Appearance groupAppearance) {
-        this.factory = factory;
         this.groupFactory = groupFactory;
         this.groupServiceFacade = groupServiceFacade;
         this.collabServiceFacade = collabServiceFacade;
         this.groupAppearance = groupAppearance;
+        this.view = factory.create(getCollaboratorDNDHandler());
+
+        addEventHandlers();
     }
 
     void addEventHandlers() {
@@ -196,13 +197,9 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
      * org.iplantc.de.commons.client.presenter.Presenter#go(com.google.gwt.user.client.ui.HasOneWidget )
      */
     @Override
-    public void go(HasOneWidget container, ManageCollaboratorsView.MODE mode) {
-        CollaboratorDNDHandler dndHandler = getCollaboratorDNDHandler();
-        this.view = factory.create(mode, dndHandler);
+    public void go() {
         loadCurrentCollaborators();
         getGroups();
-        addEventHandlers();
-        container.setWidget(view.asWidget());
     }
 
     @Override
@@ -467,18 +464,18 @@ public class ManageCollaboratorsPresenter implements ManageCollaboratorsView.Pre
     }
 
     @Override
-    public void setCurrentMode(ManageCollaboratorsView.MODE m) {
-        view.setMode(m);
-    }
-
-    @Override
-    public ManageCollaboratorsView.MODE getCurrentMode() {
-        return view.getMode();
-    }
-
-    @Override
     public List<Subject> getSelectedSubjects() {
         return view.getSelectedSubjects();
+    }
+
+    @Override
+    public ManageCollaboratorsView getView() {
+        return view;
+    }
+
+    @Override
+    public CollaborationView.TAB getTabType() {
+        return CollaborationView.TAB.Collaborators;
     }
 
     @Override

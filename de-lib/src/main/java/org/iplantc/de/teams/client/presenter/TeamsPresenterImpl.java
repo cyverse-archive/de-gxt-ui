@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
+import org.iplantc.de.collaborators.client.CollaborationView;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -72,7 +73,22 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
     @Override
     public void go() {
         currentFilter = view.getCurrentFilter();
-        getSelectedTeams();
+        getFilteredTeams();
+    }
+
+    @Override
+    public TeamsView getView() {
+        return view;
+    }
+
+    @Override
+    public void showCheckBoxes() {
+        view.showCheckBoxes();
+    }
+
+    @Override
+    public List<Group> getSelectedTeams() {
+        return view.getSelectedTeams();
     }
 
     @Override
@@ -119,10 +135,10 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
 
         currentFilter = filter;
 
-        getSelectedTeams();
+        getFilteredTeams();
     }
 
-    void getSelectedTeams() {
+    void getFilteredTeams() {
         if (TeamsFilter.MY_TEAMS.equals(currentFilter)) {
             getMyTeams();
         } else {

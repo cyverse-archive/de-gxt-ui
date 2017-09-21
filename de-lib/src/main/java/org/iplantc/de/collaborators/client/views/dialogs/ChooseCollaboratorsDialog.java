@@ -1,8 +1,8 @@
 package org.iplantc.de.collaborators.client.views.dialogs;
 
 import org.iplantc.de.client.models.collaborators.Subject;
+import org.iplantc.de.collaborators.client.CollaborationView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
-import org.iplantc.de.collaborators.client.ManageCollaboratorsView.MODE;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
@@ -18,24 +18,25 @@ import javax.inject.Inject;
  * @author sriram, jstroot
  * 
  */
-public class ManageCollaboratorsDialog extends IPlantDialog {
+public class ChooseCollaboratorsDialog extends IPlantDialog {
 
 
-    private final ManageCollaboratorsView.Presenter presenter;
+    private final CollaborationView.Presenter presenter;
     private final ManageCollaboratorsView.Appearance appearance;
 
 
     @Inject
-    ManageCollaboratorsDialog(final ManageCollaboratorsView.Appearance appearance,
-                              ManageCollaboratorsView.Presenter presenter) {
+    ChooseCollaboratorsDialog(final ManageCollaboratorsView.Appearance appearance,
+                              CollaborationView.Presenter presenter) {
         super(true);
         this.appearance = appearance;
         this.presenter = presenter;
         initDialog();
     }
 
-    public void show(MODE mode) {
-        presenter.go(this, mode);
+    @Override
+    public void show() {
+        presenter.go(this);
 
         super.show();
         ensureDebugId(CollaboratorsModule.Ids.DIALOG);
@@ -53,7 +54,7 @@ public class ManageCollaboratorsDialog extends IPlantDialog {
         setPredefinedButtons(PredefinedButton.OK);
         setHeading(appearance.collaborators());
         addHelp(new HTML(appearance.collaboratorsHelp()));
-        setPixelSize(450, 400);
+        setPixelSize(appearance.chooseCollaboratorsWidth(), appearance.chooseCollaboratorsHeight());
         addOkButtonHandler();
         setHideOnButtonClick(true);
     }
@@ -68,13 +69,7 @@ public class ManageCollaboratorsDialog extends IPlantDialog {
         });
     }
 
-    @Override
-    public void show() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException(
-                "This method is not supported. Use show(MODE mode) method instead.");
-    }
-
     public List<Subject> getSelectedSubjects() {
-        return presenter.getSelectedSubjects();
+        return presenter.getSelectedCollaborators();
     }
 }

@@ -11,7 +11,6 @@ import org.iplantc.de.collaborators.client.events.UserSearchResultSelected;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import java.util.List;
@@ -130,6 +129,10 @@ public interface ManageCollaboratorsView extends IsWidget,
         String removePermissionsBtn();
 
         int retainPermissionsWidth();
+
+        int chooseCollaboratorsWidth();
+
+        int chooseCollaboratorsHeight();
     }
 
     /**
@@ -139,10 +142,8 @@ public interface ManageCollaboratorsView extends IsWidget,
 
         /**
          * Method used to initialize the presenter
-         * @param container The UI container the presenter will put its view into
-         * @param mode The mode (manage or select) to put the ManageCollaboratorsView into
          */
-        void go (HasOneWidget container, MODE mode);
+        void go ();
 
         /**
          * Add collaborators to the view
@@ -161,22 +162,22 @@ public interface ManageCollaboratorsView extends IsWidget,
         void loadCurrentCollaborators();
 
         /**
-         * Set the mode (manage or select) to put the ManageCollaboratorsView into
-         * @param mode
-         */
-        void setCurrentMode(MODE mode);
-
-        /**
-         * Getter for the ManageCollaboratorsView mode
-         * @return
-         */
-        MODE getCurrentMode();
-
-        /**
          * Returns the list of currently selected collaborators from the ManageCollaboratorsView
          * @return
          */
         List<Subject> getSelectedSubjects();
+
+        /**
+         * Returns the view
+         * @return
+         */
+        ManageCollaboratorsView getView();
+
+        /**
+         * Returns the tab type that identifies this view in the Collaboration window
+         * @return
+         */
+        CollaborationView.TAB getTabType();
     }
 
     /**
@@ -190,13 +191,6 @@ public interface ManageCollaboratorsView extends IsWidget,
      * @param userIds
      */
     void removeCollaboratorsById(List<String> userIds);
-
-    /**
-     *  The collection of modes the ManageCollaboratorsView can step into
-     */
-    enum MODE {
-        MANAGE, SELECT
-    }
 
     /**
      * Set the list of collaborators in the ManageCollaboratorsView
@@ -222,22 +216,10 @@ public interface ManageCollaboratorsView extends IsWidget,
     void unmaskCollaborators();
 
     /**
-     * Set the mode for the ManageCollaboratorsView
-     * @param mode
-     */
-    void setMode(MODE mode);
-
-    /**
      * Returns the list of currently selected collaborators from the ManageCollaboratorsView
      * @return
      */
     List<Subject> getSelectedSubjects();
-
-    /**
-     * Returns the mode the ManageCollaboratorsView is currently set to
-     * @return
-     */
-    MODE getMode();
 
     /**
      * Add to the list of collaborators in the ManageCollaboratorsView

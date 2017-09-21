@@ -36,6 +36,7 @@ import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.SimpleComboBox;
+import com.sencha.gxt.widget.core.client.grid.CheckBoxSelectionModel;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
@@ -71,6 +72,8 @@ public class TeamsViewImpl extends Composite implements TeamsView {
     @UiField GridView<Group> gridView;
     @UiField ListStore<Group> listStore;
     private GroupProperties properties;
+    private CheckBoxSelectionModel<Group> checkBoxSelectionModel;
+    private ColumnConfig<Group, Group> checkBoxCol;
     private TeamNameCell nameCell;
     private PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Group>> loader;
 
@@ -83,6 +86,7 @@ public class TeamsViewImpl extends Composite implements TeamsView {
         this.properties = properties;
         this.nameCell = nameCell;
         this.loader = loader;
+        this.checkBoxSelectionModel = getCheckBoxSelectionModel();
 
         initWidget(uiBinder.createAndBindUi(this));
         grid.getSelectionModel().setSelectionMode(Style.SelectionMode.MULTI);
@@ -108,6 +112,7 @@ public class TeamsViewImpl extends Composite implements TeamsView {
     @UiFactory
     ColumnModel<Group> createColumnModel() {
         List<ColumnConfig<Group, ?>> list = Lists.newArrayList();
+        checkBoxCol = checkBoxSelectionModel.getColumn();
         ColumnConfig<Group, Group> nameCol = new ColumnConfig<>(new IdentityValueProvider<>("extension"),
                                                                  appearance.nameColumnWidth(),
                                                                  appearance.nameColumnLabel());
@@ -119,9 +124,12 @@ public class TeamsViewImpl extends Composite implements TeamsView {
                                                                  appearance.descColumnLabel());
         nameCol.setCell(nameCell);
         nameCol.setComparator(new TeamNameComparator());
+        list.add(checkBoxCol);
         list.add(nameCol);
         list.add(creatorCol);
         list.add(descCol);
+
+        checkBoxCol.setHidden(true);
         return new ColumnModel<>(list);
     }
 
@@ -196,6 +204,22 @@ public class TeamsViewImpl extends Composite implements TeamsView {
         if (found != null) {
             listStore.remove(found);
         }
+    }
+
+    @Override
+    public void showCheckBoxes() {
+        grid.setSelectionModel(checkBoxSelectionModel);
+        checkBoxCol.setHidden(false);
+        grid.getView().refresh(true);
+    }
+
+    @Override
+    public List<Group> getSelectedTeams() {
+        return grid.getSelectionModel().getSelectedItems();
+    }
+
+    CheckBoxSelectionModel<Group> getCheckBoxSelectionModel() {
+        return new CheckBoxSelectionModel<>(new IdentityValueProvider<Group>());
     }
 
     @Override

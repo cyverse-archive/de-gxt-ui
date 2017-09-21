@@ -8,5 +8,5 @@ import org.iplantc.de.collaborators.client.views.CollaboratorDNDHandler;
  */
 public interface ManageCollaboratorsViewFactory {
 
-    ManageCollaboratorsView create(ManageCollaboratorsView.MODE mode, CollaboratorDNDHandler dndHandler);
+    ManageCollaboratorsView create(CollaboratorDNDHandler dndHandler);
 }

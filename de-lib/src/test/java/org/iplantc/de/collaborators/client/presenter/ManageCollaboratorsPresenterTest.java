@@ -37,7 +37,6 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -113,7 +112,7 @@ public class ManageCollaboratorsPresenterTest {
 
     @Before
     public void setUp() {
-        when(factoryMock.create(ManageCollaboratorsView.MODE.MANAGE, dndHandlerMock)).thenReturn(viewMock);
+        when(factoryMock.create(dndHandlerMock)).thenReturn(viewMock);
         when(viewMock.asWidget()).thenReturn(viewWidgetMock);
         when(groupMock.getName()).thenReturn("name");
         when(groupFactoryMock.getGroup()).thenReturn(groupAutoBeanMock);
@@ -194,36 +193,28 @@ public class ManageCollaboratorsPresenterTest {
         uut.permissionsDlgProvider = retainPermsDialogProvider;
 
         parentCallback = uut.new ParentDeleteSubjectsCallback();
+
+        addEventHandlers();
     }
 
-    @Test
-    public void go() {
-        when(groupFactoryMock.getDefaultGroup()).thenReturn(groupMock);
-        HasOneWidget containerMock = mock(HasOneWidget.class);
-        ManageCollaboratorsPresenter spy = spy(uut);
-
-        /** CALL METHOD UNDER TEST **/
-        spy.go(containerMock, ManageCollaboratorsView.MODE.MANAGE);
-
-        verify(factoryMock).create(eq(ManageCollaboratorsView.MODE.MANAGE), eq(dndHandlerMock));
-        verify(viewMock).addRemoveCollaboratorSelectedHandler(eq(spy));
-        verify(spy).loadCurrentCollaborators();
-        verify(spy).getGroups();
-        verify(spy).addEventHandlers();
-        verify(containerMock).setWidget(eq(viewWidgetMock));
-    }
-
-    @Test
     public void addEventHandlers() {
-
-        /** CALL METHOD UNDER TEST **/
-        uut.addEventHandlers();
-
         verify(viewMock).addAddGroupSelectedHandler(eq(uut));
         verify(viewMock).addGroupNameSelectedHandler(eq(uut));
         verify(viewMock).addUserSearchResultSelectedEventHandler(eq(uut));
         verify(viewMock).addRemoveCollaboratorSelectedHandler(eq(uut));
     }
+
+    @Test
+    public void go() {
+        ManageCollaboratorsPresenter spy = spy(uut);
+
+        /** CALL METHOD UNDER TEST **/
+        spy.go();
+
+        verify(spy).loadCurrentCollaborators();
+        verify(spy).getGroups();
+    }
+
 
     @Test
     public void addAsCollaborators() {
@@ -365,14 +356,6 @@ public class ManageCollaboratorsPresenterTest {
         verify(viewMock).unmaskCollaborators();
         verify(viewMock).addCollaborators(eq(subjectListMock));
         verify(eventBusMock).fireEvent(isA(CollaboratorsLoadedEvent.class));
-    }
-
-    @Test
-    public void setCurrentMode() {
-
-        /** CALL METHOD UNDER TEST **/
-        uut.setCurrentMode(ManageCollaboratorsView.MODE.SELECT);
-        verify(viewMock).setMode(eq(ManageCollaboratorsView.MODE.SELECT));
     }
 
     @Test

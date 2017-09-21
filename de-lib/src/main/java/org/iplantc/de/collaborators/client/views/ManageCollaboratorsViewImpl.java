@@ -10,7 +10,6 @@ import org.iplantc.de.collaborators.client.models.SubjectKeyProvider;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.client.views.cells.SubjectNameCell;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
-import org.iplantc.de.commons.client.widgets.DETabPanel;
 
 import com.google.common.base.Strings;
 import com.google.gwt.cell.client.Cell;
@@ -32,10 +31,7 @@ import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.dnd.core.client.DragSource;
 import com.sencha.gxt.dnd.core.client.DropTarget;
 import com.sencha.gxt.widget.core.client.Composite;
-import com.sencha.gxt.widget.core.client.FramedPanel;
 import com.sencha.gxt.widget.core.client.button.TextButton;
-import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
-import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.ViewReadyEvent;
 import com.sencha.gxt.widget.core.client.grid.CheckBoxSelectionModel;
@@ -60,29 +56,22 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
     @UiField ColumnModel<Subject> cm;
     @UiField ListStore<Subject> listStore;
-    @UiField BorderLayoutContainer con;
     @UiField TextButton deleteBtn;
     @UiField TextButton addGroup;
     @UiField Grid<Subject> grid;
     @UiField GridView<Subject> gridView;
-    @UiField TextButton manageBtn;
     @UiField(provided = true) UserSearchField searchField;
     private CollaboratorDNDHandler dndHandler;
-    @UiField HorizontalLayoutContainer searchPanel;
     @UiField ToolBar toolbar;
-    private DETabPanel tabPanel;
-    @UiField FramedPanel collaboratorListPnl;
 
     @UiField(provided = true) ManageCollaboratorsView.Appearance appearance;
 
     private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
     private final CheckBoxSelectionModel<Subject> checkBoxModel;
-    private MODE mode;
     private String baseID;
 
     @Inject
-    public ManageCollaboratorsViewImpl(@Assisted final MODE mode,
-                                       ManageCollaboratorsView.Appearance appearance,
+    public ManageCollaboratorsViewImpl(ManageCollaboratorsView.Appearance appearance,
                                        UserSearchField searchField,
                                        @Assisted CollaboratorDNDHandler dndHandler) {
         this.appearance = appearance;
@@ -101,7 +90,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
             }
         });
         init();
-        setMode(mode);
     }
 
     @Override
@@ -123,11 +111,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
             return null;
         }
         return listStore.get(dropIndex);
-    }
-
-    @Override
-    public MODE getMode() {
-        return mode;
     }
 
     @Override
@@ -163,14 +146,13 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
         if (Strings.isNullOrEmpty(maskText)) {
             maskText = appearance.loadingMask();
         }
-        collaboratorListPnl.mask(maskText);
+        super.mask(maskText);
     }
 
     @Override
     public void onSelectionChanged(SelectionChangedEvent<Subject> event) {
         if (event.getSelection() != null
-                && event.getSelection().size() > 0
-                && MODE.MANAGE.equals(mode)) {
+                && event.getSelection().size() > 0) {
             deleteBtn.enable();
         } else {
             deleteBtn.disable();
@@ -190,28 +172,8 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     }
 
     @Override
-    public void setMode(MODE mode) {
-        this.mode = mode;
-        switch (mode) {
-            case MANAGE:
-                grid.getView().setEmptyText(appearance.noCollaborators());
-                manageBtn.setVisible(false);
-                searchField.asWidget().setVisible(true);
-                toolbar.setVisible(true);
-                break;
-            case SELECT:
-                grid.getView().setEmptyText(appearance.noCollaborators());
-                manageBtn.setVisible(true);
-                searchField.asWidget().setVisible(false);
-                toolbar.setVisible(false);
-                break;
-        }
-        toolbar.forceLayout();
-    }
-
-    @Override
     public void unmaskCollaborators() {
-        collaboratorListPnl.unmask();
+        super.unmask();
     }
 
     @Override
@@ -256,11 +218,6 @@ public class ManageCollaboratorsViewImpl extends Composite implements ManageColl
     @UiHandler("addGroup")
     void addGroupSelected(SelectEvent event) {
         fireEvent(new AddGroupSelected());
-    }
-
-    @UiHandler("manageBtn")
-    void manageCollaborators(SelectEvent event) {
-        setMode(MODE.MANAGE);
     }
 
     private void init() {

@@ -1,8 +1,8 @@
 package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.collaborators.client.CollaborationView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
-import org.iplantc.de.collaborators.client.presenter.ManageCollaboratorsPresenter;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
 import org.iplantc.de.commons.client.views.window.configs.CollaborationWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
@@ -19,11 +19,12 @@ import com.google.inject.Inject;
 public class CollaborationWindow extends IplantWindowBase {
 
     public static final String COLLABORATION = "#collaboration";
-    private final ManageCollaboratorsPresenter presenter;
+    private final CollaborationView.Presenter presenter;
     private ManageCollaboratorsView.Appearance appearance;
 
     @Inject
-    CollaborationWindow(final ManageCollaboratorsPresenter presenter, ManageCollaboratorsView.Appearance appearance) {
+    CollaborationWindow(final CollaborationView.Presenter presenter,
+                        ManageCollaboratorsView.Appearance appearance) {
         this.presenter = presenter;
         this.appearance = appearance;
 
@@ -43,7 +44,7 @@ public class CollaborationWindow extends IplantWindowBase {
                                               final String tag,
                                               final boolean isMaximizable) {
         final CollaborationWindowConfig collabWindowConfig = (CollaborationWindowConfig)windowConfig;
-        presenter.go(this, ManageCollaboratorsView.MODE.MANAGE);
+        presenter.go(this, collabWindowConfig);
         super.show(windowConfig, tag, isMaximizable);
 
         ensureDebugId(DeModule.WindowIds.COLLABORATION_WINDOW);

@@ -1,0 +1,32 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
+             xmlns:deTabs="urn:import:org.iplantc.de.commons.client.widgets"
+             xmlns:collab="urn:import:org.iplantc.de.collaborators.client"
+             xmlns:team="urn:import:org.iplantc.de.teams.client"
+>
+
+    <ui:with field="appearance"
+             type="org.iplantc.de.collaborators.client.CollaborationView.CollaborationViewAppearance"/>
+
+    <ui:with field="collaboratorsTabConfig"
+             type="com.sencha.gxt.widget.core.client.TabItemConfig">
+        <ui:attributes text="{appearance.getCollaboratorsTabText}" />
+    </ui:with>
+    <ui:with field="teamsTabConfig"
+             type="com.sencha.gxt.widget.core.client.TabItemConfig">
+        <ui:attributes text="{appearance.getTeamsTabText}" />
+    </ui:with>
+
+    <container:SimpleContainer>
+        <deTabs:DETabPanel ui:field="collaborationTabs">
+            <deTabs:child config="{collaboratorsTabConfig}">
+                <collab:ManageCollaboratorsView ui:field="collaboratorsView"/>
+            </deTabs:child>
+            <deTabs:child config="{teamsTabConfig}">
+                <team:TeamsView ui:field="teamsView"/>
+            </deTabs:child>
+        </deTabs:DETabPanel>
+    </container:SimpleContainer>
+
+</ui:UiBinder>

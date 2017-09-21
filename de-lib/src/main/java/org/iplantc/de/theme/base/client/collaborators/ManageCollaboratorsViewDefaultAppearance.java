@@ -337,4 +337,14 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
     public int retainPermissionsWidth() {
         return 350;
     }
+
+    @Override
+    public int chooseCollaboratorsWidth() {
+        return 550;
+    }
+
+    @Override
+    public int chooseCollaboratorsHeight() {
+        return 400;
+    }
 }
