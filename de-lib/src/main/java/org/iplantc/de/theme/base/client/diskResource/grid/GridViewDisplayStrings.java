@@ -82,4 +82,6 @@ public interface GridViewDisplayStrings extends Messages {
     String copyMetadataPrompt();
 
     String fileSaveError(String fileName);
+
+    String listingFailure();
 }

@@ -190,6 +190,8 @@ public interface GridView extends IsWidget,
             String fileExistsError(String fileName);
 
             String fileSaveError(String fileName);
+
+            String listingFailure();
         }
 
         void deSelectDiskResources();

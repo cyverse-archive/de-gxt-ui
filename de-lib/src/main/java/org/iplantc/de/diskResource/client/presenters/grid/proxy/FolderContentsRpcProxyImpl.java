@@ -9,6 +9,7 @@ import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
 import org.iplantc.de.client.services.SearchServiceFacade;
+import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.GridView;
@@ -153,6 +154,8 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FolderContentsLoadConfi
         public void onFailure(Integer statusCode, Throwable caught) {
             if (loadConfig.getFolder() instanceof DiskResourceQueryTemplate) {
                 announcer.schedule(new ErrorAnnouncementConfig(SafeHtmlUtils.fromString(appearance.searchFailure()), true));
+            } else {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.listingFailure()));
             }
             callback.onFailure(caught);
         }
