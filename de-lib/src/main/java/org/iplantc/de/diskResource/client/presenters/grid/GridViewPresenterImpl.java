@@ -185,6 +185,7 @@ public class GridViewPresenterImpl implements Presenter,
     @Inject DiskResourceErrorAutoBeanFactory drFactory;
     @Inject AsyncProviderWrapper<MetadataCopyDialog> copyMetadataDlgProvider;
     @Inject AsyncProviderWrapper<Md5DisplayDialog> md5DisplayDlgProvider;
+    @Inject AsyncProviderWrapper<SelectMetadataTemplateDialog> selectMetaTemplateDlgProvider;
     @Inject MetadataView.Presenter.Appearance metadataAppearance;
 
     @Inject DataLinkFactory dlFactory;
@@ -710,17 +711,20 @@ public class GridViewPresenterImpl implements Presenter,
 
             @Override
             public void onSuccess(List<MetadataTemplateInfo> result) {
-                final SelectMetadataTemplateDialog view =
-                        new SelectMetadataTemplateDialog(result, metadataAppearance, false);
-                view.getOkButton().addSelectHandler(selectEvent -> {
-                    final String encodedSimpleDownloadURL =
-                            diskResourceService.downloadTemplate(view.getSelectedTemplate().getId());
-                    WindowUtil.open(encodedSimpleDownloadURL, "width=100,height=100");
+
+                selectMetaTemplateDlgProvider.get(new AsyncCallback<SelectMetadataTemplateDialog>() {
+                    @Override
+                    public void onFailure(Throwable throwable) {}
+
+                    @Override
+                    public void onSuccess(SelectMetadataTemplateDialog dialog) {
+                        dialog.addOkButtonSelectHandler(selectEvent -> {
+                            final String encodedSimpleDownloadURL = diskResourceService.downloadTemplate(dialog.getSelectedTemplate().getId());
+                            WindowUtil.open(encodedSimpleDownloadURL, "width=100,height=100");
+                        });
+                        dialog.show(result, false);
+                    }
                 });
-                view.setModal(false);
-                view.setSize("400px", "400px");
-                view.setHeading(metadataAppearance.selectTemplate());
-                view.show();
             }
         });
     }

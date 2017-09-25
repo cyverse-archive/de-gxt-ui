@@ -126,8 +126,8 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
     private static DiskResourceAutoBeanFactory autoBeanFactory =
             GWT.create(DiskResourceAutoBeanFactory.class);
 
-    @Inject
-    AsyncProviderWrapper<MetadataTemplateViewDialog> templateViewDialogProvider;
+    @Inject AsyncProviderWrapper<MetadataTemplateViewDialog> templateViewDialogProvider;
+    @Inject AsyncProviderWrapper<SelectMetadataTemplateDialog> selectMetaTemplateDlgProvider;
     MetadataTemplateViewDialog templateViewDialog;
 
     @Inject
@@ -196,24 +196,23 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
 
     @Override
     public void onSelectTemplate() {
-        final SelectMetadataTemplateDialog view =
-                new SelectMetadataTemplateDialog(templates, appearance, true);
-        view.addDialogHideHandler(new DialogHideHandler() {
+        selectMetaTemplateDlgProvider.get(new AsyncCallback<SelectMetadataTemplateDialog>() {
             @Override
-            public void onDialogHide(DialogHideEvent event) {
-                PredefinedButton hideButton = event.getHideButton();
-                if (hideButton != null && hideButton.equals(PredefinedButton.OK)) {
-                    MetadataTemplateInfo selectedTemplate = view.getSelectedTemplate();
-                    if (selectedTemplate != null) {
-                        onTemplateSelected(selectedTemplate.getId());
-                    }
-                }
+            public void onFailure(Throwable throwable) {}
+
+            @Override
+            public void onSuccess(SelectMetadataTemplateDialog dialog) {
+                dialog.addDialogHideHandler(hideEvent -> {
+                                            PredefinedButton hideButton = hideEvent.getHideButton();
+                                            if (hideButton != null && hideButton.equals(PredefinedButton.OK)) {
+                                                MetadataTemplateInfo selectedTemplate = dialog.getSelectedTemplate();
+                                                if (selectedTemplate != null) {
+                                                    onTemplateSelected(selectedTemplate.getId());
+                                                }
+                                            }});
+                dialog.show(templates, true);
             }
         });
-        view.setModal(false);
-        view.setSize("400px", "400px");
-        view.setHeading(appearance.selectTemplate());
-        view.show();
     }
 
     @Override
