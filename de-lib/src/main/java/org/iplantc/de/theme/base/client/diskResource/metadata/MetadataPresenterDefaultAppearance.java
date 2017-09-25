@@ -2,6 +2,7 @@ package org.iplantc.de.theme.base.client.diskResource.metadata;
 
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.resources.client.IplantResources;
+import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
@@ -9,10 +10,25 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 
 public class MetadataPresenterDefaultAppearance implements MetadataView.Presenter.Appearance {
 
-	private final MetadataDisplayStrings displayStrings = GWT.<MetadataDisplayStrings> create(MetadataDisplayStrings.class);
+	private final MetadataDisplayStrings displayStrings;
+	private final IplantResources iplantResources;
+	private IplantDisplayStrings iplantDisplayStrings;
 
-	private final IplantResources iplantResources = GWT.create(IplantResources.class);
-	
+	public MetadataPresenterDefaultAppearance() {
+		this(GWT.<MetadataDisplayStrings> create(MetadataDisplayStrings.class),
+			 GWT.<IplantResources>create(IplantResources.class),
+			 GWT.<IplantDisplayStrings>create(IplantDisplayStrings.class));
+	}
+
+	public MetadataPresenterDefaultAppearance(MetadataDisplayStrings displayStrings,
+											  IplantResources iplantResources,
+											  IplantDisplayStrings iplantDisplayStrings) {
+
+		this.displayStrings = displayStrings;
+		this.iplantResources = iplantResources;
+		this.iplantDisplayStrings = iplantDisplayStrings;
+	}
+
 	@Override
 	public String templateListingError() {
 		return displayStrings.templateListingError();
@@ -65,5 +81,10 @@ public class MetadataPresenterDefaultAppearance implements MetadataView.Presente
 	@Override
 	public SafeHtml importMd() {
 		return displayStrings.importMd();
+	}
+
+	@Override
+	public String loadingMask() {
+		return iplantDisplayStrings.loadingMask();
 	}
 }

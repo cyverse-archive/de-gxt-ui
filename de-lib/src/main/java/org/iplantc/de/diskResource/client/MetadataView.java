@@ -130,6 +130,8 @@ public interface MetadataView extends IsWidget {
             SafeHtml importMdMsg();
 
             SafeHtml importMd();
+
+            String loadingMask();
         }
 
         boolean isValid();
