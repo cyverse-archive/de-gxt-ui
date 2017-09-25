@@ -54,26 +54,26 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
 
    private class TemplateViewCancelSelectHandler implements SelectEvent.SelectHandler {
 
-        private MetadataTemplateViewDialog mdView;
+        private MetadataTemplateViewDialog metadataTemplateDlg;
 
-        public TemplateViewCancelSelectHandler(MetadataTemplateViewDialog mdView) {
-            this.mdView = mdView;
+        public TemplateViewCancelSelectHandler(MetadataTemplateViewDialog metadataTemplateDlg) {
+            this.metadataTemplateDlg = metadataTemplateDlg;
         }
 
         @Override
         public void onSelect(SelectEvent event) {
-            mdView.hide();
+            metadataTemplateDlg.hide();
         }
     }
 
     private class TemplateViewOkSelectHandler implements SelectEvent.SelectHandler {
 
-        private MetadataTemplateViewDialog mdView;
+        private MetadataTemplateViewDialog metadataTemplateDlg;
         private boolean writable;
 
-        public TemplateViewOkSelectHandler(boolean writable, MetadataTemplateViewDialog mdView) {
+        public TemplateViewOkSelectHandler(boolean writable, MetadataTemplateViewDialog metadataTemplateDlg) {
             this.writable = writable;
-            this.mdView = mdView;
+            this.metadataTemplateDlg = metadataTemplateDlg;
         }
 
         @Override
@@ -82,7 +82,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
                 return;
             }
 
-            if (!mdView.isValid()) {
+            if (!metadataTemplateDlg.isValid()) {
                 ConfirmMessageBox cmb =
                         new ConfirmMessageBox(appearance.error(), appearance.incomplete());
                 cmb.addDialogHideHandler(new DialogHideHandler() {
@@ -103,7 +103,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
 
         private void updateMetadataFromTemplateView() {
             mdView.mask(I18N.DISPLAY.loadingMask());
-            ArrayList<Avu> mdList = mdView.getMetadataFromTemplate();
+            ArrayList<Avu> mdList = metadataTemplateDlg.getMetadataFromTemplate();
             view.updateMetadataFromTemplateView(mdList, templateAttributes);
         }
     }
