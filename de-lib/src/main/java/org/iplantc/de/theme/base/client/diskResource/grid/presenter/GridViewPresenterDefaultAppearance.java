@@ -232,4 +232,9 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     public String copyMetadataDlgHeight() {
         return "350px";
     }
+
+    @Override
+    public int md5MaxLength() {
+        return 125;
+    }
 }

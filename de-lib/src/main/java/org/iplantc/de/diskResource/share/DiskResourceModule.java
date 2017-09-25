@@ -88,6 +88,7 @@ public interface DiskResourceModule {
         String DATA_LINK_DLG = "dataLinkDlg";
         String OK_BTN = ".okBtn";
         String DATA_LINK_URL = ".urlField";
+        String MD5_DIALOG = "md5Dlg";
     }
 
     interface MetadataIds {

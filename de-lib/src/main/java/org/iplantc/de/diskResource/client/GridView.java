@@ -207,6 +207,8 @@ public interface GridView extends IsWidget,
             String copyMetadataDlgWidth();
 
             String copyMetadataDlgHeight();
+
+            int md5MaxLength();
         }
 
         void deSelectDiskResources();

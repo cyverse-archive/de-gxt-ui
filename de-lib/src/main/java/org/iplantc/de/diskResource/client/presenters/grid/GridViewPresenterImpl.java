@@ -184,6 +184,7 @@ public class GridViewPresenterImpl implements Presenter,
     @Inject AsyncProviderWrapper<SaveAsDialog> saveAsDialogProvider;
     @Inject DiskResourceErrorAutoBeanFactory drFactory;
     @Inject AsyncProviderWrapper<MetadataCopyDialog> copyMetadataDlgProvider;
+    @Inject AsyncProviderWrapper<Md5DisplayDialog> md5DisplayDlgProvider;
     @Inject MetadataView.Presenter.Appearance metadataAppearance;
 
     @Inject DataLinkFactory dlFactory;
@@ -485,12 +486,15 @@ public class GridViewPresenterImpl implements Presenter,
     @Override
     public void onMd5Clicked(Md5ValueClicked event) {
         File f = (File)event.getDiskResource();
-        Md5DisplayDialog dialog = new Md5DisplayDialog(appearance.checksum(),
-                                                       appearance.md5Checksum(),
-                                                       128,
-                                                       f.getMd5(),
-                                                       null);
-        dialog.show();
+        md5DisplayDlgProvider.get(new AsyncCallback<Md5DisplayDialog>() {
+            @Override
+            public void onFailure(Throwable throwable) {}
+
+            @Override
+            public void onSuccess(Md5DisplayDialog dialog) {
+                dialog.show(f.getMd5());
+            }
+        });
     }
 
     // </editor-fold>
