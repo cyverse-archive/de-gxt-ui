@@ -19,20 +19,25 @@ import org.iplantc.de.client.models.notifications.payload.PayloadData;
 import org.iplantc.de.client.models.notifications.payload.PayloadRequest;
 import org.iplantc.de.client.models.notifications.payload.PayloadTeam;
 import org.iplantc.de.client.models.requestStatus.RequestHistory;
+import org.iplantc.de.client.services.MessageServiceFacade;
 import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.collaborators.client.CollaborationView;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.views.window.configs.AnalysisWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.CollaborationWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConfig;
+import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.notifications.client.events.NotificationClickedEvent;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
 import org.iplantc.de.notifications.client.views.dialogs.DenyJoinRequestDetailsDialog;
 import org.iplantc.de.notifications.client.views.dialogs.JoinTeamRequestDialog;
 import org.iplantc.de.notifications.client.views.dialogs.RequestHistoryDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.NotificationCallback;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
@@ -56,8 +61,11 @@ public class NotificationUtil {
     @Inject AnalysesAutoBeanFactory analysesFactory;
     @Inject DiskResourceUtil diskResourceUtil;
     @Inject EventBus eventBus;
+    @Inject IplantAnnouncer announcer;
+    @Inject MessageServiceFacade messageServiceFacade;
     @Inject AsyncProviderWrapper<JoinTeamRequestDialog> joinRequestDlgProvider;
     @Inject AsyncProviderWrapper<DenyJoinRequestDetailsDialog> denyDetailsDlgProvider;
+    @Inject DesktopView.Presenter.DesktopPresenterAppearance appearance;
 
     @Inject
     public NotificationUtil() {
@@ -221,7 +229,11 @@ public class NotificationUtil {
 
                     break;
                 case PERMANENTIDREQUEST:
-                    // fall through to ToolRequest logic
+                    PayloadRequest request = AutoBeanCodex.decode(notificationFactory,
+                                                                  PayloadRequest.class,
+                                                                  context1).as();
+                    getRequestStatusHistory(request.getId(), NotificationCategory.PERMANENTIDREQUEST);
+                    break;
                 case TOOLREQUEST:
                     PayloadRequest toolRequest =
                             AutoBeanCodex.decode(notificationFactory, PayloadRequest.class, context1)
@@ -269,6 +281,33 @@ public class NotificationUtil {
                 default:
                     break;
             }
+        }
+    }
+
+    //TODO Refactor this service call out of the util class
+    void getRequestStatusHistory(String id, NotificationCategory cat) {
+        if (cat.equals(NotificationCategory.PERMANENTIDREQUEST)) {
+            messageServiceFacade.getPermanentIdRequestStatusHistory(id, new NotificationCallback<String>() {
+
+                @Override
+                public void onFailure(Integer statusCode, Throwable caught) {
+                    announcer.schedule(new ErrorAnnouncementConfig(appearance.requestHistoryError()));
+                }
+
+                @Override
+                public void onSuccess(String result) {
+                    PayloadRequest toolRequest = AutoBeanCodex.decode(notificationFactory,
+                                                                      PayloadRequest.class,
+                                                                      result).as();
+
+                    List<RequestHistory> history = toolRequest.getHistory();
+
+                    RequestHistoryDialog dlg = new RequestHistoryDialog(NotificationCategory.PERMANENTIDREQUEST.toString(),
+                                                                        history);
+                    dlg.show();
+
+                }
+            });
         }
     }
 }
