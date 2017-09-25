@@ -34,6 +34,7 @@ import org.iplantc.de.diskResource.client.events.RequestSendToCoGeEvent;
 import org.iplantc.de.diskResource.client.events.RequestSendToEnsemblEvent;
 import org.iplantc.de.diskResource.client.events.RequestSendToTreeViewerEvent;
 import org.iplantc.de.diskResource.client.events.RootFoldersRetrievedEvent;
+import org.iplantc.de.diskResource.client.events.selection.DNDDiskResourcesCompleted;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDiskResourcesSelected;
 import org.iplantc.de.diskResource.client.events.selection.EmptyTrashSelected;
 import org.iplantc.de.diskResource.client.events.selection.MoveDiskResourcesSelected;
@@ -95,7 +96,8 @@ public class DiskResourcePresenterImpl implements
                                       RestoreDiskResourcesSelected.RestoreDiskResourcesSelectedHandler,
                                       SendToTreeViewerSelected.SendToTreeViewerSelectedHandler,
                                       SendToEnsemblSelected.SendToEnsemblSelectedHandler,
-                                      SendToCogeSelected.SendToCogeSelectedHandler {
+                                      SendToCogeSelected.SendToCogeSelectedHandler,
+                                      DNDDiskResourcesCompleted.DNDDiskResourcesCompletedHandler {
 
     final IplantAnnouncer announcer;
     final DiskResourceAutoBeanFactory drFactory;
@@ -260,8 +262,9 @@ public class DiskResourcePresenterImpl implements
                                                    detailsViewPresenter);
 
         this.navigationPresenter.setParentPresenter(this);
-        this.gridViewPresenter.setParentPresenter(this);
         this.navigationPresenter.setMaskable(view);
+
+        this.gridViewPresenter.addDNDDiskResourcesCompletedHandler(this);
 
         // Detail Presenter
         this.detailsViewPresenter.getView().addManageSharingSelectedEventHandler(this.gridViewPresenter);
@@ -758,4 +761,8 @@ public class DiskResourcePresenterImpl implements
         }
     }
 
+    @Override
+    public void onDNDDiskResourcesCompleted(DNDDiskResourcesCompleted event) {
+        doMoveDiskResources(event.getTargetFolder(), event.getResources());
+    }
 }

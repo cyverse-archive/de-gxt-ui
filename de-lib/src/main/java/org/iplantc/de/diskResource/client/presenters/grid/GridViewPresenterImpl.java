@@ -25,7 +25,6 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
-import org.iplantc.de.diskResource.client.DiskResourceView;
 import org.iplantc.de.diskResource.client.GridView;
 import org.iplantc.de.diskResource.client.GridView.Presenter;
 import org.iplantc.de.diskResource.client.MetadataView;
@@ -40,6 +39,7 @@ import org.iplantc.de.diskResource.client.events.ShowFilePreviewEvent;
 import org.iplantc.de.diskResource.client.events.TemplateDownloadEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected;
+import org.iplantc.de.diskResource.client.events.selection.DNDDiskResourcesCompleted;
 import org.iplantc.de.diskResource.client.events.selection.DownloadTemplateSelectedEvent;
 import org.iplantc.de.diskResource.client.events.selection.EditInfoTypeSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelected;
@@ -195,7 +195,6 @@ public class GridViewPresenterImpl implements Presenter,
     private final HashMap<EventHandler, HandlerRegistration> registeredHandlers = Maps.newHashMap();
     private final GridView view;
     private boolean filePreviewEnabled = true;
-    private DiskResourceView.Presenter parentPresenter;
     private HandlerManager handlerManager;
 
     @Inject
@@ -503,7 +502,7 @@ public class GridViewPresenterImpl implements Presenter,
 
     @Override
     public void doMoveDiskResources(Folder targetFolder, List<DiskResource> resources) {
-        parentPresenter.doMoveDiskResources(targetFolder, resources);
+        ensureHandlers().fireEvent(new DNDDiskResourcesCompleted(targetFolder, resources));
     }
 
     @Override
@@ -550,11 +549,6 @@ public class GridViewPresenterImpl implements Presenter,
     @Override
     public void setFilePreviewEnabled(boolean filePreviewEnabled) {
         this.filePreviewEnabled = filePreviewEnabled;
-    }
-
-    @Override
-    public void setParentPresenter(DiskResourceView.Presenter parentPresenter) {
-        this.parentPresenter = parentPresenter;
     }
 
     @Override
@@ -753,4 +747,8 @@ public class GridViewPresenterImpl implements Presenter,
         return PermissionValue.own.equals(dr.getPermission());
     }
 
+    @Override
+    public HandlerRegistration addDNDDiskResourcesCompletedHandler(DNDDiskResourcesCompleted.DNDDiskResourcesCompletedHandler handler) {
+        return ensureHandlers().addHandler(DNDDiskResourcesCompleted.TYPE, handler);
+    }
 }
