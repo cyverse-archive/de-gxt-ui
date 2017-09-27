@@ -8,14 +8,13 @@ import org.iplantc.de.diskResource.client.events.DiskResourceNameSelectedEvent;
 import org.iplantc.de.diskResource.client.events.DiskResourcePathSelectedEvent;
 import org.iplantc.de.diskResource.client.events.RequestDiskResourceFavoriteEvent;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected;
-import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected.CopyMetadataSelectedEventHandler;
 import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected;
 import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected;
 import org.iplantc.de.diskResource.client.model.DiskResourceNameComparator;
 import org.iplantc.de.diskResource.client.model.DiskResourceProperties;
-import org.iplantc.de.diskResource.client.views.grid.cells.DiskResourceActionsCell;
+import org.iplantc.de.diskResource.client.views.grid.cells.DiskResourceDotMenuCell;
 import org.iplantc.de.diskResource.client.views.grid.cells.DiskResourceFavoriteCell;
 import org.iplantc.de.diskResource.client.views.grid.cells.DiskResourceNameCell;
 import org.iplantc.de.diskResource.client.views.grid.cells.DiskResourcePathCell;
@@ -59,8 +58,8 @@ public class DiskResourceColumnModel extends ColumnModel<DiskResource> implement
         for(ColumnConfig<DiskResource, ?> cc : configs){
             if(cc.getCell() instanceof DiskResourceNameCell){
                 ((DiskResourceNameCell)cc.getCell()).setHasHandlers(this);
-            } else if(cc.getCell() instanceof DiskResourceActionsCell){
-                ((DiskResourceActionsCell)cc.getCell()).setHasHandlers(this);
+            } else if(cc.getCell() instanceof DiskResourceDotMenuCell){
+                ((DiskResourceDotMenuCell)cc.getCell()).setHasHandlers(this);
             } else if(cc.getCell() instanceof DiskResourcePathCell) {
                 ((DiskResourcePathCell)cc.getCell()).setHasHandlers(this);
             } else if(cc.getCell() instanceof DiskResourceFavoriteCell) {
@@ -92,19 +91,18 @@ public class DiskResourceColumnModel extends ColumnModel<DiskResource> implement
         ColumnConfig<DiskResource, Date> created = new ColumnConfig<>(props.dateSubmitted(),
                                                                       appearance.createdDateColumnWidth(),
                                                                       appearance.createdDateColumnLabel());
-        ColumnConfig<DiskResource, DiskResource> actions = new ColumnConfig<>(new IdentityValueProvider<DiskResource>("actions"),
-                                                                              appearance.actionsColumnWidth(),
-                                                                              appearance.actionsColumnLabel());
+        ColumnConfig<DiskResource, DiskResource> dotMenu = new ColumnConfig<>(new IdentityValueProvider<DiskResource>(""),
+                                                                              appearance.dotMenuColumnWidth());
         lastModified.setFixed(true);
         size.setFixed(true);
         created.setFixed(true);
-        actions.setFixed(true);
+        dotMenu.setFixed(true);
 
         name.setCell(new DiskResourceNameCell(diskResourceUtil));
         lastModified.setCell(new DateCell(DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_MEDIUM)));
         size.setCell(new DiskResourceSizeCell());
         created.setCell(new DateCell(DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_MEDIUM)));
-        actions.setCell(new DiskResourceActionsCell(diskResourceUtil));
+        dotMenu.setCell(new DiskResourceDotMenuCell());
         path.setCell(new DiskResourcePathCell());
 
         name.setComparator(new DiskResourceNameComparator());
@@ -112,11 +110,11 @@ public class DiskResourceColumnModel extends ColumnModel<DiskResource> implement
 
         path.setHidden(true);
         created.setHidden(true);
-        actions.setHidden(false);
+        dotMenu.setHidden(false);
 
-        actions.setMenuDisabled(true);
-        actions.setSortable(false);
-        actions.setHideable(false);
+        dotMenu.setMenuDisabled(true);
+        dotMenu.setSortable(false);
+        dotMenu.setHideable(false);
         
         list.add(sm.getColumn());
         list.add(name);
@@ -125,7 +123,7 @@ public class DiskResourceColumnModel extends ColumnModel<DiskResource> implement
         list.add(created);
 
         list.add(size);
-        list.add(actions);
+        list.add(dotMenu);
 
         return list;
     }
@@ -180,8 +178,8 @@ public class DiskResourceColumnModel extends ColumnModel<DiskResource> implement
         for(ColumnConfig<DiskResource, ?> cc : configs){
             if(cc.getCell() instanceof DiskResourceNameCell){
                 ((DiskResourceNameCell)cc.getCell()).setBaseDebugId(baseID + DiskResourceModule.Ids.GRID);
-            } else if(cc.getCell() instanceof DiskResourceActionsCell){
-                ((DiskResourceActionsCell)cc.getCell()).setBaseDebugId(baseID + DiskResourceModule.Ids.GRID);
+            } else if(cc.getCell() instanceof DiskResourceDotMenuCell){
+                ((DiskResourceDotMenuCell)cc.getCell()).setBaseDebugId(baseID + DiskResourceModule.Ids.GRID);
             } else if(cc.getCell() instanceof DiskResourceFavoriteCell){
                 ((DiskResourceFavoriteCell)cc.getCell()).setBaseDebugId(baseID + DiskResourceModule.Ids.GRID);
             } else if(cc.getCell() instanceof DiskResourcePathCell) {

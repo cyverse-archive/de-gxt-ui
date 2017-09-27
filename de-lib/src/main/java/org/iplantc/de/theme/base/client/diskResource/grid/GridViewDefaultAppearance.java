@@ -43,8 +43,8 @@ public class GridViewDefaultAppearance implements GridView.Appearance {
     }
 
     @Override
-    public int actionsColumnWidth() {
-        return 90;
+    public int dotMenuColumnWidth() {
+        return 40;
     }
 
     @Override

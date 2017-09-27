@@ -33,7 +33,7 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
      *
      * @return translated "Add to favorite apps."
      */
-    @DefaultMessage("Add to favorite apps.")
+    @DefaultMessage("Add to favorite apps")
     @Key("addAppToFav")
     String addAppToFav();
 
@@ -2129,7 +2129,7 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
      *
      * @return translated "Remove from favorite apps."
      */
-    @DefaultMessage("Remove from favorite apps.")
+    @DefaultMessage("Remove from favorite apps")
     @Key("remAppFromFav")
     String remAppFromFav();
 

@@ -466,4 +466,9 @@ public interface IplantResources extends ClientBundle,
     @Source("dot_menu.png")
     ImageResource dotMenu();
 
+    @Source("link.png")
+    ImageResource linkIcon();
+
+    @Source("metadata.png")
+    ImageResource metadataIcon();
 }

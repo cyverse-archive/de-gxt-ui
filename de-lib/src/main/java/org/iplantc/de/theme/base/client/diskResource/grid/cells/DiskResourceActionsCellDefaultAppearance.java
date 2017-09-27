@@ -30,14 +30,8 @@ public class DiskResourceActionsCellDefaultAppearance implements DiskResourceAct
         @ClientBundle.Source("DiskResourceActionsCell.gss")
         MyCss css();
 
-        @Source("../../link.png")
-        ImageResource dataLinkIcon();
-
         @Source("../../link_add.png")
         ImageResource linkAdd();
-
-        @Source("../../comments.png")
-        ImageResource metadataIcon();
     }
 
     /**
@@ -92,7 +86,7 @@ public class DiskResourceActionsCellDefaultAppearance implements DiskResourceAct
 
     @Override
     public ImageResource dataLinkIcon() {
-        return resources.dataLinkIcon();
+        return iplantResources.linkIcon();
     }
 
     @Override
@@ -102,7 +96,7 @@ public class DiskResourceActionsCellDefaultAppearance implements DiskResourceAct
 
     @Override
     public ImageResource metadataIcon() {
-        return resources.metadataIcon();
+        return iplantResources.metadataIcon();
     }
 
     @Override

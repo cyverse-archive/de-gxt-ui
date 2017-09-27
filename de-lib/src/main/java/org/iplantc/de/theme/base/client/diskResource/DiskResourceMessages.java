@@ -229,4 +229,6 @@ public interface DiskResourceMessages extends Messages {
     String validationMessage();
 
     String select();
+
+    String shareCollab();
 }
