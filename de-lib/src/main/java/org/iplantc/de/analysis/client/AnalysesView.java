@@ -6,6 +6,13 @@ import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
+import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
+import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.client.models.analysis.Analysis;
@@ -26,11 +33,17 @@ public interface AnalysesView extends IsWidget,
                                       AnalysisNameSelectedEvent.HasAnalysisNameSelectedEventHandlers,
                                       HTAnalysisExpandEvent.HasHTAnalysisExpandEventHandlers,
                                       AnalysisUserSupportRequestedEvent.HasAnalysisUserSupportRequestedEventHandlers,
-                                      AnalysisCommentUpdate.HasAnalysisCommentUpdateHandlers {
+                                      AnalysisCommentUpdate.HasAnalysisCommentUpdateHandlers,
+                                      RelaunchAnalysisSelected.HasRelaunchAnalysisSelectedHandlers,
+                                      ShareAnalysisSelected.HasShareAnalysisSelectedHandlers,
+                                      RenameAnalysisSelected.HasRenameAnalysisSelectedHandlers,
+                                      GoToAnalysisFolderSelected.HasGoToAnalysisFolderSelectedHandlers,
+                                      DeleteAnalysisSelected.HasDeleteAnalysisSelectedHandlers,
+                                      CancelAnalysisSelected.HasCancelAnalysisSelectedHandlers,
+                                      ViewAnalysisParamsSelected.HasViewAnalysisParamsSelectedHandlers,
+                                      AnalysisJobInfoSelected.HasAnalysisJobInfoSelectedHandlers {
 
     interface Appearance {
-
-        String analysesExecDeleteWarning();
 
         String appName();
 
@@ -49,10 +62,6 @@ public interface AnalysesView extends IsWidget,
         String paramType();
 
         String paramValue();
-
-        String rename();
-
-        String renameAnalysis();
 
         String retrieveParametersLoadingMask();
 
@@ -108,8 +117,6 @@ public interface AnalysesView extends IsWidget,
 
         String saveAs();
 
-        String warning();
-
         String viewAnalysisStepInfo();
 
         String stepType();
@@ -137,6 +144,8 @@ public interface AnalysesView extends IsWidget,
         String stepInfoDialogWidth();
 
         String stepInfoDialogHeight();
+
+        int dotMenuWidth();
     }
 
     interface Presenter {
@@ -173,6 +182,13 @@ public interface AnalysesView extends IsWidget,
 
             String commentsDialogHeight();
 
+            String warning();
+
+            String analysesExecDeleteWarning();
+
+            String rename();
+
+            String renameAnalysis();
         }
 
         List<Analysis> getSelectedAnalyses();

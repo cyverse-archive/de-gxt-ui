@@ -19,17 +19,12 @@ import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
 import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
-import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
-import org.iplantc.de.analysis.client.views.dialogs.AnalysisParametersDialog;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.analysis.shared.AnalysisModule;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.analysis.Analysis;
-import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
-import org.iplantc.de.commons.client.views.dialogs.IPlantPromptDialog;
-import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -45,7 +40,6 @@ import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -55,10 +49,7 @@ import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.Composite;
-import com.sencha.gxt.widget.core.client.Dialog;
-import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.button.TextButton;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.SimpleComboBox;
 import com.sencha.gxt.widget.core.client.menu.Item;
@@ -101,11 +92,8 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     @UiField(provided = true)
     SimpleComboBox<AnalysisFilter> filterCombo;
 
-    @Inject AsyncProviderWrapper<AnalysisParametersDialog> analysisParametersDialogAsyncProvider;
-
     @Inject
     UserInfo userInfo;
-    @Inject AsyncProviderWrapper<AnalysisCommentsDialog> analysisCommentsDlgProvider;
 
 
     List<Analysis> currentSelection;
@@ -362,18 +350,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         Preconditions.checkNotNull(currentSelection);
         Preconditions.checkState(!currentSelection.isEmpty());
 
-        ConfirmMessageBox cmb = new ConfirmMessageBox(appearance.warning(),
-                                                      appearance.analysesExecDeleteWarning());
-        cmb.setPredefinedButtons(Dialog.PredefinedButton.OK, Dialog.PredefinedButton.CANCEL);
-        cmb.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
-            @Override
-            public void onDialogHide(DialogHideEvent event) {
-                if (Dialog.PredefinedButton.OK.equals(event.getHideButton())){
-                    fireEvent(new DeleteAnalysisSelected(currentSelection));
-                }
-            }
-        });
-        cmb.show();
+        fireEvent(new DeleteAnalysisSelected(currentSelection));
     }
 
     @UiHandler("goToFolderMI")
@@ -397,21 +374,8 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         Preconditions.checkState(currentSelection.size() == 1);
 
         final Analysis selectedAnalysis = currentSelection.iterator().next();
-        final String name = selectedAnalysis.getName();
-        final IPlantPromptDialog dlg = new IPlantPromptDialog(appearance.rename(),
-                                                              -1,
-                                                              name,
-                                                              new DiskResourceNameValidator());
-        dlg.setHeading(appearance.renameAnalysis());
-        dlg.addOkButtonSelectHandler(new SelectEvent.SelectHandler() {
-            @Override
-            public void onSelect(SelectEvent event) {
-                if (!selectedAnalysis.getName().equals(dlg.getFieldText())) {
-                    fireEvent(new RenameAnalysisSelected(selectedAnalysis, dlg.getFieldText()));
-                }
-            }
-        });
-        dlg.show();
+
+        fireEvent(new RenameAnalysisSelected(selectedAnalysis));
     }
 
     @UiHandler("updateCommentsMI")
@@ -423,26 +387,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
 
 
         final Analysis selectedAnalysis = currentSelection.iterator().next();
-        analysisCommentsDlgProvider.get(new AsyncCallback<AnalysisCommentsDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(AnalysisCommentsDialog result) {
-                result.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
-                    @Override
-                    public void onDialogHide(DialogHideEvent event) {
-                        if (Dialog.PredefinedButton.OK.equals(event.getHideButton())
-                            && result.isCommentChanged()) {
-                            fireEvent(new AnalysisCommentUpdate(selectedAnalysis, result.getComment()));
-                        }
-                    }
-                });
-                result.show(selectedAnalysis);
-            }
-        });
+        fireEvent(new AnalysisCommentUpdate(selectedAnalysis));
     }
 
     @UiHandler("viewParamsMI")
@@ -450,17 +395,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         Preconditions.checkNotNull(currentSelection);
         Preconditions.checkState(currentSelection.size() == 1);
 
-        analysisParametersDialogAsyncProvider.get(new AsyncCallback<AnalysisParametersDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(AnalysisParametersDialog result) {
-                result.show(currentSelection.iterator().next());
-            }
-        });
+        fireEvent(new ViewAnalysisParamsSelected(currentSelection.get(0)));
     }
 
     @UiHandler("viewJobInfoMI")
@@ -540,5 +475,10 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     @Override
     public HandlerRegistration addCancelAnalysisSelectedHandler(CancelAnalysisSelected.CancelAnalysisSelectedHandler handler) {
         return addHandler(handler, CancelAnalysisSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addViewAnalysisParamsSelectedHandler(ViewAnalysisParamsSelected.ViewAnalysisParamsSelectedHandler handler) {
+        return addHandler(handler, ViewAnalysisParamsSelected.TYPE);
     }
 }

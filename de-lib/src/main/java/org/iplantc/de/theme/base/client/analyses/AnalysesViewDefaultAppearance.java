@@ -58,10 +58,6 @@ public class AnalysesViewDefaultAppearance implements AnalysesView.Appearance {
     public AnalysisInfoStyle css() {
         return resources.css();
    }
-    @Override
-    public String analysesExecDeleteWarning() {
-        return analysesMessages.analysesExecDeleteWarning();
-    }
 
     @Override
     public String appName() {
@@ -106,16 +102,6 @@ public class AnalysesViewDefaultAppearance implements AnalysesView.Appearance {
     @Override
     public String paramValue() {
         return iplantDisplayStrings.paramValue();
-    }
-
-    @Override
-    public String rename() {
-        return iplantDisplayStrings.rename();
-    }
-
-    @Override
-    public String renameAnalysis() {
-        return analysesMessages.renameAnalysis();
     }
 
     @Override
@@ -254,11 +240,6 @@ public class AnalysesViewDefaultAppearance implements AnalysesView.Appearance {
     }
 
     @Override
-    public String warning() {
-        return iplantDisplayStrings.warning();
-    }
-
-    @Override
     public String viewAnalysisStepInfo() {
         return analysesMessages.viewAnalysisStepInfo();
     }
@@ -321,5 +302,10 @@ public class AnalysesViewDefaultAppearance implements AnalysesView.Appearance {
     @Override
     public String stepInfoDialogHeight() {
         return "300px";
+    }
+
+    @Override
+    public int dotMenuWidth() {
+        return 40;
     }
 }

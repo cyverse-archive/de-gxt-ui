@@ -17,10 +17,13 @@ import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
 import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
 import org.iplantc.de.analysis.client.gin.factory.AnalysesViewFactory;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.analysis.client.presenter.proxy.AnalysisRpcProxy;
 import org.iplantc.de.analysis.client.views.AnalysisStepsView;
+import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
+import org.iplantc.de.analysis.client.views.dialogs.AnalysisParametersDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisSharingDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisStepsInfoDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisUserSupportDialog;
@@ -45,6 +48,8 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
+import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
+import org.iplantc.de.commons.client.views.dialogs.IPlantPromptDialog;
 import org.iplantc.de.shared.AnalysisCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
@@ -70,6 +75,8 @@ import com.sencha.gxt.data.shared.loader.LoadEvent;
 import com.sencha.gxt.data.shared.loader.LoadHandler;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
+import com.sencha.gxt.widget.core.client.Dialog;
+import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 import java.util.ArrayList;
@@ -96,7 +103,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               RelaunchAnalysisSelected.RelaunchAnalysisSelectedHandler,
                                               GoToAnalysisFolderSelected.GoToAnalysisFolderSelectedHandler,
                                               DeleteAnalysisSelected.DeleteAnalysisSelectedHandler,
-                                              CancelAnalysisSelected.CancelAnalysisSelectedHandler {
+                                              CancelAnalysisSelected.CancelAnalysisSelectedHandler,
+                                              ViewAnalysisParamsSelected.ViewAnalysisParamsSelectedHandler {
 
     private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
         private final Analysis ae;
@@ -223,6 +231,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Inject
     AsyncProviderWrapper<AnalysisUserSupportDialog> aSupportDialogProvider;
     @Inject AsyncProviderWrapper<AnalysisStepsInfoDialog> stepsInfoDialogProvider;
+    @Inject AsyncProviderWrapper<AnalysisCommentsDialog> analysisCommentsDlgProvider;
+    @Inject AsyncProviderWrapper<AnalysisParametersDialog> analysisParametersDialogAsyncProvider;
 
     @Inject
     AnalysisUserSupportDialog.AnalysisUserSupportAppearance userSupportAppearance;
@@ -262,8 +272,16 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         this.view.addAnalysisAppSelectedEventHandler(this);
         this.view.addHTAnalysisExpandEventHandler(this);
         this.view.addAnalysisUserSupportRequestedEventHandler(this);
-        toolBarView.addAnalysisJobInfoSelectedHandler(this);
+        this.view.addRelaunchAnalysisSelectedHandler(this);
+        this.view.addShareAnalysisSelectedHandler(this);
         this.view.addAnalysisCommentUpdateHandler(this);
+        this.view.addAnalysisJobInfoSelectedHandler(this);
+        this.view.addRenameAnalysisSelectedHandler(this);
+        this.view.addGoToAnalysisFolderSelectedHandler(this);
+        this.view.addDeleteAnalysisSelectedHandler(this);
+        this.view.addCancelAnalysisSelectedHandler(this);
+        this.view.addViewAnalysisParamsSelectedHandler(this);
+        toolBarView.addAnalysisJobInfoSelectedHandler(this);
         toolBarView.addAnalysisCommentUpdateHandler(this);
         toolBarView.addShareAnalysisSelectedHandler(this);
         toolBarView.addAnalysisFilterChangedHandler(this);
@@ -273,6 +291,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         toolBarView.addGoToAnalysisFolderSelectedHandler(this);
         toolBarView.addDeleteAnalysisSelectedHandler(this);
         toolBarView.addCancelAnalysisSelectedHandler(this);
+        toolBarView.addViewAnalysisParamsSelectedHandler(this);
 
         //Set default filter to ALL
         currentFilter = AnalysisFilter.ALL;
@@ -298,7 +317,17 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     @Override
     public void onDeleteAnalysisSelected(DeleteAnalysisSelected event) {
-        List<Analysis> analysesToDelete = event.getAnalyses();
+        ConfirmMessageBox cmb = getDeleteAnalysisDlg();
+        cmb.setPredefinedButtons(Dialog.PredefinedButton.OK, Dialog.PredefinedButton.CANCEL);
+        cmb.addDialogHideHandler(hideEvent -> {
+            if (Dialog.PredefinedButton.OK.equals(hideEvent.getHideButton())) {
+               deleteAnalyses(event.getAnalyses());
+            }
+        });
+        cmb.show();
+    }
+
+    void deleteAnalyses(List<Analysis> analysesToDelete) {
         analysisService.deleteAnalyses(analysesToDelete, new AnalysisCallback<String>() {
 
             @Override
@@ -477,11 +506,21 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Override
     public void onRenameAnalysisSelected(RenameAnalysisSelected event) {
         Analysis selectedAnalysis = event.getAnalysis();
-        String newName = event.getNewName();
+        final String name = selectedAnalysis.getName();
+        final IPlantPromptDialog dlg = getRenameAnalysisDlg(name);
+        dlg.setHeading(appearance.renameAnalysis());
+        dlg.addOkButtonSelectHandler(okSelect -> {
+            if (!selectedAnalysis.getName().equals(dlg.getFieldText())) {
+                renameAnalysis(selectedAnalysis, dlg.getFieldText());
+            }
+        });
+        dlg.show();
+    }
+
+    void renameAnalysis(Analysis selectedAnalysis, String newName) {
         analysisService.renameAnalysis(selectedAnalysis,
                                        newName,
                                        new RenameAnalysisCallback(selectedAnalysis, newName, listStore));
-
     }
 
     @Override
@@ -491,11 +530,31 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     @Override
     public void onAnalysisCommentUpdate(AnalysisCommentUpdate event) {
-        Analysis value = event.getAnalysis();
-        String comment = event.getComment();
-        analysisService.updateAnalysisComments(value,
+        Analysis selectedAnalysis = event.getAnalysis();
+
+        analysisCommentsDlgProvider.get(new AsyncCallback<AnalysisCommentsDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(AnalysisCommentsDialog result) {
+                result.addDialogHideHandler(hideEvent -> {
+                    if (Dialog.PredefinedButton.OK.equals(hideEvent.getHideButton())
+                        && result.isCommentChanged()) {
+                        updateAnalysisComments(selectedAnalysis, result.getComment());
+                    }
+                });
+                result.show(selectedAnalysis);
+            }
+        });
+    }
+
+    void updateAnalysisComments(Analysis selectedAnalysis, String comment) {
+        analysisService.updateAnalysisComments(selectedAnalysis,
                                                comment,
-                                               new UpdateCommentsCallback(value, comment, listStore));
+                                               new UpdateCommentsCallback(selectedAnalysis, comment, listStore));
     }
 
     @Override
@@ -642,5 +701,29 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                 });
             }
         });
+    }
+
+    @Override
+    public void onViewAnalysisParamsSelected(ViewAnalysisParamsSelected event) {
+        Analysis selectedAnalysis = event.getAnalysis();
+        analysisParametersDialogAsyncProvider.get(new AsyncCallback<AnalysisParametersDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(AnalysisParametersDialog result) {
+                result.show(selectedAnalysis);
+            }
+        });
+    }
+
+    ConfirmMessageBox getDeleteAnalysisDlg() {
+        return new ConfirmMessageBox(appearance.warning(), appearance.analysesExecDeleteWarning());
+    }
+
+    IPlantPromptDialog getRenameAnalysisDlg(String name) {
+        return new IPlantPromptDialog(appearance.rename(), -1, name, new DiskResourceNameValidator());
     }
 }

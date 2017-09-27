@@ -94,4 +94,23 @@ public class AnalysesPresenterDefaultAppearance implements AnalysesView.Presente
         return "300px";
     }
 
+    @Override
+    public String analysesExecDeleteWarning() {
+        return analysesMessages.analysesExecDeleteWarning();
+    }
+
+    @Override
+    public String warning() {
+        return iplantDisplayStrings.warning();
+    }
+
+    public String rename() {
+        return iplantDisplayStrings.rename();
+    }
+
+    @Override
+    public String renameAnalysis() {
+        return analysesMessages.renameAnalysis();
+    }
+
 }

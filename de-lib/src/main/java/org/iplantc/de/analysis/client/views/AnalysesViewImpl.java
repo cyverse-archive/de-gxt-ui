@@ -6,16 +6,21 @@ import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent.HTAnalysisExpandEventHandler;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisCommentSelectedEvent;
+import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
+import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
+import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
 import org.iplantc.de.analysis.client.gin.factory.AnalysisToolBarFactory;
 import org.iplantc.de.analysis.client.models.AnalysisFilter;
-import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.analysis.shared.AnalysisModule;
 import org.iplantc.de.client.models.analysis.Analysis;
-import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -23,7 +28,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -34,10 +38,8 @@ import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.Composite;
-import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.Status;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.grid.CheckBoxSelectionModel;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
@@ -71,8 +73,7 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     @UiField ToolBar pagingToolBar;
     @UiField Status selectionStatus;
     CheckBoxSelectionModel<Analysis> checkBoxModel;
-
-    @Inject AsyncProviderWrapper<AnalysisCommentsDialog> analysisCommentsDlgProvider;
+    private AnalysisColumnModel acm;
 
     AnalysisSearchField searchField;
 
@@ -86,6 +87,8 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
         
         MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
         initWidget(uiBinder.createAndBindUi(this));
+
+        this.acm = (AnalysisColumnModel) cm;
 
         pagingToolBar.addStyleName(appearance.pagingToolbarStyle());
         pagingToolBar.setBorders(false);
@@ -154,29 +157,7 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
 
     @Override
     public void onAnalysisCommentSelected(final AnalysisCommentSelectedEvent event) {
-        // Show comments
-        analysisCommentsDlgProvider.get(new AsyncCallback<AnalysisCommentsDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(AnalysisCommentsDialog result) {
-                result.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
-                    @Override
-                    public void onDialogHide(DialogHideEvent hideEvent) {
-                        if (Dialog.PredefinedButton.OK.equals(hideEvent.getHideButton())
-                            && result.isCommentChanged()) {
-                            fireEvent(new AnalysisCommentUpdate(event.getValue(),
-                                                                result.getComment()));
-
-                        }
-                    }
-                });
-                result.show(event.getValue());
-            }
-        });
+        fireEvent(new AnalysisCommentUpdate(event.getValue()));
     }
 
     @Override
@@ -215,6 +196,8 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
         toolBar.asWidget().ensureDebugId(baseID + AnalysisModule.Ids.MENUBAR);
+        grid.ensureDebugId(baseID + AnalysisModule.Ids.GRID);
+        acm.ensureDebugId(baseID + AnalysisModule.Ids.GRID);
     }
 
     private void setSelectionCount(int count) {
@@ -229,5 +212,45 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     @Override
     public HandlerRegistration addAnalysisCommentUpdateHandler(AnalysisCommentUpdate.AnalysisCommentUpdateHandler handler) {
         return addHandler(handler, AnalysisCommentUpdate.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addRelaunchAnalysisSelectedHandler(RelaunchAnalysisSelected.RelaunchAnalysisSelectedHandler handler) {
+        return acm.addRelaunchAnalysisSelectedHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addShareAnalysisSelectedHandler(ShareAnalysisSelected.ShareAnalysisSelectedHandler handler) {
+        return acm.addShareAnalysisSelectedHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addAnalysisJobInfoSelectedHandler(AnalysisJobInfoSelected.AnalysisJobInfoSelectedHandler handler) {
+        return acm.addAnalysisJobInfoSelectedHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addCancelAnalysisSelectedHandler(CancelAnalysisSelected.CancelAnalysisSelectedHandler handler) {
+        return acm.addCancelAnalysisSelectedHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addDeleteAnalysisSelectedHandler(DeleteAnalysisSelected.DeleteAnalysisSelectedHandler handler) {
+        return acm.addDeleteAnalysisSelectedHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addGoToAnalysisFolderSelectedHandler(GoToAnalysisFolderSelected.GoToAnalysisFolderSelectedHandler handler) {
+        return acm.addGoToAnalysisFolderSelectedHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addRenameAnalysisSelectedHandler(RenameAnalysisSelected.RenameAnalysisSelectedHandler handler) {
+        return acm.addRenameAnalysisSelectedHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addViewAnalysisParamsSelectedHandler(ViewAnalysisParamsSelected.ViewAnalysisParamsSelectedHandler handler) {
+        return acm.addViewAnalysisParamsSelectedHandler(handler);
     }
 }

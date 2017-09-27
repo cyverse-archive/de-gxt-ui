@@ -40,17 +40,18 @@ public class AnalysisNameCellDefaultAppearance implements AnalysisNameCell.Analy
     }
 
     interface Templates extends SafeHtmlTemplates {
-        @SafeHtmlTemplates.Template("<span name=\"{0}\" title=\" {3}\" class=\"{1}\">{2}</span>")
-        SafeHtml analysis(String elementName, String className, SafeHtml analysisName, String tooltip);
+        @SafeHtmlTemplates.Template("<span name=\"{0}\" id='{4}' title=\" {3}\" class=\"{1}\">{2}</span>")
+        SafeHtml analysis(String elementName, String className, SafeHtml analysisName, String tooltip, String debugId);
 
-        @SafeHtmlTemplates.Template("<span name='{5}' title='{6}' class=\"{4}\"></span>&nbsp;<span name=\"{0}\" title=\" {3}\" class=\"{1}\">{2}</span> ")
+        @SafeHtmlTemplates.Template("<span name='{5}' id='{7}' title='{6}' class=\"{4}\"></span>&nbsp;<span name=\"{0}\" title=\" {3}\" class=\"{1}\">{2}</span> ")
         SafeHtml htAnalysis(String elementName,
                             String className,
                             SafeHtml analysisName,
                             String tooltip,
                             String hticon,
                             String htElementName,
-                            String batch_Status);
+                            String batch_Status,
+                            String debugId);
     }
 
     private final AnalysisNameCellResources resources;
@@ -89,7 +90,7 @@ public class AnalysisNameCellDefaultAppearance implements AnalysisNameCell.Analy
     }
 
     @Override
-    public void render(Cell.Context context, Analysis model, SafeHtmlBuilder sb) {
+    public void render(Cell.Context context, Analysis model, SafeHtmlBuilder sb, String debugId) {
         if (model == null)
             return;
 
@@ -113,9 +114,10 @@ public class AnalysisNameCellDefaultAppearance implements AnalysisNameCell.Analy
                                           tooltip,
                                           nameStyles.htList(),
                                           HT_ELEMENT_NAME,
-                                          httooltipSB.toString()));
+                                          httooltipSB.toString(),
+                                          debugId));
         } else {
-            sb.append(template.analysis(ELEMENT_NAME, style, SafeHtmlUtils.fromString(model.getName()), tooltip));
+            sb.append(template.analysis(ELEMENT_NAME, style, SafeHtmlUtils.fromString(model.getName()), tooltip, debugId));
         }
 
     }
