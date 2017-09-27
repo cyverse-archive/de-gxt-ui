@@ -142,4 +142,6 @@ public interface DesktopMessages extends Messages {
     String hookTopic();
 
     String test();
+
+    String teamNotification();
 }

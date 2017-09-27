@@ -5,9 +5,12 @@ import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.userSettings.UserSetting;
 import org.iplantc.de.client.models.userSettings.UserSettingAutoBeanFactory;
+import org.iplantc.de.client.models.webhooks.Webhook;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
+
+import java.util.List;
 
 /**
  * A singleton hold user general settings
@@ -300,4 +303,14 @@ public class UserSettings {
     public boolean isUsingDefaults() {
         return isDefaults;
     }
+
+    public void setWebhooks(List<Webhook> hooks) {
+        userSetting.setWebhooks(hooks);
+    }
+
+    public List<Webhook> getWebhooks() {
+        return userSetting.getWebhooks();
+    }
+
+
 }

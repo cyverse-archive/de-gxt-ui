@@ -100,6 +100,8 @@ public interface PreferencesView extends IsWidget,
         String hookTopic();
 
         String test();
+
+        String teamNotification();
     }
 
     void userSessionSuccess();

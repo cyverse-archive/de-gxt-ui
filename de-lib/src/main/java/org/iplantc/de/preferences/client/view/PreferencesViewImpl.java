@@ -6,15 +6,17 @@ import org.iplantc.de.client.KeyBoardShortcutConstants;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.diskResources.Folder;
+import org.iplantc.de.client.models.webhooks.Webhook;
+import org.iplantc.de.client.models.webhooks.WebhooksAutoBeanFactory;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.validators.UrlValidator;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
 import org.iplantc.de.diskResource.client.views.widgets.FolderSelectorField;
 import org.iplantc.de.preferences.client.PreferencesView;
-import org.iplantc.de.preferences.client.events.TestWebhookClicked;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
 import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
+import org.iplantc.de.preferences.client.events.TestWebhookClicked;
 import org.iplantc.de.preferences.shared.Preferences;
 
 import com.google.gwt.core.client.GWT;
@@ -36,11 +38,17 @@ import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.CheckBox;
+import com.sencha.gxt.widget.core.client.form.FieldSet;
+import com.sencha.gxt.widget.core.client.form.FormPanelHelper;
+import com.sencha.gxt.widget.core.client.form.IsField;
 import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.form.validator.MaxLengthValidator;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author sriram, jstroot
@@ -85,7 +93,6 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @Ignore
     TextButton testBtn;
 
-
     @UiField
     @Ignore
     TextField hookUrl;
@@ -93,6 +100,15 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @UiField
     @Ignore
     TextButton hookDelBtn;
+
+    @UiField
+    @Ignore
+    CheckBox dataNotification, appsNotification, analysesNotification, toolsNotification,
+            permIdNotification, teamNotification;
+
+    @Ignore
+    @UiField
+    FieldSet hookFieldSet;
 
     private final KeyBoardShortcutConstants KB_CONSTANTS;
     private final Map<TextField, String> kbMap;
@@ -104,6 +120,8 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     private UserSettings usValue;
 
     @Inject UserSettings us;
+    @Inject
+    WebhooksAutoBeanFactory wabFactory;
 
     @Inject
     PreferencesViewImpl(final DiskResourceSelectorFieldFactory folderSelectorFieldFactory,
@@ -172,6 +190,17 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @Override
     public void initAndShow(final UserSettings userSettings) {
         this.usValue = userSettings;
+        if (userSettings.getWebhooks() != null && userSettings.getWebhooks().size() > 0) {
+            Webhook webhook = userSettings.getWebhooks().get(0);
+            List<String> topics = webhook.getTopics();
+            this.hookUrl.setValue(webhook.getUrl());
+            List<IsField<?>> fields = FormPanelHelper.getFields(hookFieldSet);
+            for (IsField f : fields) {
+                if (f instanceof CheckBox && (topics.contains(((CheckBox)f).getName()))) {
+                    ((CheckBox)f).setValue(true);
+                }
+            }
+        }
         editorDriver.edit(userSettings);
         if (!userSettings.hasUserSessionConnection()) {
             userSessionFail();
@@ -205,12 +234,25 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @Override
     public void flush() {
         UserSettings value = editorDriver.flush();
+        Webhook hook = wabFactory.getWebhook().as();
+        hook.setUrl(hookUrl.getValue());
+        hook.setType(hook.getDefaultType());
+        hook.setTopics(getSelectedTopics());
+        value.setWebhooks(Arrays.asList(hook));
         if (!editorDriver.hasErrors() && isValid()) {
             this.flushedValue = value;
         } else {
             IplantAnnouncer.getInstance()
                            .schedule(new ErrorAnnouncementConfig(appearance.completeRequiredFieldsError()));
         }
+    }
+
+    private List<String> getSelectedTopics() {
+        List<IsField<?>> fields = FormPanelHelper.getFields(hookFieldSet);
+        return fields.stream()
+                     .filter(f -> f instanceof CheckBox && ((CheckBox)f).getValue())
+                     .map(f -> (((CheckBox)f).getName()))
+                     .collect(Collectors.toList());
     }
 
     @Override

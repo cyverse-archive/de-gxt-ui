@@ -10,6 +10,7 @@ import java.util.List;
  * A model that describes a webhook
  */
 public interface Webhook extends HasId {
+    String SLACK = "Slack";
 
     void setId(String id);
 
@@ -21,8 +22,12 @@ public interface Webhook extends HasId {
 
     String getType();
 
-    List<Topic> getTopics();
+    List<String> getTopics();
 
-    void setTopic(List<Topic> topics);
+    void setTopics(List<String> topics);
+
+    default String getDefaultType() {
+        return SLACK;
+    }
 
 }

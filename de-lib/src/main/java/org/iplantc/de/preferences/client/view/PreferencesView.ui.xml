@@ -180,7 +180,7 @@
                         </container:child>
                     </container:VerticalLayoutContainer>
                 </form:FieldSet>
-                <form:FieldSet heading="{appearance.webhooks}">
+                <form:FieldSet heading="{appearance.webhooks}" ui:field="hookFieldSet">
                     <form:widget>
                         <g:VerticalPanel spacing="5">
                             <g:HTML ui:field="webhooksfield"/>
@@ -192,19 +192,28 @@
                             <g:HTML text="{appearance.hookTopic}"/>
                             <form:CheckBox ui:field="dataNotification"
                                            debugId="idCboDataNotifi"
+                                           name="data"
                                            boxLabel="{appearance.dataNotification}"/>
                             <form:CheckBox ui:field="appsNotification"
                                            debugId="idCboAppsNotifi"
+                                           name="apps"
                                            boxLabel="{appearance.appsNotification}"/>
                             <form:CheckBox ui:field="analysesNotification"
                                            debugId="idCboAnalysesNotifi"
+                                           name="analysis"
                                            boxLabel="{appearance.analysesNotification}"/>
                             <form:CheckBox ui:field="toolsNotification"
                                            debugId="idCboToolsNotifi"
+                                           name="tool_request"
                                            boxLabel="{appearance.toolsNotification}"/>
                             <form:CheckBox ui:field="permIdNotification"
                                            debugId="idPermNotifi"
+                                           name="permanent_id_request"
                                            boxLabel="{appearance.permNotification}"/>
+                            <form:CheckBox ui:field="teamNotification"
+                                           debugId="idTeamNotifi"
+                                           name="team"
+                                           boxLabel="{appearance.teamNotification}" />
                         </g:VerticalPanel>
                     </form:widget>
                 </form:FieldSet>

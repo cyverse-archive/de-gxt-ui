@@ -243,4 +243,9 @@ public class PreferencesViewDefaultAppearance implements PreferencesView.Prefere
     public String test() {
         return desktopMessages.test();
     }
+
+    @Override
+    public String teamNotification() {
+        return desktopMessages.teamNotification();
+    }
 }
