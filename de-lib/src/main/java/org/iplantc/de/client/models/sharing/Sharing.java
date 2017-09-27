@@ -95,13 +95,23 @@ public class Sharing {
         return displayPermission;
     }
 
+    /**
+     * Two shares are equal if and only if
+     * - The user ID is the same
+     * - The resource ID is the same
+     * - The permission is the same
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (o == null || !(o instanceof Sharing)) {
             return false;
         }
         Sharing s = (Sharing)o;
-        return getKey().equals(s.getKey()) && s.getDisplayPermission().equals(getDisplayPermission());
+        return getKey().equals(s.getKey()) &&
+               getId().equals(s.getId()) &&
+               s.getDisplayPermission().equals(getDisplayPermission());
     }
 
     public Sharing copy() {
