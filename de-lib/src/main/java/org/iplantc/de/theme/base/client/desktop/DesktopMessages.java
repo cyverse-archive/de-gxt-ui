@@ -144,4 +144,10 @@ public interface DesktopMessages extends Messages {
     String test();
 
     String teamNotification();
+
+    SafeHtml webhookSaveError();
+
+    String testWebhookFail();
+
+    String testWebhookSuccess();
 }

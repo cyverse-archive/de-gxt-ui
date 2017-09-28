@@ -248,4 +248,14 @@ public class PreferencesViewDefaultAppearance implements PreferencesView.Prefere
     public String teamNotification() {
         return desktopMessages.teamNotification();
     }
+
+    @Override
+    public String testWebhookFail() {
+        return desktopMessages.testWebhookFail();
+    }
+
+    @Override
+    public String testWebhookSuccess() {
+        return desktopMessages.testWebhookSuccess();
+    }
 }

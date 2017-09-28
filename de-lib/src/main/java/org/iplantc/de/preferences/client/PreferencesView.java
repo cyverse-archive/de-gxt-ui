@@ -102,6 +102,10 @@ public interface PreferencesView extends IsWidget,
         String test();
 
         String teamNotification();
+
+        String testWebhookFail();
+
+        String testWebhookSuccess();
     }
 
     void userSessionSuccess();

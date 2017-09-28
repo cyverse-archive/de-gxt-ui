@@ -142,4 +142,9 @@ public class DesktopPresenterDefaultAppearance implements DesktopView.Presenter.
     public String sectionOne() {
         return desktopMessages.sectionOne();
     }
+
+    @Override
+    public SafeHtml webhookSaveError() {
+        return desktopMessages.webhookSaveError();
+    }
 }

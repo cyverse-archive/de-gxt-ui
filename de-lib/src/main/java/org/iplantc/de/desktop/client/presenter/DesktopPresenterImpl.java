@@ -49,6 +49,7 @@ import org.iplantc.de.fileViewers.client.callbacks.LoadGenomeInCoGeCallback;
 import org.iplantc.de.intercom.client.IntercomFacade;
 import org.iplantc.de.notifications.client.utils.NotificationUtil;
 import org.iplantc.de.notifications.client.utils.NotifyInfo;
+import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.NotificationCallback;
@@ -565,6 +566,19 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     @Override
     public void saveUserSettings(final UserSettings value,
                                  final boolean updateSilently) {
+        AppsCallback hookCallback = new AppsCallback<Void>() {
+            @Override
+            public void onFailure(Integer statusCode, Throwable exception) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.webhookSaveError(),
+                                                               true,
+                                                               3000));
+            }
+
+            @Override
+            public void onSuccess(Void result) {
+                //Do Nothing
+            }
+        };
         final RuntimeCallbacks.SaveUserSettingsCallback callback = new RuntimeCallbacks.SaveUserSettingsCallback(value,
                                                                                userSettings,
                                                                                announcer,
@@ -572,7 +586,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                                                                                appearance,
                                                                                updateSilently,
                                                                                userSessionService);
-        userSessionService.saveUserPreferences(value.getUserSetting(), callback);
+        userSessionService.saveUserPreferences(value.getUserSetting(), callback, hookCallback);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package org.iplantc.de.client.services.converters;
 
-import org.iplantc.de.client.models.webhooks.WebhookList;
 import org.iplantc.de.client.models.webhooks.WebhooksAutoBeanFactory;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;

@@ -184,6 +184,11 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
 
     @Ignore
     public UserSettings getValue() {
+        Webhook hook = wabFactory.getWebhook().as();
+        hook.setUrl(hookUrl.getValue());
+        hook.setType(hook.getDefaultType());
+        hook.setTopics(getSelectedTopics());
+        flushedValue.setWebhooks(Arrays.asList(hook));
         return flushedValue;
     }
 
@@ -234,11 +239,6 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @Override
     public void flush() {
         UserSettings value = editorDriver.flush();
-        Webhook hook = wabFactory.getWebhook().as();
-        hook.setUrl(hookUrl.getValue());
-        hook.setType(hook.getDefaultType());
-        hook.setTopics(getSelectedTopics());
-        value.setWebhooks(Arrays.asList(hook));
         if (!editorDriver.hasErrors() && isValid()) {
             this.flushedValue = value;
         } else {

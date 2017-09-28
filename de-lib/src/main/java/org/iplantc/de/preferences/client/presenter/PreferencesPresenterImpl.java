@@ -12,9 +12,9 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.preferences.client.PreferencesView;
-import org.iplantc.de.preferences.client.events.TestWebhookClicked;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
 import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
+import org.iplantc.de.preferences.client.events.TestWebhookClicked;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -169,15 +169,13 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
         serviceFacade.testWebhook(event.getUrl(), new AsyncCallback<String>() {
             @Override
             public void onFailure(Throwable throwable) {
-                ErrorHandler.post(
-                        "Unable to add webhook. Please check the webhook url again and try to add again!",
-                        throwable);
+                ErrorHandler.post(appearance.testWebhookFail(),
+                                  throwable);
             }
 
             @Override
             public void onSuccess(String s) {
-                //TODO: Add url to database using a service call
-               announcer.schedule(new SuccessAnnouncementConfig("Webhook added successfully!"));
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.testWebhookSuccess()));
             }
         });
     }
