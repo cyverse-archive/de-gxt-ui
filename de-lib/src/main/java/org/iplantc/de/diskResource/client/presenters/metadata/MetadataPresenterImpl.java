@@ -9,6 +9,7 @@ import org.iplantc.de.client.models.diskResources.MetadataTemplate;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.ontologies.OntologyAutoBeanFactory;
+import org.iplantc.de.client.models.ontologies.OntologyLookupServiceQueryParams;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -16,6 +17,7 @@ import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetadataUpdateCallback;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLookupServiceLoadConfig;
 import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLookupServiceProxy;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.MetadataTemplateViewDialog;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.SelectMetadataTemplateDialog;
@@ -28,6 +30,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
@@ -217,8 +220,18 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
     }
 
     @Override
-    public MetadataTermSearchField createMetadataTermSearchField() {
-        return new MetadataTermSearchField(ontologyFactory, searchProxy, searchFieldAppearance);
+    public MetadataTermSearchField createMetadataTermSearchField(MetadataTemplateAttribute attribute) {
+        OntologyLookupServiceQueryParams loaderSettings = null;
+
+        if (attribute != null && attribute.getSettings() != null) {
+            loaderSettings = AutoBeanCodex.decode(ontologyFactory,
+                                                  OntologyLookupServiceQueryParams.class,
+                                                  attribute.getSettings()).as();
+        }
+
+        OntologyLookupServiceLoadConfig loadConfig = new OntologyLookupServiceLoadConfig(loaderSettings);
+
+        return new MetadataTermSearchField(ontologyFactory, searchProxy, loadConfig, searchFieldAppearance);
     }
 
     @Override
@@ -267,7 +280,6 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
     }
 
     public static Avu newMetadata(String attr, String value, String unit) {
-        // FIXME Move to presenter. Autobean factory doesn't belong in view.
         Avu avu = autoBeanFactory.avu().as();
 
         avu.setAttribute(attr);

@@ -42,5 +42,29 @@ public interface MetadataDisplayStrings extends Messages {
 
     public String enumError();
 
+    String enumValueOrValues();
+
     String descriptionColumn();
+
+    String editOLSQueryParamsDialogHeader();
+
+    String allChildrenFieldLabel();
+
+    String allChildrenHelpLabel();
+
+    String childrenFieldLabel();
+
+    String childrenHelpLabel();
+
+    String entityTypeHelpLabel();
+
+    String iriColumnLabel();
+
+    String ontologiesColumnHeader();
+
+    String ontologiesFieldLabel();
+
+    String ontologiesHelpLabel();
+
+    String querySettings();
 }

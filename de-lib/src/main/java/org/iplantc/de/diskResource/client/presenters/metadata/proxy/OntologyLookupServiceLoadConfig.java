@@ -1,9 +1,18 @@
 package org.iplantc.de.diskResource.client.presenters.metadata.proxy;
 
+import org.iplantc.de.client.models.ontologies.OntologyLookupServiceQueryParams;
+import org.iplantc.de.client.models.ontologies.OntologyLookupServiceQueryParams.EntityTypeFilterValue;
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
+
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.loader.FilterConfig;
 import com.sencha.gxt.data.shared.loader.FilterConfigBean;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Search config for the Ontology Lookup Service `select` endpoint:
@@ -13,38 +22,53 @@ import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
  */
 public class OntologyLookupServiceLoadConfig extends FilterPagingLoadConfigBean {
     private static final String FILTER_FIELD_QUERY = "q";
-    private static final String FILTER_FIELD_ONTOLOGY = "ontology";
-    private static final String FILTER_FIELD_ENTITY_TYPE = "type";
-    private static final String FILTER_FIELD_CHILDREN = "childrenOf";
-    private static final String FILTER_FIELD_ALL_CHILDREN = "allChildrenOf";
     private static final String FILTER_FIELD_RESPONSE_FIELDS = "fieldList";
-
-    /**
-     * OLS searches may be restricted to one of these entity types.
-     */
-    public enum EntityTypeFilterValue {
-        CLASS,
-        PROPERTY,
-        INDIVIDUAL,
-        ONTOLOGY
-    }
 
     private FastMap<FilterConfig> filterConfigMap = new FastMap<>();
 
     public OntologyLookupServiceLoadConfig() {
+        this(null);
+    }
+
+    public OntologyLookupServiceLoadConfig(OntologyLookupServiceQueryParams loaderSettings) {
         filterConfigMap.put(FILTER_FIELD_QUERY,           new FilterConfigBean());
-        filterConfigMap.put(FILTER_FIELD_ONTOLOGY,        new FilterConfigBean());
-        filterConfigMap.put(FILTER_FIELD_ENTITY_TYPE,     new FilterConfigBean());
-        filterConfigMap.put(FILTER_FIELD_CHILDREN,        new FilterConfigBean());
-        filterConfigMap.put(FILTER_FIELD_ALL_CHILDREN,    new FilterConfigBean());
         filterConfigMap.put(FILTER_FIELD_RESPONSE_FIELDS, new FilterConfigBean());
+        filterConfigMap.put(OntologyLookupServiceQueryParams.FILTER_FIELD_ONTOLOGY,     new FilterConfigBean());
+        filterConfigMap.put(OntologyLookupServiceQueryParams.FILTER_FIELD_ENTITY_TYPE,  new FilterConfigBean());
+        filterConfigMap.put(OntologyLookupServiceQueryParams.FILTER_FIELD_CHILDREN,     new FilterConfigBean());
+        filterConfigMap.put(OntologyLookupServiceQueryParams.FILTER_FIELD_ALL_CHILDREN, new FilterConfigBean());
 
         filterConfigMap.forEach((key, filterConfig) -> filterConfig.setField(key));
 
-        filterConfigMap.get(FILTER_FIELD_ENTITY_TYPE).setValue(EntityTypeFilterValue.CLASS.toString().toLowerCase());
-        filterConfigMap.get(FILTER_FIELD_RESPONSE_FIELDS).setValue("id,iri,label,ontology_prefix");
+        initFilterConfigValues(loaderSettings);
 
         getFilters().addAll(filterConfigMap.values());
+    }
+
+    private void initFilterConfigValues(OntologyLookupServiceQueryParams loaderSettings) {
+        filterConfigMap.get(FILTER_FIELD_RESPONSE_FIELDS).setValue("id,iri,label,ontology_prefix");
+
+        if (loaderSettings != null) {
+            setEntityTypeFilter(loaderSettings.getEntityType());
+
+            setOntologyListFilter(list2ConfigFilterString(loaderSettings.getOntologies()));
+            setChildrenFilter(list2ConfigFilterString(loaderSettings.getChildren()));
+            setAllChildrenFilter(list2ConfigFilterString(loaderSettings.getAllChildren()));
+        }
+    }
+
+    private String list2ConfigFilterString(List<String> list) {
+        if (list != null && !list.isEmpty()) {
+            List<String> filteredList = list.stream()
+                                            .filter(s -> !Strings.isNullOrEmpty(s))
+                                            .collect(Collectors.toList());
+
+            if (!filteredList.isEmpty()) {
+                return Joiner.on(',').join(filteredList);
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -66,7 +90,7 @@ public class OntologyLookupServiceLoadConfig extends FilterPagingLoadConfigBean 
      * @return A comma-separated list of ontologies e.g. "edam" or "uberon,ma"
      */
     public String getOntologyListFilter() {
-        return filterConfigMap.get(FILTER_FIELD_ONTOLOGY).getValue();
+        return filterConfigMap.get(OntologyLookupServiceQueryParams.FILTER_FIELD_ONTOLOGY).getValue();
     }
 
     /**
@@ -76,14 +100,14 @@ public class OntologyLookupServiceLoadConfig extends FilterPagingLoadConfigBean 
      * @param ontologies A comma-separated list of ontologies (e.g. "edam" or "uberon,ma") or null to clear the filter.
      */
     public void setOntologyListFilter(String ontologies) {
-        filterConfigMap.get(FILTER_FIELD_ONTOLOGY).setValue(ontologies);
+        filterConfigMap.get(OntologyLookupServiceQueryParams.FILTER_FIELD_ONTOLOGY).setValue(ontologies);
     }
 
     /**
      * @return The `type` filter value, or null for no filter.
      */
     public EntityTypeFilterValue getEntityTypeFilter() {
-        String value = filterConfigMap.get(FILTER_FIELD_ENTITY_TYPE).getValue();
+        String value = filterConfigMap.get(OntologyLookupServiceQueryParams.FILTER_FIELD_ENTITY_TYPE).getValue();
 
         return (value == null ? null : EntityTypeFilterValue.valueOf(value.toUpperCase()));
     }
@@ -94,16 +118,16 @@ public class OntologyLookupServiceLoadConfig extends FilterPagingLoadConfigBean 
      * @param entityTypeFilter null to clear the filter.
      */
     public void setEntityTypeFilter(EntityTypeFilterValue entityTypeFilter) {
-        String value = (entityTypeFilter == null ? null : entityTypeFilter.toString().toLowerCase());
+        String value = (entityTypeFilter == null ? null : entityTypeFilter.toString());
 
-        filterConfigMap.get(FILTER_FIELD_ENTITY_TYPE).setValue(value);
+        filterConfigMap.get(OntologyLookupServiceQueryParams.FILTER_FIELD_ENTITY_TYPE).setValue(value);
     }
 
     /**
      * @return The `childrenOf` filter value, or null for no filter.
      */
     public String getChildrenFilter() {
-        return filterConfigMap.get(FILTER_FIELD_CHILDREN).getValue();
+        return filterConfigMap.get(OntologyLookupServiceQueryParams.FILTER_FIELD_CHILDREN).getValue();
     }
 
     /**
@@ -114,14 +138,14 @@ public class OntologyLookupServiceLoadConfig extends FilterPagingLoadConfigBean 
      * @param iriList A comma-separated list of IRIs, or null to clear the filter.
      */
     public void setChildrenFilter(String iriList) {
-        filterConfigMap.get(FILTER_FIELD_CHILDREN).setValue(iriList);
+        filterConfigMap.get(OntologyLookupServiceQueryParams.FILTER_FIELD_CHILDREN).setValue(iriList);
     }
 
     /**
      * @return The `allChildrenOf` filter value, or null for no filter.
      */
     public String getAllChildrenFilter() {
-        return filterConfigMap.get(FILTER_FIELD_ALL_CHILDREN).getValue();
+        return filterConfigMap.get(OntologyLookupServiceQueryParams.FILTER_FIELD_ALL_CHILDREN).getValue();
     }
 
     /**
@@ -132,6 +156,6 @@ public class OntologyLookupServiceLoadConfig extends FilterPagingLoadConfigBean 
      * @param iriList A comma-separated list of IRIs, or null to clear the filter.
      */
     public void setAllChildrenFilter(String iriList) {
-        filterConfigMap.get(FILTER_FIELD_ALL_CHILDREN).setValue(iriList);
+        filterConfigMap.get(OntologyLookupServiceQueryParams.FILTER_FIELD_ALL_CHILDREN).setValue(iriList);
     }
 }

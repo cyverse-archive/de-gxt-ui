@@ -138,7 +138,7 @@ public interface MetadataView extends IsWidget {
 
         DiskResource getSelectedResource();
 
-        MetadataTermSearchField createMetadataTermSearchField();
+        MetadataTermSearchField createMetadataTermSearchField(MetadataTemplateAttribute attribute);
 
         void onTemplateSelected(String templateId);
 

@@ -2792,8 +2792,8 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
      * @return translated "Value(s)"
      */
     @DefaultMessage("Value(s)")
-    @Key("valueParenS")
-    String valueParenS();
+    @Key("valueOrValues")
+    String valueOrValues();
 
     /**
      * Translated "varies".

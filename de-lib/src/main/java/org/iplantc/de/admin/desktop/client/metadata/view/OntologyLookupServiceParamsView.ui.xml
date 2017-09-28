@@ -1,0 +1,60 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
+             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
+             xmlns:metadataView="urn:import:org.iplantc.de.admin.desktop.client.metadata.view">
+
+    <ui:with field="appearance"
+             type="org.iplantc.de.admin.desktop.client.metadata.view.EditMetadataTemplateView.EditMetadataTemplateViewAppearance" />
+    <ui:with field="margins"
+             type="com.sencha.gxt.core.client.util.Margins">
+        <ui:attributes top="0" right="20" bottom="0" left="0"/>
+    </ui:with>
+    <ui:with field="layoutData"
+             type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
+        <ui:attributes width="1" height="-1" margins="{margins}"/>
+    </ui:with>
+
+    <ui:with field="listStore"
+             type="com.sencha.gxt.data.shared.ListStore"/>
+    <ui:with field="labelProvider"
+             type="com.sencha.gxt.data.shared.LabelProvider"/>
+
+    <container:VerticalLayoutContainer ui:field="layoutContainer"
+                                       scrollMode="AUTOY">
+
+        <container:child layoutData="{layoutData}">
+            <form:FieldLabel text="{appearance.entityTypeHelpLabel}"
+                             labelAlign="TOP" >
+                <form:widget>
+                    <form:ComboBox ui:field="entityTypeEditor"
+                                   store="{listStore}"
+                                   labelProvider="{labelProvider}"
+                                   allowBlank="true"
+                                   editable="true" />
+                </form:widget>
+            </form:FieldLabel>
+        </container:child>
+
+        <container:child layoutData="{layoutData}">
+            <metadataView:OntologyLookupServiceParamListEditor ui:field="ontologiesEditor"
+                                                               fieldLabel="{appearance.ontologiesFieldLabel}"
+                                                               helpLabel="{appearance.ontologiesHelpLabel}"
+                                                               columnLabel="{appearance.ontologiesColumnHeader}" />
+        </container:child>
+
+        <container:child layoutData="{layoutData}">
+            <metadataView:OntologyLookupServiceParamListEditor ui:field="childrenEditor"
+                                                               fieldLabel="{appearance.childrenFieldLabel}"
+                                                               helpLabel="{appearance.childrenHelpLabel}"
+                                                               columnLabel="{appearance.iriColumnLabel}" />
+        </container:child>
+
+        <container:child layoutData="{layoutData}">
+            <metadataView:OntologyLookupServiceParamListEditor ui:field="allChildrenEditor"
+                                                               fieldLabel="{appearance.allChildrenFieldLabel}"
+                                                               helpLabel="{appearance.allChildrenHelpLabel}"
+                                                               columnLabel="{appearance.iriColumnLabel}" />
+        </container:child>
+
+    </container:VerticalLayoutContainer>
+</ui:UiBinder>
