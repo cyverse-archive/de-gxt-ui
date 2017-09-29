@@ -209,7 +209,7 @@ public class UserSearchField implements IsWidget,
             @Override
             public void render(com.google.gwt.cell.client.Cell.Context context, Subject value,
                     SafeHtmlBuilder sb) {
-                appearance.render(context, value, "(" + searchProxy.getLastQueryText() + ")", sb);
+                appearance.render(context, value, searchProxy.getLastQueryText(), sb);
             }
 
         });

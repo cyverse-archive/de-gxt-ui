@@ -25,8 +25,12 @@ public class AppSearchHighlightDefaultAppearance implements AppSearchHighlightAp
 
         // Initialize or recompile regExp if necessary
         if(regExp == null
-            || !regExp.getSource().equals(pattern)){
-            regExp = RegExp.compile(pattern, "ig");
+            || !regExp.getSource().equals(pattern)) {
+            try {
+                regExp = RegExp.compile(pattern, "ig");
+            } catch (Exception exception) {
+                regExp = RegExp.compile(RegExp.quote(pattern), "ig");
+            }
         }
         return SafeHtmlUtils.fromTrustedString(regExp.replace(name, REPLACEMENT_START + "$1" + REPLACEMENT_END));
     }
