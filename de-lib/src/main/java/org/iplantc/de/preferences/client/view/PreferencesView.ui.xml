@@ -8,7 +8,6 @@
              xmlns:tabs="urn:import:com.sencha.gxt.widget.core.client">
 
     <ui:with field="appearance" type="org.iplantc.de.preferences.client.PreferencesView.PreferencesViewAppearance" />
-
     <ui:style gss="true">
         .user_pref {
             background-color: #fff;
@@ -51,7 +50,6 @@
             <container:VerticalLayoutContainer height="120">
                 <container:child layoutData="{preferenceLayoutData}">
                     <form:CheckBox ui:field="rememberLastPath"
-                                   debugId="cboLastPath"
                                    boxLabel="{appearance.rememberFileSectorPath}"/>
                 </container:child>
                 <container:child layoutData="{preferenceLayoutData}">
@@ -169,13 +167,11 @@
                     <container:VerticalLayoutContainer height="80">
                         <container:child layoutData="{preferenceLayoutData}">
                             <form:CheckBox ui:field="enableAnalysisEmailNotification"
-                                           debugId="idCboAnalysisNotifyEmail"
                                            boxLabel="{appearance.notifyAnalysisEmail}"/>
                         </container:child>
 
                         <container:child layoutData="{preferenceLayoutData}">
                             <form:CheckBox ui:field="enableImportEmailNotification"
-                                           debugId="idCboImportNotifyEmail"
                                            boxLabel="{appearance.notifyImportEmail}"/>
                         </container:child>
                     </container:VerticalLayoutContainer>
@@ -186,33 +182,27 @@
                             <g:HTML ui:field="webhooksfield"/>
                             <g:HorizontalPanel spacing="5">
                                 <form:TextField ui:field="hookUrl" visible="true" enabled="true" width="250"/>
-                                <button:TextButton text="X" ui:field="hookDelBtn" enabled="true"/>
+                                <button:TextButton text="" ui:field="hookDelBtn" enabled="true" icon="{appearance.deleteIcon}"/>
                             </g:HorizontalPanel>
                             <button:TextButton text="{appearance.test}" ui:field="testBtn"/>
                             <g:HTML text="{appearance.hookTopic}"/>
                             <form:CheckBox ui:field="dataNotification"
-                                           debugId="idCboDataNotifi"
-                                           name="data"
+                                           name="{appearance.data}"
                                            boxLabel="{appearance.dataNotification}"/>
                             <form:CheckBox ui:field="appsNotification"
-                                           debugId="idCboAppsNotifi"
-                                           name="apps"
+                                           name="{appearance.apps}"
                                            boxLabel="{appearance.appsNotification}"/>
                             <form:CheckBox ui:field="analysesNotification"
-                                           debugId="idCboAnalysesNotifi"
-                                           name="analysis"
+                                           name="{appearance.analysis}"
                                            boxLabel="{appearance.analysesNotification}"/>
                             <form:CheckBox ui:field="toolsNotification"
-                                           debugId="idCboToolsNotifi"
-                                           name="tool_request"
+                                           name="{appearance.toolRequest}"
                                            boxLabel="{appearance.toolsNotification}"/>
                             <form:CheckBox ui:field="permIdNotification"
-                                           debugId="idPermNotifi"
-                                           name="permanent_id_request"
+                                           name="{appearance.permIdRequest}"
                                            boxLabel="{appearance.permNotification}"/>
                             <form:CheckBox ui:field="teamNotification"
-                                           debugId="idTeamNotifi"
-                                           name="team"
+                                           name="{appearance.team}"
                                            boxLabel="{appearance.teamNotification}" />
                         </g:VerticalPanel>
                     </form:widget>

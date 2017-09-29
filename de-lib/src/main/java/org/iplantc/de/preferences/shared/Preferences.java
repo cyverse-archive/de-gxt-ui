@@ -23,5 +23,12 @@ public interface Preferences {
         String BROWSE_OUTPUT_FOLDER = ".browseButton";
         String DEFAULT_OUTPUT_FIELD = ".inputField";
         String RESET_HPC = ".resetHpc";
+        String DATA_NOTIFICATION = ".idCboDataNotifi";
+        String APPS_NOTIFICATION = ".idCboAppsNotifi";
+        String ANALYSES_NOTIFICATION = ".idCboAnalysesNotifi";
+        String TOOLS_NOTIFICATION = ".idCboToolsNotifi";
+        String PERMS_NOTIFICATION = ".idCboPermNotifi";
+        String TEAM_NOTIFICATION = ".idCboTeamNotifi";
     }
+
 }

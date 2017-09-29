@@ -2,10 +2,11 @@ package org.iplantc.de.preferences.client;
 
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.desktop.client.DesktopView;
-import org.iplantc.de.preferences.client.events.TestWebhookClicked;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
 import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
+import org.iplantc.de.preferences.client.events.TestWebhookClicked;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.IsWidget;
 
@@ -106,6 +107,24 @@ public interface PreferencesView extends IsWidget,
         String testWebhookFail();
 
         String testWebhookSuccess();
+
+        String mustSelectATopic();
+
+        String data();
+
+        String apps();
+
+        String analysis();
+
+        String permIdRequest();
+
+        String team();
+        
+        String toolRequest();
+
+        ImageResource deleteIcon();
+
+        String validUrl();
     }
 
     void userSessionSuccess();

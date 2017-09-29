@@ -19,6 +19,7 @@ import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
 import org.iplantc.de.preferences.client.events.TestWebhookClicked;
 import org.iplantc.de.preferences.shared.Preferences;
 
+import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
@@ -44,6 +45,7 @@ import com.sencha.gxt.widget.core.client.form.IsField;
 import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.form.validator.MaxLengthValidator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -184,11 +186,6 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
 
     @Ignore
     public UserSettings getValue() {
-        Webhook hook = wabFactory.getWebhook().as();
-        hook.setUrl(hookUrl.getValue());
-        hook.setType(hook.getDefaultType());
-        hook.setTopics(getSelectedTopics());
-        flushedValue.setWebhooks(Arrays.asList(hook));
         return flushedValue;
     }
 
@@ -239,6 +236,22 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @Override
     public void flush() {
         UserSettings value = editorDriver.flush();
+        List<String> topics = getSelectedTopics();
+        if (!Strings.isNullOrEmpty(hookUrl.getValue())) {
+            if (topics == null || topics.size() == 0) {
+                IplantAnnouncer.getInstance()
+                               .schedule(new ErrorAnnouncementConfig(appearance.mustSelectATopic()));
+                return;
+            }
+            Webhook hook = wabFactory.getWebhook().as();
+            hook.setUrl(hookUrl.getValue());
+            hook.setType(hook.getDefaultType());
+            hook.setTopics(topics);
+            value.setWebhooks(Arrays.asList(hook));
+        } else {
+            value.setWebhooks(new ArrayList<>());
+        }
+
         if (!editorDriver.hasErrors() && isValid()) {
             this.flushedValue = value;
         } else {
@@ -294,6 +307,13 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         closeShortCut.ensureDebugId(baseID + Preferences.Ids.CLOSE_SC);
 
         hpcResetBtn.ensureDebugId(baseID + Preferences.Ids.RESET_HPC);
+
+        dataNotification.ensureDebugId(baseID + Preferences.Ids.DATA_NOTIFICATION);
+        appsNotification.ensureDebugId(baseID + Preferences.Ids.APPS_NOTIFICATION);
+        analysesNotification.ensureDebugId(baseID + Preferences.Ids.ANALYSES_NOTIFICATION);
+        toolsNotification.ensureDebugId(baseID + Preferences.Ids.TOOLS_NOTIFICATION);
+        permIdNotification.ensureDebugId(baseID + Preferences.Ids.PERMS_NOTIFICATION);
+        teamNotification.ensureDebugId(baseID + Preferences.Ids.TEAM_NOTIFICATION);
 
     }
 
@@ -359,10 +379,10 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
 
     @UiHandler("testBtn")
     void onAddSlack(SelectEvent event) {
-        if(hookUrl.isValid()) {
+        if (!Strings.isNullOrEmpty(hookUrl.getValue())) {
             fireEvent(new TestWebhookClicked(hookUrl.getValue()));
         } else {
-            hookUrl.markInvalid("A valid URL is required!");
+            hookUrl.markInvalid(appearance.validUrl());
         }
 
     }

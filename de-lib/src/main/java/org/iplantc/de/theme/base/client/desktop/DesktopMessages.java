@@ -150,4 +150,20 @@ public interface DesktopMessages extends Messages {
     String testWebhookFail();
 
     String testWebhookSuccess();
+
+    String mustSelectATopic();
+
+    String data();
+
+    String apps();
+
+    String analysis();
+
+    String permIdRequest();
+
+    String team();
+
+    String toolRequest();
+
+    String validUrl();
 }

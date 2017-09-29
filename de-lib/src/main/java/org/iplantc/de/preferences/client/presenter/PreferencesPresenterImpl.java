@@ -164,6 +164,10 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
         });
     }
 
+    /**
+     * Attempt to send a test webhook notification to the URL given by user.
+     * @param event
+     */
     @Override
     public void onTestClicked(TestWebhookClicked event) {
         serviceFacade.testWebhook(event.getUrl(), new AsyncCallback<String>() {
