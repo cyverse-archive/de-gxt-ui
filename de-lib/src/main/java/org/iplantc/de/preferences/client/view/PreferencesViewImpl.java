@@ -232,13 +232,11 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         TextField fld = (TextField) event.getSource();
         int code = event.getNativeEvent().getCharCode();
         if ((code > 96 && code <= 122)) {
-            fld.clear();
             fld.setValue((event.getCharCode() + "").toUpperCase());
             fld.setText((event.getCharCode() + "").toUpperCase());
             fld.setCursorPos(1);
             fld.focus();
         } else if ((code > 47 && code <= 57) || (code > 64 && code <= 90)) {
-            fld.clear();
             fld.setValue(event.getCharCode() + "");
             fld.setText(event.getCharCode() + "");
             fld.setCursorPos(1);
