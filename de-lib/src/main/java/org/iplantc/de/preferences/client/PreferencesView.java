@@ -156,5 +156,7 @@ public interface PreferencesView extends IsWidget,
         PreferencesView getView();
 
         void setViewDebugId(String baseId);
+
+        boolean isValid();
     }
 }

@@ -149,6 +149,7 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         notifyShortCut.addValidator(new MaxLengthValidator(1));
         closeShortCut.addValidator(new MaxLengthValidator(1));
         defaultOutputFolder.addValidator(new AnalysisOutputValidator(wizardAppearance));
+
         defaultOutputFolder.addValueChangeHandler(new ValueChangeHandler<Folder>() {
 
             @Override
@@ -225,10 +226,26 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
                             ks.markInvalid(appearance.duplicateShortCutKey(kbMap.get(ks)));
                             sc.markInvalid(appearance.duplicateShortCutKey(kbMap.get(ks)));
                             valid = false;
+                            IplantAnnouncer.getInstance()
+                                           .schedule(new ErrorAnnouncementConfig(appearance.completeRequiredFieldsError()));
                         }
                     }
                 }
             }
+        }
+        if (!Strings.isNullOrEmpty(hookUrl.getValue())) {
+            List<String> topics = getSelectedTopics();
+            if (topics == null || topics.size() == 0) {
+                IplantAnnouncer.getInstance()
+                               .schedule(new ErrorAnnouncementConfig(appearance.mustSelectATopic()));
+                valid = false;
+            }
+        }
+
+        if (editorDriver.hasErrors()) {
+            IplantAnnouncer.getInstance()
+                           .schedule(new ErrorAnnouncementConfig(appearance.completeRequiredFieldsError()));
+            valid = false;
         }
         return valid;
     }
@@ -239,8 +256,6 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         List<String> topics = getSelectedTopics();
         if (!Strings.isNullOrEmpty(hookUrl.getValue())) {
             if (topics == null || topics.size() == 0) {
-                IplantAnnouncer.getInstance()
-                               .schedule(new ErrorAnnouncementConfig(appearance.mustSelectATopic()));
                 return;
             }
             Webhook hook = wabFactory.getWebhook().as();
@@ -254,9 +269,6 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
 
         if (!editorDriver.hasErrors() && isValid()) {
             this.flushedValue = value;
-        } else {
-            IplantAnnouncer.getInstance()
-                           .schedule(new ErrorAnnouncementConfig(appearance.completeRequiredFieldsError()));
         }
     }
 
@@ -319,6 +331,7 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
 
     @UiHandler({"appsShortCut", "dataShortCut", "analysesShortCut", "notifyShortCut", "closeShortCut"})
     void onKeyPress(KeyPressEvent event) {
+        GWT.log(event.getNativeEvent().getCharCode() + "");
         TextField fld = (TextField) event.getSource();
         int code = event.getNativeEvent().getCharCode();
         if ((code > 96 && code <= 122)) {

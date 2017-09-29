@@ -132,6 +132,11 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
     }
 
     @Override
+    public boolean isValid() {
+        return view.isValid();
+    }
+
+    @Override
     public void onResetHpcClicked(ResetHpcTokenClicked event) {
         oauthServiceFacade.deleteHpcToken(new AsyncCallback<Void>() {
             @Override

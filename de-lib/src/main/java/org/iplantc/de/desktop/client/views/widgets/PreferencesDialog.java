@@ -14,7 +14,6 @@ import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.XTemplates;
 import com.sencha.gxt.widget.core.client.Dialog;
-import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.AbstractHtmlLayoutContainer.HtmlData;
 import com.sencha.gxt.widget.core.client.container.HtmlLayoutContainer;
@@ -104,8 +103,10 @@ public class PreferencesDialog extends IPlantDialog implements DialogHideEvent.D
     @Override
     public void onDialogHide(DialogHideEvent event) {
         if (Dialog.PredefinedButton.OK.equals(event.getHideButton())) {
-            presenter.saveUserSettings();
-            hide();
+            if (presenter.isValid()) {
+                presenter.saveUserSettings();
+                hide();
+            }
         }
     }
 
