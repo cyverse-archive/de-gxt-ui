@@ -1,24 +1,26 @@
 package org.iplantc.de.diskResource.client.presenters.metadata.proxy;
 
-import org.iplantc.de.client.models.ontologies.OntologyLookupServiceDoc;
+import org.iplantc.de.client.models.ontologies.MetadataTermSearchResult;
 import org.iplantc.de.client.models.ontologies.OntologyLookupServiceResponse;
 import org.iplantc.de.client.models.ontologies.OntologyLookupServiceResults;
 import org.iplantc.de.client.services.OntologyLookupServiceFacade;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
-import com.sencha.gxt.data.client.loader.RpcProxy;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoadResultBean;
 
+import java.util.List;
+
 /**
- * Ontology Lookup Service RPC proxy that calls the OLS with a given LoadConfig and LoadResult callback.
+ * {@link MetadataTermSearchProxy} that calls the Ontology Lookup Service.
  *
  * @author psarando
  */
-public class OntologyLookupServiceProxy extends RpcProxy<OntologyLookupServiceLoadConfig, PagingLoadResult<OntologyLookupServiceDoc>> {
+public class OntologyLookupServiceProxy extends MetadataTermSearchProxy {
 
     OntologyLookupServiceFacade svcFacade;
 
@@ -28,7 +30,8 @@ public class OntologyLookupServiceProxy extends RpcProxy<OntologyLookupServiceLo
     }
 
     @Override
-    public void load(OntologyLookupServiceLoadConfig loadConfig, AsyncCallback<PagingLoadResult<OntologyLookupServiceDoc>> callback) {
+    public void load(MetadataTermLoadConfig loadConfig,
+                     AsyncCallback<PagingLoadResult<MetadataTermSearchResult>> callback) {
         String queryText = loadConfig.getQuery();
 
         if (Strings.isNullOrEmpty(queryText)) {
@@ -38,13 +41,13 @@ public class OntologyLookupServiceProxy extends RpcProxy<OntologyLookupServiceLo
             return;
         }
 
-        svcFacade.searchOntologyLookupService(loadConfig, new AsyncCallback<OntologyLookupServiceResponse>() {
+        OntologyLookupServiceLoadConfig olsLoadConfig = (OntologyLookupServiceLoadConfig)loadConfig;
+        svcFacade.searchOntologyLookupService(olsLoadConfig, new AsyncCallback<OntologyLookupServiceResponse>() {
             @Override
             public void onSuccess(OntologyLookupServiceResponse response) {
                 OntologyLookupServiceResults results = response.getResults();
-                callback.onSuccess(new PagingLoadResultBean<>(results.getClasses(),
-                                                              results.getTotal(),
-                                                              results.getOffset()));
+                List<MetadataTermSearchResult> resultList = Lists.newArrayList(results.getClasses());
+                callback.onSuccess(new PagingLoadResultBean<>(resultList, results.getTotal(), results.getOffset()));
             }
 
             @Override

@@ -1,5 +1,6 @@
 package org.iplantc.de.theme.base.client.diskResource.search;
 
+import org.iplantc.de.client.models.ontologies.MetadataTermSearchResult;
 import org.iplantc.de.client.models.ontologies.OntologyLookupServiceDoc;
 import org.iplantc.de.diskResource.client.views.search.MetadataTermSearchField;
 
@@ -28,7 +29,13 @@ public class MetadataTermSearchFieldDefaultAppearance implements MetadataTermSea
     }
 
     @Override
-    public void render(Context context, OntologyLookupServiceDoc ontologyClass, SafeHtmlBuilder sb) {
-        sb.append(template.render(ontologyClass.getIri(), ontologyClass.getLabel(), ontologyClass.getOntologyPrefix()));
+    public void render(Context context, MetadataTermSearchResult ontologyClass, SafeHtmlBuilder sb) {
+        String ontologyPrefix = null;
+
+        if (ontologyClass instanceof OntologyLookupServiceDoc) {
+            ontologyPrefix = ((OntologyLookupServiceDoc)ontologyClass).getOntologyPrefix();
+        }
+
+        sb.append(template.render(ontologyClass.getIri(), ontologyClass.getLabel(), ontologyPrefix));
     }
 }

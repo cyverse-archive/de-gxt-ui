@@ -4,8 +4,8 @@ import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttributeType;
 import org.iplantc.de.client.models.diskResources.TemplateAttributeSelectionItem;
+import org.iplantc.de.client.models.ontologies.MetadataTermSearchResult;
 import org.iplantc.de.client.models.ontologies.OntologyClass;
-import org.iplantc.de.client.models.ontologies.OntologyLookupServiceDoc;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.validators.UrlValidator;
 import org.iplantc.de.commons.client.widgets.IPlantAnchor;
@@ -316,8 +316,8 @@ public class MetadataTemplateView implements IsWidget {
         return tf;
     }
 
-    private ComboBox<OntologyLookupServiceDoc> buildOntologyField(String tag, MetadataTemplateAttribute attribute) {
-        ComboBox<OntologyLookupServiceDoc> combo = presenter.createMetadataTermSearchField(attribute).asField();
+    private ComboBox<MetadataTermSearchResult> buildOntologyField(String tag, MetadataTemplateAttribute attribute) {
+        ComboBox<MetadataTermSearchResult> combo = presenter.createMetadataTermSearchField(attribute).asField();
 
         combo.setAllowBlank(!attribute.isRequired());
 

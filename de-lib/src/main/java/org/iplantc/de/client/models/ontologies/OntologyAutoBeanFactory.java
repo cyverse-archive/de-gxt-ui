@@ -20,6 +20,8 @@ public interface OntologyAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<OntologyVersionDetail> getVersionDetail();
 
+    AutoBean<MetadataTermSearchResult> getMetadataTermSearchResult();
+
     AutoBean<OntologyLookupServiceResponse> getOntologyLookupServiceResponse();
 
     AutoBean<OntologyLookupServiceDoc> getOntologyLookupServiceDoc();
