@@ -1,5 +1,6 @@
 # files to be excluded from tracking by Git
 *~
+*.swp
 
 # eclipse-related files
 .classpath
