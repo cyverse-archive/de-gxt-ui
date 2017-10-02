@@ -1,5 +1,8 @@
 FROM discoenv/openjdk-base:master
 
+# Include CA certs so the UI server-side can make https calls to 3rd party services.
+RUN apk add --no-cache ca-certificates java-cacerts
+
 ENV CONF_TEMPLATE=/etc/iplant/de/de.properties.tmpl
 ENV CONF_FILENAME=de.properties
 ENV PROGRAM=java
