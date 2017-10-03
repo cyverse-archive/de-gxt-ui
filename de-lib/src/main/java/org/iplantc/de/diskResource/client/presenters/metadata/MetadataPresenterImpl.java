@@ -7,6 +7,7 @@ import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.DiskResourceMetadataList;
 import org.iplantc.de.client.models.diskResources.MetadataTemplate;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
+import org.iplantc.de.client.models.diskResources.MetadataTemplateAttributeType;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.ontologies.OntologyAutoBeanFactory;
 import org.iplantc.de.client.models.ontologies.OntologyLookupServiceQueryParams;
@@ -17,6 +18,10 @@ import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetadataUpdateCallback;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.AstroThesaurusLoadConfig;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.AstroThesaurusProxy;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.MetadataTermLoadConfig;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.MetadataTermSearchProxy;
 import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLookupServiceLoadConfig;
 import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLookupServiceProxy;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.MetadataTemplateViewDialog;
@@ -108,7 +113,8 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
     private final MetadataView view;
     private final DiskResourceServiceFacade drService;
     private final OntologyAutoBeanFactory ontologyFactory;
-    private final OntologyLookupServiceProxy searchProxy;
+    private final OntologyLookupServiceProxy olsSearchProxy;
+    private final AstroThesaurusProxy uatSearchProxy;
     private final MetadataTermSearchField.MetadataTermSearchFieldAppearance searchFieldAppearance;
     private List<MetadataTemplateInfo> templates;
 
@@ -128,13 +134,15 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
     public MetadataPresenterImpl(final MetadataView view,
                                  final DiskResourceServiceFacade drService,
                                  final OntologyAutoBeanFactory ontologyFactory,
-                                 final OntologyLookupServiceProxy searchProxy,
+                                 final OntologyLookupServiceProxy olsSearchProxy,
+                                 final AstroThesaurusProxy uatSearchProxy,
                                  final MetadataTermSearchField.MetadataTermSearchFieldAppearance searchFieldAppearance) {
 
         this.view = view;
         this.drService = drService;
         this.ontologyFactory = ontologyFactory;
-        this.searchProxy = searchProxy;
+        this.olsSearchProxy = olsSearchProxy;
+        this.uatSearchProxy = uatSearchProxy;
         this.searchFieldAppearance = searchFieldAppearance;
         view.setPresenter(this);
     }
@@ -221,17 +229,32 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
 
     @Override
     public MetadataTermSearchField createMetadataTermSearchField(MetadataTemplateAttribute attribute) {
-        OntologyLookupServiceQueryParams loaderSettings = null;
+        MetadataTermSearchProxy searchProxy = null;
+        MetadataTermLoadConfig loadConfig = new MetadataTermLoadConfig();
 
-        if (attribute != null && attribute.getSettings() != null) {
-            loaderSettings = AutoBeanCodex.decode(ontologyFactory,
-                                                  OntologyLookupServiceQueryParams.class,
-                                                  attribute.getSettings()).as();
+        if (attribute != null) {
+            String type = attribute.getType();
+
+            if (MetadataTemplateAttributeType.OLS_ONTOLOGY_TERM.toString().equalsIgnoreCase(type)) {
+                OntologyLookupServiceQueryParams loaderSettings = null;
+
+                if (attribute.getSettings() != null) {
+                    loaderSettings = AutoBeanCodex.decode(ontologyFactory,
+                                                          OntologyLookupServiceQueryParams.class,
+                                                          attribute.getSettings()).as();
+                }
+
+                loadConfig = new OntologyLookupServiceLoadConfig(loaderSettings);
+                searchProxy = olsSearchProxy;
+            } else if (MetadataTemplateAttributeType.UAT_ONTOLOGY_TERM.toString().equalsIgnoreCase(type)) {
+                loadConfig = new AstroThesaurusLoadConfig();
+                searchProxy = uatSearchProxy;
+            }
+
+            return new MetadataTermSearchField(ontologyFactory, searchProxy, loadConfig, searchFieldAppearance);
         }
 
-        OntologyLookupServiceLoadConfig loadConfig = new OntologyLookupServiceLoadConfig(loaderSettings);
-
-        return new MetadataTermSearchField(ontologyFactory, searchProxy, loadConfig, searchFieldAppearance);
+        return null;
     }
 
     @Override

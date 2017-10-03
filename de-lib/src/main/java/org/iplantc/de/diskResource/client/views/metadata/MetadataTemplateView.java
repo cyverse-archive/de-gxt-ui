@@ -460,6 +460,8 @@ public class MetadataTemplateView implements IsWidget {
             return buildURLField(tag, attribute);
         } else if (MetadataTemplateAttributeType.OLS_ONTOLOGY_TERM.toString().equalsIgnoreCase(type)) {
             return buildOntologyField(tag, attribute);
+        } else if (MetadataTemplateAttributeType.UAT_ONTOLOGY_TERM.toString().equalsIgnoreCase(type)) {
+            return buildOntologyField(tag, attribute);
         } else if (MetadataTemplateAttributeType.ENUM.toString().equalsIgnoreCase(type)) {
             return buildListField(tag, attribute);
         } else {
