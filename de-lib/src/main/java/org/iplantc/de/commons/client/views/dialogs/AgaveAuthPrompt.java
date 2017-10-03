@@ -81,7 +81,7 @@ public class AgaveAuthPrompt extends ConfirmMessageBox {
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
 
-        getButton(PredefinedButton.YES).asWidget().ensureDebugId(baseID + ".authBtn");
-        getButton(PredefinedButton.NO).asWidget().ensureDebugId(baseID + ".noAuthBtn");
+        getButton(PredefinedButton.YES).asWidget().ensureDebugId(baseID + CommonsModule.IDs.AGAVE_AUTH_BTN);
+        getButton(PredefinedButton.NO).asWidget().ensureDebugId(baseID + CommonsModule.IDs.AGAVE_NO_AUTH_BTN);
     }
 }
