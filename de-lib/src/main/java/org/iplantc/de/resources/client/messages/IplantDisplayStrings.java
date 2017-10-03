@@ -497,9 +497,9 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
      *
      * @return translated "Collaborators"
      */
-    @DefaultMessage("Collaborators")
-    @Key("collaborators")
-    String collaborators();
+    @DefaultMessage("Collaboration")
+    @Key("collaboration")
+    String collaboration();
 
     /**
      * Translated "Comments".

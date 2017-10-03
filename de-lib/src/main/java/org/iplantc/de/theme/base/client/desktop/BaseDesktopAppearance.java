@@ -159,8 +159,8 @@ public class BaseDesktopAppearance implements DesktopView.DesktopAppearance {
     }
 
     @Override
-    public String collaborators() {
-        return displayStrings.collaborators();
+    public String collaboration() {
+        return displayStrings.collaboration();
     }
 
     @Override

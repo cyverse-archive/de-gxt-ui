@@ -102,7 +102,7 @@ public interface DesktopView extends IsWidget {
 
         String preferences();
 
-        String collaborators();
+        String collaboration();
 
         String systemMessagesLabel();
 
