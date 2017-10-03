@@ -356,6 +356,7 @@ public class EditMetadataTemplateViewImpl extends Composite implements IsWidget,
                                     MetadataTemplateAttributeType.MULTILINE.toString(),
                                     MetadataTemplateAttributeType.URL.toString(),
                                     MetadataTemplateAttributeType.OLS_ONTOLOGY_TERM.toString(),
+                                    MetadataTemplateAttributeType.UAT_ONTOLOGY_TERM.toString(),
                                     MetadataTemplateAttributeType.ENUM.toString()));
         typeCombo.setValue(MetadataTemplateAttributeType.STRING.toString());
         typeCombo.setEditable(false);

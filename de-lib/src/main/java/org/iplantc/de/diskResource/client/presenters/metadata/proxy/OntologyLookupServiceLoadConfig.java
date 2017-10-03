@@ -9,18 +9,17 @@ import com.google.common.base.Strings;
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.loader.FilterConfig;
 import com.sencha.gxt.data.shared.loader.FilterConfigBean;
-import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Search config for the Ontology Lookup Service `select` endpoint:
+ * {@link MetadataTermLoadConfig} for the Ontology Lookup Service `select` endpoint:
  * http://www.ebi.ac.uk/ols/docs/api#_select_terms
  *
  * @author psarando
  */
-public class OntologyLookupServiceLoadConfig extends FilterPagingLoadConfigBean {
+public class OntologyLookupServiceLoadConfig extends MetadataTermLoadConfig {
     private static final String FILTER_FIELD_QUERY = "q";
     private static final String FILTER_FIELD_RESPONSE_FIELDS = "fieldList";
 
@@ -74,6 +73,7 @@ public class OntologyLookupServiceLoadConfig extends FilterPagingLoadConfigBean 
     /**
      * @return The user's search term.
      */
+    @Override
     public String getQuery() {
         return filterConfigMap.get(FILTER_FIELD_QUERY).getValue();
     }
@@ -81,6 +81,7 @@ public class OntologyLookupServiceLoadConfig extends FilterPagingLoadConfigBean 
     /**
      * @param query The user's search term.
      */
+    @Override
     public void setQuery(String query) {
         filterConfigMap.get(FILTER_FIELD_QUERY).setValue(query);
     }

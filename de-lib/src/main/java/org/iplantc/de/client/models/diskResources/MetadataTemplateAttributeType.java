@@ -14,6 +14,7 @@ public enum MetadataTemplateAttributeType {
     OLS_ONTOLOGY_TERM("OLS Ontology Term"),
     STRING("String"),
     TIMESTAMP("Timestamp"),
+    UAT_ONTOLOGY_TERM("UAT Ontology Term"),
     URL("URL/URI");
 
     private String label;

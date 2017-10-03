@@ -1,7 +1,5 @@
 package org.iplantc.de.client.models.ontologies;
 
-import org.iplantc.de.client.models.HasId;
-
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 
 /**
@@ -9,7 +7,7 @@ import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
  *
  * @author psarando
  */
-public interface OntologyLookupServiceDoc extends OntologyClass, HasId {
+public interface OntologyLookupServiceDoc extends MetadataTermSearchResult {
     @PropertyName("ontology_prefix")
     String getOntologyPrefix();
 }

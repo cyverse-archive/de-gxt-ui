@@ -1,6 +1,8 @@
 package org.iplantc.de.client.services;
 
+import org.iplantc.de.client.models.ontologies.AstroThesaurusResponse;
 import org.iplantc.de.client.models.ontologies.OntologyLookupServiceResponse;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.AstroThesaurusLoadConfig;
 import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLookupServiceLoadConfig;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -20,4 +22,6 @@ public interface OntologyLookupServiceFacade {
      * @param callback The OLS search response callback.
      */
     void searchOntologyLookupService(OntologyLookupServiceLoadConfig loadConfig, AsyncCallback<OntologyLookupServiceResponse> callback);
+
+    void searchUnifiedAstronomyThesaurus(AstroThesaurusLoadConfig loadConfig, AsyncCallback<AstroThesaurusResponse> callback);
 }

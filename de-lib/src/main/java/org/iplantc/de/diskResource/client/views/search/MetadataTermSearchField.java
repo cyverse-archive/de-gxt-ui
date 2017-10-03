@@ -1,9 +1,9 @@
 package org.iplantc.de.diskResource.client.views.search;
 
+import org.iplantc.de.client.models.ontologies.MetadataTermSearchResult;
 import org.iplantc.de.client.models.ontologies.OntologyAutoBeanFactory;
-import org.iplantc.de.client.models.ontologies.OntologyLookupServiceDoc;
-import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLookupServiceLoadConfig;
-import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLookupServiceProxy;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.MetadataTermLoadConfig;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.MetadataTermSearchProxy;
 
 import com.google.common.base.Strings;
 import com.google.gwt.cell.client.AbstractCell;
@@ -31,33 +31,33 @@ import java.util.Comparator;
 
 /**
  * A wrapper class for creating a {@link ComboBox} form field that allows the user to enter any text into the field,
- * by creating a new {@link OntologyLookupServiceDoc} as the field's value which has the user's text as a custom label and no IRI,
+ * by creating a new {@link MetadataTermSearchResult} as the field's value which has the user's text as a custom label and no IRI,
  * but it can also autocomplete text with terms found using the Ontology Lookup Service.
  *
  * This class can also be used as a {@link Converter} for the {@link ComboBox} in a
  * {@link GridRowEditing#addEditor(ColumnConfig, Converter, IsField)} call.
  */
-public class MetadataTermSearchField implements Converter<String, OntologyLookupServiceDoc> {
+public class MetadataTermSearchField implements Converter<String, MetadataTermSearchResult> {
 
     public interface MetadataTermSearchFieldAppearance {
-        void render(Context context, OntologyLookupServiceDoc OntologyLookupServiceDoc, SafeHtmlBuilder sb);
+        void render(Context context, MetadataTermSearchResult OntologyLookupServiceDoc, SafeHtmlBuilder sb);
     }
 
     /**
      * A {@link ComboBoxCell} that allows the user to enter any text into a {@link ComboBox} field,
-     * by creating a new {@link OntologyLookupServiceDoc} as the field's value,
+     * by creating a new {@link MetadataTermSearchResult} as the field's value,
      * which has the user's text as a custom label and no IRI.
      */
-    private class FreeTextComboBoxCell extends ComboBoxCell<OntologyLookupServiceDoc> {
-        FreeTextComboBoxCell(ListStore<OntologyLookupServiceDoc> store, ListView<OntologyLookupServiceDoc, OntologyLookupServiceDoc> view) {
-            super(store, OntologyLookupServiceDoc::getLabel, view);
+    private class FreeTextComboBoxCell extends ComboBoxCell<MetadataTermSearchResult> {
+        FreeTextComboBoxCell(ListStore<MetadataTermSearchResult> store, ListView<MetadataTermSearchResult, MetadataTermSearchResult> view) {
+            super(store, MetadataTermSearchResult::getLabel, view);
 
-            setPropertyEditor(new PropertyEditor<OntologyLookupServiceDoc>() {
+            setPropertyEditor(new PropertyEditor<MetadataTermSearchResult>() {
                 @Override
-                public OntologyLookupServiceDoc parse(CharSequence text) throws ParseException {
+                public MetadataTermSearchResult parse(CharSequence text) throws ParseException {
                     String label = text == null ? "" : text.toString();
 
-                    OntologyLookupServiceDoc selectedClass = getByValue(label);
+                    MetadataTermSearchResult selectedClass = getByValue(label);
 
                     if (selectedClass == null) {
                         selectedClass = convertModelValue(label);
@@ -67,7 +67,7 @@ public class MetadataTermSearchField implements Converter<String, OntologyLookup
                 }
 
                 @Override
-                public String render(OntologyLookupServiceDoc object) {
+                public String render(MetadataTermSearchResult object) {
                     return object.getLabel();
                 }
             });
@@ -76,38 +76,38 @@ public class MetadataTermSearchField implements Converter<String, OntologyLookup
 
     private final OntologyAutoBeanFactory factory;
 
-    private ComboBox<OntologyLookupServiceDoc> combo;
-    private ListView<OntologyLookupServiceDoc, OntologyLookupServiceDoc> view;
+    private ComboBox<MetadataTermSearchResult> combo;
+    private ListView<MetadataTermSearchResult, MetadataTermSearchResult> view;
 
     public MetadataTermSearchField(OntologyAutoBeanFactory factory,
-                                   OntologyLookupServiceProxy searchProxy,
-                                   OntologyLookupServiceLoadConfig loadConfig,
+                                   MetadataTermSearchProxy searchProxy,
+                                   MetadataTermLoadConfig loadConfig,
                                    MetadataTermSearchFieldAppearance appearance) {
         this.factory = factory;
 
-        ListStore<OntologyLookupServiceDoc> store = new ListStore<>(OntologyLookupServiceDoc::getId);
-        store.addSortInfo(new Store.StoreSortInfo<>(Comparator.comparing(OntologyLookupServiceDoc::getLabel), SortDir.ASC));
+        ListStore<MetadataTermSearchResult> store = new ListStore<>(MetadataTermSearchResult::getId);
+        store.addSortInfo(new Store.StoreSortInfo<>(Comparator.comparing(MetadataTermSearchResult::getLabel), SortDir.ASC));
 
         createView(store, appearance);
 
         createCombo(store, createLoader(searchProxy, loadConfig, store));
     }
 
-    private void createView(ListStore<OntologyLookupServiceDoc> store, MetadataTermSearchFieldAppearance appearance) {
+    private void createView(ListStore<MetadataTermSearchResult> store, MetadataTermSearchFieldAppearance appearance) {
         view = new ListView<>(store, new IdentityValueProvider<>());
-        view.setCell(new AbstractCell<OntologyLookupServiceDoc>() {
+        view.setCell(new AbstractCell<MetadataTermSearchResult>() {
             @Override
-            public void render(Context context, OntologyLookupServiceDoc value, SafeHtmlBuilder sb) {
+            public void render(Context context, MetadataTermSearchResult value, SafeHtmlBuilder sb) {
                 appearance.render(context, value, sb);
             }
         });
     }
 
-    private PagingLoader<OntologyLookupServiceLoadConfig, PagingLoadResult<OntologyLookupServiceDoc>> createLoader(
-            OntologyLookupServiceProxy searchProxy,
-            OntologyLookupServiceLoadConfig loadConfig,
-            ListStore<OntologyLookupServiceDoc> store) {
-        PagingLoader<OntologyLookupServiceLoadConfig, PagingLoadResult<OntologyLookupServiceDoc>> loader =
+    private PagingLoader<MetadataTermLoadConfig, PagingLoadResult<MetadataTermSearchResult>> createLoader(
+            MetadataTermSearchProxy searchProxy,
+            MetadataTermLoadConfig loadConfig,
+            ListStore<MetadataTermSearchResult> store) {
+        PagingLoader<MetadataTermLoadConfig, PagingLoadResult<MetadataTermSearchResult>> loader =
                 new PagingLoader<>(searchProxy);
 
         loader.useLoadConfig(loadConfig);
@@ -124,8 +124,8 @@ public class MetadataTermSearchField implements Converter<String, OntologyLookup
         return loader;
     }
 
-    private void createCombo(ListStore<OntologyLookupServiceDoc> store,
-                             PagingLoader<OntologyLookupServiceLoadConfig, PagingLoadResult<OntologyLookupServiceDoc>> loader) {
+    private void createCombo(ListStore<MetadataTermSearchResult> store,
+                             PagingLoader<MetadataTermLoadConfig, PagingLoadResult<MetadataTermSearchResult>> loader) {
         combo = new ComboBox<>(new FreeTextComboBoxCell(store, view));
         combo.setLoader(loader);
         combo.setMinChars(3);
@@ -136,19 +136,19 @@ public class MetadataTermSearchField implements Converter<String, OntologyLookup
     }
 
     @Override
-    public String convertFieldValue(OntologyLookupServiceDoc object) {
+    public String convertFieldValue(MetadataTermSearchResult object) {
         return object == null ? null : object.getLabel();
     }
 
     @Override
-    public OntologyLookupServiceDoc convertModelValue(String label) {
-        OntologyLookupServiceDoc customLabel = factory.getOntologyLookupServiceDoc().as();
+    public MetadataTermSearchResult convertModelValue(String label) {
+        MetadataTermSearchResult customLabel = factory.getMetadataTermSearchResult().as();
         customLabel.setLabel(label);
 
         return customLabel;
     }
 
-    public ComboBox<OntologyLookupServiceDoc> asField() {
+    public ComboBox<MetadataTermSearchResult> asField() {
         return combo;
     }
 

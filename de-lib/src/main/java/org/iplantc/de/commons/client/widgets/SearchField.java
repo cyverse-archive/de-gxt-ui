@@ -12,7 +12,12 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 
 import com.sencha.gxt.cell.core.client.form.TextInputCell;
 import com.sencha.gxt.core.client.util.DelayedTask;
-import com.sencha.gxt.data.shared.loader.*;
+import com.sencha.gxt.data.shared.loader.FilterConfig;
+import com.sencha.gxt.data.shared.loader.FilterConfigBean;
+import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
+import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
+import com.sencha.gxt.data.shared.loader.PagingLoadResult;
+import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.form.TextField;
 
 import java.util.ArrayList;

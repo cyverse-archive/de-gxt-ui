@@ -14,6 +14,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.client.utils.URIBuilder;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -25,6 +26,8 @@ import javax.servlet.http.HttpServletRequest;
  * Performs actions common to most URL connectors.
  */
 abstract class BaseUrlConnector implements UrlConnector {
+
+    @Value("${org.iplantc.discoveryenvironment.unprotectedMuleServiceBaseUrl}") private String terrainBaseUrl;
 
     private AppLoggerUtil appLoggerUtil = AppLoggerUtil.getInstance();
 
@@ -120,7 +123,11 @@ abstract class BaseUrlConnector implements UrlConnector {
      * @throws IOException if a URI representation is invalid or an encoding error occurs.
      */
     protected String addIpAddress(String uriString, HttpServletRequest request) throws IOException {
-        return addQueryParam(uriString, "ip-address", request.getRemoteAddr());
+        if (uriString.startsWith(terrainBaseUrl)) {
+            return addQueryParam(uriString, "ip-address", request.getRemoteAddr());
+        }
+
+        return uriString;
     }
 
     /**

@@ -7,6 +7,7 @@ import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.ontologies.OntologyAutoBeanFactory;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.diskResource.client.MetadataView;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.AstroThesaurusProxy;
 import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLookupServiceProxy;
 import org.iplantc.de.diskResource.client.views.search.MetadataTermSearchField;
 
@@ -31,13 +32,20 @@ public class MetadataPresenterImplTest {
     @Mock  DiskResourceServiceFacade drService;
     @Mock  List<Avu> userMdList;
     @Mock OntologyAutoBeanFactory autoBeanFactory;
-    @Mock OntologyLookupServiceProxy olsProxy;
+    @Mock OntologyLookupServiceProxy olsSearchProxy;
+    @Mock AstroThesaurusProxy uatSearchProxy;
     @Mock MetadataTermSearchField.MetadataTermSearchFieldAppearance appearance;
 
     private MetadataPresenterImpl presenter;
+
     @Before
     public void setUp() {
-        presenter = new MetadataPresenterImpl(view, drService, autoBeanFactory, olsProxy, appearance);
+        presenter = new MetadataPresenterImpl(view,
+                                              drService,
+                                              autoBeanFactory,
+                                              olsSearchProxy,
+                                              uatSearchProxy,
+                                              appearance);
     }
 
     @Test
