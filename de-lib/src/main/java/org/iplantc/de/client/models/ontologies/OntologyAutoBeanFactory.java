@@ -26,5 +26,9 @@ public interface OntologyAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<OntologyLookupServiceDoc> getOntologyLookupServiceDoc();
 
+    AutoBean<AstroThesaurusDoc> getAstroThesaurusDoc();
+
+    AutoBean<AstroThesaurusResponse> getAstroThesaurusResponse();
+
     AutoBean<OntologyLookupServiceQueryParams> getOntologyLookupServiceQueryParams();
 }
