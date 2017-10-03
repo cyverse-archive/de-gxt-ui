@@ -1,6 +1,7 @@
 package org.iplantc.de.commons.client.views.dialogs;
 
 import org.iplantc.de.client.models.UserInfo;
+import org.iplantc.de.commons.share.CommonsModule;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -60,11 +61,27 @@ public class AgaveAuthPrompt extends ConfirmMessageBox {
         setWidth(500);
     }
 
+
+    @Override
+    public void show() {
+        super.show();
+
+        ensureDebugId(CommonsModule.IDs.AGAVE_AUTH_DLG);
+    }
+
     private AgaveAuthPrompt() {
         this(appearance.agaveRedirectTitle(), appearance.agaveRedirectMessage(), null);
     }
 
     public AgaveAuthPrompt(String uri) {
         this(appearance.agaveRedirectTitle(), appearance.agaveRedirectMessage(), uri);
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        getButton(PredefinedButton.YES).asWidget().ensureDebugId(baseID + ".authBtn");
+        getButton(PredefinedButton.NO).asWidget().ensureDebugId(baseID + ".noAuthBtn");
     }
 }

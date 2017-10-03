@@ -17,5 +17,6 @@ public interface CommonsModule {
         String PERM_EXPLAIN_BTN = ".explainBtn";
         String PERM_CHOOSE_COLLAB = ".chooseCollabBtn";
         String PERM_USER_SEARCH = ".userSearch";
+        String AGAVE_AUTH_DLG = "agaveAuthDlg";
     }
 }
