@@ -194,6 +194,7 @@ public class FolderContentsRpcProxyTest {
         FolderContentsLoadConfig loadConfigMock = mock(FolderContentsLoadConfig.class);
         Folder mockFolder = mock(Folder.class);
         when(mockFolder.isFilter()).thenReturn(false);
+        when(appearanceMock.listingFailure()).thenReturn("failure");
 
         when(loadConfigMock.getFolder()).thenReturn(mockFolder);
 
@@ -215,6 +216,7 @@ public class FolderContentsRpcProxyTest {
         FolderContentsLoadConfig loadConfigMock = mock(FolderContentsLoadConfig.class);
         Folder mockFolder = mock(Folder.class);
         when(mockFolder.isFilter()).thenReturn(false);
+        when(appearanceMock.listingFailure()).thenReturn("failure");
 
         when(loadConfigMock.getFolder()).thenReturn(mockFolder);
 

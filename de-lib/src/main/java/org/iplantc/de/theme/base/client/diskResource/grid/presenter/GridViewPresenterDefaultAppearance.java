@@ -196,4 +196,9 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     public String fileSaveError(String fileName) {
         return displayStrings.fileSaveError(fileName);
     }
+
+    @Override
+    public String listingFailure() {
+        return displayStrings.listingFailure();
+    }
 }

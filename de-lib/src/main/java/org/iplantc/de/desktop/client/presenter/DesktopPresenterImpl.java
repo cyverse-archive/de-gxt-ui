@@ -19,8 +19,6 @@ import org.iplantc.de.client.models.notifications.NotificationAutoBeanFactory;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.models.notifications.payload.PayloadAnalysis;
-import org.iplantc.de.client.models.notifications.payload.PayloadRequest;
-import org.iplantc.de.client.models.requestStatus.RequestHistory;
 import org.iplantc.de.client.services.DEUserSupportServiceFacade;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.services.MessageServiceFacade;
@@ -51,7 +49,6 @@ import org.iplantc.de.fileViewers.client.callbacks.LoadGenomeInCoGeCallback;
 import org.iplantc.de.intercom.client.IntercomFacade;
 import org.iplantc.de.notifications.client.utils.NotificationUtil;
 import org.iplantc.de.notifications.client.utils.NotifyInfo;
-import org.iplantc.de.notifications.client.views.dialogs.RequestHistoryDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.NotificationCallback;
@@ -532,33 +529,6 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                 view.setUnseenNotificationCount(count);
             }
         });
-    }
-
-    private void getRequestStatusHistory(String id, NotificationCategory cat) {
-        if (cat.equals(NotificationCategory.PERMANENTIDREQUEST)) {
-            messageServiceFacade.getPermanentIdRequestStatusHistory(id, new NotificationCallback<String>() {
-
-                @Override
-                public void onFailure(Integer statusCode, Throwable caught) {
-                    IplantAnnouncer.getInstance()
-                                   .schedule(new ErrorAnnouncementConfig(appearance.requestHistoryError()));
-                }
-
-                @Override
-                public void onSuccess(String result) {
-                    PayloadRequest toolRequest = AutoBeanCodex.decode(notificationFactory,
-                                                                      PayloadRequest.class,
-                                                                      result).as();
-
-                    List<RequestHistory> history = toolRequest.getHistory();
-
-                    RequestHistoryDialog dlg = new RequestHistoryDialog(NotificationCategory.PERMANENTIDREQUEST.toString(),
-                                                                        history);
-                    dlg.show();
-
-                }
-            });
-        }
     }
 
     @Override
