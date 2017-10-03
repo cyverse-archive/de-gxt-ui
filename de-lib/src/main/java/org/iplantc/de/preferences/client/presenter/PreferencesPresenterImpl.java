@@ -15,6 +15,7 @@ import org.iplantc.de.preferences.client.PreferencesView;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
 import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
 import org.iplantc.de.preferences.client.events.TestWebhookClicked;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -175,17 +176,16 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
      */
     @Override
     public void onTestClicked(TestWebhookClicked event) {
-        serviceFacade.testWebhook(event.getUrl(), new AsyncCallback<String>() {
+        serviceFacade.testWebhook(event.getUrl(), new AppsCallback<Void>() {
             @Override
-            public void onFailure(Throwable throwable) {
-                ErrorHandler.post(appearance.testWebhookFail(),
-                                  throwable);
+            public void onFailure(Integer statusCode, Throwable exception) {
+                ErrorHandler.post(appearance.testWebhookFail(), exception);
             }
 
             @Override
-            public void onSuccess(String s) {
+            public void onSuccess(Void result) {
                 announcer.schedule(new SuccessAnnouncementConfig(appearance.testWebhookSuccess()));
-            }
+           }
         });
     }
     

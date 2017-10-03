@@ -152,10 +152,15 @@ public class UserSessionServiceFacadeImpl implements UserSessionServiceFacade {
     }
 
     @Override
-    public void testWebhook(String url, AsyncCallback<String> callback) {
+    public void testWebhook(String url, DECallback<Void> callback) {
         //this needs to be moved up to a service
       ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, url, constants.slackTemplate());
-      deServiceFacade.getServiceData(wrapper,callback);
+      deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, Void>(callback) {
+          @Override
+          protected Void convertFrom(String object) {
+              return null;
+          }
+      });
     }
 
     @Override
