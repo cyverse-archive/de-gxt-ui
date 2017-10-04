@@ -148,7 +148,16 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
 
         UpdatePrivilegeRequest request = factory.getUpdatePrivilegeRequest().as();
         request.setSubjectId(payloadTeam.getRequesterId());
-        request.setPrivileges(Lists.newArrayList(privilegeType));
+
+        List<PrivilegeType> privileges = Lists.newArrayList();
+        if (privilegeType.equals(PrivilegeType.readOptin)) {
+            privileges.add(PrivilegeType.read);
+            privileges.add(PrivilegeType.optin);
+        } else {
+            privileges.add(privilegeType);
+        }
+
+        request.setPrivileges(privileges);
 
         requestList.setRequests(Lists.newArrayList(request));
         return requestList;
