@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import org.iplantc.de.client.models.ontologies.OntologyLookupServiceDoc;
+import org.iplantc.de.client.models.ontologies.MetadataTermSearchResult;
 import org.iplantc.de.client.services.OntologyLookupServiceFacade;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -23,7 +23,7 @@ import org.mockito.Mock;
 public class OntologyLookupServiceProxyTest {
     @Mock OntologyLookupServiceFacade svcFacadeMock;
     @Mock OntologyLookupServiceLoadConfig loadConfigMock;
-    @Mock AsyncCallback<PagingLoadResult<OntologyLookupServiceDoc>> callbackMock;
+    @Mock AsyncCallback<PagingLoadResult<MetadataTermSearchResult>> callbackMock;
 
     OntologyLookupServiceProxy proxyUnderTest;
 
