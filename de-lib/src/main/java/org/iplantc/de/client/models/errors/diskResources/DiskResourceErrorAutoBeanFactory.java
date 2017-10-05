@@ -7,20 +7,22 @@ import org.iplantc.de.client.models.errors.diskResources.categories.ErrorDiskRes
 import org.iplantc.de.client.models.errors.diskResources.categories.ErrorDiskResourceRenameCategory;
 import org.iplantc.de.client.models.errors.diskResources.categories.ErrorDuplicateDiskResourceCategory;
 import org.iplantc.de.client.models.errors.diskResources.categories.ErrorGetManifestCategory;
+import org.iplantc.de.client.models.errors.diskResources.categories.ErrorGetStatCategory;
 import org.iplantc.de.client.models.errors.diskResources.categories.ErrorUpdateMetadataCategory;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory.Category;
 
-@Category({ErrorDiskResourceCategory.class, 
-    ErrorDiskResourceDeleteCategory.class, 
-    ErrorCreateFolderCategory.class,
-    ErrorDiskResourceMoveCategory.class, 
-    ErrorUpdateMetadataCategory.class,
-    ErrorDuplicateDiskResourceCategory.class,
-    ErrorGetManifestCategory.class,
-    ErrorDiskResourceRenameCategory.class})
+@Category({ ErrorDiskResourceCategory.class,
+            ErrorDiskResourceDeleteCategory.class,
+            ErrorCreateFolderCategory.class,
+            ErrorDiskResourceMoveCategory.class,
+            ErrorUpdateMetadataCategory.class,
+            ErrorDuplicateDiskResourceCategory.class,
+            ErrorGetManifestCategory.class,
+            ErrorDiskResourceRenameCategory.class,
+            ErrorGetStatCategory.class })
 public interface DiskResourceErrorAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<ErrorDiskResource> errorDiskResource();
@@ -38,4 +40,6 @@ public interface DiskResourceErrorAutoBeanFactory extends AutoBeanFactory {
     AutoBean<ErrorDuplicateDiskResource> errorDuplicateDiskResource();
 
     AutoBean<ErrorGetManifest> errorGetManifest();
+
+    AutoBean<ErrorGetStat> errorGetStat();
 }

@@ -34,6 +34,7 @@ public class AsyncProviderWrapper<T> {
     Logger LOG = Logger.getLogger(AsyncProviderWrapper.class.getName());
     
     @Inject AsyncProvider<T> provider;
+
     public AsyncProviderWrapper() {
 
     }

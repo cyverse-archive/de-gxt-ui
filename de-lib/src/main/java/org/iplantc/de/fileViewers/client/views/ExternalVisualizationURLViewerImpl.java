@@ -108,15 +108,18 @@ public class ExternalVisualizationURLViewerImpl extends AbstractFileViewer imple
     private final FileEditorServiceFacade fileEditorService;
     private final DiskResourceServiceFacade diskResourceServiceFacade;
     private final DiskResourceUtil diskResourceUtil;
+    private final EnsemblUtil ensemblUtil;
 
     public ExternalVisualizationURLViewerImpl(final File file,
                                               final String infoType,
                                               final FileEditorServiceFacade fileEditorService,
-                                              final DiskResourceServiceFacade diskResourceServiceFacade) {
+                                              final DiskResourceServiceFacade diskResourceServiceFacade,
+                                              final EnsemblUtil ensemblUtil) {
         super(file, infoType);
         this.fileEditorService = fileEditorService;
         this.diskResourceServiceFacade = diskResourceServiceFacade;
         this.diskResourceUtil = DiskResourceUtil.getInstance();
+        this.ensemblUtil = ensemblUtil;
         initWidget(uiBinder.createAndBindUi(this));
         gridView.setAutoExpandColumn(cm.getColumn(1));
         buildToolBar(diskResourceUtil.createInfoTypeSplittable(infoType));
@@ -191,9 +194,10 @@ public class ExternalVisualizationURLViewerImpl extends AbstractFileViewer imple
             @Override
             public void onSelect(SelectEvent event) {
                 mask(appearance.sendToEnsemblLoadingMask());
-                EnsemblUtil util = new EnsemblUtil(Collections.singletonList(file),
-                                                   ExternalVisualizationURLViewerImpl.this);
-                util.sendToEnsembl(diskResourceServiceFacade);
+                ensemblUtil.sendToEnsembl(Collections.singletonList(file),
+                                          diskResourceServiceFacade,
+                                          ExternalVisualizationURLViewerImpl.this);
+
             }
         });
         return button;

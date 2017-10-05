@@ -22,6 +22,7 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.fileViewers.client.FileViewer;
+import org.iplantc.de.fileViewers.client.callbacks.EnsemblUtil;
 import org.iplantc.de.fileViewers.client.views.AbstractFileViewer;
 import org.iplantc.de.fileViewers.client.views.ExternalVisualizationURLViewerImpl;
 import org.iplantc.de.fileViewers.client.views.ImageViewerImpl;
@@ -50,6 +51,8 @@ public class MimeTypeViewerResolverFactory {
     @Inject FileEditorServiceFacade fileEditorService;
     @Inject DiskResourceUtil diskResourceUtil;
     @Inject DiskResourceServiceFacade diskResourceServiceFacade;
+    @Inject
+    EnsemblUtil ensemblUtil;
 
     @Inject
     public MimeTypeViewerResolverFactory() {
@@ -118,7 +121,12 @@ public class MimeTypeViewerResolverFactory {
                 break;
 
             case VIZ:
-                ExternalVisualizationURLViewerImpl vizUrlViewer = new ExternalVisualizationURLViewerImpl(file, infoType, fileEditorService, diskResourceServiceFacade);
+                ExternalVisualizationURLViewerImpl vizUrlViewer = new ExternalVisualizationURLViewerImpl(
+                        file,
+                        infoType,
+                        fileEditorService,
+                        diskResourceServiceFacade,
+                        ensemblUtil);
                 viewers.add(vizUrlViewer);
                 break;
 

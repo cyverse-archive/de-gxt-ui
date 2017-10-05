@@ -98,11 +98,15 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
     @Inject
     AppTemplateAutoBeanFactory templateAutoBeanFactory;
 
+    @Inject
+    EnsemblUtil ensemblUtil;
+
     private DesktopWindowManager desktopWindowManager;
     private DesktopPresenterImpl presenter;
 
     @Inject
     public DesktopPresenterWindowEventHandler() {
+
     }
 
     @Override
@@ -179,7 +183,7 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
             showFile((File)resourcesToSend.iterator().next());
         }
 
-        new EnsemblUtil(resourcesToSend, null).sendToEnsembl(diskResourceServiceFacade);
+        ensemblUtil.sendToEnsembl(resourcesToSend, diskResourceServiceFacade, null);
     }
 
     @Override
