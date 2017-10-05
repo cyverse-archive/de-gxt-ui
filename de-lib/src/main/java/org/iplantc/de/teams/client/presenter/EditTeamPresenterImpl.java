@@ -426,10 +426,12 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     }
 
     void leaveTeam(Group team, IsHideable hideable) {
+        view.mask(appearance.loadingMask());
         serviceFacade.leaveTeam(team, new AsyncCallback<List<UpdateMemberResult>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
+                view.unmask();
             }
 
             @Override
@@ -470,10 +472,12 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
     }
 
     void deleteTeam(Group team, IsHideable hideable) {
+        view.mask(appearance.loadingMask());
         serviceFacade.deleteTeam(team, new AsyncCallback<Group>() {
             @Override
             public void onFailure(Throwable throwable) {
                 ErrorHandler.post(throwable);
+                view.unmask();
             }
 
             @Override
