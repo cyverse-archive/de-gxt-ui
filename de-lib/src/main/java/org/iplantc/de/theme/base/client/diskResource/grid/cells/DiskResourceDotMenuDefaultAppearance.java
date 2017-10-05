@@ -1,6 +1,7 @@
 package org.iplantc.de.theme.base.client.diskResource.grid.cells;
 
 import org.iplantc.de.client.models.diskResources.DiskResource;
+import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.diskResource.client.views.grid.cells.DiskResourceDotMenuCell;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
@@ -81,8 +82,12 @@ public class DiskResourceDotMenuDefaultAppearance implements DiskResourceDotMenu
     }
 
     @Override
-    public String dataLinkText() {
-        return displayStrings.dataLinkText();
+    public String dataLinkText(DiskResource diskResource) {
+        if (diskResource instanceof File) {
+            return displayStrings.dataLinkFileText();
+        } else {
+            return displayStrings.dataLinkFolderText();
+        }
     }
 
     @Override

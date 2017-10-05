@@ -40,7 +40,7 @@ public class DiskResourceDotMenuCell extends AbstractCell<DiskResource> implemen
 
         ImageResource commentIcon();
 
-        String dataLinkText();
+        String dataLinkText(DiskResource diskResource);
 
         ImageResource dataLinkIcon();
 

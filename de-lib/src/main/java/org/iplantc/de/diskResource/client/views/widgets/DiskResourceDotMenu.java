@@ -1,6 +1,7 @@
 package org.iplantc.de.diskResource.client.views.widgets;
 
 import org.iplantc.de.client.models.diskResources.DiskResource;
+import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.diskResource.client.events.RequestDiskResourceFavoriteEvent;
 import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelected;
@@ -51,7 +52,7 @@ public class DiskResourceDotMenu extends Menu {
 
     void addMenuItems(DiskResource diskResource) {
         favoriteBtn = new MenuItem(appearance.favoriteText(diskResource), appearance.favoriteIcon(diskResource));
-        dataLinkBtn = new MenuItem(appearance.dataLinkText(), appearance.dataLinkIcon());
+        dataLinkBtn = new MenuItem(appearance.dataLinkText(diskResource), appearance.dataLinkIcon());
         shareBtn = new MenuItem(appearance.shareText(), appearance.shareIcon());
         metadataBtn = new MenuItem(appearance.metadataText(), appearance.metadataIcon());
         commentBtn = new MenuItem(appearance.commentText(), appearance.commentIcon());
@@ -65,6 +66,9 @@ public class DiskResourceDotMenu extends Menu {
 
     void checkButtonStatus(DiskResource diskResource) {
         shareBtn.setEnabled(isOwner(diskResource));
+        if (diskResource instanceof File) {
+            dataLinkBtn.setEnabled(isOwner(diskResource));
+        }
     }
 
     boolean isOwner(DiskResource diskResource) {
