@@ -51,7 +51,7 @@ public class DiskResourceDotMenu extends Menu {
 
     void addMenuItems(DiskResource diskResource) {
         favoriteBtn = new MenuItem(appearance.favoriteText(diskResource), appearance.favoriteIcon(diskResource));
-        dataLinkBtn = new MenuItem(appearance.dataLinkText(), appearance.dataLinkIcon());
+        dataLinkBtn = new MenuItem(appearance.dataLinkText(diskResource), appearance.dataLinkIcon());
         shareBtn = new MenuItem(appearance.shareText(), appearance.shareIcon());
         metadataBtn = new MenuItem(appearance.metadataText(), appearance.metadataIcon());
         commentBtn = new MenuItem(appearance.commentText(), appearance.commentIcon());
