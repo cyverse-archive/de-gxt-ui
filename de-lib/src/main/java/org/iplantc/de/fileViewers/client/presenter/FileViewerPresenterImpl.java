@@ -28,7 +28,7 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.views.dialogs.SaveAsDialog;
 import org.iplantc.de.fileViewers.client.FileViewer;
-import org.iplantc.de.fileViewers.client.callbacks.EnsemblUtil;
+import org.iplantc.de.fileViewers.client.callbacks.GenomeBrowserUtil;
 import org.iplantc.de.fileViewers.client.callbacks.FileSaveCallback;
 import org.iplantc.de.fileViewers.client.callbacks.TreeUrlCallback;
 import org.iplantc.de.fileViewers.client.events.DirtyStateChangedEvent;
@@ -140,7 +140,7 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
     @Inject DiskResourceUtil diskResourceUtil;
     @Inject IplantAnnouncer announcer;
     @Inject
-    EnsemblUtil ensemblUtil;
+    GenomeBrowserUtil genomeBrowserUtil;
 
     private MimeType contentType;
     /**
@@ -494,7 +494,7 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
                                                                           infoType,
                                                                           fileEditorService,
                                                                           diskResourceServiceFacade,
-                                                                          ensemblUtil);
+                                                                          genomeBrowserUtil);
             List<VizUrl> urls = manifest.getUrls();
 
             if (urls != null && !urls.isEmpty()) {

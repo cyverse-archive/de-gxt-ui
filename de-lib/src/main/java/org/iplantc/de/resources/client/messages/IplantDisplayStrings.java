@@ -2985,4 +2985,6 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
     String analysisHelp();
 
     String manageTools();
+
+    String selectIndexFile();
 }

@@ -42,7 +42,7 @@ import org.iplantc.de.diskResource.client.events.RequestSimpleDownloadEvent;
 import org.iplantc.de.diskResource.client.events.RequestSimpleUploadEvent;
 import org.iplantc.de.diskResource.client.events.ShowFilePreviewEvent;
 import org.iplantc.de.diskResource.client.views.dialogs.FileUploadByUrlDialog;
-import org.iplantc.de.fileViewers.client.callbacks.EnsemblUtil;
+import org.iplantc.de.fileViewers.client.callbacks.GenomeBrowserUtil;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
 import org.iplantc.de.systemMessages.client.events.ShowSystemMessagesEvent;
 import org.iplantc.de.tools.client.events.UseToolInNewAppEvent;
@@ -99,7 +99,7 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
     AppTemplateAutoBeanFactory templateAutoBeanFactory;
 
     @Inject
-    EnsemblUtil ensemblUtil;
+    GenomeBrowserUtil genomeBrowserUtil;
 
     private DesktopWindowManager desktopWindowManager;
     private DesktopPresenterImpl presenter;
@@ -183,7 +183,7 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
             showFile((File)resourcesToSend.iterator().next());
         }
 
-        ensemblUtil.sendToEnsembl(resourcesToSend, diskResourceServiceFacade, null);
+        genomeBrowserUtil.sendToGenomeBrowser(resourcesToSend, null);
     }
 
     @Override

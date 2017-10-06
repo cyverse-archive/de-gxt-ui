@@ -49,8 +49,8 @@
         <when-type-is class="org.iplantc.de.fileViewers.client.views.cells.TreeUrlCell.TreeUrlCellAppearance" />
     </replace-with>
 
-    <replace-with class="org.iplantc.de.theme.base.client.fileViewers.callbacks.EnsemblUtilDefaultAppearance">
-        <when-type-is class="org.iplantc.de.fileViewers.client.callbacks.EnsemblUtil.EnsemblUtilAppearance" />
+    <replace-with class="org.iplantc.de.theme.base.client.fileViewers.callbacks.GenomeBrowserUtilDefaultAppearance">
+        <when-type-is class="org.iplantc.de.fileViewers.client.callbacks.GenomeBrowserUtil.GenomeBrowserUtilAppearance" />
     </replace-with>
 
     <replace-with class="org.iplantc.de.theme.base.client.fileViewers.callbacks.LoadGenomeInCogeCallbackDefaultAppearance">

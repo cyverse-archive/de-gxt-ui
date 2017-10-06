@@ -31,32 +31,34 @@ import com.sencha.gxt.widget.core.client.event.HideEvent;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class EnsemblUtil {
+public class GenomeBrowserUtil {
 
-    public interface EnsemblUtilAppearance {
+    public interface GenomeBrowserUtilAppearance {
 
         String indexFileMissing();
 
         String indexFileMissingError();
+
+        String selectIndexFile();
     }
 
     @Inject
-    EnsemblUtilAppearance appearance;
+    GenomeBrowserUtilAppearance appearance;
     @Inject
     DiskResourceErrorAutoBeanFactory factory;
     @Inject
     DiskResourceUtil diskResourceUtil;
     @Inject
     AsyncProviderWrapper<FileSelectDialog> dialogAsyncProviderWrapper;
+    @Inject
+    DiskResourceServiceFacade diskResourceServiceFacade;
 
     @Inject
-    public EnsemblUtil() {
+    public GenomeBrowserUtil() {
 
     }
 
-    public void sendToEnsembl(List<DiskResource> resourcesToSend,
-                              final DiskResourceServiceFacade diskResourceServiceFacade,
-                              IsMaskable container) {
+    public void sendToGenomeBrowser(List<DiskResource> resourcesToSend, IsMaskable container) {
         final FastMap<TYPE> pathMap = new FastMap<>();
 
         for (DiskResource resource : resourcesToSend) {
@@ -69,7 +71,7 @@ public class EnsemblUtil {
             if (InfoType.BAM.toString().equals(infoType)) {
                 indexFilePath = path + ".bai";
             } else if (InfoType.VCF.toString().equals(infoType)) {
-                indexFilePath = path + ".tbi";
+                indexFilePath = path + ".idx";
             }
 
             if (!Strings.isNullOrEmpty(indexFilePath)) {
@@ -77,49 +79,42 @@ public class EnsemblUtil {
             }
         }
 
-        diskResourceServiceFacade.getStat(pathMap,
-                                          new DataCallback<FastMap<DiskResource>>() {
+        diskResourceServiceFacade.getStat(pathMap, new DataCallback<FastMap<DiskResource>>() {
+            @Override
+            public void onFailure(Integer statusCode, Throwable caught) {
+                processError(caught, resourcesToSend, container);
+                if (container != null) {
+                    container.unmask();
+                }
+            }
 
-                                              @Override
-                                              public void onFailure(Integer statusCode,
-                                                                    Throwable caught) {
-                                                  ErrorGetStat egs = AutoBeanCodex.decode(factory,
-                                                                                          ErrorGetStat.class,
-                                                                                          caught.getMessage())
-                                                                                  .as();
-                                                  IPlantDialog dialog = new IPlantDialog();
-                                                  dialog.setHeading(SafeHtmlUtils.fromTrustedString(
-                                                          appearance.indexFileMissing()));
-                                                  VerticalLayoutContainer vlc =
-                                                          new VerticalLayoutContainer();
-                                                  vlc.add(new HTML(egs.generateErrorMsg()));
-                                                  vlc.add(new HTML(appearance.indexFileMissingError()));
-                                                  dialog.add(vlc);
-                                                  dialog.getOkButton().setText("Select missing files");
-                                                  dialog.getOkButton()
-                                                        .addSelectHandler(event -> dialogAsyncProviderWrapper
-                                                                .get(new FileSelectDialogAsyncCallback(
-                                                                        resourcesToSend,
-                                                                        diskResourceServiceFacade,
-                                                                        container)));
-
-                                                  dialog.show();
-                                                  if (container != null) {
-                                                      container.unmask();
-                                                  }
-                                              }
-
-                                              @Override
-                                              public void onSuccess(FastMap<DiskResource> result) {
-                                                  shareWithAnon(diskResourceServiceFacade,
-                                                                Lists.newArrayList(pathMap.keySet()),
-                                                                container);
-                                              }
-                                          });
+            @Override
+            public void onSuccess(FastMap<DiskResource> result) {
+                shareWithAnon(Lists.newArrayList(pathMap.keySet()), container);
+            }
+        });
     }
 
-    protected void shareWithAnon(DiskResourceServiceFacade diskResourceServiceFacade,
-                                 List<String> paths,
+    protected void processError(Throwable caught,
+                                List<DiskResource> resourcesToSend,
+                                IsMaskable container) {
+        ErrorGetStat egs = AutoBeanCodex.decode(factory, ErrorGetStat.class, caught.getMessage()).as();
+        IPlantDialog dialog = new IPlantDialog();
+        dialog.setHeading(SafeHtmlUtils.fromTrustedString(appearance.indexFileMissing()));
+        VerticalLayoutContainer vlc = new VerticalLayoutContainer();
+        vlc.add(new HTML(egs.generateErrorMsg()));
+        vlc.add(new HTML(appearance.indexFileMissingError()));
+        dialog.add(vlc);
+        dialog.getOkButton().setText(appearance.selectIndexFile());
+        dialog.getOkButton()
+              .addSelectHandler(event -> dialogAsyncProviderWrapper.get(new FileSelectDialogAsyncCallback(
+                      resourcesToSend,
+                      container)));
+
+        dialog.show();
+    }
+
+    protected void shareWithAnon(List<String> paths,
                                  IsMaskable container) {
         HasPaths diskResourcePaths = diskResourceServiceFacade.getDiskResourceFactory().pathsList().as();
         diskResourcePaths.setPaths(paths);
@@ -133,16 +128,12 @@ public class EnsemblUtil {
 
 
         private final List<DiskResource> resourcesToSend;
-        private final DiskResourceServiceFacade diskResourceServiceFacade;
         private final IsMaskable container;
 
         FileSelectDialogAsyncCallback(List<DiskResource> resourcesToSend,
-                                      final DiskResourceServiceFacade diskResourceServiceFacade,
                                       IsMaskable container) {
             this.resourcesToSend = resourcesToSend;
-            this.diskResourceServiceFacade = diskResourceServiceFacade;
             this.container = container;
-
         }
 
         @Override
@@ -153,26 +144,20 @@ public class EnsemblUtil {
         @Override
         public void onSuccess(FileSelectDialog dialog1) {
             dialog1.addHideHandler(new FileDialogHideHandler(dialog1, resourcesToSend,
-                                                             diskResourceServiceFacade,
                                                              container));
             dialog1.show(false, null, null, null);
-
-
         }
     }
 
     private class FileDialogHideHandler implements HideEvent.HideHandler {
         private final TakesValue<List<File>> takesValue;
         private final List<DiskResource> resourceToSend;
-        private final DiskResourceServiceFacade diskResourceServiceFacade;
         private final IsMaskable container;
 
         public FileDialogHideHandler(TakesValue<List<File>> dlg, List<DiskResource> resourcesToSend,
-                                     final DiskResourceServiceFacade diskResourceServiceFacade,
                                      IsMaskable container) {
             this.takesValue = dlg;
             this.resourceToSend = resourcesToSend;
-            this.diskResourceServiceFacade = diskResourceServiceFacade;
             this.container = container;
         }
 
@@ -184,7 +169,7 @@ public class EnsemblUtil {
             }
             resourceToSend.addAll(takesValue.getValue());
             List<String> paths = resourceToSend.stream().map(DiskResource ::getPath).collect(Collectors.toList());
-            shareWithAnon(diskResourceServiceFacade, paths, container);
+            shareWithAnon(paths, container);
         }
     }
 }
