@@ -19,6 +19,6 @@ public interface CommonsModule {
         String PERM_USER_SEARCH = ".userSearch";
         String AGAVE_AUTH_DLG = "agaveAuthDlg";
         String AGAVE_AUTH_BTN = ".authBtn";
-        String AGAVE_NO_AUTH_BTN = "noAuthBtn";
+        String AGAVE_NO_AUTH_BTN = ".noAuthBtn";
     }
 }
