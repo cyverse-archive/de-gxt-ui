@@ -1,21 +1,18 @@
 package org.iplantc.de.commons.client.views.dialogs;
 
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
-import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
-import org.iplantc.de.commons.client.widgets.IPCFileUploadField;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.HTML;
 
 import com.sencha.gxt.widget.core.client.Dialog;
@@ -24,13 +21,10 @@ import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
-import com.sencha.gxt.widget.core.client.event.InvalidEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SubmitCompleteEvent;
-import com.sencha.gxt.widget.core.client.event.ValidEvent;
 import com.sencha.gxt.widget.core.client.form.FormPanel;
 import com.sencha.gxt.widget.core.client.form.FormPanelHelper;
-import com.sencha.gxt.widget.core.client.form.TextField;
 
 import java.util.List;
 
@@ -63,6 +57,12 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
         String fileUploadsSuccess(List<String> strings);
     }
 
+    public interface Ids {
+        String BASE_ID = "simpleUpload";
+        String FILE_UPLOAD_FIELD = ".fileUpload";
+        
+    }
+
     public static final String HDN_PARENT_ID_KEY = "dest";
     public static final String HDN_USER_ID_KEY = "user";
     public static final String FILE_TYPE = "type";
@@ -71,7 +71,7 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
     static final String FORM_HEIGHT = "28";
     final DiskResourceAutoBeanFactory FS_FACTORY = GWT.create(DiskResourceAutoBeanFactory.class);
     List<FormPanel> formList;
-    List<IPCFileUploadField> fufList;
+    List<FileUpload> fufList;
     List<TextButton> tbList;
     List<Status> statList;
     final List<FormPanel> submittedForms = Lists.newArrayList();
@@ -81,7 +81,8 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
     @UiField(provided = true) final AbstractFileUploadDialogAppearance appearance;
     @UiField HTML htmlDestText;
     @UiField FormPanel form0, form1, form2, form3, form4;
-    @UiField IPCFileUploadField fuf0, fuf1, fuf2, fuf3, fuf4;
+    @UiField
+    FileUpload fuf0, fuf1, fuf2, fuf3, fuf4;
     @UiField TextButton btn0, btn1, btn2, btn3, btn4;
     @UiField Status status0, status1, status2, status3, status4;
 
@@ -108,17 +109,17 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
         fufList = Lists.newArrayList(fuf0, fuf1, fuf2, fuf3, fuf4);
         tbList = Lists.newArrayList(btn0, btn1, btn2, btn3, btn4);
         statList = Lists.newArrayList(status0, status1, status2, status3, status4);
-        addValidators();
+     //   addValidators();
         setModal(false);
     }
 
-    protected abstract void onSubmitComplete(List<IPCFileUploadField> fufList,
+    protected abstract void onSubmitComplete(List<FileUpload> fufList,
                                              List<Status> statList,
                                              List<FormPanel> submittedForms,
                                              List<FormPanel> formList,
                                              SubmitCompleteEvent event);
 
-    protected abstract void doUpload(List<IPCFileUploadField> fufList,
+    protected abstract void doUpload(List<FileUpload> fufList,
                                      List<Status> statList,
                                      List<FormPanel> submittedForms,
                                      List<FormPanel> formList);
@@ -133,11 +134,11 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
         doUpload(fufList, statList, submittedForms, formList);
     }
 
-    void addValidators() {
-        for (IPCFileUploadField f : fufList) {
+/*    void addValidators() {
+        for (FileUpload f : fufList) {
             f.addValidator(new DiskResourceNameValidator());
         }
-    }
+    }*/
 
     @UiFactory
     FormPanel createFormPanel() {
@@ -164,24 +165,29 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
 
     @UiHandler({ "btn0", "btn1", "btn2", "btn3", "btn4" })
     void onResetClicked(SelectEvent event) {
-        IPCFileUploadField uField = fufList.get(tbList.indexOf(event.getSource()));
-        uField.reset();
-        uField.validate(true);
+        FileUpload uField = fufList.get(tbList.indexOf(event.getSource()));
+        reset(uField.getElement().getId());
     }
+
+    public static native void reset(String id) /*-{
+        input = $doc.getElementById(id);
+        input.files[0] = null;
+
+    }-*/;
 
     @UiHandler({ "fuf0", "fuf1", "fuf2", "fuf3", "fuf4" })
     void onFieldChanged(ChangeEvent event) {
         getOkButton().setEnabled(FormPanelHelper.isValid(this, true) && isValidForm());
     }
 
-    @UiHandler({ "fuf0", "fuf1", "fuf2", "fuf3", "fuf4" })
+/*    @UiHandler({ "fuf0", "fuf1", "fuf2", "fuf3", "fuf4" })
     void onFieldValid(ValidEvent event) {
         getOkButton().setEnabled(FormPanelHelper.isValid(this, true) && isValidForm());
-    }
+    }*/
 
     boolean isValidForm() {
-        for (IPCFileUploadField f : fufList) {
-            if (!Strings.isNullOrEmpty(f.getValue()) && f.isValid()) {
+        for (FileUpload f : fufList) {
+            if (!Strings.isNullOrEmpty(f.getFilename())) {
                 return true;
             }
         }
@@ -189,10 +195,10 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
 
     }
 
-    @UiHandler({ "fuf0", "fuf1", "fuf2", "fuf3", "fuf4" })
+/*    @UiHandler({ "fuf0", "fuf1", "fuf2", "fuf3", "fuf4" })
     void onFieldInvalid(InvalidEvent event) {
         getOkButton().setEnabled(false);
-    }
+    }*/
 
     @Override
     public void hide() {
@@ -215,7 +221,7 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
         }
     }
 
-    @UiHandler({ "fuf0", "fuf1", "fuf2", "fuf3", "fuf4" })
+    /*@UiHandler({ "fuf0", "fuf1", "fuf2", "fuf3", "fuf4" })
     void onFormKeyUp(KeyUpEvent event) {
         if ((event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE) || (event.getNativeKeyCode()
                                                                      == KeyCodes.KEY_DELETE)) {
@@ -230,6 +236,6 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
                 }
             }
         }
-    }
+    }*/
 
 }

@@ -6,14 +6,15 @@ import org.iplantc.de.client.models.HasPaths;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
-import org.iplantc.de.commons.client.widgets.IPCFileUploadField;
 import org.iplantc.de.diskResource.client.events.FileUploadedEvent;
 import org.iplantc.de.diskResource.client.views.dialogs.DuplicateDiskResourceCallback;
 import org.iplantc.de.intercom.client.IntercomFacade;
 import org.iplantc.de.intercom.client.TrackingEventType;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
@@ -21,6 +22,7 @@ import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.autobean.shared.Splittable;
@@ -97,7 +99,7 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
 
 
     @Override
-    protected void onSubmitComplete(List<IPCFileUploadField> fufList,
+    protected void onSubmitComplete(List<FileUpload> fufList,
                                     List<Status> statList,
                                     List<FormPanel> submittedForms,
                                     List<FormPanel> formList,
@@ -107,9 +109,9 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
             statList.get(formList.indexOf(event.getSource())).clearStatus("");
         }
 
-        IPCFileUploadField field = fufList.get(formList.indexOf(event.getSource()));
+        FileUpload field = fufList.get(formList.indexOf(event.getSource()));
         String results2 = event.getResults();
-        String fieldValue = field.getValue();
+        String fieldValue = field.getFilename();
 
         Splittable bodySp = StringQuoter.createSplittable();
         StringQuoter.create(fieldValue).assign(bodySp, "name");
@@ -130,12 +132,12 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
                                        fieldValue))));
             } else {
                 if (split.isUndefined("file") || (split.get("file") == null)) {
-                    field.markInvalid(appearance.fileUploadsFailed(Lists.newArrayList(field.getValue())));
+                 //   field.markInvalid(appearance.fileUploadsFailed(Lists.newArrayList(field.getValue())));
                     IplantAnnouncer.getInstance()
                                    .schedule(new ErrorAnnouncementConfig(appearance.fileUploadsFailed(
-                                           Lists.newArrayList(field.getValue()))));
+                                           Lists.newArrayList(field.getFilename()))));
                 } else {
-                    eventBus.fireEvent(new FileUploadedEvent(uploadDest, field.getValue(), results));
+                    eventBus.fireEvent(new FileUploadedEvent(uploadDest, field.getFilename(), results));
                 }
             }
         }
@@ -147,13 +149,14 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
     }
 
     @Override
-    protected void doUpload(List<IPCFileUploadField> fufList,
+    protected void doUpload(List<FileUpload> fufList,
                             List<Status> statList,
                             List<FormPanel> submittedForms,
                             List<FormPanel> formList) {
-        FastMap<IPCFileUploadField> destResourceMap = new FastMap<>();
-        for (IPCFileUploadField field : fufList) {
-            String fileName = field.getValue().replaceAll(".*[\\\\/]", "");
+        FastMap<FileUpload> destResourceMap = new FastMap<>();
+        for (FileUpload field : fufList) {
+            printSize(field.getElement());
+            String fileName = field.getFilename().replaceAll(".*[\\\\/]", "");
             field.setEnabled(!Strings.isNullOrEmpty(fileName) && !fileName.equalsIgnoreCase("null"));
             if (field.isEnabled()) {
                 destResourceMap.put(uploadDest.getPath() + "/" + fileName, field);
@@ -162,6 +165,7 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
             }
         }
 
+
         if (!destResourceMap.isEmpty()) {
             final ArrayList<String> ids = Lists.newArrayList(destResourceMap.keySet());
             final HasPaths dto = FS_FACTORY.pathsList().as();
@@ -169,17 +173,38 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
             final CheckDuplicatesCallback cb = new CheckDuplicatesCallback(ids, destResourceMap, statList, fufList, submittedForms, formList);
             drService.diskResourcesExist(dto, cb);
         }
+
     }
 
+    public static native void printSize(com.google.gwt.user.client.Element element) /*-{
+        input = element;
+        if (!input) {
+            $wnd.alert("cannot find input element");
+        }
+        else if (!input.files) {
+            $wnd.alert("This browser doesn't seem to support the `files` property of file inputs.");
+        }
+        else if (!input.files[0]) {
+            $wnd.alert("Please select a file before clicking 'Load'");
+        }
+        else {
+            file = input.files[0];
+            $wnd.alert("File " + file.name + " is " + file.size + " bytes in size");
+        }
+
+    }-*/;
+
+    
+
     private final class CheckDuplicatesCallback extends DuplicateDiskResourceCallback {
-        private final FastMap<IPCFileUploadField> destResourceMap;
+        private final FastMap<FileUpload> destResourceMap;
         private final List<Status> statList;
-        private final List<IPCFileUploadField> fufList;
+        private final List<FileUpload> fufList;
         private final List<FormPanel> submittedForms;
         private final List<FormPanel> formList;
 
-        public CheckDuplicatesCallback(List<String> ids, FastMap<IPCFileUploadField> destResourceMap,
-                                       List<Status> statList, List<IPCFileUploadField> fufList, List<FormPanel> submittedForms,
+        public CheckDuplicatesCallback(List<String> ids, FastMap<FileUpload> destResourceMap,
+                                       List<Status> statList, List<FileUpload> fufList, List<FormPanel> submittedForms,
                                        List<FormPanel> formList) {
             super(ids, null);
             this.destResourceMap = destResourceMap;
@@ -192,11 +217,10 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
         @Override
         public void markDuplicates(Collection<String> duplicates) {
             if ((duplicates != null) && !duplicates.isEmpty()) {
-                for (String id : duplicates) {
-                    destResourceMap.get(id).markInvalid(appearance.fileExist());
-                }
+                String dupeFiles =   Joiner.on(',').join(duplicates);
+                ErrorHandler.post("Following file(s)exists already: " + dupeFiles );
             } else {
-                for (final IPCFileUploadField field : destResourceMap.values()) {
+                for (final FileUpload field : destResourceMap.values()) {
                     int index = fufList.indexOf(field);
                     statList.get(index).setBusy("");
                     FormPanel form = formList.get(index);
@@ -207,7 +231,7 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
                             if (event.isCanceled()) {
                                 IplantAnnouncer.getInstance()
                                                .schedule(new ErrorAnnouncementConfig(appearance.fileUploadsFailed(
-                                                       Lists.newArrayList(field.getValue()))));
+                                                       Lists.newArrayList(field.getFilename()))));
                             }
 
                             getOkButton().disable();
@@ -219,7 +243,7 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
                         GWT.log("\nexception on submit\n" + e.getMessage());
                         IplantAnnouncer.getInstance()
                                        .schedule(new ErrorAnnouncementConfig(appearance.fileUploadsFailed(
-                                               Lists.newArrayList(field.getValue()))));
+                                               Lists.newArrayList(field.getFilename()))));
                     }
                     submittedForms.add(form);
                 }

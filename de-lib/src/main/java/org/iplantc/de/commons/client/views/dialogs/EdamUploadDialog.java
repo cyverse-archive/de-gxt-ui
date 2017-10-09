@@ -14,6 +14,7 @@ import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -50,7 +51,7 @@ public class EdamUploadDialog extends AbstractFileUploadDialog {
     }
 
     @Override
-    protected void onSubmitComplete(List<IPCFileUploadField> fufList,
+    protected void onSubmitComplete(List<FileUpload> fufList,
                                     List<Status> statList,
                                     List<FormPanel> submittedForms,
                                     List<FormPanel> formList,
@@ -61,30 +62,30 @@ public class EdamUploadDialog extends AbstractFileUploadDialog {
             statList.get(formList.indexOf(event.getSource())).clearStatus("");
         }
 
-        IPCFileUploadField field = fufList.get(formList.indexOf(event.getSource()));
+        FileUpload field = fufList.get(formList.indexOf(event.getSource()));
         String results2 = event.getResults();
         if (Strings.isNullOrEmpty(results2)) {
             IplantAnnouncer.getInstance()
-                           .schedule(new SuccessAnnouncementConfig(appearance.fileUploadsSuccess(Lists.newArrayList(field.getValue()))));
+                           .schedule(new SuccessAnnouncementConfig(appearance.fileUploadsSuccess(Lists.newArrayList(field.getFilename()))));
             hide();
             if (handlers != null){
                 handlers.fireEvent(new RefreshOntologiesEvent());
             }
         } else {
             IplantAnnouncer.getInstance()
-                           .schedule(new ErrorAnnouncementConfig(appearance.fileUploadsFailed(Lists.newArrayList(field.getValue()))));
+                           .schedule(new ErrorAnnouncementConfig(appearance.fileUploadsFailed(Lists.newArrayList(field.getFilename()))));
         }
 
     }
 
     @Override
-    protected void doUpload(List<IPCFileUploadField> fufList,
+    protected void doUpload(List<FileUpload> fufList,
                             List<Status> statList,
                             List<FormPanel> submittedForms,
                             List<FormPanel> formList) {
 
-        for (final IPCFileUploadField field : fufList) {
-            String fileName = field.getValue().replaceAll(".*[\\\\/]", "");
+        for (final FileUpload field : fufList) {
+            String fileName = field.getFilename().replaceAll(".*[\\\\/]", "");
             field.setEnabled(!Strings.isNullOrEmpty(fileName) && !fileName.equalsIgnoreCase("null"));
             if (field.isEnabled()) {
                 int index = fufList.indexOf(field);
@@ -96,7 +97,7 @@ public class EdamUploadDialog extends AbstractFileUploadDialog {
                     public void onSubmit(SubmitEvent event) {
                         if (event.isCanceled()) {
                             IplantAnnouncer.getInstance()
-                                           .schedule(new ErrorAnnouncementConfig(appearance.fileUploadsFailed(Lists.newArrayList(field.getValue()))));
+                                           .schedule(new ErrorAnnouncementConfig(appearance.fileUploadsFailed(Lists.newArrayList(field.getFilename()))));
                         }
 
                         getOkButton().disable();
@@ -108,7 +109,7 @@ public class EdamUploadDialog extends AbstractFileUploadDialog {
                     GWT.log("\nexception on submit\n" + e.getMessage());
                     IplantAnnouncer.getInstance()
                                    .schedule(new ErrorAnnouncementConfig(appearance.fileUploadsFailed(
-                                           Lists.newArrayList(field.getValue()))));
+                                           Lists.newArrayList(field.getFilename()))));
                 }
             } else {
                 field.setEnabled(false);

@@ -188,8 +188,14 @@ public class IPCFileUploadField extends Component implements IsField<String>, Ha
         return file.getAttribute("name");
     }
 
+    public int getSize() {
+        GWT.log("filesize-->" +  getFileInput().getSize());
+        return  ((InputElement) file.cast()).getSize();
+    }
+
     @Override
     public String getValue() {
+        getSize();
         String value = getFileInput().getValue();
         if (!Strings.isNullOrEmpty(value)) {
             return value.replace("C:\\fakepath\\", "");
