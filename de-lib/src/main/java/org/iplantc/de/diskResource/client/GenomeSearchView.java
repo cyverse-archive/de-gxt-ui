@@ -1,13 +1,15 @@
 package org.iplantc.de.diskResource.client;
 
 import org.iplantc.de.client.models.IsMaskable;
+import org.iplantc.de.diskResource.client.events.selection.ImportGenomeFromCogeSelected;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
 public interface GenomeSearchView extends IsWidget,
-                                          IsMaskable {
+                                          IsMaskable,
+                                          ImportGenomeFromCogeSelected.HasImportGenomeFromCogeSelectedHandlers {
 
     interface GenomeSearchViewAppearance {
         String cogeSearchError();
@@ -50,7 +52,5 @@ public interface GenomeSearchView extends IsWidget,
     interface GenomeSearchPresenter {
 
         void go(HasOneWidget container);
-
-        void importGenomeFromCoge(Integer id);
     }
 }

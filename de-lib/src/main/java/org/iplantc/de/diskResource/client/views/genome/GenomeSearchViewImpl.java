@@ -2,10 +2,12 @@ package org.iplantc.de.diskResource.client.views.genome;
 
 import org.iplantc.de.client.models.genomes.Genome;
 import org.iplantc.de.diskResource.client.GenomeSearchView;
+import org.iplantc.de.diskResource.client.events.selection.ImportGenomeFromCogeSelected;
 import org.iplantc.de.diskResource.client.model.GenomeProperties;
 import org.iplantc.de.diskResource.client.views.widgets.GenomeSearchField;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -62,7 +64,10 @@ public class GenomeSearchViewImpl extends Composite implements GenomeSearchView 
 
     @UiHandler("importBtn")
     void onImportedClicked(SelectEvent event) {
-//        presenter.importGenomeFromCoge(grid.getSelectionModel().getSelectedItem().getId());
+        Genome selectedItem = grid.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            fireEvent(new ImportGenomeFromCogeSelected(selectedItem));
+        }
     }
 
     @UiFactory
@@ -101,5 +106,10 @@ public class GenomeSearchViewImpl extends Composite implements GenomeSearchView 
         cols.add(seqType);
 
         return new ColumnModel<>(cols);
+    }
+
+    @Override
+    public HandlerRegistration addImportGenomeFromCogeSelectedHandler(ImportGenomeFromCogeSelected.ImportGenomeFromCogeSelectedHandler handler) {
+        return addHandler(handler, ImportGenomeFromCogeSelected.TYPE);
     }
 }

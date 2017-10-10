@@ -5,6 +5,7 @@ import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.GenomeSearchView;
+import org.iplantc.de.diskResource.client.events.selection.ImportGenomeFromCogeSelected;
 import org.iplantc.de.diskResource.client.gin.factory.GenomeSearchViewFactory;
 
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -17,7 +18,8 @@ import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.box.MessageBox;
 
-public class GenomeSearchPresenterImpl implements GenomeSearchView.GenomeSearchPresenter {
+public class GenomeSearchPresenterImpl implements GenomeSearchView.GenomeSearchPresenter,
+                                                  ImportGenomeFromCogeSelected.ImportGenomeFromCogeSelectedHandler {
 
     private GenomeSearchView.GenomeSearchViewAppearance appearance;
     private GenomeSearchView view;
@@ -32,6 +34,8 @@ public class GenomeSearchPresenterImpl implements GenomeSearchView.GenomeSearchP
         this.appearance = appearance;
         this.serviceFacade = serviceFacade;
         this.view = viewFactory.create(getPagingLoader(searchProxy));
+
+        this.view.addImportGenomeFromCogeSelectedHandler(this);
     }
 
     @Override
@@ -40,8 +44,9 @@ public class GenomeSearchPresenterImpl implements GenomeSearchView.GenomeSearchP
     }
 
     @Override
-    public void importGenomeFromCoge(Integer id) {
-        serviceFacade.importGenomeFromCoge(id, true, new AsyncCallback<String>() {
+    public void onImportGenomeFromCogeSelected(ImportGenomeFromCogeSelected event) {
+        Genome genome = event.getSelectedGenome();
+        serviceFacade.importGenomeFromCoge(genome.getId(), true, new AsyncCallback<String>() {
 
             @Override
             public void onFailure(Throwable caught) {
