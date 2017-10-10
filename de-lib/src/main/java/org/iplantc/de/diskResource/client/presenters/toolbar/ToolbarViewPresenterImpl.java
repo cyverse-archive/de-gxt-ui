@@ -76,31 +76,6 @@ import java.util.logging.Logger;
  */
 public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDownloadSelectedHandler {
 
-    private final class BulkMetadataCallback extends DataCallback<String> {
-
-
-        private final String filePath;
-        private final String destFolder;
-
-        public BulkMetadataCallback(String filePath, String destFolder) {
-            this.filePath = filePath;
-            this.destFolder = destFolder;
-        }
-
-        @Override
-        public void onFailure(Integer statusCode, Throwable caught) {
-                IplantAnnouncer.getInstance()
-                               .schedule(new ErrorAnnouncementConfig(appearance.bulkMetadataError()));
-        }
-
-        @Override
-        public void onSuccess(String result) {
-            IplantAnnouncer.getInstance()
-                           .schedule(new SuccessAnnouncementConfig(appearance.bulkMetadataSuccess()));
-
-        }
-    }
-
     @Inject
     ToolbarView.Presenter.Appearance appearance;
     @Inject
@@ -387,10 +362,17 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     @Override
     public void submitBulkMetadataFromExistingFile(String filePath,
                                                    String destFolder) {
-        drFacade.setBulkMetadataFromFile(filePath,
-                                         destFolder,
-                                         new BulkMetadataCallback(filePath,  destFolder));
+        drFacade.setBulkMetadataFromFile(filePath, destFolder, new DataCallback<String>() {
+            @Override
+            public void onFailure(Integer statusCode, Throwable caught) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.bulkMetadataError()));
+            }
 
+            @Override
+            public void onSuccess(String result) {
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.bulkMetadataSuccess()));
+            }
+        });
     }
 
     @Override
