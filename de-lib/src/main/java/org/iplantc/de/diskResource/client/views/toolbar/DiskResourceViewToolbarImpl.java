@@ -20,6 +20,7 @@ import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelecte
 import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected;
 import org.iplantc.de.diskResource.client.events.selection.MoveDiskResourcesSelected;
+import org.iplantc.de.diskResource.client.events.selection.OpenTrashFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.RenameDiskResourceSelected;
 import org.iplantc.de.diskResource.client.events.selection.RestoreDiskResourcesSelected;
@@ -250,6 +251,11 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     @Override
     public HandlerRegistration addDownloadTemplateSelectedEventHandler(DownloadTemplateSelectedEvent.DownloadTemplateSelectedEventHandler handler) {
         return addHandler(handler, DownloadTemplateSelectedEvent.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addOpenTrashFolderSelectedHandler(OpenTrashFolderSelected.OpenTrashFolderSelectedHandler handler) {
+        return addHandler(handler, OpenTrashFolderSelected.TYPE);
     }
 
 
@@ -558,7 +564,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     // ------------- Trash ---------------
     @UiHandler("openTrashMi")
     void onOpenTrashClicked(SelectionEvent<Item> event) {
-        presenter.onOpenTrashFolderSelected();
+        fireEvent(new OpenTrashFolderSelected());
     }
 
     // ------------ Refresh --------------

@@ -254,11 +254,6 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     }
 
     @Override
-    public void onOpenTrashFolderSelected() {
-        parentPresenter.selectTrashFolder();
-    }
-
-    @Override
     public void onSimpleDownloadSelected(SimpleDownloadSelected event) {
         eventBus.fireEvent(new RequestSimpleDownloadEvent(event.getSelectedDiskResources(),
                                                           event.getSelectedFolder()));

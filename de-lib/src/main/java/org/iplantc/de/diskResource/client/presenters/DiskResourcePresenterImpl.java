@@ -40,6 +40,7 @@ import org.iplantc.de.diskResource.client.events.selection.DNDDiskResourcesCompl
 import org.iplantc.de.diskResource.client.events.selection.DeleteDiskResourcesSelected;
 import org.iplantc.de.diskResource.client.events.selection.EmptyTrashSelected;
 import org.iplantc.de.diskResource.client.events.selection.MoveDiskResourcesSelected;
+import org.iplantc.de.diskResource.client.events.selection.OpenTrashFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.RenameDiskResourceSelected;
 import org.iplantc.de.diskResource.client.events.selection.RestoreDiskResourcesSelected;
@@ -100,7 +101,8 @@ public class DiskResourcePresenterImpl implements
                                       SendToEnsemblSelected.SendToEnsemblSelectedHandler,
                                       SendToCogeSelected.SendToCogeSelectedHandler,
                                       DNDDiskResourcesCompleted.DNDDiskResourcesCompletedHandler,
-                                      CreateNcbiSraFolderStructureSelected.CreateNcbiSraFolderStructureSelectedHandler {
+                                      CreateNcbiSraFolderStructureSelected.CreateNcbiSraFolderStructureSelectedHandler,
+                                      OpenTrashFolderSelected.OpenTrashFolderSelectedHandler {
 
     final IplantAnnouncer announcer;
     final DiskResourceAutoBeanFactory drFactory;
@@ -338,6 +340,7 @@ public class DiskResourcePresenterImpl implements
         toolbarPresenter.getView().addSendToTreeViewerSelectedHandler(this);
         toolbarPresenter.getView().addSimpleUploadSelectedHandler(this.navigationPresenter);
         toolbarPresenter.getView().addImportFromUrlSelectedHandler(this.navigationPresenter);
+        toolbarPresenter.getView().addOpenTrashFolderSelectedHandler(this);
         toolbarPresenter.addCreateNewFolderSelectedHandler(this);
         toolbarPresenter.addCreateNcbiSraFolderStructureSelectedHandler(this);
     }
@@ -663,7 +666,7 @@ public class DiskResourcePresenterImpl implements
     }
 
     @Override
-    public void selectTrashFolder() {
+    public void onOpenTrashFolderSelected(OpenTrashFolderSelected event) {
         final HasPath hasPath = CommonModelUtils.getInstance()
                                                 .createHasPathFromString(userInfo.getTrashPath());
         navigationPresenter.setSelectedFolder(hasPath);

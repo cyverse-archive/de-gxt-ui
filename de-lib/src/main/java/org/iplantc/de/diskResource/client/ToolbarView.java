@@ -17,6 +17,7 @@ import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelecte
 import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelected.HasManageMetadataSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected.HasManageSharingSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.MoveDiskResourcesSelected.HasMoveDiskResourcesSelectedHandlers;
+import org.iplantc.de.diskResource.client.events.selection.OpenTrashFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected.HasRefreshFolderSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.RenameDiskResourceSelected.HasRenameDiskResourceSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.RestoreDiskResourcesSelected.HasRestoreDiskResourceSelectedHandlers;
@@ -61,7 +62,8 @@ public interface ToolbarView extends IsWidget,
                                      HasImportFromUrlSelectedHandlers,
                                      DownloadTemplateSelectedEvent.HasDownloadTemplateSelectedEventHandlers,
                                      FolderSelectionEventHandler,
-                                     DiskResourceSelectionChangedEventHandler {
+                                     DiskResourceSelectionChangedEventHandler,
+                                     OpenTrashFolderSelected.HasOpenTrashFolderSelectedHandlers {
     interface Appearance {
 
         SafeHtml bulkDownloadInfoBoxHeading();
@@ -292,8 +294,6 @@ public interface ToolbarView extends IsWidget,
         void onOpenNewWindowAtLocationSelected(Folder selectedFolder);
 
         void onOpenNewWindowSelected();
-
-        void onOpenTrashFolderSelected();
 
         void onImportFromCoge();
 

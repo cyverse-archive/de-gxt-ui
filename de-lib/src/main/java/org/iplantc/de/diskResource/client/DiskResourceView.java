@@ -129,8 +129,6 @@ public interface DiskResourceView extends IsWidget,
         void go(HasOneWidget container, HasPath folderToSelect,
                 List<? extends HasId> diskResourcesToSelect);
 
-        void selectTrashFolder();
-
         void setSelectedDiskResourcesById(List<? extends HasId> selectedDiskResources);
 
         /**
