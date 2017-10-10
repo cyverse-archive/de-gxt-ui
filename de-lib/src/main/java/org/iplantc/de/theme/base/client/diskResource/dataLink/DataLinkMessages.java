@@ -18,4 +18,8 @@ public interface DataLinkMessages extends Messages{
     String expandAll();
 
     String dataLinkTitle();
+
+    String manageDataLinks();
+
+    String manageDataLinksHelp();
 }

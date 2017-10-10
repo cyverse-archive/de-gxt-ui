@@ -70,6 +70,16 @@ public interface DataLinkView extends IsWidget,
         String dataLinkWarningClass();
 
         ImageResourcePrototype emptyTreeNodeIcon();
+
+        String manageDataLinks();
+
+        int manageDataLinksDialogWidth();
+
+        int manageDataLinksDialogHeight();
+
+        String done();
+
+        String manageDataLinksHelp();
     }
 
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {

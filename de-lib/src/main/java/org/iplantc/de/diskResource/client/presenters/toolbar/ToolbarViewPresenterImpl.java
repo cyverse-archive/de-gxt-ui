@@ -1,7 +1,5 @@
 package org.iplantc.de.diskResource.client.presenters.toolbar;
 
-import static com.sencha.gxt.widget.core.client.Dialog.PredefinedButton.OK;
-
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.events.diskResources.OpenFolderEvent;
 import org.iplantc.de.client.gin.ServicesInjector;
@@ -27,12 +25,10 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
-import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.FileViewerWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.PathListWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.TabularFileViewerWindowConfig;
-import org.iplantc.de.diskResource.client.DataLinkView;
 import org.iplantc.de.diskResource.client.DiskResourceView;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.CreateNewFileEvent;
@@ -43,13 +39,13 @@ import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelect
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected.SimpleDownloadSelectedHandler;
 import org.iplantc.de.diskResource.client.gin.factory.BulkMetadataDialogFactory;
-import org.iplantc.de.diskResource.client.gin.factory.DataLinkPresenterFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
 import org.iplantc.de.diskResource.client.gin.factory.HTPathListAutomationDialogFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewFactory;
 import org.iplantc.de.diskResource.client.views.dialogs.BulkMetadataDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.CreateFolderDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.CreateNcbiSraFolderStructureDialog;
+import org.iplantc.de.diskResource.client.views.dialogs.CreatePublicLinkDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.HTPathListAutomationDialog;
 import org.iplantc.de.diskResource.client.views.toolbar.dialogs.TabFileConfigDialog;
@@ -61,7 +57,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -79,7 +74,6 @@ import java.util.logging.Logger;
 public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDownloadSelectedHandler {
 
     @Inject ToolbarView.Presenter.Appearance appearance;
-    @Inject DataLinkPresenterFactory dataLinkPresenterFactory;
     @Inject DiskResourceSelectorFieldFactory drSelectorFactory;
     @Inject EventBus eventBus;
     @Inject DiskResourceServiceFacade drFacade;
@@ -100,6 +94,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     @Inject AsyncProviderWrapper<TabFileConfigDialog> tabFileConfigDlgProvider;
     @Inject AsyncProviderWrapper<CreateFolderDialog> createFolderDlgProvider;
     @Inject AsyncProviderWrapper<CreateNcbiSraFolderStructureDialog> createNcbiSraDlgProvider;
+    @Inject AsyncProviderWrapper<CreatePublicLinkDialog> createPublicLinkDlgProvider;
 
     private final GenomeSearchDialog genomeSearchView;
     private final BulkMetadataDialogFactory bulkMetadataViewFactory;
@@ -220,19 +215,15 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
     @Override
     public void onCreatePublicLinkSelected(final List<DiskResource> selectedDiskResources) {
-        // FIXME Do not fire dialog from presenter. Do so from the view.
-        IPlantDialog dlg = new IPlantDialog(true);
-        dlg.setPredefinedButtons(OK);
-        dlg.setHeading(appearance.manageDataLinks());
-        dlg.setHideOnButtonClick(true);
-        dlg.setWidth(appearance.manageDataLinksDialogWidth());
-        dlg.setHeight(appearance.manageDataLinksDialogHeight());
-        dlg.setOkButtonText(appearance.done());
-        DataLinkView.Presenter dlPresenter =
-                dataLinkPresenterFactory.createDataLinkPresenter(selectedDiskResources);
-        dlPresenter.go(dlg);
-        dlg.addHelp(new HTML(appearance.manageDataLinksHelp()));
-        dlg.show();
+        createPublicLinkDlgProvider.get(new AsyncCallback<CreatePublicLinkDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(CreatePublicLinkDialog dialog) {
+                dialog.show(selectedDiskResources);
+            }
+        });
     }
 
     @Override

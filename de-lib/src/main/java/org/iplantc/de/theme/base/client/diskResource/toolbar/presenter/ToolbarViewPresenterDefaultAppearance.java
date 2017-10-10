@@ -30,11 +30,6 @@ public class ToolbarViewPresenterDefaultAppearance implements ToolbarView.Presen
     }
 
     @Override
-    public String done() {
-        return iplantDisplayStrings.done();
-    }
-
-    @Override
     public String emptyTrash() {
         return diskResourceMessages.emptyTrash();
     }
@@ -42,26 +37,6 @@ public class ToolbarViewPresenterDefaultAppearance implements ToolbarView.Presen
     @Override
     public String emptyTrashWarning() {
         return diskResourceMessages.emptyTrashWarning();
-    }
-
-    @Override
-    public String manageDataLinks() {
-        return displayMessages.manageDataLinks();
-    }
-
-    @Override
-    public int manageDataLinksDialogHeight() {
-        return 300;
-    }
-
-    @Override
-    public int manageDataLinksDialogWidth() {
-        return 550;
-    }
-
-    @Override
-    public String manageDataLinksHelp() {
-        return displayMessages.manageDataLinksHelp();
     }
 
     @Override

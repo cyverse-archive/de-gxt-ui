@@ -246,19 +246,9 @@ public interface ToolbarView extends IsWidget,
 
         interface Appearance {
 
-            String done();
-
             String emptyTrash();
 
             String emptyTrashWarning();
-
-            String manageDataLinks();
-
-            int manageDataLinksDialogHeight();
-
-            int manageDataLinksDialogWidth();
-
-            String manageDataLinksHelp();
 
             String cogeSearchError();
 

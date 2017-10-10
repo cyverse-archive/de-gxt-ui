@@ -143,6 +143,31 @@ public class DataLinkViewDefaultAppearance implements DataLinkView.Appearance {
     }
 
     @Override
+    public String manageDataLinks() {
+        return displayMessages.manageDataLinks();
+    }
+
+    @Override
+    public int manageDataLinksDialogHeight() {
+        return 300;
+    }
+
+    @Override
+    public int manageDataLinksDialogWidth() {
+        return 550;
+    }
+
+    @Override
+    public String done() {
+        return iplantDisplayStrings.done();
+    }
+
+    @Override
+    public String manageDataLinksHelp() {
+        return displayMessages.manageDataLinksHelp();
+    }
+
+    @Override
     public ImageResource exclamationIcon() {
         return iplantResources.exclamation();
     }
