@@ -88,7 +88,6 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
             ServicesInjector.INSTANCE.getPermIdRequestUserServiceFacade();
 
     @Inject DiskResourceErrorAutoBeanFactory drFactory;
-    FileEditorServiceFacade feFacade;
 
     @Inject IplantAnnouncer announcer;
     @Inject AsyncProviderWrapper<TabFileConfigDialog> tabFileConfigDlgProvider;
@@ -98,7 +97,6 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     @Inject AsyncProviderWrapper<GenomeSearchDialog> genomeSearchDlgProvider;
 
     private final BulkMetadataDialogFactory bulkMetadataViewFactory;
-    final private GenomeAutoBeanFactory gFactory;
     private final DiskResourceView.Presenter parentPresenter;
     private final ToolbarView view;
     private final HTPathListAutomationDialogFactory htPathListAutomationViewFactory;
@@ -112,15 +110,12 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     ToolbarViewPresenterImpl(final ToolbarViewFactory viewFactory,
                              BulkMetadataDialogFactory bulkMetadataViewFactory,
                              HTPathListAutomationDialogFactory htPathListAutomationViewFactory,
-                             GenomeAutoBeanFactory gFactory,
                              @Assisted DiskResourceView.Presenter parentPresenter) {
         this.parentPresenter = parentPresenter;
         this.view = viewFactory.create(this);
         this.bulkMetadataViewFactory = bulkMetadataViewFactory;
         this.htPathListAutomationViewFactory = htPathListAutomationViewFactory;
-        this.feFacade = ServicesInjector.INSTANCE.getFileEditorServiceFacade();
         view.addSimpleDownloadSelectedHandler(this);
-        this.gFactory = gFactory;
     }
 
     @Override
@@ -267,52 +262,6 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
                 dialog.show();
             }
         });
-    }
-
-    @Override
-    public void searchGenomeInCoge(String searchTerm) {
-        feFacade.searchGenomesInCoge(searchTerm, new AsyncCallback<String>() {
-
-            @Override
-            public void onSuccess(String result) {
-                AutoBean<GenomeList> genomesBean =
-                        AutoBeanCodex.decode(gFactory, GenomeList.class, result);
-                GenomeList list = genomesBean.as();
-                genomeSearchView.loadResults(list.getGenomes());
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                genomeSearchView.unmask();
-                IplantAnnouncer.getInstance()
-                               .schedule(new ErrorAnnouncementConfig(appearance.cogeSearchError()));
-
-            }
-        });
-
-    }
-
-    @Override
-    public void importGenomeFromCoge(Integer id) {
-        feFacade.importGenomeFromCoge(id, true, new AsyncCallback<String>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                IplantAnnouncer.getInstance()
-                               .schedule(new ErrorAnnouncementConfig(appearance.cogeImportGenomeError()));
-
-            }
-
-            @Override
-            public void onSuccess(String result) {
-                MessageBox amb =
-                        new MessageBox(SafeHtmlUtils.fromTrustedString(appearance.importFromCoge()), SafeHtmlUtils.fromTrustedString(appearance.cogeImportGenomeSucess()));
-                amb.setIcon(MessageBox.ICONS.info());
-                amb.show();
-            }
-
-        });
-
     }
 
     @Override

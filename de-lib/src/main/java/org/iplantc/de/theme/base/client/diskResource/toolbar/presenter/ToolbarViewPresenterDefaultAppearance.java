@@ -56,7 +56,7 @@ public class ToolbarViewPresenterDefaultAppearance implements ToolbarView.Presen
 
     @Override
     public String cogeImportGenomeSucess() {
-        return diskResourceMessages.cogeImportGenomeSucess();
+        return diskResourceMessages.cogeImportGenomeSuccess();
     }
 
     @Override

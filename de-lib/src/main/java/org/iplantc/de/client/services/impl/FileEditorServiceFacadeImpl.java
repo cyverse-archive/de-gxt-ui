@@ -5,9 +5,12 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.diskResources.File;
+import org.iplantc.de.client.models.genomes.Genome;
+import org.iplantc.de.client.models.genomes.GenomeList;
 import org.iplantc.de.client.models.viewer.FileViewerAutoBeanFactory;
 import org.iplantc.de.client.models.viewer.Manifest;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
+import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.DEProperties;
@@ -29,6 +32,8 @@ import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import com.sencha.gxt.core.client.util.Format;
 
+import java.util.List;
+
 /**
  * Facade for file editors.
  */
@@ -42,6 +47,8 @@ public class FileEditorServiceFacadeImpl implements FileEditorServiceFacade {
 
     interface FileEditorServiceAutoBeanFactory extends AutoBeanFactory {
         AutoBean<File> file();
+
+        AutoBean<GenomeList> genomeList();
     }
 
     @Inject
@@ -175,11 +182,16 @@ public class FileEditorServiceFacadeImpl implements FileEditorServiceFacade {
     }
 
     @Override
-    public void searchGenomesInCoge(String searchTxt, AsyncCallback<String> callback) {
+    public void searchGenomesInCoge(String searchTxt, AsyncCallback<List<Genome>> callback) {
         String address = deProperties.getUnproctedMuleServiceBaseUrl() + "coge/genomes?search="
                 + URL.encodeQueryString(searchTxt);
         ServiceCallWrapper wrapper = new ServiceCallWrapper(Type.GET, address);
-        callService(wrapper, callback);
+        callService(wrapper, new AsyncCallbackConverter<String, List<Genome>>(callback) {
+            @Override
+            protected List<Genome> convertFrom(String object) {
+                return AutoBeanCodex.decode(factory, GenomeList.class, object).as().getGenomes();
+            }
+        });
     }
 
     @Override

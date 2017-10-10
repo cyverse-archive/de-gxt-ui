@@ -172,7 +172,7 @@ public interface DiskResourceMessages extends Messages {
 
     String cogeImportGenomeError();
 
-    String cogeImportGenomeSucess();
+    String cogeImportGenomeSuccess();
 
     String importFromCoge();
 

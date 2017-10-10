@@ -296,10 +296,6 @@ public interface ToolbarView extends IsWidget,
 
         void onImportFromCoge();
 
-        void searchGenomeInCoge(String searchTerm);
-
-        void importGenomeFromCoge(Integer id);
-
         void onBulkMetadataSelected(BULK_MODE mode);
 
         void submitBulkMetadataFromExistingFile(String filePath,

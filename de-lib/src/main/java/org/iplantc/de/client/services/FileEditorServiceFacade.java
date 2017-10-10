@@ -1,11 +1,14 @@
 package org.iplantc.de.client.services;
 
 import org.iplantc.de.client.models.diskResources.File;
+import org.iplantc.de.client.models.genomes.Genome;
 import org.iplantc.de.client.models.viewer.Manifest;
 import org.iplantc.de.shared.DECallback;
 
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import java.util.List;
 
 public interface FileEditorServiceFacade {
 
@@ -71,7 +74,7 @@ public interface FileEditorServiceFacade {
      */
     void loadGenomesInCoge(JSONObject pathArray,AsyncCallback<String> callback);
 
-    void searchGenomesInCoge(String searchTxt, AsyncCallback<String> callback);
+    void searchGenomesInCoge(String searchTxt, AsyncCallback<List<Genome>> callback);
 
     void uploadTextAsFile(String destination, String fileContents, boolean newFile, DECallback<File> callback);
     

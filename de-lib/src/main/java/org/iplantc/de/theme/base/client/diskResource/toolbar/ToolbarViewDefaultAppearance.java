@@ -35,9 +35,6 @@ public class ToolbarViewDefaultAppearance implements ToolbarView.Appearance {
         @Source("../bin_empty.png")
         ImageResource emptyTrashIcon();
 
-        @Source("../import.gif")
-        ImageResource importDataIcon();
-
         @Source("../list-ingredients-16.png")
         ImageResource newPathListIcon();
 
@@ -203,7 +200,7 @@ public class ToolbarViewDefaultAppearance implements ToolbarView.Appearance {
 
     @Override
     public ImageResource importDataIcon() {
-        return resources.importDataIcon();
+        return iplantResources.importDataIcon();
     }
 
     @Override

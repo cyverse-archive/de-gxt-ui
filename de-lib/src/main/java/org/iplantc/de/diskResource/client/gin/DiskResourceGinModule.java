@@ -6,6 +6,7 @@ import org.iplantc.de.diskResource.client.DataLinkView;
 import org.iplantc.de.diskResource.client.DataSharingView;
 import org.iplantc.de.diskResource.client.DetailsView;
 import org.iplantc.de.diskResource.client.DiskResourceView;
+import org.iplantc.de.diskResource.client.GenomeSearchView;
 import org.iplantc.de.diskResource.client.GridView;
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.NavigationView;
@@ -18,6 +19,7 @@ import org.iplantc.de.diskResource.client.gin.factory.DiskResourcePresenterFacto
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.FolderContentsRpcProxyFactory;
+import org.iplantc.de.diskResource.client.gin.factory.GenomeSearchViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewPresenterFactory;
 import org.iplantc.de.diskResource.client.gin.factory.HTPathListAutomationDialogFactory;
@@ -27,6 +29,7 @@ import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewPresenterFactor
 import org.iplantc.de.diskResource.client.presenters.DiskResourcePresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.dataLink.DataLinkPresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.details.DetailsViewPresenterImpl;
+import org.iplantc.de.diskResource.client.presenters.genome.GenomeSearchPresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.grid.GridViewPresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsRpcProxyImpl;
 import org.iplantc.de.diskResource.client.presenters.metadata.MetadataPresenterImpl;
@@ -41,6 +44,7 @@ import org.iplantc.de.diskResource.client.views.details.DetailsViewImpl;
 import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.InfoTypeEditorDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.SaveAsDialog;
+import org.iplantc.de.diskResource.client.views.genome.GenomeSearchViewImpl;
 import org.iplantc.de.diskResource.client.views.grid.GridViewImpl;
 import org.iplantc.de.diskResource.client.views.metadata.DiskResourceMetadataViewImpl;
 import org.iplantc.de.diskResource.client.views.metadata.MetadataTemplateView;
@@ -79,6 +83,12 @@ public class DiskResourceGinModule extends AbstractGinModule {
         install(new GinFactoryModuleBuilder()
                     .implement(DiskResourceView.Presenter.class, DiskResourcePresenterImpl.class)
                     .build(DiskResourcePresenterFactory.class));
+
+        // Genome
+        install(new GinFactoryModuleBuilder()
+                        .implement(GenomeSearchView.class, GenomeSearchViewImpl.class)
+                        .build(GenomeSearchViewFactory.class));
+        bind(GenomeSearchView.GenomeSearchPresenter.class).to(GenomeSearchPresenterImpl.class);
 
         // Data Links
         install(new GinFactoryModuleBuilder()
