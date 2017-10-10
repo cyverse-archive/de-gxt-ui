@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.viewer.MimeType;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent.DiskResourceSelectionChangedEventHandler;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent.FolderSelectionEventHandler;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected.HasCopyMetadataSelectedEventHandlers;
+import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSelected;
 import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDiskResourcesSelected.HasDeleteDiskResourcesSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.DownloadTemplateSelectedEvent;
@@ -240,7 +241,8 @@ public interface ToolbarView extends IsWidget,
         String automateHTPathListMenuItem();
     }
 
-    interface Presenter extends CreateNewFolderSelected.HasCreateNewFolderSelectedHandlers {
+    interface Presenter extends CreateNewFolderSelected.HasCreateNewFolderSelectedHandlers,
+                                CreateNcbiSraFolderStructureSelected.HasCreateNcbiSraFolderStructureSelectedHandlers {
 
         interface Appearance {
 

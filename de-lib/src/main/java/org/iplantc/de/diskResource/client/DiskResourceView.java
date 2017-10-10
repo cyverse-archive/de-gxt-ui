@@ -118,11 +118,6 @@ public interface DiskResourceView extends IsWidget,
 
         void deSelectDiskResources();
 
-        public void onCreateNcbiSraFolderStructure(Folder selectedFolder,
-                                                   String projectName,
-                                                   Integer numSample,
-                                                   Integer numlibs);
-
         void doMoveDiskResources(Folder targetFolder, List<DiskResource> resources);
 
         void doRenameDiskResource(DiskResource diskResource, String newName);

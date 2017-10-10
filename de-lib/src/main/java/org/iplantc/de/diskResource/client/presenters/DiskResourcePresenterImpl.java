@@ -34,6 +34,7 @@ import org.iplantc.de.diskResource.client.events.RequestSendToCoGeEvent;
 import org.iplantc.de.diskResource.client.events.RequestSendToEnsemblEvent;
 import org.iplantc.de.diskResource.client.events.RequestSendToTreeViewerEvent;
 import org.iplantc.de.diskResource.client.events.RootFoldersRetrievedEvent;
+import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSelected;
 import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.DNDDiskResourcesCompleted;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDiskResourcesSelected;
@@ -98,7 +99,8 @@ public class DiskResourcePresenterImpl implements
                                       SendToTreeViewerSelected.SendToTreeViewerSelectedHandler,
                                       SendToEnsemblSelected.SendToEnsemblSelectedHandler,
                                       SendToCogeSelected.SendToCogeSelectedHandler,
-                                      DNDDiskResourcesCompleted.DNDDiskResourcesCompletedHandler {
+                                      DNDDiskResourcesCompleted.DNDDiskResourcesCompletedHandler,
+                                      CreateNcbiSraFolderStructureSelected.CreateNcbiSraFolderStructureSelectedHandler {
 
     final IplantAnnouncer announcer;
     final DiskResourceAutoBeanFactory drFactory;
@@ -337,6 +339,7 @@ public class DiskResourcePresenterImpl implements
         toolbarPresenter.getView().addSimpleUploadSelectedHandler(this.navigationPresenter);
         toolbarPresenter.getView().addImportFromUrlSelectedHandler(this.navigationPresenter);
         toolbarPresenter.addCreateNewFolderSelectedHandler(this);
+        toolbarPresenter.addCreateNcbiSraFolderStructureSelectedHandler(this);
     }
 
     // <editor-fold desc="Handler Registrations">
@@ -572,15 +575,17 @@ public class DiskResourcePresenterImpl implements
     }
 
     @Override
-    public void onCreateNcbiSraFolderStructure(final Folder selectedFolder,
-                                               final String projectName,
-                                               final Integer numSample,
-                                               final Integer numlibs) {
+    public void onCreateNcbiSraFolderStructureSelected(CreateNcbiSraFolderStructureSelected event) {
+        Folder selectedFolder = event.getSelectedFolder();
+        String projectName = event.getProjectText();
+        Integer numSample = event.getBioSampleNumber();
+        Integer numLibs = event.getLibraryNumber();
+
         view.mask(appearance.createFolderLoadingMask());
-        String[] paths = new String[numSample * numlibs];
+        String[] paths = new String[numSample * numLibs];
         List<String> list = new ArrayList<>();
         for (int i = 1; i <= numSample; i++) {
-            for (int j = 1; j <= numlibs; j++) {
+            for (int j = 1; j <= numLibs; j++) {
                 list.add("BioProject_" + projectName + "/" + "BioSample" + i + "/" + "BioSample" + i
                         + "Library" + j);
             }

@@ -38,6 +38,7 @@ import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.CreateNewFileEvent;
 import org.iplantc.de.diskResource.client.events.RequestSimpleDownloadEvent;
 import org.iplantc.de.diskResource.client.events.ShowFilePreviewEvent;
+import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSelected;
 import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected.SimpleDownloadSelectedHandler;
@@ -68,8 +69,6 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 import com.sencha.gxt.widget.core.client.box.MessageBox;
-import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -100,6 +99,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     @Inject IplantAnnouncer announcer;
     @Inject AsyncProviderWrapper<TabFileConfigDialog> tabFileConfigDlgProvider;
     @Inject AsyncProviderWrapper<CreateFolderDialog> createFolderDlgProvider;
+    @Inject AsyncProviderWrapper<CreateNcbiSraFolderStructureDialog> createNcbiSraDlgProvider;
 
     private final GenomeSearchDialog genomeSearchView;
     private final BulkMetadataDialogFactory bulkMetadataViewFactory;
@@ -190,31 +190,25 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
     @Override
     public void onCreateNcbiSraFolderStructure(final Folder selectedFolder) {
-        // FIXME Do not fire dialog from presenter. Do so from the view.
-        final CreateNcbiSraFolderStructureDialog dialog =
-                new CreateNcbiSraFolderStructureDialog(selectedFolder);
-        dialog.setHideOnButtonClick(false);
-        dialog.addOkButtonSelectHandler(new SelectHandler() {
+        createNcbiSraDlgProvider.get(new AsyncCallback<CreateNcbiSraFolderStructureDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
 
             @Override
-            public void onSelect(SelectEvent event) {
-                parentPresenter.onCreateNcbiSraFolderStructure(selectedFolder,
-                                                               dialog.getProjectTxt(),
-                                                               dialog.getBiosampNum(),
-                                                               dialog.getLibNum());
-                dialog.hide();
+            public void onSuccess(CreateNcbiSraFolderStructureDialog dialog) {
+                dialog.addOkButtonSelectHandler(selectEvent -> {
+                    if (dialog.isValid()) {
+                        ensureHandlers().fireEvent(new CreateNcbiSraFolderStructureSelected(selectedFolder,
+                                                                                            dialog.getProjectTxt(),
+                                                                                            dialog.getBioSampNum(),
+                                                                                            dialog.getLibNum()));
+                        dialog.hide();
+                    }
+                });
+                dialog.addCancelButtonSelectHandler(selectEvent -> dialog.hide());
+                dialog.show(selectedFolder);
             }
         });
-
-        dialog.addCancelButtonSelectHandler(new SelectHandler() {
-
-            @Override
-            public void onSelect(SelectEvent event) {
-                dialog.hide();
-            }
-        });
-
-        dialog.show();
     }
 
     @Override
@@ -459,5 +453,11 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     @Override
     public HandlerRegistration addCreateNewFolderSelectedHandler(CreateNewFolderSelected.CreateNewFolderSelectedHandler handler) {
         return ensureHandlers().addHandler(CreateNewFolderSelected.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addCreateNcbiSraFolderStructureSelectedHandler(
+            CreateNcbiSraFolderStructureSelected.CreateNcbiSraFolderStructureSelectedHandler handler) {
+        return ensureHandlers().addHandler(CreateNcbiSraFolderStructureSelected.TYPE, handler);
     }
 }
