@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
+import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.HTML;
@@ -83,6 +84,18 @@ public class CreateNcbiSraFolderStructureDialog extends IPlantDialog {
         htmlDestText = new HTML(appearance.renderDestinationPathLabel(destPath,
                                                                       diskResourceUtil.parseNameFromPath(destPath)));
         super.show();
+
+        ensureDebugId(DiskResourceModule.Ids.CREATE_NCBI_STRUCTURE_DLG);
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        getButton(PredefinedButton.OK).ensureDebugId(baseID + DiskResourceModule.Ids.OK_BTN);
+        projectTxtField.ensureDebugId(baseID + DiskResourceModule.Ids.NCBI_PROJECT_NAME);
+        bioSampNumField.ensureDebugId(baseID + DiskResourceModule.Ids.NCBI_SAMPLE_NUM);
+        libNumField.ensureDebugId(baseID + DiskResourceModule.Ids.NCBI_LIB_NUM);
     }
 
     @Override

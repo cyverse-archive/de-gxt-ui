@@ -91,6 +91,10 @@ public interface DiskResourceModule {
         String MD5_DIALOG = "md5Dlg";
         String CREATE_FOLDER_DLG = "createFolderDlg";
         String FOLDER_NAME = ".folderName";
+        String CREATE_NCBI_STRUCTURE_DLG = "createNcbiFolderDlg";
+        String NCBI_PROJECT_NAME = ".projectName";
+        String NCBI_SAMPLE_NUM = ".sampleNum";
+        String NCBI_LIB_NUM = ".libNum";
     }
 
     interface MetadataIds {
