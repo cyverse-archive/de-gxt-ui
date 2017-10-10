@@ -38,6 +38,7 @@ import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.CreateNewFileEvent;
 import org.iplantc.de.diskResource.client.events.RequestSimpleDownloadEvent;
 import org.iplantc.de.diskResource.client.events.ShowFilePreviewEvent;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected.SimpleDownloadSelectedHandler;
 import org.iplantc.de.diskResource.client.gin.factory.BulkMetadataDialogFactory;
@@ -55,6 +56,8 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.base.Preconditions;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
@@ -96,6 +99,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
     @Inject IplantAnnouncer announcer;
     @Inject AsyncProviderWrapper<TabFileConfigDialog> tabFileConfigDlgProvider;
+    @Inject AsyncProviderWrapper<CreateFolderDialog> createFolderDlgProvider;
 
     private final GenomeSearchDialog genomeSearchView;
     private final BulkMetadataDialogFactory bulkMetadataViewFactory;
@@ -103,7 +107,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     private final DiskResourceView.Presenter parentPresenter;
     private final ToolbarView view;
     private final HTPathListAutomationDialogFactory htPathListAutomationViewFactory;
-
+    private HandlerManager handlerManager;
     HTPathListAutomationDialog dialog;
 
 
@@ -166,18 +170,22 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
     @Override
     public void onCreateNewFolderSelected(Folder selectedFolder) {
-        // FIXME Do not fire dialog from presenter. Do so from the view.
         if(selectedFolder == null) {
             Folder parent = drAbFactory.folder().as();
             parent.setPath(userInfo.getHomePath());
             selectedFolder = parent;
         }
-        final CreateFolderDialog dlg = getCreateFolderDialog(selectedFolder);
-        dlg.show();
-    }
+        Folder finalSelectedFolder = selectedFolder;
+        createFolderDlgProvider.get(new AsyncCallback<CreateFolderDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
 
-    protected CreateFolderDialog getCreateFolderDialog(Folder selectedFolder) {
-        return new CreateFolderDialog(selectedFolder, parentPresenter);
+            @Override
+            public void onSuccess(CreateFolderDialog dialog) {
+                dialog.show(finalSelectedFolder);
+                dialog.addOkButtonSelectHandler(selectEvent -> ensureHandlers().fireEvent(new CreateNewFolderSelected(finalSelectedFolder, dialog.getFolderName())));
+            }
+        });
     }
 
     @Override
@@ -440,4 +448,16 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
         });
     }
 
+    HandlerManager ensureHandlers() {
+        return handlerManager == null ? handlerManager = createHandlerManager() : handlerManager;
+    }
+
+    HandlerManager createHandlerManager() {
+        return new HandlerManager(this);
+    }
+
+    @Override
+    public HandlerRegistration addCreateNewFolderSelectedHandler(CreateNewFolderSelected.CreateNewFolderSelectedHandler handler) {
+        return ensureHandlers().addHandler(CreateNewFolderSelected.TYPE, handler);
+    }
 }

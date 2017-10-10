@@ -34,6 +34,7 @@ import org.iplantc.de.diskResource.client.events.RequestSendToCoGeEvent;
 import org.iplantc.de.diskResource.client.events.RequestSendToEnsemblEvent;
 import org.iplantc.de.diskResource.client.events.RequestSendToTreeViewerEvent;
 import org.iplantc.de.diskResource.client.events.RootFoldersRetrievedEvent;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.DNDDiskResourcesCompleted;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDiskResourcesSelected;
 import org.iplantc.de.diskResource.client.events.selection.EmptyTrashSelected;
@@ -335,6 +336,7 @@ public class DiskResourcePresenterImpl implements
         toolbarPresenter.getView().addSendToTreeViewerSelectedHandler(this);
         toolbarPresenter.getView().addSimpleUploadSelectedHandler(this.navigationPresenter);
         toolbarPresenter.getView().addImportFromUrlSelectedHandler(this.navigationPresenter);
+        toolbarPresenter.addCreateNewFolderSelectedHandler(this);
     }
 
     // <editor-fold desc="Handler Registrations">
@@ -560,7 +562,9 @@ public class DiskResourcePresenterImpl implements
     }
 
     @Override
-    public void doCreateNewFolder(Folder parentFolder, final String newFolderName) {
+    public void onCreateNewFolderSelected(CreateNewFolderSelected event) {
+        Folder parentFolder = event.getParentFolder();
+        String newFolderName = event.getFolderName();
         view.mask(appearance.createFolderLoadingMask());
         diskResourceService.createFolder(parentFolder,
                                          newFolderName,

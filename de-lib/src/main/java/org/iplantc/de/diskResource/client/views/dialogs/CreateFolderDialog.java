@@ -4,18 +4,17 @@ import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
 import org.iplantc.de.commons.client.views.dialogs.IPlantPromptDialog;
-import org.iplantc.de.diskResource.client.DiskResourceView;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.HTML;
-
-import com.sencha.gxt.widget.core.client.event.SelectEvent;
+import com.google.inject.Inject;
 
 /**
  * @author jstroot
  */
-public class CreateFolderDialog extends IPlantPromptDialog {
+public class CreateFolderDialog extends IPlantPromptDialog implements CreateNewFolderSelected.HasCreateNewFolderSelectedHandlers {
 
     public interface Appearance {
 
@@ -32,30 +31,37 @@ public class CreateFolderDialog extends IPlantPromptDialog {
 
     private final DiskResourceUtil diskResourceUtil;
 
-    public CreateFolderDialog(final Folder parentFolder, final DiskResourceView.Presenter parentPresenter) {
-        this(parentFolder,
-             GWT.<Appearance> create(Appearance.class), parentPresenter);
-    }
 
-    public CreateFolderDialog(final Folder parentFolder,
-                              final Appearance appearance, final DiskResourceView.Presenter parentPresenter) {
+    @Inject
+    public CreateFolderDialog(final Appearance appearance,
+                              DiskResourceUtil diskResourceUtil) {
         super(appearance.folderName(), -1, "", new DiskResourceNameValidator());
         this.appearance = appearance;
-        diskResourceUtil = DiskResourceUtil.getInstance();
+        this.diskResourceUtil = diskResourceUtil;
         setWidth(appearance.dialogWidth());
         setHeading(appearance.newFolder());
-        initDestPathLabel(parentFolder.getPath());
-        addOkButtonSelectHandler(new SelectEvent.SelectHandler() {
-            @Override
-            public void onSelect(SelectEvent event) {
-                parentPresenter.doCreateNewFolder(parentFolder, getFieldText());
-            }
-        });
     }
 
-    private void initDestPathLabel(String destPath) {
-
+    public void show(Folder parentFolder) {
+        String destPath = parentFolder.getPath();
         HTML htmlDestText = new HTML(appearance.renderDestinationPathLabel(destPath, diskResourceUtil.parseNameFromPath(destPath)));
         insert(htmlDestText, 0);
+
+        super.show();
+    }
+
+    public String getFolderName() {
+        return getFieldText();
+    }
+
+    @Override
+    public void show() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("This method is not supported for this class. " +
+                                                "Use show(Folder) instead.");
+    }
+
+    @Override
+    public HandlerRegistration addCreateNewFolderSelectedHandler(CreateNewFolderSelected.CreateNewFolderSelectedHandler handler) {
+        return addHandler(handler, CreateNewFolderSelected.TYPE);
     }
 }
