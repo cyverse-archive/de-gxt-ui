@@ -8,4 +8,8 @@ import com.google.gwt.i18n.client.Messages;
  */
 public interface SearchMessages extends Messages {
     String advancedSearchToolTip();
+
+    String deleteSearchSuccess(String searchName);
+
+    String saveQueryTemplateFail();
 }

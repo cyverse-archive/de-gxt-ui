@@ -11,6 +11,14 @@ import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent
  * @author jstroot
  */
 public interface SearchView {
+
+    interface SearchViewAppearance {
+
+        String deleteSearchSuccess(String searchName);
+
+        String saveQueryTemplateFail();
+    }
+
     /**
      * An interface definition for the "search" sub-system.
      *

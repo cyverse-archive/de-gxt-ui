@@ -41,15 +41,18 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     final List<DiskResourceQueryTemplate> queryTemplates = Lists.newArrayList();
     List<DiskResourceQueryTemplate> cleanCopyQueryTemplates = Lists.newArrayList();
     private final IplantAnnouncer announcer;
+    private SearchView.SearchViewAppearance appearance;
     private final SearchServiceFacade searchService;
     private HandlerManager handlerManager;
     private final Logger LOG = Logger.getLogger(DataSearchPresenterImpl.class.getName());
 
     @Inject
     DataSearchPresenterImpl(final SearchServiceFacade searchService,
-                            final IplantAnnouncer announcer) {
+                            final IplantAnnouncer announcer,
+                            SearchView.SearchViewAppearance appearance) {
         this.searchService = searchService;
         this.announcer = announcer;
+        this.appearance = appearance;
     }
 
     @Override
@@ -66,14 +69,13 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     public void onDeleteSavedSearchClicked(DeleteSavedSearchClickedEvent event) {
         final DiskResourceQueryTemplate savedSearch = event.getSavedSearch();
         if (queryTemplates.remove(savedSearch)) {
-            announcer.schedule(new SuccessAnnouncementConfig("Successfully deleted saved search: "
-                                                                 + savedSearch.getName()));
+            announcer.schedule(new SuccessAnnouncementConfig(appearance.deleteSearchSuccess(savedSearch.getName())));
             searchService.deleteQueryTemplates(Arrays.asList(savedSearch),
                                              new AsyncCallback<List<DiskResourceQueryTemplate>>() {
 
                                                  @Override
                                                  public void onFailure(Throwable caught) {
-                                                     announcer.schedule(new ErrorAnnouncementConfig("Unable to save filter."));
+                                                     announcer.schedule(new ErrorAnnouncementConfig(appearance.saveQueryTemplateFail()));
                                                  }
 
                                                  @Override
@@ -134,7 +136,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
 
             @Override
             public void onFailure(Throwable caught) {
-                announcer.schedule(new ErrorAnnouncementConfig("Unable to save filter."));
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.saveQueryTemplateFail()));
             }
 
             @Override
