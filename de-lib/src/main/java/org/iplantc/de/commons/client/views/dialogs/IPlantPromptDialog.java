@@ -89,4 +89,8 @@ public class IPlantPromptDialog extends IPlantDialog {
     public String getFieldText() {
         return textField.getCurrentValue();
     }
+
+    public TextField getTextField() {
+        return textField;
+    }
 }

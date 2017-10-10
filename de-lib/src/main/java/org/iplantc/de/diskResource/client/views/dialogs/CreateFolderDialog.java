@@ -1,10 +1,12 @@
 package org.iplantc.de.diskResource.client.views.dialogs;
 
+import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
 import org.iplantc.de.commons.client.views.dialogs.IPlantPromptDialog;
 import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
+import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -48,6 +50,7 @@ public class CreateFolderDialog extends IPlantPromptDialog implements CreateNewF
         insert(htmlDestText, 0);
 
         super.show();
+        ensureDebugId(DiskResourceModule.Ids.CREATE_FOLDER_DLG);
     }
 
     public String getFolderName() {
@@ -58,6 +61,14 @@ public class CreateFolderDialog extends IPlantPromptDialog implements CreateNewF
     public void show() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("This method is not supported for this class. " +
                                                 "Use show(Folder) instead.");
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        getTextField().ensureDebugId(baseID + DiskResourceModule.Ids.FOLDER_NAME);
+        getButton(PredefinedButton.OK).ensureDebugId(baseID + DiskResourceModule.Ids.OK_BTN);
     }
 
     @Override

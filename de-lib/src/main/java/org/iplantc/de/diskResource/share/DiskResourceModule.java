@@ -89,6 +89,8 @@ public interface DiskResourceModule {
         String OK_BTN = ".okBtn";
         String DATA_LINK_URL = ".urlField";
         String MD5_DIALOG = "md5Dlg";
+        String CREATE_FOLDER_DLG = "createFolderDlg";
+        String FOLDER_NAME = ".folderName";
     }
 
     interface MetadataIds {
