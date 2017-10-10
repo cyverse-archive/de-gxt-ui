@@ -95,6 +95,14 @@ public interface DiskResourceModule {
         String NCBI_PROJECT_NAME = ".projectName";
         String NCBI_SAMPLE_NUM = ".sampleNum";
         String NCBI_LIB_NUM = ".libNum";
+        String CREATE_PUBLIC_LINK_DLG = "createPublicLinkDlg";
+        String DONE_BTN = ".doneBtn";
+        String VIEW = ".view";
+        String ADVANCED_SHARING_BTN = ".advancedSharingBtn";
+        String COLLAPSE_ALL_BTN = ".collapseAllBtn";
+        String SHOW_LINK_BTN = ".showLinkBtn";
+        String CREATE_LINK_BTN = ".createLinkBtn";
+        String EXPAND_ALL_BTN = ".expandAllBtn";
     }
 
     interface MetadataIds {

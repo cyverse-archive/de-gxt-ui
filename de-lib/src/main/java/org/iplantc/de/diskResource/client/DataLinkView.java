@@ -84,6 +84,7 @@ public interface DataLinkView extends IsWidget,
 
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
 
+        void setViewDebugId(String baseID);
     }
 
     void addRoots(List<DiskResource> roots);
