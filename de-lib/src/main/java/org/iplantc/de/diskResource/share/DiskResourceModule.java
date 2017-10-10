@@ -103,6 +103,9 @@ public interface DiskResourceModule {
         String SHOW_LINK_BTN = ".showLinkBtn";
         String CREATE_LINK_BTN = ".createLinkBtn";
         String EXPAND_ALL_BTN = ".expandAllBtn";
+        String GENOME_SEARCH_DLG = "genomeSearchDlg";
+        String GENOME_SEARCH_FIELD = ".searchField";
+        String GENOME_IMPORT_BTN = ".importBtn";
     }
 
     interface MetadataIds {

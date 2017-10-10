@@ -44,6 +44,11 @@ public class GenomeSearchPresenterImpl implements GenomeSearchView.GenomeSearchP
     }
 
     @Override
+    public void setViewDebugId(String baseID) {
+        view.asWidget().ensureDebugId(baseID);
+    }
+
+    @Override
     public void onImportGenomeFromCogeSelected(ImportGenomeFromCogeSelected event) {
         Genome genome = event.getSelectedGenome();
         serviceFacade.importGenomeFromCoge(genome.getId(), true, new AsyncCallback<String>() {

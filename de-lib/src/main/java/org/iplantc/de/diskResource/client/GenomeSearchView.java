@@ -52,5 +52,7 @@ public interface GenomeSearchView extends IsWidget,
     interface GenomeSearchPresenter {
 
         void go(HasOneWidget container);
+
+        void setViewDebugId(String baseID);
     }
 }

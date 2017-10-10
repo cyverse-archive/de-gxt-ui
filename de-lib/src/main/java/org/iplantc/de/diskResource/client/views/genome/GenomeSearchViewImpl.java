@@ -5,6 +5,7 @@ import org.iplantc.de.diskResource.client.GenomeSearchView;
 import org.iplantc.de.diskResource.client.events.selection.ImportGenomeFromCogeSelected;
 import org.iplantc.de.diskResource.client.model.GenomeProperties;
 import org.iplantc.de.diskResource.client.views.widgets.GenomeSearchField;
+import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -106,6 +107,15 @@ public class GenomeSearchViewImpl extends Composite implements GenomeSearchView 
         cols.add(seqType);
 
         return new ColumnModel<>(cols);
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        searchField.ensureDebugId(baseID + DiskResourceModule.Ids.GENOME_SEARCH_FIELD);
+        importBtn.ensureDebugId(baseID + DiskResourceModule.Ids.GENOME_IMPORT_BTN);
+        grid.ensureDebugId(baseID + DiskResourceModule.Ids.GRID);
     }
 
     @Override
