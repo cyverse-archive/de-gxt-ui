@@ -41,10 +41,10 @@
         <container:VerticalLayoutContainer>
             <container:child layoutData="{toolBarLayoutData}">
                 <toolbar:ToolBar>
-                    <toolbar:LabelToolItem label="Search Genomes:"/>
+                    <toolbar:LabelToolItem label="{appearance.searchLabel}"/>
                     <genomes:GenomeSearchField ui:field="searchField"/>
                     <button:TextButton ui:field="importBtn"
-                                       text="Import"
+                                       text="{appearance.importText}"
                                        enabled="false"
                                        icon="{appearance.importDataIcon}"/>
                 </toolbar:ToolBar>

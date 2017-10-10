@@ -239,4 +239,6 @@ public interface DiskResourceMessages extends Messages {
     SafeHtml fileExistTitle();
 
     String invalidFileName();
+
+    String searchGenomeLabel();
 }

@@ -7,6 +7,8 @@ import org.iplantc.de.theme.base.client.diskResource.DiskResourceMessages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
 
+import com.sencha.gxt.widget.core.client.box.MessageBox;
+
 public class GenomeSearchViewDefaultAppearance implements GenomeSearchView.GenomeSearchViewAppearance {
 
     private DiskResourceMessages diskResourceMessages;
@@ -101,6 +103,16 @@ public class GenomeSearchViewDefaultAppearance implements GenomeSearchView.Genom
     @Override
     public ImageResource importDataIcon() {
         return iplantResources.importDataIcon();
+    }
+
+    @Override
+    public String searchLabel() {
+        return diskResourceMessages.searchGenomeLabel();
+    }
+
+    @Override
+    public ImageResource infoIcon() {
+        return MessageBox.ICONS.info();
     }
 
 }

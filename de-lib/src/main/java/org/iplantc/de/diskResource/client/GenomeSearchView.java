@@ -41,6 +41,10 @@ public interface GenomeSearchView extends IsWidget,
         String dialogHeight();
 
         ImageResource importDataIcon();
+
+        String searchLabel();
+
+        ImageResource infoIcon();
     }
 
     interface GenomeSearchPresenter {

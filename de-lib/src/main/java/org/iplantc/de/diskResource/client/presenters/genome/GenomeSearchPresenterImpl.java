@@ -52,7 +52,7 @@ public class GenomeSearchPresenterImpl implements GenomeSearchView.GenomeSearchP
             public void onSuccess(String result) {
                 MessageBox amb =
                         new MessageBox(SafeHtmlUtils.fromTrustedString(appearance.importFromCoge()), SafeHtmlUtils.fromTrustedString(appearance.cogeImportGenomeSuccess()));
-                amb.setIcon(MessageBox.ICONS.info());
+                amb.setIcon(appearance.infoIcon());
                 amb.show();
             }
         });
