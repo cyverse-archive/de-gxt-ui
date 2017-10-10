@@ -261,7 +261,6 @@ public class DiskResourcePresenterImpl implements
                                                    toolbarPresenter,
                                                    detailsViewPresenter);
 
-        this.navigationPresenter.setParentPresenter(this);
         this.navigationPresenter.setMaskable(view);
 
         this.gridViewPresenter.addDNDDiskResourcesCompletedHandler(this);
@@ -310,6 +309,8 @@ public class DiskResourcePresenterImpl implements
         this.navigationPresenter.getView().addFolderSelectedEventHandler(searchField);
         this.navigationPresenter.getView()
                                 .addDeleteSavedSearchClickedEventHandler(this.dataSearchPresenter);
+        this.navigationPresenter.addDNDDiskResourcesCompletedHandler(this);
+        this.navigationPresenter.addRefreshFolderSelectedHandler(this);
 
         // Data Search Presenter
         this.dataSearchPresenter.addUpdateSavedSearchesEventHandler(this.navigationPresenter);

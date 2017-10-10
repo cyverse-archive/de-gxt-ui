@@ -12,7 +12,9 @@ import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent.Has
 import org.iplantc.de.diskResource.client.events.search.DeleteSavedSearchClickedEvent.HasDeleteSavedSearchClickedEventHandlers;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent.UpdateSavedSearchesHandler;
+import org.iplantc.de.diskResource.client.events.selection.DNDDiskResourcesCompleted;
 import org.iplantc.de.diskResource.client.events.selection.ImportFromUrlSelected.ImportFromUrlSelectedHandler;
+import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleUploadSelected.SimpleUploadSelectedHandler;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsLoadConfig;
 
@@ -70,7 +72,9 @@ public interface NavigationView extends IsWidget,
                                 DiskResourcePathSelectedEventHandler,
                                 UpdateSavedSearchesHandler,
                                 ImportFromUrlSelectedHandler,
-                                SimpleUploadSelectedHandler {
+                                SimpleUploadSelectedHandler,
+                                DNDDiskResourcesCompleted.HasDNDDiskResourcesCompletedHandlers,
+                                RefreshFolderSelected.HasRefreshFolderSelectedHandlers {
 
         interface Appearance {
 
@@ -132,9 +136,6 @@ public interface NavigationView extends IsWidget,
         boolean rootsLoaded();
 
         void setMaskable(IsMaskable maskable);
-
-        // FIXME Potentially do this via assisted inject
-        void setParentPresenter(DiskResourceView.Presenter parentPresenter);
 
         /**
          * Selects the given folder, if the folder exists in the store.
