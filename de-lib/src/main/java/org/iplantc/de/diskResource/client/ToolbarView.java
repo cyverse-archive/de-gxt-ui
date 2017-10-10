@@ -29,7 +29,6 @@ import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelecte
 import org.iplantc.de.diskResource.client.events.selection.SimpleUploadSelected.HasSimpleUploadSelectedHandlers;
 import org.iplantc.de.diskResource.client.views.dialogs.BulkMetadataDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.BulkMetadataDialog.BULK_MODE;
-import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
 
 import com.google.gwt.resources.client.ImageResource;
@@ -325,8 +324,6 @@ public interface ToolbarView extends IsWidget,
     void unmaskSendToEnsembl();
 
     void unmaskSendToTreeViewer();
-
-    void openViewForGenomeSearch(GenomeSearchDialog view);
 
     void openViewBulkMetadata(BulkMetadataDialog bmd);
 }

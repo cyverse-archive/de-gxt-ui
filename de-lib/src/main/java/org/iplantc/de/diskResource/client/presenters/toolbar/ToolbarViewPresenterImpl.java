@@ -95,8 +95,8 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     @Inject AsyncProviderWrapper<CreateFolderDialog> createFolderDlgProvider;
     @Inject AsyncProviderWrapper<CreateNcbiSraFolderStructureDialog> createNcbiSraDlgProvider;
     @Inject AsyncProviderWrapper<CreatePublicLinkDialog> createPublicLinkDlgProvider;
+    @Inject AsyncProviderWrapper<GenomeSearchDialog> genomeSearchDlgProvider;
 
-    private final GenomeSearchDialog genomeSearchView;
     private final BulkMetadataDialogFactory bulkMetadataViewFactory;
     final private GenomeAutoBeanFactory gFactory;
     private final DiskResourceView.Presenter parentPresenter;
@@ -110,7 +110,6 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
     @Inject
     ToolbarViewPresenterImpl(final ToolbarViewFactory viewFactory,
-                             GenomeSearchDialog genomeSearchView,
                              BulkMetadataDialogFactory bulkMetadataViewFactory,
                              HTPathListAutomationDialogFactory htPathListAutomationViewFactory,
                              GenomeAutoBeanFactory gFactory,
@@ -121,8 +120,6 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
         this.htPathListAutomationViewFactory = htPathListAutomationViewFactory;
         this.feFacade = ServicesInjector.INSTANCE.getFileEditorServiceFacade();
         view.addSimpleDownloadSelectedHandler(this);
-        this.genomeSearchView = genomeSearchView;
-        this.genomeSearchView.setPresenter(this);
         this.gFactory = gFactory;
     }
 
@@ -261,8 +258,15 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
     @Override
     public void onImportFromCoge() {
-        view.openViewForGenomeSearch(genomeSearchView);
+        genomeSearchDlgProvider.get(new AsyncCallback<GenomeSearchDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
 
+            @Override
+            public void onSuccess(GenomeSearchDialog dialog) {
+                dialog.show();
+            }
+        });
     }
 
     @Override

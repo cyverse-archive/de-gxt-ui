@@ -32,7 +32,6 @@ import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelect
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleUploadSelected;
 import org.iplantc.de.diskResource.client.views.dialogs.BulkMetadataDialog;
-import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
 import org.iplantc.de.diskResource.client.views.toolbar.dialogs.DOIAgreementDialog;
 import org.iplantc.de.diskResource.share.DiskResourceModule.Ids;
@@ -836,15 +835,6 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     private InfoType getInfoTypeFromSingletonCollection(List<DiskResource> selectedDiskResources) {
         Preconditions.checkArgument(selectedDiskResources.size() == 1);
         return InfoType.fromTypeString(selectedDiskResources.iterator().next().getInfoType());
-    }
-
-    @Override
-    public void openViewForGenomeSearch(GenomeSearchDialog view) {
-        GenomeSearchDialog dialog = view;
-        dialog.clearView();
-        dialog.setSize("600px", "300px");
-        dialog.show();
-
     }
 
     @Override

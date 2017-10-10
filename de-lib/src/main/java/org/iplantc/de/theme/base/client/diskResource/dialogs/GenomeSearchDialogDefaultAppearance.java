@@ -7,7 +7,16 @@ import com.google.gwt.core.client.GWT;
 
 public class GenomeSearchDialogDefaultAppearance implements GenomeSearchDialog.Appearance {
 
-    private final DiskResourceMessages diskResourceMessages = GWT.<DiskResourceMessages> create(DiskResourceMessages.class);
+
+    private DiskResourceMessages diskResourceMessages;
+
+    public GenomeSearchDialogDefaultAppearance() {
+        this(GWT.<DiskResourceMessages>create(DiskResourceMessages.class));
+    }
+
+    public GenomeSearchDialogDefaultAppearance(DiskResourceMessages diskResourceMessages) {
+        this.diskResourceMessages = diskResourceMessages;
+    }
 
     @Override
     public String heading() {
@@ -50,8 +59,18 @@ public class GenomeSearchDialogDefaultAppearance implements GenomeSearchDialog.A
     }
 
     @Override
-    public String norecords() {
-        return diskResourceMessages.norecords();
+    public String noRecords() {
+        return diskResourceMessages.noRecords();
+    }
+
+    @Override
+    public String dialogWidth() {
+        return "600px";
+    }
+
+    @Override
+    public String dialogHeight() {
+        return "200px";
     }
 
 }
