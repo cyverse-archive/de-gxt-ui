@@ -30,16 +30,6 @@ public class ToolbarViewPresenterDefaultAppearance implements ToolbarView.Presen
     }
 
     @Override
-    public String createDelimitedFileDialogHeight() {
-        return "150px";
-    }
-
-    @Override
-    public String createDelimitedFileDialogWidth() {
-        return "300px";
-    }
-
-    @Override
     public String done() {
         return iplantDisplayStrings.done();
     }

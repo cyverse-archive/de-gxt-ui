@@ -33,4 +33,14 @@ public class TabFileConfigDialogDefaultAppearance implements TabFileConfigDialog
     public String tabRadioLabel() {
         return diskResourceMessages.tabFileConfigDialogTabRadioLabel();
     }
+
+    @Override
+    public String createDelimitedFileDialogHeight() {
+        return "150px";
+    }
+
+    @Override
+    public String createDelimitedFileDialogWidth() {
+        return "300px";
+    }
 }

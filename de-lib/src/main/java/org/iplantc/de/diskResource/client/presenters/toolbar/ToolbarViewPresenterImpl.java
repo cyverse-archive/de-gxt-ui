@@ -1,6 +1,5 @@
 package org.iplantc.de.diskResource.client.presenters.toolbar;
 
-import static com.sencha.gxt.widget.core.client.Dialog.PredefinedButton.CANCEL;
 import static com.sencha.gxt.widget.core.client.Dialog.PredefinedButton.OK;
 
 import org.iplantc.de.client.events.EventBus;
@@ -52,6 +51,7 @@ import org.iplantc.de.diskResource.client.views.dialogs.CreateNcbiSraFolderStruc
 import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.HTPathListAutomationDialog;
 import org.iplantc.de.diskResource.client.views.toolbar.dialogs.TabFileConfigDialog;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.base.Preconditions;
@@ -76,35 +76,26 @@ import java.util.logging.Logger;
  */
 public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDownloadSelectedHandler {
 
-    @Inject
-    ToolbarView.Presenter.Appearance appearance;
-    @Inject
-    DataLinkPresenterFactory dataLinkPresenterFactory;
-    @Inject
-    DiskResourceSelectorFieldFactory drSelectorFactory;
-    @Inject
-    EventBus eventBus;
-    @Inject
-    DiskResourceServiceFacade drFacade;
+    @Inject ToolbarView.Presenter.Appearance appearance;
+    @Inject DataLinkPresenterFactory dataLinkPresenterFactory;
+    @Inject DiskResourceSelectorFieldFactory drSelectorFactory;
+    @Inject EventBus eventBus;
+    @Inject DiskResourceServiceFacade drFacade;
     @Inject UserInfo userInfo;
 
-    @Inject
-    DiskResourceAutoBeanFactory drAbFactory;
+    @Inject DiskResourceAutoBeanFactory drAbFactory;
 
-    @Inject
-    HTPathListAutomationDialog.HTPathListAutomationAppearance htAppearance;
-    @Inject
-    DiskResourceUtil diskResourceUtil;
+    @Inject HTPathListAutomationDialog.HTPathListAutomationAppearance htAppearance;
+    @Inject DiskResourceUtil diskResourceUtil;
 
     PermIdRequestUserServiceFacade prFacade =
             ServicesInjector.INSTANCE.getPermIdRequestUserServiceFacade();
 
-    @Inject
-    DiskResourceErrorAutoBeanFactory drFactory;
+    @Inject DiskResourceErrorAutoBeanFactory drFactory;
     FileEditorServiceFacade feFacade;
 
-    @Inject
-    IplantAnnouncer announcer;
+    @Inject IplantAnnouncer announcer;
+    @Inject AsyncProviderWrapper<TabFileConfigDialog> tabFileConfigDlgProvider;
 
     private final GenomeSearchDialog genomeSearchView;
     private final BulkMetadataDialogFactory bulkMetadataViewFactory;
@@ -143,26 +134,25 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
     @Override
     public void onCreateNewDelimitedFileSelected() {
-        // FIXME Do not fire dialog from presenter. Do so from the view.
-        final TabFileConfigDialog d = new TabFileConfigDialog();
-        d.setPredefinedButtons(OK, CANCEL);
-        d.setModal(true);
-        d.getButton(OK).addSelectHandler(new SelectEvent.SelectHandler() {
+        tabFileConfigDlgProvider.get(new AsyncCallback<TabFileConfigDialog>() {
             @Override
-            public void onSelect(SelectEvent event) {
-                TabularFileViewerWindowConfig config = ConfigFactory.newTabularFileViewerWindowConfig();
-                config.setEditing(true);
-                config.setVizTabFirst(true);
-                config.setSeparator(d.getSeparator());
-                config.setColumns(d.getNumberOfColumns());
-                config.setContentType(MimeType.PLAIN);
-                eventBus.fireEvent(new CreateNewFileEvent(config));
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(TabFileConfigDialog dialog) {
+                dialog.addOkButtonSelectHandler(selectEvent -> {
+                    TabularFileViewerWindowConfig config = ConfigFactory.newTabularFileViewerWindowConfig();
+                    config.setEditing(true);
+                    config.setVizTabFirst(true);
+                    config.setSeparator(dialog.getSeparator());
+                    config.setColumns(dialog.getNumberOfColumns());
+                    config.setContentType(MimeType.PLAIN);
+                    eventBus.fireEvent(new CreateNewFileEvent(config));
+                });
+
+                dialog.show();
             }
         });
-        d.setHideOnButtonClick(true);
-        d.setSize(appearance.createDelimitedFileDialogWidth(),
-                  appearance.createDelimitedFileDialogHeight());
-        d.show();
     }
 
     @Override

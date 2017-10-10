@@ -243,10 +243,6 @@ public interface ToolbarView extends IsWidget,
 
         interface Appearance {
 
-            String createDelimitedFileDialogHeight();
-
-            String createDelimitedFileDialogWidth();
-
             String done();
 
             String emptyTrash();
