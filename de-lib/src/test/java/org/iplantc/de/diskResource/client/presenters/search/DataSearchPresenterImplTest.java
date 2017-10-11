@@ -1,22 +1,32 @@
 package org.iplantc.de.diskResource.client.presenters.search;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
+
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.events.search.DeleteSavedSearchClickedEvent;
 import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent;
-import org.iplantc.de.diskResource.client.presenters.search.DataSearchPresenterImpl;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GxtMockitoTestRunner;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +48,7 @@ public class DataSearchPresenterImplTest {
 
     @Mock SearchServiceFacade searchService;
     @Mock IplantAnnouncer announcer;
+    @Mock SearchView.SearchViewAppearance appearance;
 
     @Captor ArgumentCaptor<List<DiskResourceQueryTemplate>> drqtListCaptor;
     @Captor ArgumentCaptor<UpdateSavedSearchesEvent> updateSavedSearchesEventCaptor;
@@ -47,7 +58,7 @@ public class DataSearchPresenterImplTest {
     private DataSearchPresenterImpl dsPresenter;
 
     @Before public void setUp() {
-        dsPresenter = new DataSearchPresenterImpl(searchService, announcer);
+        dsPresenter = new DataSearchPresenterImpl(searchService, announcer, appearance);
     }
 
     /**
@@ -227,6 +238,7 @@ public class DataSearchPresenterImplTest {
         DiskResourceQueryTemplate mockTemplate = mock(DiskResourceQueryTemplate.class);
         when(mockTemplate.getName()).thenReturn("mock1");
         when(mockEvent.getQueryTemplate()).thenReturn(mockTemplate);
+        when(appearance.saveQueryTemplateFail()).thenReturn("fail");
 
         spy.onSaveDiskResourceQueryClicked(mockEvent);
         // Perform verify for record keeping
@@ -255,7 +267,7 @@ public class DataSearchPresenterImplTest {
      */
     @Test public void testDoSaveDiskResourceQueryTemplate_Case6() {
         // Create presenter with overridden method to control test execution.
-        dsPresenter = new DataSearchPresenterImpl(searchService, announcer) {
+        dsPresenter = new DataSearchPresenterImpl(searchService, announcer, appearance) {
             @Override
             boolean areTemplatesEqual(DiskResourceQueryTemplate lhs, DiskResourceQueryTemplate rhs) {
                 return !(lhs.getName().equals("qtMockId1") && rhs.getName().equals("qtMockId1"));
@@ -336,6 +348,7 @@ public class DataSearchPresenterImplTest {
         final DeleteSavedSearchClickedEvent mockEvent = mock(DeleteSavedSearchClickedEvent.class);
         final DiskResourceQueryTemplate mockSavedSearch = mock(DiskResourceQueryTemplate.class);
         when(mockEvent.getSavedSearch()).thenReturn(mockSavedSearch);
+        when(appearance.deleteSearchSuccess(anyString())).thenReturn("success");
         spy.getQueryTemplates().add(mockSavedSearch);
 
         // Call method under test
