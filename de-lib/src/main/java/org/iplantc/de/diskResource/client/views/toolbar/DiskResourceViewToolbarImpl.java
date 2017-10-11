@@ -7,9 +7,11 @@ import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.models.viewer.MimeType;
 import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.diskResource.client.BulkMetadataView;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
+import org.iplantc.de.diskResource.client.events.selection.BulkMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDiskResourcesSelected;
 import org.iplantc.de.diskResource.client.events.selection.DownloadTemplateSelectedEvent;
@@ -31,7 +33,6 @@ import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelec
 import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleUploadSelected;
-import org.iplantc.de.diskResource.client.views.dialogs.BulkMetadataDialog;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
 import org.iplantc.de.diskResource.client.views.toolbar.dialogs.DOIAgreementDialog;
 import org.iplantc.de.diskResource.share.DiskResourceModule.Ids;
@@ -257,6 +258,10 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
         return addHandler(handler, OpenTrashFolderSelected.TYPE);
     }
 
+    @Override
+    public HandlerRegistration addBulkMetadataSelectedHandler(BulkMetadataSelected.BulkMetadataSelectedHandler handler) {
+        return addHandler(handler, BulkMetadataSelected.TYPE);
+    }
 
     // </editor-fold>
 
@@ -459,7 +464,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("selectmetadataMi")
     void onSelectMetadataClicked(SelectionEvent<Item> event) {
-        presenter.onBulkMetadataSelected(BulkMetadataDialog.BULK_MODE.SELECT);
+        fireEvent(new BulkMetadataSelected(BulkMetadataView.BULK_MODE.SELECT));
     }
 
     @UiHandler("copymetadataMi")
@@ -835,12 +840,5 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     private InfoType getInfoTypeFromSingletonCollection(List<DiskResource> selectedDiskResources) {
         Preconditions.checkArgument(selectedDiskResources.size() == 1);
         return InfoType.fromTypeString(selectedDiskResources.iterator().next().getInfoType());
-    }
-
-    @Override
-    public void openViewBulkMetadata(BulkMetadataDialog bmd) {
-        bmd.setSize("600px", "200px");
-        bmd.show();
-
     }
 }

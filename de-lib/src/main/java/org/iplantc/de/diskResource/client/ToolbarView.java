@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.viewer.MimeType;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent.DiskResourceSelectionChangedEventHandler;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent.FolderSelectionEventHandler;
+import org.iplantc.de.diskResource.client.events.selection.BulkMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected.HasCopyMetadataSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSelected;
 import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
@@ -27,8 +28,6 @@ import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelec
 import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected.HasShareByDataLinkSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected.HasSimpleDownloadSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SimpleUploadSelected.HasSimpleUploadSelectedHandlers;
-import org.iplantc.de.diskResource.client.views.dialogs.BulkMetadataDialog;
-import org.iplantc.de.diskResource.client.views.dialogs.BulkMetadataDialog.BULK_MODE;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
 
 import com.google.gwt.resources.client.ImageResource;
@@ -62,7 +61,8 @@ public interface ToolbarView extends IsWidget,
                                      DownloadTemplateSelectedEvent.HasDownloadTemplateSelectedEventHandlers,
                                      FolderSelectionEventHandler,
                                      DiskResourceSelectionChangedEventHandler,
-                                     OpenTrashFolderSelected.HasOpenTrashFolderSelectedHandlers {
+                                     OpenTrashFolderSelected.HasOpenTrashFolderSelectedHandlers,
+                                     BulkMetadataSelected.HasBulkMetadataSelectedHandlers {
     interface Appearance {
 
         SafeHtml bulkDownloadInfoBoxHeading();
@@ -259,10 +259,6 @@ public interface ToolbarView extends IsWidget,
 
             String importFromCoge();
 
-            String bulkMetadataError();
-
-            String bulkMetadataSuccess();
-
             String templatesError();
 
             String applyBulkMetadata();
@@ -296,11 +292,6 @@ public interface ToolbarView extends IsWidget,
 
         void onImportFromCoge();
 
-        void onBulkMetadataSelected(BULK_MODE mode);
-
-        void submitBulkMetadataFromExistingFile(String filePath,
-                                                String destFolder);
-
         void onDoiRequest(String uuid);
 
         void onAutomateHTPathList();
@@ -320,6 +311,4 @@ public interface ToolbarView extends IsWidget,
     void unmaskSendToEnsembl();
 
     void unmaskSendToTreeViewer();
-
-    void openViewBulkMetadata(BulkMetadataDialog bmd);
 }

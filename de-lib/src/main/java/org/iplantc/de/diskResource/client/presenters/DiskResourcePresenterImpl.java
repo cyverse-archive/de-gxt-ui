@@ -341,6 +341,7 @@ public class DiskResourcePresenterImpl implements
         toolbarPresenter.getView().addSimpleUploadSelectedHandler(this.navigationPresenter);
         toolbarPresenter.getView().addImportFromUrlSelectedHandler(this.navigationPresenter);
         toolbarPresenter.getView().addOpenTrashFolderSelectedHandler(this);
+        toolbarPresenter.getView().addBulkMetadataSelectedHandler(gridViewPresenter);
         toolbarPresenter.addCreateNewFolderSelectedHandler(this);
         toolbarPresenter.addCreateNcbiSraFolderStructureSelectedHandler(this);
     }

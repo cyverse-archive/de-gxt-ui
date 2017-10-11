@@ -145,12 +145,12 @@
     </replace-with>
     
     <!-- Coge genome import -->
-      <replace-with class="org.iplantc.de.theme.base.client.diskResource.genome.GenomeSearchViewDefaultAppearance">
+    <replace-with class="org.iplantc.de.theme.base.client.diskResource.genome.GenomeSearchViewDefaultAppearance">
         <when-type-is class="org.iplantc.de.diskResource.client.GenomeSearchView.GenomeSearchViewAppearance"/>
     </replace-with>
     
-         <replace-with class="org.iplantc.de.theme.base.client.diskResource.dialogs.BulkMetadataDialogDefaultAppearance">
-        <when-type-is class="org.iplantc.de.diskResource.client.views.dialogs.BulkMetadataDialog.Appearance"/>
+    <replace-with class="org.iplantc.de.theme.base.client.diskResource.metadata.BulkMetadataViewDefaultAppearance">
+        <when-type-is class="org.iplantc.de.diskResource.client.BulkMetadataView.BulkMetadataViewAppearance"/>
     </replace-with>
 
     <replace-with class="org.iplantc.de.theme.base.client.diskResource.dialogs.HTPathListAutomationDefaultAppearance">

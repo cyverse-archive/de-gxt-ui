@@ -23,7 +23,7 @@ import org.iplantc.de.diskResource.client.DiskResourceView;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.RequestSimpleDownloadEvent;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
-import org.iplantc.de.diskResource.client.gin.factory.BulkMetadataDialogFactory;
+import org.iplantc.de.diskResource.client.gin.factory.BulkMetadataViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
 import org.iplantc.de.diskResource.client.gin.factory.HTPathListAutomationDialogFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewFactory;
@@ -61,8 +61,7 @@ public class ToolbarViewPresenterImplTest {
     GenomeSearchDialog genomeSearchView;
     @Mock
     GenomeAutoBeanFactory gFactory;
-    @Mock
-    BulkMetadataDialogFactory bulkMetadataViewFactor;
+    @Mock BulkMetadataViewFactory bulkMetadataViewFactor;
     @Mock
     DiskResourceServiceFacade drFacadeMock;
     @Mock UserInfo userInfoMock;

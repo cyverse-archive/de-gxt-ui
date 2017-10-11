@@ -2,6 +2,7 @@ package org.iplantc.de.diskResource.client.gin;
 
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.commons.client.presenter.SharingPresenter;
+import org.iplantc.de.diskResource.client.BulkMetadataView;
 import org.iplantc.de.diskResource.client.DataLinkView;
 import org.iplantc.de.diskResource.client.DataSharingView;
 import org.iplantc.de.diskResource.client.DetailsView;
@@ -12,7 +13,7 @@ import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.NavigationView;
 import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.ToolbarView;
-import org.iplantc.de.diskResource.client.gin.factory.BulkMetadataDialogFactory;
+import org.iplantc.de.diskResource.client.gin.factory.BulkMetadataViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DataLinkPresenterFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DataSharingPresenterFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourcePresenterFactory;
@@ -46,8 +47,10 @@ import org.iplantc.de.diskResource.client.views.dialogs.InfoTypeEditorDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.SaveAsDialog;
 import org.iplantc.de.diskResource.client.views.genome.GenomeSearchViewImpl;
 import org.iplantc.de.diskResource.client.views.grid.GridViewImpl;
+import org.iplantc.de.diskResource.client.views.metadata.BulkMetadataViewImpl;
 import org.iplantc.de.diskResource.client.views.metadata.DiskResourceMetadataViewImpl;
 import org.iplantc.de.diskResource.client.views.metadata.MetadataTemplateView;
+import org.iplantc.de.diskResource.client.views.metadata.dialogs.BulkMetadataDialog;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.ManageMetadataDialog;
 import org.iplantc.de.diskResource.client.views.navigation.NavigationViewImpl;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
@@ -138,7 +141,9 @@ public class DiskResourceGinModule extends AbstractGinModule {
         bind(DetailsView.Presenter.class).to(DetailsViewPresenterImpl.class);
         bind(DetailsView.class).to(DetailsViewImpl.class);
 
-        install(new GinFactoryModuleBuilder().build(BulkMetadataDialogFactory.class));
+        install(new GinFactoryModuleBuilder()
+                        .implement(BulkMetadataView.class, BulkMetadataViewImpl.class)
+                        .build(BulkMetadataViewFactory.class));
         install(new GinFactoryModuleBuilder().build(HTPathListAutomationDialogFactory.class));
 
         bind(MetadataView.class).to(DiskResourceMetadataViewImpl.class);
@@ -151,7 +156,7 @@ public class DiskResourceGinModule extends AbstractGinModule {
         bind(DataSharingDialog.class);
         bind(ShareResourceLinkDialog.class);
         bind(SaveAsDialog.class);
-
+        bind(BulkMetadataDialog.class);
         bind(GenomeSearchDialog.class);
 
         install(new GinFactoryModuleBuilder()

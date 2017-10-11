@@ -64,16 +64,6 @@ public class ToolbarViewPresenterDefaultAppearance implements ToolbarView.Presen
         return diskResourceMessages.templatesError();
     }
 
-    @Override
-    public String bulkMetadataSuccess() {
-        return diskResourceMessages.bulkMetadataSuccess();
-    }
-
-    @Override
-    public String bulkMetadataError() {
-        return diskResourceMessages.bulkMetadataError();
-    }
-
     public String overWiteMetadata() {
         return diskResourceMessages.overWiteMetadata();
     }

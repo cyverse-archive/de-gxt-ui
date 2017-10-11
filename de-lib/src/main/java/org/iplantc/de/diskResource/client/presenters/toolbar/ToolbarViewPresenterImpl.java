@@ -9,16 +9,12 @@ import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.diskResources.HTPathListRequest;
-import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
-import org.iplantc.de.client.models.genomes.GenomeAutoBeanFactory;
-import org.iplantc.de.client.models.genomes.GenomeList;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestType;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.models.viewer.MimeType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
-import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.services.PermIdRequestUserServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -38,11 +34,10 @@ import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderSt
 import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected.SimpleDownloadSelectedHandler;
-import org.iplantc.de.diskResource.client.gin.factory.BulkMetadataDialogFactory;
+import org.iplantc.de.diskResource.client.gin.factory.BulkMetadataViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
 import org.iplantc.de.diskResource.client.gin.factory.HTPathListAutomationDialogFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewFactory;
-import org.iplantc.de.diskResource.client.views.dialogs.BulkMetadataDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.CreateFolderDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.CreateNcbiSraFolderStructureDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.CreatePublicLinkDialog;
@@ -55,15 +50,11 @@ import org.iplantc.de.shared.DataCallback;
 import com.google.common.base.Preconditions;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
-import com.sencha.gxt.widget.core.client.box.MessageBox;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -96,7 +87,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     @Inject AsyncProviderWrapper<CreatePublicLinkDialog> createPublicLinkDlgProvider;
     @Inject AsyncProviderWrapper<GenomeSearchDialog> genomeSearchDlgProvider;
 
-    private final BulkMetadataDialogFactory bulkMetadataViewFactory;
+    private final BulkMetadataViewFactory bulkMetadataViewFactory;
     private final DiskResourceView.Presenter parentPresenter;
     private final ToolbarView view;
     private final HTPathListAutomationDialogFactory htPathListAutomationViewFactory;
@@ -108,7 +99,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
     @Inject
     ToolbarViewPresenterImpl(final ToolbarViewFactory viewFactory,
-                             BulkMetadataDialogFactory bulkMetadataViewFactory,
+                             BulkMetadataViewFactory bulkMetadataViewFactory,
                              HTPathListAutomationDialogFactory htPathListAutomationViewFactory,
                              @Assisted DiskResourceView.Presenter parentPresenter) {
         this.parentPresenter = parentPresenter;
@@ -260,48 +251,6 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
             @Override
             public void onSuccess(GenomeSearchDialog dialog) {
                 dialog.show();
-            }
-        });
-    }
-
-    @Override
-    public void onBulkMetadataSelected(final BulkMetadataDialog.BULK_MODE mode) {
-        drFacade.getMetadataTemplateListing(new AsyncCallback<List<MetadataTemplateInfo>>() {
-
-            @Override
-            public void onSuccess(List<MetadataTemplateInfo> templates) {
-                BulkMetadataDialog bmd = bulkMetadataViewFactory.create(drSelectorFactory,
-                                                                        parentPresenter.getSelectedDiskResources()
-                                                                                       .get(0)
-                                                                                       .getPath(),
-                                                                        templates,
-                                                                        mode);
-                bmd.setPresenter(ToolbarViewPresenterImpl.this);
-                view.openViewBulkMetadata(bmd);
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                IplantAnnouncer.getInstance()
-                               .schedule(new ErrorAnnouncementConfig(appearance.templatesError()));
-
-            }
-        });
-
-    }
-
-    @Override
-    public void submitBulkMetadataFromExistingFile(String filePath,
-                                                   String destFolder) {
-        drFacade.setBulkMetadataFromFile(filePath, destFolder, new DataCallback<String>() {
-            @Override
-            public void onFailure(Integer statusCode, Throwable caught) {
-                announcer.schedule(new ErrorAnnouncementConfig(appearance.bulkMetadataError()));
-            }
-
-            @Override
-            public void onSuccess(String result) {
-                announcer.schedule(new SuccessAnnouncementConfig(appearance.bulkMetadataSuccess()));
             }
         });
     }
