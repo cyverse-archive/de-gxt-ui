@@ -1,17 +1,12 @@
 package org.iplantc.de.apps.widgets.client.view.editors.style;
 
-import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsContextualHelpMessages;
 import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.editor.client.EditorError;
-import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeUri;
 
 import com.sencha.gxt.widget.core.client.button.IconButton;
 
@@ -22,65 +17,6 @@ import java.util.List;
  * 
  */
 public interface AppTemplateWizardAppearance {
-
-    interface AppTemplateWizardTemplates extends SafeHtmlTemplates {
-        @SafeHtmlTemplates.Template("<p style='text-overflow: ellipsis;overflow: hidden;white-space: nowrap;'>{0}</p>")
-        SafeHtml contentPanelHeader(SafeHtml label);
-
-        @SafeHtmlTemplates.Template("<p style='text-overflow: ellipsis;overflow: hidden;white-space: nowrap;'><span style='color: red;'>*&nbsp</span>{0}</p>")
-        SafeHtml contentPanelHeaderRequired(SafeHtml label);
-
-        @SafeHtmlTemplates.Template("{0}&nbsp;<img src='{1}' qtip='{2}' ></img>")
-        SafeHtml fieldLabelImg(SafeHtml label, SafeUri img, String toolTip);
-
-        @SafeHtmlTemplates.Template("{0}<img style='float: right;' src='{1}' qtip='{2}'></img>")
-        SafeHtml fieldLabelImgFloatRight(SafeHtml label, SafeUri img, String toolTip);
-
-        @SafeHtmlTemplates.Template("{0}&nbsp;<img src='{1}' title='{2}'></img>")
-        SafeHtml fieldLabelImgChkBox(SafeHtml label, SafeUri img, String toolTip);
-
-        @SafeHtmlTemplates.Template("{0}<img style='float: right;' src='{1}' title='{2}'></img>")
-        SafeHtml fieldLabelImgFloatRightChkBox(SafeHtml label, SafeUri img, String toolTip);
-
-        @SafeHtmlTemplates.Template("<span style='color: red;'>*&nbsp</span>")
-        SafeHtml fieldLabelRequired();
-
-    }
-
-    interface Resources extends IplantResources {
-        @Source("AppTemplateWizard.gss")
-        Style css();
-
-        // KLUDGE Duplicated resource in apps theme as well.
-        @Source("delete_rating.png")
-        ImageResource deleteRating();
-
-        // KLUDGE Duplicated resource in apps theme as well.
-        @Source("delete_rating_hover.png")
-        ImageResource deleteRatingHover();
-    }
-
-    interface Style extends CssResource {
-
-        String appHeaderSelect();
-
-        String argument();
-
-        String argumentSelect();
-
-        String delete();
-
-        String deleteBtn();
-
-        String deleteHover();
-
-        String emptyGroupBgText();
-
-        String grab();
-
-        String grabbing();
-
-    }
 
     public static final AppTemplateWizardAppearance INSTANCE = GWT.create(AppTemplateWizardAppearance.class);
 
@@ -146,9 +82,23 @@ public interface AppTemplateWizardAppearance {
 
     AppsWidgetsPropertyPanelLabels getPropertyPanelLabels();
 
-    Style getStyle();
+    String appHeaderSelectClassName();
 
-    AppTemplateWizardTemplates getTemplates();
+    String argumentClassName();
+
+    String argumentSelectClassName();
+
+    String deleteClassName();
+
+    String deleteBtnClassName();
+
+    String deleteHoverClassName();
+
+    String emptyGroupBgTextClassName();
+
+    String grabClassName();
+
+    String grabbingClassName();
 
     /**
      * @return the safehtml which represents the "required field" text of an argument label.
@@ -174,4 +124,36 @@ public interface AppTemplateWizardAppearance {
     SafeHtml sanitizeHtml(String html);
 
     String multiFilePrompt();
+
+    String treeSelectorFilterEmptyText();
+
+    int treeFilterWidth();
+
+    String envVarWidgetEmptyText();
+
+    String textInputWidgetEmptyText();
+
+    String integerInputWidgetEmptyText();
+
+    String doubleInputWidgetEmptyText();
+
+    String fileOutputEmptyText();
+
+    String folderOutputEmptyText();
+
+    String multiFileOutputEmptyText();
+
+    String emptyListSelectionText();
+
+    String defaultOutputFolderValidationError();
+
+    String analysisName();
+
+    String comments();
+
+    String selectOutputFolder();
+
+    String retainInputs();
+
+    String launchAnalysisDetailsHeadingPrefix();
 }

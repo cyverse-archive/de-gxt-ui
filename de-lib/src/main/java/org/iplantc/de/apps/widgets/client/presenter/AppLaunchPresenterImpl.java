@@ -5,9 +5,11 @@ import org.iplantc.de.apps.widgets.client.events.AnalysisLaunchEvent.AnalysisLau
 import org.iplantc.de.apps.widgets.client.events.AppTemplateFetched;
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent.RequestAnalysisLaunchEventHandler;
 import org.iplantc.de.apps.widgets.client.view.AppLaunchView;
+import org.iplantc.de.apps.widgets.client.view.dialogs.HPCWaitTimeDialog;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.UserSettings;
+import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.integration.JobExecution;
@@ -23,15 +25,14 @@ import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.util.RegExp;
 import org.iplantc.de.commons.client.views.window.configs.AppWizardConfig;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
-import org.iplantc.de.resources.client.messages.I18N;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsDisplayMessages;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsErrorMessages;
 import org.iplantc.de.shared.AppLaunchCallback;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
@@ -59,7 +60,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
         public void onSuccess(AppTemplate result) {
             if (result.isAppDisabled()) {
                 ErrorAnnouncementConfig config = new ErrorAnnouncementConfig(appearance.appUnavailable());
-                IplantAnnouncer.getInstance().schedule(config);
+                announcer.schedule(config);
                 return;
             }
             appTemplate = result;
@@ -67,9 +68,8 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
         }
     }
 
-    @Inject AppsWidgetsDisplayMessages appsWidgetsDisplayMessages;
-    @Inject AppsWidgetsErrorMessages appsWidgetsErrMessages;
     @Inject IplantAnnouncer announcer;
+    @Inject CommonModelUtils commonModelUtils;
     AppTemplate appTemplate;
     private final AppTemplateServices atServices;
     HandlerManager handlerManager;
@@ -80,8 +80,8 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
     private AppLaunchView.AppLaunchViewAppearance appearance;
     HasOneWidget container;
 
-    @Inject
-    private IplantValidationConstants valConstants;
+    @Inject private IplantValidationConstants valConstants;
+    @Inject AsyncProviderWrapper<HPCWaitTimeDialog> hpcWaitDlgProvider;
     private final AppLaunchView view;
 
     @Inject
@@ -128,7 +128,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
                                 ? deClientConstants.deSystemId()
                                 : config.getSystemId();
         final String appId = config.getAppId();
-        return CommonModelUtils.getInstance().createHasQualifiedId(systemId, appId);
+        return commonModelUtils.createHasQualifiedId(systemId, appId);
     }
 
     @Override
@@ -145,7 +145,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
         // JDS Replace all Cmd Line restricted chars with underscores
         String regex = getRestrictedCharRegEx();
         String newName = appTemplate.getName().replaceAll(regex, "_");
-        je.setName(newName + "_" + appsWidgetsDisplayMessages.defaultAnalysisName()); //$NON-NLS-1$
+        je.setName(newName + "_" + appearance.defaultAnalysisName()); //$NON-NLS-1$
 
         final Folder defaultOutputFolder = userSettings.getDefaultOutputFolder();
         if(defaultOutputFolder != null){
@@ -174,7 +174,25 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
 
     @Override
     public void onAnalysisLaunchRequest(final AppTemplate at, final JobExecution je) {
-        launchAnalysis(at, je);
+        if(at.getAppType().equalsIgnoreCase(App.EXTERNAL_APP)
+           && userSettings.isEnableWaitTimeMessage()) {
+            showWaitTimeNotice(at, je);
+        } else {
+            launchAnalysis(at, je);
+        }
+    }
+
+     void showWaitTimeNotice(final AppTemplate cleaned, final JobExecution je) {
+        hpcWaitDlgProvider.get(new AsyncCallback<HPCWaitTimeDialog>() {
+            @Override
+            public void onFailure(Throwable throwable) {}
+
+            @Override
+            public void onSuccess(HPCWaitTimeDialog dialog) {
+                dialog.addDialogHideHandler(hideEvent -> launchAnalysis(cleaned, je));
+                dialog.show();
+            }
+        });
     }
 
     HandlerManager ensureHandlers() {
@@ -190,20 +208,20 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
 
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
-                announcer.schedule(new ErrorAnnouncementConfig(appsWidgetsErrMessages.launchAnalysisFailure(je.getName())));
-                ErrorHandler.post(I18N.ERROR.analysisFailedToLaunch(at.getName()), caught);
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.launchAnalysisFailure(je.getName())));
+                ErrorHandler.post(appearance.analysisFailedToLaunch(at.getName()), caught);
                 view.analysisLaunchFailed();
             }
 
             @Override
             public void onSuccess(AnalysisSubmissionResponse result) {
-                announcer.schedule(new SuccessAnnouncementConfig(appsWidgetsDisplayMessages.launchAnalysisSuccess(je.getName())));
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.launchAnalysisSuccess(je.getName())));
                 ensureHandlers().fireEvent(new AnalysisLaunchEvent(at));
 
                 if (result != null) {
                     final List<String> missingPaths = result.getMissingPaths();
                     if (missingPaths != null && !missingPaths.isEmpty()) {
-                        ErrorHandler.post(I18N.ERROR.diskResourcesDoNotExist(Joiner.on(", ")
+                        ErrorHandler.post(appearance.diskResourcesDoNotExist(Joiner.on(", ")
                                                                                    .join(missingPaths)));
                     }
                 }

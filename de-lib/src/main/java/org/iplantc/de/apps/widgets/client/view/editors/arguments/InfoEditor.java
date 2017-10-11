@@ -11,24 +11,27 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 public class InfoEditor extends AbstractArgumentEditor {
 
     private HandlerRegistration handlerRegistration;
 
-    public InfoEditor(AppTemplateWizardAppearance appearance) {
+    @Inject
+    public InfoEditor(@Assisted AppTemplateWizardAppearance appearance) {
         super(appearance);
     }
 
     @Override
     public void setValue(Argument value) {
         super.setValue(value);
-        argumentLabel.removeStyleName(appearance.getStyle().emptyGroupBgText());
+        argumentLabel.removeStyleName(appearance.emptyGroupBgTextClassName());
         argumentLabel.setLabelSeparator("");
         final String id = Strings.nullToEmpty(value.getId());
         if (id.equals(AppTemplateUtils.EMPTY_GROUP_ARG_ID)) {
             handlerRegistration.removeHandler();
-            argumentLabel.setStyleName(appearance.getStyle().emptyGroupBgText());
+            argumentLabel.setStyleName(appearance.emptyGroupBgTextClassName());
             argumentLabel.getElement().getStyle().setMarginTop(100, Style.Unit.PX);
             argumentLabel.getElement().getStyle().setMarginBottom(100, Style.Unit.PX);
         }

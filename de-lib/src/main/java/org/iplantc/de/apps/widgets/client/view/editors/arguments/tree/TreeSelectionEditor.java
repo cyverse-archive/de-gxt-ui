@@ -1,11 +1,13 @@
 package org.iplantc.de.apps.widgets.client.view.editors.arguments.tree;
 
+import static com.sencha.gxt.widget.core.client.form.FormPanel.LabelAlign.TOP;
+
 import org.iplantc.de.apps.widgets.client.events.ArgumentRequiredChangedEvent;
 import org.iplantc.de.apps.widgets.client.events.ArgumentRequiredChangedEvent.ArgumentRequiredChangedEventHandler;
 import org.iplantc.de.apps.widgets.client.events.ArgumentSelectedEvent;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm;
-import org.iplantc.de.apps.widgets.client.view.editors.SelectionItemModelKeyProvider;
-import org.iplantc.de.apps.widgets.client.view.editors.SelectionItemProperties;
+import org.iplantc.de.apps.widgets.client.models.SelectionItemModelKeyProvider;
+import org.iplantc.de.apps.widgets.client.models.SelectionItemProperties;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.LabelLeafEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.VisibilityEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.ArgumentEditorConverter;
@@ -19,10 +21,8 @@ import org.iplantc.de.client.models.apps.integration.ArgumentValidator;
 import org.iplantc.de.client.models.apps.integration.SelectionItem;
 import org.iplantc.de.client.models.apps.integration.SelectionItemGroup;
 import org.iplantc.de.client.models.apps.integration.SelectionItemList;
-import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.common.collect.Lists;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.EditorDelegate;
 import com.google.gwt.editor.client.LeafValueEditor;
 import com.google.gwt.editor.client.ValueAwareEditor;
@@ -34,11 +34,12 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 
-import static com.sencha.gxt.widget.core.client.form.FormPanel.LabelAlign.TOP;
 import com.sencha.gxt.core.client.Style.SelectionMode;
 import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.data.shared.TreeStore;
@@ -175,6 +176,8 @@ public class TreeSelectionEditor extends Composite implements AppTemplateForm.Ar
 
 
     private final FieldLabel argumentLabel;
+    private final AppTemplateWizardAppearance appearance;
+    private AppTemplateAutoBeanFactory factory;
 
     private EditorDelegate<Argument> delegate;
 
@@ -203,7 +206,12 @@ public class TreeSelectionEditor extends Composite implements AppTemplateForm.Ar
 
     private ArgumentEditorConverter<List<SelectionItem>> valueEditor;
 
-    public TreeSelectionEditor(AppTemplateWizardAppearance appearance, SelectionItemProperties props) {
+    @Inject
+    public TreeSelectionEditor(@Assisted AppTemplateWizardAppearance appearance,
+                               SelectionItemProperties props,
+                               AppTemplateAutoBeanFactory factory) {
+        this.appearance = appearance;
+        this.factory = factory;
         TreeStore<SelectionItem> store = new TreeStore<>(new SelectionItemModelKeyProvider());
 
         tree = new SelectionItemTree(store, props.display());
@@ -347,7 +355,6 @@ public class TreeSelectionEditor extends Composite implements AppTemplateForm.Ar
      */
     public void setSelection(Splittable selection) {
         selectionItemsEditor.setSuppressEvent(true);
-        AppTemplateAutoBeanFactory factory = GWT.create(AppTemplateAutoBeanFactory.class);
         SelectionItemList siList = AutoBeanCodex.decode(factory, SelectionItemList.class, "{\"selectionItems\": " + selection.getPayload() + "}").as();
         List<SelectionItem> items = siList.getSelectionItems();
         tree.setSelection(items);
@@ -434,8 +441,8 @@ public class TreeSelectionEditor extends Composite implements AppTemplateForm.Ar
         };
 
         treeFilter.bind(store);
-        treeFilter.setEmptyText(I18N.DISPLAY.treeSelectorFilterEmptyText());
-        treeFilter.setWidth(250);
+        treeFilter.setEmptyText(appearance.treeSelectorFilterEmptyText());
+        treeFilter.setWidth(appearance.treeFilterWidth());
         treeFilter.setValidationDelay(750);
 
         return treeFilter;

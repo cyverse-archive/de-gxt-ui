@@ -4,7 +4,9 @@ import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.Argu
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.SplittableToDoubleConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.commons.client.widgets.IPlantSideErrorHandler;
-import org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.DoubleInputLabels;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.widget.core.client.form.NumberPropertyEditor;
 import com.sencha.gxt.widget.core.client.form.SpinnerField;
@@ -13,12 +15,13 @@ public class DoubleInputEditor extends AbstractArgumentEditor {
     private final ArgumentEditorConverter<Double> editorAdapter;
     private final SpinnerField<Double> spinnerField;
 
-    public DoubleInputEditor(AppTemplateWizardAppearance appearance, DoubleInputLabels labels) {
+    @Inject
+    public DoubleInputEditor(@Assisted AppTemplateWizardAppearance appearance) {
         super(appearance);
         spinnerField = new SpinnerField<Double>(new NumberPropertyEditor.DoublePropertyEditor());
         spinnerField.setErrorSupport(new IPlantSideErrorHandler(spinnerField));
         spinnerField.setMinValue(-Double.MAX_VALUE);
-        spinnerField.setEmptyText(labels.doubleInputWidgetEmptyText());
+        spinnerField.setEmptyText(appearance.doubleInputWidgetEmptyText());
         editorAdapter = new ArgumentEditorConverter<Double>(spinnerField, new SplittableToDoubleConverter());
 
         argumentLabel.setWidget(editorAdapter);

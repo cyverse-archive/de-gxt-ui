@@ -10,6 +10,8 @@ import org.iplantc.de.client.models.apps.integration.Argument;
 import com.google.gwt.editor.client.LeafValueEditor;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 public class FlagEditor extends AbstractArgumentEditor {
     private CheckBoxAdapter checkBox;
@@ -17,8 +19,11 @@ public class FlagEditor extends AbstractArgumentEditor {
     private LabelLeafEditor<String> cbDescriptionEditor;
     private LabelLeafEditor<String> cbLabelLeafEditor;
 
-    public FlagEditor(AppTemplateWizardAppearance appearance) {
+    @Inject
+    public FlagEditor(@Assisted AppTemplateWizardAppearance appearance,
+                      CheckBoxAdapter checkBox) {
         super(appearance);
+        this.checkBox = checkBox;
     }
 
     @Override
@@ -35,7 +40,6 @@ public class FlagEditor extends AbstractArgumentEditor {
 
     @Override
     protected void init() {
-        checkBox = new CheckBoxAdapter();
         cbDescriptionEditor = new LabelLeafEditor<String>(checkBox, this, appearance);
         cbLabelLeafEditor = new LabelLeafEditor<String>(checkBox, this, appearance);
         editorAdapter = new ArgumentEditorConverter<Boolean>(checkBox, new SplittableToBooleanConverter());

@@ -24,7 +24,7 @@ public class AppsEditorViewDefaultAppearance implements AppsEditorView.AppsEdito
     private IplantDisplayStrings iplantDisplayStrings;
     private IplantErrorStrings errorStrings;
     private AppIntegrationMessages appIntegrationMessages;
-    private AppTemplateWizardAppearance.Resources style;
+    private AppTemplateWizardAppearance wizardAppearance;
     private AppsWidgetsContextualHelpMessages contextualHelpMessages;
     private IplantResources iplantResources;
     private AppsWidgetsPropertyPanelLabels propertyPanelLabels;
@@ -33,7 +33,7 @@ public class AppsEditorViewDefaultAppearance implements AppsEditorView.AppsEdito
         this((IplantDisplayStrings)GWT.create(IplantDisplayStrings.class),
              (IplantErrorStrings)GWT.create(IplantErrorStrings.class),
              (AppIntegrationMessages)GWT.create(AppIntegrationMessages.class),
-             (AppTemplateWizardAppearance.Resources)GWT.create(AppTemplateWizardAppearance.Resources.class),
+             (AppTemplateWizardAppearance)GWT.create(AppTemplateWizardAppearance.class),
              (AppsWidgetsContextualHelpMessages)GWT.create(AppsWidgetsContextualHelpMessages.class),
              (IplantResources)GWT.create(IplantResources.class),
              (AppsWidgetsPropertyPanelLabels)GWT.create(AppsWidgetsPropertyPanelLabels.class));
@@ -42,7 +42,7 @@ public class AppsEditorViewDefaultAppearance implements AppsEditorView.AppsEdito
     public AppsEditorViewDefaultAppearance(IplantDisplayStrings iplantDisplayStrings,
                                            IplantErrorStrings errorStrings,
                                            AppIntegrationMessages appIntegrationMessages,
-                                           AppTemplateWizardAppearance.Resources style,
+                                           AppTemplateWizardAppearance wizardAppearance,
                                            AppsWidgetsContextualHelpMessages contextualHelpMessages,
                                            IplantResources iplantResources,
                                            AppsWidgetsPropertyPanelLabels propertyPanelLabels) {
@@ -50,12 +50,10 @@ public class AppsEditorViewDefaultAppearance implements AppsEditorView.AppsEdito
         this.iplantDisplayStrings = iplantDisplayStrings;
         this.errorStrings = errorStrings;
         this.appIntegrationMessages = appIntegrationMessages;
-        this.style = style;
+        this.wizardAppearance = wizardAppearance;
         this.contextualHelpMessages = contextualHelpMessages;
         this.iplantResources = iplantResources;
         this.propertyPanelLabels = propertyPanelLabels;
-
-        this.style.css().ensureInjected();
     }
 
     @Override
@@ -65,20 +63,20 @@ public class AppsEditorViewDefaultAppearance implements AppsEditorView.AppsEdito
 
     @Override
     public String appHeaderSelect() {
-        return style.css().appHeaderSelect();
+        return wizardAppearance.appHeaderSelectClassName();
     }
 
     @Override
     public IconButton getArgListDeleteButton() {
         IconButton argDeleteBtn =
-                new IconButton(new IconButton.IconConfig(style.css().delete(), style.css().deleteHover()));
-        argDeleteBtn.addStyleName(style.css().deleteBtn());
+                new IconButton(new IconButton.IconConfig(wizardAppearance.deleteClassName(), wizardAppearance.deleteHoverClassName()));
+        argDeleteBtn.addStyleName(wizardAppearance.deleteBtnClassName());
         return argDeleteBtn;
     }
 
     @Override
     public String argumentSelect() {
-        return style.css().argumentSelect();
+        return wizardAppearance.argumentSelectClassName();
     }
 
     @Override
@@ -343,7 +341,7 @@ public class AppsEditorViewDefaultAppearance implements AppsEditorView.AppsEdito
 
     @Override
     public String grab() {
-        return style.css().grab();
+        return wizardAppearance.grabClassName();
     }
 
     @Override

@@ -1,32 +1,15 @@
 package org.iplantc.de.apps.widgets.client.view.editors;
 
 import org.iplantc.de.apps.widgets.client.gin.factory.ArgumentEditorGinFactory;
+import org.iplantc.de.apps.widgets.client.models.ReferenceGenomeProperties;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm;
 import org.iplantc.de.apps.widgets.client.view.AppTemplateForm.ArgumentEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.DoubleInputEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.DoubleSelectionEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.EnvironmentVariableEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.FileOutputEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.FlagEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.FolderOutputEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.InfoEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.IntegerInputEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.IntegerSelectionEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.MultiFileOutputEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.MultiLineTextEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.ReferenceAnnotationEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.ReferenceGenomeEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.ReferenceSequenceEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.SampleArgumentEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.TextInputEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.TextSelectionEditor;
-import org.iplantc.de.apps.widgets.client.view.editors.arguments.tree.TreeSelectionEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.models.apps.refGenome.ReferenceGenome;
 import org.iplantc.de.client.services.AppBuilderMetadataServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsPropertyPanelLabels;
 import org.iplantc.de.shared.AppsCallback;
 
 import com.google.gwt.editor.client.EditorDelegate;
@@ -49,10 +32,6 @@ public class ArgumentEditorFactoryImpl implements AppTemplateForm.ArgumentEditor
 
     @Inject AppTemplateWizardAppearance appearance;
     @Inject AppBuilderMetadataServiceFacade appMetadataService;
-
-    @Inject AppsWidgetsPropertyPanelLabels appsWidgetsLabels;
-    @Inject ReferenceGenomeProperties refGenomeProps;
-    @Inject SelectionItemProperties selectionItemProps;
     @Inject ReferenceGenomeProperties referenceGenomeProperties;
     @Inject ArgumentEditorGinFactory argumentEditorGinFactory;
 
@@ -126,55 +105,55 @@ public class ArgumentEditorFactoryImpl implements AppTemplateForm.ArgumentEditor
                 subEditor = argumentEditorGinFactory.fileFolderInputEditor(appearance);
                 break;
             case EnvironmentVariable:
-                subEditor = new EnvironmentVariableEditor(appearance, appsWidgetsLabels);
+                subEditor = argumentEditorGinFactory.environmentVariableEditor(appearance);
                 break;
             case Flag:
-                subEditor = new FlagEditor(appearance);
+                subEditor = argumentEditorGinFactory.flagEditor(appearance);
                 break;
             case Info:
-                subEditor = new InfoEditor(appearance);
+                subEditor = argumentEditorGinFactory.infoEditor(appearance);
                 break;
             case MultiLineText:
-                subEditor = new MultiLineTextEditor(appearance, appsWidgetsLabels);
+                subEditor = argumentEditorGinFactory.multiLineTextEditor(appearance);
                 break;
             case Integer:
-                subEditor = new IntegerInputEditor(appearance, appsWidgetsLabels);
+                subEditor = argumentEditorGinFactory.integerInputEditor(appearance);
                 break;
             case Double:
-                subEditor = new DoubleInputEditor(appearance, appsWidgetsLabels);
+                subEditor = argumentEditorGinFactory.doubleInputEditor(appearance);
                 break;
             case Text:
-                subEditor = new TextInputEditor(appearance, appsWidgetsLabels);
+                subEditor = argumentEditorGinFactory.textInputEditor(appearance);
                 break;
             case TextSelection:
-                subEditor = new TextSelectionEditor(appearance);
+                subEditor = argumentEditorGinFactory.textSelectionEditor(appearance);
                 break;
             case IntegerSelection:
-                subEditor = new IntegerSelectionEditor(appearance);
+                subEditor = argumentEditorGinFactory.integerSelectionEditor(appearance);
                 break;
             case DoubleSelection:
-                subEditor = new DoubleSelectionEditor(appearance);
+                subEditor = argumentEditorGinFactory.doubleSelectionEditor(appearance);
                 break;
             case TreeSelection:
-                subEditor = new TreeSelectionEditor(appearance, selectionItemProps);
+                subEditor = argumentEditorGinFactory.treeSelectionEditor(appearance);
                 break;
             case FileOutput:
-                subEditor = new FileOutputEditor(appearance, appsWidgetsLabels);
+                subEditor = argumentEditorGinFactory.fileOutputEditor(appearance);
                 break;
             case FolderOutput:
-                subEditor = new FolderOutputEditor(appearance, appsWidgetsLabels);
+                subEditor = argumentEditorGinFactory.folderOutputEditor(appearance);
                 break;
             case MultiFileOutput:
-                subEditor = new MultiFileOutputEditor(appearance, appsWidgetsLabels);
+                subEditor = argumentEditorGinFactory.multiFileOutputEditor(appearance);
                 break;
             case ReferenceGenome:
-                subEditor = new ReferenceGenomeEditor(appearance, getReferenceGenomeStore(), refGenomeProps);
+                subEditor = argumentEditorGinFactory.referenceGenomeEditor(appearance, getReferenceGenomeStore());
                 break;
             case ReferenceSequence:
-                subEditor = new ReferenceSequenceEditor(appearance, getReferenceGenomeStore(), refGenomeProps);
+                subEditor = argumentEditorGinFactory.referenceSequenceEditor(appearance, getReferenceGenomeStore());
                 break;
             case ReferenceAnnotation:
-                subEditor = new ReferenceAnnotationEditor(appearance, getReferenceGenomeStore(), refGenomeProps);
+                subEditor = argumentEditorGinFactory.referenceAnnotationEditor(appearance, getReferenceGenomeStore());
                 break;
             default:
                 throw new IllegalStateException("Argument type must be known");

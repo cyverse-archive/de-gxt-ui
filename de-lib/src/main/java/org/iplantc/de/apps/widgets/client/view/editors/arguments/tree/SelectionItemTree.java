@@ -2,7 +2,6 @@ package org.iplantc.de.apps.widgets.client.view.editors.arguments.tree;
 
 import org.iplantc.de.client.models.apps.integration.SelectionItem;
 import org.iplantc.de.client.models.apps.integration.SelectionItemGroup;
-import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
@@ -21,8 +20,6 @@ import com.sencha.gxt.widget.core.client.event.BeforeCheckChangeEvent;
 import com.sencha.gxt.widget.core.client.event.BeforeCheckChangeEvent.BeforeCheckChangeHandler;
 import com.sencha.gxt.widget.core.client.event.CheckChangeEvent;
 import com.sencha.gxt.widget.core.client.event.CheckChangeEvent.CheckChangeHandler;
-import com.sencha.gxt.widget.core.client.tips.ToolTip;
-import com.sencha.gxt.widget.core.client.tips.ToolTipConfig;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 import com.sencha.gxt.widget.core.client.tree.TreeView;
 
@@ -35,7 +32,6 @@ import java.util.List;
  * @author psarando, jstroot
  */
 class SelectionItemTree extends Tree<SelectionItem, String> implements HasValueChangeHandlers<List<SelectionItem>> {
-    private ToolTip CORE_4653 = null;
     private boolean forceSingleSelection = false;
     private boolean restoreCheckedSelectionFromTree;
     private SelectionItemGroup root;
@@ -87,12 +83,6 @@ class SelectionItemTree extends Tree<SelectionItem, String> implements HasValueC
 
     @Override
     protected void onCheckClick(Event event, TreeNode<SelectionItem> node) {
-        if (getSelectionModel().isLocked()) {
-            if (CORE_4653 != null) {
-                CORE_4653.showAt(event.getClientX(), event.getClientY());
-            }
-            return;
-        }
         super.onCheckClick(event, node);
 
         // Keep track of which node the user clicked on in the isDefault field.
@@ -120,12 +110,6 @@ class SelectionItemTree extends Tree<SelectionItem, String> implements HasValueC
         builder.appendHtmlConstant("</span>"); //$NON-NLS-1$
 
         return builder.toSafeHtml();
-    }
-
-    void setCore4653Kludge() {
-        ToolTipConfig ttc = new ToolTipConfig("To make default selections, use the \"" + I18N.APPS_LABELS.treeSelectionCreateLabel() + "\" button located in the details panel.");
-        ttc.setShowDelay(10000);
-        CORE_4653 = new ToolTip(this, ttc);
     }
 
     /**

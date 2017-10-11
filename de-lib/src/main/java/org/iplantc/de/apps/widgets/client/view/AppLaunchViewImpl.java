@@ -2,8 +2,6 @@ package org.iplantc.de.apps.widgets.client.view;
 
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent;
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent.RequestAnalysisLaunchEventHandler;
-import org.iplantc.de.client.models.UserSettings;
-import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.JobExecution;
 import org.iplantc.de.client.util.AppTemplateUtils;
@@ -18,14 +16,11 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.Composite;
-import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.button.TextButton;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 import java.util.List;
@@ -42,15 +37,13 @@ public class AppLaunchViewImpl extends Composite implements AppLaunchView {
 
     @UiField @Ignore TextButton launchButton;
     @UiField(provided = true) @Path("") AppTemplateForm wizard;
-
+    @UiField(provided = true) AppLaunchViewAppearance appearance;
     private final AppTemplateUtils appTemplateUtils;
 
     private final EditorDriver editorDriver = GWT.create(EditorDriver.class);
 
     private final LaunchAnalysisView law;
     private CustomMask customMask;
-
-    AppLaunchViewAppearance appearance;
 
     @Inject
     public AppLaunchViewImpl(final AppWizardViewUIUiBinder binder,
@@ -105,31 +98,8 @@ public class AppLaunchViewImpl extends Composite implements AppLaunchView {
                 GWT.log("\t-- " + ": " + error.getMessage());
             }
         } else {
-            if(cleaned.getAppType().equalsIgnoreCase(App.EXTERNAL_APP)
-               && UserSettings.getInstance().isEnableWaitTimeMessage()) {
-                showWaitTimeNotice(cleaned, je);
-            } else {
-                launch(cleaned, je);
-            }
-
+            launch(cleaned, je);
         }
-    }
-
-    private void showWaitTimeNotice(final AppTemplate cleaned, final JobExecution je) {
-            Dialog id = new Dialog();
-            id.setHideOnButtonClick(true);
-            id.setHeading(appearance.waitTimes());
-            HTML htm = new HTML();
-            htm.setHTML(appearance.hpcAppWaitTimes());
-            id.add(htm);
-            id.setPredefinedButtons(Dialog.PredefinedButton.OK);
-            id.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
-                @Override
-                public void onDialogHide(DialogHideEvent event) {
-                    launch(cleaned, je);
-                }
-            });
-            id.show();
     }
 
     private void launch(AppTemplate cleaned, JobExecution je) {

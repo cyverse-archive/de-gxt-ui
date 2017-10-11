@@ -1,5 +1,8 @@
 package org.iplantc.de.apps.widgets.client.view.editors;
 
+import static com.sencha.gxt.core.client.dom.ScrollSupport.ScrollMode.AUTOY;
+import static com.sencha.gxt.widget.core.client.container.AccordionLayoutContainer.ExpandMode.SINGLE;
+
 import org.iplantc.de.apps.widgets.client.events.AppTemplateSelectedEvent;
 import org.iplantc.de.apps.widgets.client.events.AppTemplateSelectedEvent.AppTemplateSelectedEventHandler;
 import org.iplantc.de.apps.widgets.client.events.ArgumentGroupAddedEvent;
@@ -18,9 +21,6 @@ import com.google.gwt.editor.client.adapters.ListEditor;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-
-import static com.sencha.gxt.core.client.dom.ScrollSupport.ScrollMode.AUTOY;
-import static com.sencha.gxt.widget.core.client.container.AccordionLayoutContainer.ExpandMode.SINGLE;
 
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.ContentPanel;
@@ -185,9 +185,9 @@ public class AppTemplateFormImpl extends Composite implements AppTemplateForm {
 
         for (AppTemplateForm.ArgumentGroupEditor age : listEditor.getEditors()) {
             if (age == object) {
-                age.getHeader().addStyleName(appearance.getStyle().appHeaderSelect());
+                age.getHeader().addStyleName(appearance.appHeaderSelectClassName());
             } else {
-                age.getHeader().removeStyleName(appearance.getStyle().appHeaderSelect());
+                age.getHeader().removeStyleName(appearance.appHeaderSelectClassName());
             }
         }
 

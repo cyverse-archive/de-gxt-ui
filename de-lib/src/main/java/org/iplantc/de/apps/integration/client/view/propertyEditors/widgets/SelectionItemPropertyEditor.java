@@ -1,8 +1,8 @@
 package org.iplantc.de.apps.integration.client.view.propertyEditors.widgets;
 
 import org.iplantc.de.apps.integration.client.view.propertyEditors.PropertyEditorAppearance;
-import org.iplantc.de.apps.widgets.client.view.editors.SelectionItemModelKeyProvider;
-import org.iplantc.de.apps.widgets.client.view.editors.SelectionItemProperties;
+import org.iplantc.de.apps.widgets.client.models.SelectionItemModelKeyProvider;
+import org.iplantc.de.apps.widgets.client.models.SelectionItemProperties;
 import org.iplantc.de.apps.widgets.client.view.util.SelectionItemValueChangeStoreHandler.HasEventSuppression;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.integration.ArgumentType;

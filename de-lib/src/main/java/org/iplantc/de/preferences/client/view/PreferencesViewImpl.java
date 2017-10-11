@@ -1,5 +1,6 @@
 package org.iplantc.de.preferences.client.view;
 
+import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.apps.widgets.client.view.editors.validation.AnalysisOutputValidator;
 import org.iplantc.de.client.KeyBoardShortcutConstants;
 import org.iplantc.de.client.models.UserInfo;
@@ -91,6 +92,7 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     PreferencesViewImpl(final DiskResourceSelectorFieldFactory folderSelectorFieldFactory,
                         final PreferencesViewAppearance appearance,
                         final KeyBoardShortcutConstants kbConstants,
+                        AppTemplateWizardAppearance wizardAppearance,
                         final UserInfo userInfo) {
         this.appearance = appearance;
         this.defaultOutputFolder = folderSelectorFieldFactory.defaultFolderSelector();
@@ -105,7 +107,7 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         analysesShortCut.addValidator(new MaxLengthValidator(1));
         notifyShortCut.addValidator(new MaxLengthValidator(1));
         closeShortCut.addValidator(new MaxLengthValidator(1));
-        defaultOutputFolder.addValidator(new AnalysisOutputValidator());
+        defaultOutputFolder.addValidator(new AnalysisOutputValidator(wizardAppearance));
         defaultOutputFolder.addValueChangeHandler(new ValueChangeHandler<Folder>() {
 
             @Override

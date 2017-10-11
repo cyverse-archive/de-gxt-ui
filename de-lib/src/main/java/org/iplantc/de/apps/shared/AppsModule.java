@@ -54,6 +54,8 @@ public interface AppsModule {
         String MANAGE_TOOLS_BTN = ".manageTools";
         String APP_DOT_MENU = ".dotMenu";
         String APP_COMMENT_CELL = ".appComment";
+        String HPC_WAIT_DLG = "hpcWaitTimeDlg";
+        String OK_BTN = ".okBtn";
     }
 }
 

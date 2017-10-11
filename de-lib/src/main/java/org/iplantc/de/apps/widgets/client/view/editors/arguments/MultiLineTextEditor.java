@@ -5,9 +5,9 @@ import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.Spli
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.commons.client.validators.CmdLineArgCharacterValidator;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
-import org.iplantc.de.resources.client.uiapps.widgets.argumentTypes.TextInputLabels;
 
-import com.google.gwt.core.client.GWT;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.widget.core.client.form.TextArea;
 
@@ -17,12 +17,14 @@ import com.sencha.gxt.widget.core.client.form.TextArea;
 public class MultiLineTextEditor extends AbstractArgumentEditor {
     private final ArgumentEditorConverter<String> editorAdapter;
     private final TextArea textArea;
-    IplantValidationConstants validationConstants = GWT.create(IplantValidationConstants.class);
+    IplantValidationConstants validationConstants;
 
-    public MultiLineTextEditor(AppTemplateWizardAppearance appearance, TextInputLabels labels) {
+    @Inject
+    public MultiLineTextEditor(@Assisted AppTemplateWizardAppearance appearance,
+                               IplantValidationConstants validationConstants) {
         super(appearance);
         textArea = new TextArea();
-        textArea.setEmptyText(labels.textInputWidgetEmptyText());
+        textArea.setEmptyText(appearance.textInputWidgetEmptyText());
         textArea.addValidator(new CmdLineArgCharacterValidator(validationConstants.restrictedCmdLineArgCharsExclNewline()));
         editorAdapter = new ArgumentEditorConverter<>(textArea, new SplittableToStringConverter());
 

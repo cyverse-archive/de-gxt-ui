@@ -1,8 +1,8 @@
 package org.iplantc.de.apps.widgets.client.view.editors.widgets;
 
 import org.iplantc.de.apps.widgets.client.events.ArgumentSelectedEvent;
-import org.iplantc.de.apps.widgets.client.view.editors.SelectionItemModelKeyProvider;
-import org.iplantc.de.apps.widgets.client.view.editors.SelectionItemProperties;
+import org.iplantc.de.apps.widgets.client.models.SelectionItemModelKeyProvider;
+import org.iplantc.de.apps.widgets.client.models.SelectionItemProperties;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.AbstractArgumentEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.ClearComboBoxSelectionKeyDownHandler;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.ArgumentEditorConverter;
@@ -12,8 +12,6 @@ import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.models.apps.integration.SelectionItem;
 import org.iplantc.de.client.util.AppTemplateUtils;
-import org.iplantc.de.resources.client.messages.I18N;
-import org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsDisplayMessages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.ValueAwareEditor;
@@ -46,18 +44,17 @@ public class AppWizardComboBox extends AbstractArgumentEditor implements HasValu
     private final ArgumentEditorConverter<SelectionItem> valueEditor;
     private final AppTemplateUtils appTemplateUtils;
 
-    public AppWizardComboBox(AppTemplateWizardAppearance appearance) {
+    public AppWizardComboBox(AppTemplateWizardAppearance appearance,
+                             SelectionItemProperties props) {
         super(appearance);
         this.appTemplateUtils = AppTemplateUtils.getInstance();
         // JDS Initialize list store, and its editor
         listStore = new ListStore<>(new SelectionItemModelKeyProvider());
         selectionItemsStoreBinder = new ListStoreEditor<>(listStore);
-        SelectionItemProperties props = GWT.create(SelectionItemProperties.class);
-        AppsWidgetsDisplayMessages appsWidgetsMessages = I18N.APPS_MESSAGES;
 
         // JDS Initialize combobox and its editor converter
         selectionItemsEditor = new ComboBox<>(listStore, props.displayLabel());
-        selectionItemsEditor.setEmptyText(appsWidgetsMessages.emptyListSelectionText());
+        selectionItemsEditor.setEmptyText(appearance.emptyListSelectionText());
         selectionItemsEditor.setMinChars(1);
         selectionItemsEditor.setTriggerAction(TriggerAction.ALL);
         ClearComboBoxSelectionKeyDownHandler handler = new ClearComboBoxSelectionKeyDownHandler(selectionItemsEditor);

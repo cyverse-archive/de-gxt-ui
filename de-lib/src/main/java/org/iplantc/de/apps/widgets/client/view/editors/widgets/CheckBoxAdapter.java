@@ -7,6 +7,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.client.HasSafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.form.AdapterField;
 
@@ -27,6 +28,7 @@ public class CheckBoxAdapter extends AdapterField<Boolean> implements ValueAware
     private final CheckBox cb;
     private boolean negated = false;
 
+    @Inject
     public CheckBoxAdapter() {
         this(new CheckBox());
     }

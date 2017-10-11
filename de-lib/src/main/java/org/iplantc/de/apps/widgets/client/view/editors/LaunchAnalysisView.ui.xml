@@ -4,10 +4,10 @@
              xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
              xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
              xmlns:drFields="urn:import:org.iplantc.de.diskResource.client.views.widgets">
-    <ui:with field="strings"
-             type="org.iplantc.de.resources.client.messages.IplantDisplayStrings" />
-    <ui:with field="appWidgetStrings"
-             type="org.iplantc.de.resources.client.uiapps.widgets.AppsWidgetsDisplayMessages"/>
+
+    <ui:with field="appearance"
+             type="org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance"/>
+
     <ui:with field="margins"
              type="com.sencha.gxt.core.client.util.Margins">
       <ui:attributes top="0"
@@ -28,7 +28,7 @@
 		<con:VerticalLayoutContainer scrollMode="AUTOY"
 	                                 adjustForScroll="true">
 		    <con:child layoutData="{fieldLayoutData}">
-		        <form:FieldLabel text="{appWidgetStrings.analysisName}"
+		        <form:FieldLabel text="{appearance.analysisName}"
 		                         labelAlign="TOP">
 		            <form:widget>
 		                <form:TextField ui:field="name"
@@ -37,7 +37,7 @@
 		        </form:FieldLabel> 
 		    </con:child>                    
 		    <con:child layoutData="{fieldLayoutData}">
-		        <form:FieldLabel text="{strings.comments}"
+		        <form:FieldLabel text="{appearance.comments}"
 		                         labelAlign="TOP">
 		            <form:widget>
 		                <form:TextArea ui:field="description"/>
@@ -45,7 +45,7 @@
 		        </form:FieldLabel> 
 		    </con:child>                    
 		    <con:child layoutData="{fieldLayoutData}">
-		        <form:FieldLabel text="{appWidgetStrings.selectOutputFolder}"
+		        <form:FieldLabel text="{appearance.selectOutputFolder}"
 		                         labelAlign="TOP">
 		            <form:widget>
 		                <drFields:FolderSelectorField ui:field="awFolderSel"/>
@@ -54,7 +54,7 @@
 		    </con:child>                    
 		    <con:child layoutData="{fieldLayoutData}">
 		        <form:CheckBox ui:field="retainInputs" 
-		                       boxLabel="{appWidgetStrings.retainInputs}"/>
+		                       boxLabel="{appearance.retainInputs}"/>
 	        </con:child>                    
 	    </con:VerticalLayoutContainer>
     </gxt:ContentPanel>         
