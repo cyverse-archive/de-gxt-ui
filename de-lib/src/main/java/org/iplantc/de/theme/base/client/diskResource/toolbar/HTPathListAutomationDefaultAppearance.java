@@ -1,6 +1,6 @@
-package org.iplantc.de.theme.base.client.diskResource.dialogs;
+package org.iplantc.de.theme.base.client.diskResource.toolbar;
 
-import org.iplantc.de.diskResource.client.views.dialogs.HTPathListAutomationDialog;
+import org.iplantc.de.diskResource.client.HTPathListAutomationView;
 import org.iplantc.de.theme.base.client.diskResource.DiskResourceMessages;
 
 import com.google.gwt.core.client.GWT;
@@ -12,7 +12,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
  * Created by sriram on 7/27/17.
  */
 public class HTPathListAutomationDefaultAppearance
-        implements HTPathListAutomationDialog.HTPathListAutomationAppearance {
+        implements HTPathListAutomationView.HTPathListAutomationAppearance {
 
     private final DiskResourceMessages diskResourceMessages =
             GWT.<DiskResourceMessages>create(DiskResourceMessages.class);
@@ -55,7 +55,7 @@ public class HTPathListAutomationDefaultAppearance
     }
 
     @Override
-    public String heading() {
+    public String dialogHeading() {
         return diskResourceMessages.Htheading();
     }
 

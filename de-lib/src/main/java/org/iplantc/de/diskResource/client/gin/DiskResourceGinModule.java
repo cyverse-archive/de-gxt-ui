@@ -9,6 +9,7 @@ import org.iplantc.de.diskResource.client.DetailsView;
 import org.iplantc.de.diskResource.client.DiskResourceView;
 import org.iplantc.de.diskResource.client.GenomeSearchView;
 import org.iplantc.de.diskResource.client.GridView;
+import org.iplantc.de.diskResource.client.HTPathListAutomationView;
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.NavigationView;
 import org.iplantc.de.diskResource.client.SearchView;
@@ -23,7 +24,6 @@ import org.iplantc.de.diskResource.client.gin.factory.FolderContentsRpcProxyFact
 import org.iplantc.de.diskResource.client.gin.factory.GenomeSearchViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewPresenterFactory;
-import org.iplantc.de.diskResource.client.gin.factory.HTPathListAutomationDialogFactory;
 import org.iplantc.de.diskResource.client.gin.factory.NavigationViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewPresenterFactory;
@@ -60,6 +60,7 @@ import org.iplantc.de.diskResource.client.views.sharing.DataSharingViewImpl;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.DataSharingDialog;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.ShareResourceLinkDialog;
 import org.iplantc.de.diskResource.client.views.toolbar.DiskResourceViewToolbarImpl;
+import org.iplantc.de.diskResource.client.views.toolbar.HTPathListAutomationViewImpl;
 
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
@@ -144,7 +145,8 @@ public class DiskResourceGinModule extends AbstractGinModule {
         install(new GinFactoryModuleBuilder()
                         .implement(BulkMetadataView.class, BulkMetadataViewImpl.class)
                         .build(BulkMetadataViewFactory.class));
-        install(new GinFactoryModuleBuilder().build(HTPathListAutomationDialogFactory.class));
+
+        bind(HTPathListAutomationView.class).to(HTPathListAutomationViewImpl.class);
 
         bind(MetadataView.class).to(DiskResourceMetadataViewImpl.class);
         bind(MetadataView.Presenter.class).to(MetadataPresenterImpl.class);

@@ -20,6 +20,7 @@ import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.DiskResourceView;
+import org.iplantc.de.diskResource.client.HTPathListAutomationView;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.RequestSimpleDownloadEvent;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
@@ -29,7 +30,7 @@ import org.iplantc.de.diskResource.client.gin.factory.HTPathListAutomationDialog
 import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewFactory;
 import org.iplantc.de.diskResource.client.views.dialogs.CreateFolderDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
-import org.iplantc.de.diskResource.client.views.dialogs.HTPathListAutomationDialog;
+import org.iplantc.de.diskResource.client.views.toolbar.dialogs.HTPathListAutomationDialog;
 import org.iplantc.de.shared.DataCallback;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -74,8 +75,7 @@ public class ToolbarViewPresenterImplTest {
     HTPathListAutomationDialogFactory htPathListAutomationViewFactory;
     @Captor
     ArgumentCaptor<DataCallback<List<InfoType>>> infoTypeCaptor;
-    @Mock
-    HTPathListAutomationDialog.HTPathListAutomationAppearance appearanceMock;
+    @Mock HTPathListAutomationView.HTPathListAutomationAppearance appearanceMock;
     @Mock
     DiskResourceSelectorFieldFactory drSelectorFactoryMock;
     @Mock

@@ -8,8 +8,9 @@
              xmlns:list="urn:import:com.sencha.gxt.widget.core.client">
 
     <ui:with field="appearance"
-             type="org.iplantc.de.diskResource.client.views.dialogs.HTPathListAutomationDialog.HTPathListAutomationAppearance"/>
-
+             type="org.iplantc.de.diskResource.client.HTPathListAutomationView.HTPathListAutomationAppearance"/>
+    <ui:with field="infoTypeStore"
+             type="com.sencha.gxt.data.shared.ListStore" />
     <ui:with field="sideMargins" type="com.sencha.gxt.core.client.util.Margins">
         <ui:attributes top="4" right="4" bottom="4" left="4"/>
     </ui:with>
@@ -30,16 +31,18 @@
 
     <con:VerticalLayoutContainer>
         <con:child layoutData="{layoutData}">
-            <g:HTML HTML="{appearance.inputLbl}"
-                    ui:field="inputLbl"/>
+            <g:HTML ui:field="inputLbl"
+                    HTML="{appearance.inputLbl}"/>
         </con:child>
         <con:child layoutData="{layoutData}">
             <selector:MultiFileSelectorField ui:field="multiFolderSelector"/>
         </con:child>
         <con:child layoutData="{layoutData}">
-            <gxtForm:FieldLabel text="{appearance.folderPathOnlyLbl}" labelAlign="TOP">
+            <gxtForm:FieldLabel text="{appearance.folderPathOnlyLbl}"
+                                labelAlign="TOP">
                 <gxtForm:widget>
-                    <gxtForm:CheckBox ui:field="foldersOnlyCbx" enabled="true"
+                    <gxtForm:CheckBox ui:field="foldersOnlyCbx"
+                                      enabled="true"
                                       boxLabel="{appearance.folderPathOnlyPrompt}"/>
                 </gxtForm:widget>
             </gxtForm:FieldLabel>
@@ -48,7 +51,8 @@
             <gxtForm:FieldLabel
                     labelAlign="TOP" ui:field="patternLbl">
                 <gxtForm:widget>
-                    <gxtForm:TextField ui:field="regexField" allowBlank="true"
+                    <gxtForm:TextField ui:field="regexField"
+                                       allowBlank="true"
                                        emptyText="{appearance.patternMatchEmptyText}"/>
                 </gxtForm:widget>
             </gxtForm:FieldLabel>
@@ -57,23 +61,27 @@
             <gxtForm:FieldLabel text="{appearance.infoTypeLbl}"
                                 labelAlign="TOP">
                 <gxtForm:widget>
-                    <list:ListView ui:field="infoTypeList"/>
+                    <list:ListView ui:field="infoTypeList"
+                                   store="{infoTypeStore}"/>
                 </gxtForm:widget>
             </gxtForm:FieldLabel>
         </con:child>
 
         <con:child layoutData="{layoutData}">
-            <g:HTML HTML="{appearance.destLbl}"
-                    ui:field="destLbl"/>
+            <g:HTML ui:field="destLbl"
+                    HTML="{appearance.destLbl}"/>
         </con:child>
         <con:child layoutData="{layoutData}">
             <con:HorizontalLayoutContainer>
                 <con:child layoutData="{sideLayoutData}">
-                    <gxtForm:TextField ui:field="destField" allowBlank="false" enabled="false"
+                    <gxtForm:TextField ui:field="destField"
+                                       allowBlank="false"
+                                       enabled="false"
                                        width="{appearance.destSelectorWidth}"/>
                 </con:child>
                 <con:child layoutData="{sideLayoutData}">
-                    <button:TextButton ui:field="destSelector" text="{appearance.select}"/>
+                    <button:TextButton ui:field="destSelector"
+                                       text="{appearance.select}"/>
                 </con:child>
             </con:HorizontalLayoutContainer>
         </con:child>

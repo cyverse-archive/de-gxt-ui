@@ -25,7 +25,7 @@ import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.FileViewerWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.PathListWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.TabularFileViewerWindowConfig;
-import org.iplantc.de.diskResource.client.DiskResourceView;
+import org.iplantc.de.diskResource.client.HTPathListAutomationView;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.CreateNewFileEvent;
 import org.iplantc.de.diskResource.client.events.RequestSimpleDownloadEvent;
@@ -34,15 +34,13 @@ import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderSt
 import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected.SimpleDownloadSelectedHandler;
-import org.iplantc.de.diskResource.client.gin.factory.BulkMetadataViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
-import org.iplantc.de.diskResource.client.gin.factory.HTPathListAutomationDialogFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewFactory;
 import org.iplantc.de.diskResource.client.views.dialogs.CreateFolderDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.CreateNcbiSraFolderStructureDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.CreatePublicLinkDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
-import org.iplantc.de.diskResource.client.views.dialogs.HTPathListAutomationDialog;
+import org.iplantc.de.diskResource.client.views.toolbar.dialogs.HTPathListAutomationDialog;
 import org.iplantc.de.diskResource.client.views.toolbar.dialogs.TabFileConfigDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DataCallback;
@@ -52,7 +50,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 
@@ -72,7 +69,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
     @Inject DiskResourceAutoBeanFactory drAbFactory;
 
-    @Inject HTPathListAutomationDialog.HTPathListAutomationAppearance htAppearance;
+    @Inject HTPathListAutomationView.HTPathListAutomationAppearance htAppearance;
     @Inject DiskResourceUtil diskResourceUtil;
 
     PermIdRequestUserServiceFacade prFacade =
@@ -86,26 +83,17 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     @Inject AsyncProviderWrapper<CreateNcbiSraFolderStructureDialog> createNcbiSraDlgProvider;
     @Inject AsyncProviderWrapper<CreatePublicLinkDialog> createPublicLinkDlgProvider;
     @Inject AsyncProviderWrapper<GenomeSearchDialog> genomeSearchDlgProvider;
+    @Inject AsyncProviderWrapper<HTPathListAutomationDialog> htPathAutomationDlgProvider;
 
-    private final BulkMetadataViewFactory bulkMetadataViewFactory;
-    private final DiskResourceView.Presenter parentPresenter;
     private final ToolbarView view;
-    private final HTPathListAutomationDialogFactory htPathListAutomationViewFactory;
     private HandlerManager handlerManager;
-    HTPathListAutomationDialog dialog;
 
 
     Logger LOG = Logger.getLogger(ToolbarViewPresenterImpl.class.getSimpleName());
 
     @Inject
-    ToolbarViewPresenterImpl(final ToolbarViewFactory viewFactory,
-                             BulkMetadataViewFactory bulkMetadataViewFactory,
-                             HTPathListAutomationDialogFactory htPathListAutomationViewFactory,
-                             @Assisted DiskResourceView.Presenter parentPresenter) {
-        this.parentPresenter = parentPresenter;
+    ToolbarViewPresenterImpl(final ToolbarViewFactory viewFactory) {
         this.view = viewFactory.create(this);
-        this.bulkMetadataViewFactory = bulkMetadataViewFactory;
-        this.htPathListAutomationViewFactory = htPathListAutomationViewFactory;
         view.addSimpleDownloadSelectedHandler(this);
     }
 
@@ -261,16 +249,13 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
-                IplantAnnouncer.getInstance()
-                               .schedule(new ErrorAnnouncementConfig(appearance.doiRequestFail()));
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.doiRequestFail()));
                 ErrorHandler.post(appearance.doiRequestFail(),caught);
             }
 
             @Override
             public void onSuccess(String result) {
-                IplantAnnouncer.getInstance()
-                               .schedule(new SuccessAnnouncementConfig(appearance.doiRequestSuccess()));
-
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.doiRequestSuccess()));
             }
         });
     }
@@ -286,8 +271,18 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
             @Override
             public void onSuccess(List<InfoType> infoTypes) {
-                dialog = htPathListAutomationViewFactory.create(drSelectorFactory, infoTypes);
-                dialog.setSize(htAppearance.dialogWidth(), htAppearance.dialogHeight());
+                showHtPathAutomationDialog(infoTypes);
+            }
+        });
+    }
+
+    void showHtPathAutomationDialog(List<InfoType> infoTypes) {
+        htPathAutomationDlgProvider.get(new AsyncCallback<HTPathListAutomationDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(HTPathListAutomationDialog dialog) {
                 dialog.addOkButtonSelectHandler(event -> {
                     if (dialog.isValid()) {
                         HTPathListRequest request = dialog.getRequest();
@@ -299,26 +294,25 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
                 dialog.addCancelButtonSelectHandler(event -> {
                     dialog.hide();
                 });
-                dialog.show();
+                dialog.show(infoTypes);
             }
         });
-
     }
 
     protected void showHTProcessingError() {
         AlertMessageBox amb =
-                new AlertMessageBox(htAppearance.heading(), htAppearance.validationMessage());
+                new AlertMessageBox(htAppearance.dialogHeading(), htAppearance.validationMessage());
         amb.show();
     }
 
-
     protected void requestHTPathListCreation(HTPathListAutomationDialog dialog,
-                                           HTPathListRequest request) {
+                                             HTPathListRequest request) {
         dialog.mask(htAppearance.processing());
         drFacade.requestHTPathlistFile(request, new DataCallback<File>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 ErrorHandler.post(htAppearance.requestFailed(), exception);
+                dialog.unmask();
             }
 
             @Override

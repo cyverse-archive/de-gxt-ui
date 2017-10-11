@@ -1,29 +1,29 @@
-package org.iplantc.de.diskResource.client.views.dialogs;
+package org.iplantc.de.diskResource.client.views.toolbar;
 
 import org.iplantc.de.client.models.HasPath;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.HTPathListRequest;
 import org.iplantc.de.client.models.viewer.InfoType;
-import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
+import org.iplantc.de.diskResource.client.HTPathListAutomationView;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
+import org.iplantc.de.diskResource.client.views.dialogs.SaveAsDialog;
 import org.iplantc.de.diskResource.client.views.widgets.MultiFileSelectorField;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
+import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.ListView;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -34,110 +34,41 @@ import com.sencha.gxt.widget.core.client.form.TextField;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by sriram on 7/26/17.
- */
-public class HTPathListAutomationDialog extends IPlantDialog {
+public class HTPathListAutomationViewImpl extends Composite implements HTPathListAutomationView {
 
-    public interface HTPathListAutomationAppearance {
-        String inputLbl();
+    interface HTPathListAutomationUiBinder extends UiBinder<Widget, HTPathListAutomationViewImpl> {}
+    private static final HTPathListAutomationUiBinder BINDER = GWT.create(HTPathListAutomationUiBinder.class);
 
-        String folderPathOnlyLbl();
+    @UiField(provided = true) HTPathListAutomationView.HTPathListAutomationAppearance appearance;
+    @UiField(provided = true) MultiFileSelectorField multiFolderSelector;
+    @UiField CheckBox foldersOnlyCbx;
+    @UiField TextField regexField;
+    @UiField ListView<InfoType, String> infoTypeList;
+    @UiField ListStore<InfoType> infoTypeStore;
+    @UiField TextButton destSelector;
+    @UiField TextField destField;
+    @UiField HTML inputLbl, destLbl;
+    @UiField FieldLabel patternLbl;
 
-        String selectorEmptyText();
+    @Inject AsyncProviderWrapper<SaveAsDialog> saveAsDialogProvider;
+    @Inject DiskResourceAutoBeanFactory drFactory;
 
-        SafeHtml patternMatchLbl();
+    @Inject
+    public HTPathListAutomationViewImpl(HTPathListAutomationAppearance appearance,
+                                        DiskResourceSelectorFieldFactory selectionFieldFactory) {
+        this.appearance = appearance;
+        multiFolderSelector = selectionFieldFactory.createMultiFileSelector(true, appearance.selectorEmptyText());
 
-        String infoTypeLbl();
-
-        String destLbl();
-
-        String patternMatchEmptyText();
-
-        String heading();
-
-        String loading();
-
-        String processing();
-
-        String requestSuccess();
-
-        String requestFailed();
-
-        SafeHtml formatRequiredFieldLbl(String label);
-
-        String folderPathOnlyPrompt();
-
-        String validationMessage();
-
-        String dialogHeight();
-
-        String dialogWidth();
-
-        String listHeight();
-
-        String destSelectorWidth();
-
-        String select();
-
+        initWidget(BINDER.createAndBindUi(this));
+        infoTypeList.setHeight(appearance.listHeight());
+        inputLbl.setHTML(appearance.formatRequiredFieldLbl(inputLbl.getHTML()));
+        destLbl.setHTML(appearance.formatRequiredFieldLbl(destLbl.getHTML()));
+        patternLbl.setHTML(appearance.patternMatchLbl());
     }
 
-
-    @UiTemplate("HTPathListAutomationDialog.ui.xml")
-    interface HTPathListAutomationUiBinder extends UiBinder<Widget, HTPathListAutomationDialog> {
-
-    }
-
-    private static final HTPathListAutomationUiBinder BINDER =
-            GWT.create(HTPathListAutomationUiBinder.class);
-
-    @UiField(provided = true)
-    MultiFileSelectorField multiFolderSelector;
-
-    @UiField
-    CheckBox foldersOnlyCbx;
-
-    @UiField
-    TextField regexField;
-
-    @UiField(provided = true)
-    ListView<InfoType, String> infoTypeList;
-
-    ListStore<InfoType> infoTypeStore;
-
-    @UiField
-    TextButton destSelector;
-
-    @UiField
-    TextField destField;
-
-    @UiField
-    HTML inputLbl, destLbl;
-
-    @UiField
-    FieldLabel patternLbl;
-
-    @Inject
-    AsyncProviderWrapper<SaveAsDialog> saveAsDialogProvider;
-
-    @Inject
-    DiskResourceAutoBeanFactory drFactory;
-
-    HTPathListAutomationAppearance htAppearance;
-
-
-    @Inject
-    public HTPathListAutomationDialog(DiskResourceSelectorFieldFactory selectionFieldFactory,
-                                      HTPathListAutomationAppearance htAppearance,
-                                      @Assisted("infoTypes") List<InfoType> infoTypes) {
-
-        this.htAppearance = htAppearance;
-        multiFolderSelector =
-                selectionFieldFactory.createMultiFileSelector(true, htAppearance.selectorEmptyText());
-
-        infoTypeStore = new ListStore<>(item -> item.getTypeString());
-        infoTypeStore.addAll(infoTypes);
-        infoTypeList = new ListView<>(infoTypeStore, new ValueProvider<InfoType, String>() {
+    @UiFactory
+    ListView<InfoType, String> createListView() {
+        return new ListView<>(infoTypeStore, new ValueProvider<InfoType, String>() {
             @Override
             public String getValue(InfoType object) {
                 return object.getTypeString();
@@ -152,16 +83,12 @@ public class HTPathListAutomationDialog extends IPlantDialog {
             public String getPath() {
                 return null;
             }
-
-
         });
-        add(BINDER.createAndBindUi(this));
-        infoTypeList.setHeight(htAppearance.listHeight());
-        inputLbl.setHTML(htAppearance.formatRequiredFieldLbl(inputLbl.getHTML()));
-        destLbl.setHTML(htAppearance.formatRequiredFieldLbl(destLbl.getHTML()));
-        patternLbl.setHTML(htAppearance.patternMatchLbl());
-        setHideOnButtonClick(false);
-        setHeading(htAppearance.heading());
+    }
+
+    @UiFactory
+    ListStore<InfoType> createListStore() {
+        return new ListStore<>(InfoType::getTypeString);
     }
 
     @UiHandler("destSelector")
@@ -175,7 +102,7 @@ public class HTPathListAutomationDialog extends IPlantDialog {
             @Override
             public void onSuccess(final SaveAsDialog dialog) {
                 dialog.addOkButtonSelectHandler(event1 -> {
-                    dialog.mask(htAppearance.loading());
+                    dialog.mask(appearance.loading());
                     String destination =
                             dialog.getSelectedFolder().getPath() + "/" + dialog.getFileName();
                     destField.setValue(destination);
@@ -210,11 +137,13 @@ public class HTPathListAutomationDialog extends IPlantDialog {
     }
 
     public boolean isValid() {
-        if (multiFolderSelector.getValue() == null || multiFolderSelector.getValue().size() == 0
-            || Strings.isNullOrEmpty(destField.getValue())) {
-            return false;
-        }
-        return true;
+        return multiFolderSelector.getValue() != null && multiFolderSelector.getValue().size() != 0
+               && !Strings.isNullOrEmpty(destField.getValue());
+    }
+
+    @Override
+    public void addInfoTypes(List<InfoType> infoTypes) {
+        infoTypeStore.addAll(infoTypes);
     }
 
     private List<String> getPathList() {
