@@ -14,7 +14,6 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 
 /**
  * @author jstroot
@@ -93,7 +92,7 @@ public class AppNameCellDefaultAppearance implements AppNameCell.AppNameCellAppe
                        final String textToolTip,
                        final boolean separateFavoriteCell,
                        final String debugId) {
-        SafeHtml highlightText = SafeHtmlUtils.fromTrustedString(highlightAppearance.highlightText(value.getName(), pattern));
+        SafeHtml highlightText = highlightAppearance.highlightText(value.getName(), pattern);
 
         if (!separateFavoriteCell) {
             sb.appendHtmlConstant("&nbsp;");

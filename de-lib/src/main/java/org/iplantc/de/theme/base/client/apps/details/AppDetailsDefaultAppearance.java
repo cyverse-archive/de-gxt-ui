@@ -10,7 +10,6 @@ import com.google.common.base.Joiner;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 
 import com.sencha.gxt.widget.core.client.tree.TreeStyle;
 
@@ -92,8 +91,7 @@ public class AppDetailsDefaultAppearance implements AppDetailsView.AppDetailsApp
 
     @Override
     public SafeHtml highlightText(String value, String searchRegexPattern) {
-        SafeHtml highlightText = SafeHtmlUtils.fromTrustedString(highlightAppearance.highlightText(value, searchRegexPattern));
-        return highlightText;
+        return highlightAppearance.highlightText(value, searchRegexPattern);
     }
 
     @Override
