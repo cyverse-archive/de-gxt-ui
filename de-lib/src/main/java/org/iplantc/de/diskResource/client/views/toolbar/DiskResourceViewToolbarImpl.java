@@ -727,6 +727,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
         newRFileMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_NEW_R_DATA);
         newShellScriptFileMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_NEW_SHELL_DATA);
         newMdFileMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_NEW_MD_DATA);
+        automateHTFileMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_AUTOMATE_HT_PATH);
         newPathListMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_NEW_PATH_LIST);
 
         moveToTrashMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_MOVE_TO_TRASH);

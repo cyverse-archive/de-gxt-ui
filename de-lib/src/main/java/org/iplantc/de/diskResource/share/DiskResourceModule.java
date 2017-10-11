@@ -83,6 +83,7 @@ public interface DiskResourceModule {
         String SHARING_VIEW = ".view";
         String SHARING_PERMS = ".permPanel";
         String DOT_MENU = ".dotMenu";
+        String MENU_ITEM_AUTOMATE_HT_PATH = ".automateHTPath";
     }
 
     interface MetadataIds {
