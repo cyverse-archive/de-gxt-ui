@@ -7,6 +7,9 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
+/**
+ * A GWT event that fires when the user opts to create or add a tag to a resource
+ */
 public class UpdateResourceTagSelected
         extends GwtEvent<UpdateResourceTagSelected.UpdateResourceTagSelectedHandler> {
     public static interface UpdateResourceTagSelectedHandler extends EventHandler {

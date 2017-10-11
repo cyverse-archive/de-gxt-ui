@@ -6,6 +6,9 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
+/**
+ * A GWT event that fires when the user clicks the Show Link button in the Data Links dialog
+ */
 public class ShowDataLinkSelected extends GwtEvent<ShowDataLinkSelected.ShowDataLinkSelectedHandler> {
     public static interface ShowDataLinkSelectedHandler extends EventHandler {
         void onShowDataLinkSelected(ShowDataLinkSelected event);

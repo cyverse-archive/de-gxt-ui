@@ -8,6 +8,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 import java.util.List;
 
+/**
+ * A GWT event that fires when the user clicks the Create button in the Data Links dialog
+ */
 public class CreateDataLinkSelected
         extends GwtEvent<CreateDataLinkSelected.CreateDataLinkSelectedHandler> {
     public static interface CreateDataLinkSelectedHandler extends EventHandler {

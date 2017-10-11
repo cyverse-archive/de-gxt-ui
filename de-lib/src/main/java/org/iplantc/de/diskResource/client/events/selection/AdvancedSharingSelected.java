@@ -6,6 +6,9 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
+/**
+ * A GWT event that fires when the user clicks the Advanced Sharing button in the Data Links dialog
+ */
 public class AdvancedSharingSelected
         extends GwtEvent<AdvancedSharingSelected.AdvancedSharingSelectedHandler> {
     public static interface AdvancedSharingSelectedHandler extends EventHandler {
