@@ -1,14 +1,16 @@
 package org.iplantc.de.commons.client.views.dialogs;
 
+import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasPath;
 import org.iplantc.de.client.models.HasPaths;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
-import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
+import org.iplantc.de.commons.share.CommonsModule;
 import org.iplantc.de.diskResource.client.events.FileUploadedEvent;
 import org.iplantc.de.diskResource.client.views.dialogs.DuplicateDiskResourceCallback;
 import org.iplantc.de.intercom.client.IntercomFacade;
@@ -23,6 +25,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.FileUpload;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.autobean.shared.Splittable;
@@ -31,18 +35,16 @@ import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 import com.sencha.gxt.core.client.util.Format;
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.Status;
+import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer;
-import com.sencha.gxt.widget.core.client.event.SubmitCompleteEvent;
-import com.sencha.gxt.widget.core.client.event.SubmitEvent;
-import com.sencha.gxt.widget.core.client.event.SubmitEvent.SubmitHandler;
-import com.sencha.gxt.widget.core.client.form.FormPanel;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * @author jstroot
+ * @author jstroot sriram
  */
 public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
 
@@ -59,6 +61,8 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
     private final String userName;
     private final EventBus eventBus;
     private final DiskResourceUtil diskResourceUtil;
+    private final DEClientConstants constants = GWT.create(DEClientConstants.class);
+    private final DiskResourceNameValidator validator = new DiskResourceNameValidator();
 
     public SimpleFileUploadDialog(final HasPath uploadDest,
                                   final DiskResourceServiceFacade drService,
@@ -85,7 +89,6 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
     void initDestPathLabel() {
         String destPath = uploadDest.getPath();
         final String parentPath = diskResourceUtil.parseNameFromPath(destPath);
-
         htmlDestText.setHTML(appearance.renderDestinationPathLabel(destPath, parentPath));
     }
 
@@ -111,7 +114,7 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
 
         FileUpload field = fufList.get(formList.indexOf(event.getSource()));
         String results2 = event.getResults();
-        String fieldValue = field.getFilename();
+        String fieldValue = getRealFileName(field.getFilename());
 
         Splittable bodySp = StringQuoter.createSplittable();
         StringQuoter.create(fieldValue).assign(bodySp, "name");
@@ -132,10 +135,9 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
                                        fieldValue))));
             } else {
                 if (split.isUndefined("file") || (split.get("file") == null)) {
-                 //   field.markInvalid(appearance.fileUploadsFailed(Lists.newArrayList(field.getValue())));
                     IplantAnnouncer.getInstance()
                                    .schedule(new ErrorAnnouncementConfig(appearance.fileUploadsFailed(
-                                           Lists.newArrayList(field.getFilename()))));
+                                           Lists.newArrayList(getRealFileName(field.getFilename())))));
                 } else {
                     eventBus.fireEvent(new FileUploadedEvent(uploadDest, field.getFilename(), results));
                 }
@@ -154,17 +156,18 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
                             List<FormPanel> submittedForms,
                             List<FormPanel> formList) {
         FastMap<FileUpload> destResourceMap = new FastMap<>();
-        for (FileUpload field : fufList) {
-            printSize(field.getElement());
-            String fileName = field.getFilename().replaceAll(".*[\\\\/]", "");
-            field.setEnabled(!Strings.isNullOrEmpty(fileName) && !fileName.equalsIgnoreCase("null"));
-            if (field.isEnabled()) {
-                destResourceMap.put(uploadDest.getPath() + "/" + fileName, field);
-            } else {
-                field.setEnabled(false);
+
+        if (checkFileSize(fufList) && checkFileNameForSplChars(fufList)) {
+            for (FileUpload field : fufList) {
+                String fileName = getRealFileName(field.getFilename()).replaceAll(".*[\\\\/]", "");
+                field.setEnabled(!Strings.isNullOrEmpty(fileName) && !fileName.equalsIgnoreCase("null"));
+                if (field.isEnabled()) {
+                    destResourceMap.put(uploadDest.getPath() + "/" + fileName, field);
+                } else {
+                    field.setEnabled(false);
+                }
             }
         }
-
 
         if (!destResourceMap.isEmpty()) {
             final ArrayList<String> ids = Lists.newArrayList(destResourceMap.keySet());
@@ -176,25 +179,70 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
 
     }
 
-    public static native void printSize(com.google.gwt.user.client.Element element) /*-{
-        input = element;
-        if (!input) {
-            $wnd.alert("cannot find input element");
-        }
-        else if (!input.files) {
-            $wnd.alert("This browser doesn't seem to support the `files` property of file inputs.");
-        }
-        else if (!input.files[0]) {
-            $wnd.alert("Please select a file before clicking 'Load'");
-        }
-        else {
-            file = input.files[0];
-            $wnd.alert("File " + file.name + " is " + file.size + " bytes in size");
+    private boolean checkFileSize(List<FileUpload> files) {
+        List<String> filenames = files.stream()
+                                      .filter(f -> getSize(f.getElement())
+                                                   > constants.maxFileSizeForSimpleUpload())
+                                      .map(FileUpload::getFilename)
+                                      .map(name -> getRealFileName(name))
+                                      .collect(Collectors.toList());
+
+        if (filenames == null || filenames.size() == 0) {
+            return true;
         }
 
-    }-*/;
+        String joined = Joiner.on(',').join(filenames);
+        AlertMessageBox amb = new AlertMessageBox(appearance.maxFileSizeExceed(),
+                                                  appearance.fileSizeViolation(joined));
+        amb.show();
+        return false;
+    }
 
-    
+    private boolean checkFileNameForSplChars(List<FileUpload> files) {
+        List<String> filenames = new ArrayList<>();
+        for (FileUpload file : files) {
+            if (!Strings.isNullOrEmpty(validator.validateAndReturnError(file.getFilename()))) {
+                filenames.add(getRealFileName(file.getFilename()));
+            }
+        }
+
+        if (filenames == null || filenames.size() == 0) {
+            return true;
+        }
+
+        String joined = Joiner.on(',').join(filenames);
+        AlertMessageBox amb = new AlertMessageBox(appearance.invalidFileName(),
+                                                  appearance.fileNameValidationMsg() + joined);
+        amb.show();
+        return false;
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+        con.asWidget().ensureDebugId(baseID + CommonsModule.UploadIds.BASE_ID);
+        fuf0.getElement()
+            .setId(CommonsModule.UploadIds.BASE_ID + CommonsModule.UploadIds.FILE_UPLOAD_FIELD
+                   + CommonsModule.UploadIds.FIELD1);
+        fuf1.getElement()
+            .setId(CommonsModule.UploadIds.BASE_ID + CommonsModule.UploadIds.FILE_UPLOAD_FIELD
+                   + CommonsModule.UploadIds.FIELD2);
+        fuf2.getElement()
+            .setId(CommonsModule.UploadIds.BASE_ID + CommonsModule.UploadIds.FILE_UPLOAD_FIELD
+                   + CommonsModule.UploadIds.FIELD3);
+        fuf3.getElement()
+            .setId(CommonsModule.UploadIds.BASE_ID + CommonsModule.UploadIds.FILE_UPLOAD_FIELD
+                   + CommonsModule.UploadIds.FIELD4);
+        fuf4.getElement()
+            .setId(CommonsModule.UploadIds.BASE_ID + CommonsModule.UploadIds.FILE_UPLOAD_FIELD
+                   + CommonsModule.UploadIds.FIELD5);
+
+        btn0.ensureDebugId(CommonsModule.UploadIds.BASE_ID + CommonsModule.UploadIds.RESET_BTN1);
+        btn1.ensureDebugId(CommonsModule.UploadIds.BASE_ID + CommonsModule.UploadIds.RESET_BTN2);
+        btn2.ensureDebugId(CommonsModule.UploadIds.BASE_ID + CommonsModule.UploadIds.RESET_BTN3);
+        btn3.ensureDebugId(CommonsModule.UploadIds.BASE_ID + CommonsModule.UploadIds.RESET_BTN4);
+        btn4.ensureDebugId(CommonsModule.UploadIds.BASE_ID + CommonsModule.UploadIds.RESET_BTN5);
+    }
 
     private final class CheckDuplicatesCallback extends DuplicateDiskResourceCallback {
         private final FastMap<FileUpload> destResourceMap;
@@ -218,24 +266,22 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
         public void markDuplicates(Collection<String> duplicates) {
             if ((duplicates != null) && !duplicates.isEmpty()) {
                 String dupeFiles =   Joiner.on(',').join(duplicates);
-                ErrorHandler.post("Following file(s)exists already: " + dupeFiles );
+                AlertMessageBox amb = new AlertMessageBox(appearance.fileExistTitle(),
+                                                          appearance.fileExists(dupeFiles));
+                amb.show();
             } else {
                 for (final FileUpload field : destResourceMap.values()) {
                     int index = fufList.indexOf(field);
                     statList.get(index).setBusy("");
                     FormPanel form = formList.get(index);
-                    form.addSubmitHandler(new SubmitHandler() {
-
-                        @Override
-                        public void onSubmit(SubmitEvent event) {
-                            if (event.isCanceled()) {
-                                IplantAnnouncer.getInstance()
-                                               .schedule(new ErrorAnnouncementConfig(appearance.fileUploadsFailed(
-                                                       Lists.newArrayList(field.getFilename()))));
-                            }
-
-                            getOkButton().disable();
+                    form.addSubmitHandler(event -> {
+                        if (event.isCanceled()) {
+                            IplantAnnouncer.getInstance()
+                                           .schedule(new ErrorAnnouncementConfig(appearance.fileUploadsFailed(
+                                                   Lists.newArrayList(field.getFilename()))));
                         }
+
+                        getOkButton().disable();
                     });
                     try {
                         form.submit();

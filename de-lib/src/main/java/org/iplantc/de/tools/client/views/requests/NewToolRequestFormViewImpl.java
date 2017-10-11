@@ -273,7 +273,7 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
     }
 
     @Override
-    public final void indicateSubmissionFailure(final String reason) {
+    public final void indicateSubmissionFailure(final SafeHtml reason) {
         submissionProgressBox.hide();
         final AlertMessageBox amb = new AlertMessageBox(I18N.DISPLAY.alert(), reason);
         amb.show();

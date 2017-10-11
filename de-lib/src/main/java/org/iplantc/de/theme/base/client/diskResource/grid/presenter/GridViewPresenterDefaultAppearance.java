@@ -7,6 +7,7 @@ import org.iplantc.de.theme.base.client.diskResource.DiskResourceMessages;
 import org.iplantc.de.theme.base.client.diskResource.grid.GridViewDisplayStrings;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtml;
 
 /**
  * @author jstroot
@@ -188,7 +189,7 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     }
 
     @Override
-    public String fileExistsError(String fileName) {
+    public SafeHtml fileExistsError(String fileName) {
         return iplantErrorStrings.fileExists(fileName);
     }
 

@@ -104,7 +104,7 @@ public interface NewToolRequestFormView extends IsWidget {
     /**
      * Show the user a failed submission message
      */
-    void indicateSubmissionFailure(String reason);
+    void indicateSubmissionFailure(SafeHtml reason);
 
     /**
      * Indicate to the user that the submission has started

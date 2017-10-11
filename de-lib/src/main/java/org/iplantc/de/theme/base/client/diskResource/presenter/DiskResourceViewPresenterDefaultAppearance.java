@@ -6,6 +6,7 @@ import org.iplantc.de.resources.client.messages.IplantErrorStrings;
 import org.iplantc.de.theme.base.client.diskResource.DiskResourceMessages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtml;
 
 import java.util.ArrayList;
 
@@ -77,7 +78,7 @@ public class DiskResourceViewPresenterDefaultAppearance implements DiskResourceV
     }
 
     @Override
-    public String fileUploadsFailed(ArrayList<String> files) {
+    public SafeHtml fileUploadsFailed(ArrayList<String> files) {
         return iplantErrorStrings.fileUploadsFailed(files);
     }
 

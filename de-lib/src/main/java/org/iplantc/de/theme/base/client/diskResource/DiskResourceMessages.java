@@ -231,4 +231,12 @@ public interface DiskResourceMessages extends Messages {
     String select();
 
     String shareCollab();
+
+    SafeHtml fileSizeViolation(String filename);
+
+    SafeHtml maxFileSizeExceed();
+
+    SafeHtml fileExistTitle();
+
+    String invalidFileName();
 }

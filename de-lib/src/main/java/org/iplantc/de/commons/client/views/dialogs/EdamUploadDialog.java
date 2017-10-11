@@ -4,7 +4,6 @@ import org.iplantc.de.admin.desktop.client.ontologies.events.RefreshOntologiesEv
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
-import org.iplantc.de.commons.client.widgets.IPCFileUploadField;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -15,14 +14,12 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.FileUpload;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.Status;
-import com.sencha.gxt.widget.core.client.event.SubmitCompleteEvent;
-import com.sencha.gxt.widget.core.client.event.SubmitEvent;
-import com.sencha.gxt.widget.core.client.event.SubmitEvent.SubmitHandler;
-import com.sencha.gxt.widget.core.client.form.FormPanel;
 
 import java.util.List;
 
@@ -91,10 +88,10 @@ public class EdamUploadDialog extends AbstractFileUploadDialog {
                 int index = fufList.indexOf(field);
                 statList.get(index).setBusy("");
                 FormPanel form = formList.get(index);
-                form.addSubmitHandler(new SubmitHandler() {
+                form.addSubmitHandler(new FormPanel.SubmitHandler() {
 
                     @Override
-                    public void onSubmit(SubmitEvent event) {
+                    public void onSubmit(FormPanel.SubmitEvent event) {
                         if (event.isCanceled()) {
                             IplantAnnouncer.getInstance()
                                            .schedule(new ErrorAnnouncementConfig(appearance.fileUploadsFailed(Lists.newArrayList(field.getFilename()))));

@@ -13,19 +13,20 @@ import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.FileUpload;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
-import com.sencha.gxt.widget.core.client.Dialog;
+import com.sencha.gxt.core.client.GXT;
 import com.sencha.gxt.widget.core.client.Status;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.sencha.gxt.widget.core.client.event.SubmitCompleteEvent;
-import com.sencha.gxt.widget.core.client.form.FormPanel;
 import com.sencha.gxt.widget.core.client.form.FormPanelHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,17 +35,16 @@ import java.util.List;
  */
 public abstract class AbstractFileUploadDialog extends IPlantDialog {
 
+
     public interface AbstractFileUploadDialogAppearance {
 
         String confirmAction();
-
-        String fileExist();
 
         String fileUploadMaxSizeWarning();
 
         ImageResource arrowUndoIcon();
 
-        String fileUploadsFailed(List<String> strings);
+        SafeHtml fileUploadsFailed(List<String> strings);
 
         String closeConfirmMessage();
 
@@ -55,12 +55,18 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
         String upload();
 
         String fileUploadsSuccess(List<String> strings);
-    }
 
-    public interface Ids {
-        String BASE_ID = "simpleUpload";
-        String FILE_UPLOAD_FIELD = ".fileUpload";
-        
+        SafeHtml fileSizeViolation(String filename);
+
+        SafeHtml maxFileSizeExceed();
+
+        SafeHtml fileExistTitle();
+
+        SafeHtml fileExists(String dupeFiles);
+
+        String invalidFileName();
+
+        String fileNameValidationMsg();
     }
 
     public static final String HDN_PARENT_ID_KEY = "dest";
@@ -72,19 +78,23 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
     final DiskResourceAutoBeanFactory FS_FACTORY = GWT.create(DiskResourceAutoBeanFactory.class);
     List<FormPanel> formList;
     List<FileUpload> fufList;
-    List<TextButton> tbList;
     List<Status> statList;
+    private ArrayList<TextButton> tblist;
     final List<FormPanel> submittedForms = Lists.newArrayList();
     final SafeUri fileUploadServlet;
 
 
     @UiField(provided = true) final AbstractFileUploadDialogAppearance appearance;
-    @UiField HTML htmlDestText;
+    @UiField
+    HTML htmlDestText;
     @UiField FormPanel form0, form1, form2, form3, form4;
     @UiField
     FileUpload fuf0, fuf1, fuf2, fuf3, fuf4;
-    @UiField TextButton btn0, btn1, btn2, btn3, btn4;
     @UiField Status status0, status1, status2, status3, status4;
+    @UiField
+    TextButton btn0, btn1, btn2, btn3, btn4;
+    @UiField
+    VerticalPanel con;
 
     public AbstractFileUploadDialog(final SafeUri fileUploadServlet) {
         this.fileUploadServlet = fileUploadServlet;
@@ -96,20 +106,14 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
         getOkButton().setText(appearance.upload());
         getOkButton().setEnabled(false);
         setHeading(appearance.upload());
-        addCancelButtonSelectHandler(new SelectEvent.SelectHandler() {
-            @Override
-            public void onSelect(SelectEvent event) {
-                hide();
-            }
-        });
+        addCancelButtonSelectHandler(event -> hide());
     }
 
     protected void afterBinding() {
         formList = Lists.newArrayList(form0, form1, form2, form3, form4);
         fufList = Lists.newArrayList(fuf0, fuf1, fuf2, fuf3, fuf4);
-        tbList = Lists.newArrayList(btn0, btn1, btn2, btn3, btn4);
         statList = Lists.newArrayList(status0, status1, status2, status3, status4);
-     //   addValidators();
+        tblist = Lists.newArrayList(btn0, btn1, btn2, btn3, btn4);
         setModal(false);
     }
 
@@ -129,23 +133,24 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
         onSubmitComplete(fufList, statList, submittedForms, formList, event);
     }
 
+    @UiHandler({ "btn0", "btn1", "btn2", "btn3", "btn4" })
+    void onSelect(SelectEvent event) {
+        FormPanel fp = formList.get(tblist.indexOf(event.getSource()));
+        fp.reset();
+    }
+
     @Override
     protected void onOkButtonClicked() {
         doUpload(fufList, statList, submittedForms, formList);
     }
 
-/*    void addValidators() {
-        for (FileUpload f : fufList) {
-            f.addValidator(new DiskResourceNameValidator());
-        }
-    }*/
 
     @UiFactory
     FormPanel createFormPanel() {
         FormPanel form = new FormPanel();
         form.setAction(fileUploadServlet);
-        form.setMethod(FormPanel.Method.POST);
-        form.setEncoding(FormPanel.Encoding.MULTIPART);
+        form.setMethod(FormPanel.METHOD_POST);
+        form.setEncoding(FormPanel.ENCODING_MULTIPART);
         form.setSize(FORM_WIDTH, FORM_HEIGHT);
         return form;
     }
@@ -163,27 +168,10 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
     }
 
 
-    @UiHandler({ "btn0", "btn1", "btn2", "btn3", "btn4" })
-    void onResetClicked(SelectEvent event) {
-        FileUpload uField = fufList.get(tbList.indexOf(event.getSource()));
-        reset(uField.getElement().getId());
-    }
-
-    public static native void reset(String id) /*-{
-        input = $doc.getElementById(id);
-        input.files[0] = null;
-
-    }-*/;
-
     @UiHandler({ "fuf0", "fuf1", "fuf2", "fuf3", "fuf4" })
     void onFieldChanged(ChangeEvent event) {
         getOkButton().setEnabled(FormPanelHelper.isValid(this, true) && isValidForm());
     }
-
-/*    @UiHandler({ "fuf0", "fuf1", "fuf2", "fuf3", "fuf4" })
-    void onFieldValid(ValidEvent event) {
-        getOkButton().setEnabled(FormPanelHelper.isValid(this, true) && isValidForm());
-    }*/
 
     boolean isValidForm() {
         for (FileUpload f : fufList) {
@@ -195,23 +183,15 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
 
     }
 
-/*    @UiHandler({ "fuf0", "fuf1", "fuf2", "fuf3", "fuf4" })
-    void onFieldInvalid(InvalidEvent event) {
-        getOkButton().setEnabled(false);
-    }*/
-
     @Override
     public void hide() {
         if (submittedForms.size() > 0) {
             final ConfirmMessageBox cmb =
                     new ConfirmMessageBox(appearance.confirmAction(), appearance.closeConfirmMessage());
 
-            cmb.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
-                @Override
-                public void onDialogHide(DialogHideEvent event) {
-                    if (Dialog.PredefinedButton.YES.equals(event.getHideButton())) {
-                        AbstractFileUploadDialog.super.hide();
-                    }
+            cmb.addDialogHideHandler(event -> {
+                if (PredefinedButton.YES.equals(event.getHideButton())) {
+                    AbstractFileUploadDialog.super.hide();
                 }
             });
 
@@ -221,21 +201,30 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
         }
     }
 
-    /*@UiHandler({ "fuf0", "fuf1", "fuf2", "fuf3", "fuf4" })
-    void onFormKeyUp(KeyUpEvent event) {
-        if ((event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE) || (event.getNativeKeyCode()
-                                                                     == KeyCodes.KEY_DELETE)) {
-            TextField tf = (TextField)event.getSource();
-            for (IPCFileUploadField fuf : fufList) {
-                String value = fuf.getValue();
-                String currentValue = tf.getCurrentValue();
-                if (value.equalsIgnoreCase(currentValue)) {
-                    fuf.clear();
-                    fuf.validate(true);
-                    break;
-                }
-            }
-        }
-    }*/
 
+    public String getRealFileName(String filename) {
+        if ( Strings.isNullOrEmpty(filename) || !GXT.isChrome()) {
+            return filename;
+        }
+        return filename.substring(12); //chrome always returns C:\fakepath\filename
+    }
+
+    public static native int getSize(com.google.gwt.user.client.Element element) /*-{
+        input = element;
+        if (!input) {
+            return 0;
+        }
+        else if (!input.files) {
+            return 0;
+        }
+        else if (!input.files[0]) {
+            return 0;
+        }
+        else {
+            file = input.files[0];
+            return file.size;
+        }
+
+    }-*/;
 }
+

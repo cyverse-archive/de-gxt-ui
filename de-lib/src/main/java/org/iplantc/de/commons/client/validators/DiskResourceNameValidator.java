@@ -3,6 +3,7 @@ package org.iplantc.de.commons.client.validators;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
 import org.iplantc.de.resources.client.messages.IplantValidationMessages;
 
+import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.EditorError;
@@ -24,6 +25,7 @@ public class DiskResourceNameValidator extends AbstractValidator<String> impleme
 
     private final IplantValidationConstants validationConstants;
     private final IplantValidationMessages validationMessages;
+    char[] restrictedChars;
 
     public DiskResourceNameValidator() {
         this(GWT.<IplantValidationConstants> create(IplantValidationConstants.class),
@@ -34,6 +36,7 @@ public class DiskResourceNameValidator extends AbstractValidator<String> impleme
                               final IplantValidationMessages validationMessages) {
         this.validationConstants = validationConstants;
         this.validationMessages = validationMessages;
+        restrictedChars = validationConstants.restrictedDiskResourceNameChars().toCharArray();
     }
 
     @Override
@@ -42,16 +45,29 @@ public class DiskResourceNameValidator extends AbstractValidator<String> impleme
             return Collections.emptyList();
         }
 
-        char[] restrictedChars = (validationConstants.restrictedDiskResourceNameChars()).toCharArray();
+        String errorMsg = validateAndReturnError(value);
+
+        if (!Strings.isNullOrEmpty(errorMsg)) {
+            return createError(new DefaultEditorError(editor, errorMsg, value));
+        }
+
+        return Collections.emptyList();
+    }
+
+    /**
+     * Validate diskresource name and returns error if any. Otherwiese returns null
+     *
+     * @param value Diskresource name
+     * @return An error string
+     */
+    public String validateAndReturnError(String value) {
         // check for spaces at the beginning and at the end of the file name
         if (value.startsWith(" ") || value.endsWith(" ")) { //$NON-NLS-1$ //$NON-NLS-2$
-            return createError(new DefaultEditorError(editor,
-                                                      validationMessages.drNameValidationMsg(
-                                                              validationConstants.newlineToPrint()
-                                                              + validationConstants.tabToPrint()
-                                                              + new String(restrictedChars)),
-                                                      value));
+            return validationMessages.drNameValidationMsg(
+                    validationConstants.newlineToPrint() + validationConstants.tabToPrint() + new String(
+                            restrictedChars));
         }
+
 
         //$NON-NLS-1$
         StringBuilder restrictedFound = new StringBuilder();
@@ -73,11 +89,11 @@ public class DiskResourceNameValidator extends AbstractValidator<String> impleme
                                       validationConstants.tabToPrint() :
                                       "")
                               + validationMessages.drNameValidationMsg(validationConstants.restrictedDiskResourceNameChars())
-                    + " "+validationMessages.invalidChars(restrictedFound.toString());
+                              + " " + validationMessages.invalidChars(restrictedFound.toString());
 
-            return createError(new DefaultEditorError(editor, errorMsg, value));
+            return errorMsg;
         }
-
-        return Collections.emptyList();
+        return null;
     }
 }
+

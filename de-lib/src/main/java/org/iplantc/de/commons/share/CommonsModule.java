@@ -21,4 +21,20 @@ public interface CommonsModule {
         String AGAVE_AUTH_BTN = ".authBtn";
         String AGAVE_NO_AUTH_BTN = ".noAuthBtn";
     }
+
+    interface UploadIds {
+        String BASE_ID = "SimpleUpload";
+        String FILE_UPLOAD_FIELD = ".fileUpload";
+        String FIELD1 = ".field1";
+        String FIELD2 = ".field2";
+        String FIELD3 = ".field3";
+        String FIELD4 = ".field4";
+        String FIELD5 = ".field5";
+
+        String RESET_BTN1 = ".resetBtn1";
+        String RESET_BTN2 = ".resetBtn2";
+        String RESET_BTN3 = ".resetBtn3";
+        String RESET_BTN4 = ".resetBtn4";
+        String RESET_BTN5 = ".resetBtn5";
+    }
 }

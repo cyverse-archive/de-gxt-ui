@@ -32,6 +32,7 @@ import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConf
 import org.iplantc.de.commons.client.views.window.configs.FileViewerWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.PipelineEditorWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.SimpleDownloadWindowConfig;
+import org.iplantc.de.commons.share.CommonsModule;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.diskResource.client.events.CreateNewFileEvent;
 import org.iplantc.de.diskResource.client.events.RequestImportFromUrlEvent;
@@ -212,12 +213,17 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
     public void onRequestSimpleUpload(RequestSimpleUploadEvent event) {
         Folder uploadDest = event.getDestinationFolder();
         if (canUpload(uploadDest)) {
-            new SimpleFileUploadDialog(uploadDest,
-                                       diskResourceServiceProvider.get(),
-                                       eventBus,
-                                       diskResourceUtil,
-                                       UriUtils.fromTrustedString(clientConstants.fileUploadServlet()),
-                                       userInfo.getUsername()).show();
+            SimpleFileUploadDialog dialog = new SimpleFileUploadDialog(uploadDest,
+                                                                        diskResourceServiceProvider.get(),
+                                                                        eventBus,
+                                                                        diskResourceUtil,
+                                                                        UriUtils.fromTrustedString(
+                                                                                clientConstants.fileUploadServlet()),
+                                                                        userInfo.getUsername());
+
+            dialog.setSize("500","400");
+            dialog.ensureDebugId(CommonsModule.UploadIds.BASE_ID);
+            dialog.show();
         }
     }
 

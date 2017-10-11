@@ -87,7 +87,7 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
      */
     @DefaultMessage("Alert")
     @Key("alert")
-    String alert();
+    SafeHtml alert();
 
     /**
      * Translated "Analyses".
