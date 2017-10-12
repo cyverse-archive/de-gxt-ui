@@ -47,21 +47,21 @@
             <g:HTML text="{bulkapp.uploadMetadata}" ui:field="upFileLbl"/>
         </con:child>
         <con:child layoutData="{preferenceLayoutData}">
-            <gxtForm:FormPanel ui:field="form0" borders="false">
-                <con:HorizontalLayoutContainer>
+            <g:FormPanel ui:field="form0">
+                <con:HorizontalLayoutContainer ui:field="con">
                     <con:child layoutData="{sideLayoutData}">
                         <button:TextButton ui:field="btn0" toolTip="{appearance.reset}"
                                            icon="{appearance.arrowUndoIcon}" debugId="idBtnReset0"/>
                     </con:child>
                     <con:child layoutData="{centerLayoutData}">
-                        <form:IPCFileUploadField ui:field="fuf0"
+                        <g:FileUpload ui:field="fuf0"
                                                  debugId="idFileUpld0" name="file"/>
                     </con:child>
                     <con:child layoutData="{sideLayoutData}">
                         <gxt:Status ui:field="status0"/>
                     </con:child>
                 </con:HorizontalLayoutContainer>
-            </gxtForm:FormPanel>
+            </g:FormPanel>
         </con:child>
 
         <con:child layoutData="{fileSelLabel}">

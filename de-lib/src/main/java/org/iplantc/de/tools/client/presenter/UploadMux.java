@@ -1,6 +1,6 @@
 package org.iplantc.de.tools.client.presenter;
 
-import org.iplantc.de.tools.client.views.requests.Uploader;
+import org.iplantc.de.tools.client.views.requests.UploadForm;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -10,27 +10,25 @@ import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import com.sencha.gxt.core.client.util.Format;
-import com.sencha.gxt.widget.core.client.event.SubmitCompleteEvent;
-import com.sencha.gxt.widget.core.client.event.SubmitCompleteEvent.SubmitCompleteHandler;
 
 import java.util.List;
 
 // TODO move this to ui-commons
 
 /**
- * This class manages a bunch of Uploader uploads happening in parallel. It provides a single class
+ * This class manages a bunch of UploadForm uploads happening in parallel. It provides a single class
  * method, startUpload, that manages the uploads.
  */
 public final class UploadMux {
 
     private static final class Upload {
-        private final Callback<Void, Uploader> onComplete;
-        private final Uploader uploader;
+        private final Callback<Void, UploadForm> onComplete;
+        private final UploadForm UploadForm;
 
         private HandlerRegistration handlerReg = null;
 
-        Upload(final Uploader uploader, final Callback<Void, Uploader> onComplete) {
-            this.uploader = uploader;
+        Upload(final UploadForm UploadForm, final Callback<Void, UploadForm> onComplete) {
+            this.UploadForm = UploadForm;
             this.onComplete = onComplete;
         }
 
@@ -39,13 +37,8 @@ public final class UploadMux {
         }
 
         void start() {
-            handlerReg = uploader.addSubmitCompleteHandler(new SubmitCompleteHandler() {
-                @Override
-                public void onSubmitComplete(final SubmitCompleteEvent event) {
-                    complete(event.getResults());
-                }
-            });
-            uploader.submit();
+            handlerReg = UploadForm.addSubmitCompleteHandler(event -> complete(event.getResults()));
+            UploadForm.submit();
         }
 
         private void complete(final String jsonResults) {
@@ -54,7 +47,7 @@ public final class UploadMux {
 
             final Splittable split = StringQuoter.split(Format.stripTags(jsonResults));
             if (split.isNull("file")) {
-                onComplete.onFailure(uploader);
+                onComplete.onFailure(UploadForm);
             } else {
                 onComplete.onSuccess(null);
             }
@@ -62,31 +55,33 @@ public final class UploadMux {
     }
 
     /**
-     * Given a collection of Uploader objects, it calls submit on each one. When all of the uploads
-     * are complete, it executes the provided callback, passing a list of the Uploaders that failed
+     * Given a collection of UploadForm objects, it calls submit on each one. When all of the uploads
+     * are complete, it executes the provided callback, passing a list of the UploadForms that failed
      * back if any of them failed.
-     * 
-     * @param uploaders The list of uploaders to call submit on.
+     *
+     * @param UploadForms The list of UploadForms to call submit on.
      * @param onAllComplete the callback to execute upon completion.
      */
-    public static void startUploads(final Iterable<Uploader> uploaders, final Callback<Void, Iterable<Uploader>> onAllComplete) {
-        final UploadMux mux = new UploadMux(uploaders, onAllComplete);
+    public static void startUploads(final Iterable<UploadForm> UploadForms,
+                                    final Callback<Void, Iterable<UploadForm>> onAllComplete) {
+        final UploadMux mux = new UploadMux(UploadForms, onAllComplete);
         mux.startUploads();
     }
 
-    private final Callback<Void, Iterable<Uploader>> onAllComplete;
-    private final List<Uploader> failedUploaders;
+    private final Callback<Void, Iterable<UploadForm>> onAllComplete;
+    private final List<UploadForm> failedUploadForms;
     private final List<Upload> uploads;
 
-    private UploadMux(final Iterable<Uploader> uploaders, final Callback<Void, Iterable<Uploader>> onAllComplete) {
+    private UploadMux(final Iterable<UploadForm> UploadForms,
+                      final Callback<Void, Iterable<UploadForm>> onAllComplete) {
         this.onAllComplete = onAllComplete;
-        failedUploaders = Lists.newArrayList();
+        failedUploadForms = Lists.newArrayList();
         uploads = Lists.newArrayList();
-        for (Uploader uploader : Sets.newHashSet(uploaders)) {
-            uploads.add(new Upload(uploader, new Callback<Void, Uploader>() {
+        for (UploadForm UploadForm : Sets.newHashSet(UploadForms)) {
+            uploads.add(new Upload(UploadForm, new Callback<Void, UploadForm>() {
                 @Override
-                public void onFailure(final Uploader failure) {
-                    failedUploaders.add(failure);
+                public void onFailure(final UploadForm failure) {
+                    failedUploadForms.add(failure);
                     handleUploadComplete();
                 }
                 @Override
@@ -98,7 +93,7 @@ public final class UploadMux {
     }
 
     private void startUploads() {
-        failedUploaders.clear();
+        failedUploadForms.clear();
         if (uploads.isEmpty()) {
             onAllComplete.onSuccess(null);
         } else {
@@ -114,10 +109,10 @@ public final class UploadMux {
                 return;
             }
         }
-        if (failedUploaders.isEmpty()) {
+        if (failedUploadForms.isEmpty()) {
             onAllComplete.onSuccess(null);
         } else {
-            onAllComplete.onFailure(failedUploaders);
+            onAllComplete.onFailure(failedUploadForms);
         }
     }
 

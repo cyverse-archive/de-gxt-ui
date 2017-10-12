@@ -50,4 +50,9 @@ public class NewToolRequestFormViewDefaultAppearance implements NewToolRequestFo
         return SafeHtmlUtils.fromTrustedString(
                 "<span style='color:red; top:-5px;' >*</span> " + label); //$NON-NLS-1$
     }
+
+    @Override
+    public SafeHtml sameFileError(String filename) {
+        return toolMessages.sameFileError(filename);
+    }
 }
