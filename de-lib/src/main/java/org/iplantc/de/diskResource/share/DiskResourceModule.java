@@ -106,6 +106,8 @@ public interface DiskResourceModule {
         String GENOME_SEARCH_DLG = "genomeSearchDlg";
         String GENOME_SEARCH_FIELD = ".searchField";
         String GENOME_IMPORT_BTN = ".importBtn";
+        String RENAME_RESOURCE_DLG = "renameResourceDlg";
+        String TEXT_FIELD = ".txtField";
     }
 
     interface MetadataIds {
