@@ -11,6 +11,7 @@ import org.iplantc.de.diskResource.client.BulkMetadataView;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
+import org.iplantc.de.diskResource.client.events.selection.AutomateHTPathListSelected;
 import org.iplantc.de.diskResource.client.events.selection.BulkMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDiskResourcesSelected;
@@ -261,6 +262,11 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     @Override
     public HandlerRegistration addBulkMetadataSelectedHandler(BulkMetadataSelected.BulkMetadataSelectedHandler handler) {
         return addHandler(handler, BulkMetadataSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addAutomateHTPathListSelectedHandler(AutomateHTPathListSelected.AutomateHTPathListSelectedHandler handler) {
+        return addHandler(handler, AutomateHTPathListSelected.TYPE);
     }
 
     // </editor-fold>
@@ -664,7 +670,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("automateHTFileMi")
     void onAutomateHTPathList(SelectionEvent<Item> event) {
-        presenter.onAutomateHTPathList();
+        fireEvent(new AutomateHTPathListSelected());
     }
     // </editor-fold>
 

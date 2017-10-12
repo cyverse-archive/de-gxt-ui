@@ -30,6 +30,7 @@ import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.CreateNewFileEvent;
 import org.iplantc.de.diskResource.client.events.RequestSimpleDownloadEvent;
 import org.iplantc.de.diskResource.client.events.ShowFilePreviewEvent;
+import org.iplantc.de.diskResource.client.events.selection.AutomateHTPathListSelected;
 import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSelected;
 import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
@@ -59,7 +60,9 @@ import java.util.logging.Logger;
 /**
  * @author jstroot
  */
-public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDownloadSelectedHandler {
+public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
+                                                 SimpleDownloadSelectedHandler,
+                                                 AutomateHTPathListSelected.AutomateHTPathListSelectedHandler {
 
     @Inject ToolbarView.Presenter.Appearance appearance;
     @Inject DiskResourceSelectorFieldFactory drSelectorFactory;
@@ -95,6 +98,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     ToolbarViewPresenterImpl(final ToolbarViewFactory viewFactory) {
         this.view = viewFactory.create(this);
         view.addSimpleDownloadSelectedHandler(this);
+        view.addAutomateHTPathListSelectedHandler(this);
     }
 
     @Override
@@ -261,7 +265,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     }
 
     @Override
-    public void onAutomateHTPathList() {
+    public void onAutomateHTPathListSelected(AutomateHTPathListSelected event) {
         drFacade.getInfoTypes(new DataCallback<List<InfoType>>() {
 
             @Override
