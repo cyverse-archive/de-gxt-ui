@@ -12,7 +12,7 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
 import org.iplantc.de.commons.share.CommonsModule;
 import org.iplantc.de.diskResource.client.events.FileUploadedEvent;
-import org.iplantc.de.diskResource.client.views.dialogs.DuplicateDiskResourceCallback;
+import org.iplantc.de.diskResource.client.presenters.callbacks.DuplicateDiskResourceCallback;
 import org.iplantc.de.intercom.client.IntercomFacade;
 import org.iplantc.de.intercom.client.TrackingEventType;
 

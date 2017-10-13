@@ -8,6 +8,7 @@ import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.validators.ImportUrlValidator;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
+import org.iplantc.de.diskResource.client.presenters.callbacks.DuplicateDiskResourceCallback;
 import org.iplantc.de.shared.AppsCallback;
 
 import com.google.common.collect.Lists;
@@ -204,7 +205,8 @@ public class FileUploadByUrlDialog extends IPlantDialog implements HasPending<En
         return pendingList.size();
     }
 
-    private final class CheckDuplicatesCallback <D extends UIObject & IsHideable & HasPending<Entry<Field<String>, Status>>> extends DuplicateDiskResourceCallback {
+    private final class CheckDuplicatesCallback <D extends UIObject & IsHideable & HasPending<Entry<Field<String>, Status>>> extends
+                                                                                                                             DuplicateDiskResourceCallback {
         private final Map<String, Field<String>> destResourceMap;
         private final Folder uploadDest;
         private final DiskResourceServiceFacade drService;

@@ -1,4 +1,4 @@
-package org.iplantc.de.diskResource.client.views.dialogs;
+package org.iplantc.de.diskResource.client.presenters.callbacks;
 
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.diskResources.DiskResourceExistMap;
@@ -6,7 +6,6 @@ import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBe
 import org.iplantc.de.client.models.errors.diskResources.ErrorDuplicateDiskResource;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.diskResource.client.DiskResourceView;
-import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceServiceCallback;
 
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
