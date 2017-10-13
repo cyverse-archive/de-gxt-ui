@@ -686,8 +686,7 @@ public class DiskResourcePresenterImpl implements
         view.unmask();
     }
 
-            boolean
-            canDragDataToTargetFolder(final Folder targetFolder, final Collection<DiskResource> dropData) {
+        boolean canDragDataToTargetFolder(final Folder targetFolder, final Collection<DiskResource> dropData) {
         if (targetFolder instanceof DiskResourceQueryTemplate) {
             return false;
         }

@@ -141,6 +141,8 @@ public class DiskResourcePresenterImplTest {
         verify(toolbarMock).addSendToTreeViewerSelectedHandler(eq(uut));
         verify(toolbarMock).addSimpleUploadSelectedHandler(eq(navigationPresenterMock));
         verify(toolbarMock).addImportFromUrlSelectedHandler(eq(navigationPresenterMock));
+        verify(toolbarPresenterMock).addCreateNcbiSraFolderStructureSelectedHandler(eq(uut));
+        verify(toolbarPresenterMock).addCreateNewFolderSelectedHandler(eq(uut));
 
         // Grid
         verify(gridViewMock).addBeforeLoadHandler(eq(navigationPresenterMock));
@@ -171,7 +173,7 @@ public class DiskResourcePresenterImplTest {
         verify(detailsPresenterMock, times(12)).getView();
         verify(gridViewPresenterMock, times(9)).getView();
         verify(navigationPresenterMock, times(5)).getView();
-        verify(toolbarPresenterMock, times(21)).getView();
+        verify(toolbarPresenterMock, times(23)).getView();
 
         verifyNoMoreInteractions(navigationPresenterMock,
                                  detailsPresenterMock,
