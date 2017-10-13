@@ -9,7 +9,6 @@ import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelecte
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.ValueUpdater;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -29,10 +28,6 @@ public final class DataLinkPanelCell extends AbstractCell<DiskResource> implemen
 
     private final Appearance appearance;
     private HandlerManager handlerManager;
-
-    public DataLinkPanelCell() {
-        this(GWT.<Appearance> create(Appearance.class));
-    }
 
     @Inject
     public DataLinkPanelCell(final Appearance appearance) {

@@ -53,7 +53,8 @@ public class DataLinkViewImpl extends Composite implements DataLinkView,
         private final HasEnabled createBtn;
         private final Tree<DiskResource, DiskResource> tree;
 
-        public TreeSelectionHandler(HasEnabled createBtn, HasEnabled copyDataLinkButton,
+        public TreeSelectionHandler(HasEnabled createBtn,
+                                    HasEnabled copyDataLinkButton,
                                     HasEnabled advancedDataLinkButton,
                                     Tree<DiskResource, DiskResource> tree) {
             this.createBtn = createBtn;
