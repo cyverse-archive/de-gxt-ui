@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -18,7 +19,6 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import com.sencha.gxt.core.client.GXT;
 import com.sencha.gxt.widget.core.client.Status;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.button.TextButton;
@@ -67,6 +67,8 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
         String invalidFileName();
 
         String fileNameValidationMsg();
+
+        String getFileName(String filename);
     }
 
     public static final String HDN_PARENT_ID_KEY = "dest";
@@ -202,14 +204,7 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
     }
 
 
-    public String getRealFileName(String filename) {
-        if ( Strings.isNullOrEmpty(filename) || !GXT.isChrome()) {
-            return filename;
-        }
-        return filename.substring(12); //chrome always returns C:\fakepath\filename
-    }
-
-    public static native int getSize(com.google.gwt.user.client.Element element) /*-{
+    public static native int getSize(Element element) /*-{
         input = element;
         if (!input) {
             return 0;

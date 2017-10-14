@@ -114,7 +114,7 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
 
         FileUpload field = fufList.get(formList.indexOf(event.getSource()));
         String results2 = event.getResults();
-        String fieldValue = getRealFileName(field.getFilename());
+        String fieldValue = appearance.getFileName(field.getFilename());
 
         Splittable bodySp = StringQuoter.createSplittable();
         StringQuoter.create(fieldValue).assign(bodySp, "name");
@@ -137,7 +137,7 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
                 if (split.isUndefined("file") || (split.get("file") == null)) {
                     IplantAnnouncer.getInstance()
                                    .schedule(new ErrorAnnouncementConfig(appearance.fileUploadsFailed(
-                                           Lists.newArrayList(getRealFileName(field.getFilename())))));
+                                           Lists.newArrayList(appearance.getFileName(field.getFilename())))));
                 } else {
                     eventBus.fireEvent(new FileUploadedEvent(uploadDest, field.getFilename(), results));
                 }
@@ -159,7 +159,7 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
 
         if (checkFileSize(fufList) && checkFileNameForSplChars(fufList)) {
             for (FileUpload field : fufList) {
-                String fileName = getRealFileName(field.getFilename()).replaceAll(".*[\\\\/]", "");
+                String fileName = appearance.getFileName(field.getFilename()).replaceAll(".*[\\\\/]", "");
                 field.setEnabled(!Strings.isNullOrEmpty(fileName) && !fileName.equalsIgnoreCase("null"));
                 if (field.isEnabled()) {
                     destResourceMap.put(uploadDest.getPath() + "/" + fileName, field);
@@ -184,7 +184,7 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
                                       .filter(f -> getSize(f.getElement())
                                                    > constants.maxFileSizeForSimpleUpload())
                                       .map(FileUpload::getFilename)
-                                      .map(name -> getRealFileName(name))
+                                      .map(name -> appearance.getFileName(name))
                                       .collect(Collectors.toList());
 
         if (filenames == null || filenames.size() == 0) {
@@ -202,7 +202,7 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
         List<String> filenames = new ArrayList<>();
         for (FileUpload file : files) {
             if (!Strings.isNullOrEmpty(validator.validateAndReturnError(file.getFilename()))) {
-                filenames.add(getRealFileName(file.getFilename()));
+                filenames.add(appearance.getFileName(file.getFilename()));
             }
         }
 

@@ -8,11 +8,13 @@ import org.iplantc.de.resources.client.messages.IplantErrorStrings;
 import org.iplantc.de.resources.client.messages.IplantValidationMessages;
 import org.iplantc.de.theme.base.client.diskResource.DiskResourceMessages;
 
+import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 
+import com.sencha.gxt.core.client.GXT;
 import com.sencha.gxt.core.client.util.Format;
 
 import java.util.List;
@@ -81,6 +83,14 @@ public class AbstractFileUploadDialogDefaultAppearance implements AbstractFileUp
         return validationMessages.drNameValidationMsg(
                 validationConstants.newlineToPrint() + validationConstants.tabToPrint()
                 + validationConstants.restrictedDiskResourceNameChars()) + " Offending file(s): ";
+    }
+
+    @Override
+    public String getFileName(String filename) {
+        if (Strings.isNullOrEmpty(filename) || !GXT.isChrome()) {
+            return filename;
+        }
+        return filename.substring(12); //chrome always returns C:\fakepath\filename
     }
 
     @Override

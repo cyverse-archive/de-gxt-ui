@@ -1,5 +1,6 @@
 package org.iplantc.de.tools.client.views.requests;
 
+import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
 
@@ -18,8 +19,8 @@ import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import com.sencha.gxt.core.client.GXT;
 import com.sencha.gxt.widget.core.client.Composite;
+import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 
 /**
  * This class manages a single upload for the DE backend services. On submission, it posts a
@@ -55,6 +56,10 @@ public final class UploadForm extends Composite {
     VerticalPanel con;
 
     private final DiskResourceNameValidator diskResourceNameValidator = new DiskResourceNameValidator();
+    private final NewToolRequestFormView.NewToolRequestFormViewAppearance appearance =
+            GWT.create(NewToolRequestFormView.NewToolRequestFormViewAppearance.class);
+
+    DEClientConstants constants = GWT.create(DEClientConstants.class);
 
     /**
      * the constructor
@@ -94,14 +99,7 @@ public final class UploadForm extends Composite {
     }
 
     public String getValue() {
-        return getRealFileName(fileField.getFilename());
-    }
-
-    private String getRealFileName(String filename) {
-        if (Strings.isNullOrEmpty(filename) || !GXT.isChrome()) {
-            return filename;
-        }
-        return filename.substring(12); //chrome always returns C:\fakepath\filename
+        return appearance.getFileName(fileField.getFilename());
     }
 
     public void submit() {
@@ -121,10 +119,26 @@ public final class UploadForm extends Composite {
      * Forces validation of the file name and returns whether or not it passed validation.
      */
     public boolean isValid() {
-        return Strings.isNullOrEmpty(diskResourceNameValidator.validateAndReturnError(fileField.getFilename()));
+        String err = diskResourceNameValidator.validateAndReturnError(fileField.getFilename());
+        if (!Strings.isNullOrEmpty(err)) {
+            AlertMessageBox amb = new AlertMessageBox(appearance.invalidFileName(),
+                                                      appearance.fileNameValidationMsg());
+            amb.show();
+            return false;
+        }
+
+        if (getSize(fileField.getElement()) > constants.maxFileSizeForSimpleUpload()) {
+            AlertMessageBox amb = new AlertMessageBox(appearance.maxFileSizeExceed(),
+                                                      appearance.fileSizeViolation(appearance.getFileName(
+                                                              fileField.getFilename())));
+            return false;
+        }
+
+        return true;
+
     }
 
-    public static native int getSize(com.google.gwt.user.client.Element element) /*-{
+    public static native int getSize(com.google.gwt.dom.client.Element element) /*-{
         input = element;
         if (!input) {
             return 0;

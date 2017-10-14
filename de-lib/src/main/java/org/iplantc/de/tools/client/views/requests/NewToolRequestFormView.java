@@ -30,6 +30,22 @@ public interface NewToolRequestFormView extends IsWidget {
         SafeHtml buildRequiredFieldLabel(String label);
 
         SafeHtml sameFileError(String filename);
+
+        SafeHtml alert();
+
+        SafeHtml fileSizeViolation(String filename);
+
+        SafeHtml maxFileSizeExceed();
+
+        SafeHtml fileExistTitle();
+
+        SafeHtml fileExists(String dupeFiles);
+
+        String invalidFileName();
+
+        String fileNameValidationMsg();
+
+        String getFileName(String filename);
     }
 
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {

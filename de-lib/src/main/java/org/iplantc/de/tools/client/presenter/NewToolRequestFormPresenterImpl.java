@@ -252,14 +252,12 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
         if (toolSelectionMode.equals(NewToolRequestFormView.SELECTION_MODE.UPLOAD)) {
             valid = valid && view.getToolBinaryUploader().isValid();
             if (!valid) {
-                view.indicateSubmissionFailure(I18N.ERROR.invalidToolRequest());
                 return valid;
             }
         }
         if (testDataSelectionMode.equals(NewToolRequestFormView.SELECTION_MODE.UPLOAD)) {
             valid = valid && view.getTestDataUploader().isValid();
             if (!valid) {
-                view.indicateSubmissionFailure(I18N.ERROR.invalidToolRequest());
                 return valid;
             }
 
@@ -267,7 +265,6 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
         if (otherDataSelectionMode.equals(NewToolRequestFormView.SELECTION_MODE.UPLOAD)) {
             valid = valid && view.getOtherDataUploader().isValid();
             if (!valid) {
-                view.indicateSubmissionFailure(I18N.ERROR.invalidToolRequest());
                 return valid;
             }
         }
@@ -346,7 +343,6 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
         final Set<UploadForm> succUploadForms = Sets.newHashSet(allUploadForms);
         final List<String> failedFiles = Lists.newArrayList();
         for (UploadForm failure : failedUploadForms) {
-            //  failure.markInvalid(I18N.ERROR.fileUploadFailedAnon());
             succUploadForms.remove(failure);
             failedFiles.add(failure.getValue());
         }

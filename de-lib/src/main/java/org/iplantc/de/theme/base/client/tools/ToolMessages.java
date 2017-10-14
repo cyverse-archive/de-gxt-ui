@@ -96,6 +96,19 @@ public interface ToolMessages extends Messages {
     String entryPoint();
 
     SafeHtml sameFileError(String filename);
+
+    SafeHtml alert();
+
+    SafeHtml fileSizeViolation(String filename);
+
+    SafeHtml maxFileSizeExceed();
+
+    SafeHtml fileExistTitle();
+
+    SafeHtml fileExisits(String dupeFiles);
+
+    String invalidFileName();
+
 }
         
     
