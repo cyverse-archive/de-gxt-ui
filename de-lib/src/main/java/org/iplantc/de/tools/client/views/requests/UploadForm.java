@@ -131,6 +131,7 @@ public final class UploadForm extends Composite {
             AlertMessageBox amb = new AlertMessageBox(appearance.maxFileSizeExceed(),
                                                       appearance.fileSizeViolation(appearance.getFileName(
                                                               fileField.getFilename())));
+            amb.show();
             return false;
         }
 

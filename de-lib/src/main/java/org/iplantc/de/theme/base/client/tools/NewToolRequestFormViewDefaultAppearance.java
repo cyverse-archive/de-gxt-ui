@@ -92,7 +92,7 @@ public class NewToolRequestFormViewDefaultAppearance implements NewToolRequestFo
 
     @Override
     public SafeHtml fileExists(String dupeFiles) {
-        return toolMessages.fileExisits(dupeFiles);
+        return toolMessages.fileExists(dupeFiles);
     }
 
     @Override

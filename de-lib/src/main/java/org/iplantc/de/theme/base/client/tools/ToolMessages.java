@@ -105,7 +105,7 @@ public interface ToolMessages extends Messages {
 
     SafeHtml fileExistTitle();
 
-    SafeHtml fileExisits(String dupeFiles);
+    SafeHtml fileExists(String dupeFiles);
 
     String invalidFileName();
 

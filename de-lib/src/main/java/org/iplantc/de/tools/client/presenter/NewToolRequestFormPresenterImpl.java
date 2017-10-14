@@ -268,7 +268,6 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
                 return valid;
             }
         }
-
         if (toolSelectionMode.equals(NewToolRequestFormView.SELECTION_MODE.UPLOAD)) {
             if (testDataSelectionMode.equals(NewToolRequestFormView.SELECTION_MODE.UPLOAD)) {
                 valid = !areUploadsSame(view.getToolBinaryUploader(), view.getTestDataUploader())
@@ -322,7 +321,6 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
                 }
             }
         }
-
         return valid;
     }
 
