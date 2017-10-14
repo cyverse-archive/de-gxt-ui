@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.dom.client.Element;
 
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
@@ -139,7 +140,7 @@ public final class UploadForm extends Composite {
 
     }
 
-    public static native int getSize(com.google.gwt.dom.client.Element element) /*-{
+    public static native int getSize(Element element) /*-{
         input = element;
         if (!input) {
             return 0;
@@ -154,7 +155,6 @@ public final class UploadForm extends Composite {
             file = input.files[0];
             return file.size;
         }
-
     }-*/;
-
 }
+
