@@ -166,4 +166,10 @@ public interface DesktopMessages extends Messages {
     String toolRequest();
 
     String validUrl();
+
+    String emailSettings();
+
+    String general();
+
+    String notification();
 }

@@ -23,10 +23,10 @@
     </ui:with>
     
     <ui:with type="com.sencha.gxt.widget.core.client.TabItemConfig" field="general">
-            <ui:attributes text="General" />
+            <ui:attributes text="{appearance.general}" />
     </ui:with>
     <ui:with type="com.sencha.gxt.widget.core.client.TabItemConfig" field="notification">
-        <ui:attributes text="Notification" />
+        <ui:attributes text="{appearance.notification}" />
     </ui:with>
 
     <ui:with field="preferenceLayoutData"
@@ -163,7 +163,7 @@
         <tabs:child config="{notification}">
             <container:VerticalLayoutContainer adjustForScroll="true"
                                                styleName="{style.user_pref}">
-                <form:FieldSet heading="Email Settings">
+                <form:FieldSet heading="{appearance.emailSettings}">
                     <container:VerticalLayoutContainer height="80">
                         <container:child layoutData="{preferenceLayoutData}">
                             <form:CheckBox ui:field="enableAnalysisEmailNotification"

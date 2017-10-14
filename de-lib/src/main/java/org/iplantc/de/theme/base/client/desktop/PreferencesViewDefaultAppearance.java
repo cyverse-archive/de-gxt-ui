@@ -309,4 +309,29 @@ public class PreferencesViewDefaultAppearance implements PreferencesView.Prefere
     public String validUrl() {
         return desktopMessages.validUrl();
     }
+
+    @Override
+    public String width() {
+        return "500";
+    }
+
+    @Override
+    public String height() {
+        return "500";
+    }
+
+    @Override
+    public String emailSettings() {
+        return desktopMessages.emailSettings();
+    }
+
+    @Override
+    public String general() {
+        return desktopMessages.general();
+    }
+
+    @Override
+    public String notification() {
+        return desktopMessages.notification();
+    }
 }

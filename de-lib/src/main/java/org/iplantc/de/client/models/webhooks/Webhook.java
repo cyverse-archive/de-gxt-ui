@@ -10,7 +10,7 @@ import java.util.List;
  * A model that describes a webhook
  */
 public interface Webhook extends HasId {
-    //In future webhook types will come out of a service connected to a database
+    //TODO In future webhook types will come out of a service connected to a database
     String SLACK = "Slack";
 
     void setId(String id);

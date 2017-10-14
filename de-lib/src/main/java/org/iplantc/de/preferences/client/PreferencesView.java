@@ -125,6 +125,16 @@ public interface PreferencesView extends IsWidget,
         ImageResource deleteIcon();
 
         String validUrl();
+
+        String width();
+
+        String height();
+
+        String emailSettings();
+
+        String general();
+
+        String notification();
     }
 
     void userSessionSuccess();
