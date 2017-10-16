@@ -68,6 +68,7 @@ project(':de-webapp') {
 
         superDev { noPrecompile = true }
         maxHeapSize = '2g'
+        generateJsInteropExports = true
         compiler {
 //            enableClosureCompiler = true;
             disableClassMetadata = true;
