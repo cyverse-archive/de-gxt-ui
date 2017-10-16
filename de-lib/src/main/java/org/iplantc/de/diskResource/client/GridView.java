@@ -102,6 +102,13 @@ public interface GridView extends IsWidget,
 
         String gridViewEmptyText();
 
+        String infoTypeDialogWidth();
+
+        String infoTypeDialogHeight();
+
+        String infoTypeDialogHeader();
+
+        String infoTypeEmptyText();
     }
 
     interface FolderContentsRpcProxy extends DataProxy<FolderContentsLoadConfig, PagingLoadResult<DiskResource>> {

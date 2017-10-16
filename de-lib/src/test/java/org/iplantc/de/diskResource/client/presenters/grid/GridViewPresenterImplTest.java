@@ -2,7 +2,6 @@ package org.iplantc.de.diskResource.client.presenters.grid;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -11,8 +10,8 @@ import static org.mockito.Mockito.when;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
-import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.diskResources.TYPE;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
@@ -177,7 +176,7 @@ public class GridViewPresenterImplTest {
 
         infoTypeEditorDialogCaptor.getValue().onSuccess(infoTypeEditorDialogMock);
         verify(infoTypeEditorDialogMock).addOkButtonSelectHandler(Matchers.<SelectEvent.SelectHandler>any());
-        infoTypeEditorDialogMock.show(isA(InfoType.class));
+        infoTypeEditorDialogMock.show();
     }
 
     @Test

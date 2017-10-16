@@ -94,6 +94,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * @author jstroot
@@ -193,6 +194,7 @@ public class GridViewPresenterImpl implements Presenter,
     @Inject MetadataView.Presenter.Appearance metadataAppearance;
 
     @Inject DataLinkFactory dlFactory;
+    final Logger LOG = Logger.getLogger(GridViewPresenterImpl.class.getName());
 
     EventBus eventBus;
     private final Appearance appearance;
@@ -287,7 +289,7 @@ public class GridViewPresenterImpl implements Presenter,
                                  "Only one Disk Resource should be selected, but there are %i",
                                  getSelectedDiskResources().size());
 
-        final String infoType = event.getSelectedDiskResources().iterator().next().getInfoType();
+        final String currentType = event.getSelectedDiskResources().iterator().next().getInfoType();
         infoTypeDialogProvider.get(new AsyncCallback<InfoTypeEditorDialog>() {
             @Override
             public void onFailure(Throwable caught) {}
@@ -298,7 +300,28 @@ public class GridViewPresenterImpl implements Presenter,
                     String newType = result.getSelectedValue().toString();
                     setInfoType(event.getSelectedDiskResources().iterator().next(), newType);
                 });
-                result.show(InfoType.fromTypeString(infoType));
+                result.show();
+                result.mask();
+                fetchInfoTypes(result, InfoType.fromTypeString(currentType));
+            }
+        });
+    }
+
+    void fetchInfoTypes(InfoTypeEditorDialog result, InfoType currentType) {
+        diskResourceService.getInfoTypes(new DataCallback<List<InfoType>>() {
+
+            @Override
+            public void onFailure(Integer statusCode, Throwable arg0) {
+                ErrorHandler.post(arg0);
+                result.hide();
+            }
+
+            @Override
+            public void onSuccess(List<InfoType> infoTypes) {
+                result.addInfoTypes(infoTypes);
+                result.setCurrentInfoType(currentType);
+                result.unmask();
+                LOG.fine("InfoTypes retrieved: " + infoTypes);
             }
         });
     }
