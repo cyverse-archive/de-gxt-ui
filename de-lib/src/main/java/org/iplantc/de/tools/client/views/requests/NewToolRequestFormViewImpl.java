@@ -184,15 +184,9 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
         toolName.addValidator(new DiskResourceNameValidator());
         toolLink.addValidator(new UrlValidator());
         toolDoc.addValidator(new UrlValidator());
-        binUpld.addValidator(new DiskResourceNameValidator());
-        testDataUpld.addValidator(new DiskResourceNameValidator());
-        otherDataUpld.addValidator(new DiskResourceNameValidator());
-        otherDataUpld.setAllowBlank(true);
         otherDataSelect.setRequired(false);
         binSelect.setRequired(false);
         toolLink.setAllowBlank(true);
-        binUpld.setAllowBlank(false);
-        testDataUpld.setAllowBlank(false);
         testDataSelect.setRequired(false);
     }
 
@@ -251,17 +245,17 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
 
 
     @Override
-    public Uploader getOtherDataUploader() {
+    public UploadForm getOtherDataUploader() {
         return otherDataUpld;
     }
 
     @Override
-    public Uploader getTestDataUploader() {
+    public UploadForm getTestDataUploader() {
         return testDataUpld;
     }
 
     @Override
-    public Uploader getToolBinaryUploader() {
+    public UploadForm getToolBinaryUploader() {
         return binUpld;
     }
 
@@ -273,7 +267,7 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
     }
 
     @Override
-    public final void indicateSubmissionFailure(final String reason) {
+    public final void indicateSubmissionFailure(final SafeHtml reason) {
         submissionProgressBox.hide();
         final AlertMessageBox amb = new AlertMessageBox(I18N.DISPLAY.alert(), reason);
         amb.show();
@@ -289,7 +283,7 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
 
     @Override
     public boolean isValid() {
-        return FormPanelHelper.isValid(container, false);
+       return FormPanelHelper.isValid(container, false);
     }
 
     @Override
@@ -315,19 +309,16 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
         if (toolLinkRdo.getValue()) {
             binOptions.setActiveWidget(binOptions.getWidget(1));
             presenter.setToolMode(SELECTION_MODE.LINK);
-            binUpld.setAllowBlank(true);
             binSelect.setRequired(false);
             toolLink.setAllowBlank(false);
         } else if (toolUpldRdo.getValue()) {
             binOptions.setActiveWidget(binOptions.getWidget(0));
             presenter.setToolMode(SELECTION_MODE.UPLOAD);
-            binUpld.setAllowBlank(false);
             binSelect.setRequired(false);
             toolLink.setAllowBlank(true);
         } else if (toolSltRdo.getValue()) {
             binOptions.setActiveWidget(binOptions.getWidget(2));
             presenter.setToolMode(SELECTION_MODE.SELECT);
-            binUpld.setAllowBlank(true);
             binSelect.setRequired(true);
             toolLink.setAllowBlank(true);
         }
@@ -394,12 +385,10 @@ public final class NewToolRequestFormViewImpl extends Composite implements NewTo
         if (testUpldRdo.getValue()) {
             testDataOptions.setActiveWidget(testDataOptions.getWidget(0));
             presenter.setTestDataMode(SELECTION_MODE.UPLOAD);
-            testDataUpld.setAllowBlank(false);
             testDataSelect.setRequired(false);
         } else if (testSltRdo.getValue()) {
             testDataOptions.setActiveWidget(testDataOptions.getWidget(1));
             presenter.setTestDataMode(SELECTION_MODE.SELECT);
-            testDataUpld.setAllowBlank(true);
             testDataSelect.setRequired(true);
         }
 

@@ -86,4 +86,6 @@ public interface DEClientConstants extends Constants {
     String hpcSystemId();
 
     String errorUrl();
+
+    int maxFileSizeForSimpleUpload();
 }

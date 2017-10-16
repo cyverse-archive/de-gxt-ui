@@ -28,6 +28,24 @@ public interface NewToolRequestFormView extends IsWidget {
         String makePublicInstruction();
 
         SafeHtml buildRequiredFieldLabel(String label);
+
+        SafeHtml sameFileError(String filename);
+
+        SafeHtml alert();
+
+        SafeHtml fileSizeViolation(String filename);
+
+        SafeHtml maxFileSizeExceed();
+
+        SafeHtml fileExistTitle();
+
+        SafeHtml fileExists(String dupeFiles);
+
+        String invalidFileName();
+
+        String fileNameValidationMsg();
+
+        String getFileName(String filename);
     }
 
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
@@ -89,22 +107,22 @@ public interface NewToolRequestFormView extends IsWidget {
     /**
      * @return the uploader for the other data file
      */
-    Uploader getOtherDataUploader();
+    UploadForm getOtherDataUploader();
 
     /**
      * @return the uploader for the test data file
      */
-    Uploader getTestDataUploader();
+    UploadForm getTestDataUploader();
 
     /**
      * @return the uploader for the tool's binary file
      */
-    Uploader getToolBinaryUploader();
+    UploadForm getToolBinaryUploader();
 
     /**
      * Show the user a failed submission message
      */
-    void indicateSubmissionFailure(String reason);
+    void indicateSubmissionFailure(SafeHtml reason);
 
     /**
      * Indicate to the user that the submission has started

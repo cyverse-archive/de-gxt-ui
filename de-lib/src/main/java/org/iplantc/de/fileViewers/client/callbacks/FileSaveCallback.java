@@ -17,6 +17,8 @@ import com.google.gwt.event.shared.HasHandlers;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
+import java.util.Arrays;
+
 /**
  * @author jstroot
  */
@@ -60,6 +62,6 @@ public class FileSaveCallback extends DataCallback<File> {
     public void onFailure(Integer statusCode, Throwable caught) {
         maskingContainer.unmask();
         ErrorHandler.post(errorStrings.fileUploadsFailed(Lists.newArrayList(fileName)),
-                          caught);
+                          Arrays.asList(caught));
     }
 }

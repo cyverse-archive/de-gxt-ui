@@ -216,12 +216,14 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
     public void onRequestSimpleUpload(RequestSimpleUploadEvent event) {
         Folder uploadDest = event.getDestinationFolder();
         if (canUpload(uploadDest)) {
-            new SimpleFileUploadDialog(uploadDest,
-                                       diskResourceServiceProvider.get(),
-                                       eventBus,
-                                       diskResourceUtil,
-                                       UriUtils.fromTrustedString(clientConstants.fileUploadServlet()),
-                                       userInfo.getUsername()).show();
+            SimpleFileUploadDialog dialog = new SimpleFileUploadDialog(uploadDest,
+                                                                        diskResourceServiceProvider.get(),
+                                                                        eventBus,
+                                                                        diskResourceUtil,
+                                                                        UriUtils.fromTrustedString(
+                                                                                clientConstants.fileUploadServlet()),
+                                                                        userInfo.getUsername());
+            dialog.show();
         }
     }
 

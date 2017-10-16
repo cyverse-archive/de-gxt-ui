@@ -1,6 +1,7 @@
 package org.iplantc.de.theme.base.client.tools;
 
 import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.safehtml.shared.SafeHtml;
 
 /**
  * Created by sriram on 4/24/17.
@@ -93,7 +94,12 @@ public interface ToolMessages extends Messages {
      * @return  label for entrypoint field
      */
     String entryPoint();
+
+    SafeHtml sameFileError(String filename);
+
+    SafeHtml alert();
+
+    SafeHtml fileExists(String dupeFiles);
 }
-        
-    
+
 

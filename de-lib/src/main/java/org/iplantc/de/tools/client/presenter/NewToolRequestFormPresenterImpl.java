@@ -18,7 +18,7 @@ import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.resources.client.messages.I18N;
 import org.iplantc.de.shared.DataCallback;
 import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
-import org.iplantc.de.tools.client.views.requests.Uploader;
+import org.iplantc.de.tools.client.views.requests.UploadForm;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -60,6 +60,9 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
     private Tool tool;
 
     @Inject
+    NewToolRequestFormView.NewToolRequestFormViewAppearance appearance;
+
+    @Inject
     NewToolRequestFormPresenterImpl(final NewToolRequestFormView view,
                                     @Assisted final Command callbackCmd) {
         this.view = view;
@@ -94,9 +97,7 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
     public void onSubmitBtnClick() {
         if (isFormValid()) {
             view.indicateSubmissionStart();
-            validateUploadsNew(getUploadersToSubmit(), submitCmd(indicateSuccessCmd));
-        } else {
-            view.indicateSubmissionFailure(I18N.ERROR.invalidToolRequest());
+            validateUploadsNew(getUploadFormsToSubmit(), submitCmd(indicateSuccessCmd));
         }
     }
 
@@ -155,65 +156,56 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
     };
 
     private Command submitCmd(final Command onSuccess) {
-        return new Command() {
-            @Override
-            public void execute() {
-                final List<Uploader> uploaders = getUploadersToSubmit();
-                if (uploaders.size() > 0) {
-                    UploadMux.startUploads(uploaders, new Callback<Void, Iterable<Uploader>>() {
-                        @Override
-                        public void onFailure(final Iterable<Uploader> failedUploaders) {
-                            onUploadFailure(uploaders, failedUploaders);
-                        }
+        return () -> {
+            final List<UploadForm> UploadForms = getUploadFormsToSubmit();
+            if (UploadForms.size() > 0) {
+                UploadMux.startUploads(UploadForms, new Callback<Void, Iterable<UploadForm>>() {
+                    @Override
+                    public void onFailure(final Iterable<UploadForm> failedUploadForms) {
+                        onUploadFailure(UploadForms, failedUploadForms);
+                    }
 
-                        @Override
-                        public void onSuccess(Void unused) {
-                            submitRequest(uploaders, onSuccess);
-                        }
-                    });
-                } else {
-                    submitRequest(uploaders, onSuccess);
-                }
+                    @Override
+                    public void onSuccess(Void unused) {
+                        submitRequest(UploadForms, onSuccess);
+                    }
+                });
+            } else {
+                submitRequest(UploadForms, onSuccess);
             }
         };
     }
 
-    private void validateUploadsNew(final Iterable<Uploader> uploaders, final Command onValid) {
+    private void validateUploadsNew(final Iterable<UploadForm> UploadForms, final Command onValid) {
         final List<String> destFiles = Lists.newArrayList();
-        for (Uploader uploader : uploaders) {
-            String value = uploader.getValue();
+        for (UploadForm UploadForm : UploadForms) {
+            String value = UploadForm.getValue();
             if (!Strings.isNullOrEmpty(value)) {
                 destFiles.add(makeDestinationPath(value));
             }
         }
         if (destFiles.size() > 0) {
-            getDiskResourceExistMap(destFiles, checkExistenceCmd(uploaders, onValid));
+            getDiskResourceExistMap(destFiles, checkExistenceCmd(UploadForms, onValid));
         } else {
             onValid.execute();
         }
     }
 
-    private Continuation<DiskResourceExistMap> checkExistenceCmd(final Iterable<Uploader> uploaders,
+    private Continuation<DiskResourceExistMap> checkExistenceCmd(final Iterable<UploadForm> UploadForms,
                                                                  final Command onNoneExist) {
-        return new Continuation<DiskResourceExistMap>() {
-            @Override
-            public void execute(final DiskResourceExistMap fsExistMap) {
-                boolean allNew = true;
-                for (Uploader uploader : uploaders) {
-                    if (fsExistMap.get(makeDestinationPath(uploader.getValue()))) {
-                        uploader.markInvalid(I18N.ERROR.fileExist());
-                        allNew = false;
-                    }
+        return fsExistMap -> {
+            boolean allNew = true;
+            String dups = "";
+            for (UploadForm UploadForm : UploadForms) {
+                if (fsExistMap.get(makeDestinationPath(UploadForm.getValue()))) {
+                    allNew = false;
+                    dups += " " + UploadForm.getValue();
                 }
-                if (allNew) {
-                    onNoneExist.execute();
-                } else {
-                    String dups = "";
-                    for (Uploader uploader : uploaders) {
-                        dups += " " + uploader.getValue();
-                    }
-                    view.indicateSubmissionFailure(I18N.ERROR.fileExists(dups));
-                }
+            }
+            if (allNew) {
+                onNoneExist.execute();
+            } else {
+                view.indicateSubmissionFailure(I18N.ERROR.fileExists(dups));
             }
         };
     }
@@ -235,13 +227,13 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
         });
     }
 
-    private void submitRequest(final Iterable<Uploader> uploaders, final Command onSuccess) {
+    private void submitRequest(final Iterable<UploadForm> UploadForms, final Command onSuccess) {
         final NewToolRequest req = getToolRequest();
         reqServices.requestInstallation(req, new AsyncCallback<ToolRequestDetails>() {
             @Override
             public void onFailure(final Throwable caught) {
                 view.indicateSubmissionFailure(I18N.ERROR.newToolRequestError());
-                removeUploads(uploaders);
+                removeUploads(UploadForms);
             }
 
             @Override
@@ -254,18 +246,43 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
     private boolean isFormValid() {
         boolean valid = view.isValid();
         if (!valid) {
+            view.indicateSubmissionFailure(I18N.ERROR.invalidToolRequest());
             return false;
         }
+        if (toolSelectionMode.equals(NewToolRequestFormView.SELECTION_MODE.UPLOAD)) {
+            valid = valid && view.getToolBinaryUploader().isValid();
+            if (!valid) {
+                return valid;
+            }
+        }
+        if (testDataSelectionMode.equals(NewToolRequestFormView.SELECTION_MODE.UPLOAD)) {
+            valid = valid && view.getTestDataUploader().isValid();
+            if (!valid) {
+                return valid;
+            }
 
+        }
+        if (otherDataSelectionMode.equals(NewToolRequestFormView.SELECTION_MODE.UPLOAD)) {
+            valid = valid && view.getOtherDataUploader().isValid();
+            if (!valid) {
+                return valid;
+            }
+        }
         if (toolSelectionMode.equals(NewToolRequestFormView.SELECTION_MODE.UPLOAD)) {
             if (testDataSelectionMode.equals(NewToolRequestFormView.SELECTION_MODE.UPLOAD)) {
                 valid = !areUploadsSame(view.getToolBinaryUploader(), view.getTestDataUploader())
                         && valid;
+                if (!valid) {
+                    return valid;
+                }
             }
 
             if (otherDataSelectionMode.equals(NewToolRequestFormView.SELECTION_MODE.UPLOAD)) {
                 valid = !areUploadsSame(view.getToolBinaryUploader(), view.getOtherDataUploader())
                         && valid;
+                if (!valid) {
+                    return valid;
+                }
             }
         }
 
@@ -273,11 +290,17 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
             if (toolSelectionMode.equals(NewToolRequestFormView.SELECTION_MODE.UPLOAD)) {
                 valid = !areUploadsSame(view.getToolBinaryUploader(), view.getTestDataUploader())
                         && valid;
+                if (!valid) {
+                    return valid;
+                }
             }
 
             if (otherDataSelectionMode.equals(NewToolRequestFormView.SELECTION_MODE.UPLOAD)) {
                 valid = !areUploadsSame(view.getTestDataUploader(), view.getOtherDataUploader())
                         && valid;
+                if (!valid) {
+                    return valid;
+                }
             }
         }
 
@@ -285,41 +308,44 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
             if (toolSelectionMode.equals(NewToolRequestFormView.SELECTION_MODE.UPLOAD)) {
                 valid = !areUploadsSame(view.getToolBinaryUploader(), view.getOtherDataUploader())
                         && valid;
+                if (!valid) {
+                    return valid;
+                }
             }
 
             if (testDataSelectionMode.equals(NewToolRequestFormView.SELECTION_MODE.UPLOAD)) {
                 valid = !areUploadsSame(view.getTestDataUploader(), view.getOtherDataUploader())
                         && valid;
+                if (!valid) {
+                    return valid;
+                }
             }
         }
-
         return valid;
     }
 
-    private boolean areUploadsSame(final Uploader lhs, final Uploader rhs) {
+    private boolean areUploadsSame(final UploadForm lhs, final UploadForm rhs) {
         if (Strings.isNullOrEmpty(lhs.getValue()) || Strings.isNullOrEmpty(rhs.getValue())) {
             return false;
         }
 
         if (lhs.getValue().equals(rhs.getValue())) {
-            lhs.markInvalid(I18N.ERROR.duplicateUpload());
-            rhs.markInvalid(I18N.ERROR.duplicateUpload());
+            view.indicateSubmissionFailure(appearance.sameFileError(lhs.getValue()));
             return true;
         }
         return false;
     }
 
-    private void onUploadFailure(final Iterable<Uploader> allUploaders,
-                                 final Iterable<Uploader> failedUploaders) {
-        final Set<Uploader> succUploaders = Sets.newHashSet(allUploaders);
+    private void onUploadFailure(final Iterable<UploadForm> allUploadForms,
+                                 final Iterable<UploadForm> failedUploadForms) {
+        final Set<UploadForm> succUploadForms = Sets.newHashSet(allUploadForms);
         final List<String> failedFiles = Lists.newArrayList();
-        for (Uploader failure : failedUploaders) {
-            failure.markInvalid(I18N.ERROR.fileUploadFailedAnon());
-            succUploaders.remove(failure);
+        for (UploadForm failure : failedUploadForms) {
+            succUploadForms.remove(failure);
             failedFiles.add(failure.getValue());
         }
         view.indicateSubmissionFailure(I18N.ERROR.fileUploadsFailed(failedFiles));
-        removeUploads(succUploaders);
+        removeUploads(succUploadForms);
     }
 
     private NewToolRequest getToolRequest() {
@@ -379,25 +405,25 @@ public class NewToolRequestFormPresenterImpl implements NewToolRequestFormView.P
         return diskResourceUtil.appendNameToPath(UserInfo.getInstance().getHomePath(), file);
     }
 
-    private List<Uploader> getUploadersToSubmit() {
-        final List<Uploader> uploaders = Lists.newArrayList();
+    private List<UploadForm> getUploadFormsToSubmit() {
+        final List<UploadForm> UploadForms = Lists.newArrayList();
         if (toolSelectionMode.equals(NewToolRequestFormView.SELECTION_MODE.UPLOAD)) {
-            uploaders.add(view.getToolBinaryUploader());
+            UploadForms.add(view.getToolBinaryUploader());
         }
         if (testDataSelectionMode.equals(NewToolRequestFormView.SELECTION_MODE.UPLOAD)) {
-            uploaders.add(view.getTestDataUploader());
+            UploadForms.add(view.getTestDataUploader());
         }
         if (otherDataSelectionMode.equals(NewToolRequestFormView.SELECTION_MODE.UPLOAD)
             && !view.getOtherDataUploader().getValue().isEmpty()) {
-            uploaders.add(view.getOtherDataUploader());
+            UploadForms.add(view.getOtherDataUploader());
         }
-        return uploaders;
+        return UploadForms;
     }
 
-    private void removeUploads(final Iterable<Uploader> uploaders) {
+    private void removeUploads(final Iterable<UploadForm> UploadForms) {
         final List<String> filesToDelete = Lists.newArrayList();
-        for (Uploader uploader : uploaders) {
-            filesToDelete.add(makeDestinationPath(uploader.getValue()));
+        for (UploadForm UploadForm : UploadForms) {
+            filesToDelete.add(makeDestinationPath(UploadForm.getValue()));
         }
         if (!filesToDelete.isEmpty()) {
             final HasPaths dto = FS_FACTORY.pathsList().as();

@@ -29,6 +29,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.client.HasSafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import com.sencha.gxt.data.shared.event.StoreUpdateEvent.HasStoreUpdateHandlers;
@@ -187,7 +188,7 @@ public interface GridView extends IsWidget,
 
             String copyMetadataPrompt();
 
-            String fileExistsError(String fileName);
+            SafeHtml fileExistsError(String fileName);
 
             String fileSaveError(String fileName);
 

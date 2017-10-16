@@ -2,12 +2,12 @@ package org.iplantc.de.diskResource.client.views.dialogs;
 
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
-import org.iplantc.de.commons.client.widgets.IPCFileUploadField;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.ToolbarView.Presenter;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
 import org.iplantc.de.diskResource.client.views.widgets.FileSelectorField;
 
+import com.google.common.base.Strings;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -15,6 +15,8 @@ import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.client.ui.FileUpload;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -28,11 +30,10 @@ import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
-import com.sencha.gxt.widget.core.client.form.FormPanel;
-import com.sencha.gxt.widget.core.client.form.FormPanel.Encoding;
-import com.sencha.gxt.widget.core.client.form.FormPanel.Method;
 
 public class BulkMetadataDialog extends Dialog {
+
+    private final DiskResourceNameValidator diskResourceNameValidator;
 
     private final class CancelButtonHandler implements SelectHandler {
         @Override
@@ -95,7 +96,7 @@ public class BulkMetadataDialog extends Dialog {
     @UiField
     FormPanel form0;
     @UiField
-    IPCFileUploadField fuf0;
+    FileUpload fuf0;
     @UiField
     TextButton btn0;
     @UiField
@@ -106,6 +107,10 @@ public class BulkMetadataDialog extends Dialog {
 
     @UiField
     HTML upFileLbl, selLbl;
+
+    @UiField
+    HorizontalLayoutContainer con;
+
 
     ToolbarView.Presenter presenter;
 
@@ -127,7 +132,8 @@ public class BulkMetadataDialog extends Dialog {
         this.mode = mode;
         this.fileSelector = drSelectorFieldFactory.defaultFileSelector();
         fileSelector.setValidatePermissions(true);
-        fileSelector.addValidator(new DiskResourceNameValidator());
+        diskResourceNameValidator = new DiskResourceNameValidator();
+        fileSelector.addValidator(diskResourceNameValidator);
         this.destFolder = destPath;
         add(BINDER.createAndBindUi(this));
         selLbl.setHTML(buildRequiredFieldLabel(selLbl.getText()));
@@ -158,21 +164,21 @@ public class BulkMetadataDialog extends Dialog {
                 return true;
             }
         } else {
-            return fuf0.validate(false);
+            return Strings.isNullOrEmpty(diskResourceNameValidator.validateAndReturnError(fuf0.getFilename()));
         }
     }
 
     private void uploadFileOption() {
         fileSelector.hide();
         selLbl.setVisible(false);
-        form0.show();
+        con.show();
         upFileLbl.setVisible(true);
     }
 
     private void selectFileOption() {
         fileSelector.show();
         selLbl.setVisible(true);
-        form0.hide();
+        con.hide();
         upFileLbl.setVisible(false);
     }
 
@@ -180,8 +186,8 @@ public class BulkMetadataDialog extends Dialog {
     @UiFactory
     FormPanel createFormPanel() {
         FormPanel form = new FormPanel();
-        form.setMethod(Method.POST);
-        form.setEncoding(Encoding.MULTIPART);
+        form.setMethod(FormPanel.METHOD_POST);
+        form.setEncoding(FormPanel.ENCODING_MULTIPART);
         form.setSize(FORM_WIDTH, FORM_HEIGHT);
         return form;
     }
@@ -201,8 +207,7 @@ public class BulkMetadataDialog extends Dialog {
 
     @UiHandler("btn0")
     void onResetClicked(SelectEvent event) {
-        fuf0.reset();
-        fuf0.validate(true);
+        form0.reset();
     }
 
     @UiHandler("fuf0")

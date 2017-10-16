@@ -12,15 +12,11 @@
   <ui:attributes height="-1" width="1"/>
 </ui:with>
 
-<form:FormPanel ui:field="form" action="{constants.fileUploadServlet}" method="POST" 
-    encoding="MULTIPART">
-  <con:VerticalLayoutContainer>
-    <con:child layoutData="{layoutData}">
-      <ipc:IPCFileUploadField ui:field="fileField" name="file"/>
-    </con:child>
+<g:FormPanel ui:field="form" action="{constants.fileUploadServlet}">
+  <g:VerticalPanel ui:field="con">
+      <g:FileUpload ui:field="fileField" name="file"/>
     <g:Hidden ui:field="userField" name="user"/>
     <g:Hidden ui:field="destinationField" name="dest"/>
-  </con:VerticalLayoutContainer>
-</form:FormPanel>
-
-</ui:UiBinder> 
+  </g:VerticalPanel>
+</g:FormPanel>
+</ui:UiBinder>

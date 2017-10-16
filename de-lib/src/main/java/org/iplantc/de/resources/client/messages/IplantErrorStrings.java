@@ -2,6 +2,8 @@ package org.iplantc.de.resources.client.messages;
 
 import org.iplantc.de.resources.client.uiapps.integration.AppIntegrationErrorMessages;
 
+import com.google.gwt.safehtml.shared.SafeHtml;
+
 import java.util.List;
 
 /**
@@ -348,7 +350,7 @@ public interface IplantErrorStrings extends com.google.gwt.i18n.client.Messages,
      */
     @DefaultMessage("The following file(s) already exist:<br />{0}")
     @Key("fileExists")
-    String fileExists(String arg0);
+    SafeHtml fileExists(String arg0);
 
     /**
      * Translated "The following file(s) are not readable:<br />
@@ -411,7 +413,7 @@ public interface IplantErrorStrings extends com.google.gwt.i18n.client.Messages,
     @DefaultMessage("The files {0,list} failed to upload.")
     @AlternateMessage({"=1", "The file {0,list} failed to upload."})
     @Key("fileUploadsFailed")
-    String fileUploadsFailed(@PluralCount List<String> files);
+    SafeHtml fileUploadsFailed(@PluralCount List<String> files);
     
     /**
      * Translated "The following file(s) are writable:<br />
@@ -522,7 +524,7 @@ public interface IplantErrorStrings extends com.google.gwt.i18n.client.Messages,
      */
     @DefaultMessage("Your tool request is invalid. Please fix the issue(s).")
     @Key("invalidToolRequest")
-    String invalidToolRequest();
+    SafeHtml invalidToolRequest();
 
     /**
      * Translated "Invalid file name entered.".
@@ -611,7 +613,7 @@ public interface IplantErrorStrings extends com.google.gwt.i18n.client.Messages,
      */
     @DefaultMessage("An error occurred while processing your request. Please contact CyVerse support at support@cyverse.org.")
     @Key("newToolRequestError")
-    String newToolRequestError();
+    SafeHtml newToolRequestError();
 
     /**
      * Translated "No folder selected.".

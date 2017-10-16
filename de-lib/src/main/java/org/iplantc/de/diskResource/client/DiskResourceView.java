@@ -14,6 +14,7 @@ import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryE
 import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected;
 import org.iplantc.de.diskResource.client.presenters.navigation.proxy.SelectFolderByPathLoadHandler;
 
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
@@ -72,7 +73,7 @@ public interface DiskResourceView extends IsWidget,
 
             String fileUploadSuccess(String filename);
 
-            String fileUploadsFailed(ArrayList<String> files);
+            SafeHtml fileUploadsFailed(ArrayList<String> files);
 
             String folderName();
 
