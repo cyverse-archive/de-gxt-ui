@@ -19,6 +19,9 @@ import com.sencha.gxt.data.shared.loader.PagingLoadResultBean;
 import java.util.List;
 import javax.inject.Inject;
 
+/**
+ * An RpcProxy class that handles searching genomes when the user has typed a search term in the GenomeSearchView's search field
+ */
 public class GenomeSearchRpcProxy extends RpcProxy<FilterPagingLoadConfig, PagingLoadResult<Genome>> {
 
     private GenomeSearchView.GenomeSearchViewAppearance appearance;

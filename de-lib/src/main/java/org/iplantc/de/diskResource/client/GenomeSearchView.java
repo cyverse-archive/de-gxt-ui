@@ -7,10 +7,16 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
+/**
+ * An interface for the view when searching genomes in the Data window when choosing "Import Genome from Coge"
+ */
 public interface GenomeSearchView extends IsWidget,
                                           IsMaskable,
                                           ImportGenomeFromCogeSelected.HasImportGenomeFromCogeSelectedHandlers {
 
+    /**
+     * Appearance class for the GenomeSearchView
+     */
     interface GenomeSearchViewAppearance {
         String cogeSearchError();
 
@@ -49,10 +55,21 @@ public interface GenomeSearchView extends IsWidget,
         ImageResource infoIcon();
     }
 
+    /**
+     * Presenter which handles all the logic for the GenomeSearchView
+     */
     interface GenomeSearchPresenter {
 
+        /**
+         * Adds the view to the dialog/window
+         * @param container
+         */
         void go(HasOneWidget container);
 
+        /**
+         * Sets the debug ID for the view
+         * @param baseID
+         */
         void setViewDebugId(String baseID);
     }
 }
