@@ -23,7 +23,7 @@ public interface CommonsModule {
     }
 
     interface UploadIds {
-        String BASE_ID = "SimpleUpload";
+        String BASE_ID = "simpleUpload";
         String FILE_UPLOAD_FIELD = ".fileUpload";
         String FIELD1 = ".field1";
         String FIELD2 = ".field2";

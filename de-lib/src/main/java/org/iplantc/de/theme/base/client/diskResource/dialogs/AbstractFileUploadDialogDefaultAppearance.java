@@ -94,6 +94,16 @@ public class AbstractFileUploadDialogDefaultAppearance implements AbstractFileUp
     }
 
     @Override
+    public String width() {
+        return "500";
+    }
+
+    @Override
+    public String height() {
+        return "400";
+    }
+
+    @Override
     public String fileUploadMaxSizeWarning() {
         return diskResourceMessages.fileUploadMaxSizeWarning();
     }

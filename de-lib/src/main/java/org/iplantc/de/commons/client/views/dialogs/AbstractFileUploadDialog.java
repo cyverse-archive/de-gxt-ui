@@ -69,6 +69,10 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
         String fileNameValidationMsg();
 
         String getFileName(String filename);
+
+        String width();
+
+        String height();
     }
 
     public static final String HDN_PARENT_ID_KEY = "dest";
@@ -109,6 +113,7 @@ public abstract class AbstractFileUploadDialog extends IPlantDialog {
         getOkButton().setEnabled(false);
         setHeading(appearance.upload());
         addCancelButtonSelectHandler(event -> hide());
+        setSize(appearance.width(), appearance.height());
     }
 
     protected void afterBinding() {

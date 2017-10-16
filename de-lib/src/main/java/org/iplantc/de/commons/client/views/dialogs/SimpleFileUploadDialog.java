@@ -80,6 +80,7 @@ public class SimpleFileUploadDialog extends AbstractFileUploadDialog {
         appearance = GWT.create(AbstractFileUploadDialogAppearance.class);
 
         add(BINDER.createAndBindUi(this));
+        ensureDebugId(CommonsModule.UploadIds.BASE_ID);
 
         afterBinding(); //must be called after UIBinder
 

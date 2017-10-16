@@ -2,6 +2,7 @@ package org.iplantc.de.theme.base.client.tools;
 
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
 import org.iplantc.de.resources.client.messages.IplantValidationMessages;
+import org.iplantc.de.theme.base.client.diskResource.DiskResourceMessages;
 import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
 
 import com.google.common.base.Strings;
@@ -19,20 +20,24 @@ public class NewToolRequestFormViewDefaultAppearance implements NewToolRequestFo
     private final ToolMessages toolMessages;
     private final IplantValidationMessages validationMessages;
     private final IplantValidationConstants validationConstants;
+    private final DiskResourceMessages diskResourceMessages;
 
     public NewToolRequestFormViewDefaultAppearance() {
         this((ToolMessages)GWT.create(ToolMessages.class),
              GWT.<IplantValidationMessages>create(IplantValidationMessages.class),
-             GWT.<IplantValidationConstants>create(IplantValidationConstants.class));
+             GWT.<IplantValidationConstants>create(IplantValidationConstants.class),
+             GWT.<DiskResourceMessages>create(DiskResourceMessages.class));
         ;
     }
 
     public NewToolRequestFormViewDefaultAppearance(ToolMessages messages,
                                                    final IplantValidationMessages validationMessages,
-                                                   final IplantValidationConstants validationConstants) {
+                                                   final IplantValidationConstants validationConstants,
+                                                   final DiskResourceMessages diskResourceMessages) {
         this.toolMessages = messages;
         this.validationMessages = validationMessages;
         this.validationConstants = validationConstants;
+        this.diskResourceMessages = diskResourceMessages;
     }
 
     @Override
@@ -77,17 +82,17 @@ public class NewToolRequestFormViewDefaultAppearance implements NewToolRequestFo
 
     @Override
     public SafeHtml fileSizeViolation(String filename) {
-        return toolMessages.fileSizeViolation(filename);
+        return diskResourceMessages.fileSizeViolation(filename);
     }
 
     @Override
     public SafeHtml maxFileSizeExceed() {
-        return toolMessages.maxFileSizeExceed();
+        return diskResourceMessages.maxFileSizeExceed();
     }
 
     @Override
     public SafeHtml fileExistTitle() {
-        return toolMessages.fileExistTitle();
+        return diskResourceMessages.fileExistTitle();
     }
 
     @Override
@@ -97,7 +102,7 @@ public class NewToolRequestFormViewDefaultAppearance implements NewToolRequestFo
 
     @Override
     public String invalidFileName() {
-        return toolMessages.invalidFileName();
+        return diskResourceMessages.invalidFileName();
     }
 
     @Override

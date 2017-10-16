@@ -99,17 +99,7 @@ public interface ToolMessages extends Messages {
 
     SafeHtml alert();
 
-    SafeHtml fileSizeViolation(String filename);
-
-    SafeHtml maxFileSizeExceed();
-
-    SafeHtml fileExistTitle();
-
     SafeHtml fileExists(String dupeFiles);
-
-    String invalidFileName();
-
 }
-        
-    
+
 
