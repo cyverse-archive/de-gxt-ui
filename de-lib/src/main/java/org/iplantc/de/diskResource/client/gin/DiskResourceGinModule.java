@@ -7,6 +7,7 @@ import org.iplantc.de.diskResource.client.DataLinkView;
 import org.iplantc.de.diskResource.client.DataSharingView;
 import org.iplantc.de.diskResource.client.DetailsView;
 import org.iplantc.de.diskResource.client.DiskResourceView;
+import org.iplantc.de.diskResource.client.FileUploadByUrlView;
 import org.iplantc.de.diskResource.client.GenomeSearchView;
 import org.iplantc.de.diskResource.client.GridView;
 import org.iplantc.de.diskResource.client.HTPathListAutomationView;
@@ -20,6 +21,7 @@ import org.iplantc.de.diskResource.client.gin.factory.DataSharingPresenterFactor
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourcePresenterFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceViewFactory;
+import org.iplantc.de.diskResource.client.gin.factory.FileUploadByUrlViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.FolderContentsRpcProxyFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GenomeSearchViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewFactory;
@@ -60,6 +62,7 @@ import org.iplantc.de.diskResource.client.views.sharing.DataSharingViewImpl;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.DataSharingDialog;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.ShareResourceLinkDialog;
 import org.iplantc.de.diskResource.client.views.toolbar.DiskResourceViewToolbarImpl;
+import org.iplantc.de.diskResource.client.views.toolbar.FileUploadByUrlViewImpl;
 import org.iplantc.de.diskResource.client.views.toolbar.HTPathListAutomationViewImpl;
 
 import com.google.gwt.inject.client.AbstractGinModule;
@@ -141,6 +144,10 @@ public class DiskResourceGinModule extends AbstractGinModule {
         // Details
         bind(DetailsView.Presenter.class).to(DetailsViewPresenterImpl.class);
         bind(DetailsView.class).to(DetailsViewImpl.class);
+
+        install(new GinFactoryModuleBuilder()
+                        .implement(FileUploadByUrlView.class, FileUploadByUrlViewImpl.class)
+                        .build(FileUploadByUrlViewFactory.class));
 
         install(new GinFactoryModuleBuilder()
                         .implement(BulkMetadataView.class, BulkMetadataViewImpl.class)
