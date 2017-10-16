@@ -56,6 +56,21 @@ public class MaskUtilTest {
     }
 
     @Test
+    public void testMask_upperCase() {
+        maskUtil.setSearchTerm("FOO*BAR");
+
+        assertEquals("", maskUtil.mask("noMatch").toString());
+        assertEquals("***foo***bar***", maskUtil.mask("foosecretbar").toString());
+        assertEquals(3, maskUtil.getMatchStartIndex());
+        assertEquals(12, maskUtil.getMatchEndIndex());
+
+        maskUtil.setSearchTerm("FOO*BAR");
+        assertEquals("***foo***bar***@gmail.com", maskUtil.maskEmail("secretfoosecretbarsecret@gmail.com").toString());
+        assertEquals(3, maskUtil.getMatchStartIndex());
+        assertEquals(12, maskUtil.getMatchEndIndex());
+    }
+
+    @Test
     public void testMask_badregex() {
         maskUtil.setSearchTerm("[badregex");
         assertEquals("", maskUtil.mask("noMatch").toString());

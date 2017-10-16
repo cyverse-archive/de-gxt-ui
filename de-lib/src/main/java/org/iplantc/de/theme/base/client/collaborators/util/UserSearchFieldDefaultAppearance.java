@@ -241,7 +241,7 @@ public class UserSearchFieldDefaultAppearance implements UserSearchField.UserSea
 
             maskedValue.append("***");
             for (String regExGroup : regExGroups) {
-                maskedValue.append(regExGroup);
+                maskedValue.append(regExGroup.toLowerCase());
                 maskedValue.append("***");
             }
 
@@ -268,10 +268,10 @@ public class UserSearchFieldDefaultAppearance implements UserSearchField.UserSea
         private RegExp getRegExPattern(String regexString) {
             RegExp pattern;
             try {
-                pattern = RegExp.compile(regexString);
+                pattern = RegExp.compile(regexString, "i");
             } catch (Exception exception) {
                 // For when the search has regex metacharacters that yields an invalid regex expression
-                pattern = RegExp.compile(RegExp.quote(regexString));
+                pattern = RegExp.compile(RegExp.quote(regexString), "i");
             }
             return pattern;
         }
