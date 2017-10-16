@@ -737,6 +737,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
         moveMi.ensureDebugId(baseID + Ids.EDIT_MENU + Ids.MENU_ITEM_MOVE);
         editFileMi.ensureDebugId(baseID + Ids.EDIT_MENU + Ids.MENU_ITEM_EDIT_FILE);
         editInfoTypeMi.ensureDebugId(baseID + Ids.EDIT_MENU + Ids.MENU_ITEM_EDIT_INFO_TYPE);
+        editCommentsMi.ensureDebugId(baseID + Ids.EDIT_MENU + Ids.MENU_ITEM_EDIT_COMMENTS);
 
         // Metadata menu
         metadataMenu.ensureDebugId(baseID + Ids.METADATA_MENU);
