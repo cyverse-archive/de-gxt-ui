@@ -1,6 +1,6 @@
 package org.iplantc.de.theme.base.client.fileViewers.callbacks;
 
-import org.iplantc.de.fileViewers.client.callbacks.EnsemblUtil;
+import org.iplantc.de.fileViewers.client.callbacks.GenomeBrowserUtil;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.theme.base.client.fileViewers.FileViewerErrorStrings;
 
@@ -10,17 +10,17 @@ import com.google.gwt.core.client.GWT;
  * Created by jstroot on 1/15/15.
  * @author jstroot
  */
-public class EnsemblUtilDefaultAppearance implements EnsemblUtil.EnsemblUtilAppearance {
+public class GenomeBrowserUtilDefaultAppearance implements GenomeBrowserUtil.GenomeBrowserUtilAppearance {
     final IplantDisplayStrings displayStrings;
     final FileViewerErrorStrings fileViewerErrorStrings;
 
-    public EnsemblUtilDefaultAppearance() {
+    public GenomeBrowserUtilDefaultAppearance() {
         this(GWT.<IplantDisplayStrings> create(IplantDisplayStrings.class),
              GWT.<FileViewerErrorStrings> create(FileViewerErrorStrings.class));
     }
 
-    EnsemblUtilDefaultAppearance(final IplantDisplayStrings displayStrings,
-                                 final FileViewerErrorStrings fileViewerErrorStrings) {
+    GenomeBrowserUtilDefaultAppearance(final IplantDisplayStrings displayStrings,
+                                       final FileViewerErrorStrings fileViewerErrorStrings) {
         this.displayStrings = displayStrings;
         this.fileViewerErrorStrings = fileViewerErrorStrings;
     }
@@ -33,5 +33,10 @@ public class EnsemblUtilDefaultAppearance implements EnsemblUtil.EnsemblUtilAppe
     @Override
     public String indexFileMissingError() {
         return fileViewerErrorStrings.indexFileMissingError();
+    }
+
+    @Override
+    public String selectIndexFile() {
+        return displayStrings.selectIndexFile();
     }
 }

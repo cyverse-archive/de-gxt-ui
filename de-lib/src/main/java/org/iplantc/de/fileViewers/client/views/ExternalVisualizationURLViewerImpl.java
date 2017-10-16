@@ -9,7 +9,7 @@ import org.iplantc.de.client.models.viewer.VizUrl;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
-import org.iplantc.de.fileViewers.client.callbacks.EnsemblUtil;
+import org.iplantc.de.fileViewers.client.callbacks.GenomeBrowserUtil;
 import org.iplantc.de.fileViewers.client.callbacks.LoadGenomeInCoGeCallback;
 import org.iplantc.de.fileViewers.client.callbacks.TreeUrlCallback;
 import org.iplantc.de.fileViewers.client.views.cells.TreeUrlCell;
@@ -108,15 +108,18 @@ public class ExternalVisualizationURLViewerImpl extends AbstractFileViewer imple
     private final FileEditorServiceFacade fileEditorService;
     private final DiskResourceServiceFacade diskResourceServiceFacade;
     private final DiskResourceUtil diskResourceUtil;
+    private final GenomeBrowserUtil genomeBrowserUtil;
 
     public ExternalVisualizationURLViewerImpl(final File file,
                                               final String infoType,
                                               final FileEditorServiceFacade fileEditorService,
-                                              final DiskResourceServiceFacade diskResourceServiceFacade) {
+                                              final DiskResourceServiceFacade diskResourceServiceFacade,
+                                              final GenomeBrowserUtil genomeBrowserUtil) {
         super(file, infoType);
         this.fileEditorService = fileEditorService;
         this.diskResourceServiceFacade = diskResourceServiceFacade;
         this.diskResourceUtil = DiskResourceUtil.getInstance();
+        this.genomeBrowserUtil = genomeBrowserUtil;
         initWidget(uiBinder.createAndBindUi(this));
         gridView.setAutoExpandColumn(cm.getColumn(1));
         buildToolBar(diskResourceUtil.createInfoTypeSplittable(infoType));
@@ -191,9 +194,9 @@ public class ExternalVisualizationURLViewerImpl extends AbstractFileViewer imple
             @Override
             public void onSelect(SelectEvent event) {
                 mask(appearance.sendToEnsemblLoadingMask());
-                EnsemblUtil util = new EnsemblUtil(Collections.singletonList(file),
-                                                   ExternalVisualizationURLViewerImpl.this);
-                util.sendToEnsembl(diskResourceServiceFacade);
+                genomeBrowserUtil.sendToGenomeBrowser(Collections.singletonList(file),
+                                                      ExternalVisualizationURLViewerImpl.this);
+
             }
         });
         return button;

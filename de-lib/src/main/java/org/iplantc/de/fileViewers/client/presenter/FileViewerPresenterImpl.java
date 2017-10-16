@@ -28,6 +28,7 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.views.dialogs.SaveAsDialog;
 import org.iplantc.de.fileViewers.client.FileViewer;
+import org.iplantc.de.fileViewers.client.callbacks.GenomeBrowserUtil;
 import org.iplantc.de.fileViewers.client.callbacks.FileSaveCallback;
 import org.iplantc.de.fileViewers.client.callbacks.TreeUrlCallback;
 import org.iplantc.de.fileViewers.client.events.DirtyStateChangedEvent;
@@ -138,6 +139,8 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
     @Inject DiskResourceServiceFacade diskResourceServiceFacade;
     @Inject DiskResourceUtil diskResourceUtil;
     @Inject IplantAnnouncer announcer;
+    @Inject
+    GenomeBrowserUtil genomeBrowserUtil;
 
     private MimeType contentType;
     /**
@@ -487,7 +490,11 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
         boolean ensembleViewer = diskResourceUtil.isEnsemblVizTab(infoTypeSplittable);
 
         if (treeViewer || cogeViewer || ensembleViewer) {
-            FileViewer vizViewer = new ExternalVisualizationURLViewerImpl(file, infoType, fileEditorService, diskResourceServiceFacade);
+            FileViewer vizViewer = new ExternalVisualizationURLViewerImpl(file,
+                                                                          infoType,
+                                                                          fileEditorService,
+                                                                          diskResourceServiceFacade,
+                                                                          genomeBrowserUtil);
             List<VizUrl> urls = manifest.getUrls();
 
             if (urls != null && !urls.isEmpty()) {

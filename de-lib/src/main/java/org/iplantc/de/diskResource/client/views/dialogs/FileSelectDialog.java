@@ -91,7 +91,7 @@ public class FileSelectDialog extends IPlantDialog implements TakesValue<List<Fi
     @Inject DiskResourceUtil diskResourceUtil;
 
     @Inject
-    FileSelectDialog(final DiskResourcePresenterFactory presenterFactory,
+    public FileSelectDialog(final DiskResourcePresenterFactory presenterFactory,
                      final FileSelectDialogAppearance appearance) {
 
         this.presenterFactory = presenterFactory;
