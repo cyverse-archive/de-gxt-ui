@@ -31,7 +31,7 @@ public interface UserSessionServiceFacade {
 
     void logout(AsyncCallback<String> callback);
 
-    void testWebhook(String url, DECallback<Void> callback);
+    void testWebhook(String url, AsyncCallback<Void> callback);
 
     void updateWebhooks(List<Webhook> hooks, DECallback<Void> callback);
 }
