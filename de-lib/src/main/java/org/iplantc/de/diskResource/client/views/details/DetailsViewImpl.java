@@ -3,9 +3,9 @@ package org.iplantc.de.diskResource.client.views.details;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
-import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.diskResource.client.DetailsView;
@@ -15,14 +15,15 @@ import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryE
 import org.iplantc.de.diskResource.client.events.selection.EditInfoTypeSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected;
 import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked;
+import org.iplantc.de.diskResource.client.events.selection.RemoveResourceTagSelected;
 import org.iplantc.de.diskResource.client.events.selection.ResetInfoTypeSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected;
+import org.iplantc.de.diskResource.client.events.selection.UpdateResourceTagSelected;
 import org.iplantc.de.tags.client.TagsView;
 import org.iplantc.de.tags.client.events.TagAddedEvent;
 import org.iplantc.de.tags.client.events.TagCreated;
-import org.iplantc.de.tags.client.events.TagCreated.TagCreatedHandler;
 import org.iplantc.de.tags.client.events.selection.RemoveTagSelected;
 import org.iplantc.de.tags.client.events.selection.TagSelected;
 
@@ -48,7 +49,6 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.core.client.util.Format;
 import com.sencha.gxt.data.shared.event.StoreUpdateEvent;
@@ -68,7 +68,7 @@ public class DetailsViewImpl extends Composite implements DetailsView,
                                                           Editor<DiskResource>,
                                                           TagSelected.TagSelectedHandler,
                                                           RemoveTagSelected.RemoveTagSelectedHandler,
-                                                          TagCreatedHandler,
+                                                          TagCreated.TagCreatedHandler,
                                                           TagAddedEvent.TagAddedEventHandler {
 
     interface DetailsViewImplUiBinder extends UiBinder<HTMLPanel, DetailsViewImpl> {
@@ -105,18 +105,15 @@ public class DetailsViewImpl extends Composite implements DetailsView,
     private static final DetailsViewImplUiBinder ourUiBinder = GWT.create(DetailsViewImplUiBinder.class);
     private final Logger LOG = Logger.getLogger(DetailsViewImpl.class.getSimpleName());
     private final EditorDriver editorDriver = GWT.create(EditorDriver.class);
-    private final DetailsView.Presenter presenter;
     private final TagsView.Presenter tagsPresenter;
     private DiskResource boundValue;
 
     @Inject
     DetailsViewImpl(final DetailsView.Appearance appearance,
-                    final TagsView.Presenter tagsPresenter,
-                    @Assisted final DetailsView.Presenter presenter) {
+                    final TagsView.Presenter tagsPresenter) {
         this.tagsPresenter = tagsPresenter;
         this.tagListView = tagsPresenter.getView();
         this.appearance = appearance;
-        this.presenter = presenter;
 
         tagsPresenter.setEditable(true);
         tagsPresenter.setRemovable(true);
@@ -231,19 +228,19 @@ public class DetailsViewImpl extends Composite implements DetailsView,
     @Override
     public void onRemoveTagSelected(RemoveTagSelected event) {
         Preconditions.checkNotNull(boundValue, "Bound value should not be null right now");
-        presenter.removeTagFromResource(event.getTag(), boundValue);
+        fireEvent(new RemoveResourceTagSelected(boundValue, event.getTag()));
     }
 
     @Override
     public void onTagAdded(TagAddedEvent event) {
         Preconditions.checkNotNull(boundValue, "Bound value should not be null right now");
-        presenter.attachTagToResource(event.getTag(), boundValue);
+        fireEvent(new UpdateResourceTagSelected(boundValue, event.getTag()));
     }
 
     @Override
     public void onTagCreated(TagCreated event) {
         Preconditions.checkNotNull(boundValue, "Bound value should not be null right now");
-        presenter.attachTagToResource(event.getTag(), boundValue);
+        fireEvent(new UpdateResourceTagSelected(boundValue, event.getTag()));
     }
 
     @Override
@@ -427,5 +424,15 @@ public class DetailsViewImpl extends Composite implements DetailsView,
     @Override
     public void onFetchDetailsCompleted(FetchDetailsCompleted event) {
         unmask();
+    }
+
+    @Override
+    public HandlerRegistration addRemoveResourceTagSelectedHandler(RemoveResourceTagSelected.RemoveResourceTagSelectedHandler handler) {
+        return addHandler(handler, RemoveResourceTagSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addUpdateResourceTagSelectedHandler(UpdateResourceTagSelected.UpdateResourceTagSelectedHandler handler) {
+        return addHandler(handler, UpdateResourceTagSelected.TYPE);
     }
 }

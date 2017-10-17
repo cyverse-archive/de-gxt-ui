@@ -13,6 +13,7 @@ import org.iplantc.de.diskResource.client.events.RequestDiskResourceFavoriteEven
 import org.iplantc.de.diskResource.client.events.TemplateDownloadEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.SubmitDiskResourceQueryEventHandler;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected.CopyMetadataSelectedEventHandler;
+import org.iplantc.de.diskResource.client.events.selection.DNDDiskResourcesCompleted;
 import org.iplantc.de.diskResource.client.events.selection.DownloadTemplateSelectedEvent;
 import org.iplantc.de.diskResource.client.events.selection.EditInfoTypeSelected.EditInfoTypeSelectedEventHandler;
 import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelected.ManageCommentsSelectedEventHandler;
@@ -122,7 +123,8 @@ public interface GridView extends IsWidget,
                                 ResetInfoTypeSelectedHandler,
                                 Md5ValueClickedHandler,
                                 TemplateDownloadEvent.TemplateDownloadEventHandler,
-                                FetchDetailsCompleted.HasFetchDetailsCompletedHandlers  {
+                                FetchDetailsCompleted.HasFetchDetailsCompletedHandlers,
+                                DNDDiskResourcesCompleted.HasDNDDiskResourcesCompletedHandlers {
 
         interface Appearance {
 
@@ -172,7 +174,7 @@ public interface GridView extends IsWidget,
 
             String commentsManageFailure();
 
-            String copyMetadata();
+            String copyMetadata(String path);
 
             String copyMetadataSuccess();
 
@@ -193,6 +195,20 @@ public interface GridView extends IsWidget,
             String fileSaveError(String fileName);
 
             String listingFailure();
+
+            String metadataSaved();
+
+            String copyMetadataNoResources();
+
+            String loadingMask();
+
+            String saving();
+
+            String copyMetadataDlgWidth();
+
+            String copyMetadataDlgHeight();
+
+            int md5MaxLength();
         }
 
         void deSelectDiskResources();
@@ -214,8 +230,6 @@ public interface GridView extends IsWidget,
         boolean isSelectAllChecked();
 
         void setFilePreviewEnabled(boolean filePreviewEnabled);
-
-        void setParentPresenter(DiskResourceView.Presenter parentPresenter);
 
         void setSelectedDiskResourcesById(List<? extends HasId> diskResourcesToSelect);
 

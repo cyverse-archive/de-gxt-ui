@@ -13,9 +13,7 @@ import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.gin.factory.BulkMetadataDialogFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DataLinkPresenterFactory;
-import org.iplantc.de.diskResource.client.gin.factory.DataLinkViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DataSharingPresenterFactory;
-import org.iplantc.de.diskResource.client.gin.factory.DetailsViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourcePresenterFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceViewFactory;
@@ -86,9 +84,7 @@ public class DiskResourceGinModule extends AbstractGinModule {
         install(new GinFactoryModuleBuilder()
                     .implement(DataLinkView.Presenter.class, DataLinkPresenterImpl.class)
                     .build(DataLinkPresenterFactory.class));
-        install(new GinFactoryModuleBuilder()
-                    .implement(DataLinkView.class, DataLinkViewImpl.class)
-                    .build(DataLinkViewFactory.class));
+        bind(DataLinkView.class).to(DataLinkViewImpl.class);
 
         // Disk Resource Views
         bind(new TypeLiteral<TreeStore<Folder>>() {}).toProvider(DiskResourceTreeStoreProvider.class);
@@ -130,9 +126,7 @@ public class DiskResourceGinModule extends AbstractGinModule {
 
         // Details
         bind(DetailsView.Presenter.class).to(DetailsViewPresenterImpl.class);
-        install(new GinFactoryModuleBuilder()
-                    .implement(DetailsView.class, DetailsViewImpl.class)
-                    .build(DetailsViewFactory.class));
+        bind(DetailsView.class).to(DetailsViewImpl.class);
 
         install(new GinFactoryModuleBuilder().build(BulkMetadataDialogFactory.class));
         install(new GinFactoryModuleBuilder().build(HTPathListAutomationDialogFactory.class));

@@ -7,7 +7,8 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.diskResource.client.DetailsView;
-import org.iplantc.de.diskResource.client.gin.factory.DetailsViewFactory;
+import org.iplantc.de.diskResource.client.events.selection.RemoveResourceTagSelected;
+import org.iplantc.de.diskResource.client.events.selection.UpdateResourceTagSelected;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -16,7 +17,9 @@ import com.google.inject.Inject;
 /**
  * @author jstroot
  */
-public class DetailsViewPresenterImpl implements DetailsView.Presenter {
+public class DetailsViewPresenterImpl implements DetailsView.Presenter,
+                                                 RemoveResourceTagSelected.RemoveResourceTagSelectedHandler,
+                                                 UpdateResourceTagSelected.UpdateResourceTagSelectedHandler {
 
     @Inject IplantAnnouncer announcer;
     @Inject FileSystemMetadataServiceFacade metadataService;
@@ -25,14 +28,18 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter {
     private final DetailsView view;
 
     @Inject
-    DetailsViewPresenterImpl(final DetailsViewFactory viewFactory) {
-        this.view = viewFactory.create(this);
+    DetailsViewPresenterImpl(final DetailsView view) {
+        this.view = view;
+
+        view.addRemoveResourceTagSelectedHandler(this);
+        view.addUpdateResourceTagSelectedHandler(this);
     }
 
     @Override
-    public void attachTagToResource(final Tag tag,
-                                    final DiskResource resource) {
-           metadataService.attachTags(Lists.newArrayList(tag), resource, new AsyncCallback<Void>() {
+    public void onUpdateResourceTagSelected(UpdateResourceTagSelected event) {
+        DiskResource resource = event.getDiskResource();
+        Tag tag = event.getTag();
+        metadataService.attachTags(Lists.newArrayList(tag), resource, new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(appearance.tagAttachError(), caught);
@@ -46,8 +53,10 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter {
     }
 
     @Override
-    public void removeTagFromResource(final Tag tag,
-                                      final DiskResource resource) {
+    public void onRemoveResourceTagSelected(RemoveResourceTagSelected event) {
+        Tag tag = event.getTag();
+        DiskResource resource = event.getResource();
+
         metadataService.detachTags(Lists.newArrayList(tag), resource, new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {

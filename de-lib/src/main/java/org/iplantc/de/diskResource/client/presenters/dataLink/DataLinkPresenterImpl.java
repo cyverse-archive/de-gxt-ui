@@ -1,20 +1,24 @@
 package org.iplantc.de.diskResource.client.presenters.dataLink;
 
 import org.iplantc.de.client.models.dataLink.DataLink;
-import org.iplantc.de.client.models.dataLink.DataLinkFactory;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.diskResource.client.DataLinkView;
+import org.iplantc.de.diskResource.client.events.selection.AdvancedSharingSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateDataLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelected;
-import org.iplantc.de.diskResource.client.gin.factory.DataLinkViewFactory;
+import org.iplantc.de.diskResource.client.events.selection.ShowDataLinkSelected;
 import org.iplantc.de.diskResource.client.presenters.callbacks.CreateDataLinkCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DeleteDataLinksCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.ListDataLinksCallback;
+import org.iplantc.de.diskResource.client.views.dialogs.DataLinkDialog;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.collect.Lists;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -24,27 +28,41 @@ import java.util.List;
 /**
  * @author jstroot
  */
-public class DataLinkPresenterImpl implements DataLinkView.Presenter {
+public class DataLinkPresenterImpl implements DataLinkView.Presenter,
+                                              CreateDataLinkSelected.CreateDataLinkSelectedHandler,
+                                              AdvancedSharingSelected.AdvancedSharingSelectedHandler,
+                                              ShowDataLinkSelected.ShowDataLinkSelectedHandler,
+                                              DeleteDataLinkSelected.DeleteDataLinkSelectedHandler {
 
     private final DataLinkView view;
     private final DiskResourceServiceFacade drService;
-    private final DataLinkFactory dlFactory;
     private final DiskResourceUtil diskResourceUtil;
     private final DataLinkView.Appearance appearance;
 
+    @Inject AsyncProviderWrapper<DataLinkDialog> dataLinkDlgProvider;
+
     @Inject
     DataLinkPresenterImpl(final DiskResourceServiceFacade drService,
-                          final DataLinkViewFactory dataLinkViewFactory,
-                          final DataLinkFactory dlFactory,
+                          final DataLinkView view,
                           final DiskResourceUtil diskResourceUtil,
                           final DataLinkView.Appearance appearance,
                           @Assisted List<DiskResource> resources) {
         this.drService = drService;
-        this.dlFactory = dlFactory;
         this.appearance = appearance;
         this.diskResourceUtil = diskResourceUtil;
-        view = dataLinkViewFactory.create(this, resources);
+        this.view = view;
 
+        view.addCreateDataLinkSelectedHandler(this);
+        view.addAdvancedSharingSelectedHandler(this);
+        view.addShowDataLinkSelectedHandler(this);
+        view.addDeleteDataLinkSelectedHandler(this);
+
+        // Retrieve tickets for root nodes
+        getExistingDataLinks(resources);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    void getExistingDataLinks(List<DiskResource> resources) {
         // Remove Folders
         List<DiskResource> allowedResources = createDiskResourcesList();
         for(DiskResource m : resources){
@@ -52,14 +70,9 @@ public class DataLinkPresenterImpl implements DataLinkView.Presenter {
                 allowedResources.add(m);
             }
         }
-        // Retrieve tickets for root nodes
-        getExistingDataLinks(allowedResources);
-    }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    void getExistingDataLinks(List<DiskResource> resources) {
-        view.addRoots(resources);
-        drService.listDataLinks(diskResourceUtil.asStringPathList(resources),
+        view.addRoots(allowedResources);
+        drService.listDataLinks(diskResourceUtil.asStringPathList(allowedResources),
                                 new ListDataLinksCallback(view.getTree()));
     }
 
@@ -70,9 +83,9 @@ public class DataLinkPresenterImpl implements DataLinkView.Presenter {
                                   new DeleteDataLinksCallback(view));
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public void createDataLinks(List<DiskResource> selectedItems) {
+    public void onCreateDataLinkSelected(CreateDataLinkSelected event) {
+        List<DiskResource> selectedItems = event.getSelectedDiskResources();
         final List<String> drResourceIds = createDiskResourceIdsList();
         for(DiskResource dr : selectedItems){
             if(!(dr instanceof DataLink)){
@@ -85,19 +98,27 @@ public class DataLinkPresenterImpl implements DataLinkView.Presenter {
     }
 
     @Override
-    public String getSelectedDataLinkDownloadUrl() {
-        DiskResource model = view.getTree().getSelectionModel().getSelectedItem();
-        if (model instanceof DataLink) {
-            return ((DataLink)model).getDownloadUrl();
+    public void onShowDataLinkSelected(ShowDataLinkSelected event) {
+        DiskResource selectedResource = event.getSelectedResource();
+        if (selectedResource instanceof DataLink) {
+            String downloadUrl = ((DataLink)selectedResource).getDownloadUrl();
+            dataLinkDlgProvider.get(new AsyncCallback<DataLinkDialog>() {
+                @Override
+                public void onFailure(Throwable throwable) { }
+
+                @Override
+                public void onSuccess(DataLinkDialog dialog) {
+                    dialog.show(downloadUrl);
+                }
+            });
         }
-        return null;
     }
 
     @Override
-    public void openSelectedDataLinkDownloadPage() {
-        DiskResource model = view.getTree().getSelectionModel().getSelectedItem();
-        if (model instanceof DataLink) {
-            String url = ((DataLink)model).getDownloadPageUrl();
+    public void onAdvancedSharingSelected(AdvancedSharingSelected event) {
+        DiskResource selectedResource = event.getSelectedResource();
+        if (selectedResource instanceof DataLink) {
+            String url = ((DataLink)selectedResource).getDownloadPageUrl();
             WindowUtil.open(url);
         }
     }

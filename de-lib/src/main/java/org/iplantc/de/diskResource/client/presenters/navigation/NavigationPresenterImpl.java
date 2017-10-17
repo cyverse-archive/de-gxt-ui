@@ -25,7 +25,9 @@ import org.iplantc.de.diskResource.client.events.RootFoldersRetrievedEvent;
 import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent;
+import org.iplantc.de.diskResource.client.events.selection.DNDDiskResourcesCompleted;
 import org.iplantc.de.diskResource.client.events.selection.ImportFromUrlSelected;
+import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleUploadSelected;
 import org.iplantc.de.diskResource.client.gin.factory.NavigationViewFactory;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsLoadConfig;
@@ -38,6 +40,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
 
@@ -100,7 +103,7 @@ public class NavigationPresenterImpl implements
     private final TreeLoader<Folder> treeLoader;
     private final NavigationView view;
     private IsMaskable maskable;
-    private DiskResourceView.Presenter parentPresenter;
+    private HandlerManager handlerManager;
 
     @Inject
     NavigationPresenterImpl(final NavigationViewFactory viewFactory,
@@ -315,7 +318,7 @@ public class NavigationPresenterImpl implements
 
     @Override
     public void doMoveDiskResources(Folder targetFolder, List<DiskResource> dropData) {
-        parentPresenter.doMoveDiskResources(targetFolder, dropData);
+        ensureHandlers().fireEvent(new DNDDiskResourcesCompleted(targetFolder, dropData));
     }
 
     @Override
@@ -426,11 +429,6 @@ public class NavigationPresenterImpl implements
     }
 
     @Override
-    public void setParentPresenter(DiskResourceView.Presenter parentPresenter) {
-        this.parentPresenter = parentPresenter;
-    }
-
-    @Override
     public void setSelectedFolder(final Folder folder) {
         if (folder == null) {
             return;
@@ -466,7 +464,7 @@ public class NavigationPresenterImpl implements
             // Create and add the SelectFolderByIdLoadHandler to the treeLoader.
             SelectFolderByPathLoadHandler.registerFolderLoader(hasPath,
                                                                this,
-                                                               parentPresenter,
+                                                               ensureHandlers().getHandler(RefreshFolderSelected.TYPE, 0),
                                                                appearance,
                                                                maskable,
                                                                announcer,
@@ -522,5 +520,23 @@ public class NavigationPresenterImpl implements
     private void selectedFolderMovedFromNavTree(Folder destinationFolder) {
         // View the destination folder's contents.
         setSelectedFolder((HasPath)destinationFolder);
+    }
+
+    @Override
+    public HandlerRegistration addDNDDiskResourcesCompletedHandler(DNDDiskResourcesCompleted.DNDDiskResourcesCompletedHandler handler) {
+        return ensureHandlers().addHandler(DNDDiskResourcesCompleted.TYPE, handler);
+    }
+
+    HandlerManager ensureHandlers() {
+        return handlerManager == null ? handlerManager = createHandlerManager() : handlerManager;
+    }
+
+    HandlerManager createHandlerManager() {
+        return new HandlerManager(this);
+    }
+
+    @Override
+    public HandlerRegistration addRefreshFolderSelectedHandler(RefreshFolderSelected.RefreshFolderSelectedHandler handler) {
+        return ensureHandlers().addHandler(RefreshFolderSelected.TYPE, handler);
     }
 }

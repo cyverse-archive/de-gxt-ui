@@ -38,4 +38,7 @@ public interface Notification {
 
     @PropertyName("email_template")
     String getEmailTemplate();
+
+    boolean isEmail();
+    void setEmail(boolean email);
 }

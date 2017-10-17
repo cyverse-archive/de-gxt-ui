@@ -2,7 +2,6 @@ package org.iplantc.de.commons.client.views.dialogs;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -32,34 +31,35 @@ public class IPlantPromptDialog extends IPlantDialog {
 
     private final TextButton okButton;
 
-    public IPlantPromptDialog(final String caption,
-                              final int maxLength,
-                              final String initialText,
-                              final Validator<String> validator) {
+    public IPlantPromptDialog() {
         add(uiBinder.createAndBindUi(this));
         okButton = getButton(PredefinedButton.OK);
         okButton.setEnabled(false);
-        setInitialText(initialText);
-        init(caption, maxLength, validator);
-        Scheduler.get().scheduleFinally(new ScheduledCommand() {
-
-            @Override
-            public void execute() {
-                setFocusWidget(textField);
-                textField.selectAll();
-            }
+        Scheduler.get().scheduleFinally(() -> {
+            setFocusWidget(textField);
+            textField.selectAll();
         });
-
     }
 
-    private void init(String caption, int maxLength, Validator<String> validator) {
-        fieldLabel.setText(caption);
+    public IPlantPromptDialog(final String fieldLabelText,
+                              final int maxLength,
+                              final String initialText,
+                              final Validator<String> validator) {
+        this();
+        setFieldLabelText(fieldLabelText);
+        setMaxLength(maxLength);
+        setInitialText(initialText);
+        addValidator(validator);
+    }
 
+    protected void setFieldLabelText(String label) {
+        fieldLabel.setText(label);
+    }
+
+    protected void setMaxLength(int maxLength) {
         if (maxLength > 0) {
             addValidator(new MaxLengthValidator(maxLength));
         }
-
-        addValidator(validator);
     }
 
     protected void setInitialText(String initialText) {

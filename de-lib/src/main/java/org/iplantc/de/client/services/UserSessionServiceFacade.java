@@ -5,7 +5,6 @@ import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.userSettings.UserSetting;
 
 import com.google.gwt.http.client.Request;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import java.util.List;
@@ -19,8 +18,6 @@ public interface UserSessionServiceFacade {
     Request getUserPreferences(AsyncCallback<UserSetting> callback);
 
     void saveUserPreferences(UserSetting setting, AsyncCallback<Void> callback);
-
-    void postClientNotification(JSONObject notification, AsyncCallback<String> callback);
 
     void postClientNotification(Notification notification, AsyncCallback<String> callback);
 

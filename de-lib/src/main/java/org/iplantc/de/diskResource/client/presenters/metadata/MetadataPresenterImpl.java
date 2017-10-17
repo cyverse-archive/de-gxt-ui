@@ -27,7 +27,6 @@ import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLook
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.MetadataTemplateViewDialog;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.SelectMetadataTemplateDialog;
 import org.iplantc.de.diskResource.client.views.search.MetadataTermSearchField;
-import org.iplantc.de.resources.client.messages.I18N;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.core.client.GWT;
@@ -54,26 +53,26 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
 
    private class TemplateViewCancelSelectHandler implements SelectEvent.SelectHandler {
 
-        private MetadataTemplateViewDialog mdView;
+        private MetadataTemplateViewDialog metadataTemplateDlg;
 
-        public TemplateViewCancelSelectHandler(MetadataTemplateViewDialog mdView) {
-            this.mdView = mdView;
+        public TemplateViewCancelSelectHandler(MetadataTemplateViewDialog metadataTemplateDlg) {
+            this.metadataTemplateDlg = metadataTemplateDlg;
         }
 
         @Override
         public void onSelect(SelectEvent event) {
-            mdView.hide();
+            metadataTemplateDlg.hide();
         }
     }
 
     private class TemplateViewOkSelectHandler implements SelectEvent.SelectHandler {
 
-        private MetadataTemplateViewDialog mdView;
+        private MetadataTemplateViewDialog metadataTemplateDlg;
         private boolean writable;
 
-        public TemplateViewOkSelectHandler(boolean writable, MetadataTemplateViewDialog mdView) {
+        public TemplateViewOkSelectHandler(boolean writable, MetadataTemplateViewDialog metadataTemplateDlg) {
             this.writable = writable;
-            this.mdView = mdView;
+            this.metadataTemplateDlg = metadataTemplateDlg;
         }
 
         @Override
@@ -82,7 +81,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
                 return;
             }
 
-            if (!mdView.isValid()) {
+            if (!metadataTemplateDlg.isValid()) {
                 ConfirmMessageBox cmb =
                         new ConfirmMessageBox(appearance.error(), appearance.incomplete());
                 cmb.addDialogHideHandler(new DialogHideHandler() {
@@ -102,13 +101,13 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
         }
 
         private void updateMetadataFromTemplateView() {
-            mdView.mask(I18N.DISPLAY.loadingMask());
-            ArrayList<Avu> mdList = mdView.getMetadataFromTemplate();
+            metadataTemplateDlg.mask(appearance.loadingMask());
+            ArrayList<Avu> mdList = metadataTemplateDlg.getMetadataFromTemplate();
             view.updateMetadataFromTemplateView(mdList, templateAttributes);
         }
     }
 
-    private int unique_avu_id = 0;
+    private int uniqueAvuId = 0;
     private DiskResource resource;
     private final MetadataView view;
     private final DiskResourceServiceFacade drService;
@@ -121,13 +120,12 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
     private List<Avu> userMdList;
     private List<MetadataTemplateAttribute> templateAttributes;
 
-    private MetadataView.Presenter.Appearance appearance =
-            GWT.create(MetadataView.Presenter.Appearance.class);
     private static DiskResourceAutoBeanFactory autoBeanFactory =
             GWT.create(DiskResourceAutoBeanFactory.class);
+    @Inject MetadataView.Presenter.Appearance appearance;
 
-    @Inject
-    AsyncProviderWrapper<MetadataTemplateViewDialog> templateViewDialogProvider;
+    @Inject AsyncProviderWrapper<MetadataTemplateViewDialog> templateViewDialogProvider;
+    @Inject AsyncProviderWrapper<SelectMetadataTemplateDialog> selectMetaTemplateDlgProvider;
     MetadataTemplateViewDialog templateViewDialog;
 
     @Inject
@@ -196,24 +194,23 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
 
     @Override
     public void onSelectTemplate() {
-        final SelectMetadataTemplateDialog view =
-                new SelectMetadataTemplateDialog(templates, appearance, true);
-        view.addDialogHideHandler(new DialogHideHandler() {
+        selectMetaTemplateDlgProvider.get(new AsyncCallback<SelectMetadataTemplateDialog>() {
             @Override
-            public void onDialogHide(DialogHideEvent event) {
-                PredefinedButton hideButton = event.getHideButton();
-                if (hideButton != null && hideButton.equals(PredefinedButton.OK)) {
-                    MetadataTemplateInfo selectedTemplate = view.getSelectedTemplate();
-                    if (selectedTemplate != null) {
-                        onTemplateSelected(selectedTemplate.getId());
-                    }
-                }
+            public void onFailure(Throwable throwable) {}
+
+            @Override
+            public void onSuccess(SelectMetadataTemplateDialog dialog) {
+                dialog.addDialogHideHandler(hideEvent -> {
+                                            PredefinedButton hideButton = hideEvent.getHideButton();
+                                            if (hideButton != null && hideButton.equals(PredefinedButton.OK)) {
+                                                MetadataTemplateInfo selectedTemplate = dialog.getSelectedTemplate();
+                                                if (selectedTemplate != null) {
+                                                    onTemplateSelected(selectedTemplate.getId());
+                                                }
+                                            }});
+                dialog.show(templates, true);
             }
         });
-        view.setModal(false);
-        view.setSize("400px", "400px");
-        view.setHeading(appearance.selectTemplate());
-        view.show();
     }
 
     @Override
@@ -292,8 +289,8 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
     }
 
     @Override
-    public void downloadTemplate(String templateid) {
-        final String encodedSimpleDownloadURL = drService.downloadTemplate(templateid);
+    public void downloadTemplate(String templateId) {
+        final String encodedSimpleDownloadURL = drService.downloadTemplate(templateId);
         WindowUtil.open(encodedSimpleDownloadURL, "width=100,height=100");
     }
 
@@ -326,7 +323,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
     public Avu setAvuModelKey(Avu avu) {
         if (avu != null) {
             final AutoBean<Avu> avuBean = AutoBeanUtils.getAutoBean(avu);
-            avuBean.setTag(AVU_BEAN_TAG_MODEL_KEY, String.valueOf(unique_avu_id++));
+            avuBean.setTag(AVU_BEAN_TAG_MODEL_KEY, String.valueOf(uniqueAvuId++));
             return avuBean.as();
         }
         return null;

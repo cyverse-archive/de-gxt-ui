@@ -105,8 +105,6 @@ public class DiskResourcePresenterImplTest {
                                                     eq(infoTypeFiltersMock),
                                                     eq(entityTypeMock));
 
-        verify(navigationPresenterMock).setParentPresenter(eq(uut));
-        verify(gridViewPresenterMock).setParentPresenter(eq(uut));
         verify(navigationPresenterMock).setMaskable(eq(viewMock));
 
         // Details
@@ -163,6 +161,8 @@ public class DiskResourcePresenterImplTest {
         verify(navigationViewMock).addFolderSelectedEventHandler(eq(toolbarMock));
         verify(navigationViewMock).addFolderSelectedEventHandler(eq(searchFieldMock));
         verify(navigationViewMock).addDeleteSavedSearchClickedEventHandler(eq(dataSearchPresenterMock));
+        verify(navigationPresenterMock).addDNDDiskResourcesCompletedHandler(eq(uut));
+        verify(navigationPresenterMock).addRefreshFolderSelectedHandler(eq(uut));
 
         // Search
         verify(dataSearchPresenterMock).addUpdateSavedSearchesEventHandler(eq(navigationPresenterMock));

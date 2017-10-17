@@ -2,9 +2,13 @@ package org.iplantc.de.diskResource.client;
 
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.diskResources.DiskResource;
+import org.iplantc.de.diskResource.client.events.selection.AdvancedSharingSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateDataLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelected;
+import org.iplantc.de.diskResource.client.events.selection.ShowDataLinkSelected;
 
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.impl.ImageResourcePrototype;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import com.sencha.gxt.widget.core.client.tree.Tree;
@@ -15,7 +19,12 @@ import java.util.List;
  * Created by jstroot on 2/10/15.
  * @author jstroot
  */
-public interface DataLinkView extends IsWidget, IsMaskable {
+public interface DataLinkView extends IsWidget,
+                                      IsMaskable,
+                                      CreateDataLinkSelected.HasCreateDataLinkSelectedHandlers,
+                                      AdvancedSharingSelected.HasAdvancedSharingSelectedHandlers,
+                                      ShowDataLinkSelected.HasShowDataLinkSelectedHandlers,
+                                      DeleteDataLinkSelected.HasDeleteDataLinkSelectedHandlers {
     interface Appearance {
 
         String dataLinkTitle();
@@ -59,16 +68,12 @@ public interface DataLinkView extends IsWidget, IsMaskable {
         String backgroundClass();
 
         String dataLinkWarningClass();
+
+        ImageResourcePrototype emptyTreeNodeIcon();
     }
 
-    public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter,
-                                       DeleteDataLinkSelected.DeleteDataLinkSelectedHandler {
+    public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
 
-        void createDataLinks(List<DiskResource> selectedItems);
-
-        String getSelectedDataLinkDownloadUrl();
-
-        void openSelectedDataLinkDownloadPage();
     }
 
     void addRoots(List<DiskResource> roots);
