@@ -114,7 +114,7 @@ public class NewToolRequestFormViewDefaultAppearance implements NewToolRequestFo
 
     @Override
     public String getFileName(String filename) {
-        if (Strings.isNullOrEmpty(filename) || !filename.contains(BROWSER_FAKEPATH)) {
+        if (Strings.isNullOrEmpty(filename) || !filename.startsWith(BROWSER_FAKEPATH)) {
             return filename;
         }
         return filename.substring(12);
