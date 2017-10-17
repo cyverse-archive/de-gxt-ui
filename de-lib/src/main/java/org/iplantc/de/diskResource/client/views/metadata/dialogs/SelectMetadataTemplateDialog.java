@@ -55,7 +55,7 @@ public class SelectMetadataTemplateDialog extends IPlantDialog implements IsWidg
         getOkButton().disable();
         this.appearance = appearance;
         setModal(false);
-        setSize("400px", "400px");
+        setSize(appearance.dialogWidth(), appearance.dialogHeight());
         setHeading(appearance.selectTemplate());
 
         uiBinder.createAndBindUi(this);

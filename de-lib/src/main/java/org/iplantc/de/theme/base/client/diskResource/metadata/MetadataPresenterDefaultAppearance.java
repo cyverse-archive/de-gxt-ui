@@ -87,4 +87,14 @@ public class MetadataPresenterDefaultAppearance implements MetadataView.Presente
 	public String loadingMask() {
 		return iplantDisplayStrings.loadingMask();
 	}
+
+	@Override
+	public String dialogWidth() {
+		return "400px";
+	}
+
+	@Override
+	public String dialogHeight() {
+		return "400px";
+	}
 }
