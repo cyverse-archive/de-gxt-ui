@@ -14,7 +14,6 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 
-import com.sencha.gxt.core.client.GXT;
 import com.sencha.gxt.core.client.util.Format;
 
 import java.util.List;
@@ -36,6 +35,8 @@ public class AbstractFileUploadDialogDefaultAppearance implements AbstractFileUp
     private final IplantResources resources;
     private final IplantValidationMessages validationMessages;
     private final IplantValidationConstants validationConstants;
+
+    private final String BROWSER_FAKEPATH = "C:\\fakepath\\";
 
     public AbstractFileUploadDialogDefaultAppearance() {
         this(GWT.<DiskResourceMessages> create(DiskResourceMessages.class),
@@ -87,10 +88,10 @@ public class AbstractFileUploadDialogDefaultAppearance implements AbstractFileUp
 
     @Override
     public String getFileName(String filename) {
-        if (Strings.isNullOrEmpty(filename) || !GXT.isChrome()) {
+        if (Strings.isNullOrEmpty(filename) || !filename.contains(BROWSER_FAKEPATH)) {
             return filename;
         }
-        return filename.substring(12); //chrome always returns C:\fakepath\filename
+        return filename.substring(12);
     }
 
     @Override
