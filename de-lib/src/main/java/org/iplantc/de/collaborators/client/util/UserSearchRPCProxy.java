@@ -5,6 +5,7 @@ package org.iplantc.de.collaborators.client.util;
 
 import org.iplantc.de.client.gin.ServicesInjector;
 import org.iplantc.de.client.models.collaborators.Subject;
+import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.collaborators.client.util.UserSearchField.UsersLoadConfig;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -16,6 +17,7 @@ import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoadResultBean;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author sriram
@@ -48,7 +50,8 @@ public class UserSearchRPCProxy extends RpcProxy<UsersLoadConfig, PagingLoadResu
         serviceFacade.searchCollaborators(lastQueryText, new AsyncCallback<List<Subject>>() {
             @Override
             public void onSuccess(List<Subject> result) {
-                callback.onSuccess(new PagingLoadResultBean<>(result, result.size(), 0));
+                List<Subject> filteredResults = getFilteredResults(result);
+                callback.onSuccess(new PagingLoadResultBean<>(filteredResults, filteredResults.size(), 0));
             }
 
             @Override
@@ -58,6 +61,17 @@ public class UserSearchRPCProxy extends RpcProxy<UsersLoadConfig, PagingLoadResu
             }
         });
 
+    }
+
+    /**
+     * Filter the results so that the user never sees the "default" collaborator list in their search results
+     * @param result
+     * @return
+     */
+    List<Subject> getFilteredResults(List<Subject> result) {
+        return result.stream()
+                     .filter(subject -> !Group.DEFAULT_GROUP.equals(subject.getName()))
+                     .collect(Collectors.toList());
     }
 
 }
