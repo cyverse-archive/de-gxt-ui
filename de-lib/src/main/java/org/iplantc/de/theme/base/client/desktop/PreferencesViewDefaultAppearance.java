@@ -1,9 +1,11 @@
 package org.iplantc.de.theme.base.client.desktop;
 
 import org.iplantc.de.preferences.client.PreferencesView;
+import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 
 import com.sencha.gxt.core.client.XTemplates;
@@ -22,21 +24,25 @@ public class PreferencesViewDefaultAppearance implements PreferencesView.Prefere
     private final DesktopContextualHelpMessages help;
     private final DesktopMessages desktopMessages;
     private Templates templates;
+    private final IplantResources resources;
 
     PreferencesViewDefaultAppearance(final IplantDisplayStrings displayStrings,
                                      final DesktopContextualHelpMessages help,
                                      final DesktopMessages desktopMessages,
+                                     final IplantResources resources,
                                      Templates templates) {
         this.displayStrings = displayStrings;
         this.help = help;
         this.desktopMessages = desktopMessages;
         this.templates = templates;
+        this.resources = resources;
     }
 
     PreferencesViewDefaultAppearance() {
         this(GWT.<IplantDisplayStrings> create(IplantDisplayStrings.class),
              GWT.<DesktopContextualHelpMessages> create(DesktopContextualHelpMessages.class),
              GWT.<DesktopMessages> create(DesktopMessages.class),
+             GWT.create(IplantResources.class),
              GWT.<Templates> create(Templates.class));
     }
 
@@ -197,5 +203,135 @@ public class PreferencesViewDefaultAppearance implements PreferencesView.Prefere
     @Override
     public String resetHpcHelp() {
         return help.resetHpcHelp();
+    }
+
+    @Override
+    public String webhooks() {
+        return desktopMessages.webhooks();
+    }
+
+    @Override
+    public String webhooksPrompt() {
+        return desktopMessages.webhooksPrompt();
+    }
+
+    @Override
+    public String dataNotification() {
+        return desktopMessages.dataNotification();
+    }
+
+    @Override
+    public String appsNotification() {
+        return desktopMessages.appsNotification();
+    }
+
+    @Override
+    public String analysesNotification() {
+        return desktopMessages.analysesNotification();
+    }
+
+    @Override
+    public String toolsNotification() {
+        return desktopMessages.toolsNotification();
+    }
+
+    @Override
+    public String permNotification() {
+        return desktopMessages.permNotification();
+    }
+
+    @Override
+    public String hookTopic() {
+        return desktopMessages.hookTopic();
+    }
+
+    @Override
+    public String test() {
+        return desktopMessages.test();
+    }
+
+    @Override
+    public String teamNotification() {
+        return desktopMessages.teamNotification();
+    }
+
+    @Override
+    public String testWebhookFail() {
+        return desktopMessages.testWebhookFail();
+    }
+
+    @Override
+    public String testWebhookSuccess() {
+        return desktopMessages.testWebhookSuccess();
+    }
+
+    @Override
+    public String mustSelectATopic() {
+        return desktopMessages.mustSelectATopic();
+    }
+
+    @Override
+    public String data() {
+        return desktopMessages.data();
+    }
+
+    @Override
+    public String apps() {
+        return desktopMessages.apps();
+    }
+
+    @Override
+    public String analysis() {
+        return desktopMessages.analysis();
+    }
+
+    @Override
+    public String permIdRequest() {
+        return desktopMessages.permIdRequest();
+    }
+
+    @Override
+    public String team() {
+        return desktopMessages.team();
+    }
+
+    @Override
+    public String toolRequest() {
+        return desktopMessages.toolRequest();
+    }
+
+    @Override
+    public ImageResource deleteIcon() {
+        return resources.delete();
+    }
+
+    @Override
+    public String validUrl() {
+        return desktopMessages.validUrl();
+    }
+
+    @Override
+    public String width() {
+        return "500";
+    }
+
+    @Override
+    public String height() {
+        return "500";
+    }
+
+    @Override
+    public String emailSettings() {
+        return desktopMessages.emailSettings();
+    }
+
+    @Override
+    public String general() {
+        return desktopMessages.general();
+    }
+
+    @Override
+    public String notification() {
+        return desktopMessages.notification();
     }
 }

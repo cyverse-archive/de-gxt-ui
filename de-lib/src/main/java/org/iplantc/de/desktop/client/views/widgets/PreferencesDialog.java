@@ -42,6 +42,7 @@ public class PreferencesDialog extends IPlantDialog implements DialogHideEvent.D
         this.presenter = presenter;
         this.appearance = appearance;
         setHeading(appearance.preferences());
+        setSize(appearance.width(),appearance.height());
         getButton(PredefinedButton.OK).setText(appearance.done());
         getButton(PredefinedButton.CANCEL);
         defaultsBtn = new TextButton(appearance.restoreDefaults());
@@ -102,8 +103,10 @@ public class PreferencesDialog extends IPlantDialog implements DialogHideEvent.D
     @Override
     public void onDialogHide(DialogHideEvent event) {
         if (Dialog.PredefinedButton.OK.equals(event.getHideButton())) {
-            presenter.saveUserSettings();
-            hide();
+            if (presenter.isValid()) {
+                presenter.saveUserSettings();
+                hide();
+            }
         }
     }
 

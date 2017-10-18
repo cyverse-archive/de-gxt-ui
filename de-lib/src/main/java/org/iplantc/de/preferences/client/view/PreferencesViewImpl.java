@@ -6,15 +6,20 @@ import org.iplantc.de.client.KeyBoardShortcutConstants;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.diskResources.Folder;
+import org.iplantc.de.client.models.webhooks.Webhook;
+import org.iplantc.de.client.models.webhooks.WebhooksAutoBeanFactory;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.validators.UrlValidator;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
 import org.iplantc.de.diskResource.client.views.widgets.FolderSelectorField;
 import org.iplantc.de.preferences.client.PreferencesView;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
 import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
+import org.iplantc.de.preferences.client.events.TestWebhookClicked;
 import org.iplantc.de.preferences.shared.Preferences;
 
+import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
@@ -30,15 +35,22 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.Composite;
+import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.button.TextButton;
-import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.CheckBox;
+import com.sencha.gxt.widget.core.client.form.FieldSet;
+import com.sencha.gxt.widget.core.client.form.FormPanelHelper;
+import com.sencha.gxt.widget.core.client.form.IsField;
 import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.form.validator.MaxLengthValidator;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author sriram, jstroot
@@ -48,13 +60,9 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
 
 
     @UiTemplate("PreferencesView.ui.xml")
-    interface MyUiBinder extends UiBinder<VerticalLayoutContainer, PreferencesViewImpl> { }
+    interface MyUiBinder extends UiBinder<TabPanel, PreferencesViewImpl> { }
 
     interface EditorDriver extends SimpleBeanEditorDriver<UserSettings, PreferencesViewImpl>{}
-
-    @UiField @Ignore VerticalLayoutContainer container;
-    @UiField @Ignore VerticalLayoutContainer kbContainer;
-    @UiField @Ignore VerticalLayoutContainer prefContainer;
 
     @UiField TextField analysesShortCut;
     @UiField TextField appsShortCut;
@@ -70,12 +78,39 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @UiField(provided = true) FolderSelectorField defaultOutputFolder;
     @UiField TextField notifyShortCut;
     @UiField(provided = true) PreferencesViewAppearance appearance;
+
     @UiField(provided = true)
     @Ignore
     HTML resetHpcfield;
+
     @UiField
     @Ignore
     TextButton hpcResetBtn;
+
+    @UiField(provided = true)
+    @Ignore
+    HTML webhooksfield;
+
+    @UiField
+    @Ignore
+    TextButton testBtn;
+
+    @UiField
+    @Ignore
+    TextField hookUrl;
+
+    @UiField
+    @Ignore
+    TextButton hookDelBtn;
+
+    @UiField
+    @Ignore
+    CheckBox dataNotification, appsNotification, analysesNotification, toolsNotification,
+            permIdNotification, teamNotification;
+
+    @Ignore
+    @UiField
+    FieldSet hookFieldSet;
 
     private final KeyBoardShortcutConstants KB_CONSTANTS;
     private final Map<TextField, String> kbMap;
@@ -87,6 +122,10 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     private UserSettings usValue;
 
     @Inject UserSettings us;
+    @Inject
+    WebhooksAutoBeanFactory wabFactory;
+    @Inject
+    IplantAnnouncer announcer;
 
     @Inject
     PreferencesViewImpl(final DiskResourceSelectorFieldFactory folderSelectorFieldFactory,
@@ -99,8 +138,12 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         this.defaultOutputFolder.hideResetButton();
         this.KB_CONSTANTS = kbConstants;
         this.resetHpcfield = new HTML(appearance.resetHpcPrompt());
+        this.webhooksfield = new HTML(appearance.webhooksPrompt());
         initWidget(uiBinder.createAndBindUi(this));
 
+        hookUrl.addValidator(new UrlValidator());
+        hookUrl.setValidateOnBlur(true);
+        
         kbMap = new HashMap<>();
         appsShortCut.addValidator(new MaxLengthValidator(1));
         dataShortCut.addValidator(new MaxLengthValidator(1));
@@ -108,6 +151,7 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         notifyShortCut.addValidator(new MaxLengthValidator(1));
         closeShortCut.addValidator(new MaxLengthValidator(1));
         defaultOutputFolder.addValidator(new AnalysisOutputValidator(wizardAppearance));
+
         defaultOutputFolder.addValueChangeHandler(new ValueChangeHandler<Folder>() {
 
             @Override
@@ -137,6 +181,11 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         return addHandler(handler, ResetHpcTokenClicked.TYPE);
     }
 
+    @Override
+    public HandlerRegistration addTestWebhookClickedHandlers(TestWebhookClicked.TestWebhookClickedHandler handler) {
+        return addHandler(handler, TestWebhookClicked.TYPE);
+    }
+
 
     @Ignore
     public UserSettings getValue() {
@@ -146,6 +195,17 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @Override
     public void initAndShow(final UserSettings userSettings) {
         this.usValue = userSettings;
+        if (userSettings.getWebhooks() != null && userSettings.getWebhooks().size() > 0) {
+            Webhook webhook = userSettings.getWebhooks().get(0);
+            List<String> topics = webhook.getTopics();
+            this.hookUrl.setValue(webhook.getUrl());
+            List<IsField<?>> fields = FormPanelHelper.getFields(hookFieldSet);
+            for (IsField f : fields) {
+                if (f instanceof CheckBox && (topics.contains(((CheckBox)f).getName()))) {
+                    ((CheckBox)f).setValue(true);
+                }
+            }
+        }
         editorDriver.edit(userSettings);
         if (!userSettings.hasUserSessionConnection()) {
             userSessionFail();
@@ -168,10 +228,23 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
                             ks.markInvalid(appearance.duplicateShortCutKey(kbMap.get(ks)));
                             sc.markInvalid(appearance.duplicateShortCutKey(kbMap.get(ks)));
                             valid = false;
+                            announcer.schedule(new ErrorAnnouncementConfig(appearance.completeRequiredFieldsError()));
                         }
                     }
                 }
             }
+        }
+        if (!Strings.isNullOrEmpty(hookUrl.getValue())) {
+            List<String> topics = getSelectedTopics();
+            if (topics == null || topics.size() == 0) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.mustSelectATopic()));
+                valid = false;
+            }
+        }
+
+        if (editorDriver.hasErrors()) {
+            announcer.schedule(new ErrorAnnouncementConfig(appearance.completeRequiredFieldsError()));
+            valid = false;
         }
         return valid;
     }
@@ -179,12 +252,31 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @Override
     public void flush() {
         UserSettings value = editorDriver.flush();
+        List<String> topics = getSelectedTopics();
+        if (!Strings.isNullOrEmpty(hookUrl.getValue())) {
+            if (topics == null || topics.size() == 0) {
+                return;
+            }
+            Webhook hook = wabFactory.getWebhook().as();
+            hook.setUrl(hookUrl.getValue());
+            hook.setType(hook.getDefaultType());
+            hook.setTopics(topics);
+            value.setWebhooks(Arrays.asList(hook));
+        } else {
+            value.setWebhooks(new ArrayList<>());
+        }
+
         if (!editorDriver.hasErrors() && isValid()) {
             this.flushedValue = value;
-        } else {
-            IplantAnnouncer.getInstance()
-                           .schedule(new ErrorAnnouncementConfig(appearance.completeRequiredFieldsError()));
         }
+    }
+
+    private List<String> getSelectedTopics() {
+        List<IsField<?>> fields = FormPanelHelper.getFields(hookFieldSet);
+        return fields.stream()
+                     .filter(f -> f instanceof CheckBox && ((CheckBox)f).getValue())
+                     .map(f -> (((CheckBox)f).getName()))
+                     .collect(Collectors.toList());
     }
 
     @Override
@@ -226,6 +318,13 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         closeShortCut.ensureDebugId(baseID + Preferences.Ids.CLOSE_SC);
 
         hpcResetBtn.ensureDebugId(baseID + Preferences.Ids.RESET_HPC);
+
+        dataNotification.ensureDebugId(baseID + Preferences.Ids.DATA_NOTIFICATION);
+        appsNotification.ensureDebugId(baseID + Preferences.Ids.APPS_NOTIFICATION);
+        analysesNotification.ensureDebugId(baseID + Preferences.Ids.ANALYSES_NOTIFICATION);
+        toolsNotification.ensureDebugId(baseID + Preferences.Ids.TOOLS_NOTIFICATION);
+        permIdNotification.ensureDebugId(baseID + Preferences.Ids.PERMS_NOTIFICATION);
+        teamNotification.ensureDebugId(baseID + Preferences.Ids.TEAM_NOTIFICATION);
 
     }
 
@@ -287,5 +386,20 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @UiHandler("hpcResetBtn")
     void onResetHpcToken(SelectEvent event) {
         fireEvent(new ResetHpcTokenClicked());
+    }
+
+    @UiHandler("testBtn")
+    void onAddSlack(SelectEvent event) {
+        if (!Strings.isNullOrEmpty(hookUrl.getValue())) {
+            fireEvent(new TestWebhookClicked(hookUrl.getValue()));
+        } else {
+            hookUrl.markInvalid(appearance.validUrl());
+        }
+
+    }
+
+    @UiHandler("hookDelBtn")
+    public void onDeleteHook(SelectEvent event) {
+        hookUrl.clear();
     }
 }

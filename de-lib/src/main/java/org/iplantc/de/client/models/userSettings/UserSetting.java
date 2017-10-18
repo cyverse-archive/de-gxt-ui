@@ -1,8 +1,11 @@
 package org.iplantc.de.client.models.userSettings;
 
 import org.iplantc.de.client.models.diskResources.Folder;
+import org.iplantc.de.client.models.webhooks.Webhook;
 
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
+
+import java.util.List;
 
 /**
  * @author aramsey
@@ -57,5 +60,7 @@ public interface UserSetting {
     Boolean isEnableWaitTimeMessage();
     void setEnableWaitTimeMessage(Boolean enable);
 
-    
+    List<Webhook> getWebhooks();
+
+    void setWebhooks(List<Webhook> webhooks);
 }

@@ -9,6 +9,7 @@ import org.iplantc.de.client.models.bootstrap.UserBootstrap;
 import org.iplantc.de.client.models.bootstrap.UserProfile;
 import org.iplantc.de.client.models.bootstrap.Workspace;
 import org.iplantc.de.client.models.userSettings.UserSetting;
+import org.iplantc.de.client.models.webhooks.Webhook;
 import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.base.Strings;
@@ -56,6 +57,7 @@ public class UserInfo {
     private SystemIds systemIds;
     private AppsInfo appsInfo;
     private List<WindowState> savedOrderedWindowStates;
+    private List<Webhook> webhooks;
     private static String AGAVE_AUTH_KEY = "agave";
     private Logger LOG = Logger.getLogger(UserInfo.class.getName());
 
@@ -83,6 +85,7 @@ public class UserInfo {
         if (appsInfo != null) {
             workspace = appsInfo.getWorkspace();
             systemIds = appsInfo.getSystemsIds();
+            preferences.setWebhooks(appsInfo.getWebhooks());
         }
 
         checkForErrors();

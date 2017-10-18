@@ -1,6 +1,7 @@
 package org.iplantc.de.preferences.client.presenter;
 
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,10 +11,14 @@ import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.services.OauthServiceFacade;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.preferences.client.PreferencesView;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
 import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
+import org.iplantc.de.preferences.client.events.TestWebhookClicked;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -49,8 +54,9 @@ public class PreferencesPresenterImplTest {
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCaptor;
     @Captor ArgumentCaptor<AsyncCallback<Map<String, String>>> urlMapCaptor;
     @Mock Map<String, String> redirectUrlsMock;
-
-
+    @Captor ArgumentCaptor<AppsCallback<Void>> voidAppsCaptor;
+    @Mock
+    IplantAnnouncer iplantAnnouncerMock;
     private PreferencesPresenterImpl uut;
 
     @Before
@@ -64,6 +70,7 @@ public class PreferencesPresenterImplTest {
                                            constantsMock);
 
         uut.desktopPresenter = desktopPresenterMock;
+        uut.announcer = iplantAnnouncerMock;
     }
     
     @Test
@@ -122,6 +129,16 @@ public class PreferencesPresenterImplTest {
         verify(oauthServiceFacadeMock).getRedirectUris(urlMapCaptor.capture());
         urlMapCaptor.getValue().onSuccess(redirectUrlsMock);
         verify(redirectUrlsMock).get(eq(constantsMock.hpcSystemId()));
+    }
+    @Test
+    public void testOnTestClicked() {
+        TestWebhookClicked twc = mock(TestWebhookClicked.class);
+        when(twc.getUrl()).thenReturn("https://requestb.in/ukaletuk");
+        when(appearanceMock.testWebhookSuccess()).thenReturn("Request successful!");
+        uut.onTestClicked(twc);
+        verify(serviceFacadeMock).testWebhook(eq(twc.getUrl()), voidAppsCaptor.capture());
+        voidAppsCaptor.getValue().onSuccess(null);
+        verify(iplantAnnouncerMock).schedule(isA(SuccessAnnouncementConfig.class));
     }
 
 }

@@ -88,4 +88,6 @@ public interface DEClientConstants extends Constants {
     String errorUrl();
 
     int maxFileSizeForSimpleUpload();
+
+    String slackTemplate();
 }

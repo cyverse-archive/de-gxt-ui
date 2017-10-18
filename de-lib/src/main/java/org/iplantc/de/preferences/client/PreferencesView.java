@@ -4,7 +4,9 @@ import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
 import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
+import org.iplantc.de.preferences.client.events.TestWebhookClicked;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.IsWidget;
 
@@ -13,7 +15,8 @@ import com.google.gwt.user.client.ui.IsWidget;
  */
 public interface PreferencesView extends IsWidget,
                                          PrefDlgRetryUserSessionClicked.HasPrefDlgRetryUserSessionClickedHandlers,
-                                         ResetHpcTokenClicked.HasResetHpcLabelClickedHandlers{
+                                         ResetHpcTokenClicked.HasResetHpcLabelClickedHandlers,
+                                         TestWebhookClicked.HasTestWebhookClickedHandlers {
 
     interface PreferencesViewAppearance {
 
@@ -80,6 +83,58 @@ public interface PreferencesView extends IsWidget,
         String hpcResetFailure();
 
         String resetHpcHelp();
+
+        String webhooks();
+
+        String webhooksPrompt();
+
+        String dataNotification();
+
+        String appsNotification();
+
+        String analysesNotification();
+
+        String toolsNotification();
+
+        String permNotification();
+
+        String hookTopic();
+
+        String test();
+
+        String teamNotification();
+
+        String testWebhookFail();
+
+        String testWebhookSuccess();
+
+        String mustSelectATopic();
+
+        String data();
+
+        String apps();
+
+        String analysis();
+
+        String permIdRequest();
+
+        String team();
+        
+        String toolRequest();
+
+        ImageResource deleteIcon();
+
+        String validUrl();
+
+        String width();
+
+        String height();
+
+        String emailSettings();
+
+        String general();
+
+        String notification();
     }
 
     void userSessionSuccess();
@@ -111,5 +166,7 @@ public interface PreferencesView extends IsWidget,
         PreferencesView getView();
 
         void setViewDebugId(String baseId);
+
+        boolean isValid();
     }
 }

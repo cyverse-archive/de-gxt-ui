@@ -124,4 +124,52 @@ public interface DesktopMessages extends Messages {
     SafeHtml resetHpcPrompt();
 
     String hpcResetFailure();
+
+    String webhooks();
+
+    String webhooksPrompt();
+
+    String dataNotification();
+
+    String appsNotification();
+
+    String analysesNotification();
+
+    String toolsNotification();
+
+    String permNotification();
+
+    String hookTopic();
+
+    String test();
+
+    String teamNotification();
+
+    SafeHtml webhookSaveError();
+
+    String testWebhookFail();
+
+    String testWebhookSuccess();
+
+    String mustSelectATopic();
+
+    String data();
+
+    String apps();
+
+    String analysis();
+
+    String permIdRequest();
+
+    String team();
+
+    String toolRequest();
+
+    String validUrl();
+
+    String emailSettings();
+
+    String general();
+
+    String notification();
 }

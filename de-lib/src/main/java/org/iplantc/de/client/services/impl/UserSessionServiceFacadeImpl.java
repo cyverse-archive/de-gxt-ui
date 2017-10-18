@@ -3,6 +3,7 @@ package org.iplantc.de.client.services.impl;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
+import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.CommonModelAutoBeanFactory;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.UserSession;
@@ -10,10 +11,17 @@ import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.userSettings.UserSetting;
 import org.iplantc.de.client.models.userSettings.UserSettingAutoBeanFactory;
+import org.iplantc.de.client.models.webhooks.Webhook;
+import org.iplantc.de.client.models.webhooks.WebhookList;
+import org.iplantc.de.client.models.webhooks.WebhooksAutoBeanFactory;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
+import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
+import org.iplantc.de.shared.AppsCallback;
+import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.DEProperties;
+import org.iplantc.de.shared.services.BaseServiceCallWrapper;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
@@ -37,23 +45,29 @@ public class UserSessionServiceFacadeImpl implements UserSessionServiceFacade {
 
     private final String BOOTSTRAP = "org.iplantc.services.bootstrap";
     private final String LOGOUT = "org.iplantc.services.logout";
+    private final String APPS = "org.iplantc.services.apps";
     private final DEProperties deProperties;
     private final UserInfo userInfo;
     private final CommonModelAutoBeanFactory factory;
     private final DiscEnvApiService deServiceFacade;
     private final UserSettingAutoBeanFactory settingFactory;
+    private final WebhooksAutoBeanFactory hookFactory;
+    @Inject
+    DEClientConstants constants;
 
     @Inject
     public UserSessionServiceFacadeImpl(final DiscEnvApiService deServiceFacade,
                                         final DEProperties deProperties,
                                         final UserInfo userInfo,
                                         final CommonModelAutoBeanFactory factory,
-                                        final UserSettingAutoBeanFactory settingFactory) {
+                                        final UserSettingAutoBeanFactory settingFactory,
+                                        final WebhooksAutoBeanFactory hookFactory) {
         this.deServiceFacade = deServiceFacade;
         this.deProperties = deProperties;
         this.userInfo = userInfo;
         this.factory = factory;
         this.settingFactory = settingFactory;
+        this.hookFactory = hookFactory;
     }
 
     @Override
@@ -92,8 +106,11 @@ public class UserSessionServiceFacadeImpl implements UserSessionServiceFacade {
     }
 
     @Override
-    public void saveUserPreferences(UserSetting setting, AsyncCallback<Void> callback) {
+    public void saveUserPreferences(UserSetting setting, AsyncCallback<Void> callback, AppsCallback<Void> hookCallback) {
         String address = deProperties.getMuleServiceBaseUrl() + "preferences"; //$NON-NLS-1$
+        List<Webhook> webhooks = setting.getWebhooks();
+        updateWebhooks(webhooks, hookCallback); //webhooks saved thru separate end-point
+        setting.setWebhooks(null); //remove from preferences json
         final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(setting));
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
         deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
@@ -122,5 +139,29 @@ public class UserSessionServiceFacadeImpl implements UserSessionServiceFacade {
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deServiceFacade.getServiceData(wrapper, callback);
     }
+
+    @Override
+    public void testWebhook(String url, AsyncCallback<Void> callback) {
+        //this needs to be moved up to a service
+      ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, url, constants.slackTemplate());
+      deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
+    }
+
+    @Override
+    public void updateWebhooks(List<Webhook> hooks, final DECallback<Void> callback) {
+        String address = deProperties.getUnproctedMuleServiceBaseUrl()  + "webhooks";
+        WebhookList hookList = hookFactory.getWebhookList().as();
+        hookList.setWebhooks(hooks);
+        Splittable sp = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(hookList));
+        ServiceCallWrapper wrapper =
+                new ServiceCallWrapper(BaseServiceCallWrapper.Type.PUT, address, sp.getPayload());
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, Void> (callback){
+            @Override
+            protected Void convertFrom(String object) {
+                return null;
+            }
+        }); 
+    }
+
 
 }

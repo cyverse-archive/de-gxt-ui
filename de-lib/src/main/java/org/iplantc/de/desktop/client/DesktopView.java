@@ -190,6 +190,8 @@ public interface DesktopView extends IsWidget {
             String newApp();
 
             String sectionOne();
+
+            SafeHtml webhookSaveError();
         }
 
         List<WindowState> getOrderedWindowStates();

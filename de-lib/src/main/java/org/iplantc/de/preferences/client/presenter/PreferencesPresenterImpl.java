@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.userSettings.UserSetting;
 import org.iplantc.de.client.services.OauthServiceFacade;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
+import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
@@ -13,6 +14,7 @@ import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.preferences.client.PreferencesView;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
 import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
+import org.iplantc.de.preferences.client.events.TestWebhookClicked;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -26,7 +28,8 @@ import java.util.Map;
  */
 public class PreferencesPresenterImpl implements PreferencesView.Presenter,
                                                  PrefDlgRetryUserSessionClicked.PrefDlgRetryUserSessionClickedHandler,
-                                                 ResetHpcTokenClicked.ResetHpcTokenClickedHandler {
+                                                 ResetHpcTokenClicked.ResetHpcTokenClickedHandler,
+                                                 TestWebhookClicked.TestWebhookClickedHandler {
 
 
     private final PreferencesView view;
@@ -52,6 +55,7 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
 
         this.view.addPrefDlgRetryUserSessionClickedHandlers(this);
         this.view.addResetHpcTokenClickedHandlers(this);
+        this.view.addTestWebhookClickedHandlers(this);
     }
 
     @Override
@@ -128,6 +132,11 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
     }
 
     @Override
+    public boolean isValid() {
+        return view.isValid();
+    }
+
+    @Override
     public void onResetHpcClicked(ResetHpcTokenClicked event) {
         oauthServiceFacade.deleteHpcToken(new AsyncCallback<Void>() {
             @Override
@@ -159,4 +168,24 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
             }
         });
     }
+
+    /**
+     * Attempt to send a test webhook notification to the URL given by user.
+     * @param event
+     */
+    @Override
+    public void onTestClicked(TestWebhookClicked event) {
+        serviceFacade.testWebhook(event.getUrl(),new AsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                ErrorHandler.post(appearance.testWebhookFail(), exception);
+            }
+
+            @Override
+            public void onSuccess(Void result) {
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.testWebhookSuccess()));
+           }
+        });
+    }
+    
 }

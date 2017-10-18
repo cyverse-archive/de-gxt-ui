@@ -3,6 +3,9 @@ package org.iplantc.de.client.services;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.userSettings.UserSetting;
+import org.iplantc.de.client.models.webhooks.Webhook;
+import org.iplantc.de.shared.AppsCallback;
+import org.iplantc.de.shared.DECallback;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -17,7 +20,7 @@ public interface UserSessionServiceFacade {
 
     Request getUserPreferences(AsyncCallback<UserSetting> callback);
 
-    void saveUserPreferences(UserSetting setting, AsyncCallback<Void> callback);
+    void saveUserPreferences(UserSetting setting, AsyncCallback<Void> callback, AppsCallback<Void> hookCallback);
 
     void postClientNotification(Notification notification, AsyncCallback<String> callback);
 
@@ -25,4 +28,7 @@ public interface UserSessionServiceFacade {
 
     void logout(AsyncCallback<String> callback);
 
+    void testWebhook(String url, AsyncCallback<Void> callback);
+
+    void updateWebhooks(List<Webhook> hooks, DECallback<Void> callback);
 }
