@@ -124,6 +124,8 @@ public interface DiskResourceModule {
         String MULTI_FILE_WIDGET_ADD = ".addBtn";
         String MULTI_FILE_WIDGET_DELETE = ".deleteBtn";
         String METADATA_COPY_DLG = "metadataCopyDlg";
+        String SAVE_AS_DIALOG = "saveAsDlg";
+        String FILE_NAME = ".fileName";
     }
 
     interface MetadataIds {
