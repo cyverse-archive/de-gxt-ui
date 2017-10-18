@@ -118,6 +118,8 @@ public interface DiskResourceModule {
         String DETAILS_MD5 = ".md5";
         String DETAILS_SEND_TO = ".sendTo";
         String DETAILS_TAGS = ".tags";
+        String INFO_TYPE_DLG = "infoTypeDlg";
+        String INFO_TYPE_DROPDOWN = ".infoTypeList";
     }
 
     interface MetadataIds {

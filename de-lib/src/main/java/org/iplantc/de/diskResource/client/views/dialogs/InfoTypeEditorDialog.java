@@ -6,6 +6,7 @@ package org.iplantc.de.diskResource.client.views.dialogs;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.diskResource.client.GridView;
+import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.inject.Inject;
 
@@ -46,5 +47,19 @@ public class InfoTypeEditorDialog extends IPlantDialog {
 
     public void setCurrentInfoType(InfoType currentType) {
         infoTypeCbo.setValue(currentType);
+    }
+
+    @Override
+    public void show() {
+        super.show();
+
+        ensureDebugId(DiskResourceModule.Ids.INFO_TYPE_DLG);
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        infoTypeCbo.ensureDebugId(baseID + DiskResourceModule.Ids.INFO_TYPE_DROPDOWN);
     }
 }
