@@ -120,6 +120,9 @@ public interface DiskResourceModule {
         String DETAILS_TAGS = ".tags";
         String INFO_TYPE_DLG = "infoTypeDlg";
         String INFO_TYPE_DROPDOWN = ".infoTypeList";
+        String MULTI_FILE_WIDGET_TOOLBAR = ".toolbar";
+        String MULTI_FILE_WIDGET_ADD = ".addBtn";
+        String MULTI_FILE_WIDGET_DELETE = ".deleteBtn";
     }
 
     interface MetadataIds {
