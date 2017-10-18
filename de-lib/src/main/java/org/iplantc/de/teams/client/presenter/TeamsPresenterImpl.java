@@ -4,7 +4,6 @@ import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
-import org.iplantc.de.collaborators.client.CollaborationView;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -237,11 +236,9 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
     @Override
     public void onTeamSearchResultLoad(TeamSearchResultLoad event) {
         List<Group> teams = event.getSearchResults();
-        if (teams != null && !teams.isEmpty()) {
-            currentFilter = null;
-            view.clearTeams();
-            view.addTeams(teams);
-        }
+        currentFilter = null;
+        view.clearTeams();
+        view.addTeams(teams);
     }
 
     void addCreatorToTeams(List<Group> teams, FastMap<Subject> creatorFastMap) {
