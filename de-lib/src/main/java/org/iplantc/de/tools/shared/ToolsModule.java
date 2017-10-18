@@ -17,7 +17,7 @@ public interface ToolsModule {
         String MENU_ITEM_USE_IN_APPS = ".useInApps";
 
         String MENU_SHARE = ".shareMenu";
-        String MENU_ITEM_SHARE_COLLABS = "shareCollabs";
+        String MENU_ITEM_SHARE_COLLABS = ".shareCollabs";
         String MENU_ITEM_SHARE_PUBLIC = ".sharePublic";
 
         String MENU_ITEM_REFRESH = ".refresh";
