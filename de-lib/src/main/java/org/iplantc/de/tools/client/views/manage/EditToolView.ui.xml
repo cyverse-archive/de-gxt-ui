@@ -85,11 +85,11 @@
                 </container:VBoxLayoutContainer>
             </c:FramedPanel>
         </container:child>
-        <c:FramedPanel ui:field="restrictions" heading="{appearance.restrictions}" visible="false">
+        <c:FramedPanel ui:field="restrictions" heading="{appearance.restrictions}">
             <form:FieldSet ui:field="fieldSet" heading="{appearance.restrictions}" collapsible="true"
                            layoutData="{marginData}">
                 <container:VBoxLayoutContainer VBoxLayoutAlign="STRETCH">
-                    <form:FieldLabel text="{appearance.cpuShare}">
+                    <form:FieldLabel text="{appearance.pidsLimit}">
                         <form:widget>
                             <form:TextField ui:field="cpu" allowBlank="true" enabled="false"/>
                         </form:widget>

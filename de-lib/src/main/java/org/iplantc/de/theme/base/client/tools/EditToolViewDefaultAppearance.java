@@ -58,8 +58,8 @@ public class EditToolViewDefaultAppearance implements EditToolView.EditToolViewA
     }
 
     @Override
-    public String cpuShare() {
-        return toolMessages.cpuShare();
+    public String pidsLimit() {
+        return toolMessages.pidsLimit();
     }
 
     @Override

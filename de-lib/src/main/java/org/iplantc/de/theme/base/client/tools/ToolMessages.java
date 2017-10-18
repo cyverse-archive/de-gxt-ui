@@ -50,7 +50,7 @@ public interface ToolMessages extends Messages {
 
     String dockerUrl();
 
-    String cpuShare();
+    String pidsLimit();
 
     String memLimit();
 
