@@ -18,7 +18,6 @@ import org.iplantc.de.preferences.client.PreferencesView;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
 import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
 import org.iplantc.de.preferences.client.events.TestWebhookClicked;
-import org.iplantc.de.shared.AppsCallback;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -54,7 +53,7 @@ public class PreferencesPresenterImplTest {
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCaptor;
     @Captor ArgumentCaptor<AsyncCallback<Map<String, String>>> urlMapCaptor;
     @Mock Map<String, String> redirectUrlsMock;
-    @Captor ArgumentCaptor<AppsCallback<Void>> voidAppsCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<Void>> voidAppsCaptor;
     @Mock
     IplantAnnouncer iplantAnnouncerMock;
     private PreferencesPresenterImpl uut;
