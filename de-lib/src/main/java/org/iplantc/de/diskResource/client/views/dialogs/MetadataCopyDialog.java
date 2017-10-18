@@ -6,6 +6,7 @@ import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.diskResource.client.GridView;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
 import org.iplantc.de.diskResource.client.views.widgets.MultiFileSelectorField;
+import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.gwt.user.client.TakesValue;
 import com.google.inject.Inject;
@@ -48,5 +49,15 @@ public class MetadataCopyDialog extends IPlantDialog implements TakesValue<List<
         setHeading(appearance.copyMetadata(selected.getPath()));
 
         super.show();
+
+        ensureDebugId(DiskResourceModule.Ids.METADATA_COPY_DLG);
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        getOkButton().ensureDebugId(baseID + DiskResourceModule.Ids.OK_BTN);
+        multiFileFolderSelector.ensureDebugId(baseID);
     }
 }

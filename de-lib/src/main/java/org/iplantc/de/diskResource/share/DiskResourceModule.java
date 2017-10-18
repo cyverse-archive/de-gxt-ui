@@ -123,6 +123,7 @@ public interface DiskResourceModule {
         String MULTI_FILE_WIDGET_TOOLBAR = ".toolbar";
         String MULTI_FILE_WIDGET_ADD = ".addBtn";
         String MULTI_FILE_WIDGET_DELETE = ".deleteBtn";
+        String METADATA_COPY_DLG = "metadataCopyDlg";
     }
 
     interface MetadataIds {
