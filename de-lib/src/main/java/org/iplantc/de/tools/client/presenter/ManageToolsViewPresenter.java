@@ -11,6 +11,7 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
+import org.iplantc.de.commons.client.views.dialogs.IplantInfoBox;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.tools.client.events.AddNewToolSelected;
@@ -27,6 +28,7 @@ import org.iplantc.de.tools.client.views.dialogs.EditToolDialog;
 import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolInfoDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolSharingDialog;
+import org.iplantc.de.tools.client.views.manage.EditToolView;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
 
@@ -49,10 +51,13 @@ import java.util.List;
  */
 public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
+
     @Inject
     ManageToolsView toolsView;
 
     ManageToolsView.ManageToolsViewAppearance appearance;
+
+    EditToolView.EditToolViewAppearance editToolViewAppearance;
 
     ToolServices toolServices = ServicesInjector.INSTANCE.getDeployedComponentServices();
 
@@ -80,8 +85,10 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
     protected List<Tool> currentSelection = Lists.newArrayList();
 
     @Inject
-    public ManageToolsViewPresenter(ManageToolsView.ManageToolsViewAppearance appearance) {
+    public ManageToolsViewPresenter(ManageToolsView.ManageToolsViewAppearance appearance,
+                                    EditToolView.EditToolViewAppearance editToolViewAppearance) {
         this.appearance = appearance;
+        this.editToolViewAppearance = editToolViewAppearance;
     }
 
     @Override
@@ -140,8 +147,9 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
             @Override
             public void onSuccess(Tool result) {
-                announcer.schedule(new SuccessAnnouncementConfig(
-                        appearance.toolAdded(result.getName())));
+                IplantInfoBox iib = new IplantInfoBox(editToolViewAppearance.create(),
+                                                      appearance.toolAdded(result.getName()));
+                iib.show();
                 dialogCallbackCommand.execute();
                 tool.setId(result.getId());
                 tool.setPermission(result.getPermission());
@@ -161,8 +169,9 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
             @Override
             public void onSuccess(Tool result) {
-                announcer.schedule(new SuccessAnnouncementConfig(
-                        appearance.toolUpdated(result.getName())));
+                IplantInfoBox iib = new IplantInfoBox(editToolViewAppearance.edit(),
+                                                      appearance.toolUpdated(result.getName()));
+                iib.show();
                 dialogCallbackCommand.execute();
                 toolsView.updateTool(result);
             }
@@ -360,7 +369,7 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
             @Override
             public void onSuccess(ToolInfoDialog o) {
-                o.show(getSelectedTool(), result);
+                o.show(tool, result);
             }
         });
     }

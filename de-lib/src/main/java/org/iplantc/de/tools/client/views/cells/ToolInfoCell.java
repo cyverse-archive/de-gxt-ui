@@ -44,6 +44,24 @@ public class ToolInfoCell extends AbstractCell<Tool>
         String toolInformation();
 
         String appsUsingTool();
+
+        String restrictions();
+
+        String memLimit();
+
+        String pidsLimit();
+
+        String timeLimit();
+
+        String networkingMode();
+
+        String bridge();
+
+        String enabled();
+
+        String disabled();
+
+        String notApplicable();
     }
 
     private final ToolInfoCell.ToolInfoCellAppearance appearance;
