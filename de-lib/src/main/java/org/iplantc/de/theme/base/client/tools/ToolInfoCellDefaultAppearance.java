@@ -133,4 +133,49 @@ public class ToolInfoCellDefaultAppearance implements ToolInfoCell.ToolInfoCellA
     public String appsUsingTool() {
         return displayStrings.appUsingTool();
     }
+
+    @Override
+    public String restrictions() {
+        return displayStrings.restrictions();
+    }
+
+    @Override
+    public String memLimit() {
+        return displayStrings.memLimit();
+    }
+
+    @Override
+    public String pidsLimit() {
+        return displayStrings.pidsLimit();
+    }
+
+    @Override
+    public String timeLimit() {
+        return displayStrings.timeLimit();
+    }
+
+    @Override
+    public String networkingMode() {
+        return displayStrings.networkingMode();
+    }
+
+    @Override
+    public String bridge() {
+        return displayStrings.bridge();
+    }
+
+    @Override
+    public String enabled() {
+        return displayStrings.enabled();
+    }
+
+    @Override
+    public String disabled() {
+        return displayStrings.disabled();
+    }
+
+    @Override
+    public String notApplicable() {
+        return displayStrings.notApplicable();
+    }
 }

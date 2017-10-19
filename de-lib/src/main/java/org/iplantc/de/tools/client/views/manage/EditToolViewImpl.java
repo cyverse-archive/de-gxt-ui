@@ -19,6 +19,7 @@ import com.sencha.gxt.widget.core.client.FramedPanel;
 import com.sencha.gxt.widget.core.client.container.VBoxLayoutContainer;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.FormPanelHelper;
+import com.sencha.gxt.widget.core.client.form.IntegerField;
 import com.sencha.gxt.widget.core.client.form.IsField;
 import com.sencha.gxt.widget.core.client.form.TextArea;
 import com.sencha.gxt.widget.core.client.form.TextField;
@@ -71,11 +72,11 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
 
     @Ignore
     @UiField
-    TextField cpu;
+    IntegerField pidsLimit;
 
     @Ignore
     @UiField
-    TextField memory;
+    IntegerField memory;
 
     @Ignore
     @UiField
@@ -83,7 +84,7 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
 
     @Ignore
     @UiField
-    TextField time;
+    IntegerField time;
 
     /**
      * Entrypoint for a tool container
@@ -160,7 +161,7 @@ public class EditToolViewImpl extends Composite implements EditToolView, Editor<
         imgName.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_IMG);
         tag.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_TAG);
         url.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_URL);
-        cpu.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_CPU);
+        pidsLimit.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_CPU);
         memory.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_MEM);
         network.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_NW);
         time.ensureDebugId(baseID + ToolsModule.EditToolIds.TOOL_TIME);

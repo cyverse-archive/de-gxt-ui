@@ -179,6 +179,11 @@ public class ManageToolsViewDefaultAppearance implements ManageToolsToolbarView.
     }
 
     @Override
+    public String toolInfoError() {
+        return toolMessages.toolInfoError();
+    }
+
+    @Override
     public String submitForPublicUse() {
         return toolMessages.submitForUse();
     }

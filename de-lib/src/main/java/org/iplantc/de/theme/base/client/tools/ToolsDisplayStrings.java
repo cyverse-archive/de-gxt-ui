@@ -16,5 +16,23 @@ public interface ToolsDisplayStrings extends Messages {
     String toolInformation();
 
     String appUsingTool();
+
+    String restrictions();
+
+    String memLimit();
+
+    String pidsLimit();
+
+    String timeLimit();
+
+    String networkingMode();
+
+    String bridge();
+
+    String enabled();
+
+    String disabled();
+
+    String notApplicable();
 }
 

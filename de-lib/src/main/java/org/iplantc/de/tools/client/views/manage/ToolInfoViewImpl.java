@@ -3,6 +3,7 @@ package org.iplantc.de.tools.client.views.manage;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.tools.client.views.cells.ToolInfoCell;
 
+import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
@@ -70,6 +71,32 @@ public class ToolInfoViewImpl extends Composite implements ToolInfoView {
                           new AbstractHtmlLayoutContainer.HtmlData(".cell5"));
         htmlContainer.add(new Label(tool.getDescription()),
                           new AbstractHtmlLayoutContainer.HtmlData(".cell7"));
+        htmlContainer.add(new Label(appearance.restrictions()),
+                          new AbstractHtmlLayoutContainer.HtmlData(".cell9"));
+        htmlContainer.add(new Label(
+                                  appearance.memLimit() + ((tool.getContainer().getMemoryLimit() == null) ?
+                                                           appearance.notApplicable() :
+                                                           tool.getContainer().getMemoryLimit())),
+                          new AbstractHtmlLayoutContainer.HtmlData(".cell11"));
+        htmlContainer.add(new Label(
+                                  appearance.pidsLimit() + ((tool.getContainer().getPidsLimit() == null) ?
+                                                            appearance.notApplicable() :
+                                                            tool.getContainer().getPidsLimit())),
+                          new AbstractHtmlLayoutContainer.HtmlData(".cell12"));
+        htmlContainer.add(new Label(appearance.timeLimit().toString() + ((tool.getTimeLimit() == null
+                                                                          || tool.getTimeLimit() == 0) ?
+                                                                         appearance.notApplicable() :
+                                                                         tool.getTimeLimit())),
+                          new AbstractHtmlLayoutContainer.HtmlData(".cell13"));
+        htmlContainer.add(new Label(
+                                  appearance.networkingMode() + ((Strings.isNullOrEmpty(tool.getContainer()
+                                                                                            .getNetworkMode())
+                                                                  || tool.getContainer()
+                                                                         .getNetworkMode()
+                                                                         .equalsIgnoreCase(appearance.bridge())) ?
+                                                                 appearance.enabled() :
+                                                                 appearance.disabled())),
+                          new AbstractHtmlLayoutContainer.HtmlData(".cell14"));
     }
 
     @Override

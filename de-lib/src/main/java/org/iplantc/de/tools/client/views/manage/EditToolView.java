@@ -25,7 +25,7 @@ public interface EditToolView extends IsWidget{
 
         String dockerUrl();
 
-        String cpuShare();
+        String pidsLimit();
 
         String memLimit();
 

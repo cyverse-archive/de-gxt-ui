@@ -89,14 +89,14 @@
             <form:FieldSet ui:field="fieldSet" heading="{appearance.restrictions}" collapsible="true"
                            layoutData="{marginData}">
                 <container:VBoxLayoutContainer VBoxLayoutAlign="STRETCH">
-                    <form:FieldLabel text="{appearance.cpuShare}">
+                    <form:FieldLabel text="{appearance.pidsLimit}">
                         <form:widget>
-                            <form:TextField ui:field="cpu" allowBlank="true" enabled="false"/>
+                            <form:IntegerField ui:field="pidsLimit" allowBlank="true" enabled="false"/>
                         </form:widget>
                     </form:FieldLabel>
                     <form:FieldLabel text="{appearance.memLimit}">
                         <form:widget>
-                            <form:TextField ui:field="memory" allowBlank="true" enabled="false"/>
+                            <form:IntegerField ui:field="memory" allowBlank="true" enabled="false"/>
                         </form:widget>
                     </form:FieldLabel>
                     <form:FieldLabel text="{appearance.nwMode}">
@@ -106,7 +106,7 @@
                     </form:FieldLabel>
                     <form:FieldLabel text="{appearance.timeLimit}">
                         <form:widget>
-                            <form:TextField ui:field="time" allowBlank="true" enabled="false"/>
+                            <form:IntegerField ui:field="time" allowBlank="true" enabled="false"/>
                         </form:widget>
                     </form:FieldLabel>
                 </container:VBoxLayoutContainer>
