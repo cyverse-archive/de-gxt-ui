@@ -180,4 +180,13 @@ public class ToolServicesImpl implements ToolServices {
        
     }
 
+    @Override
+    public void getToolInfo(String toolId, AppsCallback<Tool> appsCallback) {
+        String address = TOOLS + "/" + toolId;
+        ToolCallbackConverter callbackCnvt = new ToolCallbackConverter(appsCallback, factory);
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(BaseServiceCallWrapper.Type.GET, address);
+
+        deServiceFacade.getServiceData(wrapper, callbackCnvt);
+    }
+
 }

@@ -100,6 +100,8 @@ public interface ToolMessages extends Messages {
     SafeHtml alert();
 
     SafeHtml fileExists(String dupeFiles);
+
+    String toolInfoError();
 }
 
 

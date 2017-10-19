@@ -80,6 +80,8 @@ public interface ManageToolsView extends IsWidget,
         String manageSharing();
 
         String done();
+
+        String toolInfoError();
     }
 
 

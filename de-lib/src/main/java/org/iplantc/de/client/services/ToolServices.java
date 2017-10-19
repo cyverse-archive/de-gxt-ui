@@ -27,4 +27,6 @@ public interface ToolServices {
     void updateTool(Tool tool, AppsCallback<Tool> appsCallback);
 
     void getAppsForTool(String toolId, AppsCallback<List<App>> appsCallback);
+
+    void getToolInfo(String toolId, AppsCallback<Tool> appsCallback);
 }

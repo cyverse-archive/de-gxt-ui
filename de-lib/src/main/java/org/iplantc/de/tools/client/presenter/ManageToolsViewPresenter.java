@@ -325,19 +325,33 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 announcer.schedule(new ErrorAnnouncementConfig(appearance.appsLoadError()));
-                showToolInfo(Arrays.asList());
+                getToolInfo(event.getTool().getId(), Arrays.asList());
 
             }
 
             @Override
-            public void onSuccess(final List<App> result) {
-                showToolInfo(result);
+            public void onSuccess(final List<App> apps) {
+                getToolInfo(event.getTool().getId(), apps);
             }
         });
 
     }
 
-    private void showToolInfo(final List<App> result) {
+    private void getToolInfo(String toolId, List<App> appsUsingTool) {
+        toolServices.getToolInfo(toolId, new AppsCallback<Tool>() {
+            @Override
+            public void onFailure(Integer statusCode, Throwable exception) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.toolInfoError()));
+            }
+
+            @Override
+            public void onSuccess(final Tool tool) {
+                showToolInfo(tool, appsUsingTool);
+            }
+        });
+    }
+
+    private void showToolInfo(final Tool tool, final List<App> result) {
         toolInfoDialogProvider.get(new AsyncCallback<ToolInfoDialog>() {
             @Override
             public void onFailure(Throwable throwable) {
