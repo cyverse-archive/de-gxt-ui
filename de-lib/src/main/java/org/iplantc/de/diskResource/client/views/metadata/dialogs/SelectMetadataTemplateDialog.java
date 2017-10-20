@@ -4,6 +4,8 @@ import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.MetadataView.Presenter.Appearance;
+import org.iplantc.de.diskResource.client.views.metadata.cells.DownloadTemplateCell;
+import org.iplantc.de.diskResource.client.views.metadata.cells.TemplateNameCell;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.gwt.core.client.GWT;
@@ -48,10 +50,13 @@ public class SelectMetadataTemplateDialog extends IPlantDialog implements IsWidg
 
     private ColumnConfig<MetadataTemplateInfo, MetadataTemplateInfo> downloadColumn;
     private MetadataView.Presenter.Appearance appearance;
+    private DownloadTemplateCell downloadTemplateCell;
 
     @Inject
-    public SelectMetadataTemplateDialog(Appearance appearance) {
+    public SelectMetadataTemplateDialog(Appearance appearance,
+                                        DownloadTemplateCell downloadTemplateCell) {
         super();
+        this.downloadTemplateCell = downloadTemplateCell;
         getOkButton().disable();
         this.appearance = appearance;
         setModal(false);
@@ -139,8 +144,7 @@ public class SelectMetadataTemplateDialog extends IPlantDialog implements IsWidg
         this.downloadColumn = download;
         download.setMenuDisabled(true);
         download.setSortable(false);
-        DownloadTemplateCell cell = new DownloadTemplateCell();
-        download.setCell(cell);
+        download.setCell(downloadTemplateCell);
         return new ColumnModel<MetadataTemplateInfo>(Arrays.<ColumnConfig<MetadataTemplateInfo, ?>>asList(
                 name,
                 download));
