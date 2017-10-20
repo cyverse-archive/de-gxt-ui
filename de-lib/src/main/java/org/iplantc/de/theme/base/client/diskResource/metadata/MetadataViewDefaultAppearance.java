@@ -40,6 +40,13 @@ public class MetadataViewDefaultAppearance implements MetadataView.Appearance {
 
         @SafeHtmlTemplates.Template("<span style='color:red; top:-5px;'>*</span>")
         SafeHtml required();
+
+        @SafeHtmlTemplates.Template("<b>{0}:</b> <br/>")
+        SafeHtml guideLabel(String name);
+
+        @SafeHtmlTemplates.Template("<p>{0}</p><br/>")
+        SafeHtml guideHelpText(String description);
+
     }
 
     interface MetadataInfoTemplate extends XTemplates {
@@ -278,5 +285,25 @@ public class MetadataViewDefaultAppearance implements MetadataView.Appearance {
     @Override
     public String importUMdBtnText() {
         return displayStrings.importUMdBtnText();
+    }
+
+    @Override
+    public String metadataTermDlgWidth() {
+        return "350";
+    }
+
+    @Override
+    public String metadataTermDlgHeight() {
+        return "400";
+    }
+
+    @Override
+    public SafeHtml guideLabel(String name) {
+        return htmlTemplates.guideLabel(name);
+    }
+
+    @Override
+    public SafeHtml guideHelpText(String description) {
+        return htmlTemplates.guideHelpText(description);
     }
 }

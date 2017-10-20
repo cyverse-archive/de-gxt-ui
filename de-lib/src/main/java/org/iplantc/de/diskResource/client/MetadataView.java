@@ -99,6 +99,14 @@ public interface MetadataView extends IsWidget {
         String requiredGhostText();
 
         String importUMdBtnText();
+
+        String metadataTermDlgWidth();
+
+        String metadataTermDlgHeight();
+
+        SafeHtml guideLabel(String name);
+
+        SafeHtml guideHelpText(String description);
     }
 
     public interface Presenter {

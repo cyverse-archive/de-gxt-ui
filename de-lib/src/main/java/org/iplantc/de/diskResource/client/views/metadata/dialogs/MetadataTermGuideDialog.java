@@ -17,10 +17,13 @@ import java.util.List;
  */
 public class MetadataTermGuideDialog extends Dialog {
 
+    private MetadataView.Appearance appearance;
+
     @Inject
     public MetadataTermGuideDialog(MetadataView.Appearance appearance) {
+        this.appearance = appearance;
         setHideOnButtonClick(true);
-        setSize("350", "400");
+        setSize(appearance.metadataTermDlgWidth(), appearance.metadataTermDlgHeight());
         setPredefinedButtons(PredefinedButton.OK);
         setBodyStyle(appearance.backgroundStyle());
     }
@@ -36,9 +39,9 @@ public class MetadataTermGuideDialog extends Dialog {
         VerticalLayoutContainer helpVlc = new VerticalLayoutContainer();
         helpVlc.setScrollMode(ScrollSupport.ScrollMode.AUTOY);
         for (MetadataTemplateAttribute mta : attributes) {
-            HTML l = new HTML("<b>" + mta.getName() + ":</b> <br/>");
-            HTML helpText = new HTML("<p>" + mta.getDescription() + "</p><br/>");
-            helpVlc.add(l, new VerticalLayoutContainer.VerticalLayoutData(.25, -1));
+            HTML label = new HTML(appearance.guideLabel(mta.getName()));
+            HTML helpText = new HTML(appearance.guideHelpText(mta.getDescription()));
+            helpVlc.add(label, new VerticalLayoutContainer.VerticalLayoutData(.25, -1));
             helpVlc.add(helpText, new VerticalLayoutContainer.VerticalLayoutData(.90, -1));
         }
         return helpVlc;
