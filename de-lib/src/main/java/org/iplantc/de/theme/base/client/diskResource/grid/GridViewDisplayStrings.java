@@ -94,4 +94,6 @@ public interface GridViewDisplayStrings extends Messages {
     String infoTypeDialogHeader();
 
     String infoTypeEmptyText();
+
+    String selectionCountStatus(int selectionCount);
 }

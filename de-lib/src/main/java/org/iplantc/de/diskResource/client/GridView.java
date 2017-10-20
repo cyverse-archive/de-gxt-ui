@@ -109,6 +109,8 @@ public interface GridView extends IsWidget,
         String infoTypeDialogHeader();
 
         String infoTypeEmptyText();
+
+        String selectionCountStatus(int selectionCount);
     }
 
     interface FolderContentsRpcProxy extends DataProxy<FolderContentsLoadConfig, PagingLoadResult<DiskResource>> {

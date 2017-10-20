@@ -169,4 +169,9 @@ public class GridViewDefaultAppearance implements GridView.Appearance {
         return displayStrings.infoTypeEmptyText();
     }
 
+    @Override
+    public String selectionCountStatus(int selectionCount) {
+        return displayStrings.selectionCountStatus(selectionCount);
+    }
+
 }
