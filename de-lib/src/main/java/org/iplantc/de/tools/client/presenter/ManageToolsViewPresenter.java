@@ -147,9 +147,8 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
             @Override
             public void onSuccess(Tool result) {
-                IplantInfoBox iib = new IplantInfoBox(editToolViewAppearance.create(),
+                displayInfoMessage(editToolViewAppearance.create(),
                                                       appearance.toolAdded(result.getName()));
-                iib.show();
                 dialogCallbackCommand.execute();
                 tool.setId(result.getId());
                 tool.setPermission(result.getPermission());
@@ -169,9 +168,9 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
 
             @Override
             public void onSuccess(Tool result) {
-                IplantInfoBox iib = new IplantInfoBox(editToolViewAppearance.edit(),
+                displayInfoMessage(editToolViewAppearance.edit(),
                                                       appearance.toolUpdated(result.getName()));
-                iib.show();
+
                 dialogCallbackCommand.execute();
                 toolsView.updateTool(result);
             }
@@ -372,6 +371,11 @@ public class ManageToolsViewPresenter implements ManageToolsView.Presenter {
                 o.show(tool, result);
             }
         });
+    }
+
+    void displayInfoMessage(String title, String message) {
+        IplantInfoBox iib = new IplantInfoBox(title, message);
+        iib.show();
     }
 }
 

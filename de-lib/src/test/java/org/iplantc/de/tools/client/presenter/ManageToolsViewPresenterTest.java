@@ -28,6 +28,7 @@ import org.iplantc.de.tools.client.views.dialogs.EditToolDialog;
 import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolInfoDialog;
 import org.iplantc.de.tools.client.views.dialogs.ToolSharingDialog;
+import org.iplantc.de.tools.client.views.manage.EditToolView;
 import org.iplantc.de.tools.client.views.manage.ManageToolsToolbarView;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
@@ -62,6 +63,9 @@ public class ManageToolsViewPresenterTest {
 
     @Mock
     ManageToolsView.ManageToolsViewAppearance appearanceMock;
+
+    @Mock
+    EditToolView.EditToolViewAppearance editToolViewAppearanceMock;
 
     @Mock
     ToolServices toolServicesMock;
@@ -123,7 +127,6 @@ public class ManageToolsViewPresenterTest {
     @Captor
     ArgumentCaptor<AppsCallback<List<App>>> appListCaptor;
 
-
     @Captor
     ArgumentCaptor<AppsCallback<Tool>> toolCaptor;
 
@@ -138,9 +141,16 @@ public class ManageToolsViewPresenterTest {
 
     @Before
     public void setUp() {
-        uut = new ManageToolsViewPresenter(appearanceMock);
+        uut = new ManageToolsViewPresenter(appearanceMock, editToolViewAppearanceMock) {
+
+            @Override
+            void displayInfoMessage(String title, String message) {
+                //do nothing
+            }
+        };
         uut.toolsView = toolsViewMock;
         uut.announcer = announcerMock;
+        uut.editToolViewAppearance = editToolViewAppearanceMock;
         uut.appearance = appearanceMock;
         uut.toolServices = toolServicesMock;
         uut.editDialogProvider = editDialogProviderMock;
@@ -379,6 +389,9 @@ public class ManageToolsViewPresenterTest {
 
         verify(toolServicesMock).getAppsForTool(eq(stieMock.getTool().getId()), appListCaptor.capture());
         appListCaptor.getValue().onSuccess(appList);
+
+        verify(toolServicesMock).getToolInfo(eq(stieMock.getTool().getId()), toolCaptor.capture());
+        toolCaptor.getValue().onSuccess(t1Mock);
 
         verify(toolInfoDialogProviderMock).get(toolInfoDialogCaptor.capture());
         toolInfoDialogCaptor.getValue().onSuccess(toolInfoDialogMock);
