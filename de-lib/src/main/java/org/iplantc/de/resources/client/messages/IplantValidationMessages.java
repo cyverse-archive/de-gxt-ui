@@ -331,4 +331,6 @@ public interface IplantValidationMessages extends Messages {
     String imgNameReqd();
 
     String imgNameInvalid();
+
+    String spaceNotAllowedMsg();
 }

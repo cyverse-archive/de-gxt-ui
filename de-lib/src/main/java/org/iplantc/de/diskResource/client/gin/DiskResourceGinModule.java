@@ -38,6 +38,7 @@ import org.iplantc.de.diskResource.client.presenters.toolbar.ToolbarViewPresente
 import org.iplantc.de.diskResource.client.views.DiskResourceViewImpl;
 import org.iplantc.de.diskResource.client.views.dataLink.DataLinkViewImpl;
 import org.iplantc.de.diskResource.client.views.details.DetailsViewImpl;
+import org.iplantc.de.diskResource.client.views.dialogs.CreateNcbiSraFolderStructureDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.InfoTypeEditorDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.SaveAsDialog;
@@ -148,6 +149,7 @@ public class DiskResourceGinModule extends AbstractGinModule {
                         .implement(SharingPresenter.class, DataSharingPresenterImpl.class)
                         .build(DataSharingPresenterFactory.class));
         bind(DataSharingView.class).to(DataSharingViewImpl.class);
+        bind(CreateNcbiSraFolderStructureDialog.class);
     }
 
 

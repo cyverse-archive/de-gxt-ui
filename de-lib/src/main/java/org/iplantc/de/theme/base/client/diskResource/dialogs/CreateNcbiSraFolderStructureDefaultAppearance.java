@@ -6,6 +6,7 @@ import org.iplantc.de.theme.base.client.diskResource.DiskResourceMessages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 
 import com.sencha.gxt.core.client.util.Format;
 
@@ -35,7 +36,7 @@ public class CreateNcbiSraFolderStructureDefaultAppearance implements
 
     @Override
     public String dialogWidth() {
-        return "300px";
+        return "500px";
     }
 
     @Override
@@ -62,6 +63,11 @@ public class CreateNcbiSraFolderStructureDefaultAppearance implements
     public SafeHtml renderDestinationPathLabel(String destPath, String createIn) {
         return templates.destinationPathLabel(destPath,
                                               Format.ellipse(diskResourceMessages.createIn(createIn), 50));
+    }
+
+    @Override
+    public SafeHtml buildRequiredFieldLabel(String label) {
+        return SafeHtmlUtils.fromTrustedString("<span style='color:red; top:-5px;' >*</span> " + label);
     }
 
 }
