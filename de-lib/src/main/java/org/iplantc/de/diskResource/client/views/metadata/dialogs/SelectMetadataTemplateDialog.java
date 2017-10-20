@@ -91,7 +91,7 @@ public class SelectMetadataTemplateDialog extends IPlantDialog implements IsWidg
         }
 
         super.show();
-        ensureDebugId(DiskResourceModule.MetadataIds.SELECT_TEMPLATE_BASE_ID);
+        ensureDebugId(DiskResourceModule.MetadataIds.SELECT_TEMPLATE_DLG);
     }
 
     @Override
@@ -99,6 +99,8 @@ public class SelectMetadataTemplateDialog extends IPlantDialog implements IsWidg
         super.onEnsureDebugId(baseID);
 
         getOkButton().ensureDebugId(baseID + DiskResourceModule.MetadataIds.SELECT_TEMPLATE_OK_BTN_ID);
+        downloadTemplateCell.setBaseDebugId(baseID);
+        templateInfoCell.setBaseDebugId(baseID);
     }
 
     @UiFactory

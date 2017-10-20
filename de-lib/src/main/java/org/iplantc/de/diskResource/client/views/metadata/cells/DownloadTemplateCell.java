@@ -5,6 +5,7 @@ import static com.google.gwt.dom.client.BrowserEvents.CLICK;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.diskResource.client.events.TemplateDownloadEvent;
+import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
@@ -29,6 +30,7 @@ public class DownloadTemplateCell extends AbstractCell<MetadataTemplateInfo> {
 
     private final DownloadTemplateCellAppearance appearance;
     private EventBus eventBus;
+    private String debugId;
 
     @Inject
     public DownloadTemplateCell(DownloadTemplateCellAppearance appearance,
@@ -84,6 +86,11 @@ public class DownloadTemplateCell extends AbstractCell<MetadataTemplateInfo> {
 
     @Override
     public void render(Cell.Context context, MetadataTemplateInfo value, SafeHtmlBuilder sb) {
-         appearance.render(sb,value.getId());
+        String id = debugId + "." + value.getId() + DiskResourceModule.MetadataIds.DOWNLOAD_TEMPLATE_CELL;
+        appearance.render(sb, id);
+    }
+
+    public void setBaseDebugId(String debugId) {
+        this.debugId = debugId;
     }
 }

@@ -143,9 +143,11 @@ public interface DiskResourceModule {
         String METADATA_TEMPLATE_COLLAPSE = ".collapseBtn";
         String EDIT_METADATA = ".editMetadata";
 
-        String SELECT_TEMPLATE_BASE_ID = ".selectMetadataTemplate";
+        String SELECT_TEMPLATE_DLG = "selectMetadataTemplate";
         String SELECT_TEMPLATE_OK_BTN_ID =".okBtn";
         String SELECT_TEMPLATE_CLOSE_BTN_ID =".closeBtn";
 
+        String DOWNLOAD_TEMPLATE_CELL = ".downloadTemplate";
+        String TEMPLATE_INFO_CELL = ".templateInfo";
     }
 }

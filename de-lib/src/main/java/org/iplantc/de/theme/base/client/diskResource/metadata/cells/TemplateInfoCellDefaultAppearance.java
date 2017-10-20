@@ -65,12 +65,12 @@ public class TemplateInfoCellDefaultAppearance implements TemplateInfoCell.Templ
     }
 
     @Override
-    public void render(SafeHtmlBuilder sb, MetadataTemplateInfo value) {
+    public void render(SafeHtmlBuilder sb, MetadataTemplateInfo value, String id) {
         String imgClassName;
         imgClassName = resources.css().info();
         final SafeUri safeUri = iplantResources.info().getSafeUri();
         if(DebugInfo.isDebugIdEnabled()){
-            sb.append(templates.debugCell(imgClassName, safeUri, value.getName(), value.getId() + "-info",description()));
+            sb.append(templates.debugCell(imgClassName, safeUri, value.getName(), id, description()));
         } else {
             sb.append(templates.cell(imgClassName, safeUri, value.getName(), description()));
         }

@@ -26,8 +26,7 @@ import com.sencha.gxt.widget.core.client.Dialog;
 public class TemplateInfoCell extends AbstractCell<MetadataTemplateInfo> {
 
     public interface TemplateInfoCellAppearance {
-        void render(SafeHtmlBuilder sb,
-                    MetadataTemplateInfo value);
+        void render(SafeHtmlBuilder sb, MetadataTemplateInfo value, String id);
 
         String description();
 
@@ -40,6 +39,7 @@ public class TemplateInfoCell extends AbstractCell<MetadataTemplateInfo> {
 
     private TemplateInfoCellAppearance appearance;
     @Inject AsyncProviderWrapper<Dialog> dialogProvider;
+    private String debugId;
 
     @Inject
     public TemplateInfoCell(TemplateInfoCellAppearance appearance) {
@@ -49,7 +49,8 @@ public class TemplateInfoCell extends AbstractCell<MetadataTemplateInfo> {
 
     @Override
     public void render(Context context, MetadataTemplateInfo value, SafeHtmlBuilder sb) {
-        appearance.render(sb,value);
+        String id = debugId + "." + value.getId() + DiskResourceModule.MetadataIds.TEMPLATE_INFO_CELL;
+        appearance.render(sb, value, id);
     }
 
     @Override
