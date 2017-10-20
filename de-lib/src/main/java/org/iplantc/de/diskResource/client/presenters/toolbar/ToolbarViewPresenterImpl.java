@@ -31,7 +31,7 @@ import org.iplantc.de.diskResource.client.events.CreateNewFileEvent;
 import org.iplantc.de.diskResource.client.events.RequestSimpleDownloadEvent;
 import org.iplantc.de.diskResource.client.events.ShowFilePreviewEvent;
 import org.iplantc.de.diskResource.client.events.selection.AutomateHTPathListSelected;
-import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSubmitted;
 import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected.SimpleDownloadSelectedHandler;
@@ -168,10 +168,10 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
             public void onSuccess(CreateNcbiSraFolderStructureDialog dialog) {
                 dialog.addOkButtonSelectHandler(selectEvent -> {
                     if (dialog.isValid()) {
-                        ensureHandlers().fireEvent(new CreateNcbiSraFolderStructureSelected(selectedFolder,
-                                                                                            dialog.getProjectTxt(),
-                                                                                            dialog.getBioSampNum(),
-                                                                                            dialog.getLibNum()));
+                        ensureHandlers().fireEvent(new CreateNcbiSraFolderStructureSubmitted(selectedFolder,
+                                                                                             dialog.getProjectTxt(),
+                                                                                             dialog.getBioSampNum(),
+                                                                                             dialog.getLibNum()));
                         dialog.hide();
                     }
                 });
@@ -342,8 +342,8 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     }
 
     @Override
-    public HandlerRegistration addCreateNcbiSraFolderStructureSelectedHandler(
-            CreateNcbiSraFolderStructureSelected.CreateNcbiSraFolderStructureSelectedHandler handler) {
-        return ensureHandlers().addHandler(CreateNcbiSraFolderStructureSelected.TYPE, handler);
+    public HandlerRegistration addCreateNcbiSraFolderStructureSubmittedHandler(
+            CreateNcbiSraFolderStructureSubmitted.CreateNcbiSraFolderStructureSubmittedHandler handler) {
+        return ensureHandlers().addHandler(CreateNcbiSraFolderStructureSubmitted.TYPE, handler);
     }
 }

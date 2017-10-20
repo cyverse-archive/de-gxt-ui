@@ -34,7 +34,7 @@ import org.iplantc.de.diskResource.client.events.RequestSendToCoGeEvent;
 import org.iplantc.de.diskResource.client.events.RequestSendToEnsemblEvent;
 import org.iplantc.de.diskResource.client.events.RequestSendToTreeViewerEvent;
 import org.iplantc.de.diskResource.client.events.RootFoldersRetrievedEvent;
-import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSubmitted;
 import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.DNDDiskResourcesCompleted;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDiskResourcesSelected;
@@ -98,7 +98,7 @@ public class DiskResourcePresenterImpl implements
                                       SendToEnsemblSelected.SendToEnsemblSelectedHandler,
                                       SendToCogeSelected.SendToCogeSelectedHandler,
                                       DNDDiskResourcesCompleted.DNDDiskResourcesCompletedHandler,
-                                      CreateNcbiSraFolderStructureSelected.CreateNcbiSraFolderStructureSelectedHandler,
+                                      CreateNcbiSraFolderStructureSubmitted.CreateNcbiSraFolderStructureSubmittedHandler,
                                       OpenTrashFolderSelected.OpenTrashFolderSelectedHandler {
 
     final IplantAnnouncer announcer;
@@ -341,7 +341,7 @@ public class DiskResourcePresenterImpl implements
         toolbarPresenter.getView().addOpenTrashFolderSelectedHandler(this);
         toolbarPresenter.getView().addBulkMetadataSelectedHandler(gridViewPresenter);
         toolbarPresenter.addCreateNewFolderSelectedHandler(this);
-        toolbarPresenter.addCreateNcbiSraFolderStructureSelectedHandler(this);
+        toolbarPresenter.addCreateNcbiSraFolderStructureSubmittedHandler(this);
     }
 
     // <editor-fold desc="Handler Registrations">
@@ -572,7 +572,7 @@ public class DiskResourcePresenterImpl implements
     }
 
     @Override
-    public void onCreateNcbiSraFolderStructureSelected(CreateNcbiSraFolderStructureSelected event) {
+    public void onCreateNcbiSraFolderStructureSubmitted(CreateNcbiSraFolderStructureSubmitted event) {
         Folder selectedFolder = event.getSelectedFolder();
         String projectName = event.getProjectText();
         Integer numSample = event.getBioSampleNumber();
