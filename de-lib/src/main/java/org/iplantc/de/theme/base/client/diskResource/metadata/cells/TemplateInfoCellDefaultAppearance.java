@@ -1,4 +1,4 @@
-package org.iplantc.de.theme.base.client.diskResource.metadata;
+package org.iplantc.de.theme.base.client.diskResource.metadata.cells;
 
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.diskResource.client.views.metadata.cells.TemplateInfoCell;
