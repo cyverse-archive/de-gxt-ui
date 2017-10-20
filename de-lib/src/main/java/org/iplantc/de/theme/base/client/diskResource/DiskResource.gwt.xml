@@ -89,9 +89,6 @@
     <replace-with class="org.iplantc.de.theme.base.client.diskResource.grid.GridViewDefaultAppearance">
         <when-type-is class="org.iplantc.de.diskResource.client.GridView.Appearance" />
     </replace-with>
-    <replace-with class="org.iplantc.de.theme.base.client.diskResource.grid.cells.DiskResourceActionsCellDefaultAppearance">
-        <when-type-is class="org.iplantc.de.diskResource.client.views.grid.cells.DiskResourceActionsCell.Appearance" />
-    </replace-with>
     <replace-with class="org.iplantc.de.theme.base.client.diskResource.grid.cells.DiskResourceFavoriteCellDefaultAppearance">
         <when-type-is class="org.iplantc.de.diskResource.client.views.grid.cells.DiskResourceFavoriteCell.Appearance" />
     </replace-with>
