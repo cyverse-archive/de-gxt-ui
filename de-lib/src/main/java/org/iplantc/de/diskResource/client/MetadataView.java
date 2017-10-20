@@ -136,6 +136,10 @@ public interface MetadataView extends IsWidget {
             String dialogWidth();
 
             String dialogHeight();
+
+            int infoColumnWidth();
+
+            int downloadColumnWidth();
         }
 
         boolean isValid();

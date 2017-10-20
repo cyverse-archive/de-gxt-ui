@@ -12,6 +12,7 @@ import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -40,6 +41,7 @@ public class TemplateInfoCell extends AbstractCell<MetadataTemplateInfo> {
     private TemplateInfoCellAppearance appearance;
     @Inject AsyncProviderWrapper<Dialog> dialogProvider;
     private String debugId;
+    private HandlerManager handlerManager;
 
     @Inject
     public TemplateInfoCell(TemplateInfoCellAppearance appearance) {
@@ -109,5 +111,16 @@ public class TemplateInfoCell extends AbstractCell<MetadataTemplateInfo> {
                 result.show();
             }
         });
+    }
+
+    HandlerManager ensureHandlers() {
+        if (handlerManager == null) {
+            handlerManager = new HandlerManager(this);
+        }
+        return handlerManager;
+    }
+
+    public void setBaseDebugId(String debugId) {
+        this.debugId = debugId;
     }
 }
