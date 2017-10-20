@@ -237,4 +237,15 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     public int md5MaxLength() {
         return 125;
     }
+
+    @Override
+    public String bulkMetadataSuccess() {
+        return diskResourceMessages.bulkMetadataSuccess();
+    }
+
+    @Override
+    public String bulkMetadataError() {
+        return diskResourceMessages.bulkMetadataError();
+    }
+
 }

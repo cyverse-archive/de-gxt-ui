@@ -9,6 +9,7 @@ import org.iplantc.de.diskResource.client.events.selection.CreateDataLinkSelecte
 import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.ShowDataLinkSelected;
 import org.iplantc.de.diskResource.client.views.dataLink.cells.DataLinkPanelCell;
+import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -26,6 +27,7 @@ import com.google.inject.Inject;
 import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.TreeStore;
+import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.tips.QuickTip;
@@ -36,8 +38,8 @@ import java.util.List;
 /**
  * @author jstroot
  */
-public class DataLinkViewImpl implements DataLinkView,
-                                         DeleteDataLinkSelected.DeleteDataLinkSelectedHandler {
+public class DataLinkViewImpl extends Composite implements DataLinkView,
+                                                           DeleteDataLinkSelected.DeleteDataLinkSelectedHandler {
 
     /**
      * A handler who controls this widgets button visibility based on tree check selection.
@@ -93,7 +95,6 @@ public class DataLinkViewImpl implements DataLinkView,
     @UiField Tree<DiskResource, DiskResource> tree;
 
     private static final DataLinkPanelUiBinder uiBinder = GWT.create(DataLinkPanelUiBinder.class);
-    private final Widget widget;
     @UiField(provided = true) final Appearance appearance;
     private DataLinkPanelCell dataLinkPanelCell;
 
@@ -102,7 +103,7 @@ public class DataLinkViewImpl implements DataLinkView,
                      DataLinkPanelCell dataLinkPanelCell) {
         this.appearance = appearance;
         this.dataLinkPanelCell = dataLinkPanelCell;
-        widget = uiBinder.createAndBindUi(this);
+        initWidget(uiBinder.createAndBindUi(this));
 
         // Set the tree's node close/open icons to an empty image. Images for our tree will be controlled
         // from the cell.
@@ -115,8 +116,7 @@ public class DataLinkViewImpl implements DataLinkView,
                                                                               tree));
         dataLinkPanelCell.addDeleteDataLinkSelectedHandler(this);
         tree.setCell(dataLinkPanelCell);
-        new QuickTip(widget);
-
+        new QuickTip(this);
     }
 
     @Override
@@ -129,7 +129,7 @@ public class DataLinkViewImpl implements DataLinkView,
     void onAdvancedDataLinkSelected(SelectEvent event) {
         DiskResource selectedItem = tree.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
-            widget.fireEvent(new AdvancedSharingSelected(selectedItem));
+            fireEvent(new AdvancedSharingSelected(selectedItem));
         }
     }
 
@@ -142,7 +142,7 @@ public class DataLinkViewImpl implements DataLinkView,
     void onCopyDataLinkButtonSelected(SelectEvent event) {
         DiskResource selectedItem = tree.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
-            widget.fireEvent(new ShowDataLinkSelected(selectedItem));
+            fireEvent(new ShowDataLinkSelected(selectedItem));
         }
     }
 
@@ -150,7 +150,7 @@ public class DataLinkViewImpl implements DataLinkView,
     void onCreateDataLinksSelected(SelectEvent event) {
         List<DiskResource> selectedItems = tree.getSelectionModel().getSelectedItems();
         if (selectedItems != null && !selectedItems.isEmpty()) {
-            widget.fireEvent(new CreateDataLinkSelected(selectedItems));
+            fireEvent(new CreateDataLinkSelected(selectedItems));
         }
     }
 
@@ -163,11 +163,6 @@ public class DataLinkViewImpl implements DataLinkView,
     @Override
     public void addRoots(List<DiskResource> roots) {
         store.add(roots);
-    }
-
-    @Override
-    public Widget asWidget() {
-        return widget;
     }
 
     @Override
@@ -194,18 +189,29 @@ public class DataLinkViewImpl implements DataLinkView,
     }
 
     @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        advancedDataLinkButton.ensureDebugId(baseID + DiskResourceModule.Ids.ADVANCED_SHARING_BTN);
+        collapseAll.ensureDebugId(baseID + DiskResourceModule.Ids.COLLAPSE_ALL_BTN);
+        showDataLinkButton.ensureDebugId(baseID + DiskResourceModule.Ids.SHOW_LINK_BTN);
+        createDataLinksBtn.ensureDebugId(baseID + DiskResourceModule.Ids.CREATE_LINK_BTN);
+        expandAll.ensureDebugId(baseID + DiskResourceModule.Ids.EXPAND_ALL_BTN);
+    }
+
+    @Override
     public HandlerRegistration addCreateDataLinkSelectedHandler(CreateDataLinkSelected.CreateDataLinkSelectedHandler handler) {
-        return widget.addHandler(handler, CreateDataLinkSelected.TYPE);
+        return addHandler(handler, CreateDataLinkSelected.TYPE);
     }
 
     @Override
     public HandlerRegistration addAdvancedSharingSelectedHandler(AdvancedSharingSelected.AdvancedSharingSelectedHandler handler) {
-        return widget.addHandler(handler, AdvancedSharingSelected.TYPE);
+        return addHandler(handler, AdvancedSharingSelected.TYPE);
     }
 
     @Override
     public HandlerRegistration addShowDataLinkSelectedHandler(ShowDataLinkSelected.ShowDataLinkSelectedHandler handler) {
-        return widget.addHandler(handler, ShowDataLinkSelected.TYPE);
+        return addHandler(handler, ShowDataLinkSelected.TYPE);
     }
 
     @Override

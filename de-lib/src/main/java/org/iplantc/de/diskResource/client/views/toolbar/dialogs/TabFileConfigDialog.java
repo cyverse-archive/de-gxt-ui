@@ -1,14 +1,19 @@
 package org.iplantc.de.diskResource.client.views.toolbar.dialogs;
 
+import static com.sencha.gxt.widget.core.client.Dialog.PredefinedButton.CANCEL;
+import static com.sencha.gxt.widget.core.client.Dialog.PredefinedButton.OK;
+
+import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.util.ToggleGroup;
-import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.form.NumberPropertyEditor;
 import com.sencha.gxt.widget.core.client.form.Radio;
 import com.sencha.gxt.widget.core.client.form.SpinnerField;
@@ -16,7 +21,7 @@ import com.sencha.gxt.widget.core.client.form.SpinnerField;
 /**
  * @author jstroot
  */
-public class TabFileConfigDialog extends Dialog {
+public class TabFileConfigDialog extends IPlantDialog {
 
     public interface TabFileConfigDialogAppearance {
 
@@ -25,6 +30,10 @@ public class TabFileConfigDialog extends Dialog {
         String commaRadioLabel();
 
         String tabRadioLabel();
+
+        String createDelimitedFileDialogWidth();
+
+        String createDelimitedFileDialogHeight();
     }
 
     private static final TabFileConfigViewUiBinder uiBinder = GWT.create(TabFileConfigViewUiBinder.class);
@@ -40,14 +49,16 @@ public class TabFileConfigDialog extends Dialog {
 
     private Widget widget;
 
-    public TabFileConfigDialog() {
-        this(GWT.<TabFileConfigDialogAppearance> create(TabFileConfigDialogAppearance.class));
-    }
-
+    @Inject
     public TabFileConfigDialog(final TabFileConfigDialogAppearance appearance) {
         this.appearance = appearance;
         initWidget();
         setWidget(widget);
+        setPredefinedButtons(OK, CANCEL);
+        setModal(true);
+        setHideOnButtonClick(true);
+        setSize(appearance.createDelimitedFileDialogWidth(),
+                appearance.createDelimitedFileDialogHeight());
     }
 
     private void initWidget() {

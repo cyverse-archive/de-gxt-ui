@@ -7,9 +7,12 @@ import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.models.viewer.MimeType;
 import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.diskResource.client.BulkMetadataView;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
+import org.iplantc.de.diskResource.client.events.selection.AutomateHTPathListSelected;
+import org.iplantc.de.diskResource.client.events.selection.BulkMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDiskResourcesSelected;
 import org.iplantc.de.diskResource.client.events.selection.DownloadTemplateSelectedEvent;
@@ -20,6 +23,7 @@ import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelecte
 import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected;
 import org.iplantc.de.diskResource.client.events.selection.MoveDiskResourcesSelected;
+import org.iplantc.de.diskResource.client.events.selection.OpenTrashFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.RenameDiskResourceSelected;
 import org.iplantc.de.diskResource.client.events.selection.RestoreDiskResourcesSelected;
@@ -30,8 +34,6 @@ import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelec
 import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleUploadSelected;
-import org.iplantc.de.diskResource.client.views.dialogs.BulkMetadataDialog;
-import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
 import org.iplantc.de.diskResource.client.views.toolbar.dialogs.DOIAgreementDialog;
 import org.iplantc.de.diskResource.share.DiskResourceModule.Ids;
@@ -252,6 +254,20 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
         return addHandler(handler, DownloadTemplateSelectedEvent.TYPE);
     }
 
+    @Override
+    public HandlerRegistration addOpenTrashFolderSelectedHandler(OpenTrashFolderSelected.OpenTrashFolderSelectedHandler handler) {
+        return addHandler(handler, OpenTrashFolderSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addBulkMetadataSelectedHandler(BulkMetadataSelected.BulkMetadataSelectedHandler handler) {
+        return addHandler(handler, BulkMetadataSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addAutomateHTPathListSelectedHandler(AutomateHTPathListSelected.AutomateHTPathListSelectedHandler handler) {
+        return addHandler(handler, AutomateHTPathListSelected.TYPE);
+    }
 
     // </editor-fold>
 
@@ -454,7 +470,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("selectmetadataMi")
     void onSelectMetadataClicked(SelectionEvent<Item> event) {
-        presenter.onBulkMetadataSelected(BulkMetadataDialog.BULK_MODE.SELECT);
+        fireEvent(new BulkMetadataSelected(BulkMetadataView.BULK_MODE.SELECT));
     }
 
     @UiHandler("copymetadataMi")
@@ -558,7 +574,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     // ------------- Trash ---------------
     @UiHandler("openTrashMi")
     void onOpenTrashClicked(SelectionEvent<Item> event) {
-        presenter.onOpenTrashFolderSelected();
+        fireEvent(new OpenTrashFolderSelected());
     }
 
     // ------------ Refresh --------------
@@ -654,7 +670,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("automateHTFileMi")
     void onAutomateHTPathList(SelectionEvent<Item> event) {
-        presenter.onAutomateHTPathList();
+        fireEvent(new AutomateHTPathListSelected());
     }
     // </editor-fold>
 
@@ -830,21 +846,5 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     private InfoType getInfoTypeFromSingletonCollection(List<DiskResource> selectedDiskResources) {
         Preconditions.checkArgument(selectedDiskResources.size() == 1);
         return InfoType.fromTypeString(selectedDiskResources.iterator().next().getInfoType());
-    }
-
-    @Override
-    public void openViewForGenomeSearch(GenomeSearchDialog view) {
-        GenomeSearchDialog dialog = view;
-        dialog.clearView();
-        dialog.setSize("600px", "300px");
-        dialog.show();
-
-    }
-
-    @Override
-    public void openViewBulkMetadata(BulkMetadataDialog bmd) {
-        bmd.setSize("600px", "200px");
-        bmd.show();
-
     }
 }

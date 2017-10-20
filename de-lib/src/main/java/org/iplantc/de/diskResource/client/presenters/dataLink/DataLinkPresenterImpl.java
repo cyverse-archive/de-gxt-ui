@@ -15,6 +15,7 @@ import org.iplantc.de.diskResource.client.presenters.callbacks.CreateDataLinkCal
 import org.iplantc.de.diskResource.client.presenters.callbacks.DeleteDataLinksCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.ListDataLinksCallback;
 import org.iplantc.de.diskResource.client.views.dialogs.DataLinkDialog;
+import org.iplantc.de.diskResource.share.DiskResourceModule;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.collect.Lists;
@@ -125,7 +126,7 @@ public class DataLinkPresenterImpl implements DataLinkView.Presenter,
 
     @Override
     public void go(HasOneWidget container) {
-        container.setWidget(view.asWidget());
+        container.setWidget(view);
     }
 
     List<DiskResource> createDiskResourcesList() {
@@ -134,5 +135,10 @@ public class DataLinkPresenterImpl implements DataLinkView.Presenter,
 
     List<String> createDiskResourceIdsList() {
         return Lists.newArrayList();
+    }
+
+    @Override
+    public void setViewDebugId(String baseID) {
+        view.asWidget().ensureDebugId(baseID + DiskResourceModule.Ids.VIEW);
     }
 }

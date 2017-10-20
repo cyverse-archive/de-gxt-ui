@@ -30,21 +30,6 @@ public class ToolbarViewPresenterDefaultAppearance implements ToolbarView.Presen
     }
 
     @Override
-    public String createDelimitedFileDialogHeight() {
-        return "150px";
-    }
-
-    @Override
-    public String createDelimitedFileDialogWidth() {
-        return "300px";
-    }
-
-    @Override
-    public String done() {
-        return iplantDisplayStrings.done();
-    }
-
-    @Override
     public String emptyTrash() {
         return diskResourceMessages.emptyTrash();
     }
@@ -52,26 +37,6 @@ public class ToolbarViewPresenterDefaultAppearance implements ToolbarView.Presen
     @Override
     public String emptyTrashWarning() {
         return diskResourceMessages.emptyTrashWarning();
-    }
-
-    @Override
-    public String manageDataLinks() {
-        return displayMessages.manageDataLinks();
-    }
-
-    @Override
-    public int manageDataLinksDialogHeight() {
-        return 300;
-    }
-
-    @Override
-    public int manageDataLinksDialogWidth() {
-        return 550;
-    }
-
-    @Override
-    public String manageDataLinksHelp() {
-        return displayMessages.manageDataLinksHelp();
     }
 
     @Override
@@ -91,22 +56,12 @@ public class ToolbarViewPresenterDefaultAppearance implements ToolbarView.Presen
 
     @Override
     public String cogeImportGenomeSucess() {
-        return diskResourceMessages.cogeImportGenomeSucess();
+        return diskResourceMessages.cogeImportGenomeSuccess();
     }
 
     @Override
     public String templatesError() {
         return diskResourceMessages.templatesError();
-    }
-
-    @Override
-    public String bulkMetadataSuccess() {
-        return diskResourceMessages.bulkMetadataSuccess();
-    }
-
-    @Override
-    public String bulkMetadataError() {
-        return diskResourceMessages.bulkMetadataError();
     }
 
     public String overWiteMetadata() {

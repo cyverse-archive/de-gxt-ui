@@ -9,10 +9,7 @@
              xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client">
 
     <ui:with field="appearance"
-             type="org.iplantc.de.commons.client.views.dialogs.AbstractFileUploadDialog.AbstractFileUploadDialogAppearance"/>
-
-    <ui:with field="bulkapp"
-             type="org.iplantc.de.diskResource.client.views.dialogs.BulkMetadataDialog.Appearance"/>
+             type="org.iplantc.de.diskResource.client.BulkMetadataView.BulkMetadataViewAppearance"/>
 
     <ui:with field="sideMargins" type="com.sencha.gxt.core.client.util.Margins">
         <ui:attributes top="4" right="4" bottom="4" left="4"/>
@@ -44,14 +41,16 @@
 
     <con:VerticalLayoutContainer>
         <con:child layoutData="{fileSelLabel}">
-            <g:HTML text="{bulkapp.uploadMetadata}" ui:field="upFileLbl"/>
+            <g:HTML ui:field="upFileLbl"
+                    text="{appearance.uploadMetadata}"/>
         </con:child>
         <con:child layoutData="{preferenceLayoutData}">
             <g:FormPanel ui:field="form0">
                 <con:HorizontalLayoutContainer ui:field="con">
                     <con:child layoutData="{sideLayoutData}">
-                        <button:TextButton ui:field="btn0" toolTip="{appearance.reset}"
-                                           icon="{appearance.arrowUndoIcon}" debugId="idBtnReset0"/>
+                        <button:TextButton ui:field="btn0"
+                                           toolTip="{appearance.reset}"
+                                           debugId="idBtnReset0"/>
                     </con:child>
                     <con:child layoutData="{centerLayoutData}">
                         <g:FileUpload ui:field="fuf0"
@@ -65,11 +64,12 @@
         </con:child>
 
         <con:child layoutData="{fileSelLabel}">
-            <g:HTML HTML="{bulkapp.selectMetadataFile}" ui:field="selLbl"/>
+            <g:HTML ui:field="selLbl"/>
         </con:child>
         <con:child layoutData="{preferenceLayoutData}">
             <selector:FileSelectorField ui:field="fileSelector"
-                                        debugId="idFileSelector" validatePermissions="true"/>
+                                        debugId="idFileSelector"
+                                        validatePermissions="true"/>
         </con:child>
     </con:VerticalLayoutContainer>
 </ui:UiBinder>

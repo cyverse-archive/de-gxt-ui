@@ -25,6 +25,7 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
+import org.iplantc.de.diskResource.client.BulkMetadataView;
 import org.iplantc.de.diskResource.client.GridView;
 import org.iplantc.de.diskResource.client.GridView.Presenter;
 import org.iplantc.de.diskResource.client.MetadataView;
@@ -38,6 +39,7 @@ import org.iplantc.de.diskResource.client.events.RequestDiskResourceFavoriteEven
 import org.iplantc.de.diskResource.client.events.ShowFilePreviewEvent;
 import org.iplantc.de.diskResource.client.events.TemplateDownloadEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
+import org.iplantc.de.diskResource.client.events.selection.BulkMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.DNDDiskResourcesCompleted;
 import org.iplantc.de.diskResource.client.events.selection.DownloadTemplateSelectedEvent;
@@ -59,6 +61,7 @@ import org.iplantc.de.diskResource.client.views.dialogs.Md5DisplayDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.MetadataCopyDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.SaveAsDialog;
 import org.iplantc.de.diskResource.client.views.grid.DiskResourceColumnModel;
+import org.iplantc.de.diskResource.client.views.metadata.dialogs.BulkMetadataDialog;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.ManageMetadataDialog;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.SelectMetadataTemplateDialog;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.DataSharingDialog;
@@ -186,6 +189,7 @@ public class GridViewPresenterImpl implements Presenter,
     @Inject AsyncProviderWrapper<MetadataCopyDialog> copyMetadataDlgProvider;
     @Inject AsyncProviderWrapper<Md5DisplayDialog> md5DisplayDlgProvider;
     @Inject AsyncProviderWrapper<SelectMetadataTemplateDialog> selectMetaTemplateDlgProvider;
+    @Inject AsyncProviderWrapper<BulkMetadataDialog> bulkMetadataDlgProvider;
     @Inject MetadataView.Presenter.Appearance metadataAppearance;
 
     @Inject DataLinkFactory dlFactory;
@@ -394,6 +398,44 @@ public class GridViewPresenterImpl implements Presenter,
                 });
                 dialog.addCancelButtonSelectHandler(selectEvent -> dialog.hide());
                 dialog.show(selected);
+            }
+        });
+    }
+
+    @Override
+    public void onBulkMetadataSelected(BulkMetadataSelected event) {
+        final BulkMetadataView.BULK_MODE mode = event.getMode();
+        DiskResource destFolder = view.getSelectionModel().getSelectedItem();
+        String destPath = destFolder.getPath();
+        bulkMetadataDlgProvider.get(new AsyncCallback<BulkMetadataDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(BulkMetadataDialog dialog) {
+                dialog.show(mode);
+                dialog.addOkButtonSelectHandler(selectEvent -> {
+                    if (dialog.isValid()) {
+                        submitBulkMetadataFromExistingFile(dialog.getSelectedPath(), destPath);
+                        dialog.hide();
+                    }
+                });
+                dialog.addCancelButtonSelectHandler(selectEvent -> dialog.hide());
+            }
+        });
+    }
+
+    void submitBulkMetadataFromExistingFile(String filePath,
+                                            String destFolder) {
+        diskResourceService.setBulkMetadataFromFile(filePath, destFolder, new DataCallback<String>() {
+            @Override
+            public void onFailure(Integer statusCode, Throwable caught) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.bulkMetadataError()));
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.bulkMetadataSuccess()));
             }
         });
     }

@@ -12,6 +12,7 @@ import org.iplantc.de.diskResource.client.events.FolderSelectionEvent.FolderSele
 import org.iplantc.de.diskResource.client.events.RequestDiskResourceFavoriteEvent.RequestDiskResourceFavoriteEventHandler;
 import org.iplantc.de.diskResource.client.events.TemplateDownloadEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.SubmitDiskResourceQueryEventHandler;
+import org.iplantc.de.diskResource.client.events.selection.BulkMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected.CopyMetadataSelectedEventHandler;
 import org.iplantc.de.diskResource.client.events.selection.DNDDiskResourcesCompleted;
 import org.iplantc.de.diskResource.client.events.selection.DownloadTemplateSelectedEvent;
@@ -124,7 +125,8 @@ public interface GridView extends IsWidget,
                                 Md5ValueClickedHandler,
                                 TemplateDownloadEvent.TemplateDownloadEventHandler,
                                 FetchDetailsCompleted.HasFetchDetailsCompletedHandlers,
-                                DNDDiskResourcesCompleted.HasDNDDiskResourcesCompletedHandlers {
+                                DNDDiskResourcesCompleted.HasDNDDiskResourcesCompletedHandlers,
+                                BulkMetadataSelected.BulkMetadataSelectedHandler {
 
         interface Appearance {
 
@@ -209,6 +211,10 @@ public interface GridView extends IsWidget,
             String copyMetadataDlgHeight();
 
             int md5MaxLength();
+
+            String bulkMetadataError();
+
+            String bulkMetadataSuccess();
         }
 
         void deSelectDiskResources();

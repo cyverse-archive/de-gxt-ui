@@ -36,6 +36,7 @@ import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
+import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
 import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.client.services.TagsServiceFacade;
@@ -97,6 +98,11 @@ public class BelphegorAppsGinModule extends AbstractGinModule {
     @Provides
     public CollaboratorsServiceFacade createCollaboratorServices() {
         return ServicesInjector.INSTANCE.getCollaboratorsServiceFacade();
+    }
+
+    @Provides
+    public FileEditorServiceFacade createFileEditorServices() {
+        return ServicesInjector.INSTANCE.getFileEditorServiceFacade();
     }
 
     @Provides

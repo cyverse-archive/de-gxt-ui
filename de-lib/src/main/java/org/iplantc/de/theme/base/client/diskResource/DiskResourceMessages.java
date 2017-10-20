@@ -172,7 +172,7 @@ public interface DiskResourceMessages extends Messages {
 
     String cogeImportGenomeError();
 
-    String cogeImportGenomeSucess();
+    String cogeImportGenomeSuccess();
 
     String importFromCoge();
 
@@ -194,7 +194,7 @@ public interface DiskResourceMessages extends Messages {
 
     String overWiteMetadata();
 
-    String norecords();
+    String noRecords();
 
     String doiRequestFail();
 
@@ -239,4 +239,6 @@ public interface DiskResourceMessages extends Messages {
     SafeHtml fileExistTitle();
 
     String invalidFileName();
+
+    String searchGenomeLabel();
 }

@@ -1,8 +1,5 @@
 package org.iplantc.de.diskResource.client.presenters.toolbar;
 
-import static com.sencha.gxt.widget.core.client.Dialog.PredefinedButton.CANCEL;
-import static com.sencha.gxt.widget.core.client.Dialog.PredefinedButton.OK;
-
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.events.diskResources.OpenFolderEvent;
 import org.iplantc.de.client.gin.ServicesInjector;
@@ -12,61 +9,50 @@ import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.diskResources.HTPathListRequest;
-import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
-import org.iplantc.de.client.models.genomes.GenomeAutoBeanFactory;
-import org.iplantc.de.client.models.genomes.GenomeList;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestType;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.models.viewer.MimeType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
-import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.services.PermIdRequestUserServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
-import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.FileViewerWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.PathListWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.TabularFileViewerWindowConfig;
-import org.iplantc.de.diskResource.client.DataLinkView;
-import org.iplantc.de.diskResource.client.DiskResourceView;
+import org.iplantc.de.diskResource.client.HTPathListAutomationView;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.CreateNewFileEvent;
 import org.iplantc.de.diskResource.client.events.RequestSimpleDownloadEvent;
 import org.iplantc.de.diskResource.client.events.ShowFilePreviewEvent;
+import org.iplantc.de.diskResource.client.events.selection.AutomateHTPathListSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSubmitted;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected.SimpleDownloadSelectedHandler;
-import org.iplantc.de.diskResource.client.gin.factory.BulkMetadataDialogFactory;
-import org.iplantc.de.diskResource.client.gin.factory.DataLinkPresenterFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
-import org.iplantc.de.diskResource.client.gin.factory.HTPathListAutomationDialogFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewFactory;
-import org.iplantc.de.diskResource.client.views.dialogs.BulkMetadataDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.CreateFolderDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.CreateNcbiSraFolderStructureDialog;
+import org.iplantc.de.diskResource.client.views.dialogs.CreatePublicLinkDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
-import org.iplantc.de.diskResource.client.views.dialogs.HTPathListAutomationDialog;
+import org.iplantc.de.diskResource.client.views.toolbar.dialogs.HTPathListAutomationDialog;
 import org.iplantc.de.diskResource.client.views.toolbar.dialogs.TabFileConfigDialog;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.base.Preconditions;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
-import com.sencha.gxt.widget.core.client.box.MessageBox;
-import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -74,91 +60,45 @@ import java.util.logging.Logger;
 /**
  * @author jstroot
  */
-public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDownloadSelectedHandler {
+public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
+                                                 SimpleDownloadSelectedHandler,
+                                                 AutomateHTPathListSelected.AutomateHTPathListSelectedHandler {
 
-    private final class BulkMetadataCallback extends DataCallback<String> {
-
-
-        private final String filePath;
-        private final String destFolder;
-
-        public BulkMetadataCallback(String filePath, String destFolder) {
-            this.filePath = filePath;
-            this.destFolder = destFolder;
-        }
-
-        @Override
-        public void onFailure(Integer statusCode, Throwable caught) {
-                IplantAnnouncer.getInstance()
-                               .schedule(new ErrorAnnouncementConfig(appearance.bulkMetadataError()));
-        }
-
-        @Override
-        public void onSuccess(String result) {
-            IplantAnnouncer.getInstance()
-                           .schedule(new SuccessAnnouncementConfig(appearance.bulkMetadataSuccess()));
-
-        }
-    }
-
-    @Inject
-    ToolbarView.Presenter.Appearance appearance;
-    @Inject
-    DataLinkPresenterFactory dataLinkPresenterFactory;
-    @Inject
-    DiskResourceSelectorFieldFactory drSelectorFactory;
-    @Inject
-    EventBus eventBus;
-    @Inject
-    DiskResourceServiceFacade drFacade;
+    @Inject ToolbarView.Presenter.Appearance appearance;
+    @Inject DiskResourceSelectorFieldFactory drSelectorFactory;
+    @Inject EventBus eventBus;
+    @Inject DiskResourceServiceFacade drFacade;
     @Inject UserInfo userInfo;
 
-    @Inject
-    DiskResourceAutoBeanFactory drAbFactory;
+    @Inject DiskResourceAutoBeanFactory drAbFactory;
 
-    @Inject
-    HTPathListAutomationDialog.HTPathListAutomationAppearance htAppearance;
-    @Inject
-    DiskResourceUtil diskResourceUtil;
+    @Inject HTPathListAutomationView.HTPathListAutomationAppearance htAppearance;
+    @Inject DiskResourceUtil diskResourceUtil;
 
     PermIdRequestUserServiceFacade prFacade =
             ServicesInjector.INSTANCE.getPermIdRequestUserServiceFacade();
 
-    @Inject
-    DiskResourceErrorAutoBeanFactory drFactory;
-    FileEditorServiceFacade feFacade;
+    @Inject DiskResourceErrorAutoBeanFactory drFactory;
 
-    @Inject
-    IplantAnnouncer announcer;
+    @Inject IplantAnnouncer announcer;
+    @Inject AsyncProviderWrapper<TabFileConfigDialog> tabFileConfigDlgProvider;
+    @Inject AsyncProviderWrapper<CreateFolderDialog> createFolderDlgProvider;
+    @Inject AsyncProviderWrapper<CreateNcbiSraFolderStructureDialog> createNcbiSraDlgProvider;
+    @Inject AsyncProviderWrapper<CreatePublicLinkDialog> createPublicLinkDlgProvider;
+    @Inject AsyncProviderWrapper<GenomeSearchDialog> genomeSearchDlgProvider;
+    @Inject AsyncProviderWrapper<HTPathListAutomationDialog> htPathAutomationDlgProvider;
 
-    private final GenomeSearchDialog genomeSearchView;
-    private final BulkMetadataDialogFactory bulkMetadataViewFactory;
-    final private GenomeAutoBeanFactory gFactory;
-    private final DiskResourceView.Presenter parentPresenter;
     private final ToolbarView view;
-    private final HTPathListAutomationDialogFactory htPathListAutomationViewFactory;
-
-    HTPathListAutomationDialog dialog;
+    private HandlerManager handlerManager;
 
 
     Logger LOG = Logger.getLogger(ToolbarViewPresenterImpl.class.getSimpleName());
 
     @Inject
-    ToolbarViewPresenterImpl(final ToolbarViewFactory viewFactory,
-                             GenomeSearchDialog genomeSearchView,
-                             BulkMetadataDialogFactory bulkMetadataViewFactory,
-                             HTPathListAutomationDialogFactory htPathListAutomationViewFactory,
-                             GenomeAutoBeanFactory gFactory,
-                             @Assisted DiskResourceView.Presenter parentPresenter) {
-        this.parentPresenter = parentPresenter;
+    ToolbarViewPresenterImpl(final ToolbarViewFactory viewFactory) {
         this.view = viewFactory.create(this);
-        this.bulkMetadataViewFactory = bulkMetadataViewFactory;
-        this.htPathListAutomationViewFactory = htPathListAutomationViewFactory;
-        this.feFacade = ServicesInjector.INSTANCE.getFileEditorServiceFacade();
         view.addSimpleDownloadSelectedHandler(this);
-        this.genomeSearchView = genomeSearchView;
-        this.genomeSearchView.setPresenter(this);
-        this.gFactory = gFactory;
+        view.addAutomateHTPathListSelectedHandler(this);
     }
 
     @Override
@@ -168,26 +108,25 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
     @Override
     public void onCreateNewDelimitedFileSelected() {
-        // FIXME Do not fire dialog from presenter. Do so from the view.
-        final TabFileConfigDialog d = new TabFileConfigDialog();
-        d.setPredefinedButtons(OK, CANCEL);
-        d.setModal(true);
-        d.getButton(OK).addSelectHandler(new SelectEvent.SelectHandler() {
+        tabFileConfigDlgProvider.get(new AsyncCallback<TabFileConfigDialog>() {
             @Override
-            public void onSelect(SelectEvent event) {
-                TabularFileViewerWindowConfig config = ConfigFactory.newTabularFileViewerWindowConfig();
-                config.setEditing(true);
-                config.setVizTabFirst(true);
-                config.setSeparator(d.getSeparator());
-                config.setColumns(d.getNumberOfColumns());
-                config.setContentType(MimeType.PLAIN);
-                eventBus.fireEvent(new CreateNewFileEvent(config));
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(TabFileConfigDialog dialog) {
+                dialog.addOkButtonSelectHandler(selectEvent -> {
+                    TabularFileViewerWindowConfig config = ConfigFactory.newTabularFileViewerWindowConfig();
+                    config.setEditing(true);
+                    config.setVizTabFirst(true);
+                    config.setSeparator(dialog.getSeparator());
+                    config.setColumns(dialog.getNumberOfColumns());
+                    config.setContentType(MimeType.PLAIN);
+                    eventBus.fireEvent(new CreateNewFileEvent(config));
+                });
+
+                dialog.show();
             }
         });
-        d.setHideOnButtonClick(true);
-        d.setSize(appearance.createDelimitedFileDialogWidth(),
-                  appearance.createDelimitedFileDialogHeight());
-        d.show();
     }
 
     @Override
@@ -201,47 +140,45 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
     @Override
     public void onCreateNewFolderSelected(Folder selectedFolder) {
-        // FIXME Do not fire dialog from presenter. Do so from the view.
         if(selectedFolder == null) {
             Folder parent = drAbFactory.folder().as();
             parent.setPath(userInfo.getHomePath());
             selectedFolder = parent;
         }
-        final CreateFolderDialog dlg = getCreateFolderDialog(selectedFolder);
-        dlg.show();
-    }
+        Folder finalSelectedFolder = selectedFolder;
+        createFolderDlgProvider.get(new AsyncCallback<CreateFolderDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
 
-    protected CreateFolderDialog getCreateFolderDialog(Folder selectedFolder) {
-        return new CreateFolderDialog(selectedFolder, parentPresenter);
+            @Override
+            public void onSuccess(CreateFolderDialog dialog) {
+                dialog.show(finalSelectedFolder);
+                dialog.addOkButtonSelectHandler(selectEvent -> ensureHandlers().fireEvent(new CreateNewFolderSelected(finalSelectedFolder, dialog.getFolderName())));
+            }
+        });
     }
 
     @Override
     public void onCreateNcbiSraFolderStructure(final Folder selectedFolder) {
-        // FIXME Do not fire dialog from presenter. Do so from the view.
-        final CreateNcbiSraFolderStructureDialog dialog =
-                new CreateNcbiSraFolderStructureDialog(selectedFolder);
-        dialog.setHideOnButtonClick(false);
-        dialog.addOkButtonSelectHandler(new SelectHandler() {
+        createNcbiSraDlgProvider.get(new AsyncCallback<CreateNcbiSraFolderStructureDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
 
             @Override
-            public void onSelect(SelectEvent event) {
-                parentPresenter.onCreateNcbiSraFolderStructure(selectedFolder,
-                                                               dialog.getProjectTxt(),
-                                                               dialog.getBiosampNum(),
-                                                               dialog.getLibNum());
-                dialog.hide();
+            public void onSuccess(CreateNcbiSraFolderStructureDialog dialog) {
+                dialog.addOkButtonSelectHandler(selectEvent -> {
+                    if (dialog.isValid()) {
+                        ensureHandlers().fireEvent(new CreateNcbiSraFolderStructureSubmitted(selectedFolder,
+                                                                                             dialog.getProjectTxt(),
+                                                                                             dialog.getBioSampNum(),
+                                                                                             dialog.getLibNum()));
+                        dialog.hide();
+                    }
+                });
+                dialog.addCancelButtonSelectHandler(selectEvent -> dialog.hide());
+                dialog.show(selectedFolder);
             }
         });
-
-        dialog.addCancelButtonSelectHandler(new SelectHandler() {
-
-            @Override
-            public void onSelect(SelectEvent event) {
-                dialog.hide();
-            }
-        });
-
-        dialog.show();
     }
 
     @Override
@@ -253,19 +190,15 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
     @Override
     public void onCreatePublicLinkSelected(final List<DiskResource> selectedDiskResources) {
-        // FIXME Do not fire dialog from presenter. Do so from the view.
-        IPlantDialog dlg = new IPlantDialog(true);
-        dlg.setPredefinedButtons(OK);
-        dlg.setHeading(appearance.manageDataLinks());
-        dlg.setHideOnButtonClick(true);
-        dlg.setWidth(appearance.manageDataLinksDialogWidth());
-        dlg.setHeight(appearance.manageDataLinksDialogHeight());
-        dlg.setOkButtonText(appearance.done());
-        DataLinkView.Presenter dlPresenter =
-                dataLinkPresenterFactory.createDataLinkPresenter(selectedDiskResources);
-        dlPresenter.go(dlg);
-        dlg.addHelp(new HTML(appearance.manageDataLinksHelp()));
-        dlg.show();
+        createPublicLinkDlgProvider.get(new AsyncCallback<CreatePublicLinkDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(CreatePublicLinkDialog dialog) {
+                dialog.show(selectedDiskResources);
+            }
+        });
     }
 
     @Override
@@ -296,11 +229,6 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
     }
 
     @Override
-    public void onOpenTrashFolderSelected() {
-        parentPresenter.selectTrashFolder();
-    }
-
-    @Override
     public void onSimpleDownloadSelected(SimpleDownloadSelected event) {
         eventBus.fireEvent(new RequestSimpleDownloadEvent(event.getSelectedDiskResources(),
                                                           event.getSelectedFolder()));
@@ -308,89 +236,15 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
     @Override
     public void onImportFromCoge() {
-        view.openViewForGenomeSearch(genomeSearchView);
-
-    }
-
-    @Override
-    public void searchGenomeInCoge(String searchTerm) {
-        feFacade.searchGenomesInCoge(searchTerm, new AsyncCallback<String>() {
+        genomeSearchDlgProvider.get(new AsyncCallback<GenomeSearchDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
 
             @Override
-            public void onSuccess(String result) {
-                AutoBean<GenomeList> genomesBean =
-                        AutoBeanCodex.decode(gFactory, GenomeList.class, result);
-                GenomeList list = genomesBean.as();
-                genomeSearchView.loadResults(list.getGenomes());
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                genomeSearchView.unmask();
-                IplantAnnouncer.getInstance()
-                               .schedule(new ErrorAnnouncementConfig(appearance.cogeSearchError()));
-
+            public void onSuccess(GenomeSearchDialog dialog) {
+                dialog.show();
             }
         });
-
-    }
-
-    @Override
-    public void importGenomeFromCoge(Integer id) {
-        feFacade.importGenomeFromCoge(id, true, new AsyncCallback<String>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                IplantAnnouncer.getInstance()
-                               .schedule(new ErrorAnnouncementConfig(appearance.cogeImportGenomeError()));
-
-            }
-
-            @Override
-            public void onSuccess(String result) {
-                MessageBox amb =
-                        new MessageBox(SafeHtmlUtils.fromTrustedString(appearance.importFromCoge()), SafeHtmlUtils.fromTrustedString(appearance.cogeImportGenomeSucess()));
-                amb.setIcon(MessageBox.ICONS.info());
-                amb.show();
-            }
-
-        });
-
-    }
-
-    @Override
-    public void onBulkMetadataSelected(final BulkMetadataDialog.BULK_MODE mode) {
-        drFacade.getMetadataTemplateListing(new AsyncCallback<List<MetadataTemplateInfo>>() {
-
-            @Override
-            public void onSuccess(List<MetadataTemplateInfo> templates) {
-                BulkMetadataDialog bmd = bulkMetadataViewFactory.create(drSelectorFactory,
-                                                                        parentPresenter.getSelectedDiskResources()
-                                                                                       .get(0)
-                                                                                       .getPath(),
-                                                                        templates,
-                                                                        mode);
-                bmd.setPresenter(ToolbarViewPresenterImpl.this);
-                view.openViewBulkMetadata(bmd);
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                IplantAnnouncer.getInstance()
-                               .schedule(new ErrorAnnouncementConfig(appearance.templatesError()));
-
-            }
-        });
-
-    }
-
-    @Override
-    public void submitBulkMetadataFromExistingFile(String filePath,
-                                                   String destFolder) {
-        drFacade.setBulkMetadataFromFile(filePath,
-                                         destFolder,
-                                         new BulkMetadataCallback(filePath,  destFolder));
-
     }
 
     @Override
@@ -399,22 +253,19 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
-                IplantAnnouncer.getInstance()
-                               .schedule(new ErrorAnnouncementConfig(appearance.doiRequestFail()));
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.doiRequestFail()));
                 ErrorHandler.post(appearance.doiRequestFail(),caught);
             }
 
             @Override
             public void onSuccess(String result) {
-                IplantAnnouncer.getInstance()
-                               .schedule(new SuccessAnnouncementConfig(appearance.doiRequestSuccess()));
-
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.doiRequestSuccess()));
             }
         });
     }
 
     @Override
-    public void onAutomateHTPathList() {
+    public void onAutomateHTPathListSelected(AutomateHTPathListSelected event) {
         drFacade.getInfoTypes(new DataCallback<List<InfoType>>() {
 
             @Override
@@ -424,8 +275,18 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
             @Override
             public void onSuccess(List<InfoType> infoTypes) {
-                dialog = htPathListAutomationViewFactory.create(drSelectorFactory, infoTypes);
-                dialog.setSize(htAppearance.dialogWidth(), htAppearance.dialogHeight());
+                showHtPathAutomationDialog(infoTypes);
+            }
+        });
+    }
+
+    void showHtPathAutomationDialog(List<InfoType> infoTypes) {
+        htPathAutomationDlgProvider.get(new AsyncCallback<HTPathListAutomationDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(HTPathListAutomationDialog dialog) {
                 dialog.addOkButtonSelectHandler(event -> {
                     if (dialog.isValid()) {
                         HTPathListRequest request = dialog.getRequest();
@@ -437,26 +298,25 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
                 dialog.addCancelButtonSelectHandler(event -> {
                     dialog.hide();
                 });
-                dialog.show();
+                dialog.show(infoTypes);
             }
         });
-
     }
 
     protected void showHTProcessingError() {
         AlertMessageBox amb =
-                new AlertMessageBox(htAppearance.heading(), htAppearance.validationMessage());
+                new AlertMessageBox(htAppearance.dialogHeading(), htAppearance.validationMessage());
         amb.show();
     }
 
-
     protected void requestHTPathListCreation(HTPathListAutomationDialog dialog,
-                                           HTPathListRequest request) {
+                                             HTPathListRequest request) {
         dialog.mask(htAppearance.processing());
         drFacade.requestHTPathlistFile(request, new DataCallback<File>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 ErrorHandler.post(htAppearance.requestFailed(), exception);
+                dialog.unmask();
             }
 
             @Override
@@ -468,4 +328,22 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
         });
     }
 
+    HandlerManager ensureHandlers() {
+        return handlerManager == null ? handlerManager = createHandlerManager() : handlerManager;
+    }
+
+    HandlerManager createHandlerManager() {
+        return new HandlerManager(this);
+    }
+
+    @Override
+    public HandlerRegistration addCreateNewFolderSelectedHandler(CreateNewFolderSelected.CreateNewFolderSelectedHandler handler) {
+        return ensureHandlers().addHandler(CreateNewFolderSelected.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addCreateNcbiSraFolderStructureSubmittedHandler(
+            CreateNcbiSraFolderStructureSubmitted.CreateNcbiSraFolderStructureSubmittedHandler handler) {
+        return ensureHandlers().addHandler(CreateNcbiSraFolderStructureSubmitted.TYPE, handler);
+    }
 }

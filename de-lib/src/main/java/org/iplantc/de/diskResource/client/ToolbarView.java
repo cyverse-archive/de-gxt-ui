@@ -5,7 +5,11 @@ import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.viewer.MimeType;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent.DiskResourceSelectionChangedEventHandler;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent.FolderSelectionEventHandler;
+import org.iplantc.de.diskResource.client.events.selection.AutomateHTPathListSelected;
+import org.iplantc.de.diskResource.client.events.selection.BulkMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected.HasCopyMetadataSelectedEventHandlers;
+import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSubmitted;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDiskResourcesSelected.HasDeleteDiskResourcesSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.DownloadTemplateSelectedEvent;
 import org.iplantc.de.diskResource.client.events.selection.EditInfoTypeSelected.HasEditInfoTypeSelectedEventHandlers;
@@ -15,6 +19,7 @@ import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelecte
 import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelected.HasManageMetadataSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected.HasManageSharingSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.MoveDiskResourcesSelected.HasMoveDiskResourcesSelectedHandlers;
+import org.iplantc.de.diskResource.client.events.selection.OpenTrashFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected.HasRefreshFolderSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.RenameDiskResourceSelected.HasRenameDiskResourceSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.RestoreDiskResourcesSelected.HasRestoreDiskResourceSelectedHandlers;
@@ -24,9 +29,6 @@ import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelec
 import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected.HasShareByDataLinkSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected.HasSimpleDownloadSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SimpleUploadSelected.HasSimpleUploadSelectedHandlers;
-import org.iplantc.de.diskResource.client.views.dialogs.BulkMetadataDialog;
-import org.iplantc.de.diskResource.client.views.dialogs.BulkMetadataDialog.BULK_MODE;
-import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
 
 import com.google.gwt.resources.client.ImageResource;
@@ -59,7 +61,10 @@ public interface ToolbarView extends IsWidget,
                                      HasImportFromUrlSelectedHandlers,
                                      DownloadTemplateSelectedEvent.HasDownloadTemplateSelectedEventHandlers,
                                      FolderSelectionEventHandler,
-                                     DiskResourceSelectionChangedEventHandler {
+                                     DiskResourceSelectionChangedEventHandler,
+                                     OpenTrashFolderSelected.HasOpenTrashFolderSelectedHandlers,
+                                     BulkMetadataSelected.HasBulkMetadataSelectedHandlers,
+                                     AutomateHTPathListSelected.HasAutomateHTPathListSelectedHandlers {
     interface Appearance {
 
         SafeHtml bulkDownloadInfoBoxHeading();
@@ -239,27 +244,14 @@ public interface ToolbarView extends IsWidget,
         String automateHTPathListMenuItem();
     }
 
-    interface Presenter {
+    interface Presenter extends CreateNewFolderSelected.HasCreateNewFolderSelectedHandlers,
+                                CreateNcbiSraFolderStructureSubmitted.HasCreateNcbiSraFolderStructureSubmittedHandlers {
 
         interface Appearance {
-
-            String createDelimitedFileDialogHeight();
-
-            String createDelimitedFileDialogWidth();
-
-            String done();
 
             String emptyTrash();
 
             String emptyTrashWarning();
-
-            String manageDataLinks();
-
-            int manageDataLinksDialogHeight();
-
-            int manageDataLinksDialogWidth();
-
-            String manageDataLinksHelp();
 
             String cogeSearchError();
 
@@ -268,10 +260,6 @@ public interface ToolbarView extends IsWidget,
             String cogeImportGenomeSucess();
 
             String importFromCoge();
-
-            String bulkMetadataError();
-
-            String bulkMetadataSuccess();
 
             String templatesError();
 
@@ -304,23 +292,9 @@ public interface ToolbarView extends IsWidget,
 
         void onOpenNewWindowSelected();
 
-        void onOpenTrashFolderSelected();
-
         void onImportFromCoge();
 
-        void searchGenomeInCoge(String searchTerm);
-
-        void importGenomeFromCoge(Integer id);
-
-        void onBulkMetadataSelected(BULK_MODE mode);
-
-        void submitBulkMetadataFromExistingFile(String filePath,
-                                                String destFolder);
-
         void onDoiRequest(String uuid);
-
-        void onAutomateHTPathList();
-
     }
 
     DiskResourceSearchField getSearchField();
@@ -336,8 +310,4 @@ public interface ToolbarView extends IsWidget,
     void unmaskSendToEnsembl();
 
     void unmaskSendToTreeViewer();
-
-    void openViewForGenomeSearch(GenomeSearchDialog view);
-
-    void openViewBulkMetadata(BulkMetadataDialog bmd);
 }

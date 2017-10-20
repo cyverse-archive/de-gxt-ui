@@ -45,12 +45,6 @@ public interface ToolbarDisplayMessages extends Messages {
     @Key("importFromUrlMenuItem")
     String importFromUrlMenuItem();
 
-    @Key("manageDataLinks")
-    String manageDataLinks();
-
-    @Key("manageDataLinksHelp")
-    String manageDataLinksHelp();
-
     @Key("metadataMenuItem")
     String metadataMenuItem();
 

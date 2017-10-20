@@ -11,6 +11,7 @@ import org.iplantc.de.diskResource.client.events.FolderSelectionEvent.HasFolderS
 import org.iplantc.de.diskResource.client.events.RootFoldersRetrievedEvent.HasRootFoldersRetrievedEventHandlers;
 import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent.HasSavedSearchesRetrievedEventHandlers;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected;
 import org.iplantc.de.diskResource.client.presenters.navigation.proxy.SelectFolderByPathLoadHandler;
 
@@ -51,7 +52,8 @@ public interface DiskResourceView extends IsWidget,
                                 IsMaskable,
                                 HasDiskResourceSelectionChangedEventHandlers,
                                 HasFolderSelectionEventHandlers,
-                                RefreshFolderSelected.RefreshFolderSelectedHandler {
+                                RefreshFolderSelected.RefreshFolderSelectedHandler,
+                                CreateNewFolderSelected.CreateNewFolderSelectedHandler {
 
         interface Appearance {
 
@@ -116,13 +118,6 @@ public interface DiskResourceView extends IsWidget,
 
         void deSelectDiskResources();
 
-        void doCreateNewFolder(Folder parentFolder, String folderName);
-
-        public void onCreateNcbiSraFolderStructure(Folder selectedFolder,
-                                                   String projectName,
-                                                   Integer numSample,
-                                                   Integer numlibs);
-
         void doMoveDiskResources(Folder targetFolder, List<DiskResource> resources);
 
         void doRenameDiskResource(DiskResource diskResource, String newName);
@@ -133,8 +128,6 @@ public interface DiskResourceView extends IsWidget,
 
         void go(HasOneWidget container, HasPath folderToSelect,
                 List<? extends HasId> diskResourcesToSelect);
-
-        void selectTrashFolder();
 
         void setSelectedDiskResourcesById(List<? extends HasId> selectedDiskResources);
 

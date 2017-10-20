@@ -471,4 +471,7 @@ public interface IplantResources extends ClientBundle,
 
     @Source("metadata.png")
     ImageResource metadataIcon();
+
+    @Source("import.gif")
+    ImageResource importDataIcon();
 }
