@@ -27,7 +27,6 @@ public class GenomeSearchRpcProxy extends RpcProxy<FilterPagingLoadConfig, Pagin
     private GenomeSearchView.GenomeSearchViewAppearance appearance;
     private FileEditorServiceFacade serviceFacade;
     private IplantAnnouncer announcer;
-    String lastQueryText;
 
     @Inject
     GenomeSearchRpcProxy(GenomeSearchView.GenomeSearchViewAppearance appearance,
@@ -41,20 +40,20 @@ public class GenomeSearchRpcProxy extends RpcProxy<FilterPagingLoadConfig, Pagin
     @Override
     public void load(FilterPagingLoadConfig loadConfig,
                      AsyncCallback<PagingLoadResult<Genome>> callback) {
-        lastQueryText = "";
+        String queryText = "";
 
         List<FilterConfig> filterConfigs = loadConfig.getFilters();
         if (filterConfigs != null && !filterConfigs.isEmpty()) {
-            lastQueryText = filterConfigs.get(0).getValue();
+            queryText = filterConfigs.get(0).getValue();
         }
 
-        if (Strings.isNullOrEmpty(lastQueryText)) {
+        if (Strings.isNullOrEmpty(queryText)) {
             PagingLoadResultBean<Genome> noResults = new PagingLoadResultBean<>();
             callback.onSuccess(noResults);
             return;
         }
 
-        serviceFacade.searchGenomesInCoge(lastQueryText, new AsyncCallback<List<Genome>>() {
+        serviceFacade.searchGenomesInCoge(queryText, new AsyncCallback<List<Genome>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
