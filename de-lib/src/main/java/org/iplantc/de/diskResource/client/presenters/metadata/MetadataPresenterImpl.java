@@ -51,7 +51,7 @@ import java.util.List;
  */
 public class MetadataPresenterImpl implements MetadataView.Presenter {
 
-   private class TemplateViewCancelSelectHandler implements SelectEvent.SelectHandler {
+    private class TemplateViewCancelSelectHandler implements SelectEvent.SelectHandler {
 
         private MetadataTemplateViewDialog metadataTemplateDlg;
 
