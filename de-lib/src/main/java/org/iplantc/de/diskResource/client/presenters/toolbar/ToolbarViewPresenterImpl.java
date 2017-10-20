@@ -52,6 +52,7 @@ import org.iplantc.de.diskResource.client.views.dialogs.CreateNcbiSraFolderStruc
 import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.HTPathListAutomationDialog;
 import org.iplantc.de.diskResource.client.views.toolbar.dialogs.TabFileConfigDialog;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.base.Preconditions;
@@ -66,7 +67,6 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 import com.sencha.gxt.widget.core.client.box.MessageBox;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -130,6 +130,9 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
     @Inject
     IplantAnnouncer announcer;
+
+    @Inject
+    AsyncProviderWrapper<CreateNcbiSraFolderStructureDialog> asyncProviderWrapper;
 
     private final GenomeSearchDialog genomeSearchView;
     private final BulkMetadataDialogFactory bulkMetadataViewFactory;
@@ -217,31 +220,29 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter, SimpleDo
 
     @Override
     public void onCreateNcbiSraFolderStructure(final Folder selectedFolder) {
-        // FIXME Do not fire dialog from presenter. Do so from the view.
-        final CreateNcbiSraFolderStructureDialog dialog =
-                new CreateNcbiSraFolderStructureDialog(selectedFolder);
-        dialog.setHideOnButtonClick(false);
-        dialog.addOkButtonSelectHandler(new SelectHandler() {
+        asyncProviderWrapper.get(new AsyncCallback<CreateNcbiSraFolderStructureDialog>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+
+            }
 
             @Override
-            public void onSelect(SelectEvent event) {
-                parentPresenter.onCreateNcbiSraFolderStructure(selectedFolder,
-                                                               dialog.getProjectTxt(),
-                                                               dialog.getBiosampNum(),
-                                                               dialog.getLibNum());
-                dialog.hide();
+            public void onSuccess(CreateNcbiSraFolderStructureDialog dialog) {
+                dialog.setHideOnButtonClick(false);
+                dialog.addOkButtonSelectHandler(event -> {
+                    if(dialog.validate()) {
+                        parentPresenter.onCreateNcbiSraFolderStructure(selectedFolder,
+                                                                       dialog.getProjectTxt(),
+                                                                       dialog.getBiosampNum(),
+                                                                       dialog.getLibNum());
+                        dialog.hide();
+                    }
+                });
+
+                dialog.addCancelButtonSelectHandler(event -> dialog.hide());
+                dialog.show(selectedFolder);
             }
         });
-
-        dialog.addCancelButtonSelectHandler(new SelectHandler() {
-
-            @Override
-            public void onSelect(SelectEvent event) {
-                dialog.hide();
-            }
-        });
-
-        dialog.show();
     }
 
     @Override
