@@ -7,3 +7,10 @@
 .icon:hover {
     cursor: pointer;
 }
+
+.iconDisabled {
+    cursor: hand;
+    float:left;
+    margin: 10px 0 0 10px;
+    border: 1px solid #A5A4A4;
+}

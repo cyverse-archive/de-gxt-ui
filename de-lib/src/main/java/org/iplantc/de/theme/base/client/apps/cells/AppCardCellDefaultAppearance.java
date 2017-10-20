@@ -1,7 +1,5 @@
 package org.iplantc.de.theme.base.client.apps.cells;
 
-import com.google.gwt.safehtml.shared.SafeUri;
-import com.google.gwt.safehtml.shared.UriUtils;
 import org.iplantc.de.apps.client.views.list.cells.AppCardCell;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.commons.client.util.MD5Util;
@@ -13,6 +11,8 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeUri;
+import com.google.gwt.safehtml.shared.UriUtils;
 
 /**
  * @author aramsey
@@ -27,6 +27,9 @@ public class AppCardCellDefaultAppearance extends AppNameCellDefaultAppearance i
     public interface AppCardCellStyles extends CssResource {
         @CssResource.ClassName("icon")
         String icon();
+
+        @ClassName("iconDisabled")
+        String iconDisabled();
     }
 
     public interface AppCardCellResources extends ClientBundle {
@@ -51,8 +54,15 @@ public class AppCardCellDefaultAppearance extends AppNameCellDefaultAppearance i
 
     @Override
     public void render(Cell.Context context, App value, SafeHtmlBuilder sb, String cardUrl, String cardUrlOptions, String textToolTip, String debugID) {
+        String className;
+        if (value.isDisabled()) {
+            className = styles.iconDisabled();
+        } else {
+            className = styles.icon();
+        }
+
         String hash = MD5Util.md5Hex(value.getId());
         String gravatar = cardUrl + hash + cardUrlOptions;
-        sb.append(templates.img(styles.icon(), UriUtils.fromString(gravatar), textToolTip, debugID));
+        sb.append(templates.img(className, UriUtils.fromString(gravatar), textToolTip, debugID));
     }
 }
