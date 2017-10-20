@@ -3,17 +3,20 @@ package org.iplantc.de.diskResource.client.views.metadata.cells;
 import static com.google.gwt.dom.client.BrowserEvents.CLICK;
 
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
+import org.iplantc.de.diskResource.share.DiskResourceModule;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.ValueUpdater;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.Dialog;
 
@@ -29,14 +32,19 @@ public class TemplateNameCell extends AbstractCell<MetadataTemplateInfo> {
         String description();
 
         String background();
+
+        String descriptionWidth();
+
+        String descriptionHeight();
     }
 
-
     private TemplateNameCellAppearance appearance;
+    @Inject AsyncProviderWrapper<Dialog> dialogProvider;
 
-    public TemplateNameCell() {
+    @Inject
+    public TemplateNameCell(TemplateNameCellAppearance appearance) {
        super(CLICK);
-       appearance = GWT.create(TemplateNameCellAppearance.class);
+       this.appearance = appearance;
     }
 
     @Override
@@ -60,7 +68,7 @@ public class TemplateNameCell extends AbstractCell<MetadataTemplateInfo> {
         if (child != null && child.isOrHasChild(eventTarget)) {
             switch (Event.as(event).getTypeInt()) {
                 case Event.ONCLICK:
-                    doOnClick(eventTarget, value);
+                    doOnClick(value);
                     break;
                 default:
                     break;
@@ -83,14 +91,22 @@ public class TemplateNameCell extends AbstractCell<MetadataTemplateInfo> {
         return null;
     }
 
-    private void doOnClick(Element eventTarget, MetadataTemplateInfo value) {
-        Dialog d = new Dialog();
-        d.setSize("500","100");
-        d.setHideOnButtonClick(true);
-        d.setHeading(appearance.description());
-        HTML desc = new HTML(value.getDescription());
-        desc.setStylePrimaryName(appearance.background());
-        d.add(desc);
-        d.show();
+    private void doOnClick(MetadataTemplateInfo value) {
+        dialogProvider.get(new AsyncCallback<Dialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(Dialog result) {
+                result.setSize(appearance.descriptionWidth(), appearance.descriptionHeight());
+                result.setHideOnButtonClick(true);
+                result.setHeading(appearance.description());
+                HTML desc = new HTML(value.getDescription());
+                desc.setStylePrimaryName(appearance.background());
+                result.add(desc);
+                result.ensureDebugId(DiskResourceModule.Ids.METADATA_DESC_DLG);
+                result.show();
+            }
+        });
     }
 }

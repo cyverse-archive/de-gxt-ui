@@ -51,12 +51,15 @@ public class SelectMetadataTemplateDialog extends IPlantDialog implements IsWidg
     private ColumnConfig<MetadataTemplateInfo, MetadataTemplateInfo> downloadColumn;
     private MetadataView.Presenter.Appearance appearance;
     private DownloadTemplateCell downloadTemplateCell;
+    private TemplateNameCell templateNameCell;
 
     @Inject
     public SelectMetadataTemplateDialog(Appearance appearance,
-                                        DownloadTemplateCell downloadTemplateCell) {
+                                        DownloadTemplateCell downloadTemplateCell,
+                                        TemplateNameCell templateNameCell) {
         super();
         this.downloadTemplateCell = downloadTemplateCell;
+        this.templateNameCell = templateNameCell;
         getOkButton().disable();
         this.appearance = appearance;
         setModal(false);
@@ -134,8 +137,7 @@ public class SelectMetadataTemplateDialog extends IPlantDialog implements IsWidg
                     }
                 }, 150, appearance.templates());
 
-        TemplateNameCell nameCell = new TemplateNameCell();
-        name.setCell(nameCell);
+        name.setCell(templateNameCell);
 
         ColumnConfig<MetadataTemplateInfo, MetadataTemplateInfo> download =
                 new ColumnConfig<MetadataTemplateInfo, MetadataTemplateInfo>(new IdentityValueProvider<MetadataTemplateInfo>(),

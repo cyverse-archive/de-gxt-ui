@@ -126,6 +126,7 @@ public interface DiskResourceModule {
         String METADATA_COPY_DLG = "metadataCopyDlg";
         String SAVE_AS_DIALOG = "saveAsDlg";
         String FILE_NAME = ".fileName";
+        String METADATA_DESC_DLG = "metadataDescDlg";
     }
 
     interface MetadataIds {
