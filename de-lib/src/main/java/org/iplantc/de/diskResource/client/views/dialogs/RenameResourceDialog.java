@@ -10,7 +10,8 @@ import org.iplantc.de.diskResource.share.DiskResourceModule;
 import com.google.inject.Inject;
 
 /**
- * @author jstroot
+ * A dialog used for renaming any kind of disk resource
+ * @author aramsey
  */
 public class RenameResourceDialog extends IPlantPromptDialog {
 
