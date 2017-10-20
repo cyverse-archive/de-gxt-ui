@@ -1,7 +1,6 @@
 package org.iplantc.de.diskResource.client.views.grid;
 
 import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.diskResource.client.GridView;
 import org.iplantc.de.diskResource.client.events.DiskResourceNameSelectedEvent;
@@ -14,20 +13,19 @@ import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected
 import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected;
 import org.iplantc.de.diskResource.client.model.DiskResourceNameComparator;
 import org.iplantc.de.diskResource.client.model.DiskResourceProperties;
+import org.iplantc.de.diskResource.client.model.DiskResourceSizeValueProvider;
 import org.iplantc.de.diskResource.client.views.grid.cells.DiskResourceDotMenuCell;
 import org.iplantc.de.diskResource.client.views.grid.cells.DiskResourceNameCell;
 import org.iplantc.de.diskResource.client.views.grid.cells.DiskResourcePathCell;
+import org.iplantc.de.diskResource.client.views.grid.cells.DiskResourceSizeCell;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 
-import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.DateCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
 import com.sencha.gxt.core.client.IdentityValueProvider;
-import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.widget.core.client.grid.CheckBoxSelectionModel;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
@@ -43,7 +41,7 @@ public class DiskResourceColumnModel extends ColumnModel<DiskResource> implement
                                                                                   ShareByDataLinkSelected.HasShareByDataLinkSelectedEventHandlers,
                                                                                   ManageSharingSelected.HasManageSharingSelectedEventHandlers,
                                                                                   ManageMetadataSelected.HasManageMetadataSelectedEventHandlers,
-                                                                      CopyMetadataSelected.HasCopyMetadataSelectedEventHandlers,
+                                                                                  CopyMetadataSelected.HasCopyMetadataSelectedEventHandlers,
                                                                                   RequestDiskResourceFavoriteEvent.HasManageFavoritesEventHandlers,
                                                                                   ManageCommentsSelected.HasManageCommentsSelectedEventHandlers,
                                                                                   DiskResourcePathSelectedEvent.HasDiskResourcePathSelectedEventHandlers {
@@ -179,50 +177,6 @@ public class DiskResourceColumnModel extends ColumnModel<DiskResource> implement
                 ((DiskResourceDotMenuCell)cc.getCell()).setBaseDebugId(baseID + DiskResourceModule.Ids.GRID);
             } else if(cc.getCell() instanceof DiskResourcePathCell) {
                 ((DiskResourcePathCell)cc.getCell()).setBaseDebugId(baseID + DiskResourceModule.Ids.GRID);
-            }
-        }
-    }
-
-    /**
-     * This is a value provider class which returns the size of any <code>DiskResource</code>. If the
-     * <code>DiskResource</code> is a <code>Folder</code>, this provider will return null. If it is a
-     * <code>File</code>, then it returns the value of the {@link File#getSize()} method as an Integer.
-     * 
-     * @author jstroot
-     * 
-     */
-    private static final class DiskResourceSizeValueProvider implements ValueProvider<DiskResource, Long> {
-        @Override
-        public Long getValue(DiskResource object) {
-            if (object instanceof File) {
-                return ((File) object).getSize();
-            } else {
-                return null;
-            }
-        }
-
-        @Override
-        public void setValue(DiskResource object, Long value) {
-        }
-
-        @Override
-        public String getPath() {
-            return "size"; //$NON-NLS-1$
-        }
-    }
-
-    /**
-     * A <code>Cell</code> for converting bytes as integers into human readable <code>File</code> sizes.
-     * 
-     * @author psarando
-     */
-    private static final class DiskResourceSizeCell extends AbstractCell<Long> {
-        final DiskResourceUtil diskResourceUtil = DiskResourceUtil.getInstance();
-
-        @Override
-        public void render(Context context, Long value, SafeHtmlBuilder sb) {
-            if (value != null) {
-                sb.appendEscaped(diskResourceUtil.formatFileSize(value.toString()));
             }
         }
     }
