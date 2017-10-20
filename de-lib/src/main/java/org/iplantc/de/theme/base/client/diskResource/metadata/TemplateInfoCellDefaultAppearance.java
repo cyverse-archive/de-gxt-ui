@@ -1,7 +1,7 @@
 package org.iplantc.de.theme.base.client.diskResource.metadata;
 
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
-import org.iplantc.de.diskResource.client.views.metadata.cells.TemplateNameCell;
+import org.iplantc.de.diskResource.client.views.metadata.cells.TemplateInfoCell;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
@@ -17,7 +17,7 @@ import com.google.gwt.safehtml.shared.SafeUri;
 /**
  * Created by sriram on 7/7/16.
  */
-public class TemplateNameCellDefaultAppearance implements TemplateNameCell.TemplateNameCellAppearance {
+public class TemplateInfoCellDefaultAppearance implements TemplateInfoCell.TemplateInfoCellAppearance {
 
     interface  MyCss extends CssResource {
         @CssResource.ClassName("info")
@@ -28,7 +28,7 @@ public class TemplateNameCellDefaultAppearance implements TemplateNameCell.Templ
     }
 
     interface Resources extends ClientBundle {
-        @Source("TemplateNameCell.gss")
+        @Source("TemplateInfoCell.gss")
         MyCss css();
     }
 
@@ -46,14 +46,14 @@ public class TemplateNameCellDefaultAppearance implements TemplateNameCell.Templ
     private IplantDisplayStrings iplantDisplayStrings;
 
 
-    public TemplateNameCellDefaultAppearance() {
+    public TemplateInfoCellDefaultAppearance() {
         this(GWT.<Templates> create(Templates.class),
              GWT.<Resources> create(Resources.class),
              GWT.<IplantResources> create(IplantResources.class),
              GWT.<IplantDisplayStrings> create(IplantDisplayStrings.class));
     }
 
-    TemplateNameCellDefaultAppearance(final Templates templates,
+    TemplateInfoCellDefaultAppearance(final Templates templates,
                                       final Resources resources,
                                       final IplantResources iplantResources,
                                       IplantDisplayStrings iplantDisplayStrings)  {

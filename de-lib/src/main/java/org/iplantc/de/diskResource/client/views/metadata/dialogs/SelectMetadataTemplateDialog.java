@@ -5,7 +5,7 @@ import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.MetadataView.Presenter.Appearance;
 import org.iplantc.de.diskResource.client.views.metadata.cells.DownloadTemplateCell;
-import org.iplantc.de.diskResource.client.views.metadata.cells.TemplateNameCell;
+import org.iplantc.de.diskResource.client.views.metadata.cells.TemplateInfoCell;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.gwt.core.client.GWT;
@@ -51,15 +51,15 @@ public class SelectMetadataTemplateDialog extends IPlantDialog implements IsWidg
     private ColumnConfig<MetadataTemplateInfo, MetadataTemplateInfo> downloadColumn;
     private MetadataView.Presenter.Appearance appearance;
     private DownloadTemplateCell downloadTemplateCell;
-    private TemplateNameCell templateNameCell;
+    private TemplateInfoCell templateInfoCell;
 
     @Inject
     public SelectMetadataTemplateDialog(Appearance appearance,
                                         DownloadTemplateCell downloadTemplateCell,
-                                        TemplateNameCell templateNameCell) {
+                                        TemplateInfoCell templateInfoCell) {
         super();
         this.downloadTemplateCell = downloadTemplateCell;
-        this.templateNameCell = templateNameCell;
+        this.templateInfoCell = templateInfoCell;
         getOkButton().disable();
         this.appearance = appearance;
         setModal(false);
@@ -119,7 +119,7 @@ public class SelectMetadataTemplateDialog extends IPlantDialog implements IsWidg
 
     @UiFactory
     ColumnModel<MetadataTemplateInfo> createColumnModel() {
-        ColumnConfig<MetadataTemplateInfo, MetadataTemplateInfo> name =
+        ColumnConfig<MetadataTemplateInfo, MetadataTemplateInfo> info =
                 new ColumnConfig<MetadataTemplateInfo, MetadataTemplateInfo>(new ValueProvider<MetadataTemplateInfo, MetadataTemplateInfo>() {
                     @Override
                     public MetadataTemplateInfo getValue(MetadataTemplateInfo object) {
@@ -137,7 +137,7 @@ public class SelectMetadataTemplateDialog extends IPlantDialog implements IsWidg
                     }
                 }, 150, appearance.templates());
 
-        name.setCell(templateNameCell);
+        info.setCell(templateInfoCell);
 
         ColumnConfig<MetadataTemplateInfo, MetadataTemplateInfo> download =
                 new ColumnConfig<MetadataTemplateInfo, MetadataTemplateInfo>(new IdentityValueProvider<MetadataTemplateInfo>(),
@@ -148,7 +148,7 @@ public class SelectMetadataTemplateDialog extends IPlantDialog implements IsWidg
         download.setSortable(false);
         download.setCell(downloadTemplateCell);
         return new ColumnModel<MetadataTemplateInfo>(Arrays.<ColumnConfig<MetadataTemplateInfo, ?>>asList(
-                name,
+                info,
                 download));
     }
 

@@ -23,9 +23,9 @@ import com.sencha.gxt.widget.core.client.Dialog;
 /**
  * Created by sriram on 7/7/16.
  */
-public class TemplateNameCell extends AbstractCell<MetadataTemplateInfo> {
+public class TemplateInfoCell extends AbstractCell<MetadataTemplateInfo> {
 
-    public interface TemplateNameCellAppearance {
+    public interface TemplateInfoCellAppearance {
         void render(SafeHtmlBuilder sb,
                     MetadataTemplateInfo value);
 
@@ -38,11 +38,11 @@ public class TemplateNameCell extends AbstractCell<MetadataTemplateInfo> {
         String descriptionHeight();
     }
 
-    private TemplateNameCellAppearance appearance;
+    private TemplateInfoCellAppearance appearance;
     @Inject AsyncProviderWrapper<Dialog> dialogProvider;
 
     @Inject
-    public TemplateNameCell(TemplateNameCellAppearance appearance) {
+    public TemplateInfoCell(TemplateInfoCellAppearance appearance) {
        super(CLICK);
        this.appearance = appearance;
     }

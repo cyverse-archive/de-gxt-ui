@@ -53,8 +53,8 @@
         <when-type-is class="org.iplantc.de.diskResource.client.views.metadata.cells.DownloadTemplateCell.DownloadTemplateCellAppearance" />
     </replace-with>
 
-    <replace-with class="org.iplantc.de.theme.base.client.diskResource.metadata.TemplateNameCellDefaultAppearance">
-        <when-type-is class="org.iplantc.de.diskResource.client.views.metadata.cells.TemplateNameCell.TemplateNameCellAppearance" />
+    <replace-with class="org.iplantc.de.theme.base.client.diskResource.metadata.TemplateInfoCellDefaultAppearance">
+        <when-type-is class="org.iplantc.de.diskResource.client.views.metadata.cells.TemplateInfoCell.TemplateNameCellAppearance" />
     </replace-with>
 
     <replace-with class="org.iplantc.de.theme.base.client.apps.cells.AppIntegratorCellDefaultAppearance">
