@@ -1,10 +1,11 @@
 package org.iplantc.de.diskResource.client.views.grid.cells;
 
+import static com.google.gwt.dom.client.BrowserEvents.CLICK;
+
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.diskResource.client.events.DiskResourcePathSelectedEvent;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 
-import static com.google.gwt.dom.client.BrowserEvents.CLICK;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.ValueUpdater;
@@ -16,7 +17,6 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Event;
 
 /**
- * FIXME Consolidate with DiskResourceNameCell, CORE-5959
  * @author jstroot
  */
 public class DiskResourcePathCell extends AbstractCell<DiskResource> {
@@ -32,16 +32,10 @@ public class DiskResourcePathCell extends AbstractCell<DiskResource> {
     private HasHandlers hasHandlers;
 
     public DiskResourcePathCell() {
-        this(true);
+        this(GWT.<Appearance> create(Appearance.class));
     }
 
-    public DiskResourcePathCell(final boolean previewEnabled) {
-        this(previewEnabled,
-             GWT.<Appearance> create(Appearance.class));
-    }
-
-    public DiskResourcePathCell(final boolean previewEnabled,
-                                final Appearance appearance) {
+    public DiskResourcePathCell(final Appearance appearance) {
         super(CLICK);
         this.appearance = appearance;
     }
