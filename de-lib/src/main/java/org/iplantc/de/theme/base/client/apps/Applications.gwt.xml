@@ -50,11 +50,11 @@
     </replace-with>
 
     <replace-with class="org.iplantc.de.theme.base.client.diskResource.metadata.DownloadTemplateCellDefaultAppearance">
-        <when-type-is class="org.iplantc.de.diskResource.client.views.metadata.dialogs.DownloadTemplateCell.DownloadTemplateCellAppearance" />
+        <when-type-is class="org.iplantc.de.diskResource.client.views.metadata.cells.DownloadTemplateCell.DownloadTemplateCellAppearance" />
     </replace-with>
 
     <replace-with class="org.iplantc.de.theme.base.client.diskResource.metadata.TemplateNameCellDefaultAppearance">
-        <when-type-is class="org.iplantc.de.diskResource.client.views.metadata.dialogs.TemplateNameCell.TemplateNameCellAppearance" />
+        <when-type-is class="org.iplantc.de.diskResource.client.views.metadata.cells.TemplateNameCell.TemplateNameCellAppearance" />
     </replace-with>
 
     <replace-with class="org.iplantc.de.theme.base.client.apps.cells.AppIntegratorCellDefaultAppearance">

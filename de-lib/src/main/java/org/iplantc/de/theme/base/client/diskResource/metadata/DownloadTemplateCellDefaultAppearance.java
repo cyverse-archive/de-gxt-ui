@@ -1,6 +1,6 @@
 package org.iplantc.de.theme.base.client.diskResource.metadata;
 
-import org.iplantc.de.diskResource.client.views.metadata.dialogs.DownloadTemplateCell;
+import org.iplantc.de.diskResource.client.views.metadata.cells.DownloadTemplateCell;
 import org.iplantc.de.resources.client.IplantResources;
 
 import com.google.gwt.core.client.GWT;
