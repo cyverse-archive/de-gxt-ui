@@ -107,6 +107,10 @@ public interface MetadataView extends IsWidget {
         SafeHtml guideLabel(String name);
 
         SafeHtml guideHelpText(String description);
+
+        String dialogWidth();
+
+        String dialogHeight();
     }
 
     public interface Presenter {

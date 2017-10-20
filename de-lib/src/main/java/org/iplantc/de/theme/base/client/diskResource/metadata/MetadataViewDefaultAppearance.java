@@ -306,4 +306,14 @@ public class MetadataViewDefaultAppearance implements MetadataView.Appearance {
     public SafeHtml guideHelpText(String description) {
         return htmlTemplates.guideHelpText(description);
     }
+
+    @Override
+    public String dialogWidth() {
+        return "640px";
+    }
+
+    @Override
+    public String dialogHeight() {
+        return "480px";
+    }
 }

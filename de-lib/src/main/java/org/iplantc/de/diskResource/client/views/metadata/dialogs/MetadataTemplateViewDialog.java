@@ -20,25 +20,20 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
     MetadataView.Appearance appearance;
     MetadataTemplateView view;
 
-    @Inject
-    AsyncProviderWrapper<MetadataTermGuideDialog> termGuideDialogProvider;
+    @Inject AsyncProviderWrapper<MetadataTermGuideDialog> termGuideDialogProvider;
 
     @Inject
     public MetadataTemplateViewDialog(MetadataTemplateView view, MetadataView.Appearance appearance) {
         this.view = view;
         this.appearance = appearance;
-    }
-
-
-    public void addMdTermDictionary(final List<MetadataTemplateAttribute> attributes) {
-       view.buildMdTermDictionary(attributes, getHeader().getText());
+        setSize(appearance.dialogWidth(), appearance.dialogHeight());
     }
 
     public void show(MetadataView.Presenter presenter,
                      List<Avu> templateMd,
                      boolean writable,
                      List<MetadataTemplateAttribute> attributes) {
-
+        view.buildMdTermDictionary(attributes, getHeader().getText());
         view.initTemplate(presenter, templateMd, writable, attributes);
         add(view.asWidget());
         super.show();
