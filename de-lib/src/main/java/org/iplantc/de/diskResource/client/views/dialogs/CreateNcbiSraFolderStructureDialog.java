@@ -3,7 +3,6 @@ package org.iplantc.de.diskResource.client.views.dialogs;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
-import org.iplantc.de.commons.client.validators.SpaceValidator;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -59,8 +58,7 @@ public class CreateNcbiSraFolderStructureDialog extends IPlantDialog {
         projectTxtField = new TextField();
         projectTxtField.setAllowBlank(false);
         projectTxtField.addValidator(new DiskResourceNameValidator());
-        projectTxtField.addValidator(new SpaceValidator());
-        
+
         biosampNumField = new IntegerField();
         biosampNumField.setAllowBlank(false);
         biosampNumField.setAllowNegative(false);
