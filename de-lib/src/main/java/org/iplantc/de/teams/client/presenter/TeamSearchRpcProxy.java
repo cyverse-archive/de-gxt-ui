@@ -114,7 +114,12 @@ public class TeamSearchRpcProxy extends RpcProxy<FilterPagingLoadConfig, PagingL
     }
 
     void addCreatorToTeams(List<Group> teams, FastMap<Subject> creatorFastMap) {
-        teams.forEach(group -> group.setCreator(creatorFastMap.get(getCreatorId(group)).getSubjectDisplayName()));
+        teams.forEach(group -> {
+            String creatorId = getCreatorId(group);
+            if (!Strings.isNullOrEmpty(creatorId)) {
+                group.setCreator(creatorFastMap.get(creatorId).getSubjectDisplayName());
+            }
+        });
     }
 
     /**

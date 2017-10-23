@@ -18,6 +18,7 @@ import org.iplantc.de.teams.client.gin.TeamsViewFactory;
 import org.iplantc.de.teams.client.models.TeamsFilter;
 import org.iplantc.de.teams.client.views.dialogs.EditTeamDialog;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -242,7 +243,12 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
     }
 
     void addCreatorToTeams(List<Group> teams, FastMap<Subject> creatorFastMap) {
-        teams.forEach(group -> group.setCreator(creatorFastMap.get(getCreatorId(group)).getSubjectDisplayName()));
+        teams.forEach(group -> {
+            String creatorId = getCreatorId(group);
+            if (!Strings.isNullOrEmpty(creatorId)) {
+                group.setCreator(creatorFastMap.get(creatorId).getSubjectDisplayName());
+            }
+        });
     }
 
     List<String> getCreatorIds(List<Group> teams) {
