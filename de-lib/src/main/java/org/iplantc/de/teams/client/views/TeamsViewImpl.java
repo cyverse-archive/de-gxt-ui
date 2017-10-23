@@ -12,10 +12,10 @@ import org.iplantc.de.teams.client.views.cells.TeamNameCell;
 import org.iplantc.de.teams.client.views.widgets.TeamSearchField;
 import org.iplantc.de.teams.shared.Teams;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
@@ -98,12 +98,9 @@ public class TeamsViewImpl extends Composite implements TeamsView {
         SimpleComboBox<TeamsFilter> combo = new SimpleComboBox<>(new StringLabelProvider<TeamsFilter>());
         combo.add(Lists.newArrayList(TeamsFilter.MY_TEAMS, TeamsFilter.ALL));
         combo.setValue(TeamsFilter.MY_TEAMS);
-        combo.addSelectionHandler(new SelectionHandler<TeamsFilter>() {
-            @Override
-            public void onSelection(SelectionEvent<TeamsFilter> event) {
-                searchField.setValue("");
-                fireEvent(new TeamFilterSelectionChanged(combo.getCurrentValue()));
-            }
+        combo.addSelectionHandler(event -> {
+            searchField.clear();
+            applyFilter(TeamsFilter.MY_TEAMS);
         });
 
         return combo;
@@ -148,9 +145,23 @@ public class TeamsViewImpl extends Composite implements TeamsView {
         fireEvent(new CreateTeamSelected());
     }
 
+    @UiHandler("searchField")
+    void searchFieldKeyUp(KeyUpEvent event) {
+        if (Strings.isNullOrEmpty(searchField.getCurrentValue())) {
+            applyFilter(TeamsFilter.ALL);
+        } else {
+            applyFilter(null);
+        }
+    }
+
+    void applyFilter(TeamsFilter filter) {
+        teamFilter.setValue(filter);
+        fireEvent(new TeamFilterSelectionChanged(filter));
+    }
+
     @Override
     public void onTeamSearchResultLoad(TeamSearchResultLoad event) {
-        teamFilter.setText("");
+        teamFilter.setText(null);
     }
 
     @Override

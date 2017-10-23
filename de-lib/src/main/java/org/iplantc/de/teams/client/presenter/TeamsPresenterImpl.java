@@ -4,7 +4,6 @@ import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.GroupServiceFacade;
-import org.iplantc.de.collaborators.client.CollaborationView;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -19,6 +18,7 @@ import org.iplantc.de.teams.client.gin.TeamsViewFactory;
 import org.iplantc.de.teams.client.models.TeamsFilter;
 import org.iplantc.de.teams.client.views.dialogs.EditTeamDialog;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -237,15 +237,18 @@ public class TeamsPresenterImpl implements TeamsView.Presenter, TeamNameSelected
     @Override
     public void onTeamSearchResultLoad(TeamSearchResultLoad event) {
         List<Group> teams = event.getSearchResults();
-        if (teams != null && !teams.isEmpty()) {
-            currentFilter = null;
-            view.clearTeams();
-            view.addTeams(teams);
-        }
+        currentFilter = null;
+        view.clearTeams();
+        view.addTeams(teams);
     }
 
     void addCreatorToTeams(List<Group> teams, FastMap<Subject> creatorFastMap) {
-        teams.forEach(group -> group.setCreator(creatorFastMap.get(getCreatorId(group)).getSubjectDisplayName()));
+        teams.forEach(group -> {
+            String creatorId = getCreatorId(group);
+            if (!Strings.isNullOrEmpty(creatorId)) {
+                group.setCreator(creatorFastMap.get(creatorId).getSubjectDisplayName());
+            }
+        });
     }
 
     List<String> getCreatorIds(List<Group> teams) {
