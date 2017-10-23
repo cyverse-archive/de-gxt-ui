@@ -110,8 +110,8 @@ public class UserSessionServiceFacadeImpl implements UserSessionServiceFacade {
         String address = deProperties.getMuleServiceBaseUrl() + "preferences"; //$NON-NLS-1$
         List<Webhook> webhooks = setting.getWebhooks();
         updateWebhooks(webhooks, hookCallback); //webhooks saved thru separate end-point
-        setting.setWebhooks(null); //remove from preferences json
-        final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(setting));
+        final Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(setting)).deepCopy();
+        Splittable.NULL.assign(encode, "webhooks");  //remove from preferences json
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
         deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
     }

@@ -317,7 +317,7 @@ public class PreferencesViewDefaultAppearance implements PreferencesView.Prefere
 
     @Override
     public String height() {
-        return "500";
+        return "550";
     }
 
     @Override
