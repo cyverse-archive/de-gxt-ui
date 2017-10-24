@@ -166,8 +166,6 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
 
     @Override
     public void onSelectionChanged(SelectionChangedEvent<Analysis> event) {
-        
-        GWT.log("user--->" + userInfo.getFullUsername());
         currentSelection = event.getSelection();
 
         int size = currentSelection.size();
@@ -286,13 +284,18 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     /**
      * Determines if the cancel button should be enable for the given selection.
      *
-     * @return true if the selection contains ANY status which is SUBMITTED, IDLE, or RUNNING; false
-     *         otherwise.
+     * @return true if the selection contains ANY uncompleted batch jobs or status which is SUBMITTED, IDLE, or RUNNING;
+     *         false otherwise.
      */
     boolean canCancelSelection(final List<Analysis> selection) {
+        if (selection == null) {
+            return false;
+        }
+
         for (Analysis ae : selection) {
-            if (ae == null)
+            if (ae == null) {
                 continue;
+            }
 
             final String status = ae.getStatus();
             if (SUBMITTED.toString().equalsIgnoreCase(status)
@@ -300,7 +303,13 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
                     || RUNNING.toString().equalsIgnoreCase(status)) {
                 return true;
             }
+
+            if (ae.isBatch() && (ae.getBatchStatus().getSubmitted() > 0
+                                 || ae.getBatchStatus().getRunning() > 0)) {
+                return true;
+            }
         }
+
         return false;
     }
 
