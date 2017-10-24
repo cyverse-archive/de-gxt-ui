@@ -1,31 +1,5 @@
 package org.iplantc.de.diskResource.client.presenters.navigation;
 
-import org.iplantc.de.client.events.EventBus;
-import org.iplantc.de.client.events.diskResources.FolderRefreshedEvent;
-import org.iplantc.de.client.models.HasPath;
-import org.iplantc.de.client.models.diskResources.Folder;
-import org.iplantc.de.client.util.DiskResourceUtil;
-import org.iplantc.de.diskResource.client.DiskResourceView;
-import org.iplantc.de.diskResource.client.NavigationView;
-import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
-import org.iplantc.de.diskResource.client.events.RequestImportFromUrlEvent;
-import org.iplantc.de.diskResource.client.events.RequestSimpleUploadEvent;
-import org.iplantc.de.diskResource.client.events.selection.ImportFromUrlSelected;
-import org.iplantc.de.diskResource.client.events.selection.SimpleUploadSelected;
-import org.iplantc.de.diskResource.client.gin.factory.NavigationViewFactory;
-import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsLoadConfig;
-import org.iplantc.de.diskResource.client.views.navigation.NavigationViewDnDHandler;
-
-import com.google.common.collect.Lists;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwtmockito.GxtMockitoTestRunner;
-
-import com.sencha.gxt.data.shared.TreeStore;
-import com.sencha.gxt.data.shared.loader.BeforeLoadEvent;
-import com.sencha.gxt.data.shared.loader.TreeLoader;
-import com.sencha.gxt.widget.core.client.tree.Tree;
-import com.sencha.gxt.widget.core.client.tree.TreeSelectionModel;
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -37,10 +11,40 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+
+import org.iplantc.de.client.events.EventBus;
+import org.iplantc.de.client.events.diskResources.FolderRefreshedEvent;
+import org.iplantc.de.client.models.HasPath;
+import org.iplantc.de.client.models.diskResources.Folder;
+import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.diskResource.client.DiskResourceView;
+import org.iplantc.de.diskResource.client.NavigationView;
+import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
+import org.iplantc.de.diskResource.client.events.RequestSimpleUploadEvent;
+import org.iplantc.de.diskResource.client.events.selection.ImportFromUrlSelected;
+import org.iplantc.de.diskResource.client.events.selection.SimpleUploadSelected;
+import org.iplantc.de.diskResource.client.gin.factory.NavigationViewFactory;
+import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsLoadConfig;
+import org.iplantc.de.diskResource.client.views.navigation.NavigationViewDnDHandler;
+import org.iplantc.de.diskResource.client.views.toolbar.dialogs.FileUploadByUrlDialog;
+import org.iplantc.de.shared.AsyncProviderWrapper;
+
+import com.google.common.collect.Lists;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwtmockito.GxtMockitoTestRunner;
+
+import com.sencha.gxt.data.shared.TreeStore;
+import com.sencha.gxt.data.shared.loader.BeforeLoadEvent;
+import com.sencha.gxt.data.shared.loader.TreeLoader;
+import com.sencha.gxt.widget.core.client.tree.Tree;
+import com.sencha.gxt.widget.core.client.tree.TreeSelectionModel;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 
@@ -58,12 +62,17 @@ public class NavigationViewPresenterImplTest {
     @Mock NavigationViewFactory viewFactoryMock;
     @Mock NavigationView viewMock;
     @Mock EventBus eventBusMock;
+    @Mock NavigationView.Presenter.Appearance presenterAppearanceMock;
 
     @Mock BeforeLoadEvent<FolderContentsLoadConfig> beforeLoadEventMock;
     @Mock Tree<Folder,Folder> treeMock;
     @Mock TreeSelectionModel<Folder> selectionModelMock;
     @Mock Tree.TreeNode<Folder> treeNodeMock;
     @Mock TreeLoader<Folder> treeLoaderMock;
+    @Mock AsyncProviderWrapper<FileUploadByUrlDialog> importByUrlDlgProvider;
+    @Mock FileUploadByUrlDialog importByUrlDlgMock;
+
+    @Captor ArgumentCaptor<AsyncCallback<FileUploadByUrlDialog>> importByUrlDlgCaptor;
 
     private NavigationPresenterImpl uut;
     public NavigationViewPresenterImplTest() {
@@ -75,7 +84,13 @@ public class NavigationViewPresenterImplTest {
                                     any(NavigationViewDnDHandler.class))).thenReturn(viewMock);
         when(viewMock.getTree()).thenReturn(treeMock);
         when(treeMock.getSelectionModel()).thenReturn(selectionModelMock);
-        uut = new NavigationPresenterImpl(viewFactoryMock, treeStoreMock, folderRpcProxyMock, diskResourceUtilMock, eventBusMock, appearanceMock);
+        uut = new NavigationPresenterImpl(viewFactoryMock, treeStoreMock, folderRpcProxyMock, diskResourceUtilMock, eventBusMock, appearanceMock){
+            @Override
+            void showErrorMsg() {
+            }
+        };
+        uut.appearance = presenterAppearanceMock;
+        uut.urlImportDlgProvider = importByUrlDlgProvider;
 
         verifyConstructor(uut);
     }
@@ -149,11 +164,19 @@ public class NavigationViewPresenterImplTest {
             public Folder getSelectedUploadFolder() {
                 return uploadFolderMock;
             }
+
+            @Override
+            void showErrorMsg() {
+            }
         });
+        spy.urlImportDlgProvider = importByUrlDlgProvider;
         verify(viewMock, times(2)).addFolderSelectedEventHandler(Matchers.<FolderSelectionEvent.FolderSelectionEventHandler>any());
         verify(viewMock, times(2)).getTree();
         verify(eventBusMock, times(10)).addHandler(Matchers.<GwtEvent.Type<NavigationPresenterImpl>>any(), Matchers.<NavigationPresenterImpl>any());
         ImportFromUrlSelected eventMock = mock(ImportFromUrlSelected.class);
+        when(presenterAppearanceMock.permissionErrorMessage()).thenReturn("errorMessage");
+        when(presenterAppearanceMock.permissionErrorTitle()).thenReturn("errorTitle");
+        when(diskResourceUtilMock.canUploadTo(uploadFolderMock)).thenReturn(true);
 
         /** CALL METHOD UNDER TEST **/
         spy.onImportFromUrlSelected(eventMock);
@@ -161,14 +184,9 @@ public class NavigationViewPresenterImplTest {
         verify(eventMock).getSelectedFolder();
         verify(spy).getSelectedUploadFolder();
 
-        ArgumentCaptor<RequestImportFromUrlEvent> captor = ArgumentCaptor.forClass(RequestImportFromUrlEvent.class);
-        verify(eventBusMock).fireEvent(captor.capture());
-
-        assertEquals(uploadFolderMock, captor.getValue().getDestinationFolder());
-
-        verifyNoMoreInteractions(viewMock,
-                                 eventMock,
-                                 eventBusMock);
+        verify(importByUrlDlgProvider).get(importByUrlDlgCaptor.capture());
+        importByUrlDlgCaptor.getValue().onSuccess(importByUrlDlgMock);
+        verify(importByUrlDlgMock).show(eq(uploadFolderMock));
     }
 
     @Test public void onImportFromUrlSelected_selectedFolderExists_selectedFolderUsed() {
@@ -176,14 +194,20 @@ public class NavigationViewPresenterImplTest {
         final NavigationPresenterImpl spy = spy(new NavigationPresenterImpl(viewFactoryMock, treeStoreMock, folderRpcProxyMock, diskResourceUtilMock, eventBusMock, appearanceMock) {
             @Override
             public Folder getSelectedUploadFolder() {
-                return mock(Folder.class);
+                return uploadFolderMock;
+            }
+
+            @Override
+            void showErrorMsg() {
             }
         });
+        spy.urlImportDlgProvider = importByUrlDlgProvider;
         verify(viewMock, times(2)).addFolderSelectedEventHandler(Matchers.<FolderSelectionEvent.FolderSelectionEventHandler>any());
         verify(viewMock, times(2)).getTree();
         verify(eventBusMock, times(10)).addHandler(Matchers.<GwtEvent.Type<NavigationPresenterImpl>>any(), Matchers.<NavigationPresenterImpl>any());
         ImportFromUrlSelected eventMock = mock(ImportFromUrlSelected.class);
         when(eventMock.getSelectedFolder()).thenReturn(uploadFolderMock);
+        when(diskResourceUtilMock.canUploadTo(uploadFolderMock)).thenReturn(true);
 
         /** CALL METHOD UNDER TEST **/
         spy.onImportFromUrlSelected(eventMock);
@@ -191,10 +215,9 @@ public class NavigationViewPresenterImplTest {
         verify(eventMock).getSelectedFolder();
         verify(spy, never()).getSelectedUploadFolder();
 
-        ArgumentCaptor<RequestImportFromUrlEvent> captor = ArgumentCaptor.forClass(RequestImportFromUrlEvent.class);
-        verify(eventBusMock).fireEvent(captor.capture());
-
-        assertEquals(uploadFolderMock, captor.getValue().getDestinationFolder());
+        verify(importByUrlDlgProvider).get(importByUrlDlgCaptor.capture());
+        importByUrlDlgCaptor.getValue().onSuccess(importByUrlDlgMock);
+        verify(importByUrlDlgMock).show(eq(uploadFolderMock));
 
         verifyNoMoreInteractions(viewMock,
                                  eventMock,
