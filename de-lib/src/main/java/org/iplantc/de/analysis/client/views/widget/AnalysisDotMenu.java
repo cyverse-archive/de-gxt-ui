@@ -102,7 +102,9 @@ public class AnalysisDotMenu extends Menu {
         String status = analysis.getStatus();
         return SUBMITTED.toString().equalsIgnoreCase(status) ||
                IDLE.toString().equalsIgnoreCase(status) ||
-               RUNNING.toString().equalsIgnoreCase(status);
+               RUNNING.toString().equalsIgnoreCase(status) ||
+               (analysis.isBatch() && (analysis.getBatchStatus().getSubmitted() > 0 ||
+                                       analysis.getBatchStatus().getRunning() > 0));
     }
 
     boolean canDelete(Analysis analysis) {
