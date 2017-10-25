@@ -117,6 +117,10 @@ public interface AppsListView extends IsWidget,
         void setViewDebugId(String baseID);
 
         void loadApps(List<App> apps);
+
+        String getActiveView();
+
+        void setActiveView(String activeView);
     }
 
     List<DragSource> getAppsDragSources();

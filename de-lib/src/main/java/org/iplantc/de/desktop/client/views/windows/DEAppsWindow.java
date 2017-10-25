@@ -40,7 +40,10 @@ public class DEAppsWindow extends IplantWindowBase {
                                               final String tag,
                                               final boolean isMaximizable) {
         final AppsWindowConfig appsWindowConfig = (AppsWindowConfig)windowConfig;
-        presenter.go(this, appsWindowConfig.getSelectedAppCategory(), appsWindowConfig.getSelectedApp());
+        presenter.go(this,
+                     appsWindowConfig.getSelectedAppCategory(),
+                     appsWindowConfig.getSelectedApp(),
+                     appsWindowConfig.getView());
         super.show(windowConfig, tag, isMaximizable);
         btnHelp = createHelpButton();
         getHeader().insertTool(btnHelp,0);
@@ -69,6 +72,7 @@ public class DEAppsWindow extends IplantWindowBase {
         AppsWindowConfig config = ConfigFactory.appsWindowConfig();
         config.setSelectedApp(presenter.getSelectedApp());
         config.setSelectedAppCategory(presenter.getSelectedAppCategory());
+        config.setView(presenter.getActiveView());
         return createWindowState(config);
     }
 

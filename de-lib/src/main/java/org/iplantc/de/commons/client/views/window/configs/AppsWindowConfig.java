@@ -12,4 +12,7 @@ public interface AppsWindowConfig extends WindowConfig {
 
     void setSelectedApp(HasQualifiedId app);
 
+    void setView(String lastViewSelected);
+
+    String getView();
 }

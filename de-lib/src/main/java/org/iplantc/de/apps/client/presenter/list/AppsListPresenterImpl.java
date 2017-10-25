@@ -21,6 +21,7 @@ import org.iplantc.de.apps.client.events.selection.RunAppSelected;
 import org.iplantc.de.apps.client.gin.factory.AppsListViewFactory;
 import org.iplantc.de.apps.client.presenter.callbacks.DeleteRatingCallback;
 import org.iplantc.de.apps.client.presenter.callbacks.RateAppCallback;
+import org.iplantc.de.apps.client.views.list.AppsTileViewImpl;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
@@ -186,6 +187,36 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         }
         setDesiredSelectedApp(null);
         activeView.unmask();
+    }
+
+    /**
+     * Get current active view
+     *
+     * @return the active view
+     */
+    @Override
+    public String getActiveView() {
+        if (activeView instanceof AppsTileViewImpl) {
+            return AppsListView.TILE_VIEW;
+        }
+        return AppsListView.GRID_VIEW;
+    }
+
+    /**
+     * Set new active view
+     *
+     * @param newView view to set as active
+     */
+    @Override
+    public void setActiveView(String newView) {
+        if (AppsTileViewImpl.GRID_VIEW.equals(newView)) {
+            activeView = gridView;
+        } else {
+            activeView = tileView;
+        }
+
+        cards.setActiveWidget(activeView);
+
     }
 
     @Override
