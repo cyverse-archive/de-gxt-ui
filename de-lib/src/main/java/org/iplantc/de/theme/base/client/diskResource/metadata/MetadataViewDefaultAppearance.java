@@ -331,4 +331,24 @@ public class MetadataViewDefaultAppearance implements MetadataView.Appearance {
     public int unitColumnWidth() {
         return 150;
     }
+
+    @Override
+    public int metadataTermAnchorWidth() {
+        return 150;
+    }
+
+    @Override
+    public String metadataFieldLabelWidth() {
+        return "540px";
+    }
+
+    @Override
+    public String addBtnText() {
+        return displayStrings.addBtnText();
+    }
+
+    @Override
+    public String removeBtnText() {
+        return displayStrings.removeBtnText();
+    }
 }

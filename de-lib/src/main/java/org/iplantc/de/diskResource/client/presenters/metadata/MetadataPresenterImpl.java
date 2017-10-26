@@ -7,10 +7,7 @@ import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.DiskResourceMetadataList;
 import org.iplantc.de.client.models.diskResources.MetadataTemplate;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
-import org.iplantc.de.client.models.diskResources.MetadataTemplateAttributeType;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
-import org.iplantc.de.client.models.ontologies.OntologyAutoBeanFactory;
-import org.iplantc.de.client.models.ontologies.OntologyLookupServiceQueryParams;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -22,23 +19,15 @@ import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataToFileBtnSelected;
 import org.iplantc.de.diskResource.client.events.selection.SelectTemplateBtnSelected;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetadataUpdateCallback;
-import org.iplantc.de.diskResource.client.presenters.metadata.proxy.AstroThesaurusLoadConfig;
-import org.iplantc.de.diskResource.client.presenters.metadata.proxy.AstroThesaurusProxy;
-import org.iplantc.de.diskResource.client.presenters.metadata.proxy.MetadataTermLoadConfig;
-import org.iplantc.de.diskResource.client.presenters.metadata.proxy.MetadataTermSearchProxy;
-import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLookupServiceLoadConfig;
-import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLookupServiceProxy;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.MetadataTemplateDescDlg;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.MetadataTemplateViewDialog;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.SelectMetadataTemplateDialog;
-import org.iplantc.de.diskResource.client.views.search.MetadataTermSearchField;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
@@ -117,10 +106,6 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
     private DiskResource resource;
     private final MetadataView view;
     private final DiskResourceServiceFacade drService;
-    private final OntologyAutoBeanFactory ontologyFactory;
-    private final OntologyLookupServiceProxy olsSearchProxy;
-    private final AstroThesaurusProxy uatSearchProxy;
-    private final MetadataTermSearchField.MetadataTermSearchFieldAppearance searchFieldAppearance;
     private List<MetadataTemplateInfo> templates;
 
     private List<Avu> userMdList;
@@ -138,18 +123,10 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
 
     @Inject
     public MetadataPresenterImpl(final MetadataView view,
-                                 final DiskResourceServiceFacade drService,
-                                 final OntologyAutoBeanFactory ontologyFactory,
-                                 final OntologyLookupServiceProxy olsSearchProxy,
-                                 final AstroThesaurusProxy uatSearchProxy,
-                                 final MetadataTermSearchField.MetadataTermSearchFieldAppearance searchFieldAppearance) {
+                                 final DiskResourceServiceFacade drService) {
 
         this.view = view;
         this.drService = drService;
-        this.ontologyFactory = ontologyFactory;
-        this.olsSearchProxy = olsSearchProxy;
-        this.uatSearchProxy = uatSearchProxy;
-        this.searchFieldAppearance = searchFieldAppearance;
 
         view.addImportMetadataBtnSelectedHandler(this);
         view.addSelectTemplateBtnSelectedHandler(this);
@@ -246,36 +223,6 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
     @Override
     public DiskResource getSelectedResource() {
         return resource;
-    }
-
-    @Override
-    public MetadataTermSearchField createMetadataTermSearchField(MetadataTemplateAttribute attribute) {
-        MetadataTermSearchProxy searchProxy = null;
-        MetadataTermLoadConfig loadConfig = new MetadataTermLoadConfig();
-
-        if (attribute != null) {
-            String type = attribute.getType();
-
-            if (MetadataTemplateAttributeType.OLS_ONTOLOGY_TERM.toString().equalsIgnoreCase(type)) {
-                OntologyLookupServiceQueryParams loaderSettings = null;
-
-                if (attribute.getSettings() != null) {
-                    loaderSettings = AutoBeanCodex.decode(ontologyFactory,
-                                                          OntologyLookupServiceQueryParams.class,
-                                                          attribute.getSettings()).as();
-                }
-
-                loadConfig = new OntologyLookupServiceLoadConfig(loaderSettings);
-                searchProxy = olsSearchProxy;
-            } else if (MetadataTemplateAttributeType.UAT_ONTOLOGY_TERM.toString().equalsIgnoreCase(type)) {
-                loadConfig = new AstroThesaurusLoadConfig();
-                searchProxy = uatSearchProxy;
-            }
-
-            return new MetadataTermSearchField(ontologyFactory, searchProxy, loadConfig, searchFieldAppearance);
-        }
-
-        return null;
     }
 
     @Override
@@ -386,8 +333,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
                             templateViewDialog));
                     templateViewDialog.setHeading(result.getName());
                     templateViewDialog.setModal(false);
-                    templateViewDialog.show(MetadataPresenterImpl.this,
-                                            view.getUserMetadata(),
+                    templateViewDialog.show(view.getUserMetadata(),
                                             isWritable(),
                                             templateAttributes);
                 }

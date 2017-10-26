@@ -41,11 +41,7 @@ public class MetadataPresenterImplTest {
     @Before
     public void setUp() {
         presenter = new MetadataPresenterImpl(view,
-                                              drService,
-                                              autoBeanFactory,
-                                              olsSearchProxy,
-                                              uatSearchProxy,
-                                              appearance);
+                                              drService);
     }
 
     @Test

@@ -8,7 +8,6 @@ import org.iplantc.de.diskResource.client.events.selection.ImportMetadataBtnSele
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataToFileBtnSelected;
 import org.iplantc.de.diskResource.client.events.selection.SelectTemplateBtnSelected;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetadataUpdateCallback;
-import org.iplantc.de.diskResource.client.views.search.MetadataTermSearchField;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -123,6 +122,14 @@ public interface MetadataView extends IsWidget,
         int valueColumnWidth();
 
         int unitColumnWidth();
+
+        int metadataTermAnchorWidth();
+
+        String metadataFieldLabelWidth();
+
+        String addBtnText();
+
+        String removeBtnText();
     }
 
     /**
@@ -173,13 +180,11 @@ public interface MetadataView extends IsWidget,
 
         DiskResource getSelectedResource();
 
-        MetadataTermSearchField createMetadataTermSearchField(MetadataTemplateAttribute attribute);
-
         void setDiskResourceMetadata(DiskResourceMetadataUpdateCallback callback);
 
         boolean isDirty();
 
-        void downloadTemplate(String templateid);
+        void downloadTemplate(String templateId);
 
         void go(HasOneWidget container, final DiskResource selected);
     }

@@ -46,7 +46,7 @@ public class MetadataPresenterDefaultAppearance implements MetadataView.Presente
 
 	@Override
 	public String templateinfoError() {
-		return displayStrings.templateinfoError();
+		return displayStrings.templateInfoError();
 	}
 
 	@Override

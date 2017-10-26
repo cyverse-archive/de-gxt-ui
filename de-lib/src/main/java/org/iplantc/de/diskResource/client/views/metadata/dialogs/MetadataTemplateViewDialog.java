@@ -29,12 +29,11 @@ public class MetadataTemplateViewDialog extends IPlantDialog {
         setSize(appearance.dialogWidth(), appearance.dialogHeight());
     }
 
-    public void show(MetadataView.Presenter presenter,
-                     List<Avu> templateMd,
+    public void show(List<Avu> templateMd,
                      boolean writable,
                      List<MetadataTemplateAttribute> attributes) {
         view.buildMdTermDictionary(attributes, getHeader().getText());
-        view.initTemplate(presenter, templateMd, writable, attributes);
+        view.initTemplate(templateMd, writable, attributes);
         add(view.asWidget());
         super.show();
     }
