@@ -3,6 +3,7 @@ package org.iplantc.de.diskResource.client.views.metadata;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.diskResource.client.MetadataView;
+import org.iplantc.de.diskResource.client.events.selection.MetadataInfoBtnSelected;
 import org.iplantc.de.diskResource.client.views.metadata.cells.DownloadTemplateCell;
 import org.iplantc.de.diskResource.client.views.metadata.cells.TemplateInfoCell;
 
@@ -28,7 +29,8 @@ import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import java.util.Arrays;
 import java.util.List;
 
-public class SelectMetadataTemplateView extends Composite implements SelectionChangedEvent.HasSelectionChangedHandlers<MetadataTemplateInfo> {
+public class SelectMetadataTemplateView extends Composite implements SelectionChangedEvent.HasSelectionChangedHandlers<MetadataTemplateInfo>,
+                                                                     MetadataInfoBtnSelected.HasMetadataInfoBtnSelectedHandlers {
 
     interface SelectMetadataTemplateViewUiBinder extends UiBinder<Widget, SelectMetadataTemplateView> {
     }
@@ -120,5 +122,10 @@ public class SelectMetadataTemplateView extends Composite implements SelectionCh
     @Override
     public HandlerRegistration addSelectionChangedHandler(SelectionChangedEvent.SelectionChangedHandler<MetadataTemplateInfo> handler) {
         return grid.getSelectionModel().addSelectionChangedHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addMetadataInfoBtnSelectedHandler(MetadataInfoBtnSelected.MetadataInfoBtnSelectedHandler handler) {
+        return templateInfoCell.addMetadataInfoBtnSelectedHandler(handler);
     }
 }

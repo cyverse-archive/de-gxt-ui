@@ -4,9 +4,11 @@ import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.MetadataView.Presenter.Appearance;
+import org.iplantc.de.diskResource.client.events.selection.MetadataInfoBtnSelected;
 import org.iplantc.de.diskResource.client.views.metadata.SelectMetadataTemplateView;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 
@@ -18,7 +20,8 @@ import java.util.List;
  * Created by sriram on 5/4/16.
  */
 public class SelectMetadataTemplateDialog extends IPlantDialog implements IsWidget,
-                                                                          SelectionChangedEvent.SelectionChangedHandler<MetadataTemplateInfo> {
+                                                                          SelectionChangedEvent.SelectionChangedHandler<MetadataTemplateInfo>,
+                                                                          MetadataInfoBtnSelected.HasMetadataInfoBtnSelectedHandlers {
 
     private MetadataView.Presenter.Appearance appearance;
     private SelectMetadataTemplateView view;
@@ -65,5 +68,10 @@ public class SelectMetadataTemplateDialog extends IPlantDialog implements IsWidg
         } else {
             getOkButton().enable();
         }
+    }
+
+    @Override
+    public HandlerRegistration addMetadataInfoBtnSelectedHandler(MetadataInfoBtnSelected.MetadataInfoBtnSelectedHandler handler) {
+        return view.addMetadataInfoBtnSelectedHandler(handler);
     }
 }

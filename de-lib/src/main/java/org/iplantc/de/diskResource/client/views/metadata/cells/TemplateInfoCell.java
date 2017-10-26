@@ -3,6 +3,7 @@ package org.iplantc.de.diskResource.client.views.metadata.cells;
 import static com.google.gwt.dom.client.BrowserEvents.CLICK;
 
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
+import org.iplantc.de.diskResource.client.events.selection.MetadataInfoBtnSelected;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
@@ -13,10 +14,9 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.Dialog;
@@ -24,7 +24,8 @@ import com.sencha.gxt.widget.core.client.Dialog;
 /**
  * Created by sriram on 7/7/16.
  */
-public class TemplateInfoCell extends AbstractCell<MetadataTemplateInfo> {
+public class TemplateInfoCell extends AbstractCell<MetadataTemplateInfo> implements
+                                                                         MetadataInfoBtnSelected.HasMetadataInfoBtnSelectedHandlers {
 
     public interface TemplateInfoCellAppearance {
         void render(SafeHtmlBuilder sb, MetadataTemplateInfo value, String id);
@@ -71,7 +72,7 @@ public class TemplateInfoCell extends AbstractCell<MetadataTemplateInfo> {
         if (child != null && child.isOrHasChild(eventTarget)) {
             switch (Event.as(event).getTypeInt()) {
                 case Event.ONCLICK:
-                    doOnClick(value);
+                    ensureHandlers().fireEvent(new MetadataInfoBtnSelected(value));
                     break;
                 default:
                     break;
@@ -94,25 +95,6 @@ public class TemplateInfoCell extends AbstractCell<MetadataTemplateInfo> {
         return null;
     }
 
-    private void doOnClick(MetadataTemplateInfo value) {
-        dialogProvider.get(new AsyncCallback<Dialog>() {
-            @Override
-            public void onFailure(Throwable caught) {}
-
-            @Override
-            public void onSuccess(Dialog result) {
-                result.setSize(appearance.descriptionWidth(), appearance.descriptionHeight());
-                result.setHideOnButtonClick(true);
-                result.setHeading(appearance.description());
-                HTML desc = new HTML(value.getDescription());
-                desc.setStylePrimaryName(appearance.background());
-                result.add(desc);
-                result.ensureDebugId(DiskResourceModule.Ids.METADATA_DESC_DLG);
-                result.show();
-            }
-        });
-    }
-
     HandlerManager ensureHandlers() {
         if (handlerManager == null) {
             handlerManager = new HandlerManager(this);
@@ -122,5 +104,10 @@ public class TemplateInfoCell extends AbstractCell<MetadataTemplateInfo> {
 
     public void setBaseDebugId(String debugId) {
         this.debugId = debugId;
+    }
+
+    @Override
+    public HandlerRegistration addMetadataInfoBtnSelectedHandler(MetadataInfoBtnSelected.MetadataInfoBtnSelectedHandler handler) {
+        return ensureHandlers().addHandler(MetadataInfoBtnSelected.TYPE, handler);
     }
 }

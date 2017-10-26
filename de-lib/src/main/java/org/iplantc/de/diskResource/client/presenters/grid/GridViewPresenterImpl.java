@@ -48,6 +48,7 @@ import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelecte
 import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected;
 import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked;
+import org.iplantc.de.diskResource.client.events.selection.MetadataInfoBtnSelected;
 import org.iplantc.de.diskResource.client.events.selection.ResetInfoTypeSelected;
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected;
@@ -63,6 +64,7 @@ import org.iplantc.de.diskResource.client.views.dialogs.SaveAsDialog;
 import org.iplantc.de.diskResource.client.views.grid.DiskResourceColumnModel;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.BulkMetadataDialog;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.ManageMetadataDialog;
+import org.iplantc.de.diskResource.client.views.metadata.dialogs.MetadataTemplateDescDlg;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.SelectMetadataTemplateDialog;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.DataSharingDialog;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.ShareResourceLinkDialog;
@@ -101,7 +103,8 @@ import java.util.logging.Logger;
  */
 public class GridViewPresenterImpl implements Presenter,
                                               DiskResourcePathSelectedEvent.DiskResourcePathSelectedEventHandler,
-                                              DiskResourceSelectionChangedEvent.DiskResourceSelectionChangedEventHandler {
+                                              DiskResourceSelectionChangedEvent.DiskResourceSelectionChangedEventHandler,
+                                              MetadataInfoBtnSelected.MetadataInfoBtnSelectedHandler {
 
     private final class SaveMetadataCallback implements AsyncCallback<String> {
         private final SaveAsDialog saveDialog;
@@ -191,6 +194,8 @@ public class GridViewPresenterImpl implements Presenter,
     @Inject AsyncProviderWrapper<Md5DisplayDialog> md5DisplayDlgProvider;
     @Inject AsyncProviderWrapper<SelectMetadataTemplateDialog> selectMetaTemplateDlgProvider;
     @Inject AsyncProviderWrapper<BulkMetadataDialog> bulkMetadataDlgProvider;
+    @Inject AsyncProviderWrapper<MetadataTemplateDescDlg> metadataTemplateDescDlgProvider;
+
     @Inject MetadataView.Presenter.Appearance metadataAppearance;
 
     @Inject DataLinkFactory dlFactory;
@@ -784,10 +789,12 @@ public class GridViewPresenterImpl implements Presenter,
                     @Override
                     public void onSuccess(SelectMetadataTemplateDialog dialog) {
                         dialog.addOkButtonSelectHandler(selectEvent -> {
-                            final String encodedSimpleDownloadURL = diskResourceService.downloadTemplate(dialog.getSelectedTemplate().getId());
+                            final String encodedSimpleDownloadURL =
+                                    diskResourceService.downloadTemplate(dialog.getSelectedTemplate().getId());
                             WindowUtil.open(encodedSimpleDownloadURL, "width=100,height=100");
                         });
                         dialog.show(result, false);
+                        dialog.addMetadataInfoBtnSelectedHandler(GridViewPresenterImpl.this);
                     }
                 });
             }
@@ -823,5 +830,19 @@ public class GridViewPresenterImpl implements Presenter,
     @Override
     public HandlerRegistration addDNDDiskResourcesCompletedHandler(DNDDiskResourcesCompleted.DNDDiskResourcesCompletedHandler handler) {
         return ensureHandlers().addHandler(DNDDiskResourcesCompleted.TYPE, handler);
+    }
+
+    @Override
+    public void onMetadataInfoBtnSelected(MetadataInfoBtnSelected event) {
+        metadataTemplateDescDlgProvider.get(new AsyncCallback<MetadataTemplateDescDlg>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(MetadataTemplateDescDlg result) {
+                MetadataTemplateInfo info = event.getTemplateInfo();
+                result.show(info);
+            }
+        });
     }
 }
