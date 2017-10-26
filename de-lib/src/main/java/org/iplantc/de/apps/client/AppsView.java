@@ -37,7 +37,7 @@ public interface AppsView extends IsWidget,
 
         AppCategory getSelectedAppCategory();
 
-        void go(HasOneWidget container, HasId selectedAppCategory, HasId selectedApp, String actView);
+        void go(HasOneWidget container, HasId selectedAppCategory, HasId selectedApp, String activeView);
 
         List<DragSource> getAppsDragSources();
 

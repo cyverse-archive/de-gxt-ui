@@ -209,7 +209,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
      */
     @Override
     public void setActiveView(String newView) {
-        if (AppsTileViewImpl.GRID_VIEW.equals(newView)) {
+        if (AppsListView.GRID_VIEW.equals(newView)) {
             activeView = gridView;
         } else {
             activeView = tileView;

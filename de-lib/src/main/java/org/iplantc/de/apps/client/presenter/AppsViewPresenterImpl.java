@@ -95,14 +95,16 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
 
     @Override
     public void go(final HasOneWidget container,
-                   final HasId selectedAppCategory, final HasId selectedApp, final String actview) {
+                   final HasId selectedAppCategory,
+                   final HasId selectedApp,
+                   final String activeView) {
         DETabPanel tabPanel = view.getCategoryTabPanel();
         if (isEmpty(tabPanel)) {
             categoriesPresenter.go(selectedAppCategory, true, tabPanel);
             hierarchiesPresenter.go(null, tabPanel);
         }
-        if (!Strings.isNullOrEmpty(actview)) {
-            appsListPresenter.setActiveView(actview);
+        if (!Strings.isNullOrEmpty(activeView)) {
+            appsListPresenter.setActiveView(activeView);
         }
         container.setWidget(view);
     }
