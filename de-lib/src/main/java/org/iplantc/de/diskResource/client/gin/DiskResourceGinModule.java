@@ -36,6 +36,8 @@ import org.iplantc.de.diskResource.client.presenters.genome.GenomeSearchPresente
 import org.iplantc.de.diskResource.client.presenters.grid.GridViewPresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsRpcProxyImpl;
 import org.iplantc.de.diskResource.client.presenters.metadata.MetadataPresenterImpl;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.AstroThesaurusProxy;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLookupServiceProxy;
 import org.iplantc.de.diskResource.client.presenters.navigation.NavigationPresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.navigation.proxy.FolderRpcProxyImpl;
 import org.iplantc.de.diskResource.client.presenters.search.DataSearchPresenterImpl;
@@ -167,10 +169,14 @@ public class DiskResourceGinModule extends AbstractGinModule {
         bind(SaveAsDialog.class);
         bind(BulkMetadataDialog.class);
         bind(GenomeSearchDialog.class);
+        bind(OntologyLookupServiceProxy.class);
+        bind(AstroThesaurusProxy.class);
 
-        install(new GinFactoryModuleBuilder()
-                        .implement(SharingPresenter.class, DataSharingPresenterImpl.class)
-                        .build(DataSharingPresenterFactory.class));
+//        bind(MetadataUtil.class).in(Singleton.class);
+
+        install(new GinFactoryModuleBuilder().implement(SharingPresenter.class,
+                                                        DataSharingPresenterImpl.class)
+                                             .build(DataSharingPresenterFactory.class));
         bind(DataSharingView.class).to(DataSharingViewImpl.class);
     }
 

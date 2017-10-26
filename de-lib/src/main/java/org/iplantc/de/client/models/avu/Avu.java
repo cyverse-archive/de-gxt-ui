@@ -11,6 +11,8 @@ import java.util.List;
  */
 public interface Avu extends HasId {
 
+    String AVU_BEAN_TAG_MODEL_KEY = "model-key";
+
     @PropertyName("modified_on")
     Integer getModifiedOn();
 

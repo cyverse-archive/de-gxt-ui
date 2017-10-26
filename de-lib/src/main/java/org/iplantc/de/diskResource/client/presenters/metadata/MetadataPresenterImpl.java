@@ -35,9 +35,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
@@ -110,7 +108,6 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
         }
     }
 
-    private int uniqueAvuId = 0;
     private DiskResource resource;
     private final MetadataView view;
     private final DiskResourceServiceFacade drService;
@@ -318,16 +315,6 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
         EventBus.getInstance().fireEvent(new SaveMetadataSelected(resource));
     }
 
-    public static Avu newMetadata(String attr, String value, String unit) {
-        Avu avu = autoBeanFactory.avu().as();
-
-        avu.setAttribute(attr);
-        avu.setValue(value);
-        avu.setUnit(unit);
-
-        return avu;
-    }
-
     @Override
     public void setViewDebugId(String debugId) {
         view.asWidget().ensureDebugId(debugId);
@@ -337,17 +324,6 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
     public boolean isValid() {
         return view.isValid();
     }
-
-    @Override
-    public Avu setAvuModelKey(Avu avu) {
-        if (avu != null) {
-            final AutoBean<Avu> avuBean = AutoBeanUtils.getAutoBean(avu);
-            avuBean.setTag(AVU_BEAN_TAG_MODEL_KEY, String.valueOf(uniqueAvuId++));
-            return avuBean.as();
-        }
-        return null;
-    }
-
 
     private class DiskResourceMetadataListAsyncCallback
             implements AsyncCallback<DiskResourceMetadataList> {

@@ -159,8 +159,6 @@ public interface MetadataView extends IsWidget {
 
         boolean isValid();
 
-        Avu setAvuModelKey(Avu avu);
-
         DiskResource getSelectedResource();
 
         MetadataTermSearchField createMetadataTermSearchField(MetadataTemplateAttribute attribute);

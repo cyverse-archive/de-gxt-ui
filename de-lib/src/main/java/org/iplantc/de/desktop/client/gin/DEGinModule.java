@@ -169,6 +169,10 @@ public class DEGinModule extends AbstractGinModule {
         return IplantAnnouncer.getInstance();
     }
 
+//    @Provides @Singleton public MetadataUtil createMetadataUtil() {
+//        return MetadataUtil.getInstance();
+//    }
+
 
     @Override
     protected void configure() {

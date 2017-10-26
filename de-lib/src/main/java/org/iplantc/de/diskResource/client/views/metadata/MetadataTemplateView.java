@@ -10,7 +10,7 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.validators.UrlValidator;
 import org.iplantc.de.commons.client.widgets.IPlantAnchor;
 import org.iplantc.de.diskResource.client.MetadataView;
-import org.iplantc.de.diskResource.client.presenters.metadata.MetadataPresenterImpl;
+import org.iplantc.de.diskResource.client.presenters.metadata.MetadataUtil;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.MetadataTermGuideDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
@@ -75,8 +75,8 @@ public class MetadataTemplateView implements IsWidget {
 
     MetadataView.Appearance appearance;
 
-    @Inject
-    AsyncProviderWrapper<MetadataTermGuideDialog> termGuideDialogProvider;
+    @Inject AsyncProviderWrapper<MetadataTermGuideDialog> termGuideDialogProvider;
+    @Inject MetadataUtil metadataUtil;
     private IPlantAnchor helpLink;
 
     @Inject
@@ -104,9 +104,9 @@ public class MetadataTemplateView implements IsWidget {
             Avu avu = templateTagAvuMap.get(tag);
             if (avu == null) {
                 MetadataTemplateAttribute metadataTemplateAttribute = templateTagAttrMap.get(tag);
-                avu = MetadataPresenterImpl.newMetadata(metadataTemplateAttribute.getName(),
-                                                        "",
-                                                        ""); //$NON-NLS-1$ //$NON-NLS-2$
+                avu = metadataUtil.newMetadata(metadataTemplateAttribute.getName(),
+                                               "",
+                                               ""); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
             Field<?> field = templateTagFieldMap.get(tag);
@@ -181,9 +181,9 @@ public class MetadataTemplateView implements IsWidget {
                     templateTagAttrMap.put(tag, attribute);
                 });
             } else {
-                Avu avu = presenter.setAvuModelKey(MetadataPresenterImpl.newMetadata(attribute.getName(),
-                                                                                     "",
-                                                                                     "")); //$NON-NLS-1$ //$NON-NLS-2$
+                Avu avu = metadataUtil.setAvuModelKey(metadataUtil.newMetadata(attribute.getName(),
+                                                                               "",
+                                                                               ""));
                 String tag = getTagForMetadata(avu);
                 templateTagAvuMap.put(tag, avu);
                 templateTagAttrMap.put(tag, attribute);
@@ -376,15 +376,15 @@ public class MetadataTemplateView implements IsWidget {
         addBtn.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
-                Avu avu = presenter.setAvuModelKey(MetadataPresenterImpl.newMetadata(attribute.getName(),
-                                                                                     "",
-                                                                                     "")); //$NON-NLS-1$ //$NON-NLS-2$
-                String newtag = getTagForMetadata(avu);
-                templateTagAvuMap.put(newtag, avu);
-                templateTagAttrMap.put(newtag, attribute);
-                Field<?> field = getAttributeValueWidget(newtag);
-                templateTagFieldMap.put(newtag, field);
-                addFieldToTemplate(newtag, attribute, field);
+                Avu avu = metadataUtil.setAvuModelKey(metadataUtil.newMetadata(attribute.getName(),
+                                                                               "",
+                                                                               ""));
+                String newTag = getTagForMetadata(avu);
+                templateTagAvuMap.put(newTag, avu);
+                templateTagAttrMap.put(newTag, attribute);
+                Field<?> field = getAttributeValueWidget(newTag);
+                templateTagFieldMap.put(newTag, field);
+                addFieldToTemplate(newTag, attribute, field);
             }
         });
 
