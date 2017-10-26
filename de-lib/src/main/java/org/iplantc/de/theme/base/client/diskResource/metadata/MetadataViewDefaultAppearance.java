@@ -316,4 +316,19 @@ public class MetadataViewDefaultAppearance implements MetadataView.Appearance {
     public String dialogHeight() {
         return "480px";
     }
+
+    @Override
+    public int attributeColumnWidth() {
+        return 150;
+    }
+
+    @Override
+    public int valueColumnWidth() {
+        return 150;
+    }
+
+    @Override
+    public int unitColumnWidth() {
+        return 150;
+    }
 }

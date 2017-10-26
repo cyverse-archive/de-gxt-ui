@@ -4,6 +4,9 @@ import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
+import org.iplantc.de.diskResource.client.events.selection.ImportMetadataBtnSelected;
+import org.iplantc.de.diskResource.client.events.selection.SaveMetadataToFileBtnSelected;
+import org.iplantc.de.diskResource.client.events.selection.SelectTemplateBtnSelected;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetadataUpdateCallback;
 import org.iplantc.de.diskResource.client.views.search.MetadataTermSearchField;
 
@@ -20,7 +23,10 @@ import java.util.List;
  *
  * @author jstroot
  */
-public interface MetadataView extends IsWidget {
+public interface MetadataView extends IsWidget,
+                                      SelectTemplateBtnSelected.HasSelectTemplateBtnSelectedHandlers,
+                                      ImportMetadataBtnSelected.HasImportMetadataBtnSelectedHandlers,
+                                      SaveMetadataToFileBtnSelected.HasSaveMetadataToFileBtnSelectedHandlers {
 
     interface Appearance {
 
@@ -111,6 +117,12 @@ public interface MetadataView extends IsWidget {
         String dialogWidth();
 
         String dialogHeight();
+
+        int attributeColumnWidth();
+
+        int valueColumnWidth();
+
+        int unitColumnWidth();
     }
 
     /**
@@ -163,19 +175,11 @@ public interface MetadataView extends IsWidget {
 
         MetadataTermSearchField createMetadataTermSearchField(MetadataTemplateAttribute attribute);
 
-        void onTemplateSelected(String templateId);
-
         void setDiskResourceMetadata(DiskResourceMetadataUpdateCallback callback);
-
-        void onSelectTemplate();
-
-        void onImport(List<Avu> selectedItems);
 
         boolean isDirty();
 
         void downloadTemplate(String templateid);
-
-        void onSaveToFile();
 
         void go(HasOneWidget container, final DiskResource selected);
     }
@@ -190,8 +194,6 @@ public interface MetadataView extends IsWidget {
     void loadMetadata(List<Avu> metadataList);
 
     void loadUserMetadata(List<Avu> metadataList);
-
-    void setPresenter(Presenter p);
 
     void mask();
 

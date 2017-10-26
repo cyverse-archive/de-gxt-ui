@@ -16,8 +16,11 @@ import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.diskResource.client.MetadataView;
+import org.iplantc.de.diskResource.client.events.selection.ImportMetadataBtnSelected;
 import org.iplantc.de.diskResource.client.events.selection.MetadataInfoBtnSelected;
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected;
+import org.iplantc.de.diskResource.client.events.selection.SaveMetadataToFileBtnSelected;
+import org.iplantc.de.diskResource.client.events.selection.SelectTemplateBtnSelected;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetadataUpdateCallback;
 import org.iplantc.de.diskResource.client.presenters.metadata.proxy.AstroThesaurusLoadConfig;
 import org.iplantc.de.diskResource.client.presenters.metadata.proxy.AstroThesaurusProxy;
@@ -50,7 +53,10 @@ import java.util.List;
  * @author jstroot sriram
  */
 public class MetadataPresenterImpl implements MetadataView.Presenter,
-                                              MetadataInfoBtnSelected.MetadataInfoBtnSelectedHandler {
+                                              MetadataInfoBtnSelected.MetadataInfoBtnSelectedHandler,
+                                              SelectTemplateBtnSelected.SelectTemplateBtnSelectedHandler,
+                                              ImportMetadataBtnSelected.ImportMetadataBtnSelectedHandler,
+                                              SaveMetadataToFileBtnSelected.SaveMetadataToFileBtnSelectedHandler {
 
     private class TemplateViewCancelSelectHandler implements SelectEvent.SelectHandler {
 
@@ -128,6 +134,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
     @Inject AsyncProviderWrapper<SelectMetadataTemplateDialog> selectMetaTemplateDlgProvider;
     @Inject AsyncProviderWrapper<MetadataTemplateDescDlg> metadataTemplateDescDlgProvider;
     MetadataTemplateViewDialog templateViewDialog;
+    @Inject EventBus eventBus;
 
     @Inject
     public MetadataPresenterImpl(final MetadataView view,
@@ -143,7 +150,10 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
         this.olsSearchProxy = olsSearchProxy;
         this.uatSearchProxy = uatSearchProxy;
         this.searchFieldAppearance = searchFieldAppearance;
-        view.setPresenter(this);
+
+        view.addImportMetadataBtnSelectedHandler(this);
+        view.addSelectTemplateBtnSelectedHandler(this);
+        view.addSaveMetadataToFileBtnSelectedHandler(this);
     }
 
     private void loadMetadata() {
@@ -194,7 +204,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
     }
 
     @Override
-    public void onSelectTemplate() {
+    public void onSelectTemplateBtnSelected(SelectTemplateBtnSelected event) {
         selectMetaTemplateDlgProvider.get(new AsyncCallback<SelectMetadataTemplateDialog>() {
             @Override
             public void onFailure(Throwable throwable) {}
@@ -229,10 +239,8 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
         });
     }
 
-    @Override
     public void onTemplateSelected(String templateId) {
         drService.getMetadataTemplate(templateId, new MetadataTemplateAsyncCallback());
-
     }
 
     @Override
@@ -271,7 +279,8 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
     }
 
     @Override
-    public void onImport(final List<Avu> selectedItems) {
+    public void onImportMetadataBtnSelected(ImportMetadataBtnSelected event) {
+        List<Avu> selectedItems = event.getAvuList();
         ConfirmMessageBox cmb = new ConfirmMessageBox(appearance.importMd(), appearance.importMdMsg());
         cmb.addDialogHideHandler(new DialogHideHandler() {
             @Override
@@ -311,8 +320,8 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
     }
 
     @Override
-    public void onSaveToFile() {
-        EventBus.getInstance().fireEvent(new SaveMetadataSelected(resource));
+    public void onSaveMetadataToFileBtnSelected(SaveMetadataToFileBtnSelected event) {
+        eventBus.fireEvent(new SaveMetadataSelected(resource));
     }
 
     @Override

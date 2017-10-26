@@ -31,16 +31,16 @@
     <ui:with type="com.sencha.gxt.data.shared.ListStore" field="userMdListStore"/>
     <ui:with type="com.sencha.gxt.data.shared.ListStore" field="additionalMdListStore"/>
 
-    <ui:with type="com.sencha.gxt.widget.core.client.grid.ColumnModel" field="ucm"/>
+    <ui:with type="com.sencha.gxt.widget.core.client.grid.ColumnModel" field="userColumnModel"/>
 
-    <ui:with type="com.sencha.gxt.widget.core.client.grid.GridView" field="uview">
-        <ui:attributes stripeRows="true"></ui:attributes>
+    <ui:with type="com.sencha.gxt.widget.core.client.grid.GridView" field="userView">
+        <ui:attributes stripeRows="true"/>
     </ui:with>
 
-    <ui:with type="com.sencha.gxt.widget.core.client.grid.ColumnModel" field="acm"/>
+    <ui:with type="com.sencha.gxt.widget.core.client.grid.ColumnModel" field="additionalColumnModel"/>
 
-    <ui:with type="com.sencha.gxt.widget.core.client.grid.GridView" field="aview">
-        <ui:attributes stripeRows="true"></ui:attributes>
+    <ui:with type="com.sencha.gxt.widget.core.client.grid.GridView" field="additionalView">
+        <ui:attributes stripeRows="true"/>
     </ui:with>
 
     <ui:with type="com.sencha.gxt.widget.core.client.TabItemConfig" field="userMdTabConfig">
@@ -89,9 +89,12 @@
                         </toolbar:ToolBar>
                     </container:child>
                     <container:child layoutData="{gridLayoutData}">
-                            <grid:Grid ui:field="userMdGrid" store="{userMdListStore}" cm="{ucm}"
-                                       view="{uview}"
-                                       borders="false" columnReordering="false"
+                            <grid:Grid ui:field="userMdGrid"
+                                       store="{userMdListStore}"
+                                       cm="{userColumnModel}"
+                                       view="{userView}"
+                                       borders="false"
+                                       columnReordering="false"
                             />
                     </container:child>
 
@@ -109,15 +112,17 @@
                             </toolbar:child>
                             <toolbar:child>
                                 <widget:IPlantAnchor ui:field="infoLink"
-                                                     text="{appearance.readMore}"></widget:IPlantAnchor>
+                                                     text="{appearance.readMore}"/>
                             </toolbar:child>
                         </toolbar:ToolBar>
                     </container:child>
                     <container:child layoutData="{gridLayoutData}">
-                            <grid:Grid ui:field="additionalMdgrid" store="{additionalMdListStore}"
-                                       cm="{acm}"
-                                       view="{aview}"
-                                       borders="false" columnReordering="false"
+                            <grid:Grid ui:field="additionalMdGrid"
+                                       store="{additionalMdListStore}"
+                                       cm="{additionalColumnModel}"
+                                       view="{additionalView}"
+                                       borders="false" 
+                                       columnReordering="false"
                             />
                     </container:child>
                 </container:VerticalLayoutContainer>

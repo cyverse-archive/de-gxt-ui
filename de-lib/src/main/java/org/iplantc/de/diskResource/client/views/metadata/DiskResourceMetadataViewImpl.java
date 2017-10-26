@@ -4,21 +4,23 @@ import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
 import org.iplantc.de.commons.client.widgets.IPlantAnchor;
 import org.iplantc.de.diskResource.client.MetadataView;
+import org.iplantc.de.diskResource.client.events.selection.ImportMetadataBtnSelected;
+import org.iplantc.de.diskResource.client.events.selection.SaveMetadataToFileBtnSelected;
+import org.iplantc.de.diskResource.client.events.selection.SelectTemplateBtnSelected;
 import org.iplantc.de.diskResource.client.model.DiskResourceMetadataProperties;
 import org.iplantc.de.diskResource.client.presenters.metadata.MetadataUtil;
+import org.iplantc.de.diskResource.client.views.metadata.cells.MetadataCell;
 import org.iplantc.de.diskResource.share.DiskResourceModule.MetadataIds;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -32,14 +34,9 @@ import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.button.TextButton;
-import com.sencha.gxt.widget.core.client.container.AccordionLayoutContainer.AccordionLayoutAppearance;
 import com.sencha.gxt.widget.core.client.event.CompleteEditEvent;
 import com.sencha.gxt.widget.core.client.event.CompleteEditEvent.CompleteEditHandler;
-import com.sencha.gxt.widget.core.client.event.InvalidEvent;
-import com.sencha.gxt.widget.core.client.event.InvalidEvent.InvalidHandler;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.sencha.gxt.widget.core.client.event.ValidEvent;
-import com.sencha.gxt.widget.core.client.event.ValidEvent.ValidHandler;
 import com.sencha.gxt.widget.core.client.form.CheckBox;
 import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.grid.CellSelectionModel;
@@ -69,40 +66,24 @@ import java.util.List;
  */
 public class DiskResourceMetadataViewImpl extends Composite implements MetadataView {
 
-    private DiskResourceMetadataProperties props;
+    interface DiskResourceMetadataViewImplUiBinder extends UiBinder<Widget, DiskResourceMetadataViewImpl> {
+    }
 
-    private final class AttributeValidationHandler implements ValidHandler, InvalidHandler {
-        public AttributeValidationHandler() {
-        }
-
+    private class DiskResourceAdditionalMetadataSelectionChangedHandler
+            implements SelectionChangedHandler<Avu> {
         @Override
-        public void onInvalid(InvalidEvent event) {
-            valid = false;
-        }
+        public void onSelectionChanged(SelectionChangedEvent<Avu> event) {
+            if (event.getSelection() != null && event.getSelection().size() > 0) {
+                importButton.enable();
+            } else {
+                importButton.disable();
+            }
 
-        @Override
-        public void onValid(ValidEvent event) {
-            valid = true;
         }
     }
 
-    private final class MetadataCell extends AbstractCell<String> {
-        @Override
-        public void render(Context context, String value, SafeHtmlBuilder sb) {
-            appearance.renderMetadataCell(sb, value);
-        }
-    }
-
-    @UiTemplate("DiskResourceMetadataEditorPanel.ui.xml")
-    interface DiskResourceMetadataEditorPanelUiBinder
-            extends UiBinder<Widget, DiskResourceMetadataViewImpl> {
-    }
-
-    private static final DiskResourceMetadataEditorPanelUiBinder uiBinder =
-            GWT.create(DiskResourceMetadataEditorPanelUiBinder.class);
-
-    private final AccordionLayoutAppearance accordionLayoutAppearance =
-            GWT.create(AccordionLayoutAppearance.class);
+    private static final DiskResourceMetadataViewImplUiBinder uiBinder =
+            GWT.create(DiskResourceMetadataViewImplUiBinder.class);
 
     private boolean dirty;
 
@@ -116,42 +97,43 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
 
     @UiField ListStore<Avu> userMdListStore;
     @UiField ListStore<Avu> additionalMdListStore;
-    @UiField Grid<Avu> additionalMdgrid;
+    @UiField Grid<Avu> additionalMdGrid;
     @UiField Grid<Avu> userMdGrid;
-    @UiField GridView<Avu> uview;
-    @UiField GridView<Avu> aview;
-    @UiField(provided = true) ColumnModel<Avu> ucm;
-    @UiField(provided = true) ColumnModel<Avu> acm;
+    @UiField GridView<Avu> userView;
+    @UiField GridView<Avu> additionalView;
+    @UiField(provided = true) ColumnModel<Avu> userColumnModel;
+    @UiField(provided = true) ColumnModel<Avu> additionalColumnModel;
     @UiField IPlantAnchor infoLink;
     @UiField TextButton saveToFileButton;
     @UiField TabPanel panel;
 
-
+    private DiskResourceMetadataProperties props;
     private HashSet<Avu> selectedSet;
     private GridRowEditing<Avu> userGridRowEditing;
     private boolean editable;
     private boolean valid;
-    private MetadataView.Presenter presenter;
-    private String baseId;
     private CellSelectionModel<Avu> userChxBoxModel;
     private CheckBoxSelectionModel<Avu> addChxBoxModel;
     @Inject MetadataUtil metadataUtil;
+    private MetadataCell metadataCell;
 
     @Inject
     public DiskResourceMetadataViewImpl(DiskResourceMetadataProperties props,
                                         MetadataView.Appearance appearance,
+                                        MetadataCell metadataCell) {
         this.props = props;
         this.appearance = appearance;
+        this.metadataCell = metadataCell;
         selectedSet = new HashSet<>();
         valid = true;
         userChxBoxModel = new CellSelectionModel<>();
         addChxBoxModel = new CheckBoxSelectionModel<Avu>();
-        createColumnModel();
+        createColumnModels();
         initWidget(uiBinder.createAndBindUi(this));
         importButton.setToolTip(appearance.importMdTooltip());
         userMdGrid.setSelectionModel(userChxBoxModel);
-        additionalMdgrid.setSelectionModel(addChxBoxModel);
-        additionalMdgrid.getSelectionModel()
+        additionalMdGrid.setSelectionModel(addChxBoxModel);
+        additionalMdGrid.getSelectionModel()
                         .addSelectionChangedHandler(new DiskResourceAdditionalMetadataSelectionChangedHandler());
         infoLink.addClickHandler(event -> Window.open(appearance.metadataLink(), "", "_blank"));
     }
@@ -191,7 +173,7 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
             additionalMdListStore.add(metadataUtil.setAvuModelKey(avu));
         }
 
-        additionalMdgrid.getStore().setEnableFilters(true);
+        additionalMdGrid.getStore().setEnableFilters(true);
     }
 
     @Override
@@ -207,20 +189,16 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
     }
 
     @Override
-    public void setPresenter(Presenter p) {
-        this.presenter = p;
-    }
-
-    @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
-        this.baseId = baseID;
+
         addMetadataButton.ensureDebugId(baseID + MetadataIds.ADD_METADATA);
         editMetadataButton.ensureDebugId(baseID + MetadataIds.EDIT_METADATA);
         deleteMetadataButton.ensureDebugId(baseID + MetadataIds.DELETE_METADATA);
         selectButton.ensureDebugId(baseID + MetadataIds.TEMPLATES);
+        saveToFileButton.ensureDebugId(baseID + MetadataIds.SAVE_METADATA_TO_FILE);
 
-        setUserMetadataDebugIds();
+        panel.getWidget(0).ensureDebugId(baseID + MetadataIds.USER_METADATA);
     }
 
 
@@ -246,33 +224,27 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
 
     @UiHandler("editMetadataButton")
     void onEditMetadataSelected(SelectEvent event) {
-        int row = uview.findRowIndex(uview.getRow(selectedSet.iterator().next()));
+        int row = userView.findRowIndex(userView.getRow(selectedSet.iterator().next()));
         userGridRowEditing.startEditing(new GridCell(row, 1));
         userGridRowEditing.getEditor(userMdGrid.getColumnModel().getColumn(1)).validate(false);
     }
 
     @UiHandler("selectButton")
     void onSelectButtonSelected(SelectEvent event) {
-        presenter.onSelectTemplate();
-
+        fireEvent(new SelectTemplateBtnSelected());
     }
 
     @UiHandler("importButton")
     void onImportSelected(SelectEvent event) {
-        presenter.onImport(additionalMdgrid.getSelectionModel().getSelectedItems());
+        fireEvent(new ImportMetadataBtnSelected(additionalMdGrid.getSelectionModel().getSelectedItems()));
     }
 
     @UiHandler("saveToFileButton")
     void onSaveToFileButtonSelected(SelectEvent event) {
-        presenter.onSaveToFile();
+        fireEvent(new SaveMetadataToFileBtnSelected());
     }
 
-    private void setUserMetadataDebugIds() {
-        panel.getWidget(0).ensureDebugId(baseId + MetadataIds.USER_METADATA);
-    }
-
-    @UiFactory
-    ColumnModel<Avu> createColumnModel() {
+    void createColumnModels() {
         List<ColumnConfig<Avu, ?>> columns = Lists.newArrayList();
 
 
@@ -293,11 +265,11 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
             }
         }, 30, "");
         ColumnConfig<Avu, String> attributeColumn =
-                new ColumnConfig<>(props.attribute(), 150, appearance.attribute());
+                new ColumnConfig<>(props.attribute(), appearance.attributeColumnWidth(), appearance.attribute());
         ColumnConfig<Avu, String> valueColumn =
-                new ColumnConfig<>(props.value(), 150, appearance.paramValue());
+                new ColumnConfig<>(props.value(), appearance.valueColumnWidth(), appearance.paramValue());
         ColumnConfig<Avu, String> unitColumn =
-                new ColumnConfig<>(props.unit(), 150, appearance.paramUnit());
+                new ColumnConfig<>(props.unit(), appearance.unitColumnWidth(), appearance.paramUnit());
 
 
         CheckBoxCell checkBoxCell = getCheckBoxCell();
@@ -309,7 +281,6 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
         selectColumn.setResizable(false);
         selectColumn.setSortable(false);
 
-        MetadataCell metadataCell = new MetadataCell();
         attributeColumn.setCell(metadataCell);
         valueColumn.setCell(metadataCell);
 
@@ -320,12 +291,12 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
 
         List<ColumnConfig<Avu, ?>> userMdCols = Lists.newArrayList();
         userMdCols.addAll(columns);
-        ucm = new ColumnModel<>(userMdCols);
+        userColumnModel = new ColumnModel<>(userMdCols);
 
         List<ColumnConfig<Avu, ?>> addMdCols = Lists.newArrayList();
         addMdCols.add(addChxBoxModel.getColumn());
         addMdCols.addAll(Arrays.asList(attributeColumn, valueColumn, unitColumn));
-        return new ColumnModel<>(addMdCols);
+        additionalColumnModel = new ColumnModel<>(addMdCols);
     }
 
     private CheckBoxCell getCheckBoxCell() {
@@ -475,16 +446,18 @@ public class DiskResourceMetadataViewImpl extends Composite implements MetadataV
         return dirty;
     }
 
-    private class DiskResourceAdditionalMetadataSelectionChangedHandler
-            implements SelectionChangedHandler<Avu> {
-        @Override
-        public void onSelectionChanged(SelectionChangedEvent<Avu> event) {
-            if (event.getSelection() != null && event.getSelection().size() > 0) {
-                importButton.enable();
-            } else {
-                importButton.disable();
-            }
+    @Override
+    public HandlerRegistration addSelectTemplateBtnSelectedHandler(SelectTemplateBtnSelected.SelectTemplateBtnSelectedHandler handler) {
+        return addHandler(handler, SelectTemplateBtnSelected.TYPE);
+    }
 
-        }
+    @Override
+    public HandlerRegistration addImportMetadataBtnSelectedHandler(ImportMetadataBtnSelected.ImportMetadataBtnSelectedHandler handler) {
+        return addHandler(handler, ImportMetadataBtnSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addSaveMetadataToFileBtnSelectedHandler(SaveMetadataToFileBtnSelected.SaveMetadataToFileBtnSelectedHandler handler) {
+        return addHandler(handler, SaveMetadataToFileBtnSelected.TYPE);
     }
 }
