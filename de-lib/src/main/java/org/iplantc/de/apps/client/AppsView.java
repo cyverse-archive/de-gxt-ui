@@ -37,7 +37,7 @@ public interface AppsView extends IsWidget,
 
         AppCategory getSelectedAppCategory();
 
-        void go(HasOneWidget container, HasId selectedAppCategory, HasId selectedApp);
+        void go(HasOneWidget container, HasId selectedAppCategory, HasId selectedApp, String activeView);
 
         List<DragSource> getAppsDragSources();
 
@@ -48,6 +48,10 @@ public interface AppsView extends IsWidget,
         void setViewDebugId(String baseId);
 
         void checkForAgaveRedirect();
+
+        String getActiveView();
+
+        void setActiveView(String activeView);
     }
 
     DETabPanel getCategoryTabPanel();

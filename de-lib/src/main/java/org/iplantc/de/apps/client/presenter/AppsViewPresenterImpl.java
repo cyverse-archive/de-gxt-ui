@@ -15,6 +15,7 @@ import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.util.OntologyUtil;
 import org.iplantc.de.commons.client.widgets.DETabPanel;
 
+import com.google.common.base.Strings;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
@@ -95,11 +96,15 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
     @Override
     public void go(final HasOneWidget container,
                    final HasId selectedAppCategory,
-                   final HasId selectedApp) {
+                   final HasId selectedApp,
+                   final String activeView) {
         DETabPanel tabPanel = view.getCategoryTabPanel();
         if (isEmpty(tabPanel)) {
             categoriesPresenter.go(selectedAppCategory, true, tabPanel);
             hierarchiesPresenter.go(null, tabPanel);
+        }
+        if (!Strings.isNullOrEmpty(activeView)) {
+            appsListPresenter.setActiveView(activeView);
         }
         container.setWidget(view);
     }
@@ -128,6 +133,27 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
     @Override
     public void checkForAgaveRedirect() {
         categoriesPresenter.checkForAgaveRedirect();
+    }
+
+
+    /**
+     * Get current active view
+     *
+     * @return the active view
+     */
+    @Override
+    public String getActiveView() {
+        return appsListPresenter.getActiveView();
+    }
+
+    /**
+     * Set new active view
+     *
+     * @param activeView view to set as active
+     */
+    @Override
+    public void setActiveView(String activeView) {
+        appsListPresenter.setActiveView(activeView);
     }
 
     @Override

@@ -164,7 +164,7 @@ public class PipelineViewPresenter implements Presenter,
         initPipelineBuilderDropHandler(view.getBuilderDropContainer());
 
         // TODO Possibly inject with annotation to replace with a different toolbar impl
-        appsPresenter.hideAppMenu().hideWorkflowMenu().go(appSelectView, null, null);
+        appsPresenter.hideAppMenu().hideWorkflowMenu().go(appSelectView, null, null,null);
     }
 
     private void initAppsDragHandlers(List<DragSource> sources) {
@@ -379,10 +379,10 @@ public class PipelineViewPresenter implements Presenter,
 
         if (activeView == view.getStepEditorPanel()) {
             activeView = view.getBuilderPanel();
-            appsPresenter.go(view.getAppsContainer(), null, null);
+            appsPresenter.go(view.getAppsContainer(), null, null,null);
         } else {
             activeView = view.getStepEditorPanel();
-            appsPresenter.go(appSelectView, null, null);
+            appsPresenter.go(appSelectView, null, null, null);
         }
 
         view.setActiveView(activeView);
