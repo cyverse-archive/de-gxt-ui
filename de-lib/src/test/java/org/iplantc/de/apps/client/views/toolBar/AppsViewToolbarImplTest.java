@@ -63,7 +63,6 @@ public class AppsViewToolbarImplTest {
     @Mock MenuItem mockDeleteWf;
     @Mock MenuItem mockEditApp;
     @Mock MenuItem mockEditWf;
-    @Mock MenuItem mockRequestTool;
     @Mock MenuItem mockSubmitApp;
     @Mock MenuItem mockWfRun;
 
@@ -98,7 +97,6 @@ public class AppsViewToolbarImplTest {
         uut.deleteWf = mockDeleteWf;
         uut.editApp = mockEditApp;
         uut.editWf = mockEditWf;
-        uut.requestTool = mockRequestTool;
         uut.wfRun = mockWfRun;
         uut.shareMenuButton = mockshareMenuButton;
         uut.shareCollab = mockShareCollab;
@@ -133,7 +131,6 @@ public class AppsViewToolbarImplTest {
                                mockDeleteWf,
                                mockEditApp,
                                mockEditWf,
-                               mockRequestTool,
                                mockWfRun,
                                mockshareMenuButton,
                                mockShareCollab,
@@ -163,7 +160,6 @@ public class AppsViewToolbarImplTest {
                                mockDeleteWf,
                                mockEditApp,
                                mockEditWf,
-                               mockRequestTool,
                                mockWfRun,
                                mockshareMenuButton,
                                mockSharePublic,
@@ -209,7 +205,6 @@ public class AppsViewToolbarImplTest {
                                  mockDeleteWf,
                                  mockEditApp,
                                  mockEditWf,
-                                 mockRequestTool,
                                  mockWfRun,
                                  mockshareMenuButton,
                                  mockShareCollab,
@@ -267,7 +262,6 @@ public class AppsViewToolbarImplTest {
                                  mockDeleteWf,
                                  mockEditApp,
                                  mockEditWf,
-                                 mockRequestTool,
                                  mockWfRun,
                                  mockSharePublic,
                                  mockShareCollab,
@@ -324,7 +318,6 @@ public class AppsViewToolbarImplTest {
                                  mockDeleteWf,
                                  mockEditApp,
                                  mockEditWf,
-                                 mockRequestTool,
                                  mockWfRun,
                                  mockSharePublic,
                                  mockShareCollab);
@@ -384,7 +377,6 @@ public class AppsViewToolbarImplTest {
                                  mockDeleteWf,
                                  mockEditApp,
                                  mockEditWf,
-                                 mockRequestTool,
                                  mockWfRun,
                                  mockShareCollab,
                                  mockSharePublic);
@@ -444,7 +436,6 @@ public class AppsViewToolbarImplTest {
                                  mockDeleteWf,
                                  mockEditApp,
                                  mockEditWf,
-                                 mockRequestTool,
                                  mockWfRun);
         verifyZeroInteractions(appSearchMock);
     }
@@ -500,7 +491,6 @@ public class AppsViewToolbarImplTest {
                                  mockDeleteWf,
                                  mockEditApp,
                                  mockEditWf,
-                                 mockRequestTool,
                                  mockWfRun,
                                  mockshareMenuButton,
                                  mockShareCollab,
@@ -560,7 +550,6 @@ public class AppsViewToolbarImplTest {
                                  mockDeleteWf,
                                  mockEditApp,
                                  mockEditWf,
-                                 mockRequestTool,
                                  mockWfRun,
                                  mockSharePublic,
                                  mockshareMenuButton,
@@ -620,7 +609,6 @@ public class AppsViewToolbarImplTest {
                                  mockDeleteWf,
                                  mockEditApp,
                                  mockEditWf,
-                                 mockRequestTool,
                                  mockWfRun,
                                  mockSharePublic,
                                  mockShareCollab,
@@ -680,7 +668,6 @@ public class AppsViewToolbarImplTest {
                                  mockDeleteWf,
                                  mockEditApp,
                                  mockEditWf,
-                                 mockRequestTool,
                                  mockWfRun,
                                  mockShareCollab,
                                  mockSharePublic,
@@ -743,7 +730,6 @@ public class AppsViewToolbarImplTest {
                                  mockDeleteWf,
                                  mockEditApp,
                                  mockEditWf,
-                                 mockRequestTool,
                                  mockWfRun,
                                  mockSharePublic,
                                  mockshareMenuButton,
@@ -806,7 +792,6 @@ public class AppsViewToolbarImplTest {
                                  mockDeleteWf,
                                  mockEditApp,
                                  mockEditWf,
-                                 mockRequestTool,
                                  mockWfRun,
                                  mockShareCollab,
                                  mockSharePublic,
@@ -889,7 +874,6 @@ public class AppsViewToolbarImplTest {
                                  mockDeleteWf,
                                  mockEditApp,
                                  mockEditWf,
-                                 mockRequestTool,
                                  mockWfRun,
                                  mockSharePublic,
                                  mockShareCollab,
@@ -972,7 +956,6 @@ public class AppsViewToolbarImplTest {
                                  mockDeleteWf,
                                  mockEditApp,
                                  mockEditWf,
-                                 mockRequestTool,
                                  mockWfRun,
                                  mockShareCollab,
                                  mockSharePublic,
@@ -1054,7 +1037,6 @@ public class AppsViewToolbarImplTest {
                                  mockDeleteWf,
                                  mockEditApp,
                                  mockEditWf,
-                                 mockRequestTool,
                                  mockWfRun,
                                  mockShareCollab,
                                  mockSharePublic,
@@ -1140,7 +1122,6 @@ public class AppsViewToolbarImplTest {
                                  mockDeleteWf,
                                  mockEditApp,
                                  mockEditWf,
-                                 mockRequestTool,
                                  mockWfRun,
                                  mockSharePublic,
                                  mockshareMenuButton,
@@ -1199,7 +1180,6 @@ public class AppsViewToolbarImplTest {
                                  mockDeleteWf,
                                  mockEditApp,
                                  mockEditWf,
-                                 mockRequestTool,
                                  mockWfRun,
                                  mockSharePublic,
                                  mockShareCollab,
@@ -1258,7 +1238,6 @@ public class AppsViewToolbarImplTest {
                                  mockDeleteWf,
                                  mockEditApp,
                                  mockEditWf,
-                                 mockRequestTool,
                                  mockWfRun,
                                  mockSharePublic,
                                  mockShareCollab);

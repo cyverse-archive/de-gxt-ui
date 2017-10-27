@@ -20,7 +20,6 @@ import org.iplantc.de.apps.client.events.selection.CreateNewWorkflowSelected;
 import org.iplantc.de.apps.client.events.selection.EditAppSelected;
 import org.iplantc.de.apps.client.events.selection.EditWorkflowSelected;
 import org.iplantc.de.apps.client.events.selection.PublishAppSelected;
-import org.iplantc.de.apps.client.events.selection.RequestToolSelected;
 import org.iplantc.de.apps.client.gin.factory.AppsToolbarViewFactory;
 import org.iplantc.de.apps.client.views.submit.dialog.SubmitAppForPublicDialog;
 import org.iplantc.de.client.events.EventBus;
@@ -31,11 +30,9 @@ import org.iplantc.de.client.services.AppUserServiceFacade;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
-import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import com.google.inject.Provider;
 
 import com.sencha.gxt.data.shared.loader.BeforeLoadEvent;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
@@ -107,7 +104,6 @@ public class AppsToolbarPresenterImplTest {
         verify(viewMock).addCreateNewAppSelectedHandler(eq(uut));
         verify(viewMock).addCreateNewWorkflowSelectedHandler(eq(uut));
         verify(viewMock).addEditAppSelectedHandler(eq(uut));
-        verify(viewMock).addRequestToolSelectedHandler(eq(uut));
         verify(viewMock).addEditWorkflowSelectedHandler(eq(uut));
         verify(viewMock).addShareAppSelectedHandler(eq(uut));
         verify(viewMock).addPublishAppSelectedHandler(eq(uut));
@@ -199,25 +195,6 @@ public class AppsToolbarPresenterImplTest {
 
         verifyNoMoreInteractions(appServiceMock,
                                  eventBusMock);
-    }
-
-    @Test public void verifyToolRequestDlgShown_onRequestToolSelected() {
-        RequestToolSelected eventMock = mock(RequestToolSelected.class);
-
-        /*** CALL METHOD UNDER TEST ***/
-        uut.onRequestToolSelected(eventMock);
-
-        verify(newToolRequestDialogProviderMock).get(newToolDialogCaptor.capture());
-        newToolDialogCaptor.getValue().onSuccess(toolRequestMock);
-
-        verify(toolRequestMock).show(NewToolRequestFormView.Mode.NEWTOOL);
-
-        verifyNoMoreInteractions(toolRequestMock,
-                                 newToolRequestDialogProviderMock,
-                                 eventMock);
-
-        verifyZeroInteractions(eventBusMock,
-                               appServiceMock);
     }
 
     @Test

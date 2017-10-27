@@ -12,7 +12,6 @@ import org.iplantc.de.apps.client.events.selection.CreateNewWorkflowSelected;
 import org.iplantc.de.apps.client.events.selection.EditAppSelected;
 import org.iplantc.de.apps.client.events.selection.EditWorkflowSelected;
 import org.iplantc.de.apps.client.events.selection.PublishAppSelected;
-import org.iplantc.de.apps.client.events.selection.RequestToolSelected;
 import org.iplantc.de.apps.client.events.selection.ShareAppsSelected;
 import org.iplantc.de.apps.client.gin.factory.AppsToolbarViewFactory;
 import org.iplantc.de.apps.client.presenter.toolBar.proxy.AppSearchRpcProxy;
@@ -33,13 +32,11 @@ import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.tools.client.views.dialogs.NewToolRequestDialog;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
-import org.iplantc.de.tools.client.views.requests.NewToolRequestFormView;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
@@ -58,7 +55,6 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
                                                  CreateNewAppSelected.CreateNewAppSelectedHandler,
                                                  CreateNewWorkflowSelected.CreateNewWorkflowSelectedHandler,
                                                  EditAppSelected.EditAppSelectedHandler,
-                                                 RequestToolSelected.RequestToolSelectedHandler,
                                                  EditWorkflowSelected.EditWorkflowSelectedHandler,
                                                  ShareAppsSelected.ShareAppsSelectedHandler,
                                                  PublishAppSelected.PublishAppSelectedHandler {
@@ -103,7 +99,6 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
         view.addCreateNewWorkflowSelectedHandler(this);
         view.addShareAppSelectedHandler(this);
         view.addEditAppSelectedHandler(this);
-        view.addRequestToolSelectedHandler(this);
         view.addEditWorkflowSelectedHandler(this);
         view.addPublishAppSelectedHandler(this);
     }
@@ -163,21 +158,6 @@ public class AppsToolbarPresenterImpl implements AppsToolbarView.Presenter,
             public void onSuccess(String result) {
                 Splittable serviceWorkflowJson = StringQuoter.split(result);
                 eventBus.fireEvent(new EditWorkflowEvent(workFlow, serviceWorkflowJson));
-            }
-        });
-    }
-
-    @Override
-    public void onRequestToolSelected(RequestToolSelected event) {
-        newToolRequestDialogProvider.get(new AsyncCallback<NewToolRequestDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-
-            }
-
-            @Override
-            public void onSuccess(NewToolRequestDialog result) {
-                result.show(NewToolRequestFormView.Mode.NEWTOOL);
             }
         });
     }

@@ -42,8 +42,6 @@
 							text="{appearance.run}" icon="{appearance.runIcon}" />
 						<menu:MenuItem ui:field="createNewApp" text="{appearance.newApp}"
 							icon="{appearance.addIcon}" />
-						<menu:MenuItem ui:field="requestTool" text="{appearance.requestTool}"
-							icon="{appearance.addIcon}" />
 						<menu:MenuItem ui:field="copyApp" enabled="false"
 							text="{appearance.copy}" icon="{appearance.copyIcon}" />
 						<menu:MenuItem ui:field="editApp" enabled="false"
