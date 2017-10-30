@@ -3,8 +3,6 @@ package org.iplantc.de.diskResource.client.views.toolbar.dialogs;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.diskResource.client.ToolbarView;
 
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
@@ -31,14 +29,11 @@ public class DOIAgreementDialog extends IPlantDialog {
 
         CheckBox cxb = new CheckBox();
         cxb.setHTML(appearance.doiUserAgreement());
-        cxb.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<Boolean> valueChangeEvent) {
-                if (valueChangeEvent.getValue()) {
-                    okButton.enable();
-                } else {
-                    okButton.disable();
-                }
+        cxb.addValueChangeHandler(valueChangeEvent -> {
+            if (valueChangeEvent.getValue()) {
+                okButton.enable();
+            } else {
+                okButton.disable();
             }
         });
 
@@ -46,7 +41,7 @@ public class DOIAgreementDialog extends IPlantDialog {
         okButton.setText(appearance.needDOI());
         okButton.disable();
 
-        setSize("500px", "120px");
+        setSize(appearance.doiDlgWidth(), appearance.doiDlgHeight());
         add(vlc);
     }
 
