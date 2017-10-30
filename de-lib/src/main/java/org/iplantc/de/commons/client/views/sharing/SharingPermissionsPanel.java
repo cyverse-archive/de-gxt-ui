@@ -86,6 +86,7 @@ public class SharingPermissionsPanel extends Composite
 
     @Inject IplantAnnouncer announcer;
     @Inject AsyncProviderWrapper<ChooseCollaboratorsDialog> collaboratorsDialogProvider;
+    @Inject AsyncProviderWrapper<ShareBreakDownDialog> breakDownDlgProvider;
 
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
@@ -199,9 +200,16 @@ public class SharingPermissionsPanel extends Composite
             shares.addAll(sharingMap.get(user));
         }
 
-        ShareBreakDownDialog explainDlg = new ShareBreakDownDialog(shares);
-        explainDlg.setHeading(appearance.whoHasAccess());
-        explainDlg.show();
+        breakDownDlgProvider.get(new AsyncCallback<ShareBreakDownDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(ShareBreakDownDialog explainDlg) {
+                explainDlg.setHeading(appearance.whoHasAccess());
+                explainDlg.show(shares);
+            }
+        });
     }
 
     private void addSubject(Subject user) {

@@ -51,7 +51,7 @@ public interface SharingAppearance {
 
     int shareBreakDownDlgPermissionColumnWidth();
 
-    int shareBreakDownDlgToolbarHeight();
+    String shareBreakDownDlgToolbarHeight();
 
     int shareBreakDownDlgWidth();
 
