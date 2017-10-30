@@ -14,19 +14,30 @@ import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
 import org.iplantc.de.diskResource.client.events.selection.AutomatePathListSelected;
 import org.iplantc.de.diskResource.client.events.selection.BulkMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateNcbiFolderStructureSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewDelimitedFileSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewFileSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewPathListSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreatePublicLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDiskResourcesSelected;
 import org.iplantc.de.diskResource.client.events.selection.DownloadTemplateSelectedEvent;
+import org.iplantc.de.diskResource.client.events.selection.EditFileSelected;
 import org.iplantc.de.diskResource.client.events.selection.EditInfoTypeSelected;
 import org.iplantc.de.diskResource.client.events.selection.EmptyTrashSelected;
+import org.iplantc.de.diskResource.client.events.selection.ImportFromCogeBtnSelected;
 import org.iplantc.de.diskResource.client.events.selection.ImportFromUrlSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected;
 import org.iplantc.de.diskResource.client.events.selection.MoveDiskResourcesSelected;
 import org.iplantc.de.diskResource.client.events.selection.NewMultiInputPathListFileSelected;
+import org.iplantc.de.diskResource.client.events.selection.OpenNewWindowAtLocationSelected;
+import org.iplantc.de.diskResource.client.events.selection.OpenNewWindowSelected;
 import org.iplantc.de.diskResource.client.events.selection.OpenTrashFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.RenameDiskResourceSelected;
+import org.iplantc.de.diskResource.client.events.selection.RequestDOISelected;
 import org.iplantc.de.diskResource.client.events.selection.RestoreDiskResourcesSelected;
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected;
@@ -36,9 +47,7 @@ import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelect
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleUploadSelected;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
-import org.iplantc.de.diskResource.client.views.toolbar.dialogs.DOIAgreementDialog;
 import org.iplantc.de.diskResource.share.DiskResourceModule.Ids;
-import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -49,7 +58,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -125,9 +133,6 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     private Folder selectedFolder;
 
     @Inject EventBus eventBus;
-
-    @Inject
-    AsyncProviderWrapper<DOIAgreementDialog> agreementDialogWrapper;
 
     @Inject
     DiskResourceViewToolbarImpl(final DiskResourceSearchField searchField,
@@ -276,6 +281,11 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
         return addHandler(handler, NewMultiInputPathListFileSelected.TYPE);
     }
 
+    @Override
+    public HandlerRegistration addEditFileSelectedHandler(EditFileSelected.EditFileSelectedHandler handler) {
+        return addHandler(handler, EditFileSelected.TYPE);
+    }
+
     // </editor-fold>
 
     // <editor-fold desc="Selection Handlers">
@@ -380,7 +390,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     }
 
     private DiskResource getFirstDiskResource() {
-        if(selectedDiskResources!=null &&  selectedDiskResources.size() >0) {
+        if (selectedDiskResources != null && selectedDiskResources.size() > 0) {
             return selectedDiskResources.get(0);
         } else {
             return null;
@@ -445,7 +455,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("createPublicLinkMi")
     void onCreatePublicLinkClicked(SelectionEvent<Item> event) {
-        presenter.onCreatePublicLinkSelected(selectedDiskResources);
+        fireEvent(new CreatePublicLinkSelected(selectedDiskResources));
     }
 
     @UiHandler("deleteMi")
@@ -461,7 +471,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("editFileMi")
     void onEditFileClicked(SelectionEvent<Item> event) {
-        presenter.onEditFileSelected(selectedDiskResources);
+        fireEvent(new EditFileSelected(selectedDiskResources));
     }
 
     @UiHandler("editInfoTypeMi")
@@ -494,7 +504,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("downloadtemplateMi")
     void onDownloadTemplateClicked(SelectionEvent<Item> event) {
-       fireEvent(new DownloadTemplateSelectedEvent());
+        fireEvent(new DownloadTemplateSelectedEvent());
     }
 
     @UiHandler("emptyTrashMi")
@@ -519,22 +529,22 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("newFolderMi")
     void onNewFolderClicked(SelectionEvent<Item> event) {
-        presenter.onCreateNewFolderSelected(selectedFolder);
+        fireEvent(new CreateNewFolderSelected(selectedFolder));
     }
 
     @UiHandler("createNcbiSraMi")
     void onCreateNcbiSraClicked(SelectionEvent<Item> event) {
-        presenter.onCreateNcbiSraFolderStructure(selectedFolder);
+        fireEvent(new CreateNcbiFolderStructureSelected(selectedFolder));
     }
 
     @UiHandler("newMdFileMi")
     void onNewMdFile(SelectionEvent<Item> event) {
-        presenter.onCreateNewFileSelected(selectedFolder, MimeType.X_WEB_MARKDOWN);
+        fireEvent(new CreateNewFileSelected(selectedFolder, MimeType.X_WEB_MARKDOWN));
     }
 
     @UiHandler("newPathListMi")
     void onNewPathListFileClicked(SelectionEvent<Item> event) {
-        presenter.onCreateNewPathListSelected();
+        fireEvent(new CreateNewPathListSelected());
     }
 
     @UiHandler("newMultiInputPathListMi")
@@ -544,43 +554,43 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("newPerlFileMi")
     void onNewPerlFileClicked(SelectionEvent<Item> event) {
-        presenter.onCreateNewFileSelected(selectedFolder, MimeType.X_PERL);
+        fireEvent(new CreateNewFileSelected(selectedFolder, MimeType.X_PERL));
     }
 
     @UiHandler("newPlainTextFileMi")
     void onNewPlainTextFileClicked(SelectionEvent<Item> event) {
-        presenter.onCreateNewFileSelected(selectedFolder, MimeType.PLAIN);
+        fireEvent(new CreateNewFileSelected(selectedFolder, MimeType.PLAIN));
     }
 
     @UiHandler("newPythonFileMi")
     void onNewPythonFileClicked(SelectionEvent<Item> event) {
-        presenter.onCreateNewFileSelected(selectedFolder, MimeType.X_PYTHON);
+        fireEvent(new CreateNewFileSelected(selectedFolder, MimeType.X_PYTHON));
     }
 
     @UiHandler("newRFileMi")
     void onNewRFileClicked(SelectionEvent<Item> event) {
-        presenter.onCreateNewFileSelected(selectedFolder, MimeType.X_RSRC);
+        fireEvent(new CreateNewFileSelected(selectedFolder, MimeType.X_RSRC));
     }
 
     @UiHandler("newShellScriptFileMi")
     void onNewShellScript(SelectionEvent<Item> event) {
-        presenter.onCreateNewFileSelected(selectedFolder, MimeType.X_SH);
+        fireEvent(new CreateNewFileSelected(selectedFolder, MimeType.X_SH));
     }
 
     @UiHandler("newTabularDataFileMi")
     void onNewTabularDataFileClicked(SelectionEvent<Item> event) {
-        presenter.onCreateNewDelimitedFileSelected();
+        fireEvent(new CreateNewDelimitedFileSelected());
     }
 
     @UiHandler("newWindowAtLocMi")
     void onNewWindowAtLocClicked(SelectionEvent<Item> event) {
-        presenter.onOpenNewWindowAtLocationSelected(selectedFolder);
+        fireEvent(new OpenNewWindowAtLocationSelected(selectedFolder));
     }
 
     // ---------- File ----------
     @UiHandler("newWindowMi")
     void onNewWindowClicked(SelectionEvent<Item> event) {
-        presenter.onOpenNewWindowSelected();
+        fireEvent(new OpenNewWindowSelected());
     }
 
     // ------------- Trash ---------------
@@ -600,11 +610,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     void onRenameClicked(SelectionEvent<Item> event) {
         Preconditions.checkNotNull(selectedDiskResources);
         Preconditions.checkArgument(selectedDiskResources.size() == 1);
-        /*
-         * FIXME Open RenameFileDialog or RenameFolderDialog from here Handle 'ok' event from dialog,
-         * gather information from dialog and fire event to request rename. See DiskResourcePresenter and
-         * the Dialogs mentioned above for more information.
-         */
+
         fireEvent(new RenameDiskResourceSelected(selectedDiskResources.iterator().next()));
     }
 
@@ -655,29 +661,15 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("importFromCogeMi")
     void onImportFormCoge(SelectionEvent<Item> event) {
-        presenter.onImportFromCoge();
+        fireEvent(new ImportFromCogeBtnSelected());
     }
 
     @UiHandler("doiMi")
     void onRequestDOI(SelectionEvent<Item> event) {
-        agreementDialogWrapper.get(new AsyncCallback<DOIAgreementDialog>() {
-            @Override
-            public void onFailure(Throwable throwable) {
-                    //do nothing
-            }
-
-            @Override
-            public void onSuccess(DOIAgreementDialog  dialog) {
-                dialog.addOkButtonSelectHandler(new SelectEvent.SelectHandler() {
-                    @Override
-                    public void onSelect(SelectEvent event) {
-                        presenter.onDoiRequest(getFirstDiskResource().getId());
-                    }
-                });
-                dialog.show();
-            }
-        });
-
+        DiskResource selectedDiskResource = getFirstDiskResource();
+        if (selectedDiskResource != null) {
+            fireEvent(new RequestDOISelected(selectedDiskResource.getId()));
+        }
     }
 
     @UiHandler("automateHTFileMi")
@@ -864,5 +856,56 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     private InfoType getInfoTypeFromSingletonCollection(List<DiskResource> selectedDiskResources) {
         Preconditions.checkArgument(selectedDiskResources.size() == 1);
         return InfoType.fromTypeString(selectedDiskResources.iterator().next().getInfoType());
+    }
+
+    @Override
+    public HandlerRegistration addCreatePublicLinkSelectedHandler(CreatePublicLinkSelected.CreatePublicLinkSelectedHandler handler) {
+        return addHandler(handler, CreatePublicLinkSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addCreateNewFolderSelectedHandler(CreateNewFolderSelected.CreateNewFolderSelectedHandler handler) {
+        return addHandler(handler, CreateNewFolderSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addCreateNcbiFolderStructureSelectedHandler(
+            CreateNcbiFolderStructureSelected.CreateNcbiFolderStructureSelectedHandler handler) {
+        return addHandler(handler, CreateNcbiFolderStructureSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addCreateNewFileSelectedHandler(CreateNewFileSelected.CreateNewFileSelectedHandler handler) {
+        return addHandler(handler, CreateNewFileSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addCreateNewPathListSelectedHandler(CreateNewPathListSelected.CreateNewPathListSelectedHandler handler) {
+        return addHandler(handler, CreateNewPathListSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addCreateNewDelimitedFileSelectedHandler(CreateNewDelimitedFileSelected.CreateNewDelimitedFileSelectedHandler handler) {
+        return addHandler(handler, CreateNewDelimitedFileSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addOpenNewWindowAtLocationSelectedHandler(OpenNewWindowAtLocationSelected.OpenNewWindowAtLocationSelectedHandler handler) {
+        return addHandler(handler, OpenNewWindowAtLocationSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addOpenNewWindowSelectedHandler(OpenNewWindowSelected.OpenNewWindowSelectedHandler handler) {
+        return addHandler(handler, OpenNewWindowSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addImportFromCogeBtnSelectedHandler(ImportFromCogeBtnSelected.ImportFromCogeBtnSelectedHandler handler) {
+        return addHandler(handler, ImportFromCogeBtnSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addRequestDOISelectedHandler(RequestDOISelected.RequestDOISelectedHandler handler) {
+        return addHandler(handler, RequestDOISelected.TYPE);
     }
 }

@@ -7,7 +7,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * A GWT event that gets fired whne the user selects the "Import Genome from Coge" option in the Data window
+ * A GWT event that gets fired when the user selects the "Import Genome" button in GenomeSearchView
  */
 public class ImportGenomeFromCogeSelected
         extends GwtEvent<ImportGenomeFromCogeSelected.ImportGenomeFromCogeSelectedHandler> {

@@ -1,28 +1,36 @@
 package org.iplantc.de.diskResource.client;
 
-import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.models.diskResources.Folder;
-import org.iplantc.de.client.models.viewer.MimeType;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent.DiskResourceSelectionChangedEventHandler;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent.FolderSelectionEventHandler;
 import org.iplantc.de.diskResource.client.events.selection.AutomatePathListSelected;
 import org.iplantc.de.diskResource.client.events.selection.BulkMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected.HasCopyMetadataSelectedEventHandlers;
+import org.iplantc.de.diskResource.client.events.selection.CreateNcbiFolderStructureSelected;
 import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSubmitted;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewDelimitedFileSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewFileSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderConfirmed;
 import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewPathListSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreatePublicLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDiskResourcesSelected.HasDeleteDiskResourcesSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.DownloadTemplateSelectedEvent;
+import org.iplantc.de.diskResource.client.events.selection.EditFileSelected;
 import org.iplantc.de.diskResource.client.events.selection.EditInfoTypeSelected.HasEditInfoTypeSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.EmptyTrashSelected.HasEmptyTrashSelectedHandlers;
+import org.iplantc.de.diskResource.client.events.selection.ImportFromCogeBtnSelected;
 import org.iplantc.de.diskResource.client.events.selection.ImportFromUrlSelected.HasImportFromUrlSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelected.HasManageCommentsSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelected.HasManageMetadataSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected.HasManageSharingSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.MoveDiskResourcesSelected.HasMoveDiskResourcesSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.NewMultiInputPathListFileSelected;
+import org.iplantc.de.diskResource.client.events.selection.OpenNewWindowAtLocationSelected;
+import org.iplantc.de.diskResource.client.events.selection.OpenNewWindowSelected;
 import org.iplantc.de.diskResource.client.events.selection.OpenTrashFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected.HasRefreshFolderSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.RenameDiskResourceSelected.HasRenameDiskResourceSelectedHandlers;
+import org.iplantc.de.diskResource.client.events.selection.RequestDOISelected;
 import org.iplantc.de.diskResource.client.events.selection.RestoreDiskResourcesSelected.HasRestoreDiskResourceSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected.HasSendToCogeSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected.HasSendToEnsemblSelectedHandlers;
@@ -35,8 +43,6 @@ import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.IsWidget;
-
-import java.util.List;
 
 /**
  * @author jstroot
@@ -66,7 +72,18 @@ public interface ToolbarView extends IsWidget,
                                      OpenTrashFolderSelected.HasOpenTrashFolderSelectedHandlers,
                                      BulkMetadataSelected.HasBulkMetadataSelectedHandlers,
                                      AutomatePathListSelected.HasAutomatePathListSelectedHandlers,
-                                     NewMultiInputPathListFileSelected.HasNewMultiInputPathListSelectedHandlers {
+                                     NewMultiInputPathListFileSelected.HasNewMultiInputPathListSelectedHandlers,
+                                     EditFileSelected.HasEditFileSelectedHandlers,
+                                     CreatePublicLinkSelected.HasCreatePublicLinkSelectedHandlers,
+                                     CreateNewFolderSelected.HasCreateNewFolderSelectedHandlers,
+                                     CreateNcbiFolderStructureSelected.HasCreateNcbiFolderStructureSelectedHandlers,
+                                     CreateNewFileSelected.HasCreateNewFileSelectedHandlers,
+                                     CreateNewPathListSelected.HasCreateNewPathListSelectedHandlers,
+                                     CreateNewDelimitedFileSelected.HasCreateNewDelimitedFileSelectedHandlers,
+                                     OpenNewWindowAtLocationSelected.HasOpenNewWindowAtLocationSelectedHandlers,
+                                     OpenNewWindowSelected.HasOpenNewWindowSelectedHandlers,
+                                     ImportFromCogeBtnSelected.HasImportFromCogeBtnSelectedHandlers,
+                                     RequestDOISelected.HasRequestDOISelectedHandlers {
     interface Appearance {
 
         SafeHtml bulkDownloadInfoBoxHeading();
@@ -250,9 +267,13 @@ public interface ToolbarView extends IsWidget,
         String automatePathListMenuItem();
 
         String automateMultiInputPathListMenuItem();
+
+        String doiDlgWidth();
+
+        String doiDlgHeight();
     }
 
-    interface Presenter extends CreateNewFolderSelected.HasCreateNewFolderSelectedHandlers,
+    interface Presenter extends CreateNewFolderConfirmed.HasCreateNewFolderConfirmedHandlers,
                                 CreateNcbiSraFolderStructureSubmitted.HasCreateNcbiSraFolderStructureSubmittedHandlers {
 
         interface Appearance {
@@ -281,28 +302,6 @@ public interface ToolbarView extends IsWidget,
         }
 
         ToolbarView getView();
-
-        void onCreateNewDelimitedFileSelected();
-
-        void onCreateNewFileSelected(Folder selectedFolder, MimeType mimeType);
-
-        void onCreateNewFolderSelected(Folder selectedFolder);
-
-        void onCreateNcbiSraFolderStructure(Folder selectedFolder);
-
-        void onCreateNewPathListSelected();
-
-        void onCreatePublicLinkSelected(List<DiskResource> selectedDiskResources);
-
-        void onEditFileSelected(List<DiskResource> selectedDiskResources);
-
-        void onOpenNewWindowAtLocationSelected(Folder selectedFolder);
-
-        void onOpenNewWindowSelected();
-
-        void onImportFromCoge();
-
-        void onDoiRequest(String uuid);
     }
 
     DiskResourceSearchField getSearchField();

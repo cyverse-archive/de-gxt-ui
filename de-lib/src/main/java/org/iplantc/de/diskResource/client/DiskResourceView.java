@@ -11,7 +11,7 @@ import org.iplantc.de.diskResource.client.events.FolderSelectionEvent.HasFolderS
 import org.iplantc.de.diskResource.client.events.RootFoldersRetrievedEvent.HasRootFoldersRetrievedEventHandlers;
 import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent.HasSavedSearchesRetrievedEventHandlers;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers;
-import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderConfirmed;
 import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected;
 import org.iplantc.de.diskResource.client.presenters.navigation.proxy.SelectFolderByPathLoadHandler;
 
@@ -53,7 +53,7 @@ public interface DiskResourceView extends IsWidget,
                                 HasDiskResourceSelectionChangedEventHandlers,
                                 HasFolderSelectionEventHandlers,
                                 RefreshFolderSelected.RefreshFolderSelectedHandler,
-                                CreateNewFolderSelected.CreateNewFolderSelectedHandler {
+                                CreateNewFolderConfirmed.CreateNewFolderConfirmedHandler {
 
         interface Appearance {
 

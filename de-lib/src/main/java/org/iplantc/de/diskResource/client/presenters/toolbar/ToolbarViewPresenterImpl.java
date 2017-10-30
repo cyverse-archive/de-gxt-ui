@@ -32,9 +32,20 @@ import org.iplantc.de.diskResource.client.events.CreateNewFileEvent;
 import org.iplantc.de.diskResource.client.events.RequestSimpleDownloadEvent;
 import org.iplantc.de.diskResource.client.events.ShowFilePreviewEvent;
 import org.iplantc.de.diskResource.client.events.selection.AutomatePathListSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateNcbiFolderStructureSelected;
 import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSubmitted;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewDelimitedFileSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewFileSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderConfirmed;
 import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.NewMultiInputPathListFileSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewPathListSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreatePublicLinkSelected;
+import org.iplantc.de.diskResource.client.events.selection.EditFileSelected;
+import org.iplantc.de.diskResource.client.events.selection.ImportFromCogeBtnSelected;
+import org.iplantc.de.diskResource.client.events.selection.OpenNewWindowAtLocationSelected;
+import org.iplantc.de.diskResource.client.events.selection.OpenNewWindowSelected;
+import org.iplantc.de.diskResource.client.events.selection.RequestDOISelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected.SimpleDownloadSelectedHandler;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
@@ -44,6 +55,7 @@ import org.iplantc.de.diskResource.client.views.dialogs.CreateNcbiSraFolderStruc
 import org.iplantc.de.diskResource.client.views.dialogs.CreatePublicLinkDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
 import org.iplantc.de.diskResource.client.views.toolbar.dialogs.PathListAutomationDialog;
+import org.iplantc.de.diskResource.client.views.toolbar.dialogs.DOIAgreementDialog;
 import org.iplantc.de.diskResource.client.views.toolbar.dialogs.TabFileConfigDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DataCallback;
@@ -65,7 +77,18 @@ import java.util.logging.Logger;
 public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
                                                  SimpleDownloadSelectedHandler,
                                                  AutomatePathListSelected.AutomatePathListSelectedHandler,
-                                                 NewMultiInputPathListFileSelected.NewMultiInputPathListFileSelectedHandler {
+                                                 NewMultiInputPathListFileSelected.NewMultiInputPathListFileSelectedHandler,
+                                                 EditFileSelected.EditFileSelectedHandler,
+                                                 CreatePublicLinkSelected.CreatePublicLinkSelectedHandler,
+                                                 CreateNewFolderSelected.CreateNewFolderSelectedHandler,
+                                                 CreateNcbiFolderStructureSelected.CreateNcbiFolderStructureSelectedHandler,
+                                                 CreateNewFileSelected.CreateNewFileSelectedHandler,
+                                                 CreateNewPathListSelected.CreateNewPathListSelectedHandler,
+                                                 CreateNewDelimitedFileSelected.CreateNewDelimitedFileSelectedHandler,
+                                                 OpenNewWindowAtLocationSelected.OpenNewWindowAtLocationSelectedHandler,
+                                                 OpenNewWindowSelected.OpenNewWindowSelectedHandler,
+                                                 ImportFromCogeBtnSelected.ImportFromCogeBtnSelectedHandler,
+                                                 RequestDOISelected.RequestDOISelectedHandler {
 
     @Inject ToolbarView.Presenter.Appearance appearance;
     @Inject DiskResourceSelectorFieldFactory drSelectorFactory;
@@ -91,6 +114,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     @Inject AsyncProviderWrapper<CreatePublicLinkDialog> createPublicLinkDlgProvider;
     @Inject AsyncProviderWrapper<GenomeSearchDialog> genomeSearchDlgProvider;
     @Inject AsyncProviderWrapper<PathListAutomationDialog> pathAutomationDlgProvider;
+    @Inject AsyncProviderWrapper<DOIAgreementDialog> agreementDialogWrapper;
 
     private final ToolbarView view;
     private HandlerManager handlerManager;
@@ -104,6 +128,17 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
         view.addSimpleDownloadSelectedHandler(this);
         view.addAutomatePathListSelectedHandler(this);
         view.addNewMultiInputPathListFileSelectedHandler(this);
+        view.addEditFileSelectedHandler(this);
+        view.addCreatePublicLinkSelectedHandler(this);
+        view.addCreateNewFolderSelectedHandler(this);
+        view.addCreateNcbiFolderStructureSelectedHandler(this);
+        view.addCreateNewFileSelectedHandler(this);
+        view.addCreateNewPathListSelectedHandler(this);
+        view.addCreateNewDelimitedFileSelectedHandler(this);
+        view.addOpenNewWindowAtLocationSelectedHandler(this);
+        view.addOpenNewWindowSelectedHandler(this);
+        view.addImportFromCogeBtnSelectedHandler(this);
+        view.addRequestDOISelectedHandler(this);
     }
 
     @Override
@@ -112,7 +147,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     }
 
     @Override
-    public void onCreateNewDelimitedFileSelected() {
+    public void onCreateNewDelimitedFileSelected(CreateNewDelimitedFileSelected event) {
         tabFileConfigDlgProvider.get(new AsyncCallback<TabFileConfigDialog>() {
             @Override
             public void onFailure(Throwable caught) {}
@@ -135,7 +170,9 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     }
 
     @Override
-    public void onCreateNewFileSelected(final Folder selectedFolder, final MimeType mimeType) {
+    public void onCreateNewFileSelected(CreateNewFileSelected event) {
+        final Folder selectedFolder = event.getSelectedFolder();
+        final MimeType mimeType = event.getMimeType();
         FileViewerWindowConfig config = ConfigFactory.fileViewerWindowConfig(null);
         config.setEditing(true);
         config.setParentFolder(selectedFolder);
@@ -144,7 +181,8 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     }
 
     @Override
-    public void onCreateNewFolderSelected(Folder selectedFolder) {
+    public void onCreateNewFolderSelected(CreateNewFolderSelected event) {
+        Folder selectedFolder = event.getSelectedFolder();
         if(selectedFolder == null) {
             Folder parent = drAbFactory.folder().as();
             parent.setPath(userInfo.getHomePath());
@@ -158,13 +196,14 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
             @Override
             public void onSuccess(CreateFolderDialog dialog) {
                 dialog.show(finalSelectedFolder);
-                dialog.addOkButtonSelectHandler(selectEvent -> ensureHandlers().fireEvent(new CreateNewFolderSelected(finalSelectedFolder, dialog.getFolderName())));
+                dialog.addOkButtonSelectHandler(selectEvent -> ensureHandlers().fireEvent(new CreateNewFolderConfirmed(finalSelectedFolder, dialog.getFolderName())));
             }
         });
     }
 
     @Override
-    public void onCreateNcbiSraFolderStructure(final Folder selectedFolder) {
+    public void onCreateNcbiFolderStructureSelected(CreateNcbiFolderStructureSelected event) {
+        final Folder selectedFolder = event.getSelectedFolder();
         createNcbiSraDlgProvider.get(new AsyncCallback<CreateNcbiSraFolderStructureDialog>() {
             @Override
             public void onFailure(Throwable caught) {}
@@ -187,14 +226,15 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     }
 
     @Override
-    public void onCreateNewPathListSelected() {
+    public void onCreateNewPathListSelected(CreateNewPathListSelected event) {
         HTPathListWindowConfig config = ConfigFactory.newHTPathListWindowConfig();
         config.setEditing(true);
         eventBus.fireEvent(new CreateNewFileEvent(config));
     }
 
     @Override
-    public void onCreatePublicLinkSelected(final List<DiskResource> selectedDiskResources) {
+    public void onCreatePublicLinkSelected(CreatePublicLinkSelected event) {
+        final List<DiskResource> selectedDiskResources = event.getSelectedDiskResources();
         createPublicLinkDlgProvider.get(new AsyncCallback<CreatePublicLinkDialog>() {
             @Override
             public void onFailure(Throwable caught) {}
@@ -207,7 +247,8 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     }
 
     @Override
-    public void onEditFileSelected(final List<DiskResource> selectedDiskResources) {
+    public void onEditFileSelected(EditFileSelected event) {
+        final List<DiskResource> selectedDiskResources = event.getSelectedDiskResources();
         Preconditions.checkState(selectedDiskResources.size() == 1,
                                  "Only one file should be selected, but there are %i",
                                  selectedDiskResources.size());
@@ -221,14 +262,15 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     }
 
     @Override
-    public void onOpenNewWindowAtLocationSelected(final Folder selectedFolder) {
+    public void onOpenNewWindowAtLocationSelected(OpenNewWindowAtLocationSelected event) {
+        final Folder selectedFolder = event.getSelectedFolder();
         final String selectedFolderPath = selectedFolder == null ? null : selectedFolder.getPath();
         OpenFolderEvent openFolderEvent = new OpenFolderEvent(selectedFolderPath, true);
         eventBus.fireEvent(openFolderEvent);
     }
 
     @Override
-    public void onOpenNewWindowSelected() {
+    public void onOpenNewWindowSelected(OpenNewWindowSelected event) {
         OpenFolderEvent openFolderEvent = new OpenFolderEvent(null, true);
         eventBus.fireEvent(openFolderEvent);
     }
@@ -240,7 +282,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     }
 
     @Override
-    public void onImportFromCoge() {
+    public void onImportFromCogeBtnSelected(ImportFromCogeBtnSelected event) {
         genomeSearchDlgProvider.get(new AsyncCallback<GenomeSearchDialog>() {
             @Override
             public void onFailure(Throwable caught) {}
@@ -253,7 +295,23 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     }
 
     @Override
-    public void onDoiRequest(String uuid) {
+    public void onRequestDOISelected(RequestDOISelected event) {
+        String uuid = event.getResourceId();
+        agreementDialogWrapper.get(new AsyncCallback<DOIAgreementDialog>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                //do nothing
+            }
+
+            @Override
+            public void onSuccess(DOIAgreementDialog  dialog) {
+                dialog.addOkButtonSelectHandler(selectEvent -> requestDoi(uuid));
+                dialog.show();
+            }
+        });
+    }
+
+    void requestDoi(String uuid) {
         prFacade.requestPermId(uuid, PermanentIdRequestType.DOI, new DataCallback<String>() {
 
             @Override
@@ -342,8 +400,8 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     }
 
     @Override
-    public HandlerRegistration addCreateNewFolderSelectedHandler(CreateNewFolderSelected.CreateNewFolderSelectedHandler handler) {
-        return ensureHandlers().addHandler(CreateNewFolderSelected.TYPE, handler);
+    public HandlerRegistration addCreateNewFolderConfirmedHandler(CreateNewFolderConfirmed.CreateNewFolderConfirmedHandler handler) {
+        return ensureHandlers().addHandler(CreateNewFolderConfirmed.TYPE, handler);
     }
 
     @Override
