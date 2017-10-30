@@ -1,7 +1,13 @@
 package org.iplantc.de.diskResource.client.views.search.cells;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+
+import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
-import org.iplantc.de.diskResource.client.views.search.cells.DiskResourceQueryFormNamePrompt;
 
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.google.gwtmockito.GwtMockito;
@@ -10,25 +16,22 @@ import com.google.gwtmockito.fakes.FakeSimpleBeanEditorDriverProvider;
 
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 
 @RunWith(GxtMockitoTestRunner.class)
 public class DiskResourceQueryFormNamePromptTest_NoEditorErrors {
 
     private DiskResourceQueryFormNamePrompt namePrompt;
+    @Mock SearchModelUtils searchModelUtilsMock;
 
     @Before public void setUp() {
         GwtMockito.useProviderForType(SimpleBeanEditorDriver.class, new FakeSimpleBeanEditorDriverProvider(false));
         namePrompt = new DiskResourceQueryFormNamePrompt();
+        namePrompt.searchModelUtils = searchModelUtilsMock;
     }
 
     /**

@@ -1,11 +1,12 @@
 package org.iplantc.de.diskResource.client.views.search.cells;
 
+import org.iplantc.de.client.models.HasLabel;
 import org.iplantc.de.client.models.search.DateInterval;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.FileSizeRange.FileSizeUnit;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
-import org.iplantc.de.client.models.search.SearchModelUtils;
 import org.iplantc.de.client.models.tags.Tag;
+import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.widgets.IPlantAnchor;
@@ -114,16 +115,75 @@ public class DiskResourceQueryForm extends Composite implements
                                                      TagAddedEvent.TagAddedEventHandler,
                                                      RemoveTagSelected.RemoveTagSelectedHandler {
 
-    public interface HtmlLayoutContainerTemplate extends XTemplates {
-        @XTemplate(source = "DiskResourceQueryFormTemplate.html")
-        SafeHtml getTemplate();
+    public interface DiskResourceQueryFormAppearance {
+        SafeHtml getQueryTable();
+
+        int columnFormWidth();
+
+        int columnWidth();
+
+        String nameHas();
+
+        String emptyText();
+
+        String nameHasNot();
+
+        String createdWithin();
+
+        String modifiedWithin();
+
+        String metadataAttributeHas();
+
+        String metadataValueHas();
+
+        String ownedBy();
+
+        String emptyNameText();
+
+        String sharedWith();
+
+        String fileSizeGreater();
+
+        String fileSizeLessThan();
+
+        String sizeDropDownWidth();
+
+        String includeTrash();
+
+        String searchBtnText();
+
+        String emptyTimeText();
+
+        String fileNameClass();
+
+        String createdWithinClass();
+
+        String fileNameNegateClass();
+
+        String modifiedWithinClass();
+
+        String metadataAttributeClass();
+
+        String ownerClass();
+
+        String metadataValueClass();
+
+        String sharedClass();
+
+        String searchClass();
+
+        String fileSizeClass();
+
+        String tagsClass();
+
+        String trashAndFilterClass();
+
+        String tableWidth();
     }
 
     interface SearchFormEditorDriver extends SimpleBeanEditorDriver<DiskResourceQueryTemplate, DiskResourceQueryForm> { }
 
     protected final BaseEventPreview eventPreview;
-    static final int COLUMN_FORM_WIDTH = 600;
-    static final int cw = ((COLUMN_FORM_WIDTH - 30) / 2) - 12;
     static final Logger LOG = Logger.getLogger(DiskResourceQueryForm.class.getName());
     final SearchFormEditorDriver editorDriver = GWT.create(SearchFormEditorDriver.class);
     IPlantAnchor createFilterLink;
@@ -148,34 +208,33 @@ public class DiskResourceQueryForm extends Composite implements
     @Ignore DiskResourceQueryFormNamePrompt namePrompt;
     TextField negatedFileQuery;
     TextField ownedBy;
-    @Ignore
-    TextButton searchButton;
+    @Ignore TextButton searchButton;
     TextField sharedWith;
     final SimpleEditor<Set<Tag>> tagQuery;
-    @Ignore
-    private final HtmlLayoutContainer con;
-    private final SearchAutoBeanFactory factory = GWT.create(SearchAutoBeanFactory.class);
+    @Ignore private final HtmlLayoutContainer con;
+    private final SearchAutoBeanFactory factory;
     private final TagsView.Presenter tagsViewPresenter;
-    @Ignore
-    private boolean showing;
+    private DiskResourceQueryFormAppearance appearance;
+    @Ignore private boolean showing;
+    SearchModelUtils searchModelUtils;
+    @Inject IplantAnnouncer iplantAnnouncer;
 
     /**
      * Creates the form with a new filter.
      */
     @Inject
-    DiskResourceQueryForm(final TagsView.Presenter tagsViewPresenter) {
-        this(tagsViewPresenter,
-             SearchModelUtils.createDefaultFilter());
-    }
-
     DiskResourceQueryForm(final TagsView.Presenter tagsViewPresenter,
-                          final DiskResourceQueryTemplate filter) {
+                          SearchAutoBeanFactory factory,
+                          SearchModelUtils searchModelUtils,
+                          DiskResourceQueryFormAppearance appearance) {
+        this.factory = factory;
         this.tagsViewPresenter = tagsViewPresenter;
+        this.searchModelUtils = searchModelUtils;
+        this.appearance = appearance;
         this.tagsViewPresenter.setRemovable(true);
         this.tagsViewPresenter.setEditable(true);
         VerticalPanel vp = new VerticalPanel();
-        HtmlLayoutContainerTemplate templates = GWT.create(HtmlLayoutContainerTemplate.class);
-        con = new HtmlLayoutContainer(templates.getTemplate());
+        con = new HtmlLayoutContainer(appearance.getQueryTable());
         vp.add(con);
         vp.getElement().getStyle().setBackgroundColor("#fff");
         initWidget(vp);
@@ -185,7 +244,7 @@ public class DiskResourceQueryForm extends Composite implements
         tagQuery = SimpleEditor.of();
         init(new DiskResourceQueryFormNamePrompt());
         editorDriver.initialize(this);
-        editorDriver.edit(filter);
+        editorDriver.edit(searchModelUtils.createDefaultFilter());
         tagQuery.setValue(new HashSet<Tag>());
 
         eventPreview = new BaseEventPreview() {
@@ -216,31 +275,6 @@ public class DiskResourceQueryForm extends Composite implements
         }
     }
 
-    static boolean isEmptyQuery(DiskResourceQueryTemplate template) {
-        if (Strings.isNullOrEmpty(template.getOwnedBy())
-                && Strings.isNullOrEmpty(template.getFileQuery())
-                && Strings.isNullOrEmpty(template.getMetadataAttributeQuery())
-                && Strings.isNullOrEmpty(template.getMetadataValueQuery())
-                && Strings.isNullOrEmpty(template.getNegatedFileQuery())
-                && Strings.isNullOrEmpty(template.getSharedWith())
-                && (template.getDateCreated() == null)
-                && (template.getLastModified() == null)
-                && ((template.getCreatedWithin() == null) || (template.getCreatedWithin().getFrom() == null && template.getCreatedWithin()
-                                                                                                                       .getTo() == null))
-                && ((template.getModifiedWithin() == null) || (template.getModifiedWithin().getFrom() == null && template.getModifiedWithin()
-                                                                                                                         .getTo() == null))
-                && ((template.getFileSizeRange() == null) || (template.getFileSizeRange().getMax() == null && template.getFileSizeRange()
-                                                                                                                      .getMin() == null))
-                && (template.getTagQuery() == null || template.getTagQuery().size() == 0)) {
-
-            LOG.fine("tags size==>" + template.getTagQuery());
-
-            IplantAnnouncer.getInstance().schedule(new ErrorAnnouncementConfig("You must select at least one filter."));
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public HandlerRegistration addSaveDiskResourceQueryClickedEventHandler(SaveDiskResourceQueryClickedEvent.SaveDiskResourceQueryClickedEventHandler handler) {
         return addHandler(handler, SaveDiskResourceQueryClickedEvent.TYPE);
@@ -256,7 +290,7 @@ public class DiskResourceQueryForm extends Composite implements
      */
     public void clearSearch() {
         tagsViewPresenter.removeAll();
-        editorDriver.edit(SearchModelUtils.createDefaultFilter());
+        editorDriver.edit(searchModelUtils.createDefaultFilter());
     }
 
     public void edit(DiskResourceQueryTemplate queryTemplate) {
@@ -268,7 +302,7 @@ public class DiskResourceQueryForm extends Composite implements
                 tagsViewPresenter.addTag(it);
             }
         }
-        editorDriver.edit(SearchModelUtils.copyDiskResourceQueryTemplate(queryTemplate));
+        editorDriver.edit(searchModelUtils.copyDiskResourceQueryTemplate(queryTemplate));
     }
 
     @Override
@@ -359,7 +393,7 @@ public class DiskResourceQueryForm extends Composite implements
         vp.add(includeTrashItems);
         vp.add(createFilterLink);
         vp.setSpacing(5);
-        con.add(vp, new HtmlData(".trashandfilter"));
+        con.add(vp, new HtmlData("." + appearance.trashAndFilterClass()));
     }
 
     DateInterval createDateInterval(Date from, Date to, String label) {
@@ -371,7 +405,7 @@ public class DiskResourceQueryForm extends Composite implements
     }
 
     List<FileSizeUnit> createFileSizeUnits() {
-        return SearchModelUtils.createFileSizeUnits();
+        return searchModelUtils.createFileSizeUnits();
     }
 
     void init(DiskResourceQueryFormNamePrompt namePrompt) {
@@ -413,7 +447,7 @@ public class DiskResourceQueryForm extends Composite implements
         List<DateInterval> timeIntervals = Lists.newArrayList();
         Date now = new Date();
 
-        DateInterval interval = createDateInterval(null, null, "---");
+        DateInterval interval = createDateInterval(null, null, appearance.emptyTimeText());
         timeIntervals.add(interval);
 
         final DateWrapper dateWrapper = new DateWrapper(now).clearTime();
@@ -442,55 +476,42 @@ public class DiskResourceQueryForm extends Composite implements
         timeIntervals.add(interval);
 
         // Data range combos
-        LabelProvider<DateInterval> dateIntervalLabelProvider = new LabelProvider<DateInterval>() {
-
-            @Override
-            public String getLabel(DateInterval item) {
-                return item.getLabel();
-            }
-        };
+        LabelProvider<DateInterval> dateIntervalLabelProvider = HasLabel::getLabel;
         createdWithinCombo = new SimpleComboBox<>(dateIntervalLabelProvider);
         modifiedWithinCombo = new SimpleComboBox<>(dateIntervalLabelProvider);
         createdWithinCombo.add(timeIntervals);
         modifiedWithinCombo.add(timeIntervals);
 
-        createdWithinCombo.setEmptyText("---");
-        modifiedWithinCombo.setEmptyText("---");
+        createdWithinCombo.setEmptyText(appearance.emptyTimeText());
+        modifiedWithinCombo.setEmptyText(appearance.emptyTimeText());
 
-        createdWithinCombo.setWidth(cw);
-        modifiedWithinCombo.setWidth(cw);
+        createdWithinCombo.setWidth(appearance.columnWidth());
+        modifiedWithinCombo.setWidth(appearance.columnWidth());
 
-        con.add(new FieldLabel(createdWithinCombo, "Created within"), new HtmlData(".createwithin"));
-        con.add(new FieldLabel(modifiedWithinCombo, "Modified within"), new HtmlData(".modifiedwithin"));
+        con.add(new FieldLabel(createdWithinCombo, appearance.createdWithin()), new HtmlData("." + appearance.createdWithinClass()));
+        con.add(new FieldLabel(modifiedWithinCombo, appearance.modifiedWithin()), new HtmlData("." + appearance.modifiedWithinClass()));
 
     }
 
     void initExcludeTrashField() {
         includeTrashItems = new CheckBox();
-        includeTrashItems.setBoxLabel("Include items in Trash");
+        includeTrashItems.setBoxLabel(appearance.includeTrash());
     }
 
     void initFileQuery() {
         fileQuery = new TextField();
-        fileQuery.setWidth(cw);
-        fileQuery.setEmptyText("Enter values...");
-        con.add(new FieldLabel(fileQuery, "File/Folder name has the words"), new HtmlData(".filename"));
+        fileQuery.setWidth(appearance.columnWidth());
+        fileQuery.setEmptyText(appearance.emptyText());
+        con.add(new FieldLabel(fileQuery, appearance.nameHas()), new HtmlData("." + appearance.fileNameClass()));
     }
 
     void initFileSizeComboBoxes() {
         // File Size ComboBoxes
-        LabelProvider<FileSizeUnit> fileSizeUnitLabelProvider = new LabelProvider<FileSizeUnit>() {
-
-            @Override
-            public String getLabel(FileSizeUnit item) {
-                return item.getLabel();
-            }
-
-        };
+        LabelProvider<FileSizeUnit> fileSizeUnitLabelProvider = HasLabel::getLabel;
         greaterThanComboBox = new SimpleComboBox<>(fileSizeUnitLabelProvider);
         lessThanComboBox = new SimpleComboBox<>(fileSizeUnitLabelProvider);
-        greaterThanComboBox.setWidth("64px");
-        lessThanComboBox.setWidth("64px");
+        greaterThanComboBox.setWidth(appearance.sizeDropDownWidth());
+        lessThanComboBox.setWidth(appearance.sizeDropDownWidth());
 
         greaterThanComboBox.setTriggerAction(TriggerAction.ALL);
         greaterThanComboBox.setForceSelection(true);
@@ -517,49 +538,42 @@ public class DiskResourceQueryForm extends Composite implements
 
     void initMetadataSearchFields() {
         metadataAttributeQuery = new TextField();
-        metadataAttributeQuery.setEmptyText("Enter values...");
-        metadataAttributeQuery.setWidth(cw);
-        con.add(new FieldLabel(metadataAttributeQuery, "Metadata attribute has the words"),
-                new HtmlData(".metadataattrib"));
+        metadataAttributeQuery.setEmptyText(appearance.emptyText());
+        metadataAttributeQuery.setWidth(appearance.columnWidth());
+        con.add(new FieldLabel(metadataAttributeQuery, appearance.metadataAttributeHas()),
+                new HtmlData("." + appearance.metadataAttributeClass()));
 
         metadataValueQuery = new TextField();
-        metadataValueQuery.setEmptyText("Enter values...");
-        metadataValueQuery.setWidth(cw);
-        con.add(new FieldLabel(metadataValueQuery, "Metadata value has the words"),
-                new HtmlData(".metadataval"));
+        metadataValueQuery.setEmptyText(appearance.emptyText());
+        metadataValueQuery.setWidth(appearance.columnWidth());
+        con.add(new FieldLabel(metadataValueQuery, appearance.metadataValueHas()),
+                new HtmlData("." + appearance.metadataValueClass()));
 
     }
 
     void initNegatedFileQuery() {
         negatedFileQuery = new TextField();
-        negatedFileQuery.setEmptyText("Enter values...");
-        negatedFileQuery.setWidth(cw);
-        con.add(new FieldLabel(negatedFileQuery, "File/Folder name doesn't have"),
-                new HtmlData(".negatefilename"));
+        negatedFileQuery.setEmptyText(appearance.emptyText());
+        negatedFileQuery.setWidth(appearance.columnWidth());
+        con.add(new FieldLabel(negatedFileQuery, appearance.nameHasNot()),
+                new HtmlData("." + appearance.fileNameNegateClass()));
     }
 
     void initOwnerSharedSearchField() {
         ownedBy = new TextField();
-        ownedBy.setEmptyText("Enter CyVerse user name");
-        ownedBy.setWidth(cw);
-        con.add(new FieldLabel(ownedBy, "Owned by"), new HtmlData(".owner"));
+        ownedBy.setEmptyText(appearance.emptyNameText());
+        ownedBy.setWidth(appearance.columnWidth());
+        con.add(new FieldLabel(ownedBy, appearance.ownedBy()), new HtmlData("." + appearance.ownerClass()));
 
         sharedWith = new TextField();
-        sharedWith.setEmptyText("Enter CyVerse user name");
-        sharedWith.setWidth(cw);
-        con.add(new FieldLabel(sharedWith, "Shared with"), new HtmlData(".shared"));
+        sharedWith.setEmptyText(appearance.emptyNameText());
+        sharedWith.setWidth(appearance.columnWidth());
+        con.add(new FieldLabel(sharedWith, appearance.sharedWith()), new HtmlData("." + appearance.sharedClass()));
     }
 
     void initSearchButton() {
-        searchButton = new TextButton("Search");
-        searchButton.addSelectHandler(new SelectHandler() {
-
-            @Override
-            public void onSelect(SelectEvent event) {
-                onSearchButtonSelect();
-
-            }
-        });
+        searchButton = new TextButton(appearance.searchBtnText());
+        searchButton.addSelectHandler(event -> onSearchButtonSelect());
         Label betaLbl = new Label("(beta)");
         betaLbl.setTitle("Search functionality is currently in beta.");
         betaLbl.getElement().getStyle().setColor("#ff0000");
@@ -567,7 +581,7 @@ public class DiskResourceQueryForm extends Composite implements
         hp.add(searchButton);
         hp.add(betaLbl);
         hp.setSpacing(2);
-        con.add(hp, new HtmlData(".search"));
+        con.add(hp, new HtmlData("." + appearance.searchClass()));
     }
 
     void initSizeFilterFields() {
@@ -577,7 +591,7 @@ public class DiskResourceQueryForm extends Composite implements
         hp1.add(greaterThanComboBox);
         hp1.setSpacing(3);
 
-        greaterField = new FieldLabel(hp1, "File size is bigger than or equal to");
+        greaterField = new FieldLabel(hp1, appearance.fileSizeGreater());
         vp.add(greaterField);
 
         HorizontalPanel hp2 = new HorizontalPanel();
@@ -585,9 +599,9 @@ public class DiskResourceQueryForm extends Composite implements
         hp2.add(lessThanComboBox);
         hp2.setSpacing(3);
 
-        lesserField = new FieldLabel(hp2, "File size is smaller than or equal to");
+        lesserField = new FieldLabel(hp2, appearance.fileSizeLessThan());
         vp.add(lesserField);
-        con.add(vp, new HtmlData(".filesize"));
+        con.add(vp, new HtmlData("." + appearance.fileSizeClass()));
 
     }
 
@@ -600,7 +614,7 @@ public class DiskResourceQueryForm extends Composite implements
         vp.add(fl);
         vp.add(tagsViewPresenter.getView());
 
-        con.add(vp, new HtmlData(".tags"));
+        con.add(vp, new HtmlData("." + appearance.tagsClass()));
 
     }
 
@@ -625,7 +639,7 @@ public class DiskResourceQueryForm extends Composite implements
     void onSearchButtonSelect() {
         // Flush to perform local validations
         DiskResourceQueryTemplate flushedQueryTemplate = editorDriver.flush();
-        if (editorDriver.hasErrors() || isEmptyQuery(flushedQueryTemplate)) {
+        if (editorDriver.hasErrors() || searchModelUtils.isEmptyQuery(flushedQueryTemplate)) {
             return;
         }
 

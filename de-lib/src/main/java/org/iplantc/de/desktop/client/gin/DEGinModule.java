@@ -20,6 +20,7 @@ import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.client.services.TagsServiceFacade;
 import org.iplantc.de.client.services.ToolServices;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
+import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.desktop.client.presenter.DesktopPresenterEventHandler;
@@ -167,6 +168,10 @@ public class DEGinModule extends AbstractGinModule {
 
     @Provides @Singleton public IplantAnnouncer createAnnouncer() {
         return IplantAnnouncer.getInstance();
+    }
+
+    @Provides @Singleton public SearchModelUtils createSearchModelUtils() {
+        return SearchModelUtils.getInstance();
     }
 
 //    @Provides @Singleton public MetadataUtil createMetadataUtil() {

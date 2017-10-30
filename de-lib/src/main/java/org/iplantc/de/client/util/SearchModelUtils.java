@@ -3,7 +3,10 @@ package org.iplantc.de.client.util;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.FileSizeRange.FileSizeUnit;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -100,5 +103,30 @@ public class SearchModelUtils {
 
         LOG.fine(temp.getTagQuery().toString());
         return temp;
+    }
+
+    public boolean isEmptyQuery(DiskResourceQueryTemplate template) {
+        if (Strings.isNullOrEmpty(template.getOwnedBy())
+            && Strings.isNullOrEmpty(template.getFileQuery())
+            && Strings.isNullOrEmpty(template.getMetadataAttributeQuery())
+            && Strings.isNullOrEmpty(template.getMetadataValueQuery())
+            && Strings.isNullOrEmpty(template.getNegatedFileQuery())
+            && Strings.isNullOrEmpty(template.getSharedWith())
+            && (template.getDateCreated() == null)
+            && (template.getLastModified() == null)
+            && ((template.getCreatedWithin() == null) || (template.getCreatedWithin().getFrom() == null && template.getCreatedWithin()
+                                                                                                                   .getTo() == null))
+            && ((template.getModifiedWithin() == null) || (template.getModifiedWithin().getFrom() == null && template.getModifiedWithin()
+                                                                                                                     .getTo() == null))
+            && ((template.getFileSizeRange() == null) || (template.getFileSizeRange().getMax() == null && template.getFileSizeRange()
+                                                                                                                  .getMin() == null))
+            && (template.getTagQuery() == null || template.getTagQuery().size() == 0)) {
+
+            LOG.fine("tags size==>" + template.getTagQuery());
+
+            IplantAnnouncer.getInstance().schedule(new ErrorAnnouncementConfig("You must select at least one filter."));
+            return true;
+        }
+        return false;
     }
 }

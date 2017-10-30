@@ -38,6 +38,10 @@
         <ui:attributes top="5" right="5" bottom="5" left="5"/>
     </ui:with>
 
+    <ui:with field="appearance"
+             type="org.iplantc.de.diskResource.client.views.search.cells.DiskResourceQueryForm.DiskResourceQueryFormAppearance">
+    </ui:with>
+
     <ui:with field="verticalLayoutData"
              type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
         <ui:attributes width=".80" height="-1" margins="{margins0505}"/>
@@ -60,42 +64,47 @@
     <container:VerticalLayoutContainer ui:field="con">
 
         <container:child layoutData="{verticalLayoutData}">
-            <form:FieldLabel text="File/Folder name has the words"
+            <form:FieldLabel text="{appearance.nameHas}"
                              labelAlign="TOP">
                 <form:widget>
                     <form:TextField ui:field="fileQuery"
-                                    emptyText="Enter values..."/>
+                                    emptyText="{appearance.emptyText}"/>
                 </form:widget>
             </form:FieldLabel>
         </container:child>
 
         <container:child layoutData="{verticalLayoutData}">
-            <form:FieldLabel text="File/Folder name doesn't have"
+            <form:FieldLabel text="{appearance.nameHasNot}"
                              labelAlign="TOP">
                 <form:widget>
-                    <form:TextField ui:field="negatedFileQuery" emptyText="Enter values..."/>
+                    <form:TextField ui:field="negatedFileQuery"
+                                    emptyText="{appearance.emptyText}"/>
                 </form:widget>
             </form:FieldLabel>
         </container:child>
 
 
         <container:child layoutData="{verticalLayoutDataWithTopMargins}">
-            <form:FieldLabel text="Created within" labelAlign="TOP">
+            <form:FieldLabel text="{appearance.createdWithin}"
+                             labelAlign="TOP">
                 <form:widget>
                     <form:SimpleComboBox ui:field="createdWithinCombo"
                                          forceSelection="true"
                                          triggerAction="ALL"
+                                         emptyText="{appearance.emptyTimeText}"
                             />
                 </form:widget>
             </form:FieldLabel>
         </container:child>
 
         <container:child layoutData="{verticalLayoutDataWithBottomMargins}">
-            <form:FieldLabel text="Modified within" labelAlign="TOP">
+            <form:FieldLabel text="{appearance.modifiedWithin}"
+                             labelAlign="TOP">
                 <form:widget>
                     <form:SimpleComboBox ui:field="modifiedWithinCombo"
                                          forceSelection="true"
                                          triggerAction="ALL"
+                                         emptyText="{appearance.emptyTimeText}"
                             />
                 </form:widget>
             </form:FieldLabel>
@@ -103,61 +112,62 @@
 
 
         <container:child layoutData="{verticalLayoutData}">
-            <form:FieldLabel text="Metadata attribute has the words"
+            <form:FieldLabel text="{appearance.metadataAttributeHas}"
                              labelAlign="TOP">
                 <form:widget>
                     <form:TextField ui:field="metadataAttributeQuery"
-                                    emptyText="Enter values..."/>
+                                    emptyText="{appearance.emptyText}"/>
                 </form:widget>
             </form:FieldLabel>
         </container:child>
 
 
         <container:child layoutData="{verticalLayoutData}">
-            <form:FieldLabel text="Metadata value has the words"
+            <form:FieldLabel text="{appearance.metadataValueHas}"
                              labelAlign="TOP">
                 <form:widget>
                     <form:TextField ui:field="metadataValueQuery"
-                                    emptyText="Enter values..."/>
+                                    emptyText="{appearance.emptyText}"/>
                 </form:widget>
             </form:FieldLabel>
         </container:child>
 
 
         <container:child layoutData="{verticalLayoutData}">
-            <form:FieldLabel text="Owned by"
+            <form:FieldLabel text="{appearance.ownedBy}"
                              labelAlign="TOP">
                 <form:widget>
                     <form:TextField ui:field="ownedBy"
-                                    emptyText="Enter CyVerse user name"/>
+                                    emptyText="{appearance.emptyNameText}"/>
                 </form:widget>
             </form:FieldLabel>
         </container:child>
 
 
         <container:child layoutData="{verticalLayoutData}">
-            <form:FieldLabel text="Shared with"
+            <form:FieldLabel text="{appearance.sharedWith}"
                              labelAlign="TOP">
                 <form:widget>
                     <form:TextField ui:field="sharedWith"
-                                    emptyText="Enter CyVerse user name"/>
+                                    emptyText="{appearance.emptyNameText}"/>
                 </form:widget>
             </form:FieldLabel>
         </container:child>
 
 
         <container:child layoutData="{verticalLayoutData}">
-            <form:FieldLabel text="File size is bigger than or equal to"
+            <form:FieldLabel text="{appearance.fileSizeGreater}"
                              labelAlign="TOP">
                 <form:widget>
-                    <container:HBoxLayoutContainer padding="{padding5}" hBoxLayoutAlign="TOP">
+                    <container:HBoxLayoutContainer padding="{padding5}"
+                                                   hBoxLayoutAlign="TOP">
                         <container:child layoutData="{boxLayoutDataMargins0505}">
                             <form:NumberField ui:field="fileSizeGreaterThan"/>
                         </container:child>
 
                         <container:child layoutData="{boxLayoutDataMargins0505}">
                             <form:SimpleComboBox ui:field="greaterThanComboBox"
-                                                 width="64"
+                                                 width="{appearance.sizeDropDownWidth}"
                                                  triggerAction="ALL"
                                                  forceSelection="true"/>
                         </container:child>
@@ -167,17 +177,18 @@
         </container:child>
 
         <container:child layoutData="{verticalLayoutData}">
-            <form:FieldLabel text="File size is smaller than or equal to"
+            <form:FieldLabel text="{appearance.fileSizeLessThan}"
                              labelAlign="TOP">
                 <form:widget>
-                    <container:HBoxLayoutContainer padding="{padding5}" hBoxLayoutAlign="TOP">
+                    <container:HBoxLayoutContainer padding="{padding5}"
+                                                   hBoxLayoutAlign="TOP">
                         <container:child layoutData="{boxLayoutDataMargins0505}">
                             <form:NumberField ui:field="fileSizeLessThan"/>
                         </container:child>
 
                         <container:child layoutData="{boxLayoutDataMargins0505}">
                             <form:SimpleComboBox ui:field="lessThanComboBox"
-                                                 width="64"
+                                                 width="{appearance.sizeDropDownWidth}"
                                                  triggerAction="ALL"
                                                  forceSelection="true"/>
                         </container:child>
@@ -187,15 +198,17 @@
         </container:child>
 
         <container:child layoutData="{verticalLayoutData}">
-            <form:CheckBox ui:field="includeTrashItems" boxLabel="Include items in Trash"/>
+            <form:CheckBox ui:field="includeTrashItems"
+                           boxLabel="{appearance.includeTrash}"/>
         </container:child>
 
 
         <container:child layoutData="{verticalLayoutData}">
-            <container:HBoxLayoutContainer hBoxLayoutAlign="TOP" pack="END">
+            <container:HBoxLayoutContainer hBoxLayoutAlign="TOP"
+                                           pack="END">
                 <container:child layoutData="{boxLayoutDataMargins0505}">
                     <button:TextButton ui:field="searchButton"
-                                       text="Search"/>
+                                       text="{appearance.searchBtnText}"/>
                 </container:child>
                 <container:child layoutData="{boxLayoutDataMargins0505}">
                     <g:Label styleName="{style.beta}"
