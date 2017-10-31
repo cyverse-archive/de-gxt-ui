@@ -182,6 +182,8 @@
                             <g:HTML ui:field="webhooksfield"/>
                             <g:HorizontalPanel spacing="5">
                                 <form:TextField ui:field="hookUrl" visible="true" enabled="true" width="250"/>
+                                <form:ComboBox ui:field="typeCombo" allowBlank="false"
+                                               forceSelection="true" triggerAction="ALL"/>
                                 <button:TextButton text="" ui:field="hookDelBtn" enabled="true" icon="{appearance.deleteIcon}"/>
                             </g:HorizontalPanel>
                             <button:TextButton text="{appearance.test}" ui:field="testBtn"/>

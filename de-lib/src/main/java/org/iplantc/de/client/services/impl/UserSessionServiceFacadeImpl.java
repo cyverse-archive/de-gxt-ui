@@ -13,6 +13,7 @@ import org.iplantc.de.client.models.userSettings.UserSetting;
 import org.iplantc.de.client.models.userSettings.UserSettingAutoBeanFactory;
 import org.iplantc.de.client.models.webhooks.Webhook;
 import org.iplantc.de.client.models.webhooks.WebhookList;
+import org.iplantc.de.client.models.webhooks.WebhookTypeList;
 import org.iplantc.de.client.models.webhooks.WebhooksAutoBeanFactory;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
@@ -143,7 +144,7 @@ public class UserSessionServiceFacadeImpl implements UserSessionServiceFacade {
     @Override
     public void testWebhook(String url, AsyncCallback<Void> callback) {
         //this needs to be moved up to a service
-      ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, url, constants.slackTemplate());
+      ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, url, constants.webhookTemplate());
       deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
     }
 
@@ -161,6 +162,20 @@ public class UserSessionServiceFacadeImpl implements UserSessionServiceFacade {
                 return null;
             }
         }); 
+    }
+
+    @Override
+    public void getWebhookTypes(DECallback<WebhookTypeList> callback) {
+        String address = deProperties.getUnproctedMuleServiceBaseUrl() + "webhooks/types";
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
+        deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, WebhookTypeList>(callback) {
+            @Override
+            protected WebhookTypeList convertFrom(String object) {
+             WebhookTypeList typeList = AutoBeanCodex.decode(hookFactory, WebhookTypeList.class, object).as();
+             return typeList;
+            }
+        });
+
     }
 
 

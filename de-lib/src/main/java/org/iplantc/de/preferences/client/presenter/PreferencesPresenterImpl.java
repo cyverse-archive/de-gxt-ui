@@ -4,6 +4,7 @@ import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.userSettings.UserSetting;
+import org.iplantc.de.client.models.webhooks.WebhookTypeList;
 import org.iplantc.de.client.services.OauthServiceFacade;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -15,6 +16,7 @@ import org.iplantc.de.preferences.client.PreferencesView;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
 import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
 import org.iplantc.de.preferences.client.events.TestWebhookClicked;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -62,16 +64,29 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
     public void go(DesktopView.Presenter presenter, UserSettings userSettings) {
         this.desktopPresenter = presenter;
         this.userSettings = userSettings;
-
-        if (userSettings.isUsingDefaults()) {
-            retryUserPreferences();
-        } else {
-            setUpView();
-        }
+        getWebhookTypes();
     }
 
-    void setUpView() {
-        view.initAndShow(userSettings);
+    void setUpView(WebhookTypeList typeList) {
+        view.initAndShow(userSettings, typeList);
+    }
+
+    private void getWebhookTypes() {
+        serviceFacade.getWebhookTypes(new AppsCallback<WebhookTypeList>() {
+            @Override
+            public void onFailure(Integer statusCode, Throwable exception) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.webhooktypeFailure()));
+            }
+
+            @Override
+            public void onSuccess(WebhookTypeList result) {
+                if (userSettings.isUsingDefaults()) {
+                    retryUserPreferences();
+                } else {
+                    setUpView(result);
+                }
+            }
+        });
     }
 
     @Override
@@ -104,14 +119,14 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
             @Override
             public void onFailure(Throwable caught) {
                 announcer.schedule(new ErrorAnnouncementConfig(appearance.preferencesFailure()));
-                setUpView();
+                setUpView(null);
             }
 
             @Override
             public void onSuccess(UserSetting result) {
                 announcer.schedule(new SuccessAnnouncementConfig(appearance.preferencesSuccess()));
                 userSettings.setUserSettings(result);
-                setUpView();
+                getWebhookTypes();
             }
         });
     }

@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.userSettings.UserSetting;
 import org.iplantc.de.client.models.webhooks.Webhook;
+import org.iplantc.de.client.models.webhooks.WebhookTypeList;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.DECallback;
 
@@ -31,4 +32,6 @@ public interface UserSessionServiceFacade {
     void testWebhook(String url, AsyncCallback<Void> callback);
 
     void updateWebhooks(List<Webhook> hooks, DECallback<Void> callback);
+
+    void getWebhookTypes(DECallback<WebhookTypeList> callback);
 }

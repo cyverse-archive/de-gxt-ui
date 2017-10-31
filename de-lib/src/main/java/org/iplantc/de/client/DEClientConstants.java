@@ -89,5 +89,5 @@ public interface DEClientConstants extends Constants {
 
     int maxFileSizeForSimpleUpload();
 
-    String slackTemplate();
+    String webhookTemplate();
 }

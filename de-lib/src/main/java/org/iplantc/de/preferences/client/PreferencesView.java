@@ -1,6 +1,7 @@
 package org.iplantc.de.preferences.client;
 
 import org.iplantc.de.client.models.UserSettings;
+import org.iplantc.de.client.models.webhooks.WebhookTypeList;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
 import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
@@ -135,13 +136,15 @@ public interface PreferencesView extends IsWidget,
         String general();
 
         String notification();
+
+        String webhooktypeFailure();
     }
 
     void userSessionSuccess();
 
     void userSessionFail();
 
-    void initAndShow(UserSettings userSettings);
+    void initAndShow(UserSettings userSettings, WebhookTypeList typeList);
 
     UserSettings getValue();
 
