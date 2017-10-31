@@ -27,7 +27,6 @@ import org.iplantc.de.diskResource.client.gin.factory.GenomeSearchViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewPresenterFactory;
 import org.iplantc.de.diskResource.client.gin.factory.NavigationViewFactory;
-import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewPresenterFactory;
 import org.iplantc.de.diskResource.client.presenters.DiskResourcePresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.dataLink.DataLinkPresenterImpl;
@@ -135,9 +134,7 @@ public class DiskResourceGinModule extends AbstractGinModule {
                     .build(GridViewFactory.class));
 
         // Toolbar
-        install(new GinFactoryModuleBuilder()
-                    .implement(ToolbarView.class, DiskResourceViewToolbarImpl.class)
-                    .build(ToolbarViewFactory.class));
+        bind(ToolbarView.class).to(DiskResourceViewToolbarImpl.class);
 
         install(new GinFactoryModuleBuilder()
                     .implement(ToolbarView.Presenter.class, ToolbarViewPresenterImpl.class)

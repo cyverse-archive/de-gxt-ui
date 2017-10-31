@@ -60,7 +60,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.box.MessageBox;
@@ -127,7 +126,6 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     @UiField
     TextButton uploadMenu;
     private static final DiskResourceViewToolbarUiBinder BINDER = GWT.create(DiskResourceViewToolbarUiBinder.class);
-    private final ToolbarView.Presenter presenter;
     private final UserInfo userInfo;
     private List<DiskResource> selectedDiskResources;
     private Folder selectedFolder;
@@ -137,12 +135,10 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     @Inject
     DiskResourceViewToolbarImpl(final DiskResourceSearchField searchField,
                                 final UserInfo userInfo,
-                                final ToolbarView.Appearance appearance,
-                                @Assisted final ToolbarView.Presenter presenter) {
+                                final ToolbarView.Appearance appearance) {
         this.searchField = searchField;
         this.userInfo = userInfo;
         this.appearance = appearance;
-        this.presenter = presenter;
         initWidget(BINDER.createAndBindUi(this));
     }
 
@@ -284,6 +280,52 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     @Override
     public HandlerRegistration addEditFileSelectedHandler(EditFileSelected.EditFileSelectedHandler handler) {
         return addHandler(handler, EditFileSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addCreateNewFolderSelectedHandler(CreateNewFolderSelected.CreateNewFolderSelectedHandler handler) {
+        return addHandler(handler, CreateNewFolderSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addCreateNcbiFolderStructureSelectedHandler(
+            CreateNcbiFolderStructureSelected.CreateNcbiFolderStructureSelectedHandler handler) {
+        return addHandler(handler, CreateNcbiFolderStructureSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addCreateNewFileSelectedHandler(CreateNewFileSelected.CreateNewFileSelectedHandler handler) {
+        return addHandler(handler, CreateNewFileSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addCreateNewPathListSelectedHandler(CreateNewPathListSelected.CreateNewPathListSelectedHandler handler) {
+        return addHandler(handler, CreateNewPathListSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addCreateNewDelimitedFileSelectedHandler(CreateNewDelimitedFileSelected.CreateNewDelimitedFileSelectedHandler handler) {
+        return addHandler(handler, CreateNewDelimitedFileSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addOpenNewWindowAtLocationSelectedHandler(OpenNewWindowAtLocationSelected.OpenNewWindowAtLocationSelectedHandler handler) {
+        return addHandler(handler, OpenNewWindowAtLocationSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addOpenNewWindowSelectedHandler(OpenNewWindowSelected.OpenNewWindowSelectedHandler handler) {
+        return addHandler(handler, OpenNewWindowSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addImportFromCogeBtnSelectedHandler(ImportFromCogeBtnSelected.ImportFromCogeBtnSelectedHandler handler) {
+        return addHandler(handler, ImportFromCogeBtnSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addRequestDOISelectedHandler(RequestDOISelected.RequestDOISelectedHandler handler) {
+        return addHandler(handler, RequestDOISelected.TYPE);
     }
 
     // </editor-fold>
@@ -861,51 +903,5 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     @Override
     public HandlerRegistration addCreatePublicLinkSelectedHandler(CreatePublicLinkSelected.CreatePublicLinkSelectedHandler handler) {
         return addHandler(handler, CreatePublicLinkSelected.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration addCreateNewFolderSelectedHandler(CreateNewFolderSelected.CreateNewFolderSelectedHandler handler) {
-        return addHandler(handler, CreateNewFolderSelected.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration addCreateNcbiFolderStructureSelectedHandler(
-            CreateNcbiFolderStructureSelected.CreateNcbiFolderStructureSelectedHandler handler) {
-        return addHandler(handler, CreateNcbiFolderStructureSelected.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration addCreateNewFileSelectedHandler(CreateNewFileSelected.CreateNewFileSelectedHandler handler) {
-        return addHandler(handler, CreateNewFileSelected.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration addCreateNewPathListSelectedHandler(CreateNewPathListSelected.CreateNewPathListSelectedHandler handler) {
-        return addHandler(handler, CreateNewPathListSelected.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration addCreateNewDelimitedFileSelectedHandler(CreateNewDelimitedFileSelected.CreateNewDelimitedFileSelectedHandler handler) {
-        return addHandler(handler, CreateNewDelimitedFileSelected.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration addOpenNewWindowAtLocationSelectedHandler(OpenNewWindowAtLocationSelected.OpenNewWindowAtLocationSelectedHandler handler) {
-        return addHandler(handler, OpenNewWindowAtLocationSelected.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration addOpenNewWindowSelectedHandler(OpenNewWindowSelected.OpenNewWindowSelectedHandler handler) {
-        return addHandler(handler, OpenNewWindowSelected.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration addImportFromCogeBtnSelectedHandler(ImportFromCogeBtnSelected.ImportFromCogeBtnSelectedHandler handler) {
-        return addHandler(handler, ImportFromCogeBtnSelected.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration addRequestDOISelectedHandler(RequestDOISelected.RequestDOISelectedHandler handler) {
-        return addHandler(handler, RequestDOISelected.TYPE);
     }
 }

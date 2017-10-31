@@ -49,7 +49,6 @@ import org.iplantc.de.diskResource.client.events.selection.RequestDOISelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected.SimpleDownloadSelectedHandler;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
-import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewFactory;
 import org.iplantc.de.diskResource.client.views.dialogs.CreateFolderDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.CreateNcbiSraFolderStructureDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.CreatePublicLinkDialog;
@@ -123,8 +122,8 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     Logger LOG = Logger.getLogger(ToolbarViewPresenterImpl.class.getSimpleName());
 
     @Inject
-    ToolbarViewPresenterImpl(final ToolbarViewFactory viewFactory) {
-        this.view = viewFactory.create(this);
+    ToolbarViewPresenterImpl(final ToolbarView view) {
+        this.view = view;
         view.addSimpleDownloadSelectedHandler(this);
         view.addAutomatePathListSelectedHandler(this);
         view.addNewMultiInputPathListFileSelectedHandler(this);
