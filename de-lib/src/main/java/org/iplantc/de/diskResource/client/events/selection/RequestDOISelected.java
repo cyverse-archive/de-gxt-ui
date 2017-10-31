@@ -8,7 +8,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * A GWT event that fires when the user has selected the Request DOI button in the Data window
  */
 public class RequestDOISelected extends GwtEvent<RequestDOISelected.RequestDOISelectedHandler> {
-    public static interface RequestDOISelectedHandler extends EventHandler {
+    public interface RequestDOISelectedHandler extends EventHandler {
         void onRequestDOISelected(RequestDOISelected event);
     }
 

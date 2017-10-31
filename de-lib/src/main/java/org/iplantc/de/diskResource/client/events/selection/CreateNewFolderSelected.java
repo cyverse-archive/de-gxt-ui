@@ -11,7 +11,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  */
 public class CreateNewFolderSelected
         extends GwtEvent<CreateNewFolderSelected.CreateNewFolderSelectedHandler> {
-    public static interface CreateNewFolderSelectedHandler extends EventHandler {
+    public interface CreateNewFolderSelectedHandler extends EventHandler {
         void onCreateNewFolderSelected(CreateNewFolderSelected event);
     }
 

@@ -18,6 +18,9 @@ import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * A utility class for functions used in Data window searches
+ */
 public class SearchModelUtils {
 
     private final List<String> fileSizeUnits = Lists.newArrayList("KB", "MB", "GB", "TB");

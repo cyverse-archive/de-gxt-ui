@@ -169,8 +169,6 @@ public class DiskResourceGinModule extends AbstractGinModule {
         bind(OntologyLookupServiceProxy.class);
         bind(AstroThesaurusProxy.class);
 
-//        bind(MetadataUtil.class).in(Singleton.class);
-
         install(new GinFactoryModuleBuilder().implement(SharingPresenter.class,
                                                         DataSharingPresenterImpl.class)
                                              .build(DataSharingPresenterFactory.class));

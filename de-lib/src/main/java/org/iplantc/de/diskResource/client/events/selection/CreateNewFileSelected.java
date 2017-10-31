@@ -11,7 +11,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * A GWT event fired when the user selects the Create New File button in the Data window
  */
 public class CreateNewFileSelected extends GwtEvent<CreateNewFileSelected.CreateNewFileSelectedHandler> {
-    public static interface CreateNewFileSelectedHandler extends EventHandler {
+    public interface CreateNewFileSelectedHandler extends EventHandler {
         void onCreateNewFileSelected(CreateNewFileSelected event);
     }
 

@@ -9,7 +9,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  */
 public class CreateNewDelimitedFileSelected
         extends GwtEvent<CreateNewDelimitedFileSelected.CreateNewDelimitedFileSelectedHandler> {
-    public static interface CreateNewDelimitedFileSelectedHandler extends EventHandler {
+    public interface CreateNewDelimitedFileSelectedHandler extends EventHandler {
         void onCreateNewDelimitedFileSelected(CreateNewDelimitedFileSelected event);
     }
 

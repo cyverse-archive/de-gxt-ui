@@ -28,6 +28,9 @@ import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A view that displays the sharing details to the user, either grouped by user or data
+ */
 public class ShareBreakDownView extends Composite {
 
     interface MyUiBinder extends UiBinder<Widget, ShareBreakDownView> {

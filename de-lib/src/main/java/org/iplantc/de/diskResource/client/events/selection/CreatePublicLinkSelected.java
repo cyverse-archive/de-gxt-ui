@@ -14,7 +14,7 @@ import java.util.List;
 
 public class CreatePublicLinkSelected
         extends GwtEvent<CreatePublicLinkSelected.CreatePublicLinkSelectedHandler> {
-    public static interface CreatePublicLinkSelectedHandler extends EventHandler {
+    public interface CreatePublicLinkSelectedHandler extends EventHandler {
         void onCreatePublicLinkSelected(CreatePublicLinkSelected event);
     }
 

@@ -20,6 +20,9 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
+/**
+ * A utility class to move AVU logic out of metadata-related views
+ */
 @Singleton
 public class MetadataUtil {
 

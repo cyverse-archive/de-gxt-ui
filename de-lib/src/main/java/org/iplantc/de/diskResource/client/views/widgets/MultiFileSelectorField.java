@@ -152,12 +152,12 @@ public class MultiFileSelectorField extends Composite implements
         }
     }
 
-    private final class FileFolderSelectDailogHideHandler implements DialogHideHandler {
+    private final class FileFolderSelectDialogHideHandler implements DialogHideHandler {
 
         private final FileFolderSelectDialog dlg;
         private final ListStore<DiskResource> store;
 
-        public FileFolderSelectDailogHideHandler(final FileFolderSelectDialog dlg,
+        public FileFolderSelectDialogHideHandler(final FileFolderSelectDialog dlg,
                                                  final ListStore<DiskResource> store) {
             this.dlg = dlg;
             this.store = store;
@@ -475,7 +475,7 @@ public class MultiFileSelectorField extends Composite implements
                 @Override
                 public void onSuccess(FileFolderSelectDialog result) {
                     HasPath hasPath = CommonModelUtils.getInstance().createHasPathFromString(path);
-                    result.addDialogHideHandler(new FileFolderSelectDailogHideHandler(result, listStore));
+                    result.addDialogHideHandler(new FileFolderSelectDialogHideHandler(result, listStore));
                     result.show(hasPath, null, null, false);
                 }
 

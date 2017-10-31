@@ -11,7 +11,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  */
 public class ImportGenomeFromCogeSelected
         extends GwtEvent<ImportGenomeFromCogeSelected.ImportGenomeFromCogeSelectedHandler> {
-    public static interface ImportGenomeFromCogeSelectedHandler extends EventHandler {
+    public interface ImportGenomeFromCogeSelectedHandler extends EventHandler {
         void onImportGenomeFromCogeSelected(ImportGenomeFromCogeSelected event);
     }
 

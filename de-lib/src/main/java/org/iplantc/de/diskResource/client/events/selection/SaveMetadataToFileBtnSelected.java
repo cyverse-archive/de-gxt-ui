@@ -4,9 +4,12 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
+/**
+ *  A GWT event that fires when the user selects the "Save Metadata to File" button in the MetadataView
+ */
 public class SaveMetadataToFileBtnSelected
         extends GwtEvent<SaveMetadataToFileBtnSelected.SaveMetadataToFileBtnSelectedHandler> {
-    public static interface SaveMetadataToFileBtnSelectedHandler extends EventHandler {
+    public interface SaveMetadataToFileBtnSelectedHandler extends EventHandler {
         void onSaveMetadataToFileBtnSelected(SaveMetadataToFileBtnSelected event);
     }
 

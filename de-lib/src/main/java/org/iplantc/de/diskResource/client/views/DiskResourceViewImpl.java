@@ -1,6 +1,5 @@
 package org.iplantc.de.diskResource.client.views;
 
-import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.diskResource.client.DetailsView;
 import org.iplantc.de.diskResource.client.DiskResourceView;
 import org.iplantc.de.diskResource.client.GridView;
@@ -10,7 +9,6 @@ import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -18,7 +16,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData;
@@ -57,29 +54,6 @@ public class DiskResourceViewImpl extends Composite implements DiskResourceView 
         this.detailsView = detailsPresenter.getView();
 
         initWidget(BINDER.createAndBindUi(this));
-
-        // FIXME This shouldn't be necessary
-        con.setNorthWidget(toolbar, northData);
-    }
-
-    // FIXME This shouldn't be necessary
-    @UiFactory
-    public ValueProvider<Folder, String> createValueProvider() {
-        return new ValueProvider<Folder, String>() {
-
-            @Override
-            public String getValue(Folder object) {
-                return object.getName();
-            }
-
-            @Override
-            public void setValue(Folder object, String value) {}
-
-            @Override
-            public String getPath() {
-                return "name"; //$NON-NLS-1$
-            }
-        };
     }
 
     @Override

@@ -27,6 +27,9 @@ public interface MetadataView extends IsWidget,
                                       ImportMetadataBtnSelected.HasImportMetadataBtnSelectedHandlers,
                                       SaveMetadataToFileBtnSelected.HasSaveMetadataToFileBtnSelectedHandlers {
 
+    /**
+     * An appearance class for MetadataView
+     */
     interface Appearance {
 
         String attribute();
@@ -133,11 +136,11 @@ public interface MetadataView extends IsWidget,
     }
 
     /**
-     * A presenter to to handle the logic for MetadataView
+     * A presenter to handle the logic for MetadataView
      */
-    public interface Presenter {
+    interface Presenter {
 
-        final String AVU_BEAN_TAG_MODEL_KEY = "model-key";
+        String AVU_BEAN_TAG_MODEL_KEY = "model-key";
 
         void setViewDebugId(String debugId);
 

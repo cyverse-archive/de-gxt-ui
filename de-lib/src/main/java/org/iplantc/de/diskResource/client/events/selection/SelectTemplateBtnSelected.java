@@ -9,7 +9,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  */
 public class SelectTemplateBtnSelected
         extends GwtEvent<SelectTemplateBtnSelected.SelectTemplateBtnSelectedHandler> {
-    public static interface SelectTemplateBtnSelectedHandler extends EventHandler {
+    public interface SelectTemplateBtnSelectedHandler extends EventHandler {
         void onSelectTemplateBtnSelected(SelectTemplateBtnSelected event);
     }
 

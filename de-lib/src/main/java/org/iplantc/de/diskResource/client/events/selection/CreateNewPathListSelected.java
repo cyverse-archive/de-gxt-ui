@@ -5,11 +5,11 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * A GWT even that fires when the user selects the Create HT Path List button in the Data window
+ * A GWT event that fires when the user selects the Create HT Path List button in the Data window
  */
 public class CreateNewPathListSelected
         extends GwtEvent<CreateNewPathListSelected.CreateNewPathListSelectedHandler> {
-    public static interface CreateNewPathListSelectedHandler extends EventHandler {
+    public interface CreateNewPathListSelectedHandler extends EventHandler {
         void onCreateNewPathListSelected(CreateNewPathListSelected event);
     }
 

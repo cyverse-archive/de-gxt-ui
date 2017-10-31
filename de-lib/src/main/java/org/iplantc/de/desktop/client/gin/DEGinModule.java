@@ -174,11 +174,6 @@ public class DEGinModule extends AbstractGinModule {
         return SearchModelUtils.getInstance();
     }
 
-//    @Provides @Singleton public MetadataUtil createMetadataUtil() {
-//        return MetadataUtil.getInstance();
-//    }
-
-
     @Override
     protected void configure() {
         bind(DesktopView.class).to(DesktopViewImpl.class);

@@ -11,6 +11,7 @@ import com.sencha.gxt.widget.core.client.Dialog;
 import java.util.List;
 
 /**
+ * A dialog that opens when the user clicks on the "Visibility Explained" button in any of the sharing dialogs
  * @author sriram, jstroot
  * 
  */

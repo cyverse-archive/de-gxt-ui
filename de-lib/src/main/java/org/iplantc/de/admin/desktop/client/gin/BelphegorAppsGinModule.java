@@ -119,10 +119,6 @@ public class BelphegorAppsGinModule extends AbstractGinModule {
         return UserSettings.getInstance();
     }
 
-//    @Provides @Singleton public MetadataUtil createMetadataUtil() {
-//        return MetadataUtil.getInstance();
-//    }
-
     @Provides
     public DEProperties createDeProps() {
         return DEProperties.getInstance();

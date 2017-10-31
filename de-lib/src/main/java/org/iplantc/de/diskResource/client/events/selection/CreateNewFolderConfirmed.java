@@ -11,7 +11,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  */
 public class CreateNewFolderConfirmed
         extends GwtEvent<CreateNewFolderConfirmed.CreateNewFolderConfirmedHandler> {
-    public static interface CreateNewFolderConfirmedHandler extends EventHandler {
+    public interface CreateNewFolderConfirmedHandler extends EventHandler {
         void onCreateNewFolderConfirmed(CreateNewFolderConfirmed event);
     }
 

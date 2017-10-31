@@ -8,9 +8,12 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 import java.util.List;
 
+/**
+ * A GWT event that fires when the user clicks on the "Import to User Metadata" button in the MetadataView
+ */
 public class ImportMetadataBtnSelected
         extends GwtEvent<ImportMetadataBtnSelected.ImportMetadataBtnSelectedHandler> {
-    public static interface ImportMetadataBtnSelectedHandler extends EventHandler {
+    public interface ImportMetadataBtnSelectedHandler extends EventHandler {
         void onImportMetadataBtnSelected(ImportMetadataBtnSelected event);
     }
 

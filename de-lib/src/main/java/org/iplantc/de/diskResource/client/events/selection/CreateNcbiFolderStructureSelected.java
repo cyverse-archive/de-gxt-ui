@@ -11,7 +11,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  */
 public class CreateNcbiFolderStructureSelected
         extends GwtEvent<CreateNcbiFolderStructureSelected.CreateNcbiFolderStructureSelectedHandler> {
-    public static interface CreateNcbiFolderStructureSelectedHandler extends EventHandler {
+    public interface CreateNcbiFolderStructureSelectedHandler extends EventHandler {
         void onCreateNcbiFolderStructureSelected(CreateNcbiFolderStructureSelected event);
     }
 

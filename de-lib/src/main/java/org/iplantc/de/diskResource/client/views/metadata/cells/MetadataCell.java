@@ -6,6 +6,9 @@ import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.inject.Inject;
 
+/**
+ * A cell used in the MetadataView to show an AVU with tooltips
+ */
 public final class MetadataCell extends AbstractCell<String> {
     private MetadataView.Appearance appearance;
 

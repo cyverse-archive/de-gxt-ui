@@ -11,7 +11,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  */
 public class OpenNewWindowAtLocationSelected
         extends GwtEvent<OpenNewWindowAtLocationSelected.OpenNewWindowAtLocationSelectedHandler> {
-    public static interface OpenNewWindowAtLocationSelectedHandler extends EventHandler {
+    public interface OpenNewWindowAtLocationSelectedHandler extends EventHandler {
         void onOpenNewWindowAtLocationSelected(OpenNewWindowAtLocationSelected event);
     }
 

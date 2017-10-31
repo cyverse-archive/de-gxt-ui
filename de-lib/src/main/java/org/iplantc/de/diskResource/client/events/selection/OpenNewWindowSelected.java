@@ -8,7 +8,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * A GWT event that fires when the user selects the New Data Window button in the Data window
  */
 public class OpenNewWindowSelected extends GwtEvent<OpenNewWindowSelected.OpenNewWindowSelectedHandler> {
-    public static interface OpenNewWindowSelectedHandler extends EventHandler {
+    public interface OpenNewWindowSelectedHandler extends EventHandler {
         void onOpenNewWindowSelected(OpenNewWindowSelected event);
     }
 

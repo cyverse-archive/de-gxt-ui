@@ -12,7 +12,7 @@ import java.util.List;
  * A GWT event that fires when the user selects the Edit File button in the Data window
  */
 public class EditFileSelected extends GwtEvent<EditFileSelected.EditFileSelectedHandler> {
-    public static interface EditFileSelectedHandler extends EventHandler {
+    public interface EditFileSelectedHandler extends EventHandler {
         void onEditFileSelected(EditFileSelected event);
     }
 
