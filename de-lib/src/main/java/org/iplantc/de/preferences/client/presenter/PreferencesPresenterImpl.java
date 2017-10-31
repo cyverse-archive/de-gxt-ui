@@ -71,7 +71,7 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
         view.initAndShow(userSettings, typeList);
     }
 
-    private void getWebhookTypes() {
+    void getWebhookTypes() {
         serviceFacade.getWebhookTypes(new AppsCallback<WebhookTypeList>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
