@@ -148,7 +148,7 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         this.resetHpcfield = new HTML(appearance.resetHpcPrompt());
         this.webhooksfield = new HTML(appearance.webhooksPrompt());
 
-        ListStore<WebhookType> typeListStore = new ListStore<>(item -> item.getId());
+        ListStore<WebhookType> typeListStore = new ListStore<>(item -> item.getType());
         typeCombo = new ComboBox<>(typeListStore, item -> item.getType());
         typeCombo.setEditable(false);
 
