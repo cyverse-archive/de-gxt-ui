@@ -26,6 +26,7 @@ public class HTPathListAutomationDialog extends IPlantDialog {
         setHideOnButtonClick(false);
         setHeading(htAppearance.dialogHeading());
         setSize(htAppearance.dialogWidth(), htAppearance.dialogHeight());
+        setModal(false);
     }
 
     public void show(List<InfoType> infoTypes) {
