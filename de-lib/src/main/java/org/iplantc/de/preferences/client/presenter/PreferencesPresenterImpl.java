@@ -75,7 +75,8 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
         serviceFacade.getWebhookTypes(new AppsCallback<WebhookTypeList>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
-                announcer.schedule(new ErrorAnnouncementConfig(appearance.webhooktypeFailure()));
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.webhookTypeFailure()));
+                setUpView(null);
             }
 
             @Override

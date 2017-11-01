@@ -336,7 +336,7 @@ public class PreferencesViewDefaultAppearance implements PreferencesView.Prefere
     }
 
     @Override
-    public String webhooktypeFailure() {
-        return desktopMessages.webhooktypeFailure();
+    public String webhookTypeFailure() {
+        return desktopMessages.webhookTypeFailure();
     }
 }

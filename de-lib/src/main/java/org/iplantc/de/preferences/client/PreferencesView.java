@@ -137,7 +137,7 @@ public interface PreferencesView extends IsWidget,
 
         String notification();
 
-        String webhooktypeFailure();
+        String webhookTypeFailure();
     }
 
     void userSessionSuccess();

@@ -208,7 +208,9 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @Override
     public void initAndShow(final UserSettings userSettings, WebhookTypeList typeList) {
         this.usValue = userSettings;
-        typeCombo.getStore().addAll(typeList.getTypes());
+        if (typeList!=null) {
+            typeCombo.getStore().addAll(typeList.getTypes());
+        }
         if (userSettings.getWebhooks() != null && userSettings.getWebhooks().size() > 0) {
             Webhook webhook = userSettings.getWebhooks().get(0);
             List<String> topics = webhook.getTopics();
