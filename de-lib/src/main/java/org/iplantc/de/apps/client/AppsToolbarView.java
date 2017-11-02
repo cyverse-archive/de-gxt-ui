@@ -16,7 +16,6 @@ import org.iplantc.de.apps.client.events.selection.EditWorkflowSelected;
 import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.PublishAppSelected;
 import org.iplantc.de.apps.client.events.selection.RefreshAppsSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.RequestToolSelected;
 import org.iplantc.de.apps.client.events.selection.RunAppSelected;
 import org.iplantc.de.apps.client.events.selection.ShareAppsSelected;
 
@@ -44,7 +43,6 @@ public interface AppsToolbarView extends IsWidget,
                                          DeleteAppsSelected.HasDeleteAppsSelectedHandlers,
                                          EditAppSelected.HasEditAppSelectedHandlers,
                                          EditWorkflowSelected.HasEditWorkflowSelectedHandlers,
-                                         RequestToolSelected.HasRequestToolSelectedHandlers,
                                          ShareAppsSelected.HasShareAppSelectedHandlers,
                                          OntologyHierarchySelectionChangedEvent.OntologyHierarchySelectionChangedEventHandler,
                                          SwapViewButtonClickedEvent.HasSwapViewButtonClickedEventHandlers,

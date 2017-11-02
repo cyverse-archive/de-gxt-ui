@@ -19,7 +19,6 @@ import org.iplantc.de.apps.client.events.selection.EditWorkflowSelected;
 import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.PublishAppSelected;
 import org.iplantc.de.apps.client.events.selection.RefreshAppsSelectedEvent;
-import org.iplantc.de.apps.client.events.selection.RequestToolSelected;
 import org.iplantc.de.apps.client.events.selection.RunAppSelected;
 import org.iplantc.de.apps.client.events.selection.ShareAppsSelected;
 import org.iplantc.de.apps.shared.AppsModule.Ids;
@@ -98,8 +97,6 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
     @UiField
     MenuItem editWf;
     @UiField
-    MenuItem requestTool;
-    @UiField
     MenuItem shareCollab, sharePublic;
     @UiField
     MenuItem wfRun;
@@ -169,11 +166,6 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
     @Override
     public HandlerRegistration addEditWorkflowSelectedHandler(EditWorkflowSelected.EditWorkflowSelectedHandler handler) {
         return addHandler(handler, EditWorkflowSelected.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration addRequestToolSelectedHandler(RequestToolSelected.RequestToolSelectedHandler handler) {
-        return addHandler(handler, RequestToolSelected.TYPE);
     }
 
     @Override
@@ -361,7 +353,6 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
         appMenu.ensureDebugId(baseID + Ids.MENU_ITEM_APPS);
         appRun.ensureDebugId(baseID + Ids.MENU_ITEM_APPS + Ids.MENU_ITEM_USE_APP);
         createNewApp.ensureDebugId(baseID + Ids.MENU_ITEM_APPS + Ids.MENU_ITEM_CREATE_APP);
-        requestTool.ensureDebugId(baseID + Ids.MENU_ITEM_APPS + Ids.MENU_ITEM_REQUEST_TOOL);
         copyApp.ensureDebugId(baseID + Ids.MENU_ITEM_APPS + Ids.MENU_ITEM_COPY_APP);
         editApp.ensureDebugId(baseID + Ids.MENU_ITEM_APPS + Ids.MENU_ITEM_EDIT_APP);
         deleteApp.ensureDebugId(baseID + Ids.MENU_ITEM_APPS + Ids.MENU_ITEM_DELETE_APP);
@@ -486,11 +477,6 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
     void editWfClicked(SelectionEvent<Item> event) {
         Preconditions.checkState(currentSelection.size() == 1);
         fireEvent(new EditWorkflowSelected(currentSelection.iterator().next()));
-    }
-
-    @UiHandler("requestTool")
-    void requestToolClicked(SelectionEvent<Item> event) {
-        fireEvent(new RequestToolSelected());
     }
 
     @UiHandler({ "sharePublic" })
