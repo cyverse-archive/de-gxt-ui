@@ -75,7 +75,7 @@ public class GridViewDefaultAppearance implements GridView.Appearance {
 
     @Override
     public int liveGridViewRowHeight() {
-        return 25;
+        return 28;
     }
 
     @Override
