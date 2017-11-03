@@ -7,6 +7,12 @@ package org.iplantc.de.client.util;
  */
 public class CopyToClipboardUtil {
 
+    /**
+     * Copy text value from the textfield to clipboard
+     *
+     * @param id id of the textfield
+     * @return boolean whether copy succeeded or failed.
+     */
     public static native boolean copyToClipboard(String id) /*-{
         var copyText = $doc.getElementById(id);
         copyText.select();
@@ -22,6 +28,11 @@ public class CopyToClipboardUtil {
         }
     }-*/;
 
+    /**
+     * Check if copy is supported by browser
+     *
+     * @return boolean
+     */
     public static native boolean isSupported() /*-{
         try {
             return $doc.queryCommandSupported('copy');
@@ -30,6 +41,11 @@ public class CopyToClipboardUtil {
         }
     }-*/;
 
+    /**
+     * Check if copy is enabled. Disabled unitl user events like 'Click'
+     *
+     * @return boolean
+     */
     public static native boolean isEnabled() /*-{
         try {
             return $doc.queryCommandEnabled('copy');
