@@ -119,8 +119,8 @@ public class FileUploadByUrlViewImpl extends Composite implements FileUploadByUr
 
     @Override
     public boolean isValidForm(){
-        for(Map.Entry<Field<String>, Status> entry : fieldToStatusMap.entrySet()){
-            ValueBaseField<String> valueBaseField = (ValueBaseField<String>)entry.getKey();
+        for(Field<String> key : fieldToStatusMap.keySet()){
+            ValueBaseField<String> valueBaseField = (ValueBaseField<String>)key;
             if ((valueBaseField.getCurrentValue() != null) && !valueBaseField.getCurrentValue().isEmpty()) {
                 return true;
             }
