@@ -22,7 +22,8 @@ import com.google.inject.Inject;
 import com.sencha.gxt.widget.core.client.Dialog;
 
 /**
- * Created by sriram on 7/7/16.
+ * A cell in SelectMetadataTemplateView that displays an info button.  Clicking the info button opens
+ * a dialog with a description of the template
  */
 public class TemplateInfoCell extends AbstractCell<MetadataTemplateInfo> implements
                                                                          MetadataInfoBtnSelected.HasMetadataInfoBtnSelectedHandlers {

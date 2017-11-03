@@ -17,7 +17,8 @@ import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import java.util.List;
 
 /**
- * Created by sriram on 5/4/16.
+ * A dialog that is displayed when the user either selects the "Download Template" button in the Data window
+ * or chooses "Select Template..." in the ManageMetadata dialog
  */
 public class SelectMetadataTemplateDialog extends IPlantDialog implements IsWidget,
                                                                           SelectionChangedEvent.SelectionChangedHandler<MetadataTemplateInfo>,

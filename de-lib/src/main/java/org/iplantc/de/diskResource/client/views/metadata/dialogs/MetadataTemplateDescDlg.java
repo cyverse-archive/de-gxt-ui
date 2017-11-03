@@ -24,6 +24,10 @@ public class MetadataTemplateDescDlg extends IPlantDialog {
         setPredefinedButtons(PredefinedButton.CANCEL);
     }
 
+    /**
+     * Displays the MetadataTemplateDescDlg with the specified template info's description
+     * @param info
+     */
     public void show(MetadataTemplateInfo info) {
         HTML desc = new HTML(info.getDescription());
         desc.setStylePrimaryName(appearance.background());

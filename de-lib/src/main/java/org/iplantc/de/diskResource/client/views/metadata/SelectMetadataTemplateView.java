@@ -29,6 +29,9 @@ import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * A view that shows users the list of metadata templates they can choose from
+ */
 public class SelectMetadataTemplateView extends Composite implements SelectionChangedEvent.HasSelectionChangedHandlers<MetadataTemplateInfo>,
                                                                      MetadataInfoBtnSelected.HasMetadataInfoBtnSelectedHandlers {
 

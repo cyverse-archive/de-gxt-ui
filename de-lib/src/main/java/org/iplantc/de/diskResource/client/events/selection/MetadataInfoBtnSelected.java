@@ -11,7 +11,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  */
 public class MetadataInfoBtnSelected
         extends GwtEvent<MetadataInfoBtnSelected.MetadataInfoBtnSelectedHandler> {
-    public static interface MetadataInfoBtnSelectedHandler extends EventHandler {
+    public interface MetadataInfoBtnSelectedHandler extends EventHandler {
         void onMetadataInfoBtnSelected(MetadataInfoBtnSelected event);
     }
 
