@@ -51,6 +51,10 @@ public class DiskResourceDotMenuCell extends AbstractCell<DiskResource> implemen
         String metadataText();
 
         ImageResource metadataIcon();
+
+        String copyPathText();
+
+        ImageResource copyPathIcon();
     }
 
     private DiskResourceDotMenuAppearance appearance;

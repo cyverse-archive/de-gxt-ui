@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.diskResource.client.events.RequestDiskResourceFavoriteEvent;
+import org.iplantc.de.diskResource.client.events.selection.CopyPathSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected;
@@ -17,7 +18,7 @@ import com.sencha.gxt.widget.core.client.menu.Menu;
 import com.sencha.gxt.widget.core.client.menu.MenuItem;
 
 /**
- * A menu containing the Favorite, Data Link, Share, Metadata, and Comment buttons as menu items
+ * A menu containing the Favorite, Data Link, Share, Metadata, Comment and Copy path buttons as menu items
  * @author aramsey
  */
 public class DiskResourceDotMenu extends Menu {
@@ -28,6 +29,7 @@ public class DiskResourceDotMenu extends Menu {
     private MenuItem shareBtn;
     private MenuItem metadataBtn;
     private MenuItem commentBtn;
+    private MenuItem copyPathBtn;
 
     public DiskResourceDotMenu(DiskResourceDotMenuCell.DiskResourceDotMenuAppearance appearance,
                                DiskResource diskResource,
@@ -47,6 +49,7 @@ public class DiskResourceDotMenu extends Menu {
             shareBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new ManageSharingSelected(diskResource)));
             metadataBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new ManageMetadataSelected(diskResource)));
             commentBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new ManageCommentsSelected(diskResource)));
+            copyPathBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new CopyPathSelected(diskResource)));
         }
     }
 
@@ -56,12 +59,14 @@ public class DiskResourceDotMenu extends Menu {
         shareBtn = new MenuItem(appearance.shareText(), appearance.shareIcon());
         metadataBtn = new MenuItem(appearance.metadataText(), appearance.metadataIcon());
         commentBtn = new MenuItem(appearance.commentText(), appearance.commentIcon());
+        copyPathBtn = new MenuItem(appearance.copyPathText(), appearance.copyPathIcon());
 
         add(favoriteBtn);
         add(dataLinkBtn);
         add(shareBtn);
         add(metadataBtn);
         add(commentBtn);
+        add(copyPathBtn);
     }
 
     void checkButtonStatus(DiskResource diskResource) {
@@ -84,5 +89,6 @@ public class DiskResourceDotMenu extends Menu {
         shareBtn.setId(baseID + DiskResourceModule.Ids.ACTION_CELL_SHARE);
         metadataBtn.setId(baseID + DiskResourceModule.Ids.ACTION_CELL_METADATA);
         commentBtn.setId(baseID + DiskResourceModule.Ids.ACTION_CELL_COMMENTS);
+        copyPathBtn.setId(baseID + DiskResourceModule.Ids.ACTION_CEL_COPYPATH);
     }
 }

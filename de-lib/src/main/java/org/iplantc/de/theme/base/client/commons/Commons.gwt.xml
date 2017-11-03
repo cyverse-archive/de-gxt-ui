@@ -67,4 +67,9 @@
         <when-type-is class="org.iplantc.de.commons.client.views.sharing.SharingPermissionNameCell.SharingPermissionNameCellAppearance" />
     </replace-with>
 
+    <!--ClipbaordCopy Appearance -->
+    <replace-with class="org.iplantc.de.theme.base.client.commons.views.dialogs.ClipboardCopyEnabledDefaultAppearance">
+        <when-type-is class="org.iplantc.de.commons.client.views.dialogs.ClipboardCopyEnabledDialog.Appearance" />
+    </replace-with>
+
 </module>

@@ -14,6 +14,7 @@ import org.iplantc.de.diskResource.client.events.TemplateDownloadEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.SubmitDiskResourceQueryEventHandler;
 import org.iplantc.de.diskResource.client.events.selection.BulkMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected.CopyMetadataSelectedEventHandler;
+import org.iplantc.de.diskResource.client.events.selection.CopyPathSelected;
 import org.iplantc.de.diskResource.client.events.selection.DNDDiskResourcesCompleted;
 import org.iplantc.de.diskResource.client.events.selection.DownloadTemplateSelectedEvent;
 import org.iplantc.de.diskResource.client.events.selection.EditInfoTypeSelected.EditInfoTypeSelectedEventHandler;
@@ -135,15 +136,14 @@ public interface GridView extends IsWidget,
                                 TemplateDownloadEvent.TemplateDownloadEventHandler,
                                 FetchDetailsCompleted.HasFetchDetailsCompletedHandlers,
                                 DNDDiskResourcesCompleted.HasDNDDiskResourcesCompletedHandlers,
-                                BulkMetadataSelected.BulkMetadataSelectedHandler {
+                                BulkMetadataSelected.BulkMetadataSelectedHandler,
+                                CopyPathSelected.CopyPathSelectedEventHandler {
 
         interface Appearance {
 
             String comments();
 
             String dataLinkTitle();
-
-            String copyPasteInstructions();
 
             String createDataLinksError();
 
@@ -224,6 +224,8 @@ public interface GridView extends IsWidget,
             String bulkMetadataError();
 
             String bulkMetadataSuccess();
+
+            String copyPath();
         }
 
         void deSelectDiskResources();

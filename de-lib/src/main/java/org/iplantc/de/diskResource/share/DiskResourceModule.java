@@ -60,6 +60,8 @@ public interface DiskResourceModule {
         String ACTION_CELL_METADATA = ".actionCellMetadata";
         String ACTION_CELL_FAVORITE = ".favorite";
         String ACTION_CELL_COMMENTS = ".comments";
+        String ACTION_CEL_COPYPATH =".copyPath";
+        
         String NAME_CELL = ".nameCell";
         String PATH_CELL = ".pathCell";
         String DETAILS = ".details";
@@ -127,6 +129,8 @@ public interface DiskResourceModule {
         String SAVE_AS_DIALOG = "saveAsDlg";
         String FILE_NAME = ".fileName";
         String METADATA_DESC_DLG = "metadataDescDlg";
+        String LINK_TEXT = ".linkText";
+        String SHARE_LINK_DLG = ".shareLinkDlg";
     }
 
     interface MetadataIds {

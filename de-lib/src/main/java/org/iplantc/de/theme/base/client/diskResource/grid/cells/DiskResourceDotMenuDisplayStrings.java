@@ -8,4 +8,6 @@ public interface DiskResourceDotMenuDisplayStrings extends Messages {
     String metadataText();
 
     String dataLinkFolderText();
+
+    String copyPathText();
 }

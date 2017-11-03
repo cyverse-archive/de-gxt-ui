@@ -7,6 +7,7 @@ import org.iplantc.de.diskResource.client.events.DiskResourceNameSelectedEvent;
 import org.iplantc.de.diskResource.client.events.DiskResourcePathSelectedEvent;
 import org.iplantc.de.diskResource.client.events.RequestDiskResourceFavoriteEvent;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected;
+import org.iplantc.de.diskResource.client.events.selection.CopyPathSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected;
@@ -44,7 +45,8 @@ public class DiskResourceColumnModel extends ColumnModel<DiskResource> implement
                                                                                   CopyMetadataSelected.HasCopyMetadataSelectedEventHandlers,
                                                                                   RequestDiskResourceFavoriteEvent.HasManageFavoritesEventHandlers,
                                                                                   ManageCommentsSelected.HasManageCommentsSelectedEventHandlers,
-                                                                                  DiskResourcePathSelectedEvent.HasDiskResourcePathSelectedEventHandlers {
+                                                                                  DiskResourcePathSelectedEvent.HasDiskResourcePathSelectedEventHandlers,
+                                                                                  CopyPathSelected.HasCopyPathSelectedEventHandlers {
 
 
     public DiskResourceColumnModel(@SuppressWarnings("rawtypes") final CheckBoxSelectionModel sm,
@@ -180,4 +182,10 @@ public class DiskResourceColumnModel extends ColumnModel<DiskResource> implement
             }
         }
     }
+
+    @Override
+    public HandlerRegistration addHasCopyPathSelectedEventHandlers(CopyPathSelected.CopyPathSelectedEventHandler handler) {
+        return ensureHandlers().addHandler(CopyPathSelected.TYPE, handler);
+    }
+
 }

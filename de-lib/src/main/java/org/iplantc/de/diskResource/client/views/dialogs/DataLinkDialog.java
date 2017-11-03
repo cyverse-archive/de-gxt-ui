@@ -1,22 +1,18 @@
 package org.iplantc.de.diskResource.client.views.dialogs;
 
-import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
+import org.iplantc.de.commons.client.views.dialogs.ClipboardCopyEnabledDialog;
 import org.iplantc.de.diskResource.client.DataLinkView;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 
-import com.google.gwt.user.client.ui.Label;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.Dialog;
-import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
-import com.sencha.gxt.widget.core.client.form.TextField;
 
 /**
  * A dialog that simply shows the user a public link to a disk resource for the purpose of copying the URL
  */
-public class DataLinkDialog extends IPlantDialog {
+public class DataLinkDialog extends ClipboardCopyEnabledDialog {
 
-    private TextField dataLinkUrl;
     private DataLinkView.Appearance appearance;
 
     @Inject
@@ -28,26 +24,16 @@ public class DataLinkDialog extends IPlantDialog {
         setResizable(false);
         setPredefinedButtons(Dialog.PredefinedButton.OK);
         setSize(appearance.copyDataLinkDlgWidth(), appearance.copyDataLinkDlgHeight());
-        addLinkTextField();
-
-        VerticalLayoutContainer container = new VerticalLayoutContainer();
-        setWidget(container);
-        container.add(dataLinkUrl);
-        container.add(new Label(appearance.copyPasteInstructions()));
     }
 
-    void addLinkTextField() {
-        dataLinkUrl = new TextField();
-        dataLinkUrl.setWidth(appearance.copyDataLinkDlgTextBoxWidth());
-        dataLinkUrl.setReadOnly(true);
-    }
 
     public void show(String url) {
-        dataLinkUrl.setValue(url);
-        setFocusWidget(dataLinkUrl);
-        dataLinkUrl.selectAll();
+        textBox.setValue(url);
+        setFocusWidget(textBox);
 
         ensureDebugId(DiskResourceModule.Ids.DATA_LINK_DLG);
+        textBox.getElement()
+               .setId(DiskResourceModule.Ids.DATA_LINK_DLG + DiskResourceModule.Ids.DATA_LINK_URL);
 
         super.show();
     }
@@ -62,6 +48,6 @@ public class DataLinkDialog extends IPlantDialog {
         super.onEnsureDebugId(baseID);
 
         getButton(PredefinedButton.OK).asWidget().ensureDebugId(baseID + DiskResourceModule.Ids.OK_BTN);
-        dataLinkUrl.ensureDebugId(baseID + DiskResourceModule.Ids.DATA_LINK_URL);
+        textBox.ensureDebugId(baseID + DiskResourceModule.Ids.DATA_LINK_URL);
     }
 }

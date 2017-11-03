@@ -96,4 +96,8 @@ public interface GridViewDisplayStrings extends Messages {
     String infoTypeEmptyText();
 
     String selectionCountStatus(int selectionCount);
+
+    String copyPathTooltip();
+
+    String copyPath();
 }
