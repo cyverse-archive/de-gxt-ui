@@ -30,11 +30,7 @@ public class DataLinkDialog extends ClipboardCopyEnabledDialog {
     public void show(String url) {
         textBox.setValue(url);
         setFocusWidget(textBox);
-
         ensureDebugId(DiskResourceModule.Ids.DATA_LINK_DLG);
-        textBox.getElement()
-               .setId(DiskResourceModule.Ids.DATA_LINK_DLG + DiskResourceModule.Ids.DATA_LINK_URL);
-
         super.show();
     }
 
@@ -49,5 +45,8 @@ public class DataLinkDialog extends ClipboardCopyEnabledDialog {
 
         getButton(PredefinedButton.OK).asWidget().ensureDebugId(baseID + DiskResourceModule.Ids.OK_BTN);
         textBox.ensureDebugId(baseID + DiskResourceModule.Ids.DATA_LINK_URL);
+        textBox.getElement()
+               .setId(baseID + DiskResourceModule.Ids.DATA_LINK_URL
+                      + DiskResourceModule.Ids.DATA_LINk_URL_INPUT);
     }
 }

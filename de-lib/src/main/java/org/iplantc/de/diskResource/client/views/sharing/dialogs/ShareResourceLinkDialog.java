@@ -27,9 +27,6 @@ public class ShareResourceLinkDialog extends ClipboardCopyEnabledDialog {
         textBox.setValue(link);
         textBox.selectAll();
         ensureDebugId(DiskResourceModule.Ids.SHARE_LINK_DLG);
-        textBox.getElement()
-               .setId(DiskResourceModule.Ids.SHARE_LINK_DLG + DiskResourceModule.Ids.LINK_TEXT);
-
         super.show();
     }
 
@@ -45,6 +42,9 @@ public class ShareResourceLinkDialog extends ClipboardCopyEnabledDialog {
 
         getButton(PredefinedButton.OK).asWidget().ensureDebugId(baseID + DiskResourceModule.Ids.OK_BTN);
         textBox.ensureDebugId(baseID + DiskResourceModule.Ids.LINK_TEXT);
+        textBox.getElement().setId(baseID + DiskResourceModule.Ids.LINK_TEXT_INPUT);
+
+
     }
 
 }

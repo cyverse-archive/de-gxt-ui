@@ -393,7 +393,6 @@ public class GridViewPresenterImpl implements Presenter,
         shareLinkDialogProvider.get(new AsyncCallback<ShareResourceLinkDialog>() {
             @Override
             public void onFailure(Throwable caught) {
-                announcer.schedule(new ErrorAnnouncementConfig(appearance.shareByLinkFailure()));
             }
 
             @Override
@@ -532,7 +531,6 @@ public class GridViewPresenterImpl implements Presenter,
             shareLinkDialogProvider.get(new AsyncCallback<ShareResourceLinkDialog>() {
                 @Override
                 public void onFailure(Throwable caught) {
-                    announcer.schedule(new ErrorAnnouncementConfig(appearance.shareByLinkFailure()));
                 }
 
                 @Override
