@@ -110,7 +110,7 @@ public class DiskResourceNameCell extends AbstractCell<DiskResource> {
         String imgClassName = ""; //$NON-NLS-1$
         String infoType1 = value.getInfoType();
         InfoType infoType = InfoType.fromTypeString(infoType1);
-        if(InfoType.HT_ANALYSIS_PATH_LIST.equals(infoType)){
+        if(infoType == InfoType.HT_ANALYSIS_PATH_LIST || infoType == InfoType.MULTI_INPUT_PATH_LIST){
            imgClassName = appearance.pathListClass();
         } else if (value instanceof File) {
             if (!previewEnabled) {
