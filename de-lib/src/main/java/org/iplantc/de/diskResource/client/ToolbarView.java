@@ -242,6 +242,8 @@ public interface ToolbarView extends IsWidget,
         String doiUserAgreement();
 
         String automateHTPathListMenuItem();
+
+        String newMultiInputPathLisText();
     }
 
     interface Presenter extends CreateNewFolderSelected.HasCreateNewFolderSelectedHandlers,
@@ -283,6 +285,8 @@ public interface ToolbarView extends IsWidget,
         void onCreateNcbiSraFolderStructure(Folder selectedFolder);
 
         void onCreateNewPathListSelected();
+
+        void onCreateMultiInputPathListSelected();
 
         void onCreatePublicLinkSelected(List<DiskResource> selectedDiskResources);
 

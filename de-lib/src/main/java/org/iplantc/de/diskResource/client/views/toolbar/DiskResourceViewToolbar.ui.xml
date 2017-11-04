@@ -93,6 +93,10 @@
                                                    text="{appearance.newPathListMenuText}"
                                                    icon="{appearance.newPathListMenuIcon}"/>
 
+                                    <menu:MenuItem ui:field="newMultiInputPathListMi"
+                                                   text="{appearance.newMultiInputPathLisText}"
+                                                   icon="{appearance.newPathListMenuIcon}"/>
+
                                     <menu:MenuItem ui:field="automateHTFileMi"
                                                    text="{appearance.automateHTPathListMenuItem}"
                                                    visible="true"

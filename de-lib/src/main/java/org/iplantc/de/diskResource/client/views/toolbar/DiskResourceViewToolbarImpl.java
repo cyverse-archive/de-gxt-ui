@@ -90,7 +90,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     @UiField
     MenuItem newWindowMi, newWindowAtLocMi, newFolderMi, newPlainTextFileMi,
             newTabularDataFileMi, moveToTrashMi, newRFileMi, newPerlFileMi, newPythonFileMi,
-            newShellScriptFileMi, newMdFileMi, automateHTFileMi;
+            newShellScriptFileMi, newMdFileMi, automateHTFileMi, newMultiInputPathListMi;
     @UiField
     MenuItem openTrashMi, restoreMi, emptyTrashMi;
     @UiField
@@ -530,6 +530,11 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
         presenter.onCreateNewPathListSelected();
     }
 
+    @UiHandler("newMultiInputPathListMi")
+    void onNewMultiInputPathListFileClicked(SelectionEvent<Item> event) {
+        presenter.onCreateMultiInputPathListSelected();
+    }
+
     @UiHandler("newPerlFileMi")
     void onNewPerlFileClicked(SelectionEvent<Item> event) {
         presenter.onCreateNewFileSelected(selectedFolder, MimeType.X_PERL);
@@ -745,6 +750,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
         newMdFileMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_NEW_MD_DATA);
         automateHTFileMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_AUTOMATE_HT_PATH);
         newPathListMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_NEW_PATH_LIST);
+        newMultiInputPathListMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_NEW_MULTI_INPUT_PATH_LIST);
 
         moveToTrashMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_MOVE_TO_TRASH);
 

@@ -166,4 +166,5 @@ public interface FileViewerStrings extends Messages {
     @Key("unableToRetrieveFileData")
     String unableToRetrieveFileData(String arg0);
 
+    String multiInputPathListViewName(String name);
 }

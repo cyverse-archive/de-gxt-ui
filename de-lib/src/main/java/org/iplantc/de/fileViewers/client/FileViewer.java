@@ -89,7 +89,10 @@ public interface FileViewer extends IsWidget, IsMaskable, HasHandlers, FileSaved
                        boolean editing,
                        boolean vizTabFirst,
                        boolean isTabularFile,
-                       boolean isPathListFile, Integer columns, String separator);
+                       boolean isPathListFile,
+                       boolean isMultiInputFile,
+                       Integer columns,
+                       String separator);
 
         void saveFile(FileViewer fileViewer);
 

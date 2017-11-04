@@ -1,9 +1,11 @@
 package org.iplantc.de.theme.base.client.fileViewers;
 
-import com.google.gwt.core.client.GWT;
+import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.fileViewers.client.views.PathListViewer;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * @author jstroot
@@ -35,8 +37,12 @@ public class PathListViewerDefaultAppearance extends AbstractStructuredTextViewe
     }
 
     @Override
-    public String pathListViewName(String name) {
-        return fileViewerStrings.pathListViewName(name);
+    public String pathListViewName(String infoType, String name) {
+        if (infoType.equals(InfoType.HT_ANALYSIS_PATH_LIST.getTypeString())) {
+            return fileViewerStrings.pathListViewName(name);
+        } else {
+            return fileViewerStrings.multiInputPathListViewName(name);
+        }
     }
 
     @Override

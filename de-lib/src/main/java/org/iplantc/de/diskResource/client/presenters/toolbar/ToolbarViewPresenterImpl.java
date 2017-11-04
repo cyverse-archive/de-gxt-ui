@@ -23,6 +23,7 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.FileViewerWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.MultiInputPathListWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.PathListWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.TabularFileViewerWindowConfig;
 import org.iplantc.de.diskResource.client.HTPathListAutomationView;
@@ -184,6 +185,13 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     @Override
     public void onCreateNewPathListSelected() {
         PathListWindowConfig config = ConfigFactory.newPathListWindowConfig();
+        config.setEditing(true);
+        eventBus.fireEvent(new CreateNewFileEvent(config));
+    }
+
+    @Override
+    public void onCreateMultiInputPathListSelected() {
+        MultiInputPathListWindowConfig config = ConfigFactory.newMultiInputPathListWindowConfig();
         config.setEditing(true);
         eventBus.fireEvent(new CreateNewFileEvent(config));
     }

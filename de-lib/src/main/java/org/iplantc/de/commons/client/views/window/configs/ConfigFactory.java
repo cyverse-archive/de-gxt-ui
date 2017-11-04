@@ -129,6 +129,17 @@ public class ConfigFactory {
         return ab.as();
     }
 
+    public static MultiInputPathListWindowConfig newMultiInputPathListWindowConfig() {
+        AutoBean<MultiInputPathListWindowConfig> ab = applyWindowType(WindowType.DATA_VIEWER, factory.multiInputPathListWindowConfig());
+        ab.as().setContentType(MimeType.PLAIN);
+        ab.as().setVizTabFirst(true);
+        ab.as().setSeparator(FileEditorServiceFacade.COMMA_DELIMITER);
+        ab.as().setColumns(1);
+        applyTag("Path List-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),
+                 ab);
+        return ab.as();
+    }
+
     public static NotifyWindowConfig notifyWindowConfig(NotificationCategory category) {
         NotifyWindowConfig nwc = applyWindowType(WindowType.NOTIFICATIONS, factory.notifyWindowConfig())
                 .as();

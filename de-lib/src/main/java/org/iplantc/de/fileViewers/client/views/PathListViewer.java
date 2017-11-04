@@ -220,7 +220,7 @@ public class PathListViewer extends AbstractStructuredTextViewer implements Stor
 
         String columnHeaderText();
 
-        String pathListViewName(String name);
+        String pathListViewName(String infoType, String name);
 
         String preventPathListDrop();
 
@@ -291,8 +291,8 @@ public class PathListViewer extends AbstractStructuredTextViewer implements Stor
     @Override
     public String getViewName(String fileName) {
         return fileName == null
-                   ? appearance.pathListViewName(String.valueOf(Math.random()))
-                   : appearance.pathListViewName(fileName);
+                   ? appearance.pathListViewName(infoType, String.valueOf(Math.random()))
+                   : appearance.pathListViewName(infoType,fileName);
     }
 
     @Override

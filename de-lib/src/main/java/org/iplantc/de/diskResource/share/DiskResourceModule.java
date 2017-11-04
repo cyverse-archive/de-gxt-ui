@@ -133,6 +133,7 @@ public interface DiskResourceModule {
         String LINK_TEXT = ".linkText";
         String LINK_TEXT_INPUT = ".linkTextInput";
         String SHARE_LINK_DLG = "shareLinkDlg";
+        String MENU_ITEM_NEW_MULTI_INPUT_PATH_LIST = ".multiInputPathList";
     }
 
     interface MetadataIds {
