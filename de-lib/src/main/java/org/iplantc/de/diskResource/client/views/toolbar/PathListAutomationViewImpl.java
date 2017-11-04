@@ -2,9 +2,9 @@ package org.iplantc.de.diskResource.client.views.toolbar;
 
 import org.iplantc.de.client.models.HasPath;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
-import org.iplantc.de.client.models.diskResources.HTPathListRequest;
+import org.iplantc.de.client.models.diskResources.PathListRequest;
 import org.iplantc.de.client.models.viewer.InfoType;
-import org.iplantc.de.diskResource.client.HTPathListAutomationView;
+import org.iplantc.de.diskResource.client.PathListAutomationView;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
 import org.iplantc.de.diskResource.client.views.dialogs.SaveAsDialog;
 import org.iplantc.de.diskResource.client.views.widgets.MultiFileSelectorField;
@@ -34,12 +34,13 @@ import com.sencha.gxt.widget.core.client.form.TextField;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class HTPathListAutomationViewImpl extends Composite implements HTPathListAutomationView {
+public class PathListAutomationViewImpl extends Composite implements PathListAutomationView {
 
-    interface HTPathListAutomationUiBinder extends UiBinder<Widget, HTPathListAutomationViewImpl> {}
-    private static final HTPathListAutomationUiBinder BINDER = GWT.create(HTPathListAutomationUiBinder.class);
+    interface PathListAutomationUiBinder extends UiBinder<Widget, PathListAutomationViewImpl> {}
+    private static final PathListAutomationUiBinder BINDER = GWT.create(PathListAutomationUiBinder.class);
 
-    @UiField(provided = true) HTPathListAutomationView.HTPathListAutomationAppearance appearance;
+    @UiField(provided = true)
+    PathListAutomationAppearance appearance;
     @UiField(provided = true) MultiFileSelectorField multiFolderSelector;
     @UiField CheckBox foldersOnlyCbx;
     @UiField TextField regexField;
@@ -54,8 +55,8 @@ public class HTPathListAutomationViewImpl extends Composite implements HTPathLis
     @Inject DiskResourceAutoBeanFactory drFactory;
 
     @Inject
-    public HTPathListAutomationViewImpl(HTPathListAutomationAppearance appearance,
-                                        DiskResourceSelectorFieldFactory selectionFieldFactory) {
+    public PathListAutomationViewImpl(PathListAutomationAppearance appearance,
+                                      DiskResourceSelectorFieldFactory selectionFieldFactory) {
         this.appearance = appearance;
         multiFolderSelector = selectionFieldFactory.createMultiFileSelector(true, appearance.selectorEmptyText());
 
@@ -117,8 +118,8 @@ public class HTPathListAutomationViewImpl extends Composite implements HTPathLis
         });
     }
 
-    public HTPathListRequest getRequest() {
-        HTPathListRequest request = drFactory.htPathListRequest().as();
+    public PathListRequest getRequest() {
+        PathListRequest request = drFactory.pathListRequest().as();
         request.setDest(destField.getValue());
         request.setPattern(regexField.getValue());
         request.setInfoTypes(getSelectedInfoTypes());

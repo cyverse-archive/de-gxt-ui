@@ -9,7 +9,7 @@ import org.iplantc.de.client.models.diskResources.DiskResourceExistMap;
 import org.iplantc.de.client.models.diskResources.DiskResourceMetadataList;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
-import org.iplantc.de.client.models.diskResources.HTPathListRequest;
+import org.iplantc.de.client.models.diskResources.PathListRequest;
 import org.iplantc.de.client.models.diskResources.MetadataTemplate;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.diskResources.RootFolders;
@@ -353,5 +353,5 @@ public interface DiskResourceServiceFacade {
      * @param request
      * @param callback
      */
-    void requestHTPathlistFile(HTPathListRequest request, DECallback<File> callback);
+    void requestHTPathlistFile(PathListRequest request, DECallback<File> callback);
 }

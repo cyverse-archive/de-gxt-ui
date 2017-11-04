@@ -1,7 +1,7 @@
 package org.iplantc.de.diskResource.client;
 
 import org.iplantc.de.client.models.IsMaskable;
-import org.iplantc.de.client.models.diskResources.HTPathListRequest;
+import org.iplantc.de.client.models.diskResources.PathListRequest;
 import org.iplantc.de.client.models.viewer.InfoType;
 
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -12,13 +12,13 @@ import java.util.List;
 /**
  * An interface for the HT path list automation view in the Data window
  */
-public interface HTPathListAutomationView extends IsWidget,
-                                                  IsMaskable {
+public interface PathListAutomationView extends IsWidget,
+                                                IsMaskable {
 
     /**
      * Appearance class to handle all the text, icons, etc. for the HTPathListAutomationView
      */
-    interface HTPathListAutomationAppearance {
+    interface PathListAutomationAppearance {
         String inputLbl();
 
         String folderPathOnlyLbl();
@@ -60,7 +60,7 @@ public interface HTPathListAutomationView extends IsWidget,
         String select();
     }
 
-    HTPathListRequest getRequest();
+    PathListRequest getRequest();
 
     boolean isValid();
 

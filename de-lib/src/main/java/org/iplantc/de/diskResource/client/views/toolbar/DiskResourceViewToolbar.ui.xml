@@ -97,10 +97,23 @@
                                                    text="{appearance.newMultiInputPathLisText}"
                                                    icon="{appearance.newPathListMenuIcon}"/>
 
-                                    <menu:MenuItem ui:field="automateHTFileMi"
-                                                   text="{appearance.automateHTPathListMenuItem}"
+                                    <menu:MenuItem ui:field="automatePathListFileMi"
+                                                   text="{appearance.automatePathListMenuItem}"
                                                    visible="true"
-                                                   icon="{appearance.newPathListMenuIcon}"/>
+                                                   icon="{appearance.newPathListMenuIcon}">
+                                        <menu:submenu>
+                                            <menu:Menu ui:field="pathListFileMenu">
+                                                <menu:MenuItem ui:field="automateHTFileMi"
+                                                               text="{appearance.automateHTPathListMenuItem}"
+                                                               visible="true"
+                                                               icon="{appearance.newPathListMenuIcon}"/>
+                                                <menu:MenuItem ui:field="automateMultiInputFileMi"
+                                                               text="{appearance.automateMultiInputPathListMenuItem}"
+                                                               visible="true"
+                                                               icon="{appearance.newPathListMenuIcon}"/>
+                                            </menu:Menu>
+                                        </menu:submenu>
+                                    </menu:MenuItem>
                                 </menu:Menu>
                             </menu:submenu>
                         </menu:MenuItem>

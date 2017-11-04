@@ -139,4 +139,8 @@ public interface ToolbarDisplayMessages extends Messages {
     String newPathListMenuText();
 
     String newMultiInputPathLisText();
+
+    String automateMultiInputPathListMenuItem();
+
+    String automatePathListMenuItem();
 }

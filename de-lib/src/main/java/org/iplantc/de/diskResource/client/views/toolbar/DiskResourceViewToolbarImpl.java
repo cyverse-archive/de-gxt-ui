@@ -11,7 +11,7 @@ import org.iplantc.de.diskResource.client.BulkMetadataView;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
-import org.iplantc.de.diskResource.client.events.selection.AutomateHTPathListSelected;
+import org.iplantc.de.diskResource.client.events.selection.AutomatePathListSelected;
 import org.iplantc.de.diskResource.client.events.selection.BulkMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDiskResourcesSelected;
@@ -90,7 +90,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     @UiField
     MenuItem newWindowMi, newWindowAtLocMi, newFolderMi, newPlainTextFileMi,
             newTabularDataFileMi, moveToTrashMi, newRFileMi, newPerlFileMi, newPythonFileMi,
-            newShellScriptFileMi, newMdFileMi, automateHTFileMi, newMultiInputPathListMi;
+            newShellScriptFileMi, newMdFileMi, automateHTFileMi, newMultiInputPathListMi, automateMultiInputFileMi;
     @UiField
     MenuItem openTrashMi, restoreMi, emptyTrashMi;
     @UiField
@@ -265,8 +265,8 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     }
 
     @Override
-    public HandlerRegistration addAutomateHTPathListSelectedHandler(AutomateHTPathListSelected.AutomateHTPathListSelectedHandler handler) {
-        return addHandler(handler, AutomateHTPathListSelected.TYPE);
+    public HandlerRegistration addAutomatePathListSelectedHandler(AutomatePathListSelected.AutomatePathListSelectedHandler handler) {
+        return addHandler(handler, AutomatePathListSelected.TYPE);
     }
 
     // </editor-fold>
@@ -675,7 +675,12 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("automateHTFileMi")
     void onAutomateHTPathList(SelectionEvent<Item> event) {
-        fireEvent(new AutomateHTPathListSelected());
+        fireEvent(new AutomatePathListSelected(InfoType.HT_ANALYSIS_PATH_LIST));
+    }
+
+    @UiHandler("automateMultiInputFileMi")
+    void onAutomateMultiInputPathList(SelectionEvent<Item> event) {
+        fireEvent(new AutomatePathListSelected(InfoType.HT_ANALYSIS_PATH_LIST));
     }
     // </editor-fold>
 

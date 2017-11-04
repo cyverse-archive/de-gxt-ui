@@ -10,7 +10,7 @@ import org.iplantc.de.diskResource.client.DiskResourceView;
 import org.iplantc.de.diskResource.client.FileUploadByUrlView;
 import org.iplantc.de.diskResource.client.GenomeSearchView;
 import org.iplantc.de.diskResource.client.GridView;
-import org.iplantc.de.diskResource.client.HTPathListAutomationView;
+import org.iplantc.de.diskResource.client.PathListAutomationView;
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.NavigationView;
 import org.iplantc.de.diskResource.client.SearchView;
@@ -64,6 +64,7 @@ import org.iplantc.de.diskResource.client.views.sharing.dialogs.ShareResourceLin
 import org.iplantc.de.diskResource.client.views.toolbar.DiskResourceViewToolbarImpl;
 import org.iplantc.de.diskResource.client.views.toolbar.FileUploadByUrlViewImpl;
 import org.iplantc.de.diskResource.client.views.toolbar.HTPathListAutomationViewImpl;
+import org.iplantc.de.diskResource.client.views.toolbar.PathListAutomationViewImpl;
 
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
@@ -153,7 +154,7 @@ public class DiskResourceGinModule extends AbstractGinModule {
                         .implement(BulkMetadataView.class, BulkMetadataViewImpl.class)
                         .build(BulkMetadataViewFactory.class));
 
-        bind(HTPathListAutomationView.class).to(HTPathListAutomationViewImpl.class);
+        bind(PathListAutomationView.class).to(PathListAutomationViewImpl.class);
 
         bind(MetadataView.class).to(DiskResourceMetadataViewImpl.class);
         bind(MetadataView.Presenter.class).to(MetadataPresenterImpl.class);

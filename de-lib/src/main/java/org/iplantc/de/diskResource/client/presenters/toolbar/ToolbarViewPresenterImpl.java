@@ -8,7 +8,7 @@ import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
-import org.iplantc.de.client.models.diskResources.HTPathListRequest;
+import org.iplantc.de.client.models.diskResources.PathListRequest;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestType;
 import org.iplantc.de.client.models.sharing.PermissionValue;
@@ -26,12 +26,12 @@ import org.iplantc.de.commons.client.views.window.configs.FileViewerWindowConfig
 import org.iplantc.de.commons.client.views.window.configs.MultiInputPathListWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.PathListWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.TabularFileViewerWindowConfig;
-import org.iplantc.de.diskResource.client.HTPathListAutomationView;
+import org.iplantc.de.diskResource.client.PathListAutomationView;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.CreateNewFileEvent;
 import org.iplantc.de.diskResource.client.events.RequestSimpleDownloadEvent;
 import org.iplantc.de.diskResource.client.events.ShowFilePreviewEvent;
-import org.iplantc.de.diskResource.client.events.selection.AutomateHTPathListSelected;
+import org.iplantc.de.diskResource.client.events.selection.AutomatePathListSelected;
 import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSubmitted;
 import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
@@ -42,7 +42,7 @@ import org.iplantc.de.diskResource.client.views.dialogs.CreateFolderDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.CreateNcbiSraFolderStructureDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.CreatePublicLinkDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
-import org.iplantc.de.diskResource.client.views.toolbar.dialogs.HTPathListAutomationDialog;
+import org.iplantc.de.diskResource.client.views.toolbar.dialogs.PathListAutomationDialog;
 import org.iplantc.de.diskResource.client.views.toolbar.dialogs.TabFileConfigDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DataCallback;
@@ -63,7 +63,7 @@ import java.util.logging.Logger;
  */
 public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
                                                  SimpleDownloadSelectedHandler,
-                                                 AutomateHTPathListSelected.AutomateHTPathListSelectedHandler {
+                                                 AutomatePathListSelected.AutomatePathListSelectedHandler {
 
     @Inject ToolbarView.Presenter.Appearance appearance;
     @Inject DiskResourceSelectorFieldFactory drSelectorFactory;
@@ -73,7 +73,8 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
 
     @Inject DiskResourceAutoBeanFactory drAbFactory;
 
-    @Inject HTPathListAutomationView.HTPathListAutomationAppearance htAppearance;
+    @Inject
+    PathListAutomationView.PathListAutomationAppearance htAppearance;
     @Inject DiskResourceUtil diskResourceUtil;
 
     PermIdRequestUserServiceFacade prFacade =
@@ -87,7 +88,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     @Inject AsyncProviderWrapper<CreateNcbiSraFolderStructureDialog> createNcbiSraDlgProvider;
     @Inject AsyncProviderWrapper<CreatePublicLinkDialog> createPublicLinkDlgProvider;
     @Inject AsyncProviderWrapper<GenomeSearchDialog> genomeSearchDlgProvider;
-    @Inject AsyncProviderWrapper<HTPathListAutomationDialog> htPathAutomationDlgProvider;
+    @Inject AsyncProviderWrapper<PathListAutomationDialog> pathAutomationDlgProvider;
 
     private final ToolbarView view;
     private HandlerManager handlerManager;
@@ -99,7 +100,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     ToolbarViewPresenterImpl(final ToolbarViewFactory viewFactory) {
         this.view = viewFactory.create(this);
         view.addSimpleDownloadSelectedHandler(this);
-        view.addAutomateHTPathListSelectedHandler(this);
+        view.addAutomatePathListSelectedHandler(this);
     }
 
     @Override
@@ -273,7 +274,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     }
 
     @Override
-    public void onAutomateHTPathListSelected(AutomateHTPathListSelected event) {
+    public void onAutomatePathListSelected(AutomatePathListSelected event) {
         drFacade.getInfoTypes(new DataCallback<List<InfoType>>() {
 
             @Override
@@ -283,21 +284,21 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
 
             @Override
             public void onSuccess(List<InfoType> infoTypes) {
-                showHtPathAutomationDialog(infoTypes);
+                showPathAutomationDialog(infoTypes, event.getRequestInfoType());
             }
         });
     }
 
-    void showHtPathAutomationDialog(List<InfoType> infoTypes) {
-        htPathAutomationDlgProvider.get(new AsyncCallback<HTPathListAutomationDialog>() {
+    void showPathAutomationDialog(List<InfoType> infoTypes, InfoType requestInfoType) {
+        pathAutomationDlgProvider.get(new AsyncCallback<PathListAutomationDialog>() {
             @Override
             public void onFailure(Throwable caught) {}
 
             @Override
-            public void onSuccess(HTPathListAutomationDialog dialog) {
+            public void onSuccess(PathListAutomationDialog dialog) {
                 dialog.addOkButtonSelectHandler(event -> {
                     if (dialog.isValid()) {
-                        HTPathListRequest request = dialog.getRequest();
+                        PathListRequest request = dialog.getRequest();
                         requestHTPathListCreation(dialog, request);
                     } else {
                         showHTProcessingError();
@@ -306,7 +307,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
                 dialog.addCancelButtonSelectHandler(event -> {
                     dialog.hide();
                 });
-                dialog.show(infoTypes);
+                dialog.show(infoTypes, requestInfoType);
             }
         });
     }
@@ -317,8 +318,8 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
         amb.show();
     }
 
-    protected void requestHTPathListCreation(HTPathListAutomationDialog dialog,
-                                             HTPathListRequest request) {
+    protected void requestHTPathListCreation(PathListAutomationDialog dialog,
+                                             PathListRequest request) {
         dialog.mask(htAppearance.processing());
         drFacade.requestHTPathlistFile(request, new DataCallback<File>() {
             @Override

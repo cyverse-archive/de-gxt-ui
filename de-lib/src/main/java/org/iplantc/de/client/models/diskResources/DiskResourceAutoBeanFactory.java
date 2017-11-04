@@ -59,5 +59,5 @@ public interface DiskResourceAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<Avu> avu();
 
-    AutoBean<HTPathListRequest> htPathListRequest();
+    AutoBean<PathListRequest> pathListRequest();
 }

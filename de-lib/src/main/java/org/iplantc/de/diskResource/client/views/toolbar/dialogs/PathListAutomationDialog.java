@@ -1,9 +1,9 @@
 package org.iplantc.de.diskResource.client.views.toolbar.dialogs;
 
-import org.iplantc.de.client.models.diskResources.HTPathListRequest;
+import org.iplantc.de.client.models.diskResources.PathListRequest;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
-import org.iplantc.de.diskResource.client.HTPathListAutomationView;
+import org.iplantc.de.diskResource.client.PathListAutomationView;
 
 import com.google.inject.Inject;
 
@@ -12,14 +12,15 @@ import java.util.List;
 /**
  * Created by sriram on 7/26/17.
  */
-public class HTPathListAutomationDialog extends IPlantDialog {
+public class PathListAutomationDialog extends IPlantDialog {
 
-    private HTPathListAutomationView.HTPathListAutomationAppearance htAppearance;
-    private HTPathListAutomationView view;
+    private PathListAutomationView.PathListAutomationAppearance htAppearance;
+    private PathListAutomationView view;
+    private InfoType requestInfoType;
 
     @Inject
-    public HTPathListAutomationDialog(HTPathListAutomationView.HTPathListAutomationAppearance htAppearance,
-                                      HTPathListAutomationView view) {
+    public PathListAutomationDialog(PathListAutomationView.PathListAutomationAppearance htAppearance,
+                                    PathListAutomationView view) {
         this.htAppearance = htAppearance;
         this.view = view;
         setWidget(view);
@@ -29,14 +30,17 @@ public class HTPathListAutomationDialog extends IPlantDialog {
         setModal(false);
     }
 
-    public void show(List<InfoType> infoTypes) {
+    public void show(List<InfoType> infoTypes, InfoType requestInfoType) {
         view.addInfoTypes(infoTypes);
+        this.requestInfoType = requestInfoType;
 
         super.show();
     }
 
-    public HTPathListRequest getRequest() {
-        return view.getRequest();
+    public PathListRequest getRequest() {
+        PathListRequest request = view.getRequest();
+        request.setRequestInfoType(requestInfoType);
+        return request;
     }
 
     public boolean isValid() {

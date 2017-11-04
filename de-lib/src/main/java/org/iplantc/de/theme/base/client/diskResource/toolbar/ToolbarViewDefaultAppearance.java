@@ -517,4 +517,14 @@ public class ToolbarViewDefaultAppearance implements ToolbarView.Appearance {
     public String newMultiInputPathLisText() {
         return displayMessages.newMultiInputPathLisText();
     }
+
+    @Override
+    public String automatePathListMenuItem() {
+        return displayMessages.automatePathListMenuItem();
+    }
+
+    @Override
+    public String automateMultiInputPathListMenuItem() {
+        return displayMessages.automateMultiInputPathListMenuItem();
+    }
 }

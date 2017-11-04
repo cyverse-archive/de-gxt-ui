@@ -5,7 +5,7 @@ import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.viewer.MimeType;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent.DiskResourceSelectionChangedEventHandler;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent.FolderSelectionEventHandler;
-import org.iplantc.de.diskResource.client.events.selection.AutomateHTPathListSelected;
+import org.iplantc.de.diskResource.client.events.selection.AutomatePathListSelected;
 import org.iplantc.de.diskResource.client.events.selection.BulkMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected.HasCopyMetadataSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSubmitted;
@@ -64,7 +64,7 @@ public interface ToolbarView extends IsWidget,
                                      DiskResourceSelectionChangedEventHandler,
                                      OpenTrashFolderSelected.HasOpenTrashFolderSelectedHandlers,
                                      BulkMetadataSelected.HasBulkMetadataSelectedHandlers,
-                                     AutomateHTPathListSelected.HasAutomateHTPathListSelectedHandlers {
+                                     AutomatePathListSelected.HasAutomatePathListSelectedHandlers {
     interface Appearance {
 
         SafeHtml bulkDownloadInfoBoxHeading();
@@ -244,6 +244,10 @@ public interface ToolbarView extends IsWidget,
         String automateHTPathListMenuItem();
 
         String newMultiInputPathLisText();
+
+        String automatePathListMenuItem();
+
+        String automateMultiInputPathListMenuItem();
     }
 
     interface Presenter extends CreateNewFolderSelected.HasCreateNewFolderSelectedHandlers,

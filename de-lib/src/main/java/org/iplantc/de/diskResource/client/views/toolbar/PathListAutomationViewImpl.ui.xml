@@ -8,7 +8,7 @@
              xmlns:list="urn:import:com.sencha.gxt.widget.core.client">
 
     <ui:with field="appearance"
-             type="org.iplantc.de.diskResource.client.HTPathListAutomationView.HTPathListAutomationAppearance"/>
+             type="org.iplantc.de.diskResource.client.PathListAutomationView.PathListAutomationAppearance"/>
     <ui:with field="infoTypeStore"
              type="com.sencha.gxt.data.shared.ListStore" />
     <ui:with field="sideMargins" type="com.sencha.gxt.core.client.util.Margins">
