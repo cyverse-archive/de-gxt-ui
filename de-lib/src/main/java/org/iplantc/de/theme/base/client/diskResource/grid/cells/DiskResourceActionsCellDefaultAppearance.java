@@ -140,8 +140,4 @@ public class DiskResourceActionsCellDefaultAppearance implements DiskResourceAct
         return iplantResources.userComment();
     }
 
-    @Override
-    public String copyPathTooltip() {
-        return displayStrings.copyPathTooltip();
-    }
 }

@@ -19,13 +19,11 @@ public class CopyToClipboardUtil {
             copyText.select();
             if ($doc.queryCommandEnabled('copy')) {
                 return $doc.execCommand('copy');
-            } else {
-                return false;
             }
         } catch (err) {
             console.log("Error while copying to clipboard" + err);
-            return false;
         }
+        return false;
     }-*/;
 
     /**

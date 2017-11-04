@@ -4,7 +4,6 @@ import org.iplantc.de.commons.client.views.dialogs.ClipboardCopyEnabledDialog;
 import org.iplantc.de.diskResource.client.GridView;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.inject.Inject;
 
 /**
@@ -19,8 +18,6 @@ public class ShareResourceLinkDialog extends ClipboardCopyEnabledDialog {
         setHideOnButtonClick(true);
         setResizable(false);
         setSize(appearance.shareLinkDialogWidth(), appearance.shareLinkDialogHeight());
-
-        HorizontalPanel panel = new HorizontalPanel();
     }
 
     public void show(final String link) {

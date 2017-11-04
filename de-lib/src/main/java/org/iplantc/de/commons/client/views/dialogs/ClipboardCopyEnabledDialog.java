@@ -25,9 +25,9 @@ public class ClipboardCopyEnabledDialog extends IPlantDialog {
 
         String copyToClipboard();
 
-        String textboxWidth();
+        String copyTextboxWidth();
 
-        String textboxHeight();
+        String copyTextboxHeight();
 
         String errorCopying();
     }
@@ -38,14 +38,13 @@ public class ClipboardCopyEnabledDialog extends IPlantDialog {
     Appearance appearance = GWT.create(Appearance.class);
 
     public ClipboardCopyEnabledDialog() {
-        textBox = new TextBox();
         HorizontalPanel panel = new HorizontalPanel();
         panel.setSpacing(5);
 
         textBox = new TextBox();
         textBox.setReadOnly(true);
-        textBox.setWidth(appearance.textboxWidth());
-        textBox.setHeight(appearance.textboxHeight());
+        textBox.setWidth(appearance.copyTextboxWidth());
+        textBox.setHeight(appearance.copyTextboxHeight());
 
         panel.add(textBox);
 
