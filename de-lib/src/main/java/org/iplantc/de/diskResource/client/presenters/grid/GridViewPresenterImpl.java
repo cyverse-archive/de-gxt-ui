@@ -175,6 +175,7 @@ public class GridViewPresenterImpl implements Presenter,
 
             @Override
             public void onSuccess(ShareResourceLinkDialog dlg) {
+                dlg.setHeading(appearance.dataLinkTitle());
                 dlg.show(result.get(0).getDownloadUrl());
             }
         });
@@ -509,6 +510,7 @@ public class GridViewPresenterImpl implements Presenter,
 
             @Override
             public void onSuccess(DataSharingDialog result) {
+                result.setHeading(appearance.dataLinkTitle());
                 result.show(event.getDiskResourceToShare());
                 result.addDialogHideHandler(hideEvent -> {
                     final List<DiskResource> selection = getSelectedDiskResources();
