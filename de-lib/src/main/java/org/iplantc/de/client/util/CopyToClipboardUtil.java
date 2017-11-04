@@ -14,9 +14,9 @@ public class CopyToClipboardUtil {
      * @return boolean whether copy succeeded or failed.
      */
     public static native boolean copyToClipboard(String id) /*-{
-        var copyText = $doc.getElementById(id);
-        copyText.select();
         try {
+            var copyText = $doc.getElementById(id);
+            copyText.select();
             if ($doc.queryCommandEnabled('copy')) {
                 return $doc.execCommand('copy');
             } else {
@@ -35,14 +35,14 @@ public class CopyToClipboardUtil {
      */
     public static native boolean isSupported() /*-{
         try {
-            return $doc.queryCommandSupported('copy');
+            return $doc.queryCommandSupported && $doc.queryCommandSupported('copy');
         } catch (err) {
             console.log("Error while checking if copying to clipboard supported " + err);
         }
     }-*/;
 
     /**
-     * Check if copy is enabled. Disabled unitl user events like 'Click'
+     * Check if copy is enabled. Disabled until user events like 'Click'
      *
      * @return boolean
      */
