@@ -118,8 +118,8 @@ public class ConfigFactory {
         return ab.as();
     }
 
-    public static PathListWindowConfig newPathListWindowConfig() {
-        AutoBean<PathListWindowConfig> ab = applyWindowType(WindowType.DATA_VIEWER, factory.pathListWindowConfig());
+    public static HTPathListWindowConfig newHTPathListWindowConfig() {
+        AutoBean<HTPathListWindowConfig> ab = applyWindowType(WindowType.DATA_VIEWER, factory.pathListWindowConfig());
         ab.as().setContentType(MimeType.PLAIN);
         ab.as().setVizTabFirst(true);
         ab.as().setSeparator(FileEditorServiceFacade.COMMA_DELIMITER);

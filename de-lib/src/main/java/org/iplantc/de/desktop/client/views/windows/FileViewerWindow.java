@@ -5,7 +5,7 @@ import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.commons.client.views.window.configs.FileViewerWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.MultiInputPathListWindowConfig;
-import org.iplantc.de.commons.client.views.window.configs.PathListWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.HTPathListWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.TabularFileViewerWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.fileViewers.client.FileViewer;
@@ -77,7 +77,7 @@ public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
             String title = "Untitled-" + Math.random();
             setHeading(title);
             boolean isTabularFile = windowConfig instanceof TabularFileViewerWindowConfig;
-            boolean isPathListFile = windowConfig instanceof PathListWindowConfig;
+            boolean isPathListFile = windowConfig instanceof HTPathListWindowConfig;
             boolean isMultiInputFile = windowConfig instanceof MultiInputPathListWindowConfig;
             String delimiter = isTabularFile ? ((TabularFileViewerWindowConfig) windowConfig).getSeparator() : "";
             Integer columns = isTabularFile ? ((TabularFileViewerWindowConfig) windowConfig).getColumns() : null;
