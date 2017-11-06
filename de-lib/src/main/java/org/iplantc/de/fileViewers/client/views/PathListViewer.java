@@ -284,7 +284,7 @@ public class PathListViewer extends AbstractStructuredTextViewer implements Stor
 
     @Override
     public String getEditorContent() {
-        String pathListFileIdentifier = presenter.getPathListFileIdentifier() + "\n";
+        String pathListFileIdentifier = presenter.getPathListFileIdentifier(infoType) + "\n";
         return pathListFileIdentifier + super.getEditorContent();
     }
 

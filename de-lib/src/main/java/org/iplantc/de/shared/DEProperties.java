@@ -6,7 +6,9 @@ import java.util.Map;
 
 @SuppressWarnings("nls")
 public class DEProperties {
-    private static final String PATH_LIST_FILE_IDENTIFIER = "org.iplantc.pathList.fileIdentifier";
+    private static final String HT_PATH_LIST_FILE_IDENTIFIER = "org.iplantc.pathList.fileIdentifier";
+
+    private static final String MULTI_INPUT_LIST_FILE_IDENTIFIER = "org.iplnatc.multiinput.fileIdentifier";
 
     /**
      * The base URL used to access the Mule services.
@@ -193,7 +195,9 @@ public class DEProperties {
 
     private String defaultTrashCategoryId;
 
-    private String pathListFileIdentifier;
+    private String htPathListFileIdentifier;
+
+    private String multiInputPathListFileIdentifier;
 
     private String betaAvuIri;
 
@@ -220,8 +224,8 @@ public class DEProperties {
 
     private String companyName;
 
-    public String getPathListFileIdentifier() {
-        return pathListFileIdentifier;
+    public String getHtPathListFileIdentifier() {
+        return htPathListFileIdentifier;
     }
 
     /**
@@ -297,7 +301,8 @@ public class DEProperties {
         keys.add(COMMUNITY_DATA_PATH);
         keys.add(IRODS_HOME_PATH);
         keys.add(BASE_TRASH_PATH);
-        keys.add(PATH_LIST_FILE_IDENTIFIER);
+        keys.add(HT_PATH_LIST_FILE_IDENTIFIER);
+        keys.add(MULTI_INPUT_LIST_FILE_IDENTIFIER);
         keys.add(MULE_SERVICE_BASE_URL);
         keys.add(DATA_MGMT_BASE_URL);
         keys.add(PERM_ID_BASE_URL);
@@ -348,7 +353,8 @@ public class DEProperties {
         defaultTrashCategoryId = properties.get(DEFAULT_TRASH_CATEGORY_ID);
         contextClickEnabled = getBoolean(properties, CONTEXT_CLICK_ENABLED, false);
         notificationPollInterval = getInt(properties, NOTIFICATION_POLL_INTERVAL, 60);
-        pathListFileIdentifier = properties.get(PATH_LIST_FILE_IDENTIFIER);
+        htPathListFileIdentifier = properties.get(HT_PATH_LIST_FILE_IDENTIFIER);
+        multiInputPathListFileIdentifier = properties.get(MULTI_INPUT_LIST_FILE_IDENTIFIER);
         communityDataPath = properties.get(COMMUNITY_DATA_PATH);
         irodsHomePath = properties.get(IRODS_HOME_PATH);
         baseTrashPath = properties.get(BASE_TRASH_PATH);
@@ -557,5 +563,9 @@ public class DEProperties {
 
     public boolean isIntercomEnabled() {
         return intercomEnabled;
+    }
+
+    public String getMultiInputPathListFileIdentifier() {
+        return multiInputPathListFileIdentifier;
     }
 }

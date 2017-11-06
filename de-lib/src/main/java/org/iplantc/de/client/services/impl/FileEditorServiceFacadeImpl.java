@@ -8,6 +8,7 @@ import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.genomes.Genome;
 import org.iplantc.de.client.models.genomes.GenomeList;
 import org.iplantc.de.client.models.viewer.FileViewerAutoBeanFactory;
+import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.models.viewer.Manifest;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
@@ -19,6 +20,7 @@ import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -78,8 +80,17 @@ public class FileEditorServiceFacadeImpl implements FileEditorServiceFacade {
     }
 
     @Override
-    public String getPathListFileIdentifier() {
-        return deProperties.getPathListFileIdentifier();
+    public String getPathListFileIdentifier(String infoType) {
+        if ((!Strings.isNullOrEmpty(infoType))) {
+            if (infoType.equals(InfoType.HT_ANALYSIS_PATH_LIST.getTypeString())) {
+                return deProperties.getHtPathListFileIdentifier();
+            } else if (infoType.equals(InfoType.MULTI_INPUT_PATH_LIST.getTypeString())) {
+                return deProperties.getMultiInputPathListFileIdentifier();
+            } else {
+                return null;
+            }
+        }
+       return null;
     }
 
     @Override

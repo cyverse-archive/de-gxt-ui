@@ -172,8 +172,8 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
     }
 
     @Override
-    public String getPathListFileIdentifier() {
-        return fileEditorService.getPathListFileIdentifier();
+    public String getPathListFileIdentifier(String infoTye) {
+        return fileEditorService.getPathListFileIdentifier(infoTye);
     }
 
     @Override
