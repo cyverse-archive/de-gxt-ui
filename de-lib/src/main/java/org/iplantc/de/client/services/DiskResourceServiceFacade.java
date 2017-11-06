@@ -10,6 +10,7 @@ import org.iplantc.de.client.models.diskResources.DiskResourceMetadataList;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.diskResources.PathListRequest;
+import org.iplantc.de.client.models.diskResources.MetadataCopyRequest;
 import org.iplantc.de.client.models.diskResources.MetadataTemplate;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.diskResources.RootFolders;
@@ -21,7 +22,6 @@ import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.shared.DECallback;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
@@ -300,12 +300,12 @@ public interface DiskResourceServiceFacade {
      * Copy metadata to list of files / folders
      * 
      * @param srcUUID source DR's UUID
-     * @param paths destination DR's path to which metadata will be copied.
+     * @param copyRequest IDs of disk resources to which metadata will be copied
      * @param callback callback object
      */
 
     void copyMetadata(final String srcUUID,
-                      final Splittable paths,
+                      final MetadataCopyRequest copyRequest,
                       final AsyncCallback<String> callback);
             
             /**

@@ -7,8 +7,10 @@ import org.iplantc.de.client.models.HasPath;
 import org.iplantc.de.client.models.dataLink.DataLink;
 import org.iplantc.de.client.models.dataLink.DataLinkFactory;
 import org.iplantc.de.client.models.diskResources.DiskResource;
+import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
+import org.iplantc.de.client.models.diskResources.MetadataCopyRequest;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
@@ -83,8 +85,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.google.web.bindery.autobean.shared.Splittable;
-import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.ListStore;
@@ -98,6 +98,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * @author jstroot
@@ -191,7 +192,8 @@ public class GridViewPresenterImpl implements Presenter,
     @Inject AsyncProviderWrapper<DataSharingDialog> dataSharingDialogProvider;
     @Inject AsyncProviderWrapper<ShareResourceLinkDialog> shareLinkDialogProvider;
     @Inject AsyncProviderWrapper<SaveAsDialog> saveAsDialogProvider;
-    @Inject DiskResourceErrorAutoBeanFactory drFactory;
+    @Inject DiskResourceErrorAutoBeanFactory drErrorFactory;
+    @Inject DiskResourceAutoBeanFactory factory;
     @Inject AsyncProviderWrapper<MetadataCopyDialog> copyMetadataDlgProvider;
     @Inject AsyncProviderWrapper<Md5DisplayDialog> md5DisplayDlgProvider;
     @Inject AsyncProviderWrapper<SelectMetadataTemplateDialog> selectMetaTemplateDlgProvider;
@@ -488,16 +490,13 @@ public class GridViewPresenterImpl implements Presenter,
         });
     }
 
-    private Splittable buildTargetPaths(List<HasPath> paths) {
-        Splittable pathspl = StringQuoter.createSplittable();
-        Splittable path_arr = StringQuoter.createIndexed();
-        for (HasPath obj : paths) {
-            DiskResource dr = (DiskResource)obj;
-            StringQuoter.create(String.valueOf(dr.getId())).assign(path_arr, path_arr.size());
-        }
-
-        path_arr.assign(pathspl, "destination_ids");
-        return pathspl;
+    private MetadataCopyRequest buildCopyRequest(List<HasPath> paths) {
+        MetadataCopyRequest request = factory.metadataCopyRequest().as();
+        List<String> ids = paths.stream()
+                                .map(hasPath -> String.valueOf(((DiskResource)hasPath).getId()))
+                                .collect(Collectors.toList());
+        request.setDestinationIds(ids);
+        return request;
     }
 
     @Override
@@ -753,7 +752,7 @@ public class GridViewPresenterImpl implements Presenter,
 
     private void copyMetadata(final DiskResource selected, List<HasPath> paths, MetadataCopyDialog dialog) {
         diskResourceService.copyMetadata(selected.getId(),
-                                         buildTargetPaths(paths),
+                                         buildCopyRequest(paths),
                                          new CopyMetadataCallback(dialog));
     }
 
