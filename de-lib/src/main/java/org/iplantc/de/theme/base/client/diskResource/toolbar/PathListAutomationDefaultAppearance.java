@@ -55,8 +55,13 @@ public class PathListAutomationDefaultAppearance
     }
 
     @Override
-    public String dialogHeading() {
-        return diskResourceMessages.Htheading();
+    public String dialogHTHeading() {
+        return diskResourceMessages.dialogHTHeading();
+    }
+
+    @Override
+    public String dialogMultiInputHeading() {
+        return diskResourceMessages.dialogMultiInputHeading();
     }
 
     @Override

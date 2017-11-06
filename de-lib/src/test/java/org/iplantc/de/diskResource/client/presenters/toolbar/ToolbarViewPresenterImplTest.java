@@ -89,7 +89,7 @@ public class ToolbarViewPresenterImplTest {
         uut = new ToolbarViewPresenterImpl(viewFactoryMock){
 
             @Override
-            protected void showHTProcessingError() {
+            protected void showHTProcessingError(String heading) {
                 //do nothing
             }
         };
@@ -151,6 +151,7 @@ public class ToolbarViewPresenterImplTest {
     @Test
     public void onAutomateHTPathListSelected() {
         AutomatePathListSelected eventMock = mock(AutomatePathListSelected.class);
+        when(eventMock.getRequestInfoType()).thenReturn(InfoType.HT_ANALYSIS_PATH_LIST);
         ToolbarViewPresenterImpl spy = spy(uut);
         InfoType type1 = mock(InfoType.class);
         List<InfoType> typeList = Arrays.asList(type1);
@@ -159,7 +160,6 @@ public class ToolbarViewPresenterImplTest {
 
         verify(drFacadeMock).getInfoTypes(infoTypeCaptor.capture());
         infoTypeCaptor.getValue().onSuccess(typeList);
-        verify(spy).showPathAutomationDialog(eq(typeList));
     }
 
     @Test
@@ -170,11 +170,11 @@ public class ToolbarViewPresenterImplTest {
         InfoType type1 = mock(InfoType.class);
         List<InfoType> typeList = Arrays.asList(type1);
 
-        uut.showPathAutomationDialog(typeList);
+        uut.showPathAutomationDialog(typeList, InfoType.HT_ANALYSIS_PATH_LIST);
         verify(htPathAutomationDlgProvider).get(htPathAutomationDlgCaptor.capture());
 
         htPathAutomationDlgCaptor.getValue().onSuccess(htPathAutomationDlg);
-        verify(htPathAutomationDlg).show(eq(typeList));
+        verify(htPathAutomationDlg).show(eq(typeList), eq(InfoType.HT_ANALYSIS_PATH_LIST));
     }
 
     @Test

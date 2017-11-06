@@ -25,7 +25,6 @@ public class PathListAutomationDialog extends IPlantDialog {
         this.view = view;
         setWidget(view);
         setHideOnButtonClick(false);
-        setHeading(htAppearance.dialogHeading());
         setSize(htAppearance.dialogWidth(), htAppearance.dialogHeight());
         setModal(false);
     }
@@ -33,7 +32,11 @@ public class PathListAutomationDialog extends IPlantDialog {
     public void show(List<InfoType> infoTypes, InfoType requestInfoType) {
         view.addInfoTypes(infoTypes);
         this.requestInfoType = requestInfoType;
-
+        if (requestInfoType.equals(InfoType.HT_ANALYSIS_PATH_LIST)) {
+            setHeading(htAppearance.dialogHTHeading());
+        } else if (requestInfoType.equals(InfoType.MULTI_INPUT_PATH_LIST)) {
+            setHeading(htAppearance.dialogMultiInputHeading());
+        }
         super.show();
     }
 

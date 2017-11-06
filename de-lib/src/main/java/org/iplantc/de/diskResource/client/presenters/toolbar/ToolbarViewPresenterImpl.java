@@ -301,7 +301,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
                         PathListRequest request = dialog.getRequest();
                         requestHTPathListCreation(dialog, request);
                     } else {
-                        showHTProcessingError();
+                        showHTProcessingError(dialog.getHeading().asString());
                     }
                 });
                 dialog.addCancelButtonSelectHandler(event -> {
@@ -312,9 +312,9 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
         });
     }
 
-    protected void showHTProcessingError() {
+    protected void showHTProcessingError(String heading) {
         AlertMessageBox amb =
-                new AlertMessageBox(htAppearance.dialogHeading(), htAppearance.validationMessage());
+                new AlertMessageBox(heading, htAppearance.validationMessage());
         amb.show();
     }
 

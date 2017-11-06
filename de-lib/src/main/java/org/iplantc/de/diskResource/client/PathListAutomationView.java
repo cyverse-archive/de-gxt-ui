@@ -33,7 +33,9 @@ public interface PathListAutomationView extends IsWidget,
 
         String patternMatchEmptyText();
 
-        String dialogHeading();
+        String dialogHTHeading();
+
+        String dialogMultiInputHeading();
 
         String loading();
 

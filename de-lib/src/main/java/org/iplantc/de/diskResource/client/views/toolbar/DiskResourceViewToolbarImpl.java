@@ -680,7 +680,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("automateMultiInputFileMi")
     void onAutomateMultiInputPathList(SelectionEvent<Item> event) {
-        fireEvent(new AutomatePathListSelected(InfoType.HT_ANALYSIS_PATH_LIST));
+        fireEvent(new AutomatePathListSelected(InfoType.MULTI_INPUT_PATH_LIST));
     }
     // </editor-fold>
 
