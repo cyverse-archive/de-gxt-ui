@@ -106,7 +106,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
     private DiskResource resource;
     private final MetadataView view;
     private final DiskResourceServiceFacade drService;
-    private List<MetadataTemplateInfo> templates;
+    List<MetadataTemplateInfo> templates;
 
     private List<Avu> userMdList;
     private List<MetadataTemplateAttribute> templateAttributes;
@@ -133,7 +133,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
         view.addSaveMetadataToFileBtnSelectedHandler(this);
     }
 
-    private void loadMetadata() {
+    void loadMetadata() {
         drService.getDiskResourceMetaData(resource, new DiskResourceMetadataListAsyncCallback());
     }
 

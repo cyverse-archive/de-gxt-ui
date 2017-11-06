@@ -1,11 +1,9 @@
 package org.iplantc.de.diskResource.client.presenters.sharing;
 
-import org.iplantc.de.commons.client.gin.factory.SharingPermissionViewFactory;
 import org.iplantc.de.client.models.HasPaths;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
-
 import org.iplantc.de.client.models.diskResources.sharing.DataPermission;
 import org.iplantc.de.client.models.diskResources.sharing.DataSharingAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.sharing.DataSharingRequest;
@@ -20,12 +18,13 @@ import org.iplantc.de.client.models.sharing.SharedResource;
 import org.iplantc.de.client.models.sharing.Sharing;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
-import org.iplantc.de.commons.client.views.sharing.SharingPermissionView;
-import org.iplantc.de.commons.client.presenter.SharingPresenter;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.gin.factory.SharingPermissionViewFactory;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.presenter.SharingPresenter;
+import org.iplantc.de.commons.client.views.sharing.SharingPermissionView;
 import org.iplantc.de.diskResource.client.DataSharingView;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 import org.iplantc.de.shared.DataCallback;
@@ -34,7 +33,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import com.sencha.gxt.core.shared.FastMap;
 
@@ -49,7 +47,7 @@ public class DataSharingPresenterImpl implements SharingPresenter {
 
     class GetUserInfoCallback implements AsyncCallback<FastMap<Subject>> {
 
-        private DataUserPermissionList dataPermsList;
+        DataUserPermissionList dataPermsList;
 
         private GetUserInfoCallback(DataUserPermissionList dataPermsList) {
             this.dataPermsList = dataPermsList;
@@ -62,7 +60,7 @@ public class DataSharingPresenterImpl implements SharingPresenter {
 
         @Override
         public void onSuccess(FastMap<Subject> results) {
-            FastMap<List<Sharing>> dataSharingMap = new FastMap<>();
+            FastMap<List<Sharing>> dataSharingMap = createSharingListFastMap();
             for (DataUserPermission dataPermission : dataPermsList.getDataUserPermissions()) {
                 for (OldUserPermission userPerms : dataPermission.getUserPermissions()) {
                     String userName = userPerms.getUser();
@@ -80,11 +78,7 @@ public class DataSharingPresenterImpl implements SharingPresenter {
                     }
 
                     String path = dataPermission.getPath();
-                    Sharing dataSharing = new Sharing(user,
-                                                      PermissionValue.valueOf(userPerms.getPermission()),
-                                                      path,
-                                                      DiskResourceUtil.getInstance()
-                                                                      .parseNameFromPath(path));
+                    Sharing dataSharing = buildDataSharing(userPerms, user, path);
                     dataShares.add(dataSharing);
                 }
             }
@@ -94,7 +88,7 @@ public class DataSharingPresenterImpl implements SharingPresenter {
     }
 
 
-    class LoadPermissionsCallback extends DataCallback<String> {
+    class LoadPermissionsCallback extends DataCallback<DataUserPermissionList> {
 
         @Override
         public void onFailure(Integer statusCode, Throwable caught) {
@@ -103,11 +97,8 @@ public class DataSharingPresenterImpl implements SharingPresenter {
         }
 
         @Override
-        public void onSuccess(String result) {
-            DataUserPermissionList dataPermsList =
-                    AutoBeanCodex.decode(dataSharingFactory, DataUserPermissionList.class, result).as();
-
-            final List<String> usernames = new ArrayList<>();
+        public void onSuccess(DataUserPermissionList dataPermsList) {
+            final List<String> usernames = createEmptyStringList();
 
             for (DataUserPermission dataUserPermission : dataPermsList.getDataUserPermissions()) {
                 for (OldUserPermission up : dataUserPermission.getUserPermissions()) {
@@ -122,13 +113,14 @@ public class DataSharingPresenterImpl implements SharingPresenter {
     final DataSharingView view;
     private final DiskResourceServiceFacade diskResourceService;
     private final SharingPermissionView permissionsPanel;
-    private final List<DiskResource> selectedResources;
+    List<DiskResource> selectedResources;
     private final Appearance appearance;
     private DataSharingAutoBeanFactory dataSharingFactory;
     private DiskResourceAutoBeanFactory drFactory;
     private CollaboratorsServiceFacade collaboratorsServiceFacade;
     private final CollaboratorsUtil collaboratorsUtil;
-
+    @Inject DiskResourceUtil diskResourceUtil;
+    @Inject IplantAnnouncer iplantAnnouncer;
 
     @Inject
     public DataSharingPresenterImpl(final DiskResourceServiceFacade diskResourceService,
@@ -150,8 +142,6 @@ public class DataSharingPresenterImpl implements SharingPresenter {
         this.drFactory = drFactory;
         permissionsPanel = sharingViewFactory.create(this, getSelectedResourcesAsMap(selectedResources));
         view.addShareWidget(permissionsPanel.asWidget());
-        loadResources();
-        loadPermissions();
     }
 
     @Override
@@ -162,6 +152,8 @@ public class DataSharingPresenterImpl implements SharingPresenter {
     @Override
     public void go(HasOneWidget container) {
         container.setWidget(view.asWidget());
+        loadResources();
+        loadPermissions();
     }
 
     @Override
@@ -177,7 +169,7 @@ public class DataSharingPresenterImpl implements SharingPresenter {
 
     HasPaths getPaths(List<DiskResource> selectedResources) {
         HasPaths hasPaths = drFactory.pathsList().as();
-        List<String> paths = new ArrayList<>();
+        List<String> paths = createEmptyStringList();
 
         for (DiskResource resource : selectedResources) {
             String path = resource.getPath();
@@ -201,7 +193,7 @@ public class DataSharingPresenterImpl implements SharingPresenter {
         }
 
         if (requestBody != null || unshareRequestBody != null) {
-            IplantAnnouncer.getInstance().schedule(appearance.sharingCompleteMsg());
+            iplantAnnouncer.schedule(appearance.sharingCompleteMsg());
         }
 
     }
@@ -217,7 +209,7 @@ public class DataSharingPresenterImpl implements SharingPresenter {
         return false;
     }
 
-    private List<DataPermission> buildShareDataPermissionList(List<Sharing> shareList) {
+    List<DataPermission> buildShareDataPermissionList(List<Sharing> shareList) {
         List<DataPermission> dataPermList = new ArrayList<>();
 
         for(Sharing sharing : shareList) {
@@ -236,7 +228,7 @@ public class DataSharingPresenterImpl implements SharingPresenter {
         FastMap<List<Sharing>> sharingMap = permissionsPanel.getSharingMap();
 
         if (sharingMap != null && sharingMap.size() > 0) {
-            List<DataSharingRequest> requests = new ArrayList<>();
+            List<DataSharingRequest> requests = createEmptyDataSharingRequestList();
 
             for (String userName : sharingMap.keySet()) {
                 DataSharingRequest sharingRequest = dataSharingFactory.getDataSharingRequest().as();
@@ -259,7 +251,7 @@ public class DataSharingPresenterImpl implements SharingPresenter {
         FastMap<List<Sharing>> unsharingMap = permissionsPanel.getUnshareList();
 
         if (unsharingMap != null && unsharingMap.size() > 0) {
-            List<DataUnsharingRequest> requests = new ArrayList<>();
+            List<DataUnsharingRequest> requests = createEmptyDataUnsharingRequestList();
 
             for (String userName : unsharingMap.keySet()) {
                 DataUnsharingRequest unsharingRequest = dataSharingFactory.getDataUnsharingRequest().as();
@@ -277,7 +269,7 @@ public class DataSharingPresenterImpl implements SharingPresenter {
     }
 
     List<String> buildUnsharePathList(List<Sharing> shareList) {
-        List<String> paths = new ArrayList<>();
+        List<String> paths = createEmptyStringList();
         for(Sharing unshare : shareList) {
             String path = unshare.getId();
             paths.add(path);
@@ -317,7 +309,7 @@ public class DataSharingPresenterImpl implements SharingPresenter {
         });
     }
 
-    private FastMap<SharedResource> getSelectedResourcesAsMap(List<DiskResource> selectedResources) {
+    FastMap<SharedResource> getSelectedResourcesAsMap(List<DiskResource> selectedResources) {
         FastMap<SharedResource> resourcesMap = new FastMap<>();
         for (DiskResource sr : selectedResources) {
             resourcesMap.put(sr.getPath(),
@@ -326,5 +318,28 @@ public class DataSharingPresenterImpl implements SharingPresenter {
                                                                 .parseNameFromPath(sr.getPath())));
         }
         return resourcesMap;
+    }
+
+    Sharing buildDataSharing(OldUserPermission userPerms, Subject user, String path) {
+        return new Sharing(user,
+                           PermissionValue.valueOf(userPerms.getPermission()),
+                           path,
+                           diskResourceUtil.parseNameFromPath(path));
+    }
+
+    FastMap<List<Sharing>> createSharingListFastMap() {
+        return new FastMap<>();
+    }
+
+    ArrayList<String> createEmptyStringList() {
+        return new ArrayList<>();
+    }
+
+    ArrayList<DataSharingRequest> createEmptyDataSharingRequestList() {
+        return new ArrayList<>();
+    }
+
+    ArrayList<DataUnsharingRequest> createEmptyDataUnsharingRequestList() {
+        return new ArrayList<>();
     }
 }

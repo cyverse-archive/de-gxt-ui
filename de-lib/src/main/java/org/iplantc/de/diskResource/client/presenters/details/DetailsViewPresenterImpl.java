@@ -14,6 +14,8 @@ import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
+import java.util.List;
+
 /**
  * @author jstroot
  */
@@ -39,7 +41,8 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
     public void onUpdateResourceTagSelected(UpdateResourceTagSelected event) {
         DiskResource resource = event.getDiskResource();
         Tag tag = event.getTag();
-        metadataService.attachTags(Lists.newArrayList(tag), resource, new AsyncCallback<Void>() {
+        List<Tag> tagList = wrapInList(tag);
+        metadataService.attachTags(tagList, resource, new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(appearance.tagAttachError(), caught);
@@ -56,8 +59,8 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
     public void onRemoveResourceTagSelected(RemoveResourceTagSelected event) {
         Tag tag = event.getTag();
         DiskResource resource = event.getResource();
-
-        metadataService.detachTags(Lists.newArrayList(tag), resource, new AsyncCallback<Void>() {
+        List<Tag> tagList = wrapInList(tag);
+        metadataService.detachTags(tagList, resource, new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(appearance.tagDetachError(), caught);
@@ -75,4 +78,7 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
         return view;
     }
 
+    List<Tag> wrapInList(Tag tag) {
+        return Lists.newArrayList(tag);
+    }
 }
