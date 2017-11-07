@@ -16,7 +16,7 @@ public class PathListAutomationDialog extends IPlantDialog {
 
     private PathListAutomationView.PathListAutomationAppearance htAppearance;
     private PathListAutomationView view;
-    private InfoType requestInfoType;
+    private InfoType pathListType;
 
     @Inject
     public PathListAutomationDialog(PathListAutomationView.PathListAutomationAppearance htAppearance,
@@ -31,7 +31,7 @@ public class PathListAutomationDialog extends IPlantDialog {
 
     public void show(List<InfoType> infoTypes, InfoType requestInfoType) {
         view.addInfoTypes(infoTypes);
-        this.requestInfoType = requestInfoType;
+        this.pathListType = requestInfoType;
         if (requestInfoType.equals(InfoType.HT_ANALYSIS_PATH_LIST)) {
             setHeading(htAppearance.dialogHTHeading());
         } else if (requestInfoType.equals(InfoType.MULTI_INPUT_PATH_LIST)) {
@@ -42,7 +42,7 @@ public class PathListAutomationDialog extends IPlantDialog {
 
     public PathListRequest getRequest() {
         PathListRequest request = view.getRequest();
-        request.setRequestInfoType(requestInfoType);
+        request.setPathListType(pathListType);
         return request;
     }
 
@@ -52,6 +52,6 @@ public class PathListAutomationDialog extends IPlantDialog {
 
     @Override
     public void show() throws UnsupportedOperationException{
-        throw new UnsupportedOperationException("This method is not supported for this class. Use show(String List<InfoType>) instead.");
+        throw new UnsupportedOperationException("This method is not supported for this class. Use show(List<InfoType>, InfoType) instead.");
     }
 }

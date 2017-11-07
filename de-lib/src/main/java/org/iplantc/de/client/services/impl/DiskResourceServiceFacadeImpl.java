@@ -1054,7 +1054,7 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
     }
 
     @Override
-    public void requestHTPathlistFile(PathListRequest request, DECallback<File> callback) {
+    public void requestPathlistFile(PathListRequest request, DECallback<File> callback) {
         StringBuilder address =
                 new StringBuilder(deProperties.getDataMgmtBaseUrl() + "path-list-creator?");
         address.append("dest=" + URL.encodeQueryString(request.getDest()));
@@ -1068,6 +1068,11 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
                 address.append("&info-type=" + infotype);
             }
         }
+
+        if(request.getPathListType() != null) {
+            address.append("&path-list-type=" + request.getPathListType());
+        }
+        
         Splittable s = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
         Splittable spath = StringQuoter.createSplittable();
         s.get("paths").assign(spath,"paths");

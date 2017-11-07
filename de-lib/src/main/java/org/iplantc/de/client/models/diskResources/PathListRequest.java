@@ -26,7 +26,7 @@ public interface PathListRequest extends HasPaths {
 
     void setInfoTypes(List<String> infoTypes);
 
-    void setRequestInfoType(InfoType type);
+    void setPathListType(InfoType type);
 
-    InfoType getRequestInfoType();
+    InfoType getPathListType();
 }

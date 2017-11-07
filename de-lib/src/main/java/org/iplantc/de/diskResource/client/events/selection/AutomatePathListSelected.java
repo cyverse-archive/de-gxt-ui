@@ -13,13 +13,13 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public class AutomatePathListSelected
         extends GwtEvent<AutomatePathListSelected.AutomatePathListSelectedHandler> {
 
-    private final InfoType requestInfoType;
+    private final InfoType pathListType;
 
-    public InfoType getRequestInfoType() {
-        return requestInfoType;
+    public InfoType getPathListType() {
+        return pathListType;
     }
 
-    public static interface AutomatePathListSelectedHandler extends EventHandler {
+    public interface AutomatePathListSelectedHandler extends EventHandler {
         void onAutomatePathListSelected(AutomatePathListSelected event);
     }
 
@@ -30,8 +30,8 @@ public class AutomatePathListSelected
     public static Type<AutomatePathListSelectedHandler> TYPE =
             new Type<AutomatePathListSelectedHandler>();
 
-    public AutomatePathListSelected(InfoType requestInfoType) {
-        this.requestInfoType = requestInfoType;
+    public AutomatePathListSelected(InfoType pathListType) {
+        this.pathListType = pathListType;
     }
 
     public Type<AutomatePathListSelectedHandler> getAssociatedType() {

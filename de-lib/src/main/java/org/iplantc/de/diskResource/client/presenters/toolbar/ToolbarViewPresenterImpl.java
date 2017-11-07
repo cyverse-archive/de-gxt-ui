@@ -284,7 +284,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
 
             @Override
             public void onSuccess(List<InfoType> infoTypes) {
-                showPathAutomationDialog(infoTypes, event.getRequestInfoType());
+                showPathAutomationDialog(infoTypes, event.getPathListType());
             }
         });
     }
@@ -321,7 +321,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     protected void requestHTPathListCreation(PathListAutomationDialog dialog,
                                              PathListRequest request) {
         dialog.mask(htAppearance.processing());
-        drFacade.requestHTPathlistFile(request, new DataCallback<File>() {
+        drFacade.requestPathlistFile(request, new DataCallback<File>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 ErrorHandler.post(htAppearance.requestFailed(), exception);
