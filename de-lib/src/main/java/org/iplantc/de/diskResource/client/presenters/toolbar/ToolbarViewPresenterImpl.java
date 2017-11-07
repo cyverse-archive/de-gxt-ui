@@ -284,12 +284,12 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
 
             @Override
             public void onSuccess(List<InfoType> infoTypes) {
-                showPathAutomationDialog(infoTypes, event.getPathListType());
+                showPathAutomationDialog(infoTypes, event.getPathListInfoType());
             }
         });
     }
 
-    void showPathAutomationDialog(List<InfoType> infoTypes, InfoType requestInfoType) {
+    void showPathAutomationDialog(List<InfoType> infoTypes, InfoType pathListInfoType) {
         pathAutomationDlgProvider.get(new AsyncCallback<PathListAutomationDialog>() {
             @Override
             public void onFailure(Throwable caught) {}
@@ -307,7 +307,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
                 dialog.addCancelButtonSelectHandler(event -> {
                     dialog.hide();
                 });
-                dialog.show(infoTypes, requestInfoType);
+                dialog.show(infoTypes, pathListInfoType);
             }
         });
     }

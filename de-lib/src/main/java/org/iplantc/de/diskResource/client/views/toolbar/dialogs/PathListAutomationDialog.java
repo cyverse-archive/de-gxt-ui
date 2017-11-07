@@ -16,7 +16,7 @@ public class PathListAutomationDialog extends IPlantDialog {
 
     private PathListAutomationView.PathListAutomationAppearance htAppearance;
     private PathListAutomationView view;
-    private InfoType pathListType;
+    private InfoType pathListInfoType;
 
     @Inject
     public PathListAutomationDialog(PathListAutomationView.PathListAutomationAppearance htAppearance,
@@ -29,12 +29,12 @@ public class PathListAutomationDialog extends IPlantDialog {
         setModal(false);
     }
 
-    public void show(List<InfoType> infoTypes, InfoType requestInfoType) {
+    public void show(List<InfoType> infoTypes, InfoType pathListInfoType) {
         view.addInfoTypes(infoTypes);
-        this.pathListType = requestInfoType;
-        if (requestInfoType.equals(InfoType.HT_ANALYSIS_PATH_LIST)) {
+        this.pathListInfoType = pathListInfoType;
+        if (pathListInfoType.equals(InfoType.HT_ANALYSIS_PATH_LIST)) {
             setHeading(htAppearance.dialogHTHeading());
-        } else if (requestInfoType.equals(InfoType.MULTI_INPUT_PATH_LIST)) {
+        } else if (pathListInfoType.equals(InfoType.MULTI_INPUT_PATH_LIST)) {
             setHeading(htAppearance.dialogMultiInputHeading());
         }
         super.show();
@@ -42,7 +42,7 @@ public class PathListAutomationDialog extends IPlantDialog {
 
     public PathListRequest getRequest() {
         PathListRequest request = view.getRequest();
-        request.setPathListType(pathListType);
+        request.setPathListInfoType(pathListInfoType);
         return request;
     }
 

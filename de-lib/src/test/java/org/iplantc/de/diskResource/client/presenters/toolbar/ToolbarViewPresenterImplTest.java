@@ -151,7 +151,7 @@ public class ToolbarViewPresenterImplTest {
     @Test
     public void onAutomateHTPathListSelected() {
         AutomatePathListSelected eventMock = mock(AutomatePathListSelected.class);
-        when(eventMock.getPathListType()).thenReturn(InfoType.HT_ANALYSIS_PATH_LIST);
+        when(eventMock.getPathListInfoType()).thenReturn(InfoType.HT_ANALYSIS_PATH_LIST);
         ToolbarViewPresenterImpl spy = spy(uut);
         InfoType type1 = mock(InfoType.class);
         List<InfoType> typeList = Arrays.asList(type1);

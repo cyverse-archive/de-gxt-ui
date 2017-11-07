@@ -1069,8 +1069,8 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
             }
         }
 
-        if(request.getPathListType() != null) {
-            address.append("&path-list-type=" + request.getPathListType());
+        if(request.getPathListInfoType() != null) {
+            address.append("&path-list-info-type=" + request.getPathListInfoType());
         }
         
         Splittable s = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
