@@ -334,4 +334,9 @@ public class PreferencesViewDefaultAppearance implements PreferencesView.Prefere
     public String notification() {
         return desktopMessages.notification();
     }
+
+    @Override
+    public String webhookTypeFailure() {
+        return desktopMessages.webhookTypeFailure();
+    }
 }

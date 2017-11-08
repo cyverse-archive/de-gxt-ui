@@ -13,4 +13,8 @@ public interface WebhooksAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<Webhook> getWebhook();
 
+    AutoBean<WebhookType> getType();
+
+    AutoBean<WebhookTypeList> getWebhookTypeList();
+
 }

@@ -172,4 +172,6 @@ public interface DesktopMessages extends Messages {
     String general();
 
     String notification();
+
+    String webhookTypeFailure();
 }

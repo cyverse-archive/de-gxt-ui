@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.webhooks.WebhookTypeList;
 import org.iplantc.de.client.services.OauthServiceFacade;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -18,6 +19,7 @@ import org.iplantc.de.preferences.client.PreferencesView;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
 import org.iplantc.de.preferences.client.events.ResetHpcTokenClicked;
 import org.iplantc.de.preferences.client.events.TestWebhookClicked;
+import org.iplantc.de.shared.AppsCallback;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -54,6 +56,8 @@ public class PreferencesPresenterImplTest {
     @Captor ArgumentCaptor<AsyncCallback<Map<String, String>>> urlMapCaptor;
     @Mock Map<String, String> redirectUrlsMock;
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidAppsCaptor;
+    @Captor ArgumentCaptor<AppsCallback<WebhookTypeList>> typeListCaptor;
+
     @Mock
     IplantAnnouncer iplantAnnouncerMock;
     private PreferencesPresenterImpl uut;
@@ -75,8 +79,13 @@ public class PreferencesPresenterImplTest {
     @Test
     public void go() {
         /** CALL METHOD UNDER TEST **/
+        WebhookTypeList typeList = mock(WebhookTypeList.class);
         uut.go(desktopPresenterMock, userSettingsMock);
-        verify(viewMock).initAndShow(userSettingsMock);
+
+        verify(serviceFacadeMock).getWebhookTypes(typeListCaptor.capture());
+
+        typeListCaptor.getValue().onSuccess(typeList);
+        verify(viewMock).initAndShow(userSettingsMock, typeList);
     }
 
     @Test

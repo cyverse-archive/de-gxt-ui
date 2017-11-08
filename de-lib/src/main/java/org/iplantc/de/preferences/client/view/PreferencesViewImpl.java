@@ -7,6 +7,8 @@ import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.webhooks.Webhook;
+import org.iplantc.de.client.models.webhooks.WebhookType;
+import org.iplantc.de.client.models.webhooks.WebhookTypeList;
 import org.iplantc.de.client.models.webhooks.WebhooksAutoBeanFactory;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -34,11 +36,13 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.CheckBox;
+import com.sencha.gxt.widget.core.client.form.ComboBox;
 import com.sencha.gxt.widget.core.client.form.FieldSet;
 import com.sencha.gxt.widget.core.client.form.FormPanelHelper;
 import com.sencha.gxt.widget.core.client.form.IsField;
@@ -103,6 +107,10 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @Ignore
     TextButton hookDelBtn;
 
+    @UiField(provided = true)
+    @Ignore
+    ComboBox<WebhookType> typeCombo;
+
     @UiField
     @Ignore
     CheckBox dataNotification, appsNotification, analysesNotification, toolsNotification,
@@ -139,6 +147,11 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         this.KB_CONSTANTS = kbConstants;
         this.resetHpcfield = new HTML(appearance.resetHpcPrompt());
         this.webhooksfield = new HTML(appearance.webhooksPrompt());
+
+        ListStore<WebhookType> typeListStore = new ListStore<>(item -> item.getType());
+        typeCombo = new ComboBox<>(typeListStore, item -> item.getType());
+        typeCombo.setEditable(false);
+
         initWidget(uiBinder.createAndBindUi(this));
 
         hookUrl.addValidator(new UrlValidator());
@@ -193,12 +206,16 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     }
 
     @Override
-    public void initAndShow(final UserSettings userSettings) {
+    public void initAndShow(final UserSettings userSettings, WebhookTypeList typeList) {
         this.usValue = userSettings;
+        if (typeList!=null) {
+            typeCombo.getStore().addAll(typeList.getTypes());
+        }
         if (userSettings.getWebhooks() != null && userSettings.getWebhooks().size() > 0) {
             Webhook webhook = userSettings.getWebhooks().get(0);
             List<String> topics = webhook.getTopics();
             this.hookUrl.setValue(webhook.getUrl());
+            this.typeCombo.setValue(webhook.getType());
             List<IsField<?>> fields = FormPanelHelper.getFields(hookFieldSet);
             for (IsField f : fields) {
                 if (f instanceof CheckBox && (topics.contains(((CheckBox)f).getName()))) {
@@ -259,7 +276,7 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
             }
             Webhook hook = wabFactory.getWebhook().as();
             hook.setUrl(hookUrl.getValue());
-            hook.setType(hook.getDefaultType());
+            hook.setType(typeCombo.getValue());
             hook.setTopics(topics);
             value.setWebhooks(Arrays.asList(hook));
         } else {
@@ -389,7 +406,7 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     }
 
     @UiHandler("testBtn")
-    void onAddSlack(SelectEvent event) {
+    void onTest(SelectEvent event) {
         if (!Strings.isNullOrEmpty(hookUrl.getValue())) {
             fireEvent(new TestWebhookClicked(hookUrl.getValue()));
         } else {
