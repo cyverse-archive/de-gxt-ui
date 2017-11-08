@@ -75,6 +75,7 @@ public class GridViewImpl extends ContentPanel implements GridView,
     private final PagingLoader<FolderContentsLoadConfig, PagingLoadResult<DiskResource>> gridLoader;
     private final Status selectionStatus;
     private final LiveGridCheckBoxSelectionModel sm;
+    @Inject CommonModelUtils commonModelUtils;
 
     @Inject
     GridViewImpl(final GridView.Appearance appearance,
@@ -275,7 +276,7 @@ public class GridViewImpl extends ContentPanel implements GridView,
         if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER
                 && !Strings.isNullOrEmpty(pathField.getCurrentValue())) {
             String path = pathField.getCurrentValue();
-            HasPath folderToSelect = CommonModelUtils.getInstance().createHasPathFromString(path);
+            HasPath folderToSelect = commonModelUtils.createHasPathFromString(path);
             fireEvent(new DiskResourcePathSelectedEvent(folderToSelect));
         }
     }
@@ -298,7 +299,7 @@ public class GridViewImpl extends ContentPanel implements GridView,
     }
 
     private void updateSelectionCount(int selectionCount) {
-        selectionStatus.setText(selectionCount + " item(s)");
+        selectionStatus.setText(appearance.selectionCountStatus(selectionCount));
     }
 
 }

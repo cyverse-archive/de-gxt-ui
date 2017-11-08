@@ -16,6 +16,7 @@ import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.diskResource.client.MetadataView;
+import org.iplantc.de.diskResource.client.events.selection.MetadataInfoBtnSelected;
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetadataUpdateCallback;
 import org.iplantc.de.diskResource.client.presenters.metadata.proxy.AstroThesaurusLoadConfig;
@@ -24,6 +25,7 @@ import org.iplantc.de.diskResource.client.presenters.metadata.proxy.MetadataTerm
 import org.iplantc.de.diskResource.client.presenters.metadata.proxy.MetadataTermSearchProxy;
 import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLookupServiceLoadConfig;
 import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLookupServiceProxy;
+import org.iplantc.de.diskResource.client.views.metadata.dialogs.MetadataTemplateDescDlg;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.MetadataTemplateViewDialog;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.SelectMetadataTemplateDialog;
 import org.iplantc.de.diskResource.client.views.search.MetadataTermSearchField;
@@ -49,9 +51,10 @@ import java.util.List;
 /**
  * @author jstroot sriram
  */
-public class MetadataPresenterImpl implements MetadataView.Presenter {
+public class MetadataPresenterImpl implements MetadataView.Presenter,
+                                              MetadataInfoBtnSelected.MetadataInfoBtnSelectedHandler {
 
-   private class TemplateViewCancelSelectHandler implements SelectEvent.SelectHandler {
+    private class TemplateViewCancelSelectHandler implements SelectEvent.SelectHandler {
 
         private MetadataTemplateViewDialog metadataTemplateDlg;
 
@@ -126,6 +129,7 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
 
     @Inject AsyncProviderWrapper<MetadataTemplateViewDialog> templateViewDialogProvider;
     @Inject AsyncProviderWrapper<SelectMetadataTemplateDialog> selectMetaTemplateDlgProvider;
+    @Inject AsyncProviderWrapper<MetadataTemplateDescDlg> metadataTemplateDescDlgProvider;
     MetadataTemplateViewDialog templateViewDialog;
 
     @Inject
@@ -209,6 +213,21 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
                                                 }
                                             }});
                 dialog.show(templates, true);
+                dialog.addMetadataInfoBtnSelectedHandler(MetadataPresenterImpl.this);
+            }
+        });
+    }
+
+    @Override
+    public void onMetadataInfoBtnSelected(MetadataInfoBtnSelected event) {
+        metadataTemplateDescDlgProvider.get(new AsyncCallback<MetadataTemplateDescDlg>() {
+            @Override
+            public void onFailure(Throwable caught) {}
+
+            @Override
+            public void onSuccess(MetadataTemplateDescDlg result) {
+                MetadataTemplateInfo info = event.getTemplateInfo();
+                result.show(info);
             }
         });
     }
@@ -382,8 +401,6 @@ public class MetadataPresenterImpl implements MetadataView.Presenter {
                             templateViewDialog));
                     templateViewDialog.setHeading(result.getName());
                     templateViewDialog.setModal(false);
-                    templateViewDialog.setSize("640px", "480px");
-                    templateViewDialog.addMdTermDictionary(templateAttributes);
                     templateViewDialog.show(MetadataPresenterImpl.this,
                                             view.getUserMetadata(),
                                             isWritable(),

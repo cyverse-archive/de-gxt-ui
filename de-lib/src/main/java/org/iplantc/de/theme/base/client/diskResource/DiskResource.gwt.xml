@@ -116,6 +116,15 @@
         <when-type-is class="org.iplantc.de.diskResource.client.views.toolbar.dialogs.TabFileConfigDialog.TabFileConfigDialogAppearance" />
     </replace-with>
 
+    <replace-with class="org.iplantc.de.theme.base.client.diskResource.metadata.cells.DownloadTemplateCellDefaultAppearance">
+        <when-type-is class="org.iplantc.de.diskResource.client.views.metadata.cells.DownloadTemplateCell.DownloadTemplateCellAppearance" />
+    </replace-with>
+
+    <replace-with class="org.iplantc.de.theme.base.client.diskResource.metadata.cells.TemplateInfoCellDefaultAppearance">
+        <when-type-is class="org.iplantc.de.diskResource.client.views.metadata.cells.TemplateInfoCell.TemplateInfoCellAppearance" />
+    </replace-with>
+
+
     <!-- Details -->
     <replace-with class="org.iplantc.de.theme.base.client.diskResource.details.DetailsViewDefaultAppearance">
         <when-type-is class="org.iplantc.de.diskResource.client.DetailsView.Appearance" />

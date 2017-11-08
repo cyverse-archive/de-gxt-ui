@@ -97,4 +97,14 @@ public class MetadataPresenterDefaultAppearance implements MetadataView.Presente
 	public String dialogHeight() {
 		return "400px";
 	}
+
+	@Override
+	public int infoColumnWidth() {
+		return 150;
+	}
+
+	@Override
+	public int downloadColumnWidth() {
+		return 30;
+	}
 }

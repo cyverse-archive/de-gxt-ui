@@ -1,21 +1,21 @@
-package org.iplantc.de.diskResource.client.views.metadata.dialogs;
+package org.iplantc.de.diskResource.client.views.metadata.cells;
 
 import static com.google.gwt.dom.client.BrowserEvents.CLICK;
 
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
-import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.events.TemplateDownloadEvent;
+import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.ValueUpdater;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Event;
+import com.google.inject.Inject;
 
 /**
  * Created by sriram on 6/27/16.
@@ -29,10 +29,15 @@ public class DownloadTemplateCell extends AbstractCell<MetadataTemplateInfo> {
     }
 
     private final DownloadTemplateCellAppearance appearance;
+    private EventBus eventBus;
+    private String debugId;
 
-    public DownloadTemplateCell() {
+    @Inject
+    public DownloadTemplateCell(DownloadTemplateCellAppearance appearance,
+                                EventBus eventBus) {
         super(CLICK);
-        appearance = GWT.create(DownloadTemplateCellAppearance.class);
+        this.appearance = appearance;
+        this.eventBus = eventBus;
     }
 
 
@@ -51,7 +56,7 @@ public class DownloadTemplateCell extends AbstractCell<MetadataTemplateInfo> {
         if (child != null && child.isOrHasChild(eventTarget)) {
             switch (Event.as(event).getTypeInt()) {
                 case Event.ONCLICK:
-                    doOnClick(eventTarget, value);
+                    doOnClick(value);
                     break;
                 default:
                     break;
@@ -75,12 +80,17 @@ public class DownloadTemplateCell extends AbstractCell<MetadataTemplateInfo> {
         return null;
     }
 
-    private void doOnClick(Element eventTarget, MetadataTemplateInfo value) {
-        EventBus.getInstance().fireEvent(new TemplateDownloadEvent(value.getId()));
+    private void doOnClick(MetadataTemplateInfo value) {
+        eventBus.fireEvent(new TemplateDownloadEvent(value.getId()));
     }
 
     @Override
     public void render(Cell.Context context, MetadataTemplateInfo value, SafeHtmlBuilder sb) {
-         appearance.render(sb,value.getId());
+        String id = debugId + "." + value.getId() + DiskResourceModule.MetadataIds.DOWNLOAD_TEMPLATE_CELL;
+        appearance.render(sb, id);
+    }
+
+    public void setBaseDebugId(String debugId) {
+        this.debugId = debugId;
     }
 }

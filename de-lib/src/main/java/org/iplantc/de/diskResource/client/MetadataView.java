@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import java.util.List;
 
 /**
- * Created by jstroot on 2/10/15.
+ * A view to allow users to create and modify metadata for any disk resource
  *
  * @author jstroot
  */
@@ -99,8 +99,23 @@ public interface MetadataView extends IsWidget {
         String requiredGhostText();
 
         String importUMdBtnText();
+
+        String metadataTermDlgWidth();
+
+        String metadataTermDlgHeight();
+
+        SafeHtml guideLabel(String name);
+
+        SafeHtml guideHelpText(String description);
+
+        String dialogWidth();
+
+        String dialogHeight();
     }
 
+    /**
+     * A presenter to to handle the logic for MetadataView
+     */
     public interface Presenter {
 
         final String AVU_BEAN_TAG_MODEL_KEY = "model-key";
@@ -136,6 +151,10 @@ public interface MetadataView extends IsWidget {
             String dialogWidth();
 
             String dialogHeight();
+
+            int infoColumnWidth();
+
+            int downloadColumnWidth();
         }
 
         boolean isValid();

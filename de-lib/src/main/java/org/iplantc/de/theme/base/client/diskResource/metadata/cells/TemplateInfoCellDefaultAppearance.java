@@ -1,8 +1,9 @@
-package org.iplantc.de.theme.base.client.diskResource.metadata;
+package org.iplantc.de.theme.base.client.diskResource.metadata.cells;
 
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
-import org.iplantc.de.diskResource.client.views.metadata.dialogs.TemplateNameCell;
+import org.iplantc.de.diskResource.client.views.metadata.cells.TemplateInfoCell;
 import org.iplantc.de.resources.client.IplantResources;
+import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.debug.client.DebugInfo;
@@ -16,7 +17,7 @@ import com.google.gwt.safehtml.shared.SafeUri;
 /**
  * Created by sriram on 7/7/16.
  */
-public class TemplateNameCellDefaultAppearance implements TemplateNameCell.TemplateNameCellAppearance {
+public class TemplateInfoCellDefaultAppearance implements TemplateInfoCell.TemplateInfoCellAppearance {
 
     interface  MyCss extends CssResource {
         @CssResource.ClassName("info")
@@ -27,7 +28,7 @@ public class TemplateNameCellDefaultAppearance implements TemplateNameCell.Templ
     }
 
     interface Resources extends ClientBundle {
-        @Source("TemplateNameCell.gss")
+        @Source("TemplateInfoCell.gss")
         MyCss css();
     }
 
@@ -42,31 +43,34 @@ public class TemplateNameCellDefaultAppearance implements TemplateNameCell.Templ
     private final Templates templates;
     private final Resources resources;
     private final IplantResources iplantResources;
+    private IplantDisplayStrings iplantDisplayStrings;
 
 
-    public TemplateNameCellDefaultAppearance() {
+    public TemplateInfoCellDefaultAppearance() {
         this(GWT.<Templates> create(Templates.class),
              GWT.<Resources> create(Resources.class),
-             GWT.<IplantResources> create(IplantResources.class));
+             GWT.<IplantResources> create(IplantResources.class),
+             GWT.<IplantDisplayStrings> create(IplantDisplayStrings.class));
     }
 
-    TemplateNameCellDefaultAppearance(final Templates templates,
-                                          final Resources resources,
-                                          final IplantResources iplantResources)  {
+    TemplateInfoCellDefaultAppearance(final Templates templates,
+                                      final Resources resources,
+                                      final IplantResources iplantResources,
+                                      IplantDisplayStrings iplantDisplayStrings)  {
         this.templates = templates;
         this.resources = resources;
         this.iplantResources = iplantResources;
+        this.iplantDisplayStrings = iplantDisplayStrings;
         this.resources.css().ensureInjected();
     }
 
     @Override
-    public void render(SafeHtmlBuilder sb, MetadataTemplateInfo value) {
-        String imgClassName, tooltip;
+    public void render(SafeHtmlBuilder sb, MetadataTemplateInfo value, String id) {
+        String imgClassName;
         imgClassName = resources.css().info();
-        tooltip = "info";
         final SafeUri safeUri = iplantResources.info().getSafeUri();
         if(DebugInfo.isDebugIdEnabled()){
-            sb.append(templates.debugCell(imgClassName, safeUri, value.getName(), value.getId() + "-info",description()));
+            sb.append(templates.debugCell(imgClassName, safeUri, value.getName(), id, description()));
         } else {
             sb.append(templates.cell(imgClassName, safeUri, value.getName(), description()));
         }
@@ -75,11 +79,21 @@ public class TemplateNameCellDefaultAppearance implements TemplateNameCell.Templ
 
     @Override
     public String description() {
-        return "Description";
+        return iplantDisplayStrings.description();
     }
 
     @Override
     public String background() {
         return resources.css().background();
+    }
+
+    @Override
+    public String descriptionWidth() {
+        return "500";
+    }
+
+    @Override
+    public String descriptionHeight() {
+        return "100";
     }
 }
