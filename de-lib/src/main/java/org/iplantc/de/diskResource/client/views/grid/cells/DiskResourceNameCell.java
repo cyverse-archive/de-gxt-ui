@@ -63,10 +63,6 @@ public class DiskResourceNameCell extends AbstractCell<DiskResource> {
 
     private String baseID;
 
-    public void setBaseDebugId(String baseID) {
-        this.baseID = baseID;
-    }
-
     private final boolean previewEnabled;
     private HasHandlers hasHandlers;
 
@@ -150,6 +146,10 @@ public class DiskResourceNameCell extends AbstractCell<DiskResource> {
                     break;
             }
         }
+    }
+
+    public void setBaseDebugId(String baseID) {
+        this.baseID = baseID;
     }
 
     public void setHasHandlers(HasHandlers hasHandlers) {

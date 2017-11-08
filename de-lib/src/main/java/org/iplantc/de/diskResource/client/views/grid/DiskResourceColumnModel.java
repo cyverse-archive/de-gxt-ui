@@ -15,7 +15,6 @@ import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelect
 import org.iplantc.de.diskResource.client.model.DiskResourceNameComparator;
 import org.iplantc.de.diskResource.client.model.DiskResourceProperties;
 import org.iplantc.de.diskResource.client.views.grid.cells.DiskResourceDotMenuCell;
-import org.iplantc.de.diskResource.client.views.grid.cells.DiskResourceFavoriteCell;
 import org.iplantc.de.diskResource.client.views.grid.cells.DiskResourceNameCell;
 import org.iplantc.de.diskResource.client.views.grid.cells.DiskResourcePathCell;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
@@ -62,8 +61,6 @@ public class DiskResourceColumnModel extends ColumnModel<DiskResource> implement
                 ((DiskResourceDotMenuCell)cc.getCell()).setHasHandlers(this);
             } else if(cc.getCell() instanceof DiskResourcePathCell) {
                 ((DiskResourcePathCell)cc.getCell()).setHasHandlers(this);
-            } else if(cc.getCell() instanceof DiskResourceFavoriteCell) {
-                ((DiskResourceFavoriteCell)cc.getCell()).setHasHandlers(this);
             }
         }
     }
@@ -180,8 +177,6 @@ public class DiskResourceColumnModel extends ColumnModel<DiskResource> implement
                 ((DiskResourceNameCell)cc.getCell()).setBaseDebugId(baseID + DiskResourceModule.Ids.GRID);
             } else if(cc.getCell() instanceof DiskResourceDotMenuCell){
                 ((DiskResourceDotMenuCell)cc.getCell()).setBaseDebugId(baseID + DiskResourceModule.Ids.GRID);
-            } else if(cc.getCell() instanceof DiskResourceFavoriteCell){
-                ((DiskResourceFavoriteCell)cc.getCell()).setBaseDebugId(baseID + DiskResourceModule.Ids.GRID);
             } else if(cc.getCell() instanceof DiskResourcePathCell) {
                 ((DiskResourcePathCell)cc.getCell()).setBaseDebugId(baseID + DiskResourceModule.Ids.GRID);
             }

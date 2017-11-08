@@ -118,6 +118,14 @@ public interface DiskResourceModule {
         String DETAILS_MD5 = ".md5";
         String DETAILS_SEND_TO = ".sendTo";
         String DETAILS_TAGS = ".tags";
+        String INFO_TYPE_DLG = "infoTypeDlg";
+        String INFO_TYPE_DROPDOWN = ".infoTypeList";
+        String MULTI_FILE_WIDGET_TOOLBAR = ".toolbar";
+        String MULTI_FILE_WIDGET_ADD = ".addBtn";
+        String MULTI_FILE_WIDGET_DELETE = ".deleteBtn";
+        String METADATA_COPY_DLG = "metadataCopyDlg";
+        String SAVE_AS_DIALOG = "saveAsDlg";
+        String FILE_NAME = ".fileName";
     }
 
     interface MetadataIds {

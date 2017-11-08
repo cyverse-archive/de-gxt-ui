@@ -149,4 +149,24 @@ public class GridViewDefaultAppearance implements GridView.Appearance {
         return displayStrings.noItemsToDisplay();
     }
 
+    @Override
+    public String infoTypeDialogWidth() {
+        return "300";
+    }
+
+    @Override
+    public String infoTypeDialogHeight() {
+        return "100";
+    }
+
+    @Override
+    public String infoTypeDialogHeader() {
+        return displayStrings.infoTypeDialogHeader();
+    }
+
+    @Override
+    public String infoTypeEmptyText() {
+        return displayStrings.infoTypeEmptyText();
+    }
+
 }

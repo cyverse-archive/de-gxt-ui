@@ -90,4 +90,8 @@ public interface GridViewDisplayStrings extends Messages {
     String copyMetadataNoResources();
 
     String saving();
+
+    String infoTypeDialogHeader();
+
+    String infoTypeEmptyText();
 }

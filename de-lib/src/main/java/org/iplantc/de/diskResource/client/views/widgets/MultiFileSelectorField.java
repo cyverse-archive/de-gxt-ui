@@ -20,6 +20,7 @@ import org.iplantc.de.diskResource.client.model.DiskResourceModelKeyProvider;
 import org.iplantc.de.diskResource.client.model.DiskResourceProperties;
 import org.iplantc.de.diskResource.client.views.dialogs.FileFolderSelectDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.FileSelectDialog;
+import org.iplantc.de.diskResource.share.DiskResourceModule;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DataCallback;
@@ -601,5 +602,16 @@ public class MultiFileSelectorField extends Composite implements
         dataDrop.addDragEnterHandler(this);
         dataDrop.addDragMoveHandler(this);
         dataDrop.addDropHandler(this);
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        String toolbarId = baseID + DiskResourceModule.Ids.MULTI_FILE_WIDGET_TOOLBAR;
+        toolbar.ensureDebugId(toolbarId);
+        addButton.ensureDebugId(toolbarId + DiskResourceModule.Ids.MULTI_FILE_WIDGET_ADD);
+        deleteButton.ensureDebugId(toolbarId + DiskResourceModule.Ids.MULTI_FILE_WIDGET_DELETE);
+        grid.ensureDebugId(baseID + DiskResourceModule.Ids.GRID);
     }
 }

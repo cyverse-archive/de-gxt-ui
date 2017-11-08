@@ -9,6 +9,7 @@ import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.diskResource.client.DiskResourceView;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourcePresenterFactory;
+import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.common.base.Strings;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -116,11 +117,13 @@ public class SaveAsDialog extends IPlantDialog {
         presenter.addFolderSelectedEventHandler(new FolderSelectionChangedHandler());
         presenter.go(this);
         super.show();
+
+        ensureDebugId(DiskResourceModule.Ids.SAVE_AS_DIALOG);
     }
 
     @Override
     public void show() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("");
+        throw new UnsupportedOperationException("This method is not supported for this class.  Use show(HasPath) instead." );
     }
 
     public void cleanUp() {
@@ -167,4 +170,14 @@ public class SaveAsDialog extends IPlantDialog {
         return vlc;
     }
 
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        presenter.setViewDebugId(baseID);
+        selectedFolderField.ensureDebugId(baseID + DiskResourceModule.Ids.FOLDER_NAME);
+        fileNameField.ensureDebugId(baseID + DiskResourceModule.Ids.FILE_NAME);
+
+        getOkButton().ensureDebugId(baseID + DiskResourceModule.Ids.OK_BTN);
+    }
 }
