@@ -63,7 +63,6 @@ import org.iplantc.de.diskResource.client.views.sharing.dialogs.DataSharingDialo
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.ShareResourceLinkDialog;
 import org.iplantc.de.diskResource.client.views.toolbar.DiskResourceViewToolbarImpl;
 import org.iplantc.de.diskResource.client.views.toolbar.FileUploadByUrlViewImpl;
-import org.iplantc.de.diskResource.client.views.toolbar.HTPathListAutomationViewImpl;
 import org.iplantc.de.diskResource.client.views.toolbar.PathListAutomationViewImpl;
 
 import com.google.gwt.inject.client.AbstractGinModule;
