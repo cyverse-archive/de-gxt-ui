@@ -80,6 +80,10 @@ public class FileSelectDialog extends IPlantDialog implements TakesValue<List<Fi
         String headerText();
 
         String selectorFieldLabel();
+
+        String dialogWidth();
+
+        String dialogHeight();
     }
 
     private final DiskResourcePresenterFactory presenterFactory;
@@ -100,7 +104,7 @@ public class FileSelectDialog extends IPlantDialog implements TakesValue<List<Fi
         getOkButton().setEnabled(false);
 
         setResizable(true);
-        setSize("640", "480");
+        setSize(appearance.dialogWidth(), appearance.dialogHeight());
         setHeading(appearance.headerText());
 
         selectedFileField = new TextField();

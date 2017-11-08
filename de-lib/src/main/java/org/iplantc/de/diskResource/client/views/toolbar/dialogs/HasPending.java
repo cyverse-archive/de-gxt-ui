@@ -1,6 +1,6 @@
-package org.iplantc.de.diskResource.client.views.dialogs;
+package org.iplantc.de.diskResource.client.views.toolbar.dialogs;
 
-interface HasPending <O> {
+public interface HasPending <O> {
 
     boolean addPending(O obj);
     

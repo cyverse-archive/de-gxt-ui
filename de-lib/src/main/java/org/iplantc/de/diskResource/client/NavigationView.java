@@ -83,6 +83,14 @@ public interface NavigationView extends IsWidget,
             String retrieveFolderInfoFailed();
 
             String savedFiltersRetrievalFailure();
+
+            String permissionErrorTitle();
+
+            String permissionErrorMessage();
+
+            String fileExist();
+
+            String uploadFailErrorMessage();
         }
 
         void addFolder(Folder folder);

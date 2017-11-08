@@ -25,4 +25,14 @@ public class FileSelectDialogDefaultAppearance implements FileSelectDialog.FileS
     public String selectorFieldLabel() {
         return messages.selectedFile();
     }
+
+    @Override
+    public String dialogWidth() {
+        return "640";
+    }
+
+    @Override
+    public String dialogHeight() {
+        return "480";
+    }
 }

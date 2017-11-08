@@ -3,12 +3,16 @@ package org.iplantc.de.diskResource.client.presenters.navigation;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.events.diskResources.DiskResourcesMovedEvent;
 import org.iplantc.de.client.events.diskResources.FolderRefreshedEvent;
+import org.iplantc.de.client.models.CommonModelAutoBeanFactory;
 import org.iplantc.de.client.models.HasPath;
+import org.iplantc.de.client.models.HasPaths;
+import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
+import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.DiskResourceView;
@@ -19,7 +23,6 @@ import org.iplantc.de.diskResource.client.events.DiskResourceRenamedEvent;
 import org.iplantc.de.diskResource.client.events.DiskResourcesDeletedEvent;
 import org.iplantc.de.diskResource.client.events.FolderCreatedEvent;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
-import org.iplantc.de.diskResource.client.events.RequestImportFromUrlEvent;
 import org.iplantc.de.diskResource.client.events.RequestSimpleUploadEvent;
 import org.iplantc.de.diskResource.client.events.RootFoldersRetrievedEvent;
 import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent;
@@ -30,10 +33,15 @@ import org.iplantc.de.diskResource.client.events.selection.ImportFromUrlSelected
 import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleUploadSelected;
 import org.iplantc.de.diskResource.client.gin.factory.NavigationViewFactory;
+import org.iplantc.de.diskResource.client.presenters.callbacks.DuplicateDiskResourceCallback;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsLoadConfig;
 import org.iplantc.de.diskResource.client.presenters.navigation.proxy.CachedFolderTreeStoreBinding;
 import org.iplantc.de.diskResource.client.presenters.navigation.proxy.SelectFolderByPathLoadHandler;
 import org.iplantc.de.diskResource.client.views.navigation.NavigationViewDnDHandler;
+import org.iplantc.de.diskResource.client.views.toolbar.dialogs.FileUploadByUrlDialog;
+import org.iplantc.de.diskResource.client.views.toolbar.dialogs.HasPending;
+import org.iplantc.de.shared.AppsCallback;
+import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -42,16 +50,24 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.data.shared.event.StoreDataChangeEvent;
 import com.sencha.gxt.data.shared.loader.BeforeLoadEvent;
 import com.sencha.gxt.data.shared.loader.TreeLoader;
+import com.sencha.gxt.fx.client.FxElement;
+import com.sencha.gxt.widget.core.client.Status;
+import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
+import com.sencha.gxt.widget.core.client.form.Field;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author jstroot
@@ -65,8 +81,7 @@ public class NavigationPresenterImpl implements
                                     FolderCreatedEvent.FolderCreatedEventHandler,
                                     DiskResourcesMovedEvent.DiskResourcesMovedEventHandler {
 
-    class FolderStoreDataChangeHandler implements
-                                                     StoreDataChangeEvent.StoreDataChangeHandler<Folder> {
+    class FolderStoreDataChangeHandler implements StoreDataChangeEvent.StoreDataChangeHandler<Folder> {
         private final NavigationView.Appearance appearance;
         private final Tree<Folder, Folder> tree;
 
@@ -92,6 +107,83 @@ public class NavigationPresenterImpl implements
         }
     }
 
+    final class CheckDuplicatesCallback <D extends UIObject & IsHideable & HasPending<Map.Entry<Field<String>, Status>>> extends
+                                                                                                                                 DuplicateDiskResourceCallback {
+        private final Map<String, Field<String>> destResourceMap;
+        private final Folder uploadDest;
+        private final DiskResourceServiceFacade drService;
+        private final D dlg;
+        private final Map<Field<String>, Status> fieldToStatusMap;
+
+        public CheckDuplicatesCallback(Map<String, Field<String>> destResourceMap, Map<Field<String>, Status> fieldToStatusMap, Folder uploadDest, DiskResourceServiceFacade drService, D dlg) {
+            super(Lists.newArrayList(destResourceMap.keySet()), null);
+            this.destResourceMap = destResourceMap;
+            this.fieldToStatusMap = fieldToStatusMap;
+            this.uploadDest = uploadDest;
+            this.drService = drService;
+            this.dlg = dlg;
+        }
+
+        @Override
+        public void markDuplicates(Collection<String> duplicates) {
+            for(Map.Entry<String, Field<String>> entry : destResourceMap.entrySet()){
+                Field<String> urlField = entry.getValue();
+                Status formStatus = fieldToStatusMap.get(urlField);
+
+                if (duplicates.contains(entry.getKey())){
+                    urlField.markInvalid(appearance.fileExist());
+                    formStatus.clearStatus("");
+                } else {
+                    Map.Entry<Field<String>, Status> e = getEntry(formStatus);
+                    dlg.addPending(e);
+                    drService.importFromUrl(urlField.getValue(), uploadDest, new ImportFromUrlCallback<>(dlg, e));
+                }
+            }
+        }
+
+        private Map.Entry<Field<String>, Status> getEntry(Status status){
+            for (Map.Entry<Field<String>, Status> e : fieldToStatusMap.entrySet()) {
+                if (e.getValue() == status) {
+                    return e;
+                }
+            }
+            return null;
+        }
+    }
+
+    final class ImportFromUrlCallback <D extends UIObject & IsHideable & HasPending<Map.Entry<Field<String>, Status>>> extends
+                                                                                                                               AppsCallback<String> {
+        private final D dlg;
+        private final Map.Entry<Field<String>, Status> pending;
+
+        public ImportFromUrlCallback(D dlg, Map.Entry<Field<String>, Status> pending) {
+            this.dlg = dlg;
+            this.pending = pending;
+        }
+
+        @Override
+        public void onSuccess(String result) {
+            dlg.removePending(pending);
+            pending.getValue().clearStatus("");
+            if(!dlg.hasPending()){
+                dlg.hide();
+            }
+        }
+
+        @Override
+        public void onFailure(Integer statusCode, Throwable caught) {
+            // TODO JDS Determine how to update the UI
+            if (dlg.getNumPending() == 1) {
+                // ErrorHandler.post(caught);
+                // "Blink" the window on the last pending element.
+                dlg.getElement().<FxElement>cast().blink();
+            }
+
+            pending.getKey().markInvalid(appearance.uploadFailErrorMessage());
+            dlg.removePending(pending);
+        }
+    }
+
     final TreeStore<Folder> treeStore;
     @Inject IplantAnnouncer announcer;
     @Inject NavigationView.Presenter.Appearance appearance;
@@ -104,6 +196,9 @@ public class NavigationPresenterImpl implements
     private final NavigationView view;
     private IsMaskable maskable;
     private HandlerManager handlerManager;
+    @Inject AsyncProviderWrapper<FileUploadByUrlDialog> urlImportDlgProvider;
+    @Inject DiskResourceServiceFacade drService;
+    @Inject CommonModelAutoBeanFactory factory;
 
     @Inject
     NavigationPresenterImpl(final NavigationViewFactory viewFactory,
@@ -244,7 +339,69 @@ public class NavigationPresenterImpl implements
         if (destinationFolder == null) {
             destinationFolder = getSelectedUploadFolder();
         }
-        eventBus.fireEvent(new RequestImportFromUrlEvent(destinationFolder));
+
+        if (canUpload(destinationFolder)) {
+            Folder finalDestinationFolder = destinationFolder;
+            urlImportDlgProvider.get(new AsyncCallback<FileUploadByUrlDialog>() {
+                @Override
+                public void onFailure(Throwable caught) {}
+
+                @Override
+                public void onSuccess(FileUploadByUrlDialog dialog) {
+                    dialog.show(finalDestinationFolder);
+                    dialog.addCancelButtonSelectHandler(selectEvent -> dialog.hide());
+                    dialog.addOkButtonSelectHandler(selectEvent -> {
+                        dialog.getOkButton().setEnabled(false);
+                        handleUrlImport(finalDestinationFolder, dialog.getFieldToStatusMap(), dialog);
+                    });
+                }
+            });
+        }
+    }
+
+    void handleUrlImport(Folder destinationFolder, Map<Field<String>, Status> fieldToStatusMap, FileUploadByUrlDialog dialog) {
+        final FastMap<Field<String>> destResourceMap = new FastMap<>();
+
+        for (Map.Entry<Field<String>, Status> entry : fieldToStatusMap.entrySet()) {
+            Field<String> field = entry.getKey();
+            if(field.getValue() == null)
+                continue;
+            String url = field.getValue().trim();
+            if (!url.isEmpty()) {
+                Status status = entry.getValue();
+                status.setBusy("");
+                status.show();
+                field.setValue(url);
+                String resourceId = destinationFolder.getPath() + "/" + diskResourceUtil.parseNameFromPath(url);
+                destResourceMap.put(resourceId, field);
+            } else {
+                field.setEnabled(false);
+            }
+        }
+
+        if (!destResourceMap.isEmpty()) {
+            final HasPaths dto = factory.hasPaths().as();
+            dto.setPaths(Lists.newArrayList(destResourceMap.keySet()));
+            drService.diskResourcesExist(dto, new CheckDuplicatesCallback<>(destResourceMap,
+                                                                            fieldToStatusMap,
+                                                                            destinationFolder,
+                                                                            drService,
+                                                                            dialog));
+        }
+    }
+
+    boolean canUpload(Folder uploadDest) {
+        if (uploadDest != null && diskResourceUtil.canUploadTo(uploadDest)) {
+            return true;
+        } else {
+            showErrorMsg();
+            return false;
+        }
+    }
+
+    void showErrorMsg() {
+        new AlertMessageBox(appearance.permissionErrorTitle(),
+                            appearance.permissionErrorMessage()).show();
     }
 
     @Override

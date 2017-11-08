@@ -13,4 +13,6 @@ public interface NavigationDisplayStrings extends Messages {
     String retrieveFolderInfoFailed();
 
     String savedFiltersRetrievalFailure();
+
+    String uploadFailErrorMessage();
 }

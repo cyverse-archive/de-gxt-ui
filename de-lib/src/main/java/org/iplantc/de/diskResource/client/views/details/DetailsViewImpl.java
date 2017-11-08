@@ -21,6 +21,7 @@ import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected;
 import org.iplantc.de.diskResource.client.events.selection.UpdateResourceTagSelected;
+import org.iplantc.de.diskResource.share.DiskResourceModule;
 import org.iplantc.de.tags.client.TagsView;
 import org.iplantc.de.tags.client.events.TagAddedEvent;
 import org.iplantc.de.tags.client.events.TagCreated;
@@ -97,10 +98,8 @@ public class DetailsViewImpl extends Composite implements DetailsView,
     @UiField @Ignore InlineLabel size;
     @UiField TableRowElement sizeRow;
     @UiField TableElement table;
-    @UiField
-    TableRowElement md5Row;
-    @UiField
-    InlineHyperlink md5link;
+    @UiField TableRowElement md5Row;
+    @UiField InlineHyperlink md5link;
     @UiField(provided = true) TagsView tagListView;
     private static final DetailsViewImplUiBinder ourUiBinder = GWT.create(DetailsViewImplUiBinder.class);
     private final Logger LOG = Logger.getLogger(DetailsViewImpl.class.getSimpleName());
@@ -424,6 +423,23 @@ public class DetailsViewImpl extends Composite implements DetailsView,
     @Override
     public void onFetchDetailsCompleted(FetchDetailsCompleted event) {
         unmask();
+    }
+
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        lastModified.ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_LAST_MODIFIED);
+        dateCreated.ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_DATE_SUBMITTED);
+        permission.ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_PERMISSIONS);
+        sharing.ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_SHARE);
+        size.ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_SIZE);
+        mimeType.ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_TYPE);
+        infoType.ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_INFO_TYPE);
+        md5link.ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_MD5);
+        sendTo.ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_SEND_TO);
+        tagListView.asWidget().ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_TAGS);
     }
 
     @Override

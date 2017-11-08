@@ -34,14 +34,12 @@ import org.iplantc.de.commons.client.views.window.configs.PipelineEditorWindowCo
 import org.iplantc.de.commons.client.views.window.configs.SimpleDownloadWindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.diskResource.client.events.CreateNewFileEvent;
-import org.iplantc.de.diskResource.client.events.RequestImportFromUrlEvent;
 import org.iplantc.de.diskResource.client.events.RequestSendToCoGeEvent;
 import org.iplantc.de.diskResource.client.events.RequestSendToEnsemblEvent;
 import org.iplantc.de.diskResource.client.events.RequestSendToTreeViewerEvent;
 import org.iplantc.de.diskResource.client.events.RequestSimpleDownloadEvent;
 import org.iplantc.de.diskResource.client.events.RequestSimpleUploadEvent;
 import org.iplantc.de.diskResource.client.events.ShowFilePreviewEvent;
-import org.iplantc.de.diskResource.client.views.dialogs.FileUploadByUrlDialog;
 import org.iplantc.de.fileViewers.client.callbacks.GenomeBrowserUtil;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
 import org.iplantc.de.systemMessages.client.events.ShowSystemMessagesEvent;
@@ -84,7 +82,6 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
                                                            RequestSendToCoGeEvent.RequestSendToCoGeEventHandler,
                                                            RequestSendToEnsemblEvent.RequestSendToEnsemblEventHandler,
                                                            RequestSendToTreeViewerEvent.RequestSendToTreeViewerEventHandler,
-                                                           RequestImportFromUrlEvent.RequestImportFromUrlEventHandler,
                                                            RequestSimpleDownloadEvent.RequestSimpleDownloadEventHandler,
                                                            RequestSimpleUploadEvent.RequestSimpleUploadEventHandler {
 
@@ -228,19 +225,6 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
     }
 
     @Override
-    public void onRequestUploadFromUrl(RequestImportFromUrlEvent event) {
-        Folder uploadDest = event.getDestinationFolder();
-        if (canUpload(uploadDest)) {
-            new FileUploadByUrlDialog(uploadDest,
-                                      diskResourceServiceProvider.get()
-            ).show();
-        }
-        /* FIXME REFACTOR JDS Possibly move this into where event is fired.
-         *                it is merely opening a dialog
-         */
-    }
-
-    @Override
     public void onRunAppActionInitiated(RunAppEvent event) {
         AppWizardConfig config = ConfigFactory.appWizardConfig(event.getAppToRun());
         presenter.show(config);
@@ -361,8 +345,6 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
         handlerRegistration = eventBus.addHandler(RequestSendToEnsemblEvent.TYPE, this);
         registrations.add(handlerRegistration);
         handlerRegistration = eventBus.addHandler(UseToolInNewAppEvent.TYPE, this);
-        registrations.add(handlerRegistration);
-        handlerRegistration = eventBus.addHandler(RequestImportFromUrlEvent.TYPE, this);
         registrations.add(handlerRegistration);
         handlerRegistration = eventBus.addHandler(RequestSimpleDownloadEvent.TYPE, this);
         registrations.add(handlerRegistration);

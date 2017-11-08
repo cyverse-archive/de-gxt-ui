@@ -6,7 +6,7 @@
              xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client">
 
     <ui:with field="appearance"
-             type="org.iplantc.de.diskResource.client.views.dialogs.FileUploadByUrlDialog.FileUploadByUrlDialogAppearance"/>
+             type="org.iplantc.de.diskResource.client.FileUploadByUrlView.FileUploadByUrlViewAppearance"/>
 
     <ui:with field="sideMargins"
              type="com.sencha.gxt.core.client.util.Margins">

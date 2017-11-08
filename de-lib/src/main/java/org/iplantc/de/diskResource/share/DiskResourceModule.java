@@ -108,6 +108,16 @@ public interface DiskResourceModule {
         String GENOME_IMPORT_BTN = ".importBtn";
         String RENAME_RESOURCE_DLG = "renameResourceDlg";
         String TEXT_FIELD = ".txtField";
+        String DETAILS_LAST_MODIFIED = ".lastModified";
+        String DETAILS_DATE_SUBMITTED = ".dateSubmitted";
+        String DETAILS_PERMISSIONS = ".permissions";
+        String DETAILS_SHARE = ".share";
+        String DETAILS_SIZE = ".size";
+        String DETAILS_TYPE = ".type";
+        String DETAILS_INFO_TYPE = ".infoType";
+        String DETAILS_MD5 = ".md5";
+        String DETAILS_SEND_TO = ".sendTo";
+        String DETAILS_TAGS = ".tags";
     }
 
     interface MetadataIds {
