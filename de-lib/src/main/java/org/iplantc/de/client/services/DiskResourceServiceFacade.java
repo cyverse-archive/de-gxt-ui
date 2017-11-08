@@ -353,5 +353,5 @@ public interface DiskResourceServiceFacade {
      * @param request
      * @param callback
      */
-    void requestPathlistFile(PathListRequest request, DECallback<File> callback);
+    void requestPathListFile(PathListRequest request, DECallback<File> callback);
 }

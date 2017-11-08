@@ -23,6 +23,7 @@ import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelecte
 import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected;
 import org.iplantc.de.diskResource.client.events.selection.MoveDiskResourcesSelected;
+import org.iplantc.de.diskResource.client.events.selection.NewMultiInputPathListFileSelected;
 import org.iplantc.de.diskResource.client.events.selection.OpenTrashFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.RenameDiskResourceSelected;
@@ -267,6 +268,12 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     @Override
     public HandlerRegistration addAutomatePathListSelectedHandler(AutomatePathListSelected.AutomatePathListSelectedHandler handler) {
         return addHandler(handler, AutomatePathListSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addNewMultiInputPathListFileSelectedHandler(
+            NewMultiInputPathListFileSelected.NewMultiInputPathListFileSelectedHandler handler) {
+        return addHandler(handler, NewMultiInputPathListFileSelected.TYPE);
     }
 
     // </editor-fold>
@@ -532,7 +539,8 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("newMultiInputPathListMi")
     void onNewMultiInputPathListFileClicked(SelectionEvent<Item> event) {
-        presenter.onCreateMultiInputPathListSelected();
+        //  presenter.onCreateMultiInputPathListSelected();
+        fireEvent(new NewMultiInputPathListFileSelected());
     }
 
     @UiHandler("newPerlFileMi")

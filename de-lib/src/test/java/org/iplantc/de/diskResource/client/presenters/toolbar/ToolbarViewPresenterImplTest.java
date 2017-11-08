@@ -186,7 +186,7 @@ public class ToolbarViewPresenterImplTest {
 
         uut.requestHTPathListCreation(htPathAutomationDlg, requestMock);
 
-        verify(drFacadeMock).requestPathlistFile(eq(requestMock), fileCaptor.capture());
+        verify(drFacadeMock).requestPathListFile(eq(requestMock), fileCaptor.capture());
         fileCaptor.getValue().onSuccess(file);
     }
 

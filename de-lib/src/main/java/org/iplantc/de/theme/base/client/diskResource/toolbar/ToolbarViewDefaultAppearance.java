@@ -514,7 +514,7 @@ public class ToolbarViewDefaultAppearance implements ToolbarView.Appearance {
     }
 
     @Override
-    public String newMultiInputPathLisText() {
+    public String newMultiInputPathListText() {
         return displayMessages.newMultiInputPathLisText();
     }
 

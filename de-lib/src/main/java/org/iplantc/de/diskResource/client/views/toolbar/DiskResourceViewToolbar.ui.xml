@@ -94,7 +94,7 @@
                                                    icon="{appearance.newPathListMenuIcon}"/>
 
                                     <menu:MenuItem ui:field="newMultiInputPathListMi"
-                                                   text="{appearance.newMultiInputPathLisText}"
+                                                   text="{appearance.newMultiInputPathListText}"
                                                    icon="{appearance.newPathListMenuIcon}"/>
 
                                     <menu:MenuItem ui:field="automatePathListFileMi"

@@ -19,6 +19,7 @@ import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelecte
 import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelected.HasManageMetadataSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected.HasManageSharingSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.MoveDiskResourcesSelected.HasMoveDiskResourcesSelectedHandlers;
+import org.iplantc.de.diskResource.client.events.selection.NewMultiInputPathListFileSelected;
 import org.iplantc.de.diskResource.client.events.selection.OpenTrashFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected.HasRefreshFolderSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.RenameDiskResourceSelected.HasRenameDiskResourceSelectedHandlers;
@@ -64,7 +65,8 @@ public interface ToolbarView extends IsWidget,
                                      DiskResourceSelectionChangedEventHandler,
                                      OpenTrashFolderSelected.HasOpenTrashFolderSelectedHandlers,
                                      BulkMetadataSelected.HasBulkMetadataSelectedHandlers,
-                                     AutomatePathListSelected.HasAutomatePathListSelectedHandlers {
+                                     AutomatePathListSelected.HasAutomatePathListSelectedHandlers,
+                                     NewMultiInputPathListFileSelected.HasNewMultiInputPathListSelectedHandlers {
     interface Appearance {
 
         SafeHtml bulkDownloadInfoBoxHeading();
@@ -243,7 +245,7 @@ public interface ToolbarView extends IsWidget,
 
         String automateHTPathListMenuItem();
 
-        String newMultiInputPathLisText();
+        String newMultiInputPathListText();
 
         String automatePathListMenuItem();
 
@@ -289,8 +291,6 @@ public interface ToolbarView extends IsWidget,
         void onCreateNcbiSraFolderStructure(Folder selectedFolder);
 
         void onCreateNewPathListSelected();
-
-        void onCreateMultiInputPathListSelected();
 
         void onCreatePublicLinkSelected(List<DiskResource> selectedDiskResources);
 

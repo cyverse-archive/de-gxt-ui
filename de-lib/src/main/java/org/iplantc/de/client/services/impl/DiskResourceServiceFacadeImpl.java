@@ -1054,7 +1054,7 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
     }
 
     @Override
-    public void requestPathlistFile(PathListRequest request, DECallback<File> callback) {
+    public void requestPathListFile(PathListRequest request, DECallback<File> callback) {
         StringBuilder address =
                 new StringBuilder(deProperties.getDataMgmtBaseUrl() + "path-list-creator?");
         address.append("dest=" + URL.encodeQueryString(request.getDest()));

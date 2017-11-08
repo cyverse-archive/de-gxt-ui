@@ -6,9 +6,9 @@ import java.util.Map;
 
 @SuppressWarnings("nls")
 public class DEProperties {
-    private static final String HT_PATH_LIST_FILE_IDENTIFIER = "org.iplantc.htpathList.fileIdentifier";
+    private static final String HT_PATH_LIST_FILE_IDENTIFIER = "org.iplantc.htPathList.fileIdentifier";
 
-    private static final String MULTI_INPUT_LIST_FILE_IDENTIFIER = "org.iplantc.multiinputList.fileIdentifier";
+    private static final String MULTI_INPUT_LIST_FILE_IDENTIFIER = "org.iplantc.multiInputPathList.fileIdentifier";
 
     /**
      * The base URL used to access the Mule services.

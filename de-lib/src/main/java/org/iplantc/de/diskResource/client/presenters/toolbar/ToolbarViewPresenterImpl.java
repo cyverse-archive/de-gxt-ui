@@ -23,8 +23,8 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.FileViewerWindowConfig;
-import org.iplantc.de.commons.client.views.window.configs.MultiInputPathListWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.HTPathListWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.MultiInputPathListWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.TabularFileViewerWindowConfig;
 import org.iplantc.de.diskResource.client.PathListAutomationView;
 import org.iplantc.de.diskResource.client.ToolbarView;
@@ -34,6 +34,7 @@ import org.iplantc.de.diskResource.client.events.ShowFilePreviewEvent;
 import org.iplantc.de.diskResource.client.events.selection.AutomatePathListSelected;
 import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSubmitted;
 import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
+import org.iplantc.de.diskResource.client.events.selection.NewMultiInputPathListFileSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected.SimpleDownloadSelectedHandler;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
@@ -63,7 +64,8 @@ import java.util.logging.Logger;
  */
 public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
                                                  SimpleDownloadSelectedHandler,
-                                                 AutomatePathListSelected.AutomatePathListSelectedHandler {
+                                                 AutomatePathListSelected.AutomatePathListSelectedHandler,
+                                                 NewMultiInputPathListFileSelected.NewMultiInputPathListFileSelectedHandler {
 
     @Inject ToolbarView.Presenter.Appearance appearance;
     @Inject DiskResourceSelectorFieldFactory drSelectorFactory;
@@ -101,6 +103,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
         this.view = viewFactory.create(this);
         view.addSimpleDownloadSelectedHandler(this);
         view.addAutomatePathListSelectedHandler(this);
+        view.addNewMultiInputPathListFileSelectedHandler(this);
     }
 
     @Override
@@ -186,13 +189,6 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     @Override
     public void onCreateNewPathListSelected() {
         HTPathListWindowConfig config = ConfigFactory.newHTPathListWindowConfig();
-        config.setEditing(true);
-        eventBus.fireEvent(new CreateNewFileEvent(config));
-    }
-
-    @Override
-    public void onCreateMultiInputPathListSelected() {
-        MultiInputPathListWindowConfig config = ConfigFactory.newMultiInputPathListWindowConfig();
         config.setEditing(true);
         eventBus.fireEvent(new CreateNewFileEvent(config));
     }
@@ -321,7 +317,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     protected void requestHTPathListCreation(PathListAutomationDialog dialog,
                                              PathListRequest request) {
         dialog.mask(htAppearance.processing());
-        drFacade.requestPathlistFile(request, new DataCallback<File>() {
+        drFacade.requestPathListFile(request, new DataCallback<File>() {
             @Override
             public void onFailure(Integer statusCode, Throwable exception) {
                 ErrorHandler.post(htAppearance.requestFailed(), exception);
@@ -354,5 +350,12 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
     public HandlerRegistration addCreateNcbiSraFolderStructureSubmittedHandler(
             CreateNcbiSraFolderStructureSubmitted.CreateNcbiSraFolderStructureSubmittedHandler handler) {
         return ensureHandlers().addHandler(CreateNcbiSraFolderStructureSubmitted.TYPE, handler);
+    }
+
+    @Override
+    public void onNewMultiInputPathListFileSelected(NewMultiInputPathListFileSelected event) {
+        MultiInputPathListWindowConfig config = ConfigFactory.newMultiInputPathListWindowConfig();
+        config.setEditing(true);
+        eventBus.fireEvent(new CreateNewFileEvent(config));
     }
 }
