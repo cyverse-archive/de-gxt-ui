@@ -539,7 +539,6 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("newMultiInputPathListMi")
     void onNewMultiInputPathListFileClicked(SelectionEvent<Item> event) {
-        //  presenter.onCreateMultiInputPathListSelected();
         fireEvent(new NewMultiInputPathListFileSelected());
     }
 

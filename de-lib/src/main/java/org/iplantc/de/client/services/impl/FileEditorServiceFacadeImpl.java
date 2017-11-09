@@ -20,7 +20,6 @@ import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -81,16 +80,13 @@ public class FileEditorServiceFacadeImpl implements FileEditorServiceFacade {
 
     @Override
     public String getPathListFileIdentifier(String infoType) {
-        if ((!Strings.isNullOrEmpty(infoType))) {
-            if (infoType.equals(InfoType.HT_ANALYSIS_PATH_LIST.getTypeString())) {
+        if (InfoType.HT_ANALYSIS_PATH_LIST.getTypeString().equals(infoType)) {
                 return deProperties.getHtPathListFileIdentifier();
-            } else if (infoType.equals(InfoType.MULTI_INPUT_PATH_LIST.getTypeString())) {
+        } else if (InfoType.MULTI_INPUT_PATH_LIST.getTypeString().equals(infoType)) {
                 return deProperties.getMultiInputPathListFileIdentifier();
-            } else {
+        } else {
                 return null;
-            }
         }
-       return null;
     }
 
     @Override

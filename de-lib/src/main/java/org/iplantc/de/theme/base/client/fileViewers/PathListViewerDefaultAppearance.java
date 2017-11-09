@@ -38,7 +38,7 @@ public class PathListViewerDefaultAppearance extends AbstractStructuredTextViewe
 
     @Override
     public String pathListViewName(String infoType, String name) {
-        if (infoType.equals(InfoType.HT_ANALYSIS_PATH_LIST.getTypeString())) {
+        if (InfoType.HT_ANALYSIS_PATH_LIST.getTypeString().equals(infoType)) {
             return fileViewerStrings.pathListViewName(name);
         } else {
             return fileViewerStrings.multiInputPathListViewName(name);
