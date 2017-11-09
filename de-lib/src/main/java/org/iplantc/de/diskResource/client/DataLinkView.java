@@ -31,11 +31,7 @@ public interface DataLinkView extends IsWidget,
 
         String copyDataLinkDlgHeight();
 
-        int copyDataLinkDlgTextBoxWidth();
-
         String copyDataLinkDlgWidth();
-
-        String copyPasteInstructions();
 
         String loadingMask();
 

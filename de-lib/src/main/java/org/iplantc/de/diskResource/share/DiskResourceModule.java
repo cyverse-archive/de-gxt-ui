@@ -60,6 +60,8 @@ public interface DiskResourceModule {
         String ACTION_CELL_METADATA = ".actionCellMetadata";
         String ACTION_CELL_FAVORITE = ".favorite";
         String ACTION_CELL_COMMENTS = ".comments";
+        String ACTION_CEL_COPYPATH =".copyPath";
+        
         String NAME_CELL = ".nameCell";
         String PATH_CELL = ".pathCell";
         String DETAILS = ".details";
@@ -88,6 +90,7 @@ public interface DiskResourceModule {
         String DATA_LINK_DLG = "dataLinkDlg";
         String OK_BTN = ".okBtn";
         String DATA_LINK_URL = ".urlField";
+        String DATA_LINk_URL_INPUT = ".urlFieldInput";
         String MD5_DIALOG = "md5Dlg";
         String CREATE_FOLDER_DLG = "createFolderDlg";
         String FOLDER_NAME = ".folderName";
@@ -127,6 +130,9 @@ public interface DiskResourceModule {
         String SAVE_AS_DIALOG = "saveAsDlg";
         String FILE_NAME = ".fileName";
         String METADATA_DESC_DLG = "metadataDescDlg";
+        String LINK_TEXT = ".linkText";
+        String LINK_TEXT_INPUT = ".linkTextInput";
+        String SHARE_LINK_DLG = "shareLinkDlg";
     }
 
     interface MetadataIds {

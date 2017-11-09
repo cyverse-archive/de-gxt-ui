@@ -114,4 +114,14 @@ public class DiskResourceDotMenuDefaultAppearance implements DiskResourceDotMenu
     public ImageResource metadataIcon() {
         return iplantResources.metadataIcon();
     }
+
+    @Override
+    public String copyPathText() {
+        return displayStrings.copyPathText();
+    }
+
+    @Override
+    public ImageResource copyPathIcon() {
+        return iplantResources.copy();
+    }
 }

@@ -46,11 +46,6 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     }
 
     @Override
-    public String copyPasteInstructions() {
-        return iplantDisplayStrings.copyPasteInstructions();
-    }
-
-    @Override
     public String createDataLinksError() {
         return diskResourceMessages.createDataLinksError();
     }
@@ -117,7 +112,7 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
 
     @Override
     public int shareLinkDialogTextBoxWidth() {
-        return 500;
+        return 410;
     }
 
     @Override
@@ -246,6 +241,11 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     @Override
     public String bulkMetadataError() {
         return diskResourceMessages.bulkMetadataError();
+    }
+
+    @Override
+    public String copyPath() {
+        return displayStrings.copyPath();
     }
 
 }

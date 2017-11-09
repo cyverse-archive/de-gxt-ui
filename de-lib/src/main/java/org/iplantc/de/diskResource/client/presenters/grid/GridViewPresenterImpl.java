@@ -41,6 +41,7 @@ import org.iplantc.de.diskResource.client.events.TemplateDownloadEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.selection.BulkMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected;
+import org.iplantc.de.diskResource.client.events.selection.CopyPathSelected;
 import org.iplantc.de.diskResource.client.events.selection.DNDDiskResourcesCompleted;
 import org.iplantc.de.diskResource.client.events.selection.DownloadTemplateSelectedEvent;
 import org.iplantc.de.diskResource.client.events.selection.EditInfoTypeSelected;
@@ -174,6 +175,7 @@ public class GridViewPresenterImpl implements Presenter,
 
             @Override
             public void onSuccess(ShareResourceLinkDialog dlg) {
+                dlg.setHeading(appearance.dataLinkTitle());
                 dlg.show(result.get(0).getDownloadUrl());
             }
         });
@@ -238,6 +240,7 @@ public class GridViewPresenterImpl implements Presenter,
         cm.addManageFavoritesEventHandler(this);
         cm.addManageCommentsSelectedEventHandler(this);
         cm.addDiskResourcePathSelectedEventHandler(this);
+        cm.addHasCopyPathSelectedEventHandlers(this);
 
         // Fetch Details
         this.view.addDiskResourceSelectionChangedEventHandler(this);
@@ -386,6 +389,23 @@ public class GridViewPresenterImpl implements Presenter,
     }
 
     @Override
+    public void onCopyPathSelected(CopyPathSelected event) {
+        final DiskResource dr = event.getDiskResource();
+        shareLinkDialogProvider.get(new AsyncCallback<ShareResourceLinkDialog>() {
+            @Override
+            public void onFailure(Throwable caught) {
+            }
+
+            @Override
+            public void onSuccess(ShareResourceLinkDialog result) {
+                result.setHeading(appearance.copyPath());
+                result.show(dr.getPath());
+            }
+        });
+
+    }
+
+    @Override
     public void onRequestManageMetadataSelected(ManageMetadataSelected event) {
         final DiskResource selected = event.getDiskResource();
 
@@ -490,6 +510,7 @@ public class GridViewPresenterImpl implements Presenter,
 
             @Override
             public void onSuccess(DataSharingDialog result) {
+                result.setHeading(appearance.dataLinkTitle());
                 result.show(event.getDiskResourceToShare());
                 result.addDialogHideHandler(hideEvent -> {
                     final List<DiskResource> selection = getSelectedDiskResources();
@@ -512,11 +533,11 @@ public class GridViewPresenterImpl implements Presenter,
             shareLinkDialogProvider.get(new AsyncCallback<ShareResourceLinkDialog>() {
                 @Override
                 public void onFailure(Throwable caught) {
-                    announcer.schedule(new ErrorAnnouncementConfig(appearance.shareByLinkFailure()));
                 }
 
                 @Override
                 public void onSuccess(ShareResourceLinkDialog result) {
+                    result.setHeading(appearance.dataLinkTitle());
                     result.show(GWT.getHostPageBaseURL() + "?type=data&folder=" + toBeShared.getPath());
                 }
             });

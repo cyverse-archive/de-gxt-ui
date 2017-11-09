@@ -98,11 +98,6 @@ public class DataLinkViewDefaultAppearance implements DataLinkView.Appearance {
     }
 
     @Override
-    public int copyDataLinkDlgTextBoxWidth() {
-        return 500;
-    }
-
-    @Override
     public String copyDataLinkDlgWidth() {
         return "535";
     }
@@ -110,11 +105,6 @@ public class DataLinkViewDefaultAppearance implements DataLinkView.Appearance {
     @Override
     public String showLink() {
         return displayMessages.showLink();
-    }
-
-    @Override
-    public String copyPasteInstructions() {
-        return iplantDisplayStrings.copyPasteInstructions();
     }
 
     @Override

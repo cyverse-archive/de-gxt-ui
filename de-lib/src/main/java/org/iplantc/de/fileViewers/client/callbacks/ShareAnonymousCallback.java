@@ -28,8 +28,6 @@ public class ShareAnonymousCallback extends DataCallback<List<String>> {
 
     public interface ShareAnonymousCallbackAppearance {
 
-        String copyPasteInstructions();
-
         String ensemblUrl();
 
         SafeHtml notificationWithContextHelp();
@@ -49,6 +47,8 @@ public class ShareAnonymousCallback extends DataCallback<List<String>> {
         int ensemblUrlTextAreaWidth();
 
         int ensemblUrlTextAreaHeight();
+
+        String copyPasteInstructions();
     }
 
     private final IsMaskable container;
