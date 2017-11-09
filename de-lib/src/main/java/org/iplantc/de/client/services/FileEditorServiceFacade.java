@@ -24,9 +24,12 @@ public interface FileEditorServiceFacade {
     void getManifest(File file, DECallback<Manifest> callback);
 
     /**
-     * @return the file identifier string for path-list files.
+     *
+     * Return indentifier for path list file 
+     * @param infoType
+     * @return
      */
-    String getPathListFileIdentifier();
+    String getPathListFileIdentifier(String infoType);
 
     /**
      * Construct a servlet download URL for the given file ID.

@@ -9,6 +9,7 @@ import static org.iplantc.de.client.models.viewer.InfoType.CSV;
 import static org.iplantc.de.client.models.viewer.InfoType.GFF;
 import static org.iplantc.de.client.models.viewer.InfoType.GTF;
 import static org.iplantc.de.client.models.viewer.InfoType.HT_ANALYSIS_PATH_LIST;
+import static org.iplantc.de.client.models.viewer.InfoType.MULTI_INPUT_PATH_LIST;
 import static org.iplantc.de.client.models.viewer.InfoType.TSV;
 import static org.iplantc.de.client.models.viewer.InfoType.VCF;
 
@@ -167,7 +168,8 @@ public class MimeTypeViewerResolverFactory {
                                                                                          columns,
                                                                                          presenter);
                     viewers.add(structuredTextViewer);
-                } else if(HT_ANALYSIS_PATH_LIST.toString().equals(infoType)){
+                } else if (HT_ANALYSIS_PATH_LIST.toString().equals(infoType)
+                           || MULTI_INPUT_PATH_LIST.toString().equals(infoType)) {
                     PathListViewer pathListViewer = new PathListViewer(file,
                                                                      infoType,
                                                                      editing,

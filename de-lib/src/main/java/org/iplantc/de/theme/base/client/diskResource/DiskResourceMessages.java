@@ -216,7 +216,7 @@ public interface DiskResourceMessages extends Messages {
 
     String patternMatchEmptyText();
 
-    String Htheading();
+    String dialogHTHeading();
 
     String processing();
 
@@ -241,4 +241,6 @@ public interface DiskResourceMessages extends Messages {
     String invalidFileName();
 
     String searchGenomeLabel();
+
+    String dialogMultiInputHeading();
 }

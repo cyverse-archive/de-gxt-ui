@@ -14,23 +14,23 @@ import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
-import org.iplantc.de.client.models.diskResources.HTPathListRequest;
+import org.iplantc.de.client.models.diskResources.PathListRequest;
 import org.iplantc.de.client.models.genomes.GenomeAutoBeanFactory;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.DiskResourceView;
-import org.iplantc.de.diskResource.client.HTPathListAutomationView;
+import org.iplantc.de.diskResource.client.PathListAutomationView;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.RequestSimpleDownloadEvent;
-import org.iplantc.de.diskResource.client.events.selection.AutomateHTPathListSelected;
+import org.iplantc.de.diskResource.client.events.selection.AutomatePathListSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
 import org.iplantc.de.diskResource.client.gin.factory.BulkMetadataViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewFactory;
 import org.iplantc.de.diskResource.client.views.dialogs.CreateFolderDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
-import org.iplantc.de.diskResource.client.views.toolbar.dialogs.HTPathListAutomationDialog;
+import org.iplantc.de.diskResource.client.views.toolbar.dialogs.PathListAutomationDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DataCallback;
 
@@ -69,14 +69,16 @@ public class ToolbarViewPresenterImplTest {
     @Mock DiskResourceAutoBeanFactory drAbFactory;
     @Mock AutoBean<Folder> folderAb;
     @Captor ArgumentCaptor<DataCallback<List<InfoType>>> infoTypeCaptor;
-    @Mock HTPathListAutomationView.HTPathListAutomationAppearance appearanceMock;
+    @Mock
+    PathListAutomationView.PathListAutomationAppearance appearanceMock;
     @Mock DiskResourceSelectorFieldFactory drSelectorFactoryMock;
-    @Mock HTPathListAutomationDialog htPathAutomationDlg;
+    @Mock
+    PathListAutomationDialog htPathAutomationDlg;
     @Mock AsyncProviderWrapper<CreateFolderDialog> createFolderDlgProvider;
-    @Mock AsyncProviderWrapper<HTPathListAutomationDialog> htPathAutomationDlgProvider;
+    @Mock AsyncProviderWrapper<PathListAutomationDialog> htPathAutomationDlgProvider;
     @Captor ArgumentCaptor<DataCallback<File>> fileCaptor;
     @Captor ArgumentCaptor<AsyncCallback<CreateFolderDialog>> createFolderDlgCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<HTPathListAutomationDialog>> htPathAutomationDlgCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<PathListAutomationDialog>> htPathAutomationDlgCaptor;
     @Mock IplantAnnouncer announcerMock;
 
     private ToolbarViewPresenterImpl uut;
@@ -87,7 +89,7 @@ public class ToolbarViewPresenterImplTest {
         uut = new ToolbarViewPresenterImpl(viewFactoryMock){
 
             @Override
-            protected void showHTProcessingError() {
+            protected void showHTProcessingError(String heading) {
                 //do nothing
             }
         };
@@ -99,7 +101,7 @@ public class ToolbarViewPresenterImplTest {
         uut.drSelectorFactory = drSelectorFactoryMock;
         uut.announcer = announcerMock;
         uut.createFolderDlgProvider = createFolderDlgProvider;
-        uut.htPathAutomationDlgProvider = htPathAutomationDlgProvider;
+        uut.pathAutomationDlgProvider = htPathAutomationDlgProvider;
     }
 
     @Test public void onSimpleDownloadSelected_firesEvent() {
@@ -148,43 +150,43 @@ public class ToolbarViewPresenterImplTest {
 
     @Test
     public void onAutomateHTPathListSelected() {
-        AutomateHTPathListSelected eventMock = mock(AutomateHTPathListSelected.class);
+        AutomatePathListSelected eventMock = mock(AutomatePathListSelected.class);
+        when(eventMock.getPathListInfoType()).thenReturn(InfoType.HT_ANALYSIS_PATH_LIST);
         ToolbarViewPresenterImpl spy = spy(uut);
         InfoType type1 = mock(InfoType.class);
         List<InfoType> typeList = Arrays.asList(type1);
 
-        spy.onAutomateHTPathListSelected(eventMock);
+        spy.onAutomatePathListSelected(eventMock);
 
         verify(drFacadeMock).getInfoTypes(infoTypeCaptor.capture());
         infoTypeCaptor.getValue().onSuccess(typeList);
-        verify(spy).showHtPathAutomationDialog(eq(typeList));
     }
 
     @Test
     public void showHtPathAutomationDialog() {
         when(htPathAutomationDlg.isValid()).thenReturn(true);
-        HTPathListRequest requestMock = mock(HTPathListRequest.class);
+        PathListRequest requestMock = mock(PathListRequest.class);
         when(htPathAutomationDlg.getRequest()).thenReturn(requestMock);
         InfoType type1 = mock(InfoType.class);
         List<InfoType> typeList = Arrays.asList(type1);
 
-        uut.showHtPathAutomationDialog(typeList);
+        uut.showPathAutomationDialog(typeList, InfoType.HT_ANALYSIS_PATH_LIST);
         verify(htPathAutomationDlgProvider).get(htPathAutomationDlgCaptor.capture());
 
         htPathAutomationDlgCaptor.getValue().onSuccess(htPathAutomationDlg);
-        verify(htPathAutomationDlg).show(eq(typeList));
+        verify(htPathAutomationDlg).show(eq(typeList), eq(InfoType.HT_ANALYSIS_PATH_LIST));
     }
 
     @Test
     public void requestHTPathListCreation() {
         when(appearanceMock.processing()).thenReturn("Processing Request...");
         when(appearanceMock.requestSuccess()).thenReturn("Your request completed successfully!");
-        HTPathListRequest requestMock = mock(HTPathListRequest.class);
+        PathListRequest requestMock = mock(PathListRequest.class);
         File file = mock(File.class);
 
         uut.requestHTPathListCreation(htPathAutomationDlg, requestMock);
 
-        verify(drFacadeMock).requestHTPathlistFile(eq(requestMock), fileCaptor.capture());
+        verify(drFacadeMock).requestPathListFile(eq(requestMock), fileCaptor.capture());
         fileCaptor.getValue().onSuccess(file);
     }
 

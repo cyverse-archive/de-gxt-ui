@@ -11,7 +11,7 @@ import org.iplantc.de.diskResource.client.BulkMetadataView;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
-import org.iplantc.de.diskResource.client.events.selection.AutomateHTPathListSelected;
+import org.iplantc.de.diskResource.client.events.selection.AutomatePathListSelected;
 import org.iplantc.de.diskResource.client.events.selection.BulkMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDiskResourcesSelected;
@@ -23,6 +23,7 @@ import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelecte
 import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected;
 import org.iplantc.de.diskResource.client.events.selection.MoveDiskResourcesSelected;
+import org.iplantc.de.diskResource.client.events.selection.NewMultiInputPathListFileSelected;
 import org.iplantc.de.diskResource.client.events.selection.OpenTrashFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.RenameDiskResourceSelected;
@@ -90,7 +91,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     @UiField
     MenuItem newWindowMi, newWindowAtLocMi, newFolderMi, newPlainTextFileMi,
             newTabularDataFileMi, moveToTrashMi, newRFileMi, newPerlFileMi, newPythonFileMi,
-            newShellScriptFileMi, newMdFileMi, automateHTFileMi;
+            newShellScriptFileMi, newMdFileMi, automateHTFileMi, newMultiInputPathListMi, automateMultiInputFileMi;
     @UiField
     MenuItem openTrashMi, restoreMi, emptyTrashMi;
     @UiField
@@ -265,8 +266,14 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     }
 
     @Override
-    public HandlerRegistration addAutomateHTPathListSelectedHandler(AutomateHTPathListSelected.AutomateHTPathListSelectedHandler handler) {
-        return addHandler(handler, AutomateHTPathListSelected.TYPE);
+    public HandlerRegistration addAutomatePathListSelectedHandler(AutomatePathListSelected.AutomatePathListSelectedHandler handler) {
+        return addHandler(handler, AutomatePathListSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addNewMultiInputPathListFileSelectedHandler(
+            NewMultiInputPathListFileSelected.NewMultiInputPathListFileSelectedHandler handler) {
+        return addHandler(handler, NewMultiInputPathListFileSelected.TYPE);
     }
 
     // </editor-fold>
@@ -530,6 +537,11 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
         presenter.onCreateNewPathListSelected();
     }
 
+    @UiHandler("newMultiInputPathListMi")
+    void onNewMultiInputPathListFileClicked(SelectionEvent<Item> event) {
+        fireEvent(new NewMultiInputPathListFileSelected());
+    }
+
     @UiHandler("newPerlFileMi")
     void onNewPerlFileClicked(SelectionEvent<Item> event) {
         presenter.onCreateNewFileSelected(selectedFolder, MimeType.X_PERL);
@@ -670,7 +682,12 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @UiHandler("automateHTFileMi")
     void onAutomateHTPathList(SelectionEvent<Item> event) {
-        fireEvent(new AutomateHTPathListSelected());
+        fireEvent(new AutomatePathListSelected(InfoType.HT_ANALYSIS_PATH_LIST));
+    }
+
+    @UiHandler("automateMultiInputFileMi")
+    void onAutomateMultiInputPathList(SelectionEvent<Item> event) {
+        fireEvent(new AutomatePathListSelected(InfoType.MULTI_INPUT_PATH_LIST));
     }
     // </editor-fold>
 
@@ -745,6 +762,7 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
         newMdFileMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_NEW_MD_DATA);
         automateHTFileMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_AUTOMATE_HT_PATH);
         newPathListMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_NEW_PATH_LIST);
+        newMultiInputPathListMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_NEW_MULTI_INPUT_PATH_LIST);
 
         moveToTrashMi.ensureDebugId(baseID + Ids.FILE_MENU + Ids.MENU_ITEM_MOVE_TO_TRASH);
 

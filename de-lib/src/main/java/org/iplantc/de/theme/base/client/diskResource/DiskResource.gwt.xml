@@ -159,7 +159,7 @@
         <when-type-is class="org.iplantc.de.diskResource.client.BulkMetadataView.BulkMetadataViewAppearance"/>
     </replace-with>
 
-    <replace-with class="org.iplantc.de.theme.base.client.diskResource.toolbar.HTPathListAutomationDefaultAppearance">
-        <when-type-is class="org.iplantc.de.diskResource.client.HTPathListAutomationView.HTPathListAutomationAppearance"/>
+    <replace-with class="org.iplantc.de.theme.base.client.diskResource.toolbar.PathListAutomationDefaultAppearance">
+        <when-type-is class="org.iplantc.de.diskResource.client.PathListAutomationView.PathListAutomationAppearance"/>
     </replace-with>
 </module>

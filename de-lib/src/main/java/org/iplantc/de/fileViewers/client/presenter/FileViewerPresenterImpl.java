@@ -172,8 +172,8 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
     }
 
     @Override
-    public String getPathListFileIdentifier() {
-        return fileEditorService.getPathListFileIdentifier();
+    public String getPathListFileIdentifier(String infoTye) {
+        return fileEditorService.getPathListFileIdentifier(infoTye);
     }
 
     @Override
@@ -279,7 +279,9 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
                           final boolean editing,
                           final boolean vizTabFirst,
                           final boolean isTabularFile,
-                          boolean isPathListFile, final Integer columns,
+                          boolean isPathListFile,
+                          boolean isMultiInputFile,
+                          final Integer columns,
                           final String delimiter) {
         this.parentFolder = parentFolder;
         checkNotNull(contentType);
@@ -310,6 +312,11 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
         }
         if(isPathListFile){
             manifest.setInfoType(InfoType.HT_ANALYSIS_PATH_LIST.toString());
+            manifest.setPathList(true);
+        }
+
+        if(isMultiInputFile) {
+            manifest.setInfoType(InfoType.MULTI_INPUT_PATH_LIST.toString());
             manifest.setPathList(true);
         }
         setTitle(title);

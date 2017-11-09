@@ -118,15 +118,28 @@ public class ConfigFactory {
         return ab.as();
     }
 
-    public static PathListWindowConfig newPathListWindowConfig() {
-        AutoBean<PathListWindowConfig> ab = applyWindowType(WindowType.DATA_VIEWER, factory.pathListWindowConfig());
-        ab.as().setContentType(MimeType.PLAIN);
-        ab.as().setVizTabFirst(true);
-        ab.as().setSeparator(FileEditorServiceFacade.COMMA_DELIMITER);
-        ab.as().setColumns(1);
+    public static HTPathListWindowConfig newHTPathListWindowConfig() {
+        AutoBean<HTPathListWindowConfig> ab = applyWindowType(WindowType.DATA_VIEWER, factory.pathListWindowConfig());
         applyTag("Path List-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),
                  ab);
-        return ab.as();
+        HTPathListWindowConfig config = ab.as();
+        config.setContentType(MimeType.PLAIN);
+        config.setVizTabFirst(true);
+        config.setSeparator(FileEditorServiceFacade.COMMA_DELIMITER);
+        config.setColumns(1);
+        return config;
+    }
+
+    public static MultiInputPathListWindowConfig newMultiInputPathListWindowConfig() {
+        AutoBean<MultiInputPathListWindowConfig> ab = applyWindowType(WindowType.DATA_VIEWER, factory.multiInputPathListWindowConfig());
+        applyTag("Path List-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),
+                 ab);
+        MultiInputPathListWindowConfig config = ab.as();
+        config.setContentType(MimeType.PLAIN);
+        config.setVizTabFirst(true);
+        config.setSeparator(FileEditorServiceFacade.COMMA_DELIMITER);
+        config.setColumns(1);
+        return config;
     }
 
     public static NotifyWindowConfig notifyWindowConfig(NotificationCategory category) {

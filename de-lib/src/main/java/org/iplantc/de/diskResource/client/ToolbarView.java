@@ -5,7 +5,7 @@ import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.viewer.MimeType;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent.DiskResourceSelectionChangedEventHandler;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent.FolderSelectionEventHandler;
-import org.iplantc.de.diskResource.client.events.selection.AutomateHTPathListSelected;
+import org.iplantc.de.diskResource.client.events.selection.AutomatePathListSelected;
 import org.iplantc.de.diskResource.client.events.selection.BulkMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected.HasCopyMetadataSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSubmitted;
@@ -19,6 +19,7 @@ import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelecte
 import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelected.HasManageMetadataSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected.HasManageSharingSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.MoveDiskResourcesSelected.HasMoveDiskResourcesSelectedHandlers;
+import org.iplantc.de.diskResource.client.events.selection.NewMultiInputPathListFileSelected;
 import org.iplantc.de.diskResource.client.events.selection.OpenTrashFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected.HasRefreshFolderSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.RenameDiskResourceSelected.HasRenameDiskResourceSelectedHandlers;
@@ -64,7 +65,8 @@ public interface ToolbarView extends IsWidget,
                                      DiskResourceSelectionChangedEventHandler,
                                      OpenTrashFolderSelected.HasOpenTrashFolderSelectedHandlers,
                                      BulkMetadataSelected.HasBulkMetadataSelectedHandlers,
-                                     AutomateHTPathListSelected.HasAutomateHTPathListSelectedHandlers {
+                                     AutomatePathListSelected.HasAutomatePathListSelectedHandlers,
+                                     NewMultiInputPathListFileSelected.HasNewMultiInputPathListSelectedHandlers {
     interface Appearance {
 
         SafeHtml bulkDownloadInfoBoxHeading();
@@ -242,6 +244,12 @@ public interface ToolbarView extends IsWidget,
         String doiUserAgreement();
 
         String automateHTPathListMenuItem();
+
+        String newMultiInputPathListText();
+
+        String automatePathListMenuItem();
+
+        String automateMultiInputPathListMenuItem();
     }
 
     interface Presenter extends CreateNewFolderSelected.HasCreateNewFolderSelectedHandlers,

@@ -23,7 +23,7 @@ import org.iplantc.de.client.models.diskResources.DiskResourceExistMap;
 import org.iplantc.de.client.models.diskResources.DiskResourceMetadataList;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
-import org.iplantc.de.client.models.diskResources.HTPathListRequest;
+import org.iplantc.de.client.models.diskResources.PathListRequest;
 import org.iplantc.de.client.models.diskResources.MetadataTemplate;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfoList;
@@ -1054,7 +1054,7 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
     }
 
     @Override
-    public void requestHTPathlistFile(HTPathListRequest request, DECallback<File> callback) {
+    public void requestPathListFile(PathListRequest request, DECallback<File> callback) {
         StringBuilder address =
                 new StringBuilder(deProperties.getDataMgmtBaseUrl() + "path-list-creator?");
         address.append("dest=" + URL.encodeQueryString(request.getDest()));
@@ -1068,6 +1068,11 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
                 address.append("&info-type=" + infotype);
             }
         }
+
+        if(request.getPathListInfoType() != null) {
+            address.append("&path-list-info-type=" + request.getPathListInfoType());
+        }
+        
         Splittable s = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request));
         Splittable spath = StringQuoter.createSplittable();
         s.get("paths").assign(spath,"paths");

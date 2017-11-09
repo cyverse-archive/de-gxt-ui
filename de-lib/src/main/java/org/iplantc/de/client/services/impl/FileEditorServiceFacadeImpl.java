@@ -8,6 +8,7 @@ import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.genomes.Genome;
 import org.iplantc.de.client.models.genomes.GenomeList;
 import org.iplantc.de.client.models.viewer.FileViewerAutoBeanFactory;
+import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.models.viewer.Manifest;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
@@ -78,8 +79,14 @@ public class FileEditorServiceFacadeImpl implements FileEditorServiceFacade {
     }
 
     @Override
-    public String getPathListFileIdentifier() {
-        return deProperties.getPathListFileIdentifier();
+    public String getPathListFileIdentifier(String infoType) {
+        if (InfoType.HT_ANALYSIS_PATH_LIST.getTypeString().equals(infoType)) {
+                return deProperties.getHtPathListFileIdentifier();
+        } else if (InfoType.MULTI_INPUT_PATH_LIST.getTypeString().equals(infoType)) {
+                return deProperties.getMultiInputPathListFileIdentifier();
+        } else {
+                return null;
+        }
     }
 
     @Override
