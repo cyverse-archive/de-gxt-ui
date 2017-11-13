@@ -77,7 +77,7 @@ public class MetadataTemplateViewTest {
 
 
         view = new MetadataTemplateView(appearanceMock);
-        view.initTemplate(presenterMock, templateMdMock, true, attributesMock);
+        view.initTemplate(templateMdMock, true, attributesMock);
         view.templateTagAttrMap = templateTagAtrrMapMock;
         view.templateTagAvuMap = templateTagAvuMapMock;
         view.templateTagFieldMap = templateTagFieldMapMock;

@@ -1,9 +1,18 @@
 package org.iplantc.de.diskResource.client.views.search.cells;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.iplantc.de.client.models.search.DateInterval;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.FileSizeRange.FileSizeUnit;
+import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.client.models.tags.Tag;
+import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.commons.client.widgets.IPlantAnchor;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.tags.client.TagsView;
@@ -34,9 +43,6 @@ import com.sencha.gxt.widget.core.client.form.CheckBox;
 import com.sencha.gxt.widget.core.client.form.SimpleComboBox;
 import com.sencha.gxt.widget.core.client.form.TextField;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,13 +68,19 @@ public class DiskResourceQueryFormTest_NoEditorErrors {
     @Mock TagSearchFieldImpl searchFieldMock;
     @Mock TagsView.Presenter tagsViewPresenterMock;
     @Mock TagsView tagsViewMock;
+    @Mock SearchAutoBeanFactory factoryMock;
+    @Mock DiskResourceQueryForm.DiskResourceQueryFormAppearance appearanceMock;
+    @Mock SearchModelUtils searchModelUtilsMock;
 
     private DiskResourceQueryForm form;
 
     @Before public void setUp() {
         when(tagsViewPresenterMock.getView()).thenReturn(tagsViewMock);
         GwtMockito.useProviderForType(SimpleBeanEditorDriver.class, new FakeSimpleBeanEditorDriverProvider(false));
-        form = new DiskResourceQueryForm(tagsViewPresenterMock, mockedTemplate) {
+        form = new DiskResourceQueryForm(tagsViewPresenterMock,
+                                         factoryMock,
+                                         searchModelUtilsMock,
+                                         appearanceMock) {
 
             @Override
             DateInterval createDateInterval(Date from, Date to, String label) {
@@ -151,7 +163,7 @@ public class DiskResourceQueryFormTest_NoEditorErrors {
             @Override
             void initFileQuery() {
                 fileQuery = mock(TextField.class);
-                fileQuery.setWidth(cw);
+                fileQuery.setWidth(64);
                 fileQuery.setEmptyText("Enter values...");
             }
 
@@ -159,18 +171,18 @@ public class DiskResourceQueryFormTest_NoEditorErrors {
             void initNegatedFileQuery() {
                 negatedFileQuery = mock(TextField.class);
                 negatedFileQuery.setEmptyText("Enter values...");
-                negatedFileQuery.setWidth(cw);
+                negatedFileQuery.setWidth(64);
             }
 
             @Override
             void initMetadataSearchFields() {
                 metadataAttributeQuery = mock(TextField.class);
                 metadataAttributeQuery.setEmptyText("Enter values...");
-                metadataAttributeQuery.setWidth(cw);
+                metadataAttributeQuery.setWidth(64);
 
                 metadataValueQuery = mock(TextField.class);
                 metadataValueQuery.setEmptyText("Enter values...");
-                metadataValueQuery.setWidth(cw);
+                metadataValueQuery.setWidth(64);
 
             }
 
@@ -178,11 +190,11 @@ public class DiskResourceQueryFormTest_NoEditorErrors {
             void initOwnerSharedSearchField() {
                 ownedBy = mock(TextField.class);
                 ownedBy.setEmptyText("Enter iPlant user name");
-                ownedBy.setWidth(cw);
+                ownedBy.setWidth(64);
 
                 sharedWith = mock(TextField.class);
                 sharedWith.setEmptyText("Enter iPlant user name");
-                sharedWith.setWidth(cw);
+                sharedWith.setWidth(64);
             }
 
             @Override
@@ -208,8 +220,8 @@ public class DiskResourceQueryFormTest_NoEditorErrors {
                 createdWithinCombo.setEmptyText("---");
                 modifiedWithinCombo.setEmptyText("---");
 
-                createdWithinCombo.setWidth(cw);
-                modifiedWithinCombo.setWidth(cw);
+                createdWithinCombo.setWidth(64);
+                modifiedWithinCombo.setWidth(64);
 
             }
 

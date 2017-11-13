@@ -166,8 +166,8 @@ public class DataSharingViewDefaultAppearance implements SharingAppearance {
     }
 
     @Override
-    public int shareBreakDownDlgToolbarHeight() {
-        return 30;
+    public String shareBreakDownDlgToolbarHeight() {
+        return "30";
     }
 
     @Override

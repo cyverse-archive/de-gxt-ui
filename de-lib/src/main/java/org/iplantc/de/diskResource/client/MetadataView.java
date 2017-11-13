@@ -4,8 +4,10 @@ import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
+import org.iplantc.de.diskResource.client.events.selection.ImportMetadataBtnSelected;
+import org.iplantc.de.diskResource.client.events.selection.SaveMetadataToFileBtnSelected;
+import org.iplantc.de.diskResource.client.events.selection.SelectTemplateBtnSelected;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetadataUpdateCallback;
-import org.iplantc.de.diskResource.client.views.search.MetadataTermSearchField;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -20,8 +22,14 @@ import java.util.List;
  *
  * @author jstroot
  */
-public interface MetadataView extends IsWidget {
+public interface MetadataView extends IsWidget,
+                                      SelectTemplateBtnSelected.HasSelectTemplateBtnSelectedHandlers,
+                                      ImportMetadataBtnSelected.HasImportMetadataBtnSelectedHandlers,
+                                      SaveMetadataToFileBtnSelected.HasSaveMetadataToFileBtnSelectedHandlers {
 
+    /**
+     * An appearance class for MetadataView
+     */
     interface Appearance {
 
         String attribute();
@@ -111,14 +119,28 @@ public interface MetadataView extends IsWidget {
         String dialogWidth();
 
         String dialogHeight();
+
+        int attributeColumnWidth();
+
+        int valueColumnWidth();
+
+        int unitColumnWidth();
+
+        int metadataTermAnchorWidth();
+
+        String metadataFieldLabelWidth();
+
+        String addBtnText();
+
+        String removeBtnText();
     }
 
     /**
-     * A presenter to to handle the logic for MetadataView
+     * A presenter to handle the logic for MetadataView
      */
-    public interface Presenter {
+    interface Presenter {
 
-        final String AVU_BEAN_TAG_MODEL_KEY = "model-key";
+        String AVU_BEAN_TAG_MODEL_KEY = "model-key";
 
         void setViewDebugId(String debugId);
 
@@ -159,25 +181,13 @@ public interface MetadataView extends IsWidget {
 
         boolean isValid();
 
-        Avu setAvuModelKey(Avu avu);
-
         DiskResource getSelectedResource();
-
-        MetadataTermSearchField createMetadataTermSearchField(MetadataTemplateAttribute attribute);
-
-        void onTemplateSelected(String templateId);
 
         void setDiskResourceMetadata(DiskResourceMetadataUpdateCallback callback);
 
-        void onSelectTemplate();
-
-        void onImport(List<Avu> selectedItems);
-
         boolean isDirty();
 
-        void downloadTemplate(String templateid);
-
-        void onSaveToFile();
+        void downloadTemplate(String templateId);
 
         void go(HasOneWidget container, final DiskResource selected);
     }
@@ -192,8 +202,6 @@ public interface MetadataView extends IsWidget {
     void loadMetadata(List<Avu> metadataList);
 
     void loadUserMetadata(List<Avu> metadataList);
-
-    void setPresenter(Presenter p);
 
     void mask();
 

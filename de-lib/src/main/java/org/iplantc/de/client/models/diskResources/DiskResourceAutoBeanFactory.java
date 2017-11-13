@@ -60,4 +60,6 @@ public interface DiskResourceAutoBeanFactory extends AutoBeanFactory {
     AutoBean<Avu> avu();
 
     AutoBean<PathListRequest> pathListRequest();
+
+    AutoBean<MetadataCopyRequest> metadataCopyRequest();
 }

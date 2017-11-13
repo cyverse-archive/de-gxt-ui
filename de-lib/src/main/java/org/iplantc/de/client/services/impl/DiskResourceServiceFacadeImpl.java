@@ -24,6 +24,7 @@ import org.iplantc.de.client.models.diskResources.DiskResourceMetadataList;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.diskResources.PathListRequest;
+import org.iplantc.de.client.models.diskResources.MetadataCopyRequest;
 import org.iplantc.de.client.models.diskResources.MetadataTemplate;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfoList;
@@ -1006,11 +1007,12 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
 
     @Override
     public void copyMetadata(String srcUUID,
-                              Splittable paths,
-                              AsyncCallback<String> callback) {
-        String address = null;
-        address = deProperties.getDataMgmtBaseUrl() + srcUUID + "/metadata/copy";
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, paths.getPayload());
+                             MetadataCopyRequest copyRequest,
+                             AsyncCallback<String> callback) {
+        String address = deProperties.getDataMgmtBaseUrl() + srcUUID + "/metadata/copy";
+        Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(copyRequest));
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
         callService(wrapper, callback);
     }
 

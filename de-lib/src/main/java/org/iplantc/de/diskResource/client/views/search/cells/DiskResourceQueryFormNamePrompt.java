@@ -1,6 +1,7 @@
 package org.iplantc.de.diskResource.client.views.search.cells;
 
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
+import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
 import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent;
 
@@ -16,6 +17,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.Style.AnchorAlignment;
 import com.sencha.gxt.core.client.util.BaseEventPreview;
@@ -41,6 +43,8 @@ public class DiskResourceQueryFormNamePrompt extends Composite implements Editor
     @UiField @Ignore TextButton saveFilterBtn;
     @UiField @Ignore Label saveLabel;
     @UiField @Ignore TextButton cancelSaveFilterBtn;
+
+    @Inject SearchModelUtils searchModelUtils;
 
     private final QueryFormNamePromptEditorDriver editorDriver = GWT.create(QueryFormNamePromptEditorDriver.class);
     private boolean showing;
@@ -112,7 +116,7 @@ public class DiskResourceQueryFormNamePrompt extends Composite implements Editor
     @UiHandler("saveFilterBtn")
     void onSaveFilterSelected(SelectEvent event) {
         final DiskResourceQueryTemplate flushedQueryTemplate = editorDriver.flush();
-        if (editorDriver.hasErrors() || DiskResourceQueryForm.isEmptyQuery(flushedQueryTemplate)) {
+        if (editorDriver.hasErrors() || searchModelUtils.isEmptyQuery(flushedQueryTemplate)) {
             return;
         }
 

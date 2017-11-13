@@ -1,9 +1,8 @@
 package org.iplantc.de.diskResource.client.views.sharing;
 
 import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.commons.client.views.sharing.SharingAppearance;
-import org.iplantc.de.commons.client.presenter.SharingPresenter;
 import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.commons.client.views.sharing.SharingAppearance;
 import org.iplantc.de.diskResource.client.DataSharingView;
 import org.iplantc.de.diskResource.client.model.DiskResourceModelKeyProvider;
 import org.iplantc.de.diskResource.client.model.DiskResourceNameComparator;
@@ -37,6 +36,8 @@ public class DataSharingViewImpl implements DataSharingView {
     interface MyUiBinder extends UiBinder<Widget, DataSharingViewImpl> {
     }
 
+    private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
+
     @UiField(provided = true) SharingAppearance appearance;
     private DiskResourceUtil diskResourceUtil;
     @UiField ColumnModel<DiskResource> diskResourcesColumnModel;
@@ -45,10 +46,6 @@ public class DataSharingViewImpl implements DataSharingView {
     @UiField VerticalLayoutContainer container;
     @UiField FramedPanel diskResourceListPnl;
     @UiField Grid<DiskResource> diskResourcesGrid;
-
-    SharingPresenter presenter;
-
-    private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
     @Inject
     public DataSharingViewImpl(SharingAppearance appearance,

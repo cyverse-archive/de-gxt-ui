@@ -36,7 +36,7 @@ public interface MetadataDisplayStrings extends Messages{
 
 	String saveMetadataError();
 
-	String templateinfoError();
+	String templateInfoError();
 
 	String additionalMetadata();
 
@@ -59,4 +59,8 @@ public interface MetadataDisplayStrings extends Messages{
 	String requiredGhostText();
 
     String importUMdBtnText();
+
+    String addBtnText();
+
+	String removeBtnText();
 }

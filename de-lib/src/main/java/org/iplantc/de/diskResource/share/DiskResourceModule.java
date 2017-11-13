@@ -156,5 +156,6 @@ public interface DiskResourceModule {
 
         String DOWNLOAD_TEMPLATE_CELL = ".downloadTemplate";
         String TEMPLATE_INFO_CELL = ".templateInfo";
+        String SAVE_METADATA_TO_FILE = ".saveMetadataToFile";
     }
 }

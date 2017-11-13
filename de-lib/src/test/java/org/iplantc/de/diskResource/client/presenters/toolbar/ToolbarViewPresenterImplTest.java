@@ -24,10 +24,10 @@ import org.iplantc.de.diskResource.client.PathListAutomationView;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.RequestSimpleDownloadEvent;
 import org.iplantc.de.diskResource.client.events.selection.AutomatePathListSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
 import org.iplantc.de.diskResource.client.gin.factory.BulkMetadataViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceSelectorFieldFactory;
-import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewFactory;
 import org.iplantc.de.diskResource.client.views.dialogs.CreateFolderDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.GenomeSearchDialog;
 import org.iplantc.de.diskResource.client.views.toolbar.dialogs.PathListAutomationDialog;
@@ -43,7 +43,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 
 import java.util.Arrays;
@@ -56,7 +55,6 @@ import java.util.List;
 @RunWith(GwtMockitoTestRunner.class)
 public class ToolbarViewPresenterImplTest {
 
-    @Mock ToolbarViewFactory viewFactoryMock;
     @Mock DiskResourceView.Presenter parentPresenterMock;
     @Mock EventBus eventBusMock;
     @Mock ToolbarView viewMock;
@@ -69,24 +67,23 @@ public class ToolbarViewPresenterImplTest {
     @Mock DiskResourceAutoBeanFactory drAbFactory;
     @Mock AutoBean<Folder> folderAb;
     @Captor ArgumentCaptor<DataCallback<List<InfoType>>> infoTypeCaptor;
-    @Mock
-    PathListAutomationView.PathListAutomationAppearance appearanceMock;
+    @Mock PathListAutomationView.PathListAutomationAppearance appearanceMock;
     @Mock DiskResourceSelectorFieldFactory drSelectorFactoryMock;
-    @Mock
-    PathListAutomationDialog htPathAutomationDlg;
+    @Mock PathListAutomationDialog htPathAutomationDlg;
     @Mock AsyncProviderWrapper<CreateFolderDialog> createFolderDlgProvider;
     @Mock AsyncProviderWrapper<PathListAutomationDialog> htPathAutomationDlgProvider;
     @Captor ArgumentCaptor<DataCallback<File>> fileCaptor;
     @Captor ArgumentCaptor<AsyncCallback<CreateFolderDialog>> createFolderDlgCaptor;
     @Captor ArgumentCaptor<AsyncCallback<PathListAutomationDialog>> htPathAutomationDlgCaptor;
     @Mock IplantAnnouncer announcerMock;
+    @Mock Folder folderMock;
 
     private ToolbarViewPresenterImpl uut;
 
     @Before public void setUp() {
-        when(viewFactoryMock.create(Matchers.<ToolbarView.Presenter>any())).thenReturn(viewMock);
         when(userInfoMock.getUsername()).thenReturn("username");
-        uut = new ToolbarViewPresenterImpl(viewFactoryMock){
+        when(userInfoMock.getHomePath()).thenReturn("path");
+        uut = new ToolbarViewPresenterImpl(viewMock){
 
             @Override
             protected void showHTProcessingError(String heading) {
@@ -127,7 +124,9 @@ public class ToolbarViewPresenterImplTest {
     @Test public void onCreateNewFolderSelected() {
         when(userInfoMock.getHomePath()).thenReturn("/iplant/home/ipctest");
         Folder selectedFolderMock = mock(Folder.class);
-        uut.onCreateNewFolderSelected(selectedFolderMock);
+        CreateNewFolderSelected eventMock = mock(CreateNewFolderSelected.class);
+        when(eventMock.getSelectedFolder()).thenReturn(selectedFolderMock);
+        uut.onCreateNewFolderSelected(eventMock);
 
         verify(createFolderDlgProvider).get(createFolderDlgCaptor.capture());
         createFolderDlgCaptor.getValue().onSuccess(cfDialogMock);
@@ -139,7 +138,8 @@ public class ToolbarViewPresenterImplTest {
         Folder parentMock = mock(Folder.class);
         when(drAbFactory.folder()).thenReturn(folderAb);
         when(folderAb.as()).thenReturn(parentMock);
-        uut.onCreateNewFolderSelected(null);
+        CreateNewFolderSelected eventMock = mock(CreateNewFolderSelected.class);
+        uut.onCreateNewFolderSelected(eventMock);
 
         verify(userInfoMock).getHomePath();
 

@@ -4,7 +4,7 @@ import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
 import org.iplantc.de.commons.client.views.dialogs.IPlantPromptDialog;
-import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderConfirmed;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -15,7 +15,7 @@ import com.google.inject.Inject;
 /**
  * @author jstroot
  */
-public class CreateFolderDialog extends IPlantPromptDialog implements CreateNewFolderSelected.HasCreateNewFolderSelectedHandlers {
+public class CreateFolderDialog extends IPlantPromptDialog implements CreateNewFolderConfirmed.HasCreateNewFolderConfirmedHandlers {
 
     public interface Appearance {
 
@@ -71,7 +71,7 @@ public class CreateFolderDialog extends IPlantPromptDialog implements CreateNewF
     }
 
     @Override
-    public HandlerRegistration addCreateNewFolderSelectedHandler(CreateNewFolderSelected.CreateNewFolderSelectedHandler handler) {
-        return addHandler(handler, CreateNewFolderSelected.TYPE);
+    public HandlerRegistration addCreateNewFolderConfirmedHandler(CreateNewFolderConfirmed.CreateNewFolderConfirmedHandler handler) {
+        return addHandler(handler, CreateNewFolderConfirmed.TYPE);
     }
 }

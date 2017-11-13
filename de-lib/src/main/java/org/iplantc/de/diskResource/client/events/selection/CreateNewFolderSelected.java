@@ -7,11 +7,11 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * A GWT event that gets fired after the user has opted to create a new folder and provided a folder name
+ * A GWT event that fires when the user first clicks on the Create New Folder button in the Data window
  */
 public class CreateNewFolderSelected
         extends GwtEvent<CreateNewFolderSelected.CreateNewFolderSelectedHandler> {
-    public static interface CreateNewFolderSelectedHandler extends EventHandler {
+    public interface CreateNewFolderSelectedHandler extends EventHandler {
         void onCreateNewFolderSelected(CreateNewFolderSelected event);
     }
 
@@ -19,12 +19,10 @@ public class CreateNewFolderSelected
         HandlerRegistration addCreateNewFolderSelectedHandler(CreateNewFolderSelectedHandler handler);
     }
 
-    private Folder parentFolder;
-    private String folderName;
+    private Folder selectedFolder;
 
-    public CreateNewFolderSelected(Folder parentFolder, String folderName) {
-        this.parentFolder = parentFolder;
-        this.folderName = folderName;
+    public CreateNewFolderSelected(Folder selectedFolder) {
+        this.selectedFolder = selectedFolder;
     }
 
     public static Type<CreateNewFolderSelectedHandler> TYPE = new Type<CreateNewFolderSelectedHandler>();
@@ -37,11 +35,7 @@ public class CreateNewFolderSelected
         handler.onCreateNewFolderSelected(this);
     }
 
-    public Folder getParentFolder() {
-        return parentFolder;
-    }
-
-    public String getFolderName() {
-        return folderName;
+    public Folder getSelectedFolder() {
+        return selectedFolder;
     }
 }

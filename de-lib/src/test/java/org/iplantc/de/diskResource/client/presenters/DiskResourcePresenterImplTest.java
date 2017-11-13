@@ -142,7 +142,7 @@ public class DiskResourcePresenterImplTest {
         verify(toolbarMock).addSimpleUploadSelectedHandler(eq(navigationPresenterMock));
         verify(toolbarMock).addImportFromUrlSelectedHandler(eq(navigationPresenterMock));
         verify(toolbarPresenterMock).addCreateNcbiSraFolderStructureSubmittedHandler(eq(uut));
-        verify(toolbarPresenterMock).addCreateNewFolderSelectedHandler(eq(uut));
+        verify(toolbarPresenterMock).addCreateNewFolderConfirmedHandler(eq(uut));
 
         // Grid
         verify(gridViewMock).addBeforeLoadHandler(eq(navigationPresenterMock));

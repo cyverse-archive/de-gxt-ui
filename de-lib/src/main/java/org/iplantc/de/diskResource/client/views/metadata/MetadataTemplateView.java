@@ -10,7 +10,7 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.validators.UrlValidator;
 import org.iplantc.de.commons.client.widgets.IPlantAnchor;
 import org.iplantc.de.diskResource.client.MetadataView;
-import org.iplantc.de.diskResource.client.presenters.metadata.MetadataPresenterImpl;
+import org.iplantc.de.diskResource.client.presenters.metadata.MetadataUtil;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.MetadataTermGuideDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
@@ -71,12 +71,11 @@ public class MetadataTemplateView implements IsWidget {
     List<MetadataTemplateAttribute> attributes;
     FastMap<VerticalLayoutContainer> templateAttrVLCMap;
     List<Avu> templateMd;
-    MetadataView.Presenter presenter;
 
     MetadataView.Appearance appearance;
 
-    @Inject
-    AsyncProviderWrapper<MetadataTermGuideDialog> termGuideDialogProvider;
+    @Inject AsyncProviderWrapper<MetadataTermGuideDialog> termGuideDialogProvider;
+    @Inject MetadataUtil metadataUtil;
     private IPlantAnchor helpLink;
 
     @Inject
@@ -104,9 +103,9 @@ public class MetadataTemplateView implements IsWidget {
             Avu avu = templateTagAvuMap.get(tag);
             if (avu == null) {
                 MetadataTemplateAttribute metadataTemplateAttribute = templateTagAttrMap.get(tag);
-                avu = MetadataPresenterImpl.newMetadata(metadataTemplateAttribute.getName(),
-                                                        "",
-                                                        ""); //$NON-NLS-1$ //$NON-NLS-2$
+                avu = metadataUtil.newMetadata(metadataTemplateAttribute.getName(),
+                                               "",
+                                               ""); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
             Field<?> field = templateTagFieldMap.get(tag);
@@ -143,11 +142,9 @@ public class MetadataTemplateView implements IsWidget {
         return valid;
     }
 
-    public void initTemplate(MetadataView.Presenter presenter,
-                             List<Avu> templateMd,
+    public void initTemplate(List<Avu> templateMd,
                              boolean writable,
                              List<MetadataTemplateAttribute> attributes) {
-        this.presenter = presenter;
         this.writable = writable;
         this.attributes = attributes;
         this.templateMd = templateMd;
@@ -181,9 +178,9 @@ public class MetadataTemplateView implements IsWidget {
                     templateTagAttrMap.put(tag, attribute);
                 });
             } else {
-                Avu avu = presenter.setAvuModelKey(MetadataPresenterImpl.newMetadata(attribute.getName(),
-                                                                                     "",
-                                                                                     "")); //$NON-NLS-1$ //$NON-NLS-2$
+                Avu avu = metadataUtil.setAvuModelKey(metadataUtil.newMetadata(attribute.getName(),
+                                                                               "",
+                                                                               ""));
                 String tag = getTagForMetadata(avu);
                 templateTagAvuMap.put(tag, avu);
                 templateTagAttrMap.put(tag, attribute);
@@ -205,7 +202,7 @@ public class MetadataTemplateView implements IsWidget {
         return null;
     }
 
-    private CheckBox buildBooleanField(String tag, MetadataTemplateAttribute attribute) {
+    private CheckBox buildBooleanField(String tag) {
         CheckBox cb = new CheckBox();
 
         Avu avu = templateTagAvuMap.get(tag);
@@ -317,7 +314,7 @@ public class MetadataTemplateView implements IsWidget {
     }
 
     private ComboBox<MetadataTermSearchResult> buildOntologyField(String tag, MetadataTemplateAttribute attribute) {
-        ComboBox<MetadataTermSearchResult> combo = presenter.createMetadataTermSearchField(attribute).asField();
+        ComboBox<MetadataTermSearchResult> combo = metadataUtil.createMetadataTermSearchField(attribute).asField();
 
         combo.setAllowBlank(!attribute.isRequired());
 
@@ -371,24 +368,24 @@ public class MetadataTemplateView implements IsWidget {
         HorizontalPanel panel = new HorizontalPanel();
         panel.add(field);
         panel.setSpacing(10);
-        field.setWidth("540px");
-        TextButton addBtn = new TextButton("+");
+        field.setWidth(appearance.metadataFieldLabelWidth());
+        TextButton addBtn = new TextButton(appearance.addBtnText());
         addBtn.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
-                Avu avu = presenter.setAvuModelKey(MetadataPresenterImpl.newMetadata(attribute.getName(),
-                                                                                     "",
-                                                                                     "")); //$NON-NLS-1$ //$NON-NLS-2$
-                String newtag = getTagForMetadata(avu);
-                templateTagAvuMap.put(newtag, avu);
-                templateTagAttrMap.put(newtag, attribute);
-                Field<?> field = getAttributeValueWidget(newtag);
-                templateTagFieldMap.put(newtag, field);
-                addFieldToTemplate(newtag, attribute, field);
+                Avu avu = metadataUtil.setAvuModelKey(metadataUtil.newMetadata(attribute.getName(),
+                                                                               "",
+                                                                               ""));
+                String newTag = getTagForMetadata(avu);
+                templateTagAvuMap.put(newTag, avu);
+                templateTagAttrMap.put(newTag, attribute);
+                Field<?> field = getAttributeValueWidget(newTag);
+                templateTagFieldMap.put(newTag, field);
+                addFieldToTemplate(newTag, attribute, field);
             }
         });
 
-        TextButton remBtn = new TextButton("-");
+        TextButton remBtn = new TextButton(appearance.removeBtnText());
         remBtn.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
@@ -434,7 +431,7 @@ public class MetadataTemplateView implements IsWidget {
 
     private String getTagForMetadata(Avu md) {
         final AutoBean<Object> metadataBean = AutoBeanUtils.getAutoBean(md);
-        return metadataBean.getTag(presenter.AVU_BEAN_TAG_MODEL_KEY);
+        return metadataBean.getTag(Avu.AVU_BEAN_TAG_MODEL_KEY);
     }
 
     /**
@@ -447,7 +444,7 @@ public class MetadataTemplateView implements IsWidget {
         if (MetadataTemplateAttributeType.TIMESTAMP.toString().equalsIgnoreCase(type)) {
             return buildDateField(tag, attribute);
         } else if (MetadataTemplateAttributeType.BOOLEAN.toString().equalsIgnoreCase(type)) {
-            return buildBooleanField(tag, attribute);
+            return buildBooleanField(tag);
         } else if (MetadataTemplateAttributeType.NUMBER.toString().equalsIgnoreCase(type)) {
             return buildNumberField(tag, attribute);
         } else if (MetadataTemplateAttributeType.INTEGER.toString().equalsIgnoreCase(type)) {
@@ -513,8 +510,8 @@ public class MetadataTemplateView implements IsWidget {
 
     }
 
-    private IPlantAnchor buildHelpLink(final List<MetadataTemplateAttribute> attributes, final String headerText) {
-        helpLink = new IPlantAnchor(appearance.metadataTermGuide(), 150, new ClickHandler() {
+    private void buildHelpLink(final List<MetadataTemplateAttribute> attributes, final String headerText) {
+        helpLink = new IPlantAnchor(appearance.metadataTermGuide(), appearance.metadataTermAnchorWidth(), new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
@@ -530,13 +527,7 @@ public class MetadataTemplateView implements IsWidget {
                                     headerText);
                     }
                 });
-
-
             }
         });
-
-        return helpLink;
     }
-
-
 }

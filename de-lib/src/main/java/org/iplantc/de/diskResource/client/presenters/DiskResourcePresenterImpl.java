@@ -35,7 +35,7 @@ import org.iplantc.de.diskResource.client.events.RequestSendToEnsemblEvent;
 import org.iplantc.de.diskResource.client.events.RequestSendToTreeViewerEvent;
 import org.iplantc.de.diskResource.client.events.RootFoldersRetrievedEvent;
 import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSubmitted;
-import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderSelected;
+import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderConfirmed;
 import org.iplantc.de.diskResource.client.events.selection.DNDDiskResourcesCompleted;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDiskResourcesSelected;
 import org.iplantc.de.diskResource.client.events.selection.EmptyTrashSelected;
@@ -340,7 +340,7 @@ public class DiskResourcePresenterImpl implements
         toolbarPresenter.getView().addImportFromUrlSelectedHandler(this.navigationPresenter);
         toolbarPresenter.getView().addOpenTrashFolderSelectedHandler(this);
         toolbarPresenter.getView().addBulkMetadataSelectedHandler(gridViewPresenter);
-        toolbarPresenter.addCreateNewFolderSelectedHandler(this);
+        toolbarPresenter.addCreateNewFolderConfirmedHandler(this);
         toolbarPresenter.addCreateNcbiSraFolderStructureSubmittedHandler(this);
     }
 
@@ -562,7 +562,7 @@ public class DiskResourcePresenterImpl implements
     }
 
     @Override
-    public void onCreateNewFolderSelected(CreateNewFolderSelected event) {
+    public void onCreateNewFolderConfirmed(CreateNewFolderConfirmed event) {
         Folder parentFolder = event.getParentFolder();
         String newFolderName = event.getFolderName();
         view.mask(appearance.createFolderLoadingMask());

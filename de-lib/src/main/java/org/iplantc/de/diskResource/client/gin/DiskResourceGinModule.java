@@ -27,7 +27,6 @@ import org.iplantc.de.diskResource.client.gin.factory.GenomeSearchViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewPresenterFactory;
 import org.iplantc.de.diskResource.client.gin.factory.NavigationViewFactory;
-import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewPresenterFactory;
 import org.iplantc.de.diskResource.client.presenters.DiskResourcePresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.dataLink.DataLinkPresenterImpl;
@@ -36,6 +35,8 @@ import org.iplantc.de.diskResource.client.presenters.genome.GenomeSearchPresente
 import org.iplantc.de.diskResource.client.presenters.grid.GridViewPresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsRpcProxyImpl;
 import org.iplantc.de.diskResource.client.presenters.metadata.MetadataPresenterImpl;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.AstroThesaurusProxy;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLookupServiceProxy;
 import org.iplantc.de.diskResource.client.presenters.navigation.NavigationPresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.navigation.proxy.FolderRpcProxyImpl;
 import org.iplantc.de.diskResource.client.presenters.search.DataSearchPresenterImpl;
@@ -133,9 +134,7 @@ public class DiskResourceGinModule extends AbstractGinModule {
                     .build(GridViewFactory.class));
 
         // Toolbar
-        install(new GinFactoryModuleBuilder()
-                    .implement(ToolbarView.class, DiskResourceViewToolbarImpl.class)
-                    .build(ToolbarViewFactory.class));
+        bind(ToolbarView.class).to(DiskResourceViewToolbarImpl.class);
 
         install(new GinFactoryModuleBuilder()
                     .implement(ToolbarView.Presenter.class, ToolbarViewPresenterImpl.class)
@@ -167,10 +166,12 @@ public class DiskResourceGinModule extends AbstractGinModule {
         bind(SaveAsDialog.class);
         bind(BulkMetadataDialog.class);
         bind(GenomeSearchDialog.class);
+        bind(OntologyLookupServiceProxy.class);
+        bind(AstroThesaurusProxy.class);
 
-        install(new GinFactoryModuleBuilder()
-                        .implement(SharingPresenter.class, DataSharingPresenterImpl.class)
-                        .build(DataSharingPresenterFactory.class));
+        install(new GinFactoryModuleBuilder().implement(SharingPresenter.class,
+                                                        DataSharingPresenterImpl.class)
+                                             .build(DataSharingPresenterFactory.class));
         bind(DataSharingView.class).to(DataSharingViewImpl.class);
     }
 
