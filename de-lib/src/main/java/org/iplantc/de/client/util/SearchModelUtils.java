@@ -109,27 +109,25 @@ public class SearchModelUtils {
     }
 
     public boolean isEmptyQuery(DiskResourceQueryTemplate template) {
-        if (Strings.isNullOrEmpty(template.getOwnedBy())
-            && Strings.isNullOrEmpty(template.getFileQuery())
-            && Strings.isNullOrEmpty(template.getMetadataAttributeQuery())
-            && Strings.isNullOrEmpty(template.getMetadataValueQuery())
-            && Strings.isNullOrEmpty(template.getNegatedFileQuery())
-            && Strings.isNullOrEmpty(template.getSharedWith())
-            && (template.getDateCreated() == null)
-            && (template.getLastModified() == null)
-            && ((template.getCreatedWithin() == null) || (template.getCreatedWithin().getFrom() == null && template.getCreatedWithin()
-                                                                                                                   .getTo() == null))
-            && ((template.getModifiedWithin() == null) || (template.getModifiedWithin().getFrom() == null && template.getModifiedWithin()
-                                                                                                                     .getTo() == null))
-            && ((template.getFileSizeRange() == null) || (template.getFileSizeRange().getMax() == null && template.getFileSizeRange()
-                                                                                                                  .getMin() == null))
-            && (template.getTagQuery() == null || template.getTagQuery().size() == 0)) {
-
+        boolean isEmpty = Strings.isNullOrEmpty(template.getOwnedBy())
+                          && Strings.isNullOrEmpty(template.getFileQuery())
+                          && Strings.isNullOrEmpty(template.getMetadataAttributeQuery())
+                          && Strings.isNullOrEmpty(template.getMetadataValueQuery())
+                          && Strings.isNullOrEmpty(template.getNegatedFileQuery())
+                          && Strings.isNullOrEmpty(template.getSharedWith())
+                          && (template.getDateCreated() == null)
+                          && (template.getLastModified() == null)
+                          && ((template.getCreatedWithin() == null) || (template.getCreatedWithin().getFrom() == null && template.getCreatedWithin()
+                                                                                                                                 .getTo() == null))
+                          && ((template.getModifiedWithin() == null) || (template.getModifiedWithin().getFrom() == null && template.getModifiedWithin()
+                                                                                                                                   .getTo() == null))
+                          && ((template.getFileSizeRange() == null) || (template.getFileSizeRange().getMax() == null && template.getFileSizeRange()
+                                                                                                                                .getMin() == null))
+                          && (template.getTagQuery() == null || template.getTagQuery().size() == 0);
+        if (isEmpty) {
             LOG.fine("tags size==>" + template.getTagQuery());
-
             IplantAnnouncer.getInstance().schedule(new ErrorAnnouncementConfig("You must select at least one filter."));
-            return true;
         }
-        return false;
+        return isEmpty;
     }
 }
