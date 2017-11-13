@@ -34,7 +34,9 @@ timestamps {
 
           try {
               stage "Test"
-              sh "docker run ${dockerCacheVolumes} --name ${dockerTestRunner} --rm ${dockerRepoBuild} ./gradlew test"
+              sh "docker run ${dockerCacheVolumes} --name ${dockerTestRunner} ${dockerRepoBuild} ./gradlew test"
+              sh "docker cp ${dockerTestRunner}:/usr/src/app/de-lib/build/test-results jenkins_tests
+              junit "jenkins_tests/*.xml"
 
               stage "Build WAR"
               sh "mkdir -p target/"
