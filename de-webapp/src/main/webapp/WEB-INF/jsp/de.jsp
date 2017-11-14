@@ -118,19 +118,16 @@ response.setDateHeader("Expires", 0);
                 } else {
                     w.addEventListener('load', l, false);
                 }
+                w.intercomSettings = {
+                    app_id: APP_ID,
+                    alignment: 'right',
+                    horizontal_padding: 20,
+                    vertical_padding: 45
+            	};
             }
         })
     ()}
 </script>
-<style id="intercom-custom-styles" type="text/css">
-    #intercom-container .intercom-launcher-frame {
-        bottom: 45px !important;
-    }
-
-    #intercom-container .intercom-app-launcher-enabled .intercom-messenger-frame {
-        bottom: calc(20px + 100px) !important;
-    }
-</style>
 </head>
 
 <!--                                           -->
