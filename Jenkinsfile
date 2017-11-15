@@ -34,6 +34,7 @@ timestamps {
 
           try {
               stage "Test"
+              sh returnStatus: true, script: "rm -rf jenkins_tests"
               sh "docker run ${dockerCacheVolumes} --name ${dockerTestRunner} ${dockerRepoBuild} ./gradlew test"
               sh "docker cp ${dockerTestRunner}:/usr/src/app/de-lib/build/test-results jenkins_tests"
               junit "jenkins_tests/*.xml"
@@ -71,6 +72,7 @@ timestamps {
             }
           } finally {
               // using returnStatus so if these are gone it doesn't error
+              sh returnStatus: true, script: "rm -rf jenkins_tests"
               sh returnStatus: true, script: "rm sencha_gradle.properties"
 
               sh returnStatus: true, script: "docker kill ${dockerCacher}"
