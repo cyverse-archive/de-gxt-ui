@@ -23,8 +23,8 @@ import com.google.inject.assistedinject.AssistedInject;
 
 import com.sencha.gxt.dnd.core.client.DndDropEvent;
 import com.sencha.gxt.dnd.core.client.StatusProxy;
-import com.sencha.gxt.widget.core.client.event.HideEvent;
-import com.sencha.gxt.widget.core.client.event.HideEvent.HideHandler;
+import com.sencha.gxt.widget.core.client.Dialog;
+import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,7 +41,7 @@ public class FolderSelectorField extends AbstractDiskResourceSelector<Folder> {
         String selectAFolder();
     }
 
-    private class FolderDialogHideHandler implements HideHandler {
+    private class FolderDialogHideHandler implements DialogHideEvent.DialogHideHandler {
         private final TakesValue<Folder> takesValue;
 
         public FolderDialogHideHandler(TakesValue<Folder> dlg) {
@@ -49,7 +49,11 @@ public class FolderSelectorField extends AbstractDiskResourceSelector<Folder> {
         }
 
         @Override
-        public void onHide(HideEvent event) {
+        public void onDialogHide(DialogHideEvent event) {
+            if (!Dialog.PredefinedButton.OK.equals(event.getHideButton())) {
+                return;
+            }
+
             Folder value = takesValue.getValue();
             if (value == null
                 || diskResourceUtil.containsFilteredItems(Arrays.asList(value))) {
@@ -131,7 +135,7 @@ public class FolderSelectorField extends AbstractDiskResourceSelector<Folder> {
                     }
                 }
 
-                result.addHideHandler(new FolderDialogHideHandler(result));
+                result.addDialogHideHandler(new FolderDialogHideHandler(result));
                 result.show(value,
                             infoTypeFilters);
             }
