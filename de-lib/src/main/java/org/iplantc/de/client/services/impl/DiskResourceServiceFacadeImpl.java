@@ -30,8 +30,10 @@ import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfoList;
 import org.iplantc.de.client.models.diskResources.RootFolders;
 import org.iplantc.de.client.models.diskResources.TYPE;
+import org.iplantc.de.client.models.diskResources.sharing.DataSharingAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.sharing.DataSharingRequestList;
 import org.iplantc.de.client.models.diskResources.sharing.DataUnsharingRequestList;
+import org.iplantc.de.client.models.diskResources.sharing.DataUserPermissionList;
 import org.iplantc.de.client.models.services.DiskResourceMove;
 import org.iplantc.de.client.models.services.DiskResourceRename;
 import org.iplantc.de.client.models.viewer.InfoType;
@@ -92,8 +94,10 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
     private final DiscEnvApiService deServiceFacade;
     private final DEClientConstants constants;
     private final UserInfo userInfo;
+    private final DataSharingAutoBeanFactory dataSharingFactory;;
     @Inject DiskResourceUtil diskResourceUtil;
     @Inject EventBus eventBus;
+
 
     @Inject
     public DiskResourceServiceFacadeImpl(final DiscEnvApiService deServiceFacade,
@@ -101,7 +105,8 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
                                          final DEClientConstants constants,
                                          final DiskResourceAutoBeanFactory factory,
                                          final DataLinkFactory dlFactory,
-                                         final UserInfo userInfo) {
+                                         final UserInfo userInfo,
+                                         final DataSharingAutoBeanFactory dataSharingFactory) {
         super(new ModelKeyProvider<Folder>() {
 
             @Override
@@ -116,6 +121,7 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
         this.factory = factory;
         this.dlFactory = dlFactory;
         this.userInfo = userInfo;
+        this.dataSharingFactory = dataSharingFactory;
         GWT.log("DISK RESOURCE SERVICE FACADE CONSTRUCTOR");
     }
 
@@ -707,11 +713,16 @@ public class DiskResourceServiceFacadeImpl extends TreeStore<Folder> implements
     }
 
     @Override
-    public void getPermissions(HasPaths paths, DECallback<String> callback) {
+    public void getPermissions(HasPaths paths, DECallback<DataUserPermissionList> callback) {
         String fullAddress = deProperties.getDataMgmtBaseUrl() + "user-permissions"; //$NON-NLS-1$
         String payload = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(paths)).getPayload();
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, fullAddress, payload);
-        callService(wrapper, callback);
+        callService(wrapper, new DECallbackConverter<String, DataUserPermissionList>(callback) {
+            @Override
+            protected DataUserPermissionList convertFrom(String object) {
+                return AutoBeanCodex.decode(dataSharingFactory, DataUserPermissionList.class, object).as();
+            }
+        });
     }
 
     @Override

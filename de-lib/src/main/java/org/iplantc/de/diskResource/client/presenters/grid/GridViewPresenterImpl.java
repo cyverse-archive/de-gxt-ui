@@ -108,7 +108,7 @@ public class GridViewPresenterImpl implements Presenter,
                                               DiskResourceSelectionChangedEvent.DiskResourceSelectionChangedEventHandler,
                                               MetadataInfoBtnSelected.MetadataInfoBtnSelectedHandler {
 
-    private final class SaveMetadataCallback implements AsyncCallback<String> {
+    class SaveMetadataCallback implements AsyncCallback<String> {
         private final SaveAsDialog saveDialog;
 
         private SaveMetadataCallback(SaveAsDialog saveDialog) {
@@ -437,8 +437,7 @@ public class GridViewPresenterImpl implements Presenter,
                 dialog.addOkButtonSelectHandler(selectEvent -> {
                     List<HasPath> paths = dialog.getValue();
                     if (paths == null || paths.size() == 0) {
-                        AlertMessageBox amb = new AlertMessageBox(appearance.copyMetadata(selected.getPath()),
-                                                                  appearance.copyMetadataNoResources());
+                        AlertMessageBox amb = getNoResourcesMessageBox(selected);
                         amb.show();
                         return;
                     }
@@ -450,6 +449,11 @@ public class GridViewPresenterImpl implements Presenter,
                 dialog.show(selected);
             }
         });
+    }
+
+    AlertMessageBox getNoResourcesMessageBox(DiskResource selected) {
+        return new AlertMessageBox(appearance.copyMetadata(selected.getPath()),
+                                   appearance.copyMetadataNoResources());
     }
 
     @Override
@@ -490,7 +494,7 @@ public class GridViewPresenterImpl implements Presenter,
         });
     }
 
-    private MetadataCopyRequest buildCopyRequest(List<HasPath> paths) {
+    MetadataCopyRequest buildCopyRequest(List<HasPath> paths) {
         MetadataCopyRequest request = factory.metadataCopyRequest().as();
         List<String> ids = paths.stream()
                                 .map(hasPath -> String.valueOf(((DiskResource)hasPath).getId()))
@@ -750,7 +754,7 @@ public class GridViewPresenterImpl implements Presenter,
                                   .equalsIgnoreCase(NavigationView.FAVORITES_FOLDER_NAME);
     }
 
-    private void copyMetadata(final DiskResource selected, List<HasPath> paths, MetadataCopyDialog dialog) {
+    void copyMetadata(final DiskResource selected, List<HasPath> paths, MetadataCopyDialog dialog) {
         diskResourceService.copyMetadata(selected.getId(),
                                          buildCopyRequest(paths),
                                          new CopyMetadataCallback(dialog));

@@ -2,14 +2,22 @@ package org.iplantc.de.diskResource.client.presenters.grid;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.iplantc.de.client.events.EventBus;
+import org.iplantc.de.client.models.HasPath;
+import org.iplantc.de.client.models.dataLink.DataLink;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
+import org.iplantc.de.client.models.diskResources.File;
+import org.iplantc.de.client.models.diskResources.Folder;
+import org.iplantc.de.client.models.diskResources.MetadataCopyRequest;
+import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.viewer.InfoType;
@@ -18,30 +26,49 @@ import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.comments.view.dialogs.CommentsDialog;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
+import org.iplantc.de.diskResource.client.BulkMetadataView;
 import org.iplantc.de.diskResource.client.DiskResourceView;
 import org.iplantc.de.diskResource.client.GridView;
 import org.iplantc.de.diskResource.client.NavigationView;
+import org.iplantc.de.diskResource.client.events.FetchDetailsCompleted;
 import org.iplantc.de.diskResource.client.events.RequestDiskResourceFavoriteEvent;
+import org.iplantc.de.diskResource.client.events.selection.BulkMetadataSelected;
+import org.iplantc.de.diskResource.client.events.selection.CopyMetadataSelected;
+import org.iplantc.de.diskResource.client.events.selection.DownloadTemplateSelectedEvent;
 import org.iplantc.de.diskResource.client.events.selection.EditInfoTypeSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelected;
+import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelected;
+import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected;
+import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected;
+import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected;
 import org.iplantc.de.diskResource.client.gin.factory.FolderContentsRpcProxyFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewFactory;
 import org.iplantc.de.diskResource.client.views.dialogs.InfoTypeEditorDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.MetadataCopyDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.SaveAsDialog;
 import org.iplantc.de.diskResource.client.views.grid.DiskResourceColumnModel;
+import org.iplantc.de.diskResource.client.views.metadata.dialogs.BulkMetadataDialog;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.ManageMetadataDialog;
+import org.iplantc.de.diskResource.client.views.metadata.dialogs.SelectMetadataTemplateDialog;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.DataSharingDialog;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.ShareResourceLinkDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.DataCallback;
 
 import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GxtMockitoTestRunner;
+import com.google.web.bindery.autobean.shared.Splittable;
 
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.ListStore;
+import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
+import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
+import com.sencha.gxt.widget.core.client.grid.LiveGridCheckBoxSelectionModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -93,10 +120,50 @@ public class GridViewPresenterImplTest {
     @Mock DiskResource resourceMock;
     @Mock InfoType infoTypeMock;
     @Mock PermissionValue permissionValueMock;
+    @Mock AsyncProviderWrapper<ManageMetadataDialog> manageMetadataDlgProviderMock;
+    @Mock ManageMetadataDialog manageMetadataDlgMock;
+    @Mock AsyncProviderWrapper<MetadataCopyDialog> copyMetadataDlgProviderMock;
+    @Mock MetadataCopyDialog copyMetadataDlgMock;
+    @Mock List<HasPath> hasPathListMock;
+    @Mock AsyncProviderWrapper<BulkMetadataDialog> bulkMetadataDlgProviderMock;
+    @Mock BulkMetadataDialog bulkMetadataDlgMock;
+    @Mock LiveGridCheckBoxSelectionModel selectionModelMock;
+    @Mock SelectEvent selectEventMock;
+    @Mock AlertMessageBox alertMessageBoxMock;
+    @Mock Splittable splittableMock;
+    @Mock AsyncProviderWrapper<DataSharingDialog> dataSharingDlgProviderMock;
+    @Mock DataSharingDialog dataSharingDlgMock;
+    @Mock DialogHideEvent hideEventMock;
+    @Mock FastMap<TYPE> fastMapTypeMock;
+    @Mock ShareResourceLinkDialog shareResourceLinkDlgMock;
+    @Mock List<String> stringListMock;
+    @Mock FastMap<List<DataLink>> fastMapDataLinksMock;
+    @Mock List<DataLink> dataLinksMock;
+    @Mock FastMap<DiskResource> fastMapDiskResourceMock;
+    @Mock HandlerManager handlerManagerMock;
+    @Mock AsyncProviderWrapper<SaveAsDialog> saveAsDlgProviderMock;
+    @Mock SaveAsDialog saveAsDlgMock;
+    @Mock AsyncProviderWrapper<SelectMetadataTemplateDialog> selectTemplateDlgProviderMock;
+    @Mock SelectMetadataTemplateDialog selectTemplateDlgMock;
+    @Mock List<MetadataTemplateInfo> metadataTemplateInfosMock;
+    @Mock MetadataCopyRequest metadataCopyRequestMock;
 
     @Captor ArgumentCaptor<AsyncCallback<InfoTypeEditorDialog>> infoTypeEditorDialogCaptor;
     @Captor ArgumentCaptor<AsyncCallback<String>> stringCaptor;
     @Captor ArgumentCaptor<AsyncCallback<CommentsDialog>> commentsDialogCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<ManageMetadataDialog>> manageMetadataDlgCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<MetadataCopyDialog>> copyMetadataDlgCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<BulkMetadataDialog>> bulkMetadataDlgCaptor;
+    @Captor ArgumentCaptor<SelectEvent.SelectHandler> selectHandlerCaptor;
+    @Captor ArgumentCaptor<DataCallback<String>> dataStringCallback;
+    @Captor ArgumentCaptor<AsyncCallback<DataSharingDialog>> dataSharingDlgCaptor;
+    @Captor ArgumentCaptor<DialogHideEvent.DialogHideHandler> dialogHideCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<ShareResourceLinkDialog>> shareResourceLinkDlgCaptor;
+    @Captor ArgumentCaptor<DataCallback<FastMap<List<DataLink>>>> fastMapDataLinkCaptor;
+    @Captor ArgumentCaptor<DataCallback<FastMap<DiskResource>>> fastMapDiskResourceCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<SaveAsDialog>> saveAsDlgCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<List<MetadataTemplateInfo>>> metadataTemplatesInfoCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<SelectMetadataTemplateDialog>> selectTemplateDlgCaptor;
 
     private GridViewPresenterImpl uut;
 
@@ -141,12 +208,35 @@ public class GridViewPresenterImplTest {
             ListStore<DiskResource> getDiskResourceListStore() {
                 return listStoreMock;
             }
+
+            @Override
+            AlertMessageBox getNoResourcesMessageBox(DiskResource selected) {
+                return alertMessageBoxMock;
+            }
+
+            @Override
+            MetadataCopyRequest buildCopyRequest (List<HasPath> paths) {
+                return metadataCopyRequestMock;
+            }
+
+            @Override
+            HandlerManager ensureHandlers() {
+                return handlerManagerMock;
+            }
         };
         uut.announcer = announcerMock;
         uut.infoTypeDialogProvider = infoTypeDialogProviderMock;
         uut.metadataService = metadataServiceMock;
         uut.commentDialogProvider = commentDialogProviderMock;
         uut.diskResourceService = diskResourceServiceMock;
+        uut.metadataDialogProvider = manageMetadataDlgProviderMock;
+        uut.copyMetadataDlgProvider = copyMetadataDlgProviderMock;
+        uut.bulkMetadataDlgProvider = bulkMetadataDlgProviderMock;
+        uut.dataSharingDialogProvider = dataSharingDialogProviderMock;
+        uut.diskResourceUtil = diskResourceUtilMock;
+        uut.shareLinkDialogProvider = shareLinkDialogProviderMock;
+        uut.saveAsDialogProvider = saveAsDialogProviderMock;
+        uut.selectMetaTemplateDlgProvider = selectTemplateDlgProviderMock;
 
         verifyConstructor();
     }
@@ -184,10 +274,14 @@ public class GridViewPresenterImplTest {
         RequestDiskResourceFavoriteEvent eventMock = mock(RequestDiskResourceFavoriteEvent.class);
         when(eventMock.getDiskResource()).thenReturn(resourceMock);
         when(resourceMock.isFavorite()).thenReturn(false);
+        GridViewPresenterImpl spy = spy(uut);
 
         /** CALL METHOD UNDER TEST **/
-        uut.onFavoriteRequest(eventMock);
+        spy.onFavoriteRequest(eventMock);
         verify(metadataServiceMock).addToFavorites(eq("id"), stringCaptor.capture());
+
+        stringCaptor.getValue().onSuccess("result");
+        verify(spy).updateFav(eq(resourceMock), eq(true));
     }
 
     @Test
@@ -195,10 +289,14 @@ public class GridViewPresenterImplTest {
         RequestDiskResourceFavoriteEvent eventMock = mock(RequestDiskResourceFavoriteEvent.class);
         when(eventMock.getDiskResource()).thenReturn(resourceMock);
         when(resourceMock.isFavorite()).thenReturn(true);
+        GridViewPresenterImpl spy = spy(uut);
 
         /** CALL METHOD UNDER TEST **/
-        uut.onFavoriteRequest(eventMock);
+        spy.onFavoriteRequest(eventMock);
         verify(metadataServiceMock).removeFromFavorites(eq("id"), stringCaptor.capture());
+        stringCaptor.getValue().onSuccess("result");
+        verify(spy).updateFav(eq(resourceMock), eq(false));
+
     }
 
     @Test
@@ -216,26 +314,163 @@ public class GridViewPresenterImplTest {
 
     @Test
     public void testOnRequestManageMetadataSelected() {
+        ManageMetadataSelected eventMock = mock(ManageMetadataSelected.class);
+        when(eventMock.getDiskResource()).thenReturn(resourceMock);
+
+        /** CALL METHOD UNDER TEST **/
+        uut.onRequestManageMetadataSelected(eventMock);
+
+        verify(manageMetadataDlgProviderMock).get(manageMetadataDlgCaptor.capture());
+
+        manageMetadataDlgCaptor.getValue().onSuccess(manageMetadataDlgMock);
+        verify(manageMetadataDlgMock).show(eq(resourceMock));
     }
 
     @Test
-    public void testCopyMetadata() {
+    public void testOnRequestCopyMetadataSelected() {
+        CopyMetadataSelected eventMock = mock(CopyMetadataSelected.class);
+        when(eventMock.getDiskResource()).thenReturn(resourceMock);
+        when(resourceMock.getPath()).thenReturn("path");
+        when(copyMetadataDlgMock.getSource()).thenReturn(resourceMock);
+        when(copyMetadataDlgMock.getValue()).thenReturn(hasPathListMock);
+        when(appearanceMock.copyMetadata("path")).thenReturn("copyMetadata");
+        when(appearanceMock.copyMetadataNoResources()).thenReturn("noResources");
+        when(hasPathListMock.size()).thenReturn(1);
+
+        GridViewPresenterImpl spy = spy(uut);
+
+        /** CALL METHOD UNDER TEST **/
+        spy.onRequestCopyMetadataSelected(eventMock);
+
+        verify(copyMetadataDlgProviderMock).get(copyMetadataDlgCaptor.capture());
+
+        copyMetadataDlgCaptor.getValue().onSuccess(copyMetadataDlgMock);
+        verify(copyMetadataDlgMock).show(eq(resourceMock));
+        verify(copyMetadataDlgMock).addOkButtonSelectHandler(selectHandlerCaptor.capture());
+        selectHandlerCaptor.getValue().onSelect(selectEventMock);
+        verify(spy).copyMetadata(eq(resourceMock), eq(hasPathListMock), eq(copyMetadataDlgMock));
+    }
+
+    @Test
+    public void testOnBulkMetadataSelected() {
+        BulkMetadataSelected eventMock = mock(BulkMetadataSelected.class);
+        when(eventMock.getMode()).thenReturn(BulkMetadataView.BULK_MODE.SELECT);
+        when(viewMock.getSelectionModel()).thenReturn(selectionModelMock);
+        when(selectionModelMock.getSelectedItem()).thenReturn(resourceMock);
+        when(resourceMock.getPath()).thenReturn("destPath");
+        when(bulkMetadataDlgMock.isValid()).thenReturn(true);
+        when(bulkMetadataDlgMock.getSelectedPath()).thenReturn("path");
+        GridViewPresenterImpl spy = spy(uut);
+
+        /** CALL METHOD UNDER TEST **/
+        spy.onBulkMetadataSelected(eventMock);
+
+        verify(bulkMetadataDlgProviderMock).get(bulkMetadataDlgCaptor.capture());
+        bulkMetadataDlgCaptor.getValue().onSuccess(bulkMetadataDlgMock);
+        verify(bulkMetadataDlgMock).show(eq(BulkMetadataView.BULK_MODE.SELECT));
+        verify(bulkMetadataDlgMock).addOkButtonSelectHandler(selectHandlerCaptor.capture());
+        selectHandlerCaptor.getValue().onSelect(selectEventMock);
+        verify(spy).submitBulkMetadataFromExistingFile(eq("path"), eq("destPath"));
+    }
+
+    @Test
+    public void testSubmitBulkMetadataFromExistingFile() {
+        when(appearanceMock.bulkMetadataSuccess()).thenReturn("success");
+
+        /** CALL METHOD UNDER TEST **/
+        uut.submitBulkMetadataFromExistingFile("filePath", "destFolder");
+
+        verify(diskResourceServiceMock).setBulkMetadataFromFile(eq("filePath"),
+                                                                eq("destFolder"),
+                                                                dataStringCallback.capture());
+
+        dataStringCallback.getValue().onSuccess("result");
+        verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));
     }
 
     @Test
     public void testOnRequestManageSharingSelected() {
+        ManageSharingSelected eventMock = mock(ManageSharingSelected.class);
+        when(eventMock.getDiskResourceToShare()).thenReturn(resourcesMock);
+        when(resourceMock.isFilter()).thenReturn(false);
+        when(diskResourceUtilMock.asStringPathTypeMap(any(), any())).thenReturn(fastMapTypeMock);
+        GridViewPresenterImpl spy = spy(uut);
+
+        /** CALL METHOD UNDER TEST **/
+        spy.onRequestManageSharingSelected(eventMock);
+
+        verify(dataSharingDialogProviderMock).get(dataSharingDlgCaptor.capture());
+        dataSharingDlgCaptor.getValue().onSuccess(dataSharingDlgMock);
+        verify(dataSharingDlgMock).show(eq(resourcesMock));
+        verify(dataSharingDlgMock).addDialogHideHandler(dialogHideCaptor.capture());
+
+        dialogHideCaptor.getValue().onDialogHide(hideEventMock);
+        verify(spy).fetchDetails(eq(resourceMock));
     }
 
     @Test
-    public void testOnRequestShareByDataLinkSelected() {
+    public void testOnRequestShareByDataLinkSelected_Folder() {
+        ShareByDataLinkSelected eventMock = mock(ShareByDataLinkSelected.class);
+        Folder folderMock = mock(Folder.class);
+        when(eventMock.getDiskResourceToShare()).thenReturn(folderMock);
+
+        /** CALL METHOD UNDER TEST **/
+        uut.onRequestShareByDataLinkSelected(eventMock);
+
+        verify(shareLinkDialogProviderMock).get(shareResourceLinkDlgCaptor.capture());
+
+        shareResourceLinkDlgCaptor.getValue().onSuccess(shareResourceLinkDlgMock);
+        verify(shareResourceLinkDlgMock).show(any());
+    }
+
+    @Test
+    public void testOnRequestShareByDataLinkSelected_File() {
+        ShareByDataLinkSelected eventMock = mock(ShareByDataLinkSelected.class);
+        File fileMock = mock(File.class);
+        when(eventMock.getDiskResourceToShare()).thenReturn(fileMock);
+        when(diskResourceUtilMock.asStringPathList(any())).thenReturn(stringListMock);
+        when(fileMock.getPath()).thenReturn("path");
+        when(fastMapDataLinksMock.get("path")).thenReturn(dataLinksMock);
+        when(dataLinksMock.isEmpty()).thenReturn(false);
+        GridViewPresenterImpl spy = spy(uut);
+
+        /**  CALL METHOD UNDER TEST **/
+        spy.onRequestShareByDataLinkSelected(eventMock);
+
+        verify(diskResourceServiceMock).listDataLinks(eq(stringListMock), fastMapDataLinkCaptor.capture());
+
+        fastMapDataLinkCaptor.getValue().onSuccess(fastMapDataLinksMock);
+        verify(spy).showPublicLink(eq(dataLinksMock));
     }
 
     @Test
     public void testFetchDetails() {
+        when(diskResourceUtilMock.asStringPathTypeMap(any(), any())).thenReturn(fastMapTypeMock);
+        when(resourceMock.getPath()).thenReturn("path");
+        when(fastMapDiskResourceMock.get("path")).thenReturn(resourceMock);
+        GridViewPresenterImpl spy = spy(uut);
+
+        /** CALL METHOD UNDER TEST **/
+        spy.fetchDetails(resourceMock);
+
+        verify(diskResourceServiceMock).getStat(eq(fastMapTypeMock), fastMapDiskResourceCaptor.capture());
+
+        fastMapDiskResourceCaptor.getValue().onSuccess(fastMapDiskResourceMock);
+        verify(spy).updateDiskResource(eq(resourceMock));
+        verify(handlerManagerMock).fireEvent(isA(FetchDetailsCompleted.class));
     }
 
     @Test
     public void testSetInfoType() {
+        when(resourceMock.getPath()).thenReturn("path");
+        GridViewPresenterImpl spy = spy(uut);
+
+        /** CALL METHOD UNDER TEST **/
+        spy.setInfoType(resourceMock, "newType");
+        verify(diskResourceServiceMock).setFileType(eq("path"), eq("newType"), dataStringCallback.capture());
+
+        dataStringCallback.getValue().onSuccess("result");
+        verify(spy).fetchDetails(eq(resourceMock));
     }
 
     @Test
@@ -267,9 +502,51 @@ public class GridViewPresenterImplTest {
 
     @Test
     public void testOnRequestSaveMetadataSelected() {
+        SaveMetadataSelected eventMock = mock(SaveMetadataSelected.class);
+        when(eventMock.getDiskResource()).thenReturn(resourceMock);
+        when(resourceMock.getId()).thenReturn("id");
+        Folder folderMock = mock(Folder.class);
+        when(saveAsDlgMock.getSelectedFolder()).thenReturn(folderMock);
+        when(folderMock.getPath()).thenReturn("path");
+        when(saveAsDlgMock.getFileName()).thenReturn("fileName");
+        when(appearanceMock.saving()).thenReturn("saving");
+
+        /** CALL METHOD UNDER TEST **/
+        uut.onRequestSaveMetadataSelected(eventMock);
+
+        verify(saveAsDialogProviderMock).get(saveAsDlgCaptor.capture());
+
+        saveAsDlgCaptor.getValue().onSuccess(saveAsDlgMock);
+        verify(saveAsDlgMock).addOkButtonSelectHandler(selectHandlerCaptor.capture());
+        selectHandlerCaptor.getValue().onSelect(selectEventMock);
+        verify(diskResourceServiceMock).saveMetadata(eq("id"),
+                                                     eq("path/fileName"),
+                                                     eq(true),
+                                                     isA(GridViewPresenterImpl.SaveMetadataCallback.class));
+        verify(saveAsDlgMock).show(any());
     }
 
     @Test
     public void testOnDownloadTemplateSelected() {
+        DownloadTemplateSelectedEvent eventMock = mock(DownloadTemplateSelectedEvent.class);
+        MetadataTemplateInfo infoMock = mock(MetadataTemplateInfo.class);
+        when(selectTemplateDlgMock.getSelectedTemplate()).thenReturn(infoMock);
+        when(infoMock.getId()).thenReturn("id");
+        when(diskResourceServiceMock.downloadTemplate("id")).thenReturn("url");
+
+        /** CALL METHOD UNDER TEST **/
+        uut.onDownloadTemplateSelected(eventMock);
+
+        verify(diskResourceServiceMock).getMetadataTemplateListing(metadataTemplatesInfoCaptor.capture());
+
+        metadataTemplatesInfoCaptor.getValue().onSuccess(metadataTemplateInfosMock);
+        verify(selectTemplateDlgProviderMock).get(selectTemplateDlgCaptor.capture());
+
+        selectTemplateDlgCaptor.getValue().onSuccess(selectTemplateDlgMock);
+        verify(selectTemplateDlgMock).addOkButtonSelectHandler(selectHandlerCaptor.capture());
+        selectHandlerCaptor.getValue().onSelect(selectEventMock);
+        verify(diskResourceServiceMock).downloadTemplate("id");
+
+        verify(selectTemplateDlgMock).show(eq(metadataTemplateInfosMock), eq(false));
     }
 }

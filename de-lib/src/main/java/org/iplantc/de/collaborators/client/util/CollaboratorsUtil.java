@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class CollaboratorsUtil {
 
-    private final CollaboratorAutoBeanFactory factory = GWT.create(CollaboratorAutoBeanFactory.class);
+    CollaboratorAutoBeanFactory factory = GWT.create(CollaboratorAutoBeanFactory.class);
     private static CollaboratorsUtil INSTANCE;
 
     CollaboratorsUtil() {

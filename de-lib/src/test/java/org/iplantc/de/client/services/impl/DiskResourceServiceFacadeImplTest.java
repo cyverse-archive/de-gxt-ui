@@ -18,6 +18,7 @@ import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.dataLink.DataLinkFactory;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.Folder;
+import org.iplantc.de.client.models.diskResources.sharing.DataSharingAutoBeanFactory;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.DEProperties;
@@ -48,11 +49,11 @@ public class DiskResourceServiceFacadeImplTest {
     @Mock DEProperties dePropertiesMock;
     @Mock DEClientConstants deConstantsMock;
     @Mock DiskResourceAutoBeanFactory drAutoBeanFactoryMock;
-    @Mock
-    DataLinkFactory dataLinkFactoryMock;
+    @Mock DataLinkFactory dataLinkFactoryMock;
     @Mock UserInfo userInfoMock;
     @Mock EventBus eventBusMock;
     @Mock DECallback<List<Folder>> folderListCallbackMock;
+    @Mock DataSharingAutoBeanFactory dataSharingAutoBeanFactoryMock;
 
     @Captor ArgumentCaptor<DECallback<List<Folder>>> folderListCallbackCaptor;
 
@@ -67,7 +68,8 @@ public class DiskResourceServiceFacadeImplTest {
                                                                                   deConstantsMock,
                                                                                   drAutoBeanFactoryMock,
                                                                                   dataLinkFactoryMock,
-                                                                                  userInfoMock) {
+                                                                                  userInfoMock,
+                                                                                  dataSharingAutoBeanFactoryMock) {
             public Folder findModel(Folder model) {
                 return folderMock;
             }
@@ -102,7 +104,8 @@ public class DiskResourceServiceFacadeImplTest {
                                                                                   deConstantsMock,
                                                                                   drAutoBeanFactoryMock,
                                                                                   dataLinkFactoryMock,
-                                                                                  userInfoMock) {
+                                                                                  userInfoMock,
+                                                                                  dataSharingAutoBeanFactoryMock) {
             public Folder findModel(Folder model) {
                 return folderMock;
             }
@@ -135,7 +138,8 @@ public class DiskResourceServiceFacadeImplTest {
                                                                                   deConstantsMock,
                                                                                   drAutoBeanFactoryMock,
                                                                                   dataLinkFactoryMock,
-                                                                                  userInfoMock) {
+                                                                                  userInfoMock,
+                                                                                  dataSharingAutoBeanFactoryMock) {
             public Folder findModel(Folder model) {
                 return folderMock;
             }
@@ -158,7 +162,8 @@ public class DiskResourceServiceFacadeImplTest {
                                                                                   deConstantsMock,
                                                                                   drAutoBeanFactoryMock,
                                                                                   dataLinkFactoryMock,
-                                                                                  userInfoMock) {
+                                                                                  userInfoMock,
+                                                                                  dataSharingAutoBeanFactoryMock) {
             public Folder findModel(Folder model) {
                 return folderMock;
             }

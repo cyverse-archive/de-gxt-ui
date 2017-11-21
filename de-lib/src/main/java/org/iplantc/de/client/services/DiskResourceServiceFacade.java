@@ -17,6 +17,7 @@ import org.iplantc.de.client.models.diskResources.RootFolders;
 import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.models.diskResources.sharing.DataSharingRequestList;
 import org.iplantc.de.client.models.diskResources.sharing.DataUnsharingRequestList;
+import org.iplantc.de.client.models.diskResources.sharing.DataUserPermissionList;
 import org.iplantc.de.client.models.services.DiskResourceMove;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.shared.DECallback;
@@ -204,7 +205,7 @@ public interface DiskResourceServiceFacade {
      *  @param paths - Post body in JSONObject format
      * @param callback callback object
      */
-    void getPermissions(HasPaths paths, DECallback<String> callback);
+    void getPermissions(HasPaths paths, DECallback<DataUserPermissionList> callback);
 
     /**
      * Get info about a selected file or folder

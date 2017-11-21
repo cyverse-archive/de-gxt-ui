@@ -154,7 +154,7 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
             @Override
             public void onSuccess(TabFileConfigDialog dialog) {
                 dialog.addOkButtonSelectHandler(selectEvent -> {
-                    TabularFileViewerWindowConfig config = ConfigFactory.newTabularFileViewerWindowConfig();
+                    TabularFileViewerWindowConfig config = getTabFileViewerWindowConfig();
                     config.setEditing(true);
                     config.setVizTabFirst(true);
                     config.setSeparator(dialog.getSeparator());
@@ -388,6 +388,10 @@ public class ToolbarViewPresenterImpl implements ToolbarView.Presenter,
                 eventBus.fireEvent(new ShowFilePreviewEvent(result, null));
             }
         });
+    }
+
+    TabularFileViewerWindowConfig getTabFileViewerWindowConfig() {
+        return ConfigFactory.newTabularFileViewerWindowConfig();
     }
 
     HandlerManager ensureHandlers() {

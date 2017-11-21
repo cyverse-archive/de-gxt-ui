@@ -60,12 +60,15 @@ public class GenomeSearchPresenterImpl implements GenomeSearchView.GenomeSearchP
 
             @Override
             public void onSuccess(String result) {
-                MessageBox amb =
-                        new MessageBox(SafeHtmlUtils.fromTrustedString(appearance.importFromCoge()), SafeHtmlUtils.fromTrustedString(appearance.cogeImportGenomeSuccess()));
+                MessageBox amb = getSuccessMessageBox();
                 amb.setIcon(appearance.infoIcon());
                 amb.show();
             }
         });
+    }
+
+    MessageBox getSuccessMessageBox() {
+        return new MessageBox(SafeHtmlUtils.fromTrustedString(appearance.importFromCoge()), SafeHtmlUtils.fromTrustedString(appearance.cogeImportGenomeSuccess()));
     }
 
     PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Genome>> getPagingLoader(GenomeSearchRpcProxy searchProxy) {

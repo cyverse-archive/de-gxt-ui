@@ -76,7 +76,6 @@ import com.google.inject.assistedinject.AssistedInject;
 import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.box.MessageBox;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -375,8 +374,7 @@ public class DiskResourcePresenterImpl implements
 
     @Override
     public void onEmptyTrashSelected(EmptyTrashSelected event) {
-        final ConfirmMessageBox cmb = new ConfirmMessageBox(appearance.emptyTrash(),
-                                                            appearance.emptyTrashWarning());
+        final ConfirmMessageBox cmb = getEmptyTrashMessageBox(appearance.emptyTrash());
         cmb.addDialogHideHandler(hideEvent -> {
             if (PredefinedButton.YES.equals(hideEvent.getHideButton())) {
                 doEmptyTrash();
@@ -422,7 +420,7 @@ public class DiskResourcePresenterImpl implements
         refreshFolder(event.getSelectedFolder());
     }
 
-    private void refreshFolder(final Folder selectedFolder) {
+    void refreshFolder(final Folder selectedFolder) {
         checkState(selectedFolder != null, "Selected folder should not be null");
         view.mask(appearance.loadingMask());
         diskResourceService.refreshFolder(selectedFolder, new DataCallback<List<Folder>>() {
@@ -735,23 +733,19 @@ public class DiskResourcePresenterImpl implements
         });
     }
 
-    private void confirmDelete(final List<DiskResource> drSet) {
-        final MessageBox confirm = new ConfirmMessageBox(appearance.warning(),
-                                                         appearance.emptyTrashWarning());
+    void confirmDelete(final List<DiskResource> drSet) {
+        final MessageBox confirm = getEmptyTrashMessageBox(appearance.warning());
 
-        confirm.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
-            @Override
-            public void onDialogHide(DialogHideEvent event) {
-                if (PredefinedButton.YES.equals(event.getHideButton())) {
-                    delete(drSet, appearance.deleteTrash());
-                }
+        confirm.addDialogHideHandler(event -> {
+            if (PredefinedButton.YES.equals(event.getHideButton())) {
+                delete(drSet, appearance.deleteTrash());
             }
         });
 
         confirm.show();
     }
 
-    private void delete(List<DiskResource> drSet, String announce) {
+    void delete(List<DiskResource> drSet, String announce) {
         view.mask(appearance.loadingMask());
         Folder selectedFolder = navigationPresenter.getSelectedFolder();
         final DECallback<HasPaths> callback = new DiskResourceDeleteCallback(drSet,
@@ -770,5 +764,10 @@ public class DiskResourcePresenterImpl implements
     @Override
     public void onDNDDiskResourcesCompleted(DNDDiskResourcesCompleted event) {
         doMoveDiskResources(event.getTargetFolder(), event.getResources());
+    }
+
+    ConfirmMessageBox getEmptyTrashMessageBox(String title) {
+        return new ConfirmMessageBox(title,
+                                     appearance.emptyTrashWarning());
     }
 }
