@@ -50,7 +50,7 @@ public class PropertyServiceImpl implements PropertyService{
             if (value != null) {
                 stringProps.put(key, value.toString());
             } else {
-                LOG.warn("Missing property key:" + key, new SerializationException(key));
+                throw new SerializationException("Missing property key: " + key);
             }
         }
         return stringProps;
