@@ -13,11 +13,10 @@ import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertySource;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 /**
- * @author jstroot
+ * @author jstroot, sriram, psarando
  */
 public class PropertyServiceImpl implements PropertyService{
 
@@ -39,16 +38,20 @@ public class PropertyServiceImpl implements PropertyService{
         List<String> uikeys = DEProperties.getInstance().getPropertyList();
         LOG.info("property list:" + uikeys);
         HashMap<String, Object> propertyMap = new HashMap<>();
-        for(Iterator it = ((AbstractEnvironment) environment).getPropertySources().iterator(); it.hasNext(); ) {
-            PropertySource propertySource = (PropertySource) it.next();
+        for (PropertySource propertySource : ((AbstractEnvironment)environment).getPropertySources()) {
             if (propertySource instanceof MapPropertySource) {
-                propertyMap.putAll(((MapPropertySource) propertySource).getSource());
+                propertyMap.putAll(((MapPropertySource)propertySource).getSource());
             }
         }
 
         HashMap<String, String> stringProps = new HashMap<>();
         for (String key : uikeys) {
-            stringProps.put(key, propertyMap.get(key).toString());
+            Object value = propertyMap.get(key);
+            if (value != null) {
+                stringProps.put(key, value.toString());
+            } else {
+                LOG.warn("Missing property key:" + key, new SerializationException(key));
+            }
         }
         return stringProps;
     }
