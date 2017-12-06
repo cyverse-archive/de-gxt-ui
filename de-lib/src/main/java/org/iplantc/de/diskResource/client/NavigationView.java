@@ -16,7 +16,6 @@ import org.iplantc.de.diskResource.client.events.selection.DNDDiskResourcesCompl
 import org.iplantc.de.diskResource.client.events.selection.ImportFromUrlSelected.ImportFromUrlSelectedHandler;
 import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleUploadSelected.SimpleUploadSelectedHandler;
-import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsLoadConfig;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -24,6 +23,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 
 import com.sencha.gxt.data.shared.IconProvider;
 import com.sencha.gxt.data.shared.loader.BeforeLoadEvent;
+import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 import com.sencha.gxt.widget.core.client.tree.TreeStyle;
 import com.sencha.gxt.widget.core.client.tree.TreeView;
@@ -67,7 +67,7 @@ public interface NavigationView extends IsWidget,
     interface Presenter extends HasSubmitDiskResourceQueryEventHandlers,
                                 HasRootFoldersRetrievedEventHandlers,
                                 HasSavedSearchesRetrievedEventHandlers,
-                                BeforeLoadEvent.BeforeLoadHandler<FolderContentsLoadConfig>,
+                                BeforeLoadEvent.BeforeLoadHandler<FilterPagingLoadConfigBean>,
                                 DiskResourceNameSelectedEventHandler,
                                 DiskResourcePathSelectedEventHandler,
                                 UpdateSavedSearchesHandler,

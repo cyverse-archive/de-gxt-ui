@@ -17,6 +17,7 @@ import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorCode;
+import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
@@ -55,6 +56,7 @@ import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected
 import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked;
 import org.iplantc.de.diskResource.client.events.selection.MetadataInfoBtnSelected;
 import org.iplantc.de.diskResource.client.events.selection.SetInfoTypeSelected;
+import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSelected;
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected;
 import org.iplantc.de.diskResource.client.gin.factory.FolderContentsRpcProxyFactory;
@@ -62,6 +64,7 @@ import org.iplantc.de.diskResource.client.gin.factory.GridViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ShareResourcesLinkDialogFactory;
 import org.iplantc.de.diskResource.client.model.DiskResourceModelKeyProvider;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsLoadConfig;
+import org.iplantc.de.diskResource.client.presenters.grid.proxy.QuerySearchLoadConfig;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.SelectDiskResourceByIdStoreAddHandler;
 import org.iplantc.de.diskResource.client.views.dialogs.InfoTypeEditorDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.Md5DisplayDialog;
@@ -92,6 +95,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.event.StoreUpdateEvent;
+import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
@@ -626,11 +630,23 @@ public class GridViewPresenterImpl implements Presenter,
     }
 
     void doFolderSelected(final Folder selectedFolder) {
-        final PagingLoader<FolderContentsLoadConfig, PagingLoadResult<DiskResource>> gridLoader =
+        final PagingLoader<FilterPagingLoadConfigBean, PagingLoadResult<DiskResource>> gridLoader =
                 view.getGridLoader();
-        gridLoader.getLastLoadConfig().setFolder(selectedFolder);
-        gridLoader.getLastLoadConfig().setOffset(0);
-        gridLoader.load();
+        FolderContentsLoadConfig loadConfig = new FolderContentsLoadConfig();
+        loadConfig.setFolder(selectedFolder);
+        loadConfig.setOffset(0);
+        gridLoader.load(loadConfig);
+    }
+
+    @Override
+    public void onQueryDSLSearchBtnSelected(QueryDSLSearchBtnSelected event) {
+        QueryDSLTemplate template = event.getTemplate();
+        final PagingLoader<FilterPagingLoadConfigBean, PagingLoadResult<DiskResource>> gridLoader =
+                view.getGridLoader();
+        QuerySearchLoadConfig loadConfig = new QuerySearchLoadConfig();
+        loadConfig.setTemplate(template);
+        loadConfig.setOffset(0);
+        gridLoader.load(loadConfig);
     }
 
     void updateDiskResource(DiskResource diskResource) {

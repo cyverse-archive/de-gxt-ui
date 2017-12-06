@@ -22,10 +22,10 @@ import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelecte
 import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelected.ManageMetadataSelectedEventHandler;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected.ManageSharingSelectedEventHandler;
 import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked.Md5ValueClickedHandler;
+import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSelected;
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected.SaveMetadataSelectedEventHandler;
 import org.iplantc.de.diskResource.client.events.selection.SetInfoTypeSelected.SetInfoTypeSelectedHandler;
 import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected.ShareByDataLinkSelectedEventHandler;
-import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsLoadConfig;
 import org.iplantc.de.diskResource.client.views.grid.DiskResourceColumnModel;
 
 import com.google.gwt.dom.client.Element;
@@ -38,6 +38,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.sencha.gxt.data.shared.event.StoreUpdateEvent.HasStoreUpdateHandlers;
 import com.sencha.gxt.data.shared.loader.BeforeLoadEvent;
 import com.sencha.gxt.data.shared.loader.DataProxy;
+import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.container.HasLayout;
@@ -57,7 +58,8 @@ public interface GridView extends IsWidget,
                                   FolderSelectionEventHandler,
                                   HasDiskResourceNameSelectedEventHandlers,
                                   HasDiskResourceSelectionChangedEventHandlers,
-                                  SubmitDiskResourceQueryEventHandler {
+                                  SubmitDiskResourceQueryEventHandler,
+                                  QueryDSLSearchBtnSelected.QueryDSLSearchBtnSelectedHandler {
     interface Appearance {
 
         String actionsColumnLabel();
@@ -115,7 +117,7 @@ public interface GridView extends IsWidget,
         String selectionCountStatus(int selectionCount);
     }
 
-    interface FolderContentsRpcProxy extends DataProxy<FolderContentsLoadConfig, PagingLoadResult<DiskResource>> {
+    interface FolderContentsRpcProxy extends DataProxy<FilterPagingLoadConfigBean, PagingLoadResult<DiskResource>> {
         void setHasSafeHtml(HasSafeHtml centerHeader);
     }
 
@@ -138,7 +140,8 @@ public interface GridView extends IsWidget,
                                 FetchDetailsCompleted.HasFetchDetailsCompletedHandlers,
                                 DNDDiskResourcesCompleted.HasDNDDiskResourcesCompletedHandlers,
                                 BulkMetadataSelected.BulkMetadataSelectedHandler,
-                                CopyPathSelected.CopyPathSelectedEventHandler {
+                                CopyPathSelected.CopyPathSelectedEventHandler,
+                                QueryDSLSearchBtnSelected.QueryDSLSearchBtnSelectedHandler {
 
         interface Appearance {
 
@@ -167,6 +170,8 @@ public interface GridView extends IsWidget,
             String retrieveStatFailed();
 
             String searchDataResultsHeader(String searchText, int total, double executionTime_ms);
+
+            String searchDataResultsHeader(String searchText, int total);
 
             String searchFailure();
 
@@ -257,7 +262,7 @@ public interface GridView extends IsWidget,
 
     }
 
-    HandlerRegistration addBeforeLoadHandler(BeforeLoadEvent.BeforeLoadHandler<FolderContentsLoadConfig> handler);
+    HandlerRegistration addBeforeLoadHandler(BeforeLoadEvent.BeforeLoadHandler<FilterPagingLoadConfigBean> handler);
 
     Element findGridRow(Element eventTargetElement);
 
@@ -265,7 +270,7 @@ public interface GridView extends IsWidget,
 
     DiskResourceColumnModel getColumnModel();
 
-    PagingLoader<FolderContentsLoadConfig,PagingLoadResult<DiskResource>> getGridLoader();
+    PagingLoader<FilterPagingLoadConfigBean,PagingLoadResult<DiskResource>> getGridLoader();
 
     LiveGridCheckBoxSelectionModel getSelectionModel();
 
