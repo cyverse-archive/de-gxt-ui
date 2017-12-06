@@ -1,0 +1,114 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
+             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
+             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
+>
+
+    <ui:with field="appearance"
+             type="org.iplantc.de.diskResource.client.views.search.cells.QueryDSLForm.QueryDSLFormAppearance">
+    </ui:with>
+
+    <ui:with type="com.sencha.gxt.widget.core.client.container.CssFloatLayoutContainer.CssFloatData"
+             field="leftColumn">
+        <ui:attributes size="0.5" margins="{leftMargins}"/>
+    </ui:with>
+
+    <ui:with type="com.sencha.gxt.widget.core.client.container.CssFloatLayoutContainer.CssFloatData"
+             field="rightColumn">
+        <ui:attributes size="0.5" margins="{rightMargins}"/>
+    </ui:with>
+
+    <ui:with field="leftMargins"
+             type="com.sencha.gxt.core.client.util.Margins">
+        <ui:attributes top="5" right="8" bottom="0" left="5"/>
+    </ui:with>
+
+    <ui:with field="rightMargins"
+             type="com.sencha.gxt.core.client.util.Margins">
+        <ui:attributes top="5" right="5" bottom="0" left="8"/>
+    </ui:with>
+
+    <ui:with field="verticalLayout"
+             type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
+        <ui:attributes width="-1" height="-1"/>
+    </ui:with>
+
+    <ui:with field="verticalMargins"
+             type="com.sencha.gxt.core.client.util.Margins">
+        <ui:attributes top="15" right="15" bottom="0" left="15"/>
+    </ui:with>
+
+    <container:VerticalLayoutContainer layoutData="{verticalLayout}"
+                                       ui:field="con">
+        <container:child>
+            <container:CssFloatLayoutContainer>
+                <container:child layoutData="{leftColumn}">
+                    <form:FieldLabel text="{appearance.nameHas}"
+                                     labelAlign="TOP">
+                        <form:widget>
+                            <form:TextField ui:field="nameHas"
+                                            emptyText="{appearance.emptyText}"/>
+                        </form:widget>
+                    </form:FieldLabel>
+                </container:child>
+                <container:child layoutData="{rightColumn}">
+                    <form:CheckBox ui:field="exactNameMatch"
+                                   boxLabel="{appearance.exactNameMatch}"/>
+                </container:child>
+            </container:CssFloatLayoutContainer>
+        </container:child>
+
+        <container:child>
+            <container:CssFloatLayoutContainer>
+                <container:child layoutData="{leftColumn}">
+                    <form:FieldLabel text="{appearance.pathPrefix}"
+                                     labelAlign="TOP">
+                        <form:widget>
+                            <form:TextField ui:field="pathPrefix"
+                                            emptyText="{appearance.emptyText}"/>
+                        </form:widget>
+                    </form:FieldLabel>
+                </container:child>
+                <container:child layoutData="{rightColumn}">
+                    <form:FieldLabel text="{appearance.owner}"
+                                     labelAlign="TOP">
+                        <form:widget>
+                            <form:TextField ui:field="owner"
+                                            emptyText="{appearance.emptyText}"/>
+                        </form:widget>
+                    </form:FieldLabel>
+                </container:child>
+            </container:CssFloatLayoutContainer>
+        </container:child>
+
+        <container:child>
+            <container:CssFloatLayoutContainer>
+                <container:child layoutData="{leftColumn}">
+                    <form:FieldLabel text="{appearance.permissionValueLabel}"
+                                     labelAlign="TOP">
+                        <form:widget>
+                            <form:SimpleComboBox ui:field="permissionValue"
+                                                 triggerAction="ALL"
+                                                 forceSelection="true"/>
+                        </form:widget>
+                    </form:FieldLabel>
+                </container:child>
+                <container:child layoutData="{rightColumn}">
+                    <form:CheckBox ui:field="permissionRecurse"
+                                   boxLabel="{appearance.permissionRecurse}"/>
+                </container:child>
+            </container:CssFloatLayoutContainer>
+        </container:child>
+
+        <container:child>
+            <container:CssFloatLayoutContainer>
+                <container:child layoutData="{rightColumn}">
+                    <button:TextButton ui:field="searchBtn"
+                                       text="{appearance.searchBtnText}"/>
+                </container:child>
+            </container:CssFloatLayoutContainer>
+        </container:child>
+
+    </container:VerticalLayoutContainer>
+</ui:UiBinder>

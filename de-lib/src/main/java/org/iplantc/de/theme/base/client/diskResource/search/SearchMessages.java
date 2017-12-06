@@ -66,4 +66,20 @@ public interface SearchMessages extends Messages {
     String tagsClass();
 
     String trashAndFilterClass();
+
+    String pathPrefix();
+
+    String exactNameMatch();
+
+    String owner();
+
+    String exactUserNameMatch();
+
+    String permissionValue();
+
+    String permissionRecurse();
+
+    String permissionUsers();
+
+    String emptyDropDownText();
 }

@@ -150,6 +150,10 @@
     <replace-with class="org.iplantc.de.theme.base.client.diskResource.search.cells.DiskResourceQueryFormDefaultAppearance">
         <when-type-is class="org.iplantc.de.diskResource.client.views.search.cells.DiskResourceQueryForm.DiskResourceQueryFormAppearance"/>
     </replace-with>
+
+    <replace-with class="org.iplantc.de.theme.base.client.diskResource.search.cells.QueryDSLFormDefaultAppearance">
+        <when-type-is class="org.iplantc.de.diskResource.client.views.search.cells.QueryDSLForm.QueryDSLFormAppearance"/>
+    </replace-with>
     
     <!-- Coge genome import -->
     <replace-with class="org.iplantc.de.theme.base.client.diskResource.genome.GenomeSearchViewDefaultAppearance">

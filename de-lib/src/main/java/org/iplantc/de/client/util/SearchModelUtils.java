@@ -1,5 +1,7 @@
 package org.iplantc.de.client.util;
 
+import org.iplantc.de.client.models.querydsl.QueryAutoBeanFactory;
+import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.FileSizeRange.FileSizeUnit;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
@@ -25,6 +27,7 @@ public class SearchModelUtils {
 
     private final List<String> fileSizeUnits = Lists.newArrayList("KB", "MB", "GB", "TB");
     private final SearchAutoBeanFactory factory = GWT.create(SearchAutoBeanFactory.class);
+    private final QueryAutoBeanFactory queryFactory = GWT.create(QueryAutoBeanFactory.class);
     private static SearchModelUtils INSTANCE;
     Logger LOG = Logger.getLogger(SearchModelUtils.class.getName());
 
@@ -129,5 +132,9 @@ public class SearchModelUtils {
             IplantAnnouncer.getInstance().schedule(new ErrorAnnouncementConfig("You must select at least one filter."));
         }
         return isEmpty;
+    }
+
+    public QueryDSLTemplate createDefaultQuery() {
+        return queryFactory.getQueryDSLTemplate().as();
     }
 }
