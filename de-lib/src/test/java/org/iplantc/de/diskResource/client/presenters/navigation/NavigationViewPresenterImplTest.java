@@ -36,6 +36,7 @@ import com.google.gwtmockito.GxtMockitoTestRunner;
 
 import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.data.shared.loader.BeforeLoadEvent;
+import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
 import com.sencha.gxt.data.shared.loader.TreeLoader;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 import com.sencha.gxt.widget.core.client.tree.TreeSelectionModel;
@@ -64,7 +65,7 @@ public class NavigationViewPresenterImplTest {
     @Mock EventBus eventBusMock;
     @Mock NavigationView.Presenter.Appearance presenterAppearanceMock;
 
-    @Mock BeforeLoadEvent<FolderContentsLoadConfig> beforeLoadEventMock;
+    @Mock BeforeLoadEvent<FilterPagingLoadConfigBean> beforeLoadEventMock;
     @Mock Tree<Folder,Folder> treeMock;
     @Mock TreeSelectionModel<Folder> selectionModelMock;
     @Mock Tree.TreeNode<Folder> treeNodeMock;

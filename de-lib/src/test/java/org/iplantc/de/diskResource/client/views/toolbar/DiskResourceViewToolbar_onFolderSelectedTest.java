@@ -17,6 +17,7 @@ import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
+import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchFieldv2;
 
 import com.google.gwtmockito.GxtMockitoTestRunner;
 
@@ -73,6 +74,7 @@ public class DiskResourceViewToolbar_onFolderSelectedTest {
             mockRefreshButton,
             mockTrashMenu;
     @Mock DiskResourceSearchField searchFieldMock;
+    @Mock DiskResourceSearchFieldv2 searchFieldv2Mock;
     private final boolean isReadable = true;
     private boolean isSelectionInTrash = false;
     private final boolean isSelectionOwner = true;
@@ -82,7 +84,10 @@ public class DiskResourceViewToolbar_onFolderSelectedTest {
     DiskResourceUtil mockDiskResourceUtil;
 
     @Before public void setup() {
-        uut = new DiskResourceViewToolbarImpl(searchFieldMock, mock(UserInfo.class), mockAppearance){
+        uut = new DiskResourceViewToolbarImpl(searchFieldMock,
+                                              searchFieldv2Mock,
+                                              mock(UserInfo.class),
+                                              mockAppearance){
             @Override
             boolean isOwnerList(List<DiskResource> selection) {
                 return isSelectionOwner;

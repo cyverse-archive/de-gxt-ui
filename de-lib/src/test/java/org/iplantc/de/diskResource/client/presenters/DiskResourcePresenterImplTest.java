@@ -57,6 +57,7 @@ import org.iplantc.de.diskResource.client.presenters.callbacks.RenameDiskResourc
 import org.iplantc.de.diskResource.client.views.dialogs.FolderSelectDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.RenameResourceDialog;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
+import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchFieldv2;
 import org.iplantc.de.resources.client.messages.IplantContextualHelpStrings;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DataCallback;
@@ -104,6 +105,7 @@ public class DiskResourcePresenterImplTest {
     @Mock IplantAnnouncer announcerMock;
     @Mock ToolbarView toolbarMock;
     @Mock DiskResourceSearchField searchFieldMock;
+    @Mock DiskResourceSearchFieldv2 searchFieldv2Mock;
     @Mock TreeStore<Folder> treeStoreMock;
     @Mock NavigationView.Presenter navigationPresenterMock;
     @Mock NavigationView navigationViewMock;
@@ -247,9 +249,10 @@ public class DiskResourcePresenterImplTest {
         verify(dataSearchPresenterMock).addUpdateSavedSearchesEventHandler(eq(navigationPresenterMock));
         verify(dataSearchPresenterMock).addSavedSearchDeletedEventHandler(eq(searchFieldMock));
 
-        verify(gridViewPresenterMock, times(9)).getView();
+        verify(detailsPresenterMock, times(12)).getView();
+        verify(gridViewPresenterMock, times(10)).getView();
         verify(navigationPresenterMock, times(5)).getView();
-        verify(toolbarPresenterMock, times(23)).getView();
+        verify(toolbarPresenterMock, times(24)).getView();
 
         verifyNoMoreInteractions(navigationPresenterMock,
                                  navigationViewMock,
@@ -268,6 +271,7 @@ public class DiskResourcePresenterImplTest {
                                                  anyList(),
                                                  any(TYPE.class))).thenReturn(gridViewPresenterMock);
         when(toolbarMock.getSearchField()).thenReturn(searchFieldMock);
+        when(toolbarMock.getSearchField2()).thenReturn(searchFieldv2Mock);
         when(navigationPresenterMock.getView()).thenReturn(navigationViewMock);
         when(gridViewPresenterMock.getView()).thenReturn(gridViewMock);
         when(detailsPresenterMock.getView()).thenReturn(detailsViewMock);

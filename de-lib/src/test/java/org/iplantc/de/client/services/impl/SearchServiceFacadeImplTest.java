@@ -1,15 +1,24 @@
 package org.iplantc.de.client.services.impl;
 
-import org.iplantc.de.shared.DEProperties;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
+import org.iplantc.de.client.models.querydsl.QueryAutoBeanFactory;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplateList;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
-import org.iplantc.de.shared.services.DiscEnvApiService;
+import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.services.BaseServiceCallWrapper.Type;
+import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
 import com.google.common.collect.Lists;
@@ -17,11 +26,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GxtMockitoTestRunner;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -43,6 +47,7 @@ public class SearchServiceFacadeImplTest {
     @Mock DiskResourceAutoBeanFactory drFactoryMock;
     @Mock UserInfo userInfoMock;
     @Mock AutoBean<DiskResourceQueryTemplateList> qtlistAbMock;
+    @Mock QueryAutoBeanFactory queryAutoBeanFactoryMock;
     
     @Mock AsyncCallback<List<DiskResourceQueryTemplate>> asyncQtListMock;
 
@@ -53,7 +58,12 @@ public class SearchServiceFacadeImplTest {
     private SearchServiceFacade unitUnderTest;
 
     @Before public void setUp() {
-        unitUnderTest = new SearchServiceFacadeImpl(deServiceFacadeMock, deProperties, searchAbFactoryMock, drFactoryMock, userInfoMock);
+        unitUnderTest = new SearchServiceFacadeImpl(deServiceFacadeMock,
+                                                    deProperties,
+                                                    searchAbFactoryMock,
+                                                    drFactoryMock,
+                                                    queryAutoBeanFactoryMock,
+                                                    userInfoMock);
     }
 
     /**
@@ -86,7 +96,12 @@ public class SearchServiceFacadeImplTest {
      * @see SearchServiceFacade#saveQueryTemplates(List, AsyncCallback)
      */
     @Test public void testSaveQueryTemplates_Case1() {
-        unitUnderTest = new SearchServiceFacadeImpl(deServiceFacadeMock, deProperties, searchAbFactoryMock, drFactoryMock, userInfoMock){
+        unitUnderTest = new SearchServiceFacadeImpl(deServiceFacadeMock,
+                                                    deProperties,
+                                                    searchAbFactoryMock,
+                                                    drFactoryMock,
+                                                    queryAutoBeanFactoryMock,
+                                                    userInfoMock){
             String templateListToIndexedSplittablePayload(List<DiskResourceQueryTemplate> queryTemplates){
                return "stubPayload";
             }
@@ -118,7 +133,12 @@ public class SearchServiceFacadeImplTest {
      */
     @Ignore("Unable to appropriately mock out Autobean factory")
     @Test public void testSaveQueryTemplates_Case2() {
-        unitUnderTest = new SearchServiceFacadeImpl(deServiceFacadeMock, deProperties, searchAbFactoryMock, drFactoryMock, userInfoMock){
+        unitUnderTest = new SearchServiceFacadeImpl(deServiceFacadeMock,
+                                                    deProperties,
+                                                    searchAbFactoryMock,
+                                                    drFactoryMock,
+                                                    queryAutoBeanFactoryMock,
+                                                    userInfoMock){
             String templateListToIndexedSplittablePayload(List<DiskResourceQueryTemplate> queryTemplates){
                 return "stubPayload";
             }
