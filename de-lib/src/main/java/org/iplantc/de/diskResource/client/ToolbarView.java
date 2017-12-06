@@ -39,6 +39,7 @@ import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelect
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected.HasSimpleDownloadSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SimpleUploadSelected.HasSimpleUploadSelectedHandlers;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
+import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchFieldv2;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -305,6 +306,8 @@ public interface ToolbarView extends IsWidget,
     }
 
     DiskResourceSearchField getSearchField();
+
+    DiskResourceSearchFieldv2 getSearchField2();
 
     void maskSendToCoGe();
 
