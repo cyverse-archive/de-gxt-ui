@@ -3,18 +3,28 @@ package org.iplantc.de.client.services.impl;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
-import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.diskResources.TYPE;
+import org.iplantc.de.client.models.querydsl.Document;
+import org.iplantc.de.client.models.querydsl.Metadata;
+import org.iplantc.de.client.models.querydsl.QueryAutoBeanFactory;
+import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
+import org.iplantc.de.client.models.querydsl.SearchResponse;
+import org.iplantc.de.client.models.querydsl.Source;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplateList;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
+import org.iplantc.de.client.models.sharing.OldUserPermission;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
+import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsRpcProxyImpl;
+import org.iplantc.de.diskResource.client.presenters.grid.proxy.QuerySearchLoadConfig;
+import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.services.BaseServiceCallWrapper.Type;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
@@ -23,6 +33,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -40,6 +51,7 @@ import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("nls")
 public class SearchServiceFacadeImpl implements SearchServiceFacade {
@@ -176,7 +188,97 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
                 }
             }
         }
+    }
 
+    public class SubmitQueryCallbackConverter extends AsyncCallbackConverter<String, List<DiskResource>> {
+        private final QueryAutoBeanFactory factory;
+        private final QueryDSLTemplate queryTemplate;
+        private final UserInfo userInfo1;
+
+        public SubmitQueryCallbackConverter(AsyncCallback<List<DiskResource>> callback,
+                                            QueryDSLTemplate queryTemplate,
+                                            UserInfo userInfo,
+                                            QueryAutoBeanFactory queryFactory) {
+            super(callback);
+            this.queryTemplate = queryTemplate;
+            this.userInfo1 = userInfo;
+            this.factory = queryFactory;
+        }
+
+        @Override
+        protected List<DiskResource> convertFrom(String object) {
+            if (object == null) {
+                return null;
+            }
+            SearchResponse response = AutoBeanCodex.decode(factory, SearchResponse.class, object).as();
+
+            List<Document> documents = response.getHits();
+            List<DiskResource> diskResources = Lists.newArrayList();
+            if (documents != null && documents.size() > 0) {
+                for (int i = 0; i < documents.size(); i++) {
+                    Document document = documents.get(i);
+                    diskResources.add(convertDocumentToDiskResource(document));
+                }
+            }
+
+            GWT.log("STOP HERE");
+            return diskResources;
+        }
+
+        DiskResource convertDocumentToDiskResource(Document document) {
+            Source source = document.getSource();
+            if (source == null) {
+                return null;
+            }
+            DiskResource diskResource;
+            if (Document.FOLDER_TYPE.equals(document.getType())) {
+                diskResource = AutoBeanCodex.decode(factory, Folder.class, AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(document.getSource()))).as();
+            } else {
+                diskResource = AutoBeanCodex.decode(factory, File.class, AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(document.getSource()))).as();
+                ((File)diskResource).setSize(source.getFileSize());
+            }
+
+            setDateKeys(source, diskResource);
+            setPermission(source, diskResource);
+            setInfoType(source, diskResource);
+            return diskResource;
+        }
+
+        void setPermission(Source source, DiskResource diskResource) {
+            String currentUserName = userInfo1.getUsername();
+            List<OldUserPermission> permissions = source.getUserPermissions();
+            if (permissions == null || permissions.isEmpty()) {
+                return;
+            }
+            permissions.forEach(permission -> {
+                String userString = permission.getUser();
+                String permissionString = permission.getPermission();
+                final Iterable<String> userStringSplit = Splitter.on("#").split(userString);
+                if (currentUserName.equals(userStringSplit.iterator().next())) {
+                    diskResource.setPermission(PermissionValue.valueOf(permissionString));
+                }
+            });
+        }
+
+        void setDateKeys(Source source, DiskResource diskResource) {
+            diskResource.setDateCreated(source.getDateCreated());
+            diskResource.setLastModified(source.getDateModified());
+        }
+
+        void setInfoType(Source source, DiskResource diskResource) {
+            List<Metadata> metadataList = source.getMetadataList();
+            if (metadataList == null || metadataList.isEmpty()) {
+                return;
+            }
+            List<Metadata> fileTypes = metadataList
+                                             .stream()
+                                             .filter(metadata -> Metadata.FILETYPE_METADATA_KEY.equals(
+                                                     metadata.getAttribute()))
+                                             .collect(Collectors.toList());
+            if (fileTypes != null && fileTypes.size() > 0) {
+                diskResource.setInfoType(fileTypes.get(0).getValue());
+            }
+        }
     }
 
     class QueryTemplateListCallbackConverter extends AsyncCallbackConverter<String, List<DiskResourceQueryTemplate>> {
@@ -276,8 +378,11 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
     private final DiscEnvApiService deServiceFacade;
     private final DiskResourceAutoBeanFactory drFactory;
     private final SearchAutoBeanFactory searchAbFactory;
+    private final QueryAutoBeanFactory queryAutoBeanFactory;
     private final UserInfo userInfo;
     private final DEProperties deProperties;
+    private final String SEARCH = "org.iplantc.services.diskResources.search";
+    private final String SEARCH_DOCUMENTATION = "org.iplantc.services.diskResources.searchDocumentation";
     final Logger LOG = Logger.getLogger(SearchServiceFacadeImpl.class.getName());
 
     @Inject
@@ -285,11 +390,13 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
                                    final DEProperties deProperties,
                                    final SearchAutoBeanFactory searchAbFactory,
                                    final DiskResourceAutoBeanFactory drFactory,
+                                   final QueryAutoBeanFactory queryAutoBeanFactory,
                                    final UserInfo userInfo) {
         this.deServiceFacade = deServiceFacade;
         this.deProperties = deProperties;
         this.searchAbFactory = searchAbFactory;
         this.drFactory = drFactory;
+        this.queryAutoBeanFactory = queryAutoBeanFactory;
         this.userInfo = userInfo;
     }
 
@@ -385,6 +492,19 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, addressSb.toString());
         deServiceFacade.getServiceData(wrapper, new SubmitSearchCallbackConverter(callback, queryTemplate, userInfo, drFactory));
 
+    }
+
+    @Override
+    public void submitSearchQuery(QueryDSLTemplate template,
+                                  QuerySearchLoadConfig loadConfig,
+                                  FolderContentsRpcProxyImpl.QueryResultsCallback queryResultsCallback) {
+        DataSearchQueryBuilderv2 builder = new DataSearchQueryBuilderv2(template, userInfo);
+        String address = SEARCH;
+
+        String buildFullQuery = builder.buildFullQuery();
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, buildFullQuery);
+        deServiceFacade.getServiceData(wrapper, new SubmitQueryCallbackConverter(queryResultsCallback, template, userInfo, queryAutoBeanFactory));
     }
 
     String convertSortField(String sortField) {

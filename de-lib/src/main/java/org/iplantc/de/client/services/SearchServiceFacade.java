@@ -2,8 +2,11 @@ package org.iplantc.de.client.services;
 
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.TYPE;
+import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.services.impl.DataSearchQueryBuilder;
+import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsRpcProxyImpl;
+import org.iplantc.de.diskResource.client.presenters.grid.proxy.QuerySearchLoadConfig;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -19,6 +22,7 @@ import java.util.List;
  * 
  */
 public interface SearchServiceFacade {
+
     public enum SearchType {
         ANY("any"), FILE("file"), FOLDER("folder");
 
@@ -78,5 +82,9 @@ public interface SearchServiceFacade {
      */
     void submitSearchFromQueryTemplate(final DiskResourceQueryTemplate queryTemplate, final FilterPagingLoadConfigBean loadConfig, final TYPE searchType,
             final AsyncCallback<List<DiskResource>> callback);
+
+    void submitSearchQuery(QueryDSLTemplate template,
+                           QuerySearchLoadConfig searchConfig,
+                           FolderContentsRpcProxyImpl.QueryResultsCallback queryResultsCallback);
 
 }
