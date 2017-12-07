@@ -140,6 +140,8 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
         this.userInfo = userInfo;
         this.appearance = appearance;
         initWidget(BINDER.createAndBindUi(this));
+
+        searchField.addHideHandler(handler -> searchField.setVisible(true));
     }
 
     // <editor-fold desc="Handler Registrations">

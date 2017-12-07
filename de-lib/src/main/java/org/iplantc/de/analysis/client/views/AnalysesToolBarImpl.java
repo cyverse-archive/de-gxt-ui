@@ -126,6 +126,8 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
                onFilterChange(event.getValue());
             }
         });
+
+        searchField.addHideHandler(handler -> searchField.setVisible(true));
     }
 
     private void onFilterChange(AnalysisFilter af) {

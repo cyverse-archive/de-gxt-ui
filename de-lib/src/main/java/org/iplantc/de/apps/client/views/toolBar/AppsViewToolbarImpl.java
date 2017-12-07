@@ -120,6 +120,8 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
         this.appearance = appearance;
         this.loader = loader;
         initWidget(uiBinder.createAndBindUi(this));
+
+        appSearch.addHideHandler(handler -> appSearch.setVisible(true));
     }
 
     // <editor-fold desc="Handler Registrations">
