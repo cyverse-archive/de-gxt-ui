@@ -100,7 +100,7 @@ public class TeamsViewImpl extends Composite implements TeamsView {
         combo.setValue(TeamsFilter.MY_TEAMS);
         combo.addSelectionHandler(event -> {
             searchField.clear();
-            applyFilter(TeamsFilter.MY_TEAMS);
+            applyFilter(combo.getCurrentValue());
         });
 
         return combo;
