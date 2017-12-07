@@ -1,6 +1,6 @@
 package org.iplantc.de.client.models.querydsl;
 
-import org.iplantc.de.client.models.sharing.PermissionValue;
+import java.util.List;
 
 /**
  * An autobean that can contain all the user inputs that can be clauses in an Elasticsearch query
@@ -19,10 +19,13 @@ public interface QueryDSLTemplate {
     String getOwner();
     void setOwner(String owner);
 
-    PermissionValue getPermissionValue();
-    void setPermissionValue(PermissionValue permissionValue);
+    String getPermission();
+    void setPermission(String permission);
 
     Boolean isPermissionRecurse();
     void setPermissionRecurse(Boolean permissionRecurse);
+
+    List<String> getPermissionUsers();
+    void setPermissionUsers(List<String> permissionUsers);
 
 }

@@ -53,8 +53,8 @@ public class QueryDSLFormDefaultAppearance implements QueryDSLForm.QueryDSLFormA
     }
 
     @Override
-    public String permissionUsers() {
-        return searchMessages.permissionUsers();
+    public String sharedWith() {
+        return searchMessages.sharedWith();
     }
 
     @Override

@@ -2,12 +2,14 @@ package org.iplantc.de.client.services.impl;
 
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.util.SearchModelUtils;
 
 import com.google.common.base.Strings;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -31,6 +33,10 @@ public class DataSearchQueryBuilderv2 {
     public static final String ALL = "all";
     public static final String TYPE = "type";
     public static final String ARGS = "args";
+    public static final String PERMISSIONS = "permissions";
+    public static final String PERMISSION = "permission";
+    public static final String PERMISSION_RECURSE = "permission_recurse";
+    public static final String SHARED_WITH = "users";
 
     private final QueryDSLTemplate template;
     private final UserInfo userinfo;
@@ -52,6 +58,7 @@ public class DataSearchQueryBuilderv2 {
     public String buildFullQuery() {
         ownedBy()
                 .pathPrefix()
+                .sharedWith()
                 .file();
 
         LOG.fine("search query==>" + toString());
@@ -83,6 +90,23 @@ public class DataSearchQueryBuilderv2 {
         return this;
     }
 
+    public DataSearchQueryBuilderv2 sharedWith() {
+        List<String> content = template.getPermissionUsers();
+        if (content != null && !content.isEmpty()) {
+            Splittable users = listToSplittable(content);
+            Splittable args = StringQuoter.createSplittable();
+            assignKeyValue(args, SHARED_WITH, users);
+            if (Strings.isNullOrEmpty(template.getPermission())) {
+                template.setPermission(PermissionValue.read.toString());
+                template.setPermissionRecurse(true);
+            }
+            assignKeyValue(args, PERMISSION, template.getPermission());
+            assignKeyValue(args, PERMISSION_RECURSE, template.isPermissionRecurse());
+            appendArrayItem(allList, createTypeClause(PERMISSIONS, args));
+        }
+        return this;
+    }
+
     /**
      * {"type": "path", "args": {"prefix": "/iplant/home/userName"}}
      */
@@ -106,6 +130,24 @@ public class DataSearchQueryBuilderv2 {
     /**
      * {"type": "typeVal", "args": {"argKey": "argVal"}}
      */
+    public Splittable createTypeClause(String typeVal, String argKey, Boolean argVal) {
+        Splittable argKeySpl = StringQuoter.createSplittable();
+        assignKeyValue(argKeySpl, argKey, argVal);
+        return createTypeClause(typeVal, argKeySpl);
+    }
+
+    /**
+     * {"type": "typeVal", "args": {"argKey": argVal}}
+     */
+    public Splittable createTypeClause(String typeVal, String argKey, Splittable argVal) {
+        Splittable argKeySpl = StringQuoter.createSplittable();
+        assignKeyValue(argKeySpl, argKey, argVal);
+        return createTypeClause(typeVal, argKeySpl);
+    }
+
+    /**
+     * {"type": "typeVal", "args": {"argKey": "argVal"}}
+     */
     public Splittable createTypeClause(String typeVal, Splittable args) {
         Splittable type = StringQuoter.createSplittable();
 
@@ -113,6 +155,12 @@ public class DataSearchQueryBuilderv2 {
         assignKeyValue(type, ARGS, args);
 
         return type;
+    }
+
+    public Splittable listToSplittable(List<String> list) {
+        Splittable splittable = StringQuoter.createIndexed();
+        list.forEach(value -> StringQuoter.create(value).assign(splittable, splittable.size()));
+        return splittable;
     }
 
     /**

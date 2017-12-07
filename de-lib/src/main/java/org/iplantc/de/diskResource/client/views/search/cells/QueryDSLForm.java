@@ -1,8 +1,13 @@
 package org.iplantc.de.diskResource.client.views.search.cells;
 
+import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.util.SearchModelUtils;
+import org.iplantc.de.collaborators.client.models.SubjectKeyProvider;
+import org.iplantc.de.collaborators.client.util.UserSearchField;
+import org.iplantc.de.collaborators.client.views.CollaboratorsColumnModel;
 import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSelected;
 
 import com.google.gwt.core.client.GWT;
@@ -26,7 +31,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.core.client.dom.XElement;
 import com.sencha.gxt.core.client.util.BaseEventPreview;
-import com.sencha.gxt.data.shared.StringLabelProvider;
+import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
@@ -34,10 +39,13 @@ import com.sencha.gxt.widget.core.client.event.HideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.ShowEvent;
 import com.sencha.gxt.widget.core.client.form.CheckBox;
-import com.sencha.gxt.widget.core.client.form.SimpleComboBox;
+import com.sencha.gxt.widget.core.client.form.StringComboBox;
 import com.sencha.gxt.widget.core.client.form.TextField;
+import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A form the user can fill out to perform advanced searches in the Data window which utilize the search service
@@ -64,7 +72,7 @@ public class QueryDSLForm extends Composite implements Editor<QueryDSLTemplate>,
 
         String permissionRecurse();
 
-        String permissionUsers();
+        String sharedWith();
 
         String emptyText();
 
@@ -72,6 +80,7 @@ public class QueryDSLForm extends Composite implements Editor<QueryDSLTemplate>,
 
         String searchBtnText();
     }
+
     static QueryDSLFormUiBinder uiBinder = GWT.create(QueryDSLFormUiBinder.class);
     QueryDSLFormEditor editorDriver = GWT.create(QueryDSLFormEditor.class);
 
@@ -82,11 +91,11 @@ public class QueryDSLForm extends Composite implements Editor<QueryDSLTemplate>,
     @UiField CheckBox exactNameMatch;
     @UiField TextField pathPrefix;
     @UiField TextField owner;
-    @UiField SimpleComboBox<PermissionValue> permissionValue;
+    @UiField StringComboBox permission;
     @UiField CheckBox permissionRecurse;
     @Ignore private boolean showing;
-//    @UiField TextField permissionUsers;
-//    @UiField Radio exactUserNameMatch;
+    @Ignore @UiField(provided = true) UserSearchField userSearchField;
+    @UiField ListStore<Subject> permissionUsers;
     @Ignore @UiField TextButton searchBtn;
 
     @UiField(provided = true) QueryDSLFormAppearance appearance;
@@ -95,10 +104,11 @@ public class QueryDSLForm extends Composite implements Editor<QueryDSLTemplate>,
 
     @Inject
     public QueryDSLForm(QueryDSLFormAppearance appearance,
+                        UserSearchField userSearchField,
                         SearchModelUtils searchModelUtils) {
         this.appearance = appearance;
+        this.userSearchField = userSearchField;
         this.searchModelUtils = searchModelUtils;
-
         initWidget(uiBinder.createAndBindUi(this));
         con.getElement().getStyle().setBackgroundColor("#fff");
 
@@ -121,16 +131,28 @@ public class QueryDSLForm extends Composite implements Editor<QueryDSLTemplate>,
         };
         eventPreview.getIgnoreList().add(getElement());
         eventPreview.setAutoHide(false);
+        userSearchField.addUserSearchResultSelectedEventHandler(selectEvent -> permissionUsers.add(selectEvent.getSubject()));
     }
 
     @UiFactory
-    SimpleComboBox<PermissionValue> permissionValue() {
-        SimpleComboBox<PermissionValue> comboBox = new SimpleComboBox<>(new StringLabelProvider<PermissionValue>());
-        comboBox.add(Arrays.asList(PermissionValue.own,
-                                   PermissionValue.write,
-                                   PermissionValue.read));
+    StringComboBox permission() {
+        StringComboBox comboBox = new StringComboBox();
+        comboBox.add(Arrays.asList(PermissionValue.own.toString(),
+                                                   PermissionValue.write.toString(),
+                                                   PermissionValue.read.toString()));
         return comboBox;
     }
+
+    @UiFactory
+    ListStore<Subject> createListStore() {
+        return new ListStore<>(new SubjectKeyProvider());
+    }
+
+    @UiFactory
+    ColumnModel<Subject> buildColumnModel() {
+        return new CollaboratorsColumnModel(null);
+    }
+
 
     public void edit(QueryDSLTemplate template) {
         editorDriver.edit(template);
@@ -140,11 +162,20 @@ public class QueryDSLForm extends Composite implements Editor<QueryDSLTemplate>,
     void onSearchBtnClicked(SelectEvent event) {
         if (editorDriver.isDirty()) {
             QueryDSLTemplate template = editorDriver.flush();
+            convertUsers(template);
+            template.setPermission(permission.getValue());
             AutoBean<QueryDSLTemplate> autoBean = AutoBeanUtils.getAutoBean(template);
             String encode = AutoBeanCodex.encode(autoBean).getPayload();
             GWT.log("Bean ended up being: " + encode);
-            GWT.log("Combo box was set to : " + permissionValue.getValue());
             fireEvent(new QueryDSLSearchBtnSelected(template));
+        }
+    }
+
+    void convertUsers(QueryDSLTemplate template) {
+        List<Subject> subjects = permissionUsers.getAll();
+        if (subjects != null && !subjects.isEmpty()) {
+            List<String> userNames = subjects.stream().map(HasId::getId).collect(Collectors.toList());
+            template.setPermissionUsers(userNames);
         }
     }
 
