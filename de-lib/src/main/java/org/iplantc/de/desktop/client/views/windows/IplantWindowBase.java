@@ -15,6 +15,7 @@ import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
@@ -28,6 +29,7 @@ import com.sencha.gxt.widget.core.client.Header;
 import com.sencha.gxt.widget.core.client.Window;
 import com.sencha.gxt.widget.core.client.button.IconButton;
 import com.sencha.gxt.widget.core.client.button.ToolButton;
+import com.sencha.gxt.widget.core.client.event.BeforeShowEvent;
 import com.sencha.gxt.widget.core.client.event.MaximizeEvent;
 import com.sencha.gxt.widget.core.client.event.MaximizeEvent.MaximizeHandler;
 import com.sencha.gxt.widget.core.client.event.RestoreEvent;
@@ -181,7 +183,9 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
     public void minimize() {
         super.minimize();
         minimized = true;
-        hide();
+
+        // Do not call the overridden hide() method
+        super.hide();
     }
 
     @Override
@@ -204,7 +208,34 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
 
             getHeader().addDomHandler(new HeaderDoubleClickHandler(), DoubleClickEvent.getType());
         }
-        super.show();
+        show();
+    }
+
+    @Override
+    public void show() {
+        if (!hidden || !fireCancellableEvent(new BeforeShowEvent())) {
+            return;
+        }
+
+
+        // remove hide style, else layout fails
+        removeStyleName(getHideMode().value());
+        getElement().makePositionable(true);
+        if (!isAttached()) {
+            RootPanel.get().add(this);
+        }
+
+
+        onShow();
+
+        //Prevent minimized windows from being duplicated in the window manager
+        if (!manager.getWindows().contains(this)) {
+            manager.register(this);
+        }
+
+
+        afterShow();
+        notifyShow();
     }
 
     @Override
@@ -223,6 +254,18 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
         Splittable configSplittable = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config));
         ws.setWindowConfig(configSplittable);
         return ws;
+    }
+
+    /**
+     * This method is reserved for actually closing a window.  Do not call this method
+     * to minimize a window, call minimize()
+     */
+    @Override
+    public void hide() {
+        if (isMinimized()) {
+            minimized = false;
+        }
+        super.hide();
     }
 
     protected void doHide() {

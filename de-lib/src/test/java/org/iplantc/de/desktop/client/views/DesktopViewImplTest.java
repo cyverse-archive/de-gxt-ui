@@ -1,5 +1,13 @@
 package org.iplantc.de.desktop.client.views;
 
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
+
 import org.iplantc.de.desktop.client.views.widgets.TaskBar;
 import org.iplantc.de.desktop.client.views.widgets.TaskButton;
 import org.iplantc.de.desktop.client.views.windows.IPlantWindowInterface;
@@ -15,8 +23,6 @@ import com.sencha.gxt.widget.core.client.WindowManager;
 import com.sencha.gxt.widget.core.client.event.RegisterEvent;
 import com.sencha.gxt.widget.core.client.event.UnregisterEvent;
 
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -66,29 +72,6 @@ public class DesktopViewImplTest {
         uut.onRegister(registerEventMock);
         verify(uut.taskBar, never()).addTaskButton(eq(window));
         verifyNoMoreInteractions(windowManagerMock);
-    }
-
-    @Test public void taskButtonNotRemovedWhenWindowIsUnregisteredAndMinimized() {
-        DesktopViewImpl uut = new DesktopViewImpl(tourStringsMock, windowManagerMock);
-        verifyViewInit(uut);
-        uut.taskBar = mock(TaskBar.class);
-
-        TaskButton mockTaskButton = mock(TaskButton.class);
-        List<TaskButton> tbList = Lists.newArrayList(mockTaskButton);
-        when(uut.taskBar.getButtons()).thenReturn(tbList);
-
-        final Window window = mock(Window.class, withSettings().extraInterfaces(IPlantWindowInterface.class));
-        when(((IPlantWindowInterface) window).isMinimized()).thenReturn(true);
-        when(unregisterEventMock.getItem()).thenReturn(window);
-        when(mockTaskButton.getWindow()).thenReturn(window);
-
-
-        uut.onUnregister(unregisterEventMock);
-        verify(mockTaskButton).getWindow();
-        // Verify that window is re-registered with the window manager when the window is minimized
-        verify(windowManagerMock).register(eq(window));
-        verify(uut.taskBar, never()).removeTaskButton(any(TaskButton.class));
-        verifyNoMoreInteractions(mockTaskButton, windowManagerMock);
     }
 
     @Test public void taskButtonRemovedWhenWindowIsUnregisteredAndNotMinimized() {
