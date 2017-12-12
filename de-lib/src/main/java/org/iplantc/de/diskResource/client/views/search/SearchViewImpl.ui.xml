@@ -8,7 +8,7 @@
 >
 
     <ui:with field="appearance"
-             type="org.iplantc.de.diskResource.client.views.search.cells.QueryDSLForm.QueryDSLFormAppearance">
+             type="org.iplantc.de.diskResource.client.SearchView.SearchViewAppearance">
     </ui:with>
 
     <ui:with type="com.sencha.gxt.widget.core.client.container.CssFloatLayoutContainer.CssFloatData"

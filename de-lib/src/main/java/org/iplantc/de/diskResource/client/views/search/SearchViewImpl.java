@@ -1,4 +1,4 @@
-package org.iplantc.de.diskResource.client.views.search.cells;
+package org.iplantc.de.diskResource.client.views.search;
 
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.collaborators.Subject;
@@ -8,6 +8,7 @@ import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.collaborators.client.models.SubjectKeyProvider;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.client.views.CollaboratorsColumnModel;
+import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSelected;
 
 import com.google.gwt.core.client.GWT;
@@ -50,39 +51,15 @@ import java.util.stream.Collectors;
 /**
  * A form the user can fill out to perform advanced searches in the Data window which utilize the search service
  */
-public class QueryDSLForm extends Composite implements Editor<QueryDSLTemplate>,
-                                                       QueryDSLSearchBtnSelected.HasQueryDSLSearchBtnSelectedHandlers {
+public class SearchViewImpl extends Composite implements SearchView,
+                                                         Editor<QueryDSLTemplate> {
 
-    interface QueryDSLFormEditor extends SimpleBeanEditorDriver<QueryDSLTemplate, QueryDSLForm> {}
-    interface QueryDSLFormUiBinder extends UiBinder<Widget, QueryDSLForm> {
+    interface SearchViewImplEditor extends SimpleBeanEditorDriver<QueryDSLTemplate, SearchViewImpl> {}
+    interface SearchViewImplUiBinder extends UiBinder<Widget, SearchViewImpl> {
     }
 
-    public interface QueryDSLFormAppearance {
-        String nameHas();
-
-        String pathPrefix();
-
-        String exactNameMatch();
-
-        String owner();
-
-        String exactUserNameMatch();
-
-        String permissionValueLabel();
-
-        String permissionRecurse();
-
-        String sharedWith();
-
-        String emptyText();
-
-        String emptyDropDownText();
-
-        String searchBtnText();
-    }
-
-    static QueryDSLFormUiBinder uiBinder = GWT.create(QueryDSLFormUiBinder.class);
-    QueryDSLFormEditor editorDriver = GWT.create(QueryDSLFormEditor.class);
+    static SearchViewImplUiBinder uiBinder = GWT.create(SearchViewImplUiBinder.class);
+    SearchViewImplEditor editorDriver = GWT.create(SearchViewImplEditor.class);
 
     @Ignore @UiField VerticalLayoutContainer con;
     @Path("label")
@@ -98,14 +75,14 @@ public class QueryDSLForm extends Composite implements Editor<QueryDSLTemplate>,
     @UiField ListStore<Subject> permissionUsers;
     @Ignore @UiField TextButton searchBtn;
 
-    @UiField(provided = true) QueryDSLFormAppearance appearance;
+    @UiField(provided = true) SearchViewAppearance appearance;
     private SearchModelUtils searchModelUtils;
     protected final BaseEventPreview eventPreview;
 
     @Inject
-    public QueryDSLForm(QueryDSLFormAppearance appearance,
-                        UserSearchField userSearchField,
-                        SearchModelUtils searchModelUtils) {
+    public SearchViewImpl(SearchViewAppearance appearance,
+                          UserSearchField userSearchField,
+                          SearchModelUtils searchModelUtils) {
         this.appearance = appearance;
         this.userSearchField = userSearchField;
         this.searchModelUtils = searchModelUtils;
@@ -118,7 +95,7 @@ public class QueryDSLForm extends Composite implements Editor<QueryDSLTemplate>,
 
             @Override
             protected boolean onPreview(Event.NativePreviewEvent pe) {
-                QueryDSLForm.this.onPreviewEvent(pe);
+                SearchViewImpl.this.onPreviewEvent(pe);
                 return super.onPreview(pe);
             }
 
@@ -153,7 +130,7 @@ public class QueryDSLForm extends Composite implements Editor<QueryDSLTemplate>,
         return new CollaboratorsColumnModel(null);
     }
 
-
+    @Override
     public void edit(QueryDSLTemplate template) {
         editorDriver.edit(template);
     }
@@ -179,6 +156,7 @@ public class QueryDSLForm extends Composite implements Editor<QueryDSLTemplate>,
         }
     }
 
+    @Override
     public void show(Element parent, Style.AnchorAlignment anchorAlignment) {
         getElement().makePositionable(true);
         RootPanel.get().add(this);
@@ -247,6 +225,7 @@ public class QueryDSLForm extends Composite implements Editor<QueryDSLTemplate>,
         return addHandler(handler, QueryDSLSearchBtnSelected.TYPE);
     }
 
+    @Override
     public void clearSearch() {
         editorDriver.edit(searchModelUtils.createDefaultQuery());
     }

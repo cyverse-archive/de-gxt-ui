@@ -1,6 +1,7 @@
 package org.iplantc.de.diskResource.client.views.search.cells;
 
 import org.iplantc.de.client.util.SearchModelUtils;
+import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSelected;
 
 import com.google.gwt.cell.client.ValueUpdater;
@@ -43,7 +44,7 @@ public class DiskResourceSearchCellv2 extends TriggerFieldCell<String> implement
 
 
     private boolean expanded;
-    private final QueryDSLForm searchForm;
+    private final SearchView searchForm;
     private SearchModelUtils searchModelUtils;
     private final DiskResourceSearchCell.DiskResourceSearchCellAppearance appearance;
 
@@ -53,7 +54,7 @@ public class DiskResourceSearchCellv2 extends TriggerFieldCell<String> implement
      * @param appearance the date cell appearance
      */
     @Inject
-    DiskResourceSearchCellv2(final QueryDSLForm searchForm,
+    DiskResourceSearchCellv2(final SearchView searchForm,
                              SearchModelUtils searchModelUtils,
                              final DiskResourceSearchCell.DiskResourceSearchCellAppearance appearance) {
         super(appearance);
@@ -127,7 +128,7 @@ public class DiskResourceSearchCellv2 extends TriggerFieldCell<String> implement
         });
     }
 
-    public QueryDSLForm getSearchForm() {
+    public SearchView getSearchForm() {
         return searchForm;
     }
 

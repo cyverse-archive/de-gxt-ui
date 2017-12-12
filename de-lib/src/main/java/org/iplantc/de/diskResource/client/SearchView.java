@@ -1,22 +1,56 @@
 package org.iplantc.de.diskResource.client;
 
+import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
 import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent.SavedSearchesRetrievedEventHandler;
 import org.iplantc.de.diskResource.client.events.search.DeleteSavedSearchClickedEvent.DeleteSavedSearchEventHandler;
 import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent.SaveDiskResourceQueryClickedEventHandler;
 import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent.HasSavedSearchDeletedEventHandlers;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent.HasUpdateSavedSearchesEventHandlers;
+import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSelected;
+
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.user.client.ui.IsWidget;
+
+import com.sencha.gxt.core.client.Style;
+import com.sencha.gxt.core.client.dom.XElement;
+import com.sencha.gxt.widget.core.client.event.HideEvent;
 
 /**
  * Created by jstroot on 2/10/15.
- * @author jstroot
+ * @author jstroot, aramsey
  */
-public interface SearchView {
+public interface SearchView extends IsWidget,
+                                    HideEvent.HasHideHandlers,
+                                    QueryDSLSearchBtnSelected.HasQueryDSLSearchBtnSelectedHandlers {
 
     interface SearchViewAppearance {
 
         String deleteSearchSuccess(String searchName);
 
         String saveQueryTemplateFail();
+
+        String nameHas();
+
+        String pathPrefix();
+
+        String exactNameMatch();
+
+        String owner();
+
+        String exactUserNameMatch();
+
+        String permissionValueLabel();
+
+        String permissionRecurse();
+
+        String sharedWith();
+
+        String emptyText();
+
+        String emptyDropDownText();
+
+        String searchBtnText();
     }
 
     /**
@@ -64,5 +98,17 @@ public interface SearchView {
                                 SavedSearchesRetrievedEventHandler,
                                 HasUpdateSavedSearchesEventHandlers {
     }
+
+    void edit(QueryDSLTemplate template);
+
+    void show(Element parent, Style.AnchorAlignment anchorAlignment);
+
+    void clearSearch();
+
+    XElement getElement();
+
+    void hide();
+
+    void fireEvent(GwtEvent<?> event);
 }
 

@@ -29,7 +29,7 @@ import java.text.ParseException;
 /**
  * This class is a clone-and-own of {@link DateField}.
  *
- * This is a search widget for the Data window that contains a "trigger" for opening the QueryDSLForm
+ * This is a search widget for the Data window that contains a "trigger" for opening the SearchViewImpl
  * 
  * @author aramsey
  * 
