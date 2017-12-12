@@ -484,7 +484,7 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
                                               AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
                     break;
 
-                case DATA_VIEWER:
+                case FILE_VIEWER:
                     IntercomFacade.trackEvent(TrackingEventType.DATA_VIEWER_WINDOW_OPEN,
                                               AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
                     break;
@@ -563,7 +563,7 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
                                               AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
                     break;
 
-                case DATA_VIEWER:
+                case FILE_VIEWER:
                     IntercomFacade.trackEvent(TrackingEventType.DATA_VIEWER_WINDOW_CLOSED,
                                               AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
                     break;
