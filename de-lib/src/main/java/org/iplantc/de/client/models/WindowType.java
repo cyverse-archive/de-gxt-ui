@@ -11,7 +11,7 @@ public enum WindowType {
     APP_INTEGRATION,
     APP_WIZARD,
     DATA,
-    DATA_VIEWER,
+    FILE_VIEWER,
     HELP,
     NOTIFICATIONS,
     SIMPLE_DOWNLOAD,

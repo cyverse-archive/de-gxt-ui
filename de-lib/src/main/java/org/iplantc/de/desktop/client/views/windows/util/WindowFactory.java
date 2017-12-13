@@ -74,7 +74,7 @@ public class WindowFactory {
             case DATA:
                 ret = diskResourceWindowAsyncProvider;
                 break;
-            case DATA_VIEWER:
+            case FILE_VIEWER:
                 ret = fileViewerWindowAsyncProvider;
                 break;
             case HELP:

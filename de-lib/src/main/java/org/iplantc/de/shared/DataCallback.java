@@ -14,7 +14,7 @@ public abstract class DataCallback<T> implements DECallback<T> {
     @Override
     public List<WindowType> getWindowTypes() {
         return Lists.newArrayList(WindowType.DATA,
-                                  WindowType.DATA_VIEWER,
+                                  WindowType.FILE_VIEWER,
                                   WindowType.SIMPLE_DOWNLOAD);
     }
 }

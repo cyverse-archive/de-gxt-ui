@@ -96,7 +96,7 @@ public class ConfigFactory {
     }
 
     public static FileViewerWindowConfig fileViewerWindowConfig(File file) {
-        AutoBean<FileViewerWindowConfig> fvwc = applyWindowType(WindowType.DATA_VIEWER,
+        AutoBean<FileViewerWindowConfig> fvwc = applyWindowType(WindowType.FILE_VIEWER,
                 factory.fileViewerWindowConfig());
         fvwc.as().setFile(file);
         if (file != null) {
@@ -112,14 +112,14 @@ public class ConfigFactory {
     }
 
     public static TabularFileViewerWindowConfig newTabularFileViewerWindowConfig() {
-        AutoBean<TabularFileViewerWindowConfig> ab = applyWindowType(WindowType.DATA_VIEWER, factory.newTabularFileViewerWindowConfig());
+        AutoBean<TabularFileViewerWindowConfig> ab = applyWindowType(WindowType.FILE_VIEWER, factory.newTabularFileViewerWindowConfig());
         applyTag("Tabular File-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),
                  ab);
         return ab.as();
     }
 
     public static HTPathListWindowConfig newHTPathListWindowConfig() {
-        AutoBean<HTPathListWindowConfig> ab = applyWindowType(WindowType.DATA_VIEWER, factory.pathListWindowConfig());
+        AutoBean<HTPathListWindowConfig> ab = applyWindowType(WindowType.FILE_VIEWER, factory.pathListWindowConfig());
         applyTag("Path List-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),
                  ab);
         HTPathListWindowConfig config = ab.as();
@@ -131,7 +131,7 @@ public class ConfigFactory {
     }
 
     public static MultiInputPathListWindowConfig newMultiInputPathListWindowConfig() {
-        AutoBean<MultiInputPathListWindowConfig> ab = applyWindowType(WindowType.DATA_VIEWER, factory.multiInputPathListWindowConfig());
+        AutoBean<MultiInputPathListWindowConfig> ab = applyWindowType(WindowType.FILE_VIEWER, factory.multiInputPathListWindowConfig());
         applyTag("Path List-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),
                  ab);
         MultiInputPathListWindowConfig config = ab.as();
@@ -204,7 +204,7 @@ public class ConfigFactory {
 
             case APP_INTEGRATION:
             case APP_WIZARD:
-            case DATA_VIEWER:
+            case FILE_VIEWER:
             case HELP:
             case WORKFLOW_INTEGRATION:
             case MANAGETOOLS:
@@ -246,7 +246,7 @@ public class ConfigFactory {
                         ws.getWindowConfig()).as();
                 break;
 
-            case DATA_VIEWER:
+            case FILE_VIEWER:
                 config = AutoBeanCodex.decode(factory, FileViewerWindowConfig.class,
                         ws.getWindowConfig()).as();
                 break;
