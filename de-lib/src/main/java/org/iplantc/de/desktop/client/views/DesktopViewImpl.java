@@ -159,6 +159,9 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
         final Widget eventItem = event.getItem();
         if(eventItem instanceof IPlantWindowInterface) {
             IPlantWindowInterface iplantWindow = (IPlantWindowInterface) eventItem;
+            if (iplantWindow.isMinimized()) {
+                return;
+            }
             TaskButton taskButton = null;
             for(TaskButton btn : taskBar.getButtons()){
                 if(btn.getWindow() == iplantWindow){
@@ -168,11 +171,6 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
             }
 
             Preconditions.checkNotNull(taskButton, "TaskButton should not be null");
-            if(iplantWindow.isMinimized()){
-                // Re register
-                windowManager.register(eventItem);
-                return;
-            }
             // remove corresponding task button
             taskBar.removeTaskButton(taskButton);
         }
