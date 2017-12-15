@@ -186,6 +186,7 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
 
         // Do not call the overridden hide() method
         super.hide();
+        manager.register(this);
     }
 
     @Override
@@ -264,6 +265,7 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
     public void hide() {
         if (isMinimized()) {
             minimized = false;
+            manager.unregister(this);
         }
         super.hide();
     }
