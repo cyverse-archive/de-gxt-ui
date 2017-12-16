@@ -127,7 +127,10 @@ public class SearchViewImpl extends Composite implements SearchView,
 
     @UiFactory
     ColumnModel<Subject> buildColumnModel() {
-        return new CollaboratorsColumnModel(null);
+        CollaboratorsColumnModel cm = new CollaboratorsColumnModel(null);
+        cm.deleteColumnVisible(true);
+        cm.addSubjectDeleteCellClickedHandler(event -> permissionUsers.remove(event.getSubject()));
+        return cm;
     }
 
     @Override

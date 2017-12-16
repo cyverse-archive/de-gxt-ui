@@ -16,6 +16,10 @@
         <when-type-is class="org.iplantc.de.collaborators.client.views.cells.SubjectNameCell.SubjectNameCellAppearance"/>
     </replace-with>
 
+    <replace-with class="org.iplantc.de.theme.base.client.collaborators.cells.SubjectDeleteCellDefaultAppearance">
+        <when-type-is class="org.iplantc.de.collaborators.client.views.cells.SubjectDeleteCell.SubjectDeleteCellAppearance"/>
+    </replace-with>
+
     <replace-with class="org.iplantc.de.theme.base.client.collaborators.util.UserSearchFieldDefaultAppearance">
         <when-type-is class="org.iplantc.de.collaborators.client.util.UserSearchField.UserSearchFieldAppearance"/>
     </replace-with>
