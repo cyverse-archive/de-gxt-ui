@@ -11,8 +11,4 @@ public interface AppsWindowConfig extends WindowConfig {
     void setSelectedAppCategory(HasQualifiedId appGroup);
 
     void setSelectedApp(HasQualifiedId app);
-
-    void setView(String lastViewSelected);
-
-    String getView();
 }

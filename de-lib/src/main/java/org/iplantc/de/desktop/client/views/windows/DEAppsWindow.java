@@ -2,7 +2,9 @@ package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.apps.client.AppsView;
 import org.iplantc.de.apps.shared.AppsModule;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.util.WebStorageUtil;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
@@ -22,6 +24,7 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
 public class DEAppsWindow extends IplantWindowBase {
 
     public static final String APPS = "#apps";
+    public static final String DE_APPS_ACTIVEVIEW = "de.apps.activeview#";
     private final AppsView.Presenter presenter;
 
     @Inject
@@ -43,7 +46,8 @@ public class DEAppsWindow extends IplantWindowBase {
         presenter.go(this,
                      appsWindowConfig.getSelectedAppCategory(),
                      appsWindowConfig.getSelectedApp(),
-                     appsWindowConfig.getView());
+                     WebStorageUtil.readFromStorage(
+                             DE_APPS_ACTIVEVIEW + UserInfo.getInstance().getUsername()));
         super.show(windowConfig, tag, isMaximizable);
         btnHelp = createHelpButton();
         getHeader().insertTool(btnHelp,0);
@@ -64,6 +68,8 @@ public class DEAppsWindow extends IplantWindowBase {
 
     @Override
     public void doHide() {
+        WebStorageUtil.writeToStorage(DE_APPS_ACTIVEVIEW + UserInfo.getInstance().getUsername(),
+                                      presenter.getActiveView());
         super.doHide();
     }
 
@@ -72,7 +78,6 @@ public class DEAppsWindow extends IplantWindowBase {
         AppsWindowConfig config = ConfigFactory.appsWindowConfig();
         config.setSelectedApp(presenter.getSelectedApp());
         config.setSelectedAppCategory(presenter.getSelectedAppCategory());
-        config.setView(presenter.getActiveView());
         return createWindowState(config);
     }
 

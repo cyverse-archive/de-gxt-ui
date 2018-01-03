@@ -1,8 +1,10 @@
 package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.diskResources.Folder;
+import org.iplantc.de.client.util.WebStorageUtil;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
@@ -35,6 +37,7 @@ import java.util.List;
 public class DeDiskResourceWindow extends IplantWindowBase implements FolderSelectionEvent.FolderSelectionEventHandler {
 
     public static final String DATA = "#data";
+    public static final String DE_DATA_DETAILSPANEL_COLLAPSE = "de.data.detailspanel.collapse#";
     private final DiskResourcePresenterFactory presenterFactory;
     private final IplantDisplayStrings displayStrings;
     private DiskResourceView.Presenter presenter;
@@ -69,7 +72,10 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
                                                                 resourcesToSelect);
         final String uniqueWindowTag = (diskResourceWindowConfig.getTag() == null) ? "" : "." + diskResourceWindowConfig.getTag();
         ensureDebugId(DeModule.WindowIds.DISK_RESOURCE_WINDOW + uniqueWindowTag);
-        presenter.go(this);
+        String minimizeDeatils  = WebStorageUtil.readFromStorage(
+                DE_DATA_DETAILSPANEL_COLLAPSE + UserInfo
+                .getInstance().getUsername());
+        presenter.go(this, (minimizeDeatils == null)? false: Boolean.valueOf(minimizeDeatils));
         initHandlers();
         super.show(windowConfig, tag, isMaximizable);
         btnHelp = createHelpButton();
@@ -98,6 +104,7 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
         if (!isMinimized()) {
             presenter.cleanUp();
         }
+        WebStorageUtil.writeToStorage(DE_DATA_DETAILSPANEL_COLLAPSE + UserInfo.getInstance().getUsername(), presenter.isDetailsCollapsed() + "");
         super.hide();
     }
 

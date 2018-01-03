@@ -145,7 +145,7 @@ public class FolderSelectDialog extends IPlantDialog implements TakesValue<Folde
         presenter.addDiskResourceSelectionChangedEventHandler(new DiskResourceSelectionChangedHandler(presenter,
                                                                                                       this,
                                                                                                       infoTypeFilters));
-        presenter.go(this);
+        presenter.go(this, true);
         super.show();
     }
 
