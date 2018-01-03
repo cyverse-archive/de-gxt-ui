@@ -638,11 +638,12 @@ public class DiskResourcePresenterImpl implements
     }
 
     @Override
-    public void go(HasOneWidget container) {
+    public void go(HasOneWidget container, boolean collapseDetailsPanel) {
         container.setWidget(view);
         // JDS Re-select currently selected folder in order to load center
         // panel.
         navigationPresenter.setSelectedFolder(navigationPresenter.getSelectedFolder());
+        view.setDetailsCollapsed(collapseDetailsPanel);
     }
 
     @Override
@@ -651,12 +652,17 @@ public class DiskResourcePresenterImpl implements
                    final List<? extends HasId> diskResourcesToSelect) {
 
         if ((folderToSelect == null) || Strings.isNullOrEmpty(folderToSelect.getPath())) {
-            go(container);
+            go(container, true);
         } else {
             container.setWidget(view);
             navigationPresenter.setSelectedFolder(folderToSelect);
             setSelectedDiskResourcesById(diskResourcesToSelect);
         }
+    }
+
+    @Override
+    public boolean isDetailsCollapsed() {
+      return view.isDetailsCollapsed();
     }
 
     @Override
@@ -777,4 +783,5 @@ public class DiskResourcePresenterImpl implements
         return new ConfirmMessageBox(title,
                                      appearance.emptyTrashWarning());
     }
+
 }

@@ -8,6 +8,7 @@ import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
@@ -17,6 +18,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.widget.core.client.Composite;
+import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData;
 
@@ -37,6 +39,8 @@ public class DiskResourceViewImpl extends Composite implements DiskResourceView 
     @UiField BorderLayoutData eastData;
     @UiField BorderLayoutData northData;
     @UiField BorderLayoutData southData;
+    @UiField
+    ContentPanel detailsPanel;
 
     @UiField(provided = true) final NavigationView navigationView;
     @UiField(provided = true) final GridView centerGridView;
@@ -98,4 +102,25 @@ public class DiskResourceViewImpl extends Composite implements DiskResourceView 
     public void unmask() {
         con.unmask();
     }
+
+
+    @Override
+    public boolean isDetailsCollapsed() {
+        return detailsPanel.isCollapsed();
+    }
+
+    @Override
+    public void setDetailsCollapsed(boolean collapsed) {
+        if(collapsed) {
+            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                @Override
+                public void execute() {
+                    detailsPanel.collapse();
+                }
+            });
+        } else {
+            detailsPanel.expand();
+        }
+    }
+
 }

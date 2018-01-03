@@ -115,7 +115,7 @@ public class SaveAsDialog extends IPlantDialog {
                                                                          vlc,
                                                                          60);
         presenter.addFolderSelectedEventHandler(new FolderSelectionChangedHandler());
-        presenter.go(this);
+        presenter.go(this, true);
         super.show();
 
         ensureDebugId(DiskResourceModule.Ids.SAVE_AS_DIALOG);
