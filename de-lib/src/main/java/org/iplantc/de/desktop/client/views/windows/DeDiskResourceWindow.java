@@ -72,10 +72,10 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
                                                                 resourcesToSelect);
         final String uniqueWindowTag = (diskResourceWindowConfig.getTag() == null) ? "" : "." + diskResourceWindowConfig.getTag();
         ensureDebugId(DeModule.WindowIds.DISK_RESOURCE_WINDOW + uniqueWindowTag);
-        String minimizeDeatils  = WebStorageUtil.readFromStorage(
+        String minimizeDetails  = WebStorageUtil.readFromStorage(
                 DE_DATA_DETAILSPANEL_COLLAPSE + UserInfo
                 .getInstance().getUsername());
-        presenter.go(this, (minimizeDeatils == null)? false: Boolean.valueOf(minimizeDeatils));
+        presenter.go(this, (minimizeDetails == null)? false: Boolean.valueOf(minimizeDetails));
         initHandlers();
         super.show(windowConfig, tag, isMaximizable);
         btnHelp = createHelpButton();
