@@ -40,7 +40,6 @@ public interface AppDetailsView extends IsWidget,
                                         DetailsCategoryClicked.HasDetailsCategoryClickedHandlers {
 
     interface AppDetailsAppearance {
-        String imageLabel();
 
         interface AppDetailsStyle extends CssResource {
 
@@ -106,6 +105,9 @@ public interface AppDetailsView extends IsWidget,
         String completedRun();
 
         String completedDate();
+
+        String imageLabel();
+
     }
 
     interface Presenter extends AppFavoriteSelectedEvent.HasAppFavoriteSelectedEventHandlers,
