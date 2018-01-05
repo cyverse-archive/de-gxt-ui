@@ -28,6 +28,10 @@ public class DEAppsWindow extends IplantWindowBase {
     private final AppsView.Presenter presenter;
 
     @Inject
+    UserInfo userInfo;
+
+
+    @Inject
     DEAppsWindow(final AppsView.Presenter presenter, final IplantDisplayStrings displayStrings) {
         this.presenter = presenter;
 
@@ -47,7 +51,7 @@ public class DEAppsWindow extends IplantWindowBase {
                      appsWindowConfig.getSelectedAppCategory(),
                      appsWindowConfig.getSelectedApp(),
                      WebStorageUtil.readFromStorage(
-                             DE_APPS_ACTIVEVIEW + UserInfo.getInstance().getUsername()));
+                             DE_APPS_ACTIVEVIEW + userInfo.getUsername()));
         super.show(windowConfig, tag, isMaximizable);
         btnHelp = createHelpButton();
         getHeader().insertTool(btnHelp,0);
@@ -68,7 +72,7 @@ public class DEAppsWindow extends IplantWindowBase {
 
     @Override
     public void doHide() {
-        WebStorageUtil.writeToStorage(DE_APPS_ACTIVEVIEW + UserInfo.getInstance().getUsername(),
+        WebStorageUtil.writeToStorage(DE_APPS_ACTIVEVIEW + userInfo.getUsername(),
                                       presenter.getActiveView());
         super.doHide();
     }

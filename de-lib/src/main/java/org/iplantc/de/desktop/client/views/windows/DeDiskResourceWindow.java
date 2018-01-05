@@ -42,6 +42,9 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
     private final IplantDisplayStrings displayStrings;
     private DiskResourceView.Presenter presenter;
 
+    @Inject
+    UserInfo userInfo;
+
 
     @Inject
     DeDiskResourceWindow(final DiskResourcePresenterFactory presenterFactory,
@@ -73,8 +76,7 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
         final String uniqueWindowTag = (diskResourceWindowConfig.getTag() == null) ? "" : "." + diskResourceWindowConfig.getTag();
         ensureDebugId(DeModule.WindowIds.DISK_RESOURCE_WINDOW + uniqueWindowTag);
         String minimizeDetails  = WebStorageUtil.readFromStorage(
-                DE_DATA_DETAILSPANEL_COLLAPSE + UserInfo
-                .getInstance().getUsername());
+                DE_DATA_DETAILSPANEL_COLLAPSE + userInfo.getUsername());
         presenter.go(this, (minimizeDetails == null)? false: Boolean.valueOf(minimizeDetails));
         initHandlers();
         super.show(windowConfig, tag, isMaximizable);
@@ -104,7 +106,7 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
         if (!isMinimized()) {
             presenter.cleanUp();
         }
-        WebStorageUtil.writeToStorage(DE_DATA_DETAILSPANEL_COLLAPSE + UserInfo.getInstance().getUsername(), presenter.isDetailsCollapsed() + "");
+        WebStorageUtil.writeToStorage(DE_DATA_DETAILSPANEL_COLLAPSE + userInfo.getUsername(), presenter.isDetailsCollapsed() + "");
         super.hide();
     }
 
