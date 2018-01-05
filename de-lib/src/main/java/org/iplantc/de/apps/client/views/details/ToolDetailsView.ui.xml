@@ -30,10 +30,10 @@
             </tr>
             <tr>
                 <td class="{appearance.css.label}">
-                    <ui:text from="{appearance.toolPathLabel}"/>
+                    <ui:text from="{appearance.imageLabel}"/>
                 </td>
                 <td class="{appearance.css.value}">
-                    <g:InlineLabel ui:field="location" />
+                    <g:InlineLabel ui:field="image" />:<g:InlineLabel ui:field="tag"/>
                 </td>
             </tr>
             <tr>
