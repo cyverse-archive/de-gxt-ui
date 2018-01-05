@@ -8,6 +8,7 @@ import static org.iplantc.de.client.services.FileEditorServiceFacade.TAB_DELIMIT
 
 import org.iplantc.de.client.events.FileSavedEvent;
 import org.iplantc.de.client.models.CommonModelAutoBeanFactory;
+import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
@@ -28,8 +29,8 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.views.dialogs.SaveAsDialog;
 import org.iplantc.de.fileViewers.client.FileViewer;
-import org.iplantc.de.fileViewers.client.callbacks.GenomeBrowserUtil;
 import org.iplantc.de.fileViewers.client.callbacks.FileSaveCallback;
+import org.iplantc.de.fileViewers.client.callbacks.GenomeBrowserUtil;
 import org.iplantc.de.fileViewers.client.callbacks.TreeUrlCallback;
 import org.iplantc.de.fileViewers.client.events.DirtyStateChangedEvent;
 import org.iplantc.de.fileViewers.client.views.AbstractStructuredTextViewer;
@@ -356,13 +357,13 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
     }
 
     @Override
-    public void saveFile() {
+    public void saveFileAndClose(IsHideable hideable) {
         // Locate any dirty editors
         LOG.fine("no.of viewers:" + viewers.size());
         // assuming the widget that is active is the dirty widget. save it
         for (FileViewer viewer : viewers) {
             if (viewer.isDirty()) {
-                saveFile(viewer);
+                doSaveFile(viewer, hideable);
                 break;
             }
         }
@@ -370,6 +371,10 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
 
     @Override
     public void saveFile(final FileViewer fileViewer) {
+        doSaveFile(fileViewer, null);
+    }
+
+    void doSaveFile(final FileViewer fileViewer, IsHideable hideable) {
         LOG.fine("saving file...");
         if(file == null) {
             saveAsDialogProvider.get(new AsyncCallback<SaveAsDialog>() {
@@ -386,7 +391,8 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
                                                                                                   result,
                                                                                                   appearance.savingMask(),
                                                                                                   fileViewer.getEditorContent(),
-                                                                                                  fileEditorService);
+                                                                                                  fileEditorService,
+                                                                                                  hideable);
                     SaveAsDialogCancelSelectHandler cancelSelectHandler = new SaveAsDialogCancelSelectHandler(fileViewer,
                                                                                                               result);
                     result.addOkButtonSelectHandler(okSelectHandler);
@@ -405,7 +411,8 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
                                                                     file.getPath(),
                                                                     false,
                                                                     asMaskable(simpleContainer),
-                                                                    fileViewer));
+                                                                    fileViewer,
+                                                                    hideable));
         }
     }
 
@@ -437,7 +444,8 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
                                                                 destination,
                                                                 true,
                                                                 fileViewer,
-                                                                fileViewer));
+                                                                fileViewer,
+                                                                null));
     }
 
     @Override

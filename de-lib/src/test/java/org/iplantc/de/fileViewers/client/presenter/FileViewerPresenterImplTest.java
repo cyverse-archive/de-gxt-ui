@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 
 import org.iplantc.de.client.events.FileSavedEvent;
 import org.iplantc.de.client.models.CommonModelAutoBeanFactory;
+import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
@@ -273,6 +274,7 @@ public class FileViewerPresenterImplTest {
 
     @Test
     public void testSaveFile() {
+        IsHideable hideableMock = mock(IsHideable.class);
         when(structuredTextViewerMock.isDirty()).thenReturn(false);
         when(fileViewerMock.isDirty()).thenReturn(false);
         when(textViewerMock.isDirty()).thenReturn(true);
@@ -280,8 +282,8 @@ public class FileViewerPresenterImplTest {
         FileViewerPresenterImpl spy = spy(uut);
 
         /** CALL METHOD UNDER TEST **/
-        spy.saveFile();
-        verify(spy, times(1)).saveFile(Matchers.<FileViewer> any());
+        spy.saveFileAndClose(hideableMock);
+        verify(spy, times(1)).doSaveFile(Matchers.<FileViewer> any(), eq(hideableMock));
     }
 
     @Test

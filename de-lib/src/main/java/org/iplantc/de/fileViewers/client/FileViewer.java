@@ -1,6 +1,7 @@
 package org.iplantc.de.fileViewers.client;
 
 import org.iplantc.de.client.events.FileSavedEvent;
+import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
@@ -96,7 +97,7 @@ public interface FileViewer extends IsWidget, IsMaskable, HasHandlers, FileSaved
 
         void saveFile(FileViewer fileViewer);
 
-        void saveFile();
+        void saveFileAndClose(IsHideable hideable);
 
         void saveFileWithExtension(FileViewer fileViewer, String viewerContent,
                                    String fileExtension);

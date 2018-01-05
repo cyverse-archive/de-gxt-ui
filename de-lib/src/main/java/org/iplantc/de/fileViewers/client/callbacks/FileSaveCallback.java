@@ -3,6 +3,7 @@ package org.iplantc.de.fileViewers.client.callbacks;
 import static org.iplantc.de.resources.client.messages.I18N.ERROR;
 
 import org.iplantc.de.client.events.FileSavedEvent;
+import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
@@ -30,19 +31,22 @@ public class FileSaveCallback extends DataCallback<File> {
     private final String fileName;
     private final IsMaskable maskingContainer;
     private final boolean newFile;
+    private IsHideable hideable;
     private UserSessionServiceFacade userSessionService;
 
     public FileSaveCallback(final UserSessionServiceFacade userSessionService,
                             final String path,
                             final boolean newFile,
                             final IsMaskable container,
-                            final HasHandlers hasHandlers) {
+                            final HasHandlers hasHandlers,
+                            IsHideable hideable) {
         this.userSessionService = userSessionService;
         this.hasHandlers = hasHandlers;
         this.fileName = DiskResourceUtil.getInstance().parseNameFromPath(path);
         this.parentFolder = DiskResourceUtil.getInstance().parseParent(path);
         this.maskingContainer = container;
         this.newFile = newFile;
+        this.hideable = hideable;
         errorStrings = ERROR;
     }
 
@@ -55,7 +59,11 @@ public class FileSaveCallback extends DataCallback<File> {
             uch.onCompletion(fileName, fileJson);
         }
 
-        hasHandlers.fireEvent(new FileSavedEvent(result));
+        if (hideable != null) {
+            hideable.hide();
+        } else {
+            hasHandlers.fireEvent(new FileSavedEvent(result));
+        }
     }
 
     @Override
