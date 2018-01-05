@@ -53,9 +53,13 @@ public class ToolDetailsView extends ContentPanel implements IsWidget,
     @UiField InlineLabel attribution;
     @UiField InlineLabel name;
     @UiField InlineLabel description;
-    @UiField InlineLabel location;
+    @Path("container.image.name")
+    @UiField
+    InlineLabel image;
+    @Path("container.image.tag")
+    @UiField
+    InlineLabel tag;
     @UiField InlineLabel version;
-
     @Path("name") final
     HeaderEditor headerEditor;
     private String baseID;

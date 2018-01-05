@@ -145,8 +145,8 @@ public class AppDetailsDefaultAppearance implements AppDetailsView.AppDetailsApp
     }
 
     @Override
-    public String toolPathLabel() {
-        return iplantDisplayStrings.path() + ": ";
+    public String imageLabel() {
+        return iplantDisplayStrings.imageLabel() + ": ";
     }
 
     @Override
