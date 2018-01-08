@@ -1,5 +1,6 @@
 package org.iplantc.de.fileViewers.client.views;
 
+import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
@@ -20,6 +21,7 @@ public final class SaveAsDialogOkSelectHandler implements SelectEvent.SelectHand
     private final String savingMaskText;
     private final String editorContent;
     private final FileEditorServiceFacade fileEditorService;
+    private IsHideable hideable;
     private UserSessionServiceFacade userSessionService;
 
     public SaveAsDialogOkSelectHandler(final UserSessionServiceFacade userSessionService,
@@ -28,7 +30,8 @@ public final class SaveAsDialogOkSelectHandler implements SelectEvent.SelectHand
                                        final SaveAsDialog saveAsDialog,
                                        final String savingMaskText,
                                        final String editorContent,
-                                       final FileEditorServiceFacade fileEditorService) {
+                                       final FileEditorServiceFacade fileEditorService,
+                                       IsHideable hideable) {
         this.userSessionService = userSessionService;
         this.maskable = maskable;
         this.hasHandlers = hasHandlers;
@@ -36,6 +39,7 @@ public final class SaveAsDialogOkSelectHandler implements SelectEvent.SelectHand
         this.savingMaskText = savingMaskText;
         this.editorContent = editorContent;
         this.fileEditorService = fileEditorService;
+        this.hideable = hideable;
     }
 
     @Override
@@ -54,7 +58,8 @@ public final class SaveAsDialogOkSelectHandler implements SelectEvent.SelectHand
                                                                 destination,
                                                                 true,
                                                                 maskable,
-                                                                hasHandlers));
+                                                                hasHandlers,
+                                                                hideable));
         saveAsDialog.hide();
     }
 }

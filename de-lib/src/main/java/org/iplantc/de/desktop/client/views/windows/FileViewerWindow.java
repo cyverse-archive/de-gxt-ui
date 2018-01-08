@@ -1,5 +1,6 @@
 package org.iplantc.de.desktop.client.views.windows;
 
+import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.diskResources.File;
@@ -27,6 +28,7 @@ import java.util.logging.Logger;
  * @author sriram, jstroot
  */
 public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
+                                                                  IsHideable,
                                                                   DirtyStateChangedEvent.DirtyStateChangedEventHandler {
     private class CriticalPathCallback implements AsyncCallback<String> {
         @Override
@@ -107,7 +109,7 @@ public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
                 public void onDialogHide(DialogHideEvent event) {
                     if (PredefinedButton.YES.equals(event.getHideButton())) {
                         cmb.hide();
-                        presenter.saveFile();
+                        presenter.saveFileAndClose(FileViewerWindow.this);
                     } else if (PredefinedButton.NO.equals(event.getHideButton())) {
                         FileViewerWindow.super.doHide();
                     }
