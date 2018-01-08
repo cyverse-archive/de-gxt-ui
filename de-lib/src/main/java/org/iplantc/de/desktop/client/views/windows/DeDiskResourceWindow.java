@@ -3,6 +3,7 @@ package org.iplantc.de.desktop.client.views.windows;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.util.WebStorageUtil;
 import org.iplantc.de.commons.client.util.WindowUtil;
@@ -38,21 +39,22 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
 
     public static final String DATA = "#data";
     public static final String DE_DATA_DETAILSPANEL_COLLAPSE = "de.data.detailspanel.collapse#";
+
+
     private final DiskResourcePresenterFactory presenterFactory;
     private final IplantDisplayStrings displayStrings;
     private DiskResourceView.Presenter presenter;
 
     @Inject
-    UserInfo userInfo;
-
-
-    @Inject
     DeDiskResourceWindow(final DiskResourcePresenterFactory presenterFactory,
-                         final IplantDisplayStrings displayStrings) {
+                         final IplantDisplayStrings displayStrings, final  UserInfo userInfo) {
         this.presenterFactory = presenterFactory;
         this.displayStrings = displayStrings;
+        this.userInfo = userInfo;
         setHeading(displayStrings.data());
-        setSize("900", "480");
+        String width = getSavedWidth(WindowType.DATA.toString());
+        String height = getSavedHeight(WindowType.DATA.toString());
+        setSize((width == null) ? "820" : width, (height == null) ? "400" : height);
         setMinWidth(900);
         setMinHeight(480);
     }
@@ -106,6 +108,8 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
         if (!isMinimized()) {
             presenter.cleanUp();
         }
+        saveHeight(WindowType.DATA.toString());
+        saveWidth(WindowType.DATA.toString());
         WebStorageUtil.writeToStorage(DE_DATA_DETAILSPANEL_COLLAPSE + userInfo.getUsername(), presenter.isDetailsCollapsed() + "");
         super.hide();
     }

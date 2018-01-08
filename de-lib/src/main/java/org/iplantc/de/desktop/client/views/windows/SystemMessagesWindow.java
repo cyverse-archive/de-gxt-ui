@@ -1,6 +1,8 @@
 package org.iplantc.de.desktop.client.views.windows;
 
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.SystemMessagesWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
@@ -20,9 +22,16 @@ public final class SystemMessagesWindow extends IplantWindowBase {
 
     private MessagesPresenter presenter;
 
+
     @Inject
-    SystemMessagesWindow(final IplantDisplayStrings displayStrings) {
+    SystemMessagesWindow(final IplantDisplayStrings displayStrings,
+                         final UserInfo userInfo) {
+        this.userInfo = userInfo;
         setHeading(displayStrings.systemMessagesLabel());
+        String width = getSavedWidth(WindowType.SYSTEM_MESSAGES.toString());
+        String height = getSavedHeight(WindowType.SYSTEM_MESSAGES.toString());
+        setSize((width == null) ? computeDefaultWidth() + "" : width, (height == null) ? computeDefaultHeight() + "" : height);
+
         setWidth(computeDefaultWidth());
         setHeight(computeDefaultHeight());
     }
@@ -53,19 +62,18 @@ public final class SystemMessagesWindow extends IplantWindowBase {
         return createWindowState(ConfigFactory.systemMessagesWindowConfig(selMsg));
     }
 
-    /**
-     * @see IplantWindowBase#doHide()
-     */
-    @Override
-    protected void doHide() {
-        presenter.stop();
-        super.doHide();
-    }
-
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
 
         presenter.setViewDebugId(baseID + SystemMessages.Ids.VIEW);
+    }
+
+    @Override
+    public void hide() {
+        saveHeight(WindowType.SYSTEM_MESSAGES.toString());
+        saveWidth(WindowType.SYSTEM_MESSAGES.toString());
+        presenter.stop();
+        super.hide();
     }
 }

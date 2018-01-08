@@ -6,7 +6,9 @@ import org.iplantc.de.apps.widgets.client.events.AppTemplateFetched;
 import org.iplantc.de.apps.widgets.client.view.AppLaunchView;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.HasQualifiedId;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.commons.client.views.window.configs.AppWizardConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
@@ -36,12 +38,16 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
     @Inject
     AppLaunchWindow(final AppLaunchView.Presenter presenter,
                     final DEClientConstants deClientConstants,
-                    AppLaunchView.AppLaunchViewAppearance appearance) {
+                    AppLaunchView.AppLaunchViewAppearance appearance,
+                    final UserInfo userInfo) {
         this.presenter = presenter;
         this.deClientConstants = deClientConstants;
         this.appearance = appearance;
+        this.userInfo = userInfo;
 
-        setSize("640", "375");
+        String width = getSavedWidth(WindowType.APP_WIZARD.toString());
+        String height = getSavedHeight(WindowType.APP_WIZARD.toString());
+        setSize((width == null) ? "640" : width, (height == null) ? "375" : height);
         setMinWidth(300);
         setMinHeight(350);
         setBorders(false);
@@ -102,5 +108,12 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
             fireEvent(new WindowHeadingUpdatedEvent());
         }
         forceLayout();
+    }
+
+    @Override
+    public void hide() {
+        saveHeight(WindowType.APP_WIZARD.toString());
+        saveWidth(WindowType.APP_WIZARD.toString());
+        super.hide();
     }
 }
