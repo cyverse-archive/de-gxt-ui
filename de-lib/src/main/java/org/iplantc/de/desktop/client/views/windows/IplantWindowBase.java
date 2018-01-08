@@ -1,6 +1,8 @@
 package org.iplantc.de.desktop.client.views.windows;
 
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.util.WebStorageUtil;
 import org.iplantc.de.commons.client.CommonUiConstants;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.views.widgets.ServiceDownPanel;
@@ -126,6 +128,10 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
     protected CommonUiConstants constants = GWT.create(CommonUiConstants.class);
     protected Widget currentWidget;
     protected ServiceDownPanel serviceDownPanel;
+    UserInfo userInfo;
+    protected final String LOCAL_STORAGE_PREFIX = "de.";
+    protected final String SAVED_WIDTH = ".saved.width";
+    protected final String SAVED_HEIGHT = ".saved.height";
 
     public IplantWindowBase() {
         this(GWT.<IplantWindowAppearance> create(IplantWindowAppearance.class));
@@ -267,12 +273,8 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
             minimized = false;
             manager.unregister(this);
         }
-        super.hide();
-    }
-
-    protected void doHide() {
-        hide();
         logWindowCloseToIntercom(config);
+        super.hide();
     }
 
     @Override
@@ -303,7 +305,7 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
         newCloseBtn.addSelectHandler(new SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
-                doHide();
+                hide();
             }
         });
         return newCloseBtn;
@@ -616,6 +618,28 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
 
             }
         }
+    }
+
+    protected String getSavedHeight(String windowType) {
+        return WebStorageUtil.readFromStorage(
+                LOCAL_STORAGE_PREFIX + windowType + SAVED_HEIGHT + "#"
+                + userInfo.getUsername());
+    }
+
+    protected String getSavedWidth(String windowType) {
+        return WebStorageUtil.readFromStorage(
+                LOCAL_STORAGE_PREFIX + windowType + SAVED_WIDTH + "#"
+                + userInfo.getUsername());
+    }
+
+    protected void saveHeight(String windowType) {
+      WebStorageUtil.writeToStorage(LOCAL_STORAGE_PREFIX + windowType + SAVED_HEIGHT + "#"
+                                    + userInfo.getUsername(), getOffsetHeight() + "");
+    }
+
+    protected void saveWidth(String windowType) {
+         WebStorageUtil.writeToStorage(LOCAL_STORAGE_PREFIX + windowType + SAVED_WIDTH + "#"
+                                       + userInfo.getUsername(), getOffsetWidth() + "");
     }
 
 }

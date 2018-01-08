@@ -1,6 +1,8 @@
 package org.iplantc.de.desktop.client.views.windows;
 
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
@@ -31,12 +33,17 @@ public class SimpleDownloadWindow extends IplantWindowBase {
 
     @Inject
     SimpleDownloadWindow(final IplantDisplayStrings displayStrings,
-                         final DiskResourceServiceFacade diskResourceServiceFacade) {
+                         final DiskResourceServiceFacade diskResourceServiceFacade,
+                         final UserInfo userInfo) {
         this.displayStrings = displayStrings;
         this.diskResourceServiceFacade = diskResourceServiceFacade;
-
+        this.userInfo = userInfo;
         setHeading(displayStrings.download());
-        setSize("320", "320");
+
+        String width = getSavedWidth(WindowType.SIMPLE_DOWNLOAD.toString());
+        String height = getSavedHeight(WindowType.SIMPLE_DOWNLOAD.toString());
+        setSize((width == null) ? "320" : width, (height == null) ? "320" : height);
+
         ensureDebugId(DeModule.WindowIds.SIMPLE_DOWNLOAD);
     }
 
@@ -52,6 +59,13 @@ public class SimpleDownloadWindow extends IplantWindowBase {
     public WindowState getWindowState() {
         SimpleDownloadWindowConfig config = ConfigFactory.simpleDownloadWindowConfig();
         return createWindowState(config);
+    }
+
+    @Override
+    public void hide() {
+        saveHeight(WindowType.SIMPLE_DOWNLOAD.toString());
+        saveWidth(WindowType.SIMPLE_DOWNLOAD.toString());
+        super.hide();
     }
 
     private void buildLinks(SimpleDownloadWindowConfig config, VerticalLayoutContainer vlc) {

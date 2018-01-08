@@ -4,6 +4,7 @@ import org.iplantc.de.apps.client.AppsView;
 import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.util.WebStorageUtil;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
@@ -25,19 +26,21 @@ public class DEAppsWindow extends IplantWindowBase {
 
     public static final String APPS = "#apps";
     public static final String DE_APPS_ACTIVEVIEW = "de.apps.activeview#";
+
     private final AppsView.Presenter presenter;
 
     @Inject
-    UserInfo userInfo;
-
-
-    @Inject
-    DEAppsWindow(final AppsView.Presenter presenter, final IplantDisplayStrings displayStrings) {
+    DEAppsWindow(final AppsView.Presenter presenter,
+                 final IplantDisplayStrings displayStrings,
+                 final UserInfo userInfo) {
         this.presenter = presenter;
+        this.userInfo = userInfo;
 
         // This must be set before we render view
         ensureDebugId(DeModule.WindowIds.APPS_WINDOW);
-        setSize("820", "400");
+        String width = getSavedWidth(WindowType.APPS.toString());
+        String height = getSavedHeight(WindowType.APPS.toString());
+        setSize((width == null) ? "820" : width, (height == null) ? "400" : height);
         setMinWidth(540);
         setHeading(displayStrings.applications());
     }
@@ -71,10 +74,12 @@ public class DEAppsWindow extends IplantWindowBase {
     }
 
     @Override
-    public void doHide() {
+    public void hide() {
         WebStorageUtil.writeToStorage(DE_APPS_ACTIVEVIEW + userInfo.getUsername(),
                                       presenter.getActiveView());
-        super.doHide();
+        saveHeight(WindowType.APPS.toString());
+        saveWidth(WindowType.APPS.toString());
+        super.hide();
     }
 
     @Override

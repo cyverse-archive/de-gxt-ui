@@ -1,6 +1,8 @@
 package org.iplantc.de.desktop.client.views.windows;
 
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.collaborators.client.CollaborationView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
@@ -24,12 +26,16 @@ public class CollaborationWindow extends IplantWindowBase {
 
     @Inject
     CollaborationWindow(final CollaborationView.Presenter presenter,
-                        ManageCollaboratorsView.Appearance appearance) {
+                        ManageCollaboratorsView.Appearance appearance,
+                        UserInfo userInfo) {
         this.presenter = presenter;
         this.appearance = appearance;
+        this.userInfo = userInfo;
 
-        // This must be set before we render view
-        setSize(appearance.windowWidth(), appearance.windowHeight());
+
+        String width = getSavedWidth(WindowType.COLLABORATION.toString());
+        String height = getSavedHeight(WindowType.COLLABORATION.toString());
+        setSize((width == null) ? appearance.windowWidth() : width, (height == null) ? appearance.windowHeight() : height);
         setMinWidth(appearance.windowMinWidth());
         setHeading(appearance.windowHeading());
 
@@ -62,5 +68,12 @@ public class CollaborationWindow extends IplantWindowBase {
 
         presenter.setViewDebugId(baseID);
         btnHelp.ensureDebugId(baseID + CollaboratorsModule.Ids.HELP_BTN);
+    }
+
+    @Override
+    public void hide() {
+        saveWidth(WindowType.COLLABORATION.toString());
+        saveHeight(WindowType.COLLABORATION.toString());
+        super.hide();
     }
 }

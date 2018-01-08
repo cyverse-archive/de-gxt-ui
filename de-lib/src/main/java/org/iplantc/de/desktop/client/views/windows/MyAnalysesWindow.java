@@ -2,7 +2,9 @@ package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.shared.AnalysisModule;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.window.configs.AnalysisWindowConfig;
@@ -28,14 +30,19 @@ public class MyAnalysesWindow extends IplantWindowBase {
     public static final String ANALYSES = "#analyses";
     private final AnalysesView.Presenter presenter;
 
+
     @Inject
     MyAnalysesWindow(final AnalysesView.Presenter presenter,
-                     final IplantDisplayStrings displayStrings) {
+                     final IplantDisplayStrings displayStrings,
+                     final UserInfo userInfo) {
         this.presenter = presenter;
+        this.userInfo = userInfo;
 
         ensureDebugId(DeModule.WindowIds.ANALYSES_WINDOW);
         setHeading(displayStrings.analyses());
-        setSize("670", "375");
+        String width = getSavedWidth(WindowType.ANALYSES.toString());
+        String height = getSavedHeight(WindowType.ANALYSES.toString());
+        setSize((width == null) ? "670" : width, (height == null) ? "375" : height);
         setMinWidth(590);
     }
 
@@ -80,5 +87,12 @@ public class MyAnalysesWindow extends IplantWindowBase {
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
         presenter.setViewDebugId(baseID + AnalysisModule.Ids.ANALYSES_VIEW);
+    }
+
+    @Override
+    public void hide() {
+        saveWidth(WindowType.ANALYSES.toString());
+        saveHeight(WindowType.ANALYSES.toString());
+        super.hide();
     }
 }

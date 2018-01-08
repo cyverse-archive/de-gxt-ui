@@ -1,6 +1,8 @@
 package org.iplantc.de.desktop.client.views.windows;
 
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.NotifyWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
@@ -19,12 +21,16 @@ public class NotificationWindow extends IplantWindowBase {
 
     @Inject
     NotificationWindow(NotificationView.Presenter presenter,
-                       NotificationView.NotificationViewAppearance appearance) {
+                       NotificationView.NotificationViewAppearance appearance,
+                       UserInfo userInfo) {
         this.presenter = presenter;
         this.appearance = appearance;
+        this.userInfo = userInfo;
         setHeading(appearance.notifications());
         ensureDebugId(DeModule.WindowIds.NOTIFICATION);
-        setSize("600", "375");
+        String width = getSavedWidth(WindowType.NOTIFICATIONS.toString());
+        String height = getSavedHeight(WindowType.NOTIFICATIONS.toString());
+        setSize((width == null) ? "600" : width, (height == null) ? "375" : height);
     }
 
     @Override
@@ -43,6 +49,13 @@ public class NotificationWindow extends IplantWindowBase {
     public WindowState getWindowState() {
         NotifyWindowConfig config = ConfigFactory.notifyWindowConfig(presenter.getCurrentCategory());
         return createWindowState(config);
+    }
+
+    @Override
+    public void hide() {
+        saveHeight(WindowType.NOTIFICATIONS.toString());
+        saveWidth(WindowType.NOTIFICATIONS.toString());
+        super.hide();
     }
 
 }

@@ -1,11 +1,13 @@
 package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.client.models.IsMaskable;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.commons.client.views.window.configs.FileViewerWindowConfig;
-import org.iplantc.de.commons.client.views.window.configs.MultiInputPathListWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.HTPathListWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.MultiInputPathListWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.TabularFileViewerWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.fileViewers.client.FileViewer;
@@ -46,17 +48,19 @@ public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
     private final IplantDisplayStrings displayStrings;
     private final FileViewer.Presenter presenter;
 
+
     @Inject
     FileViewerWindow(final IplantDisplayStrings displayStrings,
-                     final FileViewer.Presenter presenter) {
+                     final FileViewer.Presenter presenter,
+                     final UserInfo userInfo) {
         this.displayStrings = displayStrings;
-
+        this.userInfo = userInfo;
         this.presenter = presenter;
         this.presenter.addDirtyStateChangedEventHandler(this);
-
-        setSize("800", "480");
-
-    }
+        String width = getSavedWidth(WindowType.FILE_VIEWER.toString());
+        String height = getSavedHeight(WindowType.FILE_VIEWER.toString());
+        setSize((width == null) ? "800" : width, (height == null) ? "480" : height);
+   }
 
     @Override
     public <C extends WindowConfig> void show(C windowConfig, String tag,
@@ -98,7 +102,9 @@ public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
     }
 
     @Override
-    public void doHide() {
+    public void hide() {
+        saveHeight(WindowType.FILE_VIEWER.toString());
+        saveWidth(WindowType.FILE_VIEWER.toString());
         if (presenter.isDirty() && configAB.isEditing()) {
             final MessageBox cmb = new MessageBox(displayStrings.save(), displayStrings.unsavedChanges());
             cmb.setPredefinedButtons(PredefinedButton.YES, PredefinedButton.NO, PredefinedButton.CANCEL);
@@ -109,14 +115,14 @@ public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
                         cmb.hide();
                         presenter.saveFile();
                     } else if (PredefinedButton.NO.equals(event.getHideButton())) {
-                        FileViewerWindow.super.doHide();
+                        FileViewerWindow.super.hide();
                     }
 
                 }
             });
             cmb.show();
         } else {
-            super.doHide();
+            super.hide();
         }
     }
 
