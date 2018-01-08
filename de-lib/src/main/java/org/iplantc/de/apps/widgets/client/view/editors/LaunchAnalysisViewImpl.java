@@ -23,6 +23,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -30,7 +31,6 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.sencha.gxt.data.shared.Converter;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.event.InvalidEvent;
-import com.sencha.gxt.widget.core.client.form.CheckBox;
 import com.sencha.gxt.widget.core.client.form.ConverterEditorAdapter;
 import com.sencha.gxt.widget.core.client.form.TextArea;
 import com.sencha.gxt.widget.core.client.form.TextField;
@@ -109,7 +109,7 @@ public class LaunchAnalysisViewImpl implements LaunchAnalysisView {
     @Override
     public void edit(JobExecution je, String app_type) {
         if (app_type.equalsIgnoreCase(App.EXTERNAL_APP)) {
-            retainInputs.hide();
+            retainInputs.setVisible(false);
         }
         editorDriver.edit(je);
         // Update header on initial binding.

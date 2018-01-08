@@ -3,6 +3,7 @@
              xmlns:con="urn:import:com.sencha.gxt.widget.core.client.container"
              xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
              xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
+			 xmlns:gwt="urn:import:com.google.gwt.user.client.ui"
              xmlns:drFields="urn:import:org.iplantc.de.diskResource.client.views.widgets">
 
     <ui:with field="appearance"
@@ -25,7 +26,7 @@
     <gxt:ContentPanel ui:field="contentPanel"
                       collapsible="true"
                       titleCollapse="true">
-		<con:VerticalLayoutContainer scrollMode="AUTOY"
+		<con:VerticalLayoutContainer scrollMode="AUTO"
 	                                 adjustForScroll="true">
 		    <con:child layoutData="{fieldLayoutData}">
 		        <form:FieldLabel text="{appearance.analysisName}"
@@ -53,8 +54,8 @@
 		        </form:FieldLabel> 
 		    </con:child>                    
 		    <con:child layoutData="{fieldLayoutData}">
-		        <form:CheckBox ui:field="retainInputs" 
-		                       boxLabel="{appearance.retainInputs}"/>
+		        <gwt:CheckBox ui:field="retainInputs"
+							  text="{appearance.retainInputs}"/>
 	        </con:child>                    
 	    </con:VerticalLayoutContainer>
     </gxt:ContentPanel>         
