@@ -308,4 +308,19 @@ public class AnalysesViewDefaultAppearance implements AnalysesView.Appearance {
     public int dotMenuWidth() {
         return 40;
     }
+
+    @Override
+    public String windowWidth() {
+        return "670";
+    }
+
+    @Override
+    public String windowHeight() {
+        return "375";
+    }
+
+    @Override
+    public int windowMinWidth() {
+        return 590;
+    }
 }

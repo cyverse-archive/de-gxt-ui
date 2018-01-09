@@ -43,6 +43,10 @@ public class AboutApplicationWindow extends IplantWindowBase {
         ImageResource iplantAbout();
 
         String iplantcAboutPadText();
+
+        String windowWidth();
+
+        String windowHeight();
     }
     private final AboutApplicationServiceAsync aboutApplicationService;
     private final AboutApplicationAppearance appearance;
@@ -57,7 +61,8 @@ public class AboutApplicationWindow extends IplantWindowBase {
 
         String width = getSavedWidth(WindowType.ABOUT.toString());
         String height = getSavedHeight(WindowType.ABOUT.toString());
-        setSize((width == null) ? "320" : width, (height == null) ? "260" : height);
+        setSize((width == null) ? appearance.windowWidth() : width,
+                (height == null) ? appearance.windowHeight() : height);
 
         setHeading(appearance.headingText());
         ensureDebugId(DeModule.WindowIds.ABOUT_WINDOW);

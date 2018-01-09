@@ -32,7 +32,8 @@ public class DEAppsWindow extends IplantWindowBase {
     @Inject
     DEAppsWindow(final AppsView.Presenter presenter,
                  final IplantDisplayStrings displayStrings,
-                 final UserInfo userInfo) {
+                 final UserInfo userInfo,
+                 final AppsView.AppsViewAppearance appsViewAppearance) {
         this.presenter = presenter;
         this.userInfo = userInfo;
 
@@ -40,7 +41,8 @@ public class DEAppsWindow extends IplantWindowBase {
         ensureDebugId(DeModule.WindowIds.APPS_WINDOW);
         String width = getSavedWidth(WindowType.APPS.toString());
         String height = getSavedHeight(WindowType.APPS.toString());
-        setSize((width == null) ? "820" : width, (height == null) ? "400" : height);
+        setSize((width == null) ? appsViewAppearance.appsWindowWidth() : width,
+                (height == null) ? appsViewAppearance.appsWindowHeight() : height);
         setMinWidth(540);
         setHeading(displayStrings.applications());
     }

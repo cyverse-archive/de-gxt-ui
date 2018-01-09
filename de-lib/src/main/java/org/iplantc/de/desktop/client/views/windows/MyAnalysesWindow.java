@@ -34,7 +34,8 @@ public class MyAnalysesWindow extends IplantWindowBase {
     @Inject
     MyAnalysesWindow(final AnalysesView.Presenter presenter,
                      final IplantDisplayStrings displayStrings,
-                     final UserInfo userInfo) {
+                     final UserInfo userInfo,
+                     final AnalysesView.Appearance appearance) {
         this.presenter = presenter;
         this.userInfo = userInfo;
 
@@ -42,8 +43,9 @@ public class MyAnalysesWindow extends IplantWindowBase {
         setHeading(displayStrings.analyses());
         String width = getSavedWidth(WindowType.ANALYSES.toString());
         String height = getSavedHeight(WindowType.ANALYSES.toString());
-        setSize((width == null) ? "670" : width, (height == null) ? "375" : height);
-        setMinWidth(590);
+        setSize((width == null) ? appearance.windowWidth() : width,
+                (height == null) ? appearance.windowHeight() : height);
+        setMinWidth(appearance.windowMinWidth());
     }
 
     @Override

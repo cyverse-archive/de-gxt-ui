@@ -47,16 +47,19 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
 
     @Inject
     DeDiskResourceWindow(final DiskResourcePresenterFactory presenterFactory,
-                         final IplantDisplayStrings displayStrings, final  UserInfo userInfo) {
+                         final IplantDisplayStrings displayStrings,
+                         final UserInfo userInfo,
+                         final DiskResourceView.DiskResourceViewAppearance appearance) {
         this.presenterFactory = presenterFactory;
         this.displayStrings = displayStrings;
         this.userInfo = userInfo;
         setHeading(displayStrings.data());
         String width = getSavedWidth(WindowType.DATA.toString());
         String height = getSavedHeight(WindowType.DATA.toString());
-        setSize((width == null) ? "820" : width, (height == null) ? "400" : height);
-        setMinWidth(900);
-        setMinHeight(480);
+        setSize((width == null) ? appearance.windowWidth() : width,
+                (height == null) ? appearance.windowHeight() : height);
+        setMinWidth(Integer.parseInt(appearance.windowWidth()));
+        setMinHeight(Integer.parseInt(appearance.windowHeight()));
     }
 
     @Override
