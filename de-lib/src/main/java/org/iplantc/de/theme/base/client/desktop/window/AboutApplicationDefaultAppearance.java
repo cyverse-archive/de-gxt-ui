@@ -85,4 +85,14 @@ public class AboutApplicationDefaultAppearance implements AboutApplicationWindow
         return resources.css().iplantAboutPadText();
     }
 
+    @Override
+    public String windowWidth() {
+        return "320";
+    }
+
+    @Override
+    public String windowHeight() {
+        return "260";
+    }
+
 }

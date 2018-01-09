@@ -32,6 +32,11 @@ public interface DiskResourceView extends IsWidget,
                                           IsMaskable {
 
 
+    interface DiskResourceViewAppearance {
+        String windowHeight();
+
+        String windowWidth();
+    }
 
     boolean isDetailsCollapsed();
 

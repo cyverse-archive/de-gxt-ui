@@ -109,6 +109,10 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
         int minWidth();
 
         String unableToRetrieveWorkflowGuide();
+
+        String windowWidth();
+
+        String windowHeight();
     }
 
     final AppEditorAppearance appearance;
@@ -153,7 +157,8 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
 
         String width = getSavedWidth(WindowType.APP_INTEGRATION.toString());
         String height = getSavedHeight(WindowType.APP_INTEGRATION.toString());
-        setSize((width == null) ? "800" : width, (height == null) ? "480" : height);
+        setSize((width == null) ? appearance.windowWidth() : width,
+                (height == null) ? appearance.windowHeight() : height);
         setMinWidth(appearance.minWidth());
         setMinHeight(appearance.minHeight());
     }

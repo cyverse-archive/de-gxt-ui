@@ -23,12 +23,14 @@ public class ManageToolsWindow extends IplantWindowBase {
     @Inject
     public ManageToolsWindow(ManageToolsView.Presenter toolsPresenter,
                              final IplantDisplayStrings displayStrings,
-                             final UserInfo userInfo) {
+                             final UserInfo userInfo,
+                             final ManageToolsView.ManageToolsViewAppearance appearance) {
         this.toolsPresenter = toolsPresenter;
         this.userInfo = userInfo;
         String width = getSavedWidth(WindowType.MANAGETOOLS.toString());
         String height = getSavedWidth(WindowType.MANAGETOOLS.toString());
-        setSize((width == null) ? "800" : width, (height == null) ? "600" : height);
+        setSize((width == null) ? appearance.windowWidth() : width,
+                (height == null) ? appearance.windowHeight() : height);
 
         setHeading(displayStrings.manageTools());
         ensureDebugId(DeModule.WindowIds.MANAGE_TOOLS_WINDOW);

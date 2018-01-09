@@ -30,7 +30,8 @@ public class NotificationWindow extends IplantWindowBase {
         ensureDebugId(DeModule.WindowIds.NOTIFICATION);
         String width = getSavedWidth(WindowType.NOTIFICATIONS.toString());
         String height = getSavedHeight(WindowType.NOTIFICATIONS.toString());
-        setSize((width == null) ? "600" : width, (height == null) ? "375" : height);
+        setSize((width == null) ? appearance.windowWidth() : width,
+                (height == null) ? appearance.windowHeight() : height);
     }
 
     @Override

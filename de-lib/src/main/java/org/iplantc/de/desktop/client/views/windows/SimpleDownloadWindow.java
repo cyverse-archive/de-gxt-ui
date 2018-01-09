@@ -28,6 +28,13 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
  */
 public class SimpleDownloadWindow extends IplantWindowBase {
 
+
+    public interface SimpleDownloadWindowAppearance {
+        String windowWidth();
+
+        String windowHeight();
+    }
+
     private final DiskResourceServiceFacade diskResourceServiceFacade;
     private final IplantDisplayStrings displayStrings;
 

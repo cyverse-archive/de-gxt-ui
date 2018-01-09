@@ -54,14 +54,16 @@ public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
     @Inject
     FileViewerWindow(final IplantDisplayStrings displayStrings,
                      final FileViewer.Presenter presenter,
-                     final UserInfo userInfo) {
+                     final UserInfo userInfo,
+                     final FileViewer.FileViewerAppearance appearance) {
         this.displayStrings = displayStrings;
         this.userInfo = userInfo;
         this.presenter = presenter;
         this.presenter.addDirtyStateChangedEventHandler(this);
         String width = getSavedWidth(WindowType.FILE_VIEWER.toString());
         String height = getSavedHeight(WindowType.FILE_VIEWER.toString());
-        setSize((width == null) ? "800" : width, (height == null) ? "480" : height);
+        setSize((width == null) ? appearance.windowWidth() : width,
+                (height == null) ? appearance.windowHeight() : height);
    }
 
     @Override

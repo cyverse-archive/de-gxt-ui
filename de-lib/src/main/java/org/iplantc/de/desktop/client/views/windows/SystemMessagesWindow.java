@@ -9,6 +9,7 @@ import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.systemMessages.client.presenter.MessagesPresenter;
+import org.iplantc.de.systemMessages.client.view.MessagesView;
 import org.iplantc.de.systemMessages.shared.SystemMessages;
 
 import com.google.gwt.user.client.Window;
@@ -25,15 +26,14 @@ public final class SystemMessagesWindow extends IplantWindowBase {
 
     @Inject
     SystemMessagesWindow(final IplantDisplayStrings displayStrings,
-                         final UserInfo userInfo) {
+                         final UserInfo userInfo,
+                         final MessagesView.MessagesAppearance appearance) {
         this.userInfo = userInfo;
         setHeading(displayStrings.systemMessagesLabel());
         String width = getSavedWidth(WindowType.SYSTEM_MESSAGES.toString());
         String height = getSavedHeight(WindowType.SYSTEM_MESSAGES.toString());
-        setSize((width == null) ? computeDefaultWidth() + "" : width, (height == null) ? computeDefaultHeight() + "" : height);
-
-        setWidth(computeDefaultWidth());
-        setHeight(computeDefaultHeight());
+        setSize((width == null) ? computeDefaultWidth(appearance) + "" : width,
+                (height == null) ? computeDefaultHeight(appearance) + "" : height);
     }
 
     @Override
@@ -45,12 +45,12 @@ public final class SystemMessagesWindow extends IplantWindowBase {
         ensureDebugId(DeModule.WindowIds.SYSTEM_MESSAGES);
     }
 
-    private static int computeDefaultHeight() {
-        return Math.max(400, Window.getClientHeight() / 3);
+    private static int computeDefaultHeight(MessagesView.MessagesAppearance appearance) {
+        return Math.max(Integer.parseInt(appearance.windowHeight()), Window.getClientHeight() / 3);
     }
 
-    private static int computeDefaultWidth() {
-        return Math.max(600, Window.getClientWidth() / 3);
+    private static int computeDefaultWidth(MessagesView.MessagesAppearance appearance) {
+        return Math.max(Integer.parseInt(appearance.windowWidth()), Window.getClientWidth() / 3);
     }
 
     /**

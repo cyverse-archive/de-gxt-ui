@@ -49,4 +49,9 @@
         <when-type-is class="org.iplantc.de.desktop.client.views.widgets.ServiceDownPanel.ServiceDownPanelAppearance"/>
     </replace-with>
 
+    <replace-with class="org.iplantc.de.theme.base.client.desktop.window.SystemMessagesDefaultAppearance">
+        <when-type-is
+                class="org.iplantc.de.systemMessages.client.view.MessagesView.MessagesAppearance"/>
+    </replace-with>
+
 </module>

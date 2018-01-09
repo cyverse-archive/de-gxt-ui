@@ -53,15 +53,17 @@ public class PipelineEditorWindow extends IplantWindowBase {
 
     @Inject
     PipelineEditorWindow(final IplantDisplayStrings displayStrings,
-                         UserInfo userInfo) {
+                         UserInfo userInfo,
+                         final AppsView.AppsViewAppearance appsViewAppearance) {
         this.displayStrings = displayStrings;
         this.userInfo = userInfo;
         setHeading(displayStrings.pipeline());
         String width = getSavedWidth(WindowType.WORKFLOW_INTEGRATION.toString());
         String height = getSavedHeight(WindowType.WORKFLOW_INTEGRATION.toString());
-        setSize((width == null) ? "900" : width, (height == null) ? "500" : height);
-        setMinWidth(640);
-        setMinHeight(440);
+        setSize((width == null) ? appsViewAppearance.pipelineEdWindowWidth() : width,
+                (height == null) ? appsViewAppearance.pipelineEdWindowHeight() : height);
+        setMinWidth(appsViewAppearance.pipelineEdWindowMinWidth());
+        setMinHeight(appsViewAppearance.pipelineEdWindowMinHeight());
     }
 
     @Override
