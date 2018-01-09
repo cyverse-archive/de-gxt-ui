@@ -122,11 +122,21 @@ public class AppLaunchViewDefaultAppearance implements AppLaunchView.AppLaunchVi
 
     @Override
     public String windowHeight() {
-        return "350";
+        return "375";
     }
 
     @Override
     public String windowWidth() {
-        return "300";
+        return "640";
+    }
+
+    @Override
+    public int windowMinWidth() {
+        return 375;
+    }
+
+    @Override
+    public int windowMinHeight() {
+        return 350;
     }
 }

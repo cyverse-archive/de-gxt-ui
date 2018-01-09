@@ -252,12 +252,8 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
     protected <C extends WindowConfig> WindowState createWindowState(C config) {
         WindowState ws = wsf.windowState().as();
         ws.setConfigType(config.getWindowType());
-        ws.setMaximized(isMaximized());
-        ws.setMinimized(!isVisible());
         ws.setWinLeft(getAbsoluteLeft());
         ws.setWinTop(getAbsoluteTop());
-        ws.setWidth(getElement().getWidth(true));
-        ws.setHeight(getElement().getHeight(true));
         Splittable configSplittable = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config));
         ws.setWindowConfig(configSplittable);
         return ws;

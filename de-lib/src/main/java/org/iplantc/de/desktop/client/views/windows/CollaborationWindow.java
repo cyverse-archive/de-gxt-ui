@@ -12,6 +12,7 @@ import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.commons.client.widgets.ContextualHelpToolButton;
 import org.iplantc.de.desktop.shared.DeModule;
 
+import com.google.common.base.Strings;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
 
@@ -35,8 +36,10 @@ public class CollaborationWindow extends IplantWindowBase {
 
         String width = getSavedWidth(WindowType.COLLABORATION.toString());
         String height = getSavedHeight(WindowType.COLLABORATION.toString());
-        setSize((width == null) ? appearance.windowWidth() : width, (height == null) ? appearance.windowHeight() : height);
+        setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
+                (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
         setMinWidth(appearance.windowMinWidth());
+        setMinHeight(appearance.windowMinHeight());
         setHeading(appearance.windowHeading());
 
         ContextualHelpToolButton contextualHelpToolButton = new ContextualHelpToolButton();

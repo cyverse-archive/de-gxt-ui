@@ -10,6 +10,7 @@ import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.shared.services.AboutApplicationServiceAsync;
 
+import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -47,6 +48,10 @@ public class AboutApplicationWindow extends IplantWindowBase {
         String windowWidth();
 
         String windowHeight();
+
+        int windowMinWidth();
+
+        int windowMinHeight();
     }
     private final AboutApplicationServiceAsync aboutApplicationService;
     private final AboutApplicationAppearance appearance;
@@ -61,8 +66,11 @@ public class AboutApplicationWindow extends IplantWindowBase {
 
         String width = getSavedWidth(WindowType.ABOUT.toString());
         String height = getSavedHeight(WindowType.ABOUT.toString());
-        setSize((width == null) ? appearance.windowWidth() : width,
-                (height == null) ? appearance.windowHeight() : height);
+        setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
+                Strings.isNullOrEmpty(height) ? appearance.windowHeight() : height);
+
+        setMinHeight(appearance.windowMinHeight());
+        setMinWidth(appearance.windowMinWidth());
 
         setHeading(appearance.headingText());
         ensureDebugId(DeModule.WindowIds.ABOUT_WINDOW);

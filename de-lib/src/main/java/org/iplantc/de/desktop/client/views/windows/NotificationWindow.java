@@ -9,6 +9,7 @@ import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.notifications.client.views.NotificationView;
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 
 /**
@@ -30,8 +31,10 @@ public class NotificationWindow extends IplantWindowBase {
         ensureDebugId(DeModule.WindowIds.NOTIFICATION);
         String width = getSavedWidth(WindowType.NOTIFICATIONS.toString());
         String height = getSavedHeight(WindowType.NOTIFICATIONS.toString());
-        setSize((width == null) ? appearance.windowWidth() : width,
-                (height == null) ? appearance.windowHeight() : height);
+        setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
+                (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
+        setMinHeight(appearance.windowMinHeight());
+        setMinHeight(appearance.windowMinWidth());
     }
 
     @Override

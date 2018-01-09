@@ -34,6 +34,16 @@ public class AppsViewDefaultAppearance implements AppsView.AppsViewAppearance {
     }
 
     @Override
+    public int appsWindowMinWidth() {
+        return 540;
+    }
+
+    @Override
+    public int appsWindowMinHeight() {
+        return 400;
+    }
+
+    @Override
     public String pipelineEdWindowWidth() {
         return "900";
     }

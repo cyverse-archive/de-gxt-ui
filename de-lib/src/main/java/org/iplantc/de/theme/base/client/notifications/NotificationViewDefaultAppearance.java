@@ -89,4 +89,14 @@ public class NotificationViewDefaultAppearance implements NotificationView.Notif
     public String windowHeight() {
         return "375";
     }
+
+    @Override
+    public int windowMinWidth() {
+        return 500;
+    }
+
+    @Override
+    public int windowMinHeight() {
+        return 300;
+    }
 }

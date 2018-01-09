@@ -39,6 +39,10 @@ public interface FileViewer extends IsWidget, IsMaskable, HasHandlers, FileSaved
        String windowWidth();
 
        String windowHeight();
+
+       int windowMinWidth();
+
+       int windowMinHeight();
     }
 
     interface FileViewerPresenterAppearance {

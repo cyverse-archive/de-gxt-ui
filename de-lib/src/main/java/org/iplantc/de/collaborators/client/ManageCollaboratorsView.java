@@ -120,6 +120,8 @@ public interface ManageCollaboratorsView extends IsWidget,
 
         int windowMinWidth();
 
+        int windowMinHeight();
+
         String retainPermissionsHeader();
 
         String retainPermissionsMessage();

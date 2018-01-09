@@ -14,6 +14,7 @@ import org.iplantc.de.commons.client.widgets.IPlantAnchor;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
+import com.google.common.base.Strings;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Label;
@@ -41,7 +42,8 @@ public class SimpleDownloadWindow extends IplantWindowBase {
     @Inject
     SimpleDownloadWindow(final IplantDisplayStrings displayStrings,
                          final DiskResourceServiceFacade diskResourceServiceFacade,
-                         final UserInfo userInfo) {
+                         final UserInfo userInfo,
+                         final SimpleDownloadWindowAppearance appearance) {
         this.displayStrings = displayStrings;
         this.diskResourceServiceFacade = diskResourceServiceFacade;
         this.userInfo = userInfo;
@@ -49,7 +51,10 @@ public class SimpleDownloadWindow extends IplantWindowBase {
 
         String width = getSavedWidth(WindowType.SIMPLE_DOWNLOAD.toString());
         String height = getSavedHeight(WindowType.SIMPLE_DOWNLOAD.toString());
-        setSize((width == null) ? "320" : width, (height == null) ? "320" : height);
+        setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
+                (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
+        setMinHeight(Integer.parseInt(appearance.windowHeight()));
+        setMinWidth(Integer.parseInt(appearance.windowWidth()));
 
         ensureDebugId(DeModule.WindowIds.SIMPLE_DOWNLOAD);
     }

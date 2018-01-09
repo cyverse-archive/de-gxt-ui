@@ -30,6 +30,10 @@ public interface AppsView extends IsWidget,
 
         String appsWindowHeight();
 
+        int appsWindowMinWidth();
+
+        int appsWindowMinHeight();
+
         String pipelineEdWindowWidth();
 
         String pipelineEdWindowHeight();
@@ -37,7 +41,6 @@ public interface AppsView extends IsWidget,
         int pipelineEdWindowMinWidth();
 
         int pipelineEdWindowMinHeight();
-
     }
 
     /**

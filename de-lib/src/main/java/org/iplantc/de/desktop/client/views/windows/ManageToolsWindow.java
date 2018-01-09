@@ -10,6 +10,7 @@ import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.tools.client.views.manage.ManageToolsView;
 import org.iplantc.de.tools.shared.ToolsModule;
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 
 /**
@@ -29,9 +30,11 @@ public class ManageToolsWindow extends IplantWindowBase {
         this.userInfo = userInfo;
         String width = getSavedWidth(WindowType.MANAGETOOLS.toString());
         String height = getSavedWidth(WindowType.MANAGETOOLS.toString());
-        setSize((width == null) ? appearance.windowWidth() : width,
-                (height == null) ? appearance.windowHeight() : height);
+        setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
+                (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
 
+        setMinHeight(appearance.windowMinHeight());
+        setMinWidth(appearance.windowMinWidth());
         setHeading(displayStrings.manageTools());
         ensureDebugId(DeModule.WindowIds.MANAGE_TOOLS_WINDOW);
     }

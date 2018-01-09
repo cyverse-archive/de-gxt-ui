@@ -47,7 +47,8 @@ public class DEAppsWindow extends IplantWindowBase {
         String height = getSavedHeight(WindowType.APPS.toString());
         setSize((width == null) ? appsViewAppearance.appsWindowWidth() : width,
                 (height == null) ? appsViewAppearance.appsWindowHeight() : height);
-        setMinWidth(540);
+        setMinWidth(appsViewAppearance.appsWindowMinWidth());
+        setMinHeight(appsViewAppearance.appsWindowMinHeight());
         setHeading(displayStrings.applications());
     }
 

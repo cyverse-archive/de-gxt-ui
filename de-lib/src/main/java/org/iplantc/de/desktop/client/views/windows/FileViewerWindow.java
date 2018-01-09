@@ -15,6 +15,7 @@ import org.iplantc.de.fileViewers.client.FileViewer;
 import org.iplantc.de.fileViewers.client.events.DirtyStateChangedEvent;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
+import com.google.common.base.Strings;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -62,8 +63,10 @@ public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
         this.presenter.addDirtyStateChangedEventHandler(this);
         String width = getSavedWidth(WindowType.FILE_VIEWER.toString());
         String height = getSavedHeight(WindowType.FILE_VIEWER.toString());
-        setSize((width == null) ? appearance.windowWidth() : width,
-                (height == null) ? appearance.windowHeight() : height);
+        setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
+                (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
+        setMinHeight(appearance.windowMinHeight());
+        setMinWidth(appearance.windowMinWidth());
    }
 
     @Override

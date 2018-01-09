@@ -12,6 +12,7 @@ import org.iplantc.de.systemMessages.client.presenter.MessagesPresenter;
 import org.iplantc.de.systemMessages.client.view.MessagesView;
 import org.iplantc.de.systemMessages.shared.SystemMessages;
 
+import com.google.common.base.Strings;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 
@@ -32,8 +33,10 @@ public final class SystemMessagesWindow extends IplantWindowBase {
         setHeading(displayStrings.systemMessagesLabel());
         String width = getSavedWidth(WindowType.SYSTEM_MESSAGES.toString());
         String height = getSavedHeight(WindowType.SYSTEM_MESSAGES.toString());
-        setSize((width == null) ? computeDefaultWidth(appearance) + "" : width,
-                (height == null) ? computeDefaultHeight(appearance) + "" : height);
+        setSize((Strings.isNullOrEmpty(width)) ?computeDefaultWidth(appearance) + "" : width,
+                (Strings.isNullOrEmpty(height)) ? computeDefaultHeight(appearance) + "" : height);
+        setMinHeight(Integer.parseInt(appearance.windowHeight()));
+        setMinWidth(Integer.parseInt(appearance.windowWidth()));
     }
 
     @Override

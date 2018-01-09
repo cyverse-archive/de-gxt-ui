@@ -314,6 +314,11 @@ public class ManageCollaboratorsViewDefaultAppearance implements ManageCollabora
     }
 
     @Override
+    public int windowMinHeight() {
+        return 300;
+    }
+
+    @Override
     public String retainPermissionsHeader() {
         return displayStrings.retainPermissionsHeader();
     }

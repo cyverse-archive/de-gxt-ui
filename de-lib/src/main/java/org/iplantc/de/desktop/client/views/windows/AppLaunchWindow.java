@@ -47,9 +47,10 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
 
         String width = getSavedWidth(WindowType.APP_WIZARD.toString());
         String height = getSavedHeight(WindowType.APP_WIZARD.toString());
-        setSize((width == null) ? "640" : width, (height == null) ? "375" : height);
-        setMinWidth(300);
-        setMinHeight(350);
+        setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
+                (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
+        setMinWidth(appearance.windowMinWidth());
+        setMinHeight(appearance.windowMinHeight());
         setBorders(false);
         ensureDebugId(DeModule.WindowIds.APP_LAUNCH_WINDOW);
 

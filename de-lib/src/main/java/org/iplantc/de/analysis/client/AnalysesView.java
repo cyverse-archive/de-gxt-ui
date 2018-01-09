@@ -152,6 +152,8 @@ public interface AnalysesView extends IsWidget,
         String windowHeight();
 
         int windowMinWidth();
+
+        int windowMinHeight();
     }
 
     interface Presenter {

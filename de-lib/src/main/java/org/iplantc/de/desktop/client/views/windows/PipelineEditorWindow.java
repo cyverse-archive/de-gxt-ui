@@ -17,6 +17,7 @@ import org.iplantc.de.pipelines.client.views.PipelineViewImpl;
 import org.iplantc.de.pipelines.shared.Pipelines;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
+import com.google.common.base.Strings;
 import com.google.gwt.user.client.Command;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.Splittable;
@@ -60,8 +61,8 @@ public class PipelineEditorWindow extends IplantWindowBase {
         setHeading(displayStrings.pipeline());
         String width = getSavedWidth(WindowType.WORKFLOW_INTEGRATION.toString());
         String height = getSavedHeight(WindowType.WORKFLOW_INTEGRATION.toString());
-        setSize((width == null) ? appsViewAppearance.pipelineEdWindowWidth() : width,
-                (height == null) ? appsViewAppearance.pipelineEdWindowHeight() : height);
+        setSize((Strings.isNullOrEmpty(width)) ? appsViewAppearance.pipelineEdWindowWidth() : width,
+                (Strings.isNullOrEmpty(height)) ? appsViewAppearance.pipelineEdWindowHeight() : height);
         setMinWidth(appsViewAppearance.pipelineEdWindowMinWidth());
         setMinHeight(appsViewAppearance.pipelineEdWindowMinHeight());
     }

@@ -15,6 +15,7 @@ import org.iplantc.de.intercom.client.IntercomFacade;
 import org.iplantc.de.intercom.client.TrackingEventType;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
@@ -43,9 +44,10 @@ public class MyAnalysesWindow extends IplantWindowBase {
         setHeading(displayStrings.analyses());
         String width = getSavedWidth(WindowType.ANALYSES.toString());
         String height = getSavedHeight(WindowType.ANALYSES.toString());
-        setSize((width == null) ? appearance.windowWidth() : width,
-                (height == null) ? appearance.windowHeight() : height);
+        setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
+                (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
         setMinWidth(appearance.windowMinWidth());
+        setMinHeight(appearance.windowMinHeight());
     }
 
     @Override

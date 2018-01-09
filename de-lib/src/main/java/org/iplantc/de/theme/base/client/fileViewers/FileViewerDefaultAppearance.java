@@ -15,4 +15,14 @@ public class FileViewerDefaultAppearance implements FileViewer.FileViewerAppeara
     public String windowHeight() {
         return "480";
     }
+
+    @Override
+    public int windowMinWidth() {
+        return 600;
+    }
+
+    @Override
+    public int windowMinHeight() {
+        return 400;
+    }
 }

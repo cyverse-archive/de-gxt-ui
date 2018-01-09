@@ -87,12 +87,22 @@ public class AboutApplicationDefaultAppearance implements AboutApplicationWindow
 
     @Override
     public String windowWidth() {
-        return "320";
+        return "500";
     }
 
     @Override
     public String windowHeight() {
-        return "260";
+        return "300";
+    }
+
+    @Override
+    public int windowMinWidth() {
+        return 500;
+    }
+
+    @Override
+    public int windowMinHeight() {
+        return 300;
     }
 
 }
