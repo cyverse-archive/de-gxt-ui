@@ -16,7 +16,7 @@ import com.google.inject.Inject;
 /**
  * Created by sriram on 5/5/17.
  */
-public class ManageToolsWindow extends IplantWindowBase {
+public class ManageToolsWindow extends WindowBase {
 
 
     ManageToolsView.Presenter toolsPresenter;
@@ -28,8 +28,9 @@ public class ManageToolsWindow extends IplantWindowBase {
                              final ManageToolsView.ManageToolsViewAppearance appearance) {
         this.toolsPresenter = toolsPresenter;
         this.userInfo = userInfo;
-        String width = getSavedWidth(WindowType.MANAGETOOLS.toString());
-        String height = getSavedWidth(WindowType.MANAGETOOLS.toString());
+        WindowState ws = getWindowStateFromLocalStorage();
+        String width = ws.getWidth();
+        String height = ws.getHeight();
         setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
                 (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
 
@@ -39,9 +40,10 @@ public class ManageToolsWindow extends IplantWindowBase {
         ensureDebugId(DeModule.WindowIds.MANAGE_TOOLS_WINDOW);
     }
 
+
     @Override
-    public WindowState getWindowState() {
-        return createWindowState(ConfigFactory.manageToolsWindowConfig());
+    public WindowConfig getWindowConfig() {
+        return ConfigFactory.manageToolsWindowConfig();
     }
 
     @Override
@@ -59,9 +61,12 @@ public class ManageToolsWindow extends IplantWindowBase {
     }
 
     @Override
+    public String getWindowType() {
+        return WindowType.MANAGETOOLS.toString();
+    }
+
+    @Override
     public void hide() {
-        saveHeight(WindowType.MANAGETOOLS.toString());
-        saveWidth(WindowType.MANAGETOOLS.toString());
         super.hide();
     }
 

@@ -43,7 +43,7 @@ import org.iplantc.de.desktop.client.presenter.util.MessagePoller;
 import org.iplantc.de.desktop.client.presenter.util.NotificationWebSocketManager;
 import org.iplantc.de.desktop.client.presenter.util.SystemMessageWebSocketManager;
 import org.iplantc.de.desktop.client.views.widgets.PreferencesDialog;
-import org.iplantc.de.desktop.client.views.windows.IPlantWindowInterface;
+import org.iplantc.de.desktop.client.views.windows.WindowInterface;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.fileViewers.client.callbacks.LoadGenomeInCoGeCallback;
 import org.iplantc.de.intercom.client.IntercomFacade;
@@ -160,6 +160,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     private final EventBus eventBus;
     private final MessagePoller messagePoller;
     private final SaveSessionPeriodic ssp;
+    private final SaveWindowStatesPeriodic swsp;
     private final NewMessageView.Presenter systemMsgPresenter;
     private final DesktopView view;
     private final WindowManager windowManager;
@@ -189,6 +190,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         this.desktopWindowManager.setDesktopContainer(view.getDesktopContainer());
         this.appearance = appearance;
         this.ssp = new SaveSessionPeriodic(this, appearance, 8);
+        this.swsp = new SaveWindowStatesPeriodic(this);
         this.loggedOut = false;
         this.view.setPresenter(this);
         globalEventHandler.setPresenter(this, this.view);
@@ -338,7 +340,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                                                                           deClientConstants,
                                                                           userSettings,
                                                                           appearance,
-                                                                          getOrderedWindowStates()));
+                                                                          getOrderedWindowConfigs()));
         } else {
             final String redirectUrl = GWT.getHostPageBaseURL() + deClientConstants.logoutUrl();
             LOG.info("Session timeout.  Redirect url: " + redirectUrl);
@@ -415,14 +417,26 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }
 
     @Override
-    public List<WindowState> getOrderedWindowStates() {
-        List<WindowState> windowStates = Lists.newArrayList();
+    public List<WindowConfig> getOrderedWindowConfigs() {
+        List<WindowConfig> windowConfigs = Lists.newArrayList();
         for (Widget w : windowManager.getStack()) {
-            if (w instanceof IPlantWindowInterface) {
-                windowStates.add(((IPlantWindowInterface) w).getWindowState());
+            if (w instanceof WindowInterface) {
+                windowConfigs.add(((WindowInterface) w).getWindowConfig());
             }
         }
-        return Collections.unmodifiableList(windowStates);
+        return Collections.unmodifiableList(windowConfigs);
+    }
+
+    @Override
+    public List<WindowState> getWindowStates() {
+       List<WindowState> windowStates  = Lists.newArrayList();
+        for (Widget w : windowManager.getStack()) {
+            if (w instanceof WindowInterface) {
+               windowStates.add(((WindowInterface) w).createWindowState());
+            }
+        }
+
+        return  windowStates;
     }
 
     @Override
@@ -650,6 +664,13 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         }
     }
 
+    @Override
+    public void doPeriodicWindowStateSave() {
+        swsp.run();
+        messagePoller.addTask(swsp);
+        messagePoller.start();
+    }
+
 
     void postBootstrap(final Panel panel) {
         setBrowserContextMenuEnabled(deProperties.isContextClickEnabled());
@@ -659,6 +680,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         processQueryStrings();
         getNotifications();
         getSystemMessageCounts();
+        doPeriodicWindowStateSave();
     }
 
     private void getSystemMessageCounts() {
@@ -671,10 +693,10 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }
 
     @Override
-    public void restoreWindows(List<WindowState> windowStates) {
-        if (windowStates != null && windowStates.size() > 0) {
-            for (WindowState ws : windowStates) {
-                desktopWindowManager.show(ws);
+    public void restoreWindows(List<WindowConfig> windowConfigs) {
+        if (windowConfigs != null && windowConfigs.size() > 0) {
+            for (WindowConfig wc : windowConfigs) {
+                desktopWindowManager.show(wc);
             }
         }
     }

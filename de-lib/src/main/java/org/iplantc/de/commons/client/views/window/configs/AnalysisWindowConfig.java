@@ -1,6 +1,5 @@
 package org.iplantc.de.commons.client.views.window.configs;
 
-import org.iplantc.de.analysis.client.models.AnalysisFilter;
 import org.iplantc.de.client.models.analysis.Analysis;
 
 import java.util.List;
@@ -11,8 +10,8 @@ public interface AnalysisWindowConfig extends WindowConfig {
     
     void setSelectedAnalyses(List<Analysis> selectedAnalyses);
 
-    void setFilter(AnalysisFilter filter);
+    void setFilter(String filter);
 
-    AnalysisFilter getFilter();
+    String getFilter();
 
 }

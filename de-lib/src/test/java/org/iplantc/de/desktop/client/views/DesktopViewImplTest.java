@@ -10,8 +10,8 @@ import static org.mockito.Mockito.withSettings;
 
 import org.iplantc.de.desktop.client.views.widgets.TaskBar;
 import org.iplantc.de.desktop.client.views.widgets.TaskButton;
-import org.iplantc.de.desktop.client.views.windows.IPlantWindowInterface;
-import org.iplantc.de.desktop.client.views.windows.IplantWindowBase;
+import org.iplantc.de.desktop.client.views.windows.WindowInterface;
+import org.iplantc.de.desktop.client.views.windows.WindowBase;
 import org.iplantc.de.resources.client.messages.IplantNewUserTourStrings;
 
 import com.google.common.collect.Lists;
@@ -46,7 +46,7 @@ public class DesktopViewImplTest {
         List<TaskButton> tbList = Lists.newArrayList(mockTaskButton);
         when(uut.taskBar.getButtons()).thenReturn(tbList);
 
-        final IplantWindowBase window = mock(IplantWindowBase.class);
+        final WindowBase window = mock(WindowBase.class);
         when(registerEventMock.getItem()).thenReturn(window);
 
 
@@ -83,7 +83,7 @@ public class DesktopViewImplTest {
         List<TaskButton> tbList = Lists.newArrayList(mockTaskButton);
         when(uut.taskBar.getButtons()).thenReturn(tbList);
 
-        final Window window = mock(Window.class, withSettings().extraInterfaces(IPlantWindowInterface.class));
+        final Window window = mock(Window.class, withSettings().extraInterfaces(WindowInterface.class));
         when(unregisterEventMock.getItem()).thenReturn(window);
         when(mockTaskButton.getWindow()).thenReturn(window);
         uut.onUnregister(unregisterEventMock);

@@ -1,8 +1,8 @@
 package org.iplantc.de.preferences.client.presenter;
 
 import org.iplantc.de.client.DEClientConstants;
+import org.iplantc.de.client.models.UserSession;
 import org.iplantc.de.client.models.UserSettings;
-import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.userSettings.UserSetting;
 import org.iplantc.de.client.models.webhooks.WebhookTypeList;
 import org.iplantc.de.client.services.OauthServiceFacade;
@@ -22,7 +22,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -97,7 +96,7 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
 
     @Override
     public void onPrefDlgRetryUserSessionClicked(PrefDlgRetryUserSessionClicked event) {
-        serviceFacade.getUserSession(new AsyncCallback<List<WindowState>>() {
+        serviceFacade.getUserSession(new AsyncCallback<UserSession>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -106,10 +105,10 @@ public class PreferencesPresenterImpl implements PreferencesView.Presenter,
             }
 
             @Override
-            public void onSuccess(List<WindowState> result) {
+            public void onSuccess(UserSession result) {
                 desktopPresenter.setUserSessionConnection(true);
                 view.userSessionSuccess();
-                desktopPresenter.restoreWindows(result);
+                desktopPresenter.restoreWindows(result.getWindowConfigs());
                 desktopPresenter.doPeriodicSessionSave();
             }
         });

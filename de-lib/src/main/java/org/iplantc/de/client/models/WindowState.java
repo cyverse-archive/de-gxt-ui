@@ -1,13 +1,21 @@
 package org.iplantc.de.client.models;
 
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
-import com.google.web.bindery.autobean.shared.Splittable;
 
 public interface WindowState {
 
-    WindowType getConfigType();
 
-    void setConfigType(WindowType type);
+    String LOCAL_STORAGE_PREFIX = "de.";
+    String WIDTH = ".width";
+    String HEIGHT = ".height";
+    String TOP = ".top";
+    String LEFT = ".left";
+    String MAXIMIZED = ".maximized";
+    String MINIMIZED = ".minimized";
+
+    WindowType getWindowType();
+
+    void setWindowType(WindowType type);
 
     boolean isMaximized();
 
@@ -19,12 +27,10 @@ public interface WindowState {
     @PropertyName("win_top")
     int getWinTop();
 
-    int getWidth();
+    String getWidth();
 
-    int getHeight();
+    String getHeight();
 
-    Splittable getWindowConfig();
-    
     void setMaximized(boolean maximized);
     
     void setMinimized(boolean minimized);
@@ -35,10 +41,8 @@ public interface WindowState {
     @PropertyName("win_top")
     void setWinTop(int winTop);
     
-    void setWidth(int width);
+    void setWidth(String width);
     
-    void setHeight(int height);
-    
-    void setWindowConfig(Splittable config);
+    void setHeight(String height);
     
 }

@@ -12,6 +12,8 @@ public class WebStorageUtil {
 
 
     private static Storage store = Storage.getLocalStorageIfSupported();
+    public static final String LOCAL_STORAGE_PREFIX = "de.";
+
 
     /**
      * Write key/value to web storage

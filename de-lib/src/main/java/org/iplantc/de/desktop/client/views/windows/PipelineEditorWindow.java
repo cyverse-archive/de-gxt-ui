@@ -29,7 +29,7 @@ import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 /**
  * @author jstroot
  */
-public class PipelineEditorWindow extends IplantWindowBase {
+public class PipelineEditorWindow extends WindowBase {
     class PublishCallbackCommand implements Command {
         @Override
         public void execute() {
@@ -59,8 +59,9 @@ public class PipelineEditorWindow extends IplantWindowBase {
         this.displayStrings = displayStrings;
         this.userInfo = userInfo;
         setHeading(displayStrings.pipeline());
-        String width = getSavedWidth(WindowType.WORKFLOW_INTEGRATION.toString());
-        String height = getSavedHeight(WindowType.WORKFLOW_INTEGRATION.toString());
+        WindowState ws = getWindowStateFromLocalStorage();
+        String width = ws.getWidth();
+        String height = ws.getHeight();
         setSize((Strings.isNullOrEmpty(width)) ? appsViewAppearance.pipelineEdWindowWidth() : width,
                 (Strings.isNullOrEmpty(height)) ? appsViewAppearance.pipelineEdWindowHeight() : height);
         setMinWidth(appsViewAppearance.pipelineEdWindowMinWidth());
@@ -99,16 +100,14 @@ public class PipelineEditorWindow extends IplantWindowBase {
     }
 
     @Override
-    public WindowState getWindowState() {
+    public WindowConfig getWindowConfig() {
         PipelineEditorWindowConfig configData = ConfigFactory.workflowIntegrationWindowConfig();
         configData.setPipeline(presenter.getPipeline());
-        return createWindowState(configData);
+        return configData;
     }
 
     @Override
     public void hide() {
-        saveHeight(WindowType.WORKFLOW_INTEGRATION.toString());
-        saveWidth(WindowType.WORKFLOW_INTEGRATION.toString());
         if (!isMinimized()) {
             if (initPipelineJson != null
                     && !initPipelineJson.equals(presenter.getPublishJson(presenter.getPipeline()))) {
@@ -149,6 +148,11 @@ public class PipelineEditorWindow extends IplantWindowBase {
         super.onEnsureDebugId(baseID);
 
         view.asWidget().ensureDebugId(baseID + Pipelines.Ids.WORKFLOW_VIEW);
+    }
+
+    @Override
+    public String getWindowType() {
+        return WindowType.WORKFLOW_INTEGRATION.toString();
     }
 
 }

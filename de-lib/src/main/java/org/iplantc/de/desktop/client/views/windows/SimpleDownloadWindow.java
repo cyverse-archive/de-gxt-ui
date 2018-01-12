@@ -27,7 +27,7 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
  *
  * @author psarando, jstroot
  */
-public class SimpleDownloadWindow extends IplantWindowBase {
+public class SimpleDownloadWindow extends WindowBase {
 
 
     public interface SimpleDownloadWindowAppearance {
@@ -49,8 +49,9 @@ public class SimpleDownloadWindow extends IplantWindowBase {
         this.userInfo = userInfo;
         setHeading(displayStrings.download());
 
-        String width = getSavedWidth(WindowType.SIMPLE_DOWNLOAD.toString());
-        String height = getSavedHeight(WindowType.SIMPLE_DOWNLOAD.toString());
+        WindowState ws = getWindowStateFromLocalStorage();
+        String width = ws.getWidth();
+        String height = ws.getHeight();
         setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
                 (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
         setMinHeight(Integer.parseInt(appearance.windowHeight()));
@@ -68,16 +69,18 @@ public class SimpleDownloadWindow extends IplantWindowBase {
     }
 
     @Override
-    public WindowState getWindowState() {
-        SimpleDownloadWindowConfig config = ConfigFactory.simpleDownloadWindowConfig();
-        return createWindowState(config);
+    public WindowConfig getWindowConfig() {
+        return ConfigFactory.simpleDownloadWindowConfig();
     }
 
     @Override
     public void hide() {
-        saveHeight(WindowType.SIMPLE_DOWNLOAD.toString());
-        saveWidth(WindowType.SIMPLE_DOWNLOAD.toString());
         super.hide();
+    }
+
+    @Override
+    public String getWindowType() {
+        return WindowType.SIMPLE_DOWNLOAD.toString();
     }
 
     private void buildLinks(SimpleDownloadWindowConfig config, VerticalLayoutContainer vlc) {

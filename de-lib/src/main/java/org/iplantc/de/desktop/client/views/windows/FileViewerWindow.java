@@ -10,7 +10,6 @@ import org.iplantc.de.commons.client.views.window.configs.FileViewerWindowConfig
 import org.iplantc.de.commons.client.views.window.configs.HTPathListWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.MultiInputPathListWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.TabularFileViewerWindowConfig;
-import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.fileViewers.client.FileViewer;
 import org.iplantc.de.fileViewers.client.events.DirtyStateChangedEvent;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
@@ -30,9 +29,8 @@ import java.util.logging.Logger;
 /**
  * @author sriram, jstroot
  */
-public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
-                                                                  IsHideable,
-                                                                  DirtyStateChangedEvent.DirtyStateChangedEventHandler {
+public class FileViewerWindow extends WindowBase
+        implements IsMaskable, DirtyStateChangedEvent.DirtyStateChangedEventHandler, IsHideable {
     private class CriticalPathCallback implements AsyncCallback<String> {
         @Override
         public void onFailure(Throwable caught) {
@@ -61,8 +59,9 @@ public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
         this.userInfo = userInfo;
         this.presenter = presenter;
         this.presenter.addDirtyStateChangedEventHandler(this);
-        String width = getSavedWidth(WindowType.FILE_VIEWER.toString());
-        String height = getSavedHeight(WindowType.FILE_VIEWER.toString());
+        WindowState ws = getWindowStateFromLocalStorage();
+        String width = ws.getWidth();
+        String height = ws.getHeight();
         setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
                 (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
         setMinHeight(appearance.windowMinHeight());
@@ -70,8 +69,9 @@ public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
    }
 
     @Override
-    public <C extends WindowConfig> void show(C windowConfig, String tag,
-                                              boolean isMaximizable) {
+    public <C extends org.iplantc.de.commons.client.views.window.configs.WindowConfig> void show(C windowConfig,
+                                                                                                 String tag,
+                                                                                                 boolean isMaximizable) {
 
         final FileViewerWindowConfig fileViewerWindowConfig = (FileViewerWindowConfig) windowConfig;
         this.configAB = fileViewerWindowConfig;
@@ -110,8 +110,6 @@ public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
 
     @Override
     public void hide() {
-        saveHeight(WindowType.FILE_VIEWER.toString());
-        saveWidth(WindowType.FILE_VIEWER.toString());
         if (presenter.isDirty() && configAB.isEditing()) {
             final MessageBox cmb = new MessageBox(displayStrings.save(), displayStrings.unsavedChanges());
             cmb.setPredefinedButtons(PredefinedButton.YES, PredefinedButton.NO, PredefinedButton.CANCEL);
@@ -134,8 +132,13 @@ public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
     }
 
     @Override
-    public WindowState getWindowState() {
-        return createWindowState(configAB);
+    public String getWindowType() {
+        return WindowType.FILE_VIEWER.toString();
+    }
+
+    @Override
+    public org.iplantc.de.commons.client.views.window.configs.WindowConfig getWindowConfig() {
+        return configAB;
     }
 
     @Override

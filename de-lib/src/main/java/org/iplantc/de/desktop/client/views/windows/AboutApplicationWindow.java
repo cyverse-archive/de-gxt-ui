@@ -7,6 +7,7 @@ import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
+import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.shared.services.AboutApplicationServiceAsync;
 
@@ -28,7 +29,7 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
  *
  * @author lenards, jstroot
  */
-public class AboutApplicationWindow extends IplantWindowBase {
+public class AboutApplicationWindow extends WindowBase {
 
     /**
      * An Appearance interface for the About Window's contents and layout.
@@ -64,9 +65,10 @@ public class AboutApplicationWindow extends IplantWindowBase {
         this.appearance = appearance;
         this.userInfo = userInfo;
 
-        String width = getSavedWidth(WindowType.ABOUT.toString());
-        String height = getSavedHeight(WindowType.ABOUT.toString());
-        setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
+        WindowState ws = getWindowStateFromLocalStorage();
+        String width = ws.getWidth();
+        String height = ws.getHeight();
+        setSize(Strings.isNullOrEmpty(width) ? appearance.windowWidth() : width,
                 Strings.isNullOrEmpty(height) ? appearance.windowHeight() : height);
 
         setMinHeight(appearance.windowMinHeight());
@@ -78,8 +80,8 @@ public class AboutApplicationWindow extends IplantWindowBase {
     }
 
     @Override
-    public WindowState getWindowState() {
-        return createWindowState(ConfigFactory.aboutWindowConfig());
+    public WindowConfig getWindowConfig() {
+        return ConfigFactory.aboutWindowConfig();
     }
 
     /**
@@ -127,8 +129,11 @@ public class AboutApplicationWindow extends IplantWindowBase {
 
     @Override
     public void hide() {
-        saveHeight(WindowType.ABOUT.toString());
-        saveWidth(WindowType.ABOUT.toString());
         super.hide();
+    }
+
+    @Override
+    public String getWindowType() {
+        return WindowType.ABOUT.toString();
     }
 }

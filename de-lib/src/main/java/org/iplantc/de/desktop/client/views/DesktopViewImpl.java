@@ -10,7 +10,7 @@ import org.iplantc.de.desktop.client.views.widgets.DesktopIconButton;
 import org.iplantc.de.desktop.client.views.widgets.TaskBar;
 import org.iplantc.de.desktop.client.views.widgets.TaskButton;
 import org.iplantc.de.desktop.client.views.widgets.UnseenNotificationsView;
-import org.iplantc.de.desktop.client.views.windows.IPlantWindowInterface;
+import org.iplantc.de.desktop.client.views.windows.WindowInterface;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.intercom.client.IntercomFacade;
 import org.iplantc.de.intercom.client.TrackingEventType;
@@ -138,7 +138,7 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
     public void onRegister(RegisterEvent<Widget> event) {
         final Widget eventItem = event.getItem();
 
-        if(eventItem instanceof IPlantWindowInterface) {
+        if(eventItem instanceof WindowInterface) {
             com.sencha.gxt.widget.core.client.Window iplantWindow = (com.sencha.gxt.widget.core.client.Window) eventItem;
             // If it already exists, mark button active
             for(TaskButton btn : taskBar.getButtons()){
@@ -157,8 +157,8 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
     public void onUnregister(UnregisterEvent<Widget> event) {
 
         final Widget eventItem = event.getItem();
-        if(eventItem instanceof IPlantWindowInterface) {
-            IPlantWindowInterface iplantWindow = (IPlantWindowInterface) eventItem;
+        if(eventItem instanceof WindowInterface) {
+            WindowInterface iplantWindow = (WindowInterface) eventItem;
             if (iplantWindow.isMinimized()) {
                 return;
             }

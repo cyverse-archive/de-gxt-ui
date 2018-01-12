@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * @author jstroot
  */
-public class DeDiskResourceWindow extends IplantWindowBase implements FolderSelectionEvent.FolderSelectionEventHandler {
+public class DeDiskResourceWindow extends WindowBase implements FolderSelectionEvent.FolderSelectionEventHandler {
 
     public static final String DATA = "#data";
     public static final String DE_DATA_DETAILSPANEL_COLLAPSE = "de.data.detailspanel.collapse#";
@@ -54,8 +54,9 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
         this.displayStrings = displayStrings;
         this.userInfo = userInfo;
         setHeading(displayStrings.data());
-        String width = getSavedWidth(WindowType.DATA.toString());
-        String height = getSavedHeight(WindowType.DATA.toString());
+        WindowState ws = getWindowStateFromLocalStorage();
+        String width = ws.getWidth();
+        String height = ws.getHeight();
         setSize((width == null) ? appearance.windowWidth() : width,
                 (height == null) ? appearance.windowHeight() : height);
         setMinWidth(Integer.parseInt(appearance.windowWidth()));
@@ -97,13 +98,13 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
     }
 
     @Override
-    public WindowState getWindowState() {
+    public WindowConfig getWindowConfig() {
         DiskResourceWindowConfig config = (DiskResourceWindowConfig) this.config;
         config.setSelectedFolder(presenter.getSelectedFolder());
         List<HasId> selectedResources = Lists.newArrayList();
         selectedResources.addAll(presenter.getSelectedDiskResources());
         config.setSelectedDiskResources(selectedResources);
-        return createWindowState(config);
+        return config;
     }
 
     @Override
@@ -111,8 +112,6 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
         if (!isMinimized()) {
             presenter.cleanUp();
         }
-        saveHeight(WindowType.DATA.toString());
-        saveWidth(WindowType.DATA.toString());
         WebStorageUtil.writeToStorage(DE_DATA_DETAILSPANEL_COLLAPSE + userInfo.getUsername(), presenter.isDetailsCollapsed() + "");
         super.hide();
     }
@@ -148,6 +147,11 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
         presenter.setViewDebugId(baseID);
+    }
+
+    @Override
+    public String getWindowType() {
+        return WindowType.DATA.toString();
     }
 
     private void initHandlers() {

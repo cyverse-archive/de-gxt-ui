@@ -26,8 +26,8 @@ import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 /**
  * @author jstroot
  */
-public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchEventHandler,
-                                                                 AppTemplateFetched.AppTemplateFetchedHandler {
+public class AppLaunchWindow extends WindowBase implements AnalysisLaunchEventHandler,
+                                                           AppTemplateFetched.AppTemplateFetchedHandler {
 
     private final AppLaunchView.Presenter presenter;
     private final DEClientConstants deClientConstants;
@@ -45,8 +45,9 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
         this.appearance = appearance;
         this.userInfo = userInfo;
 
-        String width = getSavedWidth(WindowType.APP_WIZARD.toString());
-        String height = getSavedHeight(WindowType.APP_WIZARD.toString());
+        WindowState ws = getWindowStateFromLocalStorage();
+        String width = ws.getWidth();
+        String height = ws.getHeight();
         setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
                 (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
         setMinWidth(appearance.windowMinWidth());
@@ -58,11 +59,12 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
         presenter.addAppTemplateFetchedHandler(this);
     }
 
+
     @Override
-    public WindowState getWindowState() {
+    public WindowConfig getWindowConfig() {
         AppWizardConfig config = ConfigFactory.appWizardConfig(systemId, appId);
         config.setAppTemplate(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(presenter.getAppTemplate())));
-        return createWindowState(config);
+        return config;
     }
 
     private boolean isMatchingId(HasQualifiedId id) {
@@ -113,8 +115,11 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
 
     @Override
     public void hide() {
-        saveHeight(WindowType.APP_WIZARD.toString());
-        saveWidth(WindowType.APP_WIZARD.toString());
         super.hide();
+    }
+
+    @Override
+    public String getWindowType() {
+        return WindowType.APP_WIZARD.toString();
     }
 }

@@ -20,7 +20,7 @@ import com.google.inject.Inject;
  * The window for displaying all active system messages.
  * @author jstroot
  */
-public final class SystemMessagesWindow extends IplantWindowBase {
+public final class SystemMessagesWindow extends WindowBase {
 
     private MessagesPresenter presenter;
 
@@ -31,8 +31,9 @@ public final class SystemMessagesWindow extends IplantWindowBase {
                          final MessagesView.MessagesAppearance appearance) {
         this.userInfo = userInfo;
         setHeading(displayStrings.systemMessagesLabel());
-        String width = getSavedWidth(WindowType.SYSTEM_MESSAGES.toString());
-        String height = getSavedHeight(WindowType.SYSTEM_MESSAGES.toString());
+        WindowState ws = getWindowStateFromLocalStorage();
+        String width = ws.getWidth();
+        String height = ws.getHeight();
         setSize((Strings.isNullOrEmpty(width)) ?computeDefaultWidth(appearance) + "" : width,
                 (Strings.isNullOrEmpty(height)) ? computeDefaultHeight(appearance) + "" : height);
         setMinHeight(Integer.parseInt(appearance.windowHeight()));
@@ -56,13 +57,11 @@ public final class SystemMessagesWindow extends IplantWindowBase {
         return Math.max(Integer.parseInt(appearance.windowWidth()), Window.getClientWidth() / 3);
     }
 
-    /**
-     * @see IplantWindowBase#getWindowState()
-     */
+
     @Override
-    public WindowState getWindowState() {
+    public WindowConfig getWindowConfig() {
         final String selMsg = presenter.getSelectedMessageId();
-        return createWindowState(ConfigFactory.systemMessagesWindowConfig(selMsg));
+        return ConfigFactory.systemMessagesWindowConfig(selMsg);
     }
 
     @Override
@@ -73,9 +72,12 @@ public final class SystemMessagesWindow extends IplantWindowBase {
     }
 
     @Override
+    public String getWindowType() {
+        return WindowType.SYSTEM_MESSAGES.toString();
+    }
+
+    @Override
     public void hide() {
-        saveHeight(WindowType.SYSTEM_MESSAGES.toString());
-        saveWidth(WindowType.SYSTEM_MESSAGES.toString());
         presenter.stop();
         super.hide();
     }

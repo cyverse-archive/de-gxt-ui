@@ -19,7 +19,7 @@ import com.google.inject.Inject;
 /**
  * @author jstroot
  */
-public class CollaborationWindow extends IplantWindowBase {
+public class CollaborationWindow extends WindowBase {
 
     public static final String COLLABORATION = "#collaboration";
     private final CollaborationView.Presenter presenter;
@@ -34,8 +34,9 @@ public class CollaborationWindow extends IplantWindowBase {
         this.userInfo = userInfo;
 
 
-        String width = getSavedWidth(WindowType.COLLABORATION.toString());
-        String height = getSavedHeight(WindowType.COLLABORATION.toString());
+        WindowState ws = getWindowStateFromLocalStorage();
+        String width = ws.getWidth();
+        String height = ws.getHeight();
         setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
                 (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
         setMinWidth(appearance.windowMinWidth());
@@ -59,10 +60,10 @@ public class CollaborationWindow extends IplantWindowBase {
         ensureDebugId(DeModule.WindowIds.COLLABORATION_WINDOW);
     }
 
+
     @Override
-    public WindowState getWindowState() {
-        CollaborationWindowConfig config = ConfigFactory.collaborationWindowConfig();
-        return createWindowState(config);
+    public WindowConfig getWindowConfig() {
+        return ConfigFactory.collaborationWindowConfig();
     }
 
     @Override
@@ -74,9 +75,12 @@ public class CollaborationWindow extends IplantWindowBase {
     }
 
     @Override
+    public String getWindowType() {
+        return WindowType.COLLABORATION.toString();
+    }
+
+    @Override
     public void hide() {
-        saveWidth(WindowType.COLLABORATION.toString());
-        saveHeight(WindowType.COLLABORATION.toString());
         super.hide();
     }
 }

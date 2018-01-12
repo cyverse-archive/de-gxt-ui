@@ -1,6 +1,13 @@
 package org.iplantc.de.desktop.client.views.windows;
 
-import org.iplantc.de.client.models.WindowState;
+import static org.junit.Assert.assertFalse;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 
 import com.google.gwtmockito.GxtMockitoTestRunner;
 
@@ -8,8 +15,6 @@ import com.sencha.gxt.core.client.dom.XElement;
 import com.sencha.gxt.core.client.util.Rectangle;
 import com.sencha.gxt.widget.core.client.button.ToolButton;
 
-import static org.junit.Assert.assertFalse;
-import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,12 +22,17 @@ import org.junit.runner.RunWith;
 @RunWith(GxtMockitoTestRunner.class)
 public class IplantWindowBaseTest {
 
-    private IplantWindowBase uut;
+    private WindowBase uut;
 
     @Before public void setup() {
-        uut = new IplantWindowBase() {
+        uut = new WindowBase() {
             @Override
-            public WindowState getWindowState() {
+            public String getWindowType() {
+                return null;
+            }
+
+            @Override
+            public WindowConfig getWindowConfig() {
                 return null;
             }
         };
@@ -62,7 +72,7 @@ public class IplantWindowBaseTest {
         when(mockRectangle.getWidth()).thenReturn(testValueWidth);
         when(mockRectangle.getHeight()).thenReturn(testValueHeight);
         when(mock.getBounds()).thenReturn(mockRectangle);
-        IplantWindowBase uutSpy = spy(uut);
+        WindowBase uutSpy = spy(uut);
         uutSpy.doSnapLeft(mock);
 
         // Verify that page position is set to element's given X and Y
@@ -86,7 +96,7 @@ public class IplantWindowBaseTest {
         when(mockRectangle.getWidth()).thenReturn(testValueWidth);
         when(mockRectangle.getHeight()).thenReturn(testValueHeight);
         when(mock.getBounds()).thenReturn(mockRectangle);
-        IplantWindowBase uutSpy = spy(uut);
+        WindowBase uutSpy = spy(uut);
         uutSpy.doSnapRight(mock);
 
         // Verify that page position is set to half of element's width

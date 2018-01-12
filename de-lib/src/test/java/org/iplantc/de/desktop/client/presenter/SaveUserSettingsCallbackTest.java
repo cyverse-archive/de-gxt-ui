@@ -9,11 +9,11 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import org.iplantc.de.client.models.UserSettings;
-import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.userSettings.UserSetting;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -41,7 +41,7 @@ public class SaveUserSettingsCallbackTest {
     @Mock DesktopView.Presenter presenterMock;
     @Mock UserSessionServiceFacade userSessionServiceMock;
     @Mock UserSetting userSettingMock;
-    @Mock List<WindowState> windowStatesMock;
+    @Mock List<WindowConfig> windowConfigsMock;
 
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCaptor;
 
@@ -77,14 +77,14 @@ public class SaveUserSettingsCallbackTest {
         when(newValueMock.getUserSetting()).thenReturn(userSettingMock);
         when(userSettingsMock.isSaveSession()).thenReturn(true);
         when(appearanceMock.saveSessionFailed()).thenReturn("fail");
-        when(presenterMock.getOrderedWindowStates()).thenReturn(windowStatesMock);
+        when(presenterMock.getOrderedWindowConfigs()).thenReturn(windowConfigsMock);
 
         /** CALL METHOD UNDER TEST **/
         uut.onSuccess(null);
 
         verify(userSettingsMock).setUserSettings(eq(userSettingMock));
         verify(userSettingsMock).isSaveSession();
-        verify(userSessionServiceMock).saveUserSession(eq(windowStatesMock), voidCaptor.capture());
+        verify(userSessionServiceMock).saveUserSession(eq(windowConfigsMock), voidCaptor.capture());
 
         voidCaptor.getValue().onFailure(throwableMock);
         verify(announcerMock).schedule(isA(ErrorAnnouncementConfig.class));
@@ -99,14 +99,14 @@ public class SaveUserSettingsCallbackTest {
         when(newValueMock.getUserSetting()).thenReturn(userSettingMock);
         when(userSettingsMock.isSaveSession()).thenReturn(true);
 
-        when(presenterMock.getOrderedWindowStates()).thenReturn(windowStatesMock);
+        when(presenterMock.getOrderedWindowConfigs()).thenReturn(windowConfigsMock);
 
         /** CALL METHOD UNDER TEST **/
         spy.onSuccess(null);
 
         verify(userSettingsMock).setUserSettings(eq(userSettingMock));
         verify(userSettingsMock).isSaveSession();
-        verify(userSessionServiceMock).saveUserSession(eq(windowStatesMock), voidCaptor.capture());
+        verify(userSessionServiceMock).saveUserSession(eq(windowConfigsMock), voidCaptor.capture());
 
         voidCaptor.getValue().onSuccess(null);
         verify(presenterMock).setUserSessionConnection(eq(true));

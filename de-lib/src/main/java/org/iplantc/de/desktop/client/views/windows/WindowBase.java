@@ -4,7 +4,6 @@ import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.util.WebStorageUtil;
 import org.iplantc.de.commons.client.CommonUiConstants;
-import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.views.widgets.ServiceDownPanel;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.intercom.client.IntercomFacade;
@@ -23,7 +22,6 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
-import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.core.client.dom.XElement;
 import com.sencha.gxt.core.client.util.Rectangle;
@@ -45,7 +43,7 @@ import com.sencha.gxt.widget.core.client.menu.MenuItem;
  * @author jstroot
  * FIXME REFACTOR Rename to AbstractIplantWindow
  */
-public abstract class IplantWindowBase extends Window implements IPlantWindowInterface {
+public abstract class WindowBase extends Window implements WindowInterface {
     private class HeaderDoubleClickHandler implements DoubleClickHandler {
 
         @Override
@@ -111,7 +109,7 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
         AutoBean<WindowState> windowState();
     }
 
-    protected WindowConfig config;
+    protected org.iplantc.de.commons.client.views.window.configs.WindowConfig config;
 
     protected boolean isMaximizable;
     protected boolean maximized;
@@ -129,14 +127,12 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
     protected Widget currentWidget;
     protected ServiceDownPanel serviceDownPanel;
     UserInfo userInfo;
-    protected final String LOCAL_STORAGE_PREFIX = "de.";
-    protected final String SAVED_WIDTH = ".saved.width";
-    protected final String SAVED_HEIGHT = ".saved.height";
 
-    public IplantWindowBase() {
+    public WindowBase() {
         this(GWT.<IplantWindowAppearance> create(IplantWindowAppearance.class));
     }
-    public IplantWindowBase(final IplantWindowAppearance appearance) {
+
+    public WindowBase(final IplantWindowAppearance appearance) {
         // Let normal window appearance go through
         windowAppearance = appearance;
         // Turn off default window buttons.
@@ -201,9 +197,9 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
     }
 
     @Override
-    public <C extends WindowConfig> void show(final C windowConfig,
-                                              final String tag,
-                                              final boolean isMaximizable) {
+    public <C extends org.iplantc.de.commons.client.views.window.configs.WindowConfig> void show(final C windowConfig,
+                                                                                                 final String tag,
+                                                                                                 final boolean isMaximizable) {
         this.config = windowConfig;
         this.isMaximizable = isMaximizable;
         setStateId(tag);
@@ -246,16 +242,17 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
     }
 
     @Override
-    public <C extends WindowConfig> void update(C config) {
+    public <C extends org.iplantc.de.commons.client.views.window.configs.WindowConfig> void update(C config) {
     }
 
-    protected <C extends WindowConfig> WindowState createWindowState(C config) {
+    @Override
+    public WindowState createWindowState() {
         WindowState ws = wsf.windowState().as();
-        ws.setConfigType(config.getWindowType());
+        ws.setWindowType(config.getWindowType());
         ws.setWinLeft(getAbsoluteLeft());
         ws.setWinTop(getAbsoluteTop());
-        Splittable configSplittable = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config));
-        ws.setWindowConfig(configSplittable);
+        ws.setWidth(getElement().getWidth(true) + "");
+        ws.setHeight(getElement().getHeight(true) + "");
         return ws;
     }
 
@@ -325,13 +322,13 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
         left.addSelectionHandler(new SelectionHandler<Item>() {
             @Override
             public void onSelection(SelectionEvent<Item> event) {
-                doSnapLeft(IplantWindowBase.this.getContainer().<XElement>cast());
+                doSnapLeft(WindowBase.this.getContainer().<XElement>cast());
             }
         });
         right.addSelectionHandler(new SelectionHandler<Item>() {
             @Override
             public void onSelection(SelectionEvent<Item> event) {
-                doSnapRight(IplantWindowBase.this.getContainer().<XElement>cast());
+                doSnapRight(WindowBase.this.getContainer().<XElement>cast());
             }
         });
 
@@ -460,7 +457,7 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
      * @param config Config of the window that was opened.
      */
     @Override
-    public void logWindowOpenToIntercom(WindowConfig config) {
+    public void logWindowOpenToIntercom(org.iplantc.de.commons.client.views.window.configs.WindowConfig config) {
         if (config != null) {
             switch (config.getWindowType()) {
 
@@ -544,7 +541,7 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
      * @param config Config of the window that was closed.
      */
     @Override
-    public void logWindowCloseToIntercom(WindowConfig config) {
+    public void logWindowCloseToIntercom(org.iplantc.de.commons.client.views.window.configs.WindowConfig config) {
         if (config != null) {
             switch (config.getWindowType()) {
 
@@ -616,26 +613,41 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
         }
     }
 
-    protected String getSavedHeight(String windowType) {
-        return WebStorageUtil.readFromStorage(
-                LOCAL_STORAGE_PREFIX + windowType + SAVED_HEIGHT + "#"
+    public abstract String getWindowType();
+
+    @Override
+    public WindowState getWindowStateFromLocalStorage() {
+        WindowState ws = wsf.windowState().as();
+        String height = WebStorageUtil.readFromStorage(
+                WebStorageUtil.LOCAL_STORAGE_PREFIX + getWindowType() + WindowState.HEIGHT + "#"
                 + userInfo.getUsername());
-    }
+        ws.setHeight(Strings.isNullOrEmpty(height) ? "" : height);
 
-    protected String getSavedWidth(String windowType) {
-        return WebStorageUtil.readFromStorage(
-                LOCAL_STORAGE_PREFIX + windowType + SAVED_WIDTH + "#"
+        String width = WebStorageUtil.readFromStorage(
+                WebStorageUtil.LOCAL_STORAGE_PREFIX + getWindowType() + WindowState.WIDTH + "#"
                 + userInfo.getUsername());
-    }
+        ws.setWidth(Strings.isNullOrEmpty(width) ? "" : width);
 
-    protected void saveHeight(String windowType) {
-      WebStorageUtil.writeToStorage(LOCAL_STORAGE_PREFIX + windowType + SAVED_HEIGHT + "#"
-                                    + userInfo.getUsername(), getOffsetHeight() + "");
-    }
+        String left = WebStorageUtil.readFromStorage(
+                WebStorageUtil.LOCAL_STORAGE_PREFIX + getWindowType() + WindowState.LEFT + "#" + userInfo
+                        .getUsername());
+        ws.setWinLeft(Strings.isNullOrEmpty(left) ? 0 : Integer.parseInt(left));
 
-    protected void saveWidth(String windowType) {
-         WebStorageUtil.writeToStorage(LOCAL_STORAGE_PREFIX + windowType + SAVED_WIDTH + "#"
-                                       + userInfo.getUsername(), getOffsetWidth() + "");
-    }
+        String top = WebStorageUtil.readFromStorage(
+                WebStorageUtil.LOCAL_STORAGE_PREFIX + getWindowType() + WindowState.TOP + "#"
+                + userInfo.getUsername());
+        ws.setWinTop(Strings.isNullOrEmpty(top) ? 0 : Integer.parseInt(top));
 
+        String maximized = WebStorageUtil.readFromStorage(
+                WebStorageUtil.LOCAL_STORAGE_PREFIX + getWindowType() + WindowState.MAXIMIZED + "#"
+                + userInfo.getUsername());
+        ws.setMaximized(Strings.isNullOrEmpty(maximized) ? false : Boolean.parseBoolean(maximized));
+
+        String minimized = WebStorageUtil.readFromStorage(
+                WebStorageUtil.LOCAL_STORAGE_PREFIX + getWindowType() + WindowState.MINIMIZED + "#"
+                + userInfo.getUsername());
+        ws.setMinimized(Strings.isNullOrEmpty(minimized) ? false : Boolean.parseBoolean(minimized));
+        return ws;
+    }
 }
+

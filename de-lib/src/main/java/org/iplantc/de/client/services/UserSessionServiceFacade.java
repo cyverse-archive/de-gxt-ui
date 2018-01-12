@@ -1,10 +1,11 @@
 package org.iplantc.de.client.services;
 
-import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.UserSession;
 import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.userSettings.UserSetting;
 import org.iplantc.de.client.models.webhooks.Webhook;
 import org.iplantc.de.client.models.webhooks.WebhookTypeList;
+import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.DECallback;
 
@@ -15,9 +16,9 @@ import java.util.List;
 
 public interface UserSessionServiceFacade {
 
-    Request getUserSession(AsyncCallback<List<WindowState>> callback);
+    Request getUserSession(AsyncCallback<UserSession> callback);
 
-    Request saveUserSession(List<WindowState> windowStates, AsyncCallback<Void> callback);
+    Request saveUserSession(List<WindowConfig> windowConfigs, AsyncCallback<Void> callback);
 
     Request getUserPreferences(AsyncCallback<UserSetting> callback);
 

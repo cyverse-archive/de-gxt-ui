@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.analysis.Analysis;
+import org.iplantc.de.client.models.analysis.AnalysisFilter;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.window.configs.AnalysisWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
@@ -26,7 +27,7 @@ import java.util.List;
 /**
  * @author sriram, jstroot
  */
-public class MyAnalysesWindow extends IplantWindowBase {
+public class MyAnalysesWindow extends WindowBase {
 
     public static final String ANALYSES = "#analyses";
     private final AnalysesView.Presenter presenter;
@@ -42,8 +43,9 @@ public class MyAnalysesWindow extends IplantWindowBase {
 
         ensureDebugId(DeModule.WindowIds.ANALYSES_WINDOW);
         setHeading(displayStrings.analyses());
-        String width = getSavedWidth(WindowType.ANALYSES.toString());
-        String height = getSavedHeight(WindowType.ANALYSES.toString());
+        WindowState ws = getWindowStateFromLocalStorage();
+        String width = ws.getWidth();
+        String height = ws.getHeight();
         setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
                 (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
         setMinWidth(appearance.windowMinWidth());
@@ -67,13 +69,13 @@ public class MyAnalysesWindow extends IplantWindowBase {
     }
 
     @Override
-    public WindowState getWindowState() {
+    public WindowConfig getWindowConfig() {
         AnalysisWindowConfig config = ConfigFactory.analysisWindowConfig();
         List<Analysis> selectedAnalyses = Lists.newArrayList();
         selectedAnalyses.addAll(presenter.getSelectedAnalyses());
         config.setSelectedAnalyses(selectedAnalyses);
-        config.setFilter(presenter.getCurrentFilter());
-        return createWindowState(config);
+        config.setFilter(presenter.getCurrentFilter().getFilterString());
+        return config;
     }
 
     @Override
@@ -83,7 +85,7 @@ public class MyAnalysesWindow extends IplantWindowBase {
         if (config instanceof AnalysisWindowConfig) {
             AnalysisWindowConfig analysisWindowConfig = (AnalysisWindowConfig) config;
             presenter.setSelectedAnalyses(analysisWindowConfig.getSelectedAnalyses());
-            presenter.setFilterInView(((AnalysisWindowConfig)config).getFilter());
+            presenter.setFilterInView(AnalysisFilter.ALL.fromTypeString(analysisWindowConfig.getFilter()));
         }
     }
 
@@ -94,9 +96,12 @@ public class MyAnalysesWindow extends IplantWindowBase {
     }
 
     @Override
+    public String getWindowType() {
+        return WindowType.ANALYSES.toString();
+    }
+
+    @Override
     public void hide() {
-        saveWidth(WindowType.ANALYSES.toString());
-        saveHeight(WindowType.ANALYSES.toString());
         super.hide();
     }
 }

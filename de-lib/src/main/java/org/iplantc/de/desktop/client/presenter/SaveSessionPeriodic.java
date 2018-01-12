@@ -4,7 +4,7 @@ import org.iplantc.de.client.gin.ServicesInjector;
 import org.iplantc.de.client.models.CommonModelAutoBeanFactory;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.UserSession;
-import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.desktop.client.DesktopView;
@@ -38,12 +38,12 @@ public class SaveSessionPeriodic implements Runnable {
     @Override
     public void run() {
         AutoBean<UserSession> userSession = factory.userSession();
-        final List<WindowState> orderedWindowStates = presenter.getOrderedWindowStates();
-        userSession.as().setWindowStates(orderedWindowStates);
+        final List<WindowConfig> configs = presenter.getOrderedWindowConfigs();
+        userSession.as().setWindowConfigs(configs);
         Splittable spl = AutoBeanCodex.encode(userSession);
-        if (isStateChanged(orderedWindowStates, spl)) {
+        if (isStateChanged(configs, spl)) {
             GWT.log("saving periodic...");
-            ServicesInjector.INSTANCE.getUserSessionServiceFacade().saveUserSession(userSession.as().getWindowStates(), new AsyncCallback<Void>() {
+            ServicesInjector.INSTANCE.getUserSessionServiceFacade().saveUserSession(userSession.as().getWindowConfigs(), new AsyncCallback<Void>() {
 
                 @Override
                 public void onSuccess(Void result) {
@@ -51,7 +51,7 @@ public class SaveSessionPeriodic implements Runnable {
                     presenter.setUserSessionConnection(true);
                     count = 0;
                     UserInfo info = UserInfo.getInstance();
-                    info.setSavedOrderedWindowStates(orderedWindowStates);
+                    info.setSavedWindowConfigs(configs);
                 }
 
                 @Override
@@ -71,16 +71,16 @@ public class SaveSessionPeriodic implements Runnable {
         }
     }
 
-    private boolean isStateChanged(List<WindowState> orderedWindowStates, Splittable splOws) {
-        if (splOws == null || orderedWindowStates == null) {
+    private boolean isStateChanged(List<WindowConfig> configs, Splittable splOws) {
+        if (splOws == null || configs == null) {
             return false;
         }
 
         UserInfo info = UserInfo.getInstance();
-        List<WindowState> savedStates = info.getSavedOrderedWindowStates();
+        List<WindowConfig> savedConfigs = info.getSavedWindowConfigs();
 
-        if (savedStates == null) {
-            if (orderedWindowStates.size() == 0) {
+        if (savedConfigs == null) {
+            if (configs.size() == 0) {
                 return false;
             } else {
                 return true;
@@ -88,7 +88,7 @@ public class SaveSessionPeriodic implements Runnable {
         }
 
         AutoBean<UserSession> savedUserSession = factory.userSession();
-        savedUserSession.as().setWindowStates(savedStates);
+        savedUserSession.as().setWindowConfigs(savedConfigs);
         Splittable savedSpl = AutoBeanCodex.encode(savedUserSession);
         return !savedSpl.getPayload().equals(splOws.getPayload());
     }

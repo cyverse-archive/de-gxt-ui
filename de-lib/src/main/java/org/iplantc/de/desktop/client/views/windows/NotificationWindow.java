@@ -15,7 +15,7 @@ import com.google.inject.Inject;
 /**
  * @author sriram, jstroot
  */
-public class NotificationWindow extends IplantWindowBase {
+public class NotificationWindow extends WindowBase {
 
     private NotificationView.Presenter presenter;
     private NotificationView.NotificationViewAppearance appearance;
@@ -29,8 +29,9 @@ public class NotificationWindow extends IplantWindowBase {
         this.userInfo = userInfo;
         setHeading(appearance.notifications());
         ensureDebugId(DeModule.WindowIds.NOTIFICATION);
-        String width = getSavedWidth(WindowType.NOTIFICATIONS.toString());
-        String height = getSavedHeight(WindowType.NOTIFICATIONS.toString());
+        WindowState ws = getWindowStateFromLocalStorage();
+        String width = ws.getWidth();
+        String height = ws.getHeight();
         setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
                 (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
         setMinHeight(appearance.windowMinHeight());
@@ -58,16 +59,18 @@ public class NotificationWindow extends IplantWindowBase {
     }
 
     @Override
-    public WindowState getWindowState() {
-        NotifyWindowConfig config = ConfigFactory.notifyWindowConfig(presenter.getCurrentCategory());
-        return createWindowState(config);
+    public WindowConfig getWindowConfig() {
+        return ConfigFactory.notifyWindowConfig(presenter.getCurrentCategory());
     }
 
     @Override
     public void hide() {
-        saveHeight(WindowType.NOTIFICATIONS.toString());
-        saveWidth(WindowType.NOTIFICATIONS.toString());
         super.hide();
+    }
+
+    @Override
+    public String getWindowType() {
+        return WindowType.NOTIFICATIONS.toString();
     }
 
 }

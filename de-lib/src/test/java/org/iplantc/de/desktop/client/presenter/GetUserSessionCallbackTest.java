@@ -6,9 +6,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -32,7 +32,7 @@ public class GetUserSessionCallbackTest {
     @Mock DesktopPresenterImpl presenterMock;
     @Mock AutoProgressMessageBox progressMessageBoxMock;
     @Mock DesktopView.Presenter.DesktopPresenterAppearance appearanceMock;
-    @Mock List<WindowState> resultMock;
+    @Mock List<WindowConfig> resultMock;
 
     private RuntimeCallbacks.GetUserSessionCallback uut;
 

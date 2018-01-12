@@ -50,7 +50,7 @@ import java.util.logging.Logger;
  * 
  * @author jstroot, sriram, psarando
  */
-public class AppEditorWindow extends IplantWindowBase implements AppPublishedEventHandler {
+public class AppEditorWindow extends WindowBase implements AppPublishedEventHandler {
     /**
      * This command is passed to the {@link AppsEditorView.Presenter} to communicate when this window's
      * title should be updated.
@@ -154,18 +154,19 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
 
         setHeading(appearance.headingText());
 
-
-        String width = getSavedWidth(WindowType.APP_INTEGRATION.toString());
-        String height = getSavedHeight(WindowType.APP_INTEGRATION.toString());
+        WindowState ws = getWindowStateFromLocalStorage();
+        String width = ws.getWidth();
+        String height = ws.getHeight();
         setSize((width == null) ? appearance.windowWidth() : width,
                 (height == null) ? appearance.windowHeight() : height);
         setMinWidth(appearance.minWidth());
         setMinHeight(appearance.minHeight());
     }
 
+
     @Override
-    public WindowState getWindowState() {
-        return createWindowState(getUpdatedConfig());
+    public WindowConfig getWindowConfig() {
+        return getUpdatedConfig();
     }
 
     @Override
@@ -226,6 +227,11 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
         presenter.setViewDebugId(baseID + AppIntegrationModule.Ids.APP_EDITOR_VIEW);
+    }
+
+    @Override
+    public String getWindowType() {
+        return WindowType.APP_INTEGRATION.toString();
     }
 
     private AppsIntegrationWindowConfig getUpdatedConfig() {
@@ -329,8 +335,6 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
 
     @Override
     public void hide() {
-        saveHeight(WindowType.APP_INTEGRATION.toString());
-        saveWidth(WindowType.APP_INTEGRATION.toString());
         super.hide();
     }
 

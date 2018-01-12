@@ -23,7 +23,7 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
 /**
  * @author jstroot
  */
-public class DEAppsWindow extends IplantWindowBase {
+public class DEAppsWindow extends WindowBase {
 
     public static final String APPS = "#apps";
     public static final String DE_APPS_ACTIVEVIEW = "de.apps.activeview#";
@@ -43,8 +43,9 @@ public class DEAppsWindow extends IplantWindowBase {
 
         // This must be set before we render view
         ensureDebugId(DeModule.WindowIds.APPS_WINDOW);
-        String width = getSavedWidth(WindowType.APPS.toString());
-        String height = getSavedHeight(WindowType.APPS.toString());
+        WindowState ws = getWindowStateFromLocalStorage();
+        String width = ws.getWidth();
+        String height = ws.getHeight();
         setSize((width == null) ? appsViewAppearance.appsWindowWidth() : width,
                 (height == null) ? appsViewAppearance.appsWindowHeight() : height);
         setMinWidth(appsViewAppearance.appsWindowMinWidth());
@@ -86,23 +87,27 @@ public class DEAppsWindow extends IplantWindowBase {
     public void hide() {
         WebStorageUtil.writeToStorage(DE_APPS_ACTIVEVIEW + userInfo.getUsername(),
                                       presenter.getActiveView());
-        saveHeight(WindowType.APPS.toString());
-        saveWidth(WindowType.APPS.toString());
         super.hide();
     }
 
+
     @Override
-    public WindowState getWindowState() {
+    public WindowConfig getWindowConfig() {
         AppsWindowConfig config = ConfigFactory.appsWindowConfig();
         config.setSelectedApp(presenter.getSelectedApp());
         config.setSelectedAppCategory(presenter.getSelectedAppCategory());
-        return createWindowState(config);
+        return config;
     }
 
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
         presenter.setViewDebugId(baseID + AppsModule.Ids.APPS_VIEW);
+    }
+
+    @Override
+    public String getWindowType() {
+        return WindowType.APPS.toString();
     }
 
 }
