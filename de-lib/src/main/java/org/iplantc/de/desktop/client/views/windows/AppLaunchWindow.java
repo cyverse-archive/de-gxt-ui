@@ -6,8 +6,6 @@ import org.iplantc.de.apps.widgets.client.events.AppTemplateFetched;
 import org.iplantc.de.apps.widgets.client.view.AppLaunchView;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.HasQualifiedId;
-import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.commons.client.views.window.configs.AppWizardConfig;
@@ -21,6 +19,7 @@ import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 
 /**
@@ -38,14 +37,11 @@ public class AppLaunchWindow extends WindowBase implements AnalysisLaunchEventHa
     @Inject
     AppLaunchWindow(final AppLaunchView.Presenter presenter,
                     final DEClientConstants deClientConstants,
-                    AppLaunchView.AppLaunchViewAppearance appearance,
-                    final UserInfo userInfo) {
+                    AppLaunchView.AppLaunchViewAppearance appearance) {
         this.presenter = presenter;
         this.deClientConstants = deClientConstants;
         this.appearance = appearance;
-        this.userInfo = userInfo;
 
-        WindowState ws = getWindowStateFromLocalStorage();
         String width = ws.getWidth();
         String height = ws.getHeight();
         setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
@@ -82,13 +78,13 @@ public class AppLaunchWindow extends WindowBase implements AnalysisLaunchEventHa
     public <C extends WindowConfig> void show(final C windowConfig,
                                               final String tag,
                                               final boolean isMaximizable) {
+        super.show(windowConfig, tag, isMaximizable);
         final AppWizardConfig config1 = (AppWizardConfig) windowConfig;
         systemId = Strings.isNullOrEmpty(config1.getSystemId())
                 ? deClientConstants.deSystemId()
                 : config1.getSystemId();
         appId = config1.getAppId();
         init(config1);
-        super.show(windowConfig, tag, isMaximizable);
     }
 
     private void init(AppWizardConfig config) {
@@ -122,4 +118,22 @@ public class AppLaunchWindow extends WindowBase implements AnalysisLaunchEventHa
     public String getWindowType() {
         return WindowType.APP_WIZARD.toString();
     }
+
+    @Override
+    public FastMap<String> getAdditionalWindowStates() {
+        return null;
+    }
+
+    @Override
+    public void restoreWindowState() {
+        if (getStateId().equals(ws.getTag())) {
+            super.restoreWindowState();
+            String width = ws.getWidth();
+            String height = ws.getHeight();
+            setSize((width == null) ? appearance.windowWidth() : width,
+                    (height == null) ? appearance.windowHeight() : height);
+        }
+
+    }
+
 }

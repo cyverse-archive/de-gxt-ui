@@ -10,7 +10,7 @@ import org.iplantc.de.client.models.bootstrap.UserProfile;
 import org.iplantc.de.client.models.bootstrap.Workspace;
 import org.iplantc.de.client.models.userSettings.UserSetting;
 import org.iplantc.de.client.models.webhooks.Webhook;
-import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.base.Strings;
@@ -57,7 +57,7 @@ public class UserInfo {
     private Workspace workspace;
     private SystemIds systemIds;
     private AppsInfo appsInfo;
-    private List<WindowConfig> savedWindowConfigs;
+    private List<SavedWindowConfig> savedWindowConfigs;
     private List<Webhook> webhooks;
     private static String AGAVE_AUTH_KEY = "agave";
     private Logger LOG = Logger.getLogger(UserInfo.class.getName());
@@ -229,7 +229,7 @@ public class UserInfo {
     /**
      * @return the savedOrderedWindowStates
      */
-    public List<org.iplantc.de.commons.client.views.window.configs.WindowConfig> getSavedWindowConfigs() {
+    public List<SavedWindowConfig> getSavedWindowConfigs() {
         return savedWindowConfigs;
     }
 
@@ -300,7 +300,7 @@ public class UserInfo {
     /**
      * @param savedWindowConfigs the savedOrderedWindowStates to set
      */
-    public void setSavedWindowConfigs(List<org.iplantc.de.commons.client.views.window.configs.WindowConfig> savedWindowConfigs) {
+    public void setSavedWindowConfigs(List<SavedWindowConfig> savedWindowConfigs) {
         this.savedWindowConfigs = savedWindowConfigs;
     }
 

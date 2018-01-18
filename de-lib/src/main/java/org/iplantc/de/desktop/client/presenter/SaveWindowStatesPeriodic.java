@@ -8,6 +8,7 @@ import org.iplantc.de.desktop.client.DesktopView;
 import com.google.gwt.core.client.GWT;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sriram on 1/11/18.
@@ -33,17 +34,20 @@ public class SaveWindowStatesPeriodic implements Runnable {
 
     private void saveWindowState(WindowState ws) {
         UserInfo userInfo = UserInfo.getInstance();
-        WebStorageUtil.writeToStorage(WebStorageUtil.LOCAL_STORAGE_PREFIX + ws.getWindowType() + WindowState.HEIGHT + "#"
-                                      + userInfo.getUsername(),ws.getHeight() + "");
-        WebStorageUtil.writeToStorage(WebStorageUtil.LOCAL_STORAGE_PREFIX + ws.getWindowType() + WindowState.WIDTH + "#"
-                                      + userInfo.getUsername(),ws.getWidth() + "");
-        WebStorageUtil.writeToStorage(WebStorageUtil.LOCAL_STORAGE_PREFIX + ws.getWindowType() + WindowState.TOP + "#"
-                                      + userInfo.getUsername(),ws.getWinLeft() + "");
-        WebStorageUtil.writeToStorage(WebStorageUtil.LOCAL_STORAGE_PREFIX + ws.getWindowType() + WindowState.LEFT + "#"
-                                      + userInfo.getUsername(),ws.getWinTop() + "");
-        WebStorageUtil.writeToStorage(WebStorageUtil.LOCAL_STORAGE_PREFIX + ws.getWindowType() + WindowState.MINIMIZED + "#"
-                                      + userInfo.getUsername(),ws.isMinimized() + "");
-        WebStorageUtil.writeToStorage(WebStorageUtil.LOCAL_STORAGE_PREFIX + ws.getWindowType() + WindowState.MAXIMIZED + "#"
-                                      + userInfo.getUsername(),ws.isMaximized() + "");
+        String prefix = WebStorageUtil.LOCAL_STORAGE_PREFIX + ws.getWindowType();
+        String suffix = "#" + ws.getTag() + "#" + userInfo.getUsername();
+        WebStorageUtil.writeToStorage(prefix + WindowState.HEIGHT + suffix, ws.getHeight() + "");
+        WebStorageUtil.writeToStorage(prefix + WindowState.WIDTH + suffix, ws.getWidth() + "");
+        WebStorageUtil.writeToStorage(prefix + WindowState.TOP + suffix, ws.getWinTop() + "");
+        WebStorageUtil.writeToStorage(prefix + WindowState.LEFT + suffix, ws.getWinLeft() + "");
+        WebStorageUtil.writeToStorage(prefix + WindowState.MINIMIZED + suffix, ws.isMinimized() + "");
+        WebStorageUtil.writeToStorage(prefix + WindowState.MAXIMIZED + suffix, ws.isMaximized() + "");
+        Map<String, String> additionalWindowStates = ws.getAdditionalWindowStates();
+        if (additionalWindowStates != null) {
+            for (String key : additionalWindowStates.keySet()) {
+                WebStorageUtil.writeToStorage(key,
+                                              additionalWindowStates.get(key));
+            }
+        }
     }
 }

@@ -4,9 +4,9 @@ import org.iplantc.de.client.gin.ServicesInjector;
 import org.iplantc.de.client.models.CommonModelAutoBeanFactory;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.UserSession;
-import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 
 import com.google.gwt.core.client.GWT;
@@ -38,7 +38,7 @@ public class SaveSessionPeriodic implements Runnable {
     @Override
     public void run() {
         AutoBean<UserSession> userSession = factory.userSession();
-        final List<WindowConfig> configs = presenter.getOrderedWindowConfigs();
+        final List<SavedWindowConfig> configs = presenter.getOrderedWindowConfigs();
         userSession.as().setWindowConfigs(configs);
         Splittable spl = AutoBeanCodex.encode(userSession);
         if (isStateChanged(configs, spl)) {
@@ -71,13 +71,13 @@ public class SaveSessionPeriodic implements Runnable {
         }
     }
 
-    private boolean isStateChanged(List<WindowConfig> configs, Splittable splOws) {
+    private boolean isStateChanged(List<SavedWindowConfig> configs, Splittable splOws) {
         if (splOws == null || configs == null) {
             return false;
         }
 
         UserInfo info = UserInfo.getInstance();
-        List<WindowConfig> savedConfigs = info.getSavedWindowConfigs();
+        List<SavedWindowConfig> savedConfigs = info.getSavedWindowConfigs();
 
         if (savedConfigs == null) {
             if (configs.size() == 0) {

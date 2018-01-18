@@ -3,6 +3,7 @@ package org.iplantc.de.desktop.client.presenter;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
+import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.views.windows.WindowInterface;
 import org.iplantc.de.desktop.client.views.windows.util.WindowFactory;
@@ -54,8 +55,8 @@ public class DesktopWindowManager {
         }
     }
 
-    public void show(final WindowConfig config) {
-        WindowConfig wc = ConfigFactory.getConfig(config) ;
+    public void show(final SavedWindowConfig savedWindowConfig) {
+        final WindowConfig wc = ConfigFactory.getConfig(savedWindowConfig) ;
         String windowId = constructWindowId(wc);
         for (Widget w : windowManager.getWindows()) {
             String currentId = ((Window) w).getStateId();

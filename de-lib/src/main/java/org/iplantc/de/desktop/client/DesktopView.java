@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
+import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.views.windows.WindowInterface;
 
@@ -201,7 +202,7 @@ public interface DesktopView extends IsWidget {
             String cannotEditTwoApps();
         }
 
-        List<WindowConfig> getOrderedWindowConfigs();
+        List<SavedWindowConfig> getOrderedWindowConfigs();
 
         List<WindowState> getWindowStates();
 
@@ -231,7 +232,7 @@ public interface DesktopView extends IsWidget {
 
         void doPeriodicWindowStateSave();
 
-        void restoreWindows(List<WindowConfig> windowConfigs);
+        void restoreWindows(List<SavedWindowConfig> savedWindowConfigs);
 
         void setUserSessionConnection(boolean connected);
 

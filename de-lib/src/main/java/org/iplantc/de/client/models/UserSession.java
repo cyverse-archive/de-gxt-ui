@@ -1,12 +1,12 @@
 package org.iplantc.de.client.models;
 
-import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 
 import java.util.List;
 
 public interface UserSession {
-    List<WindowConfig>  getWindowConfigs();
+    List<SavedWindowConfig>  getWindowConfigs();
 
-    void setWindowConfigs(List<WindowConfig> configs);
+    void setWindowConfigs(List<SavedWindowConfig> configs);
 
 }

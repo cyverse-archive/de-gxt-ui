@@ -2,8 +2,6 @@ package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.shared.AnalysisModule;
-import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisFilter;
@@ -20,6 +18,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 import java.util.List;
@@ -31,23 +30,19 @@ public class MyAnalysesWindow extends WindowBase {
 
     public static final String ANALYSES = "#analyses";
     private final AnalysesView.Presenter presenter;
+    private final AnalysesView.Appearance analysesAppearance;
 
 
     @Inject
     MyAnalysesWindow(final AnalysesView.Presenter presenter,
                      final IplantDisplayStrings displayStrings,
-                     final UserInfo userInfo,
                      final AnalysesView.Appearance appearance) {
         this.presenter = presenter;
-        this.userInfo = userInfo;
+        this.analysesAppearance = appearance;
 
         ensureDebugId(DeModule.WindowIds.ANALYSES_WINDOW);
         setHeading(displayStrings.analyses());
-        WindowState ws = getWindowStateFromLocalStorage();
-        String width = ws.getWidth();
-        String height = ws.getHeight();
-        setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
-                (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
+
         setMinWidth(appearance.windowMinWidth());
         setMinHeight(appearance.windowMinHeight());
     }
@@ -55,8 +50,8 @@ public class MyAnalysesWindow extends WindowBase {
     @Override
     public <C extends WindowConfig> void show(C windowConfig, String tag,
                                               boolean isMaximizable) {
-        presenter.go(this, ((AnalysisWindowConfig)windowConfig).getSelectedAnalyses());
         super.show(windowConfig, tag, isMaximizable);
+        presenter.go(this, ((AnalysisWindowConfig)windowConfig).getSelectedAnalyses());
         btnHelp = createHelpButton();
         getHeader().insertTool(btnHelp,0);
         btnHelp.addSelectHandler(new SelectEvent.SelectHandler() {
@@ -98,6 +93,23 @@ public class MyAnalysesWindow extends WindowBase {
     @Override
     public String getWindowType() {
         return WindowType.ANALYSES.toString();
+    }
+
+    @Override
+    public FastMap<String> getAdditionalWindowStates() {
+        return null;
+    }
+
+    @Override
+    public void restoreWindowState() {
+        if (getStateId().equals(ws.getTag())) {
+            super.restoreWindowState();
+            String width = ws.getWidth();
+            String height = ws.getHeight();
+            setSize((Strings.isNullOrEmpty(width)) ? analysesAppearance.windowWidth() : width,
+                    (Strings.isNullOrEmpty(height)) ? analysesAppearance.windowHeight() : height);
+        }
+
     }
 
     @Override

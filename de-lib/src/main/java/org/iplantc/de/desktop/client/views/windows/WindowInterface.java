@@ -57,5 +57,5 @@ public interface WindowInterface extends HasActivateHandlers<Window>,
 
     WindowState createWindowState();
 
-    WindowState getWindowStateFromLocalStorage();
+    WindowState getWindowStateFromLocalStorage(String tag);
 }

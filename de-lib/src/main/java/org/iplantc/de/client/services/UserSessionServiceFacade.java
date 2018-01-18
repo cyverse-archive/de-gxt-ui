@@ -5,7 +5,7 @@ import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.userSettings.UserSetting;
 import org.iplantc.de.client.models.webhooks.Webhook;
 import org.iplantc.de.client.models.webhooks.WebhookTypeList;
-import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.DECallback;
 
@@ -18,7 +18,7 @@ public interface UserSessionServiceFacade {
 
     Request getUserSession(AsyncCallback<UserSession> callback);
 
-    Request saveUserSession(List<WindowConfig> windowConfigs, AsyncCallback<Void> callback);
+    Request saveUserSession(List<SavedWindowConfig> windowConfigs, AsyncCallback<Void> callback);
 
     Request getUserPreferences(AsyncCallback<UserSetting> callback);
 

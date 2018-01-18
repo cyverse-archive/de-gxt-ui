@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.util.WebStorageUtil;
 import org.iplantc.de.commons.client.CommonUiConstants;
+import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.views.widgets.ServiceDownPanel;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.intercom.client.IntercomFacade;
@@ -11,11 +12,13 @@ import org.iplantc.de.intercom.client.TrackingEventType;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.debug.client.DebugInfo;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -25,6 +28,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 import com.sencha.gxt.core.client.dom.XElement;
 import com.sencha.gxt.core.client.util.Rectangle;
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.Header;
 import com.sencha.gxt.widget.core.client.Window;
 import com.sencha.gxt.widget.core.client.button.IconButton;
@@ -38,6 +42,10 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 import com.sencha.gxt.widget.core.client.menu.Item;
 import com.sencha.gxt.widget.core.client.menu.Menu;
 import com.sencha.gxt.widget.core.client.menu.MenuItem;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author jstroot
@@ -109,8 +117,7 @@ public abstract class WindowBase extends Window implements WindowInterface {
         AutoBean<WindowState> windowState();
     }
 
-    protected org.iplantc.de.commons.client.views.window.configs.WindowConfig config;
-
+    protected WindowConfig config;
     protected boolean isMaximizable;
     protected boolean maximized;
     protected boolean minimized;
@@ -126,7 +133,8 @@ public abstract class WindowBase extends Window implements WindowInterface {
     protected CommonUiConstants constants = GWT.create(CommonUiConstants.class);
     protected Widget currentWidget;
     protected ServiceDownPanel serviceDownPanel;
-    UserInfo userInfo;
+    protected WindowState ws;
+    UserInfo userInfo = UserInfo.getInstance();
 
     public WindowBase() {
         this(GWT.<IplantWindowAppearance> create(IplantWindowAppearance.class));
@@ -197,12 +205,13 @@ public abstract class WindowBase extends Window implements WindowInterface {
     }
 
     @Override
-    public <C extends org.iplantc.de.commons.client.views.window.configs.WindowConfig> void show(final C windowConfig,
-                                                                                                 final String tag,
-                                                                                                 final boolean isMaximizable) {
+    public <C extends WindowConfig> void show(final C windowConfig,
+                                              final String tag,
+                                              final boolean isMaximizable) {
         this.config = windowConfig;
         this.isMaximizable = isMaximizable;
         setStateId(tag);
+        ws = getWindowStateFromLocalStorage(tag);
         if (isMaximizable) {
             btnMaximize = createMaximizeButton();
             // SRI: if a window is maximizable, then it is restorable.
@@ -211,6 +220,7 @@ public abstract class WindowBase extends Window implements WindowInterface {
 
             getHeader().addDomHandler(new HeaderDoubleClickHandler(), DoubleClickEvent.getType());
         }
+        restoreWindowState();
         show();
     }
 
@@ -248,11 +258,15 @@ public abstract class WindowBase extends Window implements WindowInterface {
     @Override
     public WindowState createWindowState() {
         WindowState ws = wsf.windowState().as();
-        ws.setWindowType(config.getWindowType());
+        ws.setWindowType(getWindowType());
         ws.setWinLeft(getAbsoluteLeft());
         ws.setWinTop(getAbsoluteTop());
         ws.setWidth(getElement().getWidth(true) + "");
         ws.setHeight(getElement().getHeight(true) + "");
+        ws.setMaximized(isMaximized());
+        ws.setMinimized(isMinimized());
+        ws.setAdditionalWindowStates(getAdditionalWindowStates());
+        ws.setTag(getStateId());
         return ws;
     }
 
@@ -615,38 +629,56 @@ public abstract class WindowBase extends Window implements WindowInterface {
 
     public abstract String getWindowType();
 
+    public abstract FastMap<String> getAdditionalWindowStates();
+
+    public void restoreWindowState() {
+        if (ws.isMaximized()) {
+            Scheduler.get().scheduleDeferred((Command)() -> maximize());
+        } else if (ws.isMinimized()) {
+            Scheduler.get().scheduleDeferred((Command)() -> minimize());
+        } else {
+            int left = ws.getWinLeft();
+            int top = ws.getWinTop();
+            setPagePosition(left, top);
+        }
+    }
+
     @Override
-    public WindowState getWindowStateFromLocalStorage() {
+    public WindowState getWindowStateFromLocalStorage(String tag) {
         WindowState ws = wsf.windowState().as();
-        String height = WebStorageUtil.readFromStorage(
-                WebStorageUtil.LOCAL_STORAGE_PREFIX + getWindowType() + WindowState.HEIGHT + "#"
-                + userInfo.getUsername());
+        String prefix = WebStorageUtil.LOCAL_STORAGE_PREFIX + getWindowType();
+        String suffix = "#" + tag + "#" + userInfo.getUsername();
+        String height = WebStorageUtil.readFromStorage(prefix + WindowState.HEIGHT + suffix);
         ws.setHeight(Strings.isNullOrEmpty(height) ? "" : height);
 
-        String width = WebStorageUtil.readFromStorage(
-                WebStorageUtil.LOCAL_STORAGE_PREFIX + getWindowType() + WindowState.WIDTH + "#"
-                + userInfo.getUsername());
+        String width = WebStorageUtil.readFromStorage(prefix + WindowState.WIDTH + suffix);
         ws.setWidth(Strings.isNullOrEmpty(width) ? "" : width);
 
-        String left = WebStorageUtil.readFromStorage(
-                WebStorageUtil.LOCAL_STORAGE_PREFIX + getWindowType() + WindowState.LEFT + "#" + userInfo
-                        .getUsername());
+        String left = WebStorageUtil.readFromStorage(prefix + WindowState.LEFT + suffix);
         ws.setWinLeft(Strings.isNullOrEmpty(left) ? 0 : Integer.parseInt(left));
 
-        String top = WebStorageUtil.readFromStorage(
-                WebStorageUtil.LOCAL_STORAGE_PREFIX + getWindowType() + WindowState.TOP + "#"
-                + userInfo.getUsername());
+        String top = WebStorageUtil.readFromStorage(prefix + WindowState.TOP + suffix);
         ws.setWinTop(Strings.isNullOrEmpty(top) ? 0 : Integer.parseInt(top));
 
-        String maximized = WebStorageUtil.readFromStorage(
-                WebStorageUtil.LOCAL_STORAGE_PREFIX + getWindowType() + WindowState.MAXIMIZED + "#"
-                + userInfo.getUsername());
+        String maximized = WebStorageUtil.readFromStorage(prefix + WindowState.MAXIMIZED + suffix);
         ws.setMaximized(Strings.isNullOrEmpty(maximized) ? false : Boolean.parseBoolean(maximized));
 
-        String minimized = WebStorageUtil.readFromStorage(
-                WebStorageUtil.LOCAL_STORAGE_PREFIX + getWindowType() + WindowState.MINIMIZED + "#"
-                + userInfo.getUsername());
+        String minimized = WebStorageUtil.readFromStorage(prefix + WindowState.MINIMIZED + suffix);
         ws.setMinimized(Strings.isNullOrEmpty(minimized) ? false : Boolean.parseBoolean(minimized));
+
+        Map<String, String> map = WebStorageUtil.getStorageAsMap();
+        Map<String, String> additionalWindowStates = new HashMap<>();
+        if(map != null) {
+            Set<String> keys = map.keySet();
+            for(String key : keys) {
+                if(key.contains(WindowState.ADDITIONAL + WindowState.LOCAL_STORAGE_PREFIX)) {
+                    additionalWindowStates.put(key, map.get(key));
+                }
+            }
+            ws.setAdditionalWindowStates(additionalWindowStates);
+        }
+
+        ws.setTag(tag);
         return ws;
     }
 }

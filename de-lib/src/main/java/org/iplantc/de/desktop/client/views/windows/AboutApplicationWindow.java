@@ -2,8 +2,6 @@ package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.client.models.AboutApplicationData;
 import org.iplantc.de.client.models.CommonModelAutoBeanFactory;
-import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
@@ -21,6 +19,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 
@@ -60,16 +59,9 @@ public class AboutApplicationWindow extends WindowBase {
 
     @Inject
     AboutApplicationWindow(final AboutApplicationServiceAsync aboutApplicationService,
-                           final AboutApplicationAppearance appearance, final UserInfo userInfo) {
+                           final AboutApplicationAppearance appearance) {
         this.aboutApplicationService = aboutApplicationService;
         this.appearance = appearance;
-        this.userInfo = userInfo;
-
-        WindowState ws = getWindowStateFromLocalStorage();
-        String width = ws.getWidth();
-        String height = ws.getHeight();
-        setSize(Strings.isNullOrEmpty(width) ? appearance.windowWidth() : width,
-                Strings.isNullOrEmpty(height) ? appearance.windowHeight() : height);
 
         setMinHeight(appearance.windowMinHeight());
         setMinWidth(appearance.windowMinWidth());
@@ -77,6 +69,13 @@ public class AboutApplicationWindow extends WindowBase {
         setHeading(appearance.headingText());
         ensureDebugId(DeModule.WindowIds.ABOUT_WINDOW);
         executeServiceCall();
+    }
+
+    @Override
+    public <C extends WindowConfig> void show(final C windowConfig,
+                                              final String tag,
+                                              final boolean isMaximizable) {
+        super.show(windowConfig, tag, isMaximizable);
     }
 
     @Override
@@ -135,5 +134,21 @@ public class AboutApplicationWindow extends WindowBase {
     @Override
     public String getWindowType() {
         return WindowType.ABOUT.toString();
+    }
+
+    @Override
+    public FastMap<String> getAdditionalWindowStates() {
+        return null;
+    }
+
+    @Override
+    public void restoreWindowState() {
+        if (getStateId().equals(ws.getTag())) {
+            super.restoreWindowState();
+            String width = ws.getWidth();
+            String height = ws.getHeight();
+            setSize(Strings.isNullOrEmpty(width) ? appearance.windowWidth() : width,
+                    Strings.isNullOrEmpty(height) ? appearance.windowHeight() : height);
+        }
     }
 }

@@ -1,7 +1,5 @@
 package org.iplantc.de.desktop.client.views.windows;
 
-import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.collaborators.client.CollaborationView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
@@ -16,6 +14,8 @@ import com.google.common.base.Strings;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.core.shared.FastMap;
+
 /**
  * @author jstroot
  */
@@ -27,18 +27,10 @@ public class CollaborationWindow extends WindowBase {
 
     @Inject
     CollaborationWindow(final CollaborationView.Presenter presenter,
-                        ManageCollaboratorsView.Appearance appearance,
-                        UserInfo userInfo) {
+                        ManageCollaboratorsView.Appearance appearance) {
         this.presenter = presenter;
         this.appearance = appearance;
-        this.userInfo = userInfo;
 
-
-        WindowState ws = getWindowStateFromLocalStorage();
-        String width = ws.getWidth();
-        String height = ws.getHeight();
-        setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
-                (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
         setMinWidth(appearance.windowMinWidth());
         setMinHeight(appearance.windowMinHeight());
         setHeading(appearance.windowHeading());
@@ -53,9 +45,9 @@ public class CollaborationWindow extends WindowBase {
     public <C extends WindowConfig> void show(final C windowConfig,
                                               final String tag,
                                               final boolean isMaximizable) {
+        super.show(windowConfig, tag, isMaximizable);
         final CollaborationWindowConfig collabWindowConfig = (CollaborationWindowConfig)windowConfig;
         presenter.go(this, collabWindowConfig);
-        super.show(windowConfig, tag, isMaximizable);
 
         ensureDebugId(DeModule.WindowIds.COLLABORATION_WINDOW);
     }
@@ -77,6 +69,22 @@ public class CollaborationWindow extends WindowBase {
     @Override
     public String getWindowType() {
         return WindowType.COLLABORATION.toString();
+    }
+
+    @Override
+    public FastMap<String> getAdditionalWindowStates() {
+        return null;
+    }
+
+    @Override
+    public void restoreWindowState() {
+        if (getStateId().equals(ws.getTag())) {
+            super.restoreWindowState();
+            String width = ws.getWidth();
+            String height = ws.getHeight();
+            setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
+                    (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
+        }
     }
 
     @Override

@@ -6,7 +6,6 @@ import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.WindowType;
-import org.iplantc.de.client.util.WebStorageUtil;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
@@ -18,6 +17,7 @@ import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.inject.Inject;
 
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 /**
@@ -32,22 +32,18 @@ public class DEAppsWindow extends WindowBase {
     @Inject
     UserInfo userInfo;
     private final AppsView.Presenter presenter;
+    private final AppsView.AppsViewAppearance appsViewAppearance;
 
     @Inject
     DEAppsWindow(final AppsView.Presenter presenter,
                  final IplantDisplayStrings displayStrings,
-                 final UserInfo userInfo,
                  final AppsView.AppsViewAppearance appsViewAppearance) {
         this.presenter = presenter;
-        this.userInfo = userInfo;
+        this.appsViewAppearance = appsViewAppearance;
 
         // This must be set before we render view
         ensureDebugId(DeModule.WindowIds.APPS_WINDOW);
-        WindowState ws = getWindowStateFromLocalStorage();
-        String width = ws.getWidth();
-        String height = ws.getHeight();
-        setSize((width == null) ? appsViewAppearance.appsWindowWidth() : width,
-                (height == null) ? appsViewAppearance.appsWindowHeight() : height);
+
         setMinWidth(appsViewAppearance.appsWindowMinWidth());
         setMinHeight(appsViewAppearance.appsWindowMinHeight());
         setHeading(displayStrings.applications());
@@ -57,13 +53,18 @@ public class DEAppsWindow extends WindowBase {
     public <C extends WindowConfig> void show(final C windowConfig,
                                               final String tag,
                                               final boolean isMaximizable) {
+        super.show(windowConfig, tag, isMaximizable);
         final AppsWindowConfig appsWindowConfig = (AppsWindowConfig)windowConfig;
+        String activeView = null;
+        if (ws.getAdditionalWindowStates() != null) {
+            activeView = ws.getAdditionalWindowStates()
+                           .get(WindowState.ADDITIONAL + DE_APPS_ACTIVEVIEW + tag + "#"
+                                + userInfo.getUsername());
+        }
         presenter.go(this,
                      appsWindowConfig.getSelectedAppCategory(),
                      appsWindowConfig.getSelectedApp(),
-                     WebStorageUtil.readFromStorage(
-                             DE_APPS_ACTIVEVIEW + userInfo.getUsername()));
-        super.show(windowConfig, tag, isMaximizable);
+                     activeView);
         btnHelp = createHelpButton();
         getHeader().insertTool(btnHelp,0);
         btnHelp.addSelectHandler(new SelectEvent.SelectHandler() {
@@ -85,8 +86,6 @@ public class DEAppsWindow extends WindowBase {
 
     @Override
     public void hide() {
-        WebStorageUtil.writeToStorage(DE_APPS_ACTIVEVIEW + userInfo.getUsername(),
-                                      presenter.getActiveView());
         super.hide();
     }
 
@@ -108,6 +107,27 @@ public class DEAppsWindow extends WindowBase {
     @Override
     public String getWindowType() {
         return WindowType.APPS.toString();
+    }
+
+    @Override
+    public FastMap<String> getAdditionalWindowStates() {
+        FastMap<String> additionalData = new FastMap<>();
+        additionalData.put(WindowState.ADDITIONAL + DE_APPS_ACTIVEVIEW + getStateId() + "#"
+                           + userInfo.getUsername(),
+                           presenter.getActiveView());
+        return additionalData;
+    }
+
+    @Override
+    public void restoreWindowState() {
+        if (getStateId().equals(ws.getTag())) {
+            super.restoreWindowState();
+            String width = ws.getWidth();
+            String height = ws.getHeight();
+            setSize((width == null) ? appsViewAppearance.appsWindowWidth() : width,
+                    (height == null) ? appsViewAppearance.appsWindowHeight() : height);
+        }
+
     }
 
 }

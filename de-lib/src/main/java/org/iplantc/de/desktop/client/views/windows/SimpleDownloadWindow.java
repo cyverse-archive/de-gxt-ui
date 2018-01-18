@@ -1,7 +1,5 @@
 package org.iplantc.de.desktop.client.views.windows;
 
-import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
@@ -20,6 +18,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 
 /**
@@ -29,7 +28,6 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
  */
 public class SimpleDownloadWindow extends WindowBase {
 
-
     public interface SimpleDownloadWindowAppearance {
         String windowWidth();
 
@@ -38,22 +36,18 @@ public class SimpleDownloadWindow extends WindowBase {
 
     private final DiskResourceServiceFacade diskResourceServiceFacade;
     private final IplantDisplayStrings displayStrings;
+    private final SimpleDownloadWindowAppearance appearance;
+
 
     @Inject
     SimpleDownloadWindow(final IplantDisplayStrings displayStrings,
                          final DiskResourceServiceFacade diskResourceServiceFacade,
-                         final UserInfo userInfo,
                          final SimpleDownloadWindowAppearance appearance) {
         this.displayStrings = displayStrings;
         this.diskResourceServiceFacade = diskResourceServiceFacade;
-        this.userInfo = userInfo;
+        this.appearance = appearance;
         setHeading(displayStrings.download());
 
-        WindowState ws = getWindowStateFromLocalStorage();
-        String width = ws.getWidth();
-        String height = ws.getHeight();
-        setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
-                (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
         setMinHeight(Integer.parseInt(appearance.windowHeight()));
         setMinWidth(Integer.parseInt(appearance.windowWidth()));
 
@@ -64,8 +58,8 @@ public class SimpleDownloadWindow extends WindowBase {
     public <C extends WindowConfig> void show(C windowConfig, String tag,
                                               boolean isMaximizable) {
 
-        init((SimpleDownloadWindowConfig) windowConfig);
         super.show(windowConfig, tag, true);
+        init((SimpleDownloadWindowConfig)windowConfig);
     }
 
     @Override
@@ -81,6 +75,22 @@ public class SimpleDownloadWindow extends WindowBase {
     @Override
     public String getWindowType() {
         return WindowType.SIMPLE_DOWNLOAD.toString();
+    }
+
+    @Override
+    public FastMap<String> getAdditionalWindowStates() {
+        return null;
+    }
+
+    @Override
+    public void restoreWindowState() {
+        if (getStateId().equals(ws.getTag())) {
+            super.restoreWindowState();
+            String width = ws.getWidth();
+            String height = ws.getHeight();
+            setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
+                    (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
+        }
     }
 
     private void buildLinks(SimpleDownloadWindowConfig config, VerticalLayoutContainer vlc) {

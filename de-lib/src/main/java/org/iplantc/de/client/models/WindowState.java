@@ -2,6 +2,8 @@ package org.iplantc.de.client.models;
 
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 
+import java.util.Map;
+
 public interface WindowState {
 
 
@@ -12,10 +14,12 @@ public interface WindowState {
     String LEFT = ".left";
     String MAXIMIZED = ".maximized";
     String MINIMIZED = ".minimized";
+    String ADDITIONAL = "additional.";
+    String TAG = ".tag";
 
-    WindowType getWindowType();
+    String getWindowType();
 
-    void setWindowType(WindowType type);
+    void setWindowType(String type);
 
     boolean isMaximized();
 
@@ -44,5 +48,13 @@ public interface WindowState {
     void setWidth(String width);
     
     void setHeight(String height);
+
+    void setAdditionalWindowStates(Map<String, String> data);
+
+    Map<String, String> getAdditionalWindowStates();
+
+    String getTag();
+
+    void setTag(String tag);
     
 }

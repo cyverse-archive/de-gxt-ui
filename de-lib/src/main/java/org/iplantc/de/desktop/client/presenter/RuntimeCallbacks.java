@@ -7,7 +7,7 @@ import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
-import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 
 import com.google.gwt.core.client.GWT;
@@ -61,7 +61,7 @@ class RuntimeCallbacks {
 
     static class LogoutCallback implements AsyncCallback<String> {
         private final DEClientConstants constants;
-        private final List<WindowConfig> orderedWindowConfigs;
+        private final List<SavedWindowConfig> savedWindowConfigs;
         private final UserSessionServiceFacade userSessionService;
         private final UserSettings userSettings;
         private final DesktopView.Presenter.DesktopPresenterAppearance appearance;
@@ -71,12 +71,12 @@ class RuntimeCallbacks {
                                final DEClientConstants constants,
                                final UserSettings userSettings,
                                final DesktopView.Presenter.DesktopPresenterAppearance appearance,
-                               final List<WindowConfig> orderedWindowConfigs) {
+                               final List<SavedWindowConfig> savedWindowConfigs) {
             this.userSessionService = userSessionService;
             this.constants = constants;
             this.userSettings = userSettings;
             this.appearance = appearance;
-            this.orderedWindowConfigs = orderedWindowConfigs;
+            this.savedWindowConfigs = savedWindowConfigs;
         }
 
         @Override
@@ -99,7 +99,7 @@ class RuntimeCallbacks {
                 progressMessageBox.getProgressBar().setDuration(1000);
                 progressMessageBox.getProgressBar().setInterval(100);
                 progressMessageBox.auto();
-                userSessionService.saveUserSession(orderedWindowConfigs, new AsyncCallback<Void>() {
+                userSessionService.saveUserSession(savedWindowConfigs, new AsyncCallback<Void>() {
                     @Override
                     public void onFailure(Throwable caught) {
                         GWT.log(appearance.saveSessionFailed(), caught);

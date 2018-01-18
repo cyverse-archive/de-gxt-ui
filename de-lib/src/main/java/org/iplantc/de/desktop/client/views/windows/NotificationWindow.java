@@ -1,8 +1,7 @@
 package org.iplantc.de.desktop.client.views.windows;
 
-import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.WindowType;
+import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.NotifyWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
@@ -12,28 +11,24 @@ import org.iplantc.de.notifications.client.views.NotificationView;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.core.shared.FastMap;
+
 /**
  * @author sriram, jstroot
  */
 public class NotificationWindow extends WindowBase {
 
     private NotificationView.Presenter presenter;
-    private NotificationView.NotificationViewAppearance appearance;
+    private NotificationView.NotificationViewAppearance notificationViewAppearance;
 
     @Inject
     NotificationWindow(NotificationView.Presenter presenter,
-                       NotificationView.NotificationViewAppearance appearance,
-                       UserInfo userInfo) {
+                       NotificationView.NotificationViewAppearance appearance) {
         this.presenter = presenter;
-        this.appearance = appearance;
-        this.userInfo = userInfo;
+        this.notificationViewAppearance = appearance;
         setHeading(appearance.notifications());
         ensureDebugId(DeModule.WindowIds.NOTIFICATION);
-        WindowState ws = getWindowStateFromLocalStorage();
-        String width = ws.getWidth();
-        String height = ws.getHeight();
-        setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
-                (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
+
         setMinHeight(appearance.windowMinHeight());
         setMinHeight(appearance.windowMinWidth());
     }
@@ -41,13 +36,12 @@ public class NotificationWindow extends WindowBase {
     @Override
     public <C extends WindowConfig> void show(C windowConfig, String tag,
                                               boolean isMaximizable) {
+        super.show(windowConfig, tag, isMaximizable);
         NotifyWindowConfig notifyWindowConfig = (NotifyWindowConfig) windowConfig;
-
         presenter.go(this);
         if (notifyWindowConfig != null) {
-            presenter.filterBy(notifyWindowConfig.getSortCategory());
+            presenter.filterBy(NotificationCategory.fromTypeString(notifyWindowConfig.getFilter()));
         }
-        super.show(windowConfig, tag, isMaximizable);
     }
 
     @Override
@@ -71,6 +65,24 @@ public class NotificationWindow extends WindowBase {
     @Override
     public String getWindowType() {
         return WindowType.NOTIFICATIONS.toString();
+    }
+
+    @Override
+    public FastMap<String> getAdditionalWindowStates() {
+        return null;
+    }
+
+    @Override
+    public void restoreWindowState() {
+        if (getStateId().equals(ws.getTag())) {
+            super.restoreWindowState();
+            String width = ws.getWidth();
+            String height = ws.getHeight();
+            setSize((Strings.isNullOrEmpty(width)) ? notificationViewAppearance.windowWidth() : width,
+                    (Strings.isNullOrEmpty(height)) ?
+                    notificationViewAppearance.windowHeight() :
+                    height);
+        }
     }
 
 }

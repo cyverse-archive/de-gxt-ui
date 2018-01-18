@@ -13,7 +13,6 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
@@ -145,7 +144,7 @@ public class ConfigFactory {
     public static NotifyWindowConfig notifyWindowConfig(NotificationCategory category) {
         NotifyWindowConfig nwc = applyWindowType(WindowType.NOTIFICATIONS, factory.notifyWindowConfig())
                 .as();
-        nwc.setSortCategory(category);
+        nwc.setFilter(category.toString());
         return nwc;
     }
 
@@ -215,45 +214,45 @@ public class ConfigFactory {
         return config;
     }
 
-    public static WindowConfig getConfig(WindowConfig wc) {
+    public static WindowConfig getConfig(SavedWindowConfig wc) {
         WindowConfig config = null;
         switch (wc.getWindowType()) {
             case ABOUT:
                 config = AutoBeanCodex.decode(factory,
                                               AboutWindowConfig.class,
-                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(wc))).as();
+                                              wc.getWindowConfig()).as();
                 break;
             case ANALYSES:
                 config = AutoBeanCodex.decode(factory,
                                               AnalysisWindowConfig.class,
-                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(wc))).as();
+                                              wc.getWindowConfig()).as();
                 break;
 
             case APP_INTEGRATION:
                 config = AutoBeanCodex.decode(factory, AppsIntegrationWindowConfig.class,
-                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(wc))).as();
+                                              wc.getWindowConfig()).as();
                 break;
 
             case APP_WIZARD:
                 config = AutoBeanCodex.decode(factory,
                                               AppWizardConfig.class,
-                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(wc))).as();
+                                              wc.getWindowConfig()).as();
                 break;
 
             case APPS:
                 config = AutoBeanCodex.decode(factory,
                                               AppsWindowConfig.class,
-                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(wc))).as();
+                                              wc.getWindowConfig()).as();
                 break;
 
             case DATA:
                 config = AutoBeanCodex.decode(factory, DiskResourceWindowConfig.class,
-                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(wc))).as();
+                                              wc.getWindowConfig()).as();
                 break;
 
             case FILE_VIEWER:
                 config = AutoBeanCodex.decode(factory, FileViewerWindowConfig.class,
-                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(wc))).as();
+                                              wc.getWindowConfig()).as();
                 break;
 
             case HELP:
@@ -261,35 +260,34 @@ public class ConfigFactory {
                 break;
 
             case NOTIFICATIONS:
-                config = AutoBeanCodex.decode(factory,
-                                              NotifyWindowConfig.class,
-                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(wc))).as();
+                config = AutoBeanCodex.decode(factory, NotifyWindowConfig.class,
+                                              wc.getWindowConfig()).as();
                 break;
 
             case SIMPLE_DOWNLOAD:
                 config = AutoBeanCodex.decode(factory, SimpleDownloadWindowConfig.class,
-                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(wc))).as();
+                                              wc.getWindowConfig()).as();
                 break;
 
             case WORKFLOW_INTEGRATION:
                 config = AutoBeanCodex.decode(factory, PipelineEditorWindowConfig.class,
-                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(wc))).as();
+                                              wc.getWindowConfig()).as();
                 break;
 
             case SYSTEM_MESSAGES:
                 config = AutoBeanCodex.decode(factory, SystemMessagesWindowConfig.class,
-                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(wc))).as();
+                                              wc.getWindowConfig()).as();
                 break;
 
             case MANAGETOOLS:
                 config = AutoBeanCodex.decode(factory,
                                               ManageToolsWindowConfig.class,
-                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(wc))).as();
+                                              wc.getWindowConfig()).as();
                 break;
             case COLLABORATION:
                 config = AutoBeanCodex.decode(factory,
                                               CollaborationWindowConfig.class,
-                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(wc))).as();
+                                              wc.getWindowConfig()).as();
                 break;
         }
 

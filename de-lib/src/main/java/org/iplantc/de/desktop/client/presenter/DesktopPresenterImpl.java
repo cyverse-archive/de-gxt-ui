@@ -35,8 +35,10 @@ import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.dialogs.IplantErrorDialog;
 import org.iplantc.de.commons.client.views.window.configs.AppWizardConfig;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.ConfigAutoBeanFactory;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.desktop.client.presenter.util.MessagePoller;
@@ -80,6 +82,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
@@ -147,6 +150,8 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     @Inject NotificationAutoBeanFactory notificationFactory;
     @Inject DiskResourceAutoBeanFactory diskResourceFactory;
     @Inject AnalysesAutoBeanFactory analysesFactory;
+    @Inject
+    ConfigAutoBeanFactory configAutoBeanFactory;
     @Inject PropertyServiceAsync propertyServiceFacade;
     @Inject UserInfo userInfo;
     @Inject UserSessionServiceFacade userSessionService;
@@ -417,11 +422,15 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }
 
     @Override
-    public List<WindowConfig> getOrderedWindowConfigs() {
-        List<WindowConfig> windowConfigs = Lists.newArrayList();
+    public List<SavedWindowConfig> getOrderedWindowConfigs() {
+        List<SavedWindowConfig> windowConfigs = Lists.newArrayList();
         for (Widget w : windowManager.getStack()) {
             if (w instanceof WindowInterface) {
-                windowConfigs.add(((WindowInterface) w).getWindowConfig());
+                SavedWindowConfig savedWindowConfig = configAutoBeanFactory.savedWindowConfig().as();
+                WindowConfig wc = ((WindowInterface) w).getWindowConfig();
+                savedWindowConfig.setWindowType(wc.getWindowType());
+                savedWindowConfig.setWindowConfig(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(wc)));
+                windowConfigs.add(savedWindowConfig);
             }
         }
         return Collections.unmodifiableList(windowConfigs);
@@ -693,9 +702,9 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }
 
     @Override
-    public void restoreWindows(List<WindowConfig> windowConfigs) {
-        if (windowConfigs != null && windowConfigs.size() > 0) {
-            for (WindowConfig wc : windowConfigs) {
+    public void restoreWindows(List<SavedWindowConfig> savedWindowConfigs) {
+        if (savedWindowConfigs != null && savedWindowConfigs.size() > 0) {
+            for (SavedWindowConfig wc : savedWindowConfigs) {
                 desktopWindowManager.show(wc);
             }
         }

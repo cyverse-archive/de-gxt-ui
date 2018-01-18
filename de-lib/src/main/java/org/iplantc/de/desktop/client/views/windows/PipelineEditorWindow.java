@@ -1,8 +1,6 @@
 package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.apps.client.AppsView;
-import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.pipelines.Pipeline;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -22,6 +20,7 @@ import com.google.gwt.user.client.Command;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.Splittable;
 
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
 import com.sencha.gxt.widget.core.client.box.MessageBox;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
@@ -30,6 +29,7 @@ import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
  * @author jstroot
  */
 public class PipelineEditorWindow extends WindowBase {
+
     class PublishCallbackCommand implements Command {
         @Override
         public void execute() {
@@ -51,19 +51,15 @@ public class PipelineEditorWindow extends WindowBase {
     private boolean close_after_save;
     private String initPipelineJson;
     private PipelineView view;
+    private final AppsView.AppsViewAppearance appsViewAppearance;
 
     @Inject
     PipelineEditorWindow(final IplantDisplayStrings displayStrings,
-                         UserInfo userInfo,
                          final AppsView.AppsViewAppearance appsViewAppearance) {
         this.displayStrings = displayStrings;
-        this.userInfo = userInfo;
+        this.appsViewAppearance = appsViewAppearance;
         setHeading(displayStrings.pipeline());
-        WindowState ws = getWindowStateFromLocalStorage();
-        String width = ws.getWidth();
-        String height = ws.getHeight();
-        setSize((Strings.isNullOrEmpty(width)) ? appsViewAppearance.pipelineEdWindowWidth() : width,
-                (Strings.isNullOrEmpty(height)) ? appsViewAppearance.pipelineEdWindowHeight() : height);
+
         setMinWidth(appsViewAppearance.pipelineEdWindowMinWidth());
         setMinHeight(appsViewAppearance.pipelineEdWindowMinHeight());
     }
@@ -72,6 +68,7 @@ public class PipelineEditorWindow extends WindowBase {
     public <C extends WindowConfig> void show(C windowConfig, String tag,
                                               boolean isMaximizable) {
 
+        super.show(windowConfig, tag, isMaximizable);
         this.view = new PipelineViewImpl();
         presenter = new PipelineViewPresenter(view, new PublishCallbackCommand(), appsViewPresenter);
 
@@ -94,8 +91,6 @@ public class PipelineEditorWindow extends WindowBase {
 
         presenter.go(this);
         close_after_save = false;
-        super.show(windowConfig, tag, isMaximizable);
-
         ensureDebugId(DeModule.WindowIds.WORKFLOW_EDITOR);
     }
 
@@ -153,6 +148,24 @@ public class PipelineEditorWindow extends WindowBase {
     @Override
     public String getWindowType() {
         return WindowType.WORKFLOW_INTEGRATION.toString();
+    }
+
+    @Override
+    public FastMap<String> getAdditionalWindowStates() {
+        return null;
+    }
+
+    @Override
+    public void restoreWindowState() {
+        if (getStateId().equals(ws.getTag())) {
+            super.restoreWindowState();
+            String width = ws.getWidth();
+            String height = ws.getHeight();
+            setSize((Strings.isNullOrEmpty(width)) ? appsViewAppearance.pipelineEdWindowWidth() : width,
+                    (Strings.isNullOrEmpty(height)) ?
+                    appsViewAppearance.pipelineEdWindowHeight() :
+                    height);
+        }
     }
 
 }

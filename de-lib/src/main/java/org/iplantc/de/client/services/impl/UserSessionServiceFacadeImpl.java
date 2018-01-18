@@ -18,7 +18,7 @@ import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
-import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.DEProperties;
@@ -86,7 +86,7 @@ public class UserSessionServiceFacadeImpl implements UserSessionServiceFacade {
     }
 
     @Override
-    public Request saveUserSession(final List<WindowConfig> windowConfigs, AsyncCallback<Void> callback) {
+    public Request saveUserSession(final List<SavedWindowConfig> windowConfigs, AsyncCallback<Void> callback) {
         String address = deProperties.getMuleServiceBaseUrl() + "sessions"; //$NON-NLS-1$
         final AutoBean<UserSession> userSessionAutoBean = factory.userSession();
         userSessionAutoBean.as().setWindowConfigs(windowConfigs);

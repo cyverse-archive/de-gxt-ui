@@ -2,14 +2,13 @@ package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.IsMaskable;
-import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.commons.client.views.window.configs.FileViewerWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.HTPathListWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.MultiInputPathListWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.TabularFileViewerWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.fileViewers.client.FileViewer;
 import org.iplantc.de.fileViewers.client.events.DirtyStateChangedEvent;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
@@ -20,6 +19,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
 import com.sencha.gxt.widget.core.client.box.MessageBox;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
@@ -48,22 +48,17 @@ public class FileViewerWindow extends WindowBase
     private FileViewerWindowConfig configAB;
     private final IplantDisplayStrings displayStrings;
     private final FileViewer.Presenter presenter;
-
+    private final FileViewer.FileViewerAppearance appearance;
 
     @Inject
     FileViewerWindow(final IplantDisplayStrings displayStrings,
                      final FileViewer.Presenter presenter,
-                     final UserInfo userInfo,
                      final FileViewer.FileViewerAppearance appearance) {
         this.displayStrings = displayStrings;
-        this.userInfo = userInfo;
         this.presenter = presenter;
         this.presenter.addDirtyStateChangedEventHandler(this);
-        WindowState ws = getWindowStateFromLocalStorage();
-        String width = ws.getWidth();
-        String height = ws.getHeight();
-        setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
-                (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
+        this.appearance = appearance;
+
         setMinHeight(appearance.windowMinHeight());
         setMinWidth(appearance.windowMinWidth());
    }
@@ -73,6 +68,7 @@ public class FileViewerWindow extends WindowBase
                                                                                                  String tag,
                                                                                                  boolean isMaximizable) {
 
+        super.show(windowConfig, tag, isMaximizable);
         final FileViewerWindowConfig fileViewerWindowConfig = (FileViewerWindowConfig) windowConfig;
         this.configAB = fileViewerWindowConfig;
         this.file = configAB.getFile();
@@ -105,7 +101,6 @@ public class FileViewerWindow extends WindowBase
                                 delimiter);
         }
 
-        super.show(windowConfig, tag, isMaximizable);
     }
 
     @Override
@@ -137,7 +132,24 @@ public class FileViewerWindow extends WindowBase
     }
 
     @Override
-    public org.iplantc.de.commons.client.views.window.configs.WindowConfig getWindowConfig() {
+    public FastMap<String> getAdditionalWindowStates() {
+        return null;
+    }
+
+    @Override
+    public void restoreWindowState() {
+        if (getStateId().equals(ws.getTag())) {
+            super.restoreWindowState();
+            String width = ws.getWidth();
+            String height = ws.getHeight();
+            setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
+                    (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
+        }
+
+    }
+
+    @Override
+    public WindowConfig getWindowConfig() {
         return configAB;
     }
 

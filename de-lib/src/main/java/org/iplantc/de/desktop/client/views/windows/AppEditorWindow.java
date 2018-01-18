@@ -7,8 +7,6 @@ import org.iplantc.de.apps.integration.shared.AppIntegrationModule;
 import org.iplantc.de.apps.widgets.client.view.AppLaunchView.RenameWindowHeaderCommand;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasQualifiedId;
-import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
@@ -40,6 +38,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+
+import com.sencha.gxt.core.shared.FastMap;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -137,8 +137,7 @@ public class AppEditorWindow extends WindowBase implements AppPublishedEventHand
                     final ToolServices dcServices,
                     final AppTemplateAutoBeanFactory factory,
                     final AppsWidgetsContextualHelpMessages helpMessages,
-                    final EventBus eventBus,
-                    final UserInfo userInfo) {
+                    final EventBus eventBus) {
         this.appearance = appearance;
         this.appTemplateUtils = appTemplateUtils;
         this.presenter = presenter;
@@ -147,18 +146,12 @@ public class AppEditorWindow extends WindowBase implements AppPublishedEventHand
         this.dcServices = dcServices;
         this.factory = factory;
         this.eventBus = eventBus;
-        this.userInfo  = userInfo;
 
         editPublicAppContextHlpTool = new ContextualHelpToolButton(new HTML(helpMessages.editPublicAppHelp()));
         renameCmd = new RenameWindowHeaderCmdImpl(this);
 
         setHeading(appearance.headingText());
 
-        WindowState ws = getWindowStateFromLocalStorage();
-        String width = ws.getWidth();
-        String height = ws.getHeight();
-        setSize((width == null) ? appearance.windowWidth() : width,
-                (height == null) ? appearance.windowHeight() : height);
         setMinWidth(appearance.minWidth());
         setMinHeight(appearance.minHeight());
     }
@@ -188,12 +181,11 @@ public class AppEditorWindow extends WindowBase implements AppPublishedEventHand
 
     @Override
     public <C extends WindowConfig> void show(C windowConfig, String tag, boolean isMaximizable) {
-
+        super.show(windowConfig, tag, isMaximizable);
         // JDS Add presenter as a before hide handler to determine if user has changes before closing.
         presenter.setBeforeHideHandlerRegistration(this.addBeforeHideHandler(presenter));
         eventBus.addHandler(AppPublishedEvent.TYPE, this);
         init(presenter, (AppsIntegrationWindowConfig)windowConfig);
-        super.show(windowConfig, tag, isMaximizable);
         setMaximized(true);
 
         ensureDebugId(DeModule.WindowIds.APP_EDITOR_WINDOW);
@@ -232,6 +224,22 @@ public class AppEditorWindow extends WindowBase implements AppPublishedEventHand
     @Override
     public String getWindowType() {
         return WindowType.APP_INTEGRATION.toString();
+    }
+
+    @Override
+    public FastMap<String> getAdditionalWindowStates() {
+      return null;
+    }
+
+    @Override
+    public void restoreWindowState() {
+        if (getStateId().equals(ws.getTag())) {
+            super.restoreWindowState();
+            String width = ws.getWidth();
+            String height = ws.getHeight();
+            setSize((width == null) ? appearance.windowWidth() : width,
+                    (height == null) ? appearance.windowHeight() : height);
+        }
     }
 
     private AppsIntegrationWindowConfig getUpdatedConfig() {
