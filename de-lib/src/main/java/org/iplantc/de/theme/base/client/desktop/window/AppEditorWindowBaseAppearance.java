@@ -97,4 +97,14 @@ public class AppEditorWindowBaseAppearance implements AppEditorWindow.AppEditorA
     public String unableToRetrieveWorkflowGuide() {
         return "Unable to open the selected App";
     }
+
+    @Override
+    public String windowWidth() {
+        return "800";
+    }
+
+    @Override
+    public String windowHeight() {
+        return "480";
+    }
 }

@@ -31,6 +31,17 @@ import java.util.List;
 public interface DiskResourceView extends IsWidget,
                                           IsMaskable {
 
+
+    interface DiskResourceViewAppearance {
+        String windowHeight();
+
+        String windowWidth();
+    }
+
+    boolean isDetailsCollapsed();
+
+    void setDetailsCollapsed(boolean collapsed);
+
     /**
      * A dataproxy used by the <code>Presenter</code> to fetch <code>DiskResource</code> data from the
      * {@link DiskResourceServiceFacade}.
@@ -48,12 +59,13 @@ public interface DiskResourceView extends IsWidget,
     }
 
 
-    interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter,
-                                IsMaskable,
+    interface Presenter extends IsMaskable,
                                 HasDiskResourceSelectionChangedEventHandlers,
                                 HasFolderSelectionEventHandlers,
                                 RefreshFolderSelected.RefreshFolderSelectedHandler,
                                 CreateNewFolderConfirmed.CreateNewFolderConfirmedHandler {
+
+        boolean isDetailsCollapsed();
 
         interface Appearance {
 
@@ -125,6 +137,8 @@ public interface DiskResourceView extends IsWidget,
         List<DiskResource> getSelectedDiskResources();
 
         Folder getSelectedFolder();
+
+        void  go(HasOneWidget container, boolean collapseDetailsPanel);
 
         void go(HasOneWidget container, HasPath folderToSelect,
                 List<? extends HasId> diskResourcesToSelect);

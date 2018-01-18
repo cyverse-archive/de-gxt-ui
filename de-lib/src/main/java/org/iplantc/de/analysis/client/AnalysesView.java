@@ -146,6 +146,12 @@ public interface AnalysesView extends IsWidget,
         String stepInfoDialogHeight();
 
         int dotMenuWidth();
+
+        String windowWidth();
+
+        String windowHeight();
+
+        int windowMinWidth();
     }
 
     interface Presenter {

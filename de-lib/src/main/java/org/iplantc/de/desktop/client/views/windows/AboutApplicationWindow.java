@@ -2,7 +2,9 @@ package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.client.models.AboutApplicationData;
 import org.iplantc.de.client.models.CommonModelAutoBeanFactory;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.desktop.shared.DeModule;
@@ -41,6 +43,10 @@ public class AboutApplicationWindow extends IplantWindowBase {
         ImageResource iplantAbout();
 
         String iplantcAboutPadText();
+
+        String windowWidth();
+
+        String windowHeight();
     }
     private final AboutApplicationServiceAsync aboutApplicationService;
     private final AboutApplicationAppearance appearance;
@@ -48,10 +54,16 @@ public class AboutApplicationWindow extends IplantWindowBase {
 
     @Inject
     AboutApplicationWindow(final AboutApplicationServiceAsync aboutApplicationService,
-                           final AboutApplicationAppearance appearance) {
+                           final AboutApplicationAppearance appearance, final UserInfo userInfo) {
         this.aboutApplicationService = aboutApplicationService;
         this.appearance = appearance;
-        setSize("320", "260");
+        this.userInfo = userInfo;
+
+        String width = getSavedWidth(WindowType.ABOUT.toString());
+        String height = getSavedHeight(WindowType.ABOUT.toString());
+        setSize((width == null) ? appearance.windowWidth() : width,
+                (height == null) ? appearance.windowHeight() : height);
+
         setHeading(appearance.headingText());
         ensureDebugId(DeModule.WindowIds.ABOUT_WINDOW);
         executeServiceCall();
@@ -103,5 +115,12 @@ public class AboutApplicationWindow extends IplantWindowBase {
                 compose();
             }
         });
+    }
+
+    @Override
+    public void hide() {
+        saveHeight(WindowType.ABOUT.toString());
+        saveWidth(WindowType.ABOUT.toString());
+        super.hide();
     }
 }

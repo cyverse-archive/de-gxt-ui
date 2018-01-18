@@ -2,7 +2,10 @@ package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.apps.client.AppsView;
 import org.iplantc.de.apps.shared.AppsModule;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
+import org.iplantc.de.client.util.WebStorageUtil;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
@@ -22,15 +25,24 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
 public class DEAppsWindow extends IplantWindowBase {
 
     public static final String APPS = "#apps";
+    public static final String DE_APPS_ACTIVEVIEW = "de.apps.activeview#";
+
     private final AppsView.Presenter presenter;
 
     @Inject
-    DEAppsWindow(final AppsView.Presenter presenter, final IplantDisplayStrings displayStrings) {
+    DEAppsWindow(final AppsView.Presenter presenter,
+                 final IplantDisplayStrings displayStrings,
+                 final UserInfo userInfo,
+                 final AppsView.AppsViewAppearance appsViewAppearance) {
         this.presenter = presenter;
+        this.userInfo = userInfo;
 
         // This must be set before we render view
         ensureDebugId(DeModule.WindowIds.APPS_WINDOW);
-        setSize("820", "400");
+        String width = getSavedWidth(WindowType.APPS.toString());
+        String height = getSavedHeight(WindowType.APPS.toString());
+        setSize((width == null) ? appsViewAppearance.appsWindowWidth() : width,
+                (height == null) ? appsViewAppearance.appsWindowHeight() : height);
         setMinWidth(540);
         setHeading(displayStrings.applications());
     }
@@ -43,7 +55,8 @@ public class DEAppsWindow extends IplantWindowBase {
         presenter.go(this,
                      appsWindowConfig.getSelectedAppCategory(),
                      appsWindowConfig.getSelectedApp(),
-                     appsWindowConfig.getView());
+                     WebStorageUtil.readFromStorage(
+                             DE_APPS_ACTIVEVIEW + userInfo.getUsername()));
         super.show(windowConfig, tag, isMaximizable);
         btnHelp = createHelpButton();
         getHeader().insertTool(btnHelp,0);
@@ -63,8 +76,12 @@ public class DEAppsWindow extends IplantWindowBase {
     }
 
     @Override
-    public void doHide() {
-        super.doHide();
+    public void hide() {
+        WebStorageUtil.writeToStorage(DE_APPS_ACTIVEVIEW + userInfo.getUsername(),
+                                      presenter.getActiveView());
+        saveHeight(WindowType.APPS.toString());
+        saveWidth(WindowType.APPS.toString());
+        super.hide();
     }
 
     @Override
@@ -72,7 +89,6 @@ public class DEAppsWindow extends IplantWindowBase {
         AppsWindowConfig config = ConfigFactory.appsWindowConfig();
         config.setSelectedApp(presenter.getSelectedApp());
         config.setSelectedAppCategory(presenter.getSelectedAppCategory());
-        config.setView(presenter.getActiveView());
         return createWindowState(config);
     }
 

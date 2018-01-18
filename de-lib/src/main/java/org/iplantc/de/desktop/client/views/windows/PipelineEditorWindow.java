@@ -1,7 +1,9 @@
 package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.apps.client.AppsView;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.pipelines.Pipeline;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
@@ -50,13 +52,18 @@ public class PipelineEditorWindow extends IplantWindowBase {
     private PipelineView view;
 
     @Inject
-    PipelineEditorWindow(final IplantDisplayStrings displayStrings) {
+    PipelineEditorWindow(final IplantDisplayStrings displayStrings,
+                         UserInfo userInfo,
+                         final AppsView.AppsViewAppearance appsViewAppearance) {
         this.displayStrings = displayStrings;
-
+        this.userInfo = userInfo;
         setHeading(displayStrings.pipeline());
-        setSize("900", "500");
-        setMinWidth(640);
-        setMinHeight(440);
+        String width = getSavedWidth(WindowType.WORKFLOW_INTEGRATION.toString());
+        String height = getSavedHeight(WindowType.WORKFLOW_INTEGRATION.toString());
+        setSize((width == null) ? appsViewAppearance.pipelineEdWindowWidth() : width,
+                (height == null) ? appsViewAppearance.pipelineEdWindowHeight() : height);
+        setMinWidth(appsViewAppearance.pipelineEdWindowMinWidth());
+        setMinHeight(appsViewAppearance.pipelineEdWindowMinHeight());
     }
 
     @Override
@@ -99,6 +106,8 @@ public class PipelineEditorWindow extends IplantWindowBase {
 
     @Override
     public void hide() {
+        saveHeight(WindowType.WORKFLOW_INTEGRATION.toString());
+        saveWidth(WindowType.WORKFLOW_INTEGRATION.toString());
         if (!isMinimized()) {
             if (initPipelineJson != null
                     && !initPipelineJson.equals(presenter.getPublishJson(presenter.getPipeline()))) {

@@ -7,7 +7,9 @@ import org.iplantc.de.apps.integration.shared.AppIntegrationModule;
 import org.iplantc.de.apps.widgets.client.view.AppLaunchView.RenameWindowHeaderCommand;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasQualifiedId;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
@@ -107,6 +109,10 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
         int minWidth();
 
         String unableToRetrieveWorkflowGuide();
+
+        String windowWidth();
+
+        String windowHeight();
     }
 
     final AppEditorAppearance appearance;
@@ -119,6 +125,7 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
     private final RenameWindowHeaderCmdImpl renameCmd;
     private final AppTemplateServices templateService;
     private final ContextualHelpToolButton editPublicAppContextHlpTool;
+
     Logger LOG = Logger.getLogger("App Editor window");
 
     @Inject
@@ -130,7 +137,8 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
                     final ToolServices dcServices,
                     final AppTemplateAutoBeanFactory factory,
                     final AppsWidgetsContextualHelpMessages helpMessages,
-                    final EventBus eventBus) {
+                    final EventBus eventBus,
+                    final UserInfo userInfo) {
         this.appearance = appearance;
         this.appTemplateUtils = appTemplateUtils;
         this.presenter = presenter;
@@ -139,12 +147,18 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
         this.dcServices = dcServices;
         this.factory = factory;
         this.eventBus = eventBus;
+        this.userInfo  = userInfo;
 
         editPublicAppContextHlpTool = new ContextualHelpToolButton(new HTML(helpMessages.editPublicAppHelp()));
         renameCmd = new RenameWindowHeaderCmdImpl(this);
 
         setHeading(appearance.headingText());
-        setSize("800", "480");
+
+
+        String width = getSavedWidth(WindowType.APP_INTEGRATION.toString());
+        String height = getSavedHeight(WindowType.APP_INTEGRATION.toString());
+        setSize((width == null) ? appearance.windowWidth() : width,
+                (height == null) ? appearance.windowHeight() : height);
         setMinWidth(appearance.minWidth());
         setMinHeight(appearance.minHeight());
     }
@@ -310,6 +324,14 @@ public class AppEditorWindow extends IplantWindowBase implements AppPublishedEve
                         }
                     });
         }
+    }
+
+
+    @Override
+    public void hide() {
+        saveHeight(WindowType.APP_INTEGRATION.toString());
+        saveWidth(WindowType.APP_INTEGRATION.toString());
+        super.hide();
     }
 
     private void setEditPublicAppHeader(String appName) {

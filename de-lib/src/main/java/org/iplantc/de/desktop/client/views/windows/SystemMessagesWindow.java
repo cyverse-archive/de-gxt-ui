@@ -1,12 +1,15 @@
 package org.iplantc.de.desktop.client.views.windows;
 
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.SystemMessagesWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.systemMessages.client.presenter.MessagesPresenter;
+import org.iplantc.de.systemMessages.client.view.MessagesView;
 import org.iplantc.de.systemMessages.shared.SystemMessages;
 
 import com.google.gwt.user.client.Window;
@@ -20,11 +23,17 @@ public final class SystemMessagesWindow extends IplantWindowBase {
 
     private MessagesPresenter presenter;
 
+
     @Inject
-    SystemMessagesWindow(final IplantDisplayStrings displayStrings) {
+    SystemMessagesWindow(final IplantDisplayStrings displayStrings,
+                         final UserInfo userInfo,
+                         final MessagesView.MessagesAppearance appearance) {
+        this.userInfo = userInfo;
         setHeading(displayStrings.systemMessagesLabel());
-        setWidth(computeDefaultWidth());
-        setHeight(computeDefaultHeight());
+        String width = getSavedWidth(WindowType.SYSTEM_MESSAGES.toString());
+        String height = getSavedHeight(WindowType.SYSTEM_MESSAGES.toString());
+        setSize((width == null) ? computeDefaultWidth(appearance) + "" : width,
+                (height == null) ? computeDefaultHeight(appearance) + "" : height);
     }
 
     @Override
@@ -36,12 +45,12 @@ public final class SystemMessagesWindow extends IplantWindowBase {
         ensureDebugId(DeModule.WindowIds.SYSTEM_MESSAGES);
     }
 
-    private static int computeDefaultHeight() {
-        return Math.max(400, Window.getClientHeight() / 3);
+    private static int computeDefaultHeight(MessagesView.MessagesAppearance appearance) {
+        return Math.max(Integer.parseInt(appearance.windowHeight()), Window.getClientHeight() / 3);
     }
 
-    private static int computeDefaultWidth() {
-        return Math.max(600, Window.getClientWidth() / 3);
+    private static int computeDefaultWidth(MessagesView.MessagesAppearance appearance) {
+        return Math.max(Integer.parseInt(appearance.windowWidth()), Window.getClientWidth() / 3);
     }
 
     /**
@@ -53,19 +62,18 @@ public final class SystemMessagesWindow extends IplantWindowBase {
         return createWindowState(ConfigFactory.systemMessagesWindowConfig(selMsg));
     }
 
-    /**
-     * @see IplantWindowBase#doHide()
-     */
-    @Override
-    protected void doHide() {
-        presenter.stop();
-        super.doHide();
-    }
-
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
 
         presenter.setViewDebugId(baseID + SystemMessages.Ids.VIEW);
+    }
+
+    @Override
+    public void hide() {
+        saveHeight(WindowType.SYSTEM_MESSAGES.toString());
+        saveWidth(WindowType.SYSTEM_MESSAGES.toString());
+        presenter.stop();
+        super.hide();
     }
 }

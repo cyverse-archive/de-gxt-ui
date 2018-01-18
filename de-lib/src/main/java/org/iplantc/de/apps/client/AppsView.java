@@ -25,6 +25,19 @@ public interface AppsView extends IsWidget,
 
     interface AppsViewAppearance {
         String viewCategoriesHeader();
+
+        String appsWindowWidth();
+
+        String appsWindowHeight();
+
+        String pipelineEdWindowWidth();
+
+        String pipelineEdWindowHeight();
+
+        int pipelineEdWindowMinWidth();
+
+        int pipelineEdWindowMinHeight();
+
     }
 
     /**

@@ -184,6 +184,16 @@ public class ManageToolsViewDefaultAppearance implements ManageToolsToolbarView.
     }
 
     @Override
+    public String windowWidth() {
+        return "600";
+    }
+
+    @Override
+    public String windowHeight() {
+        return "500";
+    }
+
+    @Override
     public String submitForPublicUse() {
         return toolMessages.submitForUse();
     }

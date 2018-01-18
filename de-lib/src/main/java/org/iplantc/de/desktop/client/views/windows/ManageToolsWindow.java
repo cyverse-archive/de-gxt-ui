@@ -1,6 +1,8 @@
 package org.iplantc.de.desktop.client.views.windows;
 
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.shared.DeModule;
@@ -20,9 +22,16 @@ public class ManageToolsWindow extends IplantWindowBase {
 
     @Inject
     public ManageToolsWindow(ManageToolsView.Presenter toolsPresenter,
-                             final IplantDisplayStrings displayStrings) {
+                             final IplantDisplayStrings displayStrings,
+                             final UserInfo userInfo,
+                             final ManageToolsView.ManageToolsViewAppearance appearance) {
         this.toolsPresenter = toolsPresenter;
-        setSize("800px", "600px");
+        this.userInfo = userInfo;
+        String width = getSavedWidth(WindowType.MANAGETOOLS.toString());
+        String height = getSavedWidth(WindowType.MANAGETOOLS.toString());
+        setSize((width == null) ? appearance.windowWidth() : width,
+                (height == null) ? appearance.windowHeight() : height);
+
         setHeading(displayStrings.manageTools());
         ensureDebugId(DeModule.WindowIds.MANAGE_TOOLS_WINDOW);
     }
@@ -44,6 +53,13 @@ public class ManageToolsWindow extends IplantWindowBase {
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
         toolsPresenter.setViewDebugId(baseID + ToolsModule.ToolIds.TOOLS_VIEW);
+    }
+
+    @Override
+    public void hide() {
+        saveHeight(WindowType.MANAGETOOLS.toString());
+        saveWidth(WindowType.MANAGETOOLS.toString());
+        super.hide();
     }
 
 

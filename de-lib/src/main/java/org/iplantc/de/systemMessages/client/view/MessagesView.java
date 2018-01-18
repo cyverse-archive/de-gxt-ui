@@ -20,6 +20,13 @@ import java.util.Date;
  */
 public interface MessagesView<M> extends IsWidget {
 
+
+    public interface MessagesAppearance {
+        String windowHeight();
+
+        String windowWidth();
+    }
+
     /**
      * The properties of the messages used by the view
      */

@@ -1,8 +1,11 @@
 package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.client.models.HasId;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.diskResources.Folder;
+import org.iplantc.de.client.util.WebStorageUtil;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
@@ -35,20 +38,28 @@ import java.util.List;
 public class DeDiskResourceWindow extends IplantWindowBase implements FolderSelectionEvent.FolderSelectionEventHandler {
 
     public static final String DATA = "#data";
+    public static final String DE_DATA_DETAILSPANEL_COLLAPSE = "de.data.detailspanel.collapse#";
+
+
     private final DiskResourcePresenterFactory presenterFactory;
     private final IplantDisplayStrings displayStrings;
     private DiskResourceView.Presenter presenter;
 
-
     @Inject
     DeDiskResourceWindow(final DiskResourcePresenterFactory presenterFactory,
-                         final IplantDisplayStrings displayStrings) {
+                         final IplantDisplayStrings displayStrings,
+                         final UserInfo userInfo,
+                         final DiskResourceView.DiskResourceViewAppearance appearance) {
         this.presenterFactory = presenterFactory;
         this.displayStrings = displayStrings;
+        this.userInfo = userInfo;
         setHeading(displayStrings.data());
-        setSize("900", "480");
-        setMinWidth(900);
-        setMinHeight(480);
+        String width = getSavedWidth(WindowType.DATA.toString());
+        String height = getSavedHeight(WindowType.DATA.toString());
+        setSize((width == null) ? appearance.windowWidth() : width,
+                (height == null) ? appearance.windowHeight() : height);
+        setMinWidth(Integer.parseInt(appearance.windowWidth()));
+        setMinHeight(Integer.parseInt(appearance.windowHeight()));
     }
 
     @Override
@@ -69,7 +80,9 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
                                                                 resourcesToSelect);
         final String uniqueWindowTag = (diskResourceWindowConfig.getTag() == null) ? "" : "." + diskResourceWindowConfig.getTag();
         ensureDebugId(DeModule.WindowIds.DISK_RESOURCE_WINDOW + uniqueWindowTag);
-        presenter.go(this);
+        String minimizeDetails  = WebStorageUtil.readFromStorage(
+                DE_DATA_DETAILSPANEL_COLLAPSE + userInfo.getUsername());
+        presenter.go(this, (minimizeDetails == null)? false: Boolean.valueOf(minimizeDetails));
         initHandlers();
         super.show(windowConfig, tag, isMaximizable);
         btnHelp = createHelpButton();
@@ -98,6 +111,9 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
         if (!isMinimized()) {
             presenter.cleanUp();
         }
+        saveHeight(WindowType.DATA.toString());
+        saveWidth(WindowType.DATA.toString());
+        WebStorageUtil.writeToStorage(DE_DATA_DETAILSPANEL_COLLAPSE + userInfo.getUsername(), presenter.isDetailsCollapsed() + "");
         super.hide();
     }
 
