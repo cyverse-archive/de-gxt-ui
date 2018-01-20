@@ -66,7 +66,9 @@ public class CasGroupUserDetailsService extends AbstractCasAssertionUserDetailsS
         final Object value = assertion.getPrincipal().getAttributes().get(attribute);
         if (value != null) {
             for (String groupName : convertToList(value.toString())) {
-                grantedAuthorities.add(new SimpleGrantedAuthority(groupName));
+                if (groupName.length() != 0) {
+                    grantedAuthorities.add(new SimpleGrantedAuthority(groupName));
+                }
             }
         }
         String name = assertion.getPrincipal().getName();
