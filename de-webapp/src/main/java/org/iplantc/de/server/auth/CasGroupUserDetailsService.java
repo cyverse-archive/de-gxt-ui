@@ -32,7 +32,7 @@ public class CasGroupUserDetailsService extends AbstractCasAssertionUserDetailsS
     /**
      * The pattern used to extract list contents from the string representation of a list.
      */
-    private static final Pattern LIST_CONTENTS_PATTERN = Pattern.compile("\\A\\[([^\\]]*)\\]\\z");
+    private static final Pattern LIST_CONTENTS_PATTERN = Pattern.compile("\\A\\[|\\]\\z");
 
     /**
      * The pattern used to separate list elements in the string representation of a list.
@@ -96,7 +96,7 @@ public class CasGroupUserDetailsService extends AbstractCasAssertionUserDetailsS
         String result = "";
         if (listString != null) {
             Matcher m = LIST_CONTENTS_PATTERN.matcher(listString);
-            result = m.find() ? m.group(1) : "";
+            result = m.replaceAll("");
         }
         return result;
     }
