@@ -7,6 +7,7 @@ import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.theme.base.client.apps.cells.AppDotMenuDefaultAppearance;
 import org.iplantc.de.theme.base.client.diskResource.DiskResourceMessages;
+import org.iplantc.de.theme.base.client.diskResource.toolbar.ToolbarDisplayMessages;
 
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.core.client.GWT;
@@ -19,6 +20,7 @@ public class DiskResourceDotMenuDefaultAppearance implements DiskResourceDotMenu
     private IplantDisplayStrings iplantDisplayStrings;
     private DiskResourceMessages diskResourceMessages;
     private AppDotMenuDefaultAppearance appDotMenuDefaultAppearance;
+    private ToolbarDisplayMessages toolbarDisplayMessages;
     private DiskResourceDotMenuDisplayStrings displayStrings;
 
     public DiskResourceDotMenuDefaultAppearance() {
@@ -26,6 +28,7 @@ public class DiskResourceDotMenuDefaultAppearance implements DiskResourceDotMenu
              GWT.<IplantDisplayStrings>create(IplantDisplayStrings.class),
              GWT.<DiskResourceMessages>create(DiskResourceMessages.class),
              GWT.<AppDotMenuDefaultAppearance>create(AppDotMenuDefaultAppearance.class),
+             GWT.<ToolbarDisplayMessages>create(ToolbarDisplayMessages.class),
              GWT.<DiskResourceDotMenuDisplayStrings>create(DiskResourceDotMenuDisplayStrings.class));
     }
 
@@ -33,12 +36,14 @@ public class DiskResourceDotMenuDefaultAppearance implements DiskResourceDotMenu
                                                 IplantDisplayStrings iplantDisplayStrings,
                                                 DiskResourceMessages diskResourceMessages,
                                                 AppDotMenuDefaultAppearance appDotMenuDefaultAppearance,
+                                                ToolbarDisplayMessages toolbarDisplayMessages,
                                                 DiskResourceDotMenuDisplayStrings displayStrings) {
 
         this.iplantResources = iplantResources;
         this.iplantDisplayStrings = iplantDisplayStrings;
         this.diskResourceMessages = diskResourceMessages;
         this.appDotMenuDefaultAppearance = appDotMenuDefaultAppearance;
+        this.toolbarDisplayMessages = toolbarDisplayMessages;
         this.displayStrings = displayStrings;
     }
 
@@ -86,7 +91,7 @@ public class DiskResourceDotMenuDefaultAppearance implements DiskResourceDotMenu
         if (diskResource instanceof File) {
             return displayStrings.dataLinkFileText();
         } else {
-            return displayStrings.dataLinkFolderText();
+            return toolbarDisplayMessages.shareFolderLocationMenuItem();
         }
     }
 
