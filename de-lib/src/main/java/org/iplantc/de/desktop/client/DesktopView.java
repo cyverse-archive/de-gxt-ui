@@ -192,6 +192,8 @@ public interface DesktopView extends IsWidget {
             String sectionOne();
 
             SafeHtml webhookSaveError();
+
+            String cannotEditTwoApps();
         }
 
         List<WindowState> getOrderedWindowStates();

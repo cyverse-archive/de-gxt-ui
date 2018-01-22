@@ -147,4 +147,9 @@ public class DesktopPresenterDefaultAppearance implements DesktopView.Presenter.
     public SafeHtml webhookSaveError() {
         return desktopMessages.webhookSaveError();
     }
+
+    @Override
+    public String cannotEditTwoApps() {
+        return desktopMessages.cannotEditTwoApps();
+    }
 }
