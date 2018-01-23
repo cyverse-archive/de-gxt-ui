@@ -6,8 +6,6 @@ import java.util.Map;
 
 public interface WindowState {
 
-
-    String LOCAL_STORAGE_PREFIX = "de.";
     String WIDTH = ".width";
     String HEIGHT = ".height";
     String TOP = ".top";

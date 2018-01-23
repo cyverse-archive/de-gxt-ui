@@ -138,7 +138,7 @@ public interface DiskResourceView extends IsWidget,
 
         Folder getSelectedFolder();
 
-        void  go(HasOneWidget container, boolean collapseDetailsPanel);
+        void go(HasOneWidget container, boolean collapseDetailsPanel);
 
         void go(HasOneWidget container, HasPath folderToSelect,
                 List<? extends HasId> diskResourcesToSelect);

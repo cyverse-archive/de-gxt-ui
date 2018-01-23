@@ -2,15 +2,15 @@ package org.iplantc.de.desktop.client.presenter;
 
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
-import org.iplantc.de.client.util.WebStorageUtil;
 import org.iplantc.de.desktop.client.DesktopView;
+import org.iplantc.de.desktop.client.presenter.util.WindowStateStorageWrapper;
 
 import com.google.gwt.core.client.GWT;
 
 import java.util.List;
-import java.util.Map;
 
 /**
+ * An utility run by a thread every 15s to store window states to local storage.
  * Created by sriram on 1/11/18.
  */
 public class SaveWindowStatesPeriodic implements Runnable {
@@ -33,21 +33,14 @@ public class SaveWindowStatesPeriodic implements Runnable {
     }
 
 
+    /**
+     * Save WindowState local storage.
+     *
+     * @param ws WindowState object
+     */
     void saveWindowState(WindowState ws) {
-        String prefix = WebStorageUtil.LOCAL_STORAGE_PREFIX + ws.getWindowType();
-        String suffix = "#" + ws.getTag() + "#" + userInfo.getUsername();
-        WebStorageUtil.writeToStorage(prefix + WindowState.HEIGHT + suffix, ws.getHeight() + "");
-        WebStorageUtil.writeToStorage(prefix + WindowState.WIDTH + suffix, ws.getWidth() + "");
-        WebStorageUtil.writeToStorage(prefix + WindowState.TOP + suffix, ws.getWinTop() + "");
-        WebStorageUtil.writeToStorage(prefix + WindowState.LEFT + suffix, ws.getWinLeft() + "");
-        WebStorageUtil.writeToStorage(prefix + WindowState.MINIMIZED + suffix, ws.isMinimized() + "");
-        WebStorageUtil.writeToStorage(prefix + WindowState.MAXIMIZED + suffix, ws.isMaximized() + "");
-        Map<String, String> additionalWindowStates = ws.getAdditionalWindowStates();
-        if (additionalWindowStates != null) {
-            for (String key : additionalWindowStates.keySet()) {
-                WebStorageUtil.writeToStorage(key,
-                                              additionalWindowStates.get(key));
-            }
-        }
+        WindowStateStorageWrapper wssw =
+                new WindowStateStorageWrapper(userInfo, ws.getWindowType(), ws.getTag());
+        wssw.saveWindowState(ws);
     }
 }

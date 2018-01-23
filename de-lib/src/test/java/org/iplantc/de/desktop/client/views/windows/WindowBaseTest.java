@@ -7,13 +7,9 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.WindowState;
-import org.iplantc.de.client.util.WebStorageUtil;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 
 import com.google.gwtmockito.GxtMockitoTestRunner;
-import com.google.web.bindery.autobean.shared.AutoBean;
 
 import com.sencha.gxt.core.client.dom.XElement;
 import com.sencha.gxt.core.client.util.Rectangle;
@@ -23,30 +19,17 @@ import com.sencha.gxt.widget.core.client.button.ToolButton;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
-import org.mockito.Mock;
 
 @RunWith(GxtMockitoTestRunner.class)
 public class WindowBaseTest {
 
     private WindowBase uut;
-    @Mock
-    WebStorageUtil storageUtilMock;
-
-    @Mock
-    WindowBase.WindowStateFactory wsfMock;
-
-    @Mock
-    UserInfo userInfoMock;
-
-    @Mock
-    AutoBean<WindowState> windowStateAutoBean;
 
     @Before public void setup() {
         uut = new WindowBase() {
             @Override
             public String getWindowType() {
-                return "DATA";
+                return null;
             }
 
             @Override
@@ -59,8 +42,6 @@ public class WindowBaseTest {
                 return null;
             }
         };
-        uut.wsf = wsfMock;
-        uut.userInfo = userInfoMock;
     }
 
     @Test public void minimizeFlagSetToFalseWhenWindowShown(){
@@ -128,20 +109,4 @@ public class WindowBaseTest {
         verify(uutSpy).setPagePosition(eq(testValueWidth_half), eq(testValueY));
         verify(uutSpy).setPixelSize(eq(testValueWidth_half), eq(testValueHeight));
     }
-
-    @Test
-    public void testGetWindowStateFromLocalStorage() {
-        WindowState ws1 = mock(WindowState.class);
-        when(wsfMock.windowState()).thenReturn(windowStateAutoBean);
-        when(windowStateAutoBean.as()).thenReturn(ws1);
-        when(userInfoMock.getUsername()).thenReturn("ipctest");
-        uut.getWindowStateFromLocalStorage("DATA");
-        verify(ws1).setMaximized(Matchers.anyBoolean());
-        verify(ws1).setMinimized(Matchers.anyBoolean());
-        verify(ws1).setHeight(Matchers.anyString());
-        verify(ws1).setWidth(Matchers.anyString());
-        verify(ws1).setWinLeft(Matchers.anyInt());
-        verify(ws1).setWinTop(Matchers.anyInt());
-        verify(ws1).setTag(eq("DATA"));
-   }
 }

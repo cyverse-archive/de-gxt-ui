@@ -106,11 +106,6 @@ public class AppLaunchWindow extends WindowBase implements AnalysisLaunchEventHa
     }
 
     @Override
-    public void hide() {
-        super.hide();
-    }
-
-    @Override
     public String getWindowType() {
         return WindowType.APP_WIZARD.toString();
     }

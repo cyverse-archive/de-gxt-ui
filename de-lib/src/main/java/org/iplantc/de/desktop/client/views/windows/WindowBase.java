@@ -2,9 +2,9 @@ package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
-import org.iplantc.de.client.util.WebStorageUtil;
 import org.iplantc.de.commons.client.CommonUiConstants;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
+import org.iplantc.de.desktop.client.presenter.util.WindowStateStorageWrapper;
 import org.iplantc.de.desktop.client.views.widgets.ServiceDownPanel;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.intercom.client.IntercomFacade;
@@ -42,10 +42,6 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 import com.sencha.gxt.widget.core.client.menu.Item;
 import com.sencha.gxt.widget.core.client.menu.Menu;
 import com.sencha.gxt.widget.core.client.menu.MenuItem;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author jstroot
@@ -645,41 +641,8 @@ public abstract class WindowBase extends Window implements WindowInterface {
 
     @Override
     public WindowState getWindowStateFromLocalStorage(String tag) {
-        WindowState ws = wsf.windowState().as();
-        String prefix = WebStorageUtil.LOCAL_STORAGE_PREFIX + getWindowType();
-        String suffix = "#" + tag + "#" + userInfo.getUsername();
-        String height = WebStorageUtil.readFromStorage(prefix + WindowState.HEIGHT + suffix);
-        ws.setHeight(Strings.isNullOrEmpty(height) ? "" : height);
-
-        String width = WebStorageUtil.readFromStorage(prefix + WindowState.WIDTH + suffix);
-        ws.setWidth(Strings.isNullOrEmpty(width) ? "" : width);
-
-        String left = WebStorageUtil.readFromStorage(prefix + WindowState.LEFT + suffix);
-        ws.setWinLeft(Strings.isNullOrEmpty(left) ? 0 : Integer.parseInt(left));
-
-        String top = WebStorageUtil.readFromStorage(prefix + WindowState.TOP + suffix);
-        ws.setWinTop(Strings.isNullOrEmpty(top) ? 0 : Integer.parseInt(top));
-
-        String maximized = WebStorageUtil.readFromStorage(prefix + WindowState.MAXIMIZED + suffix);
-        ws.setMaximized(Strings.isNullOrEmpty(maximized) ? false : Boolean.parseBoolean(maximized));
-
-        String minimized = WebStorageUtil.readFromStorage(prefix + WindowState.MINIMIZED + suffix);
-        ws.setMinimized(Strings.isNullOrEmpty(minimized) ? false : Boolean.parseBoolean(minimized));
-
-        Map<String, String> map = WebStorageUtil.getStorageAsMap();
-        Map<String, String> additionalWindowStates = new HashMap<>();
-        if(map != null) {
-            Set<String> keys = map.keySet();
-            for(String key : keys) {
-                if(key.contains(WindowState.ADDITIONAL + WindowState.LOCAL_STORAGE_PREFIX)) {
-                    additionalWindowStates.put(key, map.get(key));
-                }
-            }
-            ws.setAdditionalWindowStates(additionalWindowStates);
-        }
-
-        ws.setTag(tag);
-        return ws;
+        WindowStateStorageWrapper wssw = new WindowStateStorageWrapper(userInfo, getWindowType(), tag);
+        return wssw.retrieveWindowState();
     }
 }
 

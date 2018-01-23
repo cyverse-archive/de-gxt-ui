@@ -341,11 +341,6 @@ public class AppEditorWindow extends WindowBase implements AppPublishedEventHand
     }
 
 
-    @Override
-    public void hide() {
-        super.hide();
-    }
-
     private void setEditPublicAppHeader(String appName) {
         setHeading(appearance.editPublicAppWarningTitle(SafeHtmlUtils.fromString(appName)));
 

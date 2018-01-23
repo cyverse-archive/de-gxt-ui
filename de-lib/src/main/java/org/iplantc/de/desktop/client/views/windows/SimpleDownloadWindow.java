@@ -68,11 +68,6 @@ public class SimpleDownloadWindow extends WindowBase {
     }
 
     @Override
-    public void hide() {
-        super.hide();
-    }
-
-    @Override
     public String getWindowType() {
         return WindowType.SIMPLE_DOWNLOAD.toString();
     }

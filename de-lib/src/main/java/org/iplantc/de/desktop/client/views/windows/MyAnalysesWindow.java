@@ -111,9 +111,5 @@ public class MyAnalysesWindow extends WindowBase {
         }
 
     }
-
-    @Override
-    public void hide() {
-        super.hide();
-    }
 }
+

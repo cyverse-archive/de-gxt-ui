@@ -440,11 +440,11 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
        List<WindowState> windowStates  = Lists.newArrayList();
         for (Widget w : windowManager.getStack()) {
             if (w instanceof WindowInterface) {
-               windowStates.add(((WindowInterface) w).createWindowState());
+                windowStates.add(((WindowInterface)w).createWindowState());
             }
         }
 
-        return  windowStates;
+        return windowStates;
     }
 
     @Override

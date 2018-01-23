@@ -86,9 +86,4 @@ public class CollaborationWindow extends WindowBase {
                     (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
         }
     }
-
-    @Override
-    public void hide() {
-        super.hide();
-    }
 }

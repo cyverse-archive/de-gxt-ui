@@ -85,12 +85,6 @@ public class DEAppsWindow extends WindowBase {
     }
 
     @Override
-    public void hide() {
-        super.hide();
-    }
-
-
-    @Override
     public WindowConfig getWindowConfig() {
         AppsWindowConfig config = ConfigFactory.appsWindowConfig();
         config.setSelectedApp(presenter.getSelectedApp());

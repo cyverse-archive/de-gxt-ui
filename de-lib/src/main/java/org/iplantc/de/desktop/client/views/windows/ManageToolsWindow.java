@@ -75,10 +75,5 @@ public class ManageToolsWindow extends WindowBase {
         }
     }
 
-    @Override
-    public void hide() {
-        super.hide();
-    }
-
-
 }
+

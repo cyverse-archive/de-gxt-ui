@@ -37,12 +37,12 @@ import java.util.List;
 public class DeDiskResourceWindow extends WindowBase implements FolderSelectionEvent.FolderSelectionEventHandler {
 
     public static final String DATA = "#data";
-    public static final String DE_DATA_DETAILSPANEL_COLLAPSE = "de.data.detailspanel.collapse#";
+    public static final String DE_DATA_DETAILSPANEL_COLLAPSE = "de.data.detailsPanel.collapse#";
 
 
     private final DiskResourcePresenterFactory presenterFactory;
     private final IplantDisplayStrings displayStrings;
-    private final DiskResourceView.DiskResourceViewAppearance diskresourceAppearance;
+    private final DiskResourceView.DiskResourceViewAppearance diskResourceAppearance;
     private DiskResourceView.Presenter presenter;
 
     @Inject
@@ -51,7 +51,7 @@ public class DeDiskResourceWindow extends WindowBase implements FolderSelectionE
                          final DiskResourceView.DiskResourceViewAppearance appearance) {
         this.presenterFactory = presenterFactory;
         this.displayStrings = displayStrings;
-        this.diskresourceAppearance = appearance;
+        this.diskResourceAppearance = appearance;
         setHeading(displayStrings.data());
 
         setMinWidth(Integer.parseInt(appearance.windowWidth()));
@@ -169,8 +169,8 @@ public class DeDiskResourceWindow extends WindowBase implements FolderSelectionE
             super.restoreWindowState();
             String width = ws.getWidth();
             String height = ws.getHeight();
-            setSize((width == null) ? diskresourceAppearance.windowWidth() : width,
-                    (height == null) ? diskresourceAppearance.windowHeight() : height);
+            setSize((width == null) ? diskResourceAppearance.windowWidth() : width,
+                    (height == null) ? diskResourceAppearance.windowHeight() : height);
         }
     }
     private void initHandlers() {

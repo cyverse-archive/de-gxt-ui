@@ -127,11 +127,6 @@ public class AboutApplicationWindow extends WindowBase {
     }
 
     @Override
-    public void hide() {
-        super.hide();
-    }
-
-    @Override
     public String getWindowType() {
         return WindowType.ABOUT.toString();
     }
