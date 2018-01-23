@@ -15,11 +15,12 @@ import java.util.Map;
  */
 public class SaveWindowStatesPeriodic implements Runnable {
 
+    DesktopView.Presenter presenter;
+    UserInfo userInfo;
 
-    private final DesktopView.Presenter presenter;
-
-    public SaveWindowStatesPeriodic(DesktopView.Presenter presenter)   {
+    public SaveWindowStatesPeriodic(DesktopView.Presenter presenter, UserInfo userInfo)   {
       this.presenter = presenter;
+      this.userInfo = userInfo;
     }
 
     @Override
@@ -32,8 +33,7 @@ public class SaveWindowStatesPeriodic implements Runnable {
     }
 
 
-    private void saveWindowState(WindowState ws) {
-        UserInfo userInfo = UserInfo.getInstance();
+    void saveWindowState(WindowState ws) {
         String prefix = WebStorageUtil.LOCAL_STORAGE_PREFIX + ws.getWindowType();
         String suffix = "#" + ws.getTag() + "#" + userInfo.getUsername();
         WebStorageUtil.writeToStorage(prefix + WindowState.HEIGHT + suffix, ws.getHeight() + "");

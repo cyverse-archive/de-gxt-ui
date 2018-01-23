@@ -42,10 +42,6 @@ public class AppLaunchWindow extends WindowBase implements AnalysisLaunchEventHa
         this.deClientConstants = deClientConstants;
         this.appearance = appearance;
 
-        String width = ws.getWidth();
-        String height = ws.getHeight();
-        setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
-                (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
         setMinWidth(appearance.windowMinWidth());
         setMinHeight(appearance.windowMinHeight());
         setBorders(false);

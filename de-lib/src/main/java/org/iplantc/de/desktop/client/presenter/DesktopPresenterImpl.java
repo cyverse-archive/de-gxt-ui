@@ -165,7 +165,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     private final EventBus eventBus;
     private final MessagePoller messagePoller;
     private final SaveSessionPeriodic ssp;
-    private final SaveWindowStatesPeriodic swsp;
+    private SaveWindowStatesPeriodic swsp;
     private final NewMessageView.Presenter systemMsgPresenter;
     private final DesktopView view;
     private final WindowManager windowManager;
@@ -195,7 +195,6 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         this.desktopWindowManager.setDesktopContainer(view.getDesktopContainer());
         this.appearance = appearance;
         this.ssp = new SaveSessionPeriodic(this, appearance, 8);
-        this.swsp = new SaveWindowStatesPeriodic(this);
         this.loggedOut = false;
         this.view.setPresenter(this);
         globalEventHandler.setPresenter(this, this.view);
@@ -675,6 +674,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
 
     @Override
     public void doPeriodicWindowStateSave() {
+        swsp = new SaveWindowStatesPeriodic(this, userInfo);
         swsp.run();
         messagePoller.addTask(swsp);
         messagePoller.start();

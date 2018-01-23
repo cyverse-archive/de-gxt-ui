@@ -13,7 +13,7 @@ import org.iplantc.de.client.models.userSettings.UserSetting;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
-import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -41,7 +41,7 @@ public class SaveUserSettingsCallbackTest {
     @Mock DesktopView.Presenter presenterMock;
     @Mock UserSessionServiceFacade userSessionServiceMock;
     @Mock UserSetting userSettingMock;
-    @Mock List<WindowConfig> windowConfigsMock;
+    @Mock List<SavedWindowConfig> windowConfigsMock;
 
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCaptor;
 

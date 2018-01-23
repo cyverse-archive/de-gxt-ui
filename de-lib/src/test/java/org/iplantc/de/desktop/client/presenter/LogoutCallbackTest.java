@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
-import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -34,7 +34,7 @@ import java.util.List;
 public class LogoutCallbackTest {
     
     @Mock DEClientConstants constantsMock;
-    @Mock List<WindowConfig> windowConfigs;
+    @Mock List<SavedWindowConfig> windowConfigs;
     @Mock UserSessionServiceFacade userSessionServiceMock;
     @Mock UserSettings userSettingsMock;
     @Mock DesktopView.Presenter.DesktopPresenterAppearance appearanceMock;

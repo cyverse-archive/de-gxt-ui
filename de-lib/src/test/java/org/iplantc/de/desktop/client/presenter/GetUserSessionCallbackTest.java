@@ -6,9 +6,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.iplantc.de.client.models.UserSession;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
-import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -20,8 +20,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import java.util.List;
-
 /**
  * @author aramsey
  */
@@ -32,7 +30,7 @@ public class GetUserSessionCallbackTest {
     @Mock DesktopPresenterImpl presenterMock;
     @Mock AutoProgressMessageBox progressMessageBoxMock;
     @Mock DesktopView.Presenter.DesktopPresenterAppearance appearanceMock;
-    @Mock List<WindowConfig> resultMock;
+    @Mock UserSession resultMock;
 
     private RuntimeCallbacks.GetUserSessionCallback uut;
 
@@ -65,7 +63,7 @@ public class GetUserSessionCallbackTest {
         uut.onSuccess(resultMock);
 
         verify(presenterMock).setUserSessionConnection(eq(true));
-        verify(presenterMock).restoreWindows(eq(resultMock));
+        verify(presenterMock).restoreWindows(eq(resultMock.getWindowConfigs()));
         verify(presenterMock).doPeriodicSessionSave();
         verify(progressMessageBoxMock).hide();
     }

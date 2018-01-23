@@ -113,7 +113,7 @@ public abstract class WindowBase extends Window implements WindowInterface {
         String helpBtnToolTip() ;
 
     }
-    interface WindowStateFactory extends AutoBeanFactory {
+    public interface WindowStateFactory extends AutoBeanFactory {
         AutoBean<WindowState> windowState();
     }
 
@@ -122,7 +122,7 @@ public abstract class WindowBase extends Window implements WindowInterface {
     protected boolean maximized;
     protected boolean minimized;
     ToolButton btnRestore;
-    private final WindowStateFactory wsf = GWT.create(WindowStateFactory.class);
+    WindowStateFactory wsf = GWT.create(WindowStateFactory.class);
     private String baseDebugID;
     private ToolButton btnClose;
     private ToolButton btnLayout;
