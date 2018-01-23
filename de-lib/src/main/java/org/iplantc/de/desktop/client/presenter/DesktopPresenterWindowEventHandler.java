@@ -23,6 +23,8 @@ import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.dialogs.SimpleFileUploadDialog;
 import org.iplantc.de.commons.client.views.window.configs.AppWizardConfig;
@@ -89,6 +91,7 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
     @Inject Provider<DiskResourceServiceFacade> diskResourceServiceProvider;
     @Inject EventBus eventBus;
     @Inject UserInfo userInfo;
+    @Inject IplantAnnouncer announcer;
     @Inject DiskResourceUtil diskResourceUtil;
     @Inject DiskResourceServiceFacade diskResourceServiceFacade;
     @Inject DesktopView.Presenter.DesktopPresenterAppearance appearance;
@@ -132,7 +135,11 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
     public void onEditApp(EditAppEvent event) {
         AppsIntegrationWindowConfig config = ConfigFactory.appsIntegrationWindowConfig(event.getAppToEdit());
         config.setOnlyLabelEditMode(event.isUserIntegratorAndAppPublic());
-        presenter.show(config, false);
+        if (desktopWindowManager.isOpen(config.getWindowType())) {
+            announcer.schedule(new ErrorAnnouncementConfig(appearance.cannotEditTwoApps()));
+        } else {
+            presenter.show(config, false);
+        }
     }
 
     @Override

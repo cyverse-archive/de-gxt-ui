@@ -192,6 +192,12 @@ public interface DesktopView extends IsWidget {
             String sectionOne();
 
             SafeHtml webhookSaveError();
+
+            /**
+             * Error announcement text when user tries to edit a second app
+             * @return
+             */
+            String cannotEditTwoApps();
         }
 
         List<WindowState> getOrderedWindowStates();

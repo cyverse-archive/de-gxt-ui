@@ -174,4 +174,10 @@ public interface DesktopMessages extends Messages {
     String notification();
 
     String webhookTypeFailure();
+
+    /**
+     * Error announcement text when user tries to edit a second app
+     * @return
+     */
+    String cannotEditTwoApps();
 }
