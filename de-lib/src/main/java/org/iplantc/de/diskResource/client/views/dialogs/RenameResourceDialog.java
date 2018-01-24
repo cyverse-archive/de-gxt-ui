@@ -2,6 +2,7 @@ package org.iplantc.de.diskResource.client.views.dialogs;
 
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.Folder;
+import org.iplantc.de.commons.client.validators.DiskResourceNameValidator;
 import org.iplantc.de.commons.client.validators.DiskResourceSameNameValidator;
 import org.iplantc.de.commons.client.views.dialogs.IPlantPromptDialog;
 import org.iplantc.de.diskResource.client.DiskResourceView;
@@ -34,6 +35,7 @@ public class RenameResourceDialog extends IPlantPromptDialog {
         }
         setFieldLabelText(labelText);
         addValidator(new DiskResourceSameNameValidator(resource));
+        addValidator(new DiskResourceNameValidator());
 
         super.show();
 
