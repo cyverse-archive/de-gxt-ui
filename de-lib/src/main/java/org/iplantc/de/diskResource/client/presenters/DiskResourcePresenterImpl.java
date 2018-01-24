@@ -596,6 +596,11 @@ public class DiskResourcePresenterImpl implements
 
     @Override
     public void doMoveDiskResources(Folder targetFolder, List<DiskResource> resources) {
+        if (diskResourceUtil.inTrash(targetFolder)) {
+            delete(resources, appearance.deleteMsg());
+            return;
+        }
+
         view.mask(appearance.moveDiskResourcesLoadingMask());
 
         Folder parent = navigationPresenter.getSelectedFolder();

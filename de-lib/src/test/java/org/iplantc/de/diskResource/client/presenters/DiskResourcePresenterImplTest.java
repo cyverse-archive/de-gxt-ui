@@ -50,6 +50,8 @@ import org.iplantc.de.diskResource.client.gin.factory.FolderContentsRpcProxyFact
 import org.iplantc.de.diskResource.client.gin.factory.GridViewPresenterFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewPresenterFactory;
 import org.iplantc.de.diskResource.client.presenters.callbacks.CreateFolderCallback;
+import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceDeleteCallback;
+import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMoveCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceRestoreCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.NcbiSraSetupCompleteCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.RenameDiskResourceCallback;
@@ -504,6 +506,55 @@ public class DiskResourcePresenterImplTest {
         verify(diskResourceServiceMock).renameDiskResource(eq(diskResourceMock),
                                                            eq("newName"),
                                                            isA(RenameDiskResourceCallback.class));
+    }
+
+    @Test
+    public void doMoveDiskResources_toTrash() {
+        Folder targetFolderMock = mock(Folder.class);
+        when(targetFolderMock.getPath()).thenReturn("/iplant/trash/home/rods/userName");
+        when(diskResourceUtilMock.inTrash(targetFolderMock)).thenReturn(true);
+        when(appearanceMock.deleteMsg()).thenReturn("deleteMsg");
+
+        DiskResourcePresenterImpl spy = spy(uut);
+
+        /** CALL METHOD UNDER TEST **/
+        spy.doMoveDiskResources(targetFolderMock, diskResourcesMock);
+        verify(spy).delete(eq(diskResourcesMock), eq("deleteMsg"));
+    }
+
+    @Test
+    public void doMoveDiskResources() {
+        Folder targetFolderMock = mock(Folder.class);
+        Folder parentMock = mock(Folder.class);
+        when(targetFolderMock.getPath()).thenReturn("/iplant/home/userName");
+        when(diskResourceUtilMock.inTrash(targetFolderMock)).thenReturn(false);
+        when(appearanceMock.deleteMsg()).thenReturn("deleteMsg");
+        when(appearanceMock.moveDiskResourcesLoadingMask()).thenReturn("loading");
+        when(navigationPresenterMock.getSelectedFolder()).thenReturn(parentMock);
+        when(diskResourceUtilMock.contains(diskResourcesMock, parentMock)).thenReturn(false);
+        when(gridViewPresenterMock.isSelectAllChecked()).thenReturn(false);
+
+        /** CALL METHOD UNDER TEST **/
+        uut.doMoveDiskResources(targetFolderMock, diskResourcesMock);
+        verify(viewMock).mask(eq("loading"));
+        verify(diskResourceServiceMock).moveDiskResources(eq(parentMock),
+                                                          eq(targetFolderMock),
+                                                          eq(diskResourcesMock),
+                                                          isA(DiskResourceMoveCallback.class));
+    }
+
+
+    @Test
+    public void delete() {
+        Folder selectedFolderMock = mock(Folder.class);
+        when(appearanceMock.loadingMask()).thenReturn("loading");
+        when(navigationPresenterMock.getSelectedFolder()).thenReturn(selectedFolderMock);
+        when(gridViewPresenterMock.isSelectAllChecked()).thenReturn(false);
+
+        /** CALL METHOD UNDER TEST **/
+        uut.delete(diskResourcesMock, "announce");
+        verify(diskResourceServiceMock).deleteDiskResources(eq(diskResourcesMock),
+                                                            isA(DiskResourceDeleteCallback.class));
     }
 
 }
