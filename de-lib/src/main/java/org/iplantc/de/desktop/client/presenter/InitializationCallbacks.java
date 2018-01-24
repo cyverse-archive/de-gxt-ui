@@ -93,14 +93,13 @@ class InitializationCallbacks {
                     }
                 });
                 box.show();
-            } else {
-                if (userInfo.hasAgaveRedirect()) {
-                    AgaveAuthPrompt prompt = getAgavePrompt();
-                    prompt.show();
-                    presenter.stickWindowToTop(prompt);
-                }
             }
             checkUserPreferences(presenter, panel, userInfo, userSettings, announcer, appearance);
+            if (userInfo.hasAgaveRedirect() && userSettings.isEnableHPCPrompt()) {
+                AgaveAuthPrompt prompt = getAgavePrompt();
+                prompt.show();
+                presenter.stickWindowToTop(prompt);
+            }
             IntercomFacade.login(userInfo.getUsername(),
                                  userInfo.getEmail(),
                                  deProps.getIntercomAppId(),
