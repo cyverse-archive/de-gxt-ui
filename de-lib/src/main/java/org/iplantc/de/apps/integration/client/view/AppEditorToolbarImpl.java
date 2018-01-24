@@ -27,7 +27,7 @@ public class AppEditorToolbarImpl extends Composite implements AppEditorToolbar 
     @UiTemplate("AppIntegrationToolbar.ui.xml")
     interface AppIntegrationToolBarUiBinder extends UiBinder<Widget, AppEditorToolbarImpl> { }
     @UiField
-    TextButton argumentOrderButton;
+    TextButton commandLineOrderButton;
     @UiField
     MenuItem previewUiMenuItem, previewJsonMenuItem;
     @UiField
@@ -43,14 +43,14 @@ public class AppEditorToolbarImpl extends Composite implements AppEditorToolbar 
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
-        argumentOrderButton.ensureDebugId(baseID + Ids.ARG_ORDER);
+        commandLineOrderButton.ensureDebugId(baseID + Ids.COMMAND_LINE_ORDER);
         previewBtn.ensureDebugId(baseID + Ids.PREVIEW);
         previewUiMenuItem.ensureDebugId(baseID + Ids.PREVIEW + Ids.PREVIEW_UI);
         previewJsonMenuItem.ensureDebugId(baseID + Ids.PREVIEW + Ids.PREVIEW_JSON);
         saveButton.ensureDebugId(baseID + Ids.SAVE);
     }
 
-    @UiHandler("argumentOrderButton")
+    @UiHandler("commandLineOrderButton")
     void onArgumentOrderButtonClicked(@SuppressWarnings("unused") SelectEvent event) {
         fireEvent(new ArgumentOrderSelected());
     }

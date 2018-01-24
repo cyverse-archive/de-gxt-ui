@@ -35,7 +35,7 @@ public interface AppIntegrationModule {
 
         String GROUP = ".group";
         String PROPERTY_EDITOR = ".propertyEditor";
-        String ARG_ORDER = ".argumentOrder";
+        String COMMAND_LINE_ORDER = ".commandLineOrder";
         String PREVIEW = ".preview";
         String PREVIEW_UI = ".UI";
         String PREVIEW_JSON = ".JSON";

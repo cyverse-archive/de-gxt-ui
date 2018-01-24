@@ -258,9 +258,9 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
      *
      * @return translated "Argument order"
      */
-    @DefaultMessage("Argument order")
-    @Key("argumentOrder")
-    String argumentOrder();
+    @DefaultMessage("Command Line Order")
+    @Key("commandLineOrder")
+    String commandLineOrder();
 
     /**
      * Translated "Architecture".

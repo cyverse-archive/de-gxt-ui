@@ -38,8 +38,8 @@
 
       <!-- Argument Order button -->
       <toolbar:child>
-         <button:TextButton ui:field="argumentOrderButton"
-                            text="{display.argumentOrder}"
+         <button:TextButton ui:field="commandLineOrderButton"
+                            text="{display.commandLineOrder}"
                             icon="{res.listItems}"/>
       </toolbar:child>
 
