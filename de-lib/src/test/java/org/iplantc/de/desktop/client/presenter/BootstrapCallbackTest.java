@@ -117,6 +117,7 @@ public class BootstrapCallbackTest {
 
         when(userInfoMock.isNewUser()).thenReturn(false);
         when(userInfoMock.hasAgaveRedirect()).thenReturn(true);
+        when(userSettingsMock.isEnableHPCPrompt()).thenReturn(true);
 
         /** CALL METHOD UNDER TEST **/
         uut.onSuccess(result);

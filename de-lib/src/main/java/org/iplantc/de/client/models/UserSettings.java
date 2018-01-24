@@ -102,6 +102,10 @@ public class UserSettings {
             setEnableWaitTimeMessage(true);
         }
 
+        if (userSetting.isEnableHPCPrompt() == null) {
+            setEnableHPCPrompt(true);
+        }
+
         parseKeyboardShortcuts();
     }
 
@@ -311,6 +315,15 @@ public class UserSettings {
     public List<Webhook> getWebhooks() {
         return userSetting.getWebhooks();
     }
+
+    public Boolean isEnableHPCPrompt() {
+        return userSetting.isEnableHPCPrompt();
+    }
+
+    public void setEnableHPCPrompt(Boolean enableHpc) {
+        userSetting.setEnableHPCPrompt(enableHpc);
+    }
+
 
 
 }

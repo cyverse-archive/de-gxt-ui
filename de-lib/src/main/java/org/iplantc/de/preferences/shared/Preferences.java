@@ -29,6 +29,7 @@ public interface Preferences {
         String TOOLS_NOTIFICATION = ".idCboToolsNotifi";
         String PERMS_NOTIFICATION = ".idCboPermNotifi";
         String TEAM_NOTIFICATION = ".idCboTeamNotifi";
+        String ENABLE_HPC_PROMPT = ".idCboEnableHpcPrompt";
     }
 
 }

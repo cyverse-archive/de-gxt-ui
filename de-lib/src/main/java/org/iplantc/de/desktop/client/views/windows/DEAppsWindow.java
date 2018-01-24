@@ -2,6 +2,7 @@ package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.apps.client.AppsView;
 import org.iplantc.de.apps.shared.AppsModule;
+import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
@@ -23,6 +24,8 @@ public class DEAppsWindow extends IplantWindowBase {
 
     public static final String APPS = "#apps";
     private final AppsView.Presenter presenter;
+    @Inject
+    UserSettings userSettings;
 
     @Inject
     DEAppsWindow(final AppsView.Presenter presenter, final IplantDisplayStrings displayStrings) {
@@ -59,7 +62,9 @@ public class DEAppsWindow extends IplantWindowBase {
     @Override
     protected void afterShow() {
         super.afterShow();
-        presenter.checkForAgaveRedirect();
+        if (userSettings.isEnableHPCPrompt()){
+            presenter.checkForAgaveRedirect();
+        }
     }
 
     @Override

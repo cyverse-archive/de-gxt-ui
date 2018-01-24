@@ -47,7 +47,7 @@
                                                styleName="{style.user_pref}">
         <form:FieldSet heading="{appearance.preferences}"
                        collapsible="true">
-            <container:VerticalLayoutContainer height="120">
+            <container:VerticalLayoutContainer height="135">
                 <container:child layoutData="{preferenceLayoutData}">
                     <form:CheckBox ui:field="rememberLastPath"
                                    boxLabel="{appearance.rememberFileSectorPath}"/>
@@ -63,6 +63,11 @@
                                         text="{appearance.retrySessionConnection}"
                                         visible="false"/>
                     </g:HorizontalPanel>
+                </container:child>
+                <container:child layoutData="{preferenceLayoutData}">
+                    <form:CheckBox ui:field="enableHPCPrompt"
+                                   debugId="cboEnableHPC"
+                                   boxLabel="{appearance.enableHPCPrompt}"/>
                 </container:child>
                 <container:child layoutData="{preferenceLayoutData}">
                     <form:CheckBox ui:field="enableWaitTimeMessage"

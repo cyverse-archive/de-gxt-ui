@@ -63,4 +63,9 @@ public interface UserSetting {
     List<Webhook> getWebhooks();
 
     void setWebhooks(List<Webhook> webhooks);
+
+    Boolean isEnableHPCPrompt();
+
+    void setEnableHPCPrompt(Boolean enableHpcPrompt);
 }
+
