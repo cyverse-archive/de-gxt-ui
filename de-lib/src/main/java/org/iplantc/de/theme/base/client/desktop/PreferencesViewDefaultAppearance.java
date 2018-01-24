@@ -339,4 +339,9 @@ public class PreferencesViewDefaultAppearance implements PreferencesView.Prefere
     public String webhookTypeFailure() {
         return desktopMessages.webhookTypeFailure();
     }
+
+    @Override
+    public String enableHPCPrompt() {
+        return desktopMessages.enableHPCPrompt();
+    }
 }

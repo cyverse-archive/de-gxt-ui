@@ -180,4 +180,6 @@ public interface DesktopMessages extends Messages {
      * @return
      */
     String cannotEditTwoApps();
+
+    String enableHPCPrompt();
 }

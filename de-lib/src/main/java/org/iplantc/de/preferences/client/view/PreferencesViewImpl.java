@@ -75,6 +75,7 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
     @UiField CheckBox enableImportEmailNotification;
     @UiField CheckBox enableWaitTimeMessage;
     @UiField CheckBox saveSession;
+    @UiField CheckBox enableHPCPrompt;
     @UiField @Ignore HTML savedSessionFailed;
     @UiField @Ignore TextButton retrySession;
     @UiField TextField closeShortCut;
@@ -308,6 +309,7 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         enableWaitTimeMessage.setValue(true);
         rememberLastPath.setValue(true);
         saveSession.setValue(true);
+        enableHPCPrompt.setValue(true);
         appsShortCut.setValue(KB_CONSTANTS.appsKeyShortCut());
         dataShortCut.setValue(KB_CONSTANTS.dataKeyShortCut());
         analysesShortCut.setValue(KB_CONSTANTS.analysisKeyShortCut());
@@ -327,6 +329,7 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         defaultOutputFolder.ensureDebugId(baseID + Preferences.Ids.DEFAULT_OUTPUT_FOLDER);
         defaultOutputFolder.setInputFieldId(baseID + Preferences.Ids.DEFAULT_OUTPUT_FOLDER + Preferences.Ids.DEFAULT_OUTPUT_FIELD);
         defaultOutputFolder.setBrowseButtonId(baseID + Preferences.Ids.DEFAULT_OUTPUT_FOLDER + Preferences.Ids.BROWSE_OUTPUT_FOLDER);
+        enableHPCPrompt.ensureDebugId(baseID + Preferences.Ids.ENABLE_HPC_PROMPT);
 
         appsShortCut.ensureDebugId(baseID + Preferences.Ids.APPS_SC);
         dataShortCut.ensureDebugId(baseID + Preferences.Ids.DATA_SC);

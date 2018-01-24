@@ -138,6 +138,8 @@ public interface PreferencesView extends IsWidget,
         String notification();
 
         String webhookTypeFailure();
+
+        String enableHPCPrompt();
     }
 
     void userSessionSuccess();
