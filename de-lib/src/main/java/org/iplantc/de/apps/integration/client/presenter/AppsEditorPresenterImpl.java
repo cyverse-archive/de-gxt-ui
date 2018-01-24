@@ -576,6 +576,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
                     public void onSuccess(CommandLineOrderingDialog dialog) {
                         List<Argument> argumentList =
                                 createArgumentList(allTemplateArguments, result);
+                        dialog.addOkButtonSelectHandler(handler -> updateCommandLinePreview(view.flush()));
                         dialog.show(argumentList);
 
                     }
