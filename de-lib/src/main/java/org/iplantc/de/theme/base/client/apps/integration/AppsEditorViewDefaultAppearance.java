@@ -54,6 +54,8 @@ public class AppsEditorViewDefaultAppearance implements AppsEditorView.AppsEdito
         this.contextualHelpMessages = contextualHelpMessages;
         this.iplantResources = iplantResources;
         this.propertyPanelLabels = propertyPanelLabels;
+
+        iplantResources.getContextualHelpStyle().ensureInjected();
     }
 
     @Override
