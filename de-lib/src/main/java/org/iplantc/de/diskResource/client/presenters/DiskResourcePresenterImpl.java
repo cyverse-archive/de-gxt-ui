@@ -472,12 +472,14 @@ public class DiskResourcePresenterImpl implements
 
         mask(""); //$NON-NLS-1$
 
+        Folder currentFolder = navigationPresenter.getSelectedFolder();
+
         DiskResourceRestoreCallback callback = new DiskResourceRestoreCallback(this,
                                                                                this,
                                                                                drFactory,
                                                                                navigationPresenter.getSelectedFolder(),
                                                                                selectedResources);
-        if (gridViewPresenter.isSelectAllChecked()) {
+        if (gridViewPresenter.isSelectAllChecked() && diskResourceUtil.isTrash(currentFolder)) {
             diskResourceService.restoreAll(callback);
         } else {
             HasPaths request = drFactory.pathsList().as();

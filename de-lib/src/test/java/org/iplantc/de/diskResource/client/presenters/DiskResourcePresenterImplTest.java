@@ -414,6 +414,7 @@ public class DiskResourcePresenterImplTest {
     public void onRestoreDiskResourcesSelected_selectAll() {
         RestoreDiskResourcesSelected eventMock = mock(RestoreDiskResourcesSelected.class);
         when(diskResourcesMock.isEmpty()).thenReturn(false);
+        when(diskResourceUtilMock.isTrash(folderMock)).thenReturn(true);
         when(navigationPresenterMock.getSelectedFolder()).thenReturn(folderMock);
         when(gridViewPresenterMock.isSelectAllChecked()).thenReturn(true);
 

@@ -39,10 +39,11 @@ public class DiskResourceUtil {
 
     private static DiskResourceUtil INSTANCE;
     private final JsonUtil jsonUtil;
+    private final UserInfo userInfo;
 
     DiskResourceUtil() {
         this.jsonUtil = JsonUtil.getInstance();
-
+        this.userInfo = UserInfo.getInstance();
     }
 
     public static DiskResourceUtil getInstance() {
@@ -189,8 +190,12 @@ public class DiskResourceUtil {
                 && (isOwner(resource) || isWritable(resource)) && !inTrash(resource);
     }
 
+    public boolean isTrash(DiskResource resource) {
+        return resource != null && resource.getPath().equals(userInfo.getTrashPath());
+    }
+
     public boolean inTrash(DiskResource resource) {
-        return resource != null && resource.getPath().startsWith(UserInfo.getInstance().getTrashPath());
+        return resource != null && resource.getPath().startsWith(userInfo.getTrashPath());
     }
 
     public boolean containsTrashedResource(List<DiskResource> selectedResources) {
