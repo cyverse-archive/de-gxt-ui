@@ -40,6 +40,14 @@ public class NotificationWindow extends IplantWindowBase {
     }
 
     @Override
+    public <C extends WindowConfig> void update(C config) {
+        NotifyWindowConfig notifyWindowConfig = (NotifyWindowConfig) config;
+        if (notifyWindowConfig != null) {
+            presenter.filterBy(notifyWindowConfig.getSortCategory());
+        }
+    }
+
+    @Override
     public WindowState getWindowState() {
         NotifyWindowConfig config = ConfigFactory.notifyWindowConfig(presenter.getCurrentCategory());
         return createWindowState(config);

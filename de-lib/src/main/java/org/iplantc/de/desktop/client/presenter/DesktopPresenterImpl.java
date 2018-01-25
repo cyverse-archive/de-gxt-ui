@@ -386,13 +386,13 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
 
     @Override
     public void doSeeAllNotifications() {
-        show(ConfigFactory.notifyWindowConfig(NotificationCategory.ALL));
+        show(ConfigFactory.notifyWindowConfig(NotificationCategory.ALL), true);
         view.hideNotificationMenu();
     }
 
     @Override
     public void doSeeNewNotifications() {
-        show(ConfigFactory.notifyWindowConfig(NotificationCategory.NEW));
+        show(ConfigFactory.notifyWindowConfig(NotificationCategory.NEW), true);
         view.hideNotificationMenu();
     }
 

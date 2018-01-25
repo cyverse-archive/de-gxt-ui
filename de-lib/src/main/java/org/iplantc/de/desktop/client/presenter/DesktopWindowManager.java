@@ -143,6 +143,7 @@ public class DesktopWindowManager {
                     // Window already exists, so no need to call other SHOW(config, "", bool) method
                     ((IPlantWindowInterface) w).asWindow().show();
                 }
+                windowManager.bringToFront(w);
                 return;
             }
         }
