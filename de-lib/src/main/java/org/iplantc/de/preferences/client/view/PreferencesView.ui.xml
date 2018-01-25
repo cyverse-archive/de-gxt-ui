@@ -45,124 +45,124 @@
         <tabs:child config="{general}">
             <container:VerticalLayoutContainer adjustForScroll="true"
                                                styleName="{style.user_pref}">
-        <form:FieldSet heading="{appearance.preferences}"
-                       collapsible="true">
-            <container:VerticalLayoutContainer height="135">
-                <container:child layoutData="{preferenceLayoutData}">
-                    <form:CheckBox ui:field="rememberLastPath"
-                                   boxLabel="{appearance.rememberFileSectorPath}"/>
-                </container:child>
-                <container:child layoutData="{preferenceLayoutData}">
-                    <g:HorizontalPanel>
-                        <form:CheckBox ui:field="saveSession"
-                                   debugId="cboSaveSession"
-                                   boxLabel="{appearance.saveSession}"/>
-                        <g:HTML ui:field="savedSessionFailed"
-                                        visible="false"/>
-                        <button:TextButton ui:field="retrySession"
-                                        text="{appearance.retrySessionConnection}"
-                                        visible="false"/>
-                    </g:HorizontalPanel>
-                </container:child>
-                <container:child layoutData="{preferenceLayoutData}">
-                    <form:CheckBox ui:field="enableHPCPrompt"
-                                   debugId="cboEnableHPC"
-                                   boxLabel="{appearance.enableHPCPrompt}"/>
-                </container:child>
-                <container:child layoutData="{preferenceLayoutData}">
-                    <form:CheckBox ui:field="enableWaitTimeMessage"
-                                   debugId="cboWaitTime"
-                                   boxLabel="{appearance.waitTime}"/>
-                </container:child>
-                <container:child layoutData="{fileSelLabel}">
-                    <g:HTML HTML="{appearance.defaultOutputFolder}"/>
-                </container:child>
-                <container:child layoutData="{preferenceLayoutData}">
-                    <selector:FolderSelectorField ui:field="defaultOutputFolder"
-                                                  debugId="idDefaultFolderSelector"
-                                                  validatePermissions="true"/>
-                </container:child>
-            </container:VerticalLayoutContainer>
-        </form:FieldSet>
-        <form:FieldSet heading="{appearance.keyboardShortCut}"
-                       collapsible="true">
-            <container:VerticalLayoutContainer >
-                <form:FieldLabel labelWidth="150"
-                                 text="{appearance.openAppsWindow}">
+                <form:FieldSet heading="{appearance.preferences}"
+                               collapsible="true">
+                    <container:VerticalLayoutContainer height="135">
+                        <container:child layoutData="{preferenceLayoutData}">
+                            <form:CheckBox ui:field="rememberLastPath"
+                                           boxLabel="{appearance.rememberFileSectorPath}"/>
+                        </container:child>
+                        <container:child layoutData="{preferenceLayoutData}">
+                            <g:HorizontalPanel>
+                                <form:CheckBox ui:field="saveSession"
+                                           debugId="cboSaveSession"
+                                           boxLabel="{appearance.saveSession}"/>
+                                <g:HTML ui:field="savedSessionFailed"
+                                                visible="false"/>
+                                <button:TextButton ui:field="retrySession"
+                                                text="{appearance.retrySessionConnection}"
+                                                visible="false"/>
+                            </g:HorizontalPanel>
+                        </container:child>
+                        <container:child layoutData="{preferenceLayoutData}">
+                            <form:CheckBox ui:field="enableHPCPrompt"
+                                           debugId="cboEnableHPC"
+                                           boxLabel="{appearance.enableHPCPrompt}"/>
+                        </container:child>
+                        <container:child layoutData="{preferenceLayoutData}">
+                            <form:CheckBox ui:field="enableWaitTimeMessage"
+                                           debugId="cboWaitTime"
+                                           boxLabel="{appearance.waitTime}"/>
+                        </container:child>
+                        <container:child layoutData="{fileSelLabel}">
+                            <g:HTML HTML="{appearance.defaultOutputFolder}"/>
+                        </container:child>
+                        <container:child layoutData="{preferenceLayoutData}">
+                            <selector:FolderSelectorField ui:field="defaultOutputFolder"
+                                                          debugId="idDefaultFolderSelector"
+                                                          validatePermissions="true"/>
+                        </container:child>
+                    </container:VerticalLayoutContainer>
+                </form:FieldSet>
+                <form:FieldSet heading="{appearance.keyboardShortCut}"
+                               collapsible="true">
+                    <container:VerticalLayoutContainer >
+                        <form:FieldLabel labelWidth="150"
+                                         text="{appearance.openAppsWindow}">
+                            <form:widget>
+                                <g:HorizontalPanel spacing="5">
+                                    <g:Label text="{appearance.kbShortcutMetaKey}"/>
+                                    <form:TextField ui:field="appsShortCut"
+                                                    toolTip="{appearance.oneCharMax}"
+                                                    debugId="appKbSc"
+                                                    allowBlank="false"
+                                                    width="50"/>
+                                </g:HorizontalPanel>
+                            </form:widget>
+                        </form:FieldLabel>
+                        <form:FieldLabel labelWidth="150"
+                                         text="{appearance.openDataWindow}">
+                            <form:widget>
+                                <g:HorizontalPanel spacing="5">
+                                    <g:Label text="{appearance.kbShortcutMetaKey}"/>
+                                    <form:TextField ui:field="dataShortCut"
+                                                    toolTip="{appearance.oneCharMax}"
+                                                    debugId="dataKbSc"
+                                                    allowBlank="false"
+                                                    width="50"/>
+                                </g:HorizontalPanel>
+                            </form:widget>
+                        </form:FieldLabel>
+                        <form:FieldLabel labelWidth="150"
+                                         text="{appearance.openAnalysesWindow}">
+                            <form:widget>
+                                <g:HorizontalPanel spacing="5">
+                                    <g:Label text="{appearance.kbShortcutMetaKey}"/>
+                                    <form:TextField ui:field="analysesShortCut"
+                                                    toolTip="{appearance.oneCharMax}"
+                                                    debugId="anaKbSc"
+                                                    allowBlank="false"
+                                                    width="50"/>
+                                </g:HorizontalPanel>
+                            </form:widget>
+                        </form:FieldLabel>
+                        <form:FieldLabel labelWidth="150"
+                                         text="{appearance.openNotificationsWindow}">
+                            <form:widget>
+                                <g:HorizontalPanel spacing="5">
+                                    <g:Label text="{appearance.kbShortcutMetaKey}"/>
+                                    <form:TextField ui:field="notifyShortCut"
+                                                    toolTip="{appearance.oneCharMax}"
+                                                    debugId="notKbSc"
+                                                    allowBlank="false"
+                                                    width="50"/>
+                                </g:HorizontalPanel>
+                            </form:widget>
+                        </form:FieldLabel>
+                        <form:FieldLabel labelWidth="150"
+                                         text="{appearance.closeActiveWindow}">
+                            <form:widget>
+                                <g:HorizontalPanel spacing="5">
+                                    <g:Label text="{appearance.kbShortcutMetaKey}"/>
+                                    <form:TextField ui:field="closeShortCut"
+                                                    toolTip="{appearance.oneCharMax}"
+                                                    debugId="closeKbSc"
+                                                    allowBlank="false"
+                                                    width="50"/>
+                                </g:HorizontalPanel>
+                            </form:widget>
+                        </form:FieldLabel>
+                    </container:VerticalLayoutContainer>
+                </form:FieldSet>
+                <form:FieldSet heading="{appearance.resetHpc}"
+                               collapsible="true">
                     <form:widget>
-                        <g:HorizontalPanel spacing="5">
-                            <g:Label text="{appearance.kbShortcutMetaKey}"/>
-                            <form:TextField ui:field="appsShortCut"
-                                            toolTip="{appearance.oneCharMax}"
-                                            debugId="appKbSc"
-                                            allowBlank="false"
-                                            width="50"/>
-                        </g:HorizontalPanel>
+                        <g:VerticalPanel spacing="5">
+                        <g:HTML ui:field="resetHpcfield"/>
+                        <button:TextButton text="{appearance.resetHpc}" ui:field="hpcResetBtn" />
+                        </g:VerticalPanel>
                     </form:widget>
-                </form:FieldLabel>
-                <form:FieldLabel labelWidth="150"
-                                 text="{appearance.openDataWindow}">
-                    <form:widget>
-                        <g:HorizontalPanel spacing="5">
-                            <g:Label text="{appearance.kbShortcutMetaKey}"/>
-                            <form:TextField ui:field="dataShortCut"
-                                            toolTip="{appearance.oneCharMax}"
-                                            debugId="dataKbSc"
-                                            allowBlank="false"
-                                            width="50"/>
-                        </g:HorizontalPanel>
-                    </form:widget>
-                </form:FieldLabel>
-                <form:FieldLabel labelWidth="150"
-                                 text="{appearance.openAnalysesWindow}">
-                    <form:widget>
-                        <g:HorizontalPanel spacing="5">
-                            <g:Label text="{appearance.kbShortcutMetaKey}"/>
-                            <form:TextField ui:field="analysesShortCut"
-                                            toolTip="{appearance.oneCharMax}"
-                                            debugId="anaKbSc"
-                                            allowBlank="false"
-                                            width="50"/>
-                        </g:HorizontalPanel>
-                    </form:widget>
-                </form:FieldLabel>
-                <form:FieldLabel labelWidth="150"
-                                 text="{appearance.openNotificationsWindow}">
-                    <form:widget>
-                        <g:HorizontalPanel spacing="5">
-                            <g:Label text="{appearance.kbShortcutMetaKey}"/>
-                            <form:TextField ui:field="notifyShortCut"
-                                            toolTip="{appearance.oneCharMax}"
-                                            debugId="notKbSc"
-                                            allowBlank="false"
-                                            width="50"/>
-                        </g:HorizontalPanel>
-                    </form:widget>
-                </form:FieldLabel>
-                <form:FieldLabel labelWidth="150"
-                                 text="{appearance.closeActiveWindow}">
-                    <form:widget>
-                        <g:HorizontalPanel spacing="5">
-                            <g:Label text="{appearance.kbShortcutMetaKey}"/>
-                            <form:TextField ui:field="closeShortCut"
-                                            toolTip="{appearance.oneCharMax}"
-                                            debugId="closeKbSc"
-                                            allowBlank="false"
-                                            width="50"/>
-                        </g:HorizontalPanel>
-                    </form:widget>
-                </form:FieldLabel>
-            </container:VerticalLayoutContainer>
-        </form:FieldSet>
-        <form:FieldSet heading="{appearance.resetHpc}"
-                       collapsible="true">
-            <form:widget>
-                <g:VerticalPanel spacing="5">
-                <g:HTML ui:field="resetHpcfield"/>
-                <button:TextButton text="{appearance.resetHpc}" ui:field="hpcResetBtn" />
-                </g:VerticalPanel>
-            </form:widget>
-        </form:FieldSet>
+                </form:FieldSet>
             </container:VerticalLayoutContainer>
         </tabs:child>
         <tabs:child config="{notification}">
