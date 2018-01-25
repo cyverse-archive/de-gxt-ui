@@ -74,57 +74,57 @@ public class WindowStateStorageWrapper {
     }
 
     void saveHeight(String height) {
-        WebStorageUtil.writeToStorage(prefix + WindowState.HEIGHT + suffix, height + "");
+        WebStorageUtil.writeToStorage(getKey(WindowState.HEIGHT), height + "");
     }
 
 
     void saveWidth(String width) {
-        WebStorageUtil.writeToStorage(prefix + WindowState.WIDTH + suffix, width + "");
+        WebStorageUtil.writeToStorage(getKey(WindowState.WIDTH), width + "");
     }
 
     void saveTop(int top) {
-        WebStorageUtil.writeToStorage(prefix + WindowState.TOP + suffix, top + "");
+        WebStorageUtil.writeToStorage(getKey(WindowState.TOP), top + "");
     }
 
     void saveLeft(int left) {
-        WebStorageUtil.writeToStorage(prefix + WindowState.LEFT + suffix, left + "");
+        WebStorageUtil.writeToStorage(getKey(WindowState.LEFT), left + "");
     }
 
     void saveMaximizedState(boolean isMaximized) {
-        WebStorageUtil.writeToStorage(prefix + WindowState.MAXIMIZED + suffix, isMaximized + "");
+        WebStorageUtil.writeToStorage(getKey(WindowState.MAXIMIZED), isMaximized + "");
     }
 
     void saveMiniMinimizedState(boolean isMinimized) {
-        WebStorageUtil.writeToStorage(prefix + WindowState.MINIMIZED + suffix, isMinimized + "");
+        WebStorageUtil.writeToStorage(getKey(WindowState.MINIMIZED), isMinimized + "");
     }
 
 
     String retrieveHeight() {
-        return WebStorageUtil.readFromStorage(prefix + WindowState.HEIGHT + suffix);
+        return WebStorageUtil.readFromStorage(getKey(WindowState.HEIGHT));
     }
 
     String retrieveWidth() {
-        return WebStorageUtil.readFromStorage(prefix + WindowState.WIDTH + suffix);
+        return WebStorageUtil.readFromStorage(getKey(WindowState.WIDTH));
     }
 
     int retrieveTop() {
-        String top = WebStorageUtil.readFromStorage(prefix + WindowState.TOP + suffix);
+        String top = WebStorageUtil.readFromStorage(getKey(WindowState.TOP));
         return (Strings.isNullOrEmpty(top) ? 0 : Integer.parseInt(top));
     }
 
 
     int retrieveLeft() {
-        String left = WebStorageUtil.readFromStorage(prefix + WindowState.LEFT + suffix);
+        String left = WebStorageUtil.readFromStorage(getKey(WindowState.LEFT));
         return (Strings.isNullOrEmpty(left) ? 0 : Integer.parseInt(left));
     }
 
     boolean retrieveMaximizedState() {
-        String maximized = WebStorageUtil.readFromStorage(prefix + WindowState.MAXIMIZED + suffix);
+        String maximized = WebStorageUtil.readFromStorage(getKey(WindowState.MAXIMIZED));
         return (Strings.isNullOrEmpty(maximized) ? false : Boolean.parseBoolean(maximized));
     }
 
     boolean retrieveMinimizedState() {
-        String minimized = WebStorageUtil.readFromStorage(prefix + WindowState.MINIMIZED + suffix);
+        String minimized = WebStorageUtil.readFromStorage(getKey(WindowState.MINIMIZED));
         return (Strings.isNullOrEmpty(minimized) ? false : Boolean.parseBoolean(minimized));
     }
 
@@ -135,6 +135,7 @@ public class WindowStateStorageWrapper {
             }
         }
     }
+
 
     Map<String, String> retrieveMap() {
         Map<String, String> additionalWindowStates = new HashMap<>();
@@ -149,6 +150,11 @@ public class WindowStateStorageWrapper {
             }
         }
         return additionalWindowStates;
+    }
+
+
+    private String getKey(String attribute) {
+        return prefix + attribute + suffix;
     }
 }
 
