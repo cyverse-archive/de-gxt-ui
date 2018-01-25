@@ -158,7 +158,7 @@
                                collapsible="true">
                     <form:widget>
                         <g:VerticalPanel spacing="5">
-                        <g:HTML ui:field="resetHpcfield"/>
+                        <g:HTML ui:field="resetHpcField"/>
                         <button:TextButton text="{appearance.resetHpc}" ui:field="hpcResetBtn" />
                         </g:VerticalPanel>
                     </form:widget>
@@ -184,7 +184,7 @@
                 <form:FieldSet heading="{appearance.webhooks}" ui:field="hookFieldSet">
                     <form:widget>
                         <g:VerticalPanel spacing="5">
-                            <g:HTML ui:field="webhooksfield"/>
+                            <g:HTML ui:field="webhooksField"/>
                             <g:HorizontalPanel spacing="5">
                                 <form:TextField ui:field="hookUrl" visible="true" enabled="true" width="250"/>
                                 <form:ComboBox ui:field="typeCombo" allowBlank="false"

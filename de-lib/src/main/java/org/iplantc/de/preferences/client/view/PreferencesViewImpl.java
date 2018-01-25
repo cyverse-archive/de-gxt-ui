@@ -86,7 +86,7 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
 
     @UiField(provided = true)
     @Ignore
-    HTML resetHpcfield;
+    HTML resetHpcField;
 
     @UiField
     @Ignore
@@ -94,7 +94,7 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
 
     @UiField(provided = true)
     @Ignore
-    HTML webhooksfield;
+    HTML webhooksField;
 
     @UiField
     @Ignore
@@ -146,8 +146,8 @@ public class PreferencesViewImpl extends Composite implements PreferencesView,
         this.defaultOutputFolder = folderSelectorFieldFactory.defaultFolderSelector();
         this.defaultOutputFolder.hideResetButton();
         this.KB_CONSTANTS = kbConstants;
-        this.resetHpcfield = new HTML(appearance.resetHpcPrompt());
-        this.webhooksfield = new HTML(appearance.webhooksPrompt());
+        this.resetHpcField = new HTML(appearance.resetHpcPrompt());
+        this.webhooksField = new HTML(appearance.webhooksPrompt());
 
         ListStore<WebhookType> typeListStore = new ListStore<>(item -> item.getType());
         typeCombo = new ComboBox<>(typeListStore, item -> item.getType());
