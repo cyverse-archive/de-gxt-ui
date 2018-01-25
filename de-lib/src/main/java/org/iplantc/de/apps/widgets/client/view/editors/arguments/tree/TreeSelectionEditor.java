@@ -51,6 +51,7 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.Verti
 import com.sencha.gxt.widget.core.client.form.AdapterField;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.StoreFilterField;
+import com.sencha.gxt.widget.core.client.tips.QuickTip;
 import com.sencha.gxt.widget.core.client.tree.Tree.CheckCascade;
 import com.sencha.gxt.widget.core.client.tree.Tree.CheckState;
 
@@ -231,6 +232,7 @@ public class TreeSelectionEditor extends Composite implements AppTemplateForm.Ar
         vlc.add(tree);
 
         argumentLabel = new FieldLabel(vlc);
+        new QuickTip(argumentLabel);
         argumentLabel.setLabelAlign(TOP);
         argumentLabel.addDomHandler(new ClickHandler() {
 
