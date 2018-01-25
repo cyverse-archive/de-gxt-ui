@@ -452,7 +452,7 @@ public interface IplantResources extends ClientBundle,
     ToolRequestStatusHelpStyle getToolRequestStatusHelpCss();
 
     @Source("IplantContextualHelpAccess.gss")
-    IplantContextualHelpAccessStyle getContxtualHelpStyle();
+    IplantContextualHelpAccessStyle getContextualHelpStyle();
 
     @Source("user_comment.png")
     ImageResource userComment();

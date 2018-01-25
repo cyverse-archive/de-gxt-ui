@@ -49,7 +49,7 @@ public class AppEditorGinModule extends AbstractGinModule {
 
     @Provides
     public IplantContextualHelpAccessStyle createContextualHelpAccessStyle() {
-    	return IplantResources.RESOURCES.getContxtualHelpStyle();
+    	return IplantResources.RESOURCES.getContextualHelpStyle();
     }
 
     @Override

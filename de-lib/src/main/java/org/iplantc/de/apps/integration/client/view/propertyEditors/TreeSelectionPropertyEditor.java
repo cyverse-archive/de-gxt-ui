@@ -125,7 +125,7 @@ public class TreeSelectionPropertyEditor extends AbstractArgumentPropertyEditor 
             }
         });
 
-        final ToolButton toolBtn = new ToolButton(IplantResources.RESOURCES.getContxtualHelpStyle().contextualHelp());
+        final ToolButton toolBtn = new ToolButton(IplantResources.RESOURCES.getContextualHelpStyle().contextualHelp());
         toolBtn.addSelectHandler(new SelectHandler() {
 
             @Override

@@ -165,7 +165,7 @@ public class DecimalSelectionPropertyEditor extends AbstractArgumentPropertyEdit
                 ValueChangeEvent.fire(defaultValueEditor, defaultValueEditor.getValue());
             }
         });
-        final ToolButton toolBtn = new ToolButton(IplantResources.RESOURCES.getContxtualHelpStyle().contextualHelp());
+        final ToolButton toolBtn = new ToolButton(IplantResources.RESOURCES.getContextualHelpStyle().contextualHelp());
         toolBtn.addSelectHandler(new SelectHandler() {
 
             @Override

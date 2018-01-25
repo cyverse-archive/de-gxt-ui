@@ -156,7 +156,7 @@ public class AppsEditorViewDefaultAppearance implements AppsEditorView.AppsEdito
 
     @Override
     public String contextualHelp() {
-        return iplantResources.getContxtualHelpStyle().contextualHelp();
+        return iplantResources.getContextualHelpStyle().contextualHelp();
     }
 
     @Override
