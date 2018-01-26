@@ -6,6 +6,7 @@ import org.iplantc.de.apps.client.AppsToolbarView;
 import org.iplantc.de.apps.client.AppsView;
 import org.iplantc.de.apps.client.OntologyHierarchiesView;
 import org.iplantc.de.apps.shared.AppsModule.Ids;
+import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.commons.client.widgets.DETabPanel;
 
 import com.google.gwt.core.client.GWT;
@@ -21,6 +22,8 @@ import com.google.inject.assistedinject.Assisted;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.container.CardLayoutContainer;
 import com.sencha.gxt.widget.core.client.tree.Tree;
+
+import java.util.List;
 
 /**
  * @author jstroot
@@ -60,6 +63,10 @@ public class AppsViewImpl extends Composite implements AppsView {
                     if (currentItem != selectedItem) {
                         ((Tree)currentItem).getSelectionModel().deselectAll();
                     }
+                }
+                List<AppCategory> items = ((Tree)selectedItem).getStore().getRootItems();
+                if (items != null && items.size() > 0) {
+                    ((Tree)selectedItem).getSelectionModel().select(items.get(0), false);
                 }
             }
         });
