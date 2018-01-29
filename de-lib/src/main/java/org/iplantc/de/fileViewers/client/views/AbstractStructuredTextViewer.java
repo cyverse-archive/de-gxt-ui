@@ -6,6 +6,7 @@ import static org.iplantc.de.client.models.viewer.InfoType.CSV;
 import static org.iplantc.de.client.models.viewer.InfoType.GFF;
 import static org.iplantc.de.client.models.viewer.InfoType.GTF;
 import static org.iplantc.de.client.models.viewer.InfoType.HT_ANALYSIS_PATH_LIST;
+import static org.iplantc.de.client.models.viewer.InfoType.MULTI_INPUT_PATH_LIST;
 import static org.iplantc.de.client.models.viewer.InfoType.TSV;
 import static org.iplantc.de.client.models.viewer.InfoType.VCF;
 import static org.iplantc.de.client.services.FileEditorServiceFacade.COMMA_DELIMITER;
@@ -135,15 +136,16 @@ public abstract class AbstractStructuredTextViewer extends AbstractFileViewer {
 
     String getSeparator() {
         InfoType fromTypeString = InfoType.fromTypeString(infoType);
-        if (CSV.equals(fromTypeString)
-            || HT_ANALYSIS_PATH_LIST.equals(fromTypeString)) {
+        if (CSV.equals(fromTypeString)) {
             return COMMA_DELIMITER;
         } else if (TSV.equals(fromTypeString)
                        || VCF.equals(fromTypeString)
                        || GFF.equals(fromTypeString)
                        || BED.equals(fromTypeString)
                        || GTF.equals(fromTypeString)
-                       || BOWTIE.equals(fromTypeString)) {
+                       || BOWTIE.equals(fromTypeString)
+                       || HT_ANALYSIS_PATH_LIST.equals(fromTypeString)
+                       || MULTI_INPUT_PATH_LIST.equals(fromTypeString)) {
             return TAB_DELIMITER;
         } else {
             return SPACE_DELIMITER;
