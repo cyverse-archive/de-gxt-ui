@@ -45,10 +45,11 @@ public class AppLaunchWindow extends WindowBase implements AnalysisLaunchEventHa
         setMinWidth(appearance.windowMinWidth());
         setMinHeight(appearance.windowMinHeight());
         setBorders(false);
-        ensureDebugId(DeModule.WindowIds.APP_LAUNCH_WINDOW);
 
         presenter.addAnalysisLaunchHandler(this);
         presenter.addAppTemplateFetchedHandler(this);
+
+        ensureDebugId(DeModule.WindowIds.APP_LAUNCH_WINDOW);
     }
 
 
@@ -127,4 +128,10 @@ public class AppLaunchWindow extends WindowBase implements AnalysisLaunchEventHa
 
     }
 
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        presenter.setViewDebugId(baseID);
+    }
 }

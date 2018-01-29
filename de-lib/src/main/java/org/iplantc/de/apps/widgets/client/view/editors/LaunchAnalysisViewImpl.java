@@ -1,5 +1,6 @@
 package org.iplantc.de.apps.widgets.client.view.editors;
 
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.apps.widgets.client.view.LaunchAnalysisView;
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.apps.widgets.client.view.editors.validation.AnalysisOutputValidator;
@@ -42,7 +43,7 @@ import java.util.List;
 /**
  * @author jstroot
  */
-public class LaunchAnalysisViewImpl implements LaunchAnalysisView {
+public class LaunchAnalysisViewImpl extends ContentPanel implements LaunchAnalysisView {
 
     interface EditorDriver extends SimpleBeanEditorDriver<JobExecution, LaunchAnalysisViewImpl> { }
 
@@ -50,7 +51,6 @@ public class LaunchAnalysisViewImpl implements LaunchAnalysisView {
     interface LaunchAnalysisWidgetUiBinder extends UiBinder<Widget, LaunchAnalysisViewImpl> { }
 
     @UiField(provided = true) @Ignore FolderSelectorField awFolderSel;
-    @UiField @Ignore ContentPanel contentPanel;
     @UiField(provided = true) AppTemplateWizardAppearance appearance;
     @UiField TextArea description;
     @UiField TextField name;
@@ -61,6 +61,16 @@ public class LaunchAnalysisViewImpl implements LaunchAnalysisView {
 
     private final EditorDriver editorDriver = GWT.create(EditorDriver.class);
 
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        name.ensureDebugId(baseID + AppsModule.Ids.APP_LAUNCH_NAME);
+        description.ensureDebugId(baseID + AppsModule.Ids.APP_LAUNCH_COMMENTS);
+        awFolderSel.ensureDebugId(baseID + AppsModule.Ids.APP_LAUNCH_OUTPUT_FOLDER);
+        retainInputs.ensureDebugId(baseID + AppsModule.Ids.APP_LAUNCH_RETAIN_INPUTS);
+    }
+
     @Inject
     public LaunchAnalysisViewImpl(final LaunchAnalysisWidgetUiBinder binder,
                                   final AppTemplateWizardAppearance appearance,
@@ -69,7 +79,7 @@ public class LaunchAnalysisViewImpl implements LaunchAnalysisView {
         this.appearance = appearance;
         this.awFolderSel = folderSelectorFieldFactory.defaultFolderSelector();
         this.awFolderSel.hideResetButton();
-        binder.createAndBindUi(this);
+        setWidget(binder.createAndBindUi(this));
         name.addValidator(new DiskResourceNameValidator());
         name.addKeyDownHandler(new PreventEntryAfterLimitHandler(name));
         name.addValidator(new MaxLengthValidator(PreventEntryAfterLimitHandler.DEFAULT_LIMIT));
@@ -99,11 +109,6 @@ public class LaunchAnalysisViewImpl implements LaunchAnalysisView {
         awFolderSel.addValidator(new AnalysisOutputValidator(appearance));
         awFolderSel.addValidator(new EmptyValidator<String>());
         this.editorDriver.initialize(this);
-    }
-
-    @Override
-    public Widget asWidget() {
-        return contentPanel;
     }
 
     @Override
@@ -155,6 +160,6 @@ public class LaunchAnalysisViewImpl implements LaunchAnalysisView {
             headerLabel.appendHtmlConstant(appearance.getErrorIconImg().getString());
         }
         headerLabel.appendEscaped(appearance.launchAnalysisDetailsHeadingPrefix() + appName);
-        contentPanel.setHeading(headerLabel.toSafeHtml());
+        setHeading(headerLabel.toSafeHtml());
     }
 }

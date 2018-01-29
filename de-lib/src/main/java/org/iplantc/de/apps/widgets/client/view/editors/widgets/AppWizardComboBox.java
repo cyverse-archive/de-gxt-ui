@@ -38,7 +38,7 @@ public class AppWizardComboBox extends AbstractArgumentEditor implements HasValu
     private final AppTemplateAutoBeanFactory factory = GWT.create(AppTemplateAutoBeanFactory.class);
     private final ListStore<SelectionItem> listStore;
 
-    private final ComboBox<SelectionItem> selectionItemsEditor;
+    protected final ComboBox<SelectionItem> selectionItemsEditor;
 
     private final ListStoreEditor<SelectionItem> selectionItemsStoreBinder;
     private final ArgumentEditorConverter<SelectionItem> valueEditor;

@@ -3,6 +3,7 @@ package org.iplantc.de.apps.widgets.client.view.editors;
 import static com.sencha.gxt.core.client.dom.ScrollSupport.ScrollMode.AUTOY;
 import static com.sencha.gxt.widget.core.client.container.AccordionLayoutContainer.ExpandMode.SINGLE;
 
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.apps.widgets.client.events.AppTemplateSelectedEvent;
 import org.iplantc.de.apps.widgets.client.events.AppTemplateSelectedEvent.AppTemplateSelectedEventHandler;
 import org.iplantc.de.apps.widgets.client.events.ArgumentGroupAddedEvent;
@@ -117,6 +118,13 @@ public class AppTemplateFormImpl extends Composite implements AppTemplateForm {
         vlc.add(groupsContainer, new VerticalLayoutData(1.0, -1.0));
         initWidget(vlc);
 
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        listEditor.getEditors().forEach(editor -> editor.asWidget().ensureDebugId(baseID + AppsModule.Ids.TEMPLATE_GROUP + groupsContainer.getWidgetIndex(editor)));
     }
 
     @Override
