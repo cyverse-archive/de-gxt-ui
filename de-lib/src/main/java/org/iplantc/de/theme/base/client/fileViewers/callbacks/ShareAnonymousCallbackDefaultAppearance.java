@@ -73,12 +73,12 @@ public class ShareAnonymousCallbackDefaultAppearance implements ShareAnonymousCa
 
     @Override
     public String ensemblUrlDialogWidth() {
-        return "640";
+        return "600";
     }
 
     @Override
     public String ensemblUrlDialogHeight() {
-        return "320";
+        return "375";
     }
 
     @Override

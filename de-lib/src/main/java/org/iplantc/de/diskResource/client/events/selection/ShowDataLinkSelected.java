@@ -6,6 +6,8 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
+import java.util.List;
+
 /**
  * A GWT event that fires when the user clicks the Show Link button in the Data Links dialog
  */
@@ -18,10 +20,10 @@ public class ShowDataLinkSelected extends GwtEvent<ShowDataLinkSelected.ShowData
         HandlerRegistration addShowDataLinkSelectedHandler(ShowDataLinkSelectedHandler handler);
     }
     public static Type<ShowDataLinkSelectedHandler> TYPE = new Type<ShowDataLinkSelectedHandler>();
-    private DiskResource selectedResource;
+    private List<DiskResource> selectedResources;
 
-    public ShowDataLinkSelected(DiskResource selectedResource) {
-        this.selectedResource = selectedResource;
+    public ShowDataLinkSelected(List<DiskResource> selectedResources) {
+        this.selectedResources = selectedResources;
     }
 
     public Type<ShowDataLinkSelectedHandler> getAssociatedType() {
@@ -32,7 +34,7 @@ public class ShowDataLinkSelected extends GwtEvent<ShowDataLinkSelected.ShowData
         handler.onShowDataLinkSelected(this);
     }
 
-    public DiskResource getSelectedResource() {
-        return selectedResource;
+    public List<DiskResource> getSelectedResource() {
+        return selectedResources;
     }
 }

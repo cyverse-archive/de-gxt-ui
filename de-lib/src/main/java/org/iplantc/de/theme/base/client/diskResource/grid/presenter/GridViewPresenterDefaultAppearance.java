@@ -111,13 +111,18 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     }
 
     @Override
+    public String shareLinkDialogMultiLineHeight() {
+        return "300";
+    }
+
+    @Override
     public int shareLinkDialogTextBoxWidth() {
         return 410;
     }
 
     @Override
     public String shareLinkDialogWidth() {
-        return "535";
+        return "600";
     }
 
     @Override

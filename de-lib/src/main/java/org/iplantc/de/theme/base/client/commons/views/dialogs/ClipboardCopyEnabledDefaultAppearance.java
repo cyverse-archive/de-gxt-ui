@@ -36,13 +36,23 @@ public class ClipboardCopyEnabledDefaultAppearance implements ClipboardCopyEnabl
     }
 
     @Override
-    public String copyTextboxWidth() {
+    public String copyTextBoxWidth() {
         return "375px";
     }
 
     @Override
-    public String copyTextboxHeight() {
+    public String copyTextBoxHeight() {
         return "20px";
+    }
+
+    @Override
+    public String copyTextAreaWidth() {
+        return "475px";
+    }
+
+    @Override
+    public String copyTextAreaHeight() {
+        return "200px";
     }
 
     @Override

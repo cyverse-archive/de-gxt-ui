@@ -99,7 +99,12 @@ public class DataLinkViewDefaultAppearance implements DataLinkView.Appearance {
 
     @Override
     public String copyDataLinkDlgWidth() {
-        return "535";
+        return "600";
+    }
+
+    @Override
+    public String copyDataLinkDlgMultiLineHeight() {
+        return "300";
     }
 
     @Override

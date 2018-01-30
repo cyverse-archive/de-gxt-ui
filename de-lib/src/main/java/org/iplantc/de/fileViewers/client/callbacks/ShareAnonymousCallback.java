@@ -3,22 +3,16 @@ package org.iplantc.de.fileViewers.client.callbacks;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.views.dialogs.ClipboardCopyEnabledDialog;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.commons.client.widgets.ContextualHelpPopup;
+import org.iplantc.de.fileViewers.share.FileViewerModule;
 import org.iplantc.de.shared.DataCallback;
 
 import com.google.common.base.Joiner;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextArea;
-
-import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
-import com.sencha.gxt.widget.core.client.form.FieldLabel;
-import com.sencha.gxt.widget.core.client.form.FormPanel.LabelAlign;
-import com.sencha.gxt.widget.core.client.tips.QuickTip;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -82,7 +76,7 @@ public class ShareAnonymousCallback extends DataCallback<List<String>> {
 
 
     private void showShareLink(List<String> linkIds) {
-        // Open dialog window with text selected.
+/*        // Open dialog window with text selected.
         IPlantDialog dlg = new IPlantDialog(true);
         dlg.setHeading(appearance.sendToEnsemblMenuItem());
         attachHelp(dlg);
@@ -116,7 +110,16 @@ public class ShareAnonymousCallback extends DataCallback<List<String>> {
         dlg.setWidget(container);
         dlg.setFocusWidget(textBox);
         dlg.show();
-        textBox.selectAll();
+        textBox.selectAll();*/
+        ClipboardCopyEnabledDialog dlg = new ClipboardCopyEnabledDialog(true);
+        dlg.setHeading(appearance.sendToEnsemblMenuItem());
+        dlg.setPromptText(appearance.ensemblUrl());
+        dlg.setFooterText(appearance.notificationWithContextHelp().asString());
+        dlg.setSize(appearance.ensemblUrlDialogWidth(), appearance.ensemblUrlDialogHeight());
+        dlg.setCopyText(Joiner.on('\n').join(linkIds));
+        dlg.setTextBoxId(FileViewerModule.Ids.FILE_VIEWER_VIEW + FileViewerModule.Ids.SHARE_ANONYMOUS);
+        dlg.show();
+
     }
 
     private void attachHelp(final IPlantDialog dlg) {

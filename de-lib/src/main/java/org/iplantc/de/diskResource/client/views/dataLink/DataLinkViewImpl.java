@@ -67,8 +67,13 @@ public class DataLinkViewImpl extends Composite implements DataLinkView,
         public void onSelection(SelectionEvent<DiskResource> event) {
             List<DiskResource> selectedItems = tree.getSelectionModel().getSelectedItems();
             boolean createBtnEnabled = selectedItems.size() > 0;
-            boolean dataLinkSelected = selectedItems.size() == 1
-                                           && (selectedItems.get(0) instanceof DataLink);
+            boolean dataLinkSelected = true;
+
+            for (DiskResource dr : selectedItems) {
+                if (!(dr instanceof DataLink)) {
+                    dataLinkSelected = false;
+                }
+            }
 
             for (DiskResource item : selectedItems) {
                 if (item instanceof DataLink) {
@@ -141,9 +146,9 @@ public class DataLinkViewImpl extends Composite implements DataLinkView,
 
     @UiHandler("showDataLinkButton")
     void onCopyDataLinkButtonSelected(SelectEvent event) {
-        DiskResource selectedItem = tree.getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
-            fireEvent(new ShowDataLinkSelected(selectedItem));
+        List<DiskResource> selectedItems = tree.getSelectionModel().getSelectedItems();
+        if (selectedItems != null) {
+            fireEvent(new ShowDataLinkSelected(selectedItems));
         }
     }
 

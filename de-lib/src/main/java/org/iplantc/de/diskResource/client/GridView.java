@@ -171,6 +171,8 @@ public interface GridView extends IsWidget,
 
             String shareLinkDialogHeight();
 
+            String shareLinkDialogMultiLineHeight();
+
             int shareLinkDialogTextBoxWidth();
 
             String shareLinkDialogWidth();

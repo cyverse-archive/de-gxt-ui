@@ -5,6 +5,7 @@ import org.iplantc.de.diskResource.client.GridView;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 /**
  * @author jstroot
@@ -13,15 +14,21 @@ public class ShareResourceLinkDialog extends ClipboardCopyEnabledDialog {
 
 
     @Inject
-    ShareResourceLinkDialog(final GridView.Presenter.Appearance appearance) {
+    ShareResourceLinkDialog(final GridView.Presenter.Appearance appearance,
+                            @Assisted boolean copyMultiLine) {
+        super(copyMultiLine);
         setPredefinedButtons(PredefinedButton.OK);
         setHideOnButtonClick(true);
         setResizable(false);
-        setSize(appearance.shareLinkDialogWidth(), appearance.shareLinkDialogHeight());
+        if (copyMultiLine) {
+            setSize(appearance.shareLinkDialogWidth(), appearance.shareLinkDialogMultiLineHeight());
+        } else {
+            setSize(appearance.shareLinkDialogWidth(), appearance.shareLinkDialogHeight());
+        }
     }
 
     public void show(final String link) {
-        textBox.setValue(link);
+        setCopyText(link);
         textBox.selectAll();
         ensureDebugId(DiskResourceModule.Ids.SHARE_LINK_DLG);
         super.show();
@@ -39,7 +46,7 @@ public class ShareResourceLinkDialog extends ClipboardCopyEnabledDialog {
 
         getButton(PredefinedButton.OK).asWidget().ensureDebugId(baseID + DiskResourceModule.Ids.OK_BTN);
         textBox.ensureDebugId(baseID + DiskResourceModule.Ids.LINK_TEXT);
-        textBox.getElement().setId(baseID + DiskResourceModule.Ids.LINK_TEXT_INPUT);
+        setTextBoxId(baseID + DiskResourceModule.Ids.LINK_TEXT_INPUT);
 
 
     }

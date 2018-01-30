@@ -5,6 +5,7 @@ import org.iplantc.de.diskResource.client.DataLinkView;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.widget.core.client.Dialog;
 
@@ -16,19 +17,24 @@ public class DataLinkDialog extends ClipboardCopyEnabledDialog {
     private DataLinkView.Appearance appearance;
 
     @Inject
-    public DataLinkDialog(DataLinkView.Appearance appearance) {
+    public DataLinkDialog(DataLinkView.Appearance appearance, @Assisted boolean copyMultiLine) {
+        super(copyMultiLine);
         this.appearance = appearance;
 
         setHeading(appearance.dataLinkTitle());
         setHideOnButtonClick(true);
         setResizable(false);
         setPredefinedButtons(Dialog.PredefinedButton.OK);
-        setSize(appearance.copyDataLinkDlgWidth(), appearance.copyDataLinkDlgHeight());
+        if (copyMultiLine) {
+            setSize(appearance.copyDataLinkDlgWidth(), appearance.copyDataLinkDlgMultiLineHeight());
+        } else {
+            setSize(appearance.copyDataLinkDlgWidth(), appearance.copyDataLinkDlgHeight());
+        }
     }
 
 
     public void show(String url) {
-        textBox.setValue(url);
+        setCopyText(url);
         setFocusWidget(textBox);
         ensureDebugId(DiskResourceModule.Ids.DATA_LINK_DLG);
         super.show();
@@ -45,8 +51,7 @@ public class DataLinkDialog extends ClipboardCopyEnabledDialog {
 
         getButton(PredefinedButton.OK).asWidget().ensureDebugId(baseID + DiskResourceModule.Ids.OK_BTN);
         textBox.ensureDebugId(baseID + DiskResourceModule.Ids.DATA_LINK_URL);
-        textBox.getElement()
-               .setId(baseID + DiskResourceModule.Ids.DATA_LINK_URL
+        setTextBoxId(baseID + DiskResourceModule.Ids.DATA_LINK_URL
                       + DiskResourceModule.Ids.DATA_LINk_URL_INPUT);
     }
 }
