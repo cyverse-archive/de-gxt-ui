@@ -48,7 +48,8 @@ public class ClipboardCopyEnabledDialog extends IPlantDialog {
 
     Appearance appearance = GWT.create(Appearance.class);
 
-    public ClipboardCopyEnabledDialog(boolean copyMultiLine) {
+    public ClipboardCopyEnabledDialog(boolean copyMultiLine, boolean contextualHelpTool) {
+        super(contextualHelpTool);
         if (!copyMultiLine) {
             textBox = new TextBox();
             textBox.setReadOnly(true);
@@ -63,18 +64,38 @@ public class ClipboardCopyEnabledDialog extends IPlantDialog {
         textBox.setReadOnly(true);
     }
 
+    /**
+     * Set text for input prompt
+     *
+     * @param text
+     */
     public void setPromptText(String text) {
         this.promptText = text;
     }
 
+    /**
+     * Set footer text
+     *
+     * @param text
+     */
     public void setFooterText(String text) {
         this.footerText = text;
     }
 
+    /**
+     * Set the text to be copied
+     *
+     * @param text
+     */
     public void setCopyText(String text) {
         textBox.setValue(text);
     }
 
+    /**
+     * Set id for input element
+     *
+     * @param id
+     */
     public void setTextBoxId(String id) {
         textBox.getElement().setId(id);
     }

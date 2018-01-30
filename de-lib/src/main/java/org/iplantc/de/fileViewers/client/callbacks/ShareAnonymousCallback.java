@@ -76,42 +76,8 @@ public class ShareAnonymousCallback extends DataCallback<List<String>> {
 
 
     private void showShareLink(List<String> linkIds) {
-/*        // Open dialog window with text selected.
-        IPlantDialog dlg = new IPlantDialog(true);
-        dlg.setHeading(appearance.sendToEnsemblMenuItem());
+        ClipboardCopyEnabledDialog dlg = new ClipboardCopyEnabledDialog(true, true);
         attachHelp(dlg);
-
-        dlg.setHideOnButtonClick(true);
-        dlg.setResizable(false);
-        dlg.setSize(appearance.ensemblUrlDialogWidth(), appearance.ensemblUrlDialogHeight());
-
-        FieldLabel fl = new FieldLabel();
-        fl.setHTML(SafeHtmlUtils.fromTrustedString(appearance.ensemblUrl()));
-        TextArea textBox = new TextArea();
-        textBox.setPixelSize(appearance.ensemblUrlTextAreaWidth(), appearance.ensemblUrlTextAreaHeight());
-        textBox.setReadOnly(true);
-        textBox.setValue(Joiner.on('\n').join(linkIds));
-        fl.setWidget(textBox);
-        fl.setLabelAlign(LabelAlign.TOP);
-
-        VerticalLayoutContainer container = new VerticalLayoutContainer();
-        container.add(fl);
-        container.add(new Label(appearance.copyPasteInstructions()));
-
-        // Use a fl to get html
-        FieldLabel notification = new FieldLabel();
-        notification.setLabelSeparator("");
-        notification.setLabelAlign(LabelAlign.TOP);
-        notification.setHTML(appearance.notificationWithContextHelp());
-        new QuickTip(notification);
-
-        notification.setWidth(appearance.notificationWithContextWidth());
-        container.add(notification);
-        dlg.setWidget(container);
-        dlg.setFocusWidget(textBox);
-        dlg.show();
-        textBox.selectAll();*/
-        ClipboardCopyEnabledDialog dlg = new ClipboardCopyEnabledDialog(true);
         dlg.setHeading(appearance.sendToEnsemblMenuItem());
         dlg.setPromptText(appearance.ensemblUrl());
         dlg.setFooterText(appearance.notificationWithContextHelp().asString());
@@ -119,7 +85,6 @@ public class ShareAnonymousCallback extends DataCallback<List<String>> {
         dlg.setCopyText(Joiner.on('\n').join(linkIds));
         dlg.setTextBoxId(FileViewerModule.Ids.FILE_VIEWER_VIEW + FileViewerModule.Ids.SHARE_ANONYMOUS);
         dlg.show();
-
     }
 
     private void attachHelp(final IPlantDialog dlg) {

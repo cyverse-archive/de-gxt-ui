@@ -16,7 +16,7 @@ public class ShareResourceLinkDialog extends ClipboardCopyEnabledDialog {
     @Inject
     ShareResourceLinkDialog(final GridView.Presenter.Appearance appearance,
                             @Assisted boolean copyMultiLine) {
-        super(copyMultiLine);
+        super(copyMultiLine, false);
         setPredefinedButtons(PredefinedButton.OK);
         setHideOnButtonClick(true);
         setResizable(false);

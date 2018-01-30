@@ -18,7 +18,7 @@ public class DataLinkDialog extends ClipboardCopyEnabledDialog {
 
     @Inject
     public DataLinkDialog(DataLinkView.Appearance appearance, @Assisted boolean copyMultiLine) {
-        super(copyMultiLine);
+        super(copyMultiLine, false);
         this.appearance = appearance;
 
         setHeading(appearance.dataLinkTitle());
