@@ -1,4 +1,4 @@
-package org.iplantc.de.analysis.client.models;
+package org.iplantc.de.client.models.analysis;
 
 /**
  * Created by sriram on 3/4/16.
@@ -20,5 +20,13 @@ public enum AnalysisFilter {
     @Override
     public String toString() {
         return filter;
+    }
+
+    public static AnalysisFilter fromTypeString(String typeString) {
+        if (typeString == null || typeString.isEmpty()) {
+            return null;
+        }
+        String temp = typeString.replaceAll("\\s", "");
+        return valueOf(temp.toUpperCase());
     }
 }

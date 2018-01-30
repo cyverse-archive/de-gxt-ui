@@ -119,4 +119,24 @@ public class AppLaunchViewDefaultAppearance implements AppLaunchView.AppLaunchVi
     public String launchAnalysis() {
         return iplantDisplayStrings.launchAnalysis();
     }
+
+    @Override
+    public String windowHeight() {
+        return "375";
+    }
+
+    @Override
+    public String windowWidth() {
+        return "640";
+    }
+
+    @Override
+    public int windowMinWidth() {
+        return 375;
+    }
+
+    @Override
+    public int windowMinHeight() {
+        return 350;
+    }
 }

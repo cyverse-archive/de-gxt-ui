@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasUUIDs;
+import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.notifications.NotificationAutoBeanFactory;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
@@ -48,7 +49,9 @@ import org.mockito.Captor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author jstroot
@@ -107,6 +110,10 @@ public class DesktopNotifications_PresenterTest {
             @Override
             void setBrowserContextMenuEnabled(boolean enabled) {
                 // Test stub, Do nothing
+            }
+
+            public List<WindowState> getWindowStates() {
+                return new ArrayList<>();
             }
         };
 

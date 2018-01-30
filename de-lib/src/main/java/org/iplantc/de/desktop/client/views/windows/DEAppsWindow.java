@@ -2,8 +2,10 @@ package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.apps.client.AppsView;
 import org.iplantc.de.apps.shared.AppsModule;
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
@@ -15,26 +17,35 @@ import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.inject.Inject;
 
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 /**
  * @author jstroot
  */
-public class DEAppsWindow extends IplantWindowBase {
+public class DEAppsWindow extends WindowBase {
 
     public static final String APPS = "#apps";
-    private final AppsView.Presenter presenter;
+    public static final String DE_APPS_ACTIVEVIEW = "de.apps.activeview#";
     @Inject
     UserSettings userSettings;
+    @Inject
+    UserInfo userInfo;
+    private final AppsView.Presenter presenter;
+    private final AppsView.AppsViewAppearance appsViewAppearance;
 
     @Inject
-    DEAppsWindow(final AppsView.Presenter presenter, final IplantDisplayStrings displayStrings) {
+    DEAppsWindow(final AppsView.Presenter presenter,
+                 final IplantDisplayStrings displayStrings,
+                 final AppsView.AppsViewAppearance appsViewAppearance) {
         this.presenter = presenter;
+        this.appsViewAppearance = appsViewAppearance;
 
         // This must be set before we render view
         ensureDebugId(DeModule.WindowIds.APPS_WINDOW);
-        setSize("820", "400");
-        setMinWidth(540);
+
+        setMinWidth(appsViewAppearance.appsWindowMinWidth());
+        setMinHeight(appsViewAppearance.appsWindowMinHeight());
         setHeading(displayStrings.applications());
     }
 
@@ -42,12 +53,18 @@ public class DEAppsWindow extends IplantWindowBase {
     public <C extends WindowConfig> void show(final C windowConfig,
                                               final String tag,
                                               final boolean isMaximizable) {
+        super.show(windowConfig, tag, isMaximizable);
         final AppsWindowConfig appsWindowConfig = (AppsWindowConfig)windowConfig;
+        String activeView = null;
+        if (ws.getAdditionalWindowStates() != null) {
+            activeView = ws.getAdditionalWindowStates()
+                           .get(WindowState.ADDITIONAL + DE_APPS_ACTIVEVIEW + tag + "#"
+                                + userInfo.getUsername());
+        }
         presenter.go(this,
                      appsWindowConfig.getSelectedAppCategory(),
                      appsWindowConfig.getSelectedApp(),
-                     appsWindowConfig.getView());
-        super.show(windowConfig, tag, isMaximizable);
+                     activeView);
         btnHelp = createHelpButton();
         getHeader().insertTool(btnHelp,0);
         btnHelp.addSelectHandler(new SelectEvent.SelectHandler() {
@@ -68,23 +85,43 @@ public class DEAppsWindow extends IplantWindowBase {
     }
 
     @Override
-    public void doHide() {
-        super.doHide();
-    }
-
-    @Override
-    public WindowState getWindowState() {
+    public WindowConfig getWindowConfig() {
         AppsWindowConfig config = ConfigFactory.appsWindowConfig();
         config.setSelectedApp(presenter.getSelectedApp());
         config.setSelectedAppCategory(presenter.getSelectedAppCategory());
-        config.setView(presenter.getActiveView());
-        return createWindowState(config);
+        return config;
     }
 
     @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
         presenter.setViewDebugId(baseID + AppsModule.Ids.APPS_VIEW);
+    }
+
+    @Override
+    public String getWindowType() {
+        return WindowType.APPS.toString();
+    }
+
+    @Override
+    public FastMap<String> getAdditionalWindowStates() {
+        FastMap<String> additionalData = new FastMap<>();
+        additionalData.put(WindowState.ADDITIONAL + DE_APPS_ACTIVEVIEW + getStateId() + "#"
+                           + userInfo.getUsername(),
+                           presenter.getActiveView());
+        return additionalData;
+    }
+
+    @Override
+    public void restoreWindowState() {
+        if (getStateId().equals(ws.getTag())) {
+            super.restoreWindowState();
+            String width = ws.getWidth();
+            String height = ws.getHeight();
+            setSize((width == null) ? appsViewAppearance.appsWindowWidth() : width,
+                    (height == null) ? appsViewAppearance.appsWindowHeight() : height);
+        }
+
     }
 
 }

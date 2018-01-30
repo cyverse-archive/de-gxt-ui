@@ -2,22 +2,24 @@ package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.IsMaskable;
-import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.commons.client.views.window.configs.FileViewerWindowConfig;
-import org.iplantc.de.commons.client.views.window.configs.MultiInputPathListWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.HTPathListWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.MultiInputPathListWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.TabularFileViewerWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.fileViewers.client.FileViewer;
 import org.iplantc.de.fileViewers.client.events.DirtyStateChangedEvent;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
+import com.google.common.base.Strings;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
 import com.sencha.gxt.widget.core.client.box.MessageBox;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
@@ -27,9 +29,8 @@ import java.util.logging.Logger;
 /**
  * @author sriram, jstroot
  */
-public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
-                                                                  IsHideable,
-                                                                  DirtyStateChangedEvent.DirtyStateChangedEventHandler {
+public class FileViewerWindow extends WindowBase
+        implements IsMaskable, DirtyStateChangedEvent.DirtyStateChangedEventHandler, IsHideable {
     private class CriticalPathCallback implements AsyncCallback<String> {
         @Override
         public void onFailure(Throwable caught) {
@@ -47,23 +48,27 @@ public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
     private FileViewerWindowConfig configAB;
     private final IplantDisplayStrings displayStrings;
     private final FileViewer.Presenter presenter;
+    private final FileViewer.FileViewerAppearance appearance;
 
     @Inject
     FileViewerWindow(final IplantDisplayStrings displayStrings,
-                     final FileViewer.Presenter presenter) {
+                     final FileViewer.Presenter presenter,
+                     final FileViewer.FileViewerAppearance appearance) {
         this.displayStrings = displayStrings;
-
         this.presenter = presenter;
         this.presenter.addDirtyStateChangedEventHandler(this);
+        this.appearance = appearance;
 
-        setSize("800", "480");
-
-    }
+        setMinHeight(appearance.windowMinHeight());
+        setMinWidth(appearance.windowMinWidth());
+   }
 
     @Override
-    public <C extends WindowConfig> void show(C windowConfig, String tag,
-                                              boolean isMaximizable) {
+    public <C extends org.iplantc.de.commons.client.views.window.configs.WindowConfig> void show(C windowConfig,
+                                                                                                 String tag,
+                                                                                                 boolean isMaximizable) {
 
+        super.show(windowConfig, tag, isMaximizable);
         final FileViewerWindowConfig fileViewerWindowConfig = (FileViewerWindowConfig) windowConfig;
         this.configAB = fileViewerWindowConfig;
         this.file = configAB.getFile();
@@ -96,11 +101,10 @@ public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
                                 delimiter);
         }
 
-        super.show(windowConfig, tag, isMaximizable);
     }
 
     @Override
-    public void doHide() {
+    public void hide() {
         if (presenter.isDirty() && configAB.isEditing()) {
             final MessageBox cmb = new MessageBox(displayStrings.save(), displayStrings.unsavedChanges());
             cmb.setPredefinedButtons(PredefinedButton.YES, PredefinedButton.NO, PredefinedButton.CANCEL);
@@ -111,20 +115,42 @@ public class FileViewerWindow extends IplantWindowBase implements IsMaskable,
                         cmb.hide();
                         presenter.saveFileAndClose(FileViewerWindow.this);
                     } else if (PredefinedButton.NO.equals(event.getHideButton())) {
-                        FileViewerWindow.super.doHide();
+                        FileViewerWindow.super.hide();
                     }
 
                 }
             });
             cmb.show();
         } else {
-            super.doHide();
+            super.hide();
         }
     }
 
     @Override
-    public WindowState getWindowState() {
-        return createWindowState(configAB);
+    public String getWindowType() {
+        return WindowType.FILE_VIEWER.toString();
+    }
+
+    @Override
+    public FastMap<String> getAdditionalWindowStates() {
+        return null;
+    }
+
+    @Override
+    public void restoreWindowState() {
+        if (getStateId().equals(ws.getTag())) {
+            super.restoreWindowState();
+            String width = ws.getWidth();
+            String height = ws.getHeight();
+            setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
+                    (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
+        }
+
+    }
+
+    @Override
+    public WindowConfig getWindowConfig() {
+        return configAB;
     }
 
     @Override

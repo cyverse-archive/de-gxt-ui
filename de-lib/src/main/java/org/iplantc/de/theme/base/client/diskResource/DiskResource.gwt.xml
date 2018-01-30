@@ -166,4 +166,13 @@
     <replace-with class="org.iplantc.de.theme.base.client.diskResource.toolbar.PathListAutomationDefaultAppearance">
         <when-type-is class="org.iplantc.de.diskResource.client.PathListAutomationView.PathListAutomationAppearance"/>
     </replace-with>
+
+    <replace-with class="org.iplantc.de.theme.base.client.diskResource.view.DiskResourceViewDeafultAppearance">
+        <when-type-is class="org.iplantc.de.diskResource.client.DiskResourceView.DiskResourceViewAppearance"></when-type-is>
+    </replace-with>
+
+    <replace-with class="org.iplantc.de.theme.base.client.diskResource.view.SimpleDownloadWindowDefaultAppearance">
+        <when-type-is class="org.iplantc.de.desktop.client.views.windows.SimpleDownloadWindow.SimpleDownloadWindowAppearance"></when-type-is>
+    </replace-with>
+    
 </module>

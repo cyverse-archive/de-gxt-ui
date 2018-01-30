@@ -1,6 +1,6 @@
 package org.iplantc.de.desktop.client.views.windows;
 
-import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
@@ -12,11 +12,13 @@ import org.iplantc.de.commons.client.widgets.IPlantAnchor;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
+import com.google.common.base.Strings;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 
 /**
@@ -24,19 +26,31 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
  *
  * @author psarando, jstroot
  */
-public class SimpleDownloadWindow extends IplantWindowBase {
+public class SimpleDownloadWindow extends WindowBase {
+
+    public interface SimpleDownloadWindowAppearance {
+        String windowWidth();
+
+        String windowHeight();
+    }
 
     private final DiskResourceServiceFacade diskResourceServiceFacade;
     private final IplantDisplayStrings displayStrings;
+    private final SimpleDownloadWindowAppearance appearance;
+
 
     @Inject
     SimpleDownloadWindow(final IplantDisplayStrings displayStrings,
-                         final DiskResourceServiceFacade diskResourceServiceFacade) {
+                         final DiskResourceServiceFacade diskResourceServiceFacade,
+                         final SimpleDownloadWindowAppearance appearance) {
         this.displayStrings = displayStrings;
         this.diskResourceServiceFacade = diskResourceServiceFacade;
-
+        this.appearance = appearance;
         setHeading(displayStrings.download());
-        setSize("320", "320");
+
+        setMinHeight(Integer.parseInt(appearance.windowHeight()));
+        setMinWidth(Integer.parseInt(appearance.windowWidth()));
+
         ensureDebugId(DeModule.WindowIds.SIMPLE_DOWNLOAD);
     }
 
@@ -44,14 +58,34 @@ public class SimpleDownloadWindow extends IplantWindowBase {
     public <C extends WindowConfig> void show(C windowConfig, String tag,
                                               boolean isMaximizable) {
 
-        init((SimpleDownloadWindowConfig) windowConfig);
         super.show(windowConfig, tag, true);
+        init((SimpleDownloadWindowConfig)windowConfig);
     }
 
     @Override
-    public WindowState getWindowState() {
-        SimpleDownloadWindowConfig config = ConfigFactory.simpleDownloadWindowConfig();
-        return createWindowState(config);
+    public WindowConfig getWindowConfig() {
+        return ConfigFactory.simpleDownloadWindowConfig();
+    }
+
+    @Override
+    public String getWindowType() {
+        return WindowType.SIMPLE_DOWNLOAD.toString();
+    }
+
+    @Override
+    public FastMap<String> getAdditionalWindowStates() {
+        return null;
+    }
+
+    @Override
+    public void restoreWindowState() {
+        if (getStateId().equals(ws.getTag())) {
+            super.restoreWindowState();
+            String width = ws.getWidth();
+            String height = ws.getHeight();
+            setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
+                    (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
+        }
     }
 
     private void buildLinks(SimpleDownloadWindowConfig config, VerticalLayoutContainer vlc) {

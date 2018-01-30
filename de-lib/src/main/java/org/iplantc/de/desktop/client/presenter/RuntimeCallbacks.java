@@ -1,12 +1,13 @@
 package org.iplantc.de.desktop.client.presenter;
 
 import org.iplantc.de.client.DEClientConstants;
+import org.iplantc.de.client.models.UserSession;
 import org.iplantc.de.client.models.UserSettings;
-import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
+import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 
 import com.google.gwt.core.client.GWT;
@@ -25,7 +26,7 @@ import java.util.logging.Logger;
  * @author jstroot
  */
 class RuntimeCallbacks {
-    static class GetUserSessionCallback implements AsyncCallback<List<WindowState>> {
+    static class GetUserSessionCallback implements AsyncCallback<UserSession> {
         private final IplantAnnouncer announcer;
         private final DesktopPresenterImpl presenter;
         private final AutoProgressMessageBox progressMessageBox;
@@ -50,9 +51,9 @@ class RuntimeCallbacks {
         }
 
         @Override
-        public void onSuccess(List<WindowState> result) {
+        public void onSuccess(UserSession result) {
             presenter.setUserSessionConnection(true);
-            presenter.restoreWindows(result);
+            presenter.restoreWindows(result.getWindowConfigs());
             presenter.doPeriodicSessionSave();
             progressMessageBox.hide();
         }
@@ -60,7 +61,7 @@ class RuntimeCallbacks {
 
     static class LogoutCallback implements AsyncCallback<String> {
         private final DEClientConstants constants;
-        private final List<WindowState> orderedWindowStates;
+        private final List<SavedWindowConfig> savedWindowConfigs;
         private final UserSessionServiceFacade userSessionService;
         private final UserSettings userSettings;
         private final DesktopView.Presenter.DesktopPresenterAppearance appearance;
@@ -70,12 +71,12 @@ class RuntimeCallbacks {
                                final DEClientConstants constants,
                                final UserSettings userSettings,
                                final DesktopView.Presenter.DesktopPresenterAppearance appearance,
-                               final List<WindowState> orderedWindowStates) {
+                               final List<SavedWindowConfig> savedWindowConfigs) {
             this.userSessionService = userSessionService;
             this.constants = constants;
             this.userSettings = userSettings;
             this.appearance = appearance;
-            this.orderedWindowStates = orderedWindowStates;
+            this.savedWindowConfigs = savedWindowConfigs;
         }
 
         @Override
@@ -98,7 +99,7 @@ class RuntimeCallbacks {
                 progressMessageBox.getProgressBar().setDuration(1000);
                 progressMessageBox.getProgressBar().setInterval(100);
                 progressMessageBox.auto();
-                userSessionService.saveUserSession(orderedWindowStates, new AsyncCallback<Void>() {
+                userSessionService.saveUserSession(savedWindowConfigs, new AsyncCallback<Void>() {
                     @Override
                     public void onFailure(Throwable caught) {
                         GWT.log(appearance.saveSessionFailed(), caught);
@@ -160,7 +161,7 @@ class RuntimeCallbacks {
         public void onSuccess(Void result) {
             userSettings.setUserSettings(newValue.getUserSetting());
             if(userSettings.isSaveSession()) {
-                userSessionService.saveUserSession(presenter.getOrderedWindowStates(), new AsyncCallback<Void>() {
+                userSessionService.saveUserSession(presenter.getOrderedWindowConfigs(), new AsyncCallback<Void>() {
                     @Override
                     public void onFailure(Throwable caught) {
                         announcer.schedule(new ErrorAnnouncementConfig(appearance.saveSessionFailed()));

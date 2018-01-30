@@ -2,7 +2,7 @@ package org.iplantc.de.desktop.client.presenter;
 
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
-import org.iplantc.de.desktop.client.views.windows.IplantWindowBase;
+import org.iplantc.de.desktop.client.views.windows.WindowBase;
 import org.iplantc.de.desktop.client.views.windows.util.WindowFactory;
 
 import com.google.common.collect.Lists;
@@ -56,7 +56,7 @@ public class DesktopWindowManagerTest {
     @Test public void showExistingWindowShowsExistingWindow() {
         final Window oldWindowMock = mock(Window.class);
         final WindowConfig newConfigMock = mock(WindowConfig.class);
-        final IplantWindowBase newWindowMock = mock(IplantWindowBase.class);
+        final WindowBase newWindowMock = mock(WindowBase.class);
         final List<Widget> existingWindowList = Lists.newArrayList();
         existingWindowList.add(oldWindowMock);
 

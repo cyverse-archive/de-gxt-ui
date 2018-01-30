@@ -2,6 +2,7 @@ package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConfig;
@@ -19,6 +20,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.event.MaximizeEvent;
 import com.sencha.gxt.widget.core.client.event.MaximizeEvent.MaximizeHandler;
 import com.sencha.gxt.widget.core.client.event.RestoreEvent;
@@ -32,28 +34,35 @@ import java.util.List;
 /**
  * @author jstroot
  */
-public class DeDiskResourceWindow extends IplantWindowBase implements FolderSelectionEvent.FolderSelectionEventHandler {
+public class DeDiskResourceWindow extends WindowBase implements FolderSelectionEvent.FolderSelectionEventHandler {
 
     public static final String DATA = "#data";
+    public static final String DE_DATA_DETAILSPANEL_COLLAPSE = "de.data.detailsPanel.collapse#";
+
+
     private final DiskResourcePresenterFactory presenterFactory;
     private final IplantDisplayStrings displayStrings;
+    private final DiskResourceView.DiskResourceViewAppearance diskResourceAppearance;
     private DiskResourceView.Presenter presenter;
-
 
     @Inject
     DeDiskResourceWindow(final DiskResourcePresenterFactory presenterFactory,
-                         final IplantDisplayStrings displayStrings) {
+                         final IplantDisplayStrings displayStrings,
+                         final DiskResourceView.DiskResourceViewAppearance appearance) {
         this.presenterFactory = presenterFactory;
         this.displayStrings = displayStrings;
+        this.diskResourceAppearance = appearance;
         setHeading(displayStrings.data());
-        setSize("900", "480");
-        setMinWidth(900);
-        setMinHeight(480);
+
+        setMinWidth(Integer.parseInt(appearance.windowWidth()));
+        setMinHeight(Integer.parseInt(appearance.windowHeight()));
     }
 
     @Override
     public <C extends WindowConfig> void show(C windowConfig, String tag,
                                               boolean isMaximizable) {
+
+        super.show(windowConfig, tag, isMaximizable);
         // Create an empty
         List<HasId> resourcesToSelect = Lists.newArrayList();
         final DiskResourceWindowConfig diskResourceWindowConfig = (DiskResourceWindowConfig) windowConfig;
@@ -69,9 +78,15 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
                                                                 resourcesToSelect);
         final String uniqueWindowTag = (diskResourceWindowConfig.getTag() == null) ? "" : "." + diskResourceWindowConfig.getTag();
         ensureDebugId(DeModule.WindowIds.DISK_RESOURCE_WINDOW + uniqueWindowTag);
-        presenter.go(this);
+        String minimizeDetails = null;
+        if (ws.getAdditionalWindowStates() != null) {
+            minimizeDetails = ws.getAdditionalWindowStates()
+                                .get(WindowState.ADDITIONAL + DE_DATA_DETAILSPANEL_COLLAPSE + tag + "#"
+                                     + userInfo.getUsername());
+        }
+
+        presenter.go(this, (minimizeDetails == null)? false: Boolean.valueOf(minimizeDetails));
         initHandlers();
-        super.show(windowConfig, tag, isMaximizable);
         btnHelp = createHelpButton();
         getHeader().insertTool(btnHelp,0);
         btnHelp.addSelectHandler(new SelectEvent.SelectHandler() {
@@ -84,13 +99,13 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
     }
 
     @Override
-    public WindowState getWindowState() {
+    public WindowConfig getWindowConfig() {
         DiskResourceWindowConfig config = (DiskResourceWindowConfig) this.config;
         config.setSelectedFolder(presenter.getSelectedFolder());
         List<HasId> selectedResources = Lists.newArrayList();
         selectedResources.addAll(presenter.getSelectedDiskResources());
         config.setSelectedDiskResources(selectedResources);
-        return createWindowState(config);
+        return config;
     }
 
     @Override
@@ -134,6 +149,30 @@ public class DeDiskResourceWindow extends IplantWindowBase implements FolderSele
         presenter.setViewDebugId(baseID);
     }
 
+    @Override
+    public String getWindowType() {
+        return WindowType.DATA.toString();
+    }
+
+    @Override
+    public FastMap<String> getAdditionalWindowStates() {
+        FastMap<String> additionalData = new FastMap<>();
+        additionalData.put(WindowState.ADDITIONAL + DE_DATA_DETAILSPANEL_COLLAPSE + getStateId() + "#"
+                           + userInfo.getUsername(),
+                presenter.isDetailsCollapsed() + "");
+        return additionalData;
+    }
+
+    @Override
+    public void restoreWindowState() {
+        if (getStateId().equals(ws.getTag())) {
+            super.restoreWindowState();
+            String width = ws.getWidth();
+            String height = ws.getHeight();
+            setSize((width == null) ? diskResourceAppearance.windowWidth() : width,
+                    (height == null) ? diskResourceAppearance.windowHeight() : height);
+        }
+    }
     private void initHandlers() {
         presenter.addFolderSelectedEventHandler(this);
 

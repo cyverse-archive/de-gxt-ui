@@ -7,13 +7,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.iplantc.de.client.DEClientConstants;
+import org.iplantc.de.client.models.UserSession;
 import org.iplantc.de.client.models.UserSettings;
-import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.webhooks.WebhookTypeList;
 import org.iplantc.de.client.services.OauthServiceFacade;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
+import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.preferences.client.PreferencesView;
 import org.iplantc.de.preferences.client.events.PrefDlgRetryUserSessionClicked;
@@ -46,12 +47,13 @@ public class PreferencesPresenterImplTest {
     OauthServiceFacade oauthServiceFacadeMock;
     @Mock DesktopView.Presenter desktopPresenterMock;
     @Mock UserSettings userSettingsMock;
-    @Mock List<WindowState> windowStatesMock;
+    @Mock List<SavedWindowConfig> windowConfigsMock;
+    @Mock UserSession userSessionMock;
     @Mock PreferencesView.PreferencesViewAppearance appearanceMock;
     @Mock
     DEClientConstants constantsMock;
 
-    @Captor ArgumentCaptor<AsyncCallback<List<WindowState>>> userSessionCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<UserSession>> userSessionCaptor;
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCaptor;
     @Captor ArgumentCaptor<AsyncCallback<Map<String, String>>> urlMapCaptor;
     @Mock Map<String, String> redirectUrlsMock;
@@ -96,9 +98,9 @@ public class PreferencesPresenterImplTest {
         uut.onPrefDlgRetryUserSessionClicked(eventMock);
         verify(serviceFacadeMock).getUserSession(userSessionCaptor.capture());
 
-        userSessionCaptor.getValue().onSuccess(windowStatesMock);
+        userSessionCaptor.getValue().onSuccess(userSessionMock);
         verify(viewMock).userSessionSuccess();
-        verify(desktopPresenterMock).restoreWindows(windowStatesMock);
+        verify(desktopPresenterMock).restoreWindows(userSessionMock.getWindowConfigs());
         verify(desktopPresenterMock).doPeriodicSessionSave();
     }
 

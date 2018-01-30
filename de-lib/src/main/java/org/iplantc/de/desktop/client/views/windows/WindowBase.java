@@ -1,8 +1,10 @@
 package org.iplantc.de.desktop.client.views.windows;
 
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.commons.client.CommonUiConstants;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
+import org.iplantc.de.desktop.client.presenter.util.WindowStateStorageWrapper;
 import org.iplantc.de.desktop.client.views.widgets.ServiceDownPanel;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.intercom.client.IntercomFacade;
@@ -10,21 +12,23 @@ import org.iplantc.de.intercom.client.TrackingEventType;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.debug.client.DebugInfo;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
-import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.core.client.dom.XElement;
 import com.sencha.gxt.core.client.util.Rectangle;
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.Header;
 import com.sencha.gxt.widget.core.client.Window;
 import com.sencha.gxt.widget.core.client.button.IconButton;
@@ -43,7 +47,7 @@ import com.sencha.gxt.widget.core.client.menu.MenuItem;
  * @author jstroot
  * FIXME REFACTOR Rename to AbstractIplantWindow
  */
-public abstract class IplantWindowBase extends Window implements IPlantWindowInterface {
+public abstract class WindowBase extends Window implements WindowInterface {
     private class HeaderDoubleClickHandler implements DoubleClickHandler {
 
         @Override
@@ -105,17 +109,16 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
         String helpBtnToolTip() ;
 
     }
-    interface WindowStateFactory extends AutoBeanFactory {
+    public interface WindowStateFactory extends AutoBeanFactory {
         AutoBean<WindowState> windowState();
     }
 
     protected WindowConfig config;
-
     protected boolean isMaximizable;
     protected boolean maximized;
     protected boolean minimized;
     ToolButton btnRestore;
-    private final WindowStateFactory wsf = GWT.create(WindowStateFactory.class);
+    WindowStateFactory wsf = GWT.create(WindowStateFactory.class);
     private String baseDebugID;
     private ToolButton btnClose;
     private ToolButton btnLayout;
@@ -126,11 +129,14 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
     protected CommonUiConstants constants = GWT.create(CommonUiConstants.class);
     protected Widget currentWidget;
     protected ServiceDownPanel serviceDownPanel;
+    protected WindowState ws;
+    UserInfo userInfo = UserInfo.getInstance();
 
-    public IplantWindowBase() {
+    public WindowBase() {
         this(GWT.<IplantWindowAppearance> create(IplantWindowAppearance.class));
     }
-    public IplantWindowBase(final IplantWindowAppearance appearance) {
+
+    public WindowBase(final IplantWindowAppearance appearance) {
         // Let normal window appearance go through
         windowAppearance = appearance;
         // Turn off default window buttons.
@@ -201,6 +207,7 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
         this.config = windowConfig;
         this.isMaximizable = isMaximizable;
         setStateId(tag);
+        ws = getWindowStateFromLocalStorage(tag);
         if (isMaximizable) {
             btnMaximize = createMaximizeButton();
             // SRI: if a window is maximizable, then it is restorable.
@@ -209,6 +216,7 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
 
             getHeader().addDomHandler(new HeaderDoubleClickHandler(), DoubleClickEvent.getType());
         }
+        restoreWindowState();
         show();
     }
 
@@ -240,20 +248,21 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
     }
 
     @Override
-    public <C extends WindowConfig> void update(C config) {
+    public <C extends org.iplantc.de.commons.client.views.window.configs.WindowConfig> void update(C config) {
     }
 
-    protected <C extends WindowConfig> WindowState createWindowState(C config) {
+    @Override
+    public WindowState createWindowState() {
         WindowState ws = wsf.windowState().as();
-        ws.setConfigType(config.getWindowType());
-        ws.setMaximized(isMaximized());
-        ws.setMinimized(!isVisible());
+        ws.setWindowType(getWindowType());
         ws.setWinLeft(getAbsoluteLeft());
         ws.setWinTop(getAbsoluteTop());
-        ws.setWidth(getElement().getWidth(true));
-        ws.setHeight(getElement().getHeight(true));
-        Splittable configSplittable = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config));
-        ws.setWindowConfig(configSplittable);
+        ws.setWidth(getElement().getWidth(true) + "");
+        ws.setHeight(getElement().getHeight(true) + "");
+        ws.setMaximized(isMaximized());
+        ws.setMinimized(isMinimized());
+        ws.setAdditionalWindowStates(getAdditionalWindowStates());
+        ws.setTag(getStateId());
         return ws;
     }
 
@@ -267,12 +276,8 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
             minimized = false;
             manager.unregister(this);
         }
-        super.hide();
-    }
-
-    protected void doHide() {
-        hide();
         logWindowCloseToIntercom(config);
+        super.hide();
     }
 
     @Override
@@ -303,7 +308,7 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
         newCloseBtn.addSelectHandler(new SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
-                doHide();
+                hide();
             }
         });
         return newCloseBtn;
@@ -327,13 +332,13 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
         left.addSelectionHandler(new SelectionHandler<Item>() {
             @Override
             public void onSelection(SelectionEvent<Item> event) {
-                doSnapLeft(IplantWindowBase.this.getContainer().<XElement>cast());
+                doSnapLeft(WindowBase.this.getContainer().<XElement>cast());
             }
         });
         right.addSelectionHandler(new SelectionHandler<Item>() {
             @Override
             public void onSelection(SelectionEvent<Item> event) {
-                doSnapRight(IplantWindowBase.this.getContainer().<XElement>cast());
+                doSnapRight(WindowBase.this.getContainer().<XElement>cast());
             }
         });
 
@@ -462,7 +467,7 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
      * @param config Config of the window that was opened.
      */
     @Override
-    public void logWindowOpenToIntercom(WindowConfig config) {
+    public void logWindowOpenToIntercom(org.iplantc.de.commons.client.views.window.configs.WindowConfig config) {
         if (config != null) {
             switch (config.getWindowType()) {
 
@@ -546,7 +551,7 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
      * @param config Config of the window that was closed.
      */
     @Override
-    public void logWindowCloseToIntercom(WindowConfig config) {
+    public void logWindowCloseToIntercom(org.iplantc.de.commons.client.views.window.configs.WindowConfig config) {
         if (config != null) {
             switch (config.getWindowType()) {
 
@@ -618,4 +623,26 @@ public abstract class IplantWindowBase extends Window implements IPlantWindowInt
         }
     }
 
+    public abstract String getWindowType();
+
+    public abstract FastMap<String> getAdditionalWindowStates();
+
+    public void restoreWindowState() {
+        if (ws.isMaximized()) {
+            Scheduler.get().scheduleDeferred((Command)() -> maximize());
+        } else if (ws.isMinimized()) {
+            Scheduler.get().scheduleDeferred((Command)() -> minimize());
+        } else {
+            int left = ws.getWinLeft();
+            int top = ws.getWinTop();
+            setPagePosition(left, top);
+        }
+    }
+
+    @Override
+    public WindowState getWindowStateFromLocalStorage(String tag) {
+        WindowStateStorageWrapper wssw = new WindowStateStorageWrapper(userInfo, getWindowType(), tag);
+        return wssw.retrieveWindowState();
+    }
 }
+

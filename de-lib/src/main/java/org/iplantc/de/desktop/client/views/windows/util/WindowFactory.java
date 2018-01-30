@@ -10,7 +10,7 @@ import org.iplantc.de.desktop.client.views.windows.CollaborationWindow;
 import org.iplantc.de.desktop.client.views.windows.DEAppsWindow;
 import org.iplantc.de.desktop.client.views.windows.DeDiskResourceWindow;
 import org.iplantc.de.desktop.client.views.windows.FileViewerWindow;
-import org.iplantc.de.desktop.client.views.windows.IPlantWindowInterface;
+import org.iplantc.de.desktop.client.views.windows.WindowInterface;
 import org.iplantc.de.desktop.client.views.windows.ManageToolsWindow;
 import org.iplantc.de.desktop.client.views.windows.MyAnalysesWindow;
 import org.iplantc.de.desktop.client.views.windows.NotificationWindow;
@@ -53,8 +53,8 @@ public class WindowFactory {
      * 
      * @return an asynchronous provider for the appropriate window.
      */
-    public <C extends WindowConfig> AsyncProviderWrapper<? extends IPlantWindowInterface> build(C config) {
-        AsyncProviderWrapper<? extends IPlantWindowInterface> ret = null;
+    public <C extends WindowConfig> AsyncProviderWrapper<? extends WindowInterface> build(C config) {
+        AsyncProviderWrapper<? extends WindowInterface> ret = null;
         switch (config.getWindowType()) {
             case ABOUT:
                 ret = aboutApplicationWindowAsyncProvider;

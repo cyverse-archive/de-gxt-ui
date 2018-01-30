@@ -1,6 +1,6 @@
 package org.iplantc.de.analysis.client.events;
 
-import org.iplantc.de.analysis.client.models.AnalysisFilter;
+import org.iplantc.de.client.models.analysis.AnalysisFilter;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;

@@ -79,4 +79,24 @@ public class NotificationViewDefaultAppearance implements NotificationView.Notif
     public int createdDateColumnWidth() {
         return 170;
     }
+
+    @Override
+    public String windowWidth() {
+        return "600";
+    }
+
+    @Override
+    public String windowHeight() {
+        return "375";
+    }
+
+    @Override
+    public int windowMinWidth() {
+        return 500;
+    }
+
+    @Override
+    public int windowMinHeight() {
+        return 300;
+    }
 }

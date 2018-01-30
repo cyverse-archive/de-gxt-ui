@@ -2,12 +2,14 @@ package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.client.models.AboutApplicationData;
 import org.iplantc.de.client.models.CommonModelAutoBeanFactory;
-import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
+import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.shared.services.AboutApplicationServiceAsync;
 
+import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -17,6 +19,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 
@@ -25,7 +28,7 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
  *
  * @author lenards, jstroot
  */
-public class AboutApplicationWindow extends IplantWindowBase {
+public class AboutApplicationWindow extends WindowBase {
 
     /**
      * An Appearance interface for the About Window's contents and layout.
@@ -41,6 +44,14 @@ public class AboutApplicationWindow extends IplantWindowBase {
         ImageResource iplantAbout();
 
         String iplantcAboutPadText();
+
+        String windowWidth();
+
+        String windowHeight();
+
+        int windowMinWidth();
+
+        int windowMinHeight();
     }
     private final AboutApplicationServiceAsync aboutApplicationService;
     private final AboutApplicationAppearance appearance;
@@ -51,15 +62,25 @@ public class AboutApplicationWindow extends IplantWindowBase {
                            final AboutApplicationAppearance appearance) {
         this.aboutApplicationService = aboutApplicationService;
         this.appearance = appearance;
-        setSize("320", "260");
+
+        setMinHeight(appearance.windowMinHeight());
+        setMinWidth(appearance.windowMinWidth());
+
         setHeading(appearance.headingText());
         ensureDebugId(DeModule.WindowIds.ABOUT_WINDOW);
         executeServiceCall();
     }
 
     @Override
-    public WindowState getWindowState() {
-        return createWindowState(ConfigFactory.aboutWindowConfig());
+    public <C extends WindowConfig> void show(final C windowConfig,
+                                              final String tag,
+                                              final boolean isMaximizable) {
+        super.show(windowConfig, tag, isMaximizable);
+    }
+
+    @Override
+    public WindowConfig getWindowConfig() {
+        return ConfigFactory.aboutWindowConfig();
     }
 
     /**
@@ -103,5 +124,26 @@ public class AboutApplicationWindow extends IplantWindowBase {
                 compose();
             }
         });
+    }
+
+    @Override
+    public String getWindowType() {
+        return WindowType.ABOUT.toString();
+    }
+
+    @Override
+    public FastMap<String> getAdditionalWindowStates() {
+        return null;
+    }
+
+    @Override
+    public void restoreWindowState() {
+        if (getStateId().equals(ws.getTag())) {
+            super.restoreWindowState();
+            String width = ws.getWidth();
+            String height = ws.getHeight();
+            setSize(Strings.isNullOrEmpty(width) ? appearance.windowWidth() : width,
+                    Strings.isNullOrEmpty(height) ? appearance.windowHeight() : height);
+        }
     }
 }

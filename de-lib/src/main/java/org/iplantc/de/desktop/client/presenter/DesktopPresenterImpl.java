@@ -35,15 +35,17 @@ import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.dialogs.IplantErrorDialog;
 import org.iplantc.de.commons.client.views.window.configs.AppWizardConfig;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.ConfigAutoBeanFactory;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.desktop.client.presenter.util.MessagePoller;
 import org.iplantc.de.desktop.client.presenter.util.NotificationWebSocketManager;
 import org.iplantc.de.desktop.client.presenter.util.SystemMessageWebSocketManager;
 import org.iplantc.de.desktop.client.views.widgets.PreferencesDialog;
-import org.iplantc.de.desktop.client.views.windows.IPlantWindowInterface;
+import org.iplantc.de.desktop.client.views.windows.WindowInterface;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.fileViewers.client.callbacks.LoadGenomeInCoGeCallback;
 import org.iplantc.de.intercom.client.IntercomFacade;
@@ -80,6 +82,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
@@ -147,6 +150,8 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     @Inject NotificationAutoBeanFactory notificationFactory;
     @Inject DiskResourceAutoBeanFactory diskResourceFactory;
     @Inject AnalysesAutoBeanFactory analysesFactory;
+    @Inject
+    ConfigAutoBeanFactory configAutoBeanFactory;
     @Inject PropertyServiceAsync propertyServiceFacade;
     @Inject UserInfo userInfo;
     @Inject UserSessionServiceFacade userSessionService;
@@ -160,6 +165,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     private final EventBus eventBus;
     private final MessagePoller messagePoller;
     private final SaveSessionPeriodic ssp;
+    private SaveWindowStatesPeriodic swsp;
     private final NewMessageView.Presenter systemMsgPresenter;
     private final DesktopView view;
     private final WindowManager windowManager;
@@ -338,7 +344,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                                                                           deClientConstants,
                                                                           userSettings,
                                                                           appearance,
-                                                                          getOrderedWindowStates()));
+                                                                          getOrderedWindowConfigs()));
         } else {
             final String redirectUrl = GWT.getHostPageBaseURL() + deClientConstants.logoutUrl();
             LOG.info("Session timeout.  Redirect url: " + redirectUrl);
@@ -415,14 +421,30 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }
 
     @Override
-    public List<WindowState> getOrderedWindowStates() {
-        List<WindowState> windowStates = Lists.newArrayList();
+    public List<SavedWindowConfig> getOrderedWindowConfigs() {
+        List<SavedWindowConfig> windowConfigs = Lists.newArrayList();
         for (Widget w : windowManager.getStack()) {
-            if (w instanceof IPlantWindowInterface) {
-                windowStates.add(((IPlantWindowInterface) w).getWindowState());
+            if (w instanceof WindowInterface) {
+                SavedWindowConfig savedWindowConfig = configAutoBeanFactory.savedWindowConfig().as();
+                WindowConfig wc = ((WindowInterface) w).getWindowConfig();
+                savedWindowConfig.setWindowType(wc.getWindowType());
+                savedWindowConfig.setWindowConfig(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(wc)));
+                windowConfigs.add(savedWindowConfig);
             }
         }
-        return Collections.unmodifiableList(windowStates);
+        return Collections.unmodifiableList(windowConfigs);
+    }
+
+    @Override
+    public List<WindowState> getWindowStates() {
+       List<WindowState> windowStates  = Lists.newArrayList();
+        for (Widget w : windowManager.getStack()) {
+            if (w instanceof WindowInterface) {
+                windowStates.add(((WindowInterface)w).createWindowState());
+            }
+        }
+
+        return windowStates;
     }
 
     @Override
@@ -650,6 +672,14 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         }
     }
 
+    @Override
+    public void doPeriodicWindowStateSave() {
+        swsp = new SaveWindowStatesPeriodic(this, userInfo);
+        swsp.run();
+        messagePoller.addTask(swsp);
+        messagePoller.start();
+    }
+
 
     void postBootstrap(final Panel panel) {
         setBrowserContextMenuEnabled(deProperties.isContextClickEnabled());
@@ -659,6 +689,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         processQueryStrings();
         getNotifications();
         getSystemMessageCounts();
+        doPeriodicWindowStateSave();
     }
 
     private void getSystemMessageCounts() {
@@ -671,10 +702,10 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }
 
     @Override
-    public void restoreWindows(List<WindowState> windowStates) {
-        if (windowStates != null && windowStates.size() > 0) {
-            for (WindowState ws : windowStates) {
-                desktopWindowManager.show(ws);
+    public void restoreWindows(List<SavedWindowConfig> savedWindowConfigs) {
+        if (savedWindowConfigs != null && savedWindowConfigs.size() > 0) {
+            for (SavedWindowConfig wc : savedWindowConfigs) {
+                desktopWindowManager.show(wc);
             }
         }
     }

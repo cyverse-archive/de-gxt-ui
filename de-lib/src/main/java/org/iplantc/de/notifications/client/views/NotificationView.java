@@ -42,6 +42,14 @@ public interface NotificationView extends IsWidget,
 
         int createdDateColumnWidth();
 
+        String windowWidth();
+
+        String windowHeight();
+
+        int windowMinWidth();
+
+        int windowMinHeight();
+
     }
 
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {

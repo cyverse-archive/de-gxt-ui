@@ -1,11 +1,11 @@
 package org.iplantc.de.desktop.client.presenter;
 
-import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
+import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
-import org.iplantc.de.desktop.client.views.windows.IPlantWindowInterface;
+import org.iplantc.de.desktop.client.views.windows.WindowInterface;
 import org.iplantc.de.desktop.client.views.windows.util.WindowFactory;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.events.ServiceDown;
@@ -55,31 +55,28 @@ public class DesktopWindowManager {
         }
     }
 
-    public void show(final WindowState windowState) {
-        final WindowConfig config = getConfig(windowState);
-        String windowId = constructWindowId(config);
+    public void show(final SavedWindowConfig savedWindowConfig) {
+        final WindowConfig wc = ConfigFactory.getConfig(savedWindowConfig) ;
+        String windowId = constructWindowId(wc);
         for (Widget w : windowManager.getWindows()) {
             String currentId = ((Window) w).getStateId();
             if (windowId.equals(currentId)) {
-                ((IPlantWindowInterface) w).asWindow().show();
+                ((WindowInterface) w).asWindow().show();
                 return;
             }
         }
-        getOrCreateWindow(config).get(new AsyncCallback<IPlantWindowInterface>() {
+        getOrCreateWindow(wc).get(new AsyncCallback<WindowInterface>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
             }
 
             @Override
-            public void onSuccess(IPlantWindowInterface window) {
-
-                window.setPixelSize(windowState.getWidth(), windowState.getHeight());
-                window.setPagePosition(windowState.getWinLeft(), windowState.getWinTop());
+            public void onSuccess(WindowInterface window) {
                 if (desktopContainer != null) {
                     window.setContainer(desktopContainer);
                 }
-                window.show(config, constructWindowId(config), true);
+                window.show(wc, constructWindowId(wc), true);
                 resizeOversizeWindow(window);
                 moveOutOfBoundsWindow(window);
                 if (sticky != null) {
@@ -138,23 +135,23 @@ public class DesktopWindowManager {
             String currentId = ((Window) w).getStateId();
             if (windowId.equals(currentId)) {
                 if(updateExistingWindow){
-                    ((IPlantWindowInterface) w).update(config);
+                    ((WindowInterface) w).update(config);
                 } else {
                     // Window already exists, so no need to call other SHOW(config, "", bool) method
-                    ((IPlantWindowInterface) w).asWindow().show();
+                    ((WindowInterface) w).asWindow().show();
                 }
                 windowManager.bringToFront(w);
                 return;
             }
         }
-        getOrCreateWindow(config).get(new AsyncCallback<IPlantWindowInterface>() {
+        getOrCreateWindow(config).get(new AsyncCallback<WindowInterface>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
             }
 
             @Override
-            public void onSuccess(IPlantWindowInterface window) {
+            public void onSuccess(WindowInterface window) {
                 if (!window.isVisible() && (windowManager.getActive() != null)) {
                     final Point position = ((Window) windowManager.getActive()).getElement().getPosition(true);
                     position.setX(position.getX() + 10);
@@ -184,7 +181,7 @@ public class DesktopWindowManager {
             Window window = (Window)w;
             for (WindowType type : types) {
                 if (Strings.nullToEmpty(window.getStateId()).startsWith(type.toString())) {
-                    IPlantWindowInterface windowInterface = (IPlantWindowInterface)window;
+                    WindowInterface windowInterface = (WindowInterface)window;
                     windowInterface.serviceDown(event.getSelectionHandler());
                 }
             }
@@ -196,14 +193,14 @@ public class DesktopWindowManager {
             Window window = (Window)w;
             for (WindowType type : windowTypes) {
                 if (Strings.nullToEmpty(window.getStateId()).startsWith(type.toString())) {
-                    IPlantWindowInterface windowInterface = (IPlantWindowInterface)window;
+                    WindowInterface windowInterface = (WindowInterface)window;
                     windowInterface.serviceUp();
                 }
             }
         }
     }
 
-    private void resizeOversizeWindow(IPlantWindowInterface window) {
+    private void resizeOversizeWindow(WindowInterface window) {
         int desktopWidth = desktopContainer.getClientWidth();
         int desktopHeight = desktopContainer.getClientHeight();
         int windowWidth = window.asWindow().getOffsetWidth();
@@ -216,16 +213,16 @@ public class DesktopWindowManager {
         }
     }
 
-    private void moveOutOfBoundsWindow(IPlantWindowInterface window) {
+    private void moveOutOfBoundsWindow(WindowInterface window) {
         final int desktopContainerBottom = desktopContainer.getAbsoluteBottom();
         final int desktopContainerRight = desktopContainer.getAbsoluteRight();
         final int windowRight = window.asWindow().getElement().getAbsoluteRight();
         final int windowBottom = window.asWindow().getElement().getAbsoluteBottom();
         if (windowRight > desktopContainerRight) {
-            window.setPagePosition(0, window.getWindowState().getWinTop());
+            window.setPagePosition(0, window.asWindow().getAbsoluteTop());
         }
         if (windowBottom > desktopContainerBottom) {
-            window.setPagePosition(window.getWindowState().getWinLeft(), 0);
+            window.setPagePosition(window.asWindow().getAbsoluteLeft(), 0);
         }
     }
 
@@ -244,9 +241,6 @@ public class DesktopWindowManager {
         return position;
     }
 
-    WindowConfig getConfig(final WindowState windowState) {
-        return ConfigFactory.getConfig(windowState);
-    }
 
     WindowConfig getDefaultConfig(WindowType windowType) {
         return ConfigFactory.getDefaultConfig(windowType);
@@ -261,7 +255,7 @@ public class DesktopWindowManager {
      * @param config an object used to uniquely identify a window.
      * @return the window corresponding to the given config, null is the window could not be found.
      */
-    AsyncProviderWrapper<? extends IPlantWindowInterface> getOrCreateWindow(final WindowConfig config) {
+    AsyncProviderWrapper<? extends WindowInterface> getOrCreateWindow(final WindowConfig config) {
         return windowFactory.build(config);
     }
 

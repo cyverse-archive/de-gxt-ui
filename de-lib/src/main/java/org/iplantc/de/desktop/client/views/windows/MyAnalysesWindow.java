@@ -2,8 +2,9 @@ package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.shared.AnalysisModule;
-import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.analysis.Analysis;
+import org.iplantc.de.client.models.analysis.AnalysisFilter;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.window.configs.AnalysisWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
@@ -13,9 +14,11 @@ import org.iplantc.de.intercom.client.IntercomFacade;
 import org.iplantc.de.intercom.client.TrackingEventType;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 import java.util.List;
@@ -23,27 +26,32 @@ import java.util.List;
 /**
  * @author sriram, jstroot
  */
-public class MyAnalysesWindow extends IplantWindowBase {
+public class MyAnalysesWindow extends WindowBase {
 
     public static final String ANALYSES = "#analyses";
     private final AnalysesView.Presenter presenter;
+    private final AnalysesView.Appearance analysesAppearance;
+
 
     @Inject
     MyAnalysesWindow(final AnalysesView.Presenter presenter,
-                     final IplantDisplayStrings displayStrings) {
+                     final IplantDisplayStrings displayStrings,
+                     final AnalysesView.Appearance appearance) {
         this.presenter = presenter;
+        this.analysesAppearance = appearance;
 
         ensureDebugId(DeModule.WindowIds.ANALYSES_WINDOW);
         setHeading(displayStrings.analyses());
-        setSize("670", "375");
-        setMinWidth(590);
+
+        setMinWidth(appearance.windowMinWidth());
+        setMinHeight(appearance.windowMinHeight());
     }
 
     @Override
     public <C extends WindowConfig> void show(C windowConfig, String tag,
                                               boolean isMaximizable) {
-        presenter.go(this, ((AnalysisWindowConfig)windowConfig).getSelectedAnalyses());
         super.show(windowConfig, tag, isMaximizable);
+        presenter.go(this, ((AnalysisWindowConfig)windowConfig).getSelectedAnalyses());
         btnHelp = createHelpButton();
         getHeader().insertTool(btnHelp,0);
         btnHelp.addSelectHandler(new SelectEvent.SelectHandler() {
@@ -56,13 +64,13 @@ public class MyAnalysesWindow extends IplantWindowBase {
     }
 
     @Override
-    public WindowState getWindowState() {
+    public WindowConfig getWindowConfig() {
         AnalysisWindowConfig config = ConfigFactory.analysisWindowConfig();
         List<Analysis> selectedAnalyses = Lists.newArrayList();
         selectedAnalyses.addAll(presenter.getSelectedAnalyses());
         config.setSelectedAnalyses(selectedAnalyses);
-        config.setFilter(presenter.getCurrentFilter());
-        return createWindowState(config);
+        config.setFilter(presenter.getCurrentFilter().getFilterString());
+        return config;
     }
 
     @Override
@@ -72,7 +80,7 @@ public class MyAnalysesWindow extends IplantWindowBase {
         if (config instanceof AnalysisWindowConfig) {
             AnalysisWindowConfig analysisWindowConfig = (AnalysisWindowConfig) config;
             presenter.setSelectedAnalyses(analysisWindowConfig.getSelectedAnalyses());
-            presenter.setFilterInView(((AnalysisWindowConfig)config).getFilter());
+            presenter.setFilterInView(AnalysisFilter.ALL.fromTypeString(analysisWindowConfig.getFilter()));
         }
     }
 
@@ -81,4 +89,27 @@ public class MyAnalysesWindow extends IplantWindowBase {
         super.onEnsureDebugId(baseID);
         presenter.setViewDebugId(baseID + AnalysisModule.Ids.ANALYSES_VIEW);
     }
+
+    @Override
+    public String getWindowType() {
+        return WindowType.ANALYSES.toString();
+    }
+
+    @Override
+    public FastMap<String> getAdditionalWindowStates() {
+        return null;
+    }
+
+    @Override
+    public void restoreWindowState() {
+        if (getStateId().equals(ws.getTag())) {
+            super.restoreWindowState();
+            String width = ws.getWidth();
+            String height = ws.getHeight();
+            setSize((Strings.isNullOrEmpty(width)) ? analysesAppearance.windowWidth() : width,
+                    (Strings.isNullOrEmpty(height)) ? analysesAppearance.windowHeight() : height);
+        }
+
+    }
 }
+

@@ -82,6 +82,14 @@ public interface ManageToolsView extends IsWidget,
         String done();
 
         String toolInfoError();
+
+        String windowWidth();
+
+        String windowHeight();
+
+        int windowMinWidth();
+
+        int windowMinHeight();
     }
 
 

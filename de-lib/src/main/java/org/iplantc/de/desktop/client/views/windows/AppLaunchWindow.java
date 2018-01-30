@@ -6,7 +6,7 @@ import org.iplantc.de.apps.widgets.client.events.AppTemplateFetched;
 import org.iplantc.de.apps.widgets.client.view.AppLaunchView;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.HasQualifiedId;
-import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.commons.client.views.window.configs.AppWizardConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
@@ -19,13 +19,14 @@ import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 
 /**
  * @author jstroot
  */
-public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchEventHandler,
-                                                                 AppTemplateFetched.AppTemplateFetchedHandler {
+public class AppLaunchWindow extends WindowBase implements AnalysisLaunchEventHandler,
+                                                           AppTemplateFetched.AppTemplateFetchedHandler {
 
     private final AppLaunchView.Presenter presenter;
     private final DEClientConstants deClientConstants;
@@ -41,9 +42,8 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
         this.deClientConstants = deClientConstants;
         this.appearance = appearance;
 
-        setSize("640", "375");
-        setMinWidth(300);
-        setMinHeight(350);
+        setMinWidth(appearance.windowMinWidth());
+        setMinHeight(appearance.windowMinHeight());
         setBorders(false);
         ensureDebugId(DeModule.WindowIds.APP_LAUNCH_WINDOW);
 
@@ -51,11 +51,12 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
         presenter.addAppTemplateFetchedHandler(this);
     }
 
+
     @Override
-    public WindowState getWindowState() {
+    public WindowConfig getWindowConfig() {
         AppWizardConfig config = ConfigFactory.appWizardConfig(systemId, appId);
         config.setAppTemplate(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(presenter.getAppTemplate())));
-        return createWindowState(config);
+        return config;
     }
 
     private boolean isMatchingId(HasQualifiedId id) {
@@ -73,13 +74,13 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
     public <C extends WindowConfig> void show(final C windowConfig,
                                               final String tag,
                                               final boolean isMaximizable) {
+        super.show(windowConfig, tag, isMaximizable);
         final AppWizardConfig config1 = (AppWizardConfig) windowConfig;
         systemId = Strings.isNullOrEmpty(config1.getSystemId())
                 ? deClientConstants.deSystemId()
                 : config1.getSystemId();
         appId = config1.getAppId();
         init(config1);
-        super.show(windowConfig, tag, isMaximizable);
     }
 
     private void init(AppWizardConfig config) {
@@ -103,4 +104,27 @@ public class AppLaunchWindow extends IplantWindowBase implements AnalysisLaunchE
         }
         forceLayout();
     }
+
+    @Override
+    public String getWindowType() {
+        return WindowType.APP_WIZARD.toString();
+    }
+
+    @Override
+    public FastMap<String> getAdditionalWindowStates() {
+        return null;
+    }
+
+    @Override
+    public void restoreWindowState() {
+        if (getStateId().equals(ws.getTag())) {
+            super.restoreWindowState();
+            String width = ws.getWidth();
+            String height = ws.getHeight();
+            setSize((width == null) ? appearance.windowWidth() : width,
+                    (height == null) ? appearance.windowHeight() : height);
+        }
+
+    }
+
 }

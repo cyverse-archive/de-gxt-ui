@@ -1,6 +1,6 @@
 package org.iplantc.de.theme.base.client.desktop.window;
 
-import org.iplantc.de.desktop.client.views.windows.IplantWindowBase;
+import org.iplantc.de.desktop.client.views.windows.WindowBase;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
@@ -11,7 +11,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.sencha.gxt.widget.core.client.Header;
 import com.sencha.gxt.widget.core.client.button.IconButton;
 
-public class IplantBaseWindowAppearance implements IplantWindowBase.IplantWindowAppearance {
+public class IplantBaseWindowAppearance implements WindowBase.IplantWindowAppearance {
 
     interface Styles extends CssResource {
 

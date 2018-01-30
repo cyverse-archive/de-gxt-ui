@@ -7,7 +7,6 @@ import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.models.CommonModelAutoBeanFactory;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.UserSession;
-import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.userSettings.UserSetting;
 import org.iplantc.de.client.models.userSettings.UserSettingAutoBeanFactory;
@@ -19,6 +18,7 @@ import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.services.converters.StringToVoidCallbackConverter;
+import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.DEProperties;
@@ -72,24 +72,24 @@ public class UserSessionServiceFacadeImpl implements UserSessionServiceFacade {
     }
 
     @Override
-    public Request getUserSession(AsyncCallback<List<WindowState>> callback) {
+    public Request getUserSession(AsyncCallback<UserSession> callback) {
         String address = deProperties.getMuleServiceBaseUrl() + "sessions"; //$NON-NLS-1$
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
-        return deServiceFacade.getServiceData(wrapper, new AsyncCallbackConverter<String, List<WindowState>>(callback) {
+        return deServiceFacade.getServiceData(wrapper, new AsyncCallbackConverter<String, UserSession>(callback) {
 
             @Override
-            protected List<WindowState> convertFrom(String object) {
+            protected UserSession convertFrom(String object) {
                 final AutoBean<UserSession> decode = AutoBeanCodex.decode(factory, UserSession.class, object);
-                return decode.as().getWindowStates();
+                return decode.as();
             }
         });
     }
 
     @Override
-    public Request saveUserSession(final List<WindowState> windowStates, AsyncCallback<Void> callback) {
+    public Request saveUserSession(final List<SavedWindowConfig> windowConfigs, AsyncCallback<Void> callback) {
         String address = deProperties.getMuleServiceBaseUrl() + "sessions"; //$NON-NLS-1$
         final AutoBean<UserSession> userSessionAutoBean = factory.userSession();
-        userSessionAutoBean.as().setWindowStates(windowStates);
+        userSessionAutoBean.as().setWindowConfigs(windowConfigs);
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, AutoBeanCodex.encode(userSessionAutoBean).getPayload());
         return deServiceFacade.getServiceData(wrapper, new StringToVoidCallbackConverter(callback));
     }

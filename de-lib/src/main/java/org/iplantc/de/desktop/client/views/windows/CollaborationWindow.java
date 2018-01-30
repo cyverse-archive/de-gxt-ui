@@ -1,6 +1,6 @@
 package org.iplantc.de.desktop.client.views.windows;
 
-import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.collaborators.client.CollaborationView;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.shared.CollaboratorsModule;
@@ -10,13 +10,16 @@ import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.commons.client.widgets.ContextualHelpToolButton;
 import org.iplantc.de.desktop.shared.DeModule;
 
+import com.google.common.base.Strings;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
+
+import com.sencha.gxt.core.shared.FastMap;
 
 /**
  * @author jstroot
  */
-public class CollaborationWindow extends IplantWindowBase {
+public class CollaborationWindow extends WindowBase {
 
     public static final String COLLABORATION = "#collaboration";
     private final CollaborationView.Presenter presenter;
@@ -28,9 +31,8 @@ public class CollaborationWindow extends IplantWindowBase {
         this.presenter = presenter;
         this.appearance = appearance;
 
-        // This must be set before we render view
-        setSize(appearance.windowWidth(), appearance.windowHeight());
         setMinWidth(appearance.windowMinWidth());
+        setMinHeight(appearance.windowMinHeight());
         setHeading(appearance.windowHeading());
 
         ContextualHelpToolButton contextualHelpToolButton = new ContextualHelpToolButton();
@@ -43,17 +45,17 @@ public class CollaborationWindow extends IplantWindowBase {
     public <C extends WindowConfig> void show(final C windowConfig,
                                               final String tag,
                                               final boolean isMaximizable) {
+        super.show(windowConfig, tag, isMaximizable);
         final CollaborationWindowConfig collabWindowConfig = (CollaborationWindowConfig)windowConfig;
         presenter.go(this, collabWindowConfig);
-        super.show(windowConfig, tag, isMaximizable);
 
         ensureDebugId(DeModule.WindowIds.COLLABORATION_WINDOW);
     }
 
+
     @Override
-    public WindowState getWindowState() {
-        CollaborationWindowConfig config = ConfigFactory.collaborationWindowConfig();
-        return createWindowState(config);
+    public WindowConfig getWindowConfig() {
+        return ConfigFactory.collaborationWindowConfig();
     }
 
     @Override
@@ -62,5 +64,26 @@ public class CollaborationWindow extends IplantWindowBase {
 
         presenter.setViewDebugId(baseID);
         btnHelp.ensureDebugId(baseID + CollaboratorsModule.Ids.HELP_BTN);
+    }
+
+    @Override
+    public String getWindowType() {
+        return WindowType.COLLABORATION.toString();
+    }
+
+    @Override
+    public FastMap<String> getAdditionalWindowStates() {
+        return null;
+    }
+
+    @Override
+    public void restoreWindowState() {
+        if (getStateId().equals(ws.getTag())) {
+            super.restoreWindowState();
+            String width = ws.getWidth();
+            String height = ws.getHeight();
+            setSize((Strings.isNullOrEmpty(width)) ? appearance.windowWidth() : width,
+                    (Strings.isNullOrEmpty(height)) ? appearance.windowHeight() : height);
+        }
     }
 }

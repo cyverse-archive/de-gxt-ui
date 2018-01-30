@@ -1,65 +1,63 @@
 package org.iplantc.de.desktop.client.views.windows;
 
-import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.SystemMessagesWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 import org.iplantc.de.systemMessages.client.presenter.MessagesPresenter;
+import org.iplantc.de.systemMessages.client.view.MessagesView;
 import org.iplantc.de.systemMessages.shared.SystemMessages;
 
+import com.google.common.base.Strings;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
+
+import com.sencha.gxt.core.shared.FastMap;
 
 /**
  * The window for displaying all active system messages.
  * @author jstroot
  */
-public final class SystemMessagesWindow extends IplantWindowBase {
+public final class SystemMessagesWindow extends WindowBase {
 
+    private final MessagesView.MessagesAppearance messageAppearance;
     private MessagesPresenter presenter;
 
+
     @Inject
-    SystemMessagesWindow(final IplantDisplayStrings displayStrings) {
+    SystemMessagesWindow(final IplantDisplayStrings displayStrings,
+                         final MessagesView.MessagesAppearance appearance) {
+        this.messageAppearance = appearance;
         setHeading(displayStrings.systemMessagesLabel());
-        setWidth(computeDefaultWidth());
-        setHeight(computeDefaultHeight());
+
+        setMinHeight(Integer.parseInt(appearance.windowHeight()));
+        setMinWidth(Integer.parseInt(appearance.windowWidth()));
     }
 
     @Override
     public <C extends WindowConfig> void show(C windowConfig, String tag,
                                               boolean isMaximizable) {
+        super.show(windowConfig, tag, isMaximizable);
         this.presenter = new MessagesPresenter(((SystemMessagesWindowConfig)windowConfig).getSelectedMessage());
         presenter.go(this);
-        super.show(windowConfig, tag, isMaximizable);
         ensureDebugId(DeModule.WindowIds.SYSTEM_MESSAGES);
     }
 
-    private static int computeDefaultHeight() {
-        return Math.max(400, Window.getClientHeight() / 3);
+    private static int computeDefaultHeight(MessagesView.MessagesAppearance appearance) {
+        return Math.max(Integer.parseInt(appearance.windowHeight()), Window.getClientHeight() / 3);
     }
 
-    private static int computeDefaultWidth() {
-        return Math.max(600, Window.getClientWidth() / 3);
+    private static int computeDefaultWidth(MessagesView.MessagesAppearance appearance) {
+        return Math.max(Integer.parseInt(appearance.windowWidth()), Window.getClientWidth() / 3);
     }
 
-    /**
-     * @see IplantWindowBase#getWindowState()
-     */
+
     @Override
-    public WindowState getWindowState() {
+    public WindowConfig getWindowConfig() {
         final String selMsg = presenter.getSelectedMessageId();
-        return createWindowState(ConfigFactory.systemMessagesWindowConfig(selMsg));
-    }
-
-    /**
-     * @see IplantWindowBase#doHide()
-     */
-    @Override
-    protected void doHide() {
-        presenter.stop();
-        super.doHide();
+        return ConfigFactory.systemMessagesWindowConfig(selMsg);
     }
 
     @Override
@@ -67,5 +65,35 @@ public final class SystemMessagesWindow extends IplantWindowBase {
         super.onEnsureDebugId(baseID);
 
         presenter.setViewDebugId(baseID + SystemMessages.Ids.VIEW);
+    }
+
+    @Override
+    public String getWindowType() {
+        return WindowType.SYSTEM_MESSAGES.toString();
+    }
+
+    @Override
+    public FastMap<String> getAdditionalWindowStates() {
+        return null;
+    }
+
+    @Override
+    public void restoreWindowState() {
+        if (getStateId().equals(ws.getTag())) {
+            super.restoreWindowState();
+            String width = ws.getWidth();
+            String height = ws.getHeight();
+            setSize((Strings.isNullOrEmpty(width)) ? computeDefaultWidth(messageAppearance) + "" : width,
+                    (Strings.isNullOrEmpty(height)) ?
+                    computeDefaultHeight(messageAppearance) + "" :
+                    height);
+        }
+
+    }
+
+    @Override
+    public void hide() {
+        presenter.stop();
+        super.hide();
     }
 }

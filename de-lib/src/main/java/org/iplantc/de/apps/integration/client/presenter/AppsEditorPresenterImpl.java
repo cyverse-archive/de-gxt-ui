@@ -822,14 +822,16 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
     }
 
     private void checkForDeprecatedTools(final List<Tool> tools) {
-        if (tools != null && !tools.isEmpty()) {
-            if (tools.stream().anyMatch(Tool::isDeprecated)) {
-                Scheduler.get().scheduleDeferred(() -> {
-                    IplantInfoBox errorsInfo = new IplantInfoBox(appearance.warning(),
-                                                                 appearance.appUsesDeprecatedTools());
+        if (tools != null && tools.size() > 0) {
+            for (Tool t : tools) {
+                if (t!= null && t.isDeprecated()) {
+                    IplantInfoBox errorsInfo =
+                            new IplantInfoBox(appearance.warning(), appearance.appUsesDeprecatedTools());
                     errorsInfo.setIcon(MessageBox.ICONS.warning());
                     errorsInfo.show();
-                });
+                    return;
+
+                }
             }
         }
     }

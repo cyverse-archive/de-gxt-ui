@@ -22,4 +22,44 @@ public class AppsViewDefaultAppearance implements AppsView.AppsViewAppearance {
     public String viewCategoriesHeader() {
         return appsMessages.viewCategoriesHeader();
     }
+
+    @Override
+    public String appsWindowWidth() {
+        return "820";
+    }
+
+    @Override
+    public String appsWindowHeight() {
+        return "400";
+    }
+
+    @Override
+    public int appsWindowMinWidth() {
+        return 540;
+    }
+
+    @Override
+    public int appsWindowMinHeight() {
+        return 400;
+    }
+
+    @Override
+    public String pipelineEdWindowWidth() {
+        return "900";
+    }
+
+    @Override
+    public String pipelineEdWindowHeight() {
+        return "500";
+    }
+
+    @Override
+    public int pipelineEdWindowMinWidth() {
+        return 640;
+    }
+
+    @Override
+    public int pipelineEdWindowMinHeight() {
+        return 440;
+    }
 }

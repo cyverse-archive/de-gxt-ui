@@ -23,13 +23,13 @@ import com.sencha.gxt.widget.core.client.event.ShowEvent.HasShowHandlers;
  * @author jstroot
  * 
  */
-public interface IPlantWindowInterface extends HasActivateHandlers<Window>,
-                                               HasDeactivateHandlers<Window>,
-                                               HasMinimizeHandlers,
-                                               HasHideHandlers,
-                                               HasShowHandlers,
-                                               IsWidget,
-                                               IsMinimizable {
+public interface WindowInterface extends HasActivateHandlers<Window>,
+                                         HasDeactivateHandlers<Window>,
+                                         HasMinimizeHandlers,
+                                         HasHideHandlers,
+                                         HasShowHandlers,
+                                         IsWidget,
+                                         IsMinimizable {
 
     Window asWindow();
 
@@ -45,7 +45,7 @@ public interface IPlantWindowInterface extends HasActivateHandlers<Window>,
     
     <C extends WindowConfig> void update(C config);
 
-    WindowState getWindowState();
+    WindowConfig getWindowConfig();
 
     void serviceDown(SelectEvent.SelectHandler handler);
 
@@ -54,4 +54,8 @@ public interface IPlantWindowInterface extends HasActivateHandlers<Window>,
     void logWindowOpenToIntercom(WindowConfig config);
 
     void logWindowCloseToIntercom(WindowConfig config);
+
+    WindowState createWindowState();
+
+    WindowState getWindowStateFromLocalStorage(String tag);
 }

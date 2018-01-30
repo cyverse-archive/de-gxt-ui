@@ -4,7 +4,9 @@ import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
+import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
+import org.iplantc.de.desktop.client.views.windows.WindowInterface;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.resources.client.CssResource;
@@ -27,7 +29,7 @@ import java.util.List;
  *
  * <ul>
  *     <li>Task bar buttons are controlled from the view.
- *     <li>Moved minimize functionality to IplantWindowBase. Was previously in Desktop.minimizeWindow
+ *     <li>Moved minimize functionality to WindowBase. Was previously in Desktop.minimizeWindow
  *     <li>Getting rid of window managers as it previously existed. Making more use of GXT's existing
  *         WindowManager.
  * </ul>
@@ -200,7 +202,9 @@ public interface DesktopView extends IsWidget {
             String cannotEditTwoApps();
         }
 
-        List<WindowState> getOrderedWindowStates();
+        List<SavedWindowConfig> getOrderedWindowConfigs();
+
+        List<WindowState> getWindowStates();
 
         void go(Panel panel);
 
@@ -226,7 +230,9 @@ public interface DesktopView extends IsWidget {
 
         void doPeriodicSessionSave();
 
-        void restoreWindows(List<WindowState> windowStates);
+        void doPeriodicWindowStateSave();
+
+        void restoreWindows(List<SavedWindowConfig> savedWindowConfigs);
 
         void setUserSessionConnection(boolean connected);
 
@@ -275,7 +281,7 @@ public interface DesktopView extends IsWidget {
     void ensureDebugId(String baseID);
 
     /**
-     * @return the desktop container element used to constrain {@link org.iplantc.de.desktop.client.views.windows.IPlantWindowInterface} classes
+     * @return the desktop container element used to constrain {@link WindowInterface} classes
      */
     Element getDesktopContainer();
 
