@@ -48,7 +48,7 @@ public class NotificationWindow extends WindowBase {
     public <C extends WindowConfig> void update(C config) {
         NotifyWindowConfig notifyWindowConfig = (NotifyWindowConfig) config;
         if (notifyWindowConfig != null) {
-            presenter.filterBy(notifyWindowConfig.getSortCategory());
+            presenter.filterBy(NotificationCategory.fromTypeString(notifyWindowConfig.getFilter()));
         }
     }
 
