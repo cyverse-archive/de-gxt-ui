@@ -1,6 +1,7 @@
 package org.iplantc.de.apps.widgets.client.view;
 
 import org.iplantc.de.apps.integration.shared.AppIntegrationModule;
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent.RequestAnalysisLaunchEventHandler;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
 import org.iplantc.de.client.models.apps.integration.JobExecution;
@@ -85,5 +86,6 @@ public class AppLaunchPreviewViewImpl extends Window implements AppLaunchPreview
             closeBtn.ensureDebugId(baseID + AppIntegrationModule.Ids.CLOSE_BTN);
         }
         launchButton.ensureDebugId(baseID + AppIntegrationModule.Ids.LAUNCH_BTN);
+        wizard.asWidget().ensureDebugId(baseID + AppsModule.Ids.TEMPLATE_FORM);
     }
 }
