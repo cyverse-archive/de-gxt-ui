@@ -4,7 +4,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.storage.client.StorageMap;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A util class to interact with web storage
@@ -59,6 +61,22 @@ public class WebStorageUtil {
             return null;
         }
         return new StorageMap(store);
+    }
+
+    /**
+     * Clear 'de' related Key/value pair from web local storage
+     */
+    public static void clear(String dePrefix) {
+        if (store != null) {
+            Map<String, String> deMap = new StorageMap(store);
+            List<String> filterKeys = deMap.keySet()
+                                           .stream()
+                                           .filter(key -> key.contains(dePrefix))
+                                           .collect(Collectors.toList());
+            if (filterKeys != null && filterKeys.size() > 0) {
+                filterKeys.stream().forEach(s -> store.removeItem(s));
+            }
+        }
     }
 
 

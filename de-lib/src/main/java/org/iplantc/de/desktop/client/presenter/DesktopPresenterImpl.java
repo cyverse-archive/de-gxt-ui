@@ -26,6 +26,7 @@ import org.iplantc.de.client.services.UserSessionServiceFacade;
 import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.client.util.JsonUtil;
+import org.iplantc.de.client.util.WebStorageUtil;
 import org.iplantc.de.commons.client.CommonUiConstants;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -44,6 +45,7 @@ import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.desktop.client.presenter.util.MessagePoller;
 import org.iplantc.de.desktop.client.presenter.util.NotificationWebSocketManager;
 import org.iplantc.de.desktop.client.presenter.util.SystemMessageWebSocketManager;
+import org.iplantc.de.desktop.client.presenter.util.WindowStateStorageWrapper;
 import org.iplantc.de.desktop.client.views.widgets.PreferencesDialog;
 import org.iplantc.de.desktop.client.views.windows.WindowInterface;
 import org.iplantc.de.desktop.shared.DeModule;
@@ -131,6 +133,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         String TYPE = "type";
         String SYSTEM_ID = "system-id";
         String APP_ID = "app-id";
+        String STATE = "state";
     }
 
     public interface TypeQueryValues {
@@ -822,6 +825,8 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                         getUserSession(false);
                     }
                 });
+            } else if (QueryStrings.STATE.equalsIgnoreCase(key)) {
+                WebStorageUtil.clear(WindowStateStorageWrapper.LOCAL_STORAGE_PREFIX);
             }
         }
         if (!hasError) getUserSession(hasDataTypeParameter);
