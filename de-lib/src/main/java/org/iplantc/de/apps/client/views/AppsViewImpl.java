@@ -20,6 +20,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.widget.core.client.Composite;
+import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.CardLayoutContainer;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
@@ -40,6 +41,9 @@ public class AppsViewImpl extends Composite implements AppsView {
     AppsListView.Presenter gridPresenter;
 
     @UiField CardLayoutContainer cardContainer;
+
+    @UiField
+    BorderLayoutContainer.BorderLayoutData westData;
 
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
@@ -72,6 +76,16 @@ public class AppsViewImpl extends Composite implements AppsView {
         });
 
         gridPresenter.go(cardContainer);
+    }
+
+    @Override
+    public String getWestPanelWidth() {
+        return westData.getSize() + "";
+    }
+
+    @Override
+    public void setWestPanelWidth(String width) {
+        westData.setSize(Double.parseDouble(width));
     }
 
     @Override

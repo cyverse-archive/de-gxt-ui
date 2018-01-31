@@ -123,4 +123,15 @@ public class DiskResourceViewImpl extends Composite implements DiskResourceView 
         }
     }
 
+    @Override
+    public String getWestPanelWidth() {
+        return westData.getSize() + "";
+    }
+
+    @Override
+    public void setWestPanelWidth(String width) {
+       westData.setSize(Double.parseDouble(width));
+    }
+
 }
+

@@ -172,4 +172,15 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
             toolbarPresenter.reloadSearchResults();
         }
     }
+
+    @Override
+    public String getWestPanelWidth() {
+        return view.getWestPanelWidth();
+    }
+
+    @Override
+    public void setWestPanelWidth(String width) {
+        view.setWestPanelWidth(width);
+    }
+
 }

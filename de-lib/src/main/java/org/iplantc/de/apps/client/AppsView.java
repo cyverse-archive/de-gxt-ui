@@ -23,6 +23,10 @@ import java.util.List;
 public interface AppsView extends IsWidget,
                                   IsMaskable {
 
+    String getWestPanelWidth();
+
+    void setWestPanelWidth(String width);
+
     interface AppsViewAppearance {
         String viewCategoriesHeader();
 
@@ -68,6 +72,10 @@ public interface AppsView extends IsWidget,
         String getActiveView();
 
         void setActiveView(String activeView);
+
+        String getWestPanelWidth();
+
+        void setWestPanelWidth(String width);
     }
 
     DETabPanel getCategoryTabPanel();

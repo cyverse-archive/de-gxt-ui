@@ -15,6 +15,7 @@ import org.iplantc.de.intercom.client.IntercomFacade;
 import org.iplantc.de.intercom.client.TrackingEventType;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.core.shared.FastMap;
@@ -26,7 +27,9 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
 public class DEAppsWindow extends WindowBase {
 
     public static final String APPS = "#apps";
-    public static final String DE_APPS_ACTIVEVIEW = "de.apps.activeview#";
+    public static final String DE_APPS_ACTIVEVIEW = "de.apps.activeView#";
+    public static final String DE_APPS_WESTPANEL_WIDTH = "de.apps.westPanel.width#";
+    public static final String DE_APPS_NAVPANEL_COLLAPSE = "de.apps.navPanel.collapse#";
     @Inject
     UserSettings userSettings;
     @Inject
@@ -56,15 +59,19 @@ public class DEAppsWindow extends WindowBase {
         super.show(windowConfig, tag, isMaximizable);
         final AppsWindowConfig appsWindowConfig = (AppsWindowConfig)windowConfig;
         String activeView = null;
+        String westWidth = null;
+        boolean navCollapse = false;
         if (ws.getAdditionalWindowStates() != null) {
-            activeView = ws.getAdditionalWindowStates()
-                           .get(WindowState.ADDITIONAL + DE_APPS_ACTIVEVIEW + tag + "#"
-                                + userInfo.getUsername());
+            activeView = ws.getAdditionalWindowStates().get(getKey(DE_APPS_ACTIVEVIEW, tag));
+            westWidth = ws.getAdditionalWindowStates().get(getKey(DE_APPS_WESTPANEL_WIDTH, tag));
         }
         presenter.go(this,
                      appsWindowConfig.getSelectedAppCategory(),
                      appsWindowConfig.getSelectedApp(),
                      activeView);
+        if (!Strings.isNullOrEmpty(westWidth)) {
+            presenter.setWestPanelWidth(westWidth);
+        }
         btnHelp = createHelpButton();
         getHeader().insertTool(btnHelp,0);
         btnHelp.addSelectHandler(new SelectEvent.SelectHandler() {
@@ -106,9 +113,9 @@ public class DEAppsWindow extends WindowBase {
     @Override
     public FastMap<String> getAdditionalWindowStates() {
         FastMap<String> additionalData = new FastMap<>();
-        additionalData.put(WindowState.ADDITIONAL + DE_APPS_ACTIVEVIEW + getStateId() + "#"
-                           + userInfo.getUsername(),
+        additionalData.put(getKey(DE_APPS_ACTIVEVIEW, getStateId()),
                            presenter.getActiveView());
+        additionalData.put(getKey(DE_APPS_WESTPANEL_WIDTH, getStateId()), presenter.getWestPanelWidth());
         return additionalData;
     }
 
@@ -122,6 +129,10 @@ public class DEAppsWindow extends WindowBase {
                     (height == null) ? appsViewAppearance.appsWindowHeight() : height);
         }
 
+    }
+
+    private String getKey(String attribute, String tag) {
+        return WindowState.ADDITIONAL + attribute + tag + "#" + userInfo.getUsername();
     }
 
 }

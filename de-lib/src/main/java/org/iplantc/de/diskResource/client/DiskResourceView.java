@@ -42,6 +42,10 @@ public interface DiskResourceView extends IsWidget,
 
     void setDetailsCollapsed(boolean collapsed);
 
+    String getWestPanelWidth();
+
+    void setWestPanelWidth(String width);
+
     /**
      * A dataproxy used by the <code>Presenter</code> to fetch <code>DiskResource</code> data from the
      * {@link DiskResourceServiceFacade}.
@@ -155,6 +159,10 @@ public interface DiskResourceView extends IsWidget,
         void setSelectedFolderByPath(HasPath folderToSelect);
 
         void setViewDebugId(String baseID);
+
+        String getWestPanelWidth();
+
+        void setWestPanelWidth(String width);
 
     }
 

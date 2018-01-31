@@ -47,7 +47,7 @@
              type="org.iplantc.de.apps.client.AppsView.AppsViewAppearance"/>
 
 
-    <container:BorderLayoutContainer borders="true">
+    <container:BorderLayoutContainer borders="true" ui:field="con">
         <!-- This is the tool bar -->
         <container:north layoutData="{northData}">
             <toolBar:AppsToolbarView ui:field="toolBar"/>
