@@ -204,6 +204,7 @@ public class AppsEditorViewImpl extends Composite implements AppsEditorView,
         toolbar.asWidget().ensureDebugId(baseID + AppIntegrationModule.Ids.TOOLBAR);
         cmdLinePreview.ensureDebugId(baseID + AppIntegrationModule.Ids.CMD_LINE_PREVIEW);
         appTemplatePropertyEditor.ensureDebugId(baseID);
+        wizard.asWidget().ensureDebugId(baseID);
     }
 
     private Widget getCollapseBtn(ContentPanel panel) {

@@ -323,6 +323,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
 
     private final AppTemplateUtils appTemplateUtils;
     private final List<HandlerRegistration> handlerRegistrations = Lists.newArrayList();
+    private String baseID;
 
     public static native void doJsonFormattting(XElement textArea,String val,int width, int height) /*-{
 		var myCodeMirror = $wnd.CodeMirror(textArea, {
@@ -442,6 +443,9 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
         view.getEditorDriver().edit(appTemplate);
         view.onArgumentSelected(new ArgumentSelectedEvent(null));
 
+        // Set the view's debug ID after the editor driver has processed edit(appTemplate) and initialized all the subEditors
+        view.asWidget().ensureDebugId(baseID);
+
         /*
          * JDS Set postEdit to true to enable handling of ArgumentGroupAddedEvents and
          * ArgumentAddedEvents
@@ -476,7 +480,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
 
     @Override
     public void setViewDebugId(String baseID) {
-        view.asWidget().ensureDebugId(baseID);
+        this.baseID = baseID;
     }
 
     @Override
@@ -539,6 +543,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
         }
 
         view.getEditorDriver().accept(new InitializeArgumentEventManagement(event.getArgumentEditor()));
+        view.asWidget().ensureDebugId(baseID);
     }
 
     @Override
@@ -551,6 +556,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
         view.getEditorDriver().accept(new InitializeArgumentGroupEventManagement(appearance, autoBean, event.getArgumentGroupEditor(), this, this));
         event.getArgumentGroupEditor().addArgumentAddedEventHandler(this);
         event.getArgumentGroupEditor().addArgumentGroupSelectedHandler(view);
+        view.asWidget().ensureDebugId(baseID);
     }
 
     @Override

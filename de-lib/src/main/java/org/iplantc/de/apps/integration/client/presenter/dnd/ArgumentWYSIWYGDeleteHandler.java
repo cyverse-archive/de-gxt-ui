@@ -4,6 +4,7 @@ import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent.DeleteArgumentEventHandler;
 import org.iplantc.de.apps.integration.client.events.DeleteArgumentEvent.HasDeleteArgumentEventHandlers;
 import org.iplantc.de.apps.integration.client.view.AppsEditorView;
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.apps.widgets.client.events.ArgumentSelectedEvent;
 import org.iplantc.de.apps.widgets.client.events.ArgumentSelectedEvent.ArgumentSelectedEventHandler;
 import org.iplantc.de.apps.widgets.client.events.ArgumentSelectedEvent.HasArgumentSelectedEventHandlers;
@@ -106,6 +107,8 @@ public final class ArgumentWYSIWYGDeleteHandler implements MouseOverHandler, Mou
                 currentItemIndex = j;
                 button.setVisible(true);
                 button.setPagePosition(child.getAbsoluteRight() - (2 * button.getOffsetWidth()), child.getAbsoluteTop());
+                AppTemplateForm.ArgumentEditor subEditor = listEditor.getEditors().get(j).getSubEditor();
+                button.setId(subEditor.asWidget().getElement().getId() + AppsModule.Ids.APP_LAUNCH_HOVER_DELETE_BTN);
 
                 break;
             }
