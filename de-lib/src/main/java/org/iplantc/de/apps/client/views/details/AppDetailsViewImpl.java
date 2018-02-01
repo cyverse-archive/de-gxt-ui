@@ -20,7 +20,7 @@ import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.commons.client.views.dialogs.IPlantPromptDialog;
+import org.iplantc.de.commons.client.views.dialogs.ClipboardCopyEnabledDialog;
 import org.iplantc.de.desktop.client.presenter.DesktopPresenterImpl;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
@@ -56,7 +56,6 @@ import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.widget.core.client.Composite;
-import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
 import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.container.AccordionLayoutContainer;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
@@ -234,20 +233,14 @@ public class AppDetailsViewImpl extends Composite implements
             url.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    IPlantPromptDialog ipd = new IPlantPromptDialog(appearance.appUrl(),
-                                                                    1024,
-                                                                    GWT.getHostPageBaseURL()
-                                                                            + "?type="
-                                                                            + DesktopPresenterImpl.TypeQueryValues.APPS
-                                                                            + "&app-id=" + app.getId()
-                                                                            + "&"
-                                                                            + DesktopPresenterImpl.QueryStrings.SYSTEM_ID
-                                                                            + "=" + app.getSystemId(),
-                                                                    null);
-                    ipd.setHeading(appearance.copyAppUrl());
-                    ipd.setWidth("500px");
-                    ipd.setPredefinedButtons(PredefinedButton.OK);
-                    ipd.show();
+                    ClipboardCopyEnabledDialog dialog = new ClipboardCopyEnabledDialog(false, false);
+                    dialog.setHeading(appearance.copyAppUrl());
+                    dialog.setCopyText(GWT.getHostPageBaseURL() + "?type="
+                                       + DesktopPresenterImpl.TypeQueryValues.APPS + "&app-id="
+                                       + app.getId() + "&" + DesktopPresenterImpl.QueryStrings.SYSTEM_ID
+                                       + "=" + app.getSystemId());
+                    dialog.setTextBoxId(AppsModule.Ids.APP_URL_TEXT);
+                    dialog.show();
                 }
             });
         } else {
