@@ -13,6 +13,7 @@ import org.iplantc.de.fileViewers.client.callbacks.GenomeBrowserUtil;
 import org.iplantc.de.fileViewers.client.callbacks.LoadGenomeInCoGeCallback;
 import org.iplantc.de.fileViewers.client.callbacks.TreeUrlCallback;
 import org.iplantc.de.fileViewers.client.views.cells.TreeUrlCell;
+import org.iplantc.de.fileViewers.share.FileViewerModule;
 
 import com.google.common.base.Preconditions;
 import com.google.gwt.core.client.GWT;
@@ -234,6 +235,13 @@ public class ExternalVisualizationURLViewerImpl extends AbstractFileViewer imple
     @Override
     public boolean isDirty() {
         return false;
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        toolbar.ensureDebugId(baseID + FileViewerModule.Ids.TOOLBAR);
     }
 
 }

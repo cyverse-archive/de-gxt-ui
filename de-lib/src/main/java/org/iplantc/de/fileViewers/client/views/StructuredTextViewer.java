@@ -9,6 +9,7 @@ import org.iplantc.de.fileViewers.client.events.AddRowSelectedEvent;
 import org.iplantc.de.fileViewers.client.events.DeleteRowSelectedEvent;
 import org.iplantc.de.fileViewers.client.events.HeaderRowCheckboxChangedEvent;
 import org.iplantc.de.fileViewers.client.events.SkipRowsCountValueChangeEvent;
+import org.iplantc.de.fileViewers.share.FileViewerModule;
 
 import com.google.common.base.Preconditions;
 import com.google.gwt.core.client.GWT;
@@ -291,5 +292,12 @@ public class StructuredTextViewer extends AbstractStructuredTextViewer {
         }
 
         grid.reconfigure(listStore, cm);
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        toolbar.ensureDebugId(baseID + FileViewerModule.Ids.TOOLBAR);
     }
 }

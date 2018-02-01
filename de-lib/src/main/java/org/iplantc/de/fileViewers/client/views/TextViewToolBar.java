@@ -1,6 +1,7 @@
 package org.iplantc.de.fileViewers.client.views;
 
 import org.iplantc.de.fileViewers.client.events.WrapTextCheckboxChangeEvent;
+import org.iplantc.de.fileViewers.share.FileViewerModule;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -75,4 +76,11 @@ public class TextViewToolBar extends AbstractToolBar {
         fireEvent(new WrapTextCheckboxChangeEvent(event.getValue()));
     }
 
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        cbxWrap.setId(baseID + FileViewerModule.Ids.TOOLBAR_WRAP_TEXT);
+        previewMDBtn.ensureDebugId(baseID + FileViewerModule.Ids.TOOLBAR_PREVIEW_MD);
+    }
 }

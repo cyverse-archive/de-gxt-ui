@@ -9,6 +9,7 @@ import org.iplantc.de.commons.client.views.window.configs.HTPathListWindowConfig
 import org.iplantc.de.commons.client.views.window.configs.MultiInputPathListWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.TabularFileViewerWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
+import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.fileViewers.client.FileViewer;
 import org.iplantc.de.fileViewers.client.events.DirtyStateChangedEvent;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
@@ -101,6 +102,7 @@ public class FileViewerWindow extends WindowBase
                                 delimiter);
         }
 
+        ensureDebugId(DeModule.WindowIds.FILE_VIEWER);
     }
 
     @Override
@@ -163,4 +165,10 @@ public class FileViewerWindow extends WindowBase
         }
     }
 
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        presenter.setViewDebugId(baseID);
+    }
 }

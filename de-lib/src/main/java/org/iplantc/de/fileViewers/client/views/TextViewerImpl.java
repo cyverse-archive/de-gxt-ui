@@ -9,6 +9,7 @@ import org.iplantc.de.fileViewers.client.events.RefreshSelectedEvent;
 import org.iplantc.de.fileViewers.client.events.SaveSelectedEvent;
 import org.iplantc.de.fileViewers.client.events.ViewerPagingToolbarUpdatedEvent;
 import org.iplantc.de.fileViewers.client.events.WrapTextCheckboxChangeEvent;
+import org.iplantc.de.fileViewers.share.FileViewerModule;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
@@ -214,6 +215,13 @@ public class TextViewerImpl extends AbstractFileViewer implements
     @Override
     public void refresh() {
         presenter.loadTextData(pagingToolbar.getPageNumber(), pagingToolbar.getPageSize());
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        toolbar.onEnsureDebugId(baseID + FileViewerModule.Ids.TOOLBAR);
     }
 
     @Override

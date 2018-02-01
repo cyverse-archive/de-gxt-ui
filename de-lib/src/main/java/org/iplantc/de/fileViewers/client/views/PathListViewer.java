@@ -14,6 +14,7 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.fileViewers.client.FileViewer;
 import org.iplantc.de.fileViewers.client.events.DeleteSelectedPathsSelectedEvent;
+import org.iplantc.de.fileViewers.share.FileViewerModule;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -361,4 +362,10 @@ public class PathListViewer extends AbstractStructuredTextViewer implements Stor
         }
     }
 
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        toolbar.ensureDebugId(baseID + FileViewerModule.Ids.TOOLBAR);
+    }
 }
