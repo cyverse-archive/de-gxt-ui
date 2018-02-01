@@ -96,8 +96,7 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
     @Override
     public void go(final HasOneWidget container,
                    final HasId selectedAppCategory,
-                   final HasId selectedApp,
-                   final String activeView) {
+                   final HasId selectedApp, final String activeView, final boolean catPanelCollapsed) {
         DETabPanel tabPanel = view.getCategoryTabPanel();
         if (isEmpty(tabPanel)) {
             categoriesPresenter.go(selectedAppCategory, true, tabPanel);
@@ -107,6 +106,7 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
             appsListPresenter.setActiveView(activeView);
         }
         container.setWidget(view);
+        view.setNavPanelCollapsed(catPanelCollapsed);
     }
 
     boolean isEmpty(TabPanel tabPanel) {
@@ -181,6 +181,11 @@ public class AppsViewPresenterImpl implements AppsView.Presenter,
     @Override
     public void setWestPanelWidth(String width) {
         view.setWestPanelWidth(width);
+    }
+
+    @Override
+    public boolean isDetailsCollapsed() {
+        return view.isNavPanelCollapsed();
     }
 
 }

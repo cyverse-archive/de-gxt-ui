@@ -112,12 +112,7 @@ public class DiskResourceViewImpl extends Composite implements DiskResourceView 
     @Override
     public void setDetailsCollapsed(boolean collapsed) {
         if(collapsed) {
-            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-                @Override
-                public void execute() {
-                    detailsPanel.collapse();
-                }
-            });
+            Scheduler.get().scheduleDeferred(() -> detailsPanel.collapse());
         } else {
             detailsPanel.expand();
         }

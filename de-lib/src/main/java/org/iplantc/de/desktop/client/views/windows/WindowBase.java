@@ -635,8 +635,10 @@ public abstract class WindowBase extends Window implements WindowInterface {
         } else {
             int left = ws.getWinLeft();
             int top = ws.getWinTop();
-            if (left != 0 && top != 0) {
-                setPagePosition(left, top);
+            if (left == 0 && top == 0) {
+                return;
+            } else {
+                Scheduler.get().scheduleDeferred(() -> setPagePosition(left, top));
             }
         }
     }

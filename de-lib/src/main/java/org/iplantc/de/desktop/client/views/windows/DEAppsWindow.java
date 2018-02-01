@@ -29,7 +29,7 @@ public class DEAppsWindow extends WindowBase {
     public static final String APPS = "#apps";
     public static final String DE_APPS_ACTIVEVIEW = "de.apps.activeView#";
     public static final String DE_APPS_WESTPANEL_WIDTH = "de.apps.westPanel.width#";
-    public static final String DE_APPS_NAVPANEL_COLLAPSE = "de.apps.navPanel.collapse#";
+    public static final String DE_APPS_CATPANEL_COLLAPSE = "de.apps.catPanel.collapse#";
     @Inject
     UserSettings userSettings;
     @Inject
@@ -60,15 +60,19 @@ public class DEAppsWindow extends WindowBase {
         final AppsWindowConfig appsWindowConfig = (AppsWindowConfig)windowConfig;
         String activeView = null;
         String westWidth = null;
-        boolean navCollapse = false;
+        String catPanelCollapsed = null;
         if (ws.getAdditionalWindowStates() != null) {
             activeView = ws.getAdditionalWindowStates().get(getKey(DE_APPS_ACTIVEVIEW, tag));
             westWidth = ws.getAdditionalWindowStates().get(getKey(DE_APPS_WESTPANEL_WIDTH, tag));
+            catPanelCollapsed =
+                    ws.getAdditionalWindowStates().get(getKey(DE_APPS_CATPANEL_COLLAPSE, tag));
+
         }
         presenter.go(this,
                      appsWindowConfig.getSelectedAppCategory(),
                      appsWindowConfig.getSelectedApp(),
-                     activeView);
+                     activeView,
+                     (catPanelCollapsed == null) ? false : Boolean.valueOf(catPanelCollapsed));
         if (!Strings.isNullOrEmpty(westWidth)) {
             presenter.setWestPanelWidth(westWidth);
         }
@@ -116,6 +120,8 @@ public class DEAppsWindow extends WindowBase {
         additionalData.put(getKey(DE_APPS_ACTIVEVIEW, getStateId()),
                            presenter.getActiveView());
         additionalData.put(getKey(DE_APPS_WESTPANEL_WIDTH, getStateId()), presenter.getWestPanelWidth());
+        additionalData.put(getKey(DE_APPS_CATPANEL_COLLAPSE, getStateId()),
+                           presenter.isDetailsCollapsed() + "");
         return additionalData;
     }
 
