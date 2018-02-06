@@ -30,19 +30,10 @@
     </ui:with>
 
     <ui:with field="preferenceLayoutData"
-             type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
-        <ui:attributes width="1" height="-1" margins="{margin3}"/>
+             type="com.sencha.gxt.widget.core.client.container.BoxLayoutContainer.BoxLayoutData">
+        <ui:attributes margins="{margin3}"/>
     </ui:with>
 
-
-    <ui:with field="cssLayoutData"
-             type="com.sencha.gxt.widget.core.client.container.CssFloatLayoutContainer.CssFloatData">
-        <ui:attributes size="1" margins="{margin3}"/>
-    </ui:with>
-    <ui:with field="fileSelLabel"
-             type="com.sencha.gxt.widget.core.client.container.CssFloatLayoutContainer.CssFloatData">
-        <ui:attributes size="1" margins="{margins5505}"/>
-    </ui:with>
     <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
              field="verticalLayoutData">
         <ui:attributes width="1" height="-1"/>
@@ -54,12 +45,12 @@
                                                styleName="{style.user_pref}">
                 <form:FieldSet heading="{appearance.preferences}"
                                collapsible="true">
-                    <container:CssFloatLayoutContainer>
-                        <container:child layoutData="{cssLayoutData}">
+                    <container:VBoxLayoutContainer>
+                        <container:child layoutData="{preferenceLayoutData}">
                             <form:CheckBox ui:field="rememberLastPath"
                                            boxLabel="{appearance.rememberFileSectorPath}"/>
                         </container:child>
-                        <container:child layoutData="{cssLayoutData}">
+                        <container:child layoutData="{preferenceLayoutData}">
                             <g:HorizontalPanel>
                                 <form:CheckBox ui:field="saveSession"
                                            debugId="cboSaveSession"
@@ -71,25 +62,26 @@
                                                 visible="false"/>
                             </g:HorizontalPanel>
                         </container:child>
-                        <container:child layoutData="{cssLayoutData}">
+                        <container:child layoutData="{preferenceLayoutData}">
                             <form:CheckBox ui:field="enableHPCPrompt"
                                            debugId="cboEnableHPC"
                                            boxLabel="{appearance.enableHPCPrompt}"/>
                         </container:child>
-                        <container:child layoutData="{cssLayoutData}">
+                        <container:child layoutData="{preferenceLayoutData}">
                             <form:CheckBox ui:field="enableWaitTimeMessage"
                                            debugId="cboWaitTime"
                                            boxLabel="{appearance.waitTime}"/>
                         </container:child>
-                        <container:child layoutData="{cssLayoutData}">
+                        <container:child layoutData="{preferenceLayoutData}">
                             <g:HTML HTML="{appearance.defaultOutputFolder}"/>
                         </container:child>
-                        <container:child layoutData="{cssLayoutData}">
+                        <container:child layoutData="{preferenceLayoutData}">
                             <selector:FolderSelectorField ui:field="defaultOutputFolder"
                                                           debugId="idDefaultFolderSelector"
-                                                          validatePermissions="true"/>
+                                                          validatePermissions="true"
+                                                          width="{appearance.defaultOutputFolderWidth}"/>
                         </container:child>
-                    </container:CssFloatLayoutContainer>
+                    </container:VBoxLayoutContainer>
                 </form:FieldSet>
                 <form:FieldSet heading="{appearance.keyboardShortCut}"
                                collapsible="true">
@@ -177,12 +169,12 @@
                                                styleName="{style.user_pref}">
                 <form:FieldSet heading="{appearance.emailSettings}">
                     <container:VerticalLayoutContainer height="80">
-                        <container:child layoutData="{preferenceLayoutData}">
+                        <container:child layoutData="{verticalLayoutData}">
                             <form:CheckBox ui:field="enableAnalysisEmailNotification"
                                            boxLabel="{appearance.notifyAnalysisEmail}"/>
                         </container:child>
 
-                        <container:child layoutData="{preferenceLayoutData}">
+                        <container:child layoutData="{verticalLayoutData}">
                             <form:CheckBox ui:field="enableImportEmailNotification"
                                            boxLabel="{appearance.notifyImportEmail}"/>
                         </container:child>

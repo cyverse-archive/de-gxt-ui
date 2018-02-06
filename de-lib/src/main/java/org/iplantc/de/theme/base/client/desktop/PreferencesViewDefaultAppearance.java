@@ -344,4 +344,9 @@ public class PreferencesViewDefaultAppearance implements PreferencesView.Prefere
     public String enableHPCPrompt() {
         return desktopMessages.enableHPCPrompt();
     }
+
+    @Override
+    public String defaultOutputFolderWidth() {
+        return "450px";
+    }
 }

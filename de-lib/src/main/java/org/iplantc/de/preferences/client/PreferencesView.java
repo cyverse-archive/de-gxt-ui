@@ -140,6 +140,8 @@ public interface PreferencesView extends IsWidget,
         String webhookTypeFailure();
 
         String enableHPCPrompt();
+
+        String defaultOutputFolderWidth();
     }
 
     void userSessionSuccess();
