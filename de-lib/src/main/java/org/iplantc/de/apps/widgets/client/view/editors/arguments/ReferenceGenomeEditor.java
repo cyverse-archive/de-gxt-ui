@@ -2,6 +2,7 @@ package org.iplantc.de.apps.widgets.client.view.editors.arguments;
 
 import static com.sencha.gxt.cell.core.client.form.ComboBoxCell.TriggerAction.ALL;
 
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.apps.widgets.client.models.ReferenceGenomeProperties;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.ArgumentEditorConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.SplittableToReferenceGenomeConverter;
@@ -49,4 +50,10 @@ public class ReferenceGenomeEditor extends AbstractArgumentEditor implements Has
         return editorAdapter;
     }
 
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        comboBox.setId(baseID + AppsModule.Ids.APP_LAUNCH_REFERENCE_GENOME);
+    }
 }

@@ -1,5 +1,6 @@
 package org.iplantc.de.apps.widgets.client.view.editors.arguments;
 
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.ArgumentEditorConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.SplittableToIntegerConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
@@ -32,4 +33,10 @@ public class IntegerInputEditor extends AbstractArgumentEditor {
         return editorAdapter;
     }
 
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        spinnerField.setId(baseID + AppsModule.Ids.APP_LAUNCH_INTEGER_SPINNER);
+    }
 }

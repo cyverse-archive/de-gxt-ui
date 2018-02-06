@@ -1,5 +1,6 @@
 package org.iplantc.de.apps.widgets.client.presenter;
 
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.apps.widgets.client.events.AnalysisLaunchEvent;
 import org.iplantc.de.apps.widgets.client.events.AnalysisLaunchEvent.AnalysisLaunchEventHandler;
 import org.iplantc.de.apps.widgets.client.events.AppTemplateFetched;
@@ -83,6 +84,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
     @Inject private IplantValidationConstants valConstants;
     @Inject AsyncProviderWrapper<HPCWaitTimeDialog> hpcWaitDlgProvider;
     private final AppLaunchView view;
+    private String baseID;
 
     @Inject
     public AppLaunchPresenterImpl(final AppLaunchView view,
@@ -155,6 +157,10 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
         view.edit(appTemplate, je);
         container.setWidget(view);
         ensureHandlers().fireEvent(new AppTemplateFetched(appTemplate));
+
+        // The view debug ID cannot be set earlier in the case where the app template
+        // must be fetched first
+        view.asWidget().ensureDebugId(baseID + AppsModule.Ids.APP_LAUNCH_VIEW);
     }
 
     String getRestrictedCharRegEx() {
@@ -169,7 +175,7 @@ public class AppLaunchPresenterImpl implements AppLaunchView.Presenter,
 
     @Override
     public void setViewDebugId(String baseID) {
-        view.asWidget().ensureDebugId(baseID);
+        this.baseID = baseID;
     }
 
     @Override

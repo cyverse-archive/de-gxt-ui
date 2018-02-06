@@ -134,6 +134,9 @@ public interface DiskResourceModule {
         String LINK_TEXT_INPUT = ".linkTextInput";
         String SHARE_LINK_DLG = "shareLinkDlg";
         String MENU_ITEM_NEW_MULTI_INPUT_PATH_LIST = ".multiInputPathList";
+        String FILE_SELECTOR_BROWSE_BTN = ".browseBtn";
+        String FILE_SELECTOR_RESET_BTN = ".resetBtn";
+        String FILE_SELECTOR_INPUT = ".inputField";
     }
 
     interface MetadataIds {

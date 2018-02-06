@@ -1,5 +1,6 @@
 package org.iplantc.de.apps.widgets.client.view.editors.arguments;
 
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.ArgumentEditorConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.SplittableToStringConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
@@ -38,4 +39,10 @@ public class FileOutputEditor extends AbstractArgumentEditor {
     }
 
 
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        textField.setId(baseID + AppsModule.Ids.APP_LAUNCH_OUTPUT_FILE);
+    }
 }

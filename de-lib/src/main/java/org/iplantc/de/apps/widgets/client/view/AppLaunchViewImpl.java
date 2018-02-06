@@ -1,5 +1,6 @@
 package org.iplantc.de.apps.widgets.client.view;
 
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent;
 import org.iplantc.de.apps.widgets.client.events.RequestAnalysisLaunchEvent.RequestAnalysisLaunchEventHandler;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
@@ -112,5 +113,14 @@ public class AppLaunchViewImpl extends Composite implements AppLaunchView {
         mask = true;
         maskMessage = message;
         customMask.mask(this, message);
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        launchButton.ensureDebugId(baseID + AppsModule.Ids.APP_LAUNCH_BTN);
+        wizard.asWidget().ensureDebugId(baseID + AppsModule.Ids.TEMPLATE_FORM);
+        law.asWidget().ensureDebugId(baseID + AppsModule.Ids.TEMPLATE_FORM + AppsModule.Ids.LAUNCH_ANALYSIS_GROUP);
     }
 }

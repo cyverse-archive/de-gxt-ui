@@ -1,5 +1,6 @@
 package org.iplantc.de.apps.widgets.client.view.editors.arguments;
 
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.ArgumentEditorConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.SplittableToStringConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
@@ -41,5 +42,12 @@ public class MultiLineTextEditor extends AbstractArgumentEditor {
         super.disableValidations();
 
         textArea.getValidators().clear();
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        textArea.setId(baseID + AppsModule.Ids.APP_LAUNCH_MULTI_LINE_TEXT);
     }
 }

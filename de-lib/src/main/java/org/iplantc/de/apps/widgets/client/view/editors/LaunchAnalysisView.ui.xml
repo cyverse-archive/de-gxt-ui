@@ -22,41 +22,37 @@
                        height="-1" 
                        margins="{margins}"/>
     </ui:with>
-    
-    <gxt:ContentPanel ui:field="contentPanel"
-                      collapsible="true"
-                      titleCollapse="true">
-		<con:VerticalLayoutContainer scrollMode="AUTO"
-	                                 adjustForScroll="true">
-		    <con:child layoutData="{fieldLayoutData}">
-		        <form:FieldLabel text="{appearance.analysisName}"
-		                         labelAlign="TOP">
-		            <form:widget>
-		                <form:TextField ui:field="name"
-		                                allowBlank="false"/>
-		            </form:widget>
-		        </form:FieldLabel> 
-		    </con:child>                    
-		    <con:child layoutData="{fieldLayoutData}">
-		        <form:FieldLabel text="{appearance.comments}"
-		                         labelAlign="TOP">
-		            <form:widget>
-		                <form:TextArea ui:field="description"/>
-		            </form:widget>
-		        </form:FieldLabel> 
-		    </con:child>                    
-		    <con:child layoutData="{fieldLayoutData}">
-		        <form:FieldLabel text="{appearance.selectOutputFolder}"
-		                         labelAlign="TOP">
-		            <form:widget>
-		                <drFields:FolderSelectorField ui:field="awFolderSel"/>
-		            </form:widget>
-		        </form:FieldLabel> 
-		    </con:child>                    
-		    <con:child layoutData="{fieldLayoutData}">
-		        <gwt:CheckBox ui:field="retainInputs"
-							  text="{appearance.retainInputs}"/>
-	        </con:child>                    
-	    </con:VerticalLayoutContainer>
-    </gxt:ContentPanel>         
+
+	<con:VerticalLayoutContainer scrollMode="AUTO"
+								 adjustForScroll="true">
+		<con:child layoutData="{fieldLayoutData}">
+			<form:FieldLabel text="{appearance.analysisName}"
+							 labelAlign="TOP">
+				<form:widget>
+					<form:TextField ui:field="name"
+									allowBlank="false"/>
+				</form:widget>
+			</form:FieldLabel>
+		</con:child>
+		<con:child layoutData="{fieldLayoutData}">
+			<form:FieldLabel text="{appearance.comments}"
+							 labelAlign="TOP">
+				<form:widget>
+					<form:TextArea ui:field="description"/>
+				</form:widget>
+			</form:FieldLabel>
+		</con:child>
+		<con:child layoutData="{fieldLayoutData}">
+			<form:FieldLabel text="{appearance.selectOutputFolder}"
+							 labelAlign="TOP">
+				<form:widget>
+					<drFields:FolderSelectorField ui:field="awFolderSel"/>
+				</form:widget>
+			</form:FieldLabel>
+		</con:child>
+		<con:child layoutData="{fieldLayoutData}">
+			<gwt:CheckBox ui:field="retainInputs"
+						  text="{appearance.retainInputs}"/>
+		</con:child>
+	</con:VerticalLayoutContainer>
 </ui:UiBinder> 

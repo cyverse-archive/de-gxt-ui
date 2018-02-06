@@ -56,6 +56,36 @@ public interface AppsModule {
         String APP_COMMENT_CELL = ".appComment";
         String HPC_WAIT_DLG = "hpcWaitTimeDlg";
         String OK_BTN = ".okBtn";
+        String APP_LAUNCH_VIEW = ".view";
+        String APP_LAUNCH_BTN = ".launchBtn";
+        String TEMPLATE_FORM = ".templateForm";
+        String APP_LAUNCH_NAME = ".name";
+        String APP_LAUNCH_COMMENTS = ".comments";
+        String APP_LAUNCH_OUTPUT_FOLDER = ".outputFolder";
+        String APP_LAUNCH_RETAIN_INPUTS = ".retainInputs";
+        String LAUNCH_ANALYSIS_GROUP = ".launchAnalysisGroup";
+        String APP_LAUNCH_MULTI_FILE_SELECTOR = ".multiFileSelector";
+        String TEMPLATE_GROUP = ".group";
+        String APP_LAUNCH_DOUBLE_SPINNER = ".doubleSpinner";
+        String APP_LAUNCH_ENV_VAR = ".envVar";
+        String APP_LAUNCH_FILE_SELECTOR = ".fileSelector";
+        String APP_LAUNCH_OUTPUT_FILE = ".outputFile";
+        String APP_LAUNCH_FLAG = ".flag";
+        String APP_LAUNCH_INPUT_FOLDER = ".inputFolder";
+        String APP_LAUNCH_INFO_LABEL = ".info";
+        String APP_LAUNCH_INTEGER_SPINNER = ".integerSpinner";
+        String APP_LAUNCH_DOUBLE_SELECTION = ".doubleSelection";
+        String APP_LAUNCH_INTEGER_SELECTION = ".integerSelection";
+        String APP_LAUNCH_MULTI_FILE_OUTPUT = ".multiFileOutput";
+        String APP_LAUNCH_MULTI_LINE_TEXT = ".multiLineText";
+        String APP_LAUNCH_REFERENCE_ANNOTATION = ".referenceAnnotation";
+        String APP_LAUNCH_REFERENCE_GENOME = ".referenceGenome";
+        String APP_LAUNCH_REFERENCE_SEQUENCE = ".referenceSequence";
+        String APP_LAUNCH_TEXT_INPUT = ".textInput";
+        String APP_LAUNCH_TEXT_SELECTION = ".textSelection";
+        String APP_LAUNCH_TREE = ".tree";
+        String APP_LAUNCH_TREE_FILTER = ".treeFilter";
+        String APP_LAUNCH_HOVER_DELETE_BTN = ".deleteBtn";
     }
 }
 

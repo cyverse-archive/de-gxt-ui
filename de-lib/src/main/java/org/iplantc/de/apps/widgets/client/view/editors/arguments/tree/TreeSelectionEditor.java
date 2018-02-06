@@ -2,6 +2,7 @@ package org.iplantc.de.apps.widgets.client.view.editors.arguments.tree;
 
 import static com.sencha.gxt.widget.core.client.form.FormPanel.LabelAlign.TOP;
 
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.apps.widgets.client.events.ArgumentRequiredChangedEvent;
 import org.iplantc.de.apps.widgets.client.events.ArgumentRequiredChangedEvent.ArgumentRequiredChangedEventHandler;
 import org.iplantc.de.apps.widgets.client.events.ArgumentSelectedEvent;
@@ -177,6 +178,7 @@ public class TreeSelectionEditor extends Composite implements AppTemplateForm.Ar
 
 
     private final FieldLabel argumentLabel;
+    private final StoreFilterField<SelectionItem> storeFilterField;
     private final AppTemplateWizardAppearance appearance;
     private AppTemplateAutoBeanFactory factory;
 
@@ -228,7 +230,8 @@ public class TreeSelectionEditor extends Composite implements AppTemplateForm.Ar
         store.addStoreFilterHandler(new MyStoreFilterHandler());
 
         VerticalLayoutContainer vlc = new VerticalLayoutContainer();
-        vlc.add(buildFilter(store), new VerticalLayoutData(1, -1));
+        storeFilterField = buildFilter(store);
+        vlc.add(storeFilterField, new VerticalLayoutData(1, -1));
         vlc.add(tree);
 
         argumentLabel = new FieldLabel(vlc);
@@ -450,4 +453,11 @@ public class TreeSelectionEditor extends Composite implements AppTemplateForm.Ar
         return treeFilter;
     }
 
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        tree.ensureDebugId(baseID + AppsModule.Ids.APP_LAUNCH_TREE);
+        storeFilterField.setId(baseID + AppsModule.Ids.APP_LAUNCH_TREE_FILTER);
+    }
 }

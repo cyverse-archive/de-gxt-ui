@@ -8,6 +8,7 @@ import org.iplantc.de.client.models.errorHandling.SimpleServiceError;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.widgets.IPlantSideErrorHandler;
+import org.iplantc.de.diskResource.share.DiskResourceModule;
 import org.iplantc.de.resources.client.constants.IplantValidationConstants;
 import org.iplantc.de.shared.DataCallback;
 
@@ -562,5 +563,14 @@ public abstract class AbstractDiskResourceSelector<R extends DiskResource> exten
 
     public void setInputFieldId(String id) {
         input.setId(id);
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        button.ensureDebugId(baseID + DiskResourceModule.Ids.FILE_SELECTOR_BROWSE_BTN);
+        resetBtn.ensureDebugId(baseID + DiskResourceModule.Ids.FILE_SELECTOR_RESET_BTN);
+        setInputFieldId(baseID + DiskResourceModule.Ids.FILE_SELECTOR_INPUT);
     }
 }

@@ -329,6 +329,13 @@ public class ArgumentGroupEditorImpl extends ContentPanel implements AppTemplate
 
     }
 
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        editor.getEditors().forEach(editorItem -> editorItem.getSubEditor().asWidget().ensureDebugId(baseID + "." + editor.getEditors().indexOf(editorItem)));
+    }
+
     private boolean allChildrenInvisible(List<Argument> list) {
         boolean allChildrenInvisible = true;
         for (Argument arg : list) {

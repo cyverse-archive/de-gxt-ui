@@ -1,5 +1,6 @@
 package org.iplantc.de.apps.widgets.client.view.editors.arguments;
 
+import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.ArgumentEditorConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.SplittableToFolderConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
@@ -38,6 +39,13 @@ public class FolderInputEditor extends AbstractArgumentEditor implements HasDisa
     @Override
     public ArgumentEditorConverter<?> valueEditor() {
         return editorAdapter;
+    }
+
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        folderSelector.ensureDebugId(baseID + AppsModule.Ids.APP_LAUNCH_INPUT_FOLDER);
     }
 
 }
