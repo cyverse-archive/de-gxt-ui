@@ -2,6 +2,7 @@ package org.iplantc.de.apps.widgets.client.view.editors.arguments.tree;
 
 import org.iplantc.de.client.models.apps.integration.SelectionItem;
 import org.iplantc.de.client.models.apps.integration.SelectionItemGroup;
+import org.iplantc.de.client.util.AppTemplateUtils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
@@ -35,9 +36,14 @@ class SelectionItemTree extends Tree<SelectionItem, String> implements HasValueC
     private boolean forceSingleSelection = false;
     private boolean restoreCheckedSelectionFromTree;
     private SelectionItemGroup root;
+    private int uniqueIdNum = 0;
+    private AppTemplateUtils appTemplateUtils;
 
-    SelectionItemTree(TreeStore<SelectionItem> store, ValueProvider<SelectionItem, String> valueProvider) {
+    SelectionItemTree(TreeStore<SelectionItem> store,
+                      ValueProvider<SelectionItem, String> valueProvider,
+                      AppTemplateUtils appTemplateUtils) {
         super(store, valueProvider);
+        this.appTemplateUtils = appTemplateUtils;
 
         setBorders(true);
         setAutoLoad(true);
@@ -273,7 +279,8 @@ class SelectionItemTree extends Tree<SelectionItem, String> implements HasValueC
         if (findModelWithKey != null) {
             store.update(item);
         } else {
-            store.add(item);
+            final SelectionItem taggedItem = appTemplateUtils.addSelectionItemAutoBeanIdTag(item, "tmpId-" + uniqueIdNum++);
+            store.add(taggedItem);
         }
     }
 
@@ -282,7 +289,8 @@ class SelectionItemTree extends Tree<SelectionItem, String> implements HasValueC
         if ((findModelWithKey != null) && (store.getParent(child) == parent)) {
             store.update(child);
         } else {
-            store.add(parent, child);
+            final SelectionItem taggedChild = appTemplateUtils.addSelectionItemAutoBeanIdTag(child, "tmpId-" + uniqueIdNum++);
+            store.add(parent, taggedChild);
         }
     }
 

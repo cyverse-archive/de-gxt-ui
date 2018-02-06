@@ -6,9 +6,9 @@ import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.apps.widgets.client.events.ArgumentRequiredChangedEvent;
 import org.iplantc.de.apps.widgets.client.events.ArgumentRequiredChangedEvent.ArgumentRequiredChangedEventHandler;
 import org.iplantc.de.apps.widgets.client.events.ArgumentSelectedEvent;
-import org.iplantc.de.apps.widgets.client.view.AppTemplateForm;
 import org.iplantc.de.apps.widgets.client.models.SelectionItemModelKeyProvider;
 import org.iplantc.de.apps.widgets.client.models.SelectionItemProperties;
+import org.iplantc.de.apps.widgets.client.view.AppTemplateForm;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.LabelLeafEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.VisibilityEditor;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.ArgumentEditorConverter;
@@ -22,6 +22,7 @@ import org.iplantc.de.client.models.apps.integration.ArgumentValidator;
 import org.iplantc.de.client.models.apps.integration.SelectionItem;
 import org.iplantc.de.client.models.apps.integration.SelectionItemGroup;
 import org.iplantc.de.client.models.apps.integration.SelectionItemList;
+import org.iplantc.de.client.util.AppTemplateUtils;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.editor.client.EditorDelegate;
@@ -212,12 +213,13 @@ public class TreeSelectionEditor extends Composite implements AppTemplateForm.Ar
     @Inject
     public TreeSelectionEditor(@Assisted AppTemplateWizardAppearance appearance,
                                SelectionItemProperties props,
-                               AppTemplateAutoBeanFactory factory) {
+                               AppTemplateAutoBeanFactory factory,
+                               AppTemplateUtils appTemplateUtils) {
         this.appearance = appearance;
         this.factory = factory;
         TreeStore<SelectionItem> store = new TreeStore<>(new SelectionItemModelKeyProvider());
 
-        tree = new SelectionItemTree(store, props.display());
+        tree = new SelectionItemTree(store, props.display(), appTemplateUtils);
         tree.setHeight(appearance.getDefaultTreeSelectionHeight());
 
         tree.addValueChangeHandler(new TreeValueChangeHandler());
