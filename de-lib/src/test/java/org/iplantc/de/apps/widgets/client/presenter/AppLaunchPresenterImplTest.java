@@ -34,6 +34,7 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.web.bindery.autobean.shared.Splittable;
 
@@ -73,6 +74,7 @@ public class AppLaunchPresenterImplTest {
     @Mock AnalysisSubmissionResponse responseMock;
     @Mock HPCWaitTimeDialog hpcWaitTimeDialogMock;
     @Mock AsyncProviderWrapper<HPCWaitTimeDialog> hpcWaitDlgProviderMock;
+    @Mock Widget viewWidgetMock;
 
     @Captor ArgumentCaptor<AppLaunchCallback<AppTemplate>> appTemplateCaptor;
     @Captor ArgumentCaptor<AppLaunchCallback<AnalysisSubmissionResponse>> analysisSubmissionCaptor;
@@ -92,6 +94,7 @@ public class AppLaunchPresenterImplTest {
         when(userSettingsMock.getDefaultOutputFolder()).thenReturn(defaultOutputFolder);
         when(defaultOutputFolder.getPath()).thenReturn("path");
         when(userSettingsMock.isEnableAnalysisEmailNotification()).thenReturn(true);
+        when(viewMock.asWidget()).thenReturn(viewWidgetMock);
 
 
         uut = new AppLaunchPresenterImpl(viewMock,
