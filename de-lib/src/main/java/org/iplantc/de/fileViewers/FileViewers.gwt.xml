@@ -2,6 +2,9 @@
         "http://google-web-toolkit.googlecode.com/svn/releases/2.0/distro-source/core/src/gwt-module.dtd">
 <module>
 
+    <source path="share"/>
+    <source path="client"/>
+    
     <inherits name='com.google.gwt.user.User'/>
     <inherits name="org.iplantc.de.resources.ui-resources"/>
     <inherits name="org.iplantc.de.DiscoveryEnvironmentCommon"/>

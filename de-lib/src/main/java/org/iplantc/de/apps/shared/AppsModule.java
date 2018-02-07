@@ -86,6 +86,7 @@ public interface AppsModule {
         String APP_LAUNCH_TREE = ".tree";
         String APP_LAUNCH_TREE_FILTER = ".treeFilter";
         String APP_LAUNCH_HOVER_DELETE_BTN = ".deleteBtn";
+        String APP_URL_TEXT = ".appUrlText";
     }
 }
 

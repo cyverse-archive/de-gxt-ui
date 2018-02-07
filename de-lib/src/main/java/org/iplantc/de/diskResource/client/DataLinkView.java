@@ -33,6 +33,8 @@ public interface DataLinkView extends IsWidget,
 
         String copyDataLinkDlgWidth();
 
+        String copyDataLinkDlgMultiLineHeight();
+
         String loadingMask();
 
         String create();

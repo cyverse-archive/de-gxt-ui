@@ -44,6 +44,7 @@ import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected;
 import org.iplantc.de.diskResource.client.gin.factory.FolderContentsRpcProxyFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewFactory;
+import org.iplantc.de.diskResource.client.gin.factory.ShareResourcesLinkDialogFactory;
 import org.iplantc.de.diskResource.client.views.dialogs.InfoTypeEditorDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.MetadataCopyDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.SaveAsDialog;
@@ -108,7 +109,6 @@ public class GridViewPresenterImplTest {
     @Mock CommentsDialog commentsDialogMock;
     @Mock AsyncProviderWrapper<ManageMetadataDialog> metadataDialogProviderMock;
     @Mock AsyncProviderWrapper<DataSharingDialog> dataSharingDialogProviderMock;
-    @Mock AsyncProviderWrapper<ShareResourceLinkDialog> shareLinkDialogProviderMock;
     @Mock AsyncProviderWrapper<SaveAsDialog> saveAsDialogProviderMock;
     @Mock DiskResourceAutoBeanFactory drFactoryMock;
     @Mock MetadataCopyDialog mCopyDialog;
@@ -131,7 +131,6 @@ public class GridViewPresenterImplTest {
     @Mock SelectEvent selectEventMock;
     @Mock AlertMessageBox alertMessageBoxMock;
     @Mock Splittable splittableMock;
-    @Mock AsyncProviderWrapper<DataSharingDialog> dataSharingDlgProviderMock;
     @Mock DataSharingDialog dataSharingDlgMock;
     @Mock DialogHideEvent hideEventMock;
     @Mock FastMap<TYPE> fastMapTypeMock;
@@ -147,6 +146,8 @@ public class GridViewPresenterImplTest {
     @Mock SelectMetadataTemplateDialog selectTemplateDlgMock;
     @Mock List<MetadataTemplateInfo> metadataTemplateInfosMock;
     @Mock MetadataCopyRequest metadataCopyRequestMock;
+    @Mock
+    ShareResourcesLinkDialogFactory srldFactoryMock;
 
     @Captor ArgumentCaptor<AsyncCallback<InfoTypeEditorDialog>> infoTypeEditorDialogCaptor;
     @Captor ArgumentCaptor<AsyncCallback<String>> stringCaptor;
@@ -234,9 +235,9 @@ public class GridViewPresenterImplTest {
         uut.bulkMetadataDlgProvider = bulkMetadataDlgProviderMock;
         uut.dataSharingDialogProvider = dataSharingDialogProviderMock;
         uut.diskResourceUtil = diskResourceUtilMock;
-        uut.shareLinkDialogProvider = shareLinkDialogProviderMock;
         uut.saveAsDialogProvider = saveAsDialogProviderMock;
         uut.selectMetaTemplateDlgProvider = selectTemplateDlgProviderMock;
+        uut.srldFactory = srldFactoryMock;
 
         verifyConstructor();
     }
@@ -413,13 +414,12 @@ public class GridViewPresenterImplTest {
         ShareByDataLinkSelected eventMock = mock(ShareByDataLinkSelected.class);
         Folder folderMock = mock(Folder.class);
         when(eventMock.getDiskResourceToShare()).thenReturn(folderMock);
+        when(srldFactoryMock.create(false)).thenReturn(shareResourceLinkDlgMock);
 
         /** CALL METHOD UNDER TEST **/
         uut.onRequestShareByDataLinkSelected(eventMock);
 
-        verify(shareLinkDialogProviderMock).get(shareResourceLinkDlgCaptor.capture());
-
-        shareResourceLinkDlgCaptor.getValue().onSuccess(shareResourceLinkDlgMock);
+        verify(srldFactoryMock).create(false);
         verify(shareResourceLinkDlgMock).show(any());
     }
 
@@ -432,16 +432,14 @@ public class GridViewPresenterImplTest {
         when(fileMock.getPath()).thenReturn("path");
         when(fastMapDataLinksMock.get("path")).thenReturn(dataLinksMock);
         when(dataLinksMock.isEmpty()).thenReturn(false);
+        when(srldFactoryMock.create(false)).thenReturn(shareResourceLinkDlgMock);
         GridViewPresenterImpl spy = spy(uut);
 
         /**  CALL METHOD UNDER TEST **/
         spy.onRequestShareByDataLinkSelected(eventMock);
 
         verify(diskResourceServiceMock).listDataLinks(eq(stringListMock), fastMapDataLinkCaptor.capture());
-
-        fastMapDataLinkCaptor.getValue().onSuccess(fastMapDataLinksMock);
-        verify(spy).showPublicLink(eq(dataLinksMock));
-    }
+   }
 
     @Test
     public void testFetchDetails() {

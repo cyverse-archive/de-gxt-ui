@@ -15,6 +15,7 @@ import org.iplantc.de.diskResource.client.DataLinkView;
 import org.iplantc.de.diskResource.client.events.selection.CreateDataLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.ShowDataLinkSelected;
+import org.iplantc.de.diskResource.client.gin.factory.DataLinkDialogFactory;
 import org.iplantc.de.diskResource.client.views.dialogs.DataLinkDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DECallback;
@@ -31,6 +32,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -58,6 +60,8 @@ public class DataLinkPresenterImplTest {
     @Captor ArgumentCaptor<DECallback<FastMap<List<DataLink>>>> mapLinkCallbackCaptor;
     @Captor ArgumentCaptor<AsyncCallback<DataLinkDialog>> dataLinkDlgCaptor;
 
+    @Mock
+    DataLinkDialogFactory dldFactoryMock;
 
     private DataLinkPresenterImpl uut;
 
@@ -86,7 +90,7 @@ public class DataLinkPresenterImplTest {
             }
         };
 
-        uut.dataLinkDlgProvider = dataLinkDlgProviderMock;
+        uut.dldFactory = dldFactoryMock;
 
         verifyConstructor();
     }
@@ -131,16 +135,22 @@ public class DataLinkPresenterImplTest {
 
     @Test
     public void onShowDataLinkPresented() {
+        DataLink dl1 = mock(DataLink.class);
+        DataLink dl2 = mock(DataLink.class);
+
+        when(dl1.getDownloadUrl()).thenReturn("http://google.com");
+        when(dl2.getDownloadUrl()).thenReturn("http://google.com");
+
         ShowDataLinkSelected eventMock = mock(ShowDataLinkSelected.class);
-        when(eventMock.getSelectedResource()).thenReturn(dataLinkMock);
-        when(dataLinkMock.getDownloadUrl()).thenReturn("url");
+        when(eventMock.getSelectedResource()).thenReturn(Arrays.asList(dl1, dl2));
+
+        when(dldFactoryMock.create(true)).thenReturn(dataLinkDlgMock);
 
         /** CALL METHOD UNDER TEST **/
         uut.onShowDataLinkSelected(eventMock);
 
-        verify(dataLinkDlgProviderMock).get(dataLinkDlgCaptor.capture());
+        verify(dldFactoryMock).create(eq(true));
 
-        dataLinkDlgCaptor.getValue().onSuccess(dataLinkDlgMock);
-        verify(dataLinkDlgMock).show(eq("url"));
+        verify(dataLinkDlgMock).show(eq("http://google.com\nhttp://google.com"));
     }
 }

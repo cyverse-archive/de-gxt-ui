@@ -10,12 +10,13 @@ import org.iplantc.de.diskResource.client.DiskResourceView;
 import org.iplantc.de.diskResource.client.FileUploadByUrlView;
 import org.iplantc.de.diskResource.client.GenomeSearchView;
 import org.iplantc.de.diskResource.client.GridView;
-import org.iplantc.de.diskResource.client.PathListAutomationView;
 import org.iplantc.de.diskResource.client.MetadataView;
 import org.iplantc.de.diskResource.client.NavigationView;
+import org.iplantc.de.diskResource.client.PathListAutomationView;
 import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.gin.factory.BulkMetadataViewFactory;
+import org.iplantc.de.diskResource.client.gin.factory.DataLinkDialogFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DataLinkPresenterFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DataSharingPresenterFactory;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourcePresenterFactory;
@@ -27,6 +28,7 @@ import org.iplantc.de.diskResource.client.gin.factory.GenomeSearchViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewPresenterFactory;
 import org.iplantc.de.diskResource.client.gin.factory.NavigationViewFactory;
+import org.iplantc.de.diskResource.client.gin.factory.ShareResourcesLinkDialogFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewPresenterFactory;
 import org.iplantc.de.diskResource.client.presenters.DiskResourcePresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.dataLink.DataLinkPresenterImpl;
@@ -61,7 +63,6 @@ import org.iplantc.de.diskResource.client.views.search.cells.DiskResourceQueryFo
 import org.iplantc.de.diskResource.client.views.search.cells.DiskResourceSearchCell;
 import org.iplantc.de.diskResource.client.views.sharing.DataSharingViewImpl;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.DataSharingDialog;
-import org.iplantc.de.diskResource.client.views.sharing.dialogs.ShareResourceLinkDialog;
 import org.iplantc.de.diskResource.client.views.toolbar.DiskResourceViewToolbarImpl;
 import org.iplantc.de.diskResource.client.views.toolbar.FileUploadByUrlViewImpl;
 import org.iplantc.de.diskResource.client.views.toolbar.PathListAutomationViewImpl;
@@ -79,6 +80,9 @@ public class DiskResourceGinModule extends AbstractGinModule {
 
     @Override
     protected void configure() {
+
+        install(new GinFactoryModuleBuilder().build(DataLinkDialogFactory.class));
+        install(new GinFactoryModuleBuilder().build(ShareResourcesLinkDialogFactory.class));
 
         // RPC Proxies
         bind(DiskResourceView.FolderRpcProxy.class).to(FolderRpcProxyImpl.class);
@@ -162,7 +166,6 @@ public class DiskResourceGinModule extends AbstractGinModule {
         bind(InfoTypeEditorDialog.class);
         bind(ManageMetadataDialog.class);
         bind(DataSharingDialog.class);
-        bind(ShareResourceLinkDialog.class);
         bind(SaveAsDialog.class);
         bind(BulkMetadataDialog.class);
         bind(GenomeSearchDialog.class);
@@ -173,7 +176,7 @@ public class DiskResourceGinModule extends AbstractGinModule {
                                                         DataSharingPresenterImpl.class)
                                              .build(DataSharingPresenterFactory.class));
         bind(DataSharingView.class).to(DataSharingViewImpl.class);
+
     }
-
-
 }
+

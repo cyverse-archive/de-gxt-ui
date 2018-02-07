@@ -1,5 +1,7 @@
 package org.iplantc.de.diskResource.client.presenters.grid;
 
+import static java.util.stream.Collectors.toList;
+
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.events.diskResources.OpenFolderEvent;
 import org.iplantc.de.client.models.HasId;
@@ -57,6 +59,7 @@ import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected;
 import org.iplantc.de.diskResource.client.gin.factory.FolderContentsRpcProxyFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewFactory;
+import org.iplantc.de.diskResource.client.gin.factory.ShareResourcesLinkDialogFactory;
 import org.iplantc.de.diskResource.client.model.DiskResourceModelKeyProvider;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsLoadConfig;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.SelectDiskResourceByIdStoreAddHandler;
@@ -98,7 +101,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * @author jstroot
@@ -168,19 +170,11 @@ public class GridViewPresenterImpl implements Presenter,
     }
 
     protected void showPublicLink(final List<DataLink> result) {
-        shareLinkDialogProvider.get(new AsyncCallback<ShareResourceLinkDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(ShareResourceLinkDialog dlg) {
-                dlg.setHeading(appearance.dataLinkTitle());
-                dlg.show(result.get(0).getDownloadUrl());
-            }
-        });
+        ShareResourceLinkDialog dlg = srldFactory.create(false);
+        dlg.setHeading(appearance.dataLinkTitle());
+        dlg.show(result.get(0).getDownloadUrl());
     }
+
 
     @Inject IplantAnnouncer announcer;
     @Inject DiskResourceServiceFacade diskResourceService;
@@ -190,7 +184,6 @@ public class GridViewPresenterImpl implements Presenter,
     @Inject AsyncProviderWrapper<CommentsDialog> commentDialogProvider;
     @Inject AsyncProviderWrapper<ManageMetadataDialog> metadataDialogProvider;
     @Inject AsyncProviderWrapper<DataSharingDialog> dataSharingDialogProvider;
-    @Inject AsyncProviderWrapper<ShareResourceLinkDialog> shareLinkDialogProvider;
     @Inject AsyncProviderWrapper<SaveAsDialog> saveAsDialogProvider;
     @Inject DiskResourceErrorAutoBeanFactory drErrorFactory;
     @Inject DiskResourceAutoBeanFactory factory;
@@ -203,6 +196,8 @@ public class GridViewPresenterImpl implements Presenter,
     @Inject MetadataView.Presenter.Appearance metadataAppearance;
 
     @Inject DataLinkFactory dlFactory;
+    @Inject
+    ShareResourcesLinkDialogFactory srldFactory;
     final Logger LOG = Logger.getLogger(GridViewPresenterImpl.class.getName());
 
     EventBus eventBus;
@@ -393,18 +388,9 @@ public class GridViewPresenterImpl implements Presenter,
     @Override
     public void onCopyPathSelected(CopyPathSelected event) {
         final DiskResource dr = event.getDiskResource();
-        shareLinkDialogProvider.get(new AsyncCallback<ShareResourceLinkDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-            }
-
-            @Override
-            public void onSuccess(ShareResourceLinkDialog result) {
-                result.setHeading(appearance.copyPath());
-                result.show(dr.getPath());
-            }
-        });
-
+        ShareResourceLinkDialog dialog = srldFactory.create(false);
+        dialog.setHeading(appearance.copyPath());
+        dialog.show(dr.getPath());
     }
 
     @Override
@@ -498,7 +484,7 @@ public class GridViewPresenterImpl implements Presenter,
         MetadataCopyRequest request = factory.metadataCopyRequest().as();
         List<String> ids = paths.stream()
                                 .map(hasPath -> String.valueOf(((DiskResource)hasPath).getId()))
-                                .collect(Collectors.toList());
+                                .collect(toList());
         request.setDestinationIds(ids);
         return request;
     }
@@ -533,17 +519,9 @@ public class GridViewPresenterImpl implements Presenter,
     public void onRequestShareByDataLinkSelected(ShareByDataLinkSelected event) {
         final DiskResource toBeShared = event.getDiskResourceToShare();
         if (toBeShared instanceof Folder) {
-            shareLinkDialogProvider.get(new AsyncCallback<ShareResourceLinkDialog>() {
-                @Override
-                public void onFailure(Throwable caught) {
-                }
-
-                @Override
-                public void onSuccess(ShareResourceLinkDialog result) {
-                    result.setHeading(appearance.dataLinkTitle());
-                    result.show(GWT.getHostPageBaseURL() + "?type=data&folder=" + toBeShared.getPath());
-                }
-            });
+            ShareResourceLinkDialog dialog = srldFactory.create(false);
+            dialog.setHeading(appearance.copyPath());
+            dialog.show(GWT.getHostPageBaseURL() + "?type=data&folder=" + toBeShared.getPath());
         } else {
             diskResourceService.listDataLinks(diskResourceUtil.asStringPathList(Arrays.asList(toBeShared)),
                                               new DataCallback<FastMap<List<DataLink>>>() {

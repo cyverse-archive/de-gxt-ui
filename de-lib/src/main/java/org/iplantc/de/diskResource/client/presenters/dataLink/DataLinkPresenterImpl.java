@@ -11,20 +11,20 @@ import org.iplantc.de.diskResource.client.events.selection.AdvancedSharingSelect
 import org.iplantc.de.diskResource.client.events.selection.CreateDataLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.DeleteDataLinkSelected;
 import org.iplantc.de.diskResource.client.events.selection.ShowDataLinkSelected;
+import org.iplantc.de.diskResource.client.gin.factory.DataLinkDialogFactory;
 import org.iplantc.de.diskResource.client.presenters.callbacks.CreateDataLinkCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DeleteDataLinksCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.ListDataLinksCallback;
 import org.iplantc.de.diskResource.client.views.dialogs.DataLinkDialog;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
-import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.collect.Lists;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author jstroot
@@ -40,7 +40,8 @@ public class DataLinkPresenterImpl implements DataLinkView.Presenter,
     private final DiskResourceUtil diskResourceUtil;
     private final DataLinkView.Appearance appearance;
 
-    @Inject AsyncProviderWrapper<DataLinkDialog> dataLinkDlgProvider;
+    @Inject
+    DataLinkDialogFactory dldFactory;
 
     @Inject
     DataLinkPresenterImpl(final DiskResourceServiceFacade drService,
@@ -100,19 +101,14 @@ public class DataLinkPresenterImpl implements DataLinkView.Presenter,
 
     @Override
     public void onShowDataLinkSelected(ShowDataLinkSelected event) {
-        DiskResource selectedResource = event.getSelectedResource();
-        if (selectedResource instanceof DataLink) {
-            String downloadUrl = ((DataLink)selectedResource).getDownloadUrl();
-            dataLinkDlgProvider.get(new AsyncCallback<DataLinkDialog>() {
-                @Override
-                public void onFailure(Throwable throwable) { }
+        List<DiskResource> selectedResources = event.getSelectedResource();
+        String urls = selectedResources.stream()
+                                       .filter(dl -> dl instanceof DataLink)
+                                       .map(dl -> ((DataLink)dl).getDownloadUrl())
+                                       .collect(Collectors.joining("\n"));
 
-                @Override
-                public void onSuccess(DataLinkDialog dialog) {
-                    dialog.show(downloadUrl);
-                }
-            });
-        }
+        DataLinkDialog dialog = dldFactory.create(true);
+        dialog.show(urls);
     }
 
     @Override
