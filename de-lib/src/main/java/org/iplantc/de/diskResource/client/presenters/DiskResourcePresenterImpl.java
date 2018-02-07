@@ -693,6 +693,16 @@ public class DiskResourcePresenterImpl implements
     }
 
     @Override
+    public String getWestPanelWidth() {
+        return view.getWestPanelWidth();
+    }
+
+    @Override
+    public void setWestPanelWidth(String width) {
+        view.setWestPanelWidth(width);
+    }
+
+    @Override
     public void unmask() {
         view.unmask();
     }

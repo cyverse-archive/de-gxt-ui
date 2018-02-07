@@ -23,6 +23,10 @@ import java.util.List;
 public interface AppsView extends IsWidget,
                                   IsMaskable {
 
+    String getWestPanelWidth();
+
+    void setWestPanelWidth(String width);
+
     interface AppsViewAppearance {
         String viewCategoriesHeader();
 
@@ -53,7 +57,11 @@ public interface AppsView extends IsWidget,
 
         AppCategory getSelectedAppCategory();
 
-        void go(HasOneWidget container, HasId selectedAppCategory, HasId selectedApp, String activeView);
+        void go(HasOneWidget container,
+                HasId selectedAppCategory,
+                HasId selectedApp,
+                String activeView,
+                boolean catPanelCollapsed);
 
         List<DragSource> getAppsDragSources();
 
@@ -68,6 +76,12 @@ public interface AppsView extends IsWidget,
         String getActiveView();
 
         void setActiveView(String activeView);
+
+        String getWestPanelWidth();
+
+        void setWestPanelWidth(String width);
+
+        public boolean isDetailsCollapsed();
     }
 
     DETabPanel getCategoryTabPanel();
@@ -78,4 +92,7 @@ public interface AppsView extends IsWidget,
 
     void clearTabPanel();
 
+    boolean isNavPanelCollapsed();
+
+    void setNavPanelCollapsed(boolean collapsed);
 }

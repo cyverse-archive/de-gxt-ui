@@ -10,6 +10,7 @@ import org.iplantc.de.client.models.apps.AppCategory;
 import org.iplantc.de.commons.client.widgets.DETabPanel;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -20,6 +21,8 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.widget.core.client.Composite;
+import com.sencha.gxt.widget.core.client.ContentPanel;
+import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.CardLayoutContainer;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
@@ -35,11 +38,16 @@ public class AppsViewImpl extends Composite implements AppsView {
 
     @UiField(provided = true) final AppsToolbarView toolBar;
     @UiField DETabPanel categoryTabs;
+    @UiField
+    ContentPanel westPanel;
     AppCategoriesView.Presenter categoriesPresenter;
     OntologyHierarchiesView.Presenter hierarchiesPresenter;
     AppsListView.Presenter gridPresenter;
 
     @UiField CardLayoutContainer cardContainer;
+
+    @UiField
+    BorderLayoutContainer.BorderLayoutData westData;
 
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
@@ -75,6 +83,16 @@ public class AppsViewImpl extends Composite implements AppsView {
     }
 
     @Override
+    public String getWestPanelWidth() {
+        return westData.getSize() + "";
+    }
+
+    @Override
+    public void setWestPanelWidth(String width) {
+        westData.setSize(Double.parseDouble(width));
+    }
+
+    @Override
     public DETabPanel getCategoryTabPanel() {
         return categoryTabs;
     }
@@ -96,6 +114,20 @@ public class AppsViewImpl extends Composite implements AppsView {
             categoryTabs.close(categoryTabs.getWidget(0));
         }
         categoryTabs.enableEvents();
+    }
+
+    @Override
+    public boolean isNavPanelCollapsed() {
+        return westPanel.isCollapsed();
+    }
+
+    @Override
+    public void setNavPanelCollapsed(boolean collapsed) {
+        if (collapsed) {
+            Scheduler.get().scheduleDeferred(() -> westPanel.collapse());
+        } else {
+            westPanel.expand();
+        }
     }
 
     @Override

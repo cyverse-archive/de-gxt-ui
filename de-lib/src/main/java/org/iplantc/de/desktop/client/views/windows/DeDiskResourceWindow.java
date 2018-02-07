@@ -38,7 +38,7 @@ public class DeDiskResourceWindow extends WindowBase implements FolderSelectionE
 
     public static final String DATA = "#data";
     public static final String DE_DATA_DETAILSPANEL_COLLAPSE = "de.data.detailsPanel.collapse#";
-
+    public static final String DE_DATA_WESTPANEL_WIDTH = "de.data.westPanel.width#";
 
     private final DiskResourcePresenterFactory presenterFactory;
     private final IplantDisplayStrings displayStrings;
@@ -79,13 +79,18 @@ public class DeDiskResourceWindow extends WindowBase implements FolderSelectionE
         final String uniqueWindowTag = (diskResourceWindowConfig.getTag() == null) ? "" : "." + diskResourceWindowConfig.getTag();
         ensureDebugId(DeModule.WindowIds.DISK_RESOURCE_WINDOW + uniqueWindowTag);
         String minimizeDetails = null;
+        String westPanelWidth = null;
         if (ws.getAdditionalWindowStates() != null) {
             minimizeDetails = ws.getAdditionalWindowStates()
-                                .get(WindowState.ADDITIONAL + DE_DATA_DETAILSPANEL_COLLAPSE + tag + "#"
-                                     + userInfo.getUsername());
+                                .get(getKey(DE_DATA_DETAILSPANEL_COLLAPSE, tag));
+            westPanelWidth = ws.getAdditionalWindowStates()
+                               .get(getKey(DE_DATA_WESTPANEL_WIDTH, tag));
         }
 
         presenter.go(this, (minimizeDetails == null)? false: Boolean.valueOf(minimizeDetails));
+        if (!Strings.isNullOrEmpty(westPanelWidth)) {
+            presenter.setWestPanelWidth(westPanelWidth);
+        }
         initHandlers();
         btnHelp = createHelpButton();
         getHeader().insertTool(btnHelp,0);
@@ -157,9 +162,9 @@ public class DeDiskResourceWindow extends WindowBase implements FolderSelectionE
     @Override
     public FastMap<String> getAdditionalWindowStates() {
         FastMap<String> additionalData = new FastMap<>();
-        additionalData.put(WindowState.ADDITIONAL + DE_DATA_DETAILSPANEL_COLLAPSE + getStateId() + "#"
-                           + userInfo.getUsername(),
+        additionalData.put(getKey(DE_DATA_DETAILSPANEL_COLLAPSE, getStateId()),
                 presenter.isDetailsCollapsed() + "");
+        additionalData.put(getKey(DE_DATA_WESTPANEL_WIDTH, getStateId()), presenter.getWestPanelWidth());
         return additionalData;
     }
 
@@ -198,6 +203,11 @@ public class DeDiskResourceWindow extends WindowBase implements FolderSelectionE
                 }
             }
         });
+    }
+
+    private String getKey(String attribute, String tag) {
+        return WindowState.ADDITIONAL + attribute + tag + "#"
+        + userInfo.getUsername();
     }
 
 }
