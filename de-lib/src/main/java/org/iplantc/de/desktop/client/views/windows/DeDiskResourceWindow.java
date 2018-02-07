@@ -8,6 +8,7 @@ import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.events.WindowHeadingUpdatedEvent;
+import org.iplantc.de.desktop.client.presenter.util.WindowStateStorageWrapper;
 import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.diskResource.client.DiskResourceView;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
@@ -18,18 +19,16 @@ import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.user.client.Command;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.core.shared.FastMap;
-import com.sencha.gxt.widget.core.client.event.MaximizeEvent;
-import com.sencha.gxt.widget.core.client.event.MaximizeEvent.MaximizeHandler;
-import com.sencha.gxt.widget.core.client.event.RestoreEvent;
-import com.sencha.gxt.widget.core.client.event.RestoreEvent.RestoreHandler;
-import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.sencha.gxt.widget.core.client.event.ShowEvent;
-import com.sencha.gxt.widget.core.client.event.ShowEvent.ShowHandler;
+import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
+import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author jstroot
@@ -37,8 +36,8 @@ import java.util.List;
 public class DeDiskResourceWindow extends WindowBase implements FolderSelectionEvent.FolderSelectionEventHandler {
 
     public static final String DATA = "#data";
-    public static final String DE_DATA_DETAILSPANEL_COLLAPSE = "de.data.detailsPanel.collapse#";
-    public static final String DE_DATA_WESTPANEL_WIDTH = "de.data.westPanel.width#";
+    public static final String DE_DATA_DETAILSPANEL_COLLAPSE = "data.detailsPanel.collapse#";
+    public static final String DE_DATA_WESTPANEL_WIDTH = "data.westPanel.width#";
 
     private final DiskResourcePresenterFactory presenterFactory;
     private final IplantDisplayStrings displayStrings;
@@ -80,10 +79,11 @@ public class DeDiskResourceWindow extends WindowBase implements FolderSelectionE
         ensureDebugId(DeModule.WindowIds.DISK_RESOURCE_WINDOW + uniqueWindowTag);
         String minimizeDetails = null;
         String westPanelWidth = null;
-        if (ws.getAdditionalWindowStates() != null) {
-            minimizeDetails = ws.getAdditionalWindowStates()
+        Map<String, String> additionalWindowStates = ws.getAdditionalWindowStates();
+        if (additionalWindowStates != null) {
+            minimizeDetails = additionalWindowStates
                                 .get(getKey(DE_DATA_DETAILSPANEL_COLLAPSE, tag));
-            westPanelWidth = ws.getAdditionalWindowStates()
+            westPanelWidth = additionalWindowStates
                                .get(getKey(DE_DATA_WESTPANEL_WIDTH, tag));
         }
 
@@ -94,12 +94,19 @@ public class DeDiskResourceWindow extends WindowBase implements FolderSelectionE
         initHandlers();
         btnHelp = createHelpButton();
         getHeader().insertTool(btnHelp,0);
-        btnHelp.addSelectHandler(new SelectEvent.SelectHandler() {
-            @Override
-            public void onSelect(SelectEvent event) {
-                WindowUtil.open(constants.faqUrl() + DATA);
-                IntercomFacade.trackEvent(TrackingEventType.DATA_FAQ_CLICKED, null);
+        btnHelp.addSelectHandler(event -> {
+            WindowUtil.open(constants.faqUrl() + DATA);
+            IntercomFacade.trackEvent(TrackingEventType.DATA_FAQ_CLICKED, null);
+        });
+
+        Scheduler.get().scheduleDeferred((Command)() -> {
+            ColumnModel cm = presenter.getColumns();
+            List<ColumnConfig> configs = cm.getColumns();
+            FastMap<String> columnPref = new FastMap<>();
+            for (ColumnConfig cc : configs) {
+                columnPref.put(cc.getPath(), additionalWindowStates.get(getKey(cc.getPath(), DATA)));
             }
+            presenter.setColumnPreferences(columnPref);
         });
     }
 
@@ -165,6 +172,11 @@ public class DeDiskResourceWindow extends WindowBase implements FolderSelectionE
         additionalData.put(getKey(DE_DATA_DETAILSPANEL_COLLAPSE, getStateId()),
                 presenter.isDetailsCollapsed() + "");
         additionalData.put(getKey(DE_DATA_WESTPANEL_WIDTH, getStateId()), presenter.getWestPanelWidth());
+        ColumnModel cm = presenter.getColumns();
+        List<ColumnConfig> configs = cm.getColumns();
+        for (ColumnConfig cc : configs) {
+            additionalData.put(getKey(cc.getPath(), DATA), cc.isHidden() + "");
+        }
         return additionalData;
     }
 
@@ -181,33 +193,20 @@ public class DeDiskResourceWindow extends WindowBase implements FolderSelectionE
     private void initHandlers() {
         presenter.addFolderSelectedEventHandler(this);
 
-        addRestoreHandler(new RestoreHandler() {
-            @Override
-            public void onRestore(RestoreEvent event) {
-                maximized = false;
-            }
-        });
+        addRestoreHandler(event -> maximized = false);
 
-        addMaximizeHandler(new MaximizeHandler() {
-            @Override
-            public void onMaximize(MaximizeEvent event) {
-                maximized = true;
-            }
-        });
+        addMaximizeHandler(event -> maximized = true);
 
-        addShowHandler(new ShowHandler() {
-            @Override
-            public void onShow(ShowEvent event) {
-                if (config != null && ((DiskResourceWindowConfig) config).isMaximized()) {
-                    DeDiskResourceWindow.this.maximize();
-                }
+        addShowHandler(event -> {
+            if (config != null && ((DiskResourceWindowConfig)config).isMaximized()) {
+                DeDiskResourceWindow.this.maximize();
             }
         });
     }
 
     private String getKey(String attribute, String tag) {
-        return WindowState.ADDITIONAL + attribute + tag + "#"
-        + userInfo.getUsername();
+        return WindowState.ADDITIONAL + WindowStateStorageWrapper.LOCAL_STORAGE_PREFIX + attribute + tag
+               + "#" + userInfo.getUsername();
     }
 
 }

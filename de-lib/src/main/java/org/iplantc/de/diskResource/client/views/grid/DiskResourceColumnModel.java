@@ -49,6 +49,8 @@ public class DiskResourceColumnModel extends ColumnModel<DiskResource> implement
                                                                                   CopyPathSelected.HasCopyPathSelectedEventHandlers {
 
 
+    private static List<ColumnConfig<DiskResource, ?>> list;
+
     public DiskResourceColumnModel(@SuppressWarnings("rawtypes") final CheckBoxSelectionModel sm,
                                    final GridView.Appearance appearance,
                                    final DiskResourceUtil diskResourceUtil) {
@@ -69,7 +71,7 @@ public class DiskResourceColumnModel extends ColumnModel<DiskResource> implement
     public static List<ColumnConfig<DiskResource, ?>> createColumnConfigList(@SuppressWarnings("rawtypes") final CheckBoxSelectionModel sm,
                                                                              final GridView.Appearance appearance,
                                                                              final DiskResourceUtil diskResourceUtil) {
-        List<ColumnConfig<DiskResource, ?>> list = new ArrayList<>();
+        list = new ArrayList<>();
 
         DiskResourceProperties props = GWT.create(DiskResourceProperties.class);
 
@@ -88,7 +90,7 @@ public class DiskResourceColumnModel extends ColumnModel<DiskResource> implement
         ColumnConfig<DiskResource, Date> created = new ColumnConfig<>(props.dateSubmitted(),
                                                                       appearance.createdDateColumnWidth(),
                                                                       appearance.createdDateColumnLabel());
-        ColumnConfig<DiskResource, DiskResource> dotMenu = new ColumnConfig<>(new IdentityValueProvider<DiskResource>(""),
+        ColumnConfig<DiskResource, DiskResource> dotMenu = new ColumnConfig<>(new IdentityValueProvider<DiskResource>("dot"),
                                                                               appearance.dotMenuColumnWidth());
         lastModified.setFixed(true);
         size.setFixed(true);

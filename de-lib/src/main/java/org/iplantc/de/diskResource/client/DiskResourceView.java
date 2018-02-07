@@ -21,9 +21,11 @@ import com.google.gwt.user.client.ui.IsWidget;
 
 import com.sencha.gxt.data.shared.loader.DataProxy;
 import com.sencha.gxt.data.shared.loader.TreeLoader;
+import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author jstroot
@@ -45,6 +47,10 @@ public interface DiskResourceView extends IsWidget,
     String getWestPanelWidth();
 
     void setWestPanelWidth(String width);
+
+    ColumnModel<DiskResource> getColumns();
+
+    void setColumnPreferences(Map<String, String> preferences);
 
     /**
      * A dataproxy used by the <code>Presenter</code> to fetch <code>DiskResource</code> data from the
@@ -70,6 +76,10 @@ public interface DiskResourceView extends IsWidget,
                                 CreateNewFolderConfirmed.CreateNewFolderConfirmedHandler {
 
         boolean isDetailsCollapsed();
+
+        ColumnModel<DiskResource> getColumns();
+
+        void setColumnPreferences(Map<String, String> preferences);
 
         interface Appearance {
 

@@ -43,6 +43,7 @@ import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.Status;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.form.TextField;
+import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.grid.LiveGridCheckBoxSelectionModel;
@@ -51,6 +52,9 @@ import com.sencha.gxt.widget.core.client.grid.LiveToolItem;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import com.sencha.gxt.widget.core.client.toolbar.FillToolItem;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -179,23 +183,17 @@ public class GridViewImpl extends ContentPanel implements GridView,
         sm.clear();
 
         // Update pathField
-        Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
-
-            @Override
-            public void execute() {
-                if (selectedItem instanceof DiskResourceQueryTemplate) {
-                    pathField.clear();
-                } else if (!selectedItem.getPath().equals(pathField.getCurrentValue())) {
-                    pathField.setValue(selectedItem.getPath());
-                }
+        Scheduler.get().scheduleFinally(() -> {
+            if (selectedItem instanceof DiskResourceQueryTemplate) {
+                pathField.clear();
+            } else if (!selectedItem.getPath().equals(pathField.getCurrentValue())) {
+                pathField.setValue(selectedItem.getPath());
             }
         });
 
         if (selectedItem instanceof DiskResourceFavorite
                 || selectedItem instanceof DiskResourceQueryTemplate) {
             reconfigureToSearchView();
-        } else {
-            reconfigureToListingView();
         }
     }
 
@@ -244,6 +242,17 @@ public class GridViewImpl extends ContentPanel implements GridView,
     }
 
     @Override
+    public void setColumnPreferences(Map<String, String> preferences) {
+        List<ColumnConfig<DiskResource, ?>> configList = grid.getColumnModel().getColumns();
+        for (ColumnConfig cc : configList) {
+            String temp = preferences.get(cc.getPath());
+            boolean hidden = (temp == null) ? false : Boolean.valueOf(temp);
+            cc.setHidden(hidden);
+        }
+        grid.getView().refresh(true);
+    }
+
+    @Override
     protected void onEnsureDebugId(String baseID) {
         grid.ensureDebugId(baseID);
         drCm.ensureDebugId(baseID);
@@ -281,21 +290,11 @@ public class GridViewImpl extends ContentPanel implements GridView,
         }
     }
 
-    private void reconfigureToListingView() {
-        sm.setShowSelectAll(true);
-        // hide Path.
-        grid.getColumnModel().getColumn(2).setHidden(true);
-        grid.getView().refresh(true);
-    }
-
     private void reconfigureToSearchView() {
         /* Search view does not support select all, otherwise, bulk download
          * logic would have to change.
          */
         sm.setShowSelectAll(false);
-        // display Path
-        grid.getColumnModel().getColumn(2).setHidden(false);
-        grid.getView().refresh(true);
     }
 
     private void updateSelectionCount(int selectionCount) {

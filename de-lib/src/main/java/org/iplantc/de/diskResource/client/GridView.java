@@ -45,6 +45,7 @@ import com.sencha.gxt.widget.core.client.grid.LiveGridCheckBoxSelectionModel;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by jstroot on 1/26/15.
@@ -267,4 +268,7 @@ public interface GridView extends IsWidget,
     LiveGridCheckBoxSelectionModel getSelectionModel();
 
     void setSingleSelect();
+
+    void setColumnPreferences(Map<String, String> preferences);
 }
+
