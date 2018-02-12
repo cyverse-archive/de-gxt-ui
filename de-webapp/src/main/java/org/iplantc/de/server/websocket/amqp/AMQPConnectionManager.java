@@ -25,11 +25,11 @@ public class AMQPConnectionManager {
 
     private String amqpUri;
 
-    Properties deprops = PropertiesUtil.getDEProperties();
+    Properties deProperties = PropertiesUtil.getDEProperties();
     private Connection connection;
 
     private AMQPConnectionManager() {
-        amqpUri = deprops.getProperty("org.iplantc.discoveryenvironment.notification.amqp.uri");
+        amqpUri = deProperties.getProperty("org.iplantc.discoveryenvironment.notification.amqp.uri");
         ConnectionFactory factory = new ConnectionFactory();
         try {
             factory.setUri(amqpUri);

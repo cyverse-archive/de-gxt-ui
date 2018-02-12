@@ -23,7 +23,7 @@ public class SystemMessageWebSocketManager extends WebSocketManager {
         ws = new Websocket(socketUrl);
     }
 
-    public static SystemMessageWebSocketManager getInstace() {
+    public static SystemMessageWebSocketManager getInstance() {
         if(instance == null) {
             instance = new SystemMessageWebSocketManager();
         }

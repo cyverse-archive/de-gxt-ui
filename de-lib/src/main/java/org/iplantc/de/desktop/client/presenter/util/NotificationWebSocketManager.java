@@ -26,7 +26,7 @@ public class NotificationWebSocketManager extends WebSocketManager{
         ws = new Websocket(socketUrl);
     }
 
-    public static NotificationWebSocketManager getInstace() {
+    public static NotificationWebSocketManager getInstance() {
         if(instance == null) {
             instance = new NotificationWebSocketManager();
         }

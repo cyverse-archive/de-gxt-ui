@@ -211,12 +211,12 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }
 
     private void initNotificationWebSocket() {
-        notificationWebSocketManager = NotificationWebSocketManager.getInstace();
+        notificationWebSocketManager = NotificationWebSocketManager.getInstance();
         notificationWebSocketManager.openWebSocket(new WebsocketListener() {
 
             @Override
             public void onClose() {
-                GWT.log("Wesbsocket onClose()");
+                GWT.log("WebSocket onClose()");
                 //if websocket connection closed unexpectedly, retry connection!
                 if(!loggedOut) {
                     GWT.log("reconnecting...");
@@ -238,12 +238,12 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }
 
     private void initSystemMessageWebSocket() {
-        systemMessageWebSocketManager = SystemMessageWebSocketManager.getInstace();
+        systemMessageWebSocketManager = SystemMessageWebSocketManager.getInstance();
         systemMessageWebSocketManager.openWebSocket(new WebsocketListener() {
 
             @Override
             public void onClose() {
-                GWT.log("Wesbsocket onClose()");
+                GWT.log("WebSocket onClose()");
                 //if websocket connection closed unexpectedly, retry connection!
                 if(!loggedOut) {
                     GWT.log("reconnecting...");
