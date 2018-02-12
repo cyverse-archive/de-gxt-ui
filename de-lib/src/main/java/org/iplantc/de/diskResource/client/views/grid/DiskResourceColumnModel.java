@@ -49,8 +49,6 @@ public class DiskResourceColumnModel extends ColumnModel<DiskResource> implement
                                                                                   CopyPathSelected.HasCopyPathSelectedEventHandlers {
 
 
-    private static List<ColumnConfig<DiskResource, ?>> list;
-
     public DiskResourceColumnModel(@SuppressWarnings("rawtypes") final CheckBoxSelectionModel sm,
                                    final GridView.Appearance appearance,
                                    final DiskResourceUtil diskResourceUtil) {
@@ -71,7 +69,7 @@ public class DiskResourceColumnModel extends ColumnModel<DiskResource> implement
     public static List<ColumnConfig<DiskResource, ?>> createColumnConfigList(@SuppressWarnings("rawtypes") final CheckBoxSelectionModel sm,
                                                                              final GridView.Appearance appearance,
                                                                              final DiskResourceUtil diskResourceUtil) {
-        list = new ArrayList<>();
+        List<ColumnConfig<DiskResource, ?>> list = new ArrayList<>();
 
         DiskResourceProperties props = GWT.create(DiskResourceProperties.class);
 
