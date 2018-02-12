@@ -240,7 +240,11 @@ public class GridViewImpl extends ContentPanel implements GridView,
         grid.getSelectionModel().setSelectionMode(SINGLE);
         drCm.setCheckboxColumnHidden(true);
     }
-
+    /**
+     * Set column preferences. Hide / UnHide columns based on column preferences.
+     *
+     * @param preferences A map of column preferences.
+     */
     @Override
     public void setColumnPreferences(Map<String, String> preferences) {
         List<ColumnConfig<DiskResource, ?>> configList = grid.getColumnModel().getColumns();

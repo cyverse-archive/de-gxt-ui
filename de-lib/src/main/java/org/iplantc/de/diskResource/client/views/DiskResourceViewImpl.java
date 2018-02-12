@@ -138,6 +138,12 @@ public class DiskResourceViewImpl extends Composite implements DiskResourceView 
         return centerGridView.getColumnModel() ;
     }
 
+
+    /**
+     * Set column preferences.
+     *
+     * @param preferences A map of column preferences.
+     */
     @Override
     public void setColumnPreferences(Map<String, String> preferences) {
         centerGridView.setColumnPreferences(preferences);

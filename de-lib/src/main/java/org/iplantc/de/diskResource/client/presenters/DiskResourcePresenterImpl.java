@@ -672,6 +672,11 @@ public class DiskResourcePresenterImpl implements
         return view.getColumns();
     }
 
+    /**
+     * Set column preferences.
+     *
+     * @param preferences A map of column preferences.
+     */
     @Override
     public void setColumnPreferences(Map<String, String> preferences) {
         view.setColumnPreferences(preferences);
