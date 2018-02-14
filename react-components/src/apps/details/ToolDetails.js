@@ -68,10 +68,10 @@ class ToolDetails extends Component {
                     </tr>
                     <tr>
                         <td className={labelClass}>
-                            {appearance.toolPathLabel()}
+                            {appearance.imageLabel()}
                         </td>
                         <td className={valueClass}>
-                            {toolInfo.location}
+                            {toolInfo.image}
                         </td>
                     </tr>
                     <tr>
