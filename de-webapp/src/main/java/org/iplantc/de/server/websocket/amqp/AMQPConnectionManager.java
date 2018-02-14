@@ -30,6 +30,10 @@ public class AMQPConnectionManager {
 
     private AMQPConnectionManager() {
         amqpUri = deProperties.getProperty("org.iplantc.discoveryenvironment.notification.amqp.uri");
+        connection = createConnection();
+    }
+
+    private Connection createConnection() {
         ConnectionFactory factory = new ConnectionFactory();
         try {
             factory.setUri(amqpUri);
@@ -46,6 +50,7 @@ public class AMQPConnectionManager {
             LOG.error("Exception when creating AMQP connection!" + e.getMessage());
         }
 
+        return connection;
     }
 
     public static AMQPConnectionManager getInstance() {
@@ -56,6 +61,9 @@ public class AMQPConnectionManager {
     }
 
     public Connection getConnection() {
+        if (connection == null) {
+            connection = createConnection();
+        }
         return connection;
     }
 }

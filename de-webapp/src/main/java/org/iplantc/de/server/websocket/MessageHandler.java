@@ -46,6 +46,11 @@ public abstract class MessageHandler extends WebSocketHandlerAdapter {
         logger.debug("user name:" + username);
 
         final Channel msgChannel = notificationReceiver.createChannel();
+        if (msgChannel == null) {
+            onError(webSocket, new WebSocketProcessor.WebSocketException("AMQP channel was null", null));
+            webSocket.close();
+            return;
+        }
         String queue = bindQueue(username, msgChannel);
         consumeMessage(msgChannel, queue, webSocket);
 

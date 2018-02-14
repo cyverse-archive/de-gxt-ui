@@ -28,14 +28,21 @@ public class ReceiveNotificationsDirect {
 
     private final Logger LOG = LoggerFactory.getLogger(ReceiveNotificationsDirect.class);
 
-    private final Connection connection;
+    private Connection connection;
 
     /**
      * Instantiate new
      */
     public ReceiveNotificationsDirect() {
-       connection = AMQPConnectionManager.getInstance().getConnection();
+       connection = getConnection();
        LOG.info("amqp Connection created!");
+    }
+
+    private Connection getConnection() {
+        if (connection == null) {
+            connection = AMQPConnectionManager.getInstance().getConnection();
+        }
+        return connection;
     }
 
     /**
@@ -45,7 +52,7 @@ public class ReceiveNotificationsDirect {
      */
     public Channel createChannel() {
         try {
-            Channel channel = connection.createChannel();
+            Channel channel = getConnection().createChannel();
             LOG.debug("Amqp channel created!");
             return channel;
         } catch (IOException ioe) {
@@ -67,6 +74,9 @@ public class ReceiveNotificationsDirect {
     public String bind(Channel msgChannel, String routing_key) {
         String queueName = null;
         try {
+            if (msgChannel == null) {
+                msgChannel = createChannel();
+            }
             queueName = msgChannel.queueDeclare().getQueue();
             msgChannel.queueBind(queueName,
                                  props.getProperty(
@@ -94,6 +104,9 @@ public class ReceiveNotificationsDirect {
      */
     public void consumeMessage(Channel msgChannel, Consumer consumer, String queueName) {
         try {
+            if (msgChannel == null) {
+                msgChannel = createChannel();
+            }
             msgChannel.basicConsume(queueName, true, consumer);
             LOG.debug("consumer registered ");
         } catch (IOException e) {
