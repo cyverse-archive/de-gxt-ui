@@ -39,36 +39,37 @@ public abstract class MessageHandler extends WebSocketHandlerAdapter {
 
 
     @Override
-    public void onOpen(WebSocket webSocket) throws IOException {
-        notificationReceiver = new ReceiveNotificationsDirect();
-        logger.debug("Web socket connection opened!");
-        String username = getUserName(webSocket);
-        logger.debug("user name:" + username);
+    public void onOpen(WebSocket webSocket) {
+        try {
+            notificationReceiver = new ReceiveNotificationsDirect();
+            logger.debug("Web socket connection opened!");
+            String username = getUserName(webSocket);
+            logger.debug("user name:" + username);
 
-        final Channel msgChannel = notificationReceiver.createChannel();
-        if (msgChannel == null) {
+            final Channel msgChannel = notificationReceiver.createChannel();
+            String queue = bindQueue(username, msgChannel);
+            consumeMessage(msgChannel, queue, webSocket);
+
+            webSocket.resource().addEventListener(new WebSocketEventListenerAdapter() {
+                @Override
+                public void onDisconnect(AtmosphereResourceEvent event) {
+                    try {
+                        if (msgChannel != null) {
+                            msgChannel.close();
+                        }
+                    } catch (IOException e) {
+                        logger.error("Exception aborting channel", e);
+
+                    } catch (TimeoutException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+        catch (IOException exception) {
             onError(webSocket, new WebSocketProcessor.WebSocketException("AMQP channel was null", null));
             webSocket.close();
-            return;
         }
-        String queue = bindQueue(username, msgChannel);
-        consumeMessage(msgChannel, queue, webSocket);
-
-        webSocket.resource().addEventListener(new WebSocketEventListenerAdapter() {
-            @Override
-            public void onDisconnect(AtmosphereResourceEvent event) {
-                try {
-                    if (msgChannel != null) {
-                        msgChannel.close();
-                    }
-                } catch (IOException e) {
-                    logger.error("Exception aborting channel",e);
-
-                } catch (TimeoutException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
 
     }
 
