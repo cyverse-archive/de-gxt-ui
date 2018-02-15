@@ -57,6 +57,27 @@ task testReport(type: TestReport) {
     reportOn subprojects*.test
 }
 
+task npmInstall(type:Exec) {
+    group 'Build'
+    description 'Installs the node_modules depedencies in the react-components directory.'
+    workingDir 'react-components'
+    commandLine 'npm', 'install'
+}
+
+task npmTest(type:Exec, dependsOn:npmInstall) {
+    group 'Verification'
+    description 'Runs the npm tests in the react-components directory (use `npm test` manually in non-CI envs).'
+    workingDir 'react-components'
+    commandLine 'npm', 'test'
+}
+
+task webpack(type:Exec, dependsOn:npmInstall) {
+    group 'Build'
+    description 'Builds the react-components directory.'
+    workingDir 'react-components'
+    commandLine 'npm', 'run', 'build'
+}
+
 apply from: 'iplant/webapps.gradle'
 apply from: 'iplant/modules.gradle'
 
