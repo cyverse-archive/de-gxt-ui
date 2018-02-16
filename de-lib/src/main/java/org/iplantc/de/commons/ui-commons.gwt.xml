@@ -4,7 +4,9 @@
     <!-- GWT Dependencies -->
     <inherits name="com.google.common.collect.Collect"/>
     <inherits name="com.google.gwt.inject.Inject"/>
-    
+
+    <inherits name="gwt.react.React"/>
+
     <!-- UIBinder -->
     <inherits name="com.google.web.bindery.autobean.AutoBean"/>
     <inherits name="com.google.gwt.uibinder.UiBinder" />

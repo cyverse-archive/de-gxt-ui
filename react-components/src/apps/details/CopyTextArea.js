@@ -2,23 +2,29 @@
  * @author psarando
  */
 import React, { Component } from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 import {hasClipboardAPI, copySelection} from '../../clipboardFunctions'
 
 class CopyTextArea extends Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            btnText: props.btnText
+        };
+
         // This binding is necessary to make `this` work in the callback
         this.onCopyText = this.onCopyText.bind(this);
     }
 
     renderCopyTextArea(text) {
-        return <textArea ref="copyTextArea" value={text} readOnly="readonly" />;
+        return <TextField ref="copyTextArea" value={text} multiLine={true} readOnly="readonly" />;
     }
 
     renderCopyButton(btnText) {
         if (hasClipboardAPI()) {
-            return <button ref="copyTextBtn" type="button" onClick={this.onCopyText}>{btnText}</button>;
+            return <RaisedButton ref="copyTextBtn" onClick={this.onCopyText}>{btnText}</RaisedButton>;
         }
     }
 
@@ -27,7 +33,7 @@ class CopyTextArea extends Component {
 
         this.refs.copyTextArea.select();
         if (copySelection()) {
-            this.refs.copyTextBtn.innerText = "Copied!";
+            this.setState({btnText: "Copied!"});
         }
     }
 
@@ -39,7 +45,7 @@ class CopyTextArea extends Component {
 
     render() {
         let copyTextArea = this.renderCopyTextArea(this.props.text),
-            copyButton = this.renderCopyButton(this.props.btnText);
+            copyButton = this.renderCopyButton(this.state.btnText);
 
         return (
             <div>

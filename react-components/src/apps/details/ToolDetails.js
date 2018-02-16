@@ -2,6 +2,8 @@
  * @author psarando
  */
 import React, { Component } from 'react';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 
 class ToolDetails extends Component {
     constructor(props) {
@@ -15,9 +17,7 @@ class ToolDetails extends Component {
         this.onToolSelectionChange = this.onToolSelectionChange.bind(this);
     }
 
-    onToolSelectionChange(event) {
-        let selectedToolIndex = event.target.value;
-
+    onToolSelectionChange(event, selectedToolIndex) {
         this.setState({
             selectedToolIndex: selectedToolIndex
         });
@@ -32,17 +32,15 @@ class ToolDetails extends Component {
 
         return (
             <div>
-                <select value={this.state.selectedToolIndex}
-                        onChange={this.onToolSelectionChange} >
+                <SelectField value={this.state.selectedToolIndex}
+                             onChange={this.onToolSelectionChange} >
                     {
                         tools.map( (toolInfo, index) => (
-                                <option key={index} value={index}>
-                                    {toolInfo.name}
-                                </option>
+                                <MenuItem key={index} value={index} primaryText={toolInfo.name} />
                             )
                         )
                     }
-                </select>
+                </SelectField>
                 <table>
                     <tbody>
                     <tr>

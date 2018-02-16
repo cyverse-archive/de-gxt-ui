@@ -20,6 +20,7 @@ import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import org.iplantc.de.commons.client.views.dialogs.ClipboardCopyEnabledDialog;
 import org.iplantc.de.desktop.client.presenter.DesktopPresenterImpl;
 import org.iplantc.de.shared.AsyncProviderWrapper;
@@ -269,16 +270,15 @@ public class AppDetailsViewImpl extends Composite implements
                 detailProps.appearance = appearance;
                 detailProps.app = appJson;
 
-                ReactDOM.render(React.createElement(ReactToolDetails.ToolDetails, detailProps), DivElement.as(toolsContainer.getElement()));
+                CyVerseReactComponents.render(ReactToolDetails.ToolDetails, detailProps, DivElement.as(toolsContainer.getElement()));
 
                 ReactCategoryTree.CategoryTreeProps treeProps = new ReactCategoryTree.CategoryTreeProps();
                 treeProps.app = appJson;
                 treeProps.appearance = appearance;
                 treeProps.presenter = AppDetailsViewImpl.this;
-                ReactElement tree = React.createElement(ReactCategoryTree.CategoryTree, treeProps);
-                DivElement hierarchyElem = DivElement.as(hierarchyWidget.getElement());
 
-                ReactDOM.render(tree,hierarchyElem);
+                DivElement hierarchyElem = DivElement.as(hierarchyWidget.getElement());
+                CyVerseReactComponents.render(ReactCategoryTree.CategoryTree, treeProps, hierarchyElem);
             }
         });
     }

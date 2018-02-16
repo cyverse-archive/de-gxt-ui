@@ -2,6 +2,10 @@
  * @author psarando
  */
 import React, { Component } from 'react';
+
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+import { getCyVerseTheme } from '../../../src/lib';
 import CopyTextArea from '../../../src/apps/details/CopyTextArea';
 
 class CopyTextAreaTest extends Component {
@@ -10,7 +14,11 @@ class CopyTextAreaTest extends Component {
 `The Dark Arts better be worried,
 oh boy!`;
 
-        return ( <CopyTextArea btnText='Copy' text={ textToCopy } /> );
+        return (
+            <MuiThemeProvider muiTheme={getCyVerseTheme()}>
+                <CopyTextArea btnText='Copy' text={ textToCopy } />
+            </MuiThemeProvider>
+        );
     }
 }
 
