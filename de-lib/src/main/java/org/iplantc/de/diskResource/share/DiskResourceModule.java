@@ -1,9 +1,15 @@
 package org.iplantc.de.diskResource.share;
 
+import jsinterop.annotations.JsType;
+
 /**
  * @author jstroot
  */
+
+@JsType
 public interface DiskResourceModule {
+
+    @JsType
     interface Ids {
 
         String DISK_RESOURCE_VIEW = ".diskResourceView";

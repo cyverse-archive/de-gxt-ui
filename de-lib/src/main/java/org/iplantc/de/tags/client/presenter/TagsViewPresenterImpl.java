@@ -64,7 +64,7 @@ public class TagsViewPresenterImpl implements TagsView.Presenter,
     @Override
     public void fetchTagsForResource(DiskResource resource) {
         listStore.clear();
-        metadataService.getTags(resource, new AsyncCallback<List<Tag>>() {
+        metadataService.getTags(resource.getId(), new AsyncCallback<List<Tag>>() {
             @Override
             public void onFailure(Throwable caught) {
                 // FIXME Move to appearance

@@ -1,63 +1,39 @@
 package org.iplantc.de.diskResource.client.views.details;
 
 import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
-import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
-import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import org.iplantc.de.diskResource.client.DetailsView;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent;
 import org.iplantc.de.diskResource.client.events.FetchDetailsCompleted;
-import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.selection.EditInfoTypeSelected;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected;
 import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked;
-import org.iplantc.de.diskResource.client.events.selection.RemoveResourceTagSelected;
-import org.iplantc.de.diskResource.client.events.selection.ResetInfoTypeSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected;
 import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected;
-import org.iplantc.de.diskResource.client.events.selection.UpdateResourceTagSelected;
+import org.iplantc.de.diskResource.client.events.selection.SetInfoTypeSelected;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
-import org.iplantc.de.tags.client.TagsView;
-import org.iplantc.de.tags.client.events.TagAddedEvent;
-import org.iplantc.de.tags.client.events.TagCreated;
-import org.iplantc.de.tags.client.events.selection.RemoveTagSelected;
-import org.iplantc.de.tags.client.events.selection.TagSelected;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.TableElement;
-import com.google.gwt.dom.client.TableRowElement;
-import com.google.gwt.editor.client.Editor;
-import com.google.gwt.editor.client.SimpleBeanEditorDriver;
-import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiFactory;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.DateLabel;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHyperlink;
-import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
-import com.sencha.gxt.core.client.util.Format;
 import com.sencha.gxt.data.shared.event.StoreUpdateEvent;
 import com.sencha.gxt.widget.core.client.Composite;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * View is updated on grid selection changed.
@@ -65,72 +41,27 @@ import java.util.logging.Logger;
  *
  * @author jstroot
  */
-public class DetailsViewImpl extends Composite implements DetailsView,
-                                                          Editor<DiskResource>,
-                                                          TagSelected.TagSelectedHandler,
-                                                          RemoveTagSelected.RemoveTagSelectedHandler,
-                                                          TagCreated.TagCreatedHandler,
-                                                          TagAddedEvent.TagAddedEventHandler {
+public class DetailsViewImpl extends Composite implements DetailsView {
 
-    interface DetailsViewImplUiBinder extends UiBinder<HTMLPanel, DetailsViewImpl> {
-    }
+    public static final String INFOTYPE_NOSELECT = "-";
+    private List<InfoType> infoTypes;
+    private Presenter presenter;
 
-    interface EditorDriver extends SimpleBeanEditorDriver<DiskResource, DetailsViewImpl> {
-    }
-    @UiField(provided = true) final Appearance appearance;
-    @UiField DateLabel dateCreated;
-    @Inject DiskResourceUtil diskResourceUtil;
-    @UiField DivElement emptyDetails;
-    @Inject SearchAutoBeanFactory factory;
-    @UiField @Ignore InlineLabel fileFolderNum;
-    @UiField TableRowElement fileFolderNumRow;
-    @UiField @Ignore InlineHyperlink infoType;
-    @UiField TableRowElement infoTypeRow;
-    @UiField DateLabel lastModified;
-    @UiField @Ignore InlineLabel mimeType;
-    @UiField TableRowElement mimeTypeRow;
-    @UiField @Ignore InlineLabel permission;
-    @UiField Image resetInfoTypeIcon;
-    @UiField InlineHyperlink sendTo;
-    @UiField TableRowElement sendToRow;
-    @UiField TableRowElement shareRow;
-    @UiField InlineHyperlink sharing;
-    @UiField @Ignore InlineLabel size;
-    @UiField TableRowElement sizeRow;
-    @UiField TableElement table;
-    @UiField TableRowElement md5Row;
-    @UiField InlineHyperlink md5link;
-    @UiField(provided = true) TagsView tagListView;
-    private static final DetailsViewImplUiBinder ourUiBinder = GWT.create(DetailsViewImplUiBinder.class);
+
+    HTMLPanel panel;
+    final Appearance appearance;
+    DiskResourceUtil diskResourceUtil = DiskResourceUtil.getInstance();
+
     private final Logger LOG = Logger.getLogger(DetailsViewImpl.class.getSimpleName());
-    private final EditorDriver editorDriver = GWT.create(EditorDriver.class);
-    private final TagsView.Presenter tagsPresenter;
     private DiskResource boundValue;
 
     @Inject
-    DetailsViewImpl(final DetailsView.Appearance appearance,
-                    final TagsView.Presenter tagsPresenter) {
-        this.tagsPresenter = tagsPresenter;
-        this.tagListView = tagsPresenter.getView();
+    DetailsViewImpl(final DetailsView.Appearance appearance) {
         this.appearance = appearance;
-
-        tagsPresenter.setEditable(true);
-        tagsPresenter.setRemovable(true);
-        this.tagListView = tagsPresenter.getView();
-        this.tagListView.addTagSelectedHandler(this);
-        this.tagListView.addRemoveTagSelectedHandler(this);
-        this.tagListView.addTagAddedEventHandler(this);
-        this.tagListView.addTagCreatedHandler(this);
-        this.tagListView.asWidget().getElement().addClassName(appearance.css().tagSearch());
-
-        initWidget(ourUiBinder.createAndBindUi(this));
-        dateCreated.setValue(new Date());
-        lastModified.setValue(new Date());
-
-        editorDriver.initialize(this);
+        panel = new HTMLPanel("<div></div>");
+        initWidget(panel);
     }
 
-    //<editor-fold desc="Handler Registrations">
     @Override
     public HandlerRegistration addEditInfoTypeSelectedEventHandler(EditInfoTypeSelected.EditInfoTypeSelectedEventHandler handler) {
         return addHandler(handler, EditInfoTypeSelected.TYPE);
@@ -142,8 +73,8 @@ public class DetailsViewImpl extends Composite implements DetailsView,
     }
 
     @Override
-    public HandlerRegistration addResetInfoTypeSelectedHandler(ResetInfoTypeSelected.ResetInfoTypeSelectedHandler handler) {
-        return addHandler(handler, ResetInfoTypeSelected.TYPE);
+    public HandlerRegistration addResetInfoTypeSelectedHandler(SetInfoTypeSelected.SetInfoTypeSelectedHandler handler) {
+        return addHandler(handler, SetInfoTypeSelected.TYPE);
     }
 
     @Override
@@ -167,87 +98,17 @@ public class DetailsViewImpl extends Composite implements DetailsView,
     }
 
     @Override
-    public HandlerRegistration addSubmitDiskResourceQueryEventHandler(SubmitDiskResourceQueryEvent.SubmitDiskResourceQueryEventHandler handler) {
-        return addHandler(handler, SubmitDiskResourceQueryEvent.TYPE);
-    }
-    //</editor-fold>
-
-    //<editor-fold desc="Event Handlers">
-    @Override
     public void onDiskResourceSelectionChanged(DiskResourceSelectionChangedEvent event) {
         if (event.getSelection().isEmpty()
                 || event.getSelection().size() != 1 || event.getSelection().get(0).isFilter()) {
             bind(null);
-            // Hide table
-            table.addClassName(appearance.css().hidden());
-            emptyDetails.removeClassName(appearance.css().hidden());
             return;
         }
         mask(appearance.loadingMask());
-        table.removeClassName(appearance.css().hidden());
-        emptyDetails.addClassName(appearance.css().hidden());
-        // UPDATE ROW VISIBILITIES
         DiskResource singleSelection = event.getSelection().iterator().next();
-        if (singleSelection instanceof File) {
-            // Show rows
-            sizeRow.removeClassName(appearance.css().hidden());
-            mimeTypeRow.removeClassName(appearance.css().hidden());
-            infoTypeRow.removeClassName(appearance.css().hidden());
-            sendToRow.removeClassName(appearance.css().hidden());
-            md5Row.removeClassName(appearance.css().hidden());
-
-            // Hide rows
-            fileFolderNumRow.addClassName(appearance.css().hidden());
-
-        } else if (singleSelection instanceof Folder) {
-            // Show rows
-            fileFolderNumRow.removeClassName(appearance.css().hidden());
-
-            // Hide rows
-            sizeRow.addClassName(appearance.css().hidden());
-            mimeTypeRow.addClassName(appearance.css().hidden());
-            infoTypeRow.addClassName(appearance.css().hidden());
-            sendToRow.addClassName(appearance.css().hidden());
-        }
-
-        if (diskResourceUtil.inTrash(singleSelection)) {
-            shareRow.addClassName(appearance.css().hidden());
-            sendToRow.addClassName(appearance.css().hidden());
-        } else {
-            shareRow.removeClassName(appearance.css().hidden());
-            sendToRow.removeClassName(appearance.css().hidden());
-        }
-
         bind(singleSelection);
-        if(!singleSelection.isFilter())  {
-            tagsPresenter.fetchTagsForResource(singleSelection);
-        }
     }
 
-    @Override
-    public void onRemoveTagSelected(RemoveTagSelected event) {
-        Preconditions.checkNotNull(boundValue, "Bound value should not be null right now");
-        fireEvent(new RemoveResourceTagSelected(boundValue, event.getTag()));
-    }
-
-    @Override
-    public void onTagAdded(TagAddedEvent event) {
-        Preconditions.checkNotNull(boundValue, "Bound value should not be null right now");
-        fireEvent(new UpdateResourceTagSelected(boundValue, event.getTag()));
-    }
-
-    @Override
-    public void onTagCreated(TagCreated event) {
-        Preconditions.checkNotNull(boundValue, "Bound value should not be null right now");
-        fireEvent(new UpdateResourceTagSelected(boundValue, event.getTag()));
-    }
-
-    @Override
-    public void onTagSelected(TagSelected event) {
-        DiskResourceQueryTemplate queryTemplate = factory.dataSearchFilter().as();
-        queryTemplate.setTagQuery(Sets.newHashSet(event.getTag()));
-        fireEvent(new SubmitDiskResourceQueryEvent(queryTemplate));
-    }
 
     @Override
     public void onUpdate(StoreUpdateEvent<DiskResource> event) {
@@ -258,33 +119,21 @@ public class DetailsViewImpl extends Composite implements DetailsView,
         }
         bind(event.getItems().iterator().next());
     }
-    //</editor-fold>
 
-    //<editor-fold desc="UI Handlers">
-    @UiHandler("infoType")
-    void onInfoTypeClicked(ClickEvent event) {
-        if (boundValue == null
-                || !(boundValue instanceof File)) {
-            return;
+    public void fireSharingEvent() {
+        fireEvent(new ManageSharingSelected(boundValue));
+    }
+
+    public void fireSetInfoTypeEvent(String infoType) {
+        if (infoType.equals(INFOTYPE_NOSELECT)) {
+            fireEvent(new SetInfoTypeSelected(boundValue, ""));
+        } else {
+            fireEvent(new SetInfoTypeSelected(boundValue, infoType));
         }
-        fireEvent(new EditInfoTypeSelected(Lists.newArrayList(boundValue)));
     }
 
-    @UiHandler("md5link")
-    void onMd5Clicked(ClickEvent event) {
-        fireEvent(new Md5ValueClicked(boundValue));
-    }
-
-    @UiHandler("resetInfoTypeIcon")
-    void onResetInfoTypeClicked(ClickEvent event) {
-        if (boundValue == null) {
-            return;
-        }
-        fireEvent(new ResetInfoTypeSelected(boundValue));
-    }
-
-    @UiHandler("sendTo")
-    void onSendToClicked(ClickEvent event) {
+    @Override
+    public void onSendToClicked(String infoType) {
         if (boundValue == null) {
             return;
         }
@@ -301,122 +150,70 @@ public class DetailsViewImpl extends Composite implements DetailsView,
         } else if (diskResourceUtil.isEnsemblInfoType(resInfoType)) {
             fireEvent(new SendToEnsemblSelected(resources));
         }
-
-        LOG.fine("Send to clicked");
     }
 
-    @UiHandler("sharing")
-    void onSharingClicked(ClickEvent event) {
-        if (boundValue == null) {
-            return;
-        }
-        fireEvent(new ManageSharingSelected(boundValue));
-        if (boundValue.getShareCount() == 0) {
-            LOG.fine("Begin sharing");
-        }
-        LOG.fine("Sharing clicked");
+    @Override
+    public void setInfoTypes(List<InfoType> infoTypes) {
+        this.infoTypes = infoTypes;
     }
-    //</editor-fold>
+
+    @Override
+    public void setPresenter(Presenter detailsViewPresenter) {
+        this.presenter = detailsViewPresenter;
+    }
 
     void bind(final DiskResource resource) {
         this.boundValue = resource;
-        // Update editor
-        editorDriver.edit(resource);
 
-        // Clear previous values
-        permission.setText("");
-        size.setText("");
-        fileFolderNum.setText("");
-        mimeType.setText("");
-        sharing.setText("");
-        infoType.setText("");
-        sendTo.setText("");
-        md5link.setText("");
-
-        if (resource == null) {
-            return;
-        }
-        // Manually populate
-        permission.setText(resource.getPermission().name());
-        if (resource instanceof File) {
-            File file = (File) resource;
-            size.setText(diskResourceUtil.formatFileSize(file.getSize() + ""));
-            mimeType.setText(file.getContentType());
-            infoType.setText(file.getInfoType());
-            md5link.setText(Format.ellipse(file.getMd5(), 10));
-        } else if (resource instanceof Folder) {
-            Folder folder = (Folder) resource;
-            // file/folder count
-            fileFolderNum.setText(folder.getFileCount() + " / " + folder.getDirCount());
-            md5Row.addClassName(appearance.css().hidden());
-        }
-
-        // Update sharing label
-        if (PermissionValue.own.equals(resource.getPermission())) {
-            sharing.removeStyleName(appearance.css().disabledHyperlink());
-            if (resource.getShareCount() > 0) {
-                sharing.setText(Integer.toString(resource.getShareCount()));
-            } else {
-                sharing.setText(appearance.beginSharing());
+        Scheduler.get().scheduleFinally(() -> {
+            Splittable dataJson = null;
+            if (resource != null) {
+                dataJson = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(resource));
             }
-        } else {
-            sharing.setText(appearance.sharingDisabled());
-            sharing.addStyleName(appearance.css().disabledHyperlink());
-        }
+            ReactDataDetails.DataDetailsProps detailsProps = new ReactDataDetails.DataDetailsProps();
 
-        // Update SendTo
-        InfoType resInfoType = InfoType.fromTypeString(resource.getInfoType());
-        if (resInfoType != null) {
-            sendTo.removeStyleName(appearance.css().disabledHyperlink());
-            if (diskResourceUtil.isTreeInfoType(resInfoType)) {
-                sendTo.setText(appearance.treeViewer());
-            } else if (diskResourceUtil.isGenomeVizInfoType(resInfoType)) {
-                sendTo.setText(appearance.coge());
-            } else if (diskResourceUtil.isEnsemblInfoType(resInfoType)) {
-                sendTo.setText(appearance.ensembl());
+            detailsProps.data = dataJson;
+            detailsProps.drUtil = diskResourceUtil;
+            detailsProps.appearance = appearance;
+            detailsProps.view = DetailsViewImpl.this;
+            detailsProps.owner = PermissionValue.own.toString();
+            detailsProps.presenter = presenter;
+            detailsProps.DETAILS_DATE_SUBMITTED = DiskResourceModule.Ids.DETAILS_DATE_SUBMITTED;
+            detailsProps.DETAILS_DATE_SUBMITTED = DiskResourceModule.Ids.DETAILS_DATE_SUBMITTED;
+            detailsProps.DETAILS_PERMISSIONS = DiskResourceModule.Ids.DETAILS_PERMISSIONS;
+            detailsProps.DETAILS_SHARE = DiskResourceModule.Ids.DETAILS_SHARE;
+            detailsProps.DETAILS_SIZE = DiskResourceModule.Ids.DETAILS_SIZE;
+            detailsProps.DETAILS_TYPE = DiskResourceModule.Ids.DETAILS_TYPE;
+            detailsProps.DETAILS_INFO_TYPE = DiskResourceModule.Ids.DETAILS_INFO_TYPE;
+            detailsProps.DETAILS_MD5 = DiskResourceModule.Ids.DETAILS_MD5;
+            detailsProps.DETAILS_SEND_TO = DiskResourceModule.Ids.DETAILS_SEND_TO;
+            detailsProps.DETAILS_TAGS = DiskResourceModule.Ids.DETAILS_TAGS;
+
+            List<String> types = new ArrayList<>();
+            if (infoTypes != null && infoTypes.size() > 0) {
+                types = infoTypes.stream()
+                                 .map(type -> type.getTypeString())
+                                 .collect(Collectors.toList());
+
             }
 
-        } else {
-            sendTo.setText(appearance.viewersDisabled());
-            sendTo.addStyleName(appearance.css().disabledHyperlink());
-        }
 
-        PermissionValue permission = resource.getPermission();
-        // Update Infotype
-        if (resource instanceof File) {
-            if (PermissionValue.own.equals(permission)
-                    || PermissionValue.write.equals(permission)) {
-                infoType.removeStyleName(appearance.css().disabledHyperlink());
-
-                // Display Infotype
-                if (resInfoType != null) {
-                    infoType.setText(resInfoType.toString());
-                    // display deselect icon
-                    resetInfoTypeIcon.setVisible(true);
-
-                } else {
-                    infoType.setText(appearance.selectInfoType());
-                    // hide deselect icon
-                    resetInfoTypeIcon.setVisible(false);
-                }
-            } else {
-                infoType.addStyleName(appearance.css().disabledHyperlink());
-                // hide deselect icon
-                resetInfoTypeIcon.setVisible(false);
-
-                if (resInfoType != null) {
-                    infoType.setText(resInfoType.toString());
-                } else {
-                    infoType.setText(appearance.infoTypeDisabled());
-                }
+            String[] typeArray = new String[types.size() + 1];
+            typeArray[0] = INFOTYPE_NOSELECT;
+            for (int i = 0; i < types.size(); i++) {
+                typeArray[i + 1] = types.get(i);
             }
-        }
-    }
 
-    @UiFactory
-    @Ignore
-    DateLabel createDateLabel() {
-        return new DateLabel(DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_MEDIUM));
+            detailsProps.infoTypes = typeArray;
+            detailsProps.isFolder = resource instanceof Folder;
+
+            CyVerseReactComponents.render(ReactDataDetails.dataDetails,
+                                          detailsProps,
+                                          panel.getElement());
+
+        });
+
+
     }
 
 
@@ -430,7 +227,7 @@ public class DetailsViewImpl extends Composite implements DetailsView,
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
 
-        lastModified.ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_LAST_MODIFIED);
+     /* lastModified.ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_LAST_MODIFIED);
         dateCreated.ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_DATE_SUBMITTED);
         permission.ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_PERMISSIONS);
         sharing.ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_SHARE);
@@ -439,16 +236,6 @@ public class DetailsViewImpl extends Composite implements DetailsView,
         infoType.ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_INFO_TYPE);
         md5link.ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_MD5);
         sendTo.ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_SEND_TO);
-        tagListView.asWidget().ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_TAGS);
-    }
-
-    @Override
-    public HandlerRegistration addRemoveResourceTagSelectedHandler(RemoveResourceTagSelected.RemoveResourceTagSelectedHandler handler) {
-        return addHandler(handler, RemoveResourceTagSelected.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration addUpdateResourceTagSelectedHandler(UpdateResourceTagSelected.UpdateResourceTagSelectedHandler handler) {
-        return addHandler(handler, UpdateResourceTagSelected.TYPE);
+        tagListView.asWidget().ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS_TAGS);*/
     }
 }

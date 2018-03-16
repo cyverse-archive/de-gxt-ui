@@ -22,7 +22,7 @@ import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelecte
 import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelected.ManageMetadataSelectedEventHandler;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected.ManageSharingSelectedEventHandler;
 import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked.Md5ValueClickedHandler;
-import org.iplantc.de.diskResource.client.events.selection.ResetInfoTypeSelected.ResetInfoTypeSelectedHandler;
+import org.iplantc.de.diskResource.client.events.selection.SetInfoTypeSelected.SetInfoTypeSelectedHandler;
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected.SaveMetadataSelectedEventHandler;
 import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected.ShareByDataLinkSelectedEventHandler;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsLoadConfig;
@@ -131,8 +131,7 @@ public interface GridView extends IsWidget,
                                 FolderSelectionEventHandler,
                                 SubmitDiskResourceQueryEventHandler,
                                 HasStoreUpdateHandlers<DiskResource>,
-                                EditInfoTypeSelectedEventHandler,
-                                ResetInfoTypeSelectedHandler,
+                                EditInfoTypeSelectedEventHandler, SetInfoTypeSelectedHandler,
                                 Md5ValueClickedHandler,
                                 TemplateDownloadEvent.TemplateDownloadEventHandler,
                                 FetchDetailsCompleted.HasFetchDetailsCompletedHandlers,

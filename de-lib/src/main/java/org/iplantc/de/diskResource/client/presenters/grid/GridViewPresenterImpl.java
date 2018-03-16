@@ -54,7 +54,7 @@ import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelecte
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected;
 import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked;
 import org.iplantc.de.diskResource.client.events.selection.MetadataInfoBtnSelected;
-import org.iplantc.de.diskResource.client.events.selection.ResetInfoTypeSelected;
+import org.iplantc.de.diskResource.client.events.selection.SetInfoTypeSelected;
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected;
 import org.iplantc.de.diskResource.client.gin.factory.FolderContentsRpcProxyFactory;
@@ -305,28 +305,9 @@ public class GridViewPresenterImpl implements Presenter,
                     String newType = result.getSelectedValue().toString();
                     setInfoType(event.getSelectedDiskResources().iterator().next(), newType);
                 });
+                result.setCurrentInfoType(InfoType.fromTypeString(currentType));
                 result.show();
                 result.mask();
-                fetchInfoTypes(result, InfoType.fromTypeString(currentType));
-            }
-        });
-    }
-
-    void fetchInfoTypes(InfoTypeEditorDialog result, InfoType currentType) {
-        diskResourceService.getInfoTypes(new DataCallback<List<InfoType>>() {
-
-            @Override
-            public void onFailure(Integer statusCode, Throwable arg0) {
-                ErrorHandler.post(arg0);
-                result.hide();
-            }
-
-            @Override
-            public void onSuccess(List<InfoType> infoTypes) {
-                result.addInfoTypes(infoTypes);
-                result.setCurrentInfoType(currentType);
-                result.unmask();
-                LOG.fine("InfoTypes retrieved: " + infoTypes);
             }
         });
     }
@@ -552,8 +533,8 @@ public class GridViewPresenterImpl implements Presenter,
     }
 
     @Override
-    public void onResetInfoTypeSelected(ResetInfoTypeSelected event) {
-        setInfoType(event.getDiskResource(), "");
+    public void onSetInfoTypeSelected(SetInfoTypeSelected event) {
+        setInfoType(event.getDiskResource(), event.getInfoType());
     }
 
     @Override

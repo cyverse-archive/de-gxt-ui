@@ -14,7 +14,7 @@
 }
 
 .hyperlink {
-    font-size: 11px;
+    font-size: 10px;
     cursor: pointer;
     color: #0098aa;
 }
@@ -50,7 +50,7 @@
 }
 
 tr.row > td {
-    padding-bottom: 1em;
+    padding-bottom: 0.5em;
 }
 
 .emptyDetails {

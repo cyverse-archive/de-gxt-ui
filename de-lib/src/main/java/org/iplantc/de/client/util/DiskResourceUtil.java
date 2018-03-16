@@ -10,9 +10,9 @@ import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceFavorite;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
-import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.viewer.InfoType;
 
 import com.google.common.base.Joiner;
@@ -31,10 +31,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
+
 /**
  * @author sriram, jstroot
  * 
  */
+@JsType
 public class DiskResourceUtil {
 
     private static DiskResourceUtil INSTANCE;
@@ -93,6 +97,7 @@ public class DiskResourceUtil {
         return split.removeLast();
     }
 
+    @JsIgnore
     public List<String> parseNamesFromIdList(Iterable<String> idList) {
         if (idList == null) {
             return null;
@@ -120,6 +125,7 @@ public class DiskResourceUtil {
         return basePath + "/" + name;
     }
 
+    @JsIgnore
     public String asCommaSeparatedNameList(Iterable<String> idList) {
         if (idList == null) {
             return null;
@@ -128,6 +134,7 @@ public class DiskResourceUtil {
         return Joiner.on(", ").join(parseNamesFromIdList(idList));
     }
 
+    @JsIgnore
     public boolean isOwner(Iterable<DiskResource> resources) {
         if (resources == null) {
             return false;
@@ -146,6 +153,7 @@ public class DiskResourceUtil {
     /**
      * Determines if the user is an owner of one item in the given resources.
      */
+    @JsIgnore
     public boolean hasOwner(Iterable<DiskResource> resources) {
         if (resources == null) {
             return false;
@@ -164,6 +172,7 @@ public class DiskResourceUtil {
      * Determines if the given <code>DiskResource</code> is a direct child of the given parent
      * <code>Folder</code>.
      */
+    @JsIgnore
     public boolean isChildOfFolder(Folder parent, DiskResource resource) {
         return parseParent(resource.getPath()).equals(parent.getPath());
     }
@@ -176,28 +185,34 @@ public class DiskResourceUtil {
      * @param folder the folder whose ancestry is verified.
      * @return true if the folder is a descendant of the given ancestor, false otherwise.
      */
+    @JsIgnore
     public boolean isDescendantOfFolder(Folder ancestor, Folder folder) {
         return folder.getPath().startsWith(ancestor.getPath() + "/"); //$NON-NLS-1$
     }
 
+    @JsIgnore
     public boolean isMovable(Folder targetFolder, Iterable<DiskResource> dropData) {
         return isOwner(dropData) && isWritable(targetFolder);
     }
 
+    @JsIgnore
     public boolean canUploadTo(DiskResource resource) {
         return (resource instanceof Folder) && !(resource instanceof DiskResourceFavorite)
-                && !(resource instanceof DiskResourceQueryTemplate)
-                && (isOwner(resource) || isWritable(resource)) && !inTrash(resource);
+               && !(resource instanceof DiskResourceQueryTemplate) && (isOwner(resource) || isWritable(
+                resource)) && !inTrash(resource);
     }
 
+    @JsIgnore
     public boolean isTrash(DiskResource resource) {
         return resource != null && resource.getPath().equals(userInfo.getTrashPath());
     }
 
+    @JsIgnore
     public boolean inTrash(DiskResource resource) {
         return resource != null && resource.getPath().startsWith(userInfo.getTrashPath());
     }
 
+    @JsIgnore
     public boolean containsTrashedResource(List<DiskResource> selectedResources) {
         if (selectedResources != null) {
             for (DiskResource resource : selectedResources) {
@@ -210,6 +225,7 @@ public class DiskResourceUtil {
         return false;
     }
 
+    @JsIgnore
     public <R extends DiskResource> boolean contains(Iterable<R> selection, R target) {
         if (selection != null && target != null) {
             for (DiskResource resource : selection) {
@@ -222,6 +238,7 @@ public class DiskResourceUtil {
         return false;
     }
 
+    @JsIgnore
     public <R extends DiskResource> boolean containsFolder(Iterable<R> selection) {
         for (DiskResource resource : selection) {
             if (resource instanceof Folder) {
@@ -231,6 +248,7 @@ public class DiskResourceUtil {
         return false;
     }
 
+    @JsIgnore
     public <R extends DiskResource> boolean containsFile(Iterable<R> selection) {
         for (DiskResource resource : selection) {
             if (resource instanceof File) {
@@ -240,6 +258,7 @@ public class DiskResourceUtil {
         return false;
     }
 
+    @JsIgnore
     public <R extends DiskResource> Iterable<File> extractFiles(Iterable<R> diskresources) {
         List<File> files = Lists.newArrayList();
         for (DiskResource dr : diskresources) {
@@ -250,6 +269,7 @@ public class DiskResourceUtil {
         return files;
     }
 
+    @JsIgnore
     public <R extends DiskResource> Iterable<Folder> extractFolders(Iterable<R> diskresources) {
         List<Folder> folders = Lists.newArrayList();
         for (DiskResource dr : diskresources) {
@@ -260,6 +280,7 @@ public class DiskResourceUtil {
         return folders;
     }
 
+    @JsIgnore
     public <R extends HasId> List<String> asStringIdList(Iterable<R> diskResourceList) {
         List<String> ids = Lists.newArrayList();
         for (R dr : diskResourceList) {
@@ -269,6 +290,7 @@ public class DiskResourceUtil {
         return ids;
     }
 
+    @JsIgnore
     public <R extends HasPath> List<String> asStringPathList(Iterable<R> diskResourceList) {
         List<String> paths = Lists.newArrayList();
         for (R dr : diskResourceList) {
@@ -278,9 +300,9 @@ public class DiskResourceUtil {
         return paths;
     }
 
-    public <R extends HasPath>
-            FastMap<TYPE>
-            asStringPathTypeMap(Iterable<R> diskResourceList, TYPE type) {
+    @JsIgnore
+    public <R extends HasPath> FastMap<TYPE> asStringPathTypeMap(Iterable<R> diskResourceList,
+                                                                 TYPE type) {
         FastMap<TYPE> pathMap = new FastMap<>();
         for (R dr : diskResourceList) {
             pathMap.put(dr.getPath(), type);
@@ -289,16 +311,19 @@ public class DiskResourceUtil {
 
     }
 
+    @JsIgnore
     public <R extends HasId> Splittable createStringIdListSplittable(Iterable<R> hasIdList) {
         JSONArray jArr = jsonUtil.buildArrayFromStrings(asStringIdList(hasIdList));
 
         return StringQuoter.split(jArr.toString());
     }
 
+    @JsIgnore
     public Splittable createSplittableFromStringList(List<String> strings) {
         return StringQuoter.split(jsonUtil.buildArrayFromStrings(strings).toString());
     }
 
+    @JsIgnore
     public HasPath getFolderPathFromFile(File file) {
         if (file != null) {
             return CommonModelUtils.getInstance().createHasPathFromString(parseParent(file.getPath()));
@@ -329,6 +354,7 @@ public class DiskResourceUtil {
      * @return A Set containing all Files found in the given DiskResource Set, or an empty Set if the
      *         given Set is null or empty.
      */
+    @JsIgnore
     public Set<File> filterFiles(Iterable<DiskResource> diskResources) {
         Set<File> files = Sets.newHashSet();
 
@@ -349,6 +375,7 @@ public class DiskResourceUtil {
      * @return A Set containing all Folders found in the given DiskResource Set, or an empty Set if the
      *         given Set is null or empty.
      */
+    @JsIgnore
     public Set<Folder> filterFolders(Set<DiskResource> diskResources) {
         Set<Folder> folders = Sets.newHashSet();
 
@@ -363,6 +390,7 @@ public class DiskResourceUtil {
         return folders;
     }
 
+    @JsIgnore
     public boolean isOwner(DiskResource dr) {
         if (dr == null) {
             return false;
@@ -371,25 +399,26 @@ public class DiskResourceUtil {
         return dr.getPermission().equals(PermissionValue.own);
     }
 
+    @JsIgnore
     public boolean isReadable(DiskResource dr) {
         if (dr == null) {
             return false;
         }
 
-        return dr.getPermission().equals(PermissionValue.own)
-                || dr.getPermission().equals(PermissionValue.write)
-                || dr.getPermission().equals(PermissionValue.read);
+        return dr.getPermission().equals(PermissionValue.own) || dr.getPermission().equals(PermissionValue.write)
+               || dr.getPermission().equals(PermissionValue.read);
     }
 
+    @JsIgnore
     public boolean isWritable(DiskResource dr) {
         if (dr == null) {
             return false;
         }
 
-        return PermissionValue.own.equals(dr.getPermission())
-                || PermissionValue.write.equals(dr.getPermission());
+        return PermissionValue.own.equals(dr.getPermission()) || PermissionValue.write.equals(dr.getPermission());
     }
 
+    @JsIgnore
     public boolean checkManifest(Splittable obj) {
         if (obj == null) {
             return false;
@@ -403,28 +432,55 @@ public class DiskResourceUtil {
         return true;
     }
 
+    @JsIgnore
     public boolean isTreeInfoType(InfoType infoType) {
         return InfoType.NEXUS.equals(infoType) || InfoType.NEXML.equals(infoType)
-                || InfoType.NEWICK.equals(infoType) || InfoType.PHYLOXML.equals(infoType);
+               || InfoType.NEWICK.equals(infoType) || InfoType.PHYLOXML.equals(infoType);
     }
 
+    @JsIgnore
     public boolean isGenomeVizInfoType(InfoType infoType) {
         return InfoType.FASTA.equals(infoType);
     }
 
+    @JsIgnore
     public boolean isEnsemblInfoType(InfoType infoType) {
-        return InfoType.BAM.equals(infoType) || InfoType.VCF.equals(infoType)
-                || InfoType.GFF.equals(infoType) || InfoType.BED.equals(infoType)
-                || InfoType.BIGBED.equals(infoType) || InfoType.BIGWIG.equals(infoType);
+        return InfoType.BAM.equals(infoType) || InfoType.VCF.equals(infoType) || InfoType.GFF.equals(
+                infoType) || InfoType.BED.equals(infoType) || InfoType.BIGBED.equals(infoType)
+               || InfoType.BIGWIG.equals(infoType);
     }
+
+
+   public boolean isTreeInfoType(String infoType) {
+        return InfoType.NEXUS.getTypeString().equals(infoType) || InfoType.NEXML.getTypeString()
+                                                                                .equals(infoType)
+               || InfoType.NEWICK.getTypeString().equals(infoType) || InfoType.PHYLOXML.getTypeString()
+                                                                                       .equals(infoType);
+    }
+
+    public boolean isGenomeVizInfoType(String infoType) {
+        return InfoType.FASTA.getTypeString().equals(infoType);
+    }
+
+
+    public boolean isEnsemblInfoType(String infoType) {
+        return InfoType.BAM.getTypeString().equals(infoType) || InfoType.VCF.getTypeString()
+                                                                            .equals(infoType)
+               || InfoType.GFF.getTypeString().equals(infoType) || InfoType.BED.getTypeString()
+                                                                               .equals(infoType)
+               || InfoType.BIGBED.getTypeString().equals(infoType) || InfoType.BIGWIG.getTypeString()
+                                                                                     .equals(infoType);
+    }
+
+
 
     public boolean isGenomeIndexFile(String path) {
         return path != null && (path.endsWith(".bai") || path.endsWith(".tbi"));
     }
 
+
     private String getInfoType(Splittable obj) {
-        if (obj == null)
-            return null;
+        if (obj == null) return null;
         if (checkManifest(obj)) {
             return obj.get(DiskResource.INFO_TYPE_KEY).asString();
         } else {
@@ -432,41 +488,47 @@ public class DiskResourceUtil {
         }
     }
 
+    @JsIgnore
     public boolean isTreeTab(Splittable obj) {
         String infoType = getInfoType(obj);
-        return (infoType != null)
-                && (InfoType.NEXUS.toString().equals(infoType)
-                        || InfoType.NEXML.toString().equals(infoType)
-                        || InfoType.NEWICK.toString().equals(infoType) || InfoType.PHYLOXML.toString()
-                                                                                           .equals(infoType));
+        return (infoType != null) && (InfoType.NEXUS.toString().equals(infoType)
+                                      || InfoType.NEXML.toString().equals(infoType)
+                                      || InfoType.NEWICK.toString().equals(infoType) || InfoType.PHYLOXML
+                                              .toString()
+                                              .equals(infoType));
     }
 
+    @JsIgnore
     public boolean isGenomeVizTab(Splittable obj) {
         String infoType = getInfoType(obj);
         return infoType != null && InfoType.FASTA.toString().equals(infoType);
     }
 
+    @JsIgnore
     public boolean isEnsemblVizTab(Splittable obj) {
         String infoType = getInfoType(obj);
         if (infoType == null) { return false; }
-        return infoType.equals(InfoType.BAM.toString())
-                || infoType.equals(InfoType.VCF.toString()) || infoType.equals(InfoType.GFF.toString())
-                || infoType.equals(InfoType.BED.toString()) || infoType.equals(InfoType.BIGBED.toString())
-		|| infoType.equals(InfoType.BIGWIG.toString());
+        return infoType.equals(InfoType.BAM.toString()) || infoType.equals(InfoType.VCF.toString())
+               || infoType.equals(InfoType.GFF.toString()) || infoType.equals(InfoType.BED.toString())
+               || infoType.equals(InfoType.BIGBED.toString())
+               || infoType.equals(InfoType.BIGWIG.toString());
     }
 
+    @JsIgnore
     public Splittable createStringPathListSplittable(List<HasPath> hasPathList) {
         JSONArray jArr = jsonUtil.buildArrayFromStrings(asStringPathList(hasPathList));
 
         return StringQuoter.split(jArr.toString());
     }
 
+    @JsIgnore
     public Splittable createInfoTypeSplittable(String infoType) {
         Splittable s = StringQuoter.createSplittable();
         StringQuoter.create(infoType).assign(s, DiskResource.INFO_TYPE_KEY);
         return s;
     }
 
+    @JsIgnore
     public boolean containsFilteredItems(List<? extends DiskResource> diskResources) {
         if(diskResources == null || diskResources.size() == 0) {
             return false;
