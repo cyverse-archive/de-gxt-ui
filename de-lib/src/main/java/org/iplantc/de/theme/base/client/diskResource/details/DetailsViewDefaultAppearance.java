@@ -23,7 +23,7 @@ public class DetailsViewDefaultAppearance implements DetailsView.Appearance {
     private final DetailsViewDisplayStrings displayStrings;
     private final DiskResourceMessages diskResourceMessages;
     private final IplantResources iplantResources;
-    private final DetailsViewStyle style;
+    private final Resources resources;
 
     public DetailsViewDefaultAppearance() {
         this(GWT.<IplantDisplayStrings> create(IplantDisplayStrings.class),
@@ -41,9 +41,9 @@ public class DetailsViewDefaultAppearance implements DetailsView.Appearance {
         this.displayStrings = displayStrings;
         this.diskResourceMessages = diskResourceMessages;
         this.iplantResources = iplantResources;
-        this.style = resources.css();
+        this.resources = resources;
 
-        this.style.ensureInjected();
+        this.resources.css().ensureInjected();
     }
 
     @Override
@@ -133,7 +133,7 @@ public class DetailsViewDefaultAppearance implements DetailsView.Appearance {
 
     @Override
     public DetailsViewStyle css() {
-        return style;
+        return resources.css();
     }
 
     @Override

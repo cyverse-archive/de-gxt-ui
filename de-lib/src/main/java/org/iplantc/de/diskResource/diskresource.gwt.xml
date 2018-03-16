@@ -5,7 +5,6 @@
     <!-- iPlant module inherits -->
     <inherits name="org.iplantc.de.commons.ui-commons"/>
     <inherits name="org.iplantc.de.collaborators.Collaborators" />
-    <inherits name="org.iplantc.de.tags.Tags" />
 
     <source path="client"/>
     <source path="share"/>
