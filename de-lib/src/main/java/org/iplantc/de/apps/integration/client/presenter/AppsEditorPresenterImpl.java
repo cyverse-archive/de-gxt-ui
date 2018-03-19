@@ -30,10 +30,12 @@ import org.iplantc.de.apps.widgets.client.view.AppLaunchView.RenameWindowHeaderC
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.IsMinimizable;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
+import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.integration.Argument;
 import org.iplantc.de.client.models.apps.integration.ArgumentGroup;
 import org.iplantc.de.client.models.apps.integration.ArgumentType;
 import org.iplantc.de.client.models.apps.integration.FileParameters;
+import org.iplantc.de.client.models.errorHandling.SimpleServiceError;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.client.services.AppTemplateServices;
 import org.iplantc.de.client.services.UUIDServiceAsync;
@@ -116,7 +118,11 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
 
         @Override
         public void onFailure(Integer statusCode, Throwable caught) {
-            announcer.schedule(new ErrorAnnouncementConfig(failedSaveMsg));
+            AutoBean<SimpleServiceError> error = AutoBeanCodex.decode(appTemplateFactory,
+                                                                      SimpleServiceError.class,
+                                                                      caught.getMessage());
+            announcer.schedule(new ErrorAnnouncementConfig(
+                    failedSaveMsg + " " + error.as().getReason()));
             if (onSaveCallback != null) {
                 onSaveCallback.onFailure(caught);
             }
@@ -354,6 +360,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
 
     private final AppsEditorView view;
     private final IplantAnnouncer announcer;
+    private final AppTemplateAutoBeanFactory appTemplateFactory;
 
     Logger LOG = Logger.getLogger(AppsEditorPresenterImpl.class.getName());
 
@@ -367,7 +374,8 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
                             final UUIDServiceAsync uuidService,
                             final AppsEditorView.AppsEditorViewAppearance appearance,
                             final IplantAnnouncer announcer,
-                            final AppTemplateUtils appTemplateUtils) {
+                            final AppTemplateUtils appTemplateUtils,
+                            final AppTemplateAutoBeanFactory appTemplateFactory) {
         this.view = view;
         this.eventBus = eventBus;
         this.atService = atService;
@@ -375,6 +383,7 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
         this.appearance = appearance;
         this.announcer = announcer;
         this.appTemplateUtils = appTemplateUtils;
+        this.appTemplateFactory = appTemplateFactory;
 
         setUpHandlers(view);
     }
