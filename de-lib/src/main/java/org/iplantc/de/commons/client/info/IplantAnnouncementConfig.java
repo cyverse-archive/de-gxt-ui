@@ -19,8 +19,7 @@ import com.sencha.gxt.widget.core.client.button.IconButton.IconConfig;
  */
 public class IplantAnnouncementConfig {
 
-    // SS updated to 5s from 10s since 5s is seems too long
-    protected static final int DEFAULT_TIMEOUT_ms = 5000;
+    protected static final int DEFAULT_TIMEOUT_ms = 10000;
     protected final IconConfig CLOSER_CFG;
 
     public interface IplantAnnouncementConfigAppearance {
