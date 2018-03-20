@@ -1,6 +1,5 @@
 package org.iplantc.de.diskResource.client;
 
-import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
 import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent.SavedSearchesRetrievedEventHandler;
 import org.iplantc.de.diskResource.client.events.search.DeleteSavedSearchClickedEvent.DeleteSavedSearchEventHandler;
 import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent.SaveDiskResourceQueryClickedEventHandler;
@@ -16,18 +15,19 @@ import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.core.client.dom.XElement;
 import com.sencha.gxt.widget.core.client.event.HideEvent;
 
-import java.util.List;
-
+import jsinterop.annotations.JsIgnore;
 import jsinterop.annotations.JsType;
 
 /**
  * Created by jstroot on 2/10/15.
  * @author jstroot, aramsey
  */
+
 public interface SearchView extends IsWidget,
                                     HideEvent.HasHideHandlers,
                                     QueryDSLSearchBtnSelected.HasQueryDSLSearchBtnSelectedHandlers {
 
+    @JsType
     interface SearchViewAppearance {
 
         String deleteSearchSuccess(String searchName);
@@ -58,7 +58,7 @@ public interface SearchView extends IsWidget,
 
         String createdWithin();
 
-        String[] createdWithinItems();
+        String createdWithinItems();
 
         String nameHasNot();
 
@@ -78,7 +78,9 @@ public interface SearchView extends IsWidget,
 
         String taggedWith();
 
-        String[] fileSizes();
+        String fileSizes();
+
+        String enterCyVerseUserName();
 
     }
 
@@ -127,8 +129,6 @@ public interface SearchView extends IsWidget,
                                 SavedSearchesRetrievedEventHandler,
                                 HasUpdateSavedSearchesEventHandlers {
     }
-
-    void edit(QueryDSLTemplate template);
 
     void show(Element parent, Style.AnchorAlignment anchorAlignment);
 

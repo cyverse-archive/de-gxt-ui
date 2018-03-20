@@ -4,8 +4,6 @@ import org.iplantc.de.diskResource.client.SearchView;
 
 import com.google.gwt.core.client.GWT;
 
-import java.util.List;
-
 public class SearchViewDefaultAppearance implements SearchView.SearchViewAppearance {
     private SearchMessages searchMessages;
 
@@ -88,7 +86,7 @@ public class SearchViewDefaultAppearance implements SearchView.SearchViewAppeara
     }
 
     @Override
-    public String[] createdWithinItems() {
+    public String createdWithinItems() {
         return searchMessages.createdWithItems();
     }
 
@@ -138,7 +136,12 @@ public class SearchViewDefaultAppearance implements SearchView.SearchViewAppeara
     }
 
     @Override
-    public String[] fileSizes() {
+    public String fileSizes() {
         return searchMessages.fileSizes();
+    }
+
+    @Override
+    public String enterCyVerseUserName() {
+        return searchMessages.emptyNameText();
     }
 }

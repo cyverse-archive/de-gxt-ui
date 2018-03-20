@@ -1,0 +1,22 @@
+package org.iplantc.de.diskResource.client.views.search;
+
+import org.iplantc.de.diskResource.client.SearchView;
+
+import gwt.react.client.components.ReactClass;
+import gwt.react.client.proptypes.BaseProps;
+import jsinterop.annotations.JsPackage;
+import jsinterop.annotations.JsProperty;
+import jsinterop.annotations.JsType;
+
+@JsType(isNative = true, namespace = "CyVerseReactComponents.diskResource.search", name = "SearchForm")
+public class ReactSearchForm {
+
+    @JsProperty(namespace = "CyVerseReactComponents.diskResource.search", name = "SearchForm")
+    public static ReactClass<SearchFormProps> SearchForm;
+
+    @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
+    static class SearchFormProps extends BaseProps {
+        public SearchView.SearchViewAppearance appearance;
+        public String id;
+    }
+}

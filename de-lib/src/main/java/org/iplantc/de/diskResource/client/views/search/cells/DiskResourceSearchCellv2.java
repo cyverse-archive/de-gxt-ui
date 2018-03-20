@@ -122,7 +122,7 @@ public class DiskResourceSearchCellv2 extends TriggerFieldCell<String> implement
             @Override
             public void execute() {
                 getSearchForm().show(parent, new AnchorAlignment(Anchor.TOP_LEFT, Anchor.BOTTOM_LEFT, true));
-                getSearchForm().edit(searchModelUtils.createDefaultQuery());
+//                getSearchForm().edit(searchModelUtils.createDefaultQuery());
                 fireEvent(context, new ExpandEvent(context));
             }
         });

@@ -8,10 +8,13 @@ import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.collaborators.client.models.SubjectKeyProvider;
 import org.iplantc.de.collaborators.client.util.UserSearchField;
 import org.iplantc.de.collaborators.client.views.CollaboratorsColumnModel;
+import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSelected;
+import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
@@ -51,45 +54,19 @@ import java.util.stream.Collectors;
 /**
  * A form the user can fill out to perform advanced searches in the Data window which utilize the search service
  */
-public class SearchViewImpl extends Composite implements SearchView,
-                                                         Editor<QueryDSLTemplate> {
+public class SearchViewImpl extends Composite implements SearchView {
 
-    interface SearchViewImplEditor extends SimpleBeanEditorDriver<QueryDSLTemplate, SearchViewImpl> {}
-    interface SearchViewImplUiBinder extends UiBinder<Widget, SearchViewImpl> {
-    }
-
-    static SearchViewImplUiBinder uiBinder = GWT.create(SearchViewImplUiBinder.class);
-    SearchViewImplEditor editorDriver = GWT.create(SearchViewImplEditor.class);
-
-    @Ignore @UiField VerticalLayoutContainer con;
-    @Path("label")
-    @UiField TextField nameHas;
-    @Path("labelExact")
-    @UiField CheckBox exactNameMatch;
-    @UiField TextField pathPrefix;
-    @UiField TextField owner;
-    @UiField StringComboBox permission;
-    @UiField CheckBox permissionRecurse;
-    @Ignore private boolean showing;
-    @Ignore @UiField(provided = true) UserSearchField userSearchField;
-    @UiField ListStore<Subject> permissionUsers;
-    @Ignore @UiField TextButton searchBtn;
-
-    @UiField(provided = true) SearchViewAppearance appearance;
-    private SearchModelUtils searchModelUtils;
-    protected final BaseEventPreview eventPreview;
+    private VerticalLayoutContainer con;
+    private SearchViewAppearance appearance;
+    private final BaseEventPreview eventPreview;
+    private boolean showing = false;
 
     @Inject
-    public SearchViewImpl(SearchViewAppearance appearance,
-                          UserSearchField userSearchField,
-                          SearchModelUtils searchModelUtils) {
+    public SearchViewImpl(SearchViewAppearance appearance) {
         this.appearance = appearance;
-        this.userSearchField = userSearchField;
-        this.searchModelUtils = searchModelUtils;
-        initWidget(uiBinder.createAndBindUi(this));
+        this.con = new VerticalLayoutContainer();
+        initWidget(con);
         con.getElement().getStyle().setBackgroundColor("#fff");
-
-        editorDriver.initialize(this);
 
         eventPreview = new BaseEventPreview() {
 
@@ -108,60 +85,31 @@ public class SearchViewImpl extends Composite implements SearchView,
         };
         eventPreview.getIgnoreList().add(getElement());
         eventPreview.setAutoHide(false);
-        userSearchField.addUserSearchResultSelectedEventHandler(selectEvent -> permissionUsers.add(selectEvent.getSubject()));
     }
 
-    @UiFactory
-    StringComboBox permission() {
-        StringComboBox comboBox = new StringComboBox();
-        comboBox.add(Arrays.asList(PermissionValue.own.toString(),
-                                                   PermissionValue.write.toString(),
-                                                   PermissionValue.read.toString()));
-        return comboBox;
-    }
-
-    @UiFactory
-    ListStore<Subject> createListStore() {
-        return new ListStore<>(new SubjectKeyProvider());
-    }
-
-    @UiFactory
-    ColumnModel<Subject> buildColumnModel() {
-        CollaboratorsColumnModel cm = new CollaboratorsColumnModel(null);
-        cm.deleteColumnVisible(true);
-        cm.addSubjectDeleteCellClickedHandler(event -> permissionUsers.remove(event.getSubject()));
-        return cm;
-    }
-
-    @Override
-    public void edit(QueryDSLTemplate template) {
-        editorDriver.edit(template);
-    }
-
-    @UiHandler("searchBtn")
-    void onSearchBtnClicked(SelectEvent event) {
-        if (editorDriver.isDirty()) {
-            QueryDSLTemplate template = editorDriver.flush();
-            convertUsers(template);
-            template.setPermission(permission.getValue());
-            AutoBean<QueryDSLTemplate> autoBean = AutoBeanUtils.getAutoBean(template);
-            String encode = AutoBeanCodex.encode(autoBean).getPayload();
-            GWT.log("Bean ended up being: " + encode);
-            fireEvent(new QueryDSLSearchBtnSelected(template));
-        }
-    }
-
-    void convertUsers(QueryDSLTemplate template) {
-        List<Subject> subjects = permissionUsers.getAll();
-        if (subjects != null && !subjects.isEmpty()) {
-            List<String> userNames = subjects.stream().map(HasId::getId).collect(Collectors.toList());
-            template.setPermissionUsers(userNames);
-        }
-    }
+//    @UiHandler("searchBtn")
+//    void onSearchBtnClicked(SelectEvent event) {
+//        if (editorDriver.isDirty()) {
+//            QueryDSLTemplate template = editorDriver.flush();
+//            convertUsers(template);
+//            template.setPermission(permission.getValue());
+//            AutoBean<QueryDSLTemplate> autoBean = AutoBeanUtils.getAutoBean(template);
+//            String encode = AutoBeanCodex.encode(autoBean).getPayload();
+//            GWT.log("Bean ended up being: " + encode);
+//            fireEvent(new QueryDSLSearchBtnSelected(template));
+//        }
+//    }
 
     @Override
     public void show(Element parent, Style.AnchorAlignment anchorAlignment) {
         getElement().makePositionable(true);
+
+        ReactSearchForm.SearchFormProps props = new ReactSearchForm.SearchFormProps();
+        props.appearance = appearance;
+        props.id = DiskResourceModule.Ids.SEARCH_FORM;
+
+        CyVerseReactComponents.render(ReactSearchForm.SearchForm, props, DivElement.as(con.getElement()));
+
         RootPanel.get().add(this);
         onShow();
         getElement().updateZIndex(0);
@@ -219,17 +167,12 @@ public class SearchViewImpl extends Composite implements SearchView,
     }
 
     @Override
-    protected void onEnsureDebugId(String baseID) {
-        super.onEnsureDebugId(baseID);
-    }
-
-    @Override
     public HandlerRegistration addQueryDSLSearchBtnSelectedHandler(QueryDSLSearchBtnSelected.QueryDSLSearchBtnSelectedHandler handler) {
         return addHandler(handler, QueryDSLSearchBtnSelected.TYPE);
     }
 
     @Override
     public void clearSearch() {
-        editorDriver.edit(searchModelUtils.createDefaultQuery());
+        GWT.log("CLEAR SEARCH...");
     }
 }

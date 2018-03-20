@@ -85,7 +85,7 @@ public interface SearchMessages extends Messages {
 
     String taggedWith();
 
-    String[] fileSizes();
+    String fileSizes();
 
-    String[] createdWithItems();
+    String createdWithItems();
 }

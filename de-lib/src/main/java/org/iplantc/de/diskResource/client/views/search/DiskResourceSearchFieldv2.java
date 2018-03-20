@@ -106,7 +106,7 @@ public class DiskResourceSearchFieldv2 extends TriggerField<String> implements H
 
     public void edit(QueryDSLTemplate queryTemplate) {
         // Forward edit call to searchForm
-        getCell().getSearchForm().edit(queryTemplate);
+//        getCell().getSearchForm().edit(queryTemplate);
         clear();
     }
 
