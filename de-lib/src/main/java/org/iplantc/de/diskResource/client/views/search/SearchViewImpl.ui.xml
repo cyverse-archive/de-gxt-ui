@@ -144,7 +144,7 @@
                 </container:child>
                 <container:child layoutData="{rightColumn}">
                     <button:TextButton ui:field="searchBtn"
-                                       text="{appearance.searchBtnText}"/>
+                                       text="{appearance.searchBtn}"/>
                 </container:child>
             </container:CssFloatLayoutContainer>
         </container:child>

@@ -82,4 +82,10 @@ public interface SearchMessages extends Messages {
     String permissionUsers();
 
     String emptyDropDownText();
+
+    String taggedWith();
+
+    String[] fileSizes();
+
+    String[] createdWithItems();
 }

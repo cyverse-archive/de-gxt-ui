@@ -16,6 +16,10 @@ import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.core.client.dom.XElement;
 import com.sencha.gxt.widget.core.client.event.HideEvent;
 
+import java.util.List;
+
+import jsinterop.annotations.JsType;
+
 /**
  * Created by jstroot on 2/10/15.
  * @author jstroot, aramsey
@@ -50,7 +54,32 @@ public interface SearchView extends IsWidget,
 
         String emptyDropDownText();
 
-        String searchBtnText();
+        String searchBtn();
+
+        String createdWithin();
+
+        String[] createdWithinItems();
+
+        String nameHasNot();
+
+        String modifiedWithin();
+
+        String metadataAttributeHas();
+
+        String ownedBy();
+
+        String metadataValueHas();
+
+        String fileSizeGreater();
+
+        String fileSizeLessThan();
+
+        String includeTrash();
+
+        String taggedWith();
+
+        String[] fileSizes();
+
     }
 
     /**

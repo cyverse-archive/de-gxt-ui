@@ -4,6 +4,8 @@ import org.iplantc.de.diskResource.client.SearchView;
 
 import com.google.gwt.core.client.GWT;
 
+import java.util.List;
+
 public class SearchViewDefaultAppearance implements SearchView.SearchViewAppearance {
     private SearchMessages searchMessages;
 
@@ -76,7 +78,67 @@ public class SearchViewDefaultAppearance implements SearchView.SearchViewAppeara
     }
 
     @Override
-    public String searchBtnText() {
+    public String searchBtn() {
         return searchMessages.searchBtnText();
+    }
+
+    @Override
+    public String createdWithin() {
+        return searchMessages.createdWithin();
+    }
+
+    @Override
+    public String[] createdWithinItems() {
+        return searchMessages.createdWithItems();
+    }
+
+    @Override
+    public String nameHasNot() {
+        return searchMessages.nameHasNot();
+    }
+
+    @Override
+    public String modifiedWithin() {
+        return searchMessages.modifiedWithin();
+    }
+
+    @Override
+    public String metadataAttributeHas() {
+        return searchMessages.metadataAttributeHas();
+    }
+
+    @Override
+    public String ownedBy() {
+        return searchMessages.ownedBy();
+    }
+
+    @Override
+    public String metadataValueHas() {
+        return searchMessages.metadataValueHas();
+    }
+
+    @Override
+    public String fileSizeGreater() {
+        return searchMessages.fileSizeGreaterThan();
+    }
+
+    @Override
+    public String fileSizeLessThan() {
+        return searchMessages.fileSizeLessThan();
+    }
+
+    @Override
+    public String includeTrash() {
+        return searchMessages.includeTrash();
+    }
+
+    @Override
+    public String taggedWith() {
+        return searchMessages.taggedWith();
+    }
+
+    @Override
+    public String[] fileSizes() {
+        return searchMessages.fileSizes();
     }
 }
