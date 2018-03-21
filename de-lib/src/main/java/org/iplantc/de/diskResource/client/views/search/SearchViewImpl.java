@@ -154,9 +154,10 @@ public class SearchViewImpl extends Composite implements SearchView {
             case Event.ONKEYPRESS:
                 XElement target = pe.getNativeEvent().getEventTarget().cast();
 
-                // ignore targets within a parent with x-ignore, such as the listview in
-                // a combo
-                if (target.findParent(".x-ignore", 10) != null) {
+                //Ignore targets who are parents of or children of elements with
+                // an attribute role=menuitem (which are material-ui dropdowns)
+                if (target.findParent("[role=menuitem]", 10) != null ||
+                        target.child("[role=menuitem]") != null) {
                     return;
                 }
 
