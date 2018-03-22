@@ -24,23 +24,50 @@ import java.util.logging.Logger;
 @SuppressWarnings("nls")
 public class DataSearchQueryBuilderv2 {
 
-    public static final String QUERY = "query";
-    public static final String EXACT = "exact";
-    public static final String PATH = "path";
-    public static final String PREFIX = "prefix";
-    public static final String LABEL = "label";
-    public static final String OWNER = "owner";
+    // QUERY BUILDING BLOCKS
     public static final String ALL = "all";
+    public static final String ANY = "any";
+    public static final String NONE = "none";
+
     public static final String TYPE = "type";
     public static final String ARGS = "args";
+    public static final String QUERY = "query";
+    public static final String EXACT = "exact";
+
+
+    // CLAUSES
+
+    //Label
+    public static final String LABEL = "label";
+    //Path
+    public static final String PATH = "path";
+    public static final String PREFIX = "prefix";
+    //Owner
+    public static final String OWNER = "owner";
+    //Permissions
     public static final String PERMISSIONS = "permissions";
     public static final String PERMISSION = "permission";
     public static final String PERMISSION_RECURSE = "permission_recurse";
     public static final String SHARED_WITH = "users";
+    //Tag
+    public static final String TAG = "tag";
+    public static final String TAGS = "tags";
+    //Metadata
+    public static final String METADATA = "metadata";
+    public static final String ATTRIBUTE = "attribute";
+    public static final String ATTRIBUTE_EXACT = "attribute_exact";
+    public static final String VALUE = "value";
+    public static final String VALUE_EXACT = "value_exact";
+    public static final String UNIT = "unit";
+    public static final String UNIT_EXACT = "unit_exact";
+    public static final String METADATA_TYPES = "metadata_types";
+
 
     private final QueryDSLTemplate template;
     private final UserInfo userinfo;
     private final Splittable allList;
+    private final Splittable anyList;
+    private final Splittable noneList;
     private final SearchModelUtils searchModelUtils;
 
     Splittable query = StringQuoter.createSplittable();
@@ -53,6 +80,8 @@ public class DataSearchQueryBuilderv2 {
         this.userinfo = userinfo;
         this.searchModelUtils = SearchModelUtils.getInstance();
         allList = StringQuoter.createIndexed();
+        anyList = StringQuoter.createIndexed();
+        noneList = StringQuoter.createIndexed();
     }
 
     public String buildFullQuery() {
@@ -69,7 +98,7 @@ public class DataSearchQueryBuilderv2 {
      * {"type": "owner", "args": {"owner": "ipcdev"}}
      */
     public DataSearchQueryBuilderv2 ownedBy() {
-        String queryContent = template.getOwner();
+        String queryContent = template.getOwnedBy();
         if (!Strings.isNullOrEmpty(queryContent)) {
             appendArrayItem(allList, createTypeClause(OWNER, OWNER, queryContent));
         }
@@ -80,7 +109,7 @@ public class DataSearchQueryBuilderv2 {
      * {"type": "label", "args": {"label": "some_random_file_name", "exact": true}}
      */
     public DataSearchQueryBuilderv2 file() {
-        String content = template.getLabel();
+        String content = template.getNameHas();
         if (!Strings.isNullOrEmpty(content)) {
             Splittable args = StringQuoter.createSplittable();
             assignKeyValue(args, LABEL, content);
