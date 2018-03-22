@@ -3,10 +3,12 @@ package org.iplantc.de.admin.apps.client.presenter.grid;
 import org.iplantc.de.admin.apps.client.AdminAppStatsGridView;
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
+import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.shared.AppsCallback;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 
@@ -20,6 +22,8 @@ public class AdminAppsStatsGridPresenterImpl implements AdminAppStatsGridView.Pr
     AppAdminServiceFacade appService;
     @Inject
     AdminAppStatsGridView.Appearance appearance;
+
+    AppAutoBeanFactory factory = GWT.create(AppAutoBeanFactory.class);
 
     @Inject
     AdminAppsStatsGridPresenterImpl(AdminAppStatsGridView view) {
@@ -43,7 +47,6 @@ public class AdminAppsStatsGridPresenterImpl implements AdminAppStatsGridView.Pr
 
             @Override
             public void onSuccess(AppListLoadResult result) {
-                view.clear();
                 view.addAll(result.getData());
                 view.unmask();
             }

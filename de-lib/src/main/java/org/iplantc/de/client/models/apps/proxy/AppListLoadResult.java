@@ -23,3 +23,4 @@ public interface AppListLoadResult extends PagingLoadResult {
     void setTotal(int total);
 }
 
+

@@ -10,10 +10,13 @@ import BasicDetailsTest from './data/details/BasicDetails.stories'
 import InfoTypeSelectionListTest from './data/details/InfoTypeSelectionList.stories'
 import TagTest from './data/details/TagTest.stories'
 import TagPanelTest from './data/details/TagPanelTest.stories'
+import AppStatsTest from './apps/admin/AppStats.stories'
 
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);
 storiesOf('apps/details', module).add('ToolDetails', () => <ToolDetailsTest/>);
 storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
+
+storiesOf('AppStats', module).add('with test stats', () => <AppStatsTest/>);
 
 storiesOf('BasicDetails', module).add('with test diskresource details', () => <BasicDetailsTest logger={action('size')}/>);
 storiesOf('InfoTypeSelectionList',module).add('with test diskresource details', () =>  <InfoTypeSelectionListTest />);
