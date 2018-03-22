@@ -8,16 +8,20 @@ import com.google.gwt.user.client.ui.IsWidget;
 
 import java.util.List;
 
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
+
 /**
  * Created by sriram on 10/21/16.
  */
+
+@JsType
 public interface AdminAppStatsGridView extends IsWidget, IsMaskable {
 
-
-    void clear();
-
+    @JsIgnore
     void addAll(List<App> apps);
 
+    @JsType
     interface  Appearance {
         String name();
 
@@ -37,9 +41,9 @@ public interface AdminAppStatsGridView extends IsWidget, IsMaskable {
     }
 
     interface Presenter {
-     public   void go(HasOneWidget container);
+        void go(HasOneWidget container);
 
-     public void setViewDebugId(String baseId);
+        void setViewDebugId(String baseId);
     }
 
 }

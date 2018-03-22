@@ -1,3 +1,3 @@
-import * as details from './apps/details'
+import * as details from "./apps/details";
 
-export { details };
+export {details};
