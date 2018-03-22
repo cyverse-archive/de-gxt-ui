@@ -5,8 +5,10 @@
 .chip {
     display: flex;
     flex-wrap: wrap;
+    width: 50%;
     max-height: 80px;
     overflow: auto;
+    border: gray;
 }
 
 .searchButton {

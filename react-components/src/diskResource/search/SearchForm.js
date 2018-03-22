@@ -37,6 +37,7 @@ class SearchForm extends Component {
         this.handleDropDownChangeFor = this.handleDropDownChangeFor.bind(this);
         this.handleTagSubmit = this.handleTagSubmit.bind(this);
         this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this);
+        this.handleDeleteTag = this.handleDeleteTag.bind(this);
     }
 
     handleChangeFor(propertyName, event) {
@@ -90,6 +91,17 @@ class SearchForm extends Component {
                 [propertyName]: !prevState.includeTrash
             }
         });
+    }
+
+    handleDeleteTag(selectedTag) {
+        let tags = this.state.tags;
+        let index = tags.indexOf(selectedTag);
+        tags.splice(index, 1);
+        this.setState(function() {
+            return {
+                tags: tags
+            }
+        })
     }
 
     render() {
