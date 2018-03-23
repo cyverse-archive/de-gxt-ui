@@ -9,8 +9,11 @@ import com.google.gwt.core.client.GWT;
  * Created by sriram on 10/24/16.
  */
 public class AdminAppsStatsGridViewDefaultAppearance implements AdminAppStatsGridView.Appearance {
+    BelphegorDisplayStrings bds;
 
-    BelphegorDisplayStrings bds = GWT.create(BelphegorDisplayStrings.class);
+    public AdminAppsStatsGridViewDefaultAppearance() {
+        bds = GWT.create(BelphegorDisplayStrings.class);
+    }
 
     @Override
     public String name() {
