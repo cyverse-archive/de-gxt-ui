@@ -12,6 +12,9 @@ response.setDateHeader("Expires", 0);
 
 <script type="text/javascript" language="javascript"
 	src="belphegor/belphegor.nocache.js"></script>
+
+	<%@ include file="react_include.jsp" %>
+
 </head>
 
 <body>

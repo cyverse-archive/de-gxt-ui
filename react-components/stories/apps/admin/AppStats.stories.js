@@ -47,8 +47,8 @@ class AppStatsTest extends Component {
                     "job_count_completed": 0,
                     "job_count": 0,
                     "job_count_failed": 0,
-                    "job_last_completed": "2013-02-10T14:14:28Z",
-                     "last_used": "2013-02-10T14:14:28Z",
+                    "job_last_completed": 1521650432000,
+                     "last_used": 1521650292000,
                 },
                 "rating": {
                     "average": 0.0,

@@ -11,10 +11,10 @@ import jsinterop.annotations.JsType;
 /**
  * Created by sriram on 2/26/18.
  */
-@JsType(isNative = true, namespace = "CyVerseReactComponents.apps.details", name = "AppStats")
+@JsType(isNative = true, namespace = "CyVerseReactComponents.apps.admin", name = "AppStats")
 public class ReactAppStats {
 
-    @JsProperty(namespace = "CyVerseReactComponents.apps.details", name = "AppStats")
+    @JsProperty(namespace = "CyVerseReactComponents.apps.admin", name = "AppStats")
     public static ReactClass<AppStatsProps> appStats;
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
