@@ -8,8 +8,8 @@ import CategoryTreeTest from './apps/details/CategoryTree.stories'
 import CopyTextAreaTest from './util/CopyTextArea.stories'
 import BasicDetailsTest from './data/details/BasicDetails.stories'
 import InfoTypeSelectionListTest from './data/details/InfoTypeSelectionList.stories'
-import TagTest from './data/details/TagTest.stories'
-import TagPanelTest from './data/details/TagPanelTest.stories'
+import TagTest from './data/details/Tag.stories'
+import TagPanelTest from './data/details/TagPanel.stories'
 import AppStatsTest from './apps/admin/AppStats.stories'
 
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);

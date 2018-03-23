@@ -159,6 +159,7 @@ class BasicDetails extends Component {
         return (
             <div>
                 <table>
+                    <tbody>
                     <tr class={rowClass}>
                         <td class={labelClass}>
                             {appearance.lastModifiedLabel()}
@@ -202,6 +203,7 @@ class BasicDetails extends Component {
                         {sharingVal}
                     </tr>
                     {details}
+                    </tbody>
                 </table>
                 <TagPanel presenter={this.props.presenter} diskResource={this.props.data} detailsTag={this.props.DETAILS_TAGS}/>
                 <Dialog
