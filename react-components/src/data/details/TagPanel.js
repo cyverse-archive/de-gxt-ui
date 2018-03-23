@@ -93,7 +93,7 @@ class TagPanel extends Component {
         };
 
         let tagItems = this.state.tags ? this.state.tags.map((tag) =>
-                <Tag tag={tag} removeTag={this.handleRemoveClick} presenter={this.props.presenter}/>
+                <Tag tag={tag} key={tag.id} removeTag={this.handleRemoveClick} presenter={this.props.presenter}/>
             ) : [];
 
         return (
