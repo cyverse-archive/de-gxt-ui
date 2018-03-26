@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.util.SearchModelUtils;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
@@ -88,7 +89,9 @@ public class DataSearchQueryBuilderv2 {
         ownedBy()
                 .pathPrefix()
                 .sharedWith()
-                .file();
+                .file()
+                .metadata()
+                .tags();
 
         LOG.fine("search query==>" + toString());
         return toString();
@@ -118,9 +121,13 @@ public class DataSearchQueryBuilderv2 {
         return this;
     }
 
+    /**
+     * {"type": "permissions", "args": {"users": ["ipcdev","aramsey"], "permission": "write"}}
+     */
     public DataSearchQueryBuilderv2 sharedWith() {
-        List<String> content = template.getPermissionUsers();
-        if (content != null && !content.isEmpty()) {
+        String sharedWith = template.getSharedWith();
+        List<String> content = Lists.newArrayList(sharedWith);
+        if (!Strings.isNullOrEmpty(sharedWith)) {
             Splittable users = listToSplittable(content);
             Splittable args = StringQuoter.createSplittable();
             assignKeyValue(args, SHARED_WITH, users);
@@ -132,6 +139,44 @@ public class DataSearchQueryBuilderv2 {
             assignKeyValue(args, PERMISSION_RECURSE, template.isPermissionRecurse());
             appendArrayItem(allList, createTypeClause(PERMISSIONS, args));
         }
+        return this;
+    }
+
+    /**
+     * {"type": "tag", "args": {"tags": ["all","my","tags"]}
+     */
+    public DataSearchQueryBuilderv2 tags() {
+        List<String> content = template.getTags();
+        if (content != null && !content.isEmpty()) {
+            Splittable tags = listToSplittable(content);
+            Splittable args = StringQuoter.createSplittable();
+            assignKeyValue(args, TAGS, tags);
+            appendArrayItem(allList, createTypeClause(TAG, args));
+        }
+        return this;
+    }
+
+    /**
+     * {"type": "metadata", "args": {"attribute": "some_random_attribute_value", "value": "some_random_value"}}
+     */
+    public DataSearchQueryBuilderv2 metadata() {
+        String attributeContent = template.getMetadataAttributeHas();
+        String valueContent = template.getMetadataValueHas();
+        boolean hasAttributeSearch = !Strings.isNullOrEmpty(attributeContent);
+        boolean hasValueSearch = !Strings.isNullOrEmpty(valueContent);
+
+        if (hasAttributeSearch || hasValueSearch) {
+            Splittable args = StringQuoter.createSplittable();
+
+            if (hasAttributeSearch) {
+                assignKeyValue(args, ATTRIBUTE, attributeContent);
+            }
+            if (hasValueSearch) {
+                assignKeyValue(args, VALUE, valueContent);
+            }
+            appendArrayItem(allList, createTypeClause(METADATA, args));
+        }
+
         return this;
     }
 
