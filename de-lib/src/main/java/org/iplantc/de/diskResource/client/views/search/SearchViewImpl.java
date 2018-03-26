@@ -1,13 +1,5 @@
 package org.iplantc.de.diskResource.client.views.search;
 
-import org.iplantc.de.client.models.HasId;
-import org.iplantc.de.client.models.collaborators.Subject;
-import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
-import org.iplantc.de.client.models.sharing.PermissionValue;
-import org.iplantc.de.client.util.SearchModelUtils;
-import org.iplantc.de.collaborators.client.models.SubjectKeyProvider;
-import org.iplantc.de.collaborators.client.util.UserSearchField;
-import org.iplantc.de.collaborators.client.views.CollaboratorsColumnModel;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSelected;
@@ -16,40 +8,20 @@ import org.iplantc.de.diskResource.share.DiskResourceModule;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.editor.client.Editor;
-import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiFactory;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.core.client.dom.XElement;
 import com.sencha.gxt.core.client.util.BaseEventPreview;
-import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
-import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.HideEvent;
-import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.ShowEvent;
-import com.sencha.gxt.widget.core.client.form.CheckBox;
-import com.sencha.gxt.widget.core.client.form.StringComboBox;
-import com.sencha.gxt.widget.core.client.form.TextField;
-import com.sencha.gxt.widget.core.client.grid.ColumnModel;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * A form the user can fill out to perform advanced searches in the Data window which utilize the search service
@@ -87,24 +59,20 @@ public class SearchViewImpl extends Composite implements SearchView {
         eventPreview.setAutoHide(false);
     }
 
-//    @UiHandler("searchBtn")
-//    void onSearchBtnClicked(SelectEvent event) {
-//        if (editorDriver.isDirty()) {
-//            QueryDSLTemplate template = editorDriver.flush();
-//            convertUsers(template);
-//            template.setPermission(permission.getValue());
-//            AutoBean<QueryDSLTemplate> autoBean = AutoBeanUtils.getAutoBean(template);
-//            String encode = AutoBeanCodex.encode(autoBean).getPayload();
-//            GWT.log("Bean ended up being: " + encode);
-//            fireEvent(new QueryDSLSearchBtnSelected(template));
-//        }
-//    }
+    @Override
+    public void onSearchBtnClicked(Splittable query) {
+        if (query != null) {
+            GWT.log(query.getPayload());
+            fireEvent(new QueryDSLSearchBtnSelected(query));
+        }
+    }
 
     @Override
     public void show(Element parent, Style.AnchorAlignment anchorAlignment) {
         getElement().makePositionable(true);
 
         ReactSearchForm.SearchFormProps props = new ReactSearchForm.SearchFormProps();
+        props.presenter = SearchViewImpl.this;
         props.appearance = appearance;
         props.id = DiskResourceModule.Ids.SEARCH_FORM;
 

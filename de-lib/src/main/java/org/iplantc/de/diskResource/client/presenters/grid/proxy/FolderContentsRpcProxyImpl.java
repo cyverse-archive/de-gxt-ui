@@ -343,8 +343,8 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FilterPagingLoadConfigB
             QuerySearchLoadConfig searchConfig = (QuerySearchLoadConfig)loadConfig;
             QueryDSLTemplate template = searchConfig.getTemplate();
             FilterConfig filterConfig = new FilterConfigBean();
-            if (!Strings.isNullOrEmpty(template.getLabel())) {
-                filterConfig.setValue(template.getLabel());
+            if (!Strings.isNullOrEmpty(template.getNameHas())) {
+                filterConfig.setValue(template.getNameHas());
             }
             loadConfig.setFilters(Lists.newArrayList(filterConfig));
             searchService.submitSearchQuery(template, searchConfig, new QueryResultsCallback(announcer,

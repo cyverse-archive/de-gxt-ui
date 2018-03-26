@@ -113,7 +113,6 @@ public class DataSearchQueryBuilderv2 {
         if (!Strings.isNullOrEmpty(content)) {
             Splittable args = StringQuoter.createSplittable();
             assignKeyValue(args, LABEL, content);
-            assignKeyValue(args, EXACT, template.isLabelExact());
             appendArrayItem(allList, createTypeClause(LABEL, args));
         }
         return this;

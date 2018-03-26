@@ -1,10 +1,9 @@
 package org.iplantc.de.diskResource.client.events.selection;
 
-import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
-
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 /**
  * A GWT event that fires when the user selects the "Search" button in the Query DSL Form
@@ -19,9 +18,9 @@ public class QueryDSLSearchBtnSelected extends GwtEvent<QueryDSLSearchBtnSelecte
     }
 
     public static Type<QueryDSLSearchBtnSelectedHandler> TYPE = new Type<QueryDSLSearchBtnSelectedHandler>();
-    private QueryDSLTemplate template;
+    private Splittable template;
 
-    public QueryDSLSearchBtnSelected(QueryDSLTemplate template) {
+    public QueryDSLSearchBtnSelected(Splittable template) {
         this.template = template;
     }
 
@@ -33,7 +32,7 @@ public class QueryDSLSearchBtnSelected extends GwtEvent<QueryDSLSearchBtnSelecte
         handler.onQueryDSLSearchBtnSelected(this);
     }
 
-    public QueryDSLTemplate getTemplate() {
+    public Splittable getTemplate() {
         return template;
     }
 }

@@ -1,5 +1,7 @@
 package org.iplantc.de.client.models.querydsl;
 
+import org.iplantc.de.client.models.search.DateInterval;
+
 import java.util.List;
 
 /**
@@ -7,17 +9,56 @@ import java.util.List;
  */
 public interface QueryDSLTemplate {
 
-    String getLabel();
-    void setLabel(String label);
+    String getNameHas();
+    void setNameHas(String label);
+
+    String getNameHasNot();
+    void setNameHasNot(String label);
+
+    String getOwnedBy();
+    void setOwnedBy(String owner);
+
+    DateInterval getCreatedWithin();
+    void setCreatedWithin(DateInterval createdWithin);
+
+    DateInterval getModifiedWithin();
+    void setModifiedWithin(DateInterval modifiedWithin);
+
+    String getMetadataAttributeHas();
+    void setMetadataAttributeHas(String attribute);
+
+    String getMetadataValueHas();
+    void setMetadataValueHas(String value);
+
+    String getSharedWith();
+    void setSharedWith(String username);
+
+    int getFileSizeGreater();
+    void setFileSizeGreater(int size);
+
+    String getFileSizeGreaterUnit();
+    void setFileSizeGreaterUnit(String unit);
+
+    int getFileSizeLessThan();
+    void setFileSizeLessThan(int size);
+
+    String getFileSizeLessThanUnit();
+    void setFileSizeLessThanUnit(String unit);
+
+    String getTaggedWith();
+    void setTaggedWith(String tag);
+
+    List<String> getTags();
+    void setTags(List<String> tags);
+
+    Boolean isIncludeTrash();
+    void setIncludeTrash(Boolean includeTrash);
 
     Boolean isLabelExact();
     void setLabelExact(Boolean exact);
 
     String getPathPrefix();
     void setPathPrefix(String pathPrefix);
-
-    String getOwner();
-    void setOwner(String owner);
 
     String getPermission();
     void setPermission(String permission);
@@ -27,5 +68,7 @@ public interface QueryDSLTemplate {
 
     List<String> getPermissionUsers();
     void setPermissionUsers(List<String> permissionUsers);
+
+
 
 }

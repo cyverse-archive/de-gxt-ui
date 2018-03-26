@@ -17,6 +17,7 @@ import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorCode;
+import org.iplantc.de.client.models.querydsl.QueryAutoBeanFactory;
 import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.viewer.InfoType;
@@ -91,6 +92,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.ListStore;
@@ -198,6 +201,7 @@ public class GridViewPresenterImpl implements Presenter,
     @Inject AsyncProviderWrapper<MetadataTemplateDescDlg> metadataTemplateDescDlgProvider;
 
     @Inject MetadataView.Presenter.Appearance metadataAppearance;
+    @Inject QueryAutoBeanFactory queryFactory;
 
     @Inject DataLinkFactory dlFactory;
     @Inject
@@ -640,7 +644,9 @@ public class GridViewPresenterImpl implements Presenter,
 
     @Override
     public void onQueryDSLSearchBtnSelected(QueryDSLSearchBtnSelected event) {
-        QueryDSLTemplate template = event.getTemplate();
+        Splittable query = event.getTemplate();
+        QueryDSLTemplate template = AutoBeanCodex.decode(queryFactory, QueryDSLTemplate.class, query.getPayload()).as();
+
         final PagingLoader<FilterPagingLoadConfigBean, PagingLoadResult<DiskResource>> gridLoader =
                 view.getGridLoader();
         QuerySearchLoadConfig loadConfig = new QuerySearchLoadConfig();

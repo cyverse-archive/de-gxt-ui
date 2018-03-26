@@ -38,6 +38,11 @@ class SearchForm extends Component {
         this.handleTagSubmit = this.handleTagSubmit.bind(this);
         this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this);
         this.handleDeleteTag = this.handleDeleteTag.bind(this);
+        this.handleSubmitForm = this.handleSubmitForm.bind(this);
+    }
+
+    handleSubmitForm() {
+        this.props.presenter.onSearchBtnClicked(this.state);
     }
 
     handleChangeFor(propertyName, event) {
@@ -97,7 +102,7 @@ class SearchForm extends Component {
         let tags = this.state.tags;
         let index = tags.indexOf(selectedTag);
         tags.splice(index, 1);
-        this.setState(function() {
+        this.setState(function () {
             return {
                 tags: tags
             }
@@ -250,7 +255,8 @@ class SearchForm extends Component {
                     </tr>
                 </table>
                 <div className='searchButton'>
-                    <RaisedButton label={appearance.searchBtn()}/>
+                    <RaisedButton label={appearance.searchBtn()}
+                                  onClick={this.handleSubmitForm}/>
                 </div>
             </div>
         )
@@ -258,6 +264,9 @@ class SearchForm extends Component {
 }
 
 SearchForm.propTypes = {
+    presenter: PropTypes.shape({
+        onSearchBtnClicked: PropTypes.func.isRequired
+    }),
     appearance: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired
 };

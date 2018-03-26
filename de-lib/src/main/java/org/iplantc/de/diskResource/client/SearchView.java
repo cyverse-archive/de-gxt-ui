@@ -10,6 +10,7 @@ import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSele
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.core.client.dom.XElement;
@@ -22,7 +23,7 @@ import jsinterop.annotations.JsType;
  * Created by jstroot on 2/10/15.
  * @author jstroot, aramsey
  */
-
+@JsType
 public interface SearchView extends IsWidget,
                                     HideEvent.HasHideHandlers,
                                     QueryDSLSearchBtnSelected.HasQueryDSLSearchBtnSelectedHandlers {
@@ -130,14 +131,21 @@ public interface SearchView extends IsWidget,
                                 HasUpdateSavedSearchesEventHandlers {
     }
 
+    @JsIgnore
     void show(Element parent, Style.AnchorAlignment anchorAlignment);
 
+    @JsIgnore
     void clearSearch();
 
+    @JsIgnore
     XElement getElement();
 
+    @JsIgnore
     void hide();
 
+    @JsIgnore
     void fireEvent(GwtEvent<?> event);
+
+    void onSearchBtnClicked(Splittable query);
 }
 

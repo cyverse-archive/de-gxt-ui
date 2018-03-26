@@ -6,8 +6,15 @@ import SearchForm from "../../../src/diskResource/search/SearchForm";
 class SearchFormTest extends React.Component {
 
     render() {
+        const logger = this.props.logger || ((selection) => {
+            console.log(selection);
+        });
 
         const id = 'dataSearchForm';
+
+        const presenter = {
+            onSearchBtnClicked: logger
+        };
 
         const appearance = {
             nameHas: () => 'File/Folder name has the words',
@@ -30,7 +37,8 @@ class SearchFormTest extends React.Component {
 
         return (
             <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-                <SearchForm appearance={appearance}
+                <SearchForm presenter={presenter}
+                            appearance={appearance}
                             id={id}/>
             </MuiThemeProvider>
         )
