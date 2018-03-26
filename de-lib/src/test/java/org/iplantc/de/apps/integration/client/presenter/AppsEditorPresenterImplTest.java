@@ -12,6 +12,7 @@ import org.iplantc.de.apps.integration.client.view.AppEditorToolbar;
 import org.iplantc.de.apps.integration.client.view.AppsEditorView;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.apps.integration.AppTemplate;
+import org.iplantc.de.client.models.apps.integration.AppTemplateAutoBeanFactory;
 import org.iplantc.de.client.models.apps.integration.ArgumentGroup;
 import org.iplantc.de.client.services.AppTemplateServices;
 import org.iplantc.de.client.services.UUIDServiceAsync;
@@ -46,6 +47,8 @@ public class AppsEditorPresenterImplTest {
     @Mock AppTemplateUtils mockAppTemplateUtils;
 
     @Mock private AsyncCallback<Void> mockVoidCallback;
+    @Mock
+    private AppTemplateAutoBeanFactory mockAppTemplateFactory;
 
     private AppsEditorPresenterImpl uut;
 
@@ -58,7 +61,8 @@ public class AppsEditorPresenterImplTest {
                                           mockUuidService,
                                           mockAppearance,
                                           mockAnnouncer,
-                                          mockAppTemplateUtils);
+                                          mockAppTemplateUtils,
+                                          mockAppTemplateFactory);
     }
 
     @Test public void testDoArgumentGroupDelete() {
