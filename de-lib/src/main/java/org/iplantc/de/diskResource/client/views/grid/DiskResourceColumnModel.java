@@ -88,7 +88,7 @@ public class DiskResourceColumnModel extends ColumnModel<DiskResource> implement
         ColumnConfig<DiskResource, Date> created = new ColumnConfig<>(props.dateSubmitted(),
                                                                       appearance.createdDateColumnWidth(),
                                                                       appearance.createdDateColumnLabel());
-        ColumnConfig<DiskResource, DiskResource> dotMenu = new ColumnConfig<>(new IdentityValueProvider<DiskResource>(""),
+        ColumnConfig<DiskResource, DiskResource> dotMenu = new ColumnConfig<>(new IdentityValueProvider<DiskResource>("dot"),
                                                                               appearance.dotMenuColumnWidth());
         lastModified.setFixed(true);
         size.setFixed(true);

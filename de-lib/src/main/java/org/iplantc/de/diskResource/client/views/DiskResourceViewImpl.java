@@ -1,5 +1,6 @@
 package org.iplantc.de.diskResource.client.views;
 
+import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.diskResource.client.DetailsView;
 import org.iplantc.de.diskResource.client.DiskResourceView;
 import org.iplantc.de.diskResource.client.GridView;
@@ -21,6 +22,9 @@ import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData;
+import com.sencha.gxt.widget.core.client.grid.ColumnModel;
+
+import java.util.Map;
 
 /**
  * @author jstroot, sriram, psarando
@@ -126,6 +130,23 @@ public class DiskResourceViewImpl extends Composite implements DiskResourceView 
     @Override
     public void setWestPanelWidth(String width) {
        westData.setSize(Double.parseDouble(width));
+    }
+
+
+    @Override
+    public ColumnModel<DiskResource> getColumns() {
+        return centerGridView.getColumnModel() ;
+    }
+
+
+    /**
+     * Set column preferences.
+     *
+     * @param preferences A map of column preferences.
+     */
+    @Override
+    public void setColumnPreferences(Map<String, String> preferences) {
+        centerGridView.setColumnPreferences(preferences);
     }
 
 }

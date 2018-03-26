@@ -76,11 +76,13 @@ import com.google.inject.assistedinject.AssistedInject;
 import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.box.MessageBox;
+import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author jstroot
@@ -663,6 +665,21 @@ public class DiskResourcePresenterImpl implements
     @Override
     public boolean isDetailsCollapsed() {
       return view.isDetailsCollapsed();
+    }
+
+    @Override
+    public ColumnModel<DiskResource> getColumns() {
+        return view.getColumns();
+    }
+
+    /**
+     * Set column preferences.
+     *
+     * @param preferences A map of column preferences.
+     */
+    @Override
+    public void setColumnPreferences(Map<String, String> preferences) {
+        view.setColumnPreferences(preferences);
     }
 
     @Override
