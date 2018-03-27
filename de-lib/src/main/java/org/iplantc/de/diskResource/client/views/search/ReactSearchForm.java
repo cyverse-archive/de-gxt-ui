@@ -17,10 +17,11 @@ public class ReactSearchForm {
     public static ReactClass<SearchFormProps> SearchForm;
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
-    static class SearchFormProps extends BaseProps {
+    public static class SearchFormProps extends BaseProps {
         public SearchView presenter;
         public SearchView.SearchViewAppearance appearance;
         public Splittable dateIntervals;
+        public Splittable suggestedTags;
         public String id;
     }
 }

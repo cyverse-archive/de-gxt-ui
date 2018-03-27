@@ -1,11 +1,14 @@
 package org.iplantc.de.diskResource.client;
 
+import org.iplantc.de.client.models.tags.Tag;
 import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent.SavedSearchesRetrievedEventHandler;
 import org.iplantc.de.diskResource.client.events.search.DeleteSavedSearchClickedEvent.DeleteSavedSearchEventHandler;
+import org.iplantc.de.diskResource.client.events.search.FetchTagSuggestions;
 import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent.SaveDiskResourceQueryClickedEventHandler;
 import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent.HasSavedSearchDeletedEventHandlers;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent.HasUpdateSavedSearchesEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSelected;
+import org.iplantc.de.diskResource.client.views.search.ReactSearchForm;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.GwtEvent;
@@ -26,7 +29,8 @@ import jsinterop.annotations.JsType;
 @JsType
 public interface SearchView extends IsWidget,
                                     HideEvent.HasHideHandlers,
-                                    QueryDSLSearchBtnSelected.HasQueryDSLSearchBtnSelectedHandlers {
+                                    QueryDSLSearchBtnSelected.HasQueryDSLSearchBtnSelectedHandlers,
+                                    FetchTagSuggestions.HasFetchTagSuggestionsHandlers {
 
     @JsType
     interface SearchViewAppearance {
@@ -126,7 +130,10 @@ public interface SearchView extends IsWidget,
                                 DeleteSavedSearchEventHandler,
                                 HasSavedSearchDeletedEventHandlers,
                                 SavedSearchesRetrievedEventHandler,
-                                HasUpdateSavedSearchesEventHandlers {
+                                HasUpdateSavedSearchesEventHandlers,
+                                FetchTagSuggestions.FetchTagSuggestionsHandler {
+
+        void setView(SearchView view);
     }
 
     @JsIgnore
@@ -138,6 +145,8 @@ public interface SearchView extends IsWidget,
     @JsIgnore
     XElement getElement();
 
+    void renderSearchForm(ReactSearchForm.SearchFormProps props);
+
     @JsIgnore
     void hide();
 
@@ -145,5 +154,9 @@ public interface SearchView extends IsWidget,
     void fireEvent(GwtEvent<?> event);
 
     void onSearchBtnClicked(Splittable query);
+
+    void onEditTagSelected(Tag tag);
+
+    void fetchTagSuggestions(String searchTerm);
 }
 

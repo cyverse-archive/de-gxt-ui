@@ -2,6 +2,7 @@ package org.iplantc.de.diskResource.client.views.search.cells;
 
 import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.diskResource.client.SearchView;
+import org.iplantc.de.diskResource.client.events.search.FetchTagSuggestions;
 import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSelected;
 
 import com.google.gwt.cell.client.ValueUpdater;
@@ -40,7 +41,8 @@ import com.sencha.gxt.widget.core.client.event.HideEvent.HideHandler;
 public class DiskResourceSearchCellv2 extends TriggerFieldCell<String> implements HasExpandHandlers,
                                                                                   HasCollapseHandlers,
                                                                                   HideHandler,
-                                                                                  QueryDSLSearchBtnSelected.HasQueryDSLSearchBtnSelectedHandlers {
+                                                                                  QueryDSLSearchBtnSelected.HasQueryDSLSearchBtnSelectedHandlers,
+                                                                                  FetchTagSuggestions.HasFetchTagSuggestionsHandlers {
 
 
     private boolean expanded;
@@ -77,6 +79,11 @@ public class DiskResourceSearchCellv2 extends TriggerFieldCell<String> implement
     @Override
     public HandlerRegistration addQueryDSLSearchBtnSelectedHandler(QueryDSLSearchBtnSelected.QueryDSLSearchBtnSelectedHandler handler) {
         return searchForm.addQueryDSLSearchBtnSelectedHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addFetchTagSuggestionsHandler(FetchTagSuggestions.FetchTagSuggestionsHandler handler) {
+        return searchForm.addFetchTagSuggestionsHandler(handler);
     }
 
     public void collapse(final Context context, final XElement parent) {

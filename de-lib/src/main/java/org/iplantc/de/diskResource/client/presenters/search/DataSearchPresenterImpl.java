@@ -1,22 +1,30 @@
 package org.iplantc.de.diskResource.client.presenters.search;
 
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
+import org.iplantc.de.client.models.tags.Tag;
 import org.iplantc.de.client.services.SearchServiceFacade;
+import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent;
 import org.iplantc.de.diskResource.client.events.search.DeleteSavedSearchClickedEvent;
+import org.iplantc.de.diskResource.client.events.search.FetchTagSuggestions;
 import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent;
 import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent;
+import org.iplantc.de.diskResource.client.views.search.ReactSearchForm;
+import org.iplantc.de.diskResource.share.DiskResourceModule;
+import org.iplantc.de.tags.client.TagsView;
+import org.iplantc.de.tags.client.proxy.TagSuggestionLoadConfig;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.gwt.core.client.Callback;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -24,7 +32,12 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasName;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
+import com.google.web.bindery.autobean.shared.impl.StringQuoter;
+
+import com.sencha.gxt.data.shared.loader.ListLoadResult;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,17 +55,24 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     List<DiskResourceQueryTemplate> cleanCopyQueryTemplates = Lists.newArrayList();
     private final IplantAnnouncer announcer;
     private SearchView.SearchViewAppearance appearance;
+    private TagsView.TagSuggestionProxy proxy;
+    private DateIntervalProvider dateIntervalProvider;
     private final SearchServiceFacade searchService;
     private HandlerManager handlerManager;
     private final Logger LOG = Logger.getLogger(DataSearchPresenterImpl.class.getName());
+    private SearchView view;
 
     @Inject
     DataSearchPresenterImpl(final SearchServiceFacade searchService,
                             final IplantAnnouncer announcer,
-                            SearchView.SearchViewAppearance appearance) {
+                            SearchView.SearchViewAppearance appearance,
+                            TagsView.TagSuggestionProxy proxy,
+                            DateIntervalProvider dateIntervalProvider) {
         this.searchService = searchService;
         this.announcer = announcer;
         this.appearance = appearance;
+        this.proxy = proxy;
+        this.dateIntervalProvider = dateIntervalProvider;
     }
 
     @Override
@@ -256,4 +276,39 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
         return false;
     }
 
+    @Override
+    public void onFetchTagSuggestions(FetchTagSuggestions event) {
+        String searchTerm = event.getSearchTerm();
+        TagSuggestionLoadConfig config = new TagSuggestionLoadConfig();
+        config.setQuery(searchTerm);
+        proxy.load(config, new Callback<ListLoadResult<Tag>, Throwable>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(ListLoadResult<Tag> result) {
+                List<Tag> data = result.getData();
+                Splittable splittableTags = StringQuoter.createIndexed();
+                data.forEach(tag -> {
+                    Splittable splTag = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tag));
+                    splTag.assign(splittableTags, splittableTags.size());
+                });
+                ReactSearchForm.SearchFormProps props = new ReactSearchForm.SearchFormProps();
+                props.presenter = view;
+                props.appearance = appearance;
+                props.id = DiskResourceModule.Ids.SEARCH_FORM;
+                props.dateIntervals = dateIntervalProvider.get();
+                props.suggestedTags = splittableTags;
+
+                view.renderSearchForm(props);
+            }
+        });
+    }
+
+    @Override
+    public void setView(SearchView view) {
+        this.view = view;
+    }
 }

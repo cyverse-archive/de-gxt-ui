@@ -1,28 +1,42 @@
 package org.iplantc.de.diskResource.client.views.search;
 
+import org.iplantc.de.client.models.tags.Tag;
+import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import org.iplantc.de.diskResource.client.SearchView;
+import org.iplantc.de.diskResource.client.events.search.FetchTagSuggestions;
 import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSelected;
 import org.iplantc.de.diskResource.client.presenters.search.DateIntervalProvider;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
+import org.iplantc.de.tags.client.TagsView;
+import org.iplantc.de.tags.client.proxy.TagSuggestionLoadConfig;
+import org.iplantc.de.tags.client.proxy.TagSuggestionProxyImpl;
 
+import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
+import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.core.client.dom.XElement;
 import com.sencha.gxt.core.client.util.BaseEventPreview;
+import com.sencha.gxt.data.shared.loader.ListLoadResult;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.HideEvent;
 import com.sencha.gxt.widget.core.client.event.ShowEvent;
+
+import java.util.List;
 
 /**
  * A form the user can fill out to perform advanced searches in the Data window which utilize the search service
@@ -73,6 +87,16 @@ public class SearchViewImpl extends Composite implements SearchView {
     }
 
     @Override
+    public void onEditTagSelected(Tag tag) {
+        GWT.log("Edit tag : " + tag);
+    }
+
+    @Override
+    public void fetchTagSuggestions(String searchTerm) {
+        fireEvent(new FetchTagSuggestions(searchTerm));
+    }
+
+    @Override
     public void show(Element parent, Style.AnchorAlignment anchorAlignment) {
         getElement().makePositionable(true);
 
@@ -81,8 +105,9 @@ public class SearchViewImpl extends Composite implements SearchView {
         props.appearance = appearance;
         props.id = DiskResourceModule.Ids.SEARCH_FORM;
         props.dateIntervals = dateIntervalProvider.get();
+        props.suggestedTags = StringQuoter.createIndexed();
 
-        CyVerseReactComponents.render(ReactSearchForm.SearchForm, props, DivElement.as(con.getElement()));
+        renderSearchForm(props);
 
         RootPanel.get().add(this);
         onShow();
@@ -97,6 +122,11 @@ public class SearchViewImpl extends Composite implements SearchView {
 
         focus();
         fireEvent(new ShowEvent());
+    }
+
+    @Override
+    public void renderSearchForm(ReactSearchForm.SearchFormProps props) {
+        CyVerseReactComponents.render(ReactSearchForm.SearchForm, props, DivElement.as(con.getElement()));
     }
 
     @Override
@@ -149,5 +179,10 @@ public class SearchViewImpl extends Composite implements SearchView {
     @Override
     public void clearSearch() {
         GWT.log("CLEAR SEARCH...");
+    }
+
+    @Override
+    public HandlerRegistration addFetchTagSuggestionsHandler(FetchTagSuggestions.FetchTagSuggestionsHandler handler) {
+        return addHandler(handler, FetchTagSuggestions.TYPE);
     }
 }

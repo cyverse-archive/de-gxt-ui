@@ -6,6 +6,7 @@ import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.commons.client.events.SubmitTextSearchEvent;
 import org.iplantc.de.commons.client.events.SubmitTextSearchEvent.SubmitTextSearchEventHandler;
 import org.iplantc.de.commons.client.widgets.search.SearchFieldDecorator;
+import org.iplantc.de.diskResource.client.events.search.FetchTagSuggestions;
 import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSelected;
@@ -39,7 +40,8 @@ public class DiskResourceSearchFieldv2 extends TriggerField<String> implements H
                                                                                QueryDSLSearchBtnSelected.HasQueryDSLSearchBtnSelectedHandlers,
                                                                                SubmitTextSearchEventHandler,
                                                                                QueryDSLSearchBtnSelected.QueryDSLSearchBtnSelectedHandler,
-                                                                               SavedSearchDeletedEvent.SavedSearchDeletedEventHandler {
+                                                                               SavedSearchDeletedEvent.SavedSearchDeletedEventHandler,
+                                                                               FetchTagSuggestions.HasFetchTagSuggestionsHandlers {
 
     public final class QueryStringPropertyEditor extends PropertyEditor<String> {
         private final SearchAutoBeanFactory factory = GWT.create(SearchAutoBeanFactory.class);
@@ -90,6 +92,11 @@ public class DiskResourceSearchFieldv2 extends TriggerField<String> implements H
     @Override
     public HandlerRegistration addQueryDSLSearchBtnSelectedHandler(QueryDSLSearchBtnSelected.QueryDSLSearchBtnSelectedHandler handler) {
         return getCell().addQueryDSLSearchBtnSelectedHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addFetchTagSuggestionsHandler(FetchTagSuggestions.FetchTagSuggestionsHandler handler) {
+        return getCell().addFetchTagSuggestionsHandler(handler);
     }
 
     @Override

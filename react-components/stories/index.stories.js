@@ -11,6 +11,8 @@ import TagPanelTest from "./data/details/TagPanel.stories";
 import AppStatsTest from "./apps/admin/AppStats.stories";
 import DEHyperLinkTest from "./util/hyperlink/DEHyperLink.stories";
 import SearchFormTest from "./diskResource/search/SearchForm.stories";
+import TagSearchTest from "./tags/tagSearch/TagSearch.stories";
+import MyTagTest from "./tags/tagSearch/Tag.stories";
 
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);
 storiesOf('apps/details', module).add('ToolDetails', () => <ToolDetailsTest/>);
@@ -21,7 +23,17 @@ storiesOf('data/InfoTypeSelectionList',module).add('with test diskresource detai
 storiesOf('data/Tag', module).add('with test diskresource details', () => <TagTest logger={action('tag')}/>);
 storiesOf('data/TagPanel', module).add('witht test diskresource details', () => <TagPanelTest logger={action('tagpanel')}/>);
 
-storiesOf('SearchForm', module).add('with test search', () => <SearchFormTest/>);
+storiesOf('diskResource/search/SearchForm', module).add('with test search', () => <SearchFormTest searchLogger={action('Search Submitted')}
+                                                                                                  editTagLogger={action('Edit Tag Selected')}
+                                                                                                  suggestionsLogger={action('Fetch Suggestions')}/>);
+
+storiesOf('tags/tagSearch/TagSearchField', module).add('with test methods', () => <TagSearchTest deleteLogger={action('onDeleteTag')}
+                                                                                                 editLogger={action('onEditTagSelected')}
+                                                                                                 searchLogger={action('performSearch')}
+                                                                                                 addLogger={action('addTag')}/>);
+storiesOf('tags/tagSearch/Tag', module).add('with test tag', () => <MyTagTest deleteLogger={action('onDeleteTag')}
+                                                                            editLogger={action('onEditTagSelected')}/>);
+
 
 storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
 storiesOf('util', module).add('DEHyperLink', () => <DEHyperLinkTest/>);

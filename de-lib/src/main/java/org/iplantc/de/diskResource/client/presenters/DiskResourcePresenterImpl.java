@@ -285,11 +285,13 @@ public class DiskResourcePresenterImpl implements
         // Toolbar Search Field
         DiskResourceSearchField searchField = toolbarPresenter.getView().getSearchField();
         DiskResourceSearchFieldv2 searchFieldv2 = toolbarPresenter.getView().getSearchField2();
+        dataSearchPresenter.setView(searchFieldv2.getCell().getSearchForm());
         searchField.addSaveDiskResourceQueryClickedEventHandler(this.dataSearchPresenter);
         searchField.addSubmitDiskResourceQueryEventHandler(this.gridViewPresenter.getView());
         searchField.addSubmitDiskResourceQueryEventHandler(this.gridViewPresenter);
         searchFieldv2.addQueryDSLSearchBtnSelectedHandler(this.gridViewPresenter);
         searchFieldv2.addQueryDSLSearchBtnSelectedHandler(this.gridViewPresenter.getView());
+        searchFieldv2.addFetchTagSuggestionsHandler(this.dataSearchPresenter);
 
         // Grid Presenter
         this.gridViewPresenter.getView().addBeforeLoadHandler(this.navigationPresenter);

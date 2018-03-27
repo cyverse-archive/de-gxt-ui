@@ -6,15 +6,42 @@ import SearchForm from "../../../src/diskResource/search/SearchForm";
 class SearchFormTest extends React.Component {
 
     render() {
-        const logger = this.props.logger || ((selection) => {
+        const searchLogger = this.props.searchLogger || ((selection) => {
+            console.log(selection);
+        });
+
+        const editTagLogger = this.props.editTagLogger || ((selection) => {
+            console.log(selection);
+        });
+
+        const suggestionsLogger = this.props.suggestionsLogger || ((selection) => {
+            console.log(selection);
+        });
             console.log(selection);
         });
 
         const id = 'dataSearchForm';
 
         const presenter = {
-            onSearchBtnClicked: logger
+            onSearchBtnClicked: searchLogger,
+            onEditTagSelected: editTagLogger,
+            fetchTagSuggestions: suggestionsLogger
         };
+
+        const suggestedTags = [
+            {
+                value: 'apples'
+            },
+            {
+                value: 'oranges'
+            },
+            {
+                value: 'tangerines'
+            },
+            {
+                value: 'kiwis'
+            }
+        ];
 
         const appearance = {
             nameHas: () => 'File/Folder name has the words',
@@ -87,6 +114,7 @@ class SearchFormTest extends React.Component {
                 <SearchForm presenter={presenter}
                             appearance={appearance}
                             dateIntervals={dateIntervals}
+                            suggestedTags={suggestedTags}
                             id={id}/>
             </MuiThemeProvider>
         )
