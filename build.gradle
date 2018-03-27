@@ -68,7 +68,7 @@ task npmTest(type:Exec, dependsOn:npmInstall) {
     group 'Verification'
     description 'Runs the npm tests in the react-components directory (use `npm test` manually in non-CI envs).'
     workingDir 'react-components'
-    commandLine 'npm', 'test'
+    commandLine 'npm', 'run', 'test:ci'
 }
 
 task webpack(type:Exec, dependsOn:npmInstall) {
