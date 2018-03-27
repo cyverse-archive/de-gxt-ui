@@ -16,7 +16,7 @@ oh boy!`;
 
         return (
             <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-                <CopyTextArea btnText='Copy' text={ textToCopy } />
+                <CopyTextArea debugIdPrefix="test.id.prefix" btnText="Copy" copiedText="Copied!" text={ textToCopy } />
             </MuiThemeProvider>
         );
     }

@@ -18,22 +18,12 @@ class CopyTextArea extends Component {
         this.onCopyText = this.onCopyText.bind(this);
     }
 
-    renderCopyTextArea(text) {
-        return <TextField ref="copyTextArea" value={text} multiLine={true} readOnly="readonly" />;
-    }
-
-    renderCopyButton(btnText) {
-        if (hasClipboardAPI()) {
-            return <RaisedButton ref="copyTextBtn" onClick={this.onCopyText}>{btnText}</RaisedButton>;
-        }
-    }
-
     onCopyText(e) {
         e.preventDefault();
 
         this.refs.copyTextArea.select();
         if (copySelection()) {
-            this.setState({btnText: "Copied!"});
+            this.setState({btnText: this.props.copiedText});
         }
     }
 
@@ -44,13 +34,19 @@ class CopyTextArea extends Component {
     }
 
     render() {
-        let copyTextArea = this.renderCopyTextArea(this.props.text),
-            copyButton = this.renderCopyButton(this.state.btnText);
-
         return (
             <div>
-                {copyTextArea}
-                {copyButton}
+                <TextField id={`${this.props.debugIdPrefix}.CopyTextArea.TextField`}
+                           ref="copyTextArea"
+                           value={this.props.text}
+                           multiLine={true}
+                           readOnly="readonly" />
+                {hasClipboardAPI() && (
+                    <RaisedButton id={`${this.props.debugIdPrefix}.CopyTextArea.Button`}
+                                  onClick={this.onCopyText}>{
+                        this.state.btnText
+                    }</RaisedButton>
+                )}
             </div>
         );
     }
