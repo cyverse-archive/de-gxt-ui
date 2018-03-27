@@ -99,15 +99,17 @@ public class DeDiskResourceWindow extends WindowBase implements FolderSelectionE
             IntercomFacade.trackEvent(TrackingEventType.DATA_FAQ_CLICKED, null);
         });
 
-        Scheduler.get().scheduleDeferred((Command)() -> {
-            ColumnModel cm = presenter.getColumns();
-            List<ColumnConfig> configs = cm.getColumns();
-            FastMap<String> columnPref = new FastMap<>();
-            for (ColumnConfig cc : configs) {
-                columnPref.put(cc.getPath(), additionalWindowStates.get(getKey(cc.getPath(), DATA)));
-            }
-            presenter.setColumnPreferences(columnPref);
-        });
+        if (additionalWindowStates != null && additionalWindowStates.size() > 0) {
+            Scheduler.get().scheduleDeferred((Command)() -> {
+                ColumnModel cm = presenter.getColumns();
+                List<ColumnConfig> configs = cm.getColumns();
+                FastMap<String> columnPref = new FastMap<>();
+                for (ColumnConfig cc : configs) {
+                    columnPref.put(cc.getPath(), additionalWindowStates.get(getKey(cc.getPath(), DATA)));
+                }
+                presenter.setColumnPreferences(columnPref);
+            });
+        }
     }
 
     @Override
