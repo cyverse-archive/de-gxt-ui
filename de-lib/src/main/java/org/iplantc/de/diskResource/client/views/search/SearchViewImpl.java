@@ -39,6 +39,7 @@ public class SearchViewImpl extends Composite implements SearchView {
         this.con = new VerticalLayoutContainer();
         initWidget(con);
         con.getElement().getStyle().setBackgroundColor("#fff");
+        con.setWidth("500px");
 
         eventPreview = new BaseEventPreview() {
 
