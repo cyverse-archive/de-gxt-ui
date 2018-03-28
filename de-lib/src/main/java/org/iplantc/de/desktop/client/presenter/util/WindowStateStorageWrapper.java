@@ -19,6 +19,7 @@ import java.util.Set;
  */
 public class WindowStateStorageWrapper {
     public static final String LOCAL_STORAGE_PREFIX = "de.";
+    public static final String BOOTSTRAP = "bootstrap";
 
     UserInfo userInfo;
     String windowType;
@@ -34,7 +35,6 @@ public class WindowStateStorageWrapper {
         this.tag = tag;
         prefix = WindowStateStorageWrapper.LOCAL_STORAGE_PREFIX + windowType;
         suffix = "#" + tag + "#" + userInfo.getUsername();
-        this.wsf = wsf;
     }
 
 
@@ -152,10 +152,20 @@ public class WindowStateStorageWrapper {
         return additionalWindowStates;
     }
 
+    public static void bootstrap() {
+        WebStorageUtil.writeToStorage(LOCAL_STORAGE_PREFIX + BOOTSTRAP, Boolean.TRUE.toString());
+    }
+
+    public static boolean isBootStraped() {
+        return (WebStorageUtil.readFromStorage(LOCAL_STORAGE_PREFIX + BOOTSTRAP) == null) ? false : true;
+    }
+
 
     private String getKey(String attribute) {
         return prefix + attribute + suffix;
     }
+
+
 }
 
 

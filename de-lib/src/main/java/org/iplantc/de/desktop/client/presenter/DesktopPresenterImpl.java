@@ -462,6 +462,11 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                                                                         announcer,
                                                                         panel,
                                                                         this));
+        //make sure we have new structure for de storage. Else reset and start fresh
+        if (!WindowStateStorageWrapper.isBootStraped()) {
+            WebStorageUtil.clear(WindowStateStorageWrapper.LOCAL_STORAGE_PREFIX);
+            WindowStateStorageWrapper.bootstrap();
+        }
     }
 
     public void serviceDown(ServiceDown event) {
