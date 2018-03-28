@@ -20,7 +20,6 @@ import org.iplantc.de.client.models.apps.AppDoc;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.models.tool.Tool;
 import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import org.iplantc.de.commons.client.views.dialogs.ClipboardCopyEnabledDialog;
 import org.iplantc.de.desktop.client.presenter.DesktopPresenterImpl;
 import org.iplantc.de.shared.AsyncProviderWrapper;
@@ -28,7 +27,6 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 import com.google.common.base.Strings;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.editor.client.LeafValueEditor;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
@@ -53,9 +51,6 @@ import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.NumberLabel;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
-import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.core.client.ValueProvider;
@@ -65,10 +60,6 @@ import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.container.AccordionLayoutContainer;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import com.sencha.gxt.widget.core.client.tree.Tree;
-
-import gwt.react.client.api.React;
-import gwt.react.client.api.ReactDOM;
-import gwt.react.client.elements.ReactElement;
 
 /**
  * @author jstroot
@@ -259,28 +250,29 @@ public class AppDetailsViewImpl extends Composite implements
             helpLink.setVisible(false);
         }
 
-        Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
-
-            @Override
-            public void execute() {
-                final Splittable appJson = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(app));
-
-                ReactToolDetails.ToolDetailProps detailProps = new ReactToolDetails.ToolDetailProps();
-
-                detailProps.appearance = appearance;
-                detailProps.app = appJson;
-
-                CyVerseReactComponents.render(ReactToolDetails.ToolDetails, detailProps, DivElement.as(toolsContainer.getElement()));
-
-                ReactCategoryTree.CategoryTreeProps treeProps = new ReactCategoryTree.CategoryTreeProps();
-                treeProps.app = appJson;
-                treeProps.appearance = appearance;
-                treeProps.presenter = AppDetailsViewImpl.this;
-
-                DivElement hierarchyElem = DivElement.as(hierarchyWidget.getElement());
-                CyVerseReactComponents.render(ReactCategoryTree.CategoryTree, treeProps, hierarchyElem);
-            }
-        });
+        // React integration
+//        Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
+//
+//            @Override
+//            public void execute() {
+//                final Splittable appJson = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(app));
+//
+//                ReactToolDetails.ToolDetailProps detailProps = new ReactToolDetails.ToolDetailProps();
+//
+//                detailProps.appearance = appearance;
+//                detailProps.app = appJson;
+//
+//                CyVerseReactComponents.render(ReactToolDetails.ToolDetails, detailProps, DivElement.as(toolsContainer.getElement()));
+//
+//                ReactCategoryTree.CategoryTreeProps treeProps = new ReactCategoryTree.CategoryTreeProps();
+//                treeProps.app = appJson;
+//                treeProps.appearance = appearance;
+//                treeProps.presenter = AppDetailsViewImpl.this;
+//
+//                DivElement hierarchyElem = DivElement.as(hierarchyWidget.getElement());
+//                CyVerseReactComponents.render(ReactCategoryTree.CategoryTree, treeProps, hierarchyElem);
+//            }
+//        });
     }
 
     @Override
