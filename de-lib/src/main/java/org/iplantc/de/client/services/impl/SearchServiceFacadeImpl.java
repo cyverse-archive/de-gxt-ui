@@ -498,7 +498,7 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
     public void submitSearchQuery(QueryDSLTemplate template,
                                   QuerySearchLoadConfig loadConfig,
                                   FolderContentsRpcProxyImpl.QueryResultsCallback queryResultsCallback) {
-        DataSearchQueryBuilderv2 builder = new DataSearchQueryBuilderv2(template, userInfo);
+        DataSearchQueryBuilderv2 builder = new DataSearchQueryBuilderv2(template);
         String address = SEARCH;
 
         String buildFullQuery = builder.buildFullQuery();

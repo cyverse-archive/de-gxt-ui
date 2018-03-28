@@ -1,9 +1,7 @@
 package org.iplantc.de.client.services.impl;
 
-import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
 import org.iplantc.de.client.models.sharing.PermissionValue;
-import org.iplantc.de.client.util.SearchModelUtils;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -65,19 +63,14 @@ public class DataSearchQueryBuilderv2 {
 
 
     private final QueryDSLTemplate template;
-    private final UserInfo userinfo;
     private final Splittable allList;
     private final Splittable anyList;
     private final Splittable noneList;
-    private final SearchModelUtils searchModelUtils;
-
 
     Logger LOG = Logger.getLogger(DataSearchQueryBuilderv2.class.getName());
 
-    public DataSearchQueryBuilderv2(QueryDSLTemplate template, UserInfo userinfo) {
+    public DataSearchQueryBuilderv2(QueryDSLTemplate template) {
         this.template = template;
-        this.userinfo = userinfo;
-        this.searchModelUtils = SearchModelUtils.getInstance();
         allList = StringQuoter.createIndexed();
         anyList = StringQuoter.createIndexed();
         noneList = StringQuoter.createIndexed();
@@ -233,7 +226,7 @@ public class DataSearchQueryBuilderv2 {
     /**
      * {"type": "typeVal", "args": {"argKey": "argVal"}}
      */
-    public Splittable createTypeClause(String typeVal, Splittable args) {
+    private Splittable createTypeClause(String typeVal, Splittable args) {
         Splittable type = StringQuoter.createSplittable();
 
         assignKeyValue(type, TYPE, typeVal);
@@ -242,7 +235,7 @@ public class DataSearchQueryBuilderv2 {
         return type;
     }
 
-    public Splittable listToSplittable(List<String> list) {
+    private Splittable listToSplittable(List<String> list) {
         Splittable splittable = StringQuoter.createIndexed();
         list.forEach(value -> StringQuoter.create(value).assign(splittable, splittable.size()));
         return splittable;
@@ -255,7 +248,7 @@ public class DataSearchQueryBuilderv2 {
      * @param key
      * @param value
      */
-    public void assignKeyValue(Splittable keySplittable, String key, String value) {
+    private void assignKeyValue(Splittable keySplittable, String key, String value) {
         StringQuoter.create(value).assign(keySplittable, key);
     }
 
@@ -266,7 +259,7 @@ public class DataSearchQueryBuilderv2 {
      * @param key
      * @param value
      */
-    public void assignKeyValue(Splittable keySplittable, String key, Splittable value) {
+    private void assignKeyValue(Splittable keySplittable, String key, Splittable value) {
         value.assign(keySplittable, key);
     }
 
@@ -277,14 +270,8 @@ public class DataSearchQueryBuilderv2 {
      * @param key
      * @param value
      */
-    public void assignKeyValue(Splittable keySplittable, String key, boolean value) {
+    private void assignKeyValue(Splittable keySplittable, String key, boolean value) {
         StringQuoter.create(value).assign(keySplittable, key);
-    }
-
-    private Splittable addChild(Splittable parent, String key) {
-        Splittable child = StringQuoter.createSplittable();
-        child.assign(parent, key);
-        return child;
     }
 
     /**
