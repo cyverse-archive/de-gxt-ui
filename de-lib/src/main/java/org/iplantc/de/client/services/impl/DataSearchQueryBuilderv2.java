@@ -71,8 +71,6 @@ public class DataSearchQueryBuilderv2 {
     private final Splittable noneList;
     private final SearchModelUtils searchModelUtils;
 
-    Splittable query = StringQuoter.createSplittable();
-    Splittable all = addChild(query, QUERY);
 
     Logger LOG = Logger.getLogger(DataSearchQueryBuilderv2.class.getName());
 
@@ -90,6 +88,7 @@ public class DataSearchQueryBuilderv2 {
                 .pathPrefix()
                 .sharedWith()
                 .file()
+                .notFile()
                 .metadata()
                 .tags();
 
@@ -117,6 +116,19 @@ public class DataSearchQueryBuilderv2 {
             Splittable args = StringQuoter.createSplittable();
             assignKeyValue(args, LABEL, content);
             appendArrayItem(allList, createTypeClause(LABEL, args));
+        }
+        return this;
+    }
+
+    /**
+     * {"type": "label", "args": {"label": "some_random_file_name", "exact": true}}
+     */
+    public DataSearchQueryBuilderv2 notFile() {
+        String content = template.getNameHasNot();
+        if (!Strings.isNullOrEmpty(content)) {
+            Splittable args = StringQuoter.createSplittable();
+            assignKeyValue(args, LABEL, content);
+            appendArrayItem(noneList, createTypeClause(LABEL, args));
         }
         return this;
     }
@@ -289,9 +301,14 @@ public class DataSearchQueryBuilderv2 {
      */
     @Override
     public String toString() {
-        // {"all":[{"type": "randomValue"}, {"type": "otherRandomValue"}]}
+        Splittable query = StringQuoter.createSplittable();
 
-        allList.assign(all, ALL);
+        Splittable operators = StringQuoter.createSplittable();
+        assignKeyValue(operators, NONE, noneList);
+        assignKeyValue(operators, ALL, allList);
+        assignKeyValue(operators, ANY, anyList);
+
+        assignKeyValue(query, QUERY, operators);
 
         return query.getPayload();
     }
