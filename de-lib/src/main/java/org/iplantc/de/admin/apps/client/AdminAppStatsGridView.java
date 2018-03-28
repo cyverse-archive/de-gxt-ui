@@ -1,12 +1,10 @@
 package org.iplantc.de.admin.apps.client;
 
+import org.iplantc.de.admin.apps.client.presenter.callbacks.AppStatsSearchCallback;
 import org.iplantc.de.client.models.IsMaskable;
-import org.iplantc.de.client.models.apps.App;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-
-import java.util.List;
 
 import jsinterop.annotations.JsIgnore;
 import jsinterop.annotations.JsType;
@@ -18,8 +16,9 @@ import jsinterop.annotations.JsType;
 @JsType
 public interface AdminAppStatsGridView extends IsWidget, IsMaskable {
 
-    @JsIgnore
-    void addAll(List<App> apps);
+    void load(Presenter p);
+
+
 
     @JsType
     interface  Appearance {
@@ -40,10 +39,15 @@ public interface AdminAppStatsGridView extends IsWidget, IsMaskable {
         String loading();
     }
 
+    @JsType
     interface Presenter {
+        @JsIgnore
         void go(HasOneWidget container);
 
+        @JsIgnore
         void setViewDebugId(String baseId);
+
+        void searchApps(String searchString, AppStatsSearchCallback callback);
     }
 
 }
