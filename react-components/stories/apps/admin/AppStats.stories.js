@@ -56,10 +56,15 @@ class AppStatsTest extends Component {
                 }
             }];
 
+        const presenter = {
+            searchApps: (searchText, resultCallback) => {
+                resultCallback(appStats)
+            },
+        }
 
         return (
             <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-                <AppStats appStats={appStats} appearance={appearance}/>
+                <AppStats presenter={presenter} appearance={appearance}/>
             </MuiThemeProvider>
         )
 

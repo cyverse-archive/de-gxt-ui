@@ -1,7 +1,5 @@
 package org.iplantc.de.admin.apps.client;
 
-import com.google.web.bindery.autobean.shared.Splittable;
-
 import gwt.react.client.components.ReactClass;
 import gwt.react.client.proptypes.BaseProps;
 import jsinterop.annotations.JsPackage;
@@ -20,7 +18,7 @@ public class ReactAppStats {
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     static class AppStatsProps extends BaseProps {
         AdminAppStatsGridView.Appearance appearance;
-        public Splittable[] appStats;
+        AdminAppStatsGridView.Presenter presenter;
     }
 
 }
