@@ -33,13 +33,16 @@ public class ReceiveNotificationsDirect {
     /**
      * Instantiate new
      */
-    public ReceiveNotificationsDirect() {
-       connection = AMQPConnectionManager.getInstance().getConnection();
-       LOG.info("amqp Connection created created!");
+    public ReceiveNotificationsDirect() throws IOException {
+        connection = AMQPConnectionManager.getInstance().getConnection();
+        if (connection == null || !connection.isOpen()) {
+            throw new IOException();
+        }
+        LOG.info("amqp Connection created!");
     }
 
     /**
-     * Create a channel for receving the notifications
+     * Create a channel for receiving the notifications
      *
      * @return
      */
@@ -95,7 +98,7 @@ public class ReceiveNotificationsDirect {
     public void consumeMessage(Channel msgChannel, Consumer consumer, String queueName) {
         try {
             msgChannel.basicConsume(queueName, true, consumer);
-            LOG.debug("comsumer reqistered ");
+            LOG.debug("consumer registered ");
         } catch (IOException e) {
             LOG.error("IO Exception when consuming message",e);
         } catch (Exception e) {
