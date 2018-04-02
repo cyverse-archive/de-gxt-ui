@@ -13,7 +13,6 @@ public abstract class NotificationCallback<T> implements DECallback<T> {
 
     @Override
     public List<WindowType> getWindowTypes() {
-        return Lists.newArrayList(WindowType.NOTIFICATIONS,
-                                  WindowType.SYSTEM_MESSAGES);
+        return Lists.newArrayList(WindowType.NOTIFICATIONS);
     }
 }

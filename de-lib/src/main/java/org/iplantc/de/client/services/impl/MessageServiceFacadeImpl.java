@@ -7,7 +7,6 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasUUIDs;
 import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.notifications.Counts;
 import org.iplantc.de.client.models.notifications.NotificationAutoBeanFactory;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.notifications.NotificationList;
@@ -18,7 +17,6 @@ import org.iplantc.de.client.services.converters.DECallbackConverter;
 import org.iplantc.de.client.services.converters.NotificationCallbackConverter;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.shared.DECallback;
-import org.iplantc.de.shared.services.BaseServiceCallWrapper.Type;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
@@ -40,20 +38,6 @@ import java.util.List;
  *
  */
 public class MessageServiceFacadeImpl implements MessageServiceFacade {
-
-    private static final class CountsCB extends DECallbackConverter<String, Counts> {
-        private final NotificationAutoBeanFactory factory;
-
-        public CountsCB(final DECallback<Counts> callback, final NotificationAutoBeanFactory factory) {
-            super(callback);
-            this.factory = factory;
-        }
-
-        @Override
-        protected Counts convertFrom(final String json) {
-            return AutoBeanCodex.decode(factory, Counts.class, json).as();
-        }
-    }
 
     private final NotificationAutoBeanFactory notesFactory;
     private final DiscEnvApiService deServiceFacade;
@@ -122,14 +106,6 @@ public class MessageServiceFacadeImpl implements MessageServiceFacade {
                                                             encode.getPayload());
 
         deServiceFacade.getServiceData(wrapper, callback);
-    }
-
-    @Override
-    public void getMessageCounts(final DECallback<Counts> callback) {
-        final String addr = NOTIFICATIONS + "/count-messages?seen=false"; //$NON-NLS-1$
-        final ServiceCallWrapper wrapper = new ServiceCallWrapper(Type.GET, addr);
-        final DECallback<String> convCB = new CountsCB(callback, notesFactory);
-        deServiceFacade.getServiceData(wrapper, convCB);
     }
 
     @Override

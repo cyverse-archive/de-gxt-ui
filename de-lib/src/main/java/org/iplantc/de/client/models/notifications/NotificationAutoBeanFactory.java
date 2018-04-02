@@ -16,11 +16,6 @@ import com.google.web.bindery.autobean.shared.AutoBeanFactory;
  */
 public interface NotificationAutoBeanFactory extends AutoBeanFactory {
 
-    /**
-     * the response of a count-messages call when the seen parameter is false.
-     */
-    AutoBean<Counts> getCounts();
-
     AutoBean<NotificationMessage> getNotificationMessage();
 
     AutoBean<NotificationList> getNotificationList();

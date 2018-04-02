@@ -15,7 +15,6 @@ import org.iplantc.de.client.services.MessageServiceFacade;
 import org.iplantc.de.client.services.OauthServiceFacade;
 import org.iplantc.de.client.services.PermIdRequestUserServiceFacade;
 import org.iplantc.de.client.services.SearchServiceFacade;
-import org.iplantc.de.client.services.SystemMessageServiceFacade;
 import org.iplantc.de.client.services.TagsServiceFacade;
 import org.iplantc.de.client.services.ToolRequestServiceFacade;
 import org.iplantc.de.client.services.ToolServices;
@@ -52,8 +51,6 @@ public interface ServicesInjector extends Ginjector {
     MessageServiceFacade getMessageServiceFacade();
 
     SearchServiceFacade getSearchServiceFacade();
-
-    SystemMessageServiceFacade getSystemMessageServiceFacade();
 
     ToolRequestServiceFacade getToolRequestServiceProvider();
 

@@ -13,7 +13,6 @@ import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.analysis.AnalysesAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.File;
-import org.iplantc.de.client.models.notifications.Counts;
 import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.notifications.NotificationAutoBeanFactory;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
@@ -44,7 +43,6 @@ import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.desktop.client.presenter.util.MessagePoller;
 import org.iplantc.de.desktop.client.presenter.util.NotificationWebSocketManager;
-import org.iplantc.de.desktop.client.presenter.util.SystemMessageWebSocketManager;
 import org.iplantc.de.desktop.client.presenter.util.WindowStateStorageWrapper;
 import org.iplantc.de.desktop.client.views.widgets.PreferencesDialog;
 import org.iplantc.de.desktop.client.views.windows.WindowInterface;
@@ -60,8 +58,6 @@ import org.iplantc.de.shared.NotificationCallback;
 import org.iplantc.de.shared.events.ServiceDown;
 import org.iplantc.de.shared.events.ServiceRestored;
 import org.iplantc.de.shared.services.PropertyServiceAsync;
-import org.iplantc.de.systemMessages.client.events.NewSystemMessagesEvent;
-import org.iplantc.de.systemMessages.client.view.NewMessageView;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
@@ -106,20 +102,6 @@ import java.util.logging.Logger;
  * @author jstroot
  */
 public class DesktopPresenterImpl implements DesktopView.Presenter {
-
-    private final class NewSysMessageCountCallback extends NotificationCallback<Counts> {
-		@Override
-		public void onFailure(Integer statusCode, Throwable caught) {
-			IplantAnnouncer.getInstance().schedule(new ErrorAnnouncementConfig(appearance.checkSysMessageError()));
-		}
-
-		@Override
-		public void onSuccess(Counts result) {
-			if(result.getNewSystemMessageCount() > 0) {
-				 eventBus.fireEvent(new NewSystemMessagesEvent());
-			}
-		}
-	}
 
 	interface AuthErrors {
         String API_NAME = "api_name";
@@ -169,11 +151,9 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     private final MessagePoller messagePoller;
     private final SaveSessionPeriodic ssp;
     private SaveWindowStatesPeriodic swsp;
-    private final NewMessageView.Presenter systemMsgPresenter;
     private final DesktopView view;
     private final WindowManager windowManager;
     private NotificationWebSocketManager notificationWebSocketManager;
-    private SystemMessageWebSocketManager systemMessageWebSocketManager;
     private boolean loggedOut;
     Logger LOG = Logger.getLogger(DesktopPresenterImpl.class.getName());
 
@@ -184,14 +164,12 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                                 final DesktopPresenterEventHandler globalEventHandler,
                                 final DesktopPresenterWindowEventHandler windowEventHandler,
                                 final EventBus eventBus,
-                                final NewMessageView.Presenter systemMsgPresenter,
                                 final WindowManager windowManager,
                                 final DesktopWindowManager desktopWindowManager,
                                 final MessagePoller messagePoller,
                                 final DesktopPresenterAppearance appearance) {
         this.view = view;
         this.eventBus = eventBus;
-        this.systemMsgPresenter = systemMsgPresenter;
         this.windowManager = windowManager;
         this.messagePoller = messagePoller;
         this.desktopWindowManager = desktopWindowManager;
@@ -207,7 +185,6 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         }
 
         initNotificationWebSocket();
-        initSystemMessageWebSocket();
     }
 
     private void initNotificationWebSocket() {
@@ -235,46 +212,6 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                 GWT.log("websocket onOpen()");
             }
         });
-    }
-
-    private void initSystemMessageWebSocket() {
-        systemMessageWebSocketManager = SystemMessageWebSocketManager.getInstance();
-        systemMessageWebSocketManager.openWebSocket(new WebsocketListener() {
-
-            @Override
-            public void onClose() {
-                GWT.log("WebSocket onClose()");
-                //if websocket connection closed unexpectedly, retry connection!
-                if(!loggedOut) {
-                    GWT.log("reconnecting...");
-                    systemMessageWebSocketManager.openWebSocket(this);
-                }
-            }
-
-            @Override
-            public void onMessage(String msg) {
-                GWT.log("onMessage(): " + msg);
-                processSystemMessage(msg);
-            }
-
-            @Override
-            public void onOpen() {
-                GWT.log("websocket onOpen()");
-            }
-        });
-    }
-
-    private void processSystemMessage(String msg){
-        if (msg.equals("X")) {
-            return;
-        }
-        JSONObject obj = null;
-        try {
-            obj = JSONParser.parseStrict(msg).isObject();
-            eventBus.fireEvent(new NewSystemMessagesEvent());
-        } catch (Exception e) {
-            //ignore error and message as it not in json format
-          }
     }
 
     private void processNotification(String msg) {
@@ -367,7 +304,6 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         loggedOut = true;
         messagePoller.stop();
         notificationWebSocketManager.closeWebSocket();
-        systemMessageWebSocketManager.closeWebSocket();
     }
 
     @Override
@@ -589,11 +525,6 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     }
 
     @Override
-    public void onSystemMessagesClick() {
-        desktopWindowManager.show(WindowType.SYSTEM_MESSAGES);
-    }
-
-    @Override
     public void saveUserSettings(final UserSettings value,
                                  final boolean updateSilently) {
         AppsCallback hookCallback = new AppsCallback<Void>() {
@@ -696,12 +627,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         panel.add(view);
         processQueryStrings();
         getNotifications();
-        getSystemMessageCounts();
         doPeriodicWindowStateSave();
-    }
-
-    private void getSystemMessageCounts() {
-        messageServiceFacade.getMessageCounts(new NewSysMessageCountCallback());
     }
 
     @Override

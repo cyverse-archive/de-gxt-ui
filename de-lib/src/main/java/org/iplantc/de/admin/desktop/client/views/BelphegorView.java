@@ -30,8 +30,6 @@ public interface BelphegorView extends IsWidget {
 
         String toolRequests();
 
-        String systemMessages();
-
         String toolAdmin();
 
         String workshopAdmin();

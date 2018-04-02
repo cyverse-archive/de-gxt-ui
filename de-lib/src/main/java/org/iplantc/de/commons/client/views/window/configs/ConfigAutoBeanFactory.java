@@ -28,8 +28,6 @@ public interface ConfigAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<PipelineEditorWindowConfig> pipelineEditorWindowConfig();
     
-    AutoBean<SystemMessagesWindowConfig> systemMessagesWindowConfig();
-    
     AutoBean<TabularFileViewerWindowConfig> newTabularFileViewerWindowConfig();
 
     AutoBean<HTPathListWindowConfig> pathListWindowConfig();

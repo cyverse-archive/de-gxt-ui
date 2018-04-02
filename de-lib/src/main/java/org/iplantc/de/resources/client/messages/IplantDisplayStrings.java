@@ -920,15 +920,6 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
     @Key("executeThisAnalysis")
     String executeThisAnalysis();
 
-    /**
-     * A message telling what day something will expire.
-     * 
-     * @param expirationDate the date of expiration formatted for the current locale
-     */
-    @DefaultMessage("This message will expire on {0}.")
-    @Key("expirationMessage")
-    String expirationMessage(String expirationDate);
-
     @Key("feedback")
     String feedback();
 
@@ -1376,29 +1367,6 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
     String maximize();
 
     /**
-     * The system message arrival announcement message.
-     *
-     * @return the message
-     */
-    @DefaultMessage("You have an important message.")
-    @Key("messageArrivalAnnouncement")
-    String messageArrivalAnnouncement();
-
-    /**
-     * The query asking the user if he really wants to dismiss the currently selected message.
-     */
-    @DefaultMessage("Do you really want to dismiss this message?")
-    @Key("messageDismissQuery")
-    String messageDismissQuery();
-
-    /**
-     * A message letting the user know a message is currently being dismissed.
-     */
-    @DefaultMessage("dismissing message")
-    @Key("messageDismissing")
-    String messageDismissing();
-
-    /**
      * Translated "Messages".
      * 
      * @return translated "Messages"
@@ -1639,15 +1607,6 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
      */
     String noSearchResults(String searchTerm);
 
-	/**
-	 * The system messages window message indicating that the user has no system messages to view.
-	 *
-	 * @return the message
-	 */
-	@DefaultMessage("You have no new messages.")
-	@Key("noSystemMessages")
-	String noSystemMessages();
-
     /**
      * Translated "must be a valid CyVerse Wiki Documentation URL".
      *
@@ -1712,15 +1671,6 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
     @DefaultMessage("CyVerse is funded by a grant from the National Science Foundation Plant Science Cyberinfrastructure Collaborative (#DBI-0735191).")
     @Key("nsfProjectText")
     SafeHtml nsfProjectText();
-
-    /**
-     * The open system messages window link text
-     *
-     * @return the text
-     */
-    @DefaultMessage("Read it.")
-    @Key("openMessage")
-    String openMessage();
 
     /**
      * Translated "Other Information".
@@ -2541,15 +2491,6 @@ public interface IplantDisplayStrings extends com.google.gwt.i18n.client.Message
     @DefaultMessage("Switch View")
     @Key("swapView")
     String swapView();
-
-    /**
-     * The system messages menu item text
-     *
-     * @return the text
-     */
-    @DefaultMessage("System Messages")
-    @Key("systemMessagesLabel")
-    String systemMessagesLabel();
 
     /**
      * the name of the current day

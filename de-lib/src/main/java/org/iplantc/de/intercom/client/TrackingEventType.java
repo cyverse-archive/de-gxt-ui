@@ -52,10 +52,6 @@ public interface TrackingEventType {
 
     String WORKFLOW_INT_WINDOW_CLOSED = "Workflow Integration Window Closed";
 
-    String SYS_MESSAGE_WINDOW_OPEN = "System Message Window Open";
-
-    String SYS_MESSAGE_WINDOW_CLOSED = "System Message Window Closed";
-
     String MANAGE_TOOLS_WINDOW_OPEN = "Manage Tools Window Open";
 
     String MANAGE_TOOLS_WINDOW_CLOSED = "Manage Tools Window Closed";

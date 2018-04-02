@@ -524,11 +524,6 @@ public abstract class WindowBase extends Window implements WindowInterface {
                                               AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
                     break;
 
-                case SYSTEM_MESSAGES:
-                    IntercomFacade.trackEvent(TrackingEventType.SYS_MESSAGE_WINDOW_OPEN,
-                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
-                    break;
-
                 case COLLABORATION:
                     IntercomFacade.trackEvent(TrackingEventType.COLLAB_WINDOW_OPEN,
                                               AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
@@ -600,11 +595,6 @@ public abstract class WindowBase extends Window implements WindowInterface {
 
                 case WORKFLOW_INTEGRATION:
                     IntercomFacade.trackEvent(TrackingEventType.WORKFLOW_INT_WINDOW_CLOSED,
-                                              AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
-                    break;
-
-                case SYSTEM_MESSAGES:
-                    IntercomFacade.trackEvent(TrackingEventType.SYS_MESSAGE_WINDOW_CLOSED,
                                               AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config)));
                     break;
 

@@ -52,11 +52,11 @@ public interface IplantNewUserTourStrings extends com.google.gwt.i18n.client.Mes
   String introNotifications();
 
   /**
-   * Translated "<p>The Settings drop-down is where you can log out, access additional help resources, and modify settings to customize your DE experience. This includes:</p><p><li>Preferences window for changing settings and modifying keyboard shortcuts.</li><li>Collaborators window where you may add CyVerse users who you frequently interact with for easy sharing.</li><li>System Messages window which contains any global DE announcements.</li></p>".
+   * Translated "<p>The Settings drop-down is where you can log out, access additional help resources, and modify settings to customize your DE experience. This includes:</p><p><li>Preferences window for changing settings and modifying keyboard shortcuts.</li><li>Collaborators window where you may add CyVerse users who you frequently interact with for easy sharing.</li></p>".
    * 
-   * @return translated "<p>The Settings drop-down is where you can log out, access additional help resources, and modify settings to customize your DE experience. This includes:</p><p><li>Preferences window for changing settings and modifying keyboard shortcuts.</li><li>Collaborators window where you may add CyVerse users who you frequently interact with for easy sharing.</li><li>System Messages window which contains any global DE announcements.</li></p>"
+   * @return translated "<p>The Settings drop-down is where you can log out, access additional help resources, and modify settings to customize your DE experience. This includes:</p><p><li>Preferences window for changing settings and modifying keyboard shortcuts.</li><li>Collaborators window where you may add CyVerse users who you frequently interact with for easy sharing.</li></p>"
    */
-  @DefaultMessage("<p>The Settings drop-down is where you can log out, access additional help resources, and modify settings to customize your DE experience. This includes:</p><p><li>Preferences window for changing settings and modifying keyboard shortcuts.</li><li>Collaborators window where you may add CyVerse users who you frequently interact with for easy sharing.</li><li>System Messages window which contains any global DE announcements.</li></p>")
+  @DefaultMessage("<p>The Settings drop-down is where you can log out, access additional help resources, and modify settings to customize your DE experience. This includes:</p><p><li>Preferences window for changing settings and modifying keyboard shortcuts.</li><li>Collaborators window where you may add CyVerse users who you frequently interact with for easy sharing.</li></p>")
   @Key("introSettings")
   String introSettings();
 

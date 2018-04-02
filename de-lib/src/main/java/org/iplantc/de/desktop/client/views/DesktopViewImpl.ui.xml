@@ -39,8 +39,6 @@
                                                   text="{appearance.preferences}"/>
                             <anchors:IPlantAnchor ui:field="collaboratorsLink"
                                                   text="{appearance.collaboration}"/>
-                            <anchors:IPlantAnchor ui:field="systemMsgsLink"
-                                                  text="{appearance.systemMessagesLabel}"/>
                             <menu:SeparatorMenuItem/>
                             <anchors:IPlantAnchor ui:field="documentationLink"
                                                   text="{appearance.documentation}"/>

@@ -1,17 +1,15 @@
 package org.iplantc.de.client.services;
 
-import java.util.List;
-
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasUUIDs;
-import org.iplantc.de.client.models.notifications.Counts;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.notifications.NotificationList;
 import org.iplantc.de.client.services.callbacks.NotificationCallbackWrapper;
 import org.iplantc.de.shared.DECallback;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import java.util.List;
 
 public interface MessageServiceFacade {
 
@@ -41,13 +39,6 @@ public interface MessageServiceFacade {
      * @param callback called on RPC completion.
      */
     void deleteMessages(HasUUIDs deleteIds, DECallback<String> callback);
-
-    /**
-     * Retrieves the message counts from the server where the seen parameter is false.
-     * 
-     * @param callback called on RPC completion
-     */
-    void getMessageCounts(DECallback<Counts> callback);
 
     void deleteAll(NotificationCategory category, DECallback<String> callback);
 

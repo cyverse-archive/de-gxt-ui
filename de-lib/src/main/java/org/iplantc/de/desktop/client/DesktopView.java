@@ -106,8 +106,6 @@ public interface DesktopView extends IsWidget {
 
         String collaboration();
 
-        String systemMessagesLabel();
-
         String introduction();
 
         String documentation();
@@ -184,8 +182,6 @@ public interface DesktopView extends IsWidget {
             String welcome();
 
             String requestHistoryError();
-            
-            String checkSysMessageError();
 
             String userPreferencesLoadError();
 
@@ -263,8 +259,6 @@ public interface DesktopView extends IsWidget {
         void onIntroClick();
 
         void doLogout(boolean sessionTimeout);
-
-        void onSystemMessagesClick();
     }
 
     interface UnseenNotificationsPresenter {
@@ -292,8 +286,6 @@ public interface DesktopView extends IsWidget {
     void setPresenter(Presenter presenter);
 
     void setUnseenNotificationCount(int count);
-
-    void setUnseenSystemMessageCount(int count);
 
     void hideNotificationMenu();
 

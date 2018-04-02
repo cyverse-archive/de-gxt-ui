@@ -123,10 +123,6 @@ public class DesktopPresenterDefaultAppearance implements DesktopView.Presenter.
     public String requestHistoryError() {
         return desktopMessages.requestHistoryError();
     }
-	@Override
-	public String checkSysMessageError() {
-		return desktopErrorMessages.checkSysMessageError();
-	}
 
     @Override
     public String userPreferencesLoadError() {

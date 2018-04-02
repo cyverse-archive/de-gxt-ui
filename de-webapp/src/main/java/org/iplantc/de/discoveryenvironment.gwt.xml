@@ -54,14 +54,6 @@
         <when-type-is class="org.iplantc.de.client.desktop.widget.ShortcutCell.ShortcutCellAppearance"/>
     </replace-with>
 
-    <!--  system messages deferred binding rules -->
-    <replace-with class="org.iplantc.de.client.sysmsgs.services.RemoteServices">
-        <when-type-is class="org.iplantc.de.client.sysmsgs.services.Services"/>
-    </replace-with>
-    <replace-with class="org.iplantc.de.systemMessages.client.view.DefaultFactory">
-        <when-type-is class="org.iplantc.de.systemMessages.client.view.Factory"/>
-    </replace-with>
-
     <!-- Specify the app entry point class.                         -->
     <entry-point class='org.iplantc.de.client.DiscoveryEnvironment'/>
 

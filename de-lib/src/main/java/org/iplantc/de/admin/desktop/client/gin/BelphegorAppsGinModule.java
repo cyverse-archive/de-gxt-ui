@@ -18,11 +18,6 @@ import org.iplantc.de.admin.desktop.client.refGenome.presenter.RefGenomePresente
 import org.iplantc.de.admin.desktop.client.refGenome.service.ReferenceGenomeServiceFacade;
 import org.iplantc.de.admin.desktop.client.refGenome.service.impl.ReferenceGenomeServiceFacadeImpl;
 import org.iplantc.de.admin.desktop.client.refGenome.view.RefGenomeViewImpl;
-import org.iplantc.de.admin.desktop.client.systemMessage.SystemMessageView;
-import org.iplantc.de.admin.desktop.client.systemMessage.presenter.SystemMessagePresenterImpl;
-import org.iplantc.de.admin.desktop.client.systemMessage.service.SystemMessageServiceFacade;
-import org.iplantc.de.admin.desktop.client.systemMessage.service.impl.SystemMessageServiceFacadeImpl;
-import org.iplantc.de.admin.desktop.client.systemMessage.view.SystemMessageViewImpl;
 import org.iplantc.de.admin.desktop.client.toolRequest.ToolRequestView;
 import org.iplantc.de.admin.desktop.client.toolRequest.presenter.ToolRequestPresenterImpl;
 import org.iplantc.de.admin.desktop.client.toolRequest.service.ToolRequestServiceFacade;
@@ -63,10 +58,6 @@ public class BelphegorAppsGinModule extends AbstractGinModule {
         bind(ToolRequestView.class).to(ToolRequestViewImpl.class);
         bind(ToolRequestView.Presenter.class).to(ToolRequestPresenterImpl.class);
         bind(ToolRequestServiceFacade.class).to(ToolRequestServiceFacadeImpl.class);
-
-        bind(SystemMessageView.class).to(SystemMessageViewImpl.class);
-        bind(SystemMessageView.Presenter.class).to(SystemMessagePresenterImpl.class);
-        bind(SystemMessageServiceFacade.class).to(SystemMessageServiceFacadeImpl.class);
 
         bind(TemplateListingView.class).to(TemplatesListingViewImpl.class);
         bind(TemplateListingView.Presenter.class).to(MetadataTemplatesPresenterImpl.class);

@@ -5,7 +5,6 @@ import org.iplantc.de.admin.desktop.client.metadata.view.TemplateListingView;
 import org.iplantc.de.admin.desktop.client.ontologies.OntologiesView;
 import org.iplantc.de.admin.desktop.client.permIdRequest.views.PermanentIdRequestView;
 import org.iplantc.de.admin.desktop.client.refGenome.RefGenomeView;
-import org.iplantc.de.admin.desktop.client.systemMessage.SystemMessageView;
 import org.iplantc.de.admin.desktop.client.toolAdmin.ToolAdminView;
 import org.iplantc.de.admin.desktop.client.toolRequest.ToolRequestView;
 import org.iplantc.de.admin.desktop.client.workshopAdmin.WorkshopAdminView;
@@ -44,14 +43,13 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
 
     @UiField HtmlLayoutContainer northCon;
     @UiField DETabPanel deTabPanel;
-    @UiField SimpleContainer ontologiesPanel, refGenomePanel, toolRequestPanel, systemMessagesPanel, metadataPanel,
+    @UiField SimpleContainer ontologiesPanel, refGenomePanel, toolRequestPanel, metadataPanel,
             permIdPanel, toolAdminPanel, workshopAdminPanel, statsPanel;
     @UiField(provided = true) BelphegorViewAppearance appearance;
     private TextButton menuButton;
     private RefGenomeView.Presenter refGenPresenter;
     private ToolRequestView.Presenter toolReqPresenter;
     private ToolAdminView.Presenter toolAdminPresenter;
-    private SystemMessageView.Presenter sysMsgPresenter;
     private TemplateListingView.Presenter tempPresenter;
     private PermanentIdRequestView.Presenter permIdPresenter;
     private OntologiesView.Presenter ontologiesPresenter;
@@ -63,7 +61,6 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
                              final RefGenomeView.Presenter refGenPresenter,
                              final ToolRequestView.Presenter toolReqPresenter,
                              final ToolAdminView.Presenter toolAdminPresenter,
-                             final SystemMessageView.Presenter sysMsgPresenter,
                              final TemplateListingView.Presenter tempPresenter,
                              final PermanentIdRequestView.Presenter permIdPresenter,
                              final WorkshopAdminView.Presenter workshopAdminPresenter,
@@ -74,7 +71,6 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
         this.refGenPresenter = refGenPresenter;
         this.toolReqPresenter = toolReqPresenter;
         this.toolAdminPresenter = toolAdminPresenter;
-        this.sysMsgPresenter = sysMsgPresenter;
         this.tempPresenter = tempPresenter;
         this.permIdPresenter = permIdPresenter;
         this.workshopAdminPresenter = workshopAdminPresenter;
@@ -85,7 +81,6 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
              refGenPresenter,
              toolReqPresenter,
              toolAdminPresenter,
-             sysMsgPresenter,
              tempPresenter,
              permIdPresenter,
              workshopAdminPresenter, appStatsPresenter);
@@ -101,7 +96,6 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
                       final RefGenomeView.Presenter refGenPresenter,
                       final ToolRequestView.Presenter toolReqPresenter,
                       final ToolAdminView.Presenter toolAdminPresenter,
-                      final SystemMessageView.Presenter sysMsgPresenter,
                       final TemplateListingView.Presenter tempPresenter,
                       final PermanentIdRequestView.Presenter permIdPresenter,
                       final WorkshopAdminView.Presenter workshopAdminPresenter,
@@ -112,7 +106,6 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
         refGenPresenter.go(refGenomePanel);
         toolReqPresenter.go(toolRequestPanel);
         toolAdminPresenter.go(toolAdminPanel);
-        sysMsgPresenter.go(systemMessagesPanel);
         tempPresenter.go(metadataPanel);
         permIdPresenter.go(permIdPanel);
         workshopAdminPresenter.go(workshopAdminPanel);
@@ -167,10 +160,6 @@ public class BelphegorViewImpl extends Composite implements BelphegorView {
         deTabPanel.setTabDebugId(toolAdminPanel, baseID + Belphegor.Ids.TOOL_ADMIN_TAB);
         toolAdminPanel.ensureDebugId(baseID + Belphegor.Ids.TOOL_ADMIN);
         toolAdminPresenter.setViewDebugId(baseID + Belphegor.Ids.TOOL_ADMIN);
-
-        deTabPanel.setTabDebugId(systemMessagesPanel, baseID + Belphegor.Ids.SYSTEM_MESSAGE_TAB);
-        systemMessagesPanel.ensureDebugId(baseID + Belphegor.Ids.SYSTEM_MESSAGE);
-        sysMsgPresenter.setViewDebugId(baseID + Belphegor.Ids.SYSTEM_MESSAGE);
 
         deTabPanel.setTabDebugId(metadataPanel, baseID + Belphegor.Ids.METADATA_TAB);
         metadataPanel.ensureDebugId(baseID + Belphegor.Ids.METADATA);

@@ -31,7 +31,6 @@
     <inherits name="org.iplantc.de.analysis.Analysis"/>
     <inherits name="org.iplantc.de.fileViewers.FileViewers"/>
     <inherits name="org.iplantc.de.notifications.Notifications"/>
-    <inherits name="org.iplantc.de.systemMessages.SystemMessages"/>
     <inherits name="org.iplantc.de.collaborators.Collaborators" />
     <inherits name="org.iplantc.de.preferences.Preferences"/>
     <inherits name="org.iplantc.de.teams.Teams"/>

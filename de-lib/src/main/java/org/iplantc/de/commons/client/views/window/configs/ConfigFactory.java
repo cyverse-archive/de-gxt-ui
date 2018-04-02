@@ -160,13 +160,6 @@ public class ConfigFactory {
         return sdwc;
     }
 
-    public static SystemMessagesWindowConfig systemMessagesWindowConfig(final String selectedMsg) {
-        final AutoBean<SystemMessagesWindowConfig> ab = applyWindowType(WindowType.SYSTEM_MESSAGES,
-                factory.systemMessagesWindowConfig());
-        ab.as().setSelectedMessage(selectedMsg);
-        return ab.as();
-    }
-
     public static WindowConfig getDefaultConfig(WindowType type) {
         WindowConfig config = null;
         switch (type) {
@@ -191,10 +184,6 @@ public class ConfigFactory {
 
             case SIMPLE_DOWNLOAD:
                 config = simpleDownloadWindowConfig();
-                break;
-
-            case SYSTEM_MESSAGES:
-                config = systemMessagesWindowConfig(null);
                 break;
 
             case COLLABORATION:
@@ -271,11 +260,6 @@ public class ConfigFactory {
 
             case WORKFLOW_INTEGRATION:
                 config = AutoBeanCodex.decode(factory, PipelineEditorWindowConfig.class,
-                                              wc.getWindowConfig()).as();
-                break;
-
-            case SYSTEM_MESSAGES:
-                config = AutoBeanCodex.decode(factory, SystemMessagesWindowConfig.class,
                                               wc.getWindowConfig()).as();
                 break;
 
