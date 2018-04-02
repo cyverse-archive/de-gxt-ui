@@ -113,6 +113,11 @@ public interface FileViewer extends IsWidget, IsMaskable, HasHandlers, FileSaved
                                    String fileExtension);
 
         void setViewDirtyState(boolean dirty, FileViewer dirtyViewer);
+
+        /**
+         * Add a static ID to the FileViewer view and its children
+         */
+        void setViewDebugId(String baseID);
     }
 
     String COLUMNS_KEY = "columns";

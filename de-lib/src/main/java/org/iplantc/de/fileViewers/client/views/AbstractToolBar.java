@@ -3,6 +3,7 @@ package org.iplantc.de.fileViewers.client.views;
 import org.iplantc.de.fileViewers.client.events.LineNumberCheckboxChangeEvent;
 import org.iplantc.de.fileViewers.client.events.RefreshSelectedEvent;
 import org.iplantc.de.fileViewers.client.events.SaveSelectedEvent;
+import org.iplantc.de.fileViewers.share.FileViewerModule;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -108,4 +109,13 @@ public abstract class AbstractToolBar extends Composite {
         return addHandler(handler, LineNumberCheckboxChangeEvent.TYPE);
     }
 
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        refreshBtn.ensureDebugId(baseID + FileViewerModule.Ids.TOOLBAR_REFRESH_BTN);
+        saveBtn.ensureDebugId(baseID + FileViewerModule.Ids.TOOLBAR_SAVE_BTN);
+        lineNumberCheckbox.setId(baseID + FileViewerModule.Ids.TOOLBAR_LINE_NUMBERS);
+        editStatus.ensureDebugId(baseID + FileViewerModule.Ids.TOOLBAR_EDIT_STATUS);
+    }
 }

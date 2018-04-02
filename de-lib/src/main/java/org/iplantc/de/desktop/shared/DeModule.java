@@ -65,5 +65,6 @@ public interface DeModule {
         String ABOUT_WINDOW = "aboutWindow";
         String MANAGE_TOOLS_WINDOW = "manageToolsWindow";
         String COLLABORATION_WINDOW = "collaborationWindow";
+        String FILE_VIEWER = "fileViewerWindow";
     }
 }

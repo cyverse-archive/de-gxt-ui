@@ -4,6 +4,7 @@ import org.iplantc.de.fileViewers.client.events.AddRowSelectedEvent;
 import org.iplantc.de.fileViewers.client.events.DeleteRowSelectedEvent;
 import org.iplantc.de.fileViewers.client.events.HeaderRowCheckboxChangedEvent;
 import org.iplantc.de.fileViewers.client.events.SkipRowsCountValueChangeEvent;
+import org.iplantc.de.fileViewers.share.FileViewerModule;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -130,4 +131,13 @@ public class StructuredTextViewToolBar extends AbstractToolBar {
         fireEvent(new SkipRowsCountValueChangeEvent(getSkipRowCount()));
     }
 
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
+
+        addRowBtn.ensureDebugId(baseID + FileViewerModule.Ids.TOOLBAR_ADD_ROW_BTN);
+        cbxHeaderRows.setId(baseID + FileViewerModule.Ids.TOOLBAR_ROW_HEADER);
+        deleteRowBtn.ensureDebugId(baseID + FileViewerModule.Ids.TOOLBAR_DELETE_ROW_BTN);
+        skipRowsCount.ensureDebugId(baseID + FileViewerModule.Ids.TOOLBAR_SKIP_ROWS_COUNT);
+    }
 }

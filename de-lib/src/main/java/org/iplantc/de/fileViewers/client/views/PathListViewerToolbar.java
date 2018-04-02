@@ -1,6 +1,7 @@
 package org.iplantc.de.fileViewers.client.views;
 
 import org.iplantc.de.fileViewers.client.events.DeleteSelectedPathsSelectedEvent;
+import org.iplantc.de.fileViewers.share.FileViewerModule;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -55,5 +56,10 @@ public class PathListViewerToolbar extends AbstractToolBar {
         fireEvent(new DeleteSelectedPathsSelectedEvent());
     }
 
+    @Override
+    protected void onEnsureDebugId(String baseID) {
+        super.onEnsureDebugId(baseID);
 
+        deleteSelectedPathsBtn.ensureDebugId(baseID + FileViewerModule.Ids.TOOLBAR_DELETE_PATHS);
+    }
 }

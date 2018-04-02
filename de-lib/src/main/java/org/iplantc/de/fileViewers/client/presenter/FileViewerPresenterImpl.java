@@ -69,6 +69,8 @@ import java.util.logging.Logger;
  * @author sriram, jstroot
  */
 public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedEvent.FileSavedEventHandler {
+    private String baseID;
+
     class GetManifestCallback extends DataCallback<Manifest> {
         private final AsyncCallback<String> asyncCallback;
         private final FileViewer.FileViewerPresenterAppearance presenterAppearance;
@@ -473,6 +475,15 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
         }
     }
 
+    @Override
+    public void setViewDebugId(String baseID) {
+        this.baseID = baseID;
+    }
+
+    void setFileViewerDebugIds() {
+        viewers.forEach(viewer -> viewer.asWidget().ensureDebugId(baseID));
+    }
+
     /**
      * Calls the tree URL service to fetch the URLs to display in the grid.
      */
@@ -495,9 +506,9 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
                      final boolean isVizTabFirst) {
         checkNotNull(contentType);
 
-        List<? extends FileViewer> viewers_list = mimeFactory.getViewerCommand(file, infoType, editing, manifest, this, contentType);
+        List<? extends FileViewer> viewersList = mimeFactory.getViewerCommand(file, infoType, editing, manifest, this, contentType);
 
-        viewers.addAll(viewers_list);
+        viewers.addAll(viewersList);
 
         Splittable infoTypeSplittable = diskResourceUtil.createInfoTypeSplittable(infoType);
         boolean treeViewer = diskResourceUtil.isTreeTab(infoTypeSplittable);
@@ -536,6 +547,8 @@ public class FileViewerPresenterImpl implements FileViewer.Presenter, FileSavedE
             tabPanel.add(new HTML(appearance.fileOpenMsg()), "");
         }
         simpleContainer.unmask();
+
+        setFileViewerDebugIds();
     }
 
     void setContentType(MimeType contentType) {
