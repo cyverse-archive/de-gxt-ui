@@ -101,8 +101,8 @@ public class FileViewerWindow extends WindowBase
                                 columns,
                                 delimiter);
         }
-
-        ensureDebugId(DeModule.WindowIds.FILE_VIEWER);
+        final String uniqueWindowTag = (windowConfig.getTag() == null) ? "" : "." + windowConfig.getTag();
+        ensureDebugId(DeModule.WindowIds.FILE_VIEWER + uniqueWindowTag);
     }
 
     @Override
