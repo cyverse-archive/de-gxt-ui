@@ -36,4 +36,6 @@ public interface AppIntegrationMessages extends Messages {
     String outputCategoryTitle();
 
     String referenceGenomeCategoryTitle();
+
+    String appMissingInfo();
 }
