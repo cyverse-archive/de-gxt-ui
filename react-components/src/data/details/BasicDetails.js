@@ -64,12 +64,12 @@ class BasicDetails extends Component {
         let sharingVal = null;
         if (isOwner) {
             sharingVal =
-                <td id={this.props.DETAILS_SHARE} class={linkClass}
+                <td id={this.props.DETAILS_SHARE} className={linkClass}
                     onClick={this.handleShareClick}> {(diskResource["share-count"] ?
                     diskResource["share-count"] : appearance.beginSharing())}</td>;
         } else {
             sharingVal =
-                <td id={this.props.DETAILS_SHARE} class={valueClass}> appearance.emptyValue() </td>;
+                <td id={this.props.DETAILS_SHARE} className={valueClass}> appearance.emptyValue() </td>;
         }
 
 
@@ -78,27 +78,27 @@ class BasicDetails extends Component {
         if (diskResource.infoType) {
             if (drUtil.isTreeInfoType(diskResource.infoType)) {
                 sendTo =
-                    <td id={this.props.DETAILS_SEND_TO} class={linkClass}
+                    <td id={this.props.DETAILS_SEND_TO} className={linkClass}
                         onClick={this.handleSendToClick}> {appearance.treeViewer()} </td>;
             } else if (drUtil.isGenomeVizInfoType(diskResource.infoType)) {
                 sendTo =
-                    <td id={this.props.DETAILS_SEND_TO} class={linkClass}
+                    <td id={this.props.DETAILS_SEND_TO} className={linkClass}
                         onClick={this.handleSendToClick}> {appearance.coge()} </td>;
             } else if (drUtil.isEnsemblInfoType(diskResource.infoType)) {
                 sendTo =
-                    <td id={this.props.DETAILS_SEND_TO} class={linkClass}
+                    <td id={this.props.DETAILS_SEND_TO} className={linkClass}
                         onClick={this.handleSendToClick}> {appearance.ensembl()} </td>;
             } else {
-                sendTo = <td id={this.props.DETAILS_SEND_TO} class={valueClass}>
+                sendTo = <td id={this.props.DETAILS_SEND_TO} className={valueClass}>
                     {appearance.emptyValue()} </td>;
             }
         } else {
             sendTo =
-                <td id={this.props.DETAILS_SEND_TO} class={valueClass}>appearance.emptyValue() </td>;
+                <td id={this.props.DETAILS_SEND_TO} className={valueClass}>appearance.emptyValue() </td>;
         }
         let md5Link = null;
         if (diskResource.md5) {
-            md5Link = <td id={this.props.DETAILS_MD5} class={linkClass} onClick={this.handleMd5Open}>
+            md5Link = <td id={this.props.DETAILS_MD5} className={linkClass} onClick={this.handleMd5Open}>
                 {md5Link}
             </td>;
         } else {
@@ -108,46 +108,46 @@ class BasicDetails extends Component {
         let details = null;
         if (isFolder) {
             details = <tr>
-                <td class={labelClass}> {appearance.filesFoldersLabel()}</td>
+                <td className={labelClass}> {appearance.filesFoldersLabel()}</td>
                 <td> {diskResource["file-count"]} / {diskResource["dir-count"]}</td>
             </tr>;
         } else {
-            details = [<tr class={rowClass}>
-                <td class={labelClass}>
+            details = [<tr className={rowClass}>
+                <td className={labelClass}>
                     {appearance.md5CheckSum()}
                 </td>
                     {md5Link}
             </tr>,
-                <tr class={rowClass}>
-                    <td class={labelClass}>
+                <tr className={rowClass}>
+                    <td className={labelClass}>
                         {appearance.sizeLabel()}
                     </td>
-                    <td id={this.props.DETAILS_SIZE} class={valueClass}>
+                    <td id={this.props.DETAILS_SIZE} className={valueClass}>
                         {drUtil.formatFileSize(diskResource["file-size"])}
                     </td>
                 </tr>,
 
-                <tr class={rowClass}>
-                    <td class={labelClass}>
+                <tr className={rowClass}>
+                    <td className={labelClass}>
                         {appearance.typeLabel()}
                     </td>
-                    <td class={valueClass}>
+                    <td className={valueClass}>
                         {diskResource["content-type"]}
                     </td>
                 </tr>,
-                <tr class={rowClass}>
-                    <td class={labelClass}>
+                <tr className={rowClass}>
+                    <td className={labelClass}>
                         {appearance.infoTypeLabel()}
                     </td>
-                    <td class={valueClass}>
+                    <td className={valueClass}>
                         <InfoTypeSelectionList id={this.props.DETAILS_INFO_TYPE} infoTypes={infoTypes}
                                                selectedValue={diskResource.infoType ? diskResource.infoType : null}
                                                view={this.props.view}
                                                appearance={this.props.appearance}/>
                     </td>
                 </tr>,
-                <tr class={rowClass}>
-                    <td class={labelClass}>
+                <tr className={rowClass}>
+                    <td className={labelClass}>
                         {appearance.sendToLabel()}
                     </td>
                     {sendTo}
@@ -158,11 +158,11 @@ class BasicDetails extends Component {
             <div>
                 <table>
                     <tbody>
-                    <tr class={rowClass}>
-                        <td class={labelClass}>
+                    <tr className={rowClass}>
+                        <td className={labelClass}>
                             {appearance.lastModifiedLabel()}
                         </td>
-                        <td class={valueClass}>
+                        <td className={valueClass}>
                             <IntlProvider locale="en">
                                 <FormattedDate id={this.props.DETAILS_LAST_MODIFIED}
                                                value={Number(diskResource['date-modified'])}
@@ -172,11 +172,11 @@ class BasicDetails extends Component {
                             </IntlProvider>
                         </td>
                     </tr>
-                    <tr class={rowClass}>
-                        <td class={labelClass}>
+                    <tr className={rowClass}>
+                        <td className={labelClass}>
                             {appearance.createdDateLabel()}
                         </td>
-                        <td class={valueClass}>
+                        <td className={valueClass}>
                             <IntlProvider locale="en">
                                 <FormattedDate id={this.props.DETAILS_DATE_SUBMITTED}
                                                value={Number(diskResource['date-created'])}
@@ -186,16 +186,16 @@ class BasicDetails extends Component {
                             </IntlProvider>
                         </td>
                     </tr>
-                    <tr class={rowClass}>
-                        <td class={labelClass}>
+                    <tr className={rowClass}>
+                        <td className={labelClass}>
                             {appearance.permissionsLabel()}
                         </td>
-                        <td id={this.props.DETAILS_PERMISSIONS} class={valueClass}>
+                        <td id={this.props.DETAILS_PERMISSIONS} className={valueClass}>
                             {diskResource.permission}
                         </td>
                     </tr>
-                    <tr class={rowClass}>
-                        <td class={labelClass}>
+                    <tr className={rowClass}>
+                        <td className={labelClass}>
                             {appearance.shareLabel()}
                         </td>
                         {sharingVal}

@@ -95,7 +95,7 @@ class TagPanel extends Component {
                         listStyle={this.props.appearance.tagSearchListStyle()}
                         onNewRequest={this.handleTagSelect}/>
                 </div>
-                <div id="panel" class={this.props.appearance.css().tagPanelStyle()}>
+                <div id="panel" className={this.props.appearance.css().tagPanelStyle()}>
                     { tagItems }
                 </div>
             </div>

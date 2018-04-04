@@ -22,12 +22,12 @@ class Tag extends Component {
 
     render() {
         return (
-            <div class={this.props.appearance.css().tagDivStyle()} onMouseOver={this.handleMouseOver}
+            <div className={this.props.appearance.css().tagDivStyle()} onMouseOver={this.handleMouseOver}
                  onMouseOut={this.handleMouseOut}>
-                <div class={this.props.appearance.css().tagStyle()}
+                <div className={this.props.appearance.css().tagStyle()}
                      onClick={this.onTagClick}>{this.props.tag.value}</div>
                 <div title={this.props.appearance.removeTag()} id={this.props.tag.value}
-                     class={this.props.appearance.css().tagRemoveStyle()}
+                     className={this.props.appearance.css().tagRemoveStyle()}
                      onClick={() => this.props.removeTag(this.props.tag)}> X
                 </div>
             </div>
