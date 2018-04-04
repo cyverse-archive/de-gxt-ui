@@ -54,7 +54,7 @@ class BasicDetails extends Component {
 
         const actions = [
             <FlatButton
-                label="Ok"
+                label={appearance.okLabel()}
                 primary={true}
                 keyboardFocused={true}
                 onClick={this.handleMd5Close}
@@ -68,7 +68,8 @@ class BasicDetails extends Component {
                     onClick={this.handleShareClick}> {(diskResource["share-count"] ?
                     diskResource["share-count"] : appearance.beginSharing())}</td>;
         } else {
-            sharingVal = <td id={this.props.DETAILS_SHARE} class={valueClass}> - </td>;
+            sharingVal =
+                <td id={this.props.DETAILS_SHARE} class={valueClass}> appearance.emptyValue() </td>;
         }
 
 
@@ -86,12 +87,14 @@ class BasicDetails extends Component {
             } else if (drUtil.isEnsemblInfoType(diskResource.infoType)) {
                 sendTo =
                     <td id={this.props.DETAILS_SEND_TO} class={linkClass}
-                        onClick={this.handleSendToClick}> {appearance.ensemble()} </td>;
+                        onClick={this.handleSendToClick}> {appearance.ensembl()} </td>;
             } else {
-                sendTo = <td id={this.props.DETAILS_SEND_TO} class={valueClass}> - </td>;
+                sendTo = <td id={this.props.DETAILS_SEND_TO} class={valueClass}>
+                    {appearance.emptyValue()} </td>;
             }
         } else {
-            sendTo = <td id={this.props.DETAILS_SEND_TO} class={valueClass}> - </td>;
+            sendTo =
+                <td id={this.props.DETAILS_SEND_TO} class={valueClass}>appearance.emptyValue() </td>;
         }
         let md5Link = null;
         if (diskResource.md5) {
@@ -99,7 +102,7 @@ class BasicDetails extends Component {
                 {md5Link}
             </td>;
         } else {
-            md5Link = "-";
+            md5Link = <td>appearance.emptyValue()</td>;
         }
 
         let details = null;
@@ -113,11 +116,8 @@ class BasicDetails extends Component {
                 <td class={labelClass}>
                     {appearance.md5CheckSum()}
                 </td>
-                <td class={linkClass} onClick={this.handleMd5Open}>
                     {md5Link}
-                </td>
             </tr>,
-
                 <tr class={rowClass}>
                     <td class={labelClass}>
                         {appearance.sizeLabel()}
@@ -142,7 +142,8 @@ class BasicDetails extends Component {
                     <td class={valueClass}>
                         <InfoTypeSelectionList id={this.props.DETAILS_INFO_TYPE} infoTypes={infoTypes}
                                                selectedValue={diskResource.infoType ? diskResource.infoType : null}
-                                               view={this.props.view}/>
+                                               view={this.props.view}
+                                               appearance={this.props.appearance}/>
                     </td>
                 </tr>,
                 <tr class={rowClass}>
@@ -152,10 +153,7 @@ class BasicDetails extends Component {
                     {sendTo}
                 </tr>,
             ];
-
-
         }
-
         return (
             <div>
                 <table>
@@ -205,7 +203,8 @@ class BasicDetails extends Component {
                     {details}
                     </tbody>
                 </table>
-                <TagPanel presenter={this.props.presenter} diskResource={this.props.data} detailsTag={this.props.DETAILS_TAGS}/>
+                <TagPanel presenter={this.props.presenter} diskResource={this.props.data}
+                          detailsTag={this.props.DETAILS_TAGS} appearance={this.props.appearance}/>
                 <Dialog
                     title={appearance.md5CheckSum()}
                     actions={actions}

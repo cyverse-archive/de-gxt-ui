@@ -58,4 +58,11 @@ public interface DetailsViewDisplayStrings extends Messages{
 
     String md5CheckSum();
 
+    String searchTags();
+
+    String removeTag();
+
+    String okLabel();
+
+    String emptyValue();
 }

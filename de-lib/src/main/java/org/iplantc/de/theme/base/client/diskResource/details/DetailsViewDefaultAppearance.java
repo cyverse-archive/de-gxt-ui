@@ -8,6 +8,8 @@ import org.iplantc.de.theme.base.client.diskResource.DiskResourceMessages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.web.bindery.autobean.shared.Splittable;
+import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 /**
  * @author jstroot
@@ -199,6 +201,36 @@ public class DetailsViewDefaultAppearance implements DetailsView.Appearance {
     @Override
     public String loadingMask() {
         return iplantDisplayStrings.loadingMask();
+    }
+
+    @Override
+    public String searchTags() {
+        return displayStrings.searchTags();
+    }
+
+    @Override
+    public String removeTag() {
+        return displayStrings.removeTag();
+    }
+
+    @Override
+    public Splittable tagSearchListStyle() {
+        return StringQuoter.split("{\"fontSize\": \"small\",\"width\": \"100%\"};");
+    }
+
+    @Override
+    public Splittable infoTypeSelectStyle() {
+        return StringQuoter.split("{\"width\": \"100px\",\"fontSize\": \"small\"};");
+    }
+
+    @Override
+    public String okLabel() {
+        return displayStrings.okLabel();
+    }
+
+    @Override
+    public String emptyValue() {
+        return displayStrings.emptyValue();
     }
 
     @Override

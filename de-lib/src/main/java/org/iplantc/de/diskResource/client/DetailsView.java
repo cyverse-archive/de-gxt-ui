@@ -20,6 +20,7 @@ import org.iplantc.de.diskResource.client.presenters.callbacks.TagsSearchCallbac
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.event.StoreUpdateEvent.StoreUpdateHandler;
 
@@ -79,6 +80,14 @@ public interface DetailsView extends IsWidget,
             String row();
 
             String emptyDetails();
+
+            String tagPanelStyle();
+
+            String tagDivStyle();
+
+            String tagStyle();
+
+            String tagRemoveStyle();
         }
 
         String coge();
@@ -115,7 +124,6 @@ public interface DetailsView extends IsWidget,
 
         String treeViewer();
 
-
         DetailsViewStyle css();
 
         String viewersDisabled();
@@ -146,6 +154,18 @@ public interface DetailsView extends IsWidget,
         String lastModifiedLabel();
 
         String loadingMask();
+
+        String searchTags();
+
+        String removeTag();
+
+        Splittable tagSearchListStyle();
+
+        Splittable infoTypeSelectStyle();
+
+        String okLabel();
+
+        String emptyValue();
     }
 
     @JsType
