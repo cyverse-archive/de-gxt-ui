@@ -5,37 +5,58 @@ import ReactTable from "react-table";
 import React, {Component} from "react";
 import "react-table/react-table.css";
 import {FormattedDate, IntlProvider} from "react-intl";
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from "material-ui/Toolbar";
+import {Toolbar, ToolbarGroup, ToolbarSeparator} from "material-ui/Toolbar";
 import TextField from "material-ui/TextField";
 import DatePicker from "material-ui/DatePicker";
+import RaisedButton from "material-ui/RaisedButton";
+import dateformat from "dateformat";
 
 class AppStats extends Component {
     constructor(props) {
         super(props);
         this.state = {
             data: [],
-            loading: true
+            loading: true,
+            searchText: null,
+            startDate: null,
+            endDate: null,
+            filterDisabled: true,
         };
         this.handleSearch = this.handleSearch.bind(this);
         this.fetchAppStats = this.fetchAppStats.bind(this);
+        this.applyFilter = this.applyFilter.bind(this);
+        this.onStartDateChange = this.onStartDateChange.bind(this);
+        this.onEndDateChange = this.onEndDateChange.bind(this);
     }
 
     handleSearch(event, searchText) {
         console.log(searchText);
-        if (searchText && searchText.length >= 3 || !searchText) {
-            this.fetchAppStats(searchText);
+        if ((searchText && searchText.length >= 3) || !searchText) {
+            this.setState({searchText: searchText});
+            this.fetchAppStats();
         }
+    }
+
+    onStartDateChange(undef, date) {
+        this.setState({startDate: dateformat(date, "yyyy-mm-dd")});
+    }
+
+    onEndDateChange(undef, date) {
+        this.setState({endDate: dateformat(date, "yyyy-mm-dd")});
     }
 
     componentDidMount() {
         this.fetchAppStats();
     }
 
-    fetchAppStats(searchText) {
+    fetchAppStats() {
         this.setState({
             loading: true,
         });
-        this.props.presenter.searchApps((searchText) ? searchText : "", (apps) => {
+        var searchText = this.state.searchText;
+        var startDate = this.state.startDate;
+        var endDate = this.state.endDate;
+        this.props.presenter.searchApps(searchText, startDate, endDate, (apps) => {
             this.setState({
                 loading: false,
                 data: apps,
@@ -43,34 +64,37 @@ class AppStats extends Component {
         })
     }
 
+    applyFilter() {
+        this.fetchAppStats();
+    }
+
     render() {
         const appearance = this.props.appearance;
         const {data, loading} = this.state;
-        const toolbarStyle = {
-            height: '30px',
-        };
-        const divStyle = {
-            height: '800px',  //fixed header with vertical scroll
-        };
+        const disabled = (this.state.startDate && this.state.endDate) ? false : true;
         return (
             <div>
                 <div>
-                    <Toolbar style={toolbarStyle}>
+                    <Toolbar style={appearance.toolbarStyle()}>
                         <ToolbarGroup>
                             <TextField
-                                hintText="Search Apps..." onChange={this.handleSearch}/>
+                                hintText={appearance.searchApps()} onChange={this.handleSearch}/>
                             <ToolbarSeparator />
-                            <DatePicker hintText="From date..." container="inline"/>
+                            <DatePicker hintText={appearance.startDate()} container="inline"
+                                        onChange={this.onStartDateChange}/>
                             <ToolbarSeparator />
-                            <DatePicker hintText="To date..." container="inline"/>
+                            <DatePicker hintText={appearance.endDate()} container="inline"
+                                        onChange={this.onEndDateChange}/>
+                            <RaisedButton label={appearance.applyFilter()} onClick={this.applyFilter}
+                                          disabled={disabled} buttonStyle={appearance.buttonStyle()}/>
                         </ToolbarGroup>
                     </Toolbar>
                 </div>
-                <div style={divStyle}>
+                <div>
                     <ReactTable
                         data={data}
                         loading={loading}
-                        style={divStyle}
+                        style={appearance.gridStyle()}
                         className="-striped -highlight"
                         defaultPageSize={100}
                         columns={[
@@ -105,7 +129,7 @@ class AppStats extends Component {
                                                        day="numeric"
                                                        month="short"
                                                        year="numeric"/>
-                                    </IntlProvider> : "-"
+                                    </IntlProvider> : appearance.emptyDate()
                             }, {
                                 id: 'lastUsed',
                                 Header: appearance.lastUsed(),
@@ -114,7 +138,7 @@ class AppStats extends Component {
                                                        day="numeric"
                                                        month="short"
                                                        year="numeric"/>
-                                    </IntlProvider> : "-"
+                                    </IntlProvider> : appearance.emptyDate()
 
                             }
                         ]}

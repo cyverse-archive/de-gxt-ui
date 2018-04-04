@@ -19,6 +19,14 @@ class AppStatsTest extends Component {
             rating: () => "Rating",
             lastUsed: () => "Last Used",
             lastCompleted: () => "Last Completed",
+            startDate: () => "Start Date...",
+            endDate: () => "End Date...",
+            searchApps: () => "Search Apps...",
+            emptyDate: () => "-",
+            applyFilter: () => "Apply Filter",
+            toolbarStyle: () => {},
+            gridStyle: () => {},
+            buttonStyle: () => {},
         };
         const appStats =
             [{
@@ -57,7 +65,7 @@ class AppStatsTest extends Component {
             }];
 
         const presenter = {
-            searchApps: (searchText, resultCallback) => {
+            searchApps: (searchText, startDate, endDate, resultCallback) => {
                 resultCallback(appStats)
             },
         }
