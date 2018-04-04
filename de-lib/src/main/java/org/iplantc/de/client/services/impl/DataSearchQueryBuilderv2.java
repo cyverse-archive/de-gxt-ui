@@ -1,6 +1,7 @@
 package org.iplantc.de.client.services.impl;
 
 import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
+import org.iplantc.de.client.models.search.DateInterval;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 
 import com.google.common.base.Strings;
@@ -60,6 +61,13 @@ public class DataSearchQueryBuilderv2 {
     public static final String UNIT = "unit";
     public static final String UNIT_EXACT = "unit_exact";
     public static final String METADATA_TYPES = "metadata_types";
+    //Date ranges
+    public static final String FROM = "from";
+    public static final String TO = "to";
+    //Modified within
+    public static final String MODIFIED = "modified";
+    //Created within
+    public static final String CREATED = "created";
 
 
     private final QueryDSLTemplate template;
@@ -80,6 +88,8 @@ public class DataSearchQueryBuilderv2 {
         ownedBy()
                 .pathPrefix()
                 .sharedWith()
+                .modifiedWithin()
+                .createdWithin()
                 .file()
                 .notFile()
                 .metadata()
@@ -180,6 +190,43 @@ public class DataSearchQueryBuilderv2 {
                 assignKeyValue(args, VALUE, valueContent);
             }
             appendArrayItem(allList, createTypeClause(METADATA, args));
+        }
+
+        return this;
+    }
+
+    /**
+     * {"type": "created", "args": {"from": "some_date", "to": "some_other_date"}}
+     */
+    public DataSearchQueryBuilderv2 createdWithin() {
+        DateInterval content = template.getCreatedWithin();
+
+        return dateInterval(content, CREATED);
+    }
+
+    /**
+     * {"type": "modified", "args": {"from": "some_date", "to": "some_other_date"}}
+     */
+    public DataSearchQueryBuilderv2 modifiedWithin() {
+        DateInterval content = template.getModifiedWithin();
+
+        return dateInterval(content, MODIFIED);
+    }
+
+    /**
+     * {"type": "typeClause", "args": {"from": "some_date", "to": "some_other_date"}}
+     */
+    DataSearchQueryBuilderv2 dateInterval(DateInterval content, String typeClause) {
+        if (content != null && !content.getLabel().equals("---")) {
+            String from = String.valueOf(content.getFrom().getTime());
+            String to = String.valueOf(content.getTo().getTime());
+
+            Splittable args = StringQuoter.createSplittable();
+
+            assignKeyValue(args, FROM, from);
+            assignKeyValue(args, TO, to);
+
+            appendArrayItem(allList, createTypeClause(typeClause, args));
         }
 
         return this;
