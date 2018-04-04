@@ -8,6 +8,38 @@ class InfoTypeSelectionListTest extends Component {
 
     render() {
        const types = [];
+
+        const dataDetailsAppearance = {
+            css: () => (
+                {
+                    row: () => "",
+                    label: () => "",
+                    value: () => "",
+                    hyperlink: () => "",
+                    tagPanelStyle: () => "",
+                    tagDivStyle: () => "",
+                    tagStyle: () => "",
+                    tagRemoveStyle: () => "",
+                }
+            ),
+            lastModifiedLabel: () => "Last Modified:",
+            createdDateLabel: () => "Created Date:",
+            permissionsLabel: () => "Permissions:",
+            md5CheckSum: () => "Md5:",
+            sizeLabel: () => "Size:",
+            shareLabel: () => "Share",
+            beginSharing: () => "Begin Sharing",
+            infoTypeLabel: () => "InfoType",
+            typeLabel: () => "Type",
+            sendToLabel: () => "Send To",
+            searchTags: () => "Search Tags...",
+            removeTag: () => "Remove Tag",
+            selectInfoType: () => "Select Info Type...",
+            tagSearchListStyle: () => {},
+            infoTypeSelectStyle: () => {},
+            emptyValue: () => "-",
+        }
+        
        types.push("-");
        types.push("csv") ;
        types.push("tsv");
@@ -22,7 +54,7 @@ class InfoTypeSelectionListTest extends Component {
 
        return (
            <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-               <InfoTypeSelectionList infoTypes={types} selectedValue={"csv"}/>
+               <InfoTypeSelectionList infoTypes={types} selectedValue={"csv"} appearance={dataDetailsAppearance}/>
            </MuiThemeProvider>
        )
     }

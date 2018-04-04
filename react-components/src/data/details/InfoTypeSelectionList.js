@@ -31,17 +31,13 @@ class InfoTypeSelectionList extends Component {
             items.push(<MenuItem value={this.props.infoTypes[i]} key={i}
                                  primaryText={this.props.infoTypes[i]}/>);
         }
-        const selectStyle = {
-            width: '100px',
-            fontSize: 'small'
-        };
         return (
             <SelectField
                 value={this.state.value}
                 onChange={this.handleChange}
                 maxHeight={200}
-                hintText="Select Info type..."
-                style={selectStyle}>
+                hintText={this.props.appearance.selectInfoType()}
+                style={this.props.appearance.infoTypeSelectStyle()}>
                 {items}
             </SelectField>
         );

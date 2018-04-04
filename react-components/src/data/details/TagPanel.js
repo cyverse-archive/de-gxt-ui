@@ -2,7 +2,6 @@
  * @author sriram
  */
 import React, {Component} from "react";
-import {FormattedDate, IntlProvider} from "react-intl";
 import Tag from "./Tag";
 import AutoComplete from "material-ui/AutoComplete";
 
@@ -42,7 +41,7 @@ class TagPanel extends Component {
 
     handleRemoveClick(tag) {
         let index = this.findTag(tag);
-        if (index != -1) {
+        if (index !== -1) {
             this.props.presenter.detachTag(this.state.tags[index].id, this.state.tags[index].value, this.props.diskResource.id, (tags) => {
                 this.setState({tags: tags});
             });
@@ -78,36 +77,25 @@ class TagPanel extends Component {
         const dataSourceConfig = {
             text: 'value',
             value: 'id',
-        }
-        const panelStyle = {
-            padding: '2px',
-            width: '95%',
-            height: '100px',
-            margin: '2px',
-            overflow: 'scroll',
-        };
-
-        const listStyle = {
-            fontSize: '10px',
-            width: '100%',
         };
 
         let tagItems = this.state.tags ? this.state.tags.map((tag) =>
-                <Tag tag={tag} key={tag.id} removeTag={this.handleRemoveClick} presenter={this.props.presenter}/>
+                <Tag tag={tag} key={tag.id} removeTag={this.handleRemoveClick}
+                     presenter={this.props.presenter} appearance={this.props.appearance}/>
             ) : [];
 
         return (
             <div id={this.props.DETAILS_TAGS}>
                 <div>
                     <AutoComplete
-                        hintText="Search Tags"
+                        hintText={this.props.appearance.searchTags()}
                         dataSource={this.state.dataSource}
                         onUpdateInput={this.handleTagSearch}
                         dataSourceConfig={dataSourceConfig}
-                        listStyle={listStyle}
+                        listStyle={this.props.appearance.tagSearchListStyle()}
                         onNewRequest={this.handleTagSelect}/>
                 </div>
-                <div id="panel" style={panelStyle}>
+                <div id="panel" class={this.props.appearance.css().tagPanelStyle()}>
                     { tagItems }
                 </div>
             </div>

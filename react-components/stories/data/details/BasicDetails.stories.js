@@ -15,7 +15,11 @@ class BasicDetailsTest extends Component {
                     row: () => "",
                     label: () => "",
                     value: () => "",
-                    hyperlink: () => ""
+                    hyperlink: () => "",
+                    tagPanelStyle: () => "",
+                    tagDivStyle: () => "",
+                    tagStyle: () => "",
+                    tagRemoveStyle: () => "",
                 }
             ),
             lastModifiedLabel: () => "Last Modified:",
@@ -27,12 +31,19 @@ class BasicDetailsTest extends Component {
             beginSharing: () => "Begin Sharing",
             infoTypeLabel: () => "InfoType",
             typeLabel: () => "Type",
-            sendToLabel: () => "Send To"
+            sendToLabel: () => "Send To",
+            searchTags: () => "Search Tags...",
+            removeTag: () => "Remove Tag",
+            selectInfoType: () => "Select Info Type...",
+            tagSearchListStyle: () => {},
+            infoTypeSelectStyle: () => {},
+            okLabel: () => "Ok",
+            emptyValue: () => "-",
         }
 
         const ids = {
             DETAILS_LAST_MODIFIED: "detailsLastModified",
-            DETAILS_DATE_SUBMITTED: "detailsDateSubmited",
+            DETAILS_DATE_SUBMITTED: "detailsDateSubmitted",
             DETAILS_PERMISSIONS: "detailsPermission",
             DETAILS_SHARE: "DetailsShare",
             DETAILS_SIZE: "DetailsSize",

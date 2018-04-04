@@ -17,6 +17,37 @@ class TagPanelTest extends Component {
 
         const ids = {
             DETAILS_TAGS: "DetailsTags",
+        };
+
+        const dataDetailsAppearance = {
+            css: () => (
+                {
+                    row: () => "",
+                    label: () => "",
+                    value: () => "",
+                    hyperlink: () => "",
+                    tagPanelStyle: () => "",
+                    tagDivStyle: () => "",
+                    tagStyle: () => "",
+                    tagRemoveStyle: () => "",
+                }
+            ),
+            lastModifiedLabel: () => "Last Modified:",
+            createdDateLabel: () => "Created Date:",
+            permissionsLabel: () => "Permissions:",
+            md5CheckSum: () => "Md5:",
+            sizeLabel: () => "Size:",
+            shareLabel: () => "Share",
+            beginSharing: () => "Begin Sharing",
+            infoTypeLabel: () => "InfoType",
+            typeLabel: () => "Type",
+            sendToLabel: () => "Send To",
+            searchTags: () => "Search Tags...",
+            removeTag: () => "Remove Tag",
+            selectInfoType: () => "Select Info Type...",
+            tagSearchListStyle: () => {},
+            infoTypeSelectStyle: () => {},
+            emptyValue: () => "-",
         }
 
         const tags = [];
@@ -73,7 +104,7 @@ class TagPanelTest extends Component {
 
         return (
             <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-                <TagPanel presenter={presenter} diskResource={data} ids={ids}/>
+                <TagPanel presenter={presenter} diskResource={data} ids={ids} appearance={dataDetailsAppearance}/>
             </MuiThemeProvider>
         );
 

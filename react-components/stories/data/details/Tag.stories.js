@@ -13,14 +13,45 @@ class TagTest extends Component {
                 console.log(tag);
             });
 
-        const tag = {id: 1, value: 'testag'}
+        const tag = {id: 1, value: 'testag'};
+
+        const dataDetailsAppearance = {
+            css: () => (
+                {
+                    row: () => "",
+                    label: () => "",
+                    value: () => "",
+                    hyperlink: () => "",
+                    tagPanelStyle: () => "",
+                    tagDivStyle: () => "",
+                    tagStyle: () => "",
+                    tagRemoveStyle: () => "",
+                }
+            ),
+            lastModifiedLabel: () => "Last Modified:",
+            createdDateLabel: () => "Created Date:",
+            permissionsLabel: () => "Permissions:",
+            md5CheckSum: () => "Md5:",
+            sizeLabel: () => "Size:",
+            shareLabel: () => "Share",
+            beginSharing: () => "Begin Sharing",
+            infoTypeLabel: () => "InfoType",
+            typeLabel: () => "Type",
+            sendToLabel: () => "Send To",
+            searchTags: () => "Search Tags...",
+            removeTag: () => "Remove Tag",
+            selectInfoType: () => "Select Info Type...",
+            tagSearchListStyle: () => {},
+            infoTypeSelectStyle: () => {},
+            emptyValue: () => "-",
+        };
 
         const presenter = {
             onTagSelection: logger(tag),
-        }
+        };
         return (
             <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-                <Tag tag={tag} presenter={presenter} removeTag={() => logger(tag)}/>
+                <Tag tag={tag} presenter={presenter} removeTag={() => logger(tag)} appearance={dataDetailsAppearance}/>
             </MuiThemeProvider>
         );
     }

@@ -21,40 +21,13 @@ class Tag extends Component {
     }
 
     render() {
-        const divStyle = {
-            maxWidth: '100%',
-            border: '1px solid #d9d9d9',
-            backgroundColor: '#DB6619',
-            whiteSpace: 'nowrap',
-            float: 'left',
-            fontSize: '10px',
-            padding: '2px',
-            cursor: 'pointer',
-        };
-
-        const tagStyle = {
-            fontWeight: 'bold',
-            float: 'left',
-            paddingRight: '1px',
-            color: 'white',
-        };
-
-        const removeStyle = {
-            fontWeight: 'bold',
-            cursor: 'pointer',
-            display: 'none',
-            float: 'right',
-            fontSize: '12px',
-            borderLeft: '1px solid',
-            paddingLeft: '1px',
-        };
-
         return (
-            <div style={divStyle} onMouseOver={this.handleMouseOver}
+            <div class={this.props.appearance.css().tagDivStyle()} onMouseOver={this.handleMouseOver}
                  onMouseOut={this.handleMouseOut}>
-                <div style={tagStyle}
+                <div class={this.props.appearance.css().tagStyle()}
                      onClick={this.onTagClick}>{this.props.tag.value}</div>
-                <div title='Remove this tag' id={this.props.tag.value} style={removeStyle}
+                <div title={this.props.appearance.removeTag()} id={this.props.tag.value}
+                     class={this.props.appearance.css().tagRemoveStyle()}
                      onClick={() => this.props.removeTag(this.props.tag)}> X
                 </div>
             </div>
