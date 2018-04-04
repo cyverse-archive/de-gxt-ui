@@ -86,11 +86,6 @@ public class SearchViewDefaultAppearance implements SearchView.SearchViewAppeara
     }
 
     @Override
-    public String createdWithinItems() {
-        return searchMessages.createdWithItems();
-    }
-
-    @Override
     public String nameHasNot() {
         return searchMessages.nameHasNot();
     }

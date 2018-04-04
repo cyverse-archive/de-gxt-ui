@@ -217,7 +217,7 @@ public class DataSearchQueryBuilderv2 {
      * {"type": "typeClause", "args": {"from": "some_date", "to": "some_other_date"}}
      */
     DataSearchQueryBuilderv2 dateInterval(DateInterval content, String typeClause) {
-        if (content != null && !content.getLabel().equals("---")) {
+        if (content != null && !Strings.isNullOrEmpty(content.getLabel())) {
             String from = String.valueOf(content.getFrom().getTime());
             String to = String.valueOf(content.getTo().getTime());
 

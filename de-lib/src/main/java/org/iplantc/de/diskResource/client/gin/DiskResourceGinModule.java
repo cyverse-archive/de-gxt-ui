@@ -1,5 +1,7 @@
 package org.iplantc.de.diskResource.client.gin;
 
+import org.iplantc.de.analysis.client.gin.AnalysisModuleListStoreProvider;
+import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.commons.client.presenter.SharingPresenter;
 import org.iplantc.de.diskResource.client.BulkMetadataView;
@@ -42,6 +44,7 @@ import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLook
 import org.iplantc.de.diskResource.client.presenters.navigation.NavigationPresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.navigation.proxy.FolderRpcProxyImpl;
 import org.iplantc.de.diskResource.client.presenters.search.DataSearchPresenterImpl;
+import org.iplantc.de.diskResource.client.presenters.search.DateIntervalProvider;
 import org.iplantc.de.diskResource.client.presenters.sharing.DataSharingPresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.toolbar.ToolbarViewPresenterImpl;
 import org.iplantc.de.diskResource.client.views.DiskResourceViewImpl;
@@ -71,7 +74,9 @@ import org.iplantc.de.diskResource.client.views.toolbar.PathListAutomationViewIm
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.inject.TypeLiteral;
+import com.google.web.bindery.autobean.shared.Splittable;
 
+import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.TreeStore;
 
 /**
@@ -163,7 +168,10 @@ public class DiskResourceGinModule extends AbstractGinModule {
         bind(MetadataView.Presenter.class).to(MetadataPresenterImpl.class);
         bind(MetadataTemplateView.class);
 
+        //Search
         bind(SearchView.class).to(SearchViewImpl.class);
+        bind(new TypeLiteral<Splittable>() {}).toProvider(DateIntervalProvider.class);
+
 
         // Dialogs
         bind(InfoTypeEditorDialog.class);

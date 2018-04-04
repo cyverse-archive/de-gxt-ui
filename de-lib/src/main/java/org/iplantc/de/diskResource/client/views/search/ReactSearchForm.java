@@ -2,6 +2,8 @@ package org.iplantc.de.diskResource.client.views.search;
 
 import org.iplantc.de.diskResource.client.SearchView;
 
+import com.google.web.bindery.autobean.shared.Splittable;
+
 import gwt.react.client.components.ReactClass;
 import gwt.react.client.proptypes.BaseProps;
 import jsinterop.annotations.JsPackage;
@@ -18,6 +20,7 @@ public class ReactSearchForm {
     static class SearchFormProps extends BaseProps {
         public SearchView presenter;
         public SearchView.SearchViewAppearance appearance;
+        public Splittable dateIntervals;
         public String id;
     }
 }

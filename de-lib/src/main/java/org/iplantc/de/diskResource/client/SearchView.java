@@ -59,8 +59,6 @@ public interface SearchView extends IsWidget,
 
         String createdWithin();
 
-        String createdWithinItems();
-
         String nameHasNot();
 
         String modifiedWithin();

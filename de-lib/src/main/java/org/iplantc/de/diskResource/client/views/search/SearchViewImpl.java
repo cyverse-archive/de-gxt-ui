@@ -3,6 +3,7 @@ package org.iplantc.de.diskResource.client.views.search;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSelected;
+import org.iplantc.de.diskResource.client.presenters.search.DateIntervalProvider;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import com.google.gwt.core.client.GWT;
@@ -30,12 +31,15 @@ public class SearchViewImpl extends Composite implements SearchView {
 
     private VerticalLayoutContainer con;
     private SearchViewAppearance appearance;
+    private DateIntervalProvider dateIntervalProvider;
     private final BaseEventPreview eventPreview;
     private boolean showing = false;
 
     @Inject
-    public SearchViewImpl(SearchViewAppearance appearance) {
+    public SearchViewImpl(SearchViewAppearance appearance,
+                          DateIntervalProvider dateIntervalProvider) {
         this.appearance = appearance;
+        this.dateIntervalProvider = dateIntervalProvider;
         this.con = new VerticalLayoutContainer();
         initWidget(con);
         con.getElement().getStyle().setBackgroundColor("#fff");
@@ -76,6 +80,7 @@ public class SearchViewImpl extends Composite implements SearchView {
         props.presenter = SearchViewImpl.this;
         props.appearance = appearance;
         props.id = DiskResourceModule.Ids.SEARCH_FORM;
+        props.dateIntervals = dateIntervalProvider.get();
 
         CyVerseReactComponents.render(ReactSearchForm.SearchForm, props, DivElement.as(con.getElement()));
 

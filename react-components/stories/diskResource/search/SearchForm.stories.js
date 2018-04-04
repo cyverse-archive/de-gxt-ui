@@ -19,7 +19,6 @@ class SearchFormTest extends React.Component {
         const appearance = {
             nameHas: () => 'File/Folder name has the words',
             createdWithin: () => 'Created within',
-            createdWithinItems: () => '1 day, 3 days, 1 week, 2 weeks, 1 month, 2 months, 6 months, 1 year',
             nameHasNot: () => "File/Folder name doesn't have",
             modifiedWithin: () => 'Modified within',
             metadataAttributeHas: () => 'Metadata attribute has the words',
@@ -35,10 +34,59 @@ class SearchFormTest extends React.Component {
             searchBtn: () => 'Search'
         };
 
+        const dateIntervals = [
+            {
+                from: null,
+                to: null,
+                label: ''
+            },
+            {
+                from: 1522738800000,
+                to: 1522871293651,
+                label: '1 day'
+            },
+            {
+                from: 1522738800000,
+                to: 1522871293651,
+                label: '3 days'
+            },
+            {
+                from: 1522738800000,
+                to: 1522871293651,
+                label: '1 week'
+            },
+            {
+                from: 1522738800000,
+                to: 1522871293651,
+                label: '2 weeks'
+            },
+            {
+                from: 1522738800000,
+                to: 1522871293651,
+                label: '1 month'
+            },
+            {
+                from: 1522738800000,
+                to: 1522871293651,
+                label: '2 months'
+            },
+            {
+                from: 1522738800000,
+                to: 1522871293651,
+                label: '6 months'
+            },
+            {
+                from: 1522738800000,
+                to: 1522871293651,
+                label: '1 year'
+            }
+        ];
+
         return (
             <MuiThemeProvider muiTheme={getCyVerseTheme()}>
                 <SearchForm presenter={presenter}
                             appearance={appearance}
+                            dateIntervals={dateIntervals}
                             id={id}/>
             </MuiThemeProvider>
         )

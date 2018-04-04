@@ -18,8 +18,8 @@ class SearchForm extends Component {
         this.state = {
             nameHas: '',
             nameHasNot: '',
-            createdWithin: '',
-            modifiedWithin: '',
+            createdWithin: null,
+            modifiedWithin: null,
             metadataAttributeHas: '',
             metadataValueHas: '',
             ownedBy: '',
@@ -110,16 +110,17 @@ class SearchForm extends Component {
     }
 
     render() {
+        let dateIntervals = this.props.dateIntervals;
         let appearance = this.props.appearance;
         let id = this.props.id;
         let tags = this.state.tags;
 
-        let daysList = appearance.createdWithinItems().split(', ');
         let sizesList = appearance.fileSizes().split(', ');
 
         return (
             <div id={id}>
                 <table className='form'>
+                    <tbody>
                     <tr>
                         <td>
                             <TextField floatingLabelText={appearance.nameHas()}
@@ -128,10 +129,10 @@ class SearchForm extends Component {
                                        onChange={this.handleChangeFor.bind(null, 'nameHas')}/>
                         </td>
                         <td>
-                            <DropDown label={appearance.createdWithin()}
-                                      list={daysList}
-                                      value={this.state.createdWithin}
-                                      onChange={this.handleDropDownChangeFor.bind(null, 'createdWithin')}/>
+                            <DateIntervalDropDown label={appearance.createdWithin()}
+                                                  list={dateIntervals}
+                                                  value={this.state.createdWithin}
+                                                  onChange={this.handleDropDownChangeFor.bind(null, 'createdWithin')}/>
                         </td>
                     </tr>
 
@@ -143,10 +144,10 @@ class SearchForm extends Component {
                                        onChange={this.handleChangeFor.bind(null, 'nameHasNot')}/>
                         </td>
                         <td>
-                            <DropDown label={appearance.modifiedWithin()}
-                                      list={daysList}
-                                      value={this.state.modifiedWithin}
-                                      onChange={this.handleDropDownChangeFor.bind(null, 'modifiedWithin')}/>
+                            <DateIntervalDropDown label={appearance.modifiedWithin()}
+                                                  list={dateIntervals}
+                                                  value={this.state.modifiedWithin}
+                                                  onChange={this.handleDropDownChangeFor.bind(null, 'modifiedWithin')}/>
                         </td>
                     </tr>
 
@@ -185,6 +186,7 @@ class SearchForm extends Component {
                     <tr>
                         <td>
                             <table>
+                                <tbody>
                                 <tr>
                                     <td style={{'width': '100%'}}>
                                         <TextField floatingLabelText={appearance.fileSizeGreater()}
@@ -194,33 +196,37 @@ class SearchForm extends Component {
                                                    onChange={this.handleChangeFor.bind(null, 'fileSizeGreater')}/>
                                     </td>
                                     <td>
-                                        <DropDown label=' '
-                                                  list={sizesList}
-                                                  value={this.state.fileSizeGreaterUnit}
-                                                  onChange={this.handleDropDownChangeFor.bind(null, 'fileSizeGreaterUnit')}/>
+                                        <FileSizeDropDown label=' '
+                                                          list={sizesList}
+                                                          value={this.state.fileSizeGreaterUnit}
+                                                          onChange={this.handleDropDownChangeFor.bind(null, 'fileSizeGreaterUnit')}/>
                                     </td>
                                 </tr>
+                                </tbody>
                             </table>
                         </td>
+                        <td>
+                            <table>
+                                <tbody>
+                                <tr>
+                                    <td style={{'width': '100%'}}>
 
-                        <table>
-                            <tr>
-                                <td style={{'width': '100%'}}>
-
-                                    <TextField floatingLabelText={appearance.fileSizeLessThan()}
-                                               floatingLabelFixed={true}
-                                               fullWidth={true}
-                                               value={this.state.fileSizeLessThan}
-                                               onChange={this.handleChangeFor.bind(null, 'fileSizeLessThan')}/>
-                                </td>
-                                <td>
-                                    <DropDown label=' '
-                                              list={sizesList}
-                                              value={this.state.fileSizeLessThanUnit}
-                                              onChange={this.handleDropDownChangeFor.bind(null, 'fileSizeLessThanUnit')}/>
-                                </td>
-                            </tr>
-                        </table>
+                                        <TextField floatingLabelText={appearance.fileSizeLessThan()}
+                                                   floatingLabelFixed={true}
+                                                   fullWidth={true}
+                                                   value={this.state.fileSizeLessThan}
+                                                   onChange={this.handleChangeFor.bind(null, 'fileSizeLessThan')}/>
+                                    </td>
+                                    <td>
+                                        <FileSizeDropDown label=' '
+                                                          list={sizesList}
+                                                          value={this.state.fileSizeLessThanUnit}
+                                                          onChange={this.handleDropDownChangeFor.bind(null, 'fileSizeLessThanUnit')}/>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
                     </tr>
 
                     <tr>
@@ -253,6 +259,7 @@ class SearchForm extends Component {
                             </div>
                         </td>
                     </tr>
+                    </tbody>
                 </table>
                 <div className='searchButton'>
                     <RaisedButton label={appearance.searchBtn()}
@@ -267,11 +274,41 @@ SearchForm.propTypes = {
     presenter: PropTypes.shape({
         onSearchBtnClicked: PropTypes.func.isRequired
     }),
+    dateIntervals: PropTypes.arrayOf(
+        PropTypes.shape({
+            label: PropTypes.string.isRequired,
+            from: PropTypes.number,
+            to: PropTypes.number
+        })
+    ),
     appearance: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired
 };
 
-function DropDown(props) {
+function DateIntervalDropDown(props) {
+    let label = props.label;
+    let list = props.list;
+    let value = props.value;
+    let onChange = props.onChange;
+
+    return (
+        <SelectField floatingLabelText={label}
+                     fullWidth={true}
+                     value={value}
+                     onChange={onChange}>
+            {list.map(function (item, index) {
+                return <MenuItem key={index} value={item} primaryText={item.label}/>
+            })}
+        </SelectField>
+    )
+}
+
+DateIntervalDropDown.propTypes = {
+    label: PropTypes.string.isRequired,
+    list: PropTypes.array.isRequired
+};
+
+function FileSizeDropDown(props) {
     let label = props.label;
     let list = props.list;
     let value = props.value;
@@ -289,7 +326,7 @@ function DropDown(props) {
     )
 }
 
-DropDown.propTypes = {
+FileSizeDropDown.propTypes = {
     label: PropTypes.string.isRequired,
     list: PropTypes.array.isRequired
 };
