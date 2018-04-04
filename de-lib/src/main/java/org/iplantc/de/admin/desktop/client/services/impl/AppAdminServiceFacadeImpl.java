@@ -262,10 +262,17 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
     }
 
     @Override
-    public void searchApp(String term, DECallback<AppListLoadResult> callback) {
+    public void searchApp(String term,
+                          String startDate,
+                          String endDate,
+                          DECallback<AppListLoadResult> callback) {
         StringBuilder address = new StringBuilder(APPS_ADMIN);
         if(!Strings.isNullOrEmpty(term)) {
             address.append("?search=" + URL.encodeQueryString(term));
+        }
+        if (!Strings.isNullOrEmpty(startDate) && !Strings.isNullOrEmpty(endDate)) {
+            address.append("&start_date=" + startDate);
+            address.append("&end_date=" + endDate);
         }
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address.toString());

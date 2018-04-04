@@ -118,4 +118,16 @@ public interface BelphegorDisplayStrings extends Messages {
     String appDeleted();
 
     String appDelete();
+
+    String startDate();
+
+    String endDate();
+
+    String searchApps();
+
+    String emptyDate();
+
+    String applyFilter();
+
+
 }

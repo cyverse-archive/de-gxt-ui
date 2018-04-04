@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.IsMaskable;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import jsinterop.annotations.JsIgnore;
 import jsinterop.annotations.JsType;
@@ -16,12 +17,14 @@ import jsinterop.annotations.JsType;
 @JsType
 public interface AdminAppStatsGridView extends IsWidget, IsMaskable {
 
+    @JsIgnore
     void load(Presenter p);
 
 
 
     @JsType
     interface  Appearance {
+
         String name();
 
         String total();
@@ -37,6 +40,23 @@ public interface AdminAppStatsGridView extends IsWidget, IsMaskable {
         String rating();
 
         String loading();
+
+        String startDate();
+
+        String endDate();
+
+        String searchApps();
+
+        String emptyDate();
+
+        String applyFilter();
+
+        Splittable toolbarStyle();
+
+        Splittable gridStyle();
+
+        Splittable buttonStyle();
+        
     }
 
     @JsType
@@ -47,7 +67,10 @@ public interface AdminAppStatsGridView extends IsWidget, IsMaskable {
         @JsIgnore
         void setViewDebugId(String baseId);
 
-        void searchApps(String searchString, AppStatsSearchCallback callback);
+        void searchApps(String searchString,
+                        String startDate,
+                        String endDate,
+                        AppStatsSearchCallback callback);
     }
 
 }

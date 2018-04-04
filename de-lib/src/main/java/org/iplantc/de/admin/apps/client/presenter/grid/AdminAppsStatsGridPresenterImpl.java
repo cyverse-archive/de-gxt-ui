@@ -45,8 +45,8 @@ public class AdminAppsStatsGridPresenterImpl implements AdminAppStatsGridView.Pr
 
 
     @Override
-    public void searchApps(String searchString, AppStatsSearchCallback callback) {
-        appService.searchApp(searchString, new AppsCallback<AppListLoadResult>() {
+    public void searchApps(String searchString, String startDate, String endDate, AppStatsSearchCallback callback) {
+        appService.searchApp(searchString, startDate, endDate, new AppsCallback<AppListLoadResult>() {
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
