@@ -84,6 +84,21 @@ public class AdminAppsStatsGridViewDefaultAppearance implements AdminAppStatsGri
     }
 
     @Override
+    public String integrator() {
+        return bds.integrator();
+    }
+
+    @Override
+    public String system() {
+        return bds.system();
+    }
+
+    @Override
+    public String beta() {
+        return bds.beta();
+    }
+
+    @Override
     public Splittable toolbarStyle() {
         return StringQuoter.split("{\"height\": \"30px\",\"backgroundColor\": \"white\"}");
     }

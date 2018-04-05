@@ -27,6 +27,9 @@ class AppStatsTest extends Component {
             toolbarStyle: () => {},
             gridStyle: () => {},
             buttonStyle: () => {},
+            integrator: () => "Integrator",
+            beta: () => "Beta",
+            system: () => "System",
         };
         const appStats =
             [{
@@ -39,7 +42,7 @@ class AppStatsTest extends Component {
                 },
                 "is_favorite": false,
                 "integrator_name": "Matthew Vaughn",
-                "beta": false,
+                "beta": true,
                 "permission": "read",
                 "can_favor": true,
                 "disabled": false,
