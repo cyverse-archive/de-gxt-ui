@@ -31,7 +31,7 @@ class AppStats extends Component {
 
     handleSearch(event, searchText) {
         console.log(searchText);
-        if ((searchText && searchText.length >= 3) || !searchText) {
+        if (!searchText || searchText.length >= 3 || searchText.length === 0) {
             this.setState({searchText: searchText});
             this.fetchAppStats();
         }
@@ -97,6 +97,9 @@ class AppStats extends Component {
                         style={appearance.gridStyle()}
                         className="-striped -highlight"
                         defaultPageSize={100}
+                        filterable
+                        defaultFilterMethod={(filter, row) =>
+                        String(row[filter.id]) === filter.value}
                         columns={[
                             {
                                 Header: appearance.name(),
@@ -140,7 +143,38 @@ class AppStats extends Component {
                                                        year="numeric"/>
                                     </IntlProvider> : appearance.emptyDate()
 
-                            }
+                            }, {
+                                id: 'integrator',
+                                Header: appearance.integrator(),
+                                accessor: s => s.integrator_name,
+                            }, {
+                                id: 'beta',
+                                Header: appearance.beta(),
+                                accessor: s => s.beta ? new Boolean(s.beta).toString() : "false",
+                                filterMethod: (filter, row) => {
+                                    if (filter.value === "all") {
+                                        return true;
+                                    }
+                                    if (filter.value === "true") {
+                                        return row[filter.id] === "true";
+                                    }
+                                    return row[filter.id] === "false";
+                                },
+                                Filter: ({filter, onChange}) =>
+                                    <select
+                                        onChange={event => onChange(event.target.value)}
+                                        style={{width: "100%"}}
+                                        value={filter ? filter.value : "all"}
+                                    >
+                                        <option value="all">Show All</option>
+                                        <option value="true">Apps In Beta</option>
+                                        <option value="false">Apps Not In Beta</option>
+                                    </select>
+                            }, {
+                                id: 'system',
+                                Header: appearance.system(),
+                                accessor: s => s.system_id,
+                            },
                         ]}
                     />
                 </div>

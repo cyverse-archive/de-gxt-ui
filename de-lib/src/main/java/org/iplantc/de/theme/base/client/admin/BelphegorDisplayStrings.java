@@ -130,4 +130,9 @@ public interface BelphegorDisplayStrings extends Messages {
     String applyFilter();
 
 
+    String integrator();
+
+    String system();
+
+    String beta();
 }

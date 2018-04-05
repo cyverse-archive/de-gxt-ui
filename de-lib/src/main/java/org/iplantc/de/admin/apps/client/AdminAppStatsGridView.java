@@ -51,6 +51,12 @@ public interface AdminAppStatsGridView extends IsWidget, IsMaskable {
 
         String applyFilter();
 
+        String integrator();
+
+        String system();
+
+        String beta();
+
         Splittable toolbarStyle();
 
         Splittable gridStyle();
