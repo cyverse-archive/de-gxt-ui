@@ -69,7 +69,10 @@ public class MyAnalysesWindow extends WindowBase {
         List<Analysis> selectedAnalyses = Lists.newArrayList();
         selectedAnalyses.addAll(presenter.getSelectedAnalyses());
         config.setSelectedAnalyses(selectedAnalyses);
-        config.setFilter(presenter.getCurrentFilter().getFilterString());
+        AnalysisFilter currentFilter = presenter.getCurrentFilter();
+        if (currentFilter != null) {
+            config.setFilter(currentFilter.getFilterString());
+        }
         return config;
     }
 
