@@ -247,13 +247,19 @@ public class GridViewImpl extends ContentPanel implements GridView,
      */
     @Override
     public void setColumnPreferences(Map<String, String> preferences) {
-        List<ColumnConfig<DiskResource, ?>> configList = grid.getColumnModel().getColumns();
-        for (ColumnConfig cc : configList) {
-            String temp = preferences.get(cc.getPath());
-            boolean hidden = (temp == null) ? false : Boolean.valueOf(temp);
-            cc.setHidden(hidden);
-        }
-        grid.getView().refresh(true);
+        Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                List<ColumnConfig<DiskResource, ?>> configList = grid.getColumnModel().getColumns();
+                for (ColumnConfig cc : configList) {
+                    String temp = preferences.get(cc.getPath());
+                    boolean hidden = (temp == null) ? false : Boolean.valueOf(temp);
+                    cc.setHidden(hidden);
+                }
+                grid.getView().refresh(true);
+            }
+        });
+
     }
 
     @Override
