@@ -64,6 +64,8 @@ import java.util.Map;
  */
 public class GridViewImpl extends ContentPanel implements GridView,
                                                           SelectionChangedEvent.SelectionChangedHandler<DiskResource> {
+    private Map<String, String> columnPreferences;
+
     interface GridViewImplUiBinder extends UiBinder<VerticalLayoutContainer, GridViewImpl> {
     }
     @UiField(provided = true) final GridView.Appearance appearance;
@@ -144,6 +146,17 @@ public class GridViewImpl extends ContentPanel implements GridView,
                 final FolderContentsLoadConfig loadConfig = new FolderContentsLoadConfig();
                 loadConfig.setLimit(gridView.getCacheSize());
                 gridLoader.useLoadConfig(loadConfig);
+            }
+        });
+        grid.addViewReadyHandler(event -> {
+            List<ColumnConfig<DiskResource, ?>> configList = grid.getColumnModel().getColumns();
+            if (columnPreferences != null) {
+                for (ColumnConfig cc : configList) {
+                    String temp = columnPreferences.get(cc.getPath());
+                    boolean hidden = (temp == null) ? false : Boolean.valueOf(temp);
+                    cc.setHidden(hidden);
+                }
+                grid.getView().refresh(true);
             }
         });
     }
@@ -247,19 +260,7 @@ public class GridViewImpl extends ContentPanel implements GridView,
      */
     @Override
     public void setColumnPreferences(Map<String, String> preferences) {
-        Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
-            @Override
-            public void execute() {
-                List<ColumnConfig<DiskResource, ?>> configList = grid.getColumnModel().getColumns();
-                for (ColumnConfig cc : configList) {
-                    String temp = preferences.get(cc.getPath());
-                    boolean hidden = (temp == null) ? false : Boolean.valueOf(temp);
-                    cc.setHidden(hidden);
-                }
-                grid.getView().refresh(true);
-            }
-        });
-
+        this.columnPreferences = preferences;
     }
 
     @Override
