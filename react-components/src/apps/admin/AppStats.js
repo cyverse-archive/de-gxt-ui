@@ -14,12 +14,13 @@ import dateformat from "dateformat";
 class AppStats extends Component {
     constructor(props) {
         super(props);
+        var today = new Date();
         this.state = {
             data: [],
             loading: true,
             searchText: null,
-            startDate: null,
-            endDate: null,
+            startDate: new Date(today.setMonth(today.getMonth() - 3)),  // set default date range for 90 days!
+            endDate: new Date(),
             filterDisabled: true,
         };
         this.handleSearch = this.handleSearch.bind(this);
@@ -38,11 +39,11 @@ class AppStats extends Component {
     }
 
     onStartDateChange(undef, date) {
-        this.setState({startDate: dateformat(date, "yyyy-mm-dd")});
+        this.setState({startDate: date});
     }
 
     onEndDateChange(undef, date) {
-        this.setState({endDate: dateformat(date, "yyyy-mm-dd")});
+        this.setState({endDate: date});
     }
 
     componentDidMount() {
@@ -54,8 +55,8 @@ class AppStats extends Component {
             loading: true,
         });
         var searchText = this.state.searchText;
-        var startDate = this.state.startDate;
-        var endDate = this.state.endDate;
+        var startDate = dateformat(this.state.startDate, "yyyy-mm-dd");
+        var endDate = dateformat(this.state.endDate, "yyyy-mm-dd");
         this.props.presenter.searchApps(searchText, startDate, endDate, (apps) => {
             this.setState({
                 loading: false,
@@ -72,6 +73,7 @@ class AppStats extends Component {
         const appearance = this.props.appearance;
         const {data, loading} = this.state;
         const disabled = (this.state.startDate && this.state.endDate) ? false : true;
+        console.log("start date->" + this.state.startDate + " end date->" + this.state.endDate);
         return (
             <div>
                 <div>
@@ -81,10 +83,10 @@ class AppStats extends Component {
                                 hintText={appearance.searchApps()} onChange={this.handleSearch}/>
                             <ToolbarSeparator />
                             <DatePicker hintText={appearance.startDate()} container="inline"
-                                        onChange={this.onStartDateChange}/>
+                                        onChange={this.onStartDateChange} value={this.state.startDate}/>
                             <ToolbarSeparator />
                             <DatePicker hintText={appearance.endDate()} container="inline"
-                                        onChange={this.onEndDateChange}/>
+                                        onChange={this.onEndDateChange} value={this.state.endDate}/>
                             <RaisedButton label={appearance.applyFilter()} onClick={this.applyFilter}
                                           disabled={disabled} buttonStyle={appearance.buttonStyle()}/>
                         </ToolbarGroup>
@@ -126,7 +128,7 @@ class AppStats extends Component {
                             }, {
                                 id: 'lastCompleted',
                                 Header: appearance.lastCompleted(),
-                                accessor: s => s.job_stats.job_last_completed ?                       //example of how to provide custom JSX
+                                accessor: s => s.job_stats.job_last_completed ?    //example of how to provide custom JSX
                                     <IntlProvider locale="en">
                                         <FormattedDate value={Number(s.job_stats.job_last_completed)}
                                                        day="numeric"
