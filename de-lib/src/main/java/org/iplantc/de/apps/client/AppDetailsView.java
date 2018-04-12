@@ -55,6 +55,8 @@ public interface AppDetailsView extends IsWidget,
 
             String hyperlink();
 
+            String detailsCard();
+
             String detailsTable();
 
             String detailsRow();

@@ -29,6 +29,7 @@ class ToolDetails extends Component {
     render() {
         let tools      = this.props.app.tools,
             appearance = this.props.appearance,
+            cardClass = appearance.css().detailsCard(),
             labelClass = appearance.css().label(),
             valueClass = appearance.css().value();
 
@@ -38,7 +39,7 @@ class ToolDetails extends Component {
                     tools.map( (toolInfo, index) => (
                 <MediaCard
                     key={index}
-                    style={{width: '100%', border: "1px solid black"}}
+                    className={cardClass}
                     title={toolInfo.name}
                     summary={ <SummaryText children={toolInfo.description} /> }
 
