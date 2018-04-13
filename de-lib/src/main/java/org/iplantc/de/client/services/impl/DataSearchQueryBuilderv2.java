@@ -85,6 +85,12 @@ public class DataSearchQueryBuilderv2 {
     }
 
     public String buildFullQuery() {
+
+        LOG.fine("search query==>" + toString(getFullQuery()));
+        return toString();
+    }
+
+    public Splittable getFullQuery() {
         ownedBy()
                 .pathPrefix()
                 .sharedWith()
@@ -95,8 +101,16 @@ public class DataSearchQueryBuilderv2 {
                 .metadata()
                 .tags();
 
-        LOG.fine("search query==>" + toString());
-        return toString();
+        Splittable query = StringQuoter.createSplittable();
+
+        Splittable operators = StringQuoter.createSplittable();
+        assignKeyValue(operators, NONE, noneList);
+        assignKeyValue(operators, ALL, allList);
+        assignKeyValue(operators, ANY, anyList);
+
+        assignKeyValue(query, QUERY, operators);
+
+        return query;
     }
 
     /**
@@ -146,8 +160,8 @@ public class DataSearchQueryBuilderv2 {
             Splittable users = listToSplittable(content);
             Splittable args = StringQuoter.createSplittable();
             assignKeyValue(args, SHARED_WITH, users);
-            if (Strings.isNullOrEmpty(template.getPermission())) {
-                template.setPermission(PermissionValue.read.toString());
+            if (template.getPermission() != null) {
+                template.setPermission(PermissionValue.read);
                 template.setPermissionRecurse(true);
             }
             assignKeyValue(args, PERMISSION, template.getPermission());
@@ -288,6 +302,10 @@ public class DataSearchQueryBuilderv2 {
         return splittable;
     }
 
+    private void assignKeyValue(Splittable keySplittable, String key, PermissionValue value) {
+        StringQuoter.create(value.toString()).assign(keySplittable, key);
+    }
+
     /**
      * Takes a splittable, assigns the specified key and value
      * { "key" : "value" }
@@ -333,17 +351,7 @@ public class DataSearchQueryBuilderv2 {
     /**
      * @return the currently constructed query.
      */
-    @Override
-    public String toString() {
-        Splittable query = StringQuoter.createSplittable();
-
-        Splittable operators = StringQuoter.createSplittable();
-        assignKeyValue(operators, NONE, noneList);
-        assignKeyValue(operators, ALL, allList);
-        assignKeyValue(operators, ANY, anyList);
-
-        assignKeyValue(query, QUERY, operators);
-
+    public String toString(Splittable query) {
         return query.getPayload();
     }
 }

@@ -18,12 +18,11 @@ import org.iplantc.de.client.models.querydsl.Source;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplateList;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
-import org.iplantc.de.client.models.sharing.OldUserPermission;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
+import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsLoadConfig;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsRpcProxyImpl;
-import org.iplantc.de.diskResource.client.presenters.grid.proxy.QuerySearchLoadConfig;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.services.BaseServiceCallWrapper.Type;
 import org.iplantc.de.shared.services.DiscEnvApiService;
@@ -211,6 +210,7 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
                 return null;
             }
             SearchResponse response = AutoBeanCodex.decode(factory, SearchResponse.class, object).as();
+            queryTemplate.setTotal(response.getTotal());
 
             List<Document> documents = response.getHits();
             List<DiskResource> diskResources = Lists.newArrayList();
@@ -496,14 +496,20 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
 
     @Override
     public void submitSearchQuery(QueryDSLTemplate template,
-                                  QuerySearchLoadConfig loadConfig,
+                                  FolderContentsLoadConfig loadConfig,
                                   FolderContentsRpcProxyImpl.QueryResultsCallback queryResultsCallback) {
         DataSearchQueryBuilderv2 builder = new DataSearchQueryBuilderv2(template);
         String address = SEARCH;
 
-        String buildFullQuery = builder.buildFullQuery();
+        Splittable query = builder.getFullQuery();
 
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, buildFullQuery);
+        int limit = loadConfig.getLimit();
+        int offset = loadConfig.getOffset();
+
+        StringQuoter.create(limit).assign(query, "size");
+        StringQuoter.create(offset).assign(query, "from");
+
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, query.getPayload());
         deServiceFacade.getServiceData(wrapper, new SubmitQueryCallbackConverter(queryResultsCallback, template, userInfo, queryAutoBeanFactory));
     }
 

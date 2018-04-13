@@ -16,6 +16,7 @@ import org.iplantc.de.diskResource.client.events.selection.DNDDiskResourcesCompl
 import org.iplantc.de.diskResource.client.events.selection.ImportFromUrlSelected.ImportFromUrlSelectedHandler;
 import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleUploadSelected.SimpleUploadSelectedHandler;
+import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsLoadConfig;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -67,7 +68,7 @@ public interface NavigationView extends IsWidget,
     interface Presenter extends HasSubmitDiskResourceQueryEventHandlers,
                                 HasRootFoldersRetrievedEventHandlers,
                                 HasSavedSearchesRetrievedEventHandlers,
-                                BeforeLoadEvent.BeforeLoadHandler<FilterPagingLoadConfigBean>,
+                                BeforeLoadEvent.BeforeLoadHandler<FolderContentsLoadConfig>,
                                 DiskResourceNameSelectedEventHandler,
                                 DiskResourcePathSelectedEventHandler,
                                 UpdateSavedSearchesHandler,

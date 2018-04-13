@@ -28,7 +28,6 @@ import com.google.inject.assistedinject.AssistedInject;
 import com.sencha.gxt.data.client.loader.RpcProxy;
 import com.sencha.gxt.data.shared.loader.FilterConfig;
 import com.sencha.gxt.data.shared.loader.FilterConfigBean;
-import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoadResultBean;
 
@@ -40,14 +39,14 @@ import java.util.logging.Logger;
  *
  * @author jstroot, psarando
  */
-public class FolderContentsRpcProxyImpl extends RpcProxy<FilterPagingLoadConfigBean, PagingLoadResult<DiskResource>>
+public class FolderContentsRpcProxyImpl extends RpcProxy<FolderContentsLoadConfig, PagingLoadResult<DiskResource>>
                                         implements GridView.FolderContentsRpcProxy {
 
     /**
      * Constructs a valid {@link PagingLoadResultBean} from the given search results.
-     * 
+     *
      * @author jstroot
-     * 
+     *
      */
     static class SearchResultsCallback implements AsyncCallback<List<DiskResource>> {
         private final FolderContentsLoadConfig loadConfig;
@@ -111,22 +110,25 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FilterPagingLoadConfigB
     }
 
     public class QueryResultsCallback implements AsyncCallback<List<DiskResource>> {
-        private final FilterPagingLoadConfigBean loadConfig;
+        private final FolderContentsLoadConfig loadConfig;
         private final AsyncCallback<PagingLoadResult<DiskResource>> callback;
         private final GridView.Presenter.Appearance appearance;
         private final IplantAnnouncer announcer1;
         private final HasSafeHtml hasSafeHtml1;
+        private QueryDSLTemplate template;
 
         public QueryResultsCallback(final IplantAnnouncer announcer,
-                                     final FilterPagingLoadConfigBean loadConfig,
-                                     final AsyncCallback<PagingLoadResult<DiskResource>> callback,
-                                     final GridView.Presenter.Appearance appearance,
-                                     final HasSafeHtml hasSafeHtml) {
+                                    final FolderContentsLoadConfig loadConfig,
+                                    final AsyncCallback<PagingLoadResult<DiskResource>> callback,
+                                    final GridView.Presenter.Appearance appearance,
+                                    final HasSafeHtml hasSafeHtml,
+                                    QueryDSLTemplate template) {
             this.announcer1 = announcer;
             this.loadConfig = loadConfig;
             this.callback = callback;
             this.appearance = appearance;
             this.hasSafeHtml1 = hasSafeHtml;
+            this.template = template;
         }
 
         @Override
@@ -135,7 +137,7 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FilterPagingLoadConfigB
                 onFailure(null);
                 return;
             }
-            callback.onSuccess(new PagingLoadResultBean<>(results, results.size(), loadConfig.getOffset()));
+            callback.onSuccess(new PagingLoadResultBean<>(results, template.getTotal(), loadConfig.getOffset()));
             if (loadConfig.getFilters() != null && !loadConfig.getFilters().isEmpty()) {
                 String searchText = setSearchText(loadConfig.getFilters().get(0).getValue());
 
@@ -165,9 +167,9 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FilterPagingLoadConfigB
 
     /**
      * Constructs a valid {@link PagingLoadResultBean} from the given {@link Folder} result.
-     * 
+     *
      * @author jstroot
-     * 
+     *
      */
     static class FolderContentsCallback extends DataCallback<Folder> {
         private final FolderContentsLoadConfig loadConfig;
@@ -292,67 +294,66 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FilterPagingLoadConfigB
     }
 
     @Override
-    public void load(final FilterPagingLoadConfigBean loadConfig, final AsyncCallback<PagingLoadResult<DiskResource>> callback) {
-        if (loadConfig instanceof FolderContentsLoadConfig) {
-            FolderContentsLoadConfig folderConfig = (FolderContentsLoadConfig)loadConfig;
-            final Folder folder = folderConfig.getFolder();
-            if (folder.isFilter()) {
-                if (callback != null) {
-                    List<DiskResource> emptyResult = Lists.newArrayList();
-                    callback.onSuccess(new PagingLoadResultBean<>(emptyResult, 0, 0));
-                }
-            } else if (folder instanceof DiskResourceFavorite) {
-                metadataService.getFavorites(infoTypeFilterList,
-                                             entityType,
-                                             folderConfig,
-                                             new FavoritesCallback(callback,
-                                                                   folderConfig,
-                                                                   announcer,
-                                                                   appearance));
-            } else if (folder instanceof DiskResourceQueryTemplate) {
-                DiskResourceQueryTemplate qt = (DiskResourceQueryTemplate)folder;
-                String infoTypeFilterQueryString = Joiner.on(" ").join(infoTypeFilterList);
-                String newMetadataValueQuery = Joiner.on(" ")
-                                                     .join(Strings.nullToEmpty(qt.getMetadataValueQuery()),
-                                                           infoTypeFilterQueryString)
-                                                     .trim()                              // Trim the results
-                                                     .replaceAll("-", "\\\\-");           // Escape all hyphens
+    public void load(final FolderContentsLoadConfig loadConfig, final AsyncCallback<PagingLoadResult<DiskResource>> callback) {
 
-                qt.setMetadataValueQuery(newMetadataValueQuery);
+        FolderContentsLoadConfig folderConfig = (FolderContentsLoadConfig)loadConfig;
+        final Folder folder = folderConfig.getFolder();
+        if (folder.isFilter()) {
+            if (callback != null) {
+                List<DiskResource> emptyResult = Lists.newArrayList();
+                callback.onSuccess(new PagingLoadResultBean<>(emptyResult, 0, 0));
+            }
+        } else if (folder instanceof DiskResourceFavorite) {
+            metadataService.getFavorites(infoTypeFilterList,
+                                         entityType,
+                                         folderConfig,
+                                         new FavoritesCallback(callback,
+                                                               folderConfig,
+                                                               announcer,
+                                                               appearance));
+        } else if (folder instanceof DiskResourceQueryTemplate) {
+            DiskResourceQueryTemplate qt = (DiskResourceQueryTemplate)folder;
+            String infoTypeFilterQueryString = Joiner.on(" ").join(infoTypeFilterList);
+            String newMetadataValueQuery = Joiner.on(" ")
+                                                 .join(Strings.nullToEmpty(qt.getMetadataValueQuery()),
+                                                       infoTypeFilterQueryString)
+                                                 .trim()                              // Trim the results
+                                                 .replaceAll("-", "\\\\-");           // Escape all hyphens
 
-                searchService.submitSearchFromQueryTemplate((DiskResourceQueryTemplate)folder,
-                                                            folderConfig,
-                                                            entityType,
-                                                            new SearchResultsCallback(announcer,
-                                                                                      folderConfig,
-                                                                                      callback,
-                                                                                      appearance,
-                                                                                      hasSafeHtml));
-            } else {
-                drService.getFolderContents(folder,
-                                            infoTypeFilterList,
-                                            entityType,
+            qt.setMetadataValueQuery(newMetadataValueQuery);
+
+            searchService.submitSearchFromQueryTemplate((DiskResourceQueryTemplate)folder,
+                                                        folderConfig,
+                                                        entityType,
+                                                        new SearchResultsCallback(announcer,
+                                                                                  folderConfig,
+                                                                                  callback,
+                                                                                  appearance,
+                                                                                  hasSafeHtml));
+        } else if (folder instanceof QueryDSLTemplate) {
+            QueryDSLTemplate template = (QueryDSLTemplate)folder;
+            searchService.submitSearchQuery(template,
                                             folderConfig,
-                                            new FolderContentsCallback(announcer,
-                                                                       folderConfig,
-                                                                       callback,
-                                                                       hasSafeHtml,
-                                                                       appearance));
-            }
-        } else {
-            QuerySearchLoadConfig searchConfig = (QuerySearchLoadConfig)loadConfig;
-            QueryDSLTemplate template = searchConfig.getTemplate();
-            FilterConfig filterConfig = new FilterConfigBean();
-            if (!Strings.isNullOrEmpty(template.getNameHas())) {
-                filterConfig.setValue(template.getNameHas());
-            }
-            loadConfig.setFilters(Lists.newArrayList(filterConfig));
-            searchService.submitSearchQuery(template, searchConfig, new QueryResultsCallback(announcer,
-                                                                                searchConfig,
-                                                                                callback,
-                                                                                appearance,
-                                                                                hasSafeHtml));
+                                            new QueryResultsCallback(announcer,
+                                                                     folderConfig,
+                                                                     callback,
+                                                                     appearance,
+                                                                     hasSafeHtml,
+                                                                     template));
         }
+        else {
+            drService.getFolderContents(folder,
+                                        infoTypeFilterList,
+                                        entityType,
+                                        folderConfig,
+                                        new FolderContentsCallback(announcer,
+                                                                   folderConfig,
+                                                                   callback,
+                                                                   hasSafeHtml,
+                                                                   appearance));
+        }
+
+
 
     }
 

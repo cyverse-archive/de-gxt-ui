@@ -35,7 +35,6 @@ import com.google.inject.assistedinject.Assisted;
 
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.loader.BeforeLoadEvent;
-import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.dnd.core.client.DND;
@@ -80,7 +79,7 @@ public class GridViewImpl extends ContentPanel implements GridView,
     private static final GridViewImplUiBinder ourUiBinder = GWT.create(GridViewImplUiBinder.class);
     private final DiskResourceUtil diskResourceUtil;
     private final DiskResourceColumnModel drCm;
-    private final PagingLoader<FilterPagingLoadConfigBean, PagingLoadResult<DiskResource>> gridLoader;
+    private final PagingLoader<FolderContentsLoadConfig, PagingLoadResult<DiskResource>> gridLoader;
     private final Status selectionStatus;
     private final LiveGridCheckBoxSelectionModel sm;
     @Inject CommonModelUtils commonModelUtils;
@@ -165,7 +164,7 @@ public class GridViewImpl extends ContentPanel implements GridView,
 
     //<editor-fold desc="Handler Registrations">
     @Override
-    public HandlerRegistration addBeforeLoadHandler(BeforeLoadEvent.BeforeLoadHandler<FilterPagingLoadConfigBean> handler) {
+    public HandlerRegistration addBeforeLoadHandler(BeforeLoadEvent.BeforeLoadHandler<FolderContentsLoadConfig> handler) {
         return gridLoader.addBeforeLoadHandler(handler);
     }
 
@@ -246,7 +245,7 @@ public class GridViewImpl extends ContentPanel implements GridView,
     }
 
     @Override
-    public PagingLoader<FilterPagingLoadConfigBean, PagingLoadResult<DiskResource>> getGridLoader() {
+    public PagingLoader<FolderContentsLoadConfig, PagingLoadResult<DiskResource>> getGridLoader() {
         return gridLoader;
     }
 

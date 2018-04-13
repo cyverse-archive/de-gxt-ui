@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface SearchResponse {
 
-    Double getTotal();
+    int getTotal();
 
     @PropertyName("max_score")
     Double getMaxScore();

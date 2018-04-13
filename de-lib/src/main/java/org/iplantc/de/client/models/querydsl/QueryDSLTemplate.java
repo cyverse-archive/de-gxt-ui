@@ -1,13 +1,15 @@
 package org.iplantc.de.client.models.querydsl;
 
+import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.search.DateInterval;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 
 import java.util.List;
 
 /**
  * An autobean that can contain all the user inputs that can be clauses in an Elasticsearch query
  */
-public interface QueryDSLTemplate {
+public interface QueryDSLTemplate extends Folder {
 
     String getNameHas();
     void setNameHas(String label);
@@ -60,15 +62,10 @@ public interface QueryDSLTemplate {
     String getPathPrefix();
     void setPathPrefix(String pathPrefix);
 
-    String getPermission();
-    void setPermission(String permission);
-
     Boolean isPermissionRecurse();
     void setPermissionRecurse(Boolean permissionRecurse);
 
     List<String> getPermissionUsers();
     void setPermissionUsers(List<String> permissionUsers);
-
-
 
 }

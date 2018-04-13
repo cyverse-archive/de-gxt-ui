@@ -263,26 +263,22 @@ public class NavigationPresenterImpl implements
 
     // <editor-fold desc="Event Handlers">
     @Override
-    public void onBeforeLoad(BeforeLoadEvent<FilterPagingLoadConfigBean> event) {
+    public void onBeforeLoad(BeforeLoadEvent<FolderContentsLoadConfig> event) {
         if (getSelectedFolder() == null) {
             return;
         }
-        FilterPagingLoadConfigBean loadConfigBean = event.getLoadConfig();
-
-        if (loadConfigBean instanceof FolderContentsLoadConfig) {
-
-            final Folder folderToBeLoaded = ((FolderContentsLoadConfig)loadConfigBean).getFolder();
+        final Folder folderToBeLoaded = event.getLoadConfig().getFolder();
 
         /*
          * If the loaded contents are not the contents of the currently selected folder, then cancel the
          * load.
          */
-            if (!Strings.isNullOrEmpty(folderToBeLoaded.getId()) && !folderToBeLoaded.getId()
-                                                                                     .equals(getSelectedFolder()
-                                                                                                     .getId())) {
-                event.setCancelled(true);
-            }
+        if (!Strings.isNullOrEmpty(folderToBeLoaded.getId()) && !folderToBeLoaded.getId()
+                                                                                 .equals(getSelectedFolder()
+                                                                                                 .getId())) {
+            event.setCancelled(true);
         }
+
     }
 
     @Override

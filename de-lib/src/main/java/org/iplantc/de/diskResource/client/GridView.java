@@ -26,6 +26,7 @@ import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSele
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected.SaveMetadataSelectedEventHandler;
 import org.iplantc.de.diskResource.client.events.selection.SetInfoTypeSelected.SetInfoTypeSelectedHandler;
 import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected.ShareByDataLinkSelectedEventHandler;
+import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsLoadConfig;
 import org.iplantc.de.diskResource.client.views.grid.DiskResourceColumnModel;
 
 import com.google.gwt.dom.client.Element;
@@ -117,7 +118,7 @@ public interface GridView extends IsWidget,
         String selectionCountStatus(int selectionCount);
     }
 
-    interface FolderContentsRpcProxy extends DataProxy<FilterPagingLoadConfigBean, PagingLoadResult<DiskResource>> {
+    interface FolderContentsRpcProxy extends DataProxy<FolderContentsLoadConfig, PagingLoadResult<DiskResource>> {
         void setHasSafeHtml(HasSafeHtml centerHeader);
     }
 
@@ -262,7 +263,7 @@ public interface GridView extends IsWidget,
 
     }
 
-    HandlerRegistration addBeforeLoadHandler(BeforeLoadEvent.BeforeLoadHandler<FilterPagingLoadConfigBean> handler);
+    HandlerRegistration addBeforeLoadHandler(BeforeLoadEvent.BeforeLoadHandler<FolderContentsLoadConfig> handler);
 
     Element findGridRow(Element eventTargetElement);
 
@@ -270,7 +271,7 @@ public interface GridView extends IsWidget,
 
     DiskResourceColumnModel getColumnModel();
 
-    PagingLoader<FilterPagingLoadConfigBean,PagingLoadResult<DiskResource>> getGridLoader();
+    PagingLoader<FolderContentsLoadConfig,PagingLoadResult<DiskResource>> getGridLoader();
 
     LiveGridCheckBoxSelectionModel getSelectionModel();
 

@@ -65,7 +65,6 @@ import org.iplantc.de.diskResource.client.gin.factory.GridViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ShareResourcesLinkDialogFactory;
 import org.iplantc.de.diskResource.client.model.DiskResourceModelKeyProvider;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsLoadConfig;
-import org.iplantc.de.diskResource.client.presenters.grid.proxy.QuerySearchLoadConfig;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.SelectDiskResourceByIdStoreAddHandler;
 import org.iplantc.de.diskResource.client.views.dialogs.InfoTypeEditorDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.Md5DisplayDialog;
@@ -98,7 +97,6 @@ import com.google.web.bindery.autobean.shared.Splittable;
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.event.StoreUpdateEvent;
-import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
@@ -634,12 +632,12 @@ public class GridViewPresenterImpl implements Presenter,
     }
 
     void doFolderSelected(final Folder selectedFolder) {
-        final PagingLoader<FilterPagingLoadConfigBean, PagingLoadResult<DiskResource>> gridLoader =
+        final PagingLoader<FolderContentsLoadConfig, PagingLoadResult<DiskResource>> gridLoader =
                 view.getGridLoader();
-        FolderContentsLoadConfig loadConfig = new FolderContentsLoadConfig();
+        FolderContentsLoadConfig loadConfig = gridLoader.getLastLoadConfig();
         loadConfig.setFolder(selectedFolder);
         loadConfig.setOffset(0);
-        gridLoader.load(loadConfig);
+        gridLoader.load();
     }
 
     @Override
@@ -647,12 +645,12 @@ public class GridViewPresenterImpl implements Presenter,
         Splittable query = event.getTemplate();
         QueryDSLTemplate template = AutoBeanCodex.decode(queryFactory, QueryDSLTemplate.class, query.getPayload()).as();
 
-        final PagingLoader<FilterPagingLoadConfigBean, PagingLoadResult<DiskResource>> gridLoader =
+        final PagingLoader<FolderContentsLoadConfig, PagingLoadResult<DiskResource>> gridLoader =
                 view.getGridLoader();
-        QuerySearchLoadConfig loadConfig = new QuerySearchLoadConfig();
-        loadConfig.setTemplate(template);
+        FolderContentsLoadConfig loadConfig = gridLoader.getLastLoadConfig();
+        loadConfig.setFolder(template);
         loadConfig.setOffset(0);
-        gridLoader.load(loadConfig);
+        gridLoader.load();
     }
 
     void updateDiskResource(DiskResource diskResource) {

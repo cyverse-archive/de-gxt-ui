@@ -5,8 +5,8 @@ import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.services.impl.DataSearchQueryBuilder;
+import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsLoadConfig;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsRpcProxyImpl;
-import org.iplantc.de.diskResource.client.presenters.grid.proxy.QuerySearchLoadConfig;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -84,7 +84,7 @@ public interface SearchServiceFacade {
             final AsyncCallback<List<DiskResource>> callback);
 
     void submitSearchQuery(QueryDSLTemplate template,
-                           QuerySearchLoadConfig searchConfig,
+                           FolderContentsLoadConfig searchConfig,
                            FolderContentsRpcProxyImpl.QueryResultsCallback queryResultsCallback);
 
 }
