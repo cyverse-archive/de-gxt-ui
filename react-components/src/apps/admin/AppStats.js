@@ -6,10 +6,38 @@ import {FormattedDate, IntlProvider} from "react-intl";
 import Toolbar from "material-ui-next/Toolbar";
 import ToolbarGroup from "material-ui-next/Toolbar";
 import ToolbarSeparator from "material-ui-next/Toolbar";
-import TextField from "material-ui/TextField";
-import DatePicker from "material-ui/DatePicker";
-import RaisedButton from "material-ui/RaisedButton";
-import dateformat from "dateformat";
+import TextField from "material-ui-next/TextField";
+import DatePicker from "react-datepicker";
+import Button from "material-ui-next/Button";
+import {withStyles} from "material-ui-next/styles";
+import Table, {TableBody, TableCell, TableHead, TableRow} from "material-ui-next/Table";
+import Paper from "material-ui-next/Paper";
+import PropTypes from "prop-types";
+import * as moment from "moment";
+import "react-datepicker/dist/react-datepicker.css";
+import Modal from 'material-ui-next/Modal';
+import Typography from 'material-ui-next/Typography';
+
+const styles = theme => ({
+    root: {
+        width: '95%',
+        marginTop: 3,
+        overflow: 'auto',
+        height: 800,
+    },
+    table: {
+        minWidth: 700,
+    },
+    textField: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: 200,
+    },
+    button: {
+        margin: 1,
+    },
+
+});
 
 class AppStats extends Component {
     constructor(props) {
@@ -30,18 +58,18 @@ class AppStats extends Component {
         this.onEndDateChange = this.onEndDateChange.bind(this);
     }
 
-    handleSearch(event, searchText) {
-        console.log(searchText);
-        if (!searchText || searchText.length >= 3 || searchText.length === 0) {
-            this.setState({searchText: searchText});
+    handleSearch(event) {
+        console.log(event.target.value);
+        if (!event.target.value || event.target.value.length >= 3 || event.target.value.length === 0) {
+            this.setState({searchText: event.target.value});
         }
     }
 
-    onStartDateChange(undef, date) {
+    onStartDateChange(date) {
         this.setState({startDate: date});
     }
 
-    onEndDateChange(undef, date) {
+    onEndDateChange(date) {
         this.setState({endDate: date});
     }
 
@@ -54,138 +82,112 @@ class AppStats extends Component {
             loading: true,
         });
         var searchText = this.state.searchText;
-        var startDate = dateformat(this.state.startDate, "yyyy-mm-dd");
-        var endDate = dateformat(this.state.endDate, "yyyy-mm-dd");
+        var startDate = moment(this.state.startDate).format("YYYY-MM-DD");
+        var endDate = moment(this.state.endDate).format("YYYY-MM-DD");
         this.props.presenter.searchApps(searchText, startDate, endDate, (apps) => {
             this.setState({
                 loading: false,
                 data: apps,
             })
-        })
+        });
     }
 
     applyFilter() {
         this.fetchAppStats();
     }
 
-    
-
     render() {
         const appearance = this.props.appearance;
         const {data, loading} = this.state;
-        const disabled = (this.state.startDate && this.state.endDate) ? false : true;
+        const btnDisabled = (this.state.startDate && this.state.endDate) ? false : true;
+        const classes = this.props.classes;
+        let filterBtn = null;
+        if (btnDisabled) {
+            filterBtn = <Button variant="raised" disabled onClick={this.applyFilter}
+                                className={classes.button}>{appearance.applyFilter()}</Button>
+        } else {
+            filterBtn = <Button variant="raised" onClick={this.applyFilter}
+                                className={classes.button}>{appearance.applyFilter()}</Button>
+        }
         console.log("start date->" + this.state.startDate + " end date->" + this.state.endDate);
+         const divStyle = {
+             width: '100px',
+             height: '50px',
+             border: '1px solid',
+         }
         return (
             <div>
                 <div>
                     <Toolbar style={appearance.toolbarStyle()}>
                         <ToolbarGroup>
-                            <TextField
-                                hintText={appearance.searchApps()} onChange={this.handleSearch}/>
+                            <TextField className={classes.textField}
+                                       label={appearance.searchApps()} onChange={this.handleSearch}/>
                             <ToolbarSeparator />
-                            <DatePicker hintText={appearance.startDate()} container="inline"
-                                        onChange={this.onStartDateChange} value={this.state.startDate}/>
+                            <DatePicker placeholderText={appearance.startDate()}
+                                        onChange={this.onStartDateChange}
+                                        selected={moment(this.state.startDate)}/>
                             <ToolbarSeparator />
-                            <DatePicker hintText={appearance.endDate()} container="inline"
-                                        onChange={this.onEndDateChange} value={this.state.endDate}/>
-                            <RaisedButton label={appearance.applyFilter()} onClick={this.applyFilter}
-                                          disabled={disabled} buttonStyle={appearance.buttonStyle()}/>
+                            <DatePicker placeholderText={appearance.endDate()}
+                                        onChange={this.onEndDateChange}
+                                        selected={moment(this.state.endDate)}/>
+
+                            <ToolbarSeparator />
+                            {filterBtn}
                         </ToolbarGroup>
                     </Toolbar>
                 </div>
-                <div>
-                    <ReactTable
-                        data={data}
-                        loading={loading}
-                        style={appearance.gridStyle()}
-                        className="-striped -highlight"
-                        defaultPageSize={100}
-                        filterable
-                        defaultFilterMethod={(filter, row) =>
-                        String(row[filter.id]) === filter.value}
-                        columns={[
-                            {
-                                Header: appearance.name(),
-                                accessor: "name",
-                                Cell: row => (
-                                    <span title={row.value}>{row.value}</span>  //example of custom cell.
-                                )
-                            }, {
-                                id: 'rating',
-                                Header: appearance.rating(),
-                                accessor: r => r.rating.average
-                            }, {
-                                id: 'total',
-                                Header: appearance.total(),
-                                accessor: s => s.job_stats.job_count ? s.job_stats.job_count : 0
-                            }, {
-                                id: 'completed',
-                                Header: appearance.completed(),
-                                accessor: s => s.job_stats.job_count_completed ? s.job_stats.job_count_completed : 0
-                            }, {
-                                id: 'failed',
-                                Header: appearance.failed(),
-                                accessor: s => s.job_stats.job_count_failed ? s.job_stats.job_count_failed : 0
-                            }, {
-                                id: 'lastCompleted',
-                                Header: appearance.lastCompleted(),
-                                accessor: s => s.job_stats.job_last_completed ?    //example of how to provide custom JSX
-                                    <IntlProvider locale="en">
-                                        <FormattedDate value={Number(s.job_stats.job_last_completed)}
-                                                       day="numeric"
-                                                       month="short"
-                                                       year="numeric"/>
-                                    </IntlProvider> : appearance.emptyDate()
-                            }, {
-                                id: 'lastUsed',
-                                Header: appearance.lastUsed(),
-                                accessor: s => s.job_stats.last_used ? <IntlProvider locale="en">
-                                        <FormattedDate value={Number(s.job_stats.last_used)}
-                                                       day="numeric"
-                                                       month="short"
-                                                       year="numeric"/>
-                                    </IntlProvider> : appearance.emptyDate()
-
-                            }, {
-                                id: 'integrator',
-                                Header: appearance.integrator(),
-                                accessor: s => s.integrator_name,
-                            }, {
-                                id: 'beta',
-                                Header: appearance.beta(),
-                                accessor: s => s.beta ? new Boolean(s.beta).toString() : "false",
-                                filterMethod: (filter, row) => {
-                                    if (filter.value === "all") {
-                                        return true;
-                                    }
-                                    if (filter.value === "true") {
-                                        return row[filter.id] === "true";
-                                    }
-                                    return row[filter.id] === "false";
-                                },
-                                Filter: ({filter, onChange}) =>
-                                    <select
-                                        onChange={event => onChange(event.target.value)}
-                                        style={{width: "100%"}}
-                                        value={filter ? filter.value : "all"}
-                                    >
-                                        <option value="all">Show All</option>
-                                        <option value="true">Apps In Beta</option>
-                                        <option value="false">Apps Not In Beta</option>
-                                    </select>
-                            }, {
-                                id: 'system',
-                                Header: appearance.system(),
-                                accessor: s => s.system_id,
-                            },
-                        ]}
-                    />
-                </div>
+                <Paper className={classes.root}>
+                    <Modal
+                        aria-labelledby="simple-modal-title"
+                        aria-describedby="simple-modal-description"
+                        open={this.state.loading}>
+                        <div style={divStyle}>
+                            <Typography variant="title" id="modal-title">
+                                Loading...
+                            </Typography>
+                        </div>
+                    </Modal>
+                    <Table className={classes.table}>
+                        <TableHead>
+                            <TableRow hover>
+                                <TableCell>{appearance.name()}</TableCell>
+                                <TableCell numeric>{appearance.rating()}</TableCell>
+                                <TableCell numeric>{appearance.total()}</TableCell>
+                                <TableCell numeric>{appearance.completed()}</TableCell>
+                                <TableCell numeric>{appearance.failed()}</TableCell>
+                                <TableCell numeric>{appearance.lastCompleted()}</TableCell>
+                                <TableCell numeric>{appearance.lastUsed()}</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody className={classes.tableBody}>
+                            {data.map(n => {
+                                return (
+                                    <TableRow hover key={n.id}>
+                                        <TableCell>{n.name}</TableCell>
+                                        <TableCell
+                                            numeric>{(n.rating.average) ? n.rating.average : 0}</TableCell>
+                                        <TableCell
+                                            numeric>{(n.job_stats.job_count) ? n.job_stats.job_count : 0 }</TableCell>
+                                        <TableCell
+                                            numeric>{(n.job_stats.job_count_completed) ? n.job_stats.job_count_completed : 0}</TableCell>
+                                        <TableCell
+                                            numeric>{(n.job_stats.job_count_failed) ? n.job_stats.job_count_failed : 0 }</TableCell>
+                                        <TableCell>{(n.job_stats.job_count_completed) ? moment(Number(n.job_stats.job_last_completed, "x")).format("YYYY-MM-DD") : ""} </TableCell>
+                                        <TableCell>{(n.job_stats.last_used) ? moment(Number(n.job_stats.last_used, "x")).format("YYYY-MM-DD") : ""}</TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </Paper>
             </div>
         )
 
     }
 
 }
+AppStats.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
 
-export default AppStats;
+export default withStyles(styles)(AppStats);
