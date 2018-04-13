@@ -4,8 +4,7 @@
  *
  */
 import React, {Component} from "react";
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import {getCyVerseTheme} from "../../../src/lib";
+import {getDefaultTheme, NewMuiThemeProvider} from "../../../src/lib";
 import AppStats from "../../../src/apps/admin/AppStats";
 
 
@@ -55,15 +54,15 @@ class AppStatsTest extends Component {
                 "step_count": 1,
                 "can_run": true,
                 "job_stats": {
-                    "job_count_completed": 0,
-                    "job_count": 0,
-                    "job_count_failed": 0,
+                    "job_count_completed": 25,
+                    "job_count": 35,
+                    "job_count_failed": 10,
                     "job_last_completed": 1521650432000,
                      "last_used": 1521650292000,
                 },
                 "rating": {
-                    "average": 0.0,
-                    "total": 0
+                    "average": 5.0,
+                    "total": 1
                 }
             }];
 
@@ -74,9 +73,9 @@ class AppStatsTest extends Component {
         }
 
         return (
-            <MuiThemeProvider muiTheme={getCyVerseTheme()}>
+            <NewMuiThemeProvider muiTheme={getDefaultTheme()}>
                 <AppStats presenter={presenter} appearance={appearance}/>
-            </MuiThemeProvider>
+            </NewMuiThemeProvider>
         )
 
     }
