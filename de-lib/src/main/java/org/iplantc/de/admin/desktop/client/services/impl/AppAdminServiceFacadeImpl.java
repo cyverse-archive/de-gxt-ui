@@ -266,12 +266,14 @@ public class AppAdminServiceFacadeImpl implements AppAdminServiceFacade {
                           String startDate,
                           String endDate,
                           DECallback<AppListLoadResult> callback) {
-        StringBuilder address = new StringBuilder(APPS_ADMIN);
+        StringBuilder address = new StringBuilder(APPS_ADMIN + "?");
         if(!Strings.isNullOrEmpty(term)) {
-            address.append("?search=" + URL.encodeQueryString(term));
+            address.append("search=" + URL.encodeQueryString(term));
         }
-        if (!Strings.isNullOrEmpty(startDate) && !Strings.isNullOrEmpty(endDate)) {
+        if (!Strings.isNullOrEmpty(startDate)) {
             address.append("&start_date=" + startDate);
+        }
+        if(!Strings.isNullOrEmpty(endDate)) {
             address.append("&end_date=" + endDate);
         }
 

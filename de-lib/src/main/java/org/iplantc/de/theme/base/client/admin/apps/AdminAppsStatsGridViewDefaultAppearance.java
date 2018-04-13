@@ -99,16 +99,19 @@ public class AdminAppsStatsGridViewDefaultAppearance implements AdminAppStatsGri
     }
 
     @Override
+    @SuppressWarnings("unusable-by-js")
     public Splittable toolbarStyle() {
         return StringQuoter.split("{\"height\": \"30px\",\"backgroundColor\": \"white\"}");
     }
 
     @Override
+    @SuppressWarnings("unusable-by-js")
     public Splittable gridStyle() {
         return StringQuoter.split("{\"height\": \"800px\"}");
     }
 
     @Override
+    @SuppressWarnings("unusable-by-js")
     public Splittable buttonStyle() {
         return  StringQuoter.split("{\"height\": \"30px\"}");
     }

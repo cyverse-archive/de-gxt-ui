@@ -159,8 +159,10 @@ public interface DetailsView extends IsWidget,
 
         String removeTag();
 
+        @SuppressWarnings("unusable-by-js")
         Splittable tagSearchListStyle();
 
+        @SuppressWarnings("unusable-by-js")
         Splittable infoTypeSelectStyle();
 
         String okLabel();

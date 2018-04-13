@@ -56,11 +56,13 @@ public interface AdminAppStatsGridView extends IsWidget, IsMaskable {
         String system();
 
         String beta();
-
+        @SuppressWarnings("unusable-by-js")
         Splittable toolbarStyle();
 
+        @SuppressWarnings("unusable-by-js")
         Splittable gridStyle();
 
+        @SuppressWarnings("unusable-by-js")
         Splittable buttonStyle();
         
     }

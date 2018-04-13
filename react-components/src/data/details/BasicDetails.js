@@ -3,7 +3,7 @@
  */
 import React, {Component} from "react";
 import {FormattedDate, IntlProvider} from "react-intl";
-import FlatButton from "material-ui/FlatButton";
+import FlatButton from "material-ui-next/Button";
 import Dialog from "material-ui/Dialog";
 import InfoTypeSelectionList from "./InfoTypeSelectionList";
 import TagPanel from "./TagPanel";
