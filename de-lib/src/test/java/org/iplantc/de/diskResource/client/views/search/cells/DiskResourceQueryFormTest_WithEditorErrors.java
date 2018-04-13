@@ -75,6 +75,7 @@ public class DiskResourceQueryFormTest_WithEditorErrors {
         form = new DiskResourceQueryForm(tagsViewPresenterMock,
                                          factoryMock,
                                          searchModelUtilsMock,
+                                         namePrompt,
                                          appearanceMock) {
 
             @Override

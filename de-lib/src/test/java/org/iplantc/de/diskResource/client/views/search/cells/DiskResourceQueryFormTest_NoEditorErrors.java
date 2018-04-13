@@ -80,6 +80,7 @@ public class DiskResourceQueryFormTest_NoEditorErrors {
         form = new DiskResourceQueryForm(tagsViewPresenterMock,
                                          factoryMock,
                                          searchModelUtilsMock,
+                                         namePrompt,
                                          appearanceMock) {
 
             @Override
@@ -246,7 +247,7 @@ public class DiskResourceQueryFormTest_NoEditorErrors {
     @Test public void testDiskResourceQueryFormInit() {
         DiskResourceQueryForm spy = spy(form);
 
-        spy.init(namePrompt);
+        spy.init();
         /* Verify that the class under test adds itself as a save DRQE handler */
         verify(namePrompt).addSaveDiskResourceQueryClickedEventHandler(eq(spy));
     }
