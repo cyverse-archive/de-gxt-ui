@@ -226,10 +226,12 @@ public class DiskResourceQueryForm extends Composite implements
     DiskResourceQueryForm(final TagsView.Presenter tagsViewPresenter,
                           SearchAutoBeanFactory factory,
                           SearchModelUtils searchModelUtils,
+                          DiskResourceQueryFormNamePrompt namePrompt,
                           DiskResourceQueryFormAppearance appearance) {
         this.factory = factory;
         this.tagsViewPresenter = tagsViewPresenter;
         this.searchModelUtils = searchModelUtils;
+        this.namePrompt = namePrompt;
         this.appearance = appearance;
         this.tagsViewPresenter.setRemovable(true);
         this.tagsViewPresenter.setEditable(true);
@@ -242,7 +244,7 @@ public class DiskResourceQueryForm extends Composite implements
         this.tagsViewPresenter.getView().addTagAddedEventHandler(this);
         this.tagsViewPresenter.getView().addRemoveTagSelectedHandler(this);
         tagQuery = SimpleEditor.of();
-        init(new DiskResourceQueryFormNamePrompt());
+        init();
         editorDriver.initialize(this);
         editorDriver.edit(searchModelUtils.createDefaultFilter());
         tagQuery.setValue(new HashSet<Tag>());
@@ -408,8 +410,7 @@ public class DiskResourceQueryForm extends Composite implements
         return searchModelUtils.createFileSizeUnits();
     }
 
-    void init(DiskResourceQueryFormNamePrompt namePrompt) {
-        this.namePrompt = namePrompt;
+    void init() {
         this.namePrompt.addSaveDiskResourceQueryClickedEventHandler(this);
         initFileQuery();
         initNegatedFileQuery();

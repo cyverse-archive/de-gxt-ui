@@ -51,6 +51,7 @@ public class DiskResourceQueryFormNamePrompt extends Composite implements Editor
 
     String originalName;
 
+    @Inject
     public DiskResourceQueryFormNamePrompt() {
         initWidget(uiBinder.createAndBindUi(this));
         setSize("330", "110");
