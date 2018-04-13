@@ -1,11 +1,11 @@
 /**
  *  @author sriram
  * */
-import ReactTable from "react-table";
 import React, {Component} from "react";
-import "react-table/react-table.css";
 import {FormattedDate, IntlProvider} from "react-intl";
-import {Toolbar, ToolbarGroup, ToolbarSeparator} from "material-ui/Toolbar";
+import Toolbar from "material-ui-next/Toolbar";
+import ToolbarGroup from "material-ui-next/Toolbar";
+import ToolbarSeparator from "material-ui-next/Toolbar";
 import TextField from "material-ui/TextField";
 import DatePicker from "material-ui/DatePicker";
 import RaisedButton from "material-ui/RaisedButton";
@@ -34,7 +34,6 @@ class AppStats extends Component {
         console.log(searchText);
         if (!searchText || searchText.length >= 3 || searchText.length === 0) {
             this.setState({searchText: searchText});
-            this.fetchAppStats();
         }
     }
 
@@ -47,7 +46,7 @@ class AppStats extends Component {
     }
 
     componentDidMount() {
-        this.fetchAppStats();
+       this.fetchAppStats();
     }
 
     fetchAppStats() {
@@ -68,6 +67,8 @@ class AppStats extends Component {
     applyFilter() {
         this.fetchAppStats();
     }
+
+    
 
     render() {
         const appearance = this.props.appearance;
