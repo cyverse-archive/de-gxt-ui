@@ -2,7 +2,6 @@ package org.iplantc.de.client.models.querydsl;
 
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.search.DateInterval;
-import org.iplantc.de.client.models.sharing.PermissionValue;
 
 import java.util.List;
 

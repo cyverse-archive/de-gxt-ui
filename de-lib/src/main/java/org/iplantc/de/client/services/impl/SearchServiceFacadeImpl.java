@@ -10,6 +10,7 @@ import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.models.querydsl.Document;
+import org.iplantc.de.client.models.querydsl.Fields;
 import org.iplantc.de.client.models.querydsl.Metadata;
 import org.iplantc.de.client.models.querydsl.QueryAutoBeanFactory;
 import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
@@ -24,12 +25,9 @@ import org.iplantc.de.client.services.converters.AsyncCallbackConverter;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsLoadConfig;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsRpcProxyImpl;
 import org.iplantc.de.shared.DEProperties;
-import org.iplantc.de.shared.services.BaseServiceCallWrapper.Type;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
@@ -215,13 +213,11 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
             List<Document> documents = response.getHits();
             List<DiskResource> diskResources = Lists.newArrayList();
             if (documents != null && documents.size() > 0) {
-                for (int i = 0; i < documents.size(); i++) {
-                    Document document = documents.get(i);
+                for (Document document : documents) {
                     diskResources.add(convertDocumentToDiskResource(document));
                 }
             }
 
-            GWT.log("STOP HERE");
             return diskResources;
         }
 
@@ -239,25 +235,15 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
             }
 
             setDateKeys(source, diskResource);
-            setPermission(source, diskResource);
+            setPermission(document, diskResource);
             setInfoType(source, diskResource);
             return diskResource;
         }
 
-        void setPermission(Source source, DiskResource diskResource) {
-            String currentUserName = userInfo1.getUsername();
-            List<OldUserPermission> permissions = source.getUserPermissions();
-            if (permissions == null || permissions.isEmpty()) {
-                return;
-            }
-            permissions.forEach(permission -> {
-                String userString = permission.getUser();
-                String permissionString = permission.getPermission();
-                final Iterable<String> userStringSplit = Splitter.on("#").split(userString);
-                if (currentUserName.equals(userStringSplit.iterator().next())) {
-                    diskResource.setPermission(PermissionValue.valueOf(permissionString));
-                }
-            });
+        void setPermission(Document document, DiskResource diskResource) {
+            Fields fields = document.getFields();
+            PermissionValue permission = fields.getPermissions().get(0);
+            diskResource.setPermission(permission);
         }
 
         void setDateKeys(Source source, DiskResource diskResource) {

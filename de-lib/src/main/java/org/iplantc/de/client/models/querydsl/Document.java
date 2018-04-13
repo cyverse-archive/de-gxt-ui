@@ -1,5 +1,7 @@
 package org.iplantc.de.client.models.querydsl;
 
+import org.iplantc.de.client.models.sharing.PermissionValue;
+
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 import com.google.web.bindery.autobean.shared.Splittable;
 
@@ -33,4 +35,13 @@ public interface Document {
     Source getSource();
     @PropertyName("_source")
     void setSource(Source source);
+
+    Fields getFields();
+
+    /**
+     * This can be converted into a model if needed - inner_hits can contain CyVerse metadata
+     * @return
+     */
+    @PropertyName("inner_hits")
+    Splittable getInnerHits();
 }
