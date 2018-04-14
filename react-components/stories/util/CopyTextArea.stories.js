@@ -5,8 +5,8 @@ import React, { Component } from 'react';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import { getCyVerseTheme } from '../../../src/lib';
-import CopyTextArea from '../../../src/apps/details/CopyTextArea';
+import { getCyVerseTheme } from '../../src/lib';
+import CopyTextArea from '../../src/util/CopyTextArea';
 
 class CopyTextAreaTest extends Component {
     render () {

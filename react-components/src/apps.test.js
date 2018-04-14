@@ -5,9 +5,9 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import { getCyVerseTheme } from './lib';
 
-import CopyTextAreaTest from '../stories/apps/details/CopyTextArea.stories';
 import CategoryTreeTest from '../stories/apps/details/CategoryTree.stories';
 import ToolDetailsTest from '../stories/apps/details/ToolDetails.stories';
+import CopyTextAreaTest from '../stories/util/CopyTextArea.stories';
 
 it('renders CopyTextArea without crashing', () => {
   const div = document.createElement('div');
