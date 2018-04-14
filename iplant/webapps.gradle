@@ -112,6 +112,7 @@ project(':de-webapp') {
     }
 
     task draftBootRepackage(type: BootRepackage, dependsOn: draftWar) {
+        dependsOn webpack
         group 'Build'
         description 'Repackage existing draft WAR archives so that they can be executed from the command line using \'java -jar\''
         withJarTask = draftWar
@@ -119,6 +120,7 @@ project(':de-webapp') {
 
     task createProdWar(type: Copy) {
         dependsOn bootRepackage
+        dependsOn webpack
         into new File( rootProject.projectDir, "target")
         from('build/libs') {
             exclude '**/*draft*.war'
@@ -130,6 +132,7 @@ project(':de-webapp') {
     }
 
     task runWar(type:JavaExec, dependsOn:bootRepackage) {
+        dependsOn webpack
         group 'Application'
         description 'Builds and executes the self-executing WAR file.'
         main="-jar"
@@ -146,6 +149,8 @@ project(':de-webapp') {
     clean {
         delete "./war"
         delete "./bin"
+        delete "./src/main/webapp/react_components"
+        delete "./src/main/webapp/WEB-INF/jsp/react_include.jsp"
     }
 }
 

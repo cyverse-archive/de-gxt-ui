@@ -154,6 +154,9 @@ public class AppDetailsViewImpl extends Composite implements
     @UiField (provided = true)
     @Ignore
     Tree<OntologyHierarchy, SafeHtml> hierarchyTree;
+    @UiField
+    @Ignore
+    HTMLPanel hierarchyWidget;
     @UiField(provided = true) @Ignore TreeStore<OntologyHierarchy> hierarchyTreeStore;
     @UiField(provided = true) @Ignore Tree<AppCategory, String> categoryTree;
     @UiField(provided = true) @Ignore TreeStore<AppCategory> categoryTreeStore;
@@ -246,6 +249,38 @@ public class AppDetailsViewImpl extends Composite implements
         } else {
             helpLink.setVisible(false);
         }
+
+        // React integration
+//        Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
+//
+//            @Override
+//            public void execute() {
+//                final Splittable appJson = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(app));
+//
+//                ReactToolDetails.ToolDetailProps detailProps = new ReactToolDetails.ToolDetailProps();
+//
+//                detailProps.appearance = appearance;
+//                detailProps.app = appJson;
+//
+//                CyVerseReactComponents.render(ReactToolDetails.ToolDetails, detailProps, DivElement.as(toolsContainer.getElement()));
+//
+//                ReactCategoryTree.CategoryTreeProps treeProps = new ReactCategoryTree.CategoryTreeProps();
+//                treeProps.app = appJson;
+//                treeProps.appearance = appearance;
+//                treeProps.presenter = AppDetailsViewImpl.this;
+//
+//                DivElement hierarchyElem = DivElement.as(hierarchyWidget.getElement());
+//                CyVerseReactComponents.render(ReactCategoryTree.CategoryTree, treeProps, hierarchyElem);
+//            }
+//        });
+    }
+
+    @Override
+    public void onDetailsCategoryClicked(String modelKey) {
+        OntologyHierarchy hierarchy = hierarchyTreeStore.findModelWithKey(modelKey);
+        if (hierarchy != null) {
+            fireEvent(new DetailsHierarchyClicked(hierarchy));
+        }
     }
 
     @Override
@@ -255,6 +290,7 @@ public class AppDetailsViewImpl extends Composite implements
         favIcon.setBaseDebugId(baseID);
         toolsContainer.ensureDebugId(baseID + AppsModule.Ids.APP_TOOLS);
         toolEditorSource.setBaseDebugId(baseID);
+        hierarchyWidget.ensureDebugId(baseID + AppsModule.Ids.CATEGORIES_TREE);
     }
 
     @Override
