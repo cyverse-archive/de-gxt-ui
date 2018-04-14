@@ -4,6 +4,7 @@ RUN apk add --update \
     bash \
     git \
     gcc \
+    nodejs \
     && \
     rm -rf /var/cache/apk/*
 
