@@ -138,14 +138,13 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FolderContentsLoadConfi
                 return;
             }
             callback.onSuccess(new PagingLoadResultBean<>(results, template.getTotal(), loadConfig.getOffset()));
-            if (loadConfig.getFilters() != null && !loadConfig.getFilters().isEmpty()) {
-                String searchText = setSearchText(loadConfig.getFilters().get(0).getValue());
 
+            String searchText = setSearchText(template.getNameHas());
 
-                final String searchResultsHeader =
-                        appearance.searchDataResultsHeader(searchText, results.size());
-                hasSafeHtml1.setHTML(SafeHtmlUtils.fromString(searchResultsHeader));
-            }
+            final String searchResultsHeader =
+                    appearance.searchDataResultsHeader(searchText, template.getTotal());
+            hasSafeHtml1.setHTML(SafeHtmlUtils.fromString(searchResultsHeader));
+
         }
 
         private String setSearchText(String fileQuery) {
