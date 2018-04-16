@@ -31,7 +31,6 @@ final class ServicesModule extends AbstractGinModule {
         bind(FileEditorServiceFacade.class).to(FileEditorServiceFacadeImpl.class);
         bind(MessageServiceFacade.class).to(MessageServiceFacadeImpl.class);
         bind(SearchServiceFacade.class).to(SearchServiceFacadeImpl.class);
-        bind(SystemMessageServiceFacade.class).to(SystemMessageServiceFacadeImpl.class);
         bind(UserSessionServiceFacade.class).to(UserSessionServiceFacadeImpl.class);
         bind(TagsServiceFacade.class).to(TagsServiceFacadeImpl.class);
         bind(FileSystemMetadataServiceFacade.class).to(FileSystemMetadataServiceFacadeImpl.class);

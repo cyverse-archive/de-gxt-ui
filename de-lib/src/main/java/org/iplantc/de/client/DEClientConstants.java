@@ -50,12 +50,6 @@ public interface DEClientConstants extends Constants {
     String wsProtocol();
 
     /**
-     * The system messages websocket url
-     * @return
-     */
-    String sysmessageWS();
-
-    /**
      * Secured WebSocket protocol
      * @return
      */

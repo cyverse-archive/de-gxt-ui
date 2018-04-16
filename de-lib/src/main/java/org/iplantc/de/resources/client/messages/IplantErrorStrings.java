@@ -299,13 +299,6 @@ public interface IplantErrorStrings extends com.google.gwt.i18n.client.Messages,
     String diskResourceWriteable(String arg0);
 
     /**
-     * The error indicating that a system message could not be dismissed.
-     */
-    @DefaultMessage("The system message could not be dismissed.")
-    @Key("dismissMessageFailed")
-    String dismissMessageFailed();
-
-    /**
      * A message indicating the user has requested to upload the same file more than once.
      */
     @DefaultMessage("Duplicate file to upload")
@@ -548,13 +541,6 @@ public interface IplantErrorStrings extends com.google.gwt.i18n.client.Messages,
     String keepaliveRequestFailed();
 
     /**
-     * The error displayed when system messages cannot be retrieved from storage.
-     */
-    @DefaultMessage("The system messages could not be loaded.")
-    @Key("loadMessagesFailed")
-    String loadMessagesFailed();
-
-    /**
      * Error msg shown when an attempt to load App references goes awry!!
      * 
      * @return
@@ -579,20 +565,6 @@ public interface IplantErrorStrings extends com.google.gwt.i18n.client.Messages,
     @DefaultMessage("Each step must have at least one output to input mapping (except Step 1).")
     @Key("mappingStepError")
     String mappingStepError();
-
-    /**
-     * the error displayed when a stored system message cannot be marked as received
-     */
-    @DefaultMessage("The system messages could not be marked as received.")
-    @Key("markMessageReceivedFailed")
-    String markMessageReceivedFailed();
-
-    /**
-     * the error displayed when a stored system message cannot be marked as seen
-     */
-    @DefaultMessage("The system messages could not be marked as seen.")
-    @Key("markMessageSeenFailed")
-    String markMessageSeenFailed();
 
     /**
      * Translated "Could not move Application \"{0}\".".

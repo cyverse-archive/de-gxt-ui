@@ -164,11 +164,6 @@ public class BaseDesktopAppearance implements DesktopView.DesktopAppearance {
     }
 
     @Override
-    public String systemMessagesLabel() {
-        return displayStrings.systemMessagesLabel();
-    }
-
-    @Override
     public String introduction() {
         return desktopMessages.introduction();
     }

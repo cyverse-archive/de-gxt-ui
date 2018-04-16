@@ -27,7 +27,6 @@ import org.iplantc.de.resources.client.messages.IplantNewUserTourStrings;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.NotificationCallback;
-import org.iplantc.de.systemMessages.client.view.NewMessageView;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -66,7 +65,6 @@ public class DesktopNotifications_PresenterTest {
     @Mock DesktopView viewMock;
     @Mock DesktopPresenterEventHandler globalEvntHndlrMock;
     @Mock DesktopPresenterWindowEventHandler windowEvntHndlrMock;
-    @Mock NewMessageView.Presenter sysMsgPresenterMock;
     @Mock DesktopWindowManager desktopWindowManagerMock;
     @Mock MessagePoller msgPollerMock;
     @Mock NotifyInfo notifyInfoMock;
@@ -92,7 +90,6 @@ public class DesktopNotifications_PresenterTest {
                                        globalEvntHndlrMock,
                                        windowEvntHndlrMock,
                                        eventBusMock,
-                                       sysMsgPresenterMock,
                                        windowMangerMock,
                                        desktopWindowManagerMock,
                                        msgPollerMock,

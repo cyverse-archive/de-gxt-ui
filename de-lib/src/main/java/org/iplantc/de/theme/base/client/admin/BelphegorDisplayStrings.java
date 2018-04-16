@@ -69,9 +69,6 @@ public interface BelphegorDisplayStrings extends Messages {
     @Key("selectCategories")
     String selectCategories(String name);
 
-    @Key("systemMessages")
-    String systemMessages();
-
     @Key("tempDisable")
     String tempDisable();
 

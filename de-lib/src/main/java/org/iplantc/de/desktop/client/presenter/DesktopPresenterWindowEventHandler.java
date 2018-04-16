@@ -44,7 +44,6 @@ import org.iplantc.de.diskResource.client.events.RequestSimpleUploadEvent;
 import org.iplantc.de.diskResource.client.events.ShowFilePreviewEvent;
 import org.iplantc.de.fileViewers.client.callbacks.GenomeBrowserUtil;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
-import org.iplantc.de.systemMessages.client.events.ShowSystemMessagesEvent;
 import org.iplantc.de.tools.client.events.UseToolInNewAppEvent;
 
 import com.google.common.collect.Lists;
@@ -78,7 +77,6 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
                                                            CreateNewFileEvent.CreateNewFileEventHandler,
                                                            WindowShowRequestEvent.WindowShowRequestEventHandler,
                                                            RunAppEvent.RunAppEventHandler,
-                                                           ShowSystemMessagesEvent.Handler,
                                                            OpenFolderEvent.OpenFolderEventHandler,
                                                            OpenAppForRelaunchEvent.OpenAppForRelaunchEventHandler,
                                                            RequestSendToCoGeEvent.RequestSendToCoGeEventHandler,
@@ -261,11 +259,6 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
         presenter.show(fileViewerWindowConfig);
     }
 
-    @Override
-    public void showSystemMessages(final ShowSystemMessagesEvent event) {
-        presenter.show(ConfigFactory.systemMessagesWindowConfig(null));
-    }
-
     Map<String, String> buildTypeMap(List<DiskResource> resources) {
         Map<String, String> map = Maps.newHashMap();
         for (DiskResource dr : resources) {
@@ -338,8 +331,6 @@ public class DesktopPresenterWindowEventHandler implements EditAppEvent.EditAppE
         handlerRegistration = eventBus.addHandler(WindowShowRequestEvent.TYPE, this);
         registrations.add(handlerRegistration);
         handlerRegistration = eventBus.addHandler(RunAppEvent.TYPE, this);
-        registrations.add(handlerRegistration);
-        handlerRegistration = eventBus.addHandler(ShowSystemMessagesEvent.TYPE, this);
         registrations.add(handlerRegistration);
         handlerRegistration = eventBus.addHandler(OpenAppForRelaunchEvent.TYPE, this);
         registrations.add(handlerRegistration);

@@ -42,13 +42,10 @@ import org.iplantc.de.desktop.client.views.windows.MyAnalysesWindow;
 import org.iplantc.de.desktop.client.views.windows.NotificationWindow;
 import org.iplantc.de.desktop.client.views.windows.PipelineEditorWindow;
 import org.iplantc.de.desktop.client.views.windows.SimpleDownloadWindow;
-import org.iplantc.de.desktop.client.views.windows.SystemMessagesWindow;
 import org.iplantc.de.desktop.client.views.windows.util.WindowFactory;
 import org.iplantc.de.notifications.client.utils.NotifyInfo;
 import org.iplantc.de.resources.client.IplantResources;
 import org.iplantc.de.shared.DEProperties;
-import org.iplantc.de.systemMessages.client.presenter.NewMessagePresenter;
-import org.iplantc.de.systemMessages.client.view.NewMessageView;
 
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Provides;
@@ -179,7 +176,6 @@ public class DEGinModule extends AbstractGinModule {
         bind(DesktopView.class).to(DesktopViewImpl.class);
         bind(DesktopView.Presenter.class).to(DesktopPresenterImpl.class);
 
-        bind(NewMessageView.Presenter.class).to(NewMessagePresenter.class);
         bind(DesktopPresenterEventHandler.class);
         bind(DesktopPresenterWindowEventHandler.class);
         bind(DesktopWindowManager.class).in(Singleton.class);
@@ -203,7 +199,6 @@ public class DEGinModule extends AbstractGinModule {
         bind(NotificationWindow.class);
         bind(PipelineEditorWindow.class);
         bind(SimpleDownloadWindow.class);
-        bind(SystemMessagesWindow.class);
         bind(CollaborationWindow.class);
     }
 }

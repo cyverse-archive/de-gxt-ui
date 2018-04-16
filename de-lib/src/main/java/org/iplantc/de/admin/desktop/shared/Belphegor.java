@@ -12,7 +12,6 @@ public interface Belphegor {
         String METADATA = ".metadata";
         String PERMID = ".permId";
         String REFERENCE_GENOME = ".referenceGenome";
-        String SYSTEM_MESSAGE = ".systemMessage";
         String TOOL_ADMIN = ".toolAdmin";
         String TOOL_REQUEST = ".toolRequest";
         String CATALOG = ".catalog";
@@ -21,7 +20,6 @@ public interface Belphegor {
         String REFERENCE_GENOME_TAB = ".referenceGenomeTab";
         String TOOL_REQUEST_TAB = ".toolRequestTab";
         String TOOL_ADMIN_TAB = ".toolAdminTab";
-        String SYSTEM_MESSAGE_TAB = ".systemMessageTab";
         String METADATA_TAB = ".metadataTab";
         String PERMID_TAB = ".permIdTab";
         String WORKSHOP_ADMIN_TAB = ".workshopAdminTab";
@@ -205,25 +203,6 @@ public interface Belphegor {
         String SAVE_BTN = ".saveBtn";
         String REFRESH_BTN = ".refreshBtn";
         String GRID = ".grid";
-        String COL_HEADER = ".colHeader";
-    }
-
-    interface SystemMessageIds {
-        String VIEW = ".view";
-        String ADD = ".addBtn";
-        String DELETE = ".deleteBtn";
-        String GRID = ".grid";
-        String EDIT_DIALOG = "systemMsgDialog";
-        String SUBMIT = ".submitBtn";
-        String ACTIVATION_DATE = ".activationDate";
-        String ACTIVATION_TIME = ".activationTime";
-        String DEACTIVATION_DATE = ".deactivationDate";
-        String DEACTIVATION_TIME = ".deactivationTime";
-        String DISMISSABLE = ".dismissable";
-        String LOGINS_DISABLED = ".loginsDisabled";
-        String MESSAGE = ".message";
-        String TYPE = ".type";
-        String MESSAGE_CELL = ".messageCell";
         String COL_HEADER = ".colHeader";
     }
 

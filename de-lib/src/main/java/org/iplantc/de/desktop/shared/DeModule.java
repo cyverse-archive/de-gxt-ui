@@ -36,7 +36,6 @@ public interface DeModule {
         String TASK_BAR = ".deTaskBar";
         String PREFERENCES_LINK = ".preferences";
         String COLLABORATORS_LINK = ".collaborators";
-        String SYS_MSGS_LINK = ".systemMessages";
         String USER_MANUAL_LINK = ".userManual";
         String INTRO_LINK = ".introduction";
         String ABOUT_LINK = ".about";
@@ -61,7 +60,6 @@ public interface DeModule {
         String NOTIFICATION = "notificationWindow";
         String WORKFLOW_EDITOR = "workflowEditorWindow";
         String SIMPLE_DOWNLOAD = "simpleDownloadWindow";
-        String SYSTEM_MESSAGES = "systemMessageWindow";
         String ABOUT_WINDOW = "aboutWindow";
         String MANAGE_TOOLS_WINDOW = "manageToolsWindow";
         String COLLABORATION_WINDOW = "collaborationWindow";

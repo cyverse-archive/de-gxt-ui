@@ -61,7 +61,6 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
     @UiField DesktopIconButton userSettingsBtn;
     @UiField IPlantAnchor preferencesLink;
     @UiField IPlantAnchor collaboratorsLink;
-    @UiField IPlantAnchor systemMsgsLink;
     @UiField IPlantAnchor documentationLink;
     @UiField IPlantAnchor introBtn;
     @UiField IPlantAnchor aboutBtn;
@@ -222,7 +221,6 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
         // User Settings Menu Items
         preferencesLink.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.PREFERENCES_LINK);
         collaboratorsLink.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.COLLABORATORS_LINK);
-        systemMsgsLink.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.SYS_MSGS_LINK);
         documentationLink.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.USER_MANUAL_LINK);
         introBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.INTRO_LINK);
         aboutBtn.ensureDebugId(baseID + DeModule.Ids.USER_PREF_MENU + DeModule.Ids.ABOUT_LINK);
@@ -269,15 +267,6 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
             Window.setTitle(appearance.rootApplicationTitle());
         }
         notificationsListView.onUnseenCountUpdated(count);
-    }
-
-    @Override
-    public void setUnseenSystemMessageCount(int count) {
-        String labelText = appearance.systemMessagesLabel();
-        if(count > 0) {
-            labelText += " (" + count + ")";
-        }
-        systemMsgsLink.setText(labelText);
     }
 
     @UiHandler("notificationsListView")
@@ -347,8 +336,8 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
         presenter.onForumsBtnSelect();
     }
 
-    @UiHandler({ "preferencesLink", "collaboratorsLink", "systemMsgsLink",
-                 "documentationLink", "introBtn", /*"contactSupportBtn",*/ "aboutBtn", "logoutBtn"})
+    @UiHandler({ "preferencesLink", "collaboratorsLink",
+                 "documentationLink", "introBtn", "aboutBtn", "logoutBtn"})
     void onAnyUserSettingsItemClick(ClickEvent event){
         userSettingsBtn.hideMenu();
     }
@@ -361,11 +350,6 @@ public class DesktopViewImpl implements DesktopView, UnregisterEvent.UnregisterH
     @UiHandler("collaboratorsLink")
     void onCollaboratorsClick(ClickEvent event){
         presenter.onCollaboratorsClick();
-    }
-
-    @UiHandler("systemMsgsLink")
-    void onSystemMessagesClick(ClickEvent event){
-        presenter.onSystemMessagesClick();
     }
 
     @UiHandler("documentationLink")

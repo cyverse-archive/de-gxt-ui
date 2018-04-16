@@ -5,7 +5,6 @@ import org.iplantc.de.desktop.client.presenter.util.MessagePoller;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
-import org.iplantc.de.systemMessages.client.view.NewMessageView;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwtmockito.GxtMockitoTestRunner;
@@ -30,9 +29,7 @@ public class DesktopPresenterImplTest {
     @Mock EventBus eventBusMock;
     @Mock DesktopPresenterEventHandler globalEventHandlerMock;
     @Mock MessagePoller messagePollerMock;
-    @Mock NewMessageView.Presenter sysMsgPresenterMock;
-    @Mock
-    DesktopView viewMock;
+    @Mock DesktopView viewMock;
     @Mock DesktopPresenterWindowEventHandler windowEventHandlerMock;
     @Mock WindowManager windowManagerMock;
     @Mock DesktopView.Presenter.DesktopPresenterAppearance appearanceMock;
@@ -43,7 +40,6 @@ public class DesktopPresenterImplTest {
                                           globalEventHandlerMock,
                                           windowEventHandlerMock,
                                           eventBusMock,
-                                          sysMsgPresenterMock,
                                           windowManagerMock,
                                           desktopWindowManagerMock,
                                           messagePollerMock,
@@ -76,13 +72,6 @@ public class DesktopPresenterImplTest {
         verify(desktopWindowManagerMock).setDesktopContainer(any(Element.class));
         uut.onDataWinBtnSelect();
         verify(desktopWindowManagerMock).show(eq(WindowType.DATA));
-        verifyNoMoreInteractions(desktopWindowManagerMock);
-    }
-
-    @Test public void testOnSystemMessagesClick() {
-        verify(desktopWindowManagerMock).setDesktopContainer(any(Element.class));
-        uut.onSystemMessagesClick();
-        verify(desktopWindowManagerMock).show(WindowType.SYSTEM_MESSAGES);
         verifyNoMoreInteractions(desktopWindowManagerMock);
     }
 

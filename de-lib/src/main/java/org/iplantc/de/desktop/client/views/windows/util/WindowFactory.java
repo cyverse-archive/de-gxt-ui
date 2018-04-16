@@ -16,7 +16,6 @@ import org.iplantc.de.desktop.client.views.windows.MyAnalysesWindow;
 import org.iplantc.de.desktop.client.views.windows.NotificationWindow;
 import org.iplantc.de.desktop.client.views.windows.PipelineEditorWindow;
 import org.iplantc.de.desktop.client.views.windows.SimpleDownloadWindow;
-import org.iplantc.de.desktop.client.views.windows.SystemMessagesWindow;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.inject.Inject;
@@ -40,7 +39,6 @@ public class WindowFactory {
     @Inject AsyncProviderWrapper<NotificationWindow> notificationWindowAsyncProvider;
     @Inject AsyncProviderWrapper<SimpleDownloadWindow> simpleDownloadWindowAsyncProvider;
     @Inject AsyncProviderWrapper<PipelineEditorWindow> pipelineEditorWindowAsyncProvider;
-    @Inject AsyncProviderWrapper<SystemMessagesWindow> systemMessagesWindowAsyncProvider;
     @Inject AsyncProviderWrapper<ManageToolsWindow> ManageToolsWindowAsyncProvider;
     @Inject AsyncProviderWrapper<CollaborationWindow> collaborationWindowAsyncProvider;
 
@@ -88,9 +86,6 @@ public class WindowFactory {
                 break;
             case WORKFLOW_INTEGRATION:
                 ret = pipelineEditorWindowAsyncProvider;
-                break;
-            case SYSTEM_MESSAGES:
-                ret = systemMessagesWindowAsyncProvider;
                 break;
             case MANAGETOOLS:
                 ret = ManageToolsWindowAsyncProvider;

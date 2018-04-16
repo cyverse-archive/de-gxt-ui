@@ -28,7 +28,5 @@ public interface DesktopErrorMessages extends Messages {
     @Key("systemInitializationError")
     String systemInitializationError();
 
-	String checkSysMessageError();
-
     String userPreferencesLoadError();
 }
