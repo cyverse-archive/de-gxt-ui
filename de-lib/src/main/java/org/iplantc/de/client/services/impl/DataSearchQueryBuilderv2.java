@@ -3,6 +3,7 @@ package org.iplantc.de.client.services.impl;
 import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
 import org.iplantc.de.client.models.search.DateInterval;
 import org.iplantc.de.client.models.sharing.PermissionValue;
+import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -99,7 +100,8 @@ public class DataSearchQueryBuilderv2 {
                 .file()
                 .notFile()
                 .metadata()
-                .tags();
+                .tags()
+                .includeTrash();
 
         Splittable query = StringQuoter.createSplittable();
 
@@ -146,6 +148,25 @@ public class DataSearchQueryBuilderv2 {
             Splittable args = StringQuoter.createSplittable();
             assignKeyValue(args, LABEL, content);
             appendArrayItem(noneList, createTypeClause(LABEL, args));
+        }
+        return this;
+    }
+
+    /**
+     * {"type": "path", "args": {"prefix": "/iplant/home"}}
+     */
+    public DataSearchQueryBuilderv2 includeTrash() {
+        boolean include = template.isIncludeTrash();
+        DEProperties props = DEProperties.getInstance();
+
+        Splittable args = StringQuoter.createSplittable();
+
+        if (include) {
+            assignKeyValue(args, PREFIX, props.getBaseTrashPath());
+            appendArrayItem(anyList, createTypeClause(PATH, args));
+        } else {
+            assignKeyValue(args, PREFIX, props.getIrodsHomePath());
+            appendArrayItem(allList, createTypeClause(PATH, args));
         }
         return this;
     }
