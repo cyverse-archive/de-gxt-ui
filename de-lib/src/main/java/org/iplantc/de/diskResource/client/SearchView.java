@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.tags.Tag;
 import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent.SavedSearchesRetrievedEventHandler;
 import org.iplantc.de.diskResource.client.events.search.DeleteSavedSearchClickedEvent.DeleteSavedSearchEventHandler;
 import org.iplantc.de.diskResource.client.events.search.FetchTagSuggestions;
+import org.iplantc.de.diskResource.client.events.search.SaveDataSearchClicked;
 import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent.SaveDiskResourceQueryClickedEventHandler;
 import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent.HasSavedSearchDeletedEventHandlers;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent.HasUpdateSavedSearchesEventHandlers;
@@ -30,7 +31,8 @@ import jsinterop.annotations.JsType;
 public interface SearchView extends IsWidget,
                                     HideEvent.HasHideHandlers,
                                     QueryDSLSearchBtnSelected.HasQueryDSLSearchBtnSelectedHandlers,
-                                    FetchTagSuggestions.HasFetchTagSuggestionsHandlers {
+                                    FetchTagSuggestions.HasFetchTagSuggestionsHandlers,
+                                    SaveDataSearchClicked.HasSaveDataSearchClickedHandlers {
 
     @JsType
     interface SearchViewAppearance {
@@ -85,6 +87,18 @@ public interface SearchView extends IsWidget,
 
         String enterCyVerseUserName();
 
+        String saveSearchBtnText();
+
+        String filterName();
+
+        String requiredField();
+
+        String saveSearchTitle();
+
+        String saveBtn();
+
+        String cancelBtn();
+
     }
 
     /**
@@ -131,7 +145,8 @@ public interface SearchView extends IsWidget,
                                 HasSavedSearchDeletedEventHandlers,
                                 SavedSearchesRetrievedEventHandler,
                                 HasUpdateSavedSearchesEventHandlers,
-                                FetchTagSuggestions.FetchTagSuggestionsHandler {
+                                FetchTagSuggestions.FetchTagSuggestionsHandler,
+                                SaveDataSearchClicked.SaveDataSearchClickedHandler {
 
         void setView(SearchView view);
     }
@@ -158,5 +173,7 @@ public interface SearchView extends IsWidget,
     void onEditTagSelected(Tag tag);
 
     void fetchTagSuggestions(String searchTerm);
+
+    void onSaveSearch(Splittable query, String originalName);
 }
 

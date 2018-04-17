@@ -1,18 +1,23 @@
 package org.iplantc.de.theme.base.client.diskResource.search;
 
 import org.iplantc.de.diskResource.client.SearchView;
+import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
 
 import com.google.gwt.core.client.GWT;
 
 public class SearchViewDefaultAppearance implements SearchView.SearchViewAppearance {
     private SearchMessages searchMessages;
+    private IplantDisplayStrings iplantDisplayStrings;
 
     public SearchViewDefaultAppearance() {
-        this(GWT.<SearchMessages> create(SearchMessages.class));
+        this(GWT.<SearchMessages>create(SearchMessages.class),
+             GWT.<IplantDisplayStrings>create(IplantDisplayStrings.class));
     }
 
-    public SearchViewDefaultAppearance(SearchMessages searchMessages) {
+    public SearchViewDefaultAppearance(SearchMessages searchMessages,
+                                       IplantDisplayStrings iplantDisplayStrings) {
         this.searchMessages = searchMessages;
+        this.iplantDisplayStrings = iplantDisplayStrings;
     }
 
     @Override
@@ -138,5 +143,35 @@ public class SearchViewDefaultAppearance implements SearchView.SearchViewAppeara
     @Override
     public String enterCyVerseUserName() {
         return searchMessages.emptyNameText();
+    }
+
+    @Override
+    public String saveSearchBtnText() {
+        return searchMessages.saveSearchBtnText();
+    }
+
+    @Override
+    public String filterName() {
+        return searchMessages.filterName();
+    }
+
+    @Override
+    public String requiredField() {
+        return searchMessages.requiredField();
+    }
+
+    @Override
+    public String saveSearchTitle() {
+        return searchMessages.saveSearchTitle();
+    }
+
+    @Override
+    public String saveBtn() {
+        return iplantDisplayStrings.save();
+    }
+
+    @Override
+    public String cancelBtn() {
+        return iplantDisplayStrings.cancel();
     }
 }

@@ -23,5 +23,6 @@ public class ReactSearchForm {
         public Splittable dateIntervals;
         public Splittable suggestedTags;
         public String id;
+        public Splittable template;
     }
 }

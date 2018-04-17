@@ -1,6 +1,8 @@
 package org.iplantc.de.diskResource.client.presenters.search;
 
+import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
+import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.client.models.tags.Tag;
 import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -11,6 +13,7 @@ import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent;
 import org.iplantc.de.diskResource.client.events.search.DeleteSavedSearchClickedEvent;
 import org.iplantc.de.diskResource.client.events.search.FetchTagSuggestions;
+import org.iplantc.de.diskResource.client.events.search.SaveDataSearchClicked;
 import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent;
 import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent;
@@ -25,6 +28,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -57,6 +61,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     private SearchView.SearchViewAppearance appearance;
     private TagsView.TagSuggestionProxy proxy;
     private DateIntervalProvider dateIntervalProvider;
+    private SearchAutoBeanFactory factory;
     private final SearchServiceFacade searchService;
     private HandlerManager handlerManager;
     private final Logger LOG = Logger.getLogger(DataSearchPresenterImpl.class.getName());
@@ -67,12 +72,14 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
                             final IplantAnnouncer announcer,
                             SearchView.SearchViewAppearance appearance,
                             TagsView.TagSuggestionProxy proxy,
-                            DateIntervalProvider dateIntervalProvider) {
+                            DateIntervalProvider dateIntervalProvider,
+                            SearchAutoBeanFactory factory) {
         this.searchService = searchService;
         this.announcer = announcer;
         this.appearance = appearance;
         this.proxy = proxy;
         this.dateIntervalProvider = dateIntervalProvider;
+        this.factory = factory;
     }
 
     @Override
@@ -112,6 +119,16 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
         }
     }
 
+    @Override
+    public void onSaveDataSearchClicked(SaveDataSearchClicked event) {
+        String name = event.getName();
+        Splittable splTemplate = event.getQuery();
+        DiskResourceQueryTemplate template = AutoBeanCodex.decode(factory, DiskResourceQueryTemplate.class, splTemplate.getPayload()).as();
+        template.setName(name);
+
+        saveQuery(null, template);
+    }
+
     /**
      * This handler is responsible for saving or updating the {@link DiskResourceQueryTemplate} contained
      * in the given {@link org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent}.
@@ -123,28 +140,36 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     public void onSaveDiskResourceQueryClicked(final SaveDiskResourceQueryClickedEvent event) {
         // Assume that once the filter is saved, a search should be performed.
         final DiskResourceQueryTemplate queryTemplate = event.getQueryTemplate();
-
+        String name = event.getOriginalName();
         if (Strings.isNullOrEmpty(queryTemplate.getName())) {
             // Given query template has no name, ripple error back to view
-            LOG.fine("TODO: User tried to save query with no name, cannot save. Ripple error back to view");
+            LOG.fine(
+                    "TODO: User tried to save query with no name, cannot save. Ripple error back to view");
             return;
-        } else {
-            // Check for name uniqueness
-            final Set<String> uniqueNames = getUniqueNames(getQueryTemplates());
-            if (uniqueNames.size() == getQueryTemplates().size()) {
-                // Sanity check: There were no dupes in the current list
-                if (uniqueNames.contains(queryTemplate.getName())) {
-                    /*
-                     * The given query template is already in the list, remove it. The new one will be
-                     * added to the list submitted to the service.
-                     */
-                    for (DiskResourceQueryTemplate hasId : ImmutableList.copyOf(getQueryTemplates())) {
-                        String inListName = hasId.getName();
-                        if (queryTemplate.getName().equalsIgnoreCase(inListName)) {
-                            getQueryTemplates().remove(hasId);
+        }
 
-                            break;
-                        }
+        saveQuery(name, queryTemplate);
+    }
+
+    void saveQuery(String originalName, DiskResourceQueryTemplate queryTemplate) {
+        GWT.log("original name is: " + originalName);
+        GWT.log("Template name is: " + queryTemplate.getName());
+
+        // Check for name uniqueness
+        final Set<String> uniqueNames = getUniqueNames(getQueryTemplates());
+        if (uniqueNames.size() == getQueryTemplates().size()) {
+            // Sanity check: There were no dupes in the current list
+            if (uniqueNames.contains(queryTemplate.getName())) {
+                /*
+                 * The given query template is already in the list, remove it. The new one will be
+                 * added to the list submitted to the service.
+                 */
+                for (DiskResourceQueryTemplate hasId : ImmutableList.copyOf(getQueryTemplates())) {
+                    String inListName = hasId.getName();
+                    if (queryTemplate.getName().equalsIgnoreCase(inListName)) {
+                        getQueryTemplates().remove(hasId);
+
+                        break;
                     }
                 }
             }
@@ -174,7 +199,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
                  */
                 List<DiskResourceQueryTemplate> queriesToRemove = Lists.newArrayList();
                 for (DiskResourceQueryTemplate qt : cleanCopyQueryTemplates) {
-                    if (qt.getName().equals(event.getOriginalName())) {
+                    if (qt.getName().equals(originalName)) {
                         queriesToRemove.add(qt);
                     }
                 }
@@ -301,6 +326,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
                 props.id = DiskResourceModule.Ids.SEARCH_FORM;
                 props.dateIntervals = dateIntervalProvider.get();
                 props.suggestedTags = splittableTags;
+                props.template = StringQuoter.createSplittable();
 
                 view.renderSearchForm(props);
             }

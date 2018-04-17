@@ -292,6 +292,7 @@ public class DiskResourcePresenterImpl implements
         searchFieldv2.addQueryDSLSearchBtnSelectedHandler(this.gridViewPresenter);
         searchFieldv2.addQueryDSLSearchBtnSelectedHandler(this.gridViewPresenter.getView());
         searchFieldv2.addFetchTagSuggestionsHandler(this.dataSearchPresenter);
+        searchFieldv2.getCell().getSearchForm().addSaveDataSearchClickedHandler(this.dataSearchPresenter);
 
         // Grid Presenter
         this.gridViewPresenter.getView().addBeforeLoadHandler(this.navigationPresenter);

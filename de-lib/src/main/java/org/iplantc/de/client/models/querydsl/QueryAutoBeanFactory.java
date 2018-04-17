@@ -3,6 +3,7 @@ package org.iplantc.de.client.models.querydsl;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
+import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
@@ -33,4 +34,6 @@ public interface QueryAutoBeanFactory extends AutoBeanFactory {
     AutoBean<DocumentUserPermissionList> getDocumentUserPermissionList();
 
     AutoBean<QueryDSLTemplate> getQueryDSLTemplate();
+
+    AutoBean<DiskResourceQueryTemplate> getQueryTemplate();
 }

@@ -42,24 +42,12 @@ public class SearchModelUtils {
         return INSTANCE;
     }
 
-    public DiskResourceQueryTemplate createDefaultFilter() {
+    public Splittable createDefaultFilter() {
         Splittable defFilter = StringQuoter.createSplittable();
-        // Need to create full permissions by default in order to function as a "smart folder"
-        Splittable permissions = StringQuoter.createSplittable();
-        StringQuoter.create(true).assign(permissions, "own");
-        StringQuoter.create(true).assign(permissions, "read");
-        StringQuoter.create(true).assign(permissions, "write");
-        permissions.assign(defFilter, "permissions");
+
         StringQuoter.create("/savedFilters/").assign(defFilter, "path");
 
-        DiskResourceQueryTemplate dataSearchFilter = AutoBeanCodex.decode(factory, DiskResourceQueryTemplate.class, defFilter).as();
-        dataSearchFilter.setCreatedWithin(factory.dateInterval().as());
-        dataSearchFilter.setModifiedWithin(factory.dateInterval().as());
-        dataSearchFilter.setFileSizeRange(factory.fileSizeRange().as());
-        dataSearchFilter.getFileSizeRange().setMaxUnit(createDefaultFileSizeUnit());
-        dataSearchFilter.getFileSizeRange().setMinUnit(createDefaultFileSizeUnit());
-
-        return dataSearchFilter;
+        return defFilter;
     }
 
     public Double convertFileSizeToBytes(Double size, FileSizeUnit unit) {
@@ -134,7 +122,7 @@ public class SearchModelUtils {
         return isEmpty;
     }
 
-    public QueryDSLTemplate createDefaultQuery() {
-        return queryFactory.getQueryDSLTemplate().as();
+    public Splittable convertTemplateToSplittable(DiskResourceQueryTemplate template) {
+        return AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(template));
     }
 }

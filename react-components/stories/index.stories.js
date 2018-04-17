@@ -10,6 +10,7 @@ import TagTest from "./data/details/Tag.stories";
 import TagPanelTest from "./data/details/TagPanel.stories";
 import AppStatsTest from "./apps/admin/AppStats.stories";
 import DEHyperLinkTest from "./util/hyperlink/DEHyperLink.stories";
+import SaveSearchDialogTest from './diskResource/search/SaveSearchDialog.stories';
 import SearchFormTest from "./diskResource/search/SearchForm.stories";
 import TagSearchTest from "./tags/tagSearch/TagSearch.stories";
 import MyTagTest from "./tags/tagSearch/Tag.stories";
@@ -25,8 +26,10 @@ storiesOf('data/TagPanel', module).add('witht test diskresource details', () => 
 
 storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
 storiesOf('diskResource/search', module).add('SearchForm', () => <SearchFormTest searchLogger={action('Search Submitted')}
+                                                                                 saveSearchLogger={action('Save Search')}
                                                                                  editTagLogger={action('Edit Tag Selected')}
                                                                                  suggestionsLogger={action('Fetch Suggestions')}/>);
+storiesOf('diskResource/search', module).add('SaveSearchDialog', () => <SaveSearchDialogTest logger={action('Save Search')}/>);
 storiesOf('tags/tagSearch', module).add('TagSearchField', () => <TagSearchTest deleteLogger={action('onDeleteTag')}
                                                                                editLogger={action('onEditTagSelected')}
                                                                                searchLogger={action('performSearch')}

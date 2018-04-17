@@ -17,6 +17,8 @@ class SearchFormTest extends React.Component {
         const suggestionsLogger = this.props.suggestionsLogger || ((selection) => {
             console.log(selection);
         });
+
+        const saveSearchLogger = this.props.saveSearchLogger || ((selection) => {
             console.log(selection);
         });
 
@@ -25,7 +27,8 @@ class SearchFormTest extends React.Component {
         const presenter = {
             onSearchBtnClicked: searchLogger,
             onEditTagSelected: editTagLogger,
-            fetchTagSuggestions: suggestionsLogger
+            fetchTagSuggestions: suggestionsLogger,
+            onSaveSearch: saveSearchLogger
         };
 
         const suggestedTags = [
@@ -58,7 +61,13 @@ class SearchFormTest extends React.Component {
             includeTrash: () => 'Include items in Trash',
             taggedWith: () => 'Tagged with',
             fileSizes: () => 'KB, MB, GB, TB',
-            searchBtn: () => 'Search'
+            searchBtn: () => 'Search',
+            saveSearchBtnText: () => 'Save Search',
+            filterName: () => 'Filter Name',
+            requiredField: () => 'This field is required',
+            saveSearchTitle: () => 'Save Filter',
+            saveBtn: () => 'Save',
+            cancelBtn: () => 'Cancel',
         };
 
         const dateIntervals = [
@@ -109,13 +118,20 @@ class SearchFormTest extends React.Component {
             }
         ];
 
+        const template = {
+            label: 'oldtemplate',
+            fileQuery: 'testzzzz',
+            path: '/savedFilters/'
+        };
+
         return (
             <MuiThemeProvider muiTheme={getCyVerseTheme()}>
                 <SearchForm presenter={presenter}
                             appearance={appearance}
                             dateIntervals={dateIntervals}
                             suggestedTags={suggestedTags}
-                            id={id}/>
+                            id={id}
+                            template={template}/>
             </MuiThemeProvider>
         )
     }

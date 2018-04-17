@@ -86,4 +86,12 @@ public interface SearchMessages extends Messages {
     String taggedWith();
 
     String fileSizes();
+
+    String saveSearchBtnText();
+
+    String filterName();
+
+    String requiredField();
+
+    String saveSearchTitle();
 }
