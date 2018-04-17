@@ -681,10 +681,14 @@ public class AppsEditorPresenterImpl implements AppsEditorView.Presenter,
             doOnSaveClicked(null);
         } else {
             IplantInfoBox errorsInfo = new IplantInfoBox(appearance.warning(),
-                    appearance.appContainsErrorsUnableToSave());
+                    hasTemplateError() ? appearance.appMissingInfo() : appearance.appContainsErrorsUnableToSave());
             errorsInfo.setIcon(MessageBox.ICONS.error());
             errorsInfo.show();
         }
+    }
+
+    boolean hasTemplateError() {
+        return view.getAppTemplatePropertyEditor().hasErrors();
     }
 
     @Override

@@ -245,4 +245,13 @@ public class AppTemplatePropertyEditor extends Composite implements ValueAwareEd
         appDescriptionLabel.setHTML(SafeHtmlUtils.fromTrustedString(
                 requiredHtml + appearance.appDescriptionLabel()));
     }
+
+    /**
+     * Will return a boolean indicating whether the required fields have been filled out
+     * @return
+     */
+    public boolean hasErrors() {
+        return Strings.isNullOrEmpty(name.getCurrentValue()) ||
+               Strings.isNullOrEmpty(description.getCurrentValue());
+    }
 }

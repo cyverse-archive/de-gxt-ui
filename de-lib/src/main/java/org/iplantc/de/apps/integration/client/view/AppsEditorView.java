@@ -177,6 +177,8 @@ public interface AppsEditorView extends IsWidget,
         int getAutoScrollRegionHeight();
 
         int getAutoScrollRepeatDelay();
+
+        String appMissingInfo();
     }
     
     public interface Presenter extends BeforeHideHandler,

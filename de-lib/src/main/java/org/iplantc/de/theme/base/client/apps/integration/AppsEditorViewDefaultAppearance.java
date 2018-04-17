@@ -390,4 +390,9 @@ public class AppsEditorViewDefaultAppearance implements AppsEditorView.AppsEdito
     public int getAutoScrollRepeatDelay() {
         return 50;
     }
+
+    @Override
+    public String appMissingInfo() {
+        return appIntegrationMessages.appMissingInfo();
+    }
 }
