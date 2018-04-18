@@ -2,7 +2,6 @@
  *  @author sriram
  * */
 import React, {Component} from "react";
-import {FormattedDate, IntlProvider} from "react-intl";
 import Toolbar from "material-ui-next/Toolbar";
 import ToolbarGroup from "material-ui-next/Toolbar";
 import ToolbarSeparator from "material-ui-next/Toolbar";
@@ -10,23 +9,114 @@ import TextField from "material-ui-next/TextField";
 import DatePicker from "react-datepicker";
 import Button from "material-ui-next/Button";
 import {withStyles} from "material-ui-next/styles";
-import Table, {TableBody, TableCell, TableHead, TableRow} from "material-ui-next/Table";
+import Table, {
+    TableHead,
+    TableBody,
+    TableCell,
+    TableFooter,
+    TablePagination,
+    TableRow
+} from "material-ui-next/Table";
+import IconButton from "material-ui-next/IconButton";
+import FirstPageIcon from "@material-ui/icons/FirstPage";
+import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
+import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
+import LastPageIcon from "@material-ui/icons/LastPage";
 import Paper from "material-ui-next/Paper";
 import PropTypes from "prop-types";
 import * as moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
-import Modal from 'material-ui-next/Modal';
-import Typography from 'material-ui-next/Typography';
+
+const pagingStyles = theme => ({
+    root: {
+        flexShrink: 0,
+        color: theme.palette.text.secondary,
+        marginLeft: theme.spacing.unit * 2.5,
+
+    },
+});
+
+class TablePaginationActions extends React.Component {
+    handleFirstPageButtonClick = event => {
+        this.props.onChangePage(event, 0);
+    };
+
+    handleBackButtonClick = event => {
+        this.props.onChangePage(event, this.props.page - 1);
+    };
+
+    handleNextButtonClick = event => {
+        this.props.onChangePage(event, this.props.page + 1);
+    };
+
+    handleLastPageButtonClick = event => {
+        this.props.onChangePage(
+            event,
+            Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1),
+        );
+    };
+
+    render() {
+        const {classes, count, page, rowsPerPage, theme} = this.props;
+
+        return (
+            <div className={classes.root}>
+                <IconButton
+                    onClick={this.handleFirstPageButtonClick}
+                    disabled={page === 0}
+                    aria-label="First Page"
+                >
+                    {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+                </IconButton>
+                <IconButton
+                    onClick={this.handleBackButtonClick}
+                    disabled={page === 0}
+                    aria-label="Previous Page"
+                >
+                    {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+                </IconButton>
+                <IconButton
+                    onClick={this.handleNextButtonClick}
+                    disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+                    aria-label="Next Page"
+                >
+                    {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+                </IconButton>
+                <IconButton
+                    onClick={this.handleLastPageButtonClick}
+                    disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+                    aria-label="Last Page"
+                >
+                    {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+                </IconButton>
+            </div>
+        );
+    }
+}
+
+TablePaginationActions.propTypes = {
+    classes: PropTypes.object.isRequired,
+    count: PropTypes.number.isRequired,
+    onChangePage: PropTypes.func.isRequired,
+    page: PropTypes.number.isRequired,
+    rowsPerPage: PropTypes.number.isRequired,
+    theme: PropTypes.object.isRequired,
+};
+
+const TablePaginationActionsWrapped = withStyles(pagingStyles, {withTheme: true})(
+    TablePaginationActions,
+);
 
 const styles = theme => ({
-    root: {
+    paper: {
         width: '95%',
-        marginTop: 3,
-        overflow: 'auto',
-        height: 800,
+        marginTop: theme.spacing.unit * 3,
     },
     table: {
-        minWidth: 700,
+        minWidth: 500,
+    },
+    tableWrapper: {
+        overflowX: 'auto',
     },
     textField: {
         marginLeft: 1,
@@ -36,7 +126,6 @@ const styles = theme => ({
     button: {
         margin: 1,
     },
-
 });
 
 class AppStats extends Component {
@@ -50,6 +139,8 @@ class AppStats extends Component {
             startDate: new Date(today.setMonth(today.getMonth() - 3)),  // set default date range for 90 days!
             endDate: new Date(),
             filterDisabled: true,
+            page: 0,
+            rowsPerPage: 100,
         };
         this.handleSearch = this.handleSearch.bind(this);
         this.fetchAppStats = this.fetchAppStats.bind(this);
@@ -57,6 +148,15 @@ class AppStats extends Component {
         this.onStartDateChange = this.onStartDateChange.bind(this);
         this.onEndDateChange = this.onEndDateChange.bind(this);
     }
+
+    handleChangePage = (event, page) => {
+        this.setState({page});
+    };
+
+    handleChangeRowsPerPage = event => {
+        this.setState({rowsPerPage: event.target.value});
+    };
+
 
     handleSearch(event) {
         console.log(event.target.value);
@@ -96,11 +196,35 @@ class AppStats extends Component {
         this.fetchAppStats();
     }
 
+    handleFirstPageButtonClick = event => {
+        this.props.onChangePage(event, 0);
+    };
+
+    handleBackButtonClick = event => {
+        this.props.onChangePage(event, this.props.page - 1);
+    };
+
+    handleNextButtonClick = event => {
+        this.props.onChangePage(event, this.props.page + 1);
+    };
+
+    handleLastPageButtonClick = event => {
+        this.props.onChangePage(
+            event,
+            Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1),
+        );
+    };
+
     render() {
         const appearance = this.props.appearance;
-        const {data, loading} = this.state;
         const btnDisabled = (this.state.startDate && this.state.endDate) ? false : true;
         const classes = this.props.classes;
+        const {data, rowsPerPage, page} = this.state;
+        const containerStyle = {
+            height: 500,
+            overflow: 'auto',
+        }
+
         let filterBtn = null;
         if (btnDisabled) {
             filterBtn = <Button variant="raised" disabled onClick={this.applyFilter}
@@ -109,12 +233,6 @@ class AppStats extends Component {
             filterBtn = <Button variant="raised" onClick={this.applyFilter}
                                 className={classes.button}>{appearance.applyFilter()}</Button>
         }
-        console.log("start date->" + this.state.startDate + " end date->" + this.state.endDate);
-         const divStyle = {
-             width: '100px',
-             height: '50px',
-             border: '1px solid',
-         }
         return (
             <div>
                 <div>
@@ -136,17 +254,8 @@ class AppStats extends Component {
                         </ToolbarGroup>
                     </Toolbar>
                 </div>
-                <Paper className={classes.root}>
-                    <Modal
-                        aria-labelledby="simple-modal-title"
-                        aria-describedby="simple-modal-description"
-                        open={this.state.loading}>
-                        <div style={divStyle}>
-                            <Typography variant="title" id="modal-title">
-                                Loading...
-                            </Typography>
-                        </div>
-                    </Modal>
+                <div style={containerStyle}>
+                    <Paper className={classes.paper}>
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow hover>
@@ -159,8 +268,8 @@ class AppStats extends Component {
                                 <TableCell numeric>{appearance.lastUsed()}</TableCell>
                             </TableRow>
                         </TableHead>
-                        <TableBody className={classes.tableBody}>
-                            {data.map(n => {
+                        <TableBody>
+                            {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(n => {
                                 return (
                                     <TableRow hover key={n.id}>
                                         <TableCell>{n.name}</TableCell>
@@ -178,8 +287,22 @@ class AppStats extends Component {
                                 );
                             })}
                         </TableBody>
+                        <TableFooter>
+                            <TableRow>
+                                <TablePagination
+                                    colSpan={3}
+                                    count={data.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    onChangePage={this.handleChangePage}
+                                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                    Actions={TablePaginationActionsWrapped}
+                                />
+                            </TableRow>
+                        </TableFooter>
                     </Table>
                 </Paper>
+                </div>
             </div>
         )
 
@@ -190,4 +313,4 @@ AppStats.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AppStats);
+export default withStyles(styles)(AppStats, TablePaginationActionsWrapped);

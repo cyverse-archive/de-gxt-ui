@@ -6,6 +6,8 @@
 import React, {Component} from "react";
 import {getDefaultTheme, NewMuiThemeProvider} from "../../../src/lib";
 import AppStats from "../../../src/apps/admin/AppStats";
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { getCyVerseTheme } from '../../../src/lib';
 
 
 class AppStatsTest extends Component {
@@ -74,7 +76,9 @@ class AppStatsTest extends Component {
 
         return (
             <NewMuiThemeProvider muiTheme={getDefaultTheme()}>
+                <MuiThemeProvider muiTheme={getCyVerseTheme()}>
                 <AppStats presenter={presenter} appearance={appearance}/>
+                    </MuiThemeProvider>
             </NewMuiThemeProvider>
         )
 
