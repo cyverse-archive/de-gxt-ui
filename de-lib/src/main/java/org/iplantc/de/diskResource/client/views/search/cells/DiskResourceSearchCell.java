@@ -1,5 +1,6 @@
 package org.iplantc.de.diskResource.client.views.search.cells;
 
+import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.SubmitDiskResourceQueryEventHandler;
@@ -46,7 +47,7 @@ public class DiskResourceSearchCell extends TriggerFieldCell<String> implements 
     }
 
     private boolean expanded;
-    private final DiskResourceQueryForm searchForm;
+    private final SearchView searchForm;
     private final DiskResourceSearchCellAppearance appearance;
 
     /**
@@ -55,7 +56,7 @@ public class DiskResourceSearchCell extends TriggerFieldCell<String> implements 
      * @param appearance the date cell appearance
      */
     @Inject
-    DiskResourceSearchCell(final DiskResourceQueryForm searchForm,
+    DiskResourceSearchCell(final SearchView searchForm,
                            final DiskResourceSearchCellAppearance appearance) {
         super(appearance);
         this.searchForm = searchForm;
@@ -132,7 +133,7 @@ public class DiskResourceSearchCell extends TriggerFieldCell<String> implements 
         });
     }
 
-    public DiskResourceQueryForm getSearchForm() {
+    public SearchView getSearchForm() {
         return searchForm;
     }
 

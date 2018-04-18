@@ -1,14 +1,15 @@
 package org.iplantc.de.diskResource.client;
 
+import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.tags.Tag;
 import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent.SavedSearchesRetrievedEventHandler;
 import org.iplantc.de.diskResource.client.events.search.DeleteSavedSearchClickedEvent.DeleteSavedSearchEventHandler;
 import org.iplantc.de.diskResource.client.events.search.FetchTagSuggestions;
-import org.iplantc.de.diskResource.client.events.search.SaveDataSearchClicked;
+import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent;
 import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent.SaveDiskResourceQueryClickedEventHandler;
 import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent.HasSavedSearchDeletedEventHandlers;
+import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent.HasUpdateSavedSearchesEventHandlers;
-import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSelected;
 import org.iplantc.de.diskResource.client.views.search.ReactSearchForm;
 
 import com.google.gwt.dom.client.Element;
@@ -30,9 +31,9 @@ import jsinterop.annotations.JsType;
 @JsType
 public interface SearchView extends IsWidget,
                                     HideEvent.HasHideHandlers,
-                                    QueryDSLSearchBtnSelected.HasQueryDSLSearchBtnSelectedHandlers,
-                                    FetchTagSuggestions.HasFetchTagSuggestionsHandlers,
-                                    SaveDataSearchClicked.HasSaveDataSearchClickedHandlers {
+                                    SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers,
+                                    SaveDiskResourceQueryClickedEvent.HasSaveDiskResourceQueryClickedEventHandlers,
+                                    FetchTagSuggestions.HasFetchTagSuggestionsHandlers{
 
     @JsType
     interface SearchViewAppearance {
@@ -145,8 +146,7 @@ public interface SearchView extends IsWidget,
                                 HasSavedSearchDeletedEventHandlers,
                                 SavedSearchesRetrievedEventHandler,
                                 HasUpdateSavedSearchesEventHandlers,
-                                FetchTagSuggestions.FetchTagSuggestionsHandler,
-                                SaveDataSearchClicked.SaveDataSearchClickedHandler {
+                                FetchTagSuggestions.FetchTagSuggestionsHandler {
 
         void setView(SearchView view);
     }
@@ -168,12 +168,14 @@ public interface SearchView extends IsWidget,
     @JsIgnore
     void fireEvent(GwtEvent<?> event);
 
+    void edit(DiskResourceQueryTemplate template);
+
     void onSearchBtnClicked(Splittable query);
 
     void onEditTagSelected(Tag tag);
 
     void fetchTagSuggestions(String searchTerm);
-
+    
     void onSaveSearch(Splittable query, String originalName);
 }
 

@@ -57,7 +57,6 @@ import org.iplantc.de.diskResource.client.presenters.callbacks.RenameDiskResourc
 import org.iplantc.de.diskResource.client.views.dialogs.FolderSelectDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.RenameResourceDialog;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
-import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchFieldv2;
 import org.iplantc.de.resources.client.messages.IplantContextualHelpStrings;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DataCallback;

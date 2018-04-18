@@ -23,8 +23,8 @@ class SearchForm extends Component {
             negatedFileQuery: '',
             createdWithin: null,
             modifiedWithin: null,
-            metadataAttributeHas: '',
-            metadataValueHas: '',
+            metadataAttributeQuery: '',
+            metadataValueQuery: '',
             ownedBy: '',
             sharedWith: '',
             fileSizeGreater: '',
@@ -32,8 +32,8 @@ class SearchForm extends Component {
             fileSizeLessThan: '',
             fileSizeLessThanUnit: 'KB',
             taggedWith: '',
-            tags: [],
-            includeTrash: false
+            tagQuery: [],
+            includeTrashItems: false
         };
 
         this.handleChangeFor = this.handleChangeFor.bind(this);
@@ -107,7 +107,7 @@ class SearchForm extends Component {
             }
 
             return {
-                tags: newTagsArr,
+                tagQuery: newTagsArr,
                 taggedWith: ''
             }
         })
@@ -124,18 +124,18 @@ class SearchForm extends Component {
     handleCheckBoxChange(propertyName, event) {
         this.setState(function (prevState) {
             return {
-                [propertyName]: !prevState.includeTrash
+                [propertyName]: !prevState.includeTrashItems
             }
         });
     }
 
     onDeleteTagSelected(selectedTag) {
-        let tags = this.state.tags;
+        let tags = this.state.tagQuery;
         let index = tags.indexOf(selectedTag);
         tags.splice(index, 1);
         this.setState(function () {
             return {
-                tags: tags
+                tagQuery: tags
             }
         })
     }
@@ -215,8 +215,8 @@ class SearchForm extends Component {
                         <td>
                             <TextField floatingLabelText={appearance.nameHas()}
                                        fullWidth={true}
-                                       value={this.state.nameHas}
-                                       onChange={this.handleChangeFor.bind(null, 'nameHas')}/>
+                                       value={this.state.fileQuery}
+                                       onChange={this.handleChangeFor.bind(null, 'fileQuery')}/>
                         </td>
                         <td>
                             <DateIntervalDropDown label={appearance.createdWithin()}
@@ -230,8 +230,8 @@ class SearchForm extends Component {
                         <td>
                             <TextField floatingLabelText={appearance.nameHasNot()}
                                        fullWidth={true}
-                                       value={this.state.nameHasNot}
-                                       onChange={this.handleChangeFor.bind(null, 'nameHasNot')}/>
+                                       value={this.state.negatedFileQuery}
+                                       onChange={this.handleChangeFor.bind(null, 'negatedFileQuery')}/>
                         </td>
                         <td>
                             <DateIntervalDropDown label={appearance.modifiedWithin()}
@@ -245,8 +245,8 @@ class SearchForm extends Component {
                         <td>
                             <TextField floatingLabelText={appearance.metadataAttributeHas()}
                                        fullWidth={true}
-                                       value={this.state.metadataAttributeHas}
-                                       onChange={this.handleChangeFor.bind(null, 'metadataAttributeHas')}/>
+                                       value={this.state.metadataAttributeQuery}
+                                       onChange={this.handleChangeFor.bind(null, 'metadataAttributeQuery')}/>
                         </td>
                         <td>
                             <TextField floatingLabelText={appearance.ownedBy()}
@@ -261,8 +261,8 @@ class SearchForm extends Component {
                         <td>
                             <TextField floatingLabelText={appearance.metadataValueHas()}
                                        fullWidth={true}
-                                       value={this.state.metadataValueHas}
-                                       onChange={this.handleChangeFor.bind(null, 'metadataValueHas')}/>
+                                       value={this.state.metadataValueQuery}
+                                       onChange={this.handleChangeFor.bind(null, 'metadataValueQuery')}/>
                         </td>
                         <td>
                             <TextField floatingLabelText={appearance.sharedWith()}
@@ -323,7 +323,7 @@ class SearchForm extends Component {
                     <tr>
                         <td>
                             <TagSearchField taggedWith={this.state.taggedWith}
-                                            tags={this.state.tags}
+                                            tags={this.state.tagQuery}
                                             label={appearance.taggedWith()}
                                             onTagValueChange={this.onTagValueChange}
                                             onTagSelected={this.onTagSelected}
@@ -335,8 +335,8 @@ class SearchForm extends Component {
                         <td>
                             <Checkbox style={{top: '20px'}}
                                       label={appearance.includeTrash()}
-                                      onCheck={this.handleCheckBoxChange.bind(null, 'includeTrash')}
-                                      checked={this.state.includeTrash}/>
+                                      onCheck={this.handleCheckBoxChange.bind(null, 'includeTrashItems')}
+                                      checked={this.state.includeTrashItems}/>
                         </td>
 
                     </tr>

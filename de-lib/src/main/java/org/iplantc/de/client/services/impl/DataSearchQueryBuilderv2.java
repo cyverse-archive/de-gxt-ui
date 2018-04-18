@@ -1,8 +1,9 @@
 package org.iplantc.de.client.services.impl;
 
-import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
 import org.iplantc.de.client.models.search.DateInterval;
+import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.sharing.PermissionValue;
+import org.iplantc.de.client.models.tags.Tag;
 import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.base.Strings;
@@ -11,7 +12,9 @@ import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -71,14 +74,14 @@ public class DataSearchQueryBuilderv2 {
     public static final String CREATED = "created";
 
 
-    private final QueryDSLTemplate template;
+    private final DiskResourceQueryTemplate template;
     private final Splittable allList;
     private final Splittable anyList;
     private final Splittable noneList;
 
     Logger LOG = Logger.getLogger(DataSearchQueryBuilderv2.class.getName());
 
-    public DataSearchQueryBuilderv2(QueryDSLTemplate template) {
+    public DataSearchQueryBuilderv2(DiskResourceQueryTemplate template) {
         this.template = template;
         allList = StringQuoter.createIndexed();
         anyList = StringQuoter.createIndexed();
@@ -93,7 +96,6 @@ public class DataSearchQueryBuilderv2 {
 
     public Splittable getFullQuery() {
         ownedBy()
-                .pathPrefix()
                 .sharedWith()
                 .modifiedWithin()
                 .createdWithin()
@@ -130,7 +132,7 @@ public class DataSearchQueryBuilderv2 {
      * {"type": "label", "args": {"label": "some_random_file_name", "exact": true}}
      */
     public DataSearchQueryBuilderv2 file() {
-        String content = template.getNameHas();
+        String content = template.getFileQuery();
         if (!Strings.isNullOrEmpty(content)) {
             Splittable args = StringQuoter.createSplittable();
             assignKeyValue(args, LABEL, content);
@@ -143,7 +145,7 @@ public class DataSearchQueryBuilderv2 {
      * {"type": "label", "args": {"label": "some_random_file_name", "exact": true}}
      */
     public DataSearchQueryBuilderv2 notFile() {
-        String content = template.getNameHasNot();
+        String content = template.getNegatedFileQuery();
         if (!Strings.isNullOrEmpty(content)) {
             Splittable args = StringQuoter.createSplittable();
             assignKeyValue(args, LABEL, content);
@@ -156,7 +158,7 @@ public class DataSearchQueryBuilderv2 {
      * {"type": "path", "args": {"prefix": "/iplant/home"}}
      */
     public DataSearchQueryBuilderv2 includeTrash() {
-        boolean include = template.isIncludeTrash();
+        boolean include = template.isIncludeTrashItems();
         DEProperties props = DEProperties.getInstance();
 
         Splittable args = StringQuoter.createSplittable();
@@ -196,9 +198,10 @@ public class DataSearchQueryBuilderv2 {
      * {"type": "tag", "args": {"tags": ["all","my","tags"]}
      */
     public DataSearchQueryBuilderv2 tags() {
-        List<String> content = template.getTags();
+        Set<Tag> content = template.getTagQuery();
         if (content != null && !content.isEmpty()) {
-            Splittable tags = listToSplittable(content);
+
+            Splittable tags = tagsToSplittable(content);
             Splittable args = StringQuoter.createSplittable();
             assignKeyValue(args, TAGS, tags);
             appendArrayItem(allList, createTypeClause(TAG, args));
@@ -206,12 +209,18 @@ public class DataSearchQueryBuilderv2 {
         return this;
     }
 
+    private Splittable tagsToSplittable(Set<Tag> tags) {
+        List<String> tagValues = tags.stream().map(Tag::getValue).collect(Collectors.toList());
+
+        return listToSplittable(tagValues);
+    }
+
     /**
      * {"type": "metadata", "args": {"attribute": "some_random_attribute_value", "value": "some_random_value"}}
      */
     public DataSearchQueryBuilderv2 metadata() {
-        String attributeContent = template.getMetadataAttributeHas();
-        String valueContent = template.getMetadataValueHas();
+        String attributeContent = template.getMetadataAttributeQuery();
+        String valueContent = template.getMetadataValueQuery();
         boolean hasAttributeSearch = !Strings.isNullOrEmpty(attributeContent);
         boolean hasValueSearch = !Strings.isNullOrEmpty(valueContent);
 
@@ -264,17 +273,6 @@ public class DataSearchQueryBuilderv2 {
             appendArrayItem(allList, createTypeClause(typeClause, args));
         }
 
-        return this;
-    }
-
-    /**
-     * {"type": "path", "args": {"prefix": "/iplant/home/userName"}}
-     */
-    public DataSearchQueryBuilderv2 pathPrefix() {
-        String queryContent = template.getPathPrefix();
-        if (!Strings.isNullOrEmpty(queryContent)) {
-            appendArrayItem(allList, createTypeClause(PATH, PREFIX, queryContent));
-        }
         return this;
     }
 

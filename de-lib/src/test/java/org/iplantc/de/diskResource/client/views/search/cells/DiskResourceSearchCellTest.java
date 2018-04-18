@@ -1,8 +1,5 @@
 package org.iplantc.de.diskResource.client.views.search.cells;
 
-import org.iplantc.de.diskResource.client.views.search.cells.DiskResourceQueryForm;
-import org.iplantc.de.diskResource.client.views.search.cells.DiskResourceSearchCell;
-
 import com.google.gwtmockito.GxtMockitoTestRunner;
 
 import org.junit.Before;

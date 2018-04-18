@@ -12,6 +12,7 @@ import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
 import org.iplantc.de.client.services.TagsServiceFacade;
 import org.iplantc.de.client.services.callbacks.ErrorCallback;
 import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.DetailsView;
@@ -71,14 +72,18 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
     private HandlerManager handlerManager;
 
     IplantTagAutoBeanFactory factory;
+    private SearchModelUtils searchModelUtils;
 
     @Inject
     DiskResourceUtil diskResourceUtil;
 
     @Inject
-    DetailsViewPresenterImpl(final DetailsView view, final IplantTagAutoBeanFactory factory) {
+    DetailsViewPresenterImpl(final DetailsView view,
+                             final IplantTagAutoBeanFactory factory,
+                             SearchModelUtils searchModelUtils) {
         this.view = view;
         this.factory = factory;
+        this.searchModelUtils = searchModelUtils;
 
         view.setPresenter(this);
     }
@@ -284,7 +289,7 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
         tag.setValue(tagValue);
         DiskResourceQueryTemplate queryTemplate = sabFactory.dataSearchFilter().as();
         queryTemplate.setTagQuery(Sets.newHashSet(tag));
-        ensureHandlers().fireEvent(new SubmitDiskResourceQueryEvent(queryTemplate));
+        ensureHandlers().fireEvent(new SubmitDiskResourceQueryEvent(searchModelUtils.convertTemplateToSplittable(queryTemplate)));
     }
 
     @Override

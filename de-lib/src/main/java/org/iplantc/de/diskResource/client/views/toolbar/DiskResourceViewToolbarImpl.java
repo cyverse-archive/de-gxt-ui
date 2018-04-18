@@ -47,7 +47,6 @@ import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelect
 import org.iplantc.de.diskResource.client.events.selection.SimpleDownloadSelected;
 import org.iplantc.de.diskResource.client.events.selection.SimpleUploadSelected;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
-import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchFieldv2;
 import org.iplantc.de.diskResource.share.DiskResourceModule.Ids;
 
 import com.google.common.base.Preconditions;
@@ -84,8 +83,6 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     final ToolbarView.Appearance appearance;
     @UiField(provided = true)
     final DiskResourceSearchField searchField;
-    @UiField(provided = true)
-    final DiskResourceSearchFieldv2 searchField2;
     @Inject
     DiskResourceUtil diskResourceUtil;
     @UiField
@@ -137,11 +134,9 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
     @Inject
     DiskResourceViewToolbarImpl(final DiskResourceSearchField searchField,
-                                final DiskResourceSearchFieldv2 searchField2,
                                 final UserInfo userInfo,
                                 final ToolbarView.Appearance appearance) {
         this.searchField = searchField;
-        this.searchField2 = searchField2;
         this.userInfo = userInfo;
         this.appearance = appearance;
         initWidget(BINDER.createAndBindUi(this));
@@ -735,11 +730,6 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
     @Override
     public DiskResourceSearchField getSearchField() {
         return searchField;
-    }
-
-    @Override
-    public DiskResourceSearchFieldv2 getSearchField2() {
-        return searchField2;
     }
 
     @Override

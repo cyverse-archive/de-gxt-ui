@@ -8,12 +8,10 @@ import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
-import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.models.querydsl.Document;
 import org.iplantc.de.client.models.querydsl.Fields;
 import org.iplantc.de.client.models.querydsl.Metadata;
 import org.iplantc.de.client.models.querydsl.QueryAutoBeanFactory;
-import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
 import org.iplantc.de.client.models.querydsl.SearchResponse;
 import org.iplantc.de.client.models.querydsl.Source;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
@@ -30,8 +28,6 @@ import org.iplantc.de.shared.services.ServiceCallWrapper;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -39,11 +35,6 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
-
-import com.sencha.gxt.core.client.util.Format;
-import com.sencha.gxt.data.shared.SortDir;
-import com.sencha.gxt.data.shared.SortInfoBean;
-import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
 
 import java.util.Collections;
 import java.util.List;
@@ -53,147 +44,13 @@ import java.util.stream.Collectors;
 @SuppressWarnings("nls")
 public class SearchServiceFacadeImpl implements SearchServiceFacade {
 
-    public class SubmitSearchCallbackConverter extends AsyncCallbackConverter<String, List<DiskResource>> {
-        private final DiskResourceAutoBeanFactory factory;
+    public class SubmitQueryCallbackConverter extends AsyncCallbackConverter<String, List<DiskResource>> {
+        private final QueryAutoBeanFactory factory;
         private final DiskResourceQueryTemplate queryTemplate;
         private final UserInfo userInfo1;
 
-        public SubmitSearchCallbackConverter(AsyncCallback<List<DiskResource>> callback, DiskResourceQueryTemplate queryTemplate, UserInfo userInfo, DiskResourceAutoBeanFactory drFactory) {
-            super(callback);
-            this.queryTemplate = queryTemplate;
-            this.userInfo1 = userInfo;
-            this.factory = drFactory;
-        }
-
-        @Override
-        protected List<DiskResource> convertFrom(String object) {
-            // Clear previous collections from template
-            queryTemplate.setFiles(Lists.<File> newArrayList());
-            queryTemplate.setFolders(Lists.<Folder> newArrayList());
-
-            List<DiskResource> ret = Lists.newArrayList();
-            Splittable split = StringQuoter.split(object);
-            // Set the total returned on the query template
-            queryTemplate.setTotal(Double.valueOf(split.get("total").asNumber()).intValue());
-            queryTemplate.setExecutionTime(Double.valueOf(split.get("execution-time").asNumber()).longValue());
-            if (split.get("matches").isIndexed()) {
-                final int size = split.get("matches").size();
-                for (int i = 0; i < size; i++) {
-                    final Splittable child = split.get("matches").get(i);
-                    final String asString = child.get("type").asString();
-                    Splittable entity = child.get("entity");
-
-                    reMapDateKeys(entity);
-                    reMapPermissions(entity);
-                    reMapInfoType(entity);
-
-                    if (asString.equals("folder")) {
-                        ret.add(decodeFolderIntoQueryTemplate(entity, queryTemplate, factory));
-                    } else if (asString.equals("file")) {
-                        reMapFileSize(entity);
-                        ret.add(decodeFileIntoQueryTemplate(entity, queryTemplate, factory));
-                    }
-
-
-                }
-            }
-
-
-            return ret;
-        }
-
-        void reMapInfoType(Splittable entity) {
-            // If infotype is already defined, return
-            if(!entity.isUndefined(DiskResource.INFO_TYPE_KEY)){
-                LOG.info("Search results are returning entities with '"+DiskResource.INFO_TYPE_KEY+"' keys.");
-                // If this code is hit consistenly, this code is probably no longer necessary.
-                return;
-            }
-
-            Splittable metadata = entity.get("metadata");
-            Preconditions.checkArgument(metadata.isIndexed(), "'metadata key is not indexed.");
-            for(int i = 0; i < metadata.size(); i++){
-                Splittable metadataItem = metadata.get(i);
-                if(metadataItem.get("attribute").asString().equals("ipc-filetype")){
-                    // Then forward value to infoType
-                    metadataItem.get("value").assign(entity, DiskResource.INFO_TYPE_KEY);
-                }
-            }
-        }
-
-
-        File decodeFileIntoQueryTemplate(Splittable entity, DiskResourceQueryTemplate queryTemplate, DiskResourceAutoBeanFactory factory) {
-            // KLUDGE Re-map JSON keys until service JSON is unified.
-            entity.get("fileSize").assign(entity, "file-size");
-            final AutoBean<File> decodeFile = AutoBeanCodex.decode(factory, File.class, entity);
-            queryTemplate.getFiles().add(decodeFile.as());
-            return decodeFile.as();
-        }
-
-        Folder decodeFolderIntoQueryTemplate(Splittable entity, DiskResourceQueryTemplate queryTemplate, DiskResourceAutoBeanFactory factory) {
-            final AutoBean<Folder> decodeFolder = AutoBeanCodex.decode(factory, Folder.class, entity);
-            queryTemplate.getFolders().add(decodeFolder.as());
-            return decodeFolder.as();
-        }
-
-        /**
-         * KLUDGE Re-map JSON keys until service JSON is unified.
-         */
-        void reMapDateKeys(Splittable entity) {
-            final long dateModifiedInSec = Double.valueOf(entity.get("dateModified").asNumber()).longValue();
-            StringQuoter.create(dateModifiedInSec).assign(entity, "date-modified");
-            final long dateCreatedInSec = Double.valueOf(entity.get("dateCreated").asNumber()).longValue();
-            StringQuoter.create(dateCreatedInSec).assign(entity, "date-created");
-        }
-
-        /**
-         * KLUDGE Re-map JSON keys until service JSON is unified.
-         */
-        void reMapFileSize(Splittable entity) {
-            entity.get("fileSize").assign(entity, "file-size");
-        }
-
-
-        void reMapPermissions(Splittable entity) {
-            Splittable userPermissionsList = entity.get("userPermissions");
-            for (int i = 0; i < userPermissionsList.size(); i++) {
-                Splittable permission = userPermissionsList.get(i);
-                final String permissionString = permission.get("permission").asString();
-                final String userString = permission.get("user").asString();
-                final Iterable<String> userStringSplit = Splitter.on("#").split(userString);
-                Splittable newPermissionsSplit = StringQuoter.createSplittable();
-                if (userStringSplit.iterator().next().equals(userInfo1.getUsername())) {
-                    switch (permissionString) {
-                        case "own":
-                            StringQuoter.create(true).assign(newPermissionsSplit, "own");
-                            StringQuoter.create(true).assign(newPermissionsSplit, "write");
-                            StringQuoter.create(true).assign(newPermissionsSplit, "read");
-                            break;
-                        case "write":
-                            StringQuoter.create(false).assign(newPermissionsSplit, "own");
-                            StringQuoter.create(true).assign(newPermissionsSplit, "write");
-                            StringQuoter.create(true).assign(newPermissionsSplit, "read");
-                            break;
-                        case "read":
-                            StringQuoter.create(false).assign(newPermissionsSplit, "own");
-                            StringQuoter.create(false).assign(newPermissionsSplit, "write");
-                            StringQuoter.create(true).assign(newPermissionsSplit, "read");
-                            break;
-                    }
-                    newPermissionsSplit.assign(entity, "permissions");
-                    break;
-                }
-            }
-        }
-    }
-
-    public class SubmitQueryCallbackConverter extends AsyncCallbackConverter<String, List<DiskResource>> {
-        private final QueryAutoBeanFactory factory;
-        private final QueryDSLTemplate queryTemplate;
-        private final UserInfo userInfo1;
-
         public SubmitQueryCallbackConverter(AsyncCallback<List<DiskResource>> callback,
-                                            QueryDSLTemplate queryTemplate,
+                                            DiskResourceQueryTemplate queryTemplate,
                                             UserInfo userInfo,
                                             QueryAutoBeanFactory queryFactory) {
             super(callback);
@@ -433,55 +290,7 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
     }
 
     @Override
-    public void submitSearchFromQueryTemplate(DiskResourceQueryTemplate queryTemplate, FilterPagingLoadConfigBean loadConfig, TYPE searchType, AsyncCallback<List<DiskResource>> callback) {
-        DataSearchQueryBuilder builder = new DataSearchQueryBuilder(queryTemplate, userInfo);
-        String queryParameter = "";
-        String tags = "";
-        
-        String buildFullQuery = builder.buildFullQuery();
-        if (!Strings.isNullOrEmpty(buildFullQuery)) {
-            queryParameter = "q=" + URL.encodeQueryString(buildFullQuery);
-        }
-        String limitParameter = "&limit=" + loadConfig.getLimit();
-        String offsetParameter = "&offset=" + loadConfig.getOffset();
-        String typeParameter = "&type=" + ((searchType == null) ? TYPE.ANY.toString() : searchType.toString());
-        if (!Strings.isNullOrEmpty(builder.taggedWith())) {
-            tags = "&tags=" + URL.encodeQueryString(builder.taggedWith());
-        }
-        String sortParameter = "";
-        List<SortInfoBean> sortInfoList = loadConfig.getSortInfo();
-        if (sortInfoList != null && !sortInfoList.isEmpty()) {
-            SortInfoBean sortInfo = sortInfoList.get(0);
-            String sortField = convertSortField(sortInfo.getSortField());
-            if (!Strings.isNullOrEmpty(sortField)) {
-                String sortDir = sortInfo.getSortDir() == null ? SortDir.ASC.toString() : sortInfo.getSortDir().toString();
-                sortParameter = Format.substitute("&sort={0}:{1}", sortField, sortDir.toLowerCase());
-            }
-        }
-
-        StringBuilder addressSb = new StringBuilder().append(deProperties.getDataMgmtBaseUrl() + "index?");
-        if (!Strings.isNullOrEmpty(queryParameter)) {
-            addressSb.append(queryParameter);
-        }
-
-        if (!Strings.isNullOrEmpty(tags)) {
-            addressSb.append(tags);
-        }
-
-
-        addressSb.append("&includeTrash="
-                         + queryTemplate.isIncludeTrashItems());
-        addressSb.append(limitParameter);
-        addressSb.append(offsetParameter);
-        addressSb.append(typeParameter);
-        addressSb.append(sortParameter);
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, addressSb.toString());
-        deServiceFacade.getServiceData(wrapper, new SubmitSearchCallbackConverter(callback, queryTemplate, userInfo, drFactory));
-
-    }
-
-    @Override
-    public void submitSearchQuery(QueryDSLTemplate template,
+    public void submitSearchQuery(DiskResourceQueryTemplate template,
                                   FolderContentsLoadConfig loadConfig,
                                   FolderContentsRpcProxyImpl.QueryResultsCallback queryResultsCallback) {
         DataSearchQueryBuilderv2 builder = new DataSearchQueryBuilderv2(template);

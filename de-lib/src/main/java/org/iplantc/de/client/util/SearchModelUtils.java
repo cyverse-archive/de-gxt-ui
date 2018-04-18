@@ -1,7 +1,6 @@
 package org.iplantc.de.client.util;
 
 import org.iplantc.de.client.models.querydsl.QueryAutoBeanFactory;
-import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.FileSizeRange.FileSizeUnit;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
@@ -121,7 +120,7 @@ public class SearchModelUtils {
         }
         return isEmpty;
     }
-
+    
     public Splittable convertTemplateToSplittable(DiskResourceQueryTemplate template) {
         return AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(template));
     }

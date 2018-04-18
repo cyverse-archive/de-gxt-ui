@@ -18,7 +18,8 @@ import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorCode;
 import org.iplantc.de.client.models.querydsl.QueryAutoBeanFactory;
-import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
+import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
+import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
@@ -57,7 +58,6 @@ import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected
 import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked;
 import org.iplantc.de.diskResource.client.events.selection.MetadataInfoBtnSelected;
 import org.iplantc.de.diskResource.client.events.selection.SetInfoTypeSelected;
-import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSelected;
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected;
 import org.iplantc.de.diskResource.client.gin.factory.FolderContentsRpcProxyFactory;
@@ -192,6 +192,7 @@ public class GridViewPresenterImpl implements Presenter,
     @Inject AsyncProviderWrapper<SaveAsDialog> saveAsDialogProvider;
     @Inject DiskResourceErrorAutoBeanFactory drErrorFactory;
     @Inject DiskResourceAutoBeanFactory factory;
+    @Inject SearchAutoBeanFactory searchFactory;
     @Inject AsyncProviderWrapper<MetadataCopyDialog> copyMetadataDlgProvider;
     @Inject AsyncProviderWrapper<Md5DisplayDialog> md5DisplayDlgProvider;
     @Inject AsyncProviderWrapper<SelectMetadataTemplateDialog> selectMetaTemplateDlgProvider;
@@ -265,7 +266,10 @@ public class GridViewPresenterImpl implements Presenter,
     // <editor-fold desc="Event Handlers">
     @Override
     public void doSubmitDiskResourceQuery(SubmitDiskResourceQueryEvent event) {
-        doFolderSelected(event.getQueryTemplate());
+        Splittable splittable = event.getQueryTemplate();
+
+        DiskResourceQueryTemplate folder = AutoBeanCodex.decode(searchFactory, DiskResourceQueryTemplate.class, splittable.getPayload()).as();
+        doFolderSelected(folder);
     }
 
     @Override
@@ -636,19 +640,6 @@ public class GridViewPresenterImpl implements Presenter,
                 view.getGridLoader();
         FolderContentsLoadConfig loadConfig = gridLoader.getLastLoadConfig();
         loadConfig.setFolder(selectedFolder);
-        loadConfig.setOffset(0);
-        gridLoader.load();
-    }
-
-    @Override
-    public void onQueryDSLSearchBtnSelected(QueryDSLSearchBtnSelected event) {
-        Splittable query = event.getTemplate();
-        QueryDSLTemplate template = AutoBeanCodex.decode(queryFactory, QueryDSLTemplate.class, query.getPayload()).as();
-
-        final PagingLoader<FolderContentsLoadConfig, PagingLoadResult<DiskResource>> gridLoader =
-                view.getGridLoader();
-        FolderContentsLoadConfig loadConfig = gridLoader.getLastLoadConfig();
-        loadConfig.setFolder(template);
         loadConfig.setOffset(0);
         gridLoader.load();
     }

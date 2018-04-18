@@ -1,7 +1,5 @@
 package org.iplantc.de.diskResource.client.views.search.cells;
 
-import org.iplantc.de.diskResource.client.views.search.cells.DiskResourceQueryFormNamePrompt;
-
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwtmockito.GwtMockito;

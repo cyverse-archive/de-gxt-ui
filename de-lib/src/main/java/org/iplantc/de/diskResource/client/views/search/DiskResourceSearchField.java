@@ -6,6 +6,7 @@ import org.iplantc.de.commons.client.events.SubmitTextSearchEvent;
 import org.iplantc.de.commons.client.events.SubmitTextSearchEvent.SubmitTextSearchEventHandler;
 import org.iplantc.de.commons.client.widgets.search.SearchFieldDecorator;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
+import org.iplantc.de.diskResource.client.events.search.FetchTagSuggestions;
 import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent;
 import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
@@ -16,6 +17,9 @@ import org.iplantc.de.diskResource.client.views.search.cells.DiskResourceSearchC
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.widget.core.client.event.CollapseEvent.CollapseHandler;
 import com.sencha.gxt.widget.core.client.event.CollapseEvent.HasCollapseHandlers;
@@ -41,7 +45,8 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
                                                                              HasSubmitDiskResourceQueryEventHandlers,
                                                                              SubmitDiskResourceQueryEventHandler,
                                                                              SubmitTextSearchEventHandler,
-                                                                             SavedSearchDeletedEvent.SavedSearchDeletedEventHandler {
+                                                                             SavedSearchDeletedEvent.SavedSearchDeletedEventHandler,
+                                                                             FetchTagSuggestions.HasFetchTagSuggestionsHandlers {
 
     public final class QueryStringPropertyEditor extends PropertyEditor<String> {
         private final SearchAutoBeanFactory factory = GWT.create(SearchAutoBeanFactory.class);
@@ -55,7 +60,8 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
 
             DiskResourceQueryTemplate qt = factory.dataSearchFilter().as();
             qt.setFileQuery(text.toString());
-            getCell().getSearchForm().fireEvent(new SubmitDiskResourceQueryEvent(qt));
+            Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(qt));
+            getCell().getSearchForm().fireEvent(new SubmitDiskResourceQueryEvent(encode));
             return text.toString();
         }
 
@@ -155,5 +161,10 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
         // Finish editing to fire search event.
         finishEditing();
         focus();
+    }
+
+    @Override
+    public HandlerRegistration addFetchTagSuggestionsHandler(FetchTagSuggestions.FetchTagSuggestionsHandler handler) {
+        return getCell().getSearchForm().addFetchTagSuggestionsHandler(handler);
     }
 }

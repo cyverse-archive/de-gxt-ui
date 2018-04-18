@@ -27,8 +27,13 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.client.loader.RpcProxy;
+
+import org.springframework.beans.annotation.AnnotationBeanUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -196,7 +201,9 @@ public class FolderRpcProxyImpl extends RpcProxy<Folder, List<Folder>> implement
                 callback.onSuccess(Collections.<Folder>emptyList());
             }
         } else if (parentFolder instanceof DiskResourceQueryTemplate) {
-            fireEvent(new SubmitDiskResourceQueryEvent((DiskResourceQueryTemplate) parentFolder));
+            DiskResourceQueryTemplate template = (DiskResourceQueryTemplate)parentFolder;
+            Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(template));
+            fireEvent(new SubmitDiskResourceQueryEvent(encode));
         } else {
             drService.getSubFolders(parentFolder, new SubFoldersCallback(callback,
                                                                          appearance));

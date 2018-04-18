@@ -33,7 +33,5 @@ public interface QueryAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<DocumentUserPermissionList> getDocumentUserPermissionList();
 
-    AutoBean<QueryDSLTemplate> getQueryDSLTemplate();
-
     AutoBean<DiskResourceQueryTemplate> getQueryTemplate();
 }

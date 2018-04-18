@@ -6,8 +6,8 @@ import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.events.search.FetchTagSuggestions;
-import org.iplantc.de.diskResource.client.events.search.SaveDataSearchClicked;
-import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSelected;
+import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent;
+import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.presenters.search.DateIntervalProvider;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 
@@ -78,7 +78,7 @@ public class SearchViewImpl extends Composite implements SearchView {
     public void onSearchBtnClicked(Splittable query) {
         if (query != null) {
             GWT.log(query.getPayload());
-            fireEvent(new QueryDSLSearchBtnSelected(query));
+            fireEvent(new SubmitDiskResourceQueryEvent(query));
         }
     }
 
@@ -93,8 +93,8 @@ public class SearchViewImpl extends Composite implements SearchView {
     }
 
     @Override
-    public void onSaveSearch(String name, Splittable query) {
-        fireEvent(new SaveDataSearchClicked(name, query));
+    public void onSaveSearch(Splittable query) {
+        fireEvent(new SaveDiskResourceQueryClickedEvent(query, null));
     }
 
     @Override
@@ -148,7 +148,6 @@ public class SearchViewImpl extends Composite implements SearchView {
 
     @Override
     public void edit(DiskResourceQueryTemplate template) {
-        originalName = template.getName();
         props.template = searchModelUtils.convertTemplateToSplittable(template);
 
         renderSearchForm(props);
@@ -185,11 +184,6 @@ public class SearchViewImpl extends Composite implements SearchView {
     }
 
     @Override
-    public HandlerRegistration addQueryDSLSearchBtnSelectedHandler(QueryDSLSearchBtnSelected.QueryDSLSearchBtnSelectedHandler handler) {
-        return addHandler(handler, QueryDSLSearchBtnSelected.TYPE);
-    }
-
-    @Override
     public void clearSearch() {
         GWT.log("CLEAR SEARCH...");
     }
@@ -200,7 +194,13 @@ public class SearchViewImpl extends Composite implements SearchView {
     }
 
     @Override
-    public HandlerRegistration addSaveDataSearchClickedHandler(SaveDataSearchClicked.SaveDataSearchClickedHandler handler) {
-        return addHandler(handler, SaveDataSearchClicked.TYPE);
+    public HandlerRegistration addSaveDiskResourceQueryClickedEventHandler(
+            SaveDiskResourceQueryClickedEvent.SaveDiskResourceQueryClickedEventHandler handler) {
+        return addHandler(handler, SaveDiskResourceQueryClickedEvent.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addSubmitDiskResourceQueryEventHandler(SubmitDiskResourceQueryEvent.SubmitDiskResourceQueryEventHandler handler) {
+        return addHandler(handler, SubmitDiskResourceQueryEvent.TYPE);
     }
 }

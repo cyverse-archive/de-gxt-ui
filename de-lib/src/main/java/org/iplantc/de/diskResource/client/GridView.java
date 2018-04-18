@@ -141,8 +141,7 @@ public interface GridView extends IsWidget,
                                 FetchDetailsCompleted.HasFetchDetailsCompletedHandlers,
                                 DNDDiskResourcesCompleted.HasDNDDiskResourcesCompletedHandlers,
                                 BulkMetadataSelected.BulkMetadataSelectedHandler,
-                                CopyPathSelected.CopyPathSelectedEventHandler,
-                                QueryDSLSearchBtnSelected.QueryDSLSearchBtnSelectedHandler {
+                                CopyPathSelected.CopyPathSelectedEventHandler {
 
         interface Appearance {
 

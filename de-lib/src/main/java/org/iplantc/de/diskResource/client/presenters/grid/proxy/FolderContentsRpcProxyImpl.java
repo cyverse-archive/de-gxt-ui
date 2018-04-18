@@ -4,7 +4,6 @@ import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceFavorite;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.diskResources.TYPE;
-import org.iplantc.de.client.models.querydsl.QueryDSLTemplate;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
@@ -15,7 +14,6 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.GridView;
 import org.iplantc.de.shared.DataCallback;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -26,8 +24,6 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
 import com.sencha.gxt.data.client.loader.RpcProxy;
-import com.sencha.gxt.data.shared.loader.FilterConfig;
-import com.sencha.gxt.data.shared.loader.FilterConfigBean;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoadResultBean;
 
@@ -115,14 +111,14 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FolderContentsLoadConfi
         private final GridView.Presenter.Appearance appearance;
         private final IplantAnnouncer announcer1;
         private final HasSafeHtml hasSafeHtml1;
-        private QueryDSLTemplate template;
+        private DiskResourceQueryTemplate template;
 
         public QueryResultsCallback(final IplantAnnouncer announcer,
                                     final FolderContentsLoadConfig loadConfig,
                                     final AsyncCallback<PagingLoadResult<DiskResource>> callback,
                                     final GridView.Presenter.Appearance appearance,
                                     final HasSafeHtml hasSafeHtml,
-                                    QueryDSLTemplate template) {
+                                    DiskResourceQueryTemplate template) {
             this.announcer1 = announcer;
             this.loadConfig = loadConfig;
             this.callback = callback;
@@ -139,7 +135,7 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FolderContentsLoadConfi
             }
             callback.onSuccess(new PagingLoadResultBean<>(results, template.getTotal(), loadConfig.getOffset()));
 
-            String searchText = setSearchText(template.getNameHas());
+            String searchText = setSearchText(template.getFileQuery());
 
             final String searchResultsHeader =
                     appearance.searchDataResultsHeader(searchText, template.getTotal());
@@ -311,26 +307,7 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FolderContentsLoadConfi
                                                                announcer,
                                                                appearance));
         } else if (folder instanceof DiskResourceQueryTemplate) {
-            DiskResourceQueryTemplate qt = (DiskResourceQueryTemplate)folder;
-            String infoTypeFilterQueryString = Joiner.on(" ").join(infoTypeFilterList);
-            String newMetadataValueQuery = Joiner.on(" ")
-                                                 .join(Strings.nullToEmpty(qt.getMetadataValueQuery()),
-                                                       infoTypeFilterQueryString)
-                                                 .trim()                              // Trim the results
-                                                 .replaceAll("-", "\\\\-");           // Escape all hyphens
-
-            qt.setMetadataValueQuery(newMetadataValueQuery);
-
-            searchService.submitSearchFromQueryTemplate((DiskResourceQueryTemplate)folder,
-                                                        folderConfig,
-                                                        entityType,
-                                                        new SearchResultsCallback(announcer,
-                                                                                  folderConfig,
-                                                                                  callback,
-                                                                                  appearance,
-                                                                                  hasSafeHtml));
-        } else if (folder instanceof QueryDSLTemplate) {
-            QueryDSLTemplate template = (QueryDSLTemplate)folder;
+            DiskResourceQueryTemplate template = (DiskResourceQueryTemplate)folder;
             searchService.submitSearchQuery(template,
                                             folderConfig,
                                             new QueryResultsCallback(announcer,

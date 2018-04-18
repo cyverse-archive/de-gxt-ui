@@ -59,7 +59,6 @@ import org.iplantc.de.diskResource.client.presenters.callbacks.RenameDiskResourc
 import org.iplantc.de.diskResource.client.views.dialogs.FolderSelectDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.RenameResourceDialog;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
-import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchFieldv2;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DECallback;
@@ -284,15 +283,10 @@ public class DiskResourcePresenterImpl implements
 
         // Toolbar Search Field
         DiskResourceSearchField searchField = toolbarPresenter.getView().getSearchField();
-        DiskResourceSearchFieldv2 searchFieldv2 = toolbarPresenter.getView().getSearchField2();
-        dataSearchPresenter.setView(searchFieldv2.getCell().getSearchForm());
         searchField.addSaveDiskResourceQueryClickedEventHandler(this.dataSearchPresenter);
         searchField.addSubmitDiskResourceQueryEventHandler(this.gridViewPresenter.getView());
         searchField.addSubmitDiskResourceQueryEventHandler(this.gridViewPresenter);
-        searchFieldv2.addQueryDSLSearchBtnSelectedHandler(this.gridViewPresenter);
-        searchFieldv2.addQueryDSLSearchBtnSelectedHandler(this.gridViewPresenter.getView());
-        searchFieldv2.addFetchTagSuggestionsHandler(this.dataSearchPresenter);
-        searchFieldv2.getCell().getSearchForm().addSaveDataSearchClickedHandler(this.dataSearchPresenter);
+        searchField.addFetchTagSuggestionsHandler(this.dataSearchPresenter);
 
         // Grid Presenter
         this.gridViewPresenter.getView().addBeforeLoadHandler(this.navigationPresenter);

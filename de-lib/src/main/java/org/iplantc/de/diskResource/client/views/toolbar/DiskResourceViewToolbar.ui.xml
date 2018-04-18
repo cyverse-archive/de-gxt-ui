@@ -264,11 +264,6 @@
                     ui:field="searchField"/>
         </toolbar:child>
 
-        <toolbar:child layoutData="{flexBoxData}">
-            <search:DiskResourceSearchFieldv2
-                    ui:field="searchField2"/>
-        </toolbar:child>
-
 
         <!-- Trash Menu -->
         <toolbar:child>
