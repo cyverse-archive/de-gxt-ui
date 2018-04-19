@@ -23,7 +23,7 @@ class AppStatsTest extends Component {
             startDate: () => "Start Date...",
             endDate: () => "End Date...",
             searchApps: () => "Search Apps...",
-            emptyDate: () => "-",
+            emptyValue: () => "-",
             applyFilter: () => "Apply Filter",
             toolbarStyle: () => {},
             gridStyle: () => {},
@@ -31,6 +31,11 @@ class AppStatsTest extends Component {
             integrator: () => "Integrator",
             beta: () => "Beta",
             system: () => "System",
+            firstPage: () => "First Page",
+            previousPage: () => "Previous Page",
+            nextPage: () => "Next Page",
+            lastPage: () => "Last Page",
+            dateFormat: () => "YYYY-MM-DD",
         };
         const appStats =
             [{
@@ -77,8 +82,8 @@ class AppStatsTest extends Component {
         return (
             <NewMuiThemeProvider muiTheme={getDefaultTheme()}>
                 <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-                <AppStats presenter={presenter} appearance={appearance}/>
-                    </MuiThemeProvider>
+                    <AppStats presenter={presenter} appearance={appearance}/>
+                </MuiThemeProvider>
             </NewMuiThemeProvider>
         )
 
