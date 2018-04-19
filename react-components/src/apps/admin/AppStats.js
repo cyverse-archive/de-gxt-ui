@@ -6,7 +6,6 @@ import Toolbar from "material-ui-next/Toolbar";
 import ToolbarGroup from "material-ui-next/Toolbar";
 import ToolbarSeparator from "material-ui-next/Toolbar";
 import TextField from "material-ui-next/TextField";
-import DatePicker from "react-datepicker";
 import Button from "material-ui-next/Button";
 import {withStyles} from "material-ui-next/styles";
 import Table, {
@@ -22,10 +21,10 @@ import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
-import Paper from "material-ui-next/Paper";
 import PropTypes from "prop-types";
-import * as moment from "moment";
-import "react-datepicker/dist/react-datepicker.css";
+import moment  from "moment";
+import RefreshIndicator from "material-ui/RefreshIndicator";
+
 
 const pagingStyles = theme => ({
     root: {
@@ -57,35 +56,35 @@ class TablePaginationActions extends React.Component {
     };
 
     render() {
-        const {classes, count, page, rowsPerPage, theme} = this.props;
+        const {classes, count, page, rowsPerPage, theme, appearance} = this.props;
 
         return (
             <div className={classes.root}>
                 <IconButton
                     onClick={this.handleFirstPageButtonClick}
                     disabled={page === 0}
-                    aria-label="First Page"
+                    aria-label='First Page'
                 >
                     {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
                 </IconButton>
                 <IconButton
                     onClick={this.handleBackButtonClick}
                     disabled={page === 0}
-                    aria-label="Previous Page"
+                    aria-label='Previous Page'
                 >
                     {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
                 </IconButton>
                 <IconButton
                     onClick={this.handleNextButtonClick}
                     disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                    aria-label="Next Page"
+                    aria-label='Next Page'
                 >
                     {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
                 </IconButton>
                 <IconButton
                     onClick={this.handleLastPageButtonClick}
                     disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                    aria-label="Last Page"
+                    aria-label='Last Page'
                 >
                     {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
                 </IconButton>
@@ -108,24 +107,29 @@ const TablePaginationActionsWrapped = withStyles(pagingStyles, {withTheme: true}
 );
 
 const styles = theme => ({
-    paper: {
-        width: '95%',
+    root: {
+        width: "100%",
         marginTop: theme.spacing.unit * 3,
-    },
-    table: {
-        minWidth: 500,
-    },
-    tableWrapper: {
-        overflowX: 'auto',
+        overflow: "auto",
+        height: 800,
     },
     textField: {
-        marginLeft: 1,
-        marginRight: 1,
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
         width: 200,
     },
     button: {
         margin: 1,
     },
+    table: {
+        overflow: "auto",
+    },
+    head: {
+        backgroundColor: "#e2e2e2",
+        position: "sticky",
+        top: 0
+    },
+
 });
 
 class AppStats extends Component {
@@ -160,17 +164,27 @@ class AppStats extends Component {
 
     handleSearch(event) {
         console.log(event.target.value);
-        if (!event.target.value || event.target.value.length >= 3 || event.target.value.length === 0) {
+        if (event.target.value && event.target.value.length >= 3) {
             this.setState({searchText: event.target.value});
+        } else {
+            this.setState({searchText: ""});
         }
     }
 
-    onStartDateChange(date) {
-        this.setState({startDate: date});
+    onStartDateChange(event) {
+        if (Date.parse(event.target.value)) {
+            this.setState({startDate: event.target.value});
+        } else {
+            this.setState({startDate: null});
+        }
     }
 
-    onEndDateChange(date) {
-        this.setState({endDate: date});
+    onEndDateChange(event) {
+        if (Date.parse(event.target.value)) {
+            this.setState({endDate: event.target.value});
+        } else {
+            this.setState({endDate: null});
+        }
     }
 
     componentDidMount() {
@@ -182,8 +196,8 @@ class AppStats extends Component {
             loading: true,
         });
         var searchText = this.state.searchText;
-        var startDate = moment(this.state.startDate).format("YYYY-MM-DD");
-        var endDate = moment(this.state.endDate).format("YYYY-MM-DD");
+        var startDate = (this.state.startDate) ? (moment(this.state.startDate).format(this.props.appearance.dateFormat())) : "";
+        var endDate = (this.state.endDate) ? (moment(this.state.endDate).format(this.props.appearance.dateFormat())) : "";
         this.props.presenter.searchApps(searchText, startDate, endDate, (apps) => {
             this.setState({
                 loading: false,
@@ -217,55 +231,55 @@ class AppStats extends Component {
 
     render() {
         const appearance = this.props.appearance;
-        const btnDisabled = (this.state.startDate && this.state.endDate) ? false : true;
         const classes = this.props.classes;
         const {data, rowsPerPage, page} = this.state;
-        const containerStyle = {
-            height: 500,
-            overflow: 'auto',
-        }
-
-        let filterBtn = null;
-        if (btnDisabled) {
-            filterBtn = <Button variant="raised" disabled onClick={this.applyFilter}
-                                className={classes.button}>{appearance.applyFilter()}</Button>
-        } else {
-            filterBtn = <Button variant="raised" onClick={this.applyFilter}
-                                className={classes.button}>{appearance.applyFilter()}</Button>
-        }
         return (
-            <div>
+            <div className={classes.root}>
+                <RefreshIndicator
+                    size={50}
+                    left={600}
+                    top={400}
+                    loadingColor="#FF9800"
+                    status={(this.state.loading) ? "loading" : "hide"}/>
                 <div>
-                    <Toolbar style={appearance.toolbarStyle()}>
+                    <Toolbar>
                         <ToolbarGroup>
                             <TextField className={classes.textField}
                                        label={appearance.searchApps()} onChange={this.handleSearch}/>
                             <ToolbarSeparator />
-                            <DatePicker placeholderText={appearance.startDate()}
-                                        onChange={this.onStartDateChange}
-                                        selected={moment(this.state.startDate)}/>
+                            <TextField label={appearance.startDate()} type="date"
+                                       defaultValue={moment(this.state.startDate).format(appearance.dateFormat())}
+                                       InputLabelProps={{
+                                           shrink: true,
+                                       }} onChange={this.onStartDateChange}/>
+                            <TextField label={appearance.endDate()} type="date"
+                                       defaultValue={moment(this.state.endDate).format(appearance.dateFormat())}
+                                       InputLabelProps={{
+                                           shrink: true,
+                                       }} onChange={this.onEndDateChange}/>
                             <ToolbarSeparator />
-                            <DatePicker placeholderText={appearance.endDate()}
-                                        onChange={this.onEndDateChange}
-                                        selected={moment(this.state.endDate)}/>
+                            <Button variant="raised" onClick={this.applyFilter}
+                                    className={classes.button}>{appearance.applyFilter()}</Button>
 
-                            <ToolbarSeparator />
-                            {filterBtn}
                         </ToolbarGroup>
                     </Toolbar>
                 </div>
-                <div style={containerStyle}>
-                    <Paper className={classes.paper}>
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow hover>
-                                <TableCell>{appearance.name()}</TableCell>
-                                <TableCell numeric>{appearance.rating()}</TableCell>
-                                <TableCell numeric>{appearance.total()}</TableCell>
-                                <TableCell numeric>{appearance.completed()}</TableCell>
-                                <TableCell numeric>{appearance.failed()}</TableCell>
-                                <TableCell numeric>{appearance.lastCompleted()}</TableCell>
-                                <TableCell numeric>{appearance.lastUsed()}</TableCell>
+                                <TableCell className={classes.head}>{appearance.name()}</TableCell>
+                                <TableCell className={classes.head}
+                                           numeric>{appearance.rating()}</TableCell>
+                                <TableCell className={classes.head}
+                                           numeric>{appearance.total()}</TableCell>
+                                <TableCell className={classes.head}
+                                           numeric>{appearance.completed()}</TableCell>
+                                <TableCell className={classes.head}
+                                           numeric>{appearance.failed()}</TableCell>
+                                <TableCell className={classes.head}
+                                           numeric>{appearance.lastCompleted()}</TableCell>
+                                <TableCell className={classes.head}
+                                           numeric>{appearance.lastUsed()}</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -281,8 +295,8 @@ class AppStats extends Component {
                                             numeric>{(n.job_stats.job_count_completed) ? n.job_stats.job_count_completed : 0}</TableCell>
                                         <TableCell
                                             numeric>{(n.job_stats.job_count_failed) ? n.job_stats.job_count_failed : 0 }</TableCell>
-                                        <TableCell>{(n.job_stats.job_count_completed) ? moment(Number(n.job_stats.job_last_completed, "x")).format("YYYY-MM-DD") : ""} </TableCell>
-                                        <TableCell>{(n.job_stats.last_used) ? moment(Number(n.job_stats.last_used, "x")).format("YYYY-MM-DD") : ""}</TableCell>
+                                        <TableCell>{(n.job_stats.job_last_completed) ? moment(Number(n.job_stats.job_last_completed), "x").format(appearance.dateFormat()) : appearance.emptyValue()} </TableCell>
+                                        <TableCell>{(n.job_stats.last_used) ? moment(Number(n.job_stats.last_used), "x").format(appearance.dateFormat()) : appearance.emptyValue()}</TableCell>
                                     </TableRow>
                                 );
                             })}
@@ -297,17 +311,15 @@ class AppStats extends Component {
                                     onChangePage={this.handleChangePage}
                                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                                     Actions={TablePaginationActionsWrapped}
+                                    rowsPerPageOptions={[100, 500, 1000]}
                                 />
                             </TableRow>
                         </TableFooter>
                     </Table>
-                </Paper>
-                </div>
             </div>
         )
 
     }
-
 }
 AppStats.propTypes = {
     classes: PropTypes.object.isRequired,

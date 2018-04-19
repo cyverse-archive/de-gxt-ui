@@ -5,9 +5,9 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import { getCyVerseTheme } from '../lib';
 
-import CategoryTreeTest from '../stories/apps/details/CategoryTree.stories';
-import ToolDetailsTest from '../stories/apps/details/ToolDetails.stories';
-import CopyTextAreaTest from '../stories/util/CopyTextArea.stories';
+import CategoryTreeTest from '../../stories/apps/details/CategoryTree.stories';
+import ToolDetailsTest from '../../stories/apps/details/ToolDetails.stories';
+import CopyTextAreaTest from '../../stories/util/CopyTextArea.stories';
 import AppStatsTest from '../../stories/apps/admin/AppStats.stories';
 
 it('renders CopyTextArea without crashing', () => {

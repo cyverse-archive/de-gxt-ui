@@ -5,7 +5,6 @@ import org.iplantc.de.client.models.IsMaskable;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.web.bindery.autobean.shared.Splittable;
 
 import jsinterop.annotations.JsIgnore;
 import jsinterop.annotations.JsType;
@@ -47,8 +46,6 @@ public interface AdminAppStatsGridView extends IsWidget, IsMaskable {
 
         String searchApps();
 
-        String emptyDate();
-
         String applyFilter();
 
         String integrator();
@@ -56,15 +53,10 @@ public interface AdminAppStatsGridView extends IsWidget, IsMaskable {
         String system();
 
         String beta();
-        @SuppressWarnings("unusable-by-js")
-        Splittable toolbarStyle();
 
-        @SuppressWarnings("unusable-by-js")
-        Splittable gridStyle();
+        String emptyValue();
 
-        @SuppressWarnings("unusable-by-js")
-        Splittable buttonStyle();
-        
+        String dateFormat();
     }
 
     @JsType

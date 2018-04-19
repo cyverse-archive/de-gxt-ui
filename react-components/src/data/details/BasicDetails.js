@@ -2,7 +2,7 @@
  * @author sriram
  */
 import React, {Component} from "react";
-import {FormattedDate, IntlProvider} from "react-intl";
+import moment from "moment";
 import FlatButton from "material-ui-next/Button";
 import Dialog from "material-ui/Dialog";
 import InfoTypeSelectionList from "./InfoTypeSelectionList";
@@ -163,13 +163,7 @@ class BasicDetails extends Component {
                             {appearance.lastModifiedLabel()}
                         </td>
                         <td className={valueClass}>
-                            <IntlProvider locale="en">
-                                <FormattedDate id={this.props.DETAILS_LAST_MODIFIED}
-                                               value={Number(diskResource['date-modified'])}
-                                               day="numeric"
-                                               month="short"
-                                               year="numeric"/>
-                            </IntlProvider>
+                            {diskResource['date-modified'] ? moment(Number(diskResource['date-modified']), "x").format("YYYY-MM-DD") : "-"}
                         </td>
                     </tr>
                     <tr className={rowClass}>
@@ -177,13 +171,7 @@ class BasicDetails extends Component {
                             {appearance.createdDateLabel()}
                         </td>
                         <td className={valueClass}>
-                            <IntlProvider locale="en">
-                                <FormattedDate id={this.props.DETAILS_DATE_SUBMITTED}
-                                               value={Number(diskResource['date-created'])}
-                                               day="numeric"
-                                               month="short"
-                                               year="numeric"/>
-                            </IntlProvider>
+                            {diskResource['date-modified'] ? moment(Number(diskResource['date-created']), "x").format("YYYY-MM-DD") : "-"}
                         </td>
                     </tr>
                     <tr className={rowClass}>

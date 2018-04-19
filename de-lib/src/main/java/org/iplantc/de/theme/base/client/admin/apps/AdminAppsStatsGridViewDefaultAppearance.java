@@ -4,8 +4,6 @@ import org.iplantc.de.admin.apps.client.AdminAppStatsGridView;
 import org.iplantc.de.theme.base.client.admin.BelphegorDisplayStrings;
 
 import com.google.gwt.core.client.GWT;
-import com.google.web.bindery.autobean.shared.Splittable;
-import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 /**
  * Created by sriram on 10/24/16.
@@ -40,7 +38,7 @@ public class AdminAppsStatsGridViewDefaultAppearance implements AdminAppStatsGri
 
     @Override
     public String lastCompleted() {
-        return bds.lastComplted();
+        return bds.lastCompleted();
     }
 
     @Override
@@ -74,11 +72,6 @@ public class AdminAppsStatsGridViewDefaultAppearance implements AdminAppStatsGri
     }
 
     @Override
-    public String emptyDate() {
-        return bds.emptyDate();
-    }
-
-    @Override
     public String applyFilter() {
         return bds.applyFilter();
     }
@@ -99,20 +92,13 @@ public class AdminAppsStatsGridViewDefaultAppearance implements AdminAppStatsGri
     }
 
     @Override
-    @SuppressWarnings("unusable-by-js")
-    public Splittable toolbarStyle() {
-        return StringQuoter.split("{\"height\": \"30px\",\"backgroundColor\": \"white\"}");
+    public String emptyValue() {
+        return bds.emptyValue();
     }
 
     @Override
-    @SuppressWarnings("unusable-by-js")
-    public Splittable gridStyle() {
-        return StringQuoter.split("{\"height\": \"800px\"}");
+    public String dateFormat() {
+        return bds.dateFormat();
     }
 
-    @Override
-    @SuppressWarnings("unusable-by-js")
-    public Splittable buttonStyle() {
-        return  StringQuoter.split("{\"height\": \"30px\"}");
-    }
 }
