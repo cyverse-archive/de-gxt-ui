@@ -36,3 +36,4 @@ storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
 storiesOf('util', module).add('DEHyperLink', () => <DEHyperLinkTest/>);
 storiesOf('util', module).add('SearchField', () => <SearchFieldTest logger={action('Search')}/>);
 storiesOf('util', module).add('TriggerSearchField', () => <TriggerFieldTest logger={action('Search')}/>);
+
