@@ -34,7 +34,7 @@
                                               toolTip="{appearance.preferences}"
                                               config="{appearance.userPrefsConfig}">
                     <desktopBtn:contextmenu>
-                        <menu:Menu styleName="{appearance.styles.userContextMenu}">
+            <menu:Menu styleName="{appearance.styles.userContextMenu}">
                             <anchors:IPlantAnchor ui:field="preferencesLink"
                                                   text="{appearance.preferences}"/>
                             <anchors:IPlantAnchor ui:field="collaboratorsLink"
