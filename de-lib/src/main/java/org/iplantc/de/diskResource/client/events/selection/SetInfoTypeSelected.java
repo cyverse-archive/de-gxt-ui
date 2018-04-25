@@ -7,9 +7,10 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * Created by jstroot on 2/4/15.
+ * Created by Sriram
  *
- * @author jstroot
+ * @author sriram 
+ *
  */
 public class SetInfoTypeSelected extends GwtEvent<SetInfoTypeSelected.SetInfoTypeSelectedHandler> {
 
@@ -17,8 +18,8 @@ public class SetInfoTypeSelected extends GwtEvent<SetInfoTypeSelected.SetInfoTyp
         void onSetInfoTypeSelected(SetInfoTypeSelected event);
     }
 
-    public static interface HasResetInfoTypeSelectedHandlers {
-        HandlerRegistration addResetInfoTypeSelectedHandler(SetInfoTypeSelectedHandler handler);
+    public static interface HasSetInfoTypeSelectedHandlers {
+        HandlerRegistration addSetInfoTypeSelectedHandler(SetInfoTypeSelectedHandler handler);
     }
 
     public static final Type<SetInfoTypeSelectedHandler> TYPE = new Type<>();

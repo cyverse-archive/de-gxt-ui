@@ -96,7 +96,7 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
             @Override
             public void onFailure(Throwable caught) {
                 // FIXME Move to appearance
-                ErrorHandler.post("Unable to retrieve tags!", caught);
+                ErrorHandler.post(appearance.tagFetchError(), caught);
             }
 
             @Override

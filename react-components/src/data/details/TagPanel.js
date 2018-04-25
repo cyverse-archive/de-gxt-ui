@@ -79,6 +79,8 @@ class TagPanel extends Component {
             value: 'id',
         };
 
+        const tagListStyle = {fontSize: "small", width: "100%"};
+
         let tagItems = this.state.tags ? this.state.tags.map((tag) =>
                 <Tag tag={tag} key={tag.id} removeTag={this.handleRemoveClick}
                      presenter={this.props.presenter} appearance={this.props.appearance}/>
@@ -92,7 +94,7 @@ class TagPanel extends Component {
                         dataSource={this.state.dataSource}
                         onUpdateInput={this.handleTagSearch}
                         dataSourceConfig={dataSourceConfig}
-                        listStyle={this.props.appearance.tagSearchListStyle()}
+                        listStyle={tagListStyle}
                         onNewRequest={this.handleTagSelect}/>
                 </div>
                 <div id="panel" className={this.props.appearance.css().tagPanelStyle()}>

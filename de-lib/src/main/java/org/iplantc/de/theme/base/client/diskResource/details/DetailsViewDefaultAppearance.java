@@ -214,18 +214,6 @@ public class DetailsViewDefaultAppearance implements DetailsView.Appearance {
     }
 
     @Override
-    @SuppressWarnings("unusable-by-js")
-    public Splittable tagSearchListStyle() {
-        return StringQuoter.split("{\"fontSize\": \"small\",\"width\": \"100%\"};");
-    }
-
-    @Override
-    @SuppressWarnings("unusable-by-js")
-    public Splittable infoTypeSelectStyle() {
-        return StringQuoter.split("{\"width\": \"100px\",\"fontSize\": \"small\"};");
-    }
-
-    @Override
     public String okLabel() {
         return displayStrings.okLabel();
     }

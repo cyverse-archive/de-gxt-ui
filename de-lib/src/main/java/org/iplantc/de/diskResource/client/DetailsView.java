@@ -11,7 +11,7 @@ import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked.HasMd
 import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected.HasSendToCogeSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected.HasSendToEnsemblSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected.HasSendToTreeViewerSelectedHandlers;
-import org.iplantc.de.diskResource.client.events.selection.SetInfoTypeSelected.HasResetInfoTypeSelectedHandlers;
+import org.iplantc.de.diskResource.client.events.selection.SetInfoTypeSelected.HasSetInfoTypeSelectedHandlers;
 import org.iplantc.de.diskResource.client.presenters.callbacks.TagAttachCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.TagDetachCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.TagsFetchCallback;
@@ -20,7 +20,6 @@ import org.iplantc.de.diskResource.client.presenters.callbacks.TagsSearchCallbac
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.event.StoreUpdateEvent.StoreUpdateHandler;
 
@@ -40,7 +39,7 @@ public interface DetailsView extends IsWidget,
                                      StoreUpdateHandler<DiskResource>,
                                      HasManageSharingSelectedEventHandlers,
                                      HasEditInfoTypeSelectedEventHandlers,
-                                     HasResetInfoTypeSelectedHandlers,
+                                     HasSetInfoTypeSelectedHandlers,
                                      HasSendToTreeViewerSelectedHandlers,
                                      HasSendToCogeSelectedHandlers,
                                      HasSendToEnsemblSelectedHandlers,
@@ -159,12 +158,6 @@ public interface DetailsView extends IsWidget,
 
         String removeTag();
 
-        @SuppressWarnings("unusable-by-js")
-        Splittable tagSearchListStyle();
-
-        @SuppressWarnings("unusable-by-js")
-        Splittable infoTypeSelectStyle();
-
         String okLabel();
 
         String emptyValue();
@@ -185,6 +178,9 @@ public interface DetailsView extends IsWidget,
 
             @JsIgnore
             String tagDetached(String value, String name);
+
+            @JsIgnore
+            String tagFetchError();
         }
 
         @JsIgnore

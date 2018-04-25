@@ -65,4 +65,8 @@ public interface DetailsViewDisplayStrings extends Messages{
     String okLabel();
 
     String emptyValue();
+
+    String tagFetchError();
+
 }
+

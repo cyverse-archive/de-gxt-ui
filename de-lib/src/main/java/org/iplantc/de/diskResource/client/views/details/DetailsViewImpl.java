@@ -73,7 +73,7 @@ public class DetailsViewImpl extends Composite implements DetailsView {
     }
 
     @Override
-    public HandlerRegistration addResetInfoTypeSelectedHandler(SetInfoTypeSelected.SetInfoTypeSelectedHandler handler) {
+    public HandlerRegistration addSetInfoTypeSelectedHandler(SetInfoTypeSelected.SetInfoTypeSelectedHandler handler) {
         return addHandler(handler, SetInfoTypeSelected.TYPE);
     }
 
