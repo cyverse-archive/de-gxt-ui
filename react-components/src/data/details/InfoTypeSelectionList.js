@@ -26,6 +26,7 @@ class InfoTypeSelectionList extends Component {
     }
 
     render() {
+        const style = {width: "100px", fontSize: "small"};
         const items = [];
         for (let i = 0; i < this.props.infoTypes.length; i++) {
             items.push(<MenuItem value={this.props.infoTypes[i]} key={i}
@@ -37,7 +38,7 @@ class InfoTypeSelectionList extends Component {
                 onChange={this.handleChange}
                 maxHeight={200}
                 hintText={this.props.appearance.selectInfoType()}
-                style={this.props.appearance.infoTypeSelectStyle()}>
+                style={style}>
                 {items}
             </SelectField>
         );

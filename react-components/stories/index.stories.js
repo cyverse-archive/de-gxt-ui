@@ -16,9 +16,9 @@ storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest lo
 storiesOf('apps/details', module).add('ToolDetails', () => <ToolDetailsTest/>);
 storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
 
-storiesOf('AppStats', module).add('with test stats', () => <AppStatsTest/>);
+storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 
-storiesOf('BasicDetails', module).add('with test diskresource details', () => <BasicDetailsTest logger={action('size')}/>);
-storiesOf('InfoTypeSelectionList',module).add('with test diskresource details', () =>  <InfoTypeSelectionListTest />);
-storiesOf('Tag', module).add('with test diskresource details', () => <TagTest logger={action('tag')}/>);
-storiesOf('TagPanel', module).add('witht test diskresource details', () => <TagPanelTest logger={action('tag')}/>);
+storiesOf('data/BasicDetails', module).add('with test diskresource details', () => <BasicDetailsTest logger={action('size')}/>);
+storiesOf('data/InfoTypeSelectionList',module).add('with test diskresource details', () =>  <InfoTypeSelectionListTest />);
+storiesOf('data/Tag', module).add('with test diskresource details', () => <TagTest logger={action('tag')}/>);
+storiesOf('data/TagPanel', module).add('witht test diskresource details', () => <TagPanelTest logger={action('tag')}/>);

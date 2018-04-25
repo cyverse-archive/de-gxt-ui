@@ -273,7 +273,7 @@ public class DiskResourcePresenterImpl implements
         // Detail Presenter
         this.detailsViewPresenter.getView().addManageSharingSelectedEventHandler(this.gridViewPresenter);
         this.detailsViewPresenter.getView().addEditInfoTypeSelectedEventHandler(this.gridViewPresenter);
-        this.detailsViewPresenter.getView().addResetInfoTypeSelectedHandler(this.gridViewPresenter);
+        this.detailsViewPresenter.getView().addSetInfoTypeSelectedHandler(this.gridViewPresenter);
         this.detailsViewPresenter.getView().addMd5ValueClickedHandler(this.gridViewPresenter);
         this.detailsViewPresenter.addSubmitDiskResourceQueryEventHandler(this.gridViewPresenter.getView());
         this.detailsViewPresenter.addSubmitDiskResourceQueryEventHandler(this.gridViewPresenter);
