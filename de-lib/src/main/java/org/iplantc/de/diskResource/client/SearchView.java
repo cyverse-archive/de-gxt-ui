@@ -148,11 +148,15 @@ public interface SearchView extends IsWidget,
                                 HasUpdateSavedSearchesEventHandlers,
                                 FetchTagSuggestions.FetchTagSuggestionsHandler {
 
-        void setView(SearchView view);
+        SearchView getSearchForm();
+
+        void edit(DiskResourceQueryTemplate template);
+
+        void show(XElement parent, Style.AnchorAlignment anchorAlignment);
     }
 
     @JsIgnore
-    void show(Element parent, Style.AnchorAlignment anchorAlignment);
+    void show(Element parent, Style.AnchorAlignment anchorAlignment, ReactSearchForm.SearchFormProps props);
 
     @JsIgnore
     void clearSearch();
@@ -167,8 +171,6 @@ public interface SearchView extends IsWidget,
 
     @JsIgnore
     void fireEvent(GwtEvent<?> event);
-
-    void edit(DiskResourceQueryTemplate template);
 
     void onSearchBtnClicked(Splittable query);
 

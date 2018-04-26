@@ -6,12 +6,11 @@ import org.iplantc.de.commons.client.events.SubmitTextSearchEvent;
 import org.iplantc.de.commons.client.events.SubmitTextSearchEvent.SubmitTextSearchEventHandler;
 import org.iplantc.de.commons.client.widgets.search.SearchFieldDecorator;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
-import org.iplantc.de.diskResource.client.events.search.FetchTagSuggestions;
 import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent;
 import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
-import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.SubmitDiskResourceQueryEventHandler;
+import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent;
 import org.iplantc.de.diskResource.client.views.search.cells.DiskResourceSearchCell;
 
 import com.google.gwt.core.client.GWT;
@@ -40,13 +39,12 @@ import java.text.ParseException;
  */
 public class DiskResourceSearchField extends TriggerField<String> implements HasExpandHandlers,
                                                                              HasCollapseHandlers,
-                                                                             SaveDiskResourceQueryClickedEvent.HasSaveDiskResourceQueryClickedEventHandlers,
                                                                              FolderSelectionEvent.FolderSelectionEventHandler,
-                                                                             HasSubmitDiskResourceQueryEventHandlers,
+                                                                             SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers,
                                                                              SubmitDiskResourceQueryEventHandler,
                                                                              SubmitTextSearchEventHandler,
                                                                              SavedSearchDeletedEvent.SavedSearchDeletedEventHandler,
-                                                                             FetchTagSuggestions.HasFetchTagSuggestionsHandlers {
+                                                                             UpdateSavedSearchesEvent.HasUpdateSavedSearchesEventHandlers {
 
     public final class QueryStringPropertyEditor extends PropertyEditor<String> {
         private final SearchAutoBeanFactory factory = GWT.create(SearchAutoBeanFactory.class);
@@ -61,7 +59,7 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
             DiskResourceQueryTemplate qt = factory.dataSearchFilter().as();
             qt.setFileQuery(text.toString());
             Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(qt));
-            getCell().getSearchForm().fireEvent(new SubmitDiskResourceQueryEvent(encode));
+            getCell().getSearchPresenter().onSearchBtnClicked(encode);
             return text.toString();
         }
 
@@ -79,7 +77,7 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
         super(searchCell);
 
         setPropertyEditor(new QueryStringPropertyEditor());
-        getCell().addSubmitDiskResourceQueryEventHandler(this);
+        getCell().getSearchForm().addSubmitDiskResourceQueryEventHandler(this);
 
         // Add search field decorator to enable "auto-search"
         new SearchFieldDecorator<TriggerField<String>>(this).addSubmitTextSearchEventHandler(this);
@@ -96,13 +94,8 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
     }
 
     @Override
-    public HandlerRegistration addSaveDiskResourceQueryClickedEventHandler(SaveDiskResourceQueryClickedEvent.SaveDiskResourceQueryClickedEventHandler handler) {
-        return getCell().addSaveDiskResourceQueryClickedEventHandler(handler);
-    }
-
-    @Override
     public HandlerRegistration addSubmitDiskResourceQueryEventHandler(SubmitDiskResourceQueryEventHandler handler) {
-        return getCell().addSubmitDiskResourceQueryEventHandler(handler);
+        return getCell().getSearchForm().addSubmitDiskResourceQueryEventHandler(handler);
     }
 
     @Override
@@ -130,7 +123,7 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
 
     public void edit(DiskResourceQueryTemplate queryTemplate) {
         // Forward edit call to searchForm
-        getCell().getSearchForm().edit(queryTemplate);
+        getCell().edit(queryTemplate);
         clear();
     }
 
@@ -164,7 +157,7 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
     }
 
     @Override
-    public HandlerRegistration addFetchTagSuggestionsHandler(FetchTagSuggestions.FetchTagSuggestionsHandler handler) {
-        return getCell().getSearchForm().addFetchTagSuggestionsHandler(handler);
+    public HandlerRegistration addUpdateSavedSearchesEventHandler(UpdateSavedSearchesEvent.UpdateSavedSearchesHandler handler) {
+        return getCell().addUpdateSavedSearchesEventHandler(handler);
     }
 }

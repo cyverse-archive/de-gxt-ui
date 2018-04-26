@@ -280,7 +280,6 @@ class SearchForm extends Component {
                                 <tr>
                                     <td style={{'width': '100%'}}>
                                         <TextField floatingLabelText={appearance.fileSizeGreater()}
-                                                   floatingLabelFixed={true}
                                                    floatingLabelShrinkStyle={{width: '150%'}}
                                                    fullWidth={true}
                                                    value={this.state.fileSizeGreater}
@@ -302,7 +301,6 @@ class SearchForm extends Component {
                                 <tr>
                                     <td style={{'width': '100%'}}>
                                         <TextField floatingLabelText={appearance.fileSizeLessThan()}
-                                                   floatingLabelFixed={true}
                                                    floatingLabelShrinkStyle={{width: '150%'}}
                                                    fullWidth={true}
                                                    value={this.state.fileSizeLessThan}
@@ -410,6 +408,7 @@ function DateIntervalDropDown(props) {
 
     return (
         <SelectField floatingLabelText={label}
+                     floatingLabelFixed={true}
                      fullWidth={true}
                      value={value}
                      onChange={onChange}>

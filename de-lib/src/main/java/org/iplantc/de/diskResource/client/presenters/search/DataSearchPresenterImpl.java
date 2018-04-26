@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.client.models.tags.Tag;
 import org.iplantc.de.client.services.SearchServiceFacade;
+import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -16,6 +17,7 @@ import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryCli
 import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent;
 import org.iplantc.de.diskResource.client.views.search.ReactSearchForm;
+import org.iplantc.de.diskResource.client.views.search.SearchViewImpl;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 import org.iplantc.de.tags.client.TagsView;
 import org.iplantc.de.tags.client.proxy.TagSuggestionLoadConfig;
@@ -38,6 +40,8 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
+import com.sencha.gxt.core.client.Style;
+import com.sencha.gxt.core.client.dom.XElement;
 import com.sencha.gxt.data.shared.loader.ListLoadResult;
 
 import java.util.Arrays;
@@ -59,6 +63,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     private TagsView.TagSuggestionProxy proxy;
     private DateIntervalProvider dateIntervalProvider;
     private SearchAutoBeanFactory factory;
+    private SearchModelUtils searchModelUtils;
     private final SearchServiceFacade searchService;
     private HandlerManager handlerManager;
     private final Logger LOG = Logger.getLogger(DataSearchPresenterImpl.class.getName());
@@ -68,15 +73,22 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     DataSearchPresenterImpl(final SearchServiceFacade searchService,
                             final IplantAnnouncer announcer,
                             SearchView.SearchViewAppearance appearance,
+                            SearchView view,
                             TagsView.TagSuggestionProxy proxy,
                             DateIntervalProvider dateIntervalProvider,
-                            SearchAutoBeanFactory factory) {
+                            SearchAutoBeanFactory factory,
+                            SearchModelUtils searchModelUtils) {
         this.searchService = searchService;
         this.announcer = announcer;
         this.appearance = appearance;
+        this.view = view;
         this.proxy = proxy;
         this.dateIntervalProvider = dateIntervalProvider;
         this.factory = factory;
+        this.searchModelUtils = searchModelUtils;
+
+        view.addFetchTagSuggestionsHandler(this);
+        view.addSaveDiskResourceQueryClickedEventHandler(this);
     }
 
     @Override
@@ -314,7 +326,32 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     }
 
     @Override
-    public void setView(SearchView view) {
-        this.view = view;
+    public SearchView getSearchForm() {
+        return view;
+    }
+
+    @Override
+    public void edit(DiskResourceQueryTemplate template) {
+        ReactSearchForm.SearchFormProps props = getDefaultProps();
+        props.template = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(template));
+
+        view.renderSearchForm(props);
+    }
+
+    @Override
+    public void show(XElement parent, Style.AnchorAlignment anchorAlignment) {
+        view.show(parent, anchorAlignment, getDefaultProps());
+    }
+
+    ReactSearchForm.SearchFormProps getDefaultProps() {
+        ReactSearchForm.SearchFormProps props = new ReactSearchForm.SearchFormProps();
+        props.presenter = view;
+        props.appearance = appearance;
+        props.id = DiskResourceModule.Ids.SEARCH_FORM;
+        props.dateIntervals = dateIntervalProvider.get();
+        props.suggestedTags = StringQuoter.createIndexed();
+        props.template = searchModelUtils.createDefaultFilter();
+
+        return props;
     }
 }

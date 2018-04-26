@@ -131,9 +131,6 @@ public interface DiskResourceQueryTemplate extends Folder {
     String getFileSizeLessThanUnit();
     void setFileSizeLessThanUnit(String unit);
 
-    String getTaggedWith();
-    void setTaggedWith(String tag);
-
     String getPathPrefix();
     void setPathPrefix(String pathPrefix);
 
