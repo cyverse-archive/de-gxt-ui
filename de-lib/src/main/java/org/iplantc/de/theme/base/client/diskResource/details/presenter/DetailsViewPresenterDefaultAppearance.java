@@ -38,4 +38,9 @@ public class DetailsViewPresenterDefaultAppearance implements DetailsView.Presen
     public String tagDetached(String value, String name) {
         return displayStrings.tagDetached(value, name);
     }
+
+    @Override
+    public String tagFetchError() {
+        return displayStrings.tagFetchError();
+    }
 }

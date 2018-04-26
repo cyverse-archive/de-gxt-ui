@@ -8,6 +8,8 @@ import org.iplantc.de.theme.base.client.diskResource.DiskResourceMessages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.web.bindery.autobean.shared.Splittable;
+import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 /**
  * @author jstroot
@@ -23,7 +25,7 @@ public class DetailsViewDefaultAppearance implements DetailsView.Appearance {
     private final DetailsViewDisplayStrings displayStrings;
     private final DiskResourceMessages diskResourceMessages;
     private final IplantResources iplantResources;
-    private final DetailsViewStyle style;
+    private final Resources resources;
 
     public DetailsViewDefaultAppearance() {
         this(GWT.<IplantDisplayStrings> create(IplantDisplayStrings.class),
@@ -41,9 +43,9 @@ public class DetailsViewDefaultAppearance implements DetailsView.Appearance {
         this.displayStrings = displayStrings;
         this.diskResourceMessages = diskResourceMessages;
         this.iplantResources = iplantResources;
-        this.style = resources.css();
+        this.resources = resources;
 
-        this.style.ensureInjected();
+        this.resources.css().ensureInjected();
     }
 
     @Override
@@ -133,7 +135,7 @@ public class DetailsViewDefaultAppearance implements DetailsView.Appearance {
 
     @Override
     public DetailsViewStyle css() {
-        return style;
+        return resources.css();
     }
 
     @Override
@@ -199,6 +201,26 @@ public class DetailsViewDefaultAppearance implements DetailsView.Appearance {
     @Override
     public String loadingMask() {
         return iplantDisplayStrings.loadingMask();
+    }
+
+    @Override
+    public String searchTags() {
+        return displayStrings.searchTags();
+    }
+
+    @Override
+    public String removeTag() {
+        return displayStrings.removeTag();
+    }
+
+    @Override
+    public String okLabel() {
+        return displayStrings.okLabel();
+    }
+
+    @Override
+    public String emptyValue() {
+        return displayStrings.emptyValue();
     }
 
     @Override

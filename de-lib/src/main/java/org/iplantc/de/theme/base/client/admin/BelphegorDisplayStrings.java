@@ -107,7 +107,7 @@ public interface BelphegorDisplayStrings extends Messages {
 
     String failed();
 
-    String lastComplted();
+    String lastCompleted();
 
     String lastUsed();
 
@@ -118,4 +118,25 @@ public interface BelphegorDisplayStrings extends Messages {
     String appDeleted();
 
     String appDelete();
+
+    String startDate();
+
+    String endDate();
+
+    String searchApps();
+
+    String emptyValue();
+
+    String applyFilter();
+
+
+    String integrator();
+
+    String system();
+
+    String beta();
+
+    String dateFormat();
+
 }
+

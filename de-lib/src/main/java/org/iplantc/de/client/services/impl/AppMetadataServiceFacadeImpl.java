@@ -75,19 +75,19 @@ public class AppMetadataServiceFacadeImpl implements AppMetadataServiceFacade {
     }
 
     @Override
-    public void attachTags(List<Tag> tags, HasId hasId, AsyncCallback<Void> callback) {
+    public void attachTags(List<String> tags, String appId, AsyncCallback<Void> callback) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void detachTags(List<Tag> tags, HasId hasId, AsyncCallback<Void> callback) {
+    public void detachTags(List<String> tags, String appId, AsyncCallback<Void> callback) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void getTags(HasId hasId, AsyncCallback<List<Tag>> callback) {
+    public void getTags(String id, AsyncCallback<List<Tag>> callback) {
         // TODO Auto-generated method stub
 
     }

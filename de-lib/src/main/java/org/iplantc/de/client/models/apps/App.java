@@ -2,7 +2,6 @@ package org.iplantc.de.client.models.apps;
 
 import org.iplantc.de.client.models.HasDescription;
 import org.iplantc.de.client.models.HasQualifiedId;
-import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
 import org.iplantc.de.client.models.tool.Tool;
 
@@ -138,9 +137,9 @@ public interface App extends HasQualifiedId,
     @PropertyName(WIKI_URL_KEY)
     void setWikiUrl(String wikiUrl);
 
-    void setPermission(PermissionValue value);
+    void setPermission(String value);
 
-    PermissionValue getPermission();
+    String getPermission();
 
     Boolean isBeta();
 

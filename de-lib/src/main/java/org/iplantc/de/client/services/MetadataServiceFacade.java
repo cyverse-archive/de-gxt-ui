@@ -3,7 +3,6 @@
  */
 package org.iplantc.de.client.services;
 
-import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.tags.Tag;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -26,10 +25,10 @@ public interface MetadataServiceFacade {
 
     public void markAsRetracted(String UUID, String commentId, boolean retracted, AsyncCallback<String> callback);
 
-    public void attachTags(List<Tag> tags, HasId hasId, AsyncCallback<Void> callback);
+    public void attachTags(List<String> tags, String id, AsyncCallback<Void> callback);
 
-    public void detachTags(List<Tag> tags, HasId hasId, AsyncCallback<Void> callback);
+    public void detachTags(List<String> tags, String id, AsyncCallback<Void> callback);
     
-    public void getTags(HasId hasId, AsyncCallback<List<Tag>> callback);
+    public void getTags(String id, AsyncCallback<List<Tag>> callback);
  
 }

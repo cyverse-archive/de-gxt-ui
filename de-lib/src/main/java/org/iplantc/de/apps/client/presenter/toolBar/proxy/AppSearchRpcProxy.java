@@ -64,7 +64,7 @@ public class AppSearchRpcProxy extends RpcProxy<FilterPagingLoadConfig, PagingLo
         }
 
         // Call the searchApp service with this proxy's query.
-        appService.searchApp(lastQueryText, new AppsCallback<AppListLoadResult>() {
+        appService.searchApp(lastQueryText,null,null, new AppsCallback<AppListLoadResult>() {
             @Override
             public void onSuccess(final AppListLoadResult loadResult) {
                 List<App> apps = loadResult.getData();

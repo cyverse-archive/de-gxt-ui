@@ -10,7 +10,11 @@ import com.google.gwt.core.client.GWT;
  */
 public class AdminAppsStatsGridViewDefaultAppearance implements AdminAppStatsGridView.Appearance {
 
-    BelphegorDisplayStrings bds = GWT.create(BelphegorDisplayStrings.class);
+    BelphegorDisplayStrings bds;
+
+    public AdminAppsStatsGridViewDefaultAppearance() {
+        bds = GWT.create(BelphegorDisplayStrings.class);
+    }
 
     @Override
     public String name() {
@@ -34,7 +38,7 @@ public class AdminAppsStatsGridViewDefaultAppearance implements AdminAppStatsGri
 
     @Override
     public String lastCompleted() {
-        return bds.lastComplted();
+        return bds.lastCompleted();
     }
 
     @Override
@@ -51,4 +55,50 @@ public class AdminAppsStatsGridViewDefaultAppearance implements AdminAppStatsGri
     public String loading() {
         return bds.loading();
     }
+
+    @Override
+    public String startDate() {
+        return bds.startDate();
+    }
+
+    @Override
+    public String endDate() {
+        return bds.endDate();
+    }
+
+    @Override
+    public String searchApps() {
+        return bds.searchApps();
+    }
+
+    @Override
+    public String applyFilter() {
+        return bds.applyFilter();
+    }
+
+    @Override
+    public String integrator() {
+        return bds.integrator();
+    }
+
+    @Override
+    public String system() {
+        return bds.system();
+    }
+
+    @Override
+    public String beta() {
+        return bds.beta();
+    }
+
+    @Override
+    public String emptyValue() {
+        return bds.emptyValue();
+    }
+
+    @Override
+    public String dateFormat() {
+        return bds.dateFormat();
+    }
+
 }

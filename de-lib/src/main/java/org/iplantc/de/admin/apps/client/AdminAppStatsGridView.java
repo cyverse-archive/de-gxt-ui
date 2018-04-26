@@ -1,24 +1,29 @@
 package org.iplantc.de.admin.apps.client;
 
+import org.iplantc.de.admin.apps.client.presenter.callbacks.AppStatsSearchCallback;
 import org.iplantc.de.client.models.IsMaskable;
-import org.iplantc.de.client.models.apps.App;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
-import java.util.List;
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
 
 /**
  * Created by sriram on 10/21/16.
  */
+
+@JsType
 public interface AdminAppStatsGridView extends IsWidget, IsMaskable {
 
+    @JsIgnore
+    void load(Presenter p);
 
-    void clear();
 
-    void addAll(List<App> apps);
 
+    @JsType
     interface  Appearance {
+
         String name();
 
         String total();
@@ -34,12 +39,38 @@ public interface AdminAppStatsGridView extends IsWidget, IsMaskable {
         String rating();
 
         String loading();
+
+        String startDate();
+
+        String endDate();
+
+        String searchApps();
+
+        String applyFilter();
+
+        String integrator();
+
+        String system();
+
+        String beta();
+
+        String emptyValue();
+
+        String dateFormat();
     }
 
+    @JsType
     interface Presenter {
-     public   void go(HasOneWidget container);
+        @JsIgnore
+        void go(HasOneWidget container);
 
-     public void setViewDebugId(String baseId);
+        @JsIgnore
+        void setViewDebugId(String baseId);
+
+        void searchApps(String searchString,
+                        String startDate,
+                        String endDate,
+                        AppStatsSearchCallback callback);
     }
 
 }

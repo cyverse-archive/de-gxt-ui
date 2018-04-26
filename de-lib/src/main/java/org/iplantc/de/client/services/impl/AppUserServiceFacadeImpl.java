@@ -338,10 +338,20 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void searchApp(String term, DECallback<AppListLoadResult> callback) {
-        StringBuilder address = new StringBuilder(APPS);
-        address.append( "?search=" + URL.encodeQueryString(term));
-
+    public void searchApp(String term,
+                          String startDate,
+                          String endDate,
+                          DECallback<AppListLoadResult> callback) {
+        StringBuilder address = new StringBuilder(APPS + "?");
+        if(!Strings.isNullOrEmpty(term)) {
+            address.append("search=" + URL.encodeQueryString(term));
+        }
+        if (!Strings.isNullOrEmpty(startDate)) {
+            address.append("&start_date=" + startDate);
+        }
+        if(!Strings.isNullOrEmpty(endDate)) {
+            address.append("&end_date=" + endDate);
+        }
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address.toString());
         deServiceFacade.getServiceData(wrapper,  new DECallbackConverter<String, AppListLoadResult>(callback) {
             @Override

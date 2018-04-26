@@ -10,7 +10,9 @@ public interface AppSearchFacade {
     /**
      * Searches for all active Apps with a name or description that contains the given search term.
      * @param term  search term
+     * @param startDate stat start date
+     * @param endDate  stat end date
      * @param callback  callback object to call when search is complete
      */
-    void searchApp(String term, DECallback<AppListLoadResult> callback);
+    void searchApp(String term, String startDate, String endDate, DECallback<AppListLoadResult> callback);
 }
