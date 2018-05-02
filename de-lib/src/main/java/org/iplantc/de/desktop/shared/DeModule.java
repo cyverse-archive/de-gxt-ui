@@ -1,5 +1,7 @@
 package org.iplantc.de.desktop.shared;
 
+import jsinterop.annotations.JsType;
+
 /**
  * top level items don't need '.' prefix. so we can have gwt-debug-analysesWindow instead of
  * gwt-debug-.analysesWindow
@@ -8,7 +10,9 @@ package org.iplantc.de.desktop.shared;
  * @author jstroot
  * 
  */
+@JsType
 public interface DeModule {
+    @JsType
     interface Ids {
         String DESKTOP = "desktop";
         /**

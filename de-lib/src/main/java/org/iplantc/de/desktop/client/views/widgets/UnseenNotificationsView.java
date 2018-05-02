@@ -1,14 +1,5 @@
 package org.iplantc.de.desktop.client.views.widgets;
 
-import static com.sencha.gxt.core.client.Style.SelectionMode.SINGLE;
-import static com.sencha.gxt.data.shared.SortDir.DESC;
-
-import org.iplantc.de.client.models.notifications.NotificationMessage;
-import org.iplantc.de.commons.client.widgets.IPlantAnchor;
-import org.iplantc.de.desktop.client.DesktopView;
-import org.iplantc.de.notifications.client.model.NotificationMessageProperties;
-import org.iplantc.de.notifications.shared.Notifications;
-
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -21,7 +12,6 @@ import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.HTML;
-
 import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
@@ -34,6 +24,14 @@ import com.sencha.gxt.widget.core.client.ListView;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
+import org.iplantc.de.client.models.notifications.NotificationMessage;
+import org.iplantc.de.commons.client.widgets.IPlantAnchor;
+import org.iplantc.de.desktop.client.DesktopView;
+import org.iplantc.de.notifications.client.model.NotificationMessageProperties;
+import org.iplantc.de.notifications.shared.Notifications;
+
+import static com.sencha.gxt.core.client.Style.SelectionMode.SINGLE;
+import static com.sencha.gxt.data.shared.SortDir.DESC;
 
 /**
  * Presenter will have to listen for deletes and update the store
@@ -196,7 +194,7 @@ public class UnseenNotificationsView extends Composite implements StoreClearEven
 
     @UiHandler("retryButton")
     void onRetryButtonClicked(SelectEvent event) {
-        presenter.getNotifications();
+        //presenter.getNotifications();
     }
 
     @Override

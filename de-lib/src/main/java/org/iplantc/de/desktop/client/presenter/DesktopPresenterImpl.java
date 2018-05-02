@@ -1,69 +1,9 @@
 package org.iplantc.de.desktop.client.presenter;
 
-import org.iplantc.de.client.DEClientConstants;
-import org.iplantc.de.client.events.EventBus;
-import org.iplantc.de.client.models.HasPath;
-import org.iplantc.de.client.models.HasUUIDs;
-import org.iplantc.de.client.models.IsHideable;
-import org.iplantc.de.client.models.QualifiedId;
-import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.UserSettings;
-import org.iplantc.de.client.models.WindowState;
-import org.iplantc.de.client.models.WindowType;
-import org.iplantc.de.client.models.analysis.AnalysesAutoBeanFactory;
-import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
-import org.iplantc.de.client.models.diskResources.File;
-import org.iplantc.de.client.models.notifications.Notification;
-import org.iplantc.de.client.models.notifications.NotificationAutoBeanFactory;
-import org.iplantc.de.client.models.notifications.NotificationCategory;
-import org.iplantc.de.client.models.notifications.NotificationMessage;
-import org.iplantc.de.client.models.notifications.payload.PayloadAnalysis;
-import org.iplantc.de.client.services.DEUserSupportServiceFacade;
-import org.iplantc.de.client.services.FileEditorServiceFacade;
-import org.iplantc.de.client.services.MessageServiceFacade;
-import org.iplantc.de.client.services.UserSessionServiceFacade;
-import org.iplantc.de.client.util.CommonModelUtils;
-import org.iplantc.de.client.util.DiskResourceUtil;
-import org.iplantc.de.client.util.JsonUtil;
-import org.iplantc.de.client.util.WebStorageUtil;
-import org.iplantc.de.commons.client.CommonUiConstants;
-import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
-import org.iplantc.de.commons.client.info.IplantAnnouncer;
-import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
-import org.iplantc.de.commons.client.util.WindowUtil;
-import org.iplantc.de.commons.client.views.dialogs.IplantErrorDialog;
-import org.iplantc.de.commons.client.views.window.configs.AppWizardConfig;
-import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
-import org.iplantc.de.commons.client.views.window.configs.ConfigAutoBeanFactory;
-import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
-import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConfig;
-import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
-import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
-import org.iplantc.de.desktop.client.DesktopView;
-import org.iplantc.de.desktop.client.presenter.util.MessagePoller;
-import org.iplantc.de.desktop.client.presenter.util.NotificationWebSocketManager;
-import org.iplantc.de.desktop.client.presenter.util.WindowStateStorageWrapper;
-import org.iplantc.de.desktop.client.views.widgets.PreferencesDialog;
-import org.iplantc.de.desktop.client.views.windows.WindowInterface;
-import org.iplantc.de.desktop.shared.DeModule;
-import org.iplantc.de.fileViewers.client.callbacks.LoadGenomeInCoGeCallback;
-import org.iplantc.de.intercom.client.IntercomFacade;
-import org.iplantc.de.notifications.client.utils.NotificationUtil;
-import org.iplantc.de.notifications.client.utils.NotifyInfo;
-import org.iplantc.de.shared.AppsCallback;
-import org.iplantc.de.shared.AsyncProviderWrapper;
-import org.iplantc.de.shared.DEProperties;
-import org.iplantc.de.shared.NotificationCallback;
-import org.iplantc.de.shared.events.ServiceDown;
-import org.iplantc.de.shared.events.ServiceRestored;
-import org.iplantc.de.shared.services.PropertyServiceAsync;
-
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.debug.client.DebugInfo;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.URL;
@@ -82,16 +22,53 @@ import com.google.inject.Provider;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
-import com.google.web.bindery.autobean.shared.impl.StringQuoter;
-
 import com.sencha.gxt.core.client.util.KeyNav;
-import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.WindowManager;
 import com.sencha.gxt.widget.core.client.box.AutoProgressMessageBox;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
-
 import com.sksamuel.gwt.websockets.WebsocketListener;
+import org.iplantc.de.client.DEClientConstants;
+import org.iplantc.de.client.events.EventBus;
+import org.iplantc.de.client.models.*;
+import org.iplantc.de.client.models.analysis.AnalysesAutoBeanFactory;
+import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
+import org.iplantc.de.client.models.diskResources.File;
+import org.iplantc.de.client.models.notifications.*;
+import org.iplantc.de.client.models.notifications.payload.PayloadAnalysis;
+import org.iplantc.de.client.services.DEUserSupportServiceFacade;
+import org.iplantc.de.client.services.FileEditorServiceFacade;
+import org.iplantc.de.client.services.MessageServiceFacade;
+import org.iplantc.de.client.services.UserSessionServiceFacade;
+import org.iplantc.de.client.util.CommonModelUtils;
+import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.client.util.JsonUtil;
+import org.iplantc.de.client.util.WebStorageUtil;
+import org.iplantc.de.commons.client.CommonUiConstants;
+import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
+import org.iplantc.de.commons.client.util.WindowUtil;
+import org.iplantc.de.commons.client.views.dialogs.IplantErrorDialog;
+import org.iplantc.de.commons.client.views.window.configs.*;
+import org.iplantc.de.desktop.client.DesktopView;
+import org.iplantc.de.desktop.client.presenter.util.MessagePoller;
+import org.iplantc.de.desktop.client.presenter.util.NotificationWebSocketManager;
+import org.iplantc.de.desktop.client.presenter.util.WindowStateStorageWrapper;
+import org.iplantc.de.desktop.client.views.widgets.PreferencesDialog;
+import org.iplantc.de.desktop.client.views.windows.WindowInterface;
+import org.iplantc.de.fileViewers.client.callbacks.LoadGenomeInCoGeCallback;
+import org.iplantc.de.intercom.client.IntercomFacade;
+import org.iplantc.de.notifications.client.utils.NotificationUtil;
+import org.iplantc.de.notifications.client.utils.NotifyInfo;
+import org.iplantc.de.shared.AppsCallback;
+import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.DEProperties;
+import org.iplantc.de.shared.NotificationCallback;
+import org.iplantc.de.shared.events.ServiceDown;
+import org.iplantc.de.shared.events.ServiceRestored;
+import org.iplantc.de.shared.services.PropertyServiceAsync;
 
 import java.util.Collections;
 import java.util.List;
@@ -180,9 +157,6 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         this.view.setPresenter(this);
         globalEventHandler.setPresenter(this, this.view);
         windowEventHandler.setPresenter(this, desktopWindowManager);
-        if (DebugInfo.isDebugIdEnabled()) {
-            this.view.ensureDebugId(DeModule.Ids.DESKTOP);
-        }
 
         initNotificationWebSocket();
     }
@@ -226,19 +200,19 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
             return;
         }
         Number num = JsonUtil.getInstance().getNumber(obj, "total");
-        view.setUnseenNotificationCount(num.intValue());
+//        view.setUnseenNotificationCount(num.intValue());
         GWT.log("count -->" + num.intValue());
         JSONObject notifi = JsonUtil.getInstance().getObject(obj, "message");
         GWT.log("notifi-->" + notifi.toString());
         Notification n =
                 AutoBeanCodex.decode(notificationFactory, Notification.class, notifi.toString()).as();
         if (n != null) {
-            loadMessageInView(n);
+    //        loadMessageInView(n);
         }
 
     }
 
-    private void loadMessageInView(Notification n) {
+  /*  private void loadMessageInView(Notification n) {
         NotificationMessage newMessage = notificationUtil.getMessage(n, notificationFactory);
         ListStore<NotificationMessage> nmStore = view.getNotificationStore();
         final NotificationMessage modelWithKey =
@@ -248,7 +222,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
             displayNotificationPopup(newMessage);
         }
     }
-
+*/
 
     void displayNotificationPopup(NotificationMessage nm) {
         if (NotificationCategory.ANALYSIS.equals(nm.getCategory()) && nm.getContext() != null) {
@@ -316,14 +290,14 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
 
            @Override
            public void onSuccess(Void result) {
-               for(NotificationMessage nm : view.getNotificationStore().getAll()){
+             /*  for(NotificationMessage nm : view.getNotificationStore().getAll()){
                    nm.setSeen(true);
                    view.getNotificationStore().update(nm);
                }
                view.setUnseenNotificationCount(0);
                if(!announce){
                    return;
-               }
+               }*/
                announcer.schedule(new SuccessAnnouncementConfig(appearance.markAllAsSeenSuccess(), true, 3000));
            }
        });
@@ -332,13 +306,11 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     @Override
     public void doSeeAllNotifications() {
         show(ConfigFactory.notifyWindowConfig(NotificationCategory.ALL), true);
-        view.hideNotificationMenu();
     }
 
     @Override
     public void doSeeNewNotifications() {
         show(ConfigFactory.notifyWindowConfig(NotificationCategory.NEW), true);
-        view.hideNotificationMenu();
     }
 
     public void doViewGenomes(final File file) {
@@ -472,9 +444,12 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
      * FIXME REFACTOR JDS Create notifications module and move this implementation there
      */
     @Override
-    public void onNotificationSelected(final NotificationMessage selectedItem) {
-        notificationUtil.onNotificationClick(selectedItem);
-        markAsSeen(selectedItem);
+    public void onNotificationSelected(Splittable notification) {
+        GWT.log(notification.getPayload());
+        Notification n = AutoBeanCodex.decode(notificationFactory, Notification.class, notification).as();
+        NotificationMessage nm = notificationUtil.getMessage(n, notificationFactory);
+        notificationUtil.onNotificationClick(nm);
+        //markAsSeen(selectedItem);
     }
 
     public void markAsSeen(final NotificationMessage selectedItem) {
@@ -487,20 +462,20 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
             @Override
             public void onSuccess(String result) {
                 selectedItem.setSeen(true);
-                ListStore<NotificationMessage> notificationStore = view.getNotificationStore();
+/*                ListStore<NotificationMessage> notificationStore = view.getNotificationStore();
                 if(notificationStore.findModel(selectedItem)!=null) {
                     notificationStore.update(selectedItem);
                 }
                 final String asString = StringQuoter.split(result).get("count").asString();
                 final int count = Integer.parseInt(asString);
-                view.setUnseenNotificationCount(count);
+                view.setUnseenNotificationCount(count);*/
             }
         });
     }
 
     @Override
     public void onJoinTeamRequestProcessed(NotificationMessage message) {
-        view.getNotificationStore().remove(message);
+    //    view.getNotificationStore().remove(message);
         //If the notifications window is open, the NotificationPresenter will handle this
         if (!desktopWindowManager.isOpen(WindowType.NOTIFICATIONS)) {
             HasUUIDs hasUUIDs = notificationFactory.getHasUUIDs().as();
@@ -626,13 +601,12 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         initKBShortCuts();
         panel.add(view);
         processQueryStrings();
-        getNotifications();
         doPeriodicWindowStateSave();
     }
 
     @Override
-    public void getNotifications() {
-        messageServiceFacade.getRecentMessages(new InitializationCallbacks.GetInitialNotificationsCallback(view, appearance, announcer));
+    public void getNotifications(NotificationsCallback callback) {
+        messageServiceFacade.getRecentMessages(new InitializationCallbacks.GetInitialNotificationsCallback(view, appearance, announcer, callback));
     }
 
     @Override

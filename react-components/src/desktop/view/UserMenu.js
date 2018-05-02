@@ -4,10 +4,11 @@
 import React, {Component} from "react";
 import Menu, {MenuItem} from "material-ui-next/Menu";
 import {FormattedMessage, IntlProvider} from "react-intl";
-import Divider from 'material-ui-next/Divider';
+import Divider from "material-ui-next/Divider";
 import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
-import styles from '../style';
-import {css} from 'aphrodite';
+import styles from "../style";
+import {css} from "aphrodite";
+import ids from "../ids";
 
 class UserMenu extends Component {
     constructor(props) {
@@ -29,18 +30,35 @@ class UserMenu extends Component {
     }
 
     onMenuItemSelect(event) {
-        console.log("selected item =>" + event.currentTarget);
+        let id = event.currentTarget.id;
+        let presenter = this.props.presenter;
+        switch (id) {
+            case ids.desktop + ids.preferencesLink:
+                presenter.onPreferencesClick();
+                break;
+            case ids.desktop + ids.collaboratorsLink:
+                presenter.onCollaboratorsClick();
+                break;
+
+            case ids.desktop + ids.userManualLink:
+                presenter.onDocumentationClick();
+                break;
+
+            case ids.desktop + ids.introLink:
+                presenter.onIntroClick();
+                break;
+            case ids.desktop + ids.aboutLink:
+                presenter.onAboutClick();
+                break;
+
+            case ids.desktop + ids.logoutLink:
+                presenter.doLogout(false);
+                break;
+        }
     }
 
     render() {
-        const appearance = this.props.appearance;
         const {anchorEl} = this.state;
-        const link = {
-            color: '#0971AB',
-            cursor: 'pointer',
-            textAlign: 'left',
-            fontSize: '11px',
-        }
         return (
             <IntlProvider locale='en' defaultLocale='en' messages={this.props.messages}>
             <span>
@@ -51,24 +69,24 @@ class UserMenu extends Component {
                 <Menu id='userMenu' anchorEl={anchorEl}
                       open={Boolean(anchorEl)}
                       onClose={this.handleClose}>
-                    <MenuItem onClick={this.onMenuItemSelect}>
+                    <MenuItem id={ids.desktop + ids.preferencesLink} onClick={this.onMenuItemSelect}>
                         <DEHyperlink text={<FormattedMessage id="preferences"/>}/>
                     </MenuItem>
-                    <MenuItem onClick={this.onMenuItemSelect}>
+                    <MenuItem id={ids.desktop + ids.collaboratorsLink} onClick={this.onMenuItemSelect}>
                         <DEHyperlink text={<FormattedMessage id="collaboration"/>}/>
                     </MenuItem>
                       <Divider />
-                    <MenuItem onClick={this.onMenuItemSelect}>
+                    <MenuItem id={ids.desktop + ids.userManualLink} onClick={this.onMenuItemSelect}>
                         <DEHyperlink text={<FormattedMessage id="documentation"/>}/>
                     </MenuItem>
-                    <MenuItem onClick={this.onMenuItemSelect}>
+                    <MenuItem id={ids.desktop + ids.introLink} onClick={this.onMenuItemSelect}>
                         <DEHyperlink text={<FormattedMessage id="introduction"/>}/>
                     </MenuItem>
-                    <MenuItem onClick={this.onMenuItemSelect}>
+                    <MenuItem id={ids.desktop + ids.aboutLink} onClick={this.onMenuItemSelect}>
                         <DEHyperlink text={<FormattedMessage id="about"/>}/>
                     </MenuItem>
                      <Divider />
-                    <MenuItem onClick={this.onMenuItemSelect}>
+                    <MenuItem id={ids.desktop + ids.logoutLink} onClick={this.onMenuItemSelect}>
                         <DEHyperlink text={<FormattedMessage id="logout"/>}/>
                     </MenuItem>
                 </Menu>

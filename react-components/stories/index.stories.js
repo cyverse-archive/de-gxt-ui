@@ -32,8 +32,9 @@ storiesOf('data/Tag', module).add('with test diskresource details', () => <TagTe
 storiesOf('data/TagPanel', module).add('with test diskresource details', () => <TagPanelTest logger={action('tagpanel')}/>);
 
 storiesOf('util', module).add('Autocomplete', () => <AutocompleteTest selectOptionLogger={action('Selected Option')}/>);
+storiesOf('desktop/view', module).add("with test desktop view", () => <DesktopViewTest/>);
+
 storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
 storiesOf('util', module).add('DEHyperLink', () => <DEHyperLinkTest/>);
 storiesOf('util', module).add('SearchField', () => <SearchFieldTest logger={action('Search')}/>);
 storiesOf('util', module).add('TriggerSearchField', () => <TriggerFieldTest logger={action('Search')}/>);
-

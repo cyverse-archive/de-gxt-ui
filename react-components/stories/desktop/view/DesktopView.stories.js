@@ -12,7 +12,7 @@ class DesktopViewTest extends  Component {
     render() {
         const notifications = {
             "total": "30",
-            "unseen_total": "10",
+            "unseen_total": "0",
             "messages": [{
                 "type": "analysis",
                 "user": "sriram",
@@ -399,10 +399,15 @@ class DesktopViewTest extends  Component {
                 "deleted": false
             }]
         };
+        const presenter = {
+            getNotifications: (resultCallback) => {
+                resultCallback(notifications)
+            },
+        }
         return (
             <NewMuiThemeProvider muiTheme={getDefaultTheme()}>
                 <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-                    <DesktopView notifications={notifications}/>
+                    <DesktopView presenter={presenter}/>
                 </MuiThemeProvider>
             </NewMuiThemeProvider>
         )

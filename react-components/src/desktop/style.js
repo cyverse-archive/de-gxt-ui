@@ -124,7 +124,7 @@ export default StyleSheet.create({
     },
 
     notificationMenuPosition: {
-        top: '45px',
+        top: '55px',
         right: '150px',
         position: 'absolute',
     },
@@ -141,7 +141,7 @@ export default StyleSheet.create({
         position: 'absolute',
     },
 
-    notificationCount: {
+    unSeenCount: {
         backgroundColor: '#db6619',
         fontSize: '.625em',
         color: 'white',
@@ -155,23 +155,27 @@ export default StyleSheet.create({
         background: "url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAARCAMAAADqmnyMAAAACXBIWXMAABcSAAAXEgFnn9JSAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAHJQTFRF////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////BjDohgAAACV0Uk5TABAfIC4wPUBJUFdbYHCAiJCgsLW4wMHEzs/Q3uDk5ezw8fn7/Mx0kJUAAAClSURBVHgBXchZWsUgDAbQIGJEIQIah4iKw7//LUr19rttz+MhIt+sSM60dfF8I6raModzvjzBcmbe3tWX3hlUInOMaz6+G6qnvdefT6ajNzzsw5VAY6C57RmEvq8HhvhTeRnogT40GACrItI6AHVE92Y+KVYt0SS3ihody4IvU9OZrofUAdMFpkoTQygUHUsMLZH+8OiF6chVAF1Vu9t1Kjpl+vcLjzUPQmyUvhcAAAAASUVORK5CYII=')",
         backgroundColor: '#0971ab',
         backgroundPosition: '5px 5px',
-        left: 10,
-        bottom:2,
         backgroundRepeat: 'no-repeat',
         position: 'relative',
+        paddingLeft: '25px',
         color: '#fff',
         margin: 5,
-        height: '25px',
+        minHeight: 20,
+        fontSize: 10,
+        borderRadius: 4,
+        textTransform: 'capitalize',
+        ':hover': {
+           backgroundColor: '#004471',
+           boxShadow: 'none',
+        },
     },
-    taskButtonSelected: {
-        backgroundColor: '##004471',
-    },
+
     taskbar: {
         position: 'absolute',
         width: '100%',
         bottom: 0,
-        height: 30,
-        backgroundColor: '#e2e2e2'
+        minHeight: 30,
+        backgroundColor: '#e2e2e2',
     }
 
 })

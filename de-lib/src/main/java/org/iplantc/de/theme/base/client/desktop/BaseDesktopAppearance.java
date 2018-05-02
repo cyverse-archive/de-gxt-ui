@@ -1,111 +1,31 @@
 package org.iplantc.de.theme.base.client.desktop;
 
-import static com.google.gwt.resources.client.ImageResource.ImageOptions;
-
+import com.google.gwt.core.client.GWT;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.resources.client.messages.IplantDisplayStrings;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.DataResource;
-import com.google.gwt.resources.client.ImageResource;
-
-import com.sencha.gxt.widget.core.client.button.IconButton.IconConfig;
 
 /**
  * @author jstroot
  */
 public class BaseDesktopAppearance implements DesktopView.DesktopAppearance {
 
-    public interface DesktopResources extends ClientBundle {
-        @Source("org/iplantc/de/theme/base/client/desktop/analyses.png")
-        ImageResource analysisBtn();
 
-        @Source("org/iplantc/de/theme/base/client/desktop/analyses_hover.png")
-        ImageResource analysisBtnHover();
-
-        @Source("org/iplantc/de/theme/base/client/desktop/apps.png")
-        ImageResource appBtn();
-
-        @Source("org/iplantc/de/theme/base/client/desktop/apps_hover.png")
-        ImageResource appBtnHover();
-
-        @Source("org/iplantc/de/theme/base/client/desktop/Desktop.gss")
-        DesktopStyles css();
-
-        @Source("org/iplantc/de/theme/base/client/desktop/data.png")
-        ImageResource dataBtn();
-
-        @Source("org/iplantc/de/theme/base/client/desktop/data_hover.png")
-        ImageResource dataBtnHover();
-
-        @Source("org/iplantc/de/theme/base/client/desktop/background.png")
-        @ImageOptions(repeatStyle = ImageResource.RepeatStyle.Horizontal)
-        ImageResource desktopBackground();
-
-        @Source("org/iplantc/de/theme/base/client/desktop/de_desktop_background_repeat-all.png")
-        @ImageOptions(repeatStyle = ImageResource.RepeatStyle.Both)
-        ImageResource desktopBackgroundRepeat();
-
-        @Source("org/iplantc/de/theme/base/client/desktop/header_bg.png")
-        ImageResource headerBg();
-
-        @Source("org/iplantc/de/theme/base/client/desktop/cyverse_icon_white.png")
-        ImageResource cyverseLogo();
-
-        @Source("org/iplantc/de/theme/base/client/desktop/notification.png")
-        ImageResource notificationsImg();
-
-        @Source("org/iplantc/de/theme/base/client/desktop/help-24.png")
-        ImageResource helpImg();
-
-        @Source("org/iplantc/de/theme/base/client/desktop/user.png")
-        ImageResource userPrefImg();
-
-        @DataResource.MimeType("font/opentype")
-        @Source("org/iplantc/de/theme/base/client/desktop/Texta_Font/Texta-Bold.otf")
-        DataResource textaBold();
-    }
-
-    private final DesktopResources resources;
     private final DesktopMessages desktopMessages;
-    private final DesktopStyles style;
     private final IplantDisplayStrings displayStrings;
     private final DesktopContextualHelpMessages help;
 
-    BaseDesktopAppearance(final DesktopResources resources,
-                          final IplantDisplayStrings iplantDisplayStrings,
+    BaseDesktopAppearance(final IplantDisplayStrings iplantDisplayStrings,
                           final DesktopMessages desktopMessages,
                           final DesktopContextualHelpMessages desktopContextualHelpMessages) {
-        this.resources = resources;
         displayStrings = iplantDisplayStrings;
         this.desktopMessages = desktopMessages;
         this.help = desktopContextualHelpMessages;
-        this.style = this.resources.css();
-
-        style.ensureInjected();
     }
 
     public BaseDesktopAppearance() {
-        this(GWT.<DesktopResources>create(DesktopResources.class),
-             GWT.<IplantDisplayStrings> create(IplantDisplayStrings.class),
+        this(GWT.<IplantDisplayStrings> create(IplantDisplayStrings.class),
              GWT.<DesktopMessages> create(DesktopMessages.class),
              GWT.<DesktopContextualHelpMessages> create(DesktopContextualHelpMessages.class));
-    }
-
-    @Override
-    public IconConfig analysisConfig() {
-        return new IconConfig(style.analyses());
-    }
-
-    @Override
-    public IconConfig appsConfig() {
-        return new IconConfig(style.apps());
-    }
-
-    @Override
-    public IconConfig dataConfig() {
-        return new IconConfig(style.data());
     }
 
     @Override
@@ -114,38 +34,8 @@ public class BaseDesktopAppearance implements DesktopView.DesktopAppearance {
     }
 
     @Override
-    public IconConfig notificationsConfig() {
-        return new IconConfig(style.notification());
-    }
-
-    @Override
-    public IconConfig helpConfig() {
-        return new IconConfig(style.help());
-    }
-
-    @Override
     public String completeRequiredFieldsError() {
         return displayStrings.completeRequiredFieldsError();
-    }
-
-    @Override
-    public String rootApplicationTitle(int count) {
-        return "(" + count + ") " + displayStrings.rootApplicationTitle();
-    }
-
-    @Override
-    public String rootApplicationTitle() {
-        return displayStrings.rootApplicationTitle();
-    }
-
-    @Override
-    public DesktopStyles styles() {
-        return style;
-    }
-
-    @Override
-    public IconConfig userPrefsConfig() {
-        return new IconConfig(style.userPrefs());
     }
 
     @Override
