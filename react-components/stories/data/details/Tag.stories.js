@@ -46,12 +46,9 @@ class TagTest extends Component {
             emptyValue: () => "-",
         };
 
-        const presenter = {
-            onTagSelection: logger(tag),
-        };
         return (
             <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-                <Tag tag={tag} presenter={presenter} removeTag={() => logger(tag)} appearance={dataDetailsAppearance}/>
+                <Tag tag={tag} removeTag={logger} onClick={logger} appearance={dataDetailsAppearance}/>
             </MuiThemeProvider>
         );
     }

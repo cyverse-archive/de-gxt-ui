@@ -16,16 +16,12 @@ class Tag extends Component {
         document.getElementById(this.props.tag.value).style.display = 'none';
     }
 
-    onTagClick = () => {
-        this.props.presenter.onTagSelection(this.props.tag.id, this.props.tag.value)
-    }
-
     render() {
         return (
             <div className={this.props.appearance.css().tagDivStyle()} onMouseOver={this.handleMouseOver}
                  onMouseOut={this.handleMouseOut}>
                 <div className={this.props.appearance.css().tagStyle()}
-                     onClick={this.onTagClick}>{this.props.tag.value}</div>
+                     onClick={() => this.props.onClick(this.props.tag)}>{this.props.tag.value}</div>
                 <div title={this.props.appearance.removeTag()} id={this.props.tag.value}
                      className={this.props.appearance.css().tagRemoveStyle()}
                      onClick={() => this.props.removeTag(this.props.tag)}> X

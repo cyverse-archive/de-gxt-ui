@@ -16,9 +16,10 @@ storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest lo
 storiesOf('apps/details', module).add('ToolDetails', () => <ToolDetailsTest/>);
 storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
 
+
 storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 
-storiesOf('data/BasicDetails', module).add('with test diskresource details', () => <BasicDetailsTest logger={action('size')}/>);
+storiesOf('data/BasicDetails', module).add('with test diskresource details', () => <BasicDetailsTest logger={action('details')}/>);
 storiesOf('data/InfoTypeSelectionList',module).add('with test diskresource details', () =>  <InfoTypeSelectionListTest />);
 storiesOf('data/Tag', module).add('with test diskresource details', () => <TagTest logger={action('tag')}/>);
 storiesOf('data/TagPanel', module).add('witht test diskresource details', () => <TagPanelTest logger={action('tag')}/>);
