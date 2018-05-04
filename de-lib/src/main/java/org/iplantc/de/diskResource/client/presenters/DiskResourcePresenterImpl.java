@@ -1,18 +1,23 @@
 package org.iplantc.de.diskResource.client.presenters;
 
-import static com.google.common.base.Preconditions.checkState;
-
+import com.google.common.base.Strings;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HasOneWidget;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
+import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
+import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
+import com.sencha.gxt.widget.core.client.box.MessageBox;
+import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasPath;
 import org.iplantc.de.client.models.HasPaths;
 import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
-import org.iplantc.de.client.models.diskResources.DiskResourceFavorite;
-import org.iplantc.de.client.models.diskResources.File;
-import org.iplantc.de.client.models.diskResources.Folder;
-import org.iplantc.de.client.models.diskResources.TYPE;
+import org.iplantc.de.client.models.diskResources.*;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
@@ -22,40 +27,13 @@ import org.iplantc.de.commons.client.CommonUiConstants;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
-import org.iplantc.de.diskResource.client.DetailsView;
-import org.iplantc.de.diskResource.client.DiskResourceView;
-import org.iplantc.de.diskResource.client.GridView;
-import org.iplantc.de.diskResource.client.NavigationView;
-import org.iplantc.de.diskResource.client.SearchView;
-import org.iplantc.de.diskResource.client.ToolbarView;
-import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent;
-import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
-import org.iplantc.de.diskResource.client.events.RequestSendToCoGeEvent;
-import org.iplantc.de.diskResource.client.events.RequestSendToEnsemblEvent;
-import org.iplantc.de.diskResource.client.events.RequestSendToTreeViewerEvent;
-import org.iplantc.de.diskResource.client.events.RootFoldersRetrievedEvent;
-import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSubmitted;
-import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderConfirmed;
-import org.iplantc.de.diskResource.client.events.selection.DNDDiskResourcesCompleted;
-import org.iplantc.de.diskResource.client.events.selection.DeleteDiskResourcesSelected;
-import org.iplantc.de.diskResource.client.events.selection.EmptyTrashSelected;
-import org.iplantc.de.diskResource.client.events.selection.MoveDiskResourcesSelected;
-import org.iplantc.de.diskResource.client.events.selection.OpenTrashFolderSelected;
-import org.iplantc.de.diskResource.client.events.selection.RefreshFolderSelected;
-import org.iplantc.de.diskResource.client.events.selection.RenameDiskResourceSelected;
-import org.iplantc.de.diskResource.client.events.selection.RestoreDiskResourcesSelected;
-import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected;
-import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected;
-import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected;
+import org.iplantc.de.diskResource.client.*;
+import org.iplantc.de.diskResource.client.events.*;
+import org.iplantc.de.diskResource.client.events.selection.*;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewPresenterFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewPresenterFactory;
-import org.iplantc.de.diskResource.client.presenters.callbacks.CreateFolderCallback;
-import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceDeleteCallback;
-import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMoveCallback;
-import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceRestoreCallback;
-import org.iplantc.de.diskResource.client.presenters.callbacks.NcbiSraSetupCompleteCallback;
-import org.iplantc.de.diskResource.client.presenters.callbacks.RenameDiskResourceCallback;
+import org.iplantc.de.diskResource.client.presenters.callbacks.*;
 import org.iplantc.de.diskResource.client.views.dialogs.FolderSelectDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.RenameResourceDialog;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
@@ -64,25 +42,9 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.DataCallback;
 
-import com.google.common.base.Strings;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HasOneWidget;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
+import java.util.*;
 
-import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
-import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
-import com.sencha.gxt.widget.core.client.box.MessageBox;
-import com.sencha.gxt.widget.core.client.grid.ColumnModel;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * @author jstroot
@@ -271,15 +233,15 @@ public class DiskResourcePresenterImpl implements
         this.gridViewPresenter.addDNDDiskResourcesCompletedHandler(this);
 
         // Detail Presenter
-        this.detailsViewPresenter.getView().addManageSharingSelectedEventHandler(this.gridViewPresenter);
-        this.detailsViewPresenter.getView().addEditInfoTypeSelectedEventHandler(this.gridViewPresenter);
-        this.detailsViewPresenter.getView().addSetInfoTypeSelectedHandler(this.gridViewPresenter);
-        this.detailsViewPresenter.getView().addMd5ValueClickedHandler(this.gridViewPresenter);
+        this.detailsViewPresenter.addManageSharingSelectedEventHandler(this.gridViewPresenter);
+        this.detailsViewPresenter.addEditInfoTypeSelectedEventHandler(this.gridViewPresenter);
+        this.detailsViewPresenter.addSetInfoTypeSelectedHandler(this.gridViewPresenter);
+        this.detailsViewPresenter.addMd5ValueClickedHandler(this.gridViewPresenter);
         this.detailsViewPresenter.addSubmitDiskResourceQueryEventHandler(this.gridViewPresenter.getView());
         this.detailsViewPresenter.addSubmitDiskResourceQueryEventHandler(this.gridViewPresenter);
-        this.detailsViewPresenter.getView().addSendToCogeSelectedHandler(this);
-        this.detailsViewPresenter.getView().addSendToEnsemblSelectedHandler(this);
-        this.detailsViewPresenter.getView().addSendToTreeViewerSelectedHandler(this);
+        this.detailsViewPresenter.addSendToCogeSelectedHandler(this);
+        this.detailsViewPresenter.addSendToEnsemblSelectedHandler(this);
+        this.detailsViewPresenter.addSendToTreeViewerSelectedHandler(this);
 
         // Toolbar Search Field
         DiskResourceSearchField searchField = toolbarPresenter.getView().getSearchField();

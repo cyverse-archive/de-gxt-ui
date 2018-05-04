@@ -10,7 +10,6 @@ import TagPanel from "../../../src/data/details/TagPanel";
 class TagPanelTest extends Component {
 
     render() {
-
         const logger = this.props.logger || ((tag) => {
                 console.log(tag);
             });
@@ -104,7 +103,14 @@ class TagPanelTest extends Component {
 
         return (
             <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-                <TagPanel presenter={presenter} diskResource={data} ids={ids} appearance={dataDetailsAppearance}/>
+                <TagPanel ids={ids}
+                          tags={tags}
+                          dataSource={result}
+                          appearance={dataDetailsAppearance}
+                          handleTagSearch={() => logger}
+                          handleRemoveClick={() => logger}
+                          onTagClick={logger}
+                          handleTagSelect={logger}/>
             </MuiThemeProvider>
         );
 

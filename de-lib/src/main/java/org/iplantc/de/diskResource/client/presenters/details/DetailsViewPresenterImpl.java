@@ -1,26 +1,5 @@
 package org.iplantc.de.diskResource.client.presenters.details;
 
-import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
-import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
-import org.iplantc.de.client.models.tags.IplantTagAutoBeanFactory;
-import org.iplantc.de.client.models.tags.IplantTagList;
-import org.iplantc.de.client.models.tags.Tag;
-import org.iplantc.de.client.services.DiskResourceServiceFacade;
-import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
-import org.iplantc.de.client.services.TagsServiceFacade;
-import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.commons.client.info.IplantAnnouncer;
-import org.iplantc.de.diskResource.client.DetailsView;
-import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
-import org.iplantc.de.diskResource.client.events.selection.RemoveResourceTagSelected;
-import org.iplantc.de.diskResource.client.events.selection.UpdateResourceTagSelected;
-import org.iplantc.de.diskResource.client.presenters.callbacks.TagAttachCallback;
-import org.iplantc.de.diskResource.client.presenters.callbacks.TagDetachCallback;
-import org.iplantc.de.diskResource.client.presenters.callbacks.TagsFetchCallback;
-import org.iplantc.de.diskResource.client.presenters.callbacks.TagsSearchCallback;
-import org.iplantc.de.resources.client.messages.I18N;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gwt.event.shared.HandlerManager;
@@ -31,6 +10,27 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
+import org.iplantc.de.client.models.diskResources.DiskResource;
+import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
+import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
+import org.iplantc.de.client.models.tags.IplantTagAutoBeanFactory;
+import org.iplantc.de.client.models.tags.IplantTagList;
+import org.iplantc.de.client.models.tags.Tag;
+import org.iplantc.de.client.models.viewer.InfoType;
+import org.iplantc.de.client.services.DiskResourceServiceFacade;
+import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
+import org.iplantc.de.client.services.TagsServiceFacade;
+import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.diskResource.client.DetailsView;
+import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
+import org.iplantc.de.diskResource.client.events.selection.*;
+import org.iplantc.de.diskResource.client.presenters.callbacks.TagAttachCallback;
+import org.iplantc.de.diskResource.client.presenters.callbacks.TagDetachCallback;
+import org.iplantc.de.diskResource.client.presenters.callbacks.TagsFetchCallback;
+import org.iplantc.de.diskResource.client.presenters.callbacks.TagsSearchCallback;
+import org.iplantc.de.resources.client.messages.I18N;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +61,8 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
 
     IplantTagAutoBeanFactory factory;
 
+    DiskResourceUtil diskResourceUtil = DiskResourceUtil.getInstance();
+
     @Inject
     DetailsViewPresenterImpl(final DetailsView view, final IplantTagAutoBeanFactory factory) {
         this.view = view;
@@ -80,6 +82,41 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
         Tag tag = event.getTag();
         attachTag(tag.getId(), tag.getValue(), resource.getId(), null);
 
+    }
+
+    @Override
+    public HandlerRegistration addEditInfoTypeSelectedEventHandler(EditInfoTypeSelected.EditInfoTypeSelectedEventHandler handler) {
+        return ensureHandlers().addHandler(EditInfoTypeSelected.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addManageSharingSelectedEventHandler(ManageSharingSelected.ManageSharingSelectedEventHandler handler) {
+        return ensureHandlers().addHandler(ManageSharingSelected.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addSetInfoTypeSelectedHandler(SetInfoTypeSelected.SetInfoTypeSelectedHandler handler) {
+        return ensureHandlers().addHandler(SetInfoTypeSelected.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addMd5ValueClickedHandler(Md5ValueClicked.Md5ValueClickedHandler handler) {
+        return ensureHandlers().addHandler(Md5ValueClicked.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addSendToCogeSelectedHandler(SendToCogeSelected.SendToCogeSelectedHandler handler) {
+        return ensureHandlers().addHandler(SendToCogeSelected.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addSendToEnsemblSelectedHandler(SendToEnsemblSelected.SendToEnsemblSelectedHandler handler) {
+        return ensureHandlers().addHandler(SendToEnsemblSelected.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addSendToTreeViewerSelectedHandler(SendToTreeViewerSelected.SendToTreeViewerSelectedHandler handler) {
+        return ensureHandlers().addHandler(SendToTreeViewerSelected.TYPE, handler);
     }
 
     @Override
@@ -209,6 +246,42 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
         DiskResourceQueryTemplate queryTemplate = sabFactory.dataSearchFilter().as();
         queryTemplate.setTagQuery(Sets.newHashSet(tag));
         ensureHandlers().fireEvent(new SubmitDiskResourceQueryEvent(queryTemplate));
+    }
+
+    @Override
+    public void onSharingClicked() {
+        ensureHandlers().fireEvent(new ManageSharingSelected(view.getBoundValue()));
+    }
+
+    @Override
+    public void onSetInfoType(String infoType) {
+        if (infoType.equals(DetailsView.INFOTYPE_NOSELECT)) {
+            ensureHandlers().fireEvent(new SetInfoTypeSelected(view.getBoundValue(), ""));
+        } else {
+            ensureHandlers().fireEvent(new SetInfoTypeSelected(view.getBoundValue(), infoType));
+        }
+    }
+
+    @Override
+    public void onSendToClicked(String infoType) {
+        DiskResource boundValue = view.getBoundValue();
+        if (boundValue == null) {
+            return;
+        }
+        InfoType resInfoType = InfoType.fromTypeString(boundValue.getInfoType());
+        if (resInfoType == null) {
+            return;
+        }
+
+        final ArrayList<DiskResource> resources = Lists.newArrayList(boundValue);
+        if (diskResourceUtil.isTreeInfoType(resInfoType)) {
+            ensureHandlers().fireEvent(new SendToTreeViewerSelected(resources));
+        } else if (diskResourceUtil.isGenomeVizInfoType(resInfoType)) {
+            ensureHandlers().fireEvent(new SendToCogeSelected(resources));
+        } else if (diskResourceUtil.isEnsemblInfoType(resInfoType)) {
+            ensureHandlers().fireEvent(new SendToEnsemblSelected(resources));
+        }
+
     }
 
     List<String> wrapInList(String tagId) {

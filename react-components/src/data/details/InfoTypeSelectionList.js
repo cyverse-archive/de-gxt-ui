@@ -9,21 +9,11 @@ import MenuItem from "material-ui/MenuItem";
 class InfoTypeSelectionList extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            value: this.props.selectedValue,
-        };
     }
 
     handleChange = (event, index, value) => {
-        this.setState({value: value});
-        this.props.view.fireSetInfoTypeEvent(value);
+        this.props.onInfoTypeSelect(value);
    };
-
-    componentWillReceiveProps(nextProps)  {
-        if (this.props.selectedValue !== nextProps.selectedValue) {
-            this.setState({value: nextProps.selectedValue});
-       }
-    }
 
     render() {
         const style = {width: "100px", fontSize: "small"};
@@ -34,7 +24,7 @@ class InfoTypeSelectionList extends Component {
         }
         return (
             <SelectField
-                value={this.state.value}
+                value={this.props.selectedValue}
                 onChange={this.handleChange}
                 maxHeight={200}
                 hintText={this.props.appearance.selectInfoType()}

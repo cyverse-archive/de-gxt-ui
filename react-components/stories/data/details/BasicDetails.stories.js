@@ -55,8 +55,8 @@ class BasicDetailsTest extends Component {
 
         }
 
-        const logger = this.props.logger || ((size) => {
-                console.log(size);
+        const logger = this.props.logger || ((Details) => {
+                console.log(Details);
             });
 
         const drUtil = {
@@ -64,10 +64,6 @@ class BasicDetailsTest extends Component {
             isTreeInfoType: () => console.log("tree type"),
             isGenomeVizInfoType: () => console.log("Genome viz type"),
             isEnsemblInfoType: () => console.log("Ensemble type")
-        };
-
-        const view = {
-            fireSharingEvent: console.log("sharing event")
         };
 
         const types = [];
@@ -102,6 +98,11 @@ class BasicDetailsTest extends Component {
             fetchTagsForResource: (id, fetchCallback) => {
                 fetchCallback(tags.slice(2, 6));
             },
+            onSetInfoType: () => logger("Set InfoType"),
+            onSharingClicked: () => logger("Manage Sharing"),
+            detachTag: () => logger("Detach Tag"),
+            onTagSelection: () => logger("Tag Select"),
+            attachTag: () => logger("Tag Attach"),
         }
 
         const
@@ -122,7 +123,7 @@ class BasicDetailsTest extends Component {
 
         return (
             <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-                <BasicDetails data={data} drUtil={drUtil} appearance={dataDetailsAppearance} view={view}
+                <BasicDetails data={data} drUtil={drUtil} appearance={dataDetailsAppearance}
                               owner="own" infoTypes={types} selectedValue={data.infoType} presenter={presenter} ids={ids} />
             </MuiThemeProvider>
         );
