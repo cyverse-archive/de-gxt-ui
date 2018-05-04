@@ -87,7 +87,6 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
         this.factory = factory;
         this.searchModelUtils = searchModelUtils;
 
-        GWT.log("search presenter initialized!");
     }
 
     @Override
@@ -105,7 +104,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
         final DiskResourceQueryTemplate savedSearch = event.getSavedSearch();
         if (queryTemplates.remove(savedSearch)) {
             announcer.schedule(new SuccessAnnouncementConfig(appearance.deleteSearchSuccess(savedSearch.getName())));
-            searchService.deleteQueryTemplates(Arrays.asList(savedSearch),
+            searchService.saveQueryTemplates(queryTemplates,
                                              new AsyncCallback<List<DiskResourceQueryTemplate>>() {
 
                                                  @Override
@@ -119,7 +118,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
                                                          LOG.fine("Failed to save query templates after delete of saved search");
                                                      }
                                                      fireEvent(new SavedSearchDeletedEvent(savedSearch));
-                                                     fireEvent(new UpdateSavedSearchesEvent(null, savedTemplates));
+                                                     fireEvent(new UpdateSavedSearchesEvent(null, Lists.newArrayList(savedSearch)));
                                                  }
                                              });
         } else {

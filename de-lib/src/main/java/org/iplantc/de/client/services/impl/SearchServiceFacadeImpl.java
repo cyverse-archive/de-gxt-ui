@@ -274,22 +274,6 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
     }
 
     @Override
-    public void deleteQueryTemplates(List<DiskResourceQueryTemplate> queryTemplates,
-                                     AsyncCallback<List<DiskResourceQueryTemplate>> callback) {
-        String address = deProperties.getMuleServiceBaseUrl() + "saved-searches";
-
-        /*
-         * TODO check to see if query templates all have names, and that they are unique.throw illegal
-         * argument exception
-         */
-        String payload = templateListToIndexedSplittablePayload(queryTemplates);
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(Type.DELETE, address, payload);
-        deServiceFacade.getServiceData(wrapper, new SavedSearchCallbackConverter(callback,
-                                                                                 queryTemplates,
-                                                                                 searchAbFactory));
-    }
-
-    @Override
     public void submitSearchQuery(DiskResourceQueryTemplate template,
                                   FolderContentsLoadConfig loadConfig,
                                   FolderContentsRpcProxyImpl.QueryResultsCallback queryResultsCallback) {
