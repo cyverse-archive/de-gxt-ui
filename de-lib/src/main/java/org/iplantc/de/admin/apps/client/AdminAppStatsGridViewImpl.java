@@ -11,20 +11,17 @@ import org.iplantc.de.commons.client.util.CyVerseReactComponents;
  */
 public class AdminAppStatsGridViewImpl implements AdminAppStatsGridView{
 
-    private final Appearance appearance;
     HTMLPanel panel;
 
     @Inject
-    public AdminAppStatsGridViewImpl(AdminAppStatsGridView.Appearance appearance) {
+    public AdminAppStatsGridViewImpl() {
         panel = new HTMLPanel("<div></div>");
-        this.appearance = appearance;
    }
 
     @Override
     public void load(Presenter presenter) {
         Scheduler.get().scheduleFinally(() -> {
             ReactAppStats.AppStatsProps props = new ReactAppStats.AppStatsProps();
-            props.appearance = appearance;
             props.presenter = presenter;
             CyVerseReactComponents.render(ReactAppStats.appStats, props, panel.getElement());
         });

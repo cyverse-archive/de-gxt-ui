@@ -4,6 +4,7 @@
 import React, {Component} from "react";
 import Tag from "./Tag";
 import AutoComplete from "material-ui/AutoComplete";
+import {FormattedMessage, IntlProvider} from "react-intl";
 
 
 class TagPanel extends Component {
@@ -31,20 +32,22 @@ class TagPanel extends Component {
             ) : [];
 
         return (
-            <div id={this.props.DETAILS_TAGS}>
-                <div>
-                    <AutoComplete
-                        hintText={this.props.appearance.searchTags()}
-                        dataSource={this.props.dataSource}
-                        onUpdateInput={this.props.handleTagSearch}
-                        dataSourceConfig={dataSourceConfig}
-                        listStyle={tagListStyle}
-                        onNewRequest={this.handleTagSelect}/>
+            <IntlProvider locale='en' defaultLocale='en' messages={this.props.messages}>
+                <div id={this.props.DETAILS_TAGS}>
+                    <div>
+                        <AutoComplete
+                            hintText={<FormattedMessage id="searchTags"/>}
+                            dataSource={this.props.dataSource}
+                            onUpdateInput={this.props.handleTagSearch}
+                            dataSourceConfig={dataSourceConfig}
+                            listStyle={tagListStyle}
+                            onNewRequest={this.handleTagSelect}/>
+                    </div>
+                    <div id="panel" className={this.props.appearance.css().tagPanelStyle()}>
+                        { tagItems }
+                    </div>
                 </div>
-                <div id="panel" className={this.props.appearance.css().tagPanelStyle()}>
-                    { tagItems }
-                </div>
-            </div>
+            </IntlProvider>
         );
     }
 

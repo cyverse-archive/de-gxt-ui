@@ -2,6 +2,7 @@
  * @author sriram
  */
 import React, {Component} from "react";
+import {FormattedMessage, IntlProvider} from "react-intl";
 
 class Tag extends Component {
     constructor(props) {
@@ -9,24 +10,26 @@ class Tag extends Component {
     }
 
     handleMouseOver = () => {
-        document.getElementById(this.props.tag.value).style.display = 'block';
+        document.getElementById(this.props.tag.id).style.display = 'block';
     }
 
     handleMouseOut = () => {
-        document.getElementById(this.props.tag.value).style.display = 'none';
+        document.getElementById(this.props.tag.id).style.display = 'none';
     }
 
     render() {
         return (
-            <div className={this.props.appearance.css().tagDivStyle()} onMouseOver={this.handleMouseOver}
-                 onMouseOut={this.handleMouseOut}>
-                <div className={this.props.appearance.css().tagStyle()}
-                     onClick={() => this.props.onClick(this.props.tag)}>{this.props.tag.value}</div>
-                <div title={this.props.appearance.removeTag()} id={this.props.tag.value}
-                     className={this.props.appearance.css().tagRemoveStyle()}
-                     onClick={() => this.props.removeTag(this.props.tag)}> X
+            <IntlProvider locale='en' defaultLocale='en' messages={this.props.messages}>
+                <div className={this.props.appearance.css().tagDivStyle()} onMouseOver={this.handleMouseOver}
+                     onMouseOut={this.handleMouseOut}>
+                    <div className={this.props.appearance.css().tagStyle()}
+                         onClick={() => this.props.onClick(this.props.tag)}>{this.props.tag.value}</div>
+                    <div title={<FormattedMessage id="removeTag"/>} id={this.props.tag.id}
+                         className={this.props.appearance.css().tagRemoveStyle()}
+                         onClick={() => this.props.removeTag(this.props.tag)}> X
+                    </div>
                 </div>
-            </div>
+            </IntlProvider>
         );
     }
 }

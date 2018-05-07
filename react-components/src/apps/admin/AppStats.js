@@ -8,22 +8,16 @@ import ToolbarSeparator from "material-ui-next/Toolbar";
 import TextField from "material-ui-next/TextField";
 import Button from "material-ui-next/Button";
 import {withStyles} from "material-ui-next/styles";
-import Table, {
-    TableHead,
-    TableBody,
-    TableCell,
-    TableFooter,
-    TablePagination,
-    TableRow
-} from "material-ui-next/Table";
+import Table, {TableHead, TableBody, TableCell, TableFooter, TablePagination, TableRow} from "material-ui-next/Table";
 import IconButton from "material-ui-next/IconButton";
 import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import PropTypes from "prop-types";
-import moment  from "moment";
+import moment from "moment";
 import RefreshIndicator from "material-ui/RefreshIndicator";
+import {addLocaleData, ReactIntlLocaleData, FormattedMessage, IntlProvider} from "react-intl";
 
 
 const pagingStyles = theme => ({
@@ -56,39 +50,37 @@ class TablePaginationActions extends React.Component {
     };
 
     render() {
-        const {classes, count, page, rowsPerPage, theme, appearance} = this.props;
+        const {classes, count, page, rowsPerPage, theme} = this.props;
 
         return (
-            <div className={classes.root}>
-                <IconButton
-                    onClick={this.handleFirstPageButtonClick}
-                    disabled={page === 0}
-                    aria-label='First Page'
-                >
-                    {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
-                </IconButton>
-                <IconButton
-                    onClick={this.handleBackButtonClick}
-                    disabled={page === 0}
-                    aria-label='Previous Page'
-                >
-                    {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-                </IconButton>
-                <IconButton
-                    onClick={this.handleNextButtonClick}
-                    disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                    aria-label='Next Page'
-                >
-                    {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-                </IconButton>
-                <IconButton
-                    onClick={this.handleLastPageButtonClick}
-                    disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                    aria-label='Last Page'
-                >
-                    {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
-                </IconButton>
-            </div>
+            <IntlProvider locale='en' defaultLocale='en' messages={this.props.messages}>
+                <div className={classes.root}>
+                    <IconButton
+                        onClick={this.handleFirstPageButtonClick}
+                        disabled={page === 0}
+                        aria-label={<FormattedMessage id="firstPage"/>}>
+                        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+                    </IconButton>
+                    <IconButton
+                        onClick={this.handleBackButtonClick}
+                        disabled={page === 0}
+                        aria-label={<FormattedMessage id="prevPage"/>}>
+                        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+                    </IconButton>
+                    <IconButton
+                        onClick={this.handleNextButtonClick}
+                        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+                        aria-label={<FormattedMessage id="nextPage"/>}>
+                        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+                    </IconButton>
+                    <IconButton
+                        onClick={this.handleLastPageButtonClick}
+                        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+                        aria-label={<FormattedMessage id="lastPage"/>}>
+                        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+                    </IconButton>
+                </div>
+            </IntlProvider>
         );
     }
 }
@@ -196,8 +188,8 @@ class AppStats extends Component {
             loading: true,
         });
         var searchText = this.state.searchText;
-        var startDate = (this.state.startDate) ? (moment(this.state.startDate).format(this.props.appearance.dateFormat())) : "";
-        var endDate = (this.state.endDate) ? (moment(this.state.endDate).format(this.props.appearance.dateFormat())) : "";
+        var startDate = (this.state.startDate) ? (moment(this.state.startDate).format("YYYY-MM-DD")) : "";
+        var endDate = (this.state.endDate) ? (moment(this.state.endDate).format("YYYY-MM-DD")) : "";
         this.props.presenter.searchApps(searchText, startDate, endDate, (apps) => {
             this.setState({
                 loading: false,
@@ -210,76 +202,58 @@ class AppStats extends Component {
         this.fetchAppStats();
     }
 
-    handleFirstPageButtonClick = event => {
-        this.props.onChangePage(event, 0);
-    };
-
-    handleBackButtonClick = event => {
-        this.props.onChangePage(event, this.props.page - 1);
-    };
-
-    handleNextButtonClick = event => {
-        this.props.onChangePage(event, this.props.page + 1);
-    };
-
-    handleLastPageButtonClick = event => {
-        this.props.onChangePage(
-            event,
-            Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1),
-        );
-    };
-
     render() {
         const appearance = this.props.appearance;
         const classes = this.props.classes;
         const {data, rowsPerPage, page} = this.state;
         return (
-            <div className={classes.root}>
-                <RefreshIndicator
-                    size={50}
-                    left={600}
-                    top={400}
-                    loadingColor="#FF9800"
-                    status={(this.state.loading) ? "loading" : "hide"}/>
-                <div>
-                    <Toolbar>
-                        <ToolbarGroup>
-                            <TextField className={classes.textField}
-                                       label={appearance.searchApps()} onChange={this.handleSearch}/>
-                            <ToolbarSeparator />
-                            <TextField label={appearance.startDate()} type="date"
-                                       defaultValue={moment(this.state.startDate).format(appearance.dateFormat())}
-                                       InputLabelProps={{
-                                           shrink: true,
-                                       }} onChange={this.onStartDateChange}/>
-                            <TextField label={appearance.endDate()} type="date"
-                                       defaultValue={moment(this.state.endDate).format(appearance.dateFormat())}
-                                       InputLabelProps={{
-                                           shrink: true,
-                                       }} onChange={this.onEndDateChange}/>
-                            <ToolbarSeparator />
-                            <Button variant="raised" onClick={this.applyFilter}
-                                    className={classes.button}>{appearance.applyFilter()}</Button>
+            <IntlProvider locale='en' defaultLocale='en' messages={this.props.messages}>
+                <div className={classes.root}>
+                    <RefreshIndicator
+                        size={50}
+                        left={600}
+                        top={400}
+                        loadingColor="#FF9800"
+                        status={(this.state.loading) ? "loading" : "hide"}/>
+                    <div>
+                        <Toolbar>
+                            <ToolbarGroup>
+                                <TextField className={classes.textField}
+                                           label={<FormattedMessage id="searchApps"/>} onChange={this.handleSearch}/>
+                                <ToolbarSeparator />
+                                <TextField label={<FormattedMessage id="startDate"/>} type="date"
+                                           defaultValue={moment(this.state.startDate).format("YYYY-MM-DD")}
+                                           InputLabelProps={{
+                                               shrink: true,
+                                           }} onChange={this.onStartDateChange}/>
+                                <TextField label={<FormattedMessage id="endDate"/>} type="date"
+                                           defaultValue={moment(this.state.endDate).format("YYYY-MM-DD")}
+                                           InputLabelProps={{
+                                               shrink: true,
+                                           }} onChange={this.onEndDateChange}/>
+                                <ToolbarSeparator />
+                                <Button variant="raised" onClick={this.applyFilter}
+                                        className={classes.button}>{<FormattedMessage id="applyFilter"/>}</Button>
 
-                        </ToolbarGroup>
-                    </Toolbar>
-                </div>
+                            </ToolbarGroup>
+                        </Toolbar>
+                    </div>
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow hover>
-                                <TableCell className={classes.head}>{appearance.name()}</TableCell>
+                                <TableCell className={classes.head}>{<FormattedMessage id="appName"/>}</TableCell>
                                 <TableCell className={classes.head}
-                                           numeric>{appearance.rating()}</TableCell>
+                                           numeric>{<FormattedMessage id="rating"/>}</TableCell>
                                 <TableCell className={classes.head}
-                                           numeric>{appearance.total()}</TableCell>
+                                           numeric>{<FormattedMessage id="total"/>}</TableCell>
                                 <TableCell className={classes.head}
-                                           numeric>{appearance.completed()}</TableCell>
+                                           numeric>{<FormattedMessage id="completed"/>}</TableCell>
                                 <TableCell className={classes.head}
-                                           numeric>{appearance.failed()}</TableCell>
+                                           numeric>{<FormattedMessage id="failed"/>}</TableCell>
                                 <TableCell className={classes.head}
-                                           numeric>{appearance.lastCompleted()}</TableCell>
+                                           numeric>{<FormattedMessage id="lastCompleted"/>}</TableCell>
                                 <TableCell className={classes.head}
-                                           numeric>{appearance.lastUsed()}</TableCell>
+                                           numeric>{<FormattedMessage id="lastUsed"/>}</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -295,8 +269,12 @@ class AppStats extends Component {
                                             numeric>{(n.job_stats.job_count_completed) ? n.job_stats.job_count_completed : 0}</TableCell>
                                         <TableCell
                                             numeric>{(n.job_stats.job_count_failed) ? n.job_stats.job_count_failed : 0 }</TableCell>
-                                        <TableCell>{(n.job_stats.job_last_completed) ? moment(Number(n.job_stats.job_last_completed), "x").format(appearance.dateFormat()) : appearance.emptyValue()} </TableCell>
-                                        <TableCell>{(n.job_stats.last_used) ? moment(Number(n.job_stats.last_used), "x").format(appearance.dateFormat()) : appearance.emptyValue()}</TableCell>
+                                        <TableCell>{(n.job_stats.job_last_completed) ? moment(Number(n.job_stats.job_last_completed), "x").format(
+                                                "YYYY-MM-DD") :
+                                            <FormattedMessage id="emptyValue"/>} </TableCell>
+                                        <TableCell>{(n.job_stats.last_used) ? moment(Number(n.job_stats.last_used), "x").format(
+                                                "YYYY-MM-DD") :
+                                            <FormattedMessage id="emptyValue"/>}</TableCell>
                                     </TableRow>
                                 );
                             })}
@@ -316,7 +294,8 @@ class AppStats extends Component {
                             </TableRow>
                         </TableFooter>
                     </Table>
-            </div>
+                </div>
+            </IntlProvider>
         )
 
     }
