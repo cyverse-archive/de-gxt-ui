@@ -99,44 +99,9 @@ public interface BelphegorDisplayStrings extends Messages {
 
     String appStats();
 
-    String appName();
-
-    String total();
-
-    String completed();
-
-    String failed();
-
-    String lastCompleted();
-
-    String lastUsed();
-
-    String rating();
-
-    String loading();
-
     String appDeleted();
 
     String appDelete();
-
-    String startDate();
-
-    String endDate();
-
-    String searchApps();
-
-    String emptyValue();
-
-    String applyFilter();
-
-
-    String integrator();
-
-    String system();
-
-    String beta();
-
-    String dateFormat();
-
 }
+
 

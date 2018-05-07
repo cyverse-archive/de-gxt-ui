@@ -5,38 +5,13 @@
  */
 import React, {Component} from "react";
 import {getDefaultTheme, NewMuiThemeProvider} from "../../../src/lib";
-import AppStats from "../../../src/apps/admin/AppStats";
+import {AppStatsWithI18N} from "../../../src/apps/admin";
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { getCyVerseTheme } from '../../../src/lib';
 
 
 class AppStatsTest extends Component {
     render() {
-        const appearance = {
-            name: () => "Name",
-            total: () => "Total",
-            completed: () => "Completed",
-            failed: () => "Failed",
-            rating: () => "Rating",
-            lastUsed: () => "Last Used",
-            lastCompleted: () => "Last Completed",
-            startDate: () => "Start Date...",
-            endDate: () => "End Date...",
-            searchApps: () => "Search Apps...",
-            emptyValue: () => "-",
-            applyFilter: () => "Apply Filter",
-            toolbarStyle: () => {},
-            gridStyle: () => {},
-            buttonStyle: () => {},
-            integrator: () => "Integrator",
-            beta: () => "Beta",
-            system: () => "System",
-            firstPage: () => "First Page",
-            previousPage: () => "Previous Page",
-            nextPage: () => "Next Page",
-            lastPage: () => "Last Page",
-            dateFormat: () => "YYYY-MM-DD",
-        };
         const appStats =
             [{
                 "integration_date": "2013-02-10T14:16:44Z",
@@ -82,7 +57,7 @@ class AppStatsTest extends Component {
         return (
             <NewMuiThemeProvider muiTheme={getDefaultTheme()}>
                 <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-                    <AppStats presenter={presenter} appearance={appearance}/>
+                    <AppStatsWithI18N presenter={presenter}/>
                 </MuiThemeProvider>
             </NewMuiThemeProvider>
         )

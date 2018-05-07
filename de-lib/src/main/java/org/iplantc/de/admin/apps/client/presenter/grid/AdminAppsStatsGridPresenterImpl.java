@@ -27,8 +27,6 @@ public class AdminAppsStatsGridPresenterImpl implements AdminAppStatsGridView.Pr
     public AdminAppStatsGridView view;
     @Inject
     AppAdminServiceFacade appService;
-    @Inject
-    AdminAppStatsGridView.Appearance appearance;
 
     AppAutoBeanFactory factory = GWT.create(AppAutoBeanFactory.class);
 

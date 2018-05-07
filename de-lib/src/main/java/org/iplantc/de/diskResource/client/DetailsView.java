@@ -1,7 +1,6 @@
 package org.iplantc.de.diskResource.client;
 
 import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.sencha.gxt.data.shared.event.StoreUpdateEvent.StoreUpdateHandler;
 import jsinterop.annotations.JsIgnore;
@@ -11,10 +10,6 @@ import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent.DiskResourceSelectionChangedEventHandler;
 import org.iplantc.de.diskResource.client.events.FetchDetailsCompleted;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
-import org.iplantc.de.diskResource.client.presenters.callbacks.TagAttachCallback;
-import org.iplantc.de.diskResource.client.presenters.callbacks.TagDetachCallback;
-import org.iplantc.de.diskResource.client.presenters.callbacks.TagsFetchCallback;
-import org.iplantc.de.diskResource.client.presenters.callbacks.TagsSearchCallback;
 import org.iplantc.de.diskResource.client.events.selection.EditInfoTypeSelected.HasEditInfoTypeSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected.HasManageSharingSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked.HasMd5ValueClickedHandlers;
@@ -22,7 +17,10 @@ import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected.Ha
 import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected.HasSendToEnsemblSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected.HasSendToTreeViewerSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SetInfoTypeSelected.HasSetInfoTypeSelectedHandlers;
-
+import org.iplantc.de.diskResource.client.presenters.callbacks.TagAttachCallback;
+import org.iplantc.de.diskResource.client.presenters.callbacks.TagDetachCallback;
+import org.iplantc.de.diskResource.client.presenters.callbacks.TagsFetchCallback;
+import org.iplantc.de.diskResource.client.presenters.callbacks.TagsSearchCallback;
 
 import java.util.List;
 
@@ -78,78 +76,8 @@ public interface DetailsView extends IsWidget,
             String tagRemoveStyle();
         }
 
-        String coge();
-
-        String createdDate();
-
-        String delete();
-
-        String ensembl();
-
-        String files();
-
-        String folders();
-
-        String infoTypeDisabled();
-
-        String lastModified();
-
-        String noDetails();
-
-        String beginSharing();
-
-        String permissions();
-
-        String selectInfoType();
-
-        String sendTo();
-
-        String share();
-
-        String sharingDisabled();
-
-        String size();
-
-        String treeViewer();
-
         DetailsViewStyle css();
 
-        String viewersDisabled();
-
-        @JsIgnore
-        ImageResource deselectInfoTypeIcon();
-
-        String tagsLabel();
-
-        String filesFoldersLabel();
-
-        String sendToLabel();
-
-        String infoTypeLabel();
-
-        String md5CheckSum();
-
-        String typeLabel();
-
-        String sizeLabel();
-
-        String shareLabel();
-
-        String permissionsLabel();
-
-        String createdDateLabel();
-
-        String lastModifiedLabel();
-
-        String loadingMask();
-
-        String searchTags();
-
-        String removeTag();
-
-        String okLabel();
-
-        String emptyValue();
     }
 
     @JsType

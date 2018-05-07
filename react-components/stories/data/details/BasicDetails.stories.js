@@ -4,7 +4,7 @@
 import React, {Component} from "react";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import {getCyVerseTheme} from "../../../src/lib";
-import BasicDetails from "../../../src/data/details/BasicDetails";
+import {BasicDetailsWithI18N} from "../../../src/data/details";
 
 class BasicDetailsTest extends Component {
     render() {
@@ -22,23 +22,6 @@ class BasicDetailsTest extends Component {
                     tagRemoveStyle: () => "",
                 }
             ),
-            lastModifiedLabel: () => "Last Modified:",
-            createdDateLabel: () => "Created Date:",
-            permissionsLabel: () => "Permissions:",
-            md5CheckSum: () => "Md5:",
-            sizeLabel: () => "Size:",
-            shareLabel: () => "Share",
-            beginSharing: () => "Begin Sharing",
-            infoTypeLabel: () => "InfoType",
-            typeLabel: () => "Type",
-            sendToLabel: () => "Send To",
-            searchTags: () => "Search Tags...",
-            removeTag: () => "Remove Tag",
-            selectInfoType: () => "Select Info Type...",
-            tagSearchListStyle: () => {},
-            infoTypeSelectStyle: () => {},
-            okLabel: () => "Ok",
-            emptyValue: () => "-",
         }
 
         const ids = {
@@ -52,7 +35,6 @@ class BasicDetailsTest extends Component {
             DETAILS_MD5: "DetailsMd5",
             DETAILS_SEND_TO: " DetailsSendTo",
             DETAILS_TAGS: "DetailsTags",
-
         }
 
         const logger = this.props.logger || ((Details) => {
@@ -123,8 +105,9 @@ class BasicDetailsTest extends Component {
 
         return (
             <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-                <BasicDetails data={data} drUtil={drUtil} appearance={dataDetailsAppearance}
-                              owner="own" infoTypes={types} selectedValue={data.infoType} presenter={presenter} ids={ids} />
+                <BasicDetailsWithI18N data={data} drUtil={drUtil} appearance={dataDetailsAppearance}
+                                      owner="own" infoTypes={types} selectedValue={data.infoType} presenter={presenter} ids={ids} />
+
             </MuiThemeProvider>
         );
     }

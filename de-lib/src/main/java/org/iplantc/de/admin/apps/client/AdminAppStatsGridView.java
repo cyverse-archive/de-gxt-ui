@@ -16,46 +16,6 @@ public interface AdminAppStatsGridView extends IsWidget {
     @JsIgnore
     void load(Presenter p);
 
-
-
-    @JsType
-    interface  Appearance {
-
-        String name();
-
-        String total();
-
-        String completed();
-
-        String failed();
-
-        String lastCompleted();
-
-        String lastUsed();
-
-        String rating();
-
-        String loading();
-
-        String startDate();
-
-        String endDate();
-
-        String searchApps();
-
-        String applyFilter();
-
-        String integrator();
-
-        String system();
-
-        String beta();
-
-        String emptyValue();
-
-        String dateFormat();
-    }
-
     @JsType
     interface Presenter {
         @JsIgnore
