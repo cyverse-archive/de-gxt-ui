@@ -1,23 +1,19 @@
 package org.iplantc.de.admin.apps.client.presenter.grid;
 
-import org.iplantc.de.admin.apps.client.AdminAppStatsGridView;
-import org.iplantc.de.admin.apps.client.presenter.callbacks.AppStatsSearchCallback;
-import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
-import org.iplantc.de.admin.desktop.shared.Belphegor;
-import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
-import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
-import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.shared.AppsCallback;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
-
-import java.util.List;
+import org.iplantc.de.admin.apps.client.AdminAppStatsGridView;
+import org.iplantc.de.admin.apps.client.presenter.callbacks.AppStatsSearchCallback;
+import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
+import org.iplantc.de.admin.desktop.shared.Belphegor;
+import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
+import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
+import org.iplantc.de.commons.client.ErrorHandler;
+import org.iplantc.de.shared.AppsCallback;
 
 /**
  * Created by sriram on 10/21/16.
@@ -52,8 +48,9 @@ public class AdminAppsStatsGridPresenterImpl implements AdminAppStatsGridView.Pr
 
             @Override
             public void onSuccess(AppListLoadResult result) {
+                appsToSplittableList(result);
                 if (callback != null) {
-                    callback.onSearchCompleted(appsToSplittable(result.getData()));
+                    callback.onSearchCompleted(appsToSplittableList(result));
                 }
             }
         });
@@ -64,13 +61,10 @@ public class AdminAppsStatsGridPresenterImpl implements AdminAppStatsGridView.Pr
         view.asWidget().ensureDebugId(baseId + Belphegor.AppStatIds.VIEW);
     }
 
-    private Splittable[] appsToSplittable(List<App> appList) {
-        Splittable[] stats = new Splittable[appList.size()];
-        for (int i = 0; i < appList.size(); i++) {
-            stats[i] = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(appList.get(i)));
-        }
-        return stats;
-
+    private Splittable appsToSplittableList(AppListLoadResult result) {
+        Splittable sp = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(result));
+        return sp;
     }
 
 }
+

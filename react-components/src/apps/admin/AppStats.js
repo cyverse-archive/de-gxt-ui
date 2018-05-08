@@ -190,10 +190,10 @@ class AppStats extends Component {
         var searchText = this.state.searchText;
         var startDate = (this.state.startDate) ? (moment(this.state.startDate).format("YYYY-MM-DD")) : "";
         var endDate = (this.state.endDate) ? (moment(this.state.endDate).format("YYYY-MM-DD")) : "";
-        this.props.presenter.searchApps(searchText, startDate, endDate, (apps) => {
+        this.props.presenter.searchApps(searchText, startDate, endDate, (appList) => {
             this.setState({
                 loading: false,
-                data: apps,
+                data: appList.apps,
             })
         });
     }
