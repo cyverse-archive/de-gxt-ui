@@ -4,16 +4,16 @@
  *
  */
 import React, {Component} from "react";
-import {getDefaultTheme, NewMuiThemeProvider} from "../../../src/lib";
+import {getDefaultTheme, NewMuiThemeProvider, getCyVerseTheme} from "../../../src/lib";
 import {AppStatsWithI18N} from "../../../src/apps/admin";
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { getCyVerseTheme } from '../../../src/lib';
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 
 
 class AppStatsTest extends Component {
     render() {
         const appStats =
-            [{
+            {
+                apps: [{
                 "integration_date": "2013-02-10T14:16:44Z",
                 "description": "",
                 "deleted": true,
@@ -46,7 +46,8 @@ class AppStatsTest extends Component {
                     "average": 5.0,
                     "total": 1
                 }
-            }];
+                }]
+            };
 
         const presenter = {
             searchApps: (searchText, startDate, endDate, resultCallback) => {

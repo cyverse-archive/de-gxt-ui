@@ -19,6 +19,6 @@ var intlData = {
         "nextPage": "Next Page",
         "prevPage": "Previous Page",
     }
-}
+};
 
 export default intlData;
