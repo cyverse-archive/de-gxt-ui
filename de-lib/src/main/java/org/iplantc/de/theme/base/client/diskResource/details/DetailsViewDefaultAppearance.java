@@ -17,7 +17,7 @@ public class DetailsViewDefaultAppearance implements DetailsView.Appearance {
     private Resources resources;
 
     public DetailsViewDefaultAppearance() {
-        GWT.<Resources>create(Resources.class);
+        this(GWT.<Resources>create(Resources.class));
     }
 
     public DetailsViewDefaultAppearance(final Resources resources) {

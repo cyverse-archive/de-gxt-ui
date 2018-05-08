@@ -9,6 +9,7 @@ import InfoTypeSelectionList from "./InfoTypeSelectionList";
 import TagPanel from "./TagPanel";
 import {addLocaleData, ReactIntlLocaleData, FormattedMessage, IntlProvider} from "react-intl";
 import intlData from "../messages";
+import {CircularProgress} from "material-ui-next/Progress";
 
 function SendTo(props) {
     let displayText = <FormattedMessage id="emptyValue"/>;
@@ -64,10 +65,11 @@ class BasicDetails extends Component {
         super(props);
         this.state = {
             md5open: false,
-            data: props.data,
+            infoType: (props.data) ? props.data.infoType : "",
             dataSource: [],
-            tags: [],
+            tags: {dataId: "", values: []},
             searchText: null,
+            loading: false,
         };
         this.handleShareClick = this.handleShareClick.bind(this);
         this.handleSendToClick = this.handleSendToClick.bind(this);
@@ -83,13 +85,10 @@ class BasicDetails extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.data !== nextProps.data) {
-            this.setState({data: nextProps.data});
+        this.setState({infoType: (nextProps.data) ? nextProps.data.infoType : ""});
+        if (nextProps.data) {
+            this.fetchTags(nextProps.data.id);
         }
-    }
-
-    componentDidMount() {
-        this.fetchTags();
     }
 
     handleMd5Open = () => {
@@ -112,10 +111,13 @@ class BasicDetails extends Component {
         this.props.presenter.onSetInfoType(infoType);
     }
 
-    fetchTags() {
-        this.props.presenter.fetchTagsForResource(this.props.data.id, (tags) => {
-            this.setState({tags: tags});
-        });
+    fetchTags(id) {
+        if (id && id !== this.state.tags.dataId && !this.state.loading) {
+            this.setState({loading: true});
+            this.props.presenter.fetchTagsForResource(id, (tags) => {
+                this.setState({loading: false, tags: {dataId: id, values: tags}});
+            });
+        }
     }
 
     handleTagSearch(value) {
@@ -130,33 +132,39 @@ class BasicDetails extends Component {
     }
 
     handleTagSelect(chosenTag) {
-        if (chosenTag.id) {
-            this.props.presenter.attachTag(chosenTag.id, chosenTag.value, this.props.data.id, (tags) => {
-                this.setState({tags: tags});
-            });
-        } else {
-            this.props.presenter.createTag(chosenTag, this.props.data.id, (tags) => {
-                this.setState({tags: tags});
-            });
+        if (!this.state.loading) {
+            this.setState({loading: true});
+            if (chosenTag.id) {
+                this.props.presenter.attachTag(chosenTag.id, chosenTag.value, this.props.data.id, (tags) => {
+                    this.setState({tags: {dataId: this.props.data.id, values: tags}, loading: false});
+                });
+            } else {
+                this.props.presenter.createTag(chosenTag, this.props.data.id, (tags) => {
+                    this.setState({tags: {dataId: this.props.data.id, values: tags}, loading: false});
+                });
+            }
         }
     }
 
     doRemove(index) {
-        this.props.presenter.detachTag(this.state.tags[index].id, this.state.tags[index].value, this.props.data.id, (tags) => {
-            this.setState({tags: tags});
-        });
+        if (!this.state.loading) {
+            this.setState({loading: true});
+            this.props.presenter.detachTag(this.state.tags.values[index].id, this.state.tags.values[index].value, this.props.data.id, (tags) => {
+                this.setState({tags: {dataId: this.props.data.id, values: tags}, loading: false});
+            });
+        }
     }
 
     handleTagClick(tag) {
         let index = this.findTag(tag);
-        if (index != -1) {
-            this.props.presenter.onTagSelection(this.state.tags[index].id, this.state.tags[index].value);
+        if (index !== -1) {
+            this.props.presenter.onTagSelection(this.state.tags.values[index].id, this.state.tags.values[index].value);
         }
     }
 
     findTag(tag) {
         if (this.state.tags && tag) {
-            return this.state.tags.indexOf(tag)
+            return this.state.tags.values.indexOf(tag)
         }
         return -1;
     }
@@ -169,7 +177,7 @@ class BasicDetails extends Component {
     }
 
     render() {
-        if (!this.state.data) {
+        if (!this.props.data) {
             return (
                 <IntlProvider locale='en' defaultLocale='en' messages={this.props.messages}>
                     <div>{<FormattedMessage id="noDetails"/>}</div>
@@ -178,7 +186,7 @@ class BasicDetails extends Component {
         }
 
         let drUtil = this.props.drUtil,
-            diskResource = this.state.data,
+            diskResource = this.props.data,
             appearance = this.props.appearance,
             rowClass = appearance.css().row(),
             labelClass = appearance.css().label(),
@@ -188,7 +196,7 @@ class BasicDetails extends Component {
             infoTypes = this.props.infoTypes,
             isOwner = ownPermission === diskResource.permission,
             isFolder = this.props.isFolder,
-            infoType = diskResource.infoType;
+            infoType = this.state.infoType;
 
         let details = null;
 
@@ -248,6 +256,9 @@ class BasicDetails extends Component {
         return (
             <IntlProvider locale='en' defaultLocale='en' messages={this.props.messages}>
                 <div>
+                    {this.state.loading &&
+                        <CircularProgress size={30}/>
+                    }
                     <table>
                         <tbody>
                         <tr className={rowClass}>
@@ -291,7 +302,7 @@ class BasicDetails extends Component {
                     <TagPanel
                         detailsTag={this.props.DETAILS_TAGS} appearance={this.props.appearance}
                         handleTagSearch={this.handleTagSearch} handleRemoveClick={this.handleRemoveClick}
-                        tags={this.state.tags} dataSource={this.state.dataSource}
+                        tags={this.state.tags.values} dataSource={this.state.dataSource}
                         onTagClick={this.handleTagClick}
                         handleTagSelect={this.handleTagSelect} {...intlData}/>
                     <Dialog
