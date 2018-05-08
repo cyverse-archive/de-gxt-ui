@@ -8,8 +8,8 @@ import SaveSearchDialog from '../../diskResource/search/SaveSearchDialog';
 import SelectField from 'material-ui/SelectField';
 import TagSearchField from '../../tags/tagSearch/TagSearchField';
 import TextField from 'material-ui/TextField';
-
-import './Search.css'
+import injectSheet from 'react-jss';
+import styles from './styles';
 
 class SearchForm extends Component {
 
@@ -199,6 +199,7 @@ class SearchForm extends Component {
     }
 
     render() {
+        let classes = this.props.classes;
         let dateIntervals = this.props.dateIntervals;
         let appearance = this.props.appearance;
         let id = this.props.id;
@@ -209,7 +210,7 @@ class SearchForm extends Component {
 
         return (
             <div id={id}>
-                <table className='form'>
+                <table className={classes.form}>
                     <tbody>
                     <tr>
                         <td>
@@ -346,7 +347,7 @@ class SearchForm extends Component {
                                               originalName={originalName}/>
                         </td>
                         <td>
-                            <div className='searchButton'>
+                            <div className={classes.searchButton}>
                                 <RaisedButton label={appearance.searchBtn()}
                                               onClick={this.handleSubmitForm}/>
                             </div>
@@ -448,4 +449,4 @@ FileSizeDropDown.propTypes = {
 };
 
 
-export default SearchForm;
+export default injectSheet(styles)(SearchForm);

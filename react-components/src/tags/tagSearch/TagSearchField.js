@@ -3,6 +3,8 @@ import React, {Component} from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
 import PropTypes from 'prop-types';
 import Tag from "./Tag";
+import injectSheet from 'react-jss';
+import styles from './styles';
 
 class TagSearchField extends Component {
     constructor(props) {
@@ -55,6 +57,7 @@ class TagSearchField extends Component {
     }
 
     render() {
+        let classes = this.props.classes;
         let label = this.props.label;
         let searchText = this.props.taggedWith;
         let suggestedTags = this.props.suggestedTags;
@@ -72,7 +75,7 @@ class TagSearchField extends Component {
                               searchText={searchText}
                               onUpdateInput={this.onTagValueChange}
                               onNewRequest={this.onTagSelected}/>
-                <div className='chip'>
+                <div className={classes.chip}>
                     {tags && tags.map(function (tag, index) {
                         return (
                             <Tag key={index}
@@ -110,4 +113,4 @@ TagSearchField.defaultProps = {
     keyPressTimer: 1000
 };
 
-export default TagSearchField;
+export default injectSheet(styles)(TagSearchField);
