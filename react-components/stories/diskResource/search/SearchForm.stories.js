@@ -1,7 +1,7 @@
 import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {getCyVerseTheme} from "../../../src/lib";
-import SearchForm from "../../../src/diskResource/search/SearchForm";
+import {SearchForm} from "../../../src/diskResource/search";
 
 class SearchFormTest extends React.Component {
 
@@ -45,30 +45,6 @@ class SearchFormTest extends React.Component {
                 value: 'kiwis'
             }
         ];
-
-        const appearance = {
-            nameHas: () => 'File/Folder name has the words',
-            createdWithin: () => 'Created within',
-            nameHasNot: () => "File/Folder name doesn't have",
-            modifiedWithin: () => 'Modified within',
-            metadataAttributeHas: () => 'Metadata attribute has the words',
-            ownedBy: () => 'Owned by',
-            metadataValueHas: () => 'Metadata value has the words',
-            sharedWith: () => 'Shared with',
-            enterCyVerseUserName: () => 'Enter CyVerse user name',
-            fileSizeGreater: () => 'File size is bigger than or equal to',
-            fileSizeLessThan: () => 'File size is smaller than or equal to',
-            includeTrash: () => 'Include items in Trash',
-            taggedWith: () => 'Tagged with',
-            fileSizes: () => 'KB, MB, GB, TB',
-            searchBtn: () => 'Search',
-            saveSearchBtnText: () => 'Save Search',
-            filterName: () => 'Filter Name',
-            requiredField: () => 'This field is required',
-            saveSearchTitle: () => 'Save Filter',
-            saveBtn: () => 'Save',
-            cancelBtn: () => 'Cancel',
-        };
 
         const dateIntervals = [
             {
@@ -127,7 +103,6 @@ class SearchFormTest extends React.Component {
         return (
             <MuiThemeProvider muiTheme={getCyVerseTheme()}>
                 <SearchForm presenter={presenter}
-                            appearance={appearance}
                             dateIntervals={dateIntervals}
                             suggestedTags={suggestedTags}
                             id={id}

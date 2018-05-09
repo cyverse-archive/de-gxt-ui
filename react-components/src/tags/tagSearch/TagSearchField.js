@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Tag from "./Tag";
 import injectSheet from 'react-jss';
 import styles from './styles';
+import ids from './ids';
 
 class TagSearchField extends Component {
     constructor(props) {
@@ -15,6 +16,7 @@ class TagSearchField extends Component {
         this.onDeleteTagSelected = this.onDeleteTagSelected.bind(this);
         this.onTagSelected = this.onTagSelected.bind(this);
         this.fetchTagSuggestions = this.fetchTagSuggestions.bind(this);
+        this.getFullId = this.getFullId.bind(this);
     }
 
     componentWillMount() {
@@ -56,6 +58,11 @@ class TagSearchField extends Component {
         this.props.onEditTagSelected(selectedTag);
     }
 
+    getFullId(id) {
+        let parentId = this.props.parentId;
+        return parentId ? parentId + id : id;
+    }
+
     render() {
         let classes = this.props.classes;
         let label = this.props.label;
@@ -68,8 +75,9 @@ class TagSearchField extends Component {
         };
 
         return (
-            <div>
-                <AutoComplete floatingLabelText={label}
+            <div id={this.getFullId(ids.tagSearchField)}>
+                <AutoComplete id={this.getFullId(ids.tagSearchFieldInput)}
+                              floatingLabelText={label}
                               dataSource={suggestedTags}
                               dataSourceConfig={dataSourceConfig}
                               searchText={searchText}
@@ -91,8 +99,9 @@ class TagSearchField extends Component {
 }
 
 TagSearchField.propTypes = {
+    parentId: PropTypes.string,
     keyPressTimer: PropTypes.number,
-    label: PropTypes.string,
+    label: PropTypes.any,
     taggedWith: PropTypes.string.isRequired,
     tags: PropTypes.arrayOf(PropTypes.shape({
         value: PropTypes.string.isRequired,

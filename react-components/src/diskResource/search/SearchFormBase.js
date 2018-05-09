@@ -4,14 +4,16 @@ import Checkbox from 'material-ui/Checkbox';
 import MenuItem from 'material-ui/MenuItem';
 import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
-import SaveSearchDialog from '../../diskResource/search/SaveSearchDialog';
+import {SaveSearchButton} from '../../diskResource/search';
 import SelectField from 'material-ui/SelectField';
 import TagSearchField from '../../tags/tagSearch/TagSearchField';
 import TextField from 'material-ui/TextField';
 import injectSheet from 'react-jss';
 import styles from './styles';
+import ids from './ids';
+import {getMessage} from '../../util/hasI18N';
 
-class SearchForm extends Component {
+class SearchFormBase extends Component {
 
     constructor(props) {
         super(props);
@@ -200,27 +202,28 @@ class SearchForm extends Component {
 
     render() {
         let classes = this.props.classes;
+        let messages = this.props.i18nData;
         let dateIntervals = this.props.dateIntervals;
-        let appearance = this.props.appearance;
-        let id = this.props.id;
         let suggestedTags = this.props.suggestedTags;
         let originalName = this.props.template.label;
 
-        let sizesList = appearance.fileSizes().split(', ');
+        let sizesList = messages.fileSizes;
 
         return (
-            <div id={id}>
+            <div id={ids.form}>
                 <table className={classes.form}>
                     <tbody>
                     <tr>
                         <td>
-                            <TextField floatingLabelText={appearance.nameHas()}
+                            <TextField id={ids.nameHas}
+                                       floatingLabelText={getMessage('nameHas')}
                                        fullWidth={true}
                                        value={this.state.fileQuery}
                                        onChange={this.handleChangeFor.bind(null, 'fileQuery')}/>
                         </td>
                         <td>
-                            <DateIntervalDropDown label={appearance.createdWithin()}
+                            <DateIntervalDropDown id={ids.createdWithin}
+                                                  label={getMessage('createdWithin')}
                                                   list={dateIntervals}
                                                   value={this.state.createdWithin}
                                                   onChange={this.handleDropDownChangeFor.bind(null, 'createdWithin')}/>
@@ -229,13 +232,15 @@ class SearchForm extends Component {
 
                     <tr>
                         <td>
-                            <TextField floatingLabelText={appearance.nameHasNot()}
+                            <TextField id={ids.nameHasNot}
+                                       floatingLabelText={getMessage('nameHasNot')}
                                        fullWidth={true}
                                        value={this.state.negatedFileQuery}
                                        onChange={this.handleChangeFor.bind(null, 'negatedFileQuery')}/>
                         </td>
                         <td>
-                            <DateIntervalDropDown label={appearance.modifiedWithin()}
+                            <DateIntervalDropDown id={ids.modifiedWithin}
+                                                  label={getMessage('modifiedWithin')}
                                                   list={dateIntervals}
                                                   value={this.state.modifiedWithin}
                                                   onChange={this.handleDropDownChangeFor.bind(null, 'modifiedWithin')}/>
@@ -244,14 +249,16 @@ class SearchForm extends Component {
 
                     <tr>
                         <td>
-                            <TextField floatingLabelText={appearance.metadataAttributeHas()}
+                            <TextField id={ids.metadataAttributeHas}
+                                       floatingLabelText={getMessage('metadataAttributeHas')}
                                        fullWidth={true}
                                        value={this.state.metadataAttributeQuery}
                                        onChange={this.handleChangeFor.bind(null, 'metadataAttributeQuery')}/>
                         </td>
                         <td>
-                            <TextField floatingLabelText={appearance.ownedBy()}
-                                       hintText={appearance.enterCyVerseUserName()}
+                            <TextField id={ids.ownedBy}
+                                       floatingLabelText={getMessage('ownedBy')}
+                                       hintText={getMessage('enterCyVerseUserName')}
                                        fullWidth={true}
                                        value={this.state.ownedBy}
                                        onChange={this.handleChangeFor.bind(null, 'ownedBy')}/>
@@ -260,14 +267,16 @@ class SearchForm extends Component {
 
                     <tr>
                         <td>
-                            <TextField floatingLabelText={appearance.metadataValueHas()}
+                            <TextField id={ids.metadataValueHas}
+                                       floatingLabelText={getMessage('metadataValueHas')}
                                        fullWidth={true}
                                        value={this.state.metadataValueQuery}
                                        onChange={this.handleChangeFor.bind(null, 'metadataValueQuery')}/>
                         </td>
                         <td>
-                            <TextField floatingLabelText={appearance.sharedWith()}
-                                       hintText={appearance.enterCyVerseUserName()}
+                            <TextField id={ids.sharedWith}
+                                       floatingLabelText={getMessage('sharedWith')}
+                                       hintText={getMessage('enterCyVerseUserName')}
                                        fullWidth={true}
                                        value={this.state.sharedWith}
                                        onChange={this.handleChangeFor.bind(null, 'sharedWith')}/>
@@ -280,14 +289,16 @@ class SearchForm extends Component {
                                 <tbody>
                                 <tr>
                                     <td style={{'width': '100%'}}>
-                                        <TextField floatingLabelText={appearance.fileSizeGreater()}
+                                        <TextField id={ids.fileSizeGreater}
+                                                   floatingLabelText={getMessage('fileSizeGreater')}
                                                    floatingLabelShrinkStyle={{width: '150%'}}
                                                    fullWidth={true}
                                                    value={this.state.fileSizeGreater}
                                                    onChange={this.handleChangeFor.bind(null, 'fileSizeGreater')}/>
                                     </td>
                                     <td>
-                                        <FileSizeDropDown label=' '
+                                        <FileSizeDropDown id={ids.fileSizeGreaterUnit}
+                                                          label=' '
                                                           list={sizesList}
                                                           value={this.state.fileSizeGreaterUnit}
                                                           onChange={this.handleDropDownChangeFor.bind(null, 'fileSizeGreaterUnit')}/>
@@ -301,14 +312,16 @@ class SearchForm extends Component {
                                 <tbody>
                                 <tr>
                                     <td style={{'width': '100%'}}>
-                                        <TextField floatingLabelText={appearance.fileSizeLessThan()}
+                                        <TextField id={ids.fileSizeLessThan}
+                                                   floatingLabelText={getMessage('fileSizeLessThan')}
                                                    floatingLabelShrinkStyle={{width: '150%'}}
                                                    fullWidth={true}
                                                    value={this.state.fileSizeLessThan}
                                                    onChange={this.handleChangeFor.bind(null, 'fileSizeLessThan')}/>
                                     </td>
                                     <td>
-                                        <FileSizeDropDown label=' '
+                                        <FileSizeDropDown id={ids.fileSizeLessThanUnit}
+                                                          label=' '
                                                           list={sizesList}
                                                           value={this.state.fileSizeLessThanUnit}
                                                           onChange={this.handleDropDownChangeFor.bind(null, 'fileSizeLessThanUnit')}/>
@@ -321,9 +334,10 @@ class SearchForm extends Component {
 
                     <tr>
                         <td>
-                            <TagSearchField taggedWith={this.state.taggedWith}
+                            <TagSearchField parentId={ids.form}
+                                            taggedWith={this.state.taggedWith}
                                             tags={this.state.tagQuery}
-                                            label={appearance.taggedWith()}
+                                            label={getMessage('taggedWith')}
                                             onTagValueChange={this.onTagValueChange}
                                             onTagSelected={this.onTagSelected}
                                             onDeleteTagSelected={this.onDeleteTagSelected}
@@ -332,8 +346,9 @@ class SearchForm extends Component {
                                             suggestedTags={suggestedTags}/>
                         </td>
                         <td>
-                            <Checkbox style={{top: '20px'}}
-                                      label={appearance.includeTrash()}
+                            <Checkbox id={ids.includeTrash}
+                                      style={{top: '20px'}}
+                                      label={getMessage('includeTrash')}
                                       onCheck={this.handleCheckBoxChange.bind(null, 'includeTrashItems')}
                                       checked={this.state.includeTrashItems}/>
                         </td>
@@ -342,13 +357,13 @@ class SearchForm extends Component {
 
                     <tr>
                         <td>
-                            <SaveSearchDialog appearance={appearance}
-                                              handleSave={this.handleSaveSearch}
+                            <SaveSearchButton handleSave={this.handleSaveSearch}
                                               originalName={originalName}/>
                         </td>
                         <td>
                             <div className={classes.searchButton}>
-                                <RaisedButton label={appearance.searchBtn()}
+                                <RaisedButton id={ids.searchBtn}
+                                              label={getMessage('searchBtn')}
                                               onClick={this.handleSubmitForm}/>
                             </div>
                         </td>
@@ -360,7 +375,7 @@ class SearchForm extends Component {
     }
 }
 
-SearchForm.propTypes = {
+SearchFormBase.propTypes = {
     presenter: PropTypes.shape({
         onSearchBtnClicked: PropTypes.func.isRequired,
         onEditTagSelected: PropTypes.func.isRequired,
@@ -378,7 +393,6 @@ SearchForm.propTypes = {
         value: PropTypes.string.isRequired,
         description: PropTypes.string
     })),
-    appearance: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
     template: PropTypes.shape({
             label: PropTypes.string,
@@ -402,13 +416,15 @@ SearchForm.propTypes = {
 };
 
 function DateIntervalDropDown(props) {
+    let id = props.id;
     let label = props.label;
     let list = props.list;
     let value = props.value;
     let onChange = props.onChange;
 
     return (
-        <SelectField floatingLabelText={label}
+        <SelectField id={id}
+                     floatingLabelText={label}
                      floatingLabelFixed={true}
                      fullWidth={true}
                      value={value}
@@ -421,18 +437,20 @@ function DateIntervalDropDown(props) {
 }
 
 DateIntervalDropDown.propTypes = {
-    label: PropTypes.string.isRequired,
+    label: PropTypes.any.isRequired,
     list: PropTypes.array.isRequired
 };
 
 function FileSizeDropDown(props) {
+    let id = props.id;
     let label = props.label;
     let list = props.list;
     let value = props.value;
     let onChange = props.onChange;
 
     return (
-        <SelectField floatingLabelText={label}
+        <SelectField id={id}
+                     floatingLabelText={label}
                      fullWidth={true}
                      value={value}
                      onChange={onChange}>
@@ -449,4 +467,4 @@ FileSizeDropDown.propTypes = {
 };
 
 
-export default injectSheet(styles)(SearchForm);
+export default injectSheet(styles)(SearchFormBase);

@@ -5,12 +5,14 @@ import FlatButton from 'material-ui/FlatButton';
 import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import ids from './ids';
+import {getMessage} from '../../util/hasI18N';
 
 /**
  * @author aramsey
  * A dialog for naming an advanced search query and saving it
  */
-class SaveSearchDialog extends Component {
+class SaveSearchButtonBase extends Component {
     constructor(props) {
         super(props);
 
@@ -23,6 +25,7 @@ class SaveSearchDialog extends Component {
         this.handleOpen = this.handleOpen.bind(this);
         this.handleSave = this.handleSave.bind(this);
         this.handleValueChange = this.handleValueChange.bind(this);
+        this.getFullId = this.getFullId.bind(this);
     }
 
     handleValueChange(event) {
@@ -66,27 +69,36 @@ class SaveSearchDialog extends Component {
         })
     }
 
+    getFullId(id) {
+        let parentId = this.props.parentId;
+        return parentId ? parentId + id : id;
+    }
+
     render() {
-        let appearance = this.props.appearance;
         let actions = [
-            <FlatButton label={appearance.saveBtn()}
+            <FlatButton id={ids.saveBtn}
+                        label={getMessage('saveBtn')}
                         primary={true}
                         onClick={this.handleSave}/>,
-            <FlatButton label={appearance.cancelBtn()}
+            <FlatButton id={ids.cancelBtn}
+                        label={getMessage('cancelBtn')}
                         primary={true}
                         onClick={this.handleClose}/>
         ];
 
         return (
             <div>
-                <RaisedButton label={appearance.saveSearchBtnText()}
+                <RaisedButton id={this.getFullId(ids.saveSearchBtn)}
+                              label={getMessage('saveSearchBtn')}
                               onClick={this.handleOpen}/>
-                <Dialog title={appearance.saveSearchTitle()}
+                <Dialog id={ids.saveSearchDlg}
+                        title={getMessage('saveSearchTitle')}
                         actions={actions}
                         open={this.state.open}
                         onRequestClose={this.handleClose}>
-                    <TextField hintText={appearance.filterName()}
-                               errorText={appearance.requiredField()}
+                    <TextField id={ids.saveTextField}
+                               hintText={getMessage('filterName')}
+                               errorText={getMessage('requiredField')}
                                value={this.state.name}
                                onChange={this.handleValueChange}/>
                 </Dialog>
@@ -95,10 +107,10 @@ class SaveSearchDialog extends Component {
     }
 }
 
-SaveSearchDialog.propTypes = {
-    appearance: PropTypes.object.isRequired,
+SaveSearchButtonBase.propTypes = {
+    parentId: PropTypes.string,
     handleSave: PropTypes.func.isRequired,
     originalName: PropTypes.string.isRequired
 };
 
-export default SaveSearchDialog;
+export default SaveSearchButtonBase;
