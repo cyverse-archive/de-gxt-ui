@@ -10,5 +10,5 @@ import jsinterop.annotations.JsFunction;
 @JsFunction
 @SuppressWarnings("unusable-by-js")
 public interface TagAttachCallback {
-    void onAttach(Splittable[] tags);
+    void onAttach(Splittable tags);
 }

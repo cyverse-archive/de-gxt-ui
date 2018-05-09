@@ -10,5 +10,5 @@ import jsinterop.annotations.JsFunction;
 @JsFunction
 @SuppressWarnings("unusable-by-js")
 public interface TagDetachCallback {
-    void onDetach(Splittable[] tags);
+    void onDetach(Splittable tags);
 }

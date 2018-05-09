@@ -5,12 +5,9 @@ import React, {Component} from "react";
 import {FormattedMessage, IntlProvider} from "react-intl";
 import styles from "../style";
 import {css} from "aphrodite";
-import jss, {SheetsManager} from "jss";
+import jss from "jss";
 
 class Tag extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     handleMouseOver = () => {
         let ele = document.getElementById(this.props.tag.id);

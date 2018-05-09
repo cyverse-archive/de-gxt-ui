@@ -10,5 +10,5 @@ import jsinterop.annotations.JsFunction;
 @JsFunction
 @SuppressWarnings("unusable-by-js")
 public interface TagCreateCallback {
-    void createTag(Splittable[] tags);
+    void createTag(Splittable tags);
 }

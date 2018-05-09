@@ -191,7 +191,6 @@ class AppStats extends Component {
     }
 
     render() {
-        const appearance = this.props.appearance;
         const classes = this.props.classes;
         const {data, rowsPerPage, page} = this.state;
         return (
