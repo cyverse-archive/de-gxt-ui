@@ -1,6 +1,5 @@
 package org.iplantc.de.diskResource.client;
 
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.sencha.gxt.data.shared.event.StoreUpdateEvent.StoreUpdateHandler;
 import jsinterop.annotations.JsIgnore;
@@ -41,44 +40,6 @@ public interface DetailsView extends IsWidget,
     void setInfoTypes(List<InfoType> infoTypes);
 
     void setPresenter(DetailsView.Presenter detailsViewPresenter);
-
-    @JsType
-    interface Appearance {
-        @JsType
-        interface DetailsViewStyle extends CssResource {
-
-            String disabledHyperlink();
-
-            String label();
-
-            String value();
-
-            String hidden();
-
-            String hyperlink();
-
-            String deselectIcon();
-
-            String table();
-
-            String tagSearch();
-
-            String row();
-
-            String emptyDetails();
-
-            String tagPanelStyle();
-
-            String tagDivStyle();
-
-            String tagStyle();
-
-            String tagRemoveStyle();
-        }
-
-        DetailsViewStyle css();
-
-    }
 
     @JsType
     interface Presenter extends SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers,

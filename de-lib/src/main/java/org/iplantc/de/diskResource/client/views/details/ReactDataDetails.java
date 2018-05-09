@@ -24,7 +24,6 @@ public class ReactDataDetails {
     static class DataDetailsProps extends BaseProps {
         public DiskResourceUtil drUtil;
         public Splittable data;
-        public DetailsView.Appearance appearance;
         public String owner;
         public DetailsView view;
         public String[] infoTypes;

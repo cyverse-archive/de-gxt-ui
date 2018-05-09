@@ -8,22 +8,6 @@ import {BasicDetailsWithI18N} from "../../../src/data/details";
 
 class BasicDetailsTest extends Component {
     render() {
-
-        const dataDetailsAppearance = {
-            css: () => (
-                {
-                    row: () => "",
-                    label: () => "",
-                    value: () => "",
-                    hyperlink: () => "",
-                    tagPanelStyle: () => "",
-                    tagDivStyle: () => "",
-                    tagStyle: () => "",
-                    tagRemoveStyle: () => "",
-                }
-            ),
-        }
-
         const ids = {
             DETAILS_LAST_MODIFIED: "detailsLastModified",
             DETAILS_DATE_SUBMITTED: "detailsDateSubmitted",
@@ -105,8 +89,13 @@ class BasicDetailsTest extends Component {
 
         return (
             <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-                <BasicDetailsWithI18N data={data} drUtil={drUtil} appearance={dataDetailsAppearance}
-                                      owner="own" infoTypes={types} selectedValue={data.infoType} presenter={presenter} ids={ids} />
+                <BasicDetailsWithI18N data={data}
+                                      drUtil={drUtil}
+                                      owner="own"
+                                      infoTypes={types}
+                                      selectedValue={data.infoType}
+                                      presenter={presenter}
+                                      ids={ids} />
 
             </MuiThemeProvider>
         );

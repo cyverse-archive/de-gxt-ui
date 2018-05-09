@@ -37,15 +37,13 @@ public class DetailsViewImpl implements DetailsView {
 
 
     HTMLPanel panel;
-    final Appearance appearance;
 
     private final Logger LOG = Logger.getLogger(DetailsViewImpl.class.getSimpleName());
     private DiskResource boundValue;
     DiskResourceUtil diskResourceUtil = DiskResourceUtil.getInstance();
 
     @Inject
-    DetailsViewImpl(final DetailsView.Appearance appearance) {
-        this.appearance = appearance;
+    DetailsViewImpl() {
         panel = new HTMLPanel("<div></div>");
     }
 
@@ -98,7 +96,6 @@ public class DetailsViewImpl implements DetailsView {
 
             detailsProps.data = dataJson;
             detailsProps.drUtil = diskResourceUtil;
-            detailsProps.appearance = appearance;
             detailsProps.owner = PermissionValue.own.toString();
             detailsProps.presenter = presenter;
             detailsProps.DETAILS_DATE_SUBMITTED = DiskResourceModule.Ids.DETAILS_DATE_SUBMITTED;

@@ -3,6 +3,9 @@
  */
 import React, {Component} from "react";
 import {FormattedMessage, IntlProvider} from "react-intl";
+import styles from "../style";
+import {css} from "aphrodite";
+import jss, {SheetsManager} from "jss";
 
 class Tag extends Component {
     constructor(props) {
@@ -10,23 +13,40 @@ class Tag extends Component {
     }
 
     handleMouseOver = () => {
-        document.getElementById(this.props.tag.id).style.display = 'block';
-    }
+        let ele = document.getElementById(this.props.tag.id);
+        jss.createRule({
+            display: 'block',
+        }).applyTo(ele);
+    };
 
     handleMouseOut = () => {
-        document.getElementById(this.props.tag.id).style.display = 'none';
-    }
+        let ele = document.getElementById(this.props.tag.id);
+        jss.createRule({
+            display: 'none',
+        }).applyTo(ele);
+    };
+
 
     render() {
+        const removeStyle = {
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            display: 'none',
+            float: 'right',
+            fontSize: 12,
+            borderLeft: '1px solid',
+            paddingLeft: '1px',
+
+        }; // does not work with jss classname approach
+
         return (
             <IntlProvider locale='en' defaultLocale='en' messages={this.props.messages}>
-                <div className={this.props.appearance.css().tagDivStyle()} onMouseOver={this.handleMouseOver}
+                <div className={css(styles.tagDivStyle)} onMouseOver={this.handleMouseOver}
                      onMouseOut={this.handleMouseOut}>
-                    <div className={this.props.appearance.css().tagStyle()}
+                    <div className={css(styles.tagStyle)}
                          onClick={() => this.props.onClick(this.props.tag)}>{this.props.tag.value}</div>
                     <div title={<FormattedMessage id="removeTag"/>} id={this.props.tag.id}
-                         className={this.props.appearance.css().tagRemoveStyle()}
-                         onClick={() => this.props.removeTag(this.props.tag)}> X
+                         style={removeStyle} onClick={() => this.props.removeTag(this.props.tag)}> X
                     </div>
                 </div>
             </IntlProvider>

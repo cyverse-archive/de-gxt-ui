@@ -1,45 +1,13 @@
 import React, {Component} from "react";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import {getCyVerseTheme} from "../../../src/lib";
-import InfoTypeSelectionList from "../../../src/data/details/InfoTypeSelectionList"
+import InfoTypeSelectionList from "../../../src/data/details/InfoTypeSelectionList";
+import intlData from "../../../src/data/messages";
 
 class InfoTypeSelectionListTest extends Component {
 
-
     render() {
        const types = [];
-
-        const dataDetailsAppearance = {
-            css: () => (
-                {
-                    row: () => "",
-                    label: () => "",
-                    value: () => "",
-                    hyperlink: () => "",
-                    tagPanelStyle: () => "",
-                    tagDivStyle: () => "",
-                    tagStyle: () => "",
-                    tagRemoveStyle: () => "",
-                }
-            ),
-            lastModifiedLabel: () => "Last Modified:",
-            createdDateLabel: () => "Created Date:",
-            permissionsLabel: () => "Permissions:",
-            md5CheckSum: () => "Md5:",
-            sizeLabel: () => "Size:",
-            shareLabel: () => "Share",
-            beginSharing: () => "Begin Sharing",
-            infoTypeLabel: () => "InfoType",
-            typeLabel: () => "Type",
-            sendToLabel: () => "Send To",
-            searchTags: () => "Search Tags...",
-            removeTag: () => "Remove Tag",
-            selectInfoType: () => "Select Info Type...",
-            tagSearchListStyle: () => {},
-            infoTypeSelectStyle: () => {},
-            emptyValue: () => "-",
-        }
-        
        types.push("-");
        types.push("csv") ;
        types.push("tsv");
@@ -51,10 +19,13 @@ class InfoTypeSelectionListTest extends Component {
        types.push("gtf");
        types.push("perl");
        types.push("python");
+        const logger = this.props.logger || ((tag) => {
+                console.log(tag);
+            });
 
        return (
            <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-               <InfoTypeSelectionList infoTypes={types} selectedValue={"csv"} appearance={dataDetailsAppearance}/>
+               <InfoTypeSelectionList infoTypes={types} selectedValue={"csv"} onInfoTypeSelect={logger} {...intlData}/>
            </MuiThemeProvider>
        )
     }
