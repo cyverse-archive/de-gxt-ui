@@ -16,10 +16,10 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import PropTypes from "prop-types";
 import moment from "moment";
-import RefreshIndicator from "material-ui/RefreshIndicator";
 import {addLocaleData, ReactIntlLocaleData, FormattedMessage, IntlProvider} from "react-intl";
-
-
+import {CircularProgress} from "material-ui-next/Progress";
+import exStyles from "../style";
+import {css} from "aphrodite";
 const pagingStyles = theme => ({
     root: {
         flexShrink: 0,
@@ -110,18 +110,6 @@ const styles = theme => ({
         marginRight: theme.spacing.unit,
         width: 200,
     },
-    button: {
-        margin: 1,
-    },
-    table: {
-        overflow: "auto",
-    },
-    head: {
-        backgroundColor: "#e2e2e2",
-        position: "sticky",
-        top: 0
-    },
-
 });
 
 class AppStats extends Component {
@@ -209,12 +197,9 @@ class AppStats extends Component {
         return (
             <IntlProvider locale='en' defaultLocale='en' messages={this.props.messages}>
                 <div className={classes.root}>
-                    <RefreshIndicator
-                        size={50}
-                        left={600}
-                        top={400}
-                        loadingColor="#FF9800"
-                        status={(this.state.loading) ? "loading" : "hide"}/>
+                    {this.state.loading &&
+                        <CircularProgress size={30} className={css(exStyles.loadingStyle)} thickness={7}/>
+                    }
                     <div>
                         <Toolbar>
                             <ToolbarGroup>
@@ -233,26 +218,26 @@ class AppStats extends Component {
                                            }} onChange={this.onEndDateChange}/>
                                 <ToolbarSeparator />
                                 <Button variant="raised" onClick={this.applyFilter}
-                                        className={classes.button}>{<FormattedMessage id="applyFilter"/>}</Button>
+                                        className={css(exStyles.filterButton)}>{<FormattedMessage id="applyFilter"/>}</Button>
 
                             </ToolbarGroup>
                         </Toolbar>
                     </div>
-                    <Table className={classes.table}>
+                    <Table className={css(exStyles.statTable)}>
                         <TableHead>
                             <TableRow hover>
-                                <TableCell className={classes.head}>{<FormattedMessage id="appName"/>}</TableCell>
-                                <TableCell className={classes.head}
+                                <TableCell className={css(exStyles.tableHead)}>{<FormattedMessage id="appName"/>}</TableCell>
+                                <TableCell className={css(exStyles.tableHead)}
                                            numeric>{<FormattedMessage id="rating"/>}</TableCell>
-                                <TableCell className={classes.head}
+                                <TableCell className={css(exStyles.tableHead)}
                                            numeric>{<FormattedMessage id="total"/>}</TableCell>
-                                <TableCell className={classes.head}
+                                <TableCell className={css(exStyles.tableHead)}
                                            numeric>{<FormattedMessage id="completed"/>}</TableCell>
-                                <TableCell className={classes.head}
+                                <TableCell className={css(exStyles.tableHead)}
                                            numeric>{<FormattedMessage id="failed"/>}</TableCell>
-                                <TableCell className={classes.head}
+                                <TableCell className={css(exStyles.tableHead)}
                                            numeric>{<FormattedMessage id="lastCompleted"/>}</TableCell>
-                                <TableCell className={classes.head}
+                                <TableCell className={css(exStyles.tableHead)}
                                            numeric>{<FormattedMessage id="lastUsed"/>}</TableCell>
                             </TableRow>
                         </TableHead>
