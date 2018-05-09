@@ -139,7 +139,7 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
             @Override
             public void onSuccess(List<Tag> result) {
                 tags.addAll(result);
-                callback.onTagsFetched(tagsToSplittableArray(tags));
+                callback.onTagsFetched(tagsToSplittable(tags));
             }
         });
     }
@@ -160,7 +160,7 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
                         AutoBeanCodex.decode(factory, IplantTagList.class, result);
                 List<Tag> tagList = tagListBean.as().getTagList();
 
-                callback.searchComplete(tagsToSplittableArray(tagList));
+                callback.searchComplete(tagsToSplittable(tagList));
             }
         });
     }
@@ -188,7 +188,7 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
                 if (found.size() == 0) {
                     tags.add(tag);
                 }
-                callback.onAttach(tagsToSplittableArray(tags));
+                callback.onAttach(tagsToSplittable(tags));
             }
         });
     }
@@ -213,7 +213,7 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
                                          .filter(t -> t.getId().equals(tag.getId()))
                                          .collect(Collectors.toList());
                 tags.removeAll(toRemove);
-                callback.onDetach(tagsToSplittableArray(tags));
+                callback.onDetach(tagsToSplittable(tags));
             }
         });
     }
@@ -288,12 +288,10 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
         return Lists.newArrayList(tagId);
     }
 
-    private Splittable[] tagsToSplittableArray(List<Tag> tagList) {
-        Splittable[] tags = new Splittable[tagList.size()];
-        for (int i = 0; i < tagList.size(); i++) {
-            tags[i] = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tagList.get(i)));
-        }
-        return tags;
+    private Splittable tagsToSplittable(List<Tag> tagList) {
+        IplantTagList tagListAB =factory.getTagList().as();
+        tagListAB.setTagList(tagList);
+        return AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tagListAB));
     }
 
     HandlerManager createHandlerManager() {

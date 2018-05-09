@@ -57,19 +57,23 @@ class BasicDetailsTest extends Component {
         tags.push({value: 'bed', id: 9});
         tags.push({value: 'js', id: 10});
 
+        const searchResult = {
+            tags : tags,
+        };
+
         const presenter = {
             searchTags: (value, resultCallback) => {
-                resultCallback(tags);
+                resultCallback(searchResult);
             },
             fetchTagsForResource: (id, fetchCallback) => {
-                fetchCallback(tags.slice(2, 6));
+                fetchCallback({tags: tags.slice(2, 6)});
             },
             onSetInfoType: () => logger("Set InfoType"),
             onSharingClicked: () => logger("Manage Sharing"),
             detachTag: () => logger("Detach Tag"),
             onTagSelection: () => logger("Tag Select"),
             attachTag: () => logger("Tag Attach"),
-        }
+        };
 
         const
             data = {

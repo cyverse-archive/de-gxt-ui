@@ -10,5 +10,5 @@ import jsinterop.annotations.JsFunction;
 @JsFunction
 @SuppressWarnings("unusable-by-js")
 public interface TagsSearchCallback {
-    void searchComplete(Splittable[] tags);
+    void searchComplete(Splittable tags);
 }

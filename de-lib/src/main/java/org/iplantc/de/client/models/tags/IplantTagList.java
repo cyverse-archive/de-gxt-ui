@@ -9,4 +9,7 @@ public interface IplantTagList {
     @PropertyName("tags")
     List<Tag> getTagList();
 
+    @PropertyName("tags")
+    void setTagList(List<Tag> tags);
+
 }

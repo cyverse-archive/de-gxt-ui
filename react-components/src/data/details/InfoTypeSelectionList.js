@@ -13,10 +13,6 @@ import styles from "../style";
 
 
 class InfoTypeSelectionList extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     handleChange = (event) => {
         this.props.onInfoTypeSelect(event.target.value);
    };

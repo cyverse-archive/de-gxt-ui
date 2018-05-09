@@ -43,13 +43,21 @@ class TagPanelTest extends Component {
         result.push({value: 'barbarbar', id: 19});
 
 
+        const searchResult = {
+            tags : result,
+        }
+
+        const attachedTags = {
+            tags: tags,
+        }
+
         const presenter = {
             searchTags: (value, resultCallback) => {
-                resultCallback(result);
+                resultCallback(searchResult);
             },
 
             fetchTagsForResource: (id, fetchCallback) => {
-                fetchCallback(result.slice(2, 6));
+                fetchCallback({tags: result.slice(2, 6)});
             },
 
         }
@@ -74,7 +82,7 @@ class TagPanelTest extends Component {
         return (
             <MuiThemeProvider muiTheme={getCyVerseTheme()}>
                 <TagPanel ids={ids}
-                          tags={tags}
+                          tags={attachedTags.tags}
                           dataSource={result}
                           handleTagSearch={() => logger}
                           handleRemoveClick={() => logger}

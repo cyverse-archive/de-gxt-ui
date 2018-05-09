@@ -114,17 +114,17 @@ class BasicDetails extends Component {
     fetchTags(id) {
         if (id && id !== this.state.tags.dataId && !this.state.loading) {
             this.setState({loading: true});
-            this.props.presenter.fetchTagsForResource(id, (tags) => {
-                this.setState({loading: false, tags: {dataId: id, values: tags}});
+            this.props.presenter.fetchTagsForResource(id, (tagList) => {
+                this.setState({loading: false, tags: {dataId: id, values: tagList.tags}});
             });
         }
     }
 
     handleTagSearch(value) {
         if (value && value.length >= 3) {
-            this.props.presenter.searchTags(value, (tags) => {
-                if (tags) {
-                    this.setState({dataSource: tags});
+            this.props.presenter.searchTags(value, (tagList) => {
+                if (tagList && tagList.tags) {
+                    this.setState({dataSource: tagList.tags});
                 }
             });
             this.setState({searchText: value});
@@ -135,12 +135,12 @@ class BasicDetails extends Component {
         if (!this.state.loading) {
             this.setState({loading: true});
             if (chosenTag.id) {
-                this.props.presenter.attachTag(chosenTag.id, chosenTag.value, this.props.data.id, (tags) => {
-                    this.setState({tags: {dataId: this.props.data.id, values: tags}, loading: false});
+                this.props.presenter.attachTag(chosenTag.id, chosenTag.value, this.props.data.id, (tagList) => {
+                    this.setState({tags: {dataId: this.props.data.id, values: tagList.tags}, loading: false});
                 });
             } else {
-                this.props.presenter.createTag(chosenTag, this.props.data.id, (tags) => {
-                    this.setState({tags: {dataId: this.props.data.id, values: tags}, loading: false});
+                this.props.presenter.createTag(chosenTag, this.props.data.id, (tagList) => {
+                    this.setState({tags: {dataId: this.props.data.id, values: tagList.tags}, loading: false});
                 });
             }
         }
@@ -149,8 +149,8 @@ class BasicDetails extends Component {
     doRemove(index) {
         if (!this.state.loading) {
             this.setState({loading: true});
-            this.props.presenter.detachTag(this.state.tags.values[index].id, this.state.tags.values[index].value, this.props.data.id, (tags) => {
-                this.setState({tags: {dataId: this.props.data.id, values: tags}, loading: false});
+            this.props.presenter.detachTag(this.state.tags.values[index].id, this.state.tags.values[index].value, this.props.data.id, (tagList) => {
+                this.setState({tags: {dataId: this.props.data.id, values: tagList.tags}, loading: false});
             });
         }
     }
