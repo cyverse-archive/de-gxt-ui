@@ -5,6 +5,8 @@ import React, {Component} from "react";
 import Tag from "./Tag";
 import AutoComplete from "material-ui/AutoComplete";
 import {FormattedMessage, IntlProvider} from "react-intl";
+import styles from "../style";
+import {css} from "aphrodite";
 
 
 class TagPanel extends Component {
@@ -24,11 +26,10 @@ class TagPanel extends Component {
             value: 'id',
         };
 
-        const tagListStyle = {fontSize: "small", width: "100%"};
-
         let tagItems = this.props.tags ? this.props.tags.map((tag) =>
-                <Tag tag={tag} key={tag.id} removeTag={this.props.handleRemoveClick} onClick={this.props.onTagClick}
-                     appearance={this.props.appearance}/>
+                <Tag tag={tag} key={tag.id}
+                     removeTag={this.props.handleRemoveClick}
+                     onClick={this.props.onTagClick}/>
             ) : [];
 
         return (
@@ -40,10 +41,10 @@ class TagPanel extends Component {
                             dataSource={this.props.dataSource}
                             onUpdateInput={this.props.handleTagSearch}
                             dataSourceConfig={dataSourceConfig}
-                            listStyle={tagListStyle}
+                            listStyle={css(styles.tagListStyle)}
                             onNewRequest={this.handleTagSelect}/>
                     </div>
-                    <div id="panel" className={this.props.appearance.css().tagPanelStyle()}>
+                    <div id="panel" className={css(styles.tagPanelStyle)}>
                         { tagItems }
                     </div>
                 </div>
