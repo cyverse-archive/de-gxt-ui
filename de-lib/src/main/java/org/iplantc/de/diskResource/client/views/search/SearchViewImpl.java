@@ -31,13 +31,11 @@ import com.sencha.gxt.widget.core.client.event.ShowEvent;
 public class SearchViewImpl extends Composite implements SearchView {
 
     private VerticalLayoutContainer con;
-    private SearchViewAppearance appearance;
     private final BaseEventPreview eventPreview;
     private boolean showing = false;
 
     @Inject
-    public SearchViewImpl(SearchViewAppearance appearance) {
-        this.appearance = appearance;
+    public SearchViewImpl() {
         this.con = new VerticalLayoutContainer();
         initWidget(con);
         con.getElement().getStyle().setBackgroundColor("#fff");
@@ -60,29 +58,6 @@ public class SearchViewImpl extends Composite implements SearchView {
         };
         eventPreview.getIgnoreList().add(getElement());
         eventPreview.setAutoHide(false);
-    }
-
-    @Override
-    public void onSearchBtnClicked(Splittable query) {
-        if (query != null) {
-            GWT.log(query.getPayload());
-            fireEvent(new SubmitDiskResourceQueryEvent(query));
-        }
-    }
-
-    @Override
-    public void onEditTagSelected(Tag tag) {
-        GWT.log("Edit tag : " + tag);
-    }
-
-    @Override
-    public void fetchTagSuggestions(String searchTerm) {
-        fireEvent(new FetchTagSuggestions(searchTerm));
-    }
-
-    @Override
-    public void onSaveSearch(Splittable query, String originalName) {
-        fireEvent(new SaveDiskResourceQueryClickedEvent(query, originalName));
     }
 
     @Override
@@ -160,19 +135,4 @@ public class SearchViewImpl extends Composite implements SearchView {
         GWT.log("CLEAR SEARCH...");
     }
 
-    @Override
-    public HandlerRegistration addFetchTagSuggestionsHandler(FetchTagSuggestions.FetchTagSuggestionsHandler handler) {
-        return addHandler(handler, FetchTagSuggestions.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration addSaveDiskResourceQueryClickedEventHandler(
-            SaveDiskResourceQueryClickedEvent.SaveDiskResourceQueryClickedEventHandler handler) {
-        return addHandler(handler, SaveDiskResourceQueryClickedEvent.TYPE);
-    }
-
-    @Override
-    public HandlerRegistration addSubmitDiskResourceQueryEventHandler(SubmitDiskResourceQueryEvent.SubmitDiskResourceQueryEventHandler handler) {
-        return addHandler(handler, SubmitDiskResourceQueryEvent.TYPE);
-    }
 }

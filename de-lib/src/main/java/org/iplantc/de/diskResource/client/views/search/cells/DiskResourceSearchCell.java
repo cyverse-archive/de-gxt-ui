@@ -41,7 +41,8 @@ import com.sencha.gxt.widget.core.client.event.HideEvent.HideHandler;
 public class DiskResourceSearchCell extends TriggerFieldCell<String> implements HasExpandHandlers,
                                                                                 HasCollapseHandlers,
                                                                                 HideHandler,
-                                                                                UpdateSavedSearchesEvent.HasUpdateSavedSearchesEventHandlers {
+                                                                                UpdateSavedSearchesEvent.HasUpdateSavedSearchesEventHandlers,
+                                                                                HasSubmitDiskResourceQueryEventHandlers {
 
     public interface DiskResourceSearchCellAppearance extends TriggerFieldAppearance {
         String advancedSearchToolTip();
@@ -186,5 +187,14 @@ public class DiskResourceSearchCell extends TriggerFieldCell<String> implements 
     @Override
     public HandlerRegistration addUpdateSavedSearchesEventHandler(UpdateSavedSearchesEvent.UpdateSavedSearchesHandler handler) {
         return searchPresenter.addUpdateSavedSearchesEventHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addSubmitDiskResourceQueryEventHandler(SubmitDiskResourceQueryEventHandler handler) {
+        return searchPresenter.addSubmitDiskResourceQueryEventHandler(handler);
+    }
+
+    public SearchView.Presenter getSearchPresenter() {
+        return searchPresenter;
     }
 }

@@ -18,7 +18,7 @@ public class ReactSearchForm {
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class SearchFormProps extends BaseProps {
-        public SearchView presenter;
+        public SearchView.Presenter presenter;
         public SearchView.SearchViewAppearance appearance;
         public Splittable dateIntervals;
         public Splittable suggestedTags;

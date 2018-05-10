@@ -12,12 +12,10 @@ import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent;
 import org.iplantc.de.diskResource.client.events.search.DeleteSavedSearchClickedEvent;
-import org.iplantc.de.diskResource.client.events.search.FetchTagSuggestions;
-import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent;
 import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent;
+import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent;
 import org.iplantc.de.diskResource.client.views.search.ReactSearchForm;
-import org.iplantc.de.diskResource.client.views.search.SearchViewImpl;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 import org.iplantc.de.tags.client.TagsView;
 import org.iplantc.de.tags.client.proxy.TagSuggestionLoadConfig;
@@ -28,6 +26,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -68,6 +67,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     private HandlerManager handlerManager;
     private final Logger LOG = Logger.getLogger(DataSearchPresenterImpl.class.getName());
     private SearchView view;
+    private ReactSearchForm.SearchFormProps currentProps;
 
     @Inject
     DataSearchPresenterImpl(final SearchServiceFacade searchService,
@@ -87,8 +87,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
         this.factory = factory;
         this.searchModelUtils = searchModelUtils;
 
-        view.addFetchTagSuggestionsHandler(this);
-        view.addSaveDiskResourceQueryClickedEventHandler(this);
+        GWT.log("search presenter initialized!");
     }
 
     @Override
@@ -136,9 +135,8 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
      * performed.
      */
     @Override
-    public void onSaveDiskResourceQueryClicked(final SaveDiskResourceQueryClickedEvent event) {
+    public void onSaveSearch(Splittable splTemplate, String originalName) {
         // Assume that once the filter is saved, a search should be performed.
-        Splittable splTemplate = event.getQueryTemplate();
         DiskResourceQueryTemplate queryTemplate = AutoBeanCodex.decode(factory, DiskResourceQueryTemplate.class, splTemplate.getPayload()).as();
 
         if (Strings.isNullOrEmpty(queryTemplate.getName())) {
@@ -191,7 +189,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
                  */
                 List<DiskResourceQueryTemplate> queriesToRemove = Lists.newArrayList();
                 for (DiskResourceQueryTemplate qt : cleanCopyQueryTemplates) {
-                    if (qt.getName().equals(event.getOriginalName())) {
+                    if (qt.getName().equals(originalName)) {
                         queriesToRemove.add(qt);
                     }
                 }
@@ -294,8 +292,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     }
 
     @Override
-    public void onFetchTagSuggestions(FetchTagSuggestions event) {
-        String searchTerm = event.getSearchTerm();
+    public void fetchTagSuggestions(String searchTerm) {
         TagSuggestionLoadConfig config = new TagSuggestionLoadConfig();
         config.setQuery(searchTerm);
         proxy.load(config, new Callback<ListLoadResult<Tag>, Throwable>() {
@@ -312,17 +309,27 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
                     Splittable splTag = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tag));
                     splTag.assign(splittableTags, splittableTags.size());
                 });
-                ReactSearchForm.SearchFormProps props = new ReactSearchForm.SearchFormProps();
-                props.presenter = view;
-                props.appearance = appearance;
-                props.id = DiskResourceModule.Ids.SEARCH_FORM;
-                props.dateIntervals = dateIntervalProvider.get();
+                ReactSearchForm.SearchFormProps props = getCurrentProps();
                 props.suggestedTags = splittableTags;
-                props.template = StringQuoter.createSplittable();
 
                 view.renderSearchForm(props);
+
+                currentProps = props;
             }
         });
+    }
+
+    @Override
+    public void onSearchBtnClicked(Splittable query) {
+        if (query != null) {
+            GWT.log(query.getPayload());
+            fireEvent(new SubmitDiskResourceQueryEvent(query));
+        }
+    }
+
+    @Override
+    public void onEditTagSelected(Tag tag) {
+        GWT.log("Edit tag : " + tag);
     }
 
     @Override
@@ -332,26 +339,37 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
 
     @Override
     public void edit(DiskResourceQueryTemplate template) {
-        ReactSearchForm.SearchFormProps props = getDefaultProps();
+        ReactSearchForm.SearchFormProps props = getCurrentProps();
         props.template = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(template));
 
         view.renderSearchForm(props);
+
+        currentProps = props;
     }
 
     @Override
     public void show(XElement parent, Style.AnchorAlignment anchorAlignment) {
-        view.show(parent, anchorAlignment, getDefaultProps());
+        view.show(parent, anchorAlignment, getCurrentProps());
     }
 
-    ReactSearchForm.SearchFormProps getDefaultProps() {
-        ReactSearchForm.SearchFormProps props = new ReactSearchForm.SearchFormProps();
-        props.presenter = view;
-        props.appearance = appearance;
-        props.id = DiskResourceModule.Ids.SEARCH_FORM;
-        props.dateIntervals = dateIntervalProvider.get();
-        props.suggestedTags = StringQuoter.createIndexed();
-        props.template = searchModelUtils.createDefaultFilter();
+    ReactSearchForm.SearchFormProps getCurrentProps() {
+        if (currentProps == null) {
+            ReactSearchForm.SearchFormProps props = new ReactSearchForm.SearchFormProps();
+            props.presenter = this;
+            props.appearance = appearance;
+            props.id = DiskResourceModule.Ids.SEARCH_FORM;
+            props.dateIntervals = dateIntervalProvider.get();
+            props.suggestedTags = StringQuoter.createIndexed();
+            props.template = searchModelUtils.createDefaultFilter();
 
-        return props;
+            currentProps = props;
+        }
+
+        return currentProps;
+    }
+
+    @Override
+    public HandlerRegistration addSubmitDiskResourceQueryEventHandler(SubmitDiskResourceQueryEvent.SubmitDiskResourceQueryEventHandler handler) {
+        return ensureHandlers().addHandler(SubmitDiskResourceQueryEvent.TYPE, handler);
     }
 }

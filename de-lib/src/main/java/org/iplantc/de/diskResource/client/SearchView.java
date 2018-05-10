@@ -30,10 +30,7 @@ import jsinterop.annotations.JsType;
  */
 @JsType
 public interface SearchView extends IsWidget,
-                                    HideEvent.HasHideHandlers,
-                                    SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers,
-                                    SaveDiskResourceQueryClickedEvent.HasSaveDiskResourceQueryClickedEventHandlers,
-                                    FetchTagSuggestions.HasFetchTagSuggestionsHandlers{
+                                    HideEvent.HasHideHandlers {
 
     @JsType
     interface SearchViewAppearance {
@@ -141,12 +138,20 @@ public interface SearchView extends IsWidget,
      * @author jstroot
      *
      */
-    interface Presenter extends SaveDiskResourceQueryClickedEventHandler,
-                                DeleteSavedSearchEventHandler,
+    @JsType
+    interface Presenter extends DeleteSavedSearchEventHandler,
                                 HasSavedSearchDeletedEventHandlers,
                                 SavedSearchesRetrievedEventHandler,
                                 HasUpdateSavedSearchesEventHandlers,
-                                FetchTagSuggestions.FetchTagSuggestionsHandler {
+                                SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers {
+
+        void onSaveSearch(Splittable splTemplate, String originalName);
+
+        void fetchTagSuggestions(String searchTerm);
+
+        void onSearchBtnClicked(Splittable query);
+
+        void onEditTagSelected(Tag tag);
 
         SearchView getSearchForm();
 
@@ -171,13 +176,5 @@ public interface SearchView extends IsWidget,
 
     @JsIgnore
     void fireEvent(GwtEvent<?> event);
-
-    void onSearchBtnClicked(Splittable query);
-
-    void onEditTagSelected(Tag tag);
-
-    void fetchTagSuggestions(String searchTerm);
-    
-    void onSaveSearch(Splittable query, String originalName);
 }
 

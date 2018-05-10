@@ -141,9 +141,7 @@ public class DiskResourceGinModule extends AbstractGinModule {
         // Toolbar
         bind(ToolbarView.class).to(DiskResourceViewToolbarImpl.class);
 
-        install(new GinFactoryModuleBuilder()
-                    .implement(ToolbarView.Presenter.class, ToolbarViewPresenterImpl.class)
-                    .build(ToolbarViewPresenterFactory.class));
+        bind(ToolbarView.Presenter.class).to(ToolbarViewPresenterImpl.class);
 
         // Details
         bind(DetailsView.Presenter.class).to(DetailsViewPresenterImpl.class);

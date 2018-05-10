@@ -8,6 +8,7 @@ import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.models.viewer.MimeType;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.diskResource.client.BulkMetadataView;
+import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.ToolbarView;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;

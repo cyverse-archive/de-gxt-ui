@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.commons.client.events.SubmitTextSearchEvent;
 import org.iplantc.de.commons.client.events.SubmitTextSearchEvent.SubmitTextSearchEventHandler;
 import org.iplantc.de.commons.client.widgets.search.SearchFieldDecorator;
+import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
 import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent;
 import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent;
@@ -77,7 +78,7 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
         super(searchCell);
 
         setPropertyEditor(new QueryStringPropertyEditor());
-        getCell().getSearchForm().addSubmitDiskResourceQueryEventHandler(this);
+        getCell().addSubmitDiskResourceQueryEventHandler(this);
 
         // Add search field decorator to enable "auto-search"
         new SearchFieldDecorator<TriggerField<String>>(this).addSubmitTextSearchEventHandler(this);
@@ -95,7 +96,7 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
 
     @Override
     public HandlerRegistration addSubmitDiskResourceQueryEventHandler(SubmitDiskResourceQueryEventHandler handler) {
-        return getCell().getSearchForm().addSubmitDiskResourceQueryEventHandler(handler);
+        return getCell().addSubmitDiskResourceQueryEventHandler(handler);
     }
 
     @Override
@@ -159,5 +160,9 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
     @Override
     public HandlerRegistration addUpdateSavedSearchesEventHandler(UpdateSavedSearchesEvent.UpdateSavedSearchesHandler handler) {
         return getCell().addUpdateSavedSearchesEventHandler(handler);
+    }
+
+    public SearchView.Presenter getSearchPresenter() {
+        return getCell().getSearchPresenter();
     }
 }
