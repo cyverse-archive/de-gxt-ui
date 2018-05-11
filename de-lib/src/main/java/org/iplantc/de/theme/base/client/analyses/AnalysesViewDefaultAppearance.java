@@ -328,4 +328,9 @@ public class AnalysesViewDefaultAppearance implements AnalysesView.Appearance {
     public int windowMinHeight() {
         return 300;
     }
+
+    @Override
+    public int liveGridRowHeight() {
+        return 28;
+    }
 }

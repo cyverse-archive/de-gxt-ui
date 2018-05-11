@@ -110,6 +110,22 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
 
     }
 
+    @UiFactory
+    LiveGridView<Analysis> createLiveGridView() {
+        LiveGridView<Analysis> liveGridView = new LiveGridView<Analysis>(){
+            @Override
+            protected void insertRows(int firstRow, int lastRow, boolean isUpdate) {
+                super.insertRows(firstRow, lastRow, isUpdate);
+
+                setRowHeight(appearance.liveGridRowHeight());
+            }
+        };
+
+        liveGridView.setAutoFill(true);
+
+        return liveGridView;
+    }
+
     //<editor-fold desc="Handler Registrations">
     @Override
     public HandlerRegistration addAnalysisAppSelectedEventHandler(AnalysisAppSelectedEvent.AnalysisAppSelectedEventHandler handler) {
