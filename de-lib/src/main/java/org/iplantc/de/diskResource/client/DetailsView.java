@@ -35,11 +35,15 @@ public interface DetailsView extends IsWidget,
 
     public static final String INFOTYPE_NOSELECT = "-";
 
+    @JsIgnore
     DiskResource getBoundValue();
 
     void setInfoTypes(List<InfoType> infoTypes);
 
+    @JsIgnore
     void setPresenter(DetailsView.Presenter detailsViewPresenter);
+
+    void hasDebugId(String baseID);
 
     @JsType
     interface Presenter extends SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers,

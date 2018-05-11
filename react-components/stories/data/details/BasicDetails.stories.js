@@ -8,18 +8,7 @@ import {BasicDetailsWithI18N} from "../../../src/data/details";
 
 class BasicDetailsTest extends Component {
     render() {
-        const ids = {
-            DETAILS_LAST_MODIFIED: "detailsLastModified",
-            DETAILS_DATE_SUBMITTED: "detailsDateSubmitted",
-            DETAILS_PERMISSIONS: "detailsPermission",
-            DETAILS_SHARE: "DetailsShare",
-            DETAILS_SIZE: "DetailsSize",
-            DETAILS_TYPE: "DetailsType",
-            DETAILS_INFO_TYPE: "DetailsInfoType",
-            DETAILS_MD5: "DetailsMd5",
-            DETAILS_SEND_TO: " DetailsSendTo",
-            DETAILS_TAGS: "DetailsTags",
-        }
+        const baseID = "baseID";
 
         const logger = this.props.logger || ((Details) => {
                 console.log(Details);
@@ -33,7 +22,7 @@ class BasicDetailsTest extends Component {
         };
 
         const types = [];
-        types.push("-")
+        types.push("-");
         types.push("csv");
         types.push("tsv");
         types.push("jpeg");
@@ -99,7 +88,7 @@ class BasicDetailsTest extends Component {
                                       infoTypes={types}
                                       selectedValue={data.infoType}
                                       presenter={presenter}
-                                      ids={ids} />
+                                      baseID = {baseID}/>
 
             </MuiThemeProvider>
         );

@@ -29,16 +29,7 @@ public class ReactDataDetails {
         public String[] infoTypes;
         public Boolean isFolder;
         public DetailsView.Presenter presenter;
-        public String DETAILS_LAST_MODIFIED;
-        public String DETAILS_DATE_SUBMITTED ;
-        public String DETAILS_PERMISSIONS;
-        public String DETAILS_SHARE;
-        public String DETAILS_SIZE;
-        public String DETAILS_TYPE;
-        public String DETAILS_INFO_TYPE;
-        public String DETAILS_MD5;
-        public String DETAILS_SEND_TO;
-        public String DETAILS_TAGS;
+        public String baseID;
     }
 
 }

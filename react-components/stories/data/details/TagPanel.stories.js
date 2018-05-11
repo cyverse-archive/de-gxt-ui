@@ -43,41 +43,9 @@ class TagPanelTest extends Component {
         result.push({value: 'barbarbar', id: 19});
 
 
-        const searchResult = {
-            tags : result,
-        }
-
         const attachedTags = {
             tags: tags,
-        }
-
-        const presenter = {
-            searchTags: (value, resultCallback) => {
-                resultCallback(searchResult);
-            },
-
-            fetchTagsForResource: (id, fetchCallback) => {
-                fetchCallback({tags: result.slice(2, 6)});
-            },
-
-        }
-
-        const
-            data = {
-                "infoType": "perl",
-                "path": "/iplant/home/sriram/README.md",
-                "share-count": 0,
-                "date-created": 1432927857000,
-                "md5": "26329f777474f1a588f89dbb097de6dd",
-                "permission": "own",
-                "date-modified": 1432927857000,
-                "type": "file",
-                "file-size": 1943,
-                "label": "README.md",
-                "id": "3ada61ea-0639-11e5-9df8-3c4a92e4a804",
-                "content-type": "text/x-web-markdown"
-            };
-
+        };
 
         return (
             <MuiThemeProvider muiTheme={getCyVerseTheme()}>

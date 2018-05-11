@@ -13,6 +13,8 @@ import {CircularProgress} from "material-ui-next/Progress";
 import styles from "../style";
 import {css} from "aphrodite";
 import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
+import construct from "../../util/DebugIDUtil";
+import ids from "../ids";
 
 function SendTo(props) {
     let displayText = <FormattedMessage id="emptyValue"/>;
@@ -188,6 +190,7 @@ class BasicDetails extends Component {
         }
 
         let drUtil = this.props.drUtil,
+            baseID = this.props.baseID,
             diskResource = this.props.data,
             ownPermission = this.props.owner,
             infoTypes = this.props.infoTypes,
@@ -209,7 +212,7 @@ class BasicDetails extends Component {
                 <td className={css(styles.label)}>
                     {<FormattedMessage id="md5CheckSum"/>}
                 </td>
-                    <Md5 id={this.props.DETAILS_MD5}
+                    <Md5 id={construct(baseID, ids.DETAILS_MD5)}
                          md5={diskResource.md5}
                          onClick={this.handleMd5Open}
                          {...intlData}/>
@@ -218,7 +221,7 @@ class BasicDetails extends Component {
                     <td className={css(styles.label)}>
                         {<FormattedMessage id="size"/>}
                     </td>
-                    <td id={this.props.DETAILS_SIZE} className={css(styles.value)}>
+                    <td id={construct(baseID, ids.DETAILS_SIZE)} className={css(styles.value)}>
                         {drUtil.formatFileSize(diskResource["file-size"])}
                     </td>
                 </tr>,
@@ -226,7 +229,7 @@ class BasicDetails extends Component {
                     <td className={css(styles.label)}>
                         {<FormattedMessage id="type"/>}
                     </td>
-                    <td className={css(styles.value)}>
+                    <td id={construct(baseID, ids.DETAILS_TYPE)} className={css(styles.value)}>
                         {diskResource["content-type"]}
                     </td>
                 </tr>,
@@ -235,7 +238,7 @@ class BasicDetails extends Component {
                         {<FormattedMessage id="infoType"/>}
                     </td>
                     <td className={css(styles.value)}>
-                        <InfoTypeSelectionList id={this.props.DETAILS_INFO_TYPE} infoTypes={infoTypes}
+                        <InfoTypeSelectionList id={construct(baseID, ids.DETAILS_INFO_TYPE)} infoTypes={infoTypes}
                                                selectedValue={infoType ? infoType : null}
                                                view={this.props.view}
                                                onInfoTypeSelect={this.onInfoTypeSelect}
@@ -246,7 +249,7 @@ class BasicDetails extends Component {
                     <td className={css(styles.label)}>
                         {<FormattedMessage id="sendTo"/>}
                     </td>
-                    <SendTo id={this.props.DETAILS_SEND_TO}
+                    <SendTo id={construct(baseID, ids.DETAILS_SEND_TO)}
                             infoType={infoType}
                             handleSendToClick={this.handleSendToClick}
                             drUtil={drUtil}
@@ -266,7 +269,7 @@ class BasicDetails extends Component {
                             <td className={css(styles.label)}>
                                 {<FormattedMessage id="lastModified"/>}
                             </td>
-                            <td className={css(styles.value)}>
+                            <td id={construct(baseID, ids.DETAILS_LAST_MODIFIED)} className={css(styles.value)}>
                                 {diskResource['date-modified'] ? moment(Number(diskResource['date-modified']), "x").format("YYYY-MM-DD") :
                                     <FormattedMessage id="emptyValue"/>}
                             </td>
@@ -275,7 +278,7 @@ class BasicDetails extends Component {
                             <td className={css(styles.label)}>
                                 {<FormattedMessage id="createdDate"/>}
                             </td>
-                            <td className={css(styles.value)}>
+                            <td id={construct(baseID, ids.DETAILS_DATE_SUBMITTED)} className={css(styles.value)}>
                                 {diskResource['date-modified'] ? moment(Number(diskResource['date-created']), "x").format("YYYY-MM-DD") :
                                     <FormattedMessage id="emptyValue"/>}
                             </td>
@@ -284,7 +287,7 @@ class BasicDetails extends Component {
                             <td className={css(styles.label)}>
                                 {<FormattedMessage id="permissions"/>}
                             </td>
-                            <td id={this.props.DETAILS_PERMISSIONS} className={css(styles.value)}>
+                            <td id={construct(baseID, ids.DETAILS_PERMISSIONS)} className={css(styles.value)}>
                                 {diskResource.permission}
                             </td>
                         </tr>
@@ -292,7 +295,8 @@ class BasicDetails extends Component {
                             <td className={css(styles.label)}>
                                 {<FormattedMessage id="share"/>}
                             </td>
-                            <ManageSharing id={this.props.DETAILS_SHARE} isOwner={isOwner}
+                            <ManageSharing id={construct(baseID, ids.DETAILS_SHARE)}
+                                           isOwner={isOwner}
                                            shareCount={diskResource["share-count"]}
                                            onClick={this.handleShareClick} {...intlData}/>
                         </tr>
@@ -300,7 +304,7 @@ class BasicDetails extends Component {
                         </tbody>
                     </table>
                     <TagPanel
-                        detailsTag={this.props.DETAILS_TAGS}
+                        detailsTag={construct(baseID, ids.DETAILS_TAGS)}
                         handleTagSearch={this.handleTagSearch}
                         handleRemoveClick={this.handleRemoveClick}
                         tags={this.state.tags.values}

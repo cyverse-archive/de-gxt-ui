@@ -17,7 +17,6 @@ import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import org.iplantc.de.diskResource.client.DetailsView;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent;
 import org.iplantc.de.diskResource.client.events.FetchDetailsCompleted;
-import org.iplantc.de.diskResource.share.DiskResourceModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,13 +33,12 @@ public class DetailsViewImpl implements DetailsView {
 
     private List<InfoType> infoTypes;
     private Presenter presenter;
-
-
-    HTMLPanel panel;
-
     private final Logger LOG = Logger.getLogger(DetailsViewImpl.class.getSimpleName());
     private DiskResource boundValue;
+    private String baseID;
+
     DiskResourceUtil diskResourceUtil = DiskResourceUtil.getInstance();
+    HTMLPanel panel;
 
     @Inject
     DetailsViewImpl() {
@@ -84,6 +82,11 @@ public class DetailsViewImpl implements DetailsView {
         this.presenter = detailsViewPresenter;
     }
 
+    @Override
+    public void hasDebugId(String baseID) {
+        this.baseID = baseID;
+    }
+
     void bind(final DiskResource resource) {
         this.boundValue = resource;
 
@@ -98,16 +101,7 @@ public class DetailsViewImpl implements DetailsView {
             detailsProps.drUtil = diskResourceUtil;
             detailsProps.owner = PermissionValue.own.toString();
             detailsProps.presenter = presenter;
-            detailsProps.DETAILS_DATE_SUBMITTED = DiskResourceModule.Ids.DETAILS_DATE_SUBMITTED;
-            detailsProps.DETAILS_DATE_SUBMITTED = DiskResourceModule.Ids.DETAILS_DATE_SUBMITTED;
-            detailsProps.DETAILS_PERMISSIONS = DiskResourceModule.Ids.DETAILS_PERMISSIONS;
-            detailsProps.DETAILS_SHARE = DiskResourceModule.Ids.DETAILS_SHARE;
-            detailsProps.DETAILS_SIZE = DiskResourceModule.Ids.DETAILS_SIZE;
-            detailsProps.DETAILS_TYPE = DiskResourceModule.Ids.DETAILS_TYPE;
-            detailsProps.DETAILS_INFO_TYPE = DiskResourceModule.Ids.DETAILS_INFO_TYPE;
-            detailsProps.DETAILS_MD5 = DiskResourceModule.Ids.DETAILS_MD5;
-            detailsProps.DETAILS_SEND_TO = DiskResourceModule.Ids.DETAILS_SEND_TO;
-            detailsProps.DETAILS_TAGS = DiskResourceModule.Ids.DETAILS_TAGS;
+            detailsProps.baseID = baseID;
 
             List<String> types = new ArrayList<>();
             if (infoTypes != null && infoTypes.size() > 0) {
