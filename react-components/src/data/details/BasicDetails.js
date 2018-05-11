@@ -47,7 +47,7 @@ function Md5(props) {
             <DEHyperlink text={<FormattedMessage id="view"/>}/>
         </td>);
     } else {
-        return <td id={props.id} className={css(styles.value)}>{ <FormattedMessage id="folders"/>}</td>;
+        return <td id={props.id} className={css(styles.value)}>{<FormattedMessage id="folders"/>}</td>;
     }
 }
 
