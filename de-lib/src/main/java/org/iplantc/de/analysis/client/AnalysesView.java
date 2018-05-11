@@ -154,6 +154,8 @@ public interface AnalysesView extends IsWidget,
         int windowMinWidth();
 
         int windowMinHeight();
+
+        int liveGridRowHeight();
     }
 
     interface Presenter {
