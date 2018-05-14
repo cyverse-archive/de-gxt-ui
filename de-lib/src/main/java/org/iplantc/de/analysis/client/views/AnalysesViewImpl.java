@@ -122,6 +122,7 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
         };
 
         liveGridView.setAutoFill(true);
+        liveGridView.setForceFit(true);
 
         return liveGridView;
     }
