@@ -39,7 +39,7 @@ class Tag extends Component {
                      onMouseOut={this.handleMouseOut}>
                     <div className={css(styles.tagStyle)}
                          onClick={() => this.props.onClick(this.props.tag)}>{this.props.tag.value}</div>
-                    <div title={this.props.removeTagTip} id={this.props.tag.id}
+                    <div id={this.props.tag.id}
                          style={removeStyle} onClick={() => this.props.removeTag(this.props.tag)}> X
                     </div>
                 </div>
