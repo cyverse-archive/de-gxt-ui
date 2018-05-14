@@ -118,6 +118,8 @@ class BasicDetails extends Component {
             this.setState({loading: true});
             this.props.presenter.fetchTagsForResource(id, (tagList) => {
                 this.setState({loading: false, tags: {dataId: id, values: tagList.tags}});
+            }, (httpStatusCode, errMsg) => {
+                this.setState({loading: false});
             });
         }
     }
@@ -128,6 +130,8 @@ class BasicDetails extends Component {
                 if (tagList && tagList.tags) {
                     this.setState({dataSource: tagList.tags});
                 }
+            }, (httpStatusCode, errMsg) => {
+                this.setState({loading: false});
             });
             this.setState({searchText: value});
         }
@@ -139,10 +143,14 @@ class BasicDetails extends Component {
             if (chosenTag.id) {
                 this.props.presenter.attachTag(chosenTag.id, chosenTag.value, this.props.data.id, (tagList) => {
                     this.setState({tags: {dataId: this.props.data.id, values: tagList.tags}, loading: false});
+                }, (httpStatusCode, errMsg) => {
+                    this.setState({loading: false});
                 });
             } else {
                 this.props.presenter.createTag(chosenTag, this.props.data.id, (tagList) => {
                     this.setState({tags: {dataId: this.props.data.id, values: tagList.tags}, loading: false});
+                }, (httpStatusCode, errMsg) => {
+                    this.setState({loading: false});
                 });
             }
         }
@@ -153,6 +161,8 @@ class BasicDetails extends Component {
             this.setState({loading: true});
             this.props.presenter.detachTag(this.state.tags.values[index].id, this.state.tags.values[index].value, this.props.data.id, (tagList) => {
                 this.setState({tags: {dataId: this.props.data.id, values: tagList.tags}, loading: false});
+            }, (httpStatusCode, errMsg) => {
+                this.setState({loading: false});
             });
         }
     }

@@ -1,11 +1,8 @@
 package org.iplantc.de.diskResource.client;
 
-import com.google.gwt.user.client.ui.IsWidget;
-import com.sencha.gxt.data.shared.event.StoreUpdateEvent.StoreUpdateHandler;
-import jsinterop.annotations.JsIgnore;
-import jsinterop.annotations.JsType;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.viewer.InfoType;
+import org.iplantc.de.client.services.callbacks.ErrorCallback;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent.DiskResourceSelectionChangedEventHandler;
 import org.iplantc.de.diskResource.client.events.FetchDetailsCompleted;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
@@ -21,7 +18,14 @@ import org.iplantc.de.diskResource.client.presenters.callbacks.TagDetachCallback
 import org.iplantc.de.diskResource.client.presenters.callbacks.TagsFetchCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.TagsSearchCallback;
 
+import com.google.gwt.user.client.ui.IsWidget;
+
+import com.sencha.gxt.data.shared.event.StoreUpdateEvent.StoreUpdateHandler;
+
 import java.util.List;
+
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
 
 /**
  * Created by jstroot on 2/2/15.
@@ -76,15 +80,28 @@ public interface DetailsView extends IsWidget,
         @JsIgnore
         DetailsView getView();
 
-        void fetchTagsForResource(String diskResourceId, TagsFetchCallback callback);
+        void fetchTagsForResource(String diskResourceId,
+                                  TagsFetchCallback callback,
+                                  ErrorCallback errorCallback);
 
-        void searchTags(String searchVal, TagsSearchCallback callback);
+        void searchTags(String searchVal, TagsSearchCallback callback, ErrorCallback errorCallback);
 
-        void attachTag(String tagId, String tagValue, String diskResourceId, TagAttachCallback callback);
+        void attachTag(String tagId,
+                       String tagValue,
+                       String diskResourceId,
+                       TagAttachCallback callback,
+                       ErrorCallback errorCallback);
 
-        void detachTag(String tagId, String tagValue, String diskResourceId, TagDetachCallback callback);
+        void detachTag(String tagId,
+                       String tagValue,
+                       String diskResourceId,
+                       TagDetachCallback callback,
+                       ErrorCallback errorCallback);
 
-        void createTag(String tagValue, String diskResourceId, TagAttachCallback callback);
+        void createTag(String tagValue,
+                       String diskResourceId,
+                       TagAttachCallback callback,
+                       ErrorCallback errorCallback);
 
         void onTagSelection(String tagId, String tagValue);
 
