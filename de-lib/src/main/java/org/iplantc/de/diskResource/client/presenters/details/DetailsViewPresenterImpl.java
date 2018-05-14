@@ -1,5 +1,6 @@
 package org.iplantc.de.diskResource.client.presenters.details;
 
+import com.google.gwt.http.client.Response;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
@@ -146,7 +147,7 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
             public void onFailure(Throwable caught) {
                 // FIXME Move to appearance
                 ErrorHandler.post(appearance.tagFetchError(), caught);
-                errorCallback.onError(500, caught.getMessage());
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
             }
 
             @Override
@@ -166,7 +167,7 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(I18N.ERROR.tagRetrieveError(), caught);
-                errorCallback.onError(500, caught.getMessage());
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
             }
 
             @SuppressWarnings("serial")
@@ -192,7 +193,7 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(appearance.tagAttachError(), caught);
-                errorCallback.onError(500, caught.getMessage());
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
             }
 
             @Override
@@ -221,7 +222,7 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(appearance.tagDetachError(), caught);
-                errorCallback.onError(500, caught.getMessage());
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
             }
 
             @Override
@@ -247,7 +248,7 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(I18N.ERROR.tagCreateError(), caught);
-                errorCallback.onError(500, caught.getMessage());
+                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
             }
 
             @Override
