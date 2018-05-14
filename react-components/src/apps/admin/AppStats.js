@@ -27,7 +27,7 @@ const pagingStyles = theme => ({
         marginLeft: theme.spacing.unit * 2.5,
 
     },
-});
+}); // TODO: have to figure out how to pass 'theme' variable in to jss
 
 class TablePaginationActions extends React.Component {
     handleFirstPageButtonClick = event => {
@@ -110,12 +110,12 @@ const styles = theme => ({
         marginRight: theme.spacing.unit,
         width: 200,
     },
-});
+}); // TODO: have to figure out how to pass 'theme' variable in to jss
 
 class AppStats extends Component {
     constructor(props) {
         super(props);
-        var today = new Date();
+        let today = new Date();
         this.state = {
             data: [],
             loading: true,
@@ -175,15 +175,20 @@ class AppStats extends Component {
         this.setState({
             loading: true,
         });
-        var searchText = this.state.searchText;
-        var startDate = (this.state.startDate) ? (moment(this.state.startDate).format("YYYY-MM-DD")) : "";
-        var endDate = (this.state.endDate) ? (moment(this.state.endDate).format("YYYY-MM-DD")) : "";
+        let searchText = this.state.searchText;
+        let startDate = (this.state.startDate) ? (moment(this.state.startDate).format("YYYY-MM-DD")) : "";
+        let endDate = (this.state.endDate) ? (moment(this.state.endDate).format("YYYY-MM-DD")) : "";
         this.props.presenter.searchApps(searchText, startDate, endDate, (appList) => {
             this.setState({
                 loading: false,
                 data: appList.apps,
             })
-        });
+            }, (errorCode, errorMessage) => {
+                this.setState({
+                    loading: false,
+                });
+            },
+        )
     }
 
     applyFilter() {

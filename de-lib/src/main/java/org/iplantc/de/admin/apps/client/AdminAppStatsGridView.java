@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import jsinterop.annotations.JsIgnore;
 import jsinterop.annotations.JsType;
 import org.iplantc.de.admin.apps.client.presenter.callbacks.AppStatsSearchCallback;
+import org.iplantc.de.client.services.callbacks.ErrorCallback;
 
 /**
  * Created by sriram on 10/21/16.
@@ -27,7 +28,8 @@ public interface AdminAppStatsGridView extends IsWidget {
         void searchApps(String searchString,
                         String startDate,
                         String endDate,
-                        AppStatsSearchCallback callback);
+                        AppStatsSearchCallback callback,
+                        ErrorCallback errorCallback);
     }
 
 }
