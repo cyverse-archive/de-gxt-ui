@@ -144,7 +144,6 @@ class AppStats extends Component {
 
 
     handleSearch(event) {
-        console.log(event.target.value);
         if (event.target.value && event.target.value.length >= 3) {
             this.setState({searchText: event.target.value});
         } else {
