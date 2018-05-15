@@ -20,6 +20,7 @@ import {addLocaleData, ReactIntlLocaleData, FormattedMessage, IntlProvider} from
 import {CircularProgress} from "material-ui-next/Progress";
 import exStyles from "../style";
 import {css} from "aphrodite";
+import constants from "../../constants";
 const pagingStyles = theme => ({
     root: {
         flexShrink: 0,
@@ -176,8 +177,8 @@ class AppStats extends Component {
             loading: true,
         });
         let searchText = this.state.searchText;
-        let startDate = (this.state.startDate) ? (moment(this.state.startDate).format("YYYY-MM-DD")) : "";
-        let endDate = (this.state.endDate) ? (moment(this.state.endDate).format("YYYY-MM-DD")) : "";
+        let startDate = (this.state.startDate) ? (moment(this.state.startDate).format(constants.DATE_FORMAT)) : "";
+        let endDate = (this.state.endDate) ? (moment(this.state.endDate).format(constants.DATE_FORMAT)) : "";
         this.props.presenter.searchApps(searchText, startDate, endDate, (appList) => {
             this.setState({
                 loading: false,
@@ -211,12 +212,12 @@ class AppStats extends Component {
                                            label={<FormattedMessage id="searchApps"/>} onChange={this.handleSearch}/>
                                 <ToolbarSeparator />
                                 <TextField label={<FormattedMessage id="startDate"/>} type="date"
-                                           defaultValue={moment(this.state.startDate).format("YYYY-MM-DD")}
+                                           defaultValue={moment(this.state.startDate).format(constants.DATE_FORMAT)}
                                            InputLabelProps={{
                                                shrink: true,
                                            }} onChange={this.onStartDateChange}/>
                                 <TextField label={<FormattedMessage id="endDate"/>} type="date"
-                                           defaultValue={moment(this.state.endDate).format("YYYY-MM-DD")}
+                                           defaultValue={moment(this.state.endDate).format(constants.DATE_FORMAT)}
                                            InputLabelProps={{
                                                shrink: true,
                                            }} onChange={this.onEndDateChange}/>
@@ -259,10 +260,10 @@ class AppStats extends Component {
                                         <TableCell
                                             numeric>{(n.job_stats.job_count_failed) ? n.job_stats.job_count_failed : 0 }</TableCell>
                                         <TableCell>{(n.job_stats.job_last_completed) ? moment(Number(n.job_stats.job_last_completed), "x").format(
-                                                "YYYY-MM-DD") :
+                                                constants.DATE_FORMAT) :
                                             <FormattedMessage id="emptyValue"/>} </TableCell>
                                         <TableCell>{(n.job_stats.last_used) ? moment(Number(n.job_stats.last_used), "x").format(
-                                                "YYYY-MM-DD") :
+                                                constants.DATE_FORMAT) :
                                             <FormattedMessage id="emptyValue"/>}</TableCell>
                                     </TableRow>
                                 );
