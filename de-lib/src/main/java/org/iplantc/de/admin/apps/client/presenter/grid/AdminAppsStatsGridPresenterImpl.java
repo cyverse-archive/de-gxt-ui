@@ -49,7 +49,9 @@ public class AdminAppsStatsGridPresenterImpl implements AdminAppStatsGridView.Pr
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);
-                errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR , caught.getMessage());
+                if(errorCallback != null) {
+                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+                }
             }
 
             @Override
