@@ -1,77 +1,39 @@
 package org.iplantc.de.diskResource.client.presenters;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyList;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
-
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwtmockito.GwtMockitoTestRunner;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.sencha.gxt.data.shared.TreeStore;
+import com.sencha.gxt.widget.core.client.Dialog;
+import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
+import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasPaths;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.dataLink.DataLinkFactory;
-import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
-import org.iplantc.de.client.models.diskResources.File;
-import org.iplantc.de.client.models.diskResources.Folder;
-import org.iplantc.de.client.models.diskResources.TYPE;
+import org.iplantc.de.client.models.diskResources.*;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
-import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.commons.client.CommonUiConstants;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
-import org.iplantc.de.diskResource.client.DetailsView;
-import org.iplantc.de.diskResource.client.DiskResourceView;
-import org.iplantc.de.diskResource.client.GridView;
-import org.iplantc.de.diskResource.client.NavigationView;
-import org.iplantc.de.diskResource.client.SearchView;
-import org.iplantc.de.diskResource.client.ToolbarView;
+import org.iplantc.de.diskResource.client.*;
 import org.iplantc.de.diskResource.client.events.RequestSendToCoGeEvent;
 import org.iplantc.de.diskResource.client.events.RequestSendToTreeViewerEvent;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent;
-import org.iplantc.de.diskResource.client.events.selection.CreateNcbiSraFolderStructureSubmitted;
-import org.iplantc.de.diskResource.client.events.selection.CreateNewFolderConfirmed;
-import org.iplantc.de.diskResource.client.events.selection.DeleteDiskResourcesSelected;
-import org.iplantc.de.diskResource.client.events.selection.EmptyTrashSelected;
-import org.iplantc.de.diskResource.client.events.selection.MoveDiskResourcesSelected;
-import org.iplantc.de.diskResource.client.events.selection.RenameDiskResourceSelected;
-import org.iplantc.de.diskResource.client.events.selection.RestoreDiskResourcesSelected;
-import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected;
-import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected;
+import org.iplantc.de.diskResource.client.events.selection.*;
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.FolderContentsRpcProxyFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewPresenterFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewPresenterFactory;
-import org.iplantc.de.diskResource.client.presenters.callbacks.CreateFolderCallback;
-import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceDeleteCallback;
-import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMoveCallback;
-import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceRestoreCallback;
-import org.iplantc.de.diskResource.client.presenters.callbacks.NcbiSraSetupCompleteCallback;
-import org.iplantc.de.diskResource.client.presenters.callbacks.RenameDiskResourceCallback;
+import org.iplantc.de.diskResource.client.presenters.callbacks.*;
 import org.iplantc.de.diskResource.client.views.dialogs.FolderSelectDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.RenameResourceDialog;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
 import org.iplantc.de.resources.client.messages.IplantContextualHelpStrings;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DataCallback;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwtmockito.GwtMockitoTestRunner;
-import com.google.web.bindery.autobean.shared.AutoBean;
-
-import com.sencha.gxt.data.shared.TreeStore;
-import com.sencha.gxt.widget.core.client.Dialog;
-import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
-import com.sencha.gxt.widget.core.client.event.SelectEvent;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -82,6 +44,12 @@ import org.mockito.Mock;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.*;
 
 /**
  * @author jstroot
@@ -101,7 +69,6 @@ public class DiskResourcePresenterImplTest {
     @Mock SearchView.Presenter dataSearchPresenterMock;
     @Mock EventBus eventBusMock;
     @Mock UserInfo userInfoMock;
-    @Mock FileSystemMetadataServiceFacade ileSystemMetadataServiceMock;
     @Mock UpdateSavedSearchesEvent eventMock;
     @Mock IplantAnnouncer announcerMock;
     @Mock ToolbarView toolbarMock;
@@ -187,15 +154,15 @@ public class DiskResourcePresenterImplTest {
         verify(navigationPresenterMock).setMaskable(eq(viewMock));
 
         // Details
-        verify(detailsViewMock).addManageSharingSelectedEventHandler(eq(gridViewPresenterMock));
-        verify(detailsViewMock).addEditInfoTypeSelectedEventHandler(eq(gridViewPresenterMock));
-        verify(detailsViewMock).addSetInfoTypeSelectedHandler(eq(gridViewPresenterMock));
-        verify(detailsViewMock).addMd5ValueClickedHandler(eq(gridViewPresenterMock));
-        verify(detailsViewMock).addSubmitDiskResourceQueryEventHandler(eq(gridViewMock));
-        verify(detailsViewMock).addSubmitDiskResourceQueryEventHandler(eq(gridViewPresenterMock));
-        verify(detailsViewMock).addSendToCogeSelectedHandler(eq(uut));
-        verify(detailsViewMock).addSendToEnsemblSelectedHandler(eq(uut));
-        verify(detailsViewMock).addSendToTreeViewerSelectedHandler(eq(uut));
+        verify(detailsPresenterMock).addManageSharingSelectedEventHandler(eq(gridViewPresenterMock));
+        verify(detailsPresenterMock).addEditInfoTypeSelectedEventHandler(eq(gridViewPresenterMock));
+        verify(detailsPresenterMock).addSetInfoTypeSelectedHandler(eq(gridViewPresenterMock));
+        verify(detailsPresenterMock).addMd5ValueClickedHandler(eq(gridViewPresenterMock));
+        verify(detailsPresenterMock).addSubmitDiskResourceQueryEventHandler(eq(gridViewMock));
+        verify(detailsPresenterMock).addSubmitDiskResourceQueryEventHandler(eq(gridViewPresenterMock));
+        verify(detailsPresenterMock).addSendToCogeSelectedHandler(eq(uut));
+        verify(detailsPresenterMock).addSendToEnsemblSelectedHandler(eq(uut));
+        verify(detailsPresenterMock).addSendToTreeViewerSelectedHandler(eq(uut));
 
         // Toolbar
         verify(toolbarMock).getSearchField();
@@ -249,16 +216,13 @@ public class DiskResourcePresenterImplTest {
         verify(dataSearchPresenterMock).addUpdateSavedSearchesEventHandler(eq(navigationPresenterMock));
         verify(dataSearchPresenterMock).addSavedSearchDeletedEventHandler(eq(searchFieldMock));
 
-        verify(detailsPresenterMock, times(12)).getView();
         verify(gridViewPresenterMock, times(9)).getView();
         verify(navigationPresenterMock, times(5)).getView();
         verify(toolbarPresenterMock, times(23)).getView();
 
         verifyNoMoreInteractions(navigationPresenterMock,
-                                 detailsPresenterMock,
                                  navigationViewMock,
-                                 gridViewMock,
-                                 detailsViewMock);
+                                 gridViewMock);
         verifyZeroInteractions(diskResourceServiceMock,
                                eventBusMock);
 
@@ -446,7 +410,7 @@ public class DiskResourcePresenterImplTest {
         when(eventMock.getResourcesToSend()).thenReturn(diskResourcesMock);
         when(fileMock.getInfoType()).thenReturn(InfoType.FASTA.toString());
         when(appearanceMock.unsupportedCogeInfoType()).thenReturn("fail");
-        when(diskResourceUtilMock.isGenomeVizInfoType(any())).thenReturn(true);
+        when(diskResourceUtilMock.isGenomeVizInfoType(InfoType.FASTA)).thenReturn(true);
 
         uut.onSendToCogeSelected(eventMock);
         verify(eventBusMock).fireEvent(isA(RequestSendToCoGeEvent.class));
@@ -458,8 +422,8 @@ public class DiskResourcePresenterImplTest {
         File fileMock = mock(File.class);
         when(diskResourceIteratorMock.next()).thenReturn(fileMock);
         when(eventMock.getResourcesToSend()).thenReturn(diskResourcesMock);
-        when(fileMock.getInfoType()).thenReturn(InfoType.FASTA.toString());
-        when(diskResourceUtilMock.isTreeInfoType(any())).thenReturn(true);
+        when(fileMock.getInfoType()).thenReturn(InfoType.NEWICK.toString());
+        when(diskResourceUtilMock.isTreeInfoType(InfoType.NEWICK)).thenReturn(true);
         when(appearanceMock.unsupportedTreeInfoType()).thenReturn("fail");
 
         /** CALL METHOD UNDER TEST **/
