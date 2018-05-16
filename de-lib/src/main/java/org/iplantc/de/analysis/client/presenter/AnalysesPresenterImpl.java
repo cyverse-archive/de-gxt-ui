@@ -411,6 +411,9 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                 case MY_ANALYSES:
                     filterCb.setValue("mine");
                     break;
+                case INTERACTIVE_ANALYSES:
+                    filterCb.setValue("interactive");
+                    break;
             }
         } else {
             idParentFilter.setValue(view.getParentAnalysisId());

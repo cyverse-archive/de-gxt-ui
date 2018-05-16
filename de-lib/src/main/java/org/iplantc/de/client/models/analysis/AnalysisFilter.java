@@ -5,7 +5,7 @@ package org.iplantc.de.client.models.analysis;
  */
 public enum AnalysisFilter {
 
-    ALL("All"), SHARED_WITH_ME("Analyses shared with me"), MY_ANALYSES("Only my analyses");
+    ALL("All"), SHARED_WITH_ME("Analyses shared with me"), MY_ANALYSES("Only my analyses"), INTERACTIVE_ANALYSES("Only interactive analyses");
 
     private String filter;
 

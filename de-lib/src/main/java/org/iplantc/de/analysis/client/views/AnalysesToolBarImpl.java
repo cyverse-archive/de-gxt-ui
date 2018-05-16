@@ -1,49 +1,15 @@
 package org.iplantc.de.analysis.client.views;
 
-import static org.iplantc.de.client.models.analysis.AnalysisExecutionStatus.CANCELED;
-import static org.iplantc.de.client.models.analysis.AnalysisExecutionStatus.COMPLETED;
-import static org.iplantc.de.client.models.analysis.AnalysisExecutionStatus.FAILED;
-import static org.iplantc.de.client.models.analysis.AnalysisExecutionStatus.IDLE;
-import static org.iplantc.de.client.models.analysis.AnalysisExecutionStatus.RUNNING;
-import static org.iplantc.de.client.models.analysis.AnalysisExecutionStatus.SUBMITTED;
-
-import org.iplantc.de.analysis.client.AnalysesView;
-import org.iplantc.de.analysis.client.AnalysisToolBarView;
-import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
-import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
-import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
-import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
-import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
-import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
-import org.iplantc.de.client.models.analysis.AnalysisFilter;
-import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
-import org.iplantc.de.analysis.shared.AnalysisModule;
-import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.analysis.Analysis;
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiFactory;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-
 import com.sencha.gxt.data.shared.StringLabelProvider;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
@@ -56,9 +22,21 @@ import com.sencha.gxt.widget.core.client.menu.Item;
 import com.sencha.gxt.widget.core.client.menu.MenuItem;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
+import org.iplantc.de.analysis.client.AnalysesView;
+import org.iplantc.de.analysis.client.AnalysisToolBarView;
+import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
+import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
+import org.iplantc.de.analysis.client.events.selection.*;
+import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
+import org.iplantc.de.analysis.shared.AnalysisModule;
+import org.iplantc.de.client.models.UserInfo;
+import org.iplantc.de.client.models.analysis.Analysis;
+import org.iplantc.de.client.models.analysis.AnalysisFilter;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.iplantc.de.client.models.analysis.AnalysisExecutionStatus.*;
 
 /**
  * @author sriram, jstroot
@@ -105,27 +83,20 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         this.appearance = appearance;
         this.loader = loader;
 
-        filterCombo = new SimpleComboBox<AnalysisFilter>(new StringLabelProvider<AnalysisFilter>());
+        filterCombo = new SimpleComboBox<>(new StringLabelProvider<>());
         filterCombo.add(Arrays.asList(AnalysisFilter.ALL,
                                       AnalysisFilter.MY_ANALYSES,
-                                      AnalysisFilter.SHARED_WITH_ME));
+                                      AnalysisFilter.SHARED_WITH_ME,
+                                      AnalysisFilter.INTERACTIVE_ANALYSES));
         AnalysesToolbarUiBinder uiBinder = GWT.create(AnalysesToolbarUiBinder.class);
         initWidget(uiBinder.createAndBindUi(this));
         filterCombo.setEditable(false);
         filterCombo.setValue(AnalysisFilter.ALL);
-        filterCombo.addSelectionHandler(new SelectionHandler<AnalysisFilter>() {
-            @Override
-            public void onSelection(SelectionEvent<AnalysisFilter> event) {
-                onFilterChange(event.getSelectedItem());
-                searchField.clear();
-            }
+        filterCombo.addSelectionHandler(event -> {
+            onFilterChange(event.getSelectedItem());
+            searchField.clear();
         });
-        filterCombo.addValueChangeHandler(new ValueChangeHandler<AnalysisFilter>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<AnalysisFilter> event) {
-               onFilterChange(event.getValue());
-            }
-        });
+        filterCombo.addValueChangeHandler(event -> onFilterChange(event.getValue()));
 
         searchField.addHideHandler(handler -> searchField.setVisible(true));
     }
@@ -141,6 +112,9 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
 
             case MY_ANALYSES:
                 applyFilter(AnalysisFilter.MY_ANALYSES);
+                break;
+            case INTERACTIVE_ANALYSES:
+                applyFilter(AnalysisFilter.INTERACTIVE_ANALYSES);
                 break;
         }
     }
