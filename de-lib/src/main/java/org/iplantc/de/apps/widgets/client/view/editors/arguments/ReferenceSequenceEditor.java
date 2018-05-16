@@ -5,6 +5,7 @@ import static com.sencha.gxt.cell.core.client.form.ComboBoxCell.TriggerAction.AL
 import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.apps.widgets.client.models.ReferenceGenomeProperties;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.ArgumentEditorConverter;
+import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.ReferenceGenomeEditorConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.arguments.converters.SplittableToReferenceGenomeConverter;
 import org.iplantc.de.apps.widgets.client.view.editors.style.AppTemplateWizardAppearance;
 import org.iplantc.de.client.models.apps.refGenome.ReferenceGenome;
@@ -35,7 +36,7 @@ public class ReferenceSequenceEditor extends AbstractArgumentEditor implements H
         ClearComboBoxSelectionKeyDownHandler handler = new ClearComboBoxSelectionKeyDownHandler(comboBox);
         comboBox.addKeyDownHandler(handler);
 
-        editorAdapter = new ArgumentEditorConverter<ReferenceGenome>(comboBox, new SplittableToReferenceGenomeConverter());
+        editorAdapter = new ReferenceGenomeEditorConverter<>(comboBox, new SplittableToReferenceGenomeConverter());
 
         argumentLabel.setWidget(editorAdapter);
     }
