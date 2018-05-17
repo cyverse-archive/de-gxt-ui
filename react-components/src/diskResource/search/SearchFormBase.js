@@ -12,107 +12,29 @@ import injectSheet from 'react-jss';
 import styles from './styles';
 import ids from './ids';
 import {getMessage} from '../../util/hasI18N';
+import {Field, Fields, reduxForm} from 'redux-form';
 
 class SearchFormBase extends Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {
-            label: '',
-            path: '',
-            fileQuery: '',
-            negatedFileQuery: '',
-            createdWithin: null,
-            modifiedWithin: null,
-            metadataAttributeQuery: '',
-            metadataValueQuery: '',
-            ownedBy: '',
-            sharedWith: '',
-            fileSizeGreater: '',
-            fileSizeGreaterUnit: 'KB',
-            fileSizeLessThan: '',
-            fileSizeLessThanUnit: 'KB',
-            taggedWith: '',
-            tagQuery: [],
-            includeTrashItems: false
-        };
-
-        this.handleChangeFor = this.handleChangeFor.bind(this);
-        this.handleDropDownChangeFor = this.handleDropDownChangeFor.bind(this);
-        this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this);
         this.handleSubmitForm = this.handleSubmitForm.bind(this);
         this.handleSaveSearch = this.handleSaveSearch.bind(this);
-        this.initializeState = this.initializeState.bind(this);
 
         //Tags
-        this.onDeleteTagSelected = this.onDeleteTagSelected.bind(this);
-        this.onTagSelected = this.onTagSelected.bind(this);
-        this.onTagValueChange = this.onTagValueChange.bind(this);
         this.onEditTagSelected = this.onEditTagSelected.bind(this);
         this.fetchTagSuggestions = this.fetchTagSuggestions.bind(this);
     }
 
-    onTagValueChange(value) {
-        this.setState(function () {
-            return {
-                taggedWith: value
-            }
-        });
+    handleSaveSearch(values) {
+        let initialValues = this.props.initialValues;
+        let originalName = initialValues ? initialValues.label : null;
+        this.props.presenter.onSaveSearch(values, originalName);
     }
 
-    handleSaveSearch(originalName, name) {
-        this.setState(function () {
-            return {
-                label: name
-            }
-        }, function () {
-            this.props.presenter.onSaveSearch(this.state, originalName);
-        });
-    }
-
-    handleSubmitForm() {
-        this.props.presenter.onSearchBtnClicked(this.state);
-    }
-
-    handleChangeFor(propertyName, event) {
-        let value = event.target.value;
-
-        this.setState(function () {
-            return {
-                [propertyName]: value
-            }
-        });
-    }
-
-    // The value of the dropdown is set by the index of the menuItem
-    handleDropDownChangeFor(propertyName, event, index, value) {
-        event.preventDefault();
-
-        this.setState(function () {
-            return {
-                [propertyName]: value
-            }
-        });
-    }
-
-    onTagSelected(value) {
-        this.setState(function (prevState) {
-            let newTagsArr;
-            if (prevState.tagQuery) {
-                newTagsArr = prevState.tagQuery.slice();
-                if (!newTagsArr.includes(value)) {
-                    newTagsArr.push(value);
-                }
-            } else {
-                newTagsArr = [value];
-            }
-
-            return {
-                tagQuery: newTagsArr,
-                taggedWith: ''
-            }
-        })
+    handleSubmitForm(values) {
+        this.props.presenter.onSearchBtnClicked(values);
     }
 
     onEditTagSelected(tag) {
@@ -123,163 +45,91 @@ class SearchFormBase extends Component {
         this.props.presenter.fetchTagSuggestions(search);
     }
 
-    handleCheckBoxChange(propertyName, event) {
-        this.setState(function (prevState) {
-            return {
-                [propertyName]: !prevState.includeTrashItems
-            }
-        });
-    }
-
-    onDeleteTagSelected(selectedTag) {
-        let tags = this.state.tagQuery;
-        let index = tags.indexOf(selectedTag);
-        tags.splice(index, 1);
-        this.setState(function () {
-            return {
-                tagQuery: tags
-            }
-        })
-    }
-
-    // look into this:
-    // https://stackoverflow.com/questions/43498682/sync-state-with-props-to-achive-two-way-binding-for-form-input-in-reactjs
-    componentWillMount() {
-        let template = this.props.template;
-        if (template !== null) {
-            this.initializeState(template);
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        let oldTemplate = this.props.template;
-        let newTemplate = nextProps.template;
-
-        if (oldTemplate !== newTemplate) {
-            this.initializeState(newTemplate);
-        }
-    }
-
-    initializeState(template) {
-        console.log("Updating template!");
-        let {
-            label,
-            path,
-            fileQuery,
-            negatedFileQuery,
-            createdWithin,
-            modifiedWithin,
-            metadataAttributeQuery,
-            metadataValueQuery,
-            ownedBy,
-            sharedWith,
-            fileSizeGreater,
-            fileSizeGreaterUnit,
-            fileSizeLessThan,
-            fileSizeLessThanUnit,
-            tagQuery,
-            includeTrashItems
-        } = template;
-        this.setState({
-            label,
-            path,
-            fileQuery,
-            negatedFileQuery,
-            createdWithin,
-            modifiedWithin,
-            metadataAttributeQuery,
-            metadataValueQuery,
-            ownedBy,
-            sharedWith,
-            fileSizeGreater,
-            fileSizeGreaterUnit,
-            fileSizeLessThan,
-            fileSizeLessThanUnit,
-            tagQuery,
-            includeTrashItems
-        });
-    }
-
     render() {
         let classes = this.props.classes;
         let messages = this.props.i18nData;
         let dateIntervals = this.props.dateIntervals;
+        let dateIntervalChildren = dateIntervals.map(function (item, index) {
+            return <MenuItem key={index} value={item} primaryText={item.label}/>
+        });
         let suggestedTags = this.props.suggestedTags;
-        let originalName = this.props.template.label;
+        let originalName = this.props.initialValues ? this.props.initialValues : null;
 
         let sizesList = messages.fileSizes;
+        let sizesListChildren = sizesList.map(function (item, index) {
+            return <MenuItem key={index} value={item} primaryText={item}/>
+        });
+
+        // From redux
+        let { handleSubmit, array, initialized, pristine } = this.props;
 
         return (
-            <div id={ids.form}>
+            <form id={ids.form}>
                 <table className={classes.form}>
                     <tbody>
                     <tr>
                         <td>
-                            <TextField id={ids.nameHas}
-                                       floatingLabelText={getMessage('nameHas')}
-                                       fullWidth={true}
-                                       value={this.state.fileQuery}
-                                       onChange={this.handleChangeFor.bind(null, 'fileQuery')}/>
+                            <Field name='fileQuery'
+                                   id={ids.nameHas}
+                                   label={getMessage('nameHas')}
+                                   component={renderTextField}/>
                         </td>
                         <td>
-                            <DateIntervalDropDown id={ids.createdWithin}
-                                                  label={getMessage('createdWithin')}
-                                                  list={dateIntervals}
-                                                  value={this.state.createdWithin}
-                                                  onChange={this.handleDropDownChangeFor.bind(null, 'createdWithin')}/>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <TextField id={ids.nameHasNot}
-                                       floatingLabelText={getMessage('nameHasNot')}
-                                       fullWidth={true}
-                                       value={this.state.negatedFileQuery}
-                                       onChange={this.handleChangeFor.bind(null, 'negatedFileQuery')}/>
-                        </td>
-                        <td>
-                            <DateIntervalDropDown id={ids.modifiedWithin}
-                                                  label={getMessage('modifiedWithin')}
-                                                  list={dateIntervals}
-                                                  value={this.state.modifiedWithin}
-                                                  onChange={this.handleDropDownChangeFor.bind(null, 'modifiedWithin')}/>
+                            <Field name='createdWithin'
+                                   id={ids.createdWithin}
+                                   label={getMessage('createdWithin')}
+                                   component={renderDropDown}>
+                                {dateIntervalChildren}
+                            </Field>
                         </td>
                     </tr>
 
                     <tr>
                         <td>
-                            <TextField id={ids.metadataAttributeHas}
-                                       floatingLabelText={getMessage('metadataAttributeHas')}
-                                       fullWidth={true}
-                                       value={this.state.metadataAttributeQuery}
-                                       onChange={this.handleChangeFor.bind(null, 'metadataAttributeQuery')}/>
+                            <Field name='negatedFileQuery'
+                                   id={ids.nameHasNot}
+                                   label={getMessage('nameHasNot')}
+                                   component={renderTextField}/>
                         </td>
                         <td>
-                            <TextField id={ids.ownedBy}
-                                       floatingLabelText={getMessage('ownedBy')}
-                                       hintText={getMessage('enterCyVerseUserName')}
-                                       fullWidth={true}
-                                       value={this.state.ownedBy}
-                                       onChange={this.handleChangeFor.bind(null, 'ownedBy')}/>
+                            <Field name='modifiedWithin'
+                                   id={ids.modifiedWithin}
+                                   label={getMessage('modifiedWithin')}
+                                   component={renderDropDown}>
+                                {dateIntervalChildren}
+                            </Field>
                         </td>
                     </tr>
 
                     <tr>
                         <td>
-                            <TextField id={ids.metadataValueHas}
-                                       floatingLabelText={getMessage('metadataValueHas')}
-                                       fullWidth={true}
-                                       value={this.state.metadataValueQuery}
-                                       onChange={this.handleChangeFor.bind(null, 'metadataValueQuery')}/>
+                            <Field name='metadataAttributeQuery'
+                                   id={ids.metadataAttributeHas}
+                                   label={getMessage('metadataAttributeHas')}
+                                   component={renderTextField}/>
                         </td>
                         <td>
-                            <TextField id={ids.sharedWith}
-                                       floatingLabelText={getMessage('sharedWith')}
-                                       hintText={getMessage('enterCyVerseUserName')}
-                                       fullWidth={true}
-                                       value={this.state.sharedWith}
-                                       onChange={this.handleChangeFor.bind(null, 'sharedWith')}/>
+                            <Field name='ownedBy'
+                                   id={ids.ownedBy}
+                                   label={getMessage('ownedBy')}
+                                   hintText={getMessage('enterCyVerseUserName')}
+                                   component={renderTextField}/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <Field name='metadataValueQuery'
+                                   id={ids.metadataValueHas}
+                                   label={getMessage('metadataValueHas')}
+                                   component={renderTextField}/>
+                        </td>
+                        <td>
+                            <Field name='sharedWith'
+                                   id={ids.sharedWith}
+                                   label={getMessage('sharedWith')}
+                                   hintText={getMessage('enterCyVerseUserName')}
+                                   component={renderTextField}/>
                         </td>
                     </tr>
 
@@ -289,19 +139,21 @@ class SearchFormBase extends Component {
                                 <tbody>
                                 <tr>
                                     <td style={{'width': '100%'}}>
-                                        <TextField id={ids.fileSizeGreater}
-                                                   floatingLabelText={getMessage('fileSizeGreater')}
-                                                   floatingLabelShrinkStyle={{width: '150%'}}
-                                                   fullWidth={true}
-                                                   value={this.state.fileSizeGreater}
-                                                   onChange={this.handleChangeFor.bind(null, 'fileSizeGreater')}/>
+                                        <Field name='fileSizeGreater'
+                                               type='number'
+                                               min='0'
+                                               id={ids.fileSizeGreater}
+                                               label={getMessage('fileSizeGreater')}
+                                               floatingLabelShrinkStyle={{width: '150%'}}
+                                               component={renderTextField}/>
                                     </td>
                                     <td>
-                                        <FileSizeDropDown id={ids.fileSizeGreaterUnit}
-                                                          label=' '
-                                                          list={sizesList}
-                                                          value={this.state.fileSizeGreaterUnit}
-                                                          onChange={this.handleDropDownChangeFor.bind(null, 'fileSizeGreaterUnit')}/>
+                                        <Field name='fileSizeGreaterUnit'
+                                               id={ids.fileSizeGreaterUnit}
+                                               label=' '
+                                               component={renderDropDown}>
+                                            {sizesListChildren}
+                                        </Field>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -312,19 +164,21 @@ class SearchFormBase extends Component {
                                 <tbody>
                                 <tr>
                                     <td style={{'width': '100%'}}>
-                                        <TextField id={ids.fileSizeLessThan}
-                                                   floatingLabelText={getMessage('fileSizeLessThan')}
-                                                   floatingLabelShrinkStyle={{width: '150%'}}
-                                                   fullWidth={true}
-                                                   value={this.state.fileSizeLessThan}
-                                                   onChange={this.handleChangeFor.bind(null, 'fileSizeLessThan')}/>
+                                        <Field name='fileSizeLessThan'
+                                               type='number'
+                                               min='0'
+                                               id={ids.fileSizeLessThan}
+                                               label={getMessage('fileSizeLessThan')}
+                                               floatingLabelShrinkStyle={{width: '150%'}}
+                                               component={renderTextField}/>
                                     </td>
                                     <td>
-                                        <FileSizeDropDown id={ids.fileSizeLessThanUnit}
-                                                          label=' '
-                                                          list={sizesList}
-                                                          value={this.state.fileSizeLessThanUnit}
-                                                          onChange={this.handleDropDownChangeFor.bind(null, 'fileSizeLessThanUnit')}/>
+                                        <Field name='fileSizeLessThanUnit'
+                                               id={ids.fileSizeLessThanUnit}
+                                               label=' '
+                                               component={renderDropDown}>
+                                            {sizesListChildren}
+                                        </Field>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -334,43 +188,46 @@ class SearchFormBase extends Component {
 
                     <tr>
                         <td>
-                            <TagSearchField parentId={ids.form}
-                                            taggedWith={this.state.taggedWith}
-                                            tags={this.state.tagQuery}
-                                            label={getMessage('taggedWith')}
-                                            onTagValueChange={this.onTagValueChange}
-                                            onTagSelected={this.onTagSelected}
-                                            onDeleteTagSelected={this.onDeleteTagSelected}
-                                            onEditTagSelected={this.onEditTagSelected}
-                                            fetchTagSuggestions={this.fetchTagSuggestions}
-                                            suggestedTags={suggestedTags}/>
+                            <Fields names={['taggedWith', 'tagQuery']}
+                                    parentId={ids.form}
+                                    label={getMessage('taggedWith')}
+                                    onEditTagSelected={this.onEditTagSelected}
+                                    fetchTagSuggestions={this.fetchTagSuggestions}
+                                    suggestedTags={suggestedTags}
+                                    array={array}
+                                    component={renderTagSearchField}/>
                         </td>
                         <td>
-                            <Checkbox id={ids.includeTrash}
-                                      style={{top: '20px'}}
-                                      label={getMessage('includeTrash')}
-                                      onCheck={this.handleCheckBoxChange.bind(null, 'includeTrashItems')}
-                                      checked={this.state.includeTrashItems}/>
+                            <Field name='includeTrashItems'
+                                   id={ids.includeTrash}
+                                   label={getMessage('includeTrash')}
+                                   style={{top: '20px'}}
+                                   component={renderCheckBox}/>
                         </td>
 
                     </tr>
 
                     <tr>
                         <td>
-                            <SaveSearchButton handleSave={this.handleSaveSearch}
-                                              originalName={originalName}/>
+                            <Field name='label'
+                                   originalName={originalName}
+                                   disabled={initialized ? false : pristine}
+                                   id={ids.saveSearchBtn}
+                                   handleSave={handleSubmit(this.handleSaveSearch)}
+                                   component={renderSaveSearchBtn}/>
                         </td>
                         <td>
                             <div className={classes.searchButton}>
                                 <RaisedButton id={ids.searchBtn}
+                                              disabled={initialized ? false : pristine}
                                               label={getMessage('searchBtn')}
-                                              onClick={this.handleSubmitForm}/>
+                                              onClick={handleSubmit(this.handleSubmitForm)}/>
                             </div>
                         </td>
                     </tr>
                     </tbody>
                 </table>
-            </div>
+            </form>
         )
     }
 }
@@ -394,7 +251,7 @@ SearchFormBase.propTypes = {
         description: PropTypes.string
     })),
     id: PropTypes.string.isRequired,
-    template: PropTypes.shape({
+    initialValues: PropTypes.shape({
             label: PropTypes.string,
             path: PropTypes.string,
             fileQuery: PropTypes.string,
@@ -415,56 +272,101 @@ SearchFormBase.propTypes = {
     )
 };
 
-function DateIntervalDropDown(props) {
-    let id = props.id;
-    let label = props.label;
-    let list = props.list;
-    let value = props.value;
-    let onChange = props.onChange;
-
+function renderSaveSearchBtn(props) {
+    let {
+        input,
+        disabled,
+        ...custom
+    } = props;
     return (
-        <SelectField id={id}
-                     floatingLabelText={label}
-                     floatingLabelFixed={true}
-                     fullWidth={true}
-                     value={value}
-                     onChange={onChange}>
-            {list.map(function (item, index) {
-                return <MenuItem key={index} value={item} primaryText={item.label}/>
-            })}
-        </SelectField>
+        <SaveSearchButton disabled={disabled}
+                          {...input}
+                          {...custom}
+        />
     )
 }
 
-DateIntervalDropDown.propTypes = {
-    label: PropTypes.any.isRequired,
-    list: PropTypes.array.isRequired
-};
-
-function FileSizeDropDown(props) {
-    let id = props.id;
-    let label = props.label;
-    let list = props.list;
-    let value = props.value;
-    let onChange = props.onChange;
-
+function renderTagSearchField(props) {
+    let {
+        label,
+        taggedWith,
+        tagQuery,
+        array,
+        ...custom
+    } = props;
     return (
-        <SelectField id={id}
-                     floatingLabelText={label}
-                     fullWidth={true}
-                     value={value}
-                     onChange={onChange}>
-            {list.map(function (item, index) {
-                return <MenuItem key={index} value={item} primaryText={item}/>
-            })}
-        </SelectField>
+        <TagSearchField
+            label={label}
+            taggedWith={taggedWith.input.value}
+            tags={tagQuery.input.value ? tagQuery.input.value : []}
+            onTagValueChange={(value) => taggedWith.input.onChange(value)}
+            onTagSelected={(value) => onTagSelected(value, array, taggedWith)}
+            onDeleteTagSelected={(index) => array.remove('tagQuery', index)}
+            {...custom}/>
     )
 }
 
-FileSizeDropDown.propTypes = {
-    label: PropTypes.string.isRequired,
-    list: PropTypes.array.isRequired
-};
+function onTagSelected(value, array, taggedWith) {
+    array.insert('tagQuery', 0, value);
+    taggedWith.input.onChange('');
+}
 
+function renderTextField(props) {
+    let {
+        input,
+        label,
+        meta: {touched, error},
+        ...custom
+    } = props;
+    return (
+        <TextField
+            floatingLabelText={label}
+            errorText={touched && error}
+            fullWidth={true}
+            {...input}
+            {...custom}
+        />
+    )
+}
 
-export default injectSheet(styles)(SearchFormBase);
+function renderDropDown(props) {
+    let {
+        input,
+        label,
+        children,
+        ...custom,
+    } = props;
+
+    return (
+        <SelectField floatingLabelText={label}
+                     fullWidth={true}
+                     {...input}
+                     onChange={(event, index, value) => input.onChange(value)}
+                     children={children}
+                     {...custom}
+        />
+    )
+}
+
+function renderCheckBox(props) {
+    let {
+        input,
+        label,
+        ...custom
+    } = props;
+    return (
+        <Checkbox label={label}
+                  checked={input.value ? true : false}
+                  onCheck={input.onChange}
+                  {...custom}
+        />
+    )
+}
+
+SearchFormBase = injectSheet(styles)(SearchFormBase);
+export default reduxForm(
+    {
+        form: 'searchForm',
+        enableReinitialize: true
+    }
+)(SearchFormBase);

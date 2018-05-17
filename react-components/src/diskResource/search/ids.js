@@ -2,7 +2,7 @@ export default {
     form: 'searchForm',
     nameHas: 'searchForm.nameHas',
     createdWithin: 'searchForm.createdWithin',
-    nameHasNot: ".nameHasNot",
+    nameHasNot: "searchForm.nameHasNot",
     modifiedWithin: 'searchForm.modifiedWithin',
     metadataAttributeHas: 'searchForm.metadataAttributeHas',
     ownedBy: 'searchForm.ownedBy',

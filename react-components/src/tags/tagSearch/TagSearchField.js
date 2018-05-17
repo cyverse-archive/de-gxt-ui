@@ -50,8 +50,8 @@ class TagSearchField extends Component {
         this.props.onTagSelected(selectedItem);
     }
 
-    onDeleteTagSelected(selectedTag) {
-        this.props.onDeleteTagSelected(selectedTag);
+    onDeleteTagSelected(tagIndex, tagValue) {
+        this.props.onDeleteTagSelected(tagIndex, tagValue);
     }
 
     onEditTagSelected(selectedTag) {
@@ -89,7 +89,7 @@ class TagSearchField extends Component {
                             <Tag key={index}
                                  tag={tag}
                                  onClick={this.onEditTagSelected}
-                                 onRequestDelete={this.onDeleteTagSelected}/>
+                                 onRequestDelete={this.onDeleteTagSelected.bind(null, index)}/>
                         )
                     }, this)}
                 </div>

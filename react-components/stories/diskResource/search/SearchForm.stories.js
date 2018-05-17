@@ -1,6 +1,4 @@
 import React from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {getCyVerseTheme} from "../../../src/lib";
 import {SearchForm} from "../../../src/diskResource/search";
 
 class SearchFormTest extends React.Component {
@@ -101,13 +99,11 @@ class SearchFormTest extends React.Component {
         };
 
         return (
-            <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-                <SearchForm presenter={presenter}
-                            dateIntervals={dateIntervals}
-                            suggestedTags={suggestedTags}
-                            id={id}
-                            template={template}/>
-            </MuiThemeProvider>
+            <SearchForm presenter={presenter}
+                        dateIntervals={dateIntervals}
+                        suggestedTags={suggestedTags}
+                        id={id}
+                        initialValues={template}/>
         )
     }
 }

@@ -339,7 +339,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     @Override
     public void edit(DiskResourceQueryTemplate template) {
         ReactSearchForm.SearchFormProps props = getCurrentProps();
-        props.template = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(template));
+        props.initialValues = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(template));
 
         view.renderSearchForm(props);
 
@@ -355,11 +355,10 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
         if (currentProps == null) {
             ReactSearchForm.SearchFormProps props = new ReactSearchForm.SearchFormProps();
             props.presenter = this;
-            props.appearance = appearance;
             props.id = DiskResourceModule.Ids.SEARCH_FORM;
             props.dateIntervals = dateIntervalProvider.get();
             props.suggestedTags = StringQuoter.createIndexed();
-            props.template = searchModelUtils.createDefaultFilter();
+            props.initialValues = searchModelUtils.createDefaultFilter();
 
             currentProps = props;
         }

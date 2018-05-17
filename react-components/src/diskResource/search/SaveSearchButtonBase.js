@@ -10,63 +10,33 @@ import {getMessage} from '../../util/hasI18N';
 
 /**
  * @author aramsey
- * A dialog for naming an advanced search query and saving it
+ * A button which opens a dialog for naming an advanced search query and saving it
  */
 class SaveSearchButtonBase extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            open: false,
-            name: props.originalName
+            open: false
         };
 
         this.handleClose = this.handleClose.bind(this);
         this.handleOpen = this.handleOpen.bind(this);
         this.handleSave = this.handleSave.bind(this);
-        this.handleValueChange = this.handleValueChange.bind(this);
         this.getFullId = this.getFullId.bind(this);
     }
 
-    handleValueChange(event) {
-        let value = event.target.value;
-
-        this.setState(function () {
-            return {
-                name: value
-            }
-        })
-    }
-
     handleSave() {
-        let name = this.state.name;
-        let originalName = this.props.originalName;
-
-        if (name.length > 0) {
-            this.props.handleSave(originalName, name);
-            this.setState(function () {
-                return {
-                    open: false,
-                    name: ''
-                }
-            })
-        }
+        this.props.handleSave();
+        this.setState({open: false})
     }
 
     handleOpen() {
-        this.setState(function () {
-            return {
-                open: true
-            }
-        })
+        this.setState({open: true})
     }
 
     handleClose() {
-        this.setState(function () {
-            return {
-                open: false
-            }
-        })
+        this.setState({open: false})
     }
 
     getFullId(id) {
@@ -75,6 +45,9 @@ class SaveSearchButtonBase extends Component {
     }
 
     render() {
+        let { value, onChange } = this.props;
+        let disabled = this.props.disabled;
+
         let actions = [
             <FlatButton id={ids.saveBtn}
                         label={getMessage('saveBtn')}
@@ -89,6 +62,7 @@ class SaveSearchButtonBase extends Component {
         return (
             <div>
                 <RaisedButton id={this.getFullId(ids.saveSearchBtn)}
+                              disabled={disabled ? disabled : false}
                               label={getMessage('saveSearchBtn')}
                               onClick={this.handleOpen}/>
                 <Dialog id={ids.saveSearchDlg}
@@ -98,9 +72,9 @@ class SaveSearchButtonBase extends Component {
                         onRequestClose={this.handleClose}>
                     <TextField id={ids.saveTextField}
                                hintText={getMessage('filterName')}
-                               errorText={getMessage('requiredField')}
-                               value={this.state.name}
-                               onChange={this.handleValueChange}/>
+                               errorText={value ? null : getMessage('requiredField')}
+                               value={value}
+                               onChange={onChange}/>
                 </Dialog>
             </div>
         )
@@ -109,8 +83,10 @@ class SaveSearchButtonBase extends Component {
 
 SaveSearchButtonBase.propTypes = {
     parentId: PropTypes.string,
+    disabled: PropTypes.bool,
     handleSave: PropTypes.func.isRequired,
-    originalName: PropTypes.string.isRequired
+    value: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired
 };
 
 export default SaveSearchButtonBase;

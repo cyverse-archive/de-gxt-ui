@@ -10,11 +10,18 @@ class SaveSearchButtonTest extends React.Component {
             console.log(selection);
         });
 
+        const onChange = (event) => {
+            return event.target.value;
+        };
+
+        const value = 'OLDNAME';
+
         return (
 
             <MuiThemeProvider muiTheme={getCyVerseTheme()}>
                 <SaveSearchButton handleSave={handleSave}
-                                  originalName='OLDNAME'/>
+                                  value={value}
+                                  onChange={onChange}/>
             </MuiThemeProvider>
         )
     }
