@@ -29,9 +29,10 @@ import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
 import org.iplantc.de.analysis.client.events.selection.*;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.analysis.shared.AnalysisModule;
+import org.iplantc.de.client.models.AnalysisTypeFilter;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.analysis.Analysis;
-import org.iplantc.de.client.models.analysis.AnalysisFilter;
+import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -57,18 +58,18 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     @UiField TextButton analysesTb;
     @UiField MenuItem updateCommentsMI;
     @UiField MenuItem renameMI;
-    @UiField TextButton editTb;
     @UiField TextButton refreshTb;
     @UiField AnalysisSearchField searchField;
     @UiField(provided = true) final AnalysesView.Appearance appearance;
-
-    @UiField
-    TextButton share_menu;
     @UiField
     MenuItem shareCollabMI;
 
     @UiField(provided = true)
-    SimpleComboBox<AnalysisFilter> filterCombo;
+    SimpleComboBox<AnalysisPermissionFilter> filterPermCombo;
+
+    @UiField(provided = true)
+    SimpleComboBox<AnalysisTypeFilter> filterTypeCombo;
+
 
     @Inject
     UserInfo userInfo;
@@ -83,38 +84,62 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         this.appearance = appearance;
         this.loader = loader;
 
-        filterCombo = new SimpleComboBox<>(new StringLabelProvider<>());
-        filterCombo.add(Arrays.asList(AnalysisFilter.ALL,
-                                      AnalysisFilter.MY_ANALYSES,
-                                      AnalysisFilter.SHARED_WITH_ME,
-                                      AnalysisFilter.INTERACTIVE_ANALYSES));
+        filterPermCombo = new SimpleComboBox<>(new StringLabelProvider<>());
+        filterPermCombo.add(Arrays.asList(AnalysisPermissionFilter.ALL,
+                AnalysisPermissionFilter.MY_ANALYSES,
+                AnalysisPermissionFilter.SHARED_WITH_ME));
+        filterTypeCombo = new SimpleComboBox<>(new StringLabelProvider<>());
+        filterTypeCombo.add(Arrays.asList(AnalysisTypeFilter.AGAVE,
+                AnalysisTypeFilter.DE,
+                AnalysisTypeFilter.INTERACTIVE,
+                AnalysisTypeFilter.OSG));
         AnalysesToolbarUiBinder uiBinder = GWT.create(AnalysesToolbarUiBinder.class);
         initWidget(uiBinder.createAndBindUi(this));
-        filterCombo.setEditable(false);
-        filterCombo.setValue(AnalysisFilter.ALL);
-        filterCombo.addSelectionHandler(event -> {
-            onFilterChange(event.getSelectedItem());
+        filterPermCombo.setEditable(false);
+        filterPermCombo.setValue(AnalysisPermissionFilter.ALL);
+        filterPermCombo.addSelectionHandler(event -> {
+            onPermFilterChange(event.getSelectedItem());
             searchField.clear();
         });
-        filterCombo.addValueChangeHandler(event -> onFilterChange(event.getValue()));
+        filterPermCombo.addValueChangeHandler(event -> onPermFilterChange(event.getValue()));
+
+
+        filterTypeCombo.setEditable(false);
+        filterTypeCombo.setValue(AnalysisTypeFilter.DE);
+        filterTypeCombo.addSelectionHandler(event -> {
+            onTypeFilterChange(event.getSelectedItem());
+            searchField.clear();
+        });
+        filterTypeCombo.addValueChangeHandler(event -> onTypeFilterChange(event.getValue()));
+
 
         searchField.addHideHandler(handler -> searchField.setVisible(true));
     }
 
-    private void onFilterChange(AnalysisFilter af) {
+    private void onPermFilterChange(AnalysisPermissionFilter af) {
         switch (af) {
             case ALL:
-                applyFilter(AnalysisFilter.ALL);
+                applyFilter(AnalysisPermissionFilter.ALL);
                 break;
             case SHARED_WITH_ME:
-                applyFilter(AnalysisFilter.SHARED_WITH_ME);
+                applyFilter(AnalysisPermissionFilter.SHARED_WITH_ME);
                 break;
 
             case MY_ANALYSES:
-                applyFilter(AnalysisFilter.MY_ANALYSES);
+                applyFilter(AnalysisPermissionFilter.MY_ANALYSES);
                 break;
-            case INTERACTIVE_ANALYSES:
-                applyFilter(AnalysisFilter.INTERACTIVE_ANALYSES);
+        }
+    }
+
+    private void onTypeFilterChange(AnalysisTypeFilter af) {
+        switch (af) {
+            case AGAVE:
+                break;
+            case DE:
+                break;
+            case INTERACTIVE:
+                break;
+            case OSG:
                 break;
         }
     }
@@ -128,7 +153,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     public void filterByAnalysisId(String analysisId, String name) {
         searchField.filterByAnalysisId(analysisId, name);
         //reset filter. Users need to set Filter to ALL to go back...
-        filterCombo.setValue(null);
+        filterPermCombo.setValue(null);
         applyFilter(null);
     }
 
@@ -136,7 +161,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     public void filterByParentAnalysisId(String analysisId) {
         searchField.filterByParentId(analysisId);
         //reset filter. Users need to set Filter to ALL to go back...
-        filterCombo.setValue(null);
+        filterPermCombo.setValue(null);
         applyFilter(null);
     }
 
@@ -195,7 +220,6 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         relaunchMI.setEnabled(relaunchEnabled);
         cancelMI.setEnabled(cancelEnabled);
         deleteMI.setEnabled(deleteEnabled);
-        share_menu.setEnabled(shareEnabled);
         shareCollabMI.setEnabled(shareEnabled);
        // shareSupportMI.setEnabled(shareEnabled);
         renameMI.setEnabled(renameEnabled);
@@ -240,8 +264,6 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         deleteMI.ensureDebugId(baseID + AnalysisModule.Ids.MENUITEM_ANALYSES
                 + AnalysisModule.Ids.MENUITEM_DELETE);
 
-        // Edit menu
-        editTb.ensureDebugId(baseID + AnalysisModule.Ids.MENUITEM_EDIT);
         renameMI.ensureDebugId(baseID + AnalysisModule.Ids.MENUITEM_EDIT
                 + AnalysisModule.Ids.MENUITEM_RENAME);
         updateCommentsMI.ensureDebugId(baseID + AnalysisModule.Ids.MENUITEM_EDIT
@@ -249,12 +271,8 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
 
         refreshTb.ensureDebugId(baseID + AnalysisModule.Ids.BUTTON_REFRESH);
         searchField.ensureDebugId(baseID + AnalysisModule.Ids.FIELD_SEARCH);
-
-        //share menu
-        share_menu.ensureDebugId(baseID + AnalysisModule.Ids.SHARE_MENU );
         shareCollabMI.ensureDebugId(baseID + AnalysisModule.Ids.SHARE_COLLAB);
         shareCollabMI.ensureDebugId(baseID + AnalysisModule.Ids.SHARE_SUPPORT);
-
     }
 
     /**
@@ -314,9 +332,9 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     @UiHandler("searchField")
     void searchFieldKeyUp(KeyUpEvent event){
         if (Strings.isNullOrEmpty(searchField.getCurrentValue())) {
-            filterCombo.setValue(AnalysisFilter.ALL);
+            filterPermCombo.setValue(AnalysisPermissionFilter.ALL);
         } else {
-            filterCombo.setValue(null);
+            filterPermCombo.setValue(null);
             applyFilter(null);
         }
     }
@@ -393,13 +411,13 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         fireEvent(new RefreshAnalysesSelected());
     }
 
-    void applyFilter(AnalysisFilter filter) {
+    void applyFilter(AnalysisPermissionFilter filter) {
         fireEvent(new AnalysisFilterChanged(filter));
     }
 
     @Override
-    public void setFilterInView(AnalysisFilter filter) {
-        filterCombo.setValue(filter);
+    public void setFilterInView(AnalysisPermissionFilter filter) {
+        filterPermCombo.setValue(filter);
     }
 
     @Override

@@ -4,7 +4,7 @@ import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.shared.AnalysisModule;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.analysis.Analysis;
-import org.iplantc.de.client.models.analysis.AnalysisFilter;
+import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.window.configs.AnalysisWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
@@ -69,7 +69,7 @@ public class MyAnalysesWindow extends WindowBase {
         List<Analysis> selectedAnalyses = Lists.newArrayList();
         selectedAnalyses.addAll(presenter.getSelectedAnalyses());
         config.setSelectedAnalyses(selectedAnalyses);
-        AnalysisFilter currentFilter = presenter.getCurrentFilter();
+        AnalysisPermissionFilter currentFilter = presenter.getCurrentFilter();
         if (currentFilter != null) {
             config.setFilter(currentFilter.getFilterString());
         }
@@ -83,7 +83,7 @@ public class MyAnalysesWindow extends WindowBase {
         if (config instanceof AnalysisWindowConfig) {
             AnalysisWindowConfig analysisWindowConfig = (AnalysisWindowConfig) config;
             presenter.setSelectedAnalyses(analysisWindowConfig.getSelectedAnalyses());
-            presenter.setFilterInView(AnalysisFilter.ALL.fromTypeString(analysisWindowConfig.getFilter()));
+            presenter.setFilterInView(AnalysisPermissionFilter.ALL.fromTypeString(analysisWindowConfig.getFilter()));
         }
     }
 

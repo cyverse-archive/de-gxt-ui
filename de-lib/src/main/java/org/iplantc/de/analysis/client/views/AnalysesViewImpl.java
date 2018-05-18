@@ -17,7 +17,7 @@ import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
 import org.iplantc.de.analysis.client.gin.factory.AnalysisToolBarFactory;
-import org.iplantc.de.client.models.analysis.AnalysisFilter;
+import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.analysis.shared.AnalysisModule;
 import org.iplantc.de.client.models.analysis.Analysis;
@@ -194,7 +194,7 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     }
 
     @Override
-    public void setFilterInView(AnalysisFilter filter) {
+    public void setPermFilterInView(AnalysisPermissionFilter filter) {
         toolBar.setFilterInView(filter);
     }
 

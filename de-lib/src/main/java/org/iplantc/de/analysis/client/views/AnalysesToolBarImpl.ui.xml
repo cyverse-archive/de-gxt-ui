@@ -35,7 +35,10 @@
                         <menu:MenuItem ui:field="viewJobInfoMI"
                                        text="{appearance.viewAnalysisStepInfo}"
                                        icon="{appearance.fileViewIcon}"
-                                       enabled="false"/>               
+                                       enabled="false"/>
+                        <menu:MenuItem ui:field="shareCollabMI" enabled="false"
+                                       text="{appearance.shareCollab}"
+                                       icon="{appearance.shareIcon}"/>
                         <menu:MenuItem ui:field="cancelMI"
                                        text="{appearance.cancelAnalysis}"
                                        icon="{appearance.deleteIcon}"
@@ -44,16 +47,6 @@
                                        text="{appearance.delete}"
                                        icon="{appearance.cancelIcon}"
                                        enabled="false"/>
-                    </menu:Menu>
-                </button:menu>
-            </button:TextButton>
-        </toolbar:child>
-
-        <toolbar:child>
-            <button:TextButton ui:field="editTb"
-                               text="{appearance.editMenuLbl}">
-                <button:menu>
-                    <menu:Menu>
                         <menu:MenuItem ui:field="renameMI"
                                        text="{appearance.renameMenuItem}"
                                        icon="{appearance.fileRenameIcon}"
@@ -66,34 +59,18 @@
                 </button:menu>
             </button:TextButton>
         </toolbar:child>
-
         <toolbar:child>
             <button:TextButton ui:field="refreshTb"
                                text="{appearance.refresh}"
                                icon="{appearance.refreshIcon}" />
         </toolbar:child>
         <toolbar:child>
-            <toolbar:SeparatorToolItem />
+            <form:SimpleComboBox ui:field="filterPermCombo" allowBlank="true" forceSelection="true"
+                                 triggerAction="ALL"/>
         </toolbar:child>
         <toolbar:child>
-            <button:TextButton ui:field="share_menu" text="{appearance.share}">
-                <button:menu>
-                    <menu:Menu ui:field="sharingMenu">
-                        <menu:MenuItem ui:field="shareCollabMI" enabled="false"
-                                       text="{appearance.shareCollab}" icon="{appearance.shareIcon}"
-                        />
-                       <!-- <menu:MenuItem ui:field="shareSupportMI" enabled="false"
-                                       text="{appearance.shareSupport}" icon="{appearance.shareIcon}"
-                        /> -->
-                    </menu:Menu>
-                </button:menu>
-            </button:TextButton>
-        </toolbar:child>
-        <toolbar:child>
-            <toolbar:SeparatorToolItem />
-        </toolbar:child>
-        <toolbar:child>
-            <form:SimpleComboBox ui:field="filterCombo" allowBlank="true" forceSelection="true" triggerAction="ALL" />
+            <form:SimpleComboBox ui:field="filterTypeCombo" allowBlank="true" forceSelection="true"
+                                 triggerAction="ALL"/>
         </toolbar:child>
         <toolbar:child>
             <toolbar:SeparatorToolItem />

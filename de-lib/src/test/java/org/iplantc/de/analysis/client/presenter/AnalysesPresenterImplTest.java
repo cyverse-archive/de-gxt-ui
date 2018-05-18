@@ -22,7 +22,7 @@ import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
 import org.iplantc.de.analysis.client.gin.factory.AnalysesViewFactory;
-import org.iplantc.de.client.models.analysis.AnalysisFilter;
+import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
 import org.iplantc.de.analysis.client.presenter.proxy.AnalysisRpcProxy;
 import org.iplantc.de.analysis.client.views.AnalysisStepsView;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
@@ -100,7 +100,8 @@ public class AnalysesPresenterImplTest {
     @Mock AnalysisStepsView analysisStepsViewMock;
     @Mock AsyncProviderWrapper<AnalysisSharingDialog> aSharingDialogProviderMock;
     @Mock AnalysisSharingDialog analysisSharingDialogMock;
-    @Mock AnalysisFilter currentFilterMock;
+    @Mock
+    AnalysisPermissionFilter currentFilterMock;
     @Mock ListStore<Analysis> listStoreMock;
     @Mock AnalysesView viewMock;
     @Mock HasHandlers eventBusMock;
@@ -326,13 +327,13 @@ public class AnalysesPresenterImplTest {
 
         /** CALL METHOD UNDER TEST **/
         spy.go(containerMock, analysisListMock);
-        verify(spy).loadAnalyses(eq(AnalysisFilter.ALL));
+        verify(spy).loadAnalyses(eq(AnalysisPermissionFilter.ALL));
         verify(containerMock).setWidget(eq(viewMock));
     }
 
     @Test
     public void loadAnalyses_search() {
-        AnalysisFilter filterMock = mock(AnalysisFilter.class);
+        AnalysisPermissionFilter filterMock = mock(AnalysisPermissionFilter.class);
         when(analysisSearchFieldMock.getCurrentValue()).thenReturn("Value");
 
         /** CALL METHOD UNDER TEST **/
@@ -343,7 +344,7 @@ public class AnalysesPresenterImplTest {
 
     @Test
     public void loadAnalyses() {
-        AnalysisFilter filterMock = mock(AnalysisFilter.class);
+        AnalysisPermissionFilter filterMock = mock(AnalysisPermissionFilter.class);
         when(analysisSearchFieldMock.getCurrentValue()).thenReturn(null);
 
 
@@ -375,11 +376,11 @@ public class AnalysesPresenterImplTest {
     public void setCurrentFilter() {
         AnalysesPresenterImpl spy = spy(uut);
         AnalysisFilterChanged eventMock = mock(AnalysisFilterChanged.class);
-        when(eventMock.getFilter()).thenReturn(AnalysisFilter.MY_ANALYSES);
+        when(eventMock.getFilter()).thenReturn(AnalysisPermissionFilter.MY_ANALYSES);
 
         /** CALL METHOD UNDER TEST **/
         spy.onAnalysisFilterChanged(eventMock);
-        currentFilterMock = AnalysisFilter.MY_ANALYSES;
+        currentFilterMock = AnalysisPermissionFilter.MY_ANALYSES;
         verify(spy, times(1)).loadAnalyses(eq(currentFilterMock));
     }
 

@@ -3,13 +3,13 @@ package org.iplantc.de.client.models.analysis;
 /**
  * Created by sriram on 3/4/16.
  */
-public enum AnalysisFilter {
+public enum AnalysisPermissionFilter {
 
-    ALL("All"), SHARED_WITH_ME("Analyses shared with me"), MY_ANALYSES("Only my analyses"), INTERACTIVE_ANALYSES("Only interactive analyses");
+    ALL("All"), SHARED_WITH_ME("Analyses shared with me"), MY_ANALYSES("Only my analyses");
 
     private String filter;
 
-    private AnalysisFilter(String label) {
+    private AnalysisPermissionFilter(String label) {
            this.filter = label;
     }
 
@@ -22,7 +22,7 @@ public enum AnalysisFilter {
         return filter;
     }
 
-    public static AnalysisFilter fromTypeString(String typeString) {
+    public static AnalysisPermissionFilter fromTypeString(String typeString) {
         if (typeString == null || typeString.isEmpty()) {
             return null;
         }
