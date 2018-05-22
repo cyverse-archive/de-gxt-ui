@@ -8,7 +8,14 @@ import ToolbarSeparator from "material-ui-next/Toolbar";
 import TextField from "material-ui-next/TextField";
 import Button from "material-ui-next/Button";
 import {withStyles} from "material-ui-next/styles";
-import Table, {TableHead, TableBody, TableCell, TableFooter, TablePagination, TableRow} from "material-ui-next/Table";
+import Table, {
+    TableHead,
+    TableBody,
+    TableCell,
+    TableFooter,
+    TablePagination,
+    TableRow
+} from "material-ui-next/Table";
 import IconButton from "material-ui-next/IconButton";
 import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
@@ -16,11 +23,13 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import PropTypes from "prop-types";
 import moment from "moment";
-import {addLocaleData, ReactIntlLocaleData, FormattedMessage, IntlProvider} from "react-intl";
 import {CircularProgress} from "material-ui-next/Progress";
 import exStyles from "../style";
 import {css} from "aphrodite";
 import constants from "../../constants";
+import intlData from "../messages";
+import withI18N, {getMessage} from "../../util/I18NWrapper";
+
 const pagingStyles = theme => ({
     root: {
         flexShrink: 0,
@@ -59,25 +68,25 @@ class TablePaginationActions extends React.Component {
                     <IconButton
                         onClick={this.handleFirstPageButtonClick}
                         disabled={page === 0}
-                        aria-label={<FormattedMessage id="firstPage"/>}>
+                        aria-label={getMessage("firstPage")}>
                         {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
                     </IconButton>
                     <IconButton
                         onClick={this.handleBackButtonClick}
                         disabled={page === 0}
-                        aria-label={<FormattedMessage id="prevPage"/>}>
+                        aria-label={getMessage("prevPage")}>
                         {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
                     </IconButton>
                     <IconButton
                         onClick={this.handleNextButtonClick}
                         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                        aria-label={<FormattedMessage id="nextPage"/>}>
+                        aria-label={getMessage("nextPage")}>
                         {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
                     </IconButton>
                     <IconButton
                         onClick={this.handleLastPageButtonClick}
                         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                        aria-label={<FormattedMessage id="lastPage"/>}>
+                        aria-label={getMessage("lastPage")}>
                         {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
                     </IconButton>
                 </div>
@@ -95,9 +104,9 @@ TablePaginationActions.propTypes = {
     theme: PropTypes.object.isRequired,
 };
 
-const TablePaginationActionsWrapped = withStyles(pagingStyles, {withTheme: true})(
+const TablePaginationActionsWrapped = withI18N(withStyles(pagingStyles, {withTheme: true})(
     TablePaginationActions,
-);
+), intlData);
 
 const styles = theme => ({
     root: {
@@ -199,7 +208,6 @@ class AppStats extends Component {
         const classes = this.props.classes;
         const {data, rowsPerPage, page} = this.state;
         return (
-            <IntlProvider locale='en' defaultLocale='en' messages={this.props.messages}>
                 <div className={classes.root}>
                     {this.state.loading &&
                         <CircularProgress size={30} className={css(exStyles.loadingStyle)} thickness={7}/>
@@ -208,21 +216,22 @@ class AppStats extends Component {
                         <Toolbar>
                             <ToolbarGroup>
                                 <TextField className={classes.textField}
-                                           label={<FormattedMessage id="searchApps"/>} onChange={this.handleSearch}/>
+                                           label={getMessage("searchApps")}
+                                           onChange={this.handleSearch}/>
                                 <ToolbarSeparator />
-                                <TextField label={<FormattedMessage id="startDate"/>} type="date"
+                                <TextField label={getMessage("startDate")} type="date"
                                            defaultValue={moment(this.state.startDate).format(constants.DATE_FORMAT)}
                                            InputLabelProps={{
                                                shrink: true,
                                            }} onChange={this.onStartDateChange}/>
-                                <TextField label={<FormattedMessage id="endDate"/>} type="date"
+                                <TextField label={getMessage("endDate")} type="date"
                                            defaultValue={moment(this.state.endDate).format(constants.DATE_FORMAT)}
                                            InputLabelProps={{
                                                shrink: true,
                                            }} onChange={this.onEndDateChange}/>
                                 <ToolbarSeparator />
                                 <Button variant="raised" onClick={this.applyFilter}
-                                        className={css(exStyles.filterButton)}>{<FormattedMessage id="applyFilter"/>}</Button>
+                                        className={css(exStyles.filterButton)}>{getMessage("applyFilter")}</Button>
 
                             </ToolbarGroup>
                         </Toolbar>
@@ -230,19 +239,20 @@ class AppStats extends Component {
                     <Table className={css(exStyles.statTable)}>
                         <TableHead>
                             <TableRow hover>
-                                <TableCell className={css(exStyles.tableHead)}>{<FormattedMessage id="appName"/>}</TableCell>
+                                <TableCell
+                                    className={css(exStyles.tableHead)}>{getMessage("appName")}</TableCell>
                                 <TableCell className={css(exStyles.tableHead)}
-                                           numeric>{<FormattedMessage id="rating"/>}</TableCell>
+                                           numeric>{getMessage("rating")}</TableCell>
                                 <TableCell className={css(exStyles.tableHead)}
-                                           numeric>{<FormattedMessage id="total"/>}</TableCell>
+                                           numeric>{getMessage("total")}</TableCell>
                                 <TableCell className={css(exStyles.tableHead)}
-                                           numeric>{<FormattedMessage id="completed"/>}</TableCell>
+                                           numeric>{getMessage("completed")}</TableCell>
                                 <TableCell className={css(exStyles.tableHead)}
-                                           numeric>{<FormattedMessage id="failed"/>}</TableCell>
+                                           numeric>{getMessage("failed")}</TableCell>
                                 <TableCell className={css(exStyles.tableHead)}
-                                           numeric>{<FormattedMessage id="lastCompleted"/>}</TableCell>
+                                           numeric>{getMessage("lastCompleted")}</TableCell>
                                 <TableCell className={css(exStyles.tableHead)}
-                                           numeric>{<FormattedMessage id="lastUsed"/>}</TableCell>
+                                           numeric>{getMessage("lastUsed")}</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -260,10 +270,10 @@ class AppStats extends Component {
                                             numeric>{(n.job_stats.job_count_failed) ? n.job_stats.job_count_failed : 0 }</TableCell>
                                         <TableCell>{(n.job_stats.job_last_completed) ? moment(Number(n.job_stats.job_last_completed), "x").format(
                                                 constants.DATE_FORMAT) :
-                                            <FormattedMessage id="emptyValue"/>} </TableCell>
+                                            getMessage("emptyValue")} </TableCell>
                                         <TableCell>{(n.job_stats.last_used) ? moment(Number(n.job_stats.last_used), "x").format(
                                                 constants.DATE_FORMAT) :
-                                            <FormattedMessage id="emptyValue"/>}</TableCell>
+                                            getMessage("emptyValue")}</TableCell>
                                     </TableRow>
                                 );
                             })}
@@ -284,7 +294,6 @@ class AppStats extends Component {
                         </TableFooter>
                     </Table>
                 </div>
-            </IntlProvider>
         )
 
     }
@@ -293,4 +302,4 @@ AppStats.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AppStats, TablePaginationActionsWrapped);
+export default withStyles(styles)(withI18N(AppStats, intlData), TablePaginationActionsWrapped);

@@ -1,14 +1,45 @@
 package org.iplantc.de.apps.client.views.toolBar;
 
+import static org.iplantc.de.apps.client.events.AppSearchResultLoadEvent.TYPE;
+
+import org.iplantc.de.apps.client.AppsToolbarView;
+import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent.AppSearchResultLoadEventHandler;
+import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
+import org.iplantc.de.apps.client.events.ManageToolsClickedEvent;
+import org.iplantc.de.apps.client.events.SwapViewButtonClickedEvent;
+import org.iplantc.de.apps.client.events.selection.AppCategorySelectionChangedEvent;
+import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
+import org.iplantc.de.apps.client.events.selection.CopyAppSelected;
+import org.iplantc.de.apps.client.events.selection.CopyWorkflowSelected;
+import org.iplantc.de.apps.client.events.selection.CreateNewAppSelected;
+import org.iplantc.de.apps.client.events.selection.CreateNewWorkflowSelected;
+import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
+import org.iplantc.de.apps.client.events.selection.EditAppSelected;
+import org.iplantc.de.apps.client.events.selection.EditWorkflowSelected;
+import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
+import org.iplantc.de.apps.client.events.selection.PublishAppSelected;
+import org.iplantc.de.apps.client.events.selection.RefreshAppsSelectedEvent;
+import org.iplantc.de.apps.client.events.selection.RunAppSelected;
+import org.iplantc.de.apps.client.events.selection.ShareAppsSelected;
+import org.iplantc.de.apps.shared.AppsModule.Ids;
+import org.iplantc.de.client.models.UserInfo;
+import org.iplantc.de.client.models.apps.App;
+import org.iplantc.de.client.models.sharing.PermissionValue;
+
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.uibinder.client.*;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiFactory;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
@@ -22,21 +53,9 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.menu.Item;
 import com.sencha.gxt.widget.core.client.menu.Menu;
 import com.sencha.gxt.widget.core.client.menu.MenuItem;
-import org.iplantc.de.apps.client.AppsToolbarView;
-import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent.AppSearchResultLoadEventHandler;
-import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
-import org.iplantc.de.apps.client.events.ManageToolsClickedEvent;
-import org.iplantc.de.apps.client.events.SwapViewButtonClickedEvent;
-import org.iplantc.de.apps.client.events.selection.*;
-import org.iplantc.de.apps.shared.AppsModule.Ids;
-import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.apps.App;
-import org.iplantc.de.client.models.sharing.PermissionValue;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static org.iplantc.de.apps.client.events.AppSearchResultLoadEvent.TYPE;
 
 /**
  * @author jstroot
@@ -309,12 +328,12 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
 
     private boolean hasReadPermission(App selectedApp) {
         return selectedApp.getPermission() != null && selectedApp.getPermission()
-                .equals(PermissionValue.read.toString());
+                                                                 .equals(PermissionValue.read.toString());
     }
 
     private boolean hasOwnerPermission(App selectedApp) {
         return selectedApp.getPermission() != null && selectedApp.getPermission()
-                .equals(PermissionValue.own.toString());
+                                                                 .equals(PermissionValue.own.toString());
     }
 
     private boolean isIntegrator(App selectedApp) {
