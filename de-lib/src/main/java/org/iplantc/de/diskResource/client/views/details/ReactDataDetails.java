@@ -14,10 +14,10 @@ import jsinterop.annotations.JsType;
 /**
  * Created by sriram on 2/26/18.
  */
-@JsType(isNative = true, namespace = "CyVerseReactComponents.data.details", name = "BasicDetailsWithI18N")
+@JsType(isNative = true, namespace = "CyVerseReactComponents.data.details", name = "BasicDetails")
 public class ReactDataDetails {
 
-    @JsProperty(namespace = "CyVerseReactComponents.data.details", name = "BasicDetailsWithI18N")
+    @JsProperty(namespace = "CyVerseReactComponents.data.details", name = "BasicDetails")
     public static ReactClass<DataDetailsProps> dataDetails;
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")

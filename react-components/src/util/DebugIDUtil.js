@@ -1,7 +1,7 @@
 /**
  @author sriram
  */
-export default function construct(baseID, id) {
+export default function build(baseID, id) {
     const DOT = ".";
     return baseID + DOT + id;
 }

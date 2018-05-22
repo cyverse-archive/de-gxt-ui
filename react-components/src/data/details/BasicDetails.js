@@ -4,10 +4,14 @@
 import React, {Component} from "react";
 import moment from "moment";
 import Button from "material-ui-next/Button";
-import Dialog, {DialogActions, DialogContent, DialogContentText, DialogTitle} from "material-ui-next/Dialog";
+import Dialog, {
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle
+} from "material-ui-next/Dialog";
 import InfoTypeSelectionList from "./InfoTypeSelectionList";
 import TagPanel from "./TagPanel";
-import {addLocaleData, ReactIntlLocaleData, FormattedMessage, IntlProvider} from "react-intl";
 import intlData from "../messages";
 import {CircularProgress} from "material-ui-next/Progress";
 import styles from "../style";
@@ -15,9 +19,10 @@ import {css} from "aphrodite";
 import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
 import construct from "../../util/DebugIDUtil";
 import ids from "../ids";
+import withI18N, {getMessage} from "../../util/I18NWrapper";
 
 function SendTo(props) {
-    let displayText = <FormattedMessage id="emptyValue"/>;
+    let displayText = getMessage("emptyValue");
     let className = css(styles.value);
     let onClick = null;
     let infoType = props.infoType;
@@ -25,15 +30,15 @@ function SendTo(props) {
 
     if (infoType) {
         if (drUtil.isTreeInfoType(infoType)) {
-            displayText = <DEHyperlink text={<FormattedMessage id="treeViewer"/>}/>;
+            displayText = <DEHyperlink text={getMessage("treeViewer")}/>;
             className = null;
             onClick = props.handleSendToClick;
         } else if (drUtil.isGenomeVizInfoType(infoType)) {
-            displayText = <DEHyperlink text={<FormattedMessage id="coge"/>}/>;
+            displayText = <DEHyperlink text={getMessage("coge")}/>;
             className = null;
             onClick = props.handleSendToClick;
         } else if (drUtil.isEnsemblInfoType(infoType)) {
-            displayText = <DEHyperlink text={<FormattedMessage id="genomeBrowser"/>}/>;
+            displayText = <DEHyperlink text={getMessage("genomeBrowser")}/>;
             className = null;
             onClick = props.handleSendToClick;
         }
@@ -44,10 +49,10 @@ function SendTo(props) {
 function Md5(props) {
     if (props.md5) {
         return (<td id={props.id} onClick={props.onClick}>
-            <DEHyperlink text={<FormattedMessage id="view"/>}/>
+            <DEHyperlink text={getMessage("view")}/>
         </td>);
     } else {
-        return <td id={props.id} className={css(styles.value)}>{<FormattedMessage id="folders"/>}</td>;
+        return <td id={props.id} className={css(styles.value)}>{getMessage("folders")}</td>;
     }
 }
 
@@ -55,10 +60,11 @@ function ManageSharing(props) {
     if (props.isOwner) {
         return (
             <td id={props.id} onClick={props.onClick}>
-                {(props.shareCount ? <DEHyperlink text={props.shareCount} /> : <DEHyperlink text={<FormattedMessage id="noSharing"/>}/>)}
+                {(props.shareCount ? <DEHyperlink text={props.shareCount}/> :
+                    <DEHyperlink text={getMessage("noSharing")}/>)}
             </td>);
     } else {
-        return <td id={props.id} className={css(styles.value)}>{<FormattedMessage id="emptyValue"/>}</td>;
+        return <td id={props.id} className={css(styles.value)}>{getMessage("emptyValue")}</td>;
     }
 }
 
@@ -191,11 +197,7 @@ class BasicDetails extends Component {
     render() {
         if (!this.props.data) {
             return (
-                <IntlProvider locale='en'
-                              defaultLocale='en'
-                              messages={this.props.messages}>
-                    <div>{<FormattedMessage id="noDetails"/>}</div>
-                </IntlProvider>
+                <div>{getMessage("noDetails")}</div>
             )
         }
 
@@ -212,7 +214,7 @@ class BasicDetails extends Component {
 
         if (isFolder) {
             details = <tr>
-                <td className={css(styles.label)}> {<FormattedMessage id="filesFolders"/>}</td>
+                <td className={css(styles.label)}> {getMessage("filesFolders")}</td>
                 <td> {diskResource["file-count"] ? diskResource["file-count"] : 0}
                     / {diskResource["dir-count"] ? diskResource["dir-count"] : 0}</td>
             </tr>;
@@ -220,16 +222,15 @@ class BasicDetails extends Component {
             details = [
                 <tr>
                 <td className={css(styles.label)}>
-                    {<FormattedMessage id="md5CheckSum"/>}
+                    {getMessage("md5CheckSum")}
                 </td>
                     <Md5 id={construct(baseID, ids.DETAILS_MD5)}
                          md5={diskResource.md5}
-                         onClick={this.handleMd5Open}
-                         {...intlData}/>
+                         onClick={this.handleMd5Open}/>
                 </tr>,
                 <tr>
                     <td className={css(styles.label)}>
-                        {<FormattedMessage id="size"/>}
+                        {getMessage("size")}
                     </td>
                     <td id={construct(baseID, ids.DETAILS_SIZE)} className={css(styles.value)}>
                         {drUtil.formatFileSize(diskResource["file-size"])}
@@ -237,7 +238,7 @@ class BasicDetails extends Component {
                 </tr>,
                 <tr>
                     <td className={css(styles.label)}>
-                        {<FormattedMessage id="type"/>}
+                        {getMessage("type")}
                     </td>
                     <td id={construct(baseID, ids.DETAILS_TYPE)} className={css(styles.value)}>
                         {diskResource["content-type"]}
@@ -245,30 +246,28 @@ class BasicDetails extends Component {
                 </tr>,
                 <tr>
                     <td className={css(styles.label)}>
-                        {<FormattedMessage id="infoType"/>}
+                        {getMessage("infoType")}
                     </td>
                     <td className={css(styles.value)}>
-                        <InfoTypeSelectionList id={construct(baseID, ids.DETAILS_INFO_TYPE)} infoTypes={infoTypes}
+                        <InfoTypeSelectionList id={construct(baseID, ids.DETAILS_INFO_TYPE)}
+                                               infoTypes={infoTypes}
                                                selectedValue={infoType ? infoType : null}
                                                view={this.props.view}
-                                               onInfoTypeSelect={this.onInfoTypeSelect}
-                                               {...intlData}/>
+                                               onInfoTypeSelect={this.onInfoTypeSelect}/>
                     </td>
                 </tr>,
                 <tr>
                     <td className={css(styles.label)}>
-                        {<FormattedMessage id="sendTo"/>}
+                        {getMessage("sendTo")}
                     </td>
                     <SendTo id={construct(baseID, ids.DETAILS_SEND_TO)}
                             infoType={infoType}
                             handleSendToClick={this.handleSendToClick}
-                            drUtil={drUtil}
-                            {...intlData}/>
+                            drUtil={drUtil}/>
                 </tr>,
             ];
         }
         return (
-            <IntlProvider locale='en' defaultLocale='en' messages={this.props.messages}>
                 <div>
                     {this.state.loading &&
                         <CircularProgress size={30} className={css(styles.loadingStyle)} thickness={7}/>
@@ -277,25 +276,25 @@ class BasicDetails extends Component {
                         <tbody>
                         <tr>
                             <td className={css(styles.label)}>
-                                {<FormattedMessage id="lastModified"/>}
+                                {getMessage("lastModified")}
                             </td>
                             <td id={construct(baseID, ids.DETAILS_LAST_MODIFIED)} className={css(styles.value)}>
                                 {diskResource['date-modified'] ? moment(Number(diskResource['date-modified']), "x").format("YYYY-MM-DD") :
-                                    <FormattedMessage id="emptyValue"/>}
+                                    getMessage("emptyValue")}
                             </td>
                         </tr>
                         <tr>
                             <td className={css(styles.label)}>
-                                {<FormattedMessage id="createdDate"/>}
+                                {getMessage("createdDate")}
                             </td>
                             <td id={construct(baseID, ids.DETAILS_DATE_SUBMITTED)} className={css(styles.value)}>
                                 {diskResource['date-modified'] ? moment(Number(diskResource['date-created']), "x").format("YYYY-MM-DD") :
-                                    <FormattedMessage id="emptyValue"/>}
+                                    getMessage("emptyValue")}
                             </td>
                         </tr>
                         <tr>
                             <td className={css(styles.label)}>
-                                {<FormattedMessage id="permissions"/>}
+                                {getMessage("permissions")}
                             </td>
                             <td id={construct(baseID, ids.DETAILS_PERMISSIONS)} className={css(styles.value)}>
                                 {diskResource.permission}
@@ -303,12 +302,12 @@ class BasicDetails extends Component {
                         </tr>
                         <tr>
                             <td className={css(styles.label)}>
-                                {<FormattedMessage id="share"/>}
+                                {getMessage("share")}
                             </td>
                             <ManageSharing id={construct(baseID, ids.DETAILS_SHARE)}
                                            isOwner={isOwner}
                                            shareCount={diskResource["share-count"]}
-                                           onClick={this.handleShareClick} {...intlData}/>
+                                           onClick={this.handleShareClick}/>
                         </tr>
                         {details}
                         </tbody>
@@ -320,13 +319,11 @@ class BasicDetails extends Component {
                         tags={this.state.tags.values}
                         dataSource={this.state.dataSource}
                         onTagClick={this.handleTagClick}
-                        handleTagSelect={this.handleTagSelect}
-                        {...intlData}/>
+                        handleTagSelect={this.handleTagSelect}/>
                     <Dialog
                         open={this.state.md5open}
-                        onClose={this.handleMd5Close}
-                        {...intlData}>
-                        <DialogTitle>{<FormattedMessage id="md5CheckSum"/>}</DialogTitle>
+                        onClose={this.handleMd5Close}>
+                        <DialogTitle>{getMessage("md5CheckSum")}</DialogTitle>
                         <DialogContent>
                             <DialogContentText>
                                 {diskResource.md5}
@@ -334,15 +331,14 @@ class BasicDetails extends Component {
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={this.handleMd5Close} autoFocus>
-                                {<FormattedMessage id="okLabel"/>}
+                                {getMessage("okLabel")}
                             </Button>
                         </DialogActions>
 
                     </Dialog>
                 </div>
-            </IntlProvider>
         );
     }
 }
 
-export default BasicDetails;
+export default withI18N(BasicDetails, intlData);

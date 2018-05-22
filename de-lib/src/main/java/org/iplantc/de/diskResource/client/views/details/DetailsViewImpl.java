@@ -1,13 +1,5 @@
 package org.iplantc.de.diskResource.client.views.details;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
-import com.google.web.bindery.autobean.shared.Splittable;
-import com.sencha.gxt.data.shared.event.StoreUpdateEvent;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.sharing.PermissionValue;
@@ -17,6 +9,16 @@ import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import org.iplantc.de.diskResource.client.DetailsView;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent;
 import org.iplantc.de.diskResource.client.events.FetchDetailsCompleted;
+
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
+
+import com.sencha.gxt.data.shared.event.StoreUpdateEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +39,8 @@ public class DetailsViewImpl implements DetailsView {
     private DiskResource boundValue;
     private String baseID;
 
-    DiskResourceUtil diskResourceUtil = DiskResourceUtil.getInstance();
+    @Inject
+    DiskResourceUtil diskResourceUtil;
     HTMLPanel panel;
 
     @Inject
@@ -83,7 +86,7 @@ public class DetailsViewImpl implements DetailsView {
     }
 
     @Override
-    public void hasDebugId(String baseID) {
+    public void setDebugId(String baseID) {
         this.baseID = baseID;
     }
 

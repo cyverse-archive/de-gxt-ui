@@ -5,7 +5,6 @@ import React, {Component} from "react";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import {getCyVerseTheme} from "../../../src/lib";
 import TagPanel from "../../../src/data/details/TagPanel";
-import intlData from "../../../src/data/messages";
 
 
 class TagPanelTest extends Component {
@@ -55,8 +54,7 @@ class TagPanelTest extends Component {
                           handleTagSearch={() => logger}
                           handleRemoveClick={() => logger}
                           onTagClick={logger}
-                          handleTagSelect={logger}
-                          {...intlData}/>
+                          handleTagSelect={logger}/>
             </MuiThemeProvider>
         );
 

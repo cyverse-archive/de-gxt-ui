@@ -1,16 +1,5 @@
 package org.iplantc.de.diskResource.client.presenters.details;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
-import com.google.web.bindery.autobean.shared.Splittable;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
@@ -27,12 +16,32 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.DetailsView;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
-import org.iplantc.de.diskResource.client.events.selection.*;
+import org.iplantc.de.diskResource.client.events.selection.EditInfoTypeSelected;
+import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected;
+import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked;
+import org.iplantc.de.diskResource.client.events.selection.RemoveResourceTagSelected;
+import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected;
+import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected;
+import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected;
+import org.iplantc.de.diskResource.client.events.selection.SetInfoTypeSelected;
+import org.iplantc.de.diskResource.client.events.selection.UpdateResourceTagSelected;
 import org.iplantc.de.diskResource.client.presenters.callbacks.TagAttachCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.TagDetachCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.TagsFetchCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.TagsSearchCallback;
 import org.iplantc.de.resources.client.messages.I18N;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
+import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +72,8 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
 
     IplantTagAutoBeanFactory factory;
 
-    DiskResourceUtil diskResourceUtil = DiskResourceUtil.getInstance();
+    @Inject
+    DiskResourceUtil diskResourceUtil;
 
     @Inject
     DetailsViewPresenterImpl(final DetailsView view, final IplantTagAutoBeanFactory factory) {
@@ -169,11 +179,8 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
             @SuppressWarnings("serial")
             @Override
             public void onSuccess(final String result) {
-                AutoBean<IplantTagList> tagListBean =
-                        AutoBeanCodex.decode(factory, IplantTagList.class, result);
-                List<Tag> tagList = tagListBean.as().getTagList();
                 if (callback != null) {
-                    callback.searchComplete(tagsToSplittable(tagList));
+                    callback.searchComplete(StringQuoter.split(result));
                 }
             }
         });

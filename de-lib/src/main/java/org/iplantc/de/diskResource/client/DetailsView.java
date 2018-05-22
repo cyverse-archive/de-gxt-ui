@@ -1,5 +1,9 @@
 package org.iplantc.de.diskResource.client;
 
+import com.google.gwt.user.client.ui.IsWidget;
+import com.sencha.gxt.data.shared.event.StoreUpdateEvent.StoreUpdateHandler;
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.callbacks.ErrorCallback;
@@ -18,14 +22,7 @@ import org.iplantc.de.diskResource.client.presenters.callbacks.TagDetachCallback
 import org.iplantc.de.diskResource.client.presenters.callbacks.TagsFetchCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.TagsSearchCallback;
 
-import com.google.gwt.user.client.ui.IsWidget;
-
-import com.sencha.gxt.data.shared.event.StoreUpdateEvent.StoreUpdateHandler;
-
 import java.util.List;
-
-import jsinterop.annotations.JsIgnore;
-import jsinterop.annotations.JsType;
 
 /**
  * Created by jstroot on 2/2/15.
@@ -47,7 +44,7 @@ public interface DetailsView extends IsWidget,
     @JsIgnore
     void setPresenter(DetailsView.Presenter detailsViewPresenter);
 
-    void hasDebugId(String baseID);
+    void setDebugId(String baseID);
 
     @JsType
     interface Presenter extends SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers,

@@ -4,9 +4,10 @@
 import React, {Component} from "react";
 import Tag from "./Tag";
 import AutoComplete from "material-ui/AutoComplete";
-import {FormattedMessage, IntlProvider} from "react-intl";
 import styles from "../style";
 import {css} from "aphrodite";
+import withI18N, {getMessage} from "../../util/I18NWrapper";
+import intlData from "../messages";
 
 
 class TagPanel extends Component {
@@ -33,11 +34,10 @@ class TagPanel extends Component {
             ) : [];
 
         return (
-            <IntlProvider locale='en' defaultLocale='en' messages={this.props.messages}>
                 <div id={this.props.DETAILS_TAGS}>
                     <div>
                         <AutoComplete
-                            hintText={<FormattedMessage id="searchTags"/>}
+                            hintText={getMessage("searchTags")}
                             dataSource={this.props.dataSource}
                             onUpdateInput={this.props.handleTagSearch}
                             dataSourceConfig={dataSourceConfig}
@@ -48,11 +48,10 @@ class TagPanel extends Component {
                         { tagItems }
                     </div>
                 </div>
-            </IntlProvider>
         );
     }
 
 }
 
 
-export default TagPanel;
+export default withI18N(TagPanel, intlData);

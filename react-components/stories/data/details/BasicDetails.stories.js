@@ -4,7 +4,7 @@
 import React, {Component} from "react";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import {getCyVerseTheme} from "../../../src/lib";
-import {BasicDetailsWithI18N} from "../../../src/data/details";
+import {BasicDetails} from "../../../src/data/details";
 
 class BasicDetailsTest extends Component {
     render() {
@@ -82,13 +82,13 @@ class BasicDetailsTest extends Component {
 
         return (
             <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-                <BasicDetailsWithI18N data={data}
-                                      drUtil={drUtil}
-                                      owner="own"
-                                      infoTypes={types}
-                                      selectedValue={data.infoType}
-                                      presenter={presenter}
-                                      baseID = {baseID}/>
+                <BasicDetails data={data}
+                              drUtil={drUtil}
+                              owner="own"
+                              infoTypes={types}
+                              selectedValue={data.infoType}
+                              presenter={presenter}
+                              baseID = {baseID}/>
 
             </MuiThemeProvider>
         );

@@ -25,7 +25,7 @@ class InfoTypeSelectionListTest extends Component {
 
        return (
            <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-               <InfoTypeSelectionList infoTypes={types} selectedValue={"csv"} onInfoTypeSelect={logger} {...intlData}/>
+               <InfoTypeSelectionList infoTypes={types} selectedValue={"csv"} onInfoTypeSelect={logger}/>
            </MuiThemeProvider>
        )
     }

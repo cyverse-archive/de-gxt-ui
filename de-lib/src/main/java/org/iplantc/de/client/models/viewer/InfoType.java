@@ -1,8 +1,5 @@
 package org.iplantc.de.client.models.viewer;
 
-import jsinterop.annotations.JsType;
-
-@JsType
 public enum InfoType {
 
     ACE("ace"),
