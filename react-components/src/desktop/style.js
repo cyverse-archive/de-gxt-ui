@@ -145,11 +145,12 @@ export default StyleSheet.create({
         backgroundColor: '#db6619',
         fontSize: '.625em',
         color: 'white',
-        height: '10px',
+        height: 8,
         verticalAlign: 'super',
         visibility: 'visible',
         lineHeight: '0.8em',
         float: 'left',
+        padding: 2,
     },
     taskbarButton: {
         background: "url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAARCAMAAADqmnyMAAAACXBIWXMAABcSAAAXEgFnn9JSAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAHJQTFRF////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////BjDohgAAACV0Uk5TABAfIC4wPUBJUFdbYHCAiJCgsLW4wMHEzs/Q3uDk5ezw8fn7/Mx0kJUAAAClSURBVHgBXchZWsUgDAbQIGJEIQIah4iKw7//LUr19rttz+MhIt+sSM60dfF8I6raModzvjzBcmbe3tWX3hlUInOMaz6+G6qnvdefT6ajNzzsw5VAY6C57RmEvq8HhvhTeRnogT40GACrItI6AHVE92Y+KVYt0SS3ihody4IvU9OZrofUAdMFpkoTQygUHUsMLZH+8OiF6chVAF1Vu9t1Kjpl+vcLjzUPQmyUvhcAAAAASUVORK5CYII=')",

@@ -13,6 +13,8 @@ import {css} from "aphrodite";
 import {addLocaleData, ReactIntlLocaleData} from "react-intl";
 import * as en from "react-intl/locale-data/en";
 import ids from "../ids";
+import constants from "../../constants";
+import Sockette from "sockette";
 
 addLocaleData(en);
 
@@ -23,10 +25,33 @@ class DesktopView extends Component {
         this.state = {
             windows: [],
             unSeenCount: 0,
-            notifications: [],
+            notifications: {},
         }
         this.handleDesktopClick = this.handleDesktopClick.bind(this);
         this.onNotificationClicked = this.onNotificationClicked.bind(this);
+        this.getWSUrl = this.getWSUrl.bind(this);
+        this.handleMessage = this.handleMessage.bind(this);
+        this.displayNotification = this.displayNotification.bind(this);
+        this.onMarkAllAsSeenClicked = this.onMarkAllAsSeenClicked.bind(this);
+        this.onViewAllNotificationsClicked = this.onViewAllNotificationsClicked.bind(this);
+        this.onViewNewNotificationsClicked = this.onViewNewNotificationsClicked.bind(this);
+    }
+
+    componentDidMount() {
+        this.props.presenter.getNotifications((notifications) => {
+            this.setState({
+                unSeenCount: notifications.unseen_total,
+                notifications: notifications,
+            });
+        });
+        new Sockette(this.getWSUrl(), {
+            maxAttempts: 10,
+            onmessage: e => this.handleMessage(e),
+            onreconnect: e => console.log('Reconnecting...', e),
+            onmaximum: e => console.log('Stop Attempting!', e),
+            onerror: e => console.log('Error:', e)
+        });
+
     }
 
     handleDesktopClick(event) {
@@ -65,17 +90,67 @@ class DesktopView extends Component {
         }
     }
 
-    componentDidMount() {
-        this.props.presenter.getNotifications((notifications) => {
-            this.setState({
-                unSeenCount: notifications.unseen_total,
-                notifications: notifications,
-            });
-        });
+    handleMessage(event) {
+        console.log(event.data);
+        let msg = null;
+        try {
+            msg = JSON.parse(event.data);
+        } catch (e) {
+            return;
+        }
+        console.log("count-->" + msg.total);
+        console.log("msg-->" + msg.message);
+        if (msg.total) {
+            this.setState({unSeenCount: msg.total});
+        }
+        if (msg.message) {
+            let notifyQueue = this.state.notifications;
+            if(notifyQueue.messages) {
+                notifyQueue.messages.push(msg.message);
+            } else {
+                notifyQueue.messages = [];
+                notifyQueue.messages.push(msg.message)
+            }
+            this.setState({notifications: notifyQueue});
+            this.displayNotification(msg.message);
+        }
     }
 
+    displayNotification(message) {
+        let displayText = message.message.text;
+        let category = message.type;
+        let analysisStatus = (message.type==="analysis")? message.payload.status : "";
+        this.props.presenter.displayNotificationPopup(displayText, category, analysisStatus);
+    }
+
+
+    getWSUrl() {
+        let location = window.location;
+        let protocol = (location.protocol === "HTTPS") ? constants.WSS_PROTOCOL : constants.WS_PROTOCOL;
+        let host = location.hostname;
+        let port = location.port;
+        const notificationUrl = protocol + host + (port ? ':' + port : '') + constants.NOTIFICATION_WS;
+        console.log(notificationUrl);
+        return notificationUrl;
+    }
+
+    onViewNewNotificationsClicked() {
+        this.props.presenter.doSeeNewNotifications();
+    }
+
+    onViewAllNotificationsClicked() {
+       this.props.presenter.doSeeAllNotifications();
+    }
+
+    onMarkAllAsSeenClicked() {
+       this.props.presenter.doMarkAllSeen(true);
+    }
+
+
+
     render() {
-        const {windows, unSeenCount, notifications}  = this.state;
+        const {windows, unSeenCount, notifications, wsConnected}  = this.state;
+
         return (
             <div className={css(styles.body)}>
                 <div className={css(styles.header)}>
@@ -88,7 +163,10 @@ class DesktopView extends Component {
                                                notifications={notifications}
                                                unSeenCount={unSeenCount}
                                                presenter={this.props.presenter}
-                                               notificationClicked = {this.onNotificationClicked}  />
+                                               notificationClicked = {this.onNotificationClicked}
+                                               viewNewNotification = {this.onViewNewNotificationsClicked}
+                                               viewAllNotification = {this.onViewAllNotificationsClicked}
+                                               markAllAsSenn = {this.onMarkAllAsSeenClicked} />
                                 <UserMenu {...intlData} anchor="userMenuAnchor" presenter={this.props.presenter}/>
                                 <Help {...intlData} anchor="helpMenuAnchor" presenter={this.props.presenter}/>
                                 <span id="notificationMenuAnchor"

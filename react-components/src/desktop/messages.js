@@ -12,6 +12,7 @@ var intlData = {
         "logout": "Logout",
         "viewAllNotifi": "See all notifications",
         "markAllRead": "Mark all as read",
+        "newNotifications": "New Notifications ({count})"
     }
 }
 

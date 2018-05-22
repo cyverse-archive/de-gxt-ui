@@ -165,6 +165,8 @@ public interface DesktopView extends IsWidget {
 
         void onNotificationSelected(final Splittable notificationMessage);
 
+        void displayNotificationPopup(String message, String category, String analysisStatus);
+
         @JsIgnore
         void saveUserSettings(UserSettings value, boolean updateSilently);
 

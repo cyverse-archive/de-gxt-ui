@@ -38,7 +38,7 @@ class Notifications extends Component {
         } = this.state;
         const notifications = this.props.notifications;
         const unSeenCount = this.props.unSeenCount;
-
+        const messages = (notifications && notifications.messages && notifications.messages.length > 0) ? notifications.messages : [];
         return (
             <IntlProvider locale='en' defaultLocale='en' messages={this.props.messages}>
                 <span>
@@ -50,8 +50,8 @@ class Notifications extends Component {
                     </span>
                     <Menu id='notificationsMenu' anchorEl={anchorEl} open={Boolean(anchorEl)}
                           onClose={this.handleClose}>
-                        {(notifications && notifications.messages && notifications.messages.length > 0) ?
-                            notifications.messages.map(n => {
+                        {(messages.length > 0) ?
+                            messages.map(n => {
                                 return (
                                     <span key={n.message.id}>
                                         <MenuItem id={n.message.id}
@@ -61,16 +61,24 @@ class Notifications extends Component {
                                         <Divider/>
                                     </span>
                                 )
-                            }) : (
+                            }).reverse() : (
                                 <MenuItem id="noNotify"
                                           onClick={this.onMenuItemSelect}>
                                     No notifications to display!
                                 </MenuItem>
                             )}
                         <MenuItem>
-                            <span id="viewAll"><DEHyperlink text={<FormattedMessage id="viewAllNotifi"/>}/></span>
+                            {(unSeenCount > 10) ?
+                                <span id="viewNew"><DEHyperlink onClick={this.props.viewNewNotification}
+                                    text={<FormattedMessage id="newNotifications"
+                                                            values={{count: unSeenCount}}/>}/></span>
+                                :
+                                <span id="viewAll"><DEHyperlink onClick={this.props.viewAllNotification}
+                                    text={<FormattedMessage id="viewAllNotifi"/>}/></span>
+                            }
                             <span style={{margin: '20px'}}> </span>
-                            <span id="markAll"><DEHyperlink text={<FormattedMessage id="markAllRead"/>}/></span>
+                            <span id="markAll"><DEHyperlink onClick={this.props.markAllAsSenn}
+                                text={<FormattedMessage id="markAllRead"/>}/></span>
                         </MenuItem>
                     </Menu>
                 </span>
