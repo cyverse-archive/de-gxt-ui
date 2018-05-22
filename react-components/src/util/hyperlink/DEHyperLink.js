@@ -5,10 +5,6 @@ import {css} from 'aphrodite';
 
 class DEHyperLink extends Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <a className={css(styles.normal)}>{this.props.text}</a>
