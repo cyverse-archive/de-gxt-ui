@@ -8,6 +8,8 @@ import styles from "../style";
 import {css} from "aphrodite";
 import withI18N, {getMessage} from "../../util/I18NWrapper";
 import intlData from "../messages";
+import build from "../../util/DebugIDUtil";
+import ids from "../ids";
 
 
 class TagPanel extends Component {
@@ -34,7 +36,7 @@ class TagPanel extends Component {
             ) : [];
 
         return (
-                <div id={this.props.DETAILS_TAGS}>
+            <div id={build(this.props.baseID, ids.DETAILS_TAGS_PANEL)}>
                     <div>
                         <AutoComplete
                             hintText={getMessage("searchTags")}
@@ -44,7 +46,8 @@ class TagPanel extends Component {
                             listStyle={css(styles.tagListStyle)}
                             onNewRequest={this.handleTagSelect}/>
                     </div>
-                    <div id="panel" className={css(styles.tagPanelStyle)}>
+                <div id={build(this.props.baseID, ids.DETAILS_TAGS)}
+                     className={css(styles.tagPanelStyle)}>
                         { tagItems }
                     </div>
                 </div>

@@ -17,7 +17,7 @@ import {CircularProgress} from "material-ui-next/Progress";
 import styles from "../style";
 import {css} from "aphrodite";
 import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
-import construct from "../../util/DebugIDUtil";
+import build from "../../util/DebugIDUtil";
 import ids from "../ids";
 import withI18N, {getMessage} from "../../util/I18NWrapper";
 
@@ -224,7 +224,7 @@ class BasicDetails extends Component {
                 <td className={css(styles.label)}>
                     {getMessage("md5CheckSum")}
                 </td>
-                    <Md5 id={construct(baseID, ids.DETAILS_MD5)}
+                    <Md5 id={build(baseID, ids.DETAILS_MD5)}
                          md5={diskResource.md5}
                          onClick={this.handleMd5Open}/>
                 </tr>,
@@ -232,7 +232,7 @@ class BasicDetails extends Component {
                     <td className={css(styles.label)}>
                         {getMessage("size")}
                     </td>
-                    <td id={construct(baseID, ids.DETAILS_SIZE)} className={css(styles.value)}>
+                    <td id={build(baseID, ids.DETAILS_SIZE)} className={css(styles.value)}>
                         {drUtil.formatFileSize(diskResource["file-size"])}
                     </td>
                 </tr>,
@@ -240,7 +240,7 @@ class BasicDetails extends Component {
                     <td className={css(styles.label)}>
                         {getMessage("type")}
                     </td>
-                    <td id={construct(baseID, ids.DETAILS_TYPE)} className={css(styles.value)}>
+                    <td id={build(baseID, ids.DETAILS_TYPE)} className={css(styles.value)}>
                         {diskResource["content-type"]}
                     </td>
                 </tr>,
@@ -249,7 +249,7 @@ class BasicDetails extends Component {
                         {getMessage("infoType")}
                     </td>
                     <td className={css(styles.value)}>
-                        <InfoTypeSelectionList id={construct(baseID, ids.DETAILS_INFO_TYPE)}
+                        <InfoTypeSelectionList id={build(baseID, ids.DETAILS_INFO_TYPE)}
                                                infoTypes={infoTypes}
                                                selectedValue={infoType ? infoType : null}
                                                view={this.props.view}
@@ -260,7 +260,7 @@ class BasicDetails extends Component {
                     <td className={css(styles.label)}>
                         {getMessage("sendTo")}
                     </td>
-                    <SendTo id={construct(baseID, ids.DETAILS_SEND_TO)}
+                    <SendTo id={build(baseID, ids.DETAILS_SEND_TO)}
                             infoType={infoType}
                             handleSendToClick={this.handleSendToClick}
                             drUtil={drUtil}/>
@@ -278,7 +278,7 @@ class BasicDetails extends Component {
                             <td className={css(styles.label)}>
                                 {getMessage("lastModified")}
                             </td>
-                            <td id={construct(baseID, ids.DETAILS_LAST_MODIFIED)} className={css(styles.value)}>
+                            <td id={build(baseID, ids.DETAILS_LAST_MODIFIED)} className={css(styles.value)}>
                                 {diskResource['date-modified'] ? moment(Number(diskResource['date-modified']), "x").format("YYYY-MM-DD") :
                                     getMessage("emptyValue")}
                             </td>
@@ -287,7 +287,7 @@ class BasicDetails extends Component {
                             <td className={css(styles.label)}>
                                 {getMessage("createdDate")}
                             </td>
-                            <td id={construct(baseID, ids.DETAILS_DATE_SUBMITTED)} className={css(styles.value)}>
+                            <td id={build(baseID, ids.DETAILS_DATE_SUBMITTED)} className={css(styles.value)}>
                                 {diskResource['date-modified'] ? moment(Number(diskResource['date-created']), "x").format("YYYY-MM-DD") :
                                     getMessage("emptyValue")}
                             </td>
@@ -296,7 +296,7 @@ class BasicDetails extends Component {
                             <td className={css(styles.label)}>
                                 {getMessage("permissions")}
                             </td>
-                            <td id={construct(baseID, ids.DETAILS_PERMISSIONS)} className={css(styles.value)}>
+                            <td id={build(baseID, ids.DETAILS_PERMISSIONS)} className={css(styles.value)}>
                                 {diskResource.permission}
                             </td>
                         </tr>
@@ -304,7 +304,7 @@ class BasicDetails extends Component {
                             <td className={css(styles.label)}>
                                 {getMessage("share")}
                             </td>
-                            <ManageSharing id={construct(baseID, ids.DETAILS_SHARE)}
+                            <ManageSharing id={build(baseID, ids.DETAILS_SHARE)}
                                            isOwner={isOwner}
                                            shareCount={diskResource["share-count"]}
                                            onClick={this.handleShareClick}/>
@@ -313,7 +313,7 @@ class BasicDetails extends Component {
                         </tbody>
                     </table>
                     <TagPanel
-                        detailsTag={construct(baseID, ids.DETAILS_TAGS)}
+                        baseID={baseID}
                         handleTagSearch={this.handleTagSearch}
                         handleRemoveClick={this.handleRemoveClick}
                         tags={this.state.tags.values}

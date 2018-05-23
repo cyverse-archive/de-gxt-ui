@@ -15,7 +15,7 @@ class TagPanelTest extends Component {
             });
 
         const ids = {
-            DETAILS_TAGS: "DetailsTags",
+            DETAILS_TAGS_PANEL: "DetailsTags",
         };
 
         const tags = [];

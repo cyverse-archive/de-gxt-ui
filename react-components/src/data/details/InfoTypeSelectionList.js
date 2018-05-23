@@ -11,6 +11,7 @@ import {InputLabel} from "material-ui-next/Input";
 import styles from "../style";
 import withI18N, {getMessage} from "../../util/I18NWrapper";
 import intlData from "../messages";
+import build from "../../util/DebugIDUtil";
 
 
 class InfoTypeSelectionList extends Component {
@@ -22,7 +23,8 @@ class InfoTypeSelectionList extends Component {
         const items = [];
         for (let i = 0; i < this.props.infoTypes.length; i++) {
             items.push(<MenuItem value={this.props.infoTypes[i]}
-                                 key={this.props.infoTypes[i]}>{this.props.infoTypes[i]}</MenuItem>);
+                                 key={this.props.infoTypes[i]}><span
+                id={build(this.props.id, this.props.infoTypes[i])}>{this.props.infoTypes[i]}</span></MenuItem>);
         }
         const menuProps = {
             PaperProps: {
