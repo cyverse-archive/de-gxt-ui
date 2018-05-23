@@ -1,7 +1,4 @@
 import React, {Component} from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
-import {getCyVerseTheme} from '../../../src/lib';
 import Tag from '../../../src/tags/tagSearch/Tag';
 
 class TagTest extends Component {
@@ -21,11 +18,10 @@ class TagTest extends Component {
         };
 
         return (
-            <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-                <Tag tag={tag}
-                     onClick={editLogger}
-                     onRequestDelete={deleteLogger}/>
-            </MuiThemeProvider>);
+            <Tag tag={tag}
+                 onClick={editLogger}
+                 onRequestDelete={deleteLogger}/>
+        );
     }
 }
 

@@ -1,6 +1,4 @@
 import React from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {getCyVerseTheme} from "../../../src/lib";
 import {SaveSearchButton} from '../../../src/diskResource/search';
 
 class SaveSearchButtonTest extends React.Component {
@@ -17,12 +15,9 @@ class SaveSearchButtonTest extends React.Component {
         const value = 'OLDNAME';
 
         return (
-
-            <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-                <SaveSearchButton handleSave={handleSave}
-                                  value={value}
-                                  onChange={onChange}/>
-            </MuiThemeProvider>
+            <SaveSearchButton handleSave={handleSave}
+                              value={value}
+                              onChange={onChange}/>
         )
     }
 }

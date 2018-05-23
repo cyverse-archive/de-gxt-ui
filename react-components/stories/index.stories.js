@@ -24,7 +24,6 @@ storiesOf('data/InfoTypeSelectionList',module).add('with test diskresource detai
 storiesOf('data/Tag', module).add('with test diskresource details', () => <TagTest logger={action('tag')}/>);
 storiesOf('data/TagPanel', module).add('witht test diskresource details', () => <TagPanelTest logger={action('tagpanel')}/>);
 
-storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
 storiesOf('diskResource/search', module).add('SearchForm', () => <SearchFormTest searchLogger={action('Search Submitted')}
                                                                                  saveSearchLogger={action('Save Search')}
                                                                                  editTagLogger={action('Edit Tag Selected')}

@@ -1,7 +1,4 @@
 import React, {Component} from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
-import {getCyVerseTheme} from '../../../src/lib';
 import TagSearchField from '../../../src/tags/tagSearch/TagSearchField';
 
 class TagSearchTest extends Component {
@@ -61,17 +58,16 @@ class TagSearchTest extends Component {
         ];
 
         return (
-            <MuiThemeProvider muiTheme={getCyVerseTheme()}>
-                <TagSearchField label='Tagged with'
-                                onEditTagSelected={editLogger}
-                                fetchTagSuggestions={searchLogger}
-                                onDeleteTagSelected={deleteTag}
-                                suggestedTags={suggestedTags}
-                                onTagSelected={addLogger}
-                                onTagValueChange={taggedWith}
-                                taggedWith={taggedWith()}
-                                tags={tags}/>
-            </MuiThemeProvider>);
+            <TagSearchField label='Tagged with'
+                            onEditTagSelected={editLogger}
+                            fetchTagSuggestions={searchLogger}
+                            onDeleteTagSelected={deleteTag}
+                            suggestedTags={suggestedTags}
+                            onTagSelected={addLogger}
+                            onTagValueChange={taggedWith}
+                            taggedWith={taggedWith()}
+                            tags={tags}/>
+        );
     }
 }
 
