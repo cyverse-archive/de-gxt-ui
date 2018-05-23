@@ -63,7 +63,6 @@ class TablePaginationActions extends React.Component {
         const {classes, count, page, rowsPerPage, theme} = this.props;
 
         return (
-            <IntlProvider locale='en' defaultLocale='en' messages={this.props.messages}>
                 <div className={classes.root}>
                     <IconButton
                         onClick={this.handleFirstPageButtonClick}
@@ -90,7 +89,6 @@ class TablePaginationActions extends React.Component {
                         {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
                     </IconButton>
                 </div>
-            </IntlProvider>
         );
     }
 }
