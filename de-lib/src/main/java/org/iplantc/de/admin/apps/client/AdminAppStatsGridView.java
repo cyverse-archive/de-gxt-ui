@@ -1,11 +1,13 @@
 package org.iplantc.de.admin.apps.client;
 
-import com.google.gwt.user.client.ui.HasOneWidget;
-import com.google.gwt.user.client.ui.IsWidget;
-import jsinterop.annotations.JsIgnore;
-import jsinterop.annotations.JsType;
 import org.iplantc.de.admin.apps.client.presenter.callbacks.AppStatsSearchCallback;
 import org.iplantc.de.client.services.callbacks.ErrorCallback;
+
+import com.google.gwt.user.client.ui.HasOneWidget;
+import com.google.gwt.user.client.ui.IsWidget;
+
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
 
 /**
  * Created by sriram on 10/21/16.

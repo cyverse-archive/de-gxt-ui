@@ -1,20 +1,25 @@
 package org.iplantc.de.admin.apps.client.presenter.grid;
 
-import com.google.common.collect.Lists;
-import com.google.gwtmockito.GwtMockitoTestRunner;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.iplantc.de.admin.apps.client.AdminAppStatsGridView;
 import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
 import org.iplantc.de.shared.DECallback;
+
+import com.google.common.collect.Lists;
+import com.google.gwtmockito.GwtMockitoTestRunner;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-
-import static org.mockito.Mockito.*;
 
 
 /**

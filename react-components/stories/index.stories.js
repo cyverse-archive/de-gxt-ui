@@ -13,13 +13,12 @@ import DEHyperLinkTest from "./util/hyperlink/DEHyperLink.stories";
 
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);
 storiesOf('apps/details', module).add('ToolDetails', () => <ToolDetailsTest/>);
-storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
-storiesOf('util', module).add('DEHyperLink', () => <DEHyperLinkTest/>);
-
-
 storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 
 storiesOf('data/BasicDetails', module).add('with test diskresource details', () => <BasicDetailsTest logger={action('details')}/>);
 storiesOf('data/InfoTypeSelectionList',module).add('with test diskresource details', () =>  <InfoTypeSelectionListTest logger={action('infoTypes')}/>);
 storiesOf('data/Tag', module).add('with test diskresource details', () => <TagTest logger={action('tag')}/>);
 storiesOf('data/TagPanel', module).add('witht test diskresource details', () => <TagPanelTest logger={action('tagpanel')}/>);
+
+storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
+storiesOf('util', module).add('DEHyperLink', () => <DEHyperLinkTest/>);
