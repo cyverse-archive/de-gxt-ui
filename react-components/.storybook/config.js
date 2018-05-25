@@ -5,7 +5,7 @@ import {getDefaultTheme, MuiThemeProvider} from "../src/lib";
 //redirect console error / logs / warns to action logger
 addDecorator((storyFn, context) => withConsole()(storyFn)(context));
 
-//wap with mui theme
+//wrap with mui theme
 const themeDecorator = (storyFn) => (
     <MuiThemeProvider theme={getDefaultTheme()}>
         {storyFn()}
