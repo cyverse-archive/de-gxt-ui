@@ -1,8 +1,5 @@
 import React, {Component} from "react";
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import {getCyVerseTheme} from "../../../src/lib";
 import InfoTypeSelectionList from "../../../src/data/details/InfoTypeSelectionList";
-import intlData from "../../../src/data/messages";
 
 class InfoTypeSelectionListTest extends Component {
 
@@ -24,9 +21,7 @@ class InfoTypeSelectionListTest extends Component {
             });
 
        return (
-           <MuiThemeProvider muiTheme={getCyVerseTheme()}>
                <InfoTypeSelectionList infoTypes={types} selectedValue={"csv"} onInfoTypeSelect={logger}/>
-           </MuiThemeProvider>
        )
     }
 

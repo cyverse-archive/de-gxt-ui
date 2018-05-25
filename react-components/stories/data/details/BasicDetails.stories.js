@@ -2,8 +2,6 @@
  @author sriram
  */
 import React, {Component} from "react";
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import {getCyVerseTheme} from "../../../src/lib";
 import {BasicDetails} from "../../../src/data/details";
 
 class BasicDetailsTest extends Component {
@@ -81,7 +79,6 @@ class BasicDetailsTest extends Component {
             };
 
         return (
-            <MuiThemeProvider muiTheme={getCyVerseTheme()}>
                 <BasicDetails data={data}
                               drUtil={drUtil}
                               owner="own"
@@ -89,8 +86,6 @@ class BasicDetailsTest extends Component {
                               selectedValue={data.infoType}
                               presenter={presenter}
                               baseID = {baseID}/>
-
-            </MuiThemeProvider>
         );
     }
 }

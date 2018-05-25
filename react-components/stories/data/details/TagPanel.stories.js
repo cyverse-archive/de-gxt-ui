@@ -2,8 +2,6 @@
  @author sriram
  */
 import React, {Component} from "react";
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import {getCyVerseTheme} from "../../../src/lib";
 import TagPanel from "../../../src/data/details/TagPanel";
 
 
@@ -47,7 +45,6 @@ class TagPanelTest extends Component {
         };
 
         return (
-            <MuiThemeProvider muiTheme={getCyVerseTheme()}>
                 <TagPanel ids={ids}
                           tags={attachedTags.tags}
                           dataSource={result}
@@ -55,7 +52,6 @@ class TagPanelTest extends Component {
                           handleRemoveClick={() => logger}
                           onTagClick={logger}
                           handleTagSelect={logger}/>
-            </MuiThemeProvider>
         );
 
     }

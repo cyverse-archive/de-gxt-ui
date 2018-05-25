@@ -1,11 +1,8 @@
 /**
  * @author psarando
  */
-import React, { Component } from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
-import { getCyVerseTheme } from '../../../src/lib';
-import CategoryTree from '../../../src/apps/details/CategoryTree';
+import React, {Component} from "react";
+import CategoryTree from "../../../src/apps/details/CategoryTree";
 
 class CategoryTreeTest extends Component {
     render() {
@@ -65,9 +62,7 @@ class CategoryTreeTest extends Component {
         };
 
         return (
-            <MuiThemeProvider muiTheme={getCyVerseTheme()}>
                 <CategoryTree app={app} presenter={presenter} />
-            </MuiThemeProvider>
         );
     }
 }
