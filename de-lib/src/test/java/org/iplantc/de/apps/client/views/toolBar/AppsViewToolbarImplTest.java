@@ -221,7 +221,7 @@ public class AppsViewToolbarImplTest {
         AppSelectionChangedEvent eventMock = mock(AppSelectionChangedEvent.class);
 
         App appMock = mock(App.class);
-        when(appMock.getPermission()).thenReturn(PermissionValue.read);
+        when(appMock.getPermission()).thenReturn(PermissionValue.read.toString());
         when(appMock.getAppType()).thenReturn("DE");
         when(appMock.getStepCount()).thenReturn(1);
         List<App> singleAppSelection = Lists.newArrayList(appMock);
@@ -277,7 +277,7 @@ public class AppsViewToolbarImplTest {
         AppSelectionChangedEvent eventMock = mock(AppSelectionChangedEvent.class);
 
         App wfMock = mock(App.class);
-        when(wfMock.getPermission()).thenReturn(PermissionValue.read);
+        when(wfMock.getPermission()).thenReturn(PermissionValue.read.toString());
         when(wfMock.getAppType()).thenReturn("DE");
         when(wfMock.getStepCount()).thenReturn(2);
         List<App> singleAppSelection = Lists.newArrayList(wfMock);
@@ -332,7 +332,7 @@ public class AppsViewToolbarImplTest {
         AppSelectionChangedEvent eventMock = mock(AppSelectionChangedEvent.class);
 
         App appMock = mock(App.class);
-        when(appMock.getPermission()).thenReturn(PermissionValue.read);
+        when(appMock.getPermission()).thenReturn(PermissionValue.read.toString());
         when(appMock.getAppType()).thenReturn("DE");
         when(appMock.getStepCount()).thenReturn(1);
         when(appMock.isPublic()).thenReturn(true);
@@ -391,7 +391,7 @@ public class AppsViewToolbarImplTest {
         AppSelectionChangedEvent eventMock = mock(AppSelectionChangedEvent.class);
 
         App appMock = mock(App.class);
-        when(appMock.getPermission()).thenReturn(PermissionValue.read);
+        when(appMock.getPermission()).thenReturn(PermissionValue.read.toString());
         when(appMock.getAppType()).thenReturn("DE");
         when(appMock.getStepCount()).thenReturn(2);
         when(appMock.isPublic()).thenReturn(true);
@@ -449,7 +449,7 @@ public class AppsViewToolbarImplTest {
 
         App appMock = mock(App.class);
         when(appMock.getStepCount()).thenReturn(1);
-        when(appMock.getPermission()).thenReturn(PermissionValue.own);
+        when(appMock.getPermission()).thenReturn(PermissionValue.own.toString());
         when(appMock.getAppType()).thenReturn("DE");
         when(appMock.isRunnable()).thenReturn(true);
 
@@ -506,7 +506,7 @@ public class AppsViewToolbarImplTest {
         AppSelectionChangedEvent eventMock = mock(AppSelectionChangedEvent.class);
 
         App wfMock = mock(App.class);
-        when(wfMock.getPermission()).thenReturn(PermissionValue.own);
+        when(wfMock.getPermission()).thenReturn(PermissionValue.own.toString());
         when(wfMock.getAppType()).thenReturn("DE");
         when(wfMock.getStepCount()).thenReturn(2);
         when(wfMock.isPublic()).thenReturn(false);
@@ -566,7 +566,7 @@ public class AppsViewToolbarImplTest {
 
         App appMock = mock(App.class);
         when(appMock.getStepCount()).thenReturn(1);
-        when(appMock.getPermission()).thenReturn(PermissionValue.own);
+        when(appMock.getPermission()).thenReturn(PermissionValue.own.toString());
         when(appMock.getAppType()).thenReturn("DE");
         when(appMock.getStepCount()).thenReturn(1);
         when(appMock.isRunnable()).thenReturn(true);
@@ -625,7 +625,7 @@ public class AppsViewToolbarImplTest {
 
         App wfMock = mock(App.class);
         when(wfMock.getStepCount()).thenReturn(1);
-        when(wfMock.getPermission()).thenReturn(PermissionValue.own);
+        when(wfMock.getPermission()).thenReturn(PermissionValue.own.toString());
         when(wfMock.getAppType()).thenReturn("DE");
         when(wfMock.getStepCount()).thenReturn(2);
         when(wfMock.isRunnable()).thenReturn(true);
@@ -684,7 +684,7 @@ public class AppsViewToolbarImplTest {
 
         App appMock = mock(App.class);
         when(appMock.getStepCount()).thenReturn(1);
-        when(appMock.getPermission()).thenReturn(PermissionValue.read);
+        when(appMock.getPermission()).thenReturn(PermissionValue.read.toString());
         when(appMock.getStepCount()).thenReturn(1);
         when(appMock.isPublic()).thenReturn(true);
         when(appMock.isRunnable()).thenReturn(true);
@@ -746,7 +746,7 @@ public class AppsViewToolbarImplTest {
 
         App wfMock = mock(App.class);
         when(wfMock.getStepCount()).thenReturn(1);
-        when(wfMock.getPermission()).thenReturn(PermissionValue.read);
+        when(wfMock.getPermission()).thenReturn(PermissionValue.read.toString());
         when(wfMock.getAppType()).thenReturn("DE");
         when(wfMock.getStepCount()).thenReturn(2);
         when(wfMock.isPublic()).thenReturn(true);
@@ -824,13 +824,13 @@ public class AppsViewToolbarImplTest {
         AppSelectionChangedEvent eventMock = mock(AppSelectionChangedEvent.class);
 
         App wfMock = mock(App.class);
-        when(wfMock.getPermission()).thenReturn(PermissionValue.read);
+        when(wfMock.getPermission()).thenReturn(PermissionValue.read.toString());
         when(wfMock.getAppType()).thenReturn("DE");
         when(wfMock.getStepCount()).thenReturn(2);
         when(wfMock.isPublic()).thenReturn(true);
 
         App appMock = mock(App.class);
-        when(appMock.getPermission()).thenReturn(PermissionValue.read);
+        when(appMock.getPermission()).thenReturn(PermissionValue.read.toString());
         when(appMock.getStepCount()).thenReturn(1);
         when(appMock.isPublic()).thenReturn(true);
         when(wfMock.getAppType()).thenReturn("DE");
@@ -907,13 +907,13 @@ public class AppsViewToolbarImplTest {
 
         App wfMock = mock(App.class);
         when(wfMock.getStepCount()).thenReturn(1);
-        when(wfMock.getPermission()).thenReturn(PermissionValue.own);
+        when(wfMock.getPermission()).thenReturn(PermissionValue.own.toString());
         when(wfMock.getAppType()).thenReturn("DE");
         when(wfMock.getStepCount()).thenReturn(2);
         when(wfMock.isPublic()).thenReturn(false);
 
         App appMock = mock(App.class);
-        when(appMock.getPermission()).thenReturn(PermissionValue.own);
+        when(appMock.getPermission()).thenReturn(PermissionValue.own.toString());
         when(appMock.getAppType()).thenReturn("DE");
         when(appMock.getStepCount()).thenReturn(1);
         when(appMock.isPublic()).thenReturn(false);
@@ -988,13 +988,13 @@ public class AppsViewToolbarImplTest {
         AppSelectionChangedEvent eventMock = mock(AppSelectionChangedEvent.class);
 
         App wfMock = mock(App.class);
-        when(wfMock.getPermission()).thenReturn(PermissionValue.own);
+        when(wfMock.getPermission()).thenReturn(PermissionValue.own.toString());
         when(wfMock.getStepCount()).thenReturn(2);
         when(wfMock.isPublic()).thenReturn(true);
         when(wfMock.getAppType()).thenReturn("DE");
 
         App appMock = mock(App.class);
-        when(appMock.getPermission()).thenReturn(PermissionValue.own);
+        when(appMock.getPermission()).thenReturn(PermissionValue.own.toString());
         when(appMock.getAppType()).thenReturn("DE");
         when(appMock.getStepCount()).thenReturn(1);
         when(appMock.isPublic()).thenReturn(true);
@@ -1070,7 +1070,7 @@ public class AppsViewToolbarImplTest {
 
         App wfMock = mock(App.class);
         when(wfMock.getStepCount()).thenReturn(1);
-        when(wfMock.getPermission()).thenReturn(PermissionValue.read);
+        when(wfMock.getPermission()).thenReturn(PermissionValue.read.toString());
         when(wfMock.getAppType()).thenReturn("DE");
         when(wfMock.getStepCount()).thenReturn(2);
         when(wfMock.isPublic()).thenReturn(false);
@@ -1078,7 +1078,7 @@ public class AppsViewToolbarImplTest {
         App appMock = mock(App.class);
         when(appMock.getStepCount()).thenReturn(1);
         when(appMock.isPublic()).thenReturn(true);
-        when(appMock.getPermission()).thenReturn(PermissionValue.read);
+        when(appMock.getPermission()).thenReturn(PermissionValue.read.toString());
         when(appMock.getAppType()).thenReturn("DE");
         when(appMock.isPublic()).thenReturn(false);
 
@@ -1137,7 +1137,7 @@ public class AppsViewToolbarImplTest {
         AppSelectionChangedEvent eventMock = mock(AppSelectionChangedEvent.class);
 
         App appMock = mock(App.class);
-        when(appMock.getPermission()).thenReturn(PermissionValue.write);
+        when(appMock.getPermission()).thenReturn(PermissionValue.write.toString());
         when(appMock.getAppType()).thenReturn("DE");
         when(appMock.getStepCount()).thenReturn(1);
         when(appMock.isPublic()).thenReturn(false);
@@ -1195,7 +1195,7 @@ public class AppsViewToolbarImplTest {
         AppSelectionChangedEvent eventMock = mock(AppSelectionChangedEvent.class);
 
         App wfMock = mock(App.class);
-        when(wfMock.getPermission()).thenReturn(PermissionValue.write);
+        when(wfMock.getPermission()).thenReturn(PermissionValue.write.toString());
         when(wfMock.getAppType()).thenReturn("DE");
         when(wfMock.getStepCount()).thenReturn(2);
         when(wfMock.isPublic()).thenReturn(false);

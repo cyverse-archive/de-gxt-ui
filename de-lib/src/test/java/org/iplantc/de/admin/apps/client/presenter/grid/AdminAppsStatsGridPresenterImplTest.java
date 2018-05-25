@@ -1,6 +1,5 @@
 package org.iplantc.de.admin.apps.client.presenter.grid;
 
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -31,7 +30,6 @@ public class AdminAppsStatsGridPresenterImplTest {
 
     @Mock AdminAppStatsGridView mockView;
     @Mock AppAdminServiceFacade mockAppService;
-    @Mock AdminAppStatsGridView.Appearance mockApppearance;
 
     @Captor
     ArgumentCaptor<DECallback<AppListLoadResult>> appListCallbackCaptor;
@@ -41,23 +39,16 @@ public class AdminAppsStatsGridPresenterImplTest {
     @Before public void setUp() {
        uut = new AdminAppsStatsGridPresenterImpl(mockView);
        uut.appService = mockAppService;
-       uut.appearance = mockApppearance;
     }
 
-    @Test public void verifyLoad() {
-        when(mockApppearance.loading()).thenReturn("loading...");
-        uut.load();
-        verify(mockView).mask(anyString());
-        verify(mockAppService).searchApp(eq(""), appListCallbackCaptor.capture());
+    @Test public void searchAppsTest() {
+        uut.searchApps("","","",null,null);
+        verify(mockAppService).searchApp(eq(""),eq(""),eq(""), appListCallbackCaptor.capture());
 
         AppListLoadResult result = mock(AppListLoadResult.class);
         when(result.getData()).thenReturn(Lists.newArrayList(mock(App.class)));
 
         appListCallbackCaptor.getValue().onSuccess(result);
-
-        verify(mockView).clear();
-        verify(mockView).addAll(result.getData());
-        verify(mockView).unmask();
     }
 
 }

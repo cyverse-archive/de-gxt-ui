@@ -71,7 +71,7 @@ public class DiskResourceViewImpl extends Composite implements DiskResourceView 
         toolbar.asWidget().ensureDebugId(baseID + DiskResourceModule.Ids.MENU_BAR);
         centerGridView.asWidget().ensureDebugId(baseID + DiskResourceModule.Ids.GRID);
         navigationView.asWidget().ensureDebugId(baseID + DiskResourceModule.Ids.NAVIGATION);
-        detailsView.asWidget().ensureDebugId(baseID + DiskResourceModule.Ids.DETAILS);
+        detailsView.setDebugId(baseID + DiskResourceModule.Ids.DETAILS);
     }
 
     @Override

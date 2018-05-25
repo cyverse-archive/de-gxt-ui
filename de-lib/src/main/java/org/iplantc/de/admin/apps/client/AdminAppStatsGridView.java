@@ -1,45 +1,37 @@
 package org.iplantc.de.admin.apps.client;
 
-import org.iplantc.de.client.models.IsMaskable;
-import org.iplantc.de.client.models.apps.App;
+import org.iplantc.de.admin.apps.client.presenter.callbacks.AppStatsSearchCallback;
+import org.iplantc.de.client.services.callbacks.ErrorCallback;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
-import java.util.List;
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
 
 /**
  * Created by sriram on 10/21/16.
  */
-public interface AdminAppStatsGridView extends IsWidget, IsMaskable {
 
+@JsType
+public interface AdminAppStatsGridView extends IsWidget {
 
-    void clear();
+    @JsIgnore
+    void load(Presenter p);
 
-    void addAll(List<App> apps);
-
-    interface  Appearance {
-        String name();
-
-        String total();
-
-        String completed();
-
-        String failed();
-
-        String lastCompleted();
-
-        String lastUsed();
-
-        String rating();
-
-        String loading();
-    }
-
+    @JsType
     interface Presenter {
-     public   void go(HasOneWidget container);
+        @JsIgnore
+        void go(HasOneWidget container);
 
-     public void setViewDebugId(String baseId);
+        @JsIgnore
+        void setViewDebugId(String baseId);
+
+        void searchApps(String searchString,
+                        String startDate,
+                        String endDate,
+                        AppStatsSearchCallback callback,
+                        ErrorCallback errorCallback);
     }
 
 }

@@ -1,145 +1,114 @@
 package org.iplantc.de.diskResource.client;
 
 import org.iplantc.de.client.models.diskResources.DiskResource;
+import org.iplantc.de.client.models.viewer.InfoType;
+import org.iplantc.de.client.services.callbacks.ErrorCallback;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent.DiskResourceSelectionChangedEventHandler;
 import org.iplantc.de.diskResource.client.events.FetchDetailsCompleted;
-import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers;
+import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.selection.EditInfoTypeSelected.HasEditInfoTypeSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected.HasManageSharingSelectedEventHandlers;
 import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked.HasMd5ValueClickedHandlers;
-import org.iplantc.de.diskResource.client.events.selection.RemoveResourceTagSelected;
-import org.iplantc.de.diskResource.client.events.selection.ResetInfoTypeSelected.HasResetInfoTypeSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToCogeSelected.HasSendToCogeSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToEnsemblSelected.HasSendToEnsemblSelectedHandlers;
 import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelected.HasSendToTreeViewerSelectedHandlers;
-import org.iplantc.de.diskResource.client.events.selection.UpdateResourceTagSelected;
+import org.iplantc.de.diskResource.client.events.selection.SetInfoTypeSelected.HasSetInfoTypeSelectedHandlers;
+import org.iplantc.de.diskResource.client.presenters.callbacks.TagAttachCallback;
+import org.iplantc.de.diskResource.client.presenters.callbacks.TagDetachCallback;
+import org.iplantc.de.diskResource.client.presenters.callbacks.TagsFetchCallback;
+import org.iplantc.de.diskResource.client.presenters.callbacks.TagsSearchCallback;
 
-import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import com.sencha.gxt.data.shared.event.StoreUpdateEvent.StoreUpdateHandler;
+
+import java.util.List;
+
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
 
 /**
  * Created by jstroot on 2/2/15.
  * @author jstroot
  */
+@JsType
 public interface DetailsView extends IsWidget,
                                      DiskResourceSelectionChangedEventHandler,
                                      FetchDetailsCompleted.FetchDetailsCompletedHandler,
-                                     StoreUpdateHandler<DiskResource>,
-                                     HasManageSharingSelectedEventHandlers,
-                                     HasEditInfoTypeSelectedEventHandlers,
-                                     HasResetInfoTypeSelectedHandlers,
-                                     HasSubmitDiskResourceQueryEventHandlers,
-                                     HasSendToTreeViewerSelectedHandlers,
-                                     HasSendToCogeSelectedHandlers,
-                                     HasSendToEnsemblSelectedHandlers,
-                                     HasMd5ValueClickedHandlers,
-                                     RemoveResourceTagSelected.HasRemoveResourceTagSelectedHandlers,
-                                     UpdateResourceTagSelected.HasUpdateResourceTagSelectedHandlers {
-    interface Appearance {
-        interface DetailsViewStyle extends CssResource {
+                                     StoreUpdateHandler<DiskResource> {
 
-            String disabledHyperlink();
+    public static final String INFOTYPE_NOSELECT = "-";
 
-            String label();
+    @JsIgnore
+    DiskResource getBoundValue();
 
-            String value();
+    void setInfoTypes(List<InfoType> infoTypes);
 
-            String hidden();
+    @JsIgnore
+    void setPresenter(DetailsView.Presenter detailsViewPresenter);
 
-            String hyperlink();
+    void setDebugId(String baseID);
 
-            String deselectIcon();
+    @JsType
+    interface Presenter extends SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers,
+            HasManageSharingSelectedEventHandlers,
+            HasEditInfoTypeSelectedEventHandlers,
+            HasSetInfoTypeSelectedHandlers,
+            HasSendToTreeViewerSelectedHandlers,
+            HasSendToCogeSelectedHandlers,
+            HasSendToEnsemblSelectedHandlers,
+            HasMd5ValueClickedHandlers {
 
-            String table();
-
-            String tagSearch();
-
-            String row();
-
-            String emptyDetails();
-        }
-
-        String coge();
-
-        String createdDate();
-
-        String delete();
-
-        String ensembl();
-
-        String files();
-
-        String folders();
-
-        String infoTypeDisabled();
-
-        String lastModified();
-
-        String noDetails();
-
-        String beginSharing();
-
-        String permissions();
-
-        String selectInfoType();
-
-        String sendTo();
-
-        String share();
-
-        String sharingDisabled();
-
-        String size();
-
-        String treeViewer();
-
-        DetailsViewStyle css();
-
-        String viewersDisabled();
-
-        ImageResource deselectInfoTypeIcon();
-
-        String tagsLabel();
-
-        String filesFoldersLabel();
-
-        String sendToLabel();
-
-        String infoTypeLabel();
-
-        String md5CheckSum();
-
-        String typeLabel();
-
-        String sizeLabel();
-
-        String shareLabel();
-
-        String permissionsLabel();
-
-        String createdDateLabel();
-
-        String lastModifiedLabel();
-
-        String loadingMask();
-    }
-
-    interface Presenter {
 
         interface Appearance {
-
+            @JsIgnore
             String tagAttachError();
 
+            @JsIgnore
             String tagAttached(String name, String value);
 
+            @JsIgnore
             String tagDetachError();
 
+            @JsIgnore
             String tagDetached(String value, String name);
+
+            @JsIgnore
+            String tagFetchError();
         }
 
+        @JsIgnore
         DetailsView getView();
+
+        void fetchTagsForResource(String diskResourceId,
+                                  TagsFetchCallback callback,
+                                  ErrorCallback errorCallback);
+
+        void searchTags(String searchVal, TagsSearchCallback callback, ErrorCallback errorCallback);
+
+        void attachTag(String tagId,
+                       String tagValue,
+                       String diskResourceId,
+                       TagAttachCallback callback,
+                       ErrorCallback errorCallback);
+
+        void detachTag(String tagId,
+                       String tagValue,
+                       String diskResourceId,
+                       TagDetachCallback callback,
+                       ErrorCallback errorCallback);
+
+        void createTag(String tagValue,
+                       String diskResourceId,
+                       TagAttachCallback callback,
+                       ErrorCallback errorCallback);
+
+        void onTagSelection(String tagId, String tagValue);
+
+        void onSharingClicked();
+
+        void onSetInfoType(String infoType);
+
+        void onSendToClicked(String infoType);
     }
 }

@@ -118,6 +118,7 @@ public class DiskResourcePresenterImpl implements
     private final EventBus eventBus;
     private final GridView.Presenter gridViewPresenter;
     private final NavigationView.Presenter navigationPresenter;
+    List<InfoType> infoTypes;
 
     @AssistedInject
     DiskResourcePresenterImpl(final DiskResourceViewFactory diskResourceViewFactory,
@@ -270,17 +271,15 @@ public class DiskResourcePresenterImpl implements
         this.gridViewPresenter.addDNDDiskResourcesCompletedHandler(this);
 
         // Detail Presenter
-        this.detailsViewPresenter.getView().addManageSharingSelectedEventHandler(this.gridViewPresenter);
-        this.detailsViewPresenter.getView().addEditInfoTypeSelectedEventHandler(this.gridViewPresenter);
-        this.detailsViewPresenter.getView().addResetInfoTypeSelectedHandler(this.gridViewPresenter);
-        this.detailsViewPresenter.getView().addMd5ValueClickedHandler(this.gridViewPresenter);
-        this.detailsViewPresenter.getView()
-                                 .addSubmitDiskResourceQueryEventHandler(this.gridViewPresenter.getView());
-        this.detailsViewPresenter.getView()
-                                 .addSubmitDiskResourceQueryEventHandler(this.gridViewPresenter);
-        this.detailsViewPresenter.getView().addSendToCogeSelectedHandler(this);
-        this.detailsViewPresenter.getView().addSendToEnsemblSelectedHandler(this);
-        this.detailsViewPresenter.getView().addSendToTreeViewerSelectedHandler(this);
+        this.detailsViewPresenter.addManageSharingSelectedEventHandler(this.gridViewPresenter);
+        this.detailsViewPresenter.addEditInfoTypeSelectedEventHandler(this.gridViewPresenter);
+        this.detailsViewPresenter.addSetInfoTypeSelectedHandler(this.gridViewPresenter);
+        this.detailsViewPresenter.addMd5ValueClickedHandler(this.gridViewPresenter);
+        this.detailsViewPresenter.addSubmitDiskResourceQueryEventHandler(this.gridViewPresenter.getView());
+        this.detailsViewPresenter.addSubmitDiskResourceQueryEventHandler(this.gridViewPresenter);
+        this.detailsViewPresenter.addSendToCogeSelectedHandler(this);
+        this.detailsViewPresenter.addSendToEnsemblSelectedHandler(this);
+        this.detailsViewPresenter.addSendToTreeViewerSelectedHandler(this);
 
         // Toolbar Search Field
         DiskResourceSearchField searchField = toolbarPresenter.getView().getSearchField();
@@ -343,6 +342,22 @@ public class DiskResourcePresenterImpl implements
         toolbarPresenter.getView().addBulkMetadataSelectedHandler(gridViewPresenter);
         toolbarPresenter.addCreateNewFolderConfirmedHandler(this);
         toolbarPresenter.addCreateNcbiSraFolderStructureSubmittedHandler(this);
+    }
+
+    void fetchInfoTypes() {
+        diskResourceService.getInfoTypes(new DataCallback<List<InfoType>>() {
+
+            @Override
+            public void onFailure(Integer statusCode, Throwable arg0) {
+                ErrorHandler.post(arg0);
+            }
+
+            @Override
+            public void onSuccess(List<InfoType> infoTypes) {
+                DiskResourcePresenterImpl.this.infoTypes = infoTypes;
+                detailsViewPresenter.getView().setInfoTypes(infoTypes);
+            }
+        });
     }
 
     // <editor-fold desc="Handler Registrations">
@@ -646,6 +661,11 @@ public class DiskResourcePresenterImpl implements
         // panel.
         navigationPresenter.setSelectedFolder(navigationPresenter.getSelectedFolder());
         view.setDetailsCollapsed(collapseDetailsPanel);
+        if (infoTypes == null) {
+            fetchInfoTypes();
+        } else {
+            detailsViewPresenter.getView().setInfoTypes(infoTypes);
+        }
     }
 
     @Override

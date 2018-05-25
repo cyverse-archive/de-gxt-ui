@@ -290,7 +290,6 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
                 copyWfEnabled = isMultiStep && isCopyable;
                 // Wf run menu item is left enabled so user can get error announcement
                 wfRunEnabled = isMultiStep && !isAppDisabled;
-                GWT.log(selectedApp.getPermission() + "&&--&&");
                 shareWithCollaboratorsMiEnabled = containsShareableApps(Arrays.asList(selectedApp));
 
                 break;
@@ -329,12 +328,12 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
 
     private boolean hasReadPermission(App selectedApp) {
         return selectedApp.getPermission() != null && selectedApp.getPermission()
-                                                                 .equals(PermissionValue.read);
+                                                                 .equals(PermissionValue.read.toString());
     }
 
     private boolean hasOwnerPermission(App selectedApp) {
         return selectedApp.getPermission() != null && selectedApp.getPermission()
-                                                                 .equals(PermissionValue.own);
+                                                                 .equals(PermissionValue.own.toString());
     }
 
     private boolean isIntegrator(App selectedApp) {
@@ -344,7 +343,7 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
 
     private boolean hasWritePermission(App selectedApp) {
         return selectedApp.getPermission() != null && selectedApp.getPermission()
-                                                                 .equals(PermissionValue.write);
+                .equals(PermissionValue.write.toString());
     }
 
     // </editor-fold>
@@ -384,7 +383,7 @@ public class AppsViewToolbarImpl extends Composite implements AppsToolbarView {
                 boolean isExternal = a.getAppType().equalsIgnoreCase(App.EXTERNAL_APP);
                 if (isExternal && a.isPublic()) {
                     return false;
-                } else if (!isExternal && !(PermissionValue.own.equals(a.getPermission()))) {
+                } else if (!isExternal && !(PermissionValue.own.toString().equals(a.getPermission()))) {
                     return false;
                 }
             }

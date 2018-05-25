@@ -1,7 +1,6 @@
 package org.iplantc.de.diskResource.client.events.selection;
 
 import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.diskResource.client.events.selection.ResetInfoTypeSelected.ResetInfoTypeSelectedHandler;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;

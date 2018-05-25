@@ -66,6 +66,8 @@ public enum InfoType {
         return toString().toLowerCase();
     }
 
+
+
     /**
      * Null-safe and case insensitive variant of valueOf(String)
      * 
