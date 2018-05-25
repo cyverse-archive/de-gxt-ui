@@ -15,7 +15,7 @@ var intlData = {
         "infoType": "Info-Type:",
         "tagsLabel": "Tags",
         "md5CheckSum": "md5 Checksum:",
-        "searchTags": "Search Tags...",
+        "searchTags": "Tags:",
         "removeTag": "Remove Tag",
         "okLabel": "Ok",
         "emptyValue": "-",
@@ -24,6 +24,7 @@ var intlData = {
         "view": "View",
         "coge": "CoGe",
         "genomeBrowser": "Genome Browser",
+        "newTagPrompt": "Create new tag with ",
     }
 }
 

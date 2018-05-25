@@ -3,17 +3,17 @@
  */
 import React, {Component} from "react";
 import moment from "moment";
-import Button from "material-ui-next/Button";
+import Button from "@material-ui/core/Button";
 import Dialog, {
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle
-} from "material-ui-next/Dialog";
+} from "@material-ui/core/Dialog";
 import InfoTypeSelectionList from "./InfoTypeSelectionList";
 import TagPanel from "./TagPanel";
 import intlData from "../messages";
-import {CircularProgress} from "material-ui-next/Progress";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import styles from "../style";
 import {css} from "aphrodite";
 import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
@@ -144,16 +144,16 @@ class BasicDetails extends Component {
     }
 
     handleTagSelect(chosenTag) {
-        if (!this.state.loading) {
+        if (!this.state.loading && chosenTag) {
             this.setState({loading: true});
-            if (chosenTag.id) {
+            if (chosenTag.id !== chosenTag.value) {
                 this.props.presenter.attachTag(chosenTag.id, chosenTag.value, this.props.data.id, (tagList) => {
                     this.setState({tags: {dataId: this.props.data.id, values: tagList.tags}, loading: false});
                 }, (httpStatusCode, errMsg) => {
                     this.setState({loading: false});
                 });
-            } else {
-                this.props.presenter.createTag(chosenTag, this.props.data.id, (tagList) => {
+            } else {  //component has set a dummy id that equals the value
+                this.props.presenter.createTag(chosenTag.value, this.props.data.id, (tagList) => {
                     this.setState({tags: {dataId: this.props.data.id, values: tagList.tags}, loading: false});
                 }, (httpStatusCode, errMsg) => {
                     this.setState({loading: false});
