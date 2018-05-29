@@ -3,11 +3,11 @@
  */
 import React, {Component} from "react";
 import {FormattedMessage, IntlProvider} from "react-intl";
-import Menu, {MenuItem} from "material-ui-next/Menu";
+import Menu, {MenuItem} from "@material-ui/core/Menu";
 import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
 import styles from "../style";
 import {css} from "aphrodite";
-import Divider from "material-ui-next/Divider";
+import Divider from "@material-ui/core/Divider";
 
 class Notifications extends Component {
     constructor(props) {

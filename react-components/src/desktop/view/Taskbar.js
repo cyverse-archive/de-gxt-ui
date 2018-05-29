@@ -2,9 +2,9 @@
  * @author sriram
  */
 import React, {Component} from "react";
-import {withStyles} from "material-ui-next/styles";
-import Toolbar from "material-ui-next/Toolbar";
-import Button from "material-ui-next/Button";
+import {withStyles} from "@material-ui/core/styles";
+import Toolbar from "@material-ui/core/Toolbar";
+import Button from "@material-ui/core/Button";
 import styles from "../style";
 import {css} from "aphrodite";
 

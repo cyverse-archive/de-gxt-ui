@@ -4,9 +4,7 @@
  *
  */
 import React, {Component} from "react";
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {getDefaultTheme, NewMuiThemeProvider, getCyVerseTheme} from "../../../src/lib";
-import DesktopView from '../../../src/desktop/view/DesktopView';
+import DesktopView from "../../../src/desktop/view/DesktopView";
 
 class DesktopViewTest extends  Component {
     render() {
@@ -403,14 +401,10 @@ class DesktopViewTest extends  Component {
             getNotifications: (resultCallback) => {
                 resultCallback(notifications)
             },
-        }
+        };
         return (
-            <NewMuiThemeProvider muiTheme={getDefaultTheme()}>
-                <MuiThemeProvider muiTheme={getCyVerseTheme()}>
                     <DesktopView presenter={presenter}/>
-                </MuiThemeProvider>
-            </NewMuiThemeProvider>
-        )
+        );
     }
 }
 

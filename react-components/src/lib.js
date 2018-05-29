@@ -1,6 +1,7 @@
 import * as apps from "./apps";
 import * as data from "./data";
 import * as util from './util/util';
+import * as desktop from "./desktop";
 import palette from "./util/CyVersePalette";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -23,10 +24,5 @@ const getDefaultTheme = () => createMuiTheme({
     }
 });
 
-export {
-    apps,
-    data,
-    util,
-    getDefaultTheme,
-    MuiThemeProvider
-};
+
+export {apps, data, desktop, getDefaultTheme, MuiThemeProvider};

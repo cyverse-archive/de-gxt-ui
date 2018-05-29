@@ -17,6 +17,7 @@ import SearchFormTest from "./data/search/SearchForm.stories";
 import SearchFormTagPanel from './data/search/SearchFormTagPanel.stories';
 import TriggerFieldTest from './util/TriggerField.stories';
 import AutocompleteTest from "./util/Autocomplete.stories";
+import DesktopViewTest from "./desktop/view/DesktopView.stories";
 
 storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);

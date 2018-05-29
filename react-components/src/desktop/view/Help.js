@@ -2,7 +2,7 @@
  * @author sriram
  */
 import React, {Component} from "react";
-import Menu, {MenuItem} from "material-ui-next/Menu";
+import Menu, {MenuItem} from "@material-ui/core/Menu";
 import {FormattedMessage, IntlProvider} from "react-intl";
 import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
 import styles from '../style';
