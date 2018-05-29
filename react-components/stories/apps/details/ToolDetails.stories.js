@@ -43,7 +43,7 @@ class ToolDetailsTest extends Component {
 
         return (
                 <ToolDetails appearance={toolDetailsAppearance} app={app}/>
-        )
+        );
     }
 }
 

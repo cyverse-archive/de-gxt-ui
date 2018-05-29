@@ -1,10 +1,10 @@
 /**
  * @author psarando
  */
-import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import {hasClipboardAPI, copySelection} from '../clipboardFunctions'
+import React, {Component} from "react";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import {hasClipboardAPI, copySelection} from "../clipboardFunctions";
 
 class CopyTextArea extends Component {
     constructor(props) {
@@ -38,7 +38,6 @@ class CopyTextArea extends Component {
         return (
             <div>
                 <TextField id={`${this.props.debugIdPrefix}.CopyTextArea.TextField`}
-                           ref="copyTextArea"
                            value={this.props.text}
                            multiLine={true}
                            readOnly="readonly"
@@ -46,9 +45,10 @@ class CopyTextArea extends Component {
                            style={{width: '100%'}}/>
                 {hasClipboardAPI() && (
                     <Button variant="raised" id={`${this.props.debugIdPrefix}.CopyTextArea.Button`}
-                                  onClick={this.onCopyText} style={{padding : 2}}>{
-                        this.state.btnText
-                    }</Button>
+                            onClick={this.onCopyText}
+                            style={{padding: 2}}>
+                        {this.state.btnText}
+                    </Button>
                 )}
             </div>
         );
