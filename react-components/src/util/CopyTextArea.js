@@ -21,7 +21,9 @@ class CopyTextArea extends Component {
     onCopyText(e) {
         e.preventDefault();
         let ele = document.getElementById(`${this.props.debugIdPrefix}.CopyTextArea.TextField`);
-        ele.select();
+        if(ele) {
+            ele.select();
+        }
         if (copySelection()) {
             this.setState({btnText: this.props.copiedText});
         }
@@ -30,7 +32,9 @@ class CopyTextArea extends Component {
     componentDidMount() {
         if (!hasClipboardAPI()) {
             let ele = document.getElementById(`${this.props.debugIdPrefix}.CopyTextArea.TextField`);
-            ele.select();
+            if(ele) {
+                ele.select();
+            }
         }
     }
 
@@ -44,7 +48,8 @@ class CopyTextArea extends Component {
                            margin ="normal"
                            style={{width: '100%'}}/>
                 {hasClipboardAPI() && (
-                    <Button variant="raised" id={`${this.props.debugIdPrefix}.CopyTextArea.Button`}
+                    <Button variant="raised"
+                            id={`${this.props.debugIdPrefix}.CopyTextArea.Button`}
                             onClick={this.onCopyText}
                             style={{padding: 2}}>
                         {this.state.btnText}
