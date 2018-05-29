@@ -29,7 +29,8 @@ timestamps {
           dockerWarBuilder = "war-${repo}-${env.BUILD_TAG}"
           dockerPusher = "push-${env.BUILD_TAG}"
 
-          dockerCacheVolumes = """-v /tmp:/tmp -v "\$(pwd)/.gradle/caches:/root/.gradle/caches\""""
+          dockerSrcRootDir = "/usr/src/app"
+          dockerCacheVolumes = """-v /tmp:/tmp -v "\$(pwd)/.gradle/caches:/root/.gradle/caches\" -v "\$(pwd)/node_modules:${dockerSrcRootDir}/react-components/node_modules\""""
 
           sh "docker run ${dockerCacheVolumes} --name ${dockerCacher} --rm ${dockerRepoBuild} ./gradlew clean classes testClasses"
 
@@ -38,7 +39,7 @@ timestamps {
               sh returnStatus: true, script: "rm -rf jenkins_tests"
               sh "docker run ${dockerCacheVolumes} --name ${dockerTestRunner} ${dockerRepoBuild} ./gradlew test"
               sh "docker run ${dockerCacheVolumes} --name ${dockerNpmTestRunner} ${dockerRepoBuild} ./gradlew npmTest"
-              sh "docker cp ${dockerTestRunner}:/usr/src/app/de-lib/build/test-results jenkins_tests"
+              sh "docker cp ${dockerTestRunner}:${dockerSrcRootDir}/de-lib/build/test-results jenkins_tests"
               junit "jenkins_tests/*.xml"
 
               stage "Build WAR"
