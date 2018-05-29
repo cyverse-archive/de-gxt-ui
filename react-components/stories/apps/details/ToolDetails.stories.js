@@ -1,10 +1,6 @@
-import React, { Component } from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
-import { getCyVerseTheme } from '../../../src/lib';
-import ToolDetails from '../../../src/apps/details/ToolDetails';
-
-import '../../../src/index.css';
+import React, {Component} from "react";
+import ToolDetails from "../../../src/apps/details/ToolDetails";
+import "../../../src/index.css";
 
 class ToolDetailsTest extends Component {
     render() {
@@ -46,9 +42,8 @@ class ToolDetailsTest extends Component {
         };
 
         return (
-            <MuiThemeProvider muiTheme={getCyVerseTheme()}>
                 <ToolDetails appearance={toolDetailsAppearance} app={app}/>
-            </MuiThemeProvider>);
+        );
     }
 }
 

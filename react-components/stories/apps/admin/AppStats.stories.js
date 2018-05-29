@@ -4,9 +4,7 @@
  *
  */
 import React, {Component} from "react";
-import {getDefaultTheme, NewMuiThemeProvider, getCyVerseTheme} from "../../../src/lib";
 import {AppStats} from "../../../src/apps/admin";
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 
 
 class AppStatsTest extends Component {
@@ -53,14 +51,10 @@ class AppStatsTest extends Component {
             searchApps: (searchText, startDate, endDate, resultCallback) => {
                 resultCallback(appStats)
             },
-        }
+        };
 
         return (
-            <NewMuiThemeProvider muiTheme={getDefaultTheme()}>
-                <MuiThemeProvider muiTheme={getCyVerseTheme()}>
                     <AppStats presenter={presenter}/>
-                </MuiThemeProvider>
-            </NewMuiThemeProvider>
         )
 
     }

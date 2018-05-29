@@ -1,14 +1,19 @@
 /**
- * @author psarando
+ * @author sriram
+ *
  */
-import React, { Component } from 'react';
-import {
-    MediaCard,
-    MediaCardGroup,
-    SummaryText,
-} from "cyverse-ui";
+import React, {Component} from "react";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import styles from "../style";
+import {css} from "aphrodite";
+import intlData from "../messages";
+import withI18N, {getMessage} from "../../util/I18NWrapper";
 
-class ToolDetails extends Component {
+
+class ToolDetailsV1 extends Component {
     constructor(props) {
         super(props);
 
@@ -27,80 +32,75 @@ class ToolDetails extends Component {
     }
 
     render() {
-        let tools      = this.props.app.tools,
-            appearance = this.props.appearance,
-            cardClass = appearance.css().detailsCard(),
-            labelClass = appearance.css().label(),
-            valueClass = appearance.css().value();
-
+        let tools = this.props.app.tools,
+            labelClass = css(styles.label),
+            valueClass = css(styles.value);
         return (
-            <MediaCardGroup>
+            <div>
                 {
-                    tools.map( (toolInfo, index) => (
-                <MediaCard
-                    key={index}
-                    className={cardClass}
-                    title={toolInfo.name}
-                    summary={ <SummaryText children={toolInfo.description} /> }
-
-                    detail = {
-                <table>
-                    <tbody>
-                    <tr>
-                        <td>
-                            {appearance.detailsLabel()}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className={labelClass}>
-                            {appearance.toolNameLabel()}
-                        </td>
-                        <td className={valueClass}>
-                            {toolInfo.name}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className={labelClass}>
-                            {appearance.descriptionLabel()}
-                        </td>
-                        <td className={valueClass}>
-                            {toolInfo.description}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className={labelClass}>
-                            {appearance.imageLabel()}
-                        </td>
-                        <td className={valueClass}>
-                            {toolInfo.image}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className={labelClass}>
-                            {appearance.toolVersionLabel()}
-                        </td>
-                        <td className={valueClass}>
-                            {toolInfo.version}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className={labelClass}>
-                            {appearance.toolAttributionLabel()}
-                        </td>
-                        <td className={valueClass}>
-                            {toolInfo.attribution}
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                    }
-                />
-                        )
-                    )
+                    tools.map((toolInfo, index) => (
+                        <ExpansionPanel key={index}>
+                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+                                <p className={labelClass}>{toolInfo.name}:</p>
+                                <p className={valueClass}>{toolInfo.description}</p>
+                            </ExpansionPanelSummary>
+                            <ExpansionPanelDetails>
+                                <table>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            {getMessage("detailsLabel")}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td className={labelClass}>
+                                            {getMessage("toolNameLabel")}
+                                        </td>
+                                        <td className={valueClass}>
+                                            {toolInfo.name}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td className={labelClass}>
+                                            {getMessage("descriptionLabel")}
+                                        </td>
+                                        <td className={valueClass}>
+                                            {toolInfo.description}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td className={labelClass}>
+                                            {getMessage("imageLabel")}
+                                        </td>
+                                        <td className={valueClass}>
+                                            {toolInfo.image}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td className={labelClass}>
+                                            {getMessage("toolVersionLabel")}
+                                        </td>
+                                        <td className={valueClass}>
+                                            {toolInfo.version}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td className={labelClass}>
+                                            {getMessage("toolAttributionLabel")}
+                                        </td>
+                                        <td className={valueClass}>
+                                            {toolInfo.attribution}
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </ExpansionPanelDetails>
+                        </ExpansionPanel>
+                    ))
                 }
-            </MediaCardGroup>
+            </div>
         );
     }
 }
 
-export default ToolDetails;
+export default withI18N(ToolDetailsV1,intlData);

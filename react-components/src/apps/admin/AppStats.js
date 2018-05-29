@@ -2,28 +2,27 @@
  *  @author sriram
  * */
 import React, {Component} from "react";
-import Toolbar from "material-ui-next/Toolbar";
-import ToolbarGroup from "material-ui-next/Toolbar";
-import ToolbarSeparator from "material-ui-next/Toolbar";
-import TextField from "material-ui-next/TextField";
-import Button from "material-ui-next/Button";
-import {withStyles} from "material-ui-next/styles";
-import Table, {
-    TableHead,
-    TableBody,
-    TableCell,
-    TableFooter,
-    TablePagination,
-    TableRow
-} from "material-ui-next/Table";
-import IconButton from "material-ui-next/IconButton";
+import Toolbar from "@material-ui/core/Toolbar";
+import ToolbarGroup from "@material-ui/core/Toolbar";
+import ToolbarSeparator from "@material-ui/core/Toolbar";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import {withStyles} from "@material-ui/core/styles";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableFooter from '@material-ui/core/TableFooter';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import TableHead from '@material-ui/core/TableHead';
+import IconButton from "@material-ui/core/IconButton";
 import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import PropTypes from "prop-types";
 import moment from "moment";
-import {CircularProgress} from "material-ui-next/Progress";
 import exStyles from "../style";
 import {css} from "aphrodite";
 import constants from "../../constants";

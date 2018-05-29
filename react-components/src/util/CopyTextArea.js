@@ -1,10 +1,10 @@
 /**
  * @author psarando
  */
-import React, { Component } from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
-import {hasClipboardAPI, copySelection} from '../clipboardFunctions'
+import React, {Component} from "react";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import {hasClipboardAPI, copySelection} from "../clipboardFunctions";
 
 class CopyTextArea extends Component {
     constructor(props) {
@@ -20,8 +20,8 @@ class CopyTextArea extends Component {
 
     onCopyText(e) {
         e.preventDefault();
-
-        this.refs.copyTextArea.select();
+        let ele = document.getElementById(`${this.props.debugIdPrefix}.CopyTextArea.TextField`);
+        ele.select();
         if (copySelection()) {
             this.setState({btnText: this.props.copiedText});
         }
@@ -29,7 +29,8 @@ class CopyTextArea extends Component {
 
     componentDidMount() {
         if (!hasClipboardAPI()) {
-            this.refs.copyTextArea.select();
+            let ele = document.getElementById(`${this.props.debugIdPrefix}.CopyTextArea.TextField`);
+            ele.select();
         }
     }
 
@@ -37,15 +38,17 @@ class CopyTextArea extends Component {
         return (
             <div>
                 <TextField id={`${this.props.debugIdPrefix}.CopyTextArea.TextField`}
-                           ref="copyTextArea"
                            value={this.props.text}
                            multiLine={true}
-                           readOnly="readonly" />
+                           readOnly="readonly"
+                           margin ="normal"
+                           style={{width: '100%'}}/>
                 {hasClipboardAPI() && (
-                    <RaisedButton id={`${this.props.debugIdPrefix}.CopyTextArea.Button`}
-                                  onClick={this.onCopyText}>{
-                        this.state.btnText
-                    }</RaisedButton>
+                    <Button variant="raised" id={`${this.props.debugIdPrefix}.CopyTextArea.Button`}
+                            onClick={this.onCopyText}
+                            style={{padding: 2}}>
+                        {this.state.btnText}
+                    </Button>
                 )}
             </div>
         );

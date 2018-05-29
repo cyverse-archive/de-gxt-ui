@@ -3,15 +3,15 @@
  *
  */
 import React, {Component} from "react";
-import MenuItem from "material-ui/MenuItem";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import InputLabel from "@material-ui/core/InputLabel";
 import {css} from "aphrodite";
-import {FormControl} from "material-ui-next/Form";
-import Select from "material-ui-next/Select";
-import {InputLabel} from "material-ui-next/Input";
 import styles from "../style";
 import withI18N, {getMessage} from "../../util/I18NWrapper";
 import intlData from "../messages";
 import build from "../../util/DebugIDUtil";
+import FormControl from "@material-ui/core/FormControl";
 
 
 class InfoTypeSelectionList extends Component {
@@ -35,16 +35,16 @@ class InfoTypeSelectionList extends Component {
             },
         };
         return (
-                <FormControl>
-                    <InputLabel>{getMessage("selectInfoType")}</InputLabel>
-                    <Select
-                        value={this.props.selectedValue}
-                        onChange={this.handleChange}
-                        className={css(styles.infoTypeStyle)}
-                        MenuProps={menuProps}>
-                        {items}
-                    </Select>
-                </FormControl>
+            <FormControl>
+                <InputLabel>{getMessage("selectInfoType")}</InputLabel>
+                <Select
+                    value={this.props.selectedValue}
+                    onChange={this.handleChange}
+                    className={css(styles.infoTypeStyle)}
+                    MenuProps={menuProps}>
+                    {items}
+                </Select>
+            </FormControl>
         );
     }
 

@@ -17,4 +17,15 @@ export default StyleSheet.create({
         position: "sticky",
         top: 0
     },
+    label: {
+        fontWeight: 'bold',
+        fontSize: 10,
+        width: 90,
+        paddingBottom: '0.5em'
+    },
+    value: {
+        fontSize: 10,
+        paddingLeft: 2,
+        paddingBottom: '0.5em'
+    },
 });

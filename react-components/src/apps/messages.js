@@ -18,6 +18,13 @@ var intlData = {
         "lastPage": "Last Page",
         "nextPage": "Next Page",
         "prevPage": "Previous Page",
+        "detailsLabel" : "Details",
+        "toolNameLabel" : "Name",
+        "descriptionLabel": "Description",
+        "imageLabel" : "Image",
+        "toolVersionLabel": "Version",
+        "toolAttributionLabel": "Attribution"
+
     }
 };
 
