@@ -32,7 +32,7 @@ timestamps {
           dockerSrcRootDir = "/usr/src/app"
           dockerCacheVolumes = """-v /tmp:/tmp -v "\$(pwd)/.gradle/caches:/root/.gradle/caches\" -v "\$(pwd)/node_modules:${dockerSrcRootDir}/react-components/node_modules\""""
 
-          sh "docker run ${dockerCacheVolumes} --name ${dockerCacher} --rm ${dockerRepoBuild} ./gradlew clean classes testClasses"
+          sh "docker run ${dockerCacheVolumes} --name ${dockerCacher} --rm ${dockerRepoBuild} ./gradlew clean classes testClasses npmInstall"
 
           try {
               stage "Test"
