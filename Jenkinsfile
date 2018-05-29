@@ -36,6 +36,7 @@ timestamps {
               stage "Test"
               sh returnStatus: true, script: "rm -rf jenkins_tests"
               sh "docker run ${dockerCacheVolumes} --name ${dockerTestRunner} ${dockerRepoBuild} ./gradlew test"
+              sh "docker run ${dockerCacheVolumes} --name ${dockerTestRunner} ${dockerRepoBuild} ./gradlew npmTest"
               sh "docker cp ${dockerTestRunner}:/usr/src/app/de-lib/build/test-results jenkins_tests"
               junit "jenkins_tests/*.xml"
 
