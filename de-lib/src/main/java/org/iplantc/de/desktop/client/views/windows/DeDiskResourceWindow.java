@@ -115,10 +115,12 @@ public class DeDiskResourceWindow extends WindowBase implements FolderSelectionE
     @Override
     public WindowConfig getWindowConfig() {
         DiskResourceWindowConfig config = (DiskResourceWindowConfig) this.config;
-        config.setSelectedFolder(presenter.getSelectedFolder());
-        List<HasId> selectedResources = Lists.newArrayList();
-        selectedResources.addAll(presenter.getSelectedDiskResources());
-        config.setSelectedDiskResources(selectedResources);
+        if(presenter != null) {
+            config.setSelectedFolder(presenter.getSelectedFolder());
+            List<HasId> selectedResources = Lists.newArrayList();
+            selectedResources.addAll(presenter.getSelectedDiskResources());
+            config.setSelectedDiskResources(selectedResources);
+        }
         return config;
     }
 
@@ -171,13 +173,15 @@ public class DeDiskResourceWindow extends WindowBase implements FolderSelectionE
     @Override
     public FastMap<String> getAdditionalWindowStates() {
         FastMap<String> additionalData = new FastMap<>();
-        additionalData.put(getKey(DE_DATA_DETAILSPANEL_COLLAPSE, getStateId()),
-                presenter.isDetailsCollapsed() + "");
-        additionalData.put(getKey(DE_DATA_WESTPANEL_WIDTH, getStateId()), presenter.getWestPanelWidth());
-        ColumnModel cm = presenter.getColumns();
-        List<ColumnConfig> configs = cm.getColumns();
-        for (ColumnConfig cc : configs) {
-            additionalData.put(getKey(cc.getPath(), DATA), cc.isHidden() + "");
+        if(presenter != null) {
+            additionalData.put(getKey(DE_DATA_DETAILSPANEL_COLLAPSE, getStateId()),
+                               presenter.isDetailsCollapsed() + "");
+            additionalData.put(getKey(DE_DATA_WESTPANEL_WIDTH, getStateId()), presenter.getWestPanelWidth());
+            ColumnModel cm = presenter.getColumns();
+            List<ColumnConfig> configs = cm.getColumns();
+            for (ColumnConfig cc : configs) {
+                additionalData.put(getKey(cc.getPath(), DATA), cc.isHidden() + "");
+            }
         }
         return additionalData;
     }

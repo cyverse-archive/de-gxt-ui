@@ -18,6 +18,7 @@ import SearchFormTagPanel from './data/search/SearchFormTagPanel.stories';
 import TriggerFieldTest from './util/TriggerField.stories';
 import AutocompleteTest from "./util/Autocomplete.stories";
 import DesktopViewTest from "./desktop/view/DesktopView.stories";
+import TaskButtonTest from "./desktop/view/TaskButton.stories";
 
 storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);
@@ -34,6 +35,7 @@ storiesOf('data/TagPanel', module).add('with test diskresource details', () => <
 
 storiesOf('util', module).add('Autocomplete', () => <AutocompleteTest selectOptionLogger={action('Selected Option')}/>);
 storiesOf('desktop/view', module).add("with test desktop view", () => <DesktopViewTest/>);
+storiesOf('desktop/view', module).add("with test desktop taskbutton", () => <TaskButtonTest/>);
 
 storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
 storiesOf('util', module).add('DEHyperLink', () => <DEHyperLinkTest/>);

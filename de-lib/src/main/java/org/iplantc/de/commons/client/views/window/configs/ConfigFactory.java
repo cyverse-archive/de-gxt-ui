@@ -27,20 +27,21 @@ public class ConfigFactory {
     private static int appEditorWindowCount = 0;
 
     public static AboutWindowConfig aboutWindowConfig() {
-        AboutWindowConfig awc = applyWindowType(WindowType.ABOUT, factory.aboutWindowConfig()).as();
-        return awc;
+        AutoBean<AboutWindowConfig> awc = applyWindowType(WindowType.ABOUT, factory.aboutWindowConfig());
+        applyTag("About-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),awc);
+        return awc.as();
     }
 
     public static AnalysisWindowConfig analysisWindowConfig() {
-        AnalysisWindowConfig awc = applyWindowType(WindowType.ANALYSES, factory.analysisWindowConfig())
-                .as();
-        return awc;
+        AutoBean<AnalysisWindowConfig> awc = applyWindowType(WindowType.ANALYSES, factory.analysisWindowConfig());
+        applyTag("Analysis-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),awc);
+        return awc.as();
     }
 
     public static CollaborationWindowConfig collaborationWindowConfig() {
-        CollaborationWindowConfig collabWindowConfig = applyWindowType(WindowType.COLLABORATION, factory.collaborationWindowConfig())
-                .as();
-        return collabWindowConfig;
+        AutoBean<CollaborationWindowConfig> collabWindowConfig = applyWindowType(WindowType.COLLABORATION, factory.collaborationWindowConfig());
+        applyTag("Analysis-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),collabWindowConfig);
+        return collabWindowConfig.as();
     }
 
     public static AppsIntegrationWindowConfig appsIntegrationWindowConfig(HasQualifiedId app) {
@@ -63,8 +64,9 @@ public class ConfigFactory {
 
 
     public static AppsWindowConfig appsWindowConfig() {
-        AppsWindowConfig awc = applyWindowType(WindowType.APPS, factory.appsWindowConfig()).as();
-        return awc;
+        AutoBean<AppsWindowConfig> awc = applyWindowType(WindowType.APPS, factory.appsWindowConfig());
+        applyTag("Analysis-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),awc);
+        return awc.as();
     }
 
     public static AppWizardConfig appWizardConfig(String systemId, String appId) {
@@ -142,22 +144,27 @@ public class ConfigFactory {
     }
 
     public static NotifyWindowConfig notifyWindowConfig(NotificationCategory category) {
-        NotifyWindowConfig nwc = applyWindowType(WindowType.NOTIFICATIONS, factory.notifyWindowConfig())
-                .as();
-        nwc.setFilter(category.toString());
-        return nwc;
+        AutoBean<NotifyWindowConfig> nwc = applyWindowType(WindowType.NOTIFICATIONS, factory.notifyWindowConfig());
+        applyTag("Notify-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),
+                 nwc);
+        nwc.as().setFilter(category.toString());
+        return nwc.as();
     }
 
     public static PipelineEditorWindowConfig workflowIntegrationWindowConfig() {
-        PipelineEditorWindowConfig config = applyWindowType(WindowType.WORKFLOW_INTEGRATION,
-                factory.pipelineEditorWindowConfig()).as();
-        return config;
+        AutoBean<PipelineEditorWindowConfig> config = applyWindowType(WindowType.WORKFLOW_INTEGRATION,
+                factory.pipelineEditorWindowConfig());
+        applyTag("workflow-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),
+                 config);
+        return config.as();
     }
 
     public static SimpleDownloadWindowConfig simpleDownloadWindowConfig() {
-        SimpleDownloadWindowConfig sdwc = applyWindowType(WindowType.SIMPLE_DOWNLOAD,
-                factory.simpleDownloadWindowConfig()).as();
-        return sdwc;
+        AutoBean<SimpleDownloadWindowConfig> sdwc = applyWindowType(WindowType.SIMPLE_DOWNLOAD,
+                factory.simpleDownloadWindowConfig());
+        applyTag("simpleDown-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),
+                 sdwc);
+        return sdwc.as();
     }
 
     public static WindowConfig getDefaultConfig(WindowType type) {
@@ -279,9 +286,11 @@ public class ConfigFactory {
     }
 
     public static ManageToolsWindowConfig manageToolsWindowConfig() {
-        ManageToolsWindowConfig mtwc =
-                applyWindowType(WindowType.MANAGETOOLS, factory.manageToolsWindowConfig()).as();
-        return mtwc;
+        AutoBean<ManageToolsWindowConfig> mtwc =
+                applyWindowType(WindowType.MANAGETOOLS, factory.manageToolsWindowConfig());
+        applyTag("manageTools-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),
+                 mtwc);
+        return mtwc.as();
     }
 
     private static <C extends WindowConfig> AutoBean<C> applyWindowType(WindowType type, AutoBean<C> wc) {

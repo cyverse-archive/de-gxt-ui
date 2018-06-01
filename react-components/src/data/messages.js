@@ -27,6 +27,6 @@ var intlData = {
         "newTagPrompt": "Create new tag with {tag}",
         "taggedWith": 'Tagged with'
     }
-}
+};
 
 export default intlData;

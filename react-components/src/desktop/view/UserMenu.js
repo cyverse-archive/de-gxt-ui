@@ -2,13 +2,16 @@
  * @author sriram
  */
 import React, {Component} from "react";
-import Menu, {MenuItem} from "@material-ui/core/Menu";
-import {FormattedMessage, IntlProvider} from "react-intl";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 import Divider from "@material-ui/core/Divider";
 import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
 import styles from "../style";
 import {css} from "aphrodite";
 import ids from "../ids";
+import withI18N, {getMessage} from "../../util/I18NWrapper";
+import intlData from "../messages";
+import build from "../../util/DebugIDUtil";
 
 class UserMenu extends Component {
     constructor(props) {
@@ -33,34 +36,35 @@ class UserMenu extends Component {
         let id = event.currentTarget.id;
         let presenter = this.props.presenter;
         switch (id) {
-            case ids.desktop + ids.preferencesLink:
+            case build(ids.DESKTOP, ids.PREFERENCES_LINK):
                 presenter.onPreferencesClick();
                 break;
-            case ids.desktop + ids.collaboratorsLink:
+            case build(ids.DESKTOP, ids.COLLABORATORS_LINK):
                 presenter.onCollaboratorsClick();
                 break;
 
-            case ids.desktop + ids.userManualLink:
+            case build(ids.DESKTOP, ids.USER_MANUAL_LINK):
                 presenter.onDocumentationClick();
                 break;
 
-            case ids.desktop + ids.introLink:
+            case build(ids.DESKTOP, ids.INTRO_LINK):
                 presenter.onIntroClick();
                 break;
-            case ids.desktop + ids.aboutLink:
+            case build(ids.DESKTOP, ids.ABOUT_LINK):
                 presenter.onAboutClick();
                 break;
 
-            case ids.desktop + ids.logoutLink:
+            case build(ids.DESKTOP, ids.LOGOUT_LINK):
                 presenter.doLogout(false);
                 break;
+            default:
+                break; //do nothing
         }
     }
 
     render() {
         const {anchorEl} = this.state;
         return (
-            <IntlProvider locale='en' defaultLocale='en' messages={this.props.messages}>
             <span>
                     <img className={css(styles.menuIcon)}
                          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAMAAABHPGVmAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAP9QTFRF////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////fb62zwAAAFR0Uk5TAAEFBgcICRgZGhwdHiQnKS0vMDFER0pLUlRZWmltenuEhYqLjJOUlZeYnKGkpqqrrra3vsDCxcfJyszP0NbX2Nna29zh5O/w8fLz9PX29/j5/P3+yIHx3AAAAeRJREFUeAHt1OtS2lAQwPGDEoSgwRjveEERSBS8KCixBJKoBBUEuvv+z9JADs6Z6rQy/ZKt5/cC/5ndnWXSf0iSJEkyDMvyvFHIdU1T10lGUqnU6SmiCMCyFIVOhCcajQZ+ol5XeIdIRJjUeOyExmPkTNOkEzEMnDk7W1pioXS6Wp2tH3SdSsSy3hNMUKthpFKhEvE8vvJwVAJVBcCJdptKZDTCCcdhv/F9nBgOqUXoR1yXLz6dZoJsFoDXqURMEyPVKhOcn2OkVJIRga4DYKRWU9VoH7MEAKyuEonwP8wB+CEA5MrlMmN0IopSr9fxEzc3yWSSTIRnFMsCQAFAucwLlCL8liuVdnsYcpxSiV8uyYgUI8vL+Xz+5OT6utMJgp+hIOh0rq6Kxd3dbDZLI2IYxaLn4R+57vHx2lp8I4nEzo5t45c1m9vbiUT8Irnc3R1+9Prq+z9CDw/9Pn50e6tp8YpsbLy8iD+92SwUCpubmQwTZDJbW0dHtm0D4Lvn5/X1bxbJ5QYD5B4fDw5U9W//4PDw6Qm5fl/T4hK5vMSpbndvb2GBfcni4v5+r4dTFxdxiQQBhnq9lRU2F02LzqXbjUsEp+7v2dxaLZwiGSEQGQxac3t7i2PkX8iIjEiSJEkSMb8AcEQvAJi3fQMAAAAASUVORK5CYII="
@@ -69,31 +73,33 @@ class UserMenu extends Component {
                 <Menu id='userMenu' anchorEl={anchorEl}
                       open={Boolean(anchorEl)}
                       onClose={this.handleClose}>
-                    <MenuItem id={ids.desktop + ids.preferencesLink} onClick={this.onMenuItemSelect}>
-                        <DEHyperlink text={<FormattedMessage id="preferences"/>}/>
+                    <MenuItem id={build(ids.DESKTOP, ids.PREFERENCES_LINK)}
+                              onClick={this.onMenuItemSelect}>
+                        <DEHyperlink text={getMessage("preferences")}/>
                     </MenuItem>
-                    <MenuItem id={ids.desktop + ids.collaboratorsLink} onClick={this.onMenuItemSelect}>
-                        <DEHyperlink text={<FormattedMessage id="collaboration"/>}/>
+                    <MenuItem id={build(ids.DESKTOP, ids.COLLABORATORS_LINK)}
+                              onClick={this.onMenuItemSelect}>
+                        <DEHyperlink text={getMessage("collaboration")}/>
                     </MenuItem>
                       <Divider />
-                    <MenuItem id={ids.desktop + ids.userManualLink} onClick={this.onMenuItemSelect}>
-                        <DEHyperlink text={<FormattedMessage id="documentation"/>}/>
+                    <MenuItem id={build(ids.DESKTOP, ids.USER_MANUAL_LINK)}
+                              onClick={this.onMenuItemSelect}>
+                        <DEHyperlink text={getMessage("documentation")}/>
                     </MenuItem>
-                    <MenuItem id={ids.desktop + ids.introLink} onClick={this.onMenuItemSelect}>
-                        <DEHyperlink text={<FormattedMessage id="introduction"/>}/>
+                    <MenuItem id={build(ids.DESKTOP, ids.INTRO_LINK)} onClick={this.onMenuItemSelect}>
+                        <DEHyperlink text={getMessage("introduction")}/>
                     </MenuItem>
-                    <MenuItem id={ids.desktop + ids.aboutLink} onClick={this.onMenuItemSelect}>
-                        <DEHyperlink text={<FormattedMessage id="about"/>}/>
+                    <MenuItem id={build(ids.DESKTOP, ids.ABOUT_LINK)} onClick={this.onMenuItemSelect}>
+                        <DEHyperlink text={getMessage("about")}/>
                     </MenuItem>
                      <Divider />
-                    <MenuItem id={ids.desktop + ids.logoutLink} onClick={this.onMenuItemSelect}>
-                        <DEHyperlink text={<FormattedMessage id="logout"/>}/>
+                    <MenuItem id={build(ids.DESKTOP, ids.LOGOUT_LINK)} onClick={this.onMenuItemSelect}>
+                        <DEHyperlink text={getMessage("logout")}/>
                     </MenuItem>
                 </Menu>
             </span>
-            </IntlProvider>
         );
     }
 }
 
-export default UserMenu;
+export default withI18N(UserMenu, intlData);

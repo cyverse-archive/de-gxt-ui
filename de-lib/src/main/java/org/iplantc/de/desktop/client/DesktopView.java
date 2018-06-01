@@ -1,13 +1,5 @@
 package org.iplantc.de.desktop.client;
 
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Panel;
-import com.google.web.bindery.autobean.shared.Splittable;
-import com.sencha.gxt.widget.core.client.Window;
-import jsinterop.annotations.JsIgnore;
-import jsinterop.annotations.JsType;
 import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.WindowState;
@@ -17,7 +9,18 @@ import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.presenter.NotificationsCallback;
 import org.iplantc.de.desktop.client.views.windows.WindowInterface;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.web.bindery.autobean.shared.Splittable;
+
+import com.sencha.gxt.widget.core.client.Window;
+
 import java.util.List;
+
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
 
 /**
  * TODO JDS Change initial display time for user menu tooltips
@@ -87,6 +90,9 @@ public interface DesktopView extends IsWidget {
      */
     @JsType
     interface Presenter extends UserSettingsMenuPresenter, UnseenNotificationsPresenter {
+
+        @JsIgnore
+        void setDesktopContainer(Element desktopContainer);
 
         @JsType
         interface DesktopPresenterAppearance {
@@ -205,6 +211,7 @@ public interface DesktopView extends IsWidget {
         @JsIgnore
         void onJoinTeamRequestProcessed(NotificationMessage message);
 
+        void onTaskButtonClicked(Splittable windowConfig);
     }
 
     @JsType
@@ -246,5 +253,8 @@ public interface DesktopView extends IsWidget {
 
     @JsIgnore
     void setPresenter(Presenter presenter);
+
+    @JsIgnore
+    void onTaskButtonClick(Splittable windowConfig);
 
 }

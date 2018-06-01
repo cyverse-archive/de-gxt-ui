@@ -12,8 +12,10 @@ var intlData = {
         "logout": "Logout",
         "viewAllNotifi": "See all notifications",
         "markAllRead": "Mark all as read",
-        "newNotifications": "New Notifications ({count})"
+        "newNotifications": "New Notifications ({count})",
+        "noNotifications": "No Notifications to display!",
+        "cyverseDe": "CyVerse Discovery Environment ({count})",
     }
-}
+};
 
 export default intlData;

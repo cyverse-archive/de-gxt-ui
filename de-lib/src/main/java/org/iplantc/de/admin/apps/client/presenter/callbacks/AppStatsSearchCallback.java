@@ -8,6 +8,7 @@ import jsinterop.annotations.JsFunction;
  * Created by sriram on 3/27/18.
  */
 @JsFunction
+@SuppressWarnings("unusuable-by-js")
 public interface AppStatsSearchCallback {
     void onSearchCompleted(Splittable result);
 }

@@ -2,21 +2,15 @@
  * @author sriram
  */
 import React, {Component} from "react";
-import {withStyles} from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
-import Button from "@material-ui/core/Button";
 import styles from "../style";
 import {css} from "aphrodite";
+import TaskButton from "./TaskButton";
 
 
 class Taskbar extends Component {
     constructor(props) {
         super(props);
-        this.onClick = this.onClick.bind(this);
-    }
-
-    onClick(event) {
-        document.getElementById(event.currentTarget.id).classes = css(styles.taskButtonSelected);
     }
 
     render() {
@@ -25,10 +19,9 @@ class Taskbar extends Component {
             <Toolbar className={css(styles.taskbar)}>
                 {windows.map(n => {
                     return (
-                        <Button id='test' variant="raised" color="primary" className={css(styles.taskbarButton)} onClick={this.onClick}>
-                            {n}
-                        </Button>
-                    )
+                        <TaskButton windowConfig={n}
+                                    taskButtonClickHandler={this.props.taskButtonClickHandler}/>
+                    );
                 })}
             </Toolbar>
         );

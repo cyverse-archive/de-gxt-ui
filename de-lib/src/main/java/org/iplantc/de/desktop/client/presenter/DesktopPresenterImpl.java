@@ -1,34 +1,15 @@
 package org.iplantc.de.desktop.client.presenter;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
-import com.google.web.bindery.autobean.shared.Splittable;
-import com.sencha.gxt.core.client.util.KeyNav;
-import com.sencha.gxt.widget.core.client.Dialog;
-import com.sencha.gxt.widget.core.client.WindowManager;
-import com.sencha.gxt.widget.core.client.box.AutoProgressMessageBox;
-import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.events.EventBus;
-import org.iplantc.de.client.models.*;
+import org.iplantc.de.client.models.HasPath;
+import org.iplantc.de.client.models.HasUUIDs;
+import org.iplantc.de.client.models.IsHideable;
+import org.iplantc.de.client.models.QualifiedId;
+import org.iplantc.de.client.models.UserInfo;
+import org.iplantc.de.client.models.UserSettings;
+import org.iplantc.de.client.models.WindowState;
+import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.analysis.AnalysesAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.File;
@@ -50,7 +31,13 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.commons.client.util.WindowUtil;
 import org.iplantc.de.commons.client.views.dialogs.IplantErrorDialog;
-import org.iplantc.de.commons.client.views.window.configs.*;
+import org.iplantc.de.commons.client.views.window.configs.AppWizardConfig;
+import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.ConfigAutoBeanFactory;
+import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
+import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
+import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.desktop.client.presenter.util.MessagePoller;
 import org.iplantc.de.desktop.client.presenter.util.NotificationWebSocketManager;
@@ -68,6 +55,35 @@ import org.iplantc.de.shared.NotificationCallback;
 import org.iplantc.de.shared.events.ServiceDown;
 import org.iplantc.de.shared.events.ServiceRestored;
 import org.iplantc.de.shared.services.PropertyServiceAsync;
+
+import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
+
+import com.sencha.gxt.core.client.util.KeyNav;
+import com.sencha.gxt.widget.core.client.Dialog;
+import com.sencha.gxt.widget.core.client.WindowManager;
+import com.sencha.gxt.widget.core.client.box.AutoProgressMessageBox;
+import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
 import java.util.Collections;
 import java.util.List;
@@ -149,7 +165,6 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         this.windowManager = windowManager;
         this.messagePoller = messagePoller;
         this.desktopWindowManager = desktopWindowManager;
-        this.desktopWindowManager.setDesktopContainer(view.getDesktopContainer());
         this.appearance = appearance;
         this.ssp = new SaveSessionPeriodic(this, appearance, 8);
         this.loggedOut = false;
@@ -262,6 +277,11 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                 result.loadGenomesInCoge(obj, new LoadGenomeInCoGeCallback(null));
             }
         });
+    }
+
+    @Override
+    public void setDesktopContainer(Element desktopContainer) {
+        desktopWindowManager.setDesktopContainer(desktopContainer);
     }
 
     @Override
@@ -425,6 +445,11 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                 }
             });
         }
+    }
+
+    @Override
+    public void onTaskButtonClicked(Splittable windowConfig) {
+        view.onTaskButtonClick(windowConfig);
     }
 
     @Override
