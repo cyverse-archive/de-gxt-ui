@@ -10,10 +10,10 @@ import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
 
-@JsType(isNative = true, namespace = "CyVerseReactComponents.diskResource.search", name = "SearchForm")
+@JsType(isNative = true, namespace = "CyVerseReactComponents.data.search", name = "SearchForm")
 public class ReactSearchForm {
 
-    @JsProperty(namespace = "CyVerseReactComponents.diskResource.search", name = "SearchForm")
+    @JsProperty(namespace = "CyVerseReactComponents.data.search", name = "SearchForm")
     public static ReactClass<SearchFormProps> SearchForm;
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")

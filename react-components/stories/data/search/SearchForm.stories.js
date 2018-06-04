@@ -1,5 +1,5 @@
 import React from 'react';
-import {SearchForm} from "../../../src/diskResource/search";
+import {SearchForm} from "../../../src/data/search";
 
 class SearchFormTest extends React.Component {
 

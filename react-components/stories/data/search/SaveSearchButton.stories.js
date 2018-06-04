@@ -1,5 +1,5 @@
 import React from 'react';
-import {SaveSearchButton} from '../../../src/diskResource/search';
+import {SaveSearchButton} from '../../../src/data/search';
 
 class SaveSearchButtonTest extends React.Component {
 
