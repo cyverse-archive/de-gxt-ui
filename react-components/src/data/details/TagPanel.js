@@ -74,7 +74,7 @@ class TagPanel extends Component {
                                   onChange={this.handleTagSelect}
                                   placeholder={getMessage("searchTags")}
                                   promptTextCreator={(tagValue) => {
-                                      return getMessage("newTagPrompt") + tagValue;
+                                      return getMessage("newTagPrompt", {values: {tag: tagValue}});
                                   } }
                 />
                 <div id={build(this.props.baseID, ids.DETAILS_TAGS)}
