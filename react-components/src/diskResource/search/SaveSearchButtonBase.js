@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import PropTypes from 'prop-types';
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import ids from './ids';
 import {getMessage} from '../../util/hasI18N';
 
@@ -48,33 +50,39 @@ class SaveSearchButtonBase extends Component {
         let { value, onChange } = this.props;
         let disabled = this.props.disabled;
 
-        let actions = [
-            <FlatButton id={ids.saveBtn}
-                        label={getMessage('saveBtn')}
-                        primary={true}
-                        onClick={this.handleSave}/>,
-            <FlatButton id={ids.cancelBtn}
-                        label={getMessage('cancelBtn')}
-                        primary={true}
-                        onClick={this.handleClose}/>
-        ];
-
         return (
             <div>
-                <RaisedButton id={this.getFullId(ids.saveSearchBtn)}
-                              disabled={disabled ? disabled : false}
-                              label={getMessage('saveSearchBtn')}
-                              onClick={this.handleOpen}/>
-                <Dialog id={ids.saveSearchDlg}
-                        title={getMessage('saveSearchTitle')}
-                        actions={actions}
-                        open={this.state.open}
-                        onRequestClose={this.handleClose}>
-                    <TextField id={ids.saveTextField}
-                               hintText={getMessage('filterName')}
-                               errorText={value ? null : getMessage('requiredField')}
-                               value={value}
-                               onChange={onChange}/>
+                <Button variant="raised"
+                        id={this.getFullId(ids.saveSearchBtn)}
+                        disabled={disabled ? disabled : false}
+                        onClick={this.handleOpen}>
+                    {getMessage('saveSearchBtn')}
+                </Button>
+                <Dialog open={this.state.open}
+                        onClose={this.handleClose}>
+                    <DialogTitle id={ids.saveSearchDlg}>
+                        {getMessage('saveSearchTitle')}
+                    </DialogTitle>
+                    <DialogContent>
+                        <TextField id={ids.saveTextField}
+                                   label={value ? getMessage('filterName') : getMessage('requiredField')}
+                                   value={value}
+                                   onChange={onChange}/>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button variant="flat"
+                                id={ids.saveBtn}
+                                color="primary"
+                                onClick={this.handleSave}>
+                            {getMessage('saveBtn')}
+                        </Button>,
+                        <Button variant="flat"
+                                id={ids.cancelBtn}
+                                color="primary"
+                                onClick={this.handleClose}>
+                            {getMessage('cancelBtn')}
+                        </Button>
+                    </DialogActions>
                 </Dialog>
             </div>
         )

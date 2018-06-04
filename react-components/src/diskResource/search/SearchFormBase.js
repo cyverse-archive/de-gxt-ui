@@ -1,13 +1,16 @@
 import React, {Component} from 'react';
 
-import Checkbox from 'material-ui/Checkbox';
-import MenuItem from 'material-ui/MenuItem';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from '@material-ui/core/Button';
 import {SaveSearchButton} from '../../diskResource/search';
-import SelectField from 'material-ui/SelectField';
+import Select from '@material-ui/core/Select';
 import TagSearchField from '../../tags/tagSearch/TagSearchField';
-import TextField from 'material-ui/TextField';
+import TextField from '@material-ui/core/TextField';
 import injectSheet from 'react-jss';
 import styles from './styles';
 import ids from './ids';
@@ -50,14 +53,14 @@ class SearchFormBase extends Component {
         let messages = this.props.i18nData;
         let dateIntervals = this.props.dateIntervals;
         let dateIntervalChildren = dateIntervals.map(function (item, index) {
-            return <MenuItem key={index} value={item} primaryText={item.label}/>
+            return <MenuItem key={index} value={item}>{item.label}</MenuItem>
         });
         let suggestedTags = this.props.suggestedTags;
         let originalName = this.props.initialValues ? this.props.initialValues : null;
 
         let sizesList = messages.fileSizes;
         let sizesListChildren = sizesList.map(function (item, index) {
-            return <MenuItem key={index} value={item} primaryText={item}/>
+            return <MenuItem key={index} value={item}>{item}</MenuItem>
         });
 
         // From redux
@@ -112,7 +115,7 @@ class SearchFormBase extends Component {
                             <Field name='ownedBy'
                                    id={ids.ownedBy}
                                    label={getMessage('ownedBy')}
-                                   hintText={getMessage('enterCyVerseUserName')}
+                                   helperText={getMessage('enterCyVerseUserName')}
                                    component={renderTextField}/>
                         </td>
                     </tr>
@@ -128,7 +131,7 @@ class SearchFormBase extends Component {
                             <Field name='sharedWith'
                                    id={ids.sharedWith}
                                    label={getMessage('sharedWith')}
-                                   hintText={getMessage('enterCyVerseUserName')}
+                                   helperText={getMessage('enterCyVerseUserName')}
                                    component={renderTextField}/>
                         </td>
                     </tr>
@@ -144,7 +147,6 @@ class SearchFormBase extends Component {
                                                min='0'
                                                id={ids.fileSizeGreater}
                                                label={getMessage('fileSizeGreater')}
-                                               floatingLabelShrinkStyle={{width: '150%'}}
                                                component={renderTextField}/>
                                     </td>
                                     <td>
@@ -169,7 +171,6 @@ class SearchFormBase extends Component {
                                                min='0'
                                                id={ids.fileSizeLessThan}
                                                label={getMessage('fileSizeLessThan')}
-                                               floatingLabelShrinkStyle={{width: '150%'}}
                                                component={renderTextField}/>
                                     </td>
                                     <td>
@@ -201,7 +202,6 @@ class SearchFormBase extends Component {
                             <Field name='includeTrashItems'
                                    id={ids.includeTrash}
                                    label={getMessage('includeTrash')}
-                                   style={{top: '20px'}}
                                    component={renderCheckBox}/>
                         </td>
 
@@ -218,10 +218,12 @@ class SearchFormBase extends Component {
                         </td>
                         <td>
                             <div className={classes.searchButton}>
-                                <RaisedButton id={ids.searchBtn}
-                                              disabled={initialized ? false : pristine}
-                                              label={getMessage('searchBtn')}
-                                              onClick={handleSubmit(this.handleSubmitForm)}/>
+                                <Button variant="raised"
+                                        id={ids.searchBtn}
+                                        disabled={initialized ? false : pristine}
+                                        onClick={handleSubmit(this.handleSubmitForm)}>
+                                    {getMessage('searchBtn')}
+                                </Button>
                             </div>
                         </td>
                     </tr>
@@ -315,13 +317,12 @@ function renderTextField(props) {
     let {
         input,
         label,
-        meta: {touched, error},
+        meta: {error},
         ...custom
     } = props;
     return (
         <TextField
-            floatingLabelText={label}
-            errorText={touched && error}
+            label={error ? error : label}
             fullWidth={true}
             {...input}
             {...custom}
@@ -334,17 +335,20 @@ function renderDropDown(props) {
         input,
         label,
         children,
+        id,
         ...custom,
     } = props;
-
+console.log("renderdropdown: ", input);
     return (
-        <SelectField floatingLabelText={label}
-                     fullWidth={true}
-                     {...input}
-                     onChange={(event, index, value) => input.onChange(value)}
-                     children={children}
-                     {...custom}
-        />
+        <FormControl>
+            {label && <InputLabel htmlFor={id}>{label}</InputLabel>}
+            <Select autoWidth={true}
+                    value={input.value}
+                    onChange={(event) => input.onChange(event.target.value)}
+                    id={id}>
+                {children}
+            </Select>
+        </FormControl>
     )
 }
 
@@ -355,10 +359,15 @@ function renderCheckBox(props) {
         ...custom
     } = props;
     return (
-        <Checkbox label={label}
-                  checked={input.value ? true : false}
-                  onCheck={input.onChange}
-                  {...custom}
+        <FormControlLabel
+            control={
+                <Checkbox
+                    checked={input.value ? true : false}
+                    onChange={input.onChange}
+                    {...custom}
+                />
+            }
+            label={label}
         />
     )
 }

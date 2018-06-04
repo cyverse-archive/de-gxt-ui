@@ -119,8 +119,9 @@ public class SearchViewImpl extends Composite implements SearchView {
 
                 //Ignore targets who are parents of or children of elements with
                 // an attribute role=menuitem (which are material-ui dropdowns)
-                if (target.findParent("[role=menuitem]", 10) != null
-                    || target.child("[role=menuitem]") != null) {
+                if (target.findParent("[role=document]", 10) != null
+                    || target.child("[role=document]") != null
+                    || target.findParent("[id=menu-]", 10) != null) {
                     return;
                 }
 
