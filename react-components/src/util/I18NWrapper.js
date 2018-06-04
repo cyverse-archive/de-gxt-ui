@@ -16,8 +16,14 @@ export default function withI18N(WrappedComponent, intlData) {
     }
 }
 
-export function getMessage(id) {
+export function getMessage(id, options) {
+    if (options && options.values) {
+        return (
+            <FormattedMessage id={id} values={options.values}/>
+        );
+    }
     return (
         <FormattedMessage id={id}/>
     );
 }
+
