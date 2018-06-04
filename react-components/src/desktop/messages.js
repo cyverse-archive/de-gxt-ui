@@ -14,7 +14,6 @@ var intlData = {
         "markAllRead": "Mark all as read",
         "newNotifications": "New Notifications ({count})",
         "noNotifications": "No Notifications to display!",
-        "cyverseDe": "CyVerse Discovery Environment ({count})",
     }
 };
 

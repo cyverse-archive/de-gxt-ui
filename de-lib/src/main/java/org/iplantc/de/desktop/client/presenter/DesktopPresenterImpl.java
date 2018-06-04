@@ -43,6 +43,7 @@ import org.iplantc.de.desktop.client.presenter.util.MessagePoller;
 import org.iplantc.de.desktop.client.presenter.util.NotificationWebSocketManager;
 import org.iplantc.de.desktop.client.presenter.util.WindowStateStorageWrapper;
 import org.iplantc.de.desktop.client.views.widgets.PreferencesDialog;
+import org.iplantc.de.desktop.client.views.windows.WindowBase;
 import org.iplantc.de.desktop.client.views.windows.WindowInterface;
 import org.iplantc.de.fileViewers.client.callbacks.LoadGenomeInCoGeCallback;
 import org.iplantc.de.intercom.client.IntercomFacade;
@@ -84,8 +85,12 @@ import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.WindowManager;
 import com.sencha.gxt.widget.core.client.box.AutoProgressMessageBox;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
+import com.sencha.gxt.widget.core.client.event.RegisterEvent;
+import com.sencha.gxt.widget.core.client.event.UnregisterEvent;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -93,7 +98,9 @@ import java.util.logging.Logger;
 /**
  * @author jstroot
  */
-public class DesktopPresenterImpl implements DesktopView.Presenter {
+public class DesktopPresenterImpl implements DesktopView.Presenter,
+                                             UnregisterEvent.UnregisterHandler<Widget>,
+                                             RegisterEvent.RegisterHandler<Widget> {
 
 	interface AuthErrors {
         String API_NAME = "api_name";
@@ -144,9 +151,11 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     private final SaveSessionPeriodic ssp;
     private SaveWindowStatesPeriodic swsp;
     private final DesktopView view;
-    private final WindowManager windowManager;
     private NotificationWebSocketManager notificationWebSocketManager;
     private boolean loggedOut;
+    private final WindowManager windowManager;
+    private Map<Splittable, WindowBase> windowConfigMap = new HashMap<>();
+
     Logger LOG = Logger.getLogger(DesktopPresenterImpl.class.getName());
 
     public static final int NEW_NOTIFICATION_LIMIT = 10;
@@ -169,8 +178,62 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         this.ssp = new SaveSessionPeriodic(this, appearance, 8);
         this.loggedOut = false;
         this.view.setPresenter(this);
+        this.view.renderView(windowConfigMap);
         globalEventHandler.setPresenter(this, this.view);
         windowEventHandler.setPresenter(this, desktopWindowManager);
+        windowManager.addRegisterHandler(this);
+        windowManager.addUnregisterHandler(this);
+    }
+
+    @Override
+    public void onRegister(RegisterEvent<Widget> event) {
+        if (event.getItem() instanceof WindowInterface) {
+            WindowBase wb = (WindowBase)event.getItem();
+            buildWindowConfigList();
+            view.renderView(windowConfigMap);
+        }
+
+    }
+
+    @Override
+    public void onUnregister(UnregisterEvent<Widget> event) {
+        if (event.getItem() instanceof WindowInterface) {
+            buildWindowConfigList();
+            view.renderView(windowConfigMap);
+        }
+    }
+
+    private void buildWindowConfigList() {
+        List<Widget> widgets = windowManager.getWindows();
+        windowConfigMap.clear();
+        if (widgets.size() == 0) {
+            return;
+        }
+        for (Widget w : widgets) {
+            if (w instanceof WindowInterface) {
+                WindowBase cyverseWin = (WindowBase)w;
+                windowConfigMap.put(getConfigAsSplittable(cyverseWin), cyverseWin);
+            }
+        }
+    }
+
+    private Splittable getConfigAsSplittable(WindowBase win) {
+        WindowConfig config = win.getWindowConfig();
+        config.setMinimized(win.isMinimized());
+        config.setWindowTitle(win.getHeading().asString());
+        Splittable sp = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config));
+        return sp;
+    }
+
+    private WindowBase getWindowFromConfig(Splittable config) {
+        Iterator it = windowConfigMap.keySet().iterator();
+        while (it.hasNext()) {
+            Splittable sp = (Splittable)it.next();
+            if (sp.get("tag") != null && sp.get("tag").asString().equals(config.get("tag").asString())) {
+                return windowConfigMap.get(sp);
+            }
+        }
+        return null;
     }
 
 
@@ -449,7 +512,16 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
 
     @Override
     public void onTaskButtonClicked(Splittable windowConfig) {
-        view.onTaskButtonClick(windowConfig);
+        WindowBase win = getWindowFromConfig(windowConfig);
+        if (win != null) {
+            if (win.isMinimized()) {
+                win.show();
+            } else {
+                win.toFront();
+            }
+        }
+        buildWindowConfigList();
+        view.renderView(windowConfigMap);
     }
 
     @Override

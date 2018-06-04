@@ -7,6 +7,7 @@ import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.presenter.NotificationsCallback;
+import org.iplantc.de.desktop.client.views.windows.WindowBase;
 import org.iplantc.de.desktop.client.views.windows.WindowInterface;
 
 import com.google.gwt.dom.client.Element;
@@ -18,6 +19,7 @@ import com.google.web.bindery.autobean.shared.Splittable;
 import com.sencha.gxt.widget.core.client.Window;
 
 import java.util.List;
+import java.util.Map;
 
 import jsinterop.annotations.JsIgnore;
 import jsinterop.annotations.JsType;
@@ -255,6 +257,6 @@ public interface DesktopView extends IsWidget {
     void setPresenter(Presenter presenter);
 
     @JsIgnore
-    void onTaskButtonClick(Splittable windowConfig);
-
+    void renderView(Map<Splittable, WindowBase> windowConfigMap);
 }
+

@@ -25,6 +25,7 @@ public class ReactDesktop {
         DesktopView.Presenter presenter;
         MessageServiceFacade messageServiceFacade;
         Splittable[] windowConfigList;
+        String desktopContainerId;
     }
 
 }

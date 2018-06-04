@@ -3,4 +3,7 @@ export default ({
     NOTIFICATION_WS: "/de/websocket/notifications",
     WS_PROTOCOL: "ws://",
     WSS_PROTOCOL: "wss://",
+    CYVERSE_DE: "CyVerse Discovery Environment",
+    DE: "Discovery Environment",
 });
+

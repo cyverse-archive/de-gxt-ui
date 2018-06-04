@@ -40,7 +40,7 @@ public class ConfigFactory {
 
     public static CollaborationWindowConfig collaborationWindowConfig() {
         AutoBean<CollaborationWindowConfig> collabWindowConfig = applyWindowType(WindowType.COLLABORATION, factory.collaborationWindowConfig());
-        applyTag("Analysis-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),collabWindowConfig);
+        applyTag("Collab-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),collabWindowConfig);
         return collabWindowConfig.as();
     }
 
@@ -65,7 +65,7 @@ public class ConfigFactory {
 
     public static AppsWindowConfig appsWindowConfig() {
         AutoBean<AppsWindowConfig> awc = applyWindowType(WindowType.APPS, factory.appsWindowConfig());
-        applyTag("Analysis-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),awc);
+        applyTag("Apps-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),awc);
         return awc.as();
     }
 

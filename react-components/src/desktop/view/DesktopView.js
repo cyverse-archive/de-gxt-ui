@@ -33,6 +33,7 @@ class DesktopView extends Component {
         this.onViewAllNotificationsClicked = this.onViewAllNotificationsClicked.bind(this);
         this.onViewNewNotificationsClicked = this.onViewNewNotificationsClicked.bind(this);
         this.onTaskButtonClick = this.onTaskButtonClick.bind(this);
+        this.updateApplicationTitle = this.updateApplicationTitle.bind(this);
     }
 
     componentDidMount() {
@@ -150,16 +151,22 @@ class DesktopView extends Component {
         this.props.presenter.onTaskButtonClicked(windowConfig);
     }
 
-
+    updateApplicationTitle(count) {
+        if (count > 0) {
+            document.title = constants.DE + " (" + count + ")";
+        } else {
+            document.title = constants.DE;
+        }
+    }
 
     render() {
         const {windows, unSeenCount, notifications}  = this.state;
-
+        this.updateApplicationTitle(unSeenCount);
         return (
             <div className={css(styles.body)}>
                 <div className={css(styles.header)}>
                     <div className={css(styles.logo)}>
-                        <span className={css(styles.logoContainer)}>{getMessage("cyverseDe", {values: {count: unSeenCount}})}</span>
+                        <span className={css(styles.logoContainer)}>{constants.CYVERSE_DE}</span>
                         <span className={css(styles.userMenuContainer)}>
                             <nav>
                                 <Notifications
@@ -185,7 +192,7 @@ class DesktopView extends Component {
                         </span>
                     </div>
                 </div>
-                <div id="desktopContainer" className={css(styles.desktop)}>
+                <div id={this.props.desktopContainerId} className={css(styles.desktop)}>
                     <img className={css(styles.data)}
                          id={build(ids.DESKTOP, ids.DATA_BTN)}
                          alt="data" onClick={this.handleDesktopClick}
