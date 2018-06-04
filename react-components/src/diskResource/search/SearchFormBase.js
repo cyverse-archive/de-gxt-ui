@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import {SaveSearchButton} from '../../diskResource/search';
 import Select from '@material-ui/core/Select';
-import TagSearchField from '../../tags/tagSearch/TagSearchField';
+import TagPanel from '../../data/details/TagPanel';
 import TextField from '@material-ui/core/TextField';
 import injectSheet from 'react-jss';
 import styles from './styles';
@@ -191,10 +191,10 @@ class SearchFormBase extends Component {
                         <td>
                             <Fields names={['taggedWith', 'tagQuery']}
                                     parentId={ids.form}
-                                    label={getMessage('taggedWith')}
-                                    onEditTagSelected={this.onEditTagSelected}
-                                    fetchTagSuggestions={this.fetchTagSuggestions}
-                                    suggestedTags={suggestedTags}
+                                    placeholder={getMessage('taggedWith')}
+                                    onTagClick={this.onEditTagSelected}
+                                    handleTagSearch={this.fetchTagSuggestions}
+                                    dataSource={suggestedTags}
                                     array={array}
                                     component={renderTagSearchField}/>
                         </td>
@@ -290,21 +290,18 @@ function renderSaveSearchBtn(props) {
 
 function renderTagSearchField(props) {
     let {
-        label,
         taggedWith,
         tagQuery,
         array,
+        parentId,
         ...custom
     } = props;
     return (
-        <TagSearchField
-            label={label}
-            taggedWith={taggedWith.input.value}
-            tags={tagQuery.input.value ? tagQuery.input.value : []}
-            onTagValueChange={(value) => taggedWith.input.onChange(value)}
-            onTagSelected={(value) => onTagSelected(value, array, taggedWith)}
-            onDeleteTagSelected={(index) => array.remove('tagQuery', index)}
-            {...custom}/>
+        <TagPanel baseID={parentId}
+                  handleRemoveClick={(tag, index) => array.remove('tagQuery', index)}
+                  handleTagSelect={(value) => onTagSelected(value, array, taggedWith)}
+                  tags={tagQuery.input.value ? tagQuery.input.value : []}
+                  {...custom}/>
     )
 }
 
@@ -335,15 +332,12 @@ function renderDropDown(props) {
         input,
         label,
         children,
-        id,
-        ...custom,
+        id
     } = props;
-console.log("renderdropdown: ", input);
     return (
-        <FormControl>
+        <FormControl fullWidth={true}>
             {label && <InputLabel htmlFor={id}>{label}</InputLabel>}
-            <Select autoWidth={true}
-                    value={input.value}
+            <Select value={input.value ? input.value : ''}
                     onChange={(event) => input.onChange(event.target.value)}
                     id={id}>
                 {children}
