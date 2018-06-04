@@ -24,7 +24,7 @@ var intlData = {
         "view": "View",
         "coge": "CoGe",
         "genomeBrowser": "Genome Browser",
-        "newTagPrompt": "Create new tag with ",
+        "newTagPrompt": "Create new tag with {tag}",
     }
 }
 
