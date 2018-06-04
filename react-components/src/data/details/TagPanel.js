@@ -11,6 +11,7 @@ import Select from "react-select";
 import exStyle from "../style";
 import injectSheet from "react-jss";
 import {withStyles} from "@material-ui/core/styles";
+import PropTypes from 'prop-types';
 
 const styles = theme => ({
     // We had to use a lot of global selectors in order to style react-select.
@@ -60,11 +61,12 @@ class TagPanel extends Component {
 
     render() {
         const classes = this.props.classes;
-        let tagItems = this.props.tags ? this.props.tags.map((tag) =>
+        let tagItems = this.props.tags ? this.props.tags.map((tag, index) =>
                 <Tag tag={tag} key={tag.id}
-                     removeTag={this.props.handleRemoveClick}
+                     removeTag={this.props.handleRemoveClick.bind(null, tag, index)}
                      onClick={this.props.onTagClick}/>
             ) : [];
+        let { placeholder } = this.props;
         return (
             <div id={build(this.props.baseID, ids.DETAILS_TAGS_PANEL)}>
                 <Select.Creatable labelKey="value"
@@ -73,7 +75,7 @@ class TagPanel extends Component {
                                   options={this.props.dataSource}
                                   onInputChange={this.handleInputChange}
                                   onChange={this.handleTagSelect}
-                                  placeholder={getMessage("searchTags")}
+                                  placeholder={placeholder}
                                   promptTextCreator={(tagValue) => {
                                       return getMessage("newTagPrompt", {values: {tag: tagValue}});
                                   } }
@@ -88,5 +90,19 @@ class TagPanel extends Component {
 
 }
 
+TagPanel.propTypes = {
+    baseID: PropTypes.string.isRequired,
+    tags: PropTypes.array.isRequired,
+    dataSource: PropTypes.array.isRequired,
+    handleRemoveClick: PropTypes.func.isRequired,
+    onTagClick: PropTypes.func.isRequired,
+    handleTagSelect: PropTypes.func.isRequired,
+    handleTagSearch: PropTypes.func.isRequired,
+    placeholder: PropTypes.any
+};
+
+TagPanel.defaultProps = {
+    placeholder: getMessage("searchTags")
+};
 
 export default injectSheet(exStyle)(withStyles(styles)(withI18N(TagPanel, intlData)));
