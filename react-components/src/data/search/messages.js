@@ -6,8 +6,8 @@ export default {
         emptyDropDownText: '---',
         enterCyVerseUserName: 'Enter CyVerse user name',
         emptyText: 'Enter values...',
-        fileSizeGreater: 'File size is bigger than or equal to',
-        fileSizeLessThan: 'File size is smaller than or equal to',
+        fileSizeGreater: 'File size greater than',
+        fileSizeLessThan: 'File size smaller than',
         fileSizes: [
             'KB',
             'MB',
