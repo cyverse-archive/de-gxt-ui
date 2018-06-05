@@ -55,8 +55,10 @@ class TagPanel extends Component {
     }
 
     handleInputChange(inputValue) {
-        this.props.handleTagSearch(inputValue);
-        return inputValue;
+        if (inputValue && inputValue.length > 0) {
+            this.props.handleTagSearch(inputValue);
+            return inputValue;
+        }
     }
 
     render() {
