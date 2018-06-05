@@ -9,7 +9,7 @@ import build from "../../util/DebugIDUtil";
 import ids from "../ids";
 import Select from "react-select";
 import exStyle from "../style";
-import {css} from "aphrodite";
+import injectSheet from "react-jss";
 import {withStyles} from "@material-ui/core/styles";
 
 const styles = theme => ({
@@ -59,6 +59,7 @@ class TagPanel extends Component {
     }
 
     render() {
+        const classes = this.props.classes;
         let tagItems = this.props.tags ? this.props.tags.map((tag) =>
                 <Tag tag={tag} key={tag.id}
                      removeTag={this.props.handleRemoveClick}
@@ -78,7 +79,7 @@ class TagPanel extends Component {
                                   } }
                 />
                 <div id={build(this.props.baseID, ids.DETAILS_TAGS)}
-                     className={css(exStyle.tagPanelStyle)}>
+                     className={classes.tagPanelStyle}>
                     { tagItems }
                 </div>
             </div>
@@ -88,4 +89,4 @@ class TagPanel extends Component {
 }
 
 
-export default withStyles(styles)(withI18N(TagPanel, intlData));
+export default injectSheet(exStyle)(withStyles(styles)(withI18N(TagPanel, intlData)));

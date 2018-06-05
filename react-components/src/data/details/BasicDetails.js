@@ -4,18 +4,17 @@
 import React, {Component} from "react";
 import moment from "moment";
 import Button from "@material-ui/core/Button";
-import Dialog, {
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle
-} from "@material-ui/core/Dialog";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import InfoTypeSelectionList from "./InfoTypeSelectionList";
 import TagPanel from "./TagPanel";
 import intlData from "../messages";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import styles from "../style";
-import {css} from "aphrodite";
+import injectSheet from "react-jss";
 import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
 import build from "../../util/DebugIDUtil";
 import ids from "../ids";
@@ -23,7 +22,7 @@ import withI18N, {getMessage} from "../../util/I18NWrapper";
 
 function SendTo(props) {
     let displayText = getMessage("emptyValue");
-    let className = css(styles.value);
+    let className = props.classes.detailsValue;
     let onClick = null;
     let infoType = props.infoType;
     let drUtil = props.drUtil;
@@ -52,7 +51,7 @@ function Md5(props) {
             <DEHyperlink text={getMessage("view")}/>
         </td>);
     } else {
-        return <td id={props.id} className={css(styles.value)}>{getMessage("folders")}</td>;
+        return <td id={props.id} className={props.classes.detailsValue}>{getMessage("emptyValue")}</td>;
     }
 }
 
@@ -64,7 +63,7 @@ function ManageSharing(props) {
                     <DEHyperlink text={getMessage("noSharing")}/>)}
             </td>);
     } else {
-        return <td id={props.id} className={css(styles.value)}>{getMessage("emptyValue")}</td>;
+        return <td id={props.id} className={props.classes.detailsValue}>{getMessage("emptyValue")}</td>;
     }
 }
 
@@ -90,6 +89,8 @@ class BasicDetails extends Component {
         this.handleTagClick = this.handleTagClick.bind(this);
         this.doRemove = this.doRemove.bind(this);
         this.findTag = this.findTag.bind(this);
+        this.handleMd5Open = this.handleMd5Open.bind(this);
+        this.handleMd5Close = this.handleMd5Close.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -99,13 +100,13 @@ class BasicDetails extends Component {
         }
     }
 
-    handleMd5Open = () => {
+    handleMd5Open() {
         this.setState({md5open: true});
-    };
+    }
 
-    handleMd5Close = () => {
+    handleMd5Close(){
         this.setState({md5open: false});
-    };
+    }
 
     handleShareClick() {
         this.props.presenter.onSharingClicked();
@@ -200,7 +201,8 @@ class BasicDetails extends Component {
                 <div>{getMessage("noDetails")}</div>
             )
         }
-
+        const classes = this.props.classes;
+        
         let drUtil = this.props.drUtil,
             baseID = this.props.baseID,
             diskResource = this.props.data,
@@ -214,41 +216,42 @@ class BasicDetails extends Component {
 
         if (isFolder) {
             details = <tr>
-                <td className={css(styles.label)}> {getMessage("filesFolders")}</td>
+                <td className={classes.detailsLabel}> {getMessage("filesFolders")}</td>
                 <td> {diskResource["file-count"] ? diskResource["file-count"] : 0}
                     / {diskResource["dir-count"] ? diskResource["dir-count"] : 0}</td>
             </tr>;
         } else {
             details = [
-                <tr>
-                <td className={css(styles.label)}>
+                <tr key="md5">
+                    <td className={classes.detailsLabel}>
                     {getMessage("md5CheckSum")}
                 </td>
                     <Md5 id={build(baseID, ids.DETAILS_MD5)}
                          md5={diskResource.md5}
-                         onClick={this.handleMd5Open}/>
+                         onClick={this.handleMd5Open}
+                         classes={classes}/>
                 </tr>,
-                <tr>
-                    <td className={css(styles.label)}>
+                <tr key="size">
+                    <td className={classes.detailsLabel}>
                         {getMessage("size")}
                     </td>
-                    <td id={build(baseID, ids.DETAILS_SIZE)} className={css(styles.value)}>
+                    <td id={build(baseID, ids.DETAILS_SIZE)} className={classes.detailsValue}>
                         {drUtil.formatFileSize(diskResource["file-size"])}
                     </td>
                 </tr>,
-                <tr>
-                    <td className={css(styles.label)}>
+                <tr key="type">
+                    <td className={classes.detailsLabel}>
                         {getMessage("type")}
                     </td>
-                    <td id={build(baseID, ids.DETAILS_TYPE)} className={css(styles.value)}>
+                    <td id={build(baseID, ids.DETAILS_TYPE)} className={classes.detailsValue}>
                         {diskResource["content-type"]}
                     </td>
                 </tr>,
-                <tr>
-                    <td className={css(styles.label)}>
+                <tr key="infoType">
+                    <td className={classes.detailsLabel}>
                         {getMessage("infoType")}
                     </td>
-                    <td className={css(styles.value)}>
+                    <td className={classes.detailsValue}>
                         <InfoTypeSelectionList id={build(baseID, ids.DETAILS_INFO_TYPE)}
                                                infoTypes={infoTypes}
                                                selectedValue={infoType ? infoType : null}
@@ -256,58 +259,60 @@ class BasicDetails extends Component {
                                                onInfoTypeSelect={this.onInfoTypeSelect}/>
                     </td>
                 </tr>,
-                <tr>
-                    <td className={css(styles.label)}>
+                <tr key="sendTo">
+                    <td className={classes.detailsLabel}>
                         {getMessage("sendTo")}
                     </td>
                     <SendTo id={build(baseID, ids.DETAILS_SEND_TO)}
                             infoType={infoType}
                             handleSendToClick={this.handleSendToClick}
-                            drUtil={drUtil}/>
+                            drUtil={drUtil}
+                            classes={classes}/>
                 </tr>,
             ];
         }
         return (
                 <div>
                     {this.state.loading &&
-                        <CircularProgress size={30} className={css(styles.loadingStyle)} thickness={7}/>
+                    <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
                     }
                     <table>
                         <tbody>
                         <tr>
-                            <td className={css(styles.label)}>
+                            <td className={classes.detailsLabel}>
                                 {getMessage("lastModified")}
                             </td>
-                            <td id={build(baseID, ids.DETAILS_LAST_MODIFIED)} className={css(styles.value)}>
+                            <td id={build(baseID, ids.DETAILS_LAST_MODIFIED)} className={classes.detailsValue}>
                                 {diskResource['date-modified'] ? moment(Number(diskResource['date-modified']), "x").format("YYYY-MM-DD") :
                                     getMessage("emptyValue")}
                             </td>
                         </tr>
                         <tr>
-                            <td className={css(styles.label)}>
+                            <td className={classes.detailsLabel}>
                                 {getMessage("createdDate")}
                             </td>
-                            <td id={build(baseID, ids.DETAILS_DATE_SUBMITTED)} className={css(styles.value)}>
+                            <td id={build(baseID, ids.DETAILS_DATE_SUBMITTED)} className={classes.detailsValue}>
                                 {diskResource['date-modified'] ? moment(Number(diskResource['date-created']), "x").format("YYYY-MM-DD") :
                                     getMessage("emptyValue")}
                             </td>
                         </tr>
                         <tr>
-                            <td className={css(styles.label)}>
+                            <td className={classes.detailsLabel}>
                                 {getMessage("permissions")}
                             </td>
-                            <td id={build(baseID, ids.DETAILS_PERMISSIONS)} className={css(styles.value)}>
+                            <td id={build(baseID, ids.DETAILS_PERMISSIONS)} className={classes.detailsValue}>
                                 {diskResource.permission}
                             </td>
                         </tr>
                         <tr>
-                            <td className={css(styles.label)}>
+                            <td className={classes.detailsLabel}>
                                 {getMessage("share")}
                             </td>
                             <ManageSharing id={build(baseID, ids.DETAILS_SHARE)}
                                            isOwner={isOwner}
                                            shareCount={diskResource["share-count"]}
-                                           onClick={this.handleShareClick}/>
+                                           onClick={this.handleShareClick}
+                                           classes={classes}/>
                         </tr>
                         {details}
                         </tbody>
@@ -319,7 +324,9 @@ class BasicDetails extends Component {
                         tags={this.state.tags.values}
                         dataSource={this.state.dataSource}
                         onTagClick={this.handleTagClick}
-                        handleTagSelect={this.handleTagSelect}/>
+                        handleTagSelect={this.handleTagSelect}
+                    />
+                    <div>
                     <Dialog
                         open={this.state.md5open}
                         onClose={this.handleMd5Close}>
@@ -334,11 +341,11 @@ class BasicDetails extends Component {
                                 {getMessage("okLabel")}
                             </Button>
                         </DialogActions>
-
                     </Dialog>
+                    </div>
                 </div>
         );
     }
 }
 
-export default withI18N(BasicDetails, intlData);
+export default injectSheet(styles)(withI18N(BasicDetails, intlData));

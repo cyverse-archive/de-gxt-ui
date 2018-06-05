@@ -1,5 +1,4 @@
-import { StyleSheet } from 'aphrodite';
-export default StyleSheet.create( {
+export default {
     normal: {
         color: '#0971AB',
         cursor: 'pointer',
@@ -11,4 +10,4 @@ export default StyleSheet.create( {
             backgroundColor: '#ededed',
         },
     },
-})
+};

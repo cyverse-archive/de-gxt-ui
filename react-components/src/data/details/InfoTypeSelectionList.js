@@ -6,13 +6,12 @@ import React, {Component} from "react";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
-import {css} from "aphrodite";
 import styles from "../style";
+import injectSheet from "react-jss";
 import withI18N, {getMessage} from "../../util/I18NWrapper";
 import intlData from "../messages";
 import build from "../../util/DebugIDUtil";
 import FormControl from "@material-ui/core/FormControl";
-
 
 class InfoTypeSelectionList extends Component {
     handleChange = (event) => {
@@ -34,13 +33,14 @@ class InfoTypeSelectionList extends Component {
                 },
             },
         };
+        const classes = this.props.classes;
         return (
             <FormControl>
                 <InputLabel>{getMessage("selectInfoType")}</InputLabel>
                 <Select
                     value={this.props.selectedValue}
                     onChange={this.handleChange}
-                    className={css(styles.infoTypeStyle)}
+                    className={classes.infoTypeStyle}
                     MenuProps={menuProps}>
                     {items}
                 </Select>
@@ -50,4 +50,4 @@ class InfoTypeSelectionList extends Component {
 
 }
 
-export default withI18N(InfoTypeSelectionList, intlData);
+export default injectSheet(styles)(withI18N(InfoTypeSelectionList, intlData));
