@@ -1,23 +1,25 @@
-import React, {Component} from 'react';
+import ids from './ids';
+import messages from './messages';
+import { SaveSearchButton } from '../search';
+import styles from './styles';
+import TagPanel from '../details/TagPanel';
+import withI18N, { getMessage } from "../../util/I18NWrapper";
+import withStoreProvider from "../../util/StoreProvider";
 
+import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
+import {Field, Fields, reduxForm} from 'redux-form';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import injectSheet from 'react-jss';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
-import {SaveSearchButton} from '../search';
+import React, { Component } from 'react';
 import Select from '@material-ui/core/Select';
-import TagPanel from '../details/TagPanel';
 import TextField from '@material-ui/core/TextField';
-import injectSheet from 'react-jss';
-import styles from './styles';
-import ids from './ids';
-import {getMessage} from '../../util/hasI18N';
-import {Field, Fields, reduxForm} from 'redux-form';
 
-class SearchFormBase extends Component {
+class SearchForm extends Component {
 
     constructor(props) {
         super(props);
@@ -49,8 +51,7 @@ class SearchFormBase extends Component {
     }
 
     render() {
-        let classes = this.props.classes;
-        let messages = this.props.i18nData;
+        let { classes, messages } = this.props;
         let dateIntervals = this.props.dateIntervals;
         let dateIntervalChildren = dateIntervals.map(function (item, index) {
             return <MenuItem key={index} value={item}>{item.label}</MenuItem>
@@ -234,7 +235,7 @@ class SearchFormBase extends Component {
     }
 }
 
-SearchFormBase.propTypes = {
+SearchForm.propTypes = {
     presenter: PropTypes.shape({
         onSearchBtnClicked: PropTypes.func.isRequired,
         onEditTagSelected: PropTypes.func.isRequired,
@@ -366,10 +367,10 @@ function renderCheckBox(props) {
     )
 }
 
-SearchFormBase = injectSheet(styles)(SearchFormBase);
-export default reduxForm(
+export default withStoreProvider(
+    reduxForm(
     {
         form: 'searchForm',
         enableReinitialize: true
     }
-)(SearchFormBase);
+)(injectSheet(styles)(withI18N(SearchForm, messages))));

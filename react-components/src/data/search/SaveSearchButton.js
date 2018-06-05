@@ -1,20 +1,22 @@
-import React, {Component} from 'react';
+import build from '../../util/DebugIDUtil';
+import ids from './ids';
+import messages from './messages';
+import withI18N, { getMessage } from "../../util/I18NWrapper";
 
+import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
+import React, {Component} from 'react';
 import TextField from '@material-ui/core/TextField';
-import ids from './ids';
-import {getMessage} from '../../util/hasI18N';
 
 /**
  * @author aramsey
  * A button which opens a dialog for naming an advanced search query and saving it
  */
-class SaveSearchButtonBase extends Component {
+class SaveSearchButton extends Component {
     constructor(props) {
         super(props);
 
@@ -25,7 +27,6 @@ class SaveSearchButtonBase extends Component {
         this.handleClose = this.handleClose.bind(this);
         this.handleOpen = this.handleOpen.bind(this);
         this.handleSave = this.handleSave.bind(this);
-        this.getFullId = this.getFullId.bind(this);
     }
 
     handleSave() {
@@ -41,19 +42,14 @@ class SaveSearchButtonBase extends Component {
         this.setState({open: false})
     }
 
-    getFullId(id) {
-        let parentId = this.props.parentId;
-        return parentId ? parentId + id : id;
-    }
-
     render() {
-        let { value, onChange } = this.props;
+        let { value, onChange, parentId } = this.props;
         let disabled = this.props.disabled;
 
         return (
             <div>
                 <Button variant="raised"
-                        id={this.getFullId(ids.saveSearchBtn)}
+                        id={build(parentId, ids.saveSearchBtn)}
                         disabled={disabled ? disabled : false}
                         onClick={this.handleOpen}>
                     {getMessage('saveSearchBtn')}
@@ -71,6 +67,7 @@ class SaveSearchButtonBase extends Component {
                     </DialogContent>
                     <DialogActions>
                         <Button variant="flat"
+                                disabled={!value}
                                 id={ids.saveBtn}
                                 color="primary"
                                 onClick={this.handleSave}>
@@ -89,7 +86,7 @@ class SaveSearchButtonBase extends Component {
     }
 }
 
-SaveSearchButtonBase.propTypes = {
+SaveSearchButton.propTypes = {
     parentId: PropTypes.string,
     disabled: PropTypes.bool,
     handleSave: PropTypes.func.isRequired,
@@ -97,4 +94,4 @@ SaveSearchButtonBase.propTypes = {
     onChange: PropTypes.func.isRequired
 };
 
-export default SaveSearchButtonBase;
+export default withI18N(SaveSearchButton, messages);
