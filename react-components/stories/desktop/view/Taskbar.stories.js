@@ -4,32 +4,31 @@
  *
  */
 import React, {Component} from "react";
-import TaskButton from "../../../src/desktop/view/TaskButton";
+import Taskbar from "../../../src/desktop/view/Taskbar";
 
-class TaskButtonTest extends Component {
+class TaskbarTest extends Component {
     render() {
-        const windowConfig1 = {
+
+        const windowConfigs = [{
             "tag": "0",
             "type": "DATA",
             "windowTitle": "Data",
             "minimized": false,
 
-        };
-        const windowConfig2 = {
+        },
+       {
             "tag": "",
             "type": "APPS",
             "windowTitle": "Apps",
             "minimized": true,
 
-        };
-
-
+        }];
         return (
             <div>
-                <TaskButton windowConfig={windowConfig1}/>
-                <TaskButton windowConfig={windowConfig2}/>
+                <Taskbar windows={windowConfigs}/>
             </div>
         );
     }
 }
-export default TaskButtonTest;
+
+export default TaskbarTest;

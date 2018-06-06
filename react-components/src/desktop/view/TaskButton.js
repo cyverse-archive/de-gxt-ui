@@ -4,7 +4,8 @@
 import React, {Component} from "react";
 import Button from "@material-ui/core/Button";
 import styles from "../style";
-import {css} from "aphrodite";
+import injectSheet from "react-jss";
+import {withStyles} from "@material-ui/core/styles";
 
 class TaskButton extends Component {
     constructor(props) {
@@ -19,14 +20,19 @@ class TaskButton extends Component {
 
     getButton() {
         if (this.props.windowConfig.minimized === true) {
-            return (<Button variant="raised" className={css(styles.taskbarButtonMinimized)}
-                            onClick={this.onClick}>
+            return (<Button key={this.props.windowConfig.tag}
+                            className={this.props.classes.taskbarButtonMinimized}
+                            onClick={this.onClick}
+                            variant="raised" >
                     {this.props.windowConfig.windowTitle}
                 </Button>
             );
         } else {
             return (
-                <Button variant="outlined" className={css(styles.taskbarButton)} onClick={this.onClick}>
+                <Button key={this.props.windowConfig.tag}
+                        className={this.props.classes.taskbarButton}
+                        onClick={this.onClick}
+                        variant="contained">
                     {this.props.windowConfig.windowTitle}
                 </Button>
             );
@@ -41,4 +47,5 @@ class TaskButton extends Component {
 
 }
 
-export default TaskButton;
+export default withStyles(styles)(TaskButton); //need to use withStyles here instead of injectSheet
+                                              // of react-jss to override default mui component styles.

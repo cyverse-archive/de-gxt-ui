@@ -2,10 +2,10 @@
  * @author sriram
  */
 import React, {Component} from "react";
-import Toolbar from "@material-ui/core/Toolbar";
 import styles from "../style";
-import {css} from "aphrodite";
 import TaskButton from "./TaskButton";
+import Toolbar from "@material-ui/core/Toolbar";
+import {withStyles} from "@material-ui/core/styles";
 
 
 class Taskbar extends Component {
@@ -14,9 +14,9 @@ class Taskbar extends Component {
     }
 
     render() {
-        const windows = this.props.windows;
+        const {windows, classes} = this.props;
         return (
-            <Toolbar className={css(styles.taskbar)}>
+            <Toolbar className={classes.taskbar}>
                 {windows.map(n => {
                     return (
                         <TaskButton windowConfig={n}
@@ -28,4 +28,5 @@ class Taskbar extends Component {
     }
 }
 
-export default Taskbar;
+export default withStyles(styles)(Taskbar); //need use to withStyles here instead of injectSheet
+                                           // of react-jss to override default mui component styles.

@@ -1,6 +1,4 @@
-import {StyleSheet} from "aphrodite";
-export default StyleSheet.create({
-
+export default {
     body: {
         position: 'fixed',
         top: 0,
@@ -46,9 +44,10 @@ export default StyleSheet.create({
         marginBottom: '8px',
         marginRight: '8px',
         cursor: 'pointer',
-        ':hover': {
+        '&:hover': {
             boxShadow: '0px 2px 3px #ccc',
-        }, borderRadius: '10px',
+        },
+        borderRadius: '10px',
     },
 
     logoContainer: {
@@ -89,7 +88,7 @@ export default StyleSheet.create({
         left: '50px',
         top: '50px',
         cursor: 'pointer',
-        ':hover': {
+        '&:hover': {
             boxShadow: '0px 2px 3px #e2e2e2',
         }, borderRadius: '10px',
 
@@ -104,7 +103,7 @@ export default StyleSheet.create({
         left: '50px',
         top: '150px',
         cursor: 'pointer',
-        ':hover': {
+        '&:hover': {
             boxShadow: '0px 2px 3px #e2e2e2',
         }, borderRadius: '10px',
     },
@@ -118,7 +117,7 @@ export default StyleSheet.create({
         left: '50px',
         top: '230px',
         cursor: 'pointer',
-        ':hover': {
+        '&:hover': {
             boxShadow: '0px 2px 3px #e2e2e2',
         }, borderRadius: '10px',
     },
@@ -157,6 +156,7 @@ export default StyleSheet.create({
         backgroundColor: '#0971ab',
         backgroundPosition: '5px 5px',
         backgroundRepeat: 'no-repeat',
+        border: '1px #e2e2e2',
         position: 'relative',
         paddingLeft: '25px',
         color: '#fff',
@@ -166,7 +166,8 @@ export default StyleSheet.create({
         fontSize: 10,
         textTransform: 'none',
         borderRadius: 4,
-        ':hover': {
+        '&:hover': {
+           backgroundColor: '#0971ab',
            boxShadow: 'none',
         },
     },
@@ -185,7 +186,7 @@ export default StyleSheet.create({
         fontSize: 10,
         borderRadius: 4,
         textTransform: 'none',
-        ':hover': {
+        '&:hover': {
             backgroundColor: '#0971ab',
         },
     },
@@ -198,4 +199,4 @@ export default StyleSheet.create({
         backgroundColor: '#e2e2e2',
     }
 
-})
+};

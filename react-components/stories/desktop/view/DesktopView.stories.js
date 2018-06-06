@@ -8,15 +8,21 @@ import DesktopView from "../../../src/desktop/view/DesktopView";
 
 class DesktopViewTest extends  Component {
     render() {
-        const windows = [{
-            "windowType": "APPS"
+        const windowConfigs = [{
+            "tag": "0",
+            "type": "DATA",
+            "windowTitle": "Data",
+            "minimized": false,
+
         },
             {
-                "tag": "0",
-                "selectedDiskResources": [],
-                "windowType": "DATA"
-            }
-        ];
+                "tag": "",
+                "type": "APPS",
+                "windowTitle": "Apps",
+                "minimized": true,
+
+            }];
+        
         const notifications = {
             "total": "30",
             "unseen_total": "10",
@@ -412,7 +418,7 @@ class DesktopViewTest extends  Component {
             },
         };
         return (
-            <DesktopView presenter={presenter} windowConfigList={windows}/>
+            <DesktopView presenter={presenter} windowConfigList={windowConfigs}/>
         );
     }
 }
