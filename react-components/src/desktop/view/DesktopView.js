@@ -86,7 +86,13 @@ class DesktopView extends Component {
             });
             console.log("found=>" + found);
             if(found) {
-                this.props.presenter.onNotificationSelected(found);
+                this.props.presenter.onNotificationSelected(found,(updatedUnSeenCount) => {
+                    this.setState({
+                        unSeenCount:updatedUnSeenCount,
+                    });
+                }, (httpStatusCode, errMsg) => {
+                    // do nothing for now
+                });
             }
         }
     }
@@ -144,7 +150,13 @@ class DesktopView extends Component {
     }
 
     onMarkAllAsSeenClicked() {
-       this.props.presenter.doMarkAllSeen(true);
+       this.props.presenter.doMarkAllSeen(true,(updatedUnSeenCount) => {
+            this.setState({
+                unSeenCount:updatedUnSeenCount,
+            });
+        }, (httpStatusCode, errMsg) => {
+            // do nothing for now
+        });
     }
 
     onTaskButtonClick(windowConfig) {

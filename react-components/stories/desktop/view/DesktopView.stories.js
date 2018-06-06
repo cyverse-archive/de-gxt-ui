@@ -56,7 +56,7 @@ class DesktopViewTest extends  Component {
                     "timestamp": "1520448918196",
                     "text": "Word_Count_analysis1 submitted"
                 },
-                "seen": true,
+                "seen": false,
                 "deleted": false
             }, {
                 "type": "analysis",
@@ -284,7 +284,7 @@ class DesktopViewTest extends  Component {
                     "timestamp": "1523899957449",
                     "text": "test-multi-input uploaded successfully."
                 },
-                "seen": true,
+                "seen": false,
                 "deleted": false
             }, {
                 "type": "analysis",

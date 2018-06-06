@@ -21,6 +21,7 @@ import org.iplantc.de.client.services.DEUserSupportServiceFacade;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.services.MessageServiceFacade;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
+import org.iplantc.de.client.services.callbacks.ErrorCallback;
 import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.client.util.WebStorageUtil;
@@ -39,6 +40,7 @@ import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConf
 import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
+import org.iplantc.de.desktop.client.presenter.callbacks.NotificationMarkAsSeenCallback;
 import org.iplantc.de.desktop.client.presenter.util.MessagePoller;
 import org.iplantc.de.desktop.client.presenter.util.NotificationWebSocketManager;
 import org.iplantc.de.desktop.client.presenter.util.WindowStateStorageWrapper;
@@ -64,6 +66,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -79,6 +82,7 @@ import com.google.inject.Provider;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
+import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import com.sencha.gxt.core.client.util.KeyNav;
 import com.sencha.gxt.widget.core.client.Dialog;
@@ -292,23 +296,23 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
     }
 
     @Override
-    public void doMarkAllSeen(final boolean announce) {
+    public void doMarkAllSeen(final boolean announce,
+                              final NotificationMarkAsSeenCallback callback,
+                              final ErrorCallback errorCallback) {
        messageServiceFacade.markAllNotificationsSeen(new NotificationCallback<Void>() {
            @Override
            public void onFailure(Integer statusCode, Throwable caught) {
                errorHandlerProvider.get().post(caught);
+               if (errorCallback != null) {
+                   errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+               }
            }
 
            @Override
            public void onSuccess(Void result) {
-             /*  for(NotificationMessage nm : view.getNotificationStore().getAll()){
-                   nm.setSeen(true);
-                   view.getNotificationStore().update(nm);
+               if (callback != null) {
+                   callback.onMarkSeen(0);
                }
-               view.setUnseenNotificationCount(0);
-               if(!announce){
-                   return;
-               }*/
                announcer.schedule(new SuccessAnnouncementConfig(appearance.markAllAsSeenSuccess(), true, 3000));
            }
        });
@@ -460,31 +464,36 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
      * FIXME REFACTOR JDS Create notifications module and move this implementation there
      */
     @Override
-    public void onNotificationSelected(Splittable notification) {
+    public void onNotificationSelected(Splittable notification,
+                                       final NotificationMarkAsSeenCallback callback,
+                                       final ErrorCallback errorCallback) {
         GWT.log(notification.getPayload());
         Notification n = AutoBeanCodex.decode(notificationFactory, Notification.class, notification).as();
         NotificationMessage nm = notificationUtil.getMessage(n, notificationFactory);
         notificationUtil.onNotificationClick(nm);
-        //markAsSeen(selectedItem);
+        markAsSeen(nm, callback, errorCallback);
     }
 
-    public void markAsSeen(final NotificationMessage selectedItem) {
+    public void markAsSeen(final NotificationMessage selectedItem,
+                           final NotificationMarkAsSeenCallback callback,
+                           final ErrorCallback errorCallback) {
         messageServiceFacade.markAsSeen(selectedItem, new NotificationCallback<String>() {
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
                 errorHandlerProvider.get().post(caught);
+                if (errorCallback != null) {
+                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+                }
             }
 
             @Override
             public void onSuccess(String result) {
-                selectedItem.setSeen(true);
-/*                ListStore<NotificationMessage> notificationStore = view.getNotificationStore();
-                if(notificationStore.findModel(selectedItem)!=null) {
-                    notificationStore.update(selectedItem);
+                if (callback != null) {
+                    final String asString = StringQuoter.split(result).get("count").asString();
+                    final int count = Integer.parseInt(asString);
+                    callback.onMarkSeen(count);
                 }
-                final String asString = StringQuoter.split(result).get("count").asString();
-                final int count = Integer.parseInt(asString);
-                view.setUnseenNotificationCount(count);*/
+
             }
         });
     }

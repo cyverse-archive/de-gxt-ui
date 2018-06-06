@@ -21,6 +21,7 @@ class Notifications extends Component {
         };
         this.handleNotificationsClick = this.handleNotificationsClick.bind(this);
         this.onMenuItemSelect = this.onMenuItemSelect.bind(this);
+        this.getNotification = this.getNotification.bind(this);
     }
 
     handleNotificationsClick() {
@@ -35,6 +36,32 @@ class Notifications extends Component {
     onMenuItemSelect(event) {
         console.log("selected item =>" + event.currentTarget.id);
         this.props.notificationClicked(event.currentTarget.id);
+    }
+
+    getNotification(notification) {
+        if (notification.seen) {
+            return (
+                <span key={notification.message.id}>
+                                        <MenuItem id={notification.message.id}
+                                                  onClick={this.onMenuItemSelect}>
+                                            {notification.message.text}
+                                        </MenuItem>
+                                        <Divider/>
+                </span>
+            );
+        } else {
+            return (
+                <span key={notification.message.id}>
+                                        <MenuItem id={notification.message.id}
+                                                  onClick={this.onMenuItemSelect}
+                                                  style={{backgroundColor: '#e2e2e2'}}>
+                                            {notification.message.text}
+                                        </MenuItem>
+                                        <Divider/>
+                </span>
+            );
+        }
+
     }
 
     render() {
@@ -62,13 +89,7 @@ class Notifications extends Component {
                         {(messages.length > 0) ?
                             messages.map(n => {
                                 return (
-                                    <span key={n.message.id}>
-                                        <MenuItem id={n.message.id}
-                                                  onClick={this.onMenuItemSelect}>
-                                            {n.message.text}
-                                        </MenuItem>
-                                        <Divider/>
-                                    </span>
+                                    this.getNotification(n)
                                 )
                             }).reverse() : (
                                 <MenuItem id={build(ids.DESKTOP, ids.EMPTY_NOTIFICATION)}
