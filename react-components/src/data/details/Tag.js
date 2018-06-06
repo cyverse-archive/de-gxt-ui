@@ -3,8 +3,9 @@
  */
 import React, {Component} from "react";
 import styles from "../style";
-import {css} from "aphrodite";
 import jss from "jss";
+import injectSheet from "react-jss";
+
 
 class Tag extends Component {
 
@@ -33,11 +34,11 @@ class Tag extends Component {
             paddingLeft: '2px',
 
         }; // does not work with jss classname approach
-
+        const classes = this.props.classes;
         return (
-                <div className={css(styles.tagDivStyle)} onMouseOver={this.handleMouseOver}
+                <div className={classes.tagDivStyle} onMouseOver={this.handleMouseOver}
                      onMouseOut={this.handleMouseOut}>
-                    <div className={css(styles.tagStyle)}
+                    <div className={classes.tagStyle}
                          onClick={() => this.props.onClick(this.props.tag)}>{this.props.tag.value}</div>
                     <div id={this.props.tag.id}
                          style={removeStyle} onClick={() => this.props.removeTag(this.props.tag)}> X
@@ -47,4 +48,4 @@ class Tag extends Component {
     }
 }
 
-export default Tag;
+export default injectSheet(styles)(Tag);

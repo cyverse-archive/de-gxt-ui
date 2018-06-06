@@ -7,14 +7,13 @@ import ToolbarGroup from "@material-ui/core/Toolbar";
 import ToolbarSeparator from "@material-ui/core/Toolbar";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import {withStyles} from "@material-ui/core/styles";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableHead from '@material-ui/core/TableHead';
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableFooter from "@material-ui/core/TableFooter";
+import TablePagination from "@material-ui/core/TablePagination";
+import TableRow from "@material-ui/core/TableRow";
+import TableHead from "@material-ui/core/TableHead";
 import IconButton from "@material-ui/core/IconButton";
 import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
@@ -24,19 +23,10 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import PropTypes from "prop-types";
 import moment from "moment";
 import exStyles from "../style";
-import {css} from "aphrodite";
 import constants from "../../constants";
 import intlData from "../messages";
 import withI18N, {getMessage} from "../../util/I18NWrapper";
-
-const pagingStyles = theme => ({
-    root: {
-        flexShrink: 0,
-        color: theme.palette.text.secondary,
-        marginLeft: theme.spacing.unit * 2.5,
-
-    },
-}); // TODO: have to figure out how to pass 'theme' variable in to jss
+import injectSheet from "react-jss";
 
 class TablePaginationActions extends React.Component {
     handleFirstPageButtonClick = event => {
@@ -59,10 +49,10 @@ class TablePaginationActions extends React.Component {
     };
 
     render() {
-        const {classes, count, page, rowsPerPage, theme} = this.props;
+        const {count, page, rowsPerPage, theme} = this.props;
 
         return (
-                <div className={classes.root}>
+                <div>
                     <IconButton
                         onClick={this.handleFirstPageButtonClick}
                         disabled={page === 0}
@@ -101,23 +91,10 @@ TablePaginationActions.propTypes = {
     theme: PropTypes.object.isRequired,
 };
 
-const TablePaginationActionsWrapped = withI18N(withStyles(pagingStyles, {withTheme: true})(
+const TablePaginationActionsWrapped = withI18N(injectSheet(exStyles, {withTheme: true})(
     TablePaginationActions,
 ), intlData);
 
-const styles = theme => ({
-    root: {
-        width: "100%",
-        marginTop: theme.spacing.unit * 3,
-        overflow: "auto",
-        height: 800,
-    },
-    textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        width: 200,
-    },
-}); // TODO: have to figure out how to pass 'theme' variable in to jss
 
 class AppStats extends Component {
     constructor(props) {
@@ -205,14 +182,14 @@ class AppStats extends Component {
         const classes = this.props.classes;
         const {data, rowsPerPage, page} = this.state;
         return (
-                <div className={classes.root}>
+                <div className={classes.statContainer}>
                     {this.state.loading &&
-                        <CircularProgress size={30} className={css(exStyles.loadingStyle)} thickness={7}/>
+                        <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
                     }
                     <div>
                         <Toolbar>
                             <ToolbarGroup>
-                                <TextField className={classes.textField}
+                                <TextField className={classes.statSearchTextField}
                                            label={getMessage("searchApps")}
                                            onChange={this.handleSearch}/>
                                 <ToolbarSeparator />
@@ -228,27 +205,27 @@ class AppStats extends Component {
                                            }} onChange={this.onEndDateChange}/>
                                 <ToolbarSeparator />
                                 <Button variant="raised" onClick={this.applyFilter}
-                                        className={css(exStyles.filterButton)}>{getMessage("applyFilter")}</Button>
+                                        className={classes.statFilterButton}>{getMessage("applyFilter")}</Button>
 
                             </ToolbarGroup>
                         </Toolbar>
                     </div>
-                    <Table className={css(exStyles.statTable)}>
+                    <Table className={classes.statTable}>
                         <TableHead>
                             <TableRow hover>
                                 <TableCell
-                                    className={css(exStyles.tableHead)}>{getMessage("appName")}</TableCell>
-                                <TableCell className={css(exStyles.tableHead)}
+                                    className={classes.statTableHead}>{getMessage("appName")}</TableCell>
+                                <TableCell className={classes.statTableHead}
                                            numeric>{getMessage("rating")}</TableCell>
-                                <TableCell className={css(exStyles.tableHead)}
+                                <TableCell className={classes.statTableHead}
                                            numeric>{getMessage("total")}</TableCell>
-                                <TableCell className={css(exStyles.tableHead)}
+                                <TableCell className={classes.statTableHead}
                                            numeric>{getMessage("completed")}</TableCell>
-                                <TableCell className={css(exStyles.tableHead)}
+                                <TableCell className={classes.statTableHead}
                                            numeric>{getMessage("failed")}</TableCell>
-                                <TableCell className={css(exStyles.tableHead)}
+                                <TableCell className={classes.statTableHead}
                                            numeric>{getMessage("lastCompleted")}</TableCell>
-                                <TableCell className={css(exStyles.tableHead)}
+                                <TableCell className={classes.statTableHead}
                                            numeric>{getMessage("lastUsed")}</TableCell>
                             </TableRow>
                         </TableHead>
@@ -299,4 +276,4 @@ AppStats.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(withI18N(AppStats, intlData), TablePaginationActionsWrapped);
+export default injectSheet(exStyles)(withI18N(AppStats, intlData), TablePaginationActionsWrapped);

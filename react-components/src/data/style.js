@@ -1,12 +1,11 @@
-import {StyleSheet} from "aphrodite";
-export default StyleSheet.create({
-    label: {
+export default {
+    detailsLabel: {
         fontWeight: 'bold',
         fontSize: 10,
         width: 90,
         paddingBottom: '0.5em'
     },
-    value: {
+    detailsValue: {
         fontSize: 10,
         paddingLeft: 2,
         paddingBottom: '0.5em'
@@ -68,4 +67,4 @@ export default StyleSheet.create({
         color: '#DB6619',
     },
 
-})
+};

@@ -7,11 +7,6 @@ import BasicDetailsTest from '../../stories/data/details/BasicDetails.stories';
 import InfoTypeSelectionListTest from '../../stories/data/details/InfoTypeSelectionList.stories';
 import TagPanelTest from '../../stories/data/details/TagPanel.stories';
 import TagTest from '../../stories/data/details/Tag.stories';
-import { StyleSheetTestUtils } from 'aphrodite';
-
-beforeEach(() => {
-    StyleSheetTestUtils.suppressStyleInjection();
-});
 
 it('renders BasicDetailsTest without crashing', () => {
     const div = document.createElement('div');
@@ -37,6 +32,3 @@ it('renders TagTest without crashing', () => {
     ReactDOM.unmountComponentAtNode(div);
 });
 
-afterEach(() => {
-    StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
-});

@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import styles from './style';
-import {css} from 'aphrodite';
+import injectSheet from 'react-jss';
 
 
 class DEHyperLink extends Component {
 
     render() {
+        const classes = this.props.classes;
         return (
-            <a className={css(styles.normal)}>{this.props.text}</a>
+            <a onClick={this.props.onClick} className={classes.normal}>{this.props.text}</a>
         );
     }
 
 }
 
-export default DEHyperLink;
+export default injectSheet(styles)(DEHyperLink);

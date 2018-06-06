@@ -7,9 +7,9 @@ import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import styles from "../style";
-import {css} from "aphrodite";
 import intlData from "../messages";
+import styles from "../style";
+import injectSheet from 'react-jss';
 import withI18N, {getMessage} from "../../util/I18NWrapper";
 
 
@@ -32,9 +32,10 @@ class ToolDetailsV1 extends Component {
     }
 
     render() {
+        const classes = this.props.classes;
         let tools = this.props.app.tools,
-            labelClass = css(styles.label),
-            valueClass = css(styles.value);
+            labelClass = classes.toolDetailsLabel,
+            valueClass = classes.toolDetailsValue;
         return (
             <div>
                 {
@@ -103,4 +104,4 @@ class ToolDetailsV1 extends Component {
     }
 }
 
-export default withI18N(ToolDetailsV1,intlData);
+export default injectSheet(styles)(withI18N(ToolDetailsV1,intlData));
