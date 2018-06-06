@@ -10,6 +10,7 @@ import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryCli
 import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent.HasSavedSearchDeletedEventHandlers;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent.HasUpdateSavedSearchesEventHandlers;
+import org.iplantc.de.diskResource.client.presenters.callbacks.TagCreateCallback;
 import org.iplantc.de.diskResource.client.views.search.ReactSearchForm;
 
 import com.google.gwt.dom.client.Element;
@@ -152,6 +153,8 @@ public interface SearchView extends IsWidget,
         void onSearchBtnClicked(Splittable query);
 
         void onEditTagSelected(Tag tag);
+
+        void onAddTagSelected(String tagValue, TagCreateCallback addTagCallback);
 
         SearchView getSearchForm();
 

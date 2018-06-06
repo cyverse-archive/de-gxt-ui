@@ -30,6 +30,8 @@ class SearchForm extends Component {
         //Tags
         this.onEditTagSelected = this.onEditTagSelected.bind(this);
         this.fetchTagSuggestions = this.fetchTagSuggestions.bind(this);
+        this.onTagSelected = this.onTagSelected.bind(this);
+        this.appendTag = this.appendTag.bind(this);
     }
 
     handleSaveSearch(values) {
@@ -48,6 +50,19 @@ class SearchForm extends Component {
 
     fetchTagSuggestions(search) {
         this.props.presenter.fetchTagSuggestions(search);
+    }
+
+    onTagSelected(tag, array, taggedWith) {
+        if (tag.id !== tag.value) {
+            this.appendTag(tag, array, taggedWith);
+        } else {
+            this.props.presenter.onAddTagSelected(tag.value, (newTag) => this.appendTag(newTag, array, taggedWith));
+        }
+    }
+
+    appendTag(tag, array, taggedWith) {
+        array.insert('tagQuery', 0, tag);
+        taggedWith.input.onChange('');
     }
 
     render() {
@@ -195,6 +210,7 @@ class SearchForm extends Component {
                                     placeholder={getMessage('taggedWith')}
                                     onTagClick={this.onEditTagSelected}
                                     handleTagSearch={this.fetchTagSuggestions}
+                                    handleTagSelect={this.onTagSelected}
                                     dataSource={suggestedTags}
                                     array={array}
                                     component={renderTagSearchField}/>
@@ -238,6 +254,7 @@ class SearchForm extends Component {
 SearchForm.propTypes = {
     presenter: PropTypes.shape({
         onSearchBtnClicked: PropTypes.func.isRequired,
+        onAddTagSelected: PropTypes.func.isRequired,
         onEditTagSelected: PropTypes.func.isRequired,
         onSaveSearch: PropTypes.func.isRequired,
         fetchTagSuggestions: PropTypes.func.isRequired
@@ -295,20 +312,16 @@ function renderTagSearchField(props) {
         tagQuery,
         array,
         parentId,
+        handleTagSelect,
         ...custom
     } = props;
     return (
         <TagPanel baseID={parentId}
                   handleRemoveClick={(tag, index) => array.remove('tagQuery', index)}
-                  handleTagSelect={(value) => onTagSelected(value, array, taggedWith)}
+                  handleTagSelect={(tag) => handleTagSelect(tag, array, taggedWith)}
                   tags={tagQuery.input.value ? tagQuery.input.value : []}
                   {...custom}/>
     )
-}
-
-function onTagSelected(value, array, taggedWith) {
-    array.insert('tagQuery', 0, value);
-    taggedWith.input.onChange('');
 }
 
 function renderTextField(props) {

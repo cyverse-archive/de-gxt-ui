@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.client.models.tags.Tag;
 import org.iplantc.de.client.services.SearchServiceFacade;
+import org.iplantc.de.client.services.TagsServiceFacade;
 import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -15,6 +16,7 @@ import org.iplantc.de.diskResource.client.events.search.DeleteSavedSearchClicked
 import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent;
+import org.iplantc.de.diskResource.client.presenters.callbacks.TagCreateCallback;
 import org.iplantc.de.diskResource.client.views.search.ReactSearchForm;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 import org.iplantc.de.tags.client.TagsView;
@@ -43,7 +45,6 @@ import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.core.client.dom.XElement;
 import com.sencha.gxt.data.shared.loader.ListLoadResult;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -60,6 +61,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     private final IplantAnnouncer announcer;
     private SearchView.SearchViewAppearance appearance;
     private TagsView.TagSuggestionProxy proxy;
+    private TagsServiceFacade tagsService;
     private DateIntervalProvider dateIntervalProvider;
     private SearchAutoBeanFactory factory;
     private SearchModelUtils searchModelUtils;
@@ -75,6 +77,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
                             SearchView.SearchViewAppearance appearance,
                             SearchView view,
                             TagsView.TagSuggestionProxy proxy,
+                            TagsServiceFacade tagsService,
                             DateIntervalProvider dateIntervalProvider,
                             SearchAutoBeanFactory factory,
                             SearchModelUtils searchModelUtils) {
@@ -83,6 +86,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
         this.appearance = appearance;
         this.view = view;
         this.proxy = proxy;
+        this.tagsService = tagsService;
         this.dateIntervalProvider = dateIntervalProvider;
         this.factory = factory;
         this.searchModelUtils = searchModelUtils;
@@ -330,6 +334,24 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     public void onEditTagSelected(Tag tag) {
         GWT.log("Edit tag : " + tag);
     }
+
+    @Override
+    public void onAddTagSelected(String tagValue, TagCreateCallback addTagCallback) {
+        tagsService.createTag(tagValue.trim(), new AsyncCallback<Tag>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(Tag result) {
+                if (addTagCallback != null && result != null) {
+                    addTagCallback.createTag(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(result)));
+                }
+            }
+        });
+    }
+
 
     @Override
     public SearchView getSearchForm() {

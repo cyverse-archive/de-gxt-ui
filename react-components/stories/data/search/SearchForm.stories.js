@@ -24,6 +24,7 @@ class SearchFormTest extends React.Component {
 
         const presenter = {
             onSearchBtnClicked: searchLogger,
+            onAddTagSelected: editTagLogger,
             onEditTagSelected: editTagLogger,
             fetchTagSuggestions: suggestionsLogger,
             onSaveSearch: saveSearchLogger
