@@ -326,7 +326,6 @@ class BasicDetails extends Component {
                         onTagClick={this.handleTagClick}
                         handleTagSelect={this.handleTagSelect}
                     />
-                    <div>
                     <Dialog
                         open={this.state.md5open}
                         onClose={this.handleMd5Close}>
@@ -342,7 +341,6 @@ class BasicDetails extends Component {
                             </Button>
                         </DialogActions>
                     </Dialog>
-                    </div>
                 </div>
         );
     }
