@@ -31,15 +31,19 @@ class SearchFormTest extends React.Component {
 
         const suggestedTags = [
             {
+                id: 1,
                 value: 'apples'
             },
             {
+                id: 2,
                 value: 'oranges'
             },
             {
+                id: 3,
                 value: 'tangerines'
             },
             {
+                id: 4,
                 value: 'kiwis'
             }
         ];

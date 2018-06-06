@@ -210,7 +210,7 @@ public class DataSearchQueryBuilderv2 {
     }
 
     private Splittable tagsToSplittable(Set<Tag> tags) {
-        List<String> tagValues = tags.stream().map(Tag::getValue).collect(Collectors.toList());
+        List<String> tagValues = tags.stream().map(Tag::getId).collect(Collectors.toList());
 
         return listToSplittable(tagValues);
     }
