@@ -7,11 +7,6 @@ import CategoryTreeTest from '../../stories/apps/details/CategoryTree.stories';
 import ToolDetailsTest from '../../stories/apps/details/ToolDetails.stories';
 import CopyTextAreaTest from '../../stories/util/CopyTextArea.stories';
 import AppStatsTest from '../../stories/apps/admin/AppStats.stories';
-import { StyleSheetTestUtils } from 'aphrodite';
-
-beforeEach(() => {
-    StyleSheetTestUtils.suppressStyleInjection();
-});
 
 it('renders CopyTextArea without crashing', () => {
   const div = document.createElement('div');
@@ -37,7 +32,5 @@ it('renders ToolDetails without crashing', () => {
     ReactDOM.unmountComponentAtNode(div);
 });
 
-afterEach(() => {
-    StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
-});
+
 
