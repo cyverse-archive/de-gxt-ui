@@ -11,6 +11,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import {Field, Fields, reduxForm} from 'redux-form';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { injectIntl } from 'react-intl';
 import injectSheet from 'react-jss';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -66,7 +67,7 @@ class SearchForm extends Component {
     }
 
     render() {
-        let { classes, messages } = this.props;
+        let { classes, messages, intl } = this.props;
         let dateIntervals = this.props.dateIntervals;
         let dateIntervalChildren = dateIntervals.map(function (item, index) {
             return <MenuItem key={index} value={item}>{item.label}</MenuItem>
@@ -131,7 +132,7 @@ class SearchForm extends Component {
                             <Field name='ownedBy'
                                    id={ids.ownedBy}
                                    label={getMessage('ownedBy')}
-                                   helperText={getMessage('enterCyVerseUserName')}
+                                   placeholder={intl.formatMessage({id: 'enterCyVerseUserName'})}
                                    component={renderTextField}/>
                         </td>
                     </tr>
@@ -147,7 +148,7 @@ class SearchForm extends Component {
                             <Field name='sharedWith'
                                    id={ids.sharedWith}
                                    label={getMessage('sharedWith')}
-                                   helperText={getMessage('enterCyVerseUserName')}
+                                   placeholder={intl.formatMessage({id: 'enterCyVerseUserName'})}
                                    component={renderTextField}/>
                         </td>
                     </tr>
@@ -388,4 +389,4 @@ export default withStoreProvider(
         form: 'searchForm',
         enableReinitialize: true
     }
-)(injectSheet(styles)(withI18N(SearchForm, messages))));
+)(injectSheet(styles)(withI18N(injectIntl(SearchForm), messages))));
