@@ -158,15 +158,16 @@ class SearchForm extends Component {
                                 <tbody>
                                 <tr>
                                     <td style={{'width': '100%'}}>
-                                        <Field name='fileSizeGreater'
+                                        <Field name='fileSizeRange.min'
                                                type='number'
+                                               parse={value => value ? Number(value) : null}
                                                min='0'
                                                id={ids.fileSizeGreater}
                                                label={getMessage('fileSizeGreater')}
                                                component={renderTextField}/>
                                     </td>
                                     <td>
-                                        <Field name='fileSizeGreaterUnit'
+                                        <Field name='fileSizeRange.minUnit.label'
                                                id={ids.fileSizeGreaterUnit}
                                                label=' '
                                                component={renderDropDown}>
@@ -182,15 +183,16 @@ class SearchForm extends Component {
                                 <tbody>
                                 <tr>
                                     <td style={{'width': '100%'}}>
-                                        <Field name='fileSizeLessThan'
+                                        <Field name='fileSizeRange.max'
                                                type='number'
+                                               parse={value => value ? Number(value) : null}
                                                min='0'
                                                id={ids.fileSizeLessThan}
                                                label={getMessage('fileSizeLessThan')}
                                                component={renderTextField}/>
                                     </td>
                                     <td>
-                                        <Field name='fileSizeLessThanUnit'
+                                        <Field name='fileSizeRange.maxUnit.label'
                                                id={ids.fileSizeLessThanUnit}
                                                label=' '
                                                component={renderDropDown}>

@@ -2,6 +2,7 @@ package org.iplantc.de.client.services.impl;
 
 import org.iplantc.de.client.models.search.DateInterval;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
+import org.iplantc.de.client.models.search.FileSizeRange;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.tags.Tag;
 import org.iplantc.de.shared.DEProperties;
@@ -66,6 +67,7 @@ public class DataSearchQueryBuilderv2 {
     public static final String UNIT_EXACT = "unit_exact";
     public static final String METADATA_TYPES = "metadata_types";
     //Date ranges
+    public static final String SIZE = "size";
     public static final String FROM = "from";
     public static final String TO = "to";
     //Modified within
@@ -101,6 +103,7 @@ public class DataSearchQueryBuilderv2 {
                 .createdWithin()
                 .file()
                 .notFile()
+                .fileSizeRange()
                 .metadata()
                 .tags()
                 .includeTrash();
@@ -150,6 +153,31 @@ public class DataSearchQueryBuilderv2 {
             Splittable args = StringQuoter.createSplittable();
             assignKeyValue(args, LABEL, content);
             appendArrayItem(noneList, createTypeClause(LABEL, args));
+        }
+        return this;
+    }
+
+    /**
+     * {"type": "size", "args": {"from": "1KB", "to": "2KB"}}
+     */
+    public DataSearchQueryBuilderv2 fileSizeRange() {
+        FileSizeRange fileSizeRange = template.getFileSizeRange();
+        if (fileSizeRange != null) {
+            Double min = fileSizeRange.getMin();
+            Double max = fileSizeRange.getMax();
+            if (min != null || max != null) {
+                Splittable args = StringQuoter.createSplittable();
+                String from, to;
+                if (min != null) {
+                    from = min + fileSizeRange.getMinUnit().getLabel();
+                    assignKeyValue(args, FROM, from);
+                }
+                if (max != null) {
+                    to = max + fileSizeRange.getMaxUnit().getLabel();
+                    assignKeyValue(args, TO, to);
+                }
+                appendArrayItem(allList, createTypeClause(SIZE, args));
+            }
         }
         return this;
     }
