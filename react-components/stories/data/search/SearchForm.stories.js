@@ -4,19 +4,23 @@ import {SearchForm} from "../../../src/data/search";
 class SearchFormTest extends React.Component {
 
     render() {
-        const searchLogger = this.props.searchLogger || ((selection) => {
+        const searchLogger = this.props.logger('Search Submitted') || ((selection) => {
             console.log(selection);
         });
 
-        const editTagLogger = this.props.editTagLogger || ((selection) => {
+        const editTagLogger = this.props.logger('Edit Tag') || ((selection) => {
             console.log(selection);
         });
 
-        const suggestionsLogger = this.props.suggestionsLogger || ((selection) => {
+        const suggestionsLogger = this.props.logger('Fetch Suggestions') || ((selection) => {
             console.log(selection);
         });
 
-        const saveSearchLogger = this.props.saveSearchLogger || ((selection) => {
+        const saveSearchLogger = this.props.logger('Save Search') || ((selection) => {
+            console.log(selection);
+        });
+
+        const addTagLogger = this.props.logger('Add Tag') || ((selection) => {
             console.log(selection);
         });
 
@@ -24,7 +28,7 @@ class SearchFormTest extends React.Component {
 
         const presenter = {
             onSearchBtnClicked: searchLogger,
-            onAddTagSelected: editTagLogger,
+            onAddTagSelected: addTagLogger,
             onEditTagSelected: editTagLogger,
             fetchTagSuggestions: suggestionsLogger,
             onSaveSearch: saveSearchLogger

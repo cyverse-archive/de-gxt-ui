@@ -19,10 +19,7 @@ storiesOf('apps/details', module).add('ToolDetails', () => <ToolDetailsTest/>);
 
 storiesOf('data/BasicDetails', module).add('with test diskresource details', () => <BasicDetailsTest logger={action('details')}/>);
 storiesOf('data/InfoTypeSelectionList',module).add('with test diskresource details', () =>  <InfoTypeSelectionListTest logger={action('infoTypes')}/>);
-storiesOf('data/search', module).add('SearchForm', () => <SearchFormTest searchLogger={action('Search Submitted')}
-                                                                         saveSearchLogger={action('Save Search')}
-                                                                         editTagLogger={action('Edit Tag Selected')}
-                                                                         suggestionsLogger={action('Fetch Suggestions')}/>);
+storiesOf('data/search', module).add('SearchForm', () => <SearchFormTest logger={action}/>);
 storiesOf('data/search', module).add('SaveSearchButton', () => <SaveSearchButtonTest logger={action('Save Search')}/>);
 storiesOf('data/Tag', module).add('with test diskresource details', () => <TagTest logger={action('tag')}/>);
 storiesOf('data/TagPanel', module).add('with test diskresource details', () => <TagPanelTest logger={action('tagpanel')}/>);
