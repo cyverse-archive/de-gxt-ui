@@ -10,8 +10,10 @@ import TagTest from "./data/details/Tag.stories";
 import TagPanelTest from "./data/details/TagPanel.stories";
 import AppStatsTest from "./apps/admin/AppStats.stories";
 import DEHyperLinkTest from "./util/hyperlink/DEHyperLink.stories";
+import EditTagDialogTest from './data/search/EditTagDialog.stories';
 import SaveSearchButtonTest from './data/search/SaveSearchButton.stories'
 import SearchFormTest from "./data/search/SearchForm.stories";
+import SearchFormTagPanel from './data/search/SearchFormTagPanel.stories';
 
 storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);
@@ -19,8 +21,10 @@ storiesOf('apps/details', module).add('ToolDetails', () => <ToolDetailsTest/>);
 
 storiesOf('data/BasicDetails', module).add('with test diskresource details', () => <BasicDetailsTest logger={action('details')}/>);
 storiesOf('data/InfoTypeSelectionList',module).add('with test diskresource details', () =>  <InfoTypeSelectionListTest logger={action('infoTypes')}/>);
-storiesOf('data/search', module).add('SearchForm', () => <SearchFormTest logger={action}/>);
+storiesOf('data/search', module).add('EditTagDialog', () => <EditTagDialogTest logger={action}/>);
 storiesOf('data/search', module).add('SaveSearchButton', () => <SaveSearchButtonTest logger={action('Save Search')}/>);
+storiesOf('data/search', module).add('SearchForm', () => <SearchFormTest logger={action}/>);
+storiesOf('data/search', module).add('SearchFormTagPanel', () => <SearchFormTagPanel logger={action}/>);
 storiesOf('data/Tag', module).add('with test diskresource details', () => <TagTest logger={action('tag')}/>);
 storiesOf('data/TagPanel', module).add('with test diskresource details', () => <TagPanelTest logger={action('tagpanel')}/>);
 
