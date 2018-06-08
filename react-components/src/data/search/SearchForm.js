@@ -1,9 +1,8 @@
-import EditTagDialog from './EditTagDialog';
 import ids from './ids';
 import messages from './messages';
 import { SaveSearchButton } from '../search';
 import styles from './styles';
-import TagPanel from '../details/TagPanel';
+import SearchFormTagPanel from './SearchFormTagPanel';
 import withI18N, { getMessage } from "../../util/I18NWrapper";
 import withStoreProvider from "../../util/StoreProvider";
 
@@ -33,14 +32,6 @@ class SearchForm extends Component {
 
         this.handleSubmitForm = this.handleSubmitForm.bind(this);
         this.handleSaveSearch = this.handleSaveSearch.bind(this);
-
-        //Tags
-        this.onTagClicked = this.onTagClicked.bind(this);
-        this.fetchTagSuggestions = this.fetchTagSuggestions.bind(this);
-        this.onTagSelected = this.onTagSelected.bind(this);
-        this.appendTag = this.appendTag.bind(this);
-        this.saveTagDescription = this.saveTagDescription.bind(this);
-        this.closeEditTagDlg = this.closeEditTagDlg.bind(this);
     }
 
     handleSaveSearch(values) {
@@ -53,47 +44,8 @@ class SearchForm extends Component {
         this.props.presenter.onSearchBtnClicked(values);
     }
 
-    onTagClicked(tag) {
-        this.setState({
-            openEditTagDlg: true,
-            selectedTag: tag
-        })
-    }
-
-    saveTagDescription(tag) {
-        this.props.presenter.onEditTagSelected(tag);
-        this.setState({
-            openEditTagDlg: false,
-            selectedTag: null
-        });
-    }
-
-    closeEditTagDlg() {
-        this.setState({
-            openEditTagDlg: false,
-            selectedTag: null
-        })
-    }
-
-    fetchTagSuggestions(search) {
-        this.props.presenter.fetchTagSuggestions(search);
-    }
-
-    onTagSelected(tag, array, taggedWith) {
-        if (tag.id !== tag.value) {
-            this.appendTag(tag, array, taggedWith);
-        } else {
-            this.props.presenter.onAddTagSelected(tag.value, (newTag) => this.appendTag(newTag, array, taggedWith));
-        }
-    }
-
-    appendTag(tag, array, taggedWith) {
-        array.insert('tagQuery', 0, tag);
-        taggedWith.input.onChange('');
-    }
-
     render() {
-        let { classes, messages, intl } = this.props;
+        let { classes, messages, intl, presenter } = this.props;
         let dateIntervals = this.props.dateIntervals;
         let dateIntervalChildren = dateIntervals.map(function (item, index) {
             return <MenuItem key={index} value={item}>{item.label}</MenuItem>
@@ -108,8 +60,6 @@ class SearchForm extends Component {
 
         // From redux
         let { handleSubmit, array, initialized, pristine } = this.props;
-
-        let { selectedTag, openEditTagDlg } = this.state;
 
         return (
             <form id={ids.form}>
@@ -239,16 +189,10 @@ class SearchForm extends Component {
                             <Fields names={['taggedWith', 'tagQuery']}
                                     parentId={ids.form}
                                     placeholder={getMessage('taggedWith')}
-                                    onTagClick={this.onTagClicked}
-                                    handleTagSearch={this.fetchTagSuggestions}
-                                    handleTagSelect={this.onTagSelected}
                                     dataSource={suggestedTags}
                                     array={array}
+                                    presenter={presenter}
                                     component={renderTagSearchField}/>
-                            <EditTagDialog open={openEditTagDlg}
-                                           tag={selectedTag}
-                                           handleSave={this.saveTagDescription}
-                                           handleClose={this.closeEditTagDlg}/>
                         </td>
                         <td>
                             <Field name='includeTrashItems'
@@ -256,7 +200,6 @@ class SearchForm extends Component {
                                    label={getMessage('includeTrash')}
                                    component={renderCheckBox}/>
                         </td>
-
                     </tr>
 
                     <tr>
@@ -347,15 +290,18 @@ function renderTagSearchField(props) {
         tagQuery,
         array,
         parentId,
-        handleTagSelect,
-        ...custom
+        placeholder,
+        presenter,
+        dataSource
     } = props;
     return (
-        <TagPanel baseID={parentId}
-                  handleRemoveClick={(tag, index) => array.remove('tagQuery', index)}
-                  handleTagSelect={(tag) => handleTagSelect(tag, array, taggedWith)}
-                  tags={tagQuery.input.value ? tagQuery.input.value : []}
-                  {...custom}/>
+        <SearchFormTagPanel parentId={parentId}
+                            placeholder={placeholder}
+                            presenter={presenter}
+                            dataSource={dataSource}
+                            array={array}
+                            tagQuery={tagQuery}
+                            taggedWith={taggedWith}/>
     )
 }
 
