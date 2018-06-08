@@ -21,7 +21,6 @@ export default ({
     EMPTY_NOTIFICATION: "emptyNotification",
     MARK_ALL_SEEN: "markAllSeenLink",
     SEE_ALL_NOTIFICATIONS: "seeAllNotificationsLink",
-    RETRY_NOTIFICATIONS: "retryNotifications",
     RETRY_BTN: "retryBtn",
     NOTIFICATION_LIST: "notificationList",
     NEW_NOTIFICATIONS: "newNotificationsLink",

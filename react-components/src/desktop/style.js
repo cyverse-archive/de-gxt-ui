@@ -123,7 +123,7 @@ export default {
     },
 
     notificationMenuPosition: {
-        top: '55px',
+        top: '60px',
         right: '150px',
         position: 'absolute',
     },
@@ -197,6 +197,27 @@ export default {
         bottom: 0,
         minHeight: 30,
         backgroundColor: '#e2e2e2',
-    }
+    },
+
+    errorRetryButton: {
+        backgroundColor: '#e2e2e2',
+        position: 'relative',
+        left: 50,
+        '&:hover': {
+            backgroundColor: '#0971ab',
+        },
+    },
+
+    notificationError: {
+        marginBottom: 10,
+        fontSize: 10
+    },
+
+    loadingStyle: {
+        outline: 'none',
+        position: 'absolute',
+        left: 50,
+        color: '#DB6619',
+    },
 
 };

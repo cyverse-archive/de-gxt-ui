@@ -36,6 +36,7 @@ storiesOf('data/TagPanel', module).add('with test diskresource details', () => <
 
 storiesOf('util', module).add('Autocomplete', () => <AutocompleteTest selectOptionLogger={action('Selected Option')}/>);
 storiesOf('desktop/view', module).add("with test desktop view", () => <DesktopViewTest/>);
+storiesOf('desktop/view', module).add("with test desktop view", () => <DesktopViewTest logger={action('desktop')}/>);
 storiesOf('desktop/view', module).add("with test desktop taskbutton", () => <TaskButtonTest/>);
 storiesOf('desktop/view', module).add("with test desktop taskbar", () => <TaskbarTest/>);
 

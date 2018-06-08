@@ -66,6 +66,11 @@ public class DesktopViewImpl implements DesktopView {
 
     @Override
     public void renderView(Map<Splittable, WindowBase> windowConfigMap) {
+         renderView(false, windowConfigMap);
+    }
+
+    @Override
+    public void renderView(boolean newUser, Map<Splittable, WindowBase> windowConfigMap) {
         Scheduler.get().scheduleFinally(()-> {
             Splittable[] sp = new Splittable[windowConfigMap.size()];
             Iterator it = windowConfigMap.keySet().iterator();
@@ -79,12 +84,12 @@ public class DesktopViewImpl implements DesktopView {
             props.messageServiceFacade = DesktopViewImpl.this.messageServiceFacade;
             props.windowConfigList = sp;
             props.desktopContainerId = DESKTOP_CONTAINER;
+            props.isNewUser = newUser;
 
             CyVerseReactComponents.render(ReactDesktop.desktopProps, props, panel.getElement());
             presenter.setDesktopContainer(getDesktopContainer());
         });
     }
-
 
     void onFeedbackBtnSelect() {
         deFeedbackDialogProvider.get(new AsyncCallback<DEFeedbackDialog>() {

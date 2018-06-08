@@ -4,7 +4,6 @@
 import React, {Component} from "react";
 import Button from "@material-ui/core/Button";
 import styles from "../style";
-import injectSheet from "react-jss";
 import {withStyles} from "@material-ui/core/styles";
 
 class TaskButton extends Component {

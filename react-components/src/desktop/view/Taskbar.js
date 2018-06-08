@@ -9,10 +9,6 @@ import {withStyles} from "@material-ui/core/styles";
 
 
 class Taskbar extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const {windows, classes} = this.props;
         return (

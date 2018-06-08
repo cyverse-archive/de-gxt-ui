@@ -26,6 +26,7 @@ public class ReactDesktop {
         MessageServiceFacade messageServiceFacade;
         Splittable[] windowConfigList;
         String desktopContainerId;
+        boolean isNewUser;
     }
 
 }

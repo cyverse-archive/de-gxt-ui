@@ -249,7 +249,7 @@ public interface DesktopView extends IsWidget {
 
         void doSeeNewNotifications();
 
-        void getNotifications(NotificationsCallback callback);
+        void getNotifications(NotificationsCallback callback, ErrorCallback errorCallback);
     }
 
 
@@ -264,5 +264,9 @@ public interface DesktopView extends IsWidget {
 
     @JsIgnore
     void renderView(Map<Splittable, WindowBase> windowConfigMap);
+
+    @JsIgnore
+    void renderView(boolean newUser, Map<Splittable, WindowBase> windowConfigMap);
 }
+
 

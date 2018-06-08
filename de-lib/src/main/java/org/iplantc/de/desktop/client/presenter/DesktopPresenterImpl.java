@@ -3,7 +3,6 @@ package org.iplantc.de.desktop.client.presenter;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasPath;
-import org.iplantc.de.client.models.HasUUIDs;
 import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.QualifiedId;
 import org.iplantc.de.client.models.UserInfo;
@@ -40,6 +39,7 @@ import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConf
 import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
+import org.iplantc.de.desktop.client.events.WindowHeadingUpdatedEvent;
 import org.iplantc.de.desktop.client.presenter.callbacks.NotificationMarkAsSeenCallback;
 import org.iplantc.de.desktop.client.presenter.util.MessagePoller;
 import org.iplantc.de.desktop.client.presenter.util.NotificationWebSocketManager;
@@ -126,6 +126,15 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
         String DATA = "data";
     }
 
+    private class HeadingUpdatedEventHandler
+            implements WindowHeadingUpdatedEvent.WindowHeadingUpdatedEventHandler {
+        @Override
+        public void onWindowHeadingUpdated(WindowHeadingUpdatedEvent event) {
+            DesktopPresenterImpl.this.buildWindowConfigList();
+            DesktopPresenterImpl.this.view.renderView(windowConfigMap);
+        }
+    }
+
     final DesktopWindowManager desktopWindowManager;
     @Inject IplantAnnouncer announcer;
     @Inject CommonUiConstants commonUiConstants;
@@ -193,6 +202,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
     public void onRegister(RegisterEvent<Widget> event) {
         if (event.getItem() instanceof WindowInterface) {
             WindowBase wb = (WindowBase)event.getItem();
+            wb.asWidget().addHandler(new HeadingUpdatedEventHandler(), WindowHeadingUpdatedEvent.TYPE);
             buildWindowConfigList();
             view.renderView(windowConfigMap);
         }
@@ -254,13 +264,13 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
         }
     }
 
-    public static native void doIntro() /*-{
+/*    public static native void doIntro() *//*-{
 		var introjs = $wnd.introJs();
 		introjs.setOption("showStepNumbers", false);
 		introjs.setOption("skipLabel", "Exit");
 		introjs.setOption("overlayOpacity",0);
 		introjs.start();
-    }-*/;
+    }-*//*;*/
 
    @Override
     public void doLogout(boolean sessionTimeout) {
@@ -498,11 +508,13 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
         });
     }
 
+    //TODO: SS Port this over to React Desktop. For now the Join Team Notification will remain in
+    // Notifications List. I confirmed with Sarah that Join team operation is idempotent.
     @Override
     public void onJoinTeamRequestProcessed(NotificationMessage message) {
-    //    view.getNotificationStore().remove(message);
+    /*   view.getNotificationStore().remove(message);
         //If the notifications window is open, the NotificationPresenter will handle this
-        if (!desktopWindowManager.isOpen(WindowType.NOTIFICATIONS)) {
+         if (!desktopWindowManager.isOpen(WindowType.NOTIFICATIONS)) {
             HasUUIDs hasUUIDs = notificationFactory.getHasUUIDs().as();
             hasUUIDs.setUUIDs(Lists.newArrayList(message.getId()));
             messageServiceFacade.deleteMessages(hasUUIDs, new NotificationCallback<String>() {
@@ -516,7 +528,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
                     //do nothing intentionally
                 }
             });
-        }
+        }*/
     }
 
     @Override
@@ -535,7 +547,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
 
     @Override
     public void onIntroClick() {
-        doIntro();
+      view.renderView(true, windowConfigMap);
     }
 
     @Override
@@ -644,8 +656,13 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
     }
 
     @Override
-    public void getNotifications(NotificationsCallback callback) {
-        messageServiceFacade.getRecentMessages(new InitializationCallbacks.GetInitialNotificationsCallback(view, appearance, announcer, callback));
+    public void getNotifications(NotificationsCallback callback, ErrorCallback errorCallback) {
+        messageServiceFacade.getRecentMessages(new InitializationCallbacks.GetInitialNotificationsCallback(
+                view,
+                appearance,
+                announcer,
+                callback,
+                errorCallback));
     }
 
     @Override
@@ -796,4 +813,6 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
     public void setUserSessionConnection(boolean connected) {
         userSettings.setUserSessionConnection(connected);
     }
+
 }
+

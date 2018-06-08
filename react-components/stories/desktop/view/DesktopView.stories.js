@@ -8,6 +8,7 @@ import DesktopView from "../../../src/desktop/view/DesktopView";
 
 class DesktopViewTest extends  Component {
     render() {
+        const logger = this.props.logger;
         const windowConfigs = [{
             "tag": "0",
             "type": "DATA",
@@ -414,8 +415,14 @@ class DesktopViewTest extends  Component {
         };
         const presenter = {
             getNotifications: (resultCallback) => {
-                resultCallback(notifications)
+                logger("getNotifications");
+                resultCallback(notifications);
             },
+            doSeeNewNotifications: () => logger("New Notifications"),
+            doSeeAllNotifications: () => logger("All Notifications"),
+            doMarkAllSeen: () => logger("Mark all as seen"),
+            onTaskButtonClicked: () => logger("Task Button Clicked"),
+            onNotificationSelected: () => logger("Notification Selected"),
         };
         return (
             <DesktopView presenter={presenter} windowConfigList={windowConfigs}/>
