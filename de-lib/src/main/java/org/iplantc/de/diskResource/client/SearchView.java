@@ -152,7 +152,8 @@ public interface SearchView extends IsWidget,
 
         void onSearchBtnClicked(Splittable query);
 
-        void onEditTagSelected(Tag tag);
+        @SuppressWarnings("unusable-by-js")
+        void onEditTagSelected(Splittable tag);
 
         void onAddTagSelected(String tagValue, TagCreateCallback addTagCallback);
 

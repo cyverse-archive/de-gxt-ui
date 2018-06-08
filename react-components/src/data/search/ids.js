@@ -19,5 +19,9 @@ export default {
     saveSearchDlg: 'saveSearchDlg',
     saveBtn: 'saveSearchDlg.saveBtn',
     cancelBtn: 'saveSearchDlg.cancelBtn',
-    saveTextField: 'saveSearchDlg.input'
+    saveTextField: 'saveSearchDlg.input',
+    editTagDlg: 'editTagDlg',
+    editTagInput: 'editTagDlg.input',
+    editTagSave: 'editTagDlg.saveBtn',
+    editTagCancel: 'editTagDlg.cancelBtn'
 };

@@ -331,8 +331,18 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     }
 
     @Override
-    public void onEditTagSelected(Tag tag) {
-        GWT.log("Edit tag : " + tag);
+    @SuppressWarnings("unusable-by-js")
+    public void onEditTagSelected(Splittable splTag) {
+        Tag tag = AutoBeanCodex.decode(factory, Tag.class, splTag.getPayload()).as();
+        tagsService.updateTagDescription(tag, new AsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(Void result) {}
+        });
     }
 
     @Override

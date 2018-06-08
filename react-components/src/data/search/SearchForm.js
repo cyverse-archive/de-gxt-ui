@@ -1,3 +1,4 @@
+import EditTagDialog from './EditTagDialog';
 import ids from './ids';
 import messages from './messages';
 import { SaveSearchButton } from '../search';
@@ -25,14 +26,21 @@ class SearchForm extends Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            openEditTagDlg: false,
+            selectedTag: null
+        };
+
         this.handleSubmitForm = this.handleSubmitForm.bind(this);
         this.handleSaveSearch = this.handleSaveSearch.bind(this);
 
         //Tags
-        this.onEditTagSelected = this.onEditTagSelected.bind(this);
+        this.onTagClicked = this.onTagClicked.bind(this);
         this.fetchTagSuggestions = this.fetchTagSuggestions.bind(this);
         this.onTagSelected = this.onTagSelected.bind(this);
         this.appendTag = this.appendTag.bind(this);
+        this.saveTagDescription = this.saveTagDescription.bind(this);
+        this.closeEditTagDlg = this.closeEditTagDlg.bind(this);
     }
 
     handleSaveSearch(values) {
@@ -45,8 +53,26 @@ class SearchForm extends Component {
         this.props.presenter.onSearchBtnClicked(values);
     }
 
-    onEditTagSelected(tag) {
+    onTagClicked(tag) {
+        this.setState({
+            openEditTagDlg: true,
+            selectedTag: tag
+        })
+    }
+
+    saveTagDescription(tag) {
         this.props.presenter.onEditTagSelected(tag);
+        this.setState({
+            openEditTagDlg: false,
+            selectedTag: null
+        });
+    }
+
+    closeEditTagDlg() {
+        this.setState({
+            openEditTagDlg: false,
+            selectedTag: null
+        })
     }
 
     fetchTagSuggestions(search) {
@@ -82,6 +108,8 @@ class SearchForm extends Component {
 
         // From redux
         let { handleSubmit, array, initialized, pristine } = this.props;
+
+        let { selectedTag, openEditTagDlg } = this.state;
 
         return (
             <form id={ids.form}>
@@ -211,12 +239,16 @@ class SearchForm extends Component {
                             <Fields names={['taggedWith', 'tagQuery']}
                                     parentId={ids.form}
                                     placeholder={getMessage('taggedWith')}
-                                    onTagClick={this.onEditTagSelected}
+                                    onTagClick={this.onTagClicked}
                                     handleTagSearch={this.fetchTagSuggestions}
                                     handleTagSelect={this.onTagSelected}
                                     dataSource={suggestedTags}
                                     array={array}
                                     component={renderTagSearchField}/>
+                            <EditTagDialog open={openEditTagDlg}
+                                           tag={selectedTag}
+                                           handleSave={this.saveTagDescription}
+                                           handleClose={this.closeEditTagDlg}/>
                         </td>
                         <td>
                             <Field name='includeTrashItems'

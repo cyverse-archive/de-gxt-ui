@@ -3,6 +3,8 @@ export default {
     messages: {
         cancelBtn: 'Cancel',
         createdWithin: 'Created within',
+        description: 'Description',
+        editTagDescription: 'Edit Tag Description',
         emptyDropDownText: '---',
         enterCyVerseUserName: 'Enter CyVerse user name',
         emptyText: 'Enter values...',
