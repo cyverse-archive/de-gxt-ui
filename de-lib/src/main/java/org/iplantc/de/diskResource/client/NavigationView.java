@@ -24,7 +24,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 
 import com.sencha.gxt.data.shared.IconProvider;
 import com.sencha.gxt.data.shared.loader.BeforeLoadEvent;
-import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 import com.sencha.gxt.widget.core.client.tree.TreeStyle;
 import com.sencha.gxt.widget.core.client.tree.TreeView;

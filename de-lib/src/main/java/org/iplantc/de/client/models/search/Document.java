@@ -1,6 +1,4 @@
-package org.iplantc.de.client.models.querydsl;
-
-import org.iplantc.de.client.models.sharing.PermissionValue;
+package org.iplantc.de.client.models.search;
 
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 import com.google.web.bindery.autobean.shared.Splittable;

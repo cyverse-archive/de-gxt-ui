@@ -1,21 +1,15 @@
-package org.iplantc.de.diskResource.client.views.search;
+package org.iplantc.de.diskResource.client.views.search.cells;
 
-import org.iplantc.de.client.models.tags.Tag;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import org.iplantc.de.diskResource.client.SearchView;
-import org.iplantc.de.diskResource.client.events.search.FetchTagSuggestions;
-import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent;
-import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
+import org.iplantc.de.diskResource.client.views.search.ReactSearchForm;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.core.client.dom.XElement;
@@ -28,14 +22,14 @@ import com.sencha.gxt.widget.core.client.event.ShowEvent;
 /**
  * A form the user can fill out to perform advanced searches in the Data window which utilize the search service
  */
-public class SearchViewImpl extends Composite implements SearchView {
+public class DiskResourceQueryForm extends Composite implements SearchView {
 
     private VerticalLayoutContainer con;
     private final BaseEventPreview eventPreview;
     private boolean showing = false;
 
     @Inject
-    public SearchViewImpl() {
+    public DiskResourceQueryForm() {
         this.con = new VerticalLayoutContainer();
         initWidget(con);
         con.getElement().getStyle().setBackgroundColor("#fff");
@@ -45,7 +39,7 @@ public class SearchViewImpl extends Composite implements SearchView {
 
             @Override
             protected boolean onPreview(Event.NativePreviewEvent pe) {
-                SearchViewImpl.this.onPreviewEvent(pe);
+                DiskResourceQueryForm.this.onPreviewEvent(pe);
                 return super.onPreview(pe);
             }
 
@@ -130,10 +124,4 @@ public class SearchViewImpl extends Composite implements SearchView {
                 }
         }
     }
-
-    @Override
-    public void clearSearch() {
-        GWT.log("CLEAR SEARCH...");
-    }
-
 }

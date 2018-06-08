@@ -17,7 +17,6 @@ import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorCode;
-import org.iplantc.de.client.models.querydsl.QueryAutoBeanFactory;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.client.models.sharing.PermissionValue;
@@ -25,6 +24,7 @@ import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.comments.view.dialogs.CommentsDialog;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -193,6 +193,7 @@ public class GridViewPresenterImpl implements Presenter,
     @Inject DiskResourceErrorAutoBeanFactory drErrorFactory;
     @Inject DiskResourceAutoBeanFactory factory;
     @Inject SearchAutoBeanFactory searchFactory;
+    @Inject SearchModelUtils searchModelUtils;
     @Inject AsyncProviderWrapper<MetadataCopyDialog> copyMetadataDlgProvider;
     @Inject AsyncProviderWrapper<Md5DisplayDialog> md5DisplayDlgProvider;
     @Inject AsyncProviderWrapper<SelectMetadataTemplateDialog> selectMetaTemplateDlgProvider;
@@ -200,7 +201,6 @@ public class GridViewPresenterImpl implements Presenter,
     @Inject AsyncProviderWrapper<MetadataTemplateDescDlg> metadataTemplateDescDlgProvider;
 
     @Inject MetadataView.Presenter.Appearance metadataAppearance;
-    @Inject QueryAutoBeanFactory queryFactory;
 
     @Inject DataLinkFactory dlFactory;
     @Inject
@@ -268,7 +268,7 @@ public class GridViewPresenterImpl implements Presenter,
     public void doSubmitDiskResourceQuery(SubmitDiskResourceQueryEvent event) {
         Splittable splittable = event.getQueryTemplate();
 
-        DiskResourceQueryTemplate folder = AutoBeanCodex.decode(searchFactory, DiskResourceQueryTemplate.class, splittable.getPayload()).as();
+        DiskResourceQueryTemplate folder = searchModelUtils.convertSplittableToTemplate(splittable);
         doFolderSelected(folder);
     }
 

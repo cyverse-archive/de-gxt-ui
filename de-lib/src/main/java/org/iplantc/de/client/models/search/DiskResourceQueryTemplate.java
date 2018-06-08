@@ -5,7 +5,6 @@ import org.iplantc.de.client.models.tags.Tag;
 
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -119,24 +118,9 @@ public interface DiskResourceQueryTemplate extends Folder {
 
     void setSharedWith(String sharedWith);
 
-    int getFileSizeGreater();
-    void setFileSizeGreater(int size);
-
-    String getFileSizeGreaterUnit();
-    void setFileSizeGreaterUnit(String unit);
-
-    int getFileSizeLessThan();
-    void setFileSizeLessThan(int size);
-
-    String getFileSizeLessThanUnit();
-    void setFileSizeLessThanUnit(String unit);
-
     String getPathPrefix();
     void setPathPrefix(String pathPrefix);
 
     Boolean isPermissionRecurse();
     void setPermissionRecurse(Boolean permissionRecurse);
-
-    List<String> getPermissionUsers();
-    void setPermissionUsers(List<String> permissionUsers);
 }

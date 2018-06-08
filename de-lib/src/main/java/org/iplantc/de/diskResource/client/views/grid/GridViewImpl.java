@@ -15,7 +15,6 @@ import org.iplantc.de.diskResource.client.events.DiskResourcePathSelectedEvent;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
-import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSelected;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsLoadConfig;
 
 import com.google.common.base.Preconditions;
@@ -222,12 +221,7 @@ public class GridViewImpl extends ContentPanel implements GridView,
         Preconditions.checkNotNull(event.getQueryTemplate());
         reconfigureToSearchView();
     }
-
-    @Override
-    public void onQueryDSLSearchBtnSelected(QueryDSLSearchBtnSelected event) {
-        Preconditions.checkNotNull(event.getTemplate());
-        reconfigureToSearchView();
-    }
+    //</editor-fold>
 
     @Override
     public Element findGridRow(Element eventTargetElement) {

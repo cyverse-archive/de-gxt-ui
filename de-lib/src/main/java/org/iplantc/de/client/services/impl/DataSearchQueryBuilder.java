@@ -1,480 +1,404 @@
 package org.iplantc.de.client.services.impl;
 
-import org.iplantc.de.client.models.UserInfo;
+import org.iplantc.de.client.models.search.DateInterval;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.FileSizeRange;
+import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.tags.Tag;
-import org.iplantc.de.client.util.SearchModelUtils;
+import org.iplantc.de.shared.DEProperties;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
-import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
+ *
  * This class uses a builder pattern to construct a search query from a given query template.
  *
  * If a field in the given query template is null or empty, the corresponding search term will be omitted
  * from the final query.
  *
- * @author jstroot
+ * @author aramsey
  */
 @SuppressWarnings("nls")
 public class DataSearchQueryBuilder {
 
-    public static final String METADATA_VALUE = "metadata.value";
-    public static final String METADATA_ATTRIBUTE = "metadata.attribute";
-    public static final String FIELDS = "fields";
-    public static final String QUERY_STRING = "query_string";
-    public static final String LESSER = "lte";
-    public static final String GREATER = "gte";
-    public static final String RANGE2 = "range";
-    public static final String WILDCARD = "wildcard";
-    public static final String OR_OPERATOR = " OR ";
-    public static final String DATE_MODIFIED = "dateModified";
-    public static final String QUERY2 = "query";
-    public static final String PATH = "path";
-    public static final String METADATA2 = "metadata";
-    public static final String NESTED2 = "nested";
-    public static final String HAS_CHILD = "has_child";
-    public static final String FILE_SIZE = "fileSize";
+    // QUERY BUILDING BLOCKS
+    public static final String ALL = "all";
+    public static final String ANY = "any";
+    public static final String NONE = "none";
+
+    public static final String TYPE = "type";
+    public static final String ARGS = "args";
+    public static final String QUERY = "query";
+    public static final String EXACT = "exact";
+
+
+    // CLAUSES
+
+    //Label
     public static final String LABEL = "label";
-    public static final String DATE_CREATED = "dateCreated";
-    public static final String BOOL = "bool";
+    //Path
+    public static final String PATH = "path";
+    public static final String PREFIX = "prefix";
+    //Owner
+    public static final String OWNER = "owner";
+    //Permissions
+    public static final String PERMISSIONS = "permissions";
+    public static final String PERMISSION = "permission";
+    public static final String PERMISSION_RECURSE = "permission_recurse";
+    public static final String SHARED_WITH = "users";
+    //Tag
+    public static final String TAG = "tag";
+    public static final String TAGS = "tags";
+    //Metadata
+    public static final String METADATA = "metadata";
+    public static final String ATTRIBUTE = "attribute";
+    public static final String ATTRIBUTE_EXACT = "attribute_exact";
+    public static final String VALUE = "value";
+    public static final String VALUE_EXACT = "value_exact";
+    public static final String UNIT = "unit";
+    public static final String UNIT_EXACT = "unit_exact";
+    public static final String METADATA_TYPES = "metadata_types";
+    //Date ranges
+    public static final String SIZE = "size";
+    public static final String FROM = "from";
+    public static final String TO = "to";
+    //Modified within
+    public static final String MODIFIED = "modified";
+    //Created within
+    public static final String CREATED = "created";
 
-    private final DiskResourceQueryTemplate dsf;
-    private final UserInfo userinfo;
-    private final Splittable mustList;
-    private final Splittable mustNotList;
-    private final SearchModelUtils searchModelUtils;
 
-    Splittable query = StringQuoter.createSplittable();
-    Splittable bool = addChild(query, BOOL);
+    private final DiskResourceQueryTemplate template;
+    private final Splittable allList;
+    private final Splittable anyList;
+    private final Splittable noneList;
 
     Logger LOG = Logger.getLogger(DataSearchQueryBuilder.class.getName());
 
-    public DataSearchQueryBuilder(DiskResourceQueryTemplate dsf, UserInfo userinfo) {
-        this.dsf = dsf;
-        this.userinfo = userinfo;
-        this.searchModelUtils = SearchModelUtils.getInstance();
-        mustList = StringQuoter.createIndexed();
-        mustNotList = StringQuoter.createIndexed();
+    public DataSearchQueryBuilder(DiskResourceQueryTemplate template) {
+        this.template = template;
+        allList = StringQuoter.createIndexed();
+        anyList = StringQuoter.createIndexed();
+        noneList = StringQuoter.createIndexed();
     }
 
     public String buildFullQuery() {
-        ownedBy().createdWithin()
-                 .file()
-                 .fileSizeRange()
-                 .metadataAttribute()
-                 .metadataValue()
-                 .modifiedWithin()
-                 .negatedFile()
-                 .sharedWith()
-                 .taggedWith();
 
-        LOG.fine("search query==>" + toString());
+        LOG.fine("search query==>" + toString(getFullQuery()));
         return toString();
     }
 
-    public String taggedWith() {
-        Set<Tag> tags = dsf.getTagQuery();
+    public Splittable getFullQuery() {
+        ownedBy()
+                .sharedWith()
+                .modifiedWithin()
+                .createdWithin()
+                .file()
+                .notFile()
+                .fileSizeRange()
+                .metadata()
+                .tags()
+                .includeTrash();
 
-        if (tags == null) {
-            return "";
-        }
+        Splittable query = StringQuoter.createSplittable();
 
-        StringBuilder sb = new StringBuilder();
-        for (Tag it : tags) {
-            sb.append(it.getId());
-            sb.append(",");
-        }
+        Splittable operators = StringQuoter.createSplittable();
+        assignKeyValue(operators, NONE, noneList);
+        assignKeyValue(operators, ALL, allList);
+        assignKeyValue(operators, ANY, anyList);
 
-        // delete last comma
-        if (sb.length() > 0) {
-            sb.deleteCharAt(sb.length() - 1);
-        }
-        return sb.toString();
+        assignKeyValue(query, QUERY, operators);
 
+        return query;
     }
 
     /**
-     * {"nested":{"path":"userPermissions", "query":{"bool":{"must":[{"term":{"permission":"own"}},
-     * {"wildcard":{"user":(some query)}}]}}}}
+     * {"type": "owner", "args": {"owner": "ipcdev"}}
      */
     public DataSearchQueryBuilder ownedBy() {
-        String queryContent = dsf.getOwnedBy();
+        String queryContent = template.getOwnedBy();
         if (!Strings.isNullOrEmpty(queryContent)) {
-            appendArrayItem(mustList, createOwnerQuery(queryContent));
+            appendArrayItem(allList, createTypeClause(OWNER, OWNER, queryContent));
         }
         return this;
     }
 
     /**
-     * {"range": {"dateModified": {"gte":(some query),"lte":(some query)}}}
-     */
-    public DataSearchQueryBuilder createdWithin() {
-        if ((dsf.getCreatedWithin() != null)) {
-            Date dateFrom = dsf.getCreatedWithin().getFrom();
-            Date dateTo = dsf.getCreatedWithin().getTo();
-            if ((dateFrom != null) && (dateTo != null)) {
-                // {"range": {"dateCreated": {"gte":"1380559151000","lte":"1390511909000"}}}
-                Splittable range = createRangeQuery(DATE_CREATED, dateFrom.getTime(), dateTo.getTime());
-                appendArrayItem(mustList, range);
-            } else if (dateFrom != null) {
-                // {"range": {"dateModified": {"gte":"1380559151000"}}}
-                Splittable range = createMinRangeQuery(DATE_CREATED, dateFrom.getTime());
-                appendArrayItem(mustList, range);
-            } else if (dateTo != null) {
-                // {"range": {"dateModified": {"lte":"1390511909000"}}}
-                Splittable range = createMaxRangeQuery(DATE_CREATED, dateTo.getTime());
-                appendArrayItem(mustList, range);
-            }
-        }
-        return this;
-    }
-
-    /**
-     * {"wildcard":{"label":(some query)}}
+     * {"type": "label", "args": {"label": "some_random_file_name", "exact": true}}
      */
     public DataSearchQueryBuilder file() {
-        String content = dsf.getFileQuery();
+        String content = template.getFileQuery();
         if (!Strings.isNullOrEmpty(content)) {
-            /*
-             * { "simple_query_string": { "query": "*test*|*csv*", "fields": [ "label" ] } }
-             */
-            appendArrayItem(mustList, getSimpleQuery(LABEL, content));
+            Splittable args = StringQuoter.createSplittable();
+            assignKeyValue(args, LABEL, content);
+            appendArrayItem(allList, createTypeClause(LABEL, args));
         }
         return this;
     }
 
     /**
-     * {"range": {"fileSize": {"gte":(some query),"lte":(some query)}}}
+     * {"type": "label", "args": {"label": "some_random_file_name", "exact": true}}
+     */
+    public DataSearchQueryBuilder notFile() {
+        String content = template.getNegatedFileQuery();
+        if (!Strings.isNullOrEmpty(content)) {
+            Splittable args = StringQuoter.createSplittable();
+            assignKeyValue(args, LABEL, content);
+            appendArrayItem(noneList, createTypeClause(LABEL, args));
+        }
+        return this;
+    }
+
+    /**
+     * {"type": "size", "args": {"from": "1KB", "to": "2KB"}}
      */
     public DataSearchQueryBuilder fileSizeRange() {
-        FileSizeRange fileSizeRange = dsf.getFileSizeRange();
+        FileSizeRange fileSizeRange = template.getFileSizeRange();
         if (fileSizeRange != null) {
-            Double minSize = searchModelUtils.convertFileSizeToBytes(fileSizeRange.getMin(),
-                                                                     fileSizeRange.getMinUnit());
-            Double maxSize = searchModelUtils.convertFileSizeToBytes(fileSizeRange.getMax(),
-                                                                     fileSizeRange.getMaxUnit());
-
-            if ((minSize != null) && (maxSize != null)) {
-                // {"range": {"fileSize": {"gte":"1000","lte":"100000"}}}
-                appendArrayItem(mustList,
-                                createRangeQuery(FILE_SIZE, minSize.longValue(), maxSize.longValue()));
-            } else if (minSize != null) {
-                // {"range": {"fileSize": {"gte":"1000"}}}
-                Splittable range = createMinRangeQuery(FILE_SIZE, minSize.longValue());
-                appendArrayItem(mustList, range);
-            } else if (maxSize != null) {
-                // {"range": {"fileSize": {"lte":"100000"}}}
-                Splittable range = createMaxRangeQuery(FILE_SIZE, maxSize.longValue());
-                appendArrayItem(mustList, range);
+            Double min = fileSizeRange.getMin();
+            Double max = fileSizeRange.getMax();
+            if (min != null || max != null) {
+                Splittable args = StringQuoter.createSplittable();
+                String from, to;
+                if (min != null) {
+                    from = min + fileSizeRange.getMinUnit().getLabel();
+                    assignKeyValue(args, FROM, from);
+                }
+                if (max != null) {
+                    to = max + fileSizeRange.getMaxUnit().getLabel();
+                    assignKeyValue(args, TO, to);
+                }
+                appendArrayItem(allList, createTypeClause(SIZE, args));
             }
         }
         return this;
     }
 
     /**
-     * @return the currently constructed query.
+     * {"type": "path", "args": {"prefix": "/iplant/home"}}
      */
-    public String getQuery() {
-        return toString();
-    }
+    public DataSearchQueryBuilder includeTrash() {
+        boolean include = template.isIncludeTrashItems();
+        DEProperties props = DEProperties.getInstance();
 
-    private Splittable metadataNested(String content, String field) {
-        // {"nested":{"path":"metadata","query":{"query_string":{"query":"*ipc* OR *attrib*","fields":["metadata.attribute"]}}}}
-        Splittable metadata = StringQuoter.createSplittable();
+        Splittable args = StringQuoter.createSplittable();
 
-        Splittable nested = addChild(metadata, NESTED2);
-        StringQuoter.create(METADATA2).assign(nested, PATH);
-
-        getSimpleQuery(field, content).assign(nested, QUERY2);
-        return metadata;
-    }
-
-    private Splittable childQuery(String type, Splittable innerQuery) {
-        // {"has_child": {"type": "...", "score_mode": "max", "query": {...}}
-        Splittable query = StringQuoter.createSplittable();
-        Splittable hasChild = addChild(query, HAS_CHILD);
-        StringQuoter.create(type).assign(hasChild, "type");
-        StringQuoter.create("max").assign(hasChild, "score_mode");
-        innerQuery.assign(hasChild, QUERY2);
-        return query;
-    }
-
-    public DataSearchQueryBuilder metadataAttribute() {
-        String content = dsf.getMetadataAttributeQuery();
-        if (!Strings.isNullOrEmpty(content)) {
-            Splittable attr = StringQuoter.createSplittable();
-            Splittable attrBool = addChild(attr, BOOL);
-            Splittable attrShouldList = addArray(attrBool, "should");
-
-            Splittable metadata = metadataNested(content, METADATA_ATTRIBUTE);
-            appendArrayItem(attrShouldList, metadata);
-
-            Splittable childFileQuery = childQuery("file_metadata", metadata.deepCopy());
-            appendArrayItem(attrShouldList, childFileQuery);
-
-            Splittable childFolderQuery = childQuery("folder_metadata", metadata.deepCopy());
-            appendArrayItem(attrShouldList, childFolderQuery);
-
-            appendArrayItem(mustList, attr);
-        }
-        return this;
-    }
-
-    public DataSearchQueryBuilder metadataValue() {
-        String content = dsf.getMetadataValueQuery();
-        if (!Strings.isNullOrEmpty(content)) {
-            Splittable value = StringQuoter.createSplittable();
-            Splittable valueBool = addChild(value, BOOL);
-            Splittable valueShouldList = addArray(valueBool, "should");
-
-            Splittable metadata = metadataNested(content, METADATA_VALUE);
-            appendArrayItem(valueShouldList, metadata);
-
-            Splittable childFileQuery = childQuery("file_metadata", metadata.deepCopy());
-            appendArrayItem(valueShouldList, childFileQuery);
-
-            Splittable childFolderQuery = childQuery("folder_metadata", metadata.deepCopy());
-            appendArrayItem(valueShouldList, childFolderQuery);
-
-            appendArrayItem(mustList, value);
+        if (include) {
+            assignKeyValue(args, PREFIX, props.getBaseTrashPath());
+            appendArrayItem(anyList, createTypeClause(PATH, args));
+        } else {
+            assignKeyValue(args, PREFIX, props.getIrodsHomePath());
+            appendArrayItem(allList, createTypeClause(PATH, args));
         }
         return this;
     }
 
     /**
-     * {"range": {"dateModified": {"gte":(some query),"lte":(some query)}}}
+     * {"type": "permissions", "args": {"users": ["ipcdev","aramsey"], "permission": "write"}}
+     */
+    public DataSearchQueryBuilder sharedWith() {
+        String sharedWith = template.getSharedWith();
+        List<String> content = Lists.newArrayList(sharedWith);
+        if (!Strings.isNullOrEmpty(sharedWith)) {
+            Splittable users = listToSplittable(content);
+            Splittable args = StringQuoter.createSplittable();
+            assignKeyValue(args, SHARED_WITH, users);
+            if (template.getPermission() != null) {
+                template.setPermission(PermissionValue.read);
+                template.setPermissionRecurse(true);
+            }
+            assignKeyValue(args, PERMISSION, template.getPermission());
+            assignKeyValue(args, PERMISSION_RECURSE, template.isPermissionRecurse());
+            appendArrayItem(allList, createTypeClause(PERMISSIONS, args));
+        }
+        return this;
+    }
+
+    /**
+     * {"type": "tag", "args": {"tags": ["all","my","tags"]}
+     */
+    public DataSearchQueryBuilder tags() {
+        Set<Tag> content = template.getTagQuery();
+        if (content != null && !content.isEmpty()) {
+
+            Splittable tags = tagsToSplittable(content);
+            Splittable args = StringQuoter.createSplittable();
+            assignKeyValue(args, TAGS, tags);
+            appendArrayItem(allList, createTypeClause(TAG, args));
+        }
+        return this;
+    }
+
+    private Splittable tagsToSplittable(Set<Tag> tags) {
+        List<String> tagValues = tags.stream().map(Tag::getId).collect(Collectors.toList());
+
+        return listToSplittable(tagValues);
+    }
+
+    /**
+     * {"type": "metadata", "args": {"attribute": "some_random_attribute_value", "value": "some_random_value"}}
+     */
+    public DataSearchQueryBuilder metadata() {
+        String attributeContent = template.getMetadataAttributeQuery();
+        String valueContent = template.getMetadataValueQuery();
+        boolean hasAttributeSearch = !Strings.isNullOrEmpty(attributeContent);
+        boolean hasValueSearch = !Strings.isNullOrEmpty(valueContent);
+
+        if (hasAttributeSearch || hasValueSearch) {
+            Splittable args = StringQuoter.createSplittable();
+
+            if (hasAttributeSearch) {
+                assignKeyValue(args, ATTRIBUTE, attributeContent);
+            }
+            if (hasValueSearch) {
+                assignKeyValue(args, VALUE, valueContent);
+            }
+            appendArrayItem(allList, createTypeClause(METADATA, args));
+        }
+
+        return this;
+    }
+
+    /**
+     * {"type": "created", "args": {"from": "some_date", "to": "some_other_date"}}
+     */
+    public DataSearchQueryBuilder createdWithin() {
+        DateInterval content = template.getCreatedWithin();
+
+        return dateInterval(content, CREATED);
+    }
+
+    /**
+     * {"type": "modified", "args": {"from": "some_date", "to": "some_other_date"}}
      */
     public DataSearchQueryBuilder modifiedWithin() {
-        if ((dsf.getModifiedWithin() != null)) {
-            Date dateFrom = dsf.getModifiedWithin().getFrom();
-            Date dateTo = dsf.getModifiedWithin().getTo();
+        DateInterval content = template.getModifiedWithin();
 
-            if ((dateFrom != null) && (dateTo != null)) {
-                // {"range": {"dateModified": {"gte":"1380559151000","lte":"1390511909000"}}}
-                Splittable range = createRangeQuery(DATE_MODIFIED, dateFrom.getTime(), dateTo.getTime());
-                appendArrayItem(mustList, range);
-            } else if (dateFrom != null) {
-                // {"range": {"dateModified": {"gte":"1380559151000"}}}
-                Splittable range = createMinRangeQuery(DATE_MODIFIED, dateFrom.getTime());
-                appendArrayItem(mustList, range);
-            } else if (dateTo != null) {
-                // {"range": {"dateModified": {"lte":"1390511909000"}}}
-                Splittable range = createMaxRangeQuery(DATE_MODIFIED, dateTo.getTime());
-                appendArrayItem(mustList, range);
-            }
-        }
-        return this;
+        return dateInterval(content, MODIFIED);
     }
 
-    public DataSearchQueryBuilder negatedFile() {
-        String content = dsf.getNegatedFileQuery();
-        if (!Strings.isNullOrEmpty(content)) {
-            /*
-             * { "simple_query_string": { "query": "*test*|*csv*", "fields": [ "label" ] } }
-             */
-            appendArrayItem(mustNotList, getSimpleQuery(LABEL, content));
+    /**
+     * {"type": "typeClause", "args": {"from": "some_date", "to": "some_other_date"}}
+     */
+    DataSearchQueryBuilder dateInterval(DateInterval content, String typeClause) {
+        if (content != null && !Strings.isNullOrEmpty(content.getLabel())) {
+            String from = String.valueOf(content.getFrom().getTime());
+            String to = String.valueOf(content.getTo().getTime());
 
+            Splittable args = StringQuoter.createSplittable();
+
+            assignKeyValue(args, FROM, from);
+            assignKeyValue(args, TO, to);
+
+            appendArrayItem(allList, createTypeClause(typeClause, args));
         }
-        return this;
-    }
 
-    public DataSearchQueryBuilder sharedWith() {
-        String content = applyImplicitUsernameWildcard(dsf.getSharedWith());
-        if (!Strings.isNullOrEmpty(content)) {
-            // {"bool":{"must":[{"nested":{"path":"userPermissions","query":{"bool":{"must":[{"term":{"permission":"own"}},{"wildcard":{"userPermissions.user":"currentUser#*"}}]}}}},{"nested":{"path":"userPermissions","query":{"bool":{"must":[{"wildcard":{"user":queryContent}}]}}}}]}}
-            Splittable query = StringQuoter.createSplittable();
-            Splittable bool = addChild(query, BOOL);
-            Splittable must = addArray(bool, "must");
-
-            appendArrayItem(must, createOwnerQuery(userinfo.getUsername()));
-
-            Splittable sharedWith = StringQuoter.createSplittable();
-
-            Splittable nested = addChild(sharedWith, NESTED2);
-            StringQuoter.create("userPermissions").assign(nested, PATH);
-
-            createWildcard("userPermissions.user", content).assign(nested, QUERY2);
-
-            appendArrayItem(must, sharedWith);
-
-            appendArrayItem(mustList, query);
-        }
         return this;
     }
 
     /**
-     * Applies "implicit asterisks" to the front and end of every search term delimited term in the given
-     * searchText string if that string does not contain any of the following characters:
-     *
-     * <pre>
-     * *
-     * ?
-     * \
-     * </pre>
-     *
-     * @return a string whose space-delimited terms are prepended and appended with "*" if the given
-     * string does not contain *, ?, nor /.
+     * {"type": "typeVal", "args": {"argKey": "argVal"}}
      */
-    String applyImplicitAsteriskSearchText(final String searchText) {
-        String implicitSearchText = "";
-        if (searchText.matches(".*[*?\\\\]+.*")) {
-            // Leave text alone
-            implicitSearchText = searchText;
-        } else {
-            // Apply implicit "*"
-            final Iterable<String> transform = Iterables.transform(Splitter.on(OR_OPERATOR)
-                                                                           .omitEmptyStrings()
-                                                                           .trimResults()
-                                                                           .split(searchText),
-                                                                   new Function<String, String>() {
-                                                                       @Override
-                                                                       public String apply(String input) {
-                                                                           return "*".concat(input)
-                                                                                     .concat("*");
-                                                                       }
-                                                                   });
-            implicitSearchText = Joiner.on(OR_OPERATOR).join(transform);
-        }
-        return implicitSearchText;
+    public Splittable createTypeClause(String typeVal, String argKey, String argVal) {
+        Splittable argKeySpl = StringQuoter.createSplittable();
+        assignKeyValue(argKeySpl, argKey, argVal);
+        return createTypeClause(typeVal, argKeySpl);
     }
 
     /**
-     * Join multiple search text using '|'
+     * {"type": "typeVal", "args": {"argKey": "argVal"}}
      */
-    String applyOROperator(final String searchText) {
-        String implicitSearchText = "";
-        final Iterable<String> transform =
-                Splitter.on(" ").trimResults().omitEmptyStrings().split(searchText);
-        implicitSearchText = Joiner.on(OR_OPERATOR).join(transform);
-        return implicitSearchText;
+    public Splittable createTypeClause(String typeVal, String argKey, Boolean argVal) {
+        Splittable argKeySpl = StringQuoter.createSplittable();
+        assignKeyValue(argKeySpl, argKey, argVal);
+        return createTypeClause(typeVal, argKeySpl);
     }
 
     /**
-     * @return the currently constructed query.
+     * {"type": "typeVal", "args": {"argKey": argVal}}
      */
-    @Override
-    public String toString() {
-        // {"bool":{"must":[mustList],"must_not":[mustNotList]}}
-
-        mustList.assign(bool, "must");
-        mustNotList.assign(bool, "must_not");
-
-        return query.getPayload();
+    public Splittable createTypeClause(String typeVal, String argKey, Splittable argVal) {
+        Splittable argKeySpl = StringQuoter.createSplittable();
+        assignKeyValue(argKeySpl, argKey, argVal);
+        return createTypeClause(typeVal, argKeySpl);
     }
 
-    private Splittable createWildcard(String field, String content) {
-        // {"wildcard": {field: content}}
-        // Use lowercase values since wildcard queries are not analyzed by the
-        // service and values are indexed as lowercase.
-        content = Strings.isNullOrEmpty(content) ? null : content.toLowerCase();
-        return createQuery(WILDCARD, field, content);
+    /**
+     * {"type": "typeVal", "args": {"argKey": "argVal"}}
+     */
+    private Splittable createTypeClause(String typeVal, Splittable args) {
+        Splittable type = StringQuoter.createSplittable();
+
+        assignKeyValue(type, TYPE, typeVal);
+        assignKeyValue(type, ARGS, args);
+
+        return type;
     }
 
-    private Splittable createQuery(String queryType, String field, String content) {
-        // {queryType: {field: content}}
-        Splittable query = StringQuoter.createSplittable();
-
-        Splittable wildcard = addChild(query, queryType);
-        StringQuoter.create(content).assign(wildcard, field);
-
-        return query;
+    private Splittable listToSplittable(List<String> list) {
+        Splittable splittable = StringQuoter.createIndexed();
+        list.forEach(value -> StringQuoter.create(value).assign(splittable, splittable.size()));
+        return splittable;
     }
 
-    private Splittable createRangeQuery(String field, long lowerLimit, long upperLimit) {
-        // {"range": {field: {"gte": lowerLimit,"lte": upperLimit}}}
-        Splittable query = StringQuoter.createSplittable();
-
-        Splittable range = addChild(addChild(query, RANGE2), field);
-
-        StringQuoter.create(String.valueOf(lowerLimit)).assign(range, GREATER);
-        StringQuoter.create(String.valueOf(upperLimit)).assign(range, LESSER);
-
-        return query;
+    private void assignKeyValue(Splittable keySplittable, String key, PermissionValue value) {
+        StringQuoter.create(value.toString()).assign(keySplittable, key);
     }
 
-    private Splittable createMinRangeQuery(String field, long lowerLimit) {
-        // {"range": {field: {"gte": lowerLimit}}}
-        Splittable query = StringQuoter.createSplittable();
-
-        Splittable range = addChild(addChild(query, RANGE2), field);
-
-        StringQuoter.create(String.valueOf(lowerLimit)).assign(range, GREATER);
-
-        return query;
+    /**
+     * Takes a splittable, assigns the specified key and value
+     * { "key" : "value" }
+     * @param keySplittable
+     * @param key
+     * @param value
+     */
+    private void assignKeyValue(Splittable keySplittable, String key, String value) {
+        StringQuoter.create(value).assign(keySplittable, key);
     }
 
-    private Splittable createMaxRangeQuery(String field, long upperLimit) {
-        // {"range": {field: {"lte": upperLimit}}}
-        Splittable query = StringQuoter.createSplittable();
-
-        Splittable range = addChild(addChild(query, RANGE2), field);
-
-        StringQuoter.create(String.valueOf(upperLimit)).assign(range, LESSER);
-
-        return query;
+    /**
+     * Takes a splittable, assigns the specified key and value
+     * { "key" : { "someKey" : "someValue" } }
+     * @param keySplittable
+     * @param key
+     * @param value
+     */
+    private void assignKeyValue(Splittable keySplittable, String key, Splittable value) {
+        value.assign(keySplittable, key);
     }
 
-    private Splittable createOwnerQuery(String user) {
-        // {"nested":{"path":"userPermissions","query":{"bool":{"must":[{"term":{"userPermissions.permission":"own"}},{"wildcard":{"userPermissions.user":queryContent}}]}}}}
-        Splittable ownedBy = StringQuoter.createSplittable();
-
-        Splittable nested = addChild(ownedBy, NESTED2);
-        StringQuoter.create("userPermissions").assign(nested, PATH);
-
-        Splittable query = addChild(nested, QUERY2);
-        Splittable bool = addChild(query, BOOL);
-        Splittable must = addArray(bool, "must");
-
-        appendArrayItem(must, createQuery("term", "userPermissions.permission", "own"));
-        appendArrayItem(must, createWildcard("userPermissions.user", applyImplicitUsernameWildcard(user)));
-
-        return ownedBy;
+    /**
+     * Takes a splittable, assigns the specified key and boolean value
+     * { "key" : true }
+     * @param keySplittable
+     * @param key
+     * @param value
+     */
+    private void assignKeyValue(Splittable keySplittable, String key, boolean value) {
+        StringQuoter.create(value).assign(keySplittable, key);
     }
 
-    private String applyImplicitUsernameWildcard(String user) {
-        // usernames are formatted as user#zone
-        if (!Strings.isNullOrEmpty(user) && !user.endsWith("*") && !user.contains("#")) {
-            user += "#*";
-        }
-
-        return user;
-    }
-
-    private Splittable addChild(Splittable parent, String key) {
-        Splittable child = StringQuoter.createSplittable();
-        child.assign(parent, key);
-        return child;
-    }
-
-    private Splittable addArray(Splittable parent, String key) {
-        Splittable child = StringQuoter.createIndexed();
-        child.assign(parent, key);
-        return child;
-    }
-
+    /**
+     * Takes a splittable array and adds the specified item to it
+     * @param array
+     * @param item
+     */
     private void appendArrayItem(Splittable array, Splittable item) {
         item.assign(array, array.size());
     }
 
-    public Splittable getSimpleQuery(String field, String userEntry) {
-        // {"query": {"query_string": {"query": "*la* OR *foo*", "fields":["whatever"]}}}
-        Splittable query = StringQuoter.createSplittable();
-        Splittable simpleQuery = addChild(query, QUERY_STRING);
-        String entry = applyImplicitAsteriskSearchText(applyOROperator(userEntry));
-        StringQuoter.create(entry).assign(simpleQuery, QUERY2);
-        Splittable fieldsArr = addArray(simpleQuery, FIELDS);
-        appendArrayItem(fieldsArr, StringQuoter.create(field));
-        return query;
+    /**
+     * @return the currently constructed query.
+     */
+    public String toString(Splittable query) {
+        return query.getPayload();
     }
 }

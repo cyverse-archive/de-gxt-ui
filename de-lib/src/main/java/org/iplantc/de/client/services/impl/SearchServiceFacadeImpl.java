@@ -8,12 +8,11 @@ import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.client.models.diskResources.Folder;
-import org.iplantc.de.client.models.querydsl.Document;
-import org.iplantc.de.client.models.querydsl.Fields;
-import org.iplantc.de.client.models.querydsl.Metadata;
-import org.iplantc.de.client.models.querydsl.QueryAutoBeanFactory;
-import org.iplantc.de.client.models.querydsl.SearchResponse;
-import org.iplantc.de.client.models.querydsl.Source;
+import org.iplantc.de.client.models.search.Document;
+import org.iplantc.de.client.models.search.Fields;
+import org.iplantc.de.client.models.search.Metadata;
+import org.iplantc.de.client.models.search.SearchResponse;
+import org.iplantc.de.client.models.search.Source;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplateList;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
@@ -44,19 +43,19 @@ import java.util.stream.Collectors;
 @SuppressWarnings("nls")
 public class SearchServiceFacadeImpl implements SearchServiceFacade {
 
-    public class SubmitQueryCallbackConverter extends AsyncCallbackConverter<String, List<DiskResource>> {
-        private final QueryAutoBeanFactory factory;
+    public class SubmitSearchCallbackConverter extends AsyncCallbackConverter<String, List<DiskResource>> {
+        private final SearchAutoBeanFactory factory;
         private final DiskResourceQueryTemplate queryTemplate;
         private final UserInfo userInfo1;
 
-        public SubmitQueryCallbackConverter(AsyncCallback<List<DiskResource>> callback,
-                                            DiskResourceQueryTemplate queryTemplate,
-                                            UserInfo userInfo,
-                                            QueryAutoBeanFactory queryFactory) {
+        public SubmitSearchCallbackConverter(AsyncCallback<List<DiskResource>> callback,
+                                             DiskResourceQueryTemplate queryTemplate,
+                                             UserInfo userInfo,
+                                             SearchAutoBeanFactory factory) {
             super(callback);
             this.queryTemplate = queryTemplate;
             this.userInfo1 = userInfo;
-            this.factory = queryFactory;
+            this.factory = factory;
         }
 
         @Override
@@ -85,9 +84,9 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
             }
             DiskResource diskResource;
             if (Document.FOLDER_TYPE.equals(document.getType())) {
-                diskResource = AutoBeanCodex.decode(factory, Folder.class, AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(document.getSource()))).as();
+                diskResource = AutoBeanCodex.decode(factory, Folder.class, AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(source))).as();
             } else {
-                diskResource = AutoBeanCodex.decode(factory, File.class, AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(document.getSource()))).as();
+                diskResource = AutoBeanCodex.decode(factory, File.class, AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(source))).as();
                 ((File)diskResource).setSize(source.getFileSize());
             }
 
@@ -221,7 +220,6 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
     private final DiscEnvApiService deServiceFacade;
     private final DiskResourceAutoBeanFactory drFactory;
     private final SearchAutoBeanFactory searchAbFactory;
-    private final QueryAutoBeanFactory queryAutoBeanFactory;
     private final UserInfo userInfo;
     private final DEProperties deProperties;
     private final String SEARCH = "org.iplantc.services.diskResources.search";
@@ -233,13 +231,11 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
                                    final DEProperties deProperties,
                                    final SearchAutoBeanFactory searchAbFactory,
                                    final DiskResourceAutoBeanFactory drFactory,
-                                   final QueryAutoBeanFactory queryAutoBeanFactory,
                                    final UserInfo userInfo) {
         this.deServiceFacade = deServiceFacade;
         this.deProperties = deProperties;
         this.searchAbFactory = searchAbFactory;
         this.drFactory = drFactory;
-        this.queryAutoBeanFactory = queryAutoBeanFactory;
         this.userInfo = userInfo;
     }
 
@@ -276,8 +272,8 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
     @Override
     public void submitSearchQuery(DiskResourceQueryTemplate template,
                                   FolderContentsLoadConfig loadConfig,
-                                  FolderContentsRpcProxyImpl.QueryResultsCallback queryResultsCallback) {
-        DataSearchQueryBuilderv2 builder = new DataSearchQueryBuilderv2(template);
+                                  FolderContentsRpcProxyImpl.SearchResultsCallback queryResultsCallback) {
+        DataSearchQueryBuilder builder = new DataSearchQueryBuilder(template);
         String address = SEARCH;
 
         Splittable query = builder.getFullQuery();
@@ -289,7 +285,7 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
         StringQuoter.create(offset).assign(query, "from");
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, query.getPayload());
-        deServiceFacade.getServiceData(wrapper, new SubmitQueryCallbackConverter(queryResultsCallback, template, userInfo, queryAutoBeanFactory));
+        deServiceFacade.getServiceData(wrapper, new SubmitSearchCallbackConverter(queryResultsCallback, template, userInfo, searchAbFactory));
     }
 
     String convertSortField(String sortField) {

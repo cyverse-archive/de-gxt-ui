@@ -1,7 +1,6 @@
 package org.iplantc.de.client.services;
 
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
-import org.iplantc.de.client.services.impl.DataSearchQueryBuilder;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsLoadConfig;
 import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsRpcProxyImpl;
 
@@ -76,6 +75,6 @@ public interface SearchServiceFacade {
 
     void submitSearchQuery(DiskResourceQueryTemplate template,
                            FolderContentsLoadConfig searchConfig,
-                           FolderContentsRpcProxyImpl.QueryResultsCallback queryResultsCallback);
+                           FolderContentsRpcProxyImpl.SearchResultsCallback queryResultsCallback);
 
 }

@@ -4,9 +4,6 @@ import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.tags.Tag;
 import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent.SavedSearchesRetrievedEventHandler;
 import org.iplantc.de.diskResource.client.events.search.DeleteSavedSearchClickedEvent.DeleteSavedSearchEventHandler;
-import org.iplantc.de.diskResource.client.events.search.FetchTagSuggestions;
-import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent;
-import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent.SaveDiskResourceQueryClickedEventHandler;
 import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent.HasSavedSearchDeletedEventHandlers;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent.HasUpdateSavedSearchesEventHandlers;
@@ -33,71 +30,11 @@ import jsinterop.annotations.JsType;
 public interface SearchView extends IsWidget,
                                     HideEvent.HasHideHandlers {
 
-    @JsType
     interface SearchViewAppearance {
 
         String deleteSearchSuccess(String searchName);
 
         String saveQueryTemplateFail();
-
-        String nameHas();
-
-        String pathPrefix();
-
-        String exactNameMatch();
-
-        String owner();
-
-        String exactUserNameMatch();
-
-        String permissionValueLabel();
-
-        String permissionRecurse();
-
-        String sharedWith();
-
-        String emptyText();
-
-        String emptyDropDownText();
-
-        String searchBtn();
-
-        String createdWithin();
-
-        String nameHasNot();
-
-        String modifiedWithin();
-
-        String metadataAttributeHas();
-
-        String ownedBy();
-
-        String metadataValueHas();
-
-        String fileSizeGreater();
-
-        String fileSizeLessThan();
-
-        String includeTrash();
-
-        String taggedWith();
-
-        String fileSizes();
-
-        String enterCyVerseUserName();
-
-        String saveSearchBtnText();
-
-        String filterName();
-
-        String requiredField();
-
-        String saveSearchTitle();
-
-        String saveBtn();
-
-        String cancelBtn();
-
     }
 
     /**
@@ -146,10 +83,12 @@ public interface SearchView extends IsWidget,
                                 HasUpdateSavedSearchesEventHandlers,
                                 SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers {
 
+        @SuppressWarnings("unusable-by-js")
         void onSaveSearch(Splittable splTemplate, String originalName);
 
         void fetchTagSuggestions(String searchTerm);
 
+        @SuppressWarnings("unusable-by-js")
         void onSearchBtnClicked(Splittable query);
 
         @SuppressWarnings("unusable-by-js")
@@ -159,16 +98,17 @@ public interface SearchView extends IsWidget,
 
         SearchView getSearchForm();
 
+        @JsIgnore
         void edit(DiskResourceQueryTemplate template);
 
+        @JsIgnore
         void show(XElement parent, Style.AnchorAlignment anchorAlignment);
+
+        void clearSearch();
     }
 
     @JsIgnore
     void show(Element parent, Style.AnchorAlignment anchorAlignment, ReactSearchForm.SearchFormProps props);
-
-    @JsIgnore
-    void clearSearch();
 
     @JsIgnore
     XElement getElement();

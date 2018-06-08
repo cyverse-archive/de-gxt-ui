@@ -40,72 +40,11 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FolderContentsLoadConfi
 
     /**
      * Constructs a valid {@link PagingLoadResultBean} from the given search results.
-     *
+     * 
      * @author jstroot
-     *
+     * 
      */
-    static class SearchResultsCallback implements AsyncCallback<List<DiskResource>> {
-        private final FolderContentsLoadConfig loadConfig;
-        private final AsyncCallback<PagingLoadResult<DiskResource>> callback;
-        private final GridView.Presenter.Appearance appearance;
-        private final IplantAnnouncer announcer1;
-        private final HasSafeHtml hasSafeHtml1;
-
-        public SearchResultsCallback(final IplantAnnouncer announcer,
-                                     final FolderContentsLoadConfig loadConfig,
-                                     final AsyncCallback<PagingLoadResult<DiskResource>> callback,
-                                     final GridView.Presenter.Appearance appearance,
-                                     final HasSafeHtml hasSafeHtml) {
-            this.announcer1 = announcer;
-            this.loadConfig = loadConfig;
-            this.callback = callback;
-            this.appearance = appearance;
-            this.hasSafeHtml1 = hasSafeHtml;
-        }
-
-        @Override
-        public void onSuccess(List<DiskResource> results) {
-            if (callback == null || results == null) {
-                onFailure(null);
-                return;
-            }
-            callback.onSuccess(new PagingLoadResultBean<>(results, loadConfig.getFolder().getTotal(), loadConfig.getOffset()));
-            DiskResourceQueryTemplate query = (DiskResourceQueryTemplate)loadConfig.getFolder();
-            String searchText = setSearchText(query.getFileQuery());
-
-            final String searchResultsHeader = appearance.searchDataResultsHeader(searchText, query.getTotal(), query.getExecutionTime() / 1000.0);
-            hasSafeHtml1.setHTML(SafeHtmlUtils.fromString(searchResultsHeader));
-        }
-
-        private String setSearchText(String fileQuery) {
-            String retString;
-            if (Strings.isNullOrEmpty(fileQuery)) {
-                retString = "Advanced Search";
-            } else {
-                retString = "\"" + fileQuery + "\"";
-            }
-            return retString;
-        }
-
-        @Override
-        public void onFailure(Throwable caught) {
-            if (loadConfig.getFolder() instanceof DiskResourceQueryTemplate) {
-                announcer1.schedule(new ErrorAnnouncementConfig(SafeHtmlUtils.fromString(appearance.searchFailure()), true));
-            }
-            callback.onFailure(caught);
-        }
-
-        public FolderContentsLoadConfig getLoadConfig() {
-            return loadConfig;
-        }
-
-        public AsyncCallback<PagingLoadResult<DiskResource>> getCallback() {
-            return callback;
-        }
-
-    }
-
-    public class QueryResultsCallback implements AsyncCallback<List<DiskResource>> {
+    public class SearchResultsCallback implements AsyncCallback<List<DiskResource>> {
         private final FolderContentsLoadConfig loadConfig;
         private final AsyncCallback<PagingLoadResult<DiskResource>> callback;
         private final GridView.Presenter.Appearance appearance;
@@ -113,12 +52,12 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FolderContentsLoadConfi
         private final HasSafeHtml hasSafeHtml1;
         private DiskResourceQueryTemplate template;
 
-        public QueryResultsCallback(final IplantAnnouncer announcer,
-                                    final FolderContentsLoadConfig loadConfig,
-                                    final AsyncCallback<PagingLoadResult<DiskResource>> callback,
-                                    final GridView.Presenter.Appearance appearance,
-                                    final HasSafeHtml hasSafeHtml,
-                                    DiskResourceQueryTemplate template) {
+        public SearchResultsCallback(final IplantAnnouncer announcer,
+                                     final FolderContentsLoadConfig loadConfig,
+                                     final AsyncCallback<PagingLoadResult<DiskResource>> callback,
+                                     final GridView.Presenter.Appearance appearance,
+                                     final HasSafeHtml hasSafeHtml,
+                                     DiskResourceQueryTemplate template) {
             this.announcer1 = announcer;
             this.loadConfig = loadConfig;
             this.callback = callback;
@@ -162,9 +101,9 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FolderContentsLoadConfi
 
     /**
      * Constructs a valid {@link PagingLoadResultBean} from the given {@link Folder} result.
-     *
+     * 
      * @author jstroot
-     *
+     * 
      */
     static class FolderContentsCallback extends DataCallback<Folder> {
         private final FolderContentsLoadConfig loadConfig;
@@ -290,9 +229,7 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FolderContentsLoadConfi
 
     @Override
     public void load(final FolderContentsLoadConfig loadConfig, final AsyncCallback<PagingLoadResult<DiskResource>> callback) {
-
-        FolderContentsLoadConfig folderConfig = (FolderContentsLoadConfig)loadConfig;
-        final Folder folder = folderConfig.getFolder();
+        final Folder folder = loadConfig.getFolder();
         if (folder.isFilter()) {
             if (callback != null) {
                 List<DiskResource> emptyResult = Lists.newArrayList();
@@ -301,35 +238,33 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FolderContentsLoadConfi
         } else if (folder instanceof DiskResourceFavorite) {
             metadataService.getFavorites(infoTypeFilterList,
                                          entityType,
-                                         folderConfig,
+                                         loadConfig,
                                          new FavoritesCallback(callback,
-                                                               folderConfig,
+                                                               loadConfig,
                                                                announcer,
                                                                appearance));
         } else if (folder instanceof DiskResourceQueryTemplate) {
             DiskResourceQueryTemplate template = (DiskResourceQueryTemplate)folder;
             searchService.submitSearchQuery(template,
-                                            folderConfig,
-                                            new QueryResultsCallback(announcer,
-                                                                     folderConfig,
-                                                                     callback,
-                                                                     appearance,
-                                                                     hasSafeHtml,
-                                                                     template));
+                                            loadConfig,
+                                            new SearchResultsCallback(announcer,
+                                                                      loadConfig,
+                                                                      callback,
+                                                                      appearance,
+                                                                      hasSafeHtml,
+                                                                      template));
         }
         else {
             drService.getFolderContents(folder,
                                         infoTypeFilterList,
                                         entityType,
-                                        folderConfig,
+                                        loadConfig,
                                         new FolderContentsCallback(announcer,
-                                                                   folderConfig,
+                                                                   loadConfig,
                                                                    callback,
                                                                    hasSafeHtml,
                                                                    appearance));
         }
-
-
 
     }
 

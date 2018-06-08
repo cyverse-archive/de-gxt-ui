@@ -45,12 +45,18 @@ class SearchForm extends Component {
     }
 
     render() {
-        let { classes, messages, intl, presenter } = this.props;
-        let dateIntervals = this.props.dateIntervals;
+        let {
+            classes,
+            messages,
+            intl,
+            presenter,
+            dateIntervals,
+            suggestedTags,
+        } = this.props;
         let dateIntervalChildren = dateIntervals.map(function (item, index) {
             return <MenuItem key={index} value={item}>{item.label}</MenuItem>
         });
-        let suggestedTags = this.props.suggestedTags;
+
         let originalName = this.props.initialValues ? this.props.initialValues : null;
 
         let sizesList = messages.fileSizes;
@@ -59,7 +65,7 @@ class SearchForm extends Component {
         });
 
         // From redux
-        let { handleSubmit, array, initialized, pristine } = this.props;
+        let { handleSubmit, array } = this.props;
 
         return (
             <form id={ids.form}>
@@ -136,7 +142,7 @@ class SearchForm extends Component {
                             <table>
                                 <tbody>
                                 <tr>
-                                    <td style={{'width': '100%'}}>
+                                    <td className={classes.fullWidth}>
                                         <Field name='fileSizeRange.min'
                                                type='number'
                                                parse={value => value ? Number(value) : null}
@@ -161,7 +167,7 @@ class SearchForm extends Component {
                             <table>
                                 <tbody>
                                 <tr>
-                                    <td style={{'width': '100%'}}>
+                                    <td className={classes.fullWidth}>
                                         <Field name='fileSizeRange.max'
                                                type='number'
                                                parse={value => value ? Number(value) : null}
@@ -206,7 +212,6 @@ class SearchForm extends Component {
                         <td>
                             <Field name='label'
                                    originalName={originalName}
-                                   disabled={initialized ? false : pristine}
                                    id={ids.saveSearchBtn}
                                    handleSave={handleSubmit(this.handleSaveSearch)}
                                    component={renderSaveSearchBtn}/>
@@ -215,7 +220,6 @@ class SearchForm extends Component {
                             <div className={classes.searchButton}>
                                 <Button variant="raised"
                                         id={ids.searchBtn}
-                                        disabled={initialized ? false : pristine}
                                         onClick={handleSubmit(this.handleSubmitForm)}>
                                     {getMessage('searchBtn')}
                                 </Button>

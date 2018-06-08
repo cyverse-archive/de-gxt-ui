@@ -1,15 +1,11 @@
 export default {
-    chip: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        width: '100%',
-        maxHeight: '80px',
-        overflow: 'auto'
-    },
-
     searchButton: {
         display: 'flex',
         flexDirection: 'row-reverse',
+    },
+
+    fullWidth: {
+        width: '100%'
     },
 
     form: {

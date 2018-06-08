@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
-import org.iplantc.de.client.models.querydsl.QueryAutoBeanFactory;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplateList;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
@@ -47,7 +46,6 @@ public class SearchServiceFacadeImplTest {
     @Mock DiskResourceAutoBeanFactory drFactoryMock;
     @Mock UserInfo userInfoMock;
     @Mock AutoBean<DiskResourceQueryTemplateList> qtlistAbMock;
-    @Mock QueryAutoBeanFactory queryAutoBeanFactoryMock;
     
     @Mock AsyncCallback<List<DiskResourceQueryTemplate>> asyncQtListMock;
 
@@ -62,7 +60,6 @@ public class SearchServiceFacadeImplTest {
                                                     deProperties,
                                                     searchAbFactoryMock,
                                                     drFactoryMock,
-                                                    queryAutoBeanFactoryMock,
                                                     userInfoMock);
     }
 
@@ -100,7 +97,6 @@ public class SearchServiceFacadeImplTest {
                                                     deProperties,
                                                     searchAbFactoryMock,
                                                     drFactoryMock,
-                                                    queryAutoBeanFactoryMock,
                                                     userInfoMock){
             String templateListToIndexedSplittablePayload(List<DiskResourceQueryTemplate> queryTemplates){
                return "stubPayload";
@@ -137,7 +133,6 @@ public class SearchServiceFacadeImplTest {
                                                     deProperties,
                                                     searchAbFactoryMock,
                                                     drFactoryMock,
-                                                    queryAutoBeanFactoryMock,
                                                     userInfoMock){
             String templateListToIndexedSplittablePayload(List<DiskResourceQueryTemplate> queryTemplates){
                 return "stubPayload";

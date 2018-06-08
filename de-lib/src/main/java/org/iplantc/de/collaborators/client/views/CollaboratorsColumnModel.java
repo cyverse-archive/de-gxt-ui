@@ -3,10 +3,8 @@ package org.iplantc.de.collaborators.client.views;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.collaborators.client.ManageCollaboratorsView;
 import org.iplantc.de.collaborators.client.events.GroupNameSelected;
-import org.iplantc.de.collaborators.client.events.SubjectDeleteCellClicked;
 import org.iplantc.de.collaborators.client.models.SubjectNameComparator;
 import org.iplantc.de.collaborators.client.models.SubjectProperties;
-import org.iplantc.de.collaborators.client.views.cells.SubjectDeleteCell;
 import org.iplantc.de.collaborators.client.views.cells.SubjectNameCell;
 
 import com.google.gwt.core.client.GWT;
@@ -24,8 +22,7 @@ import java.util.List;
 /**
  * @author jstroot
  */
-public class CollaboratorsColumnModel extends ColumnModel<Subject> implements GroupNameSelected.HasGroupNameSelectedHandlers,
-                                                                              SubjectDeleteCellClicked.HasSubjectDeleteCellClickedHandlers {
+public class CollaboratorsColumnModel extends ColumnModel<Subject> implements GroupNameSelected.HasGroupNameSelectedHandlers {
 
     private final ManageCollaboratorsView.Appearance appearance;
     private HandlerManager handlerManager;
@@ -57,9 +54,6 @@ public class CollaboratorsColumnModel extends ColumnModel<Subject> implements Gr
             if (cc.getCell() instanceof SubjectNameCell) {
                 ((SubjectNameCell)cc.getCell()).setHasHandlers(ensureHandlers());
             }
-            if (cc.getCell() instanceof SubjectDeleteCell) {
-                ((SubjectDeleteCell)cc.getCell()).setHasHandlers(ensureHandlers());
-            }
         }
         this.appearance = appearance;
     }
@@ -89,29 +83,13 @@ public class CollaboratorsColumnModel extends ColumnModel<Subject> implements Gr
         ins.setHeader(appearance.institutionOrDescriptionHeader());
         configs.add(ins);
 
-        ColumnConfig<Subject, Subject> delete = new ColumnConfig<>(new IdentityValueProvider<Subject>(""), 25);
-        delete.setHeader("");
-        delete.setCell(new SubjectDeleteCell());
-        delete.setHidden(true);
-        configs.add(delete);
-
         return configs;
 
-    }
-
-    public void deleteColumnVisible(boolean visible) {
-        ColumnConfig<Subject, ?> columnConfig = configs.get(configs.size() - 1);
-        columnConfig.setHidden(!visible);
     }
 
     @Override
     public HandlerRegistration addGroupNameSelectedHandler(GroupNameSelected.GroupNameSelectedHandler handler) {
         return ensureHandlers().addHandler(GroupNameSelected.TYPE, handler);
-    }
-
-    @Override
-    public HandlerRegistration addSubjectDeleteCellClickedHandler(SubjectDeleteCellClicked.SubjectDeleteCellClickedHandler handler) {
-        return ensureHandlers().addHandler(SubjectDeleteCellClicked.TYPE, handler);
     }
 
     protected HandlerManager ensureHandlers() {
@@ -120,5 +98,4 @@ public class CollaboratorsColumnModel extends ColumnModel<Subject> implements Gr
         }
         return handlerManager;
     }
-
 }

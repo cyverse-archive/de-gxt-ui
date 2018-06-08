@@ -29,7 +29,6 @@ import org.iplantc.de.diskResource.client.gin.factory.GridViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewPresenterFactory;
 import org.iplantc.de.diskResource.client.gin.factory.NavigationViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ShareResourcesLinkDialogFactory;
-import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewPresenterFactory;
 import org.iplantc.de.diskResource.client.presenters.DiskResourcePresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.dataLink.DataLinkPresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.details.DetailsViewPresenterImpl;
@@ -61,7 +60,7 @@ import org.iplantc.de.diskResource.client.views.metadata.dialogs.ManageMetadataD
 import org.iplantc.de.diskResource.client.views.navigation.NavigationViewImpl;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
 import org.iplantc.de.diskResource.client.views.search.cells.DiskResourceSearchCell;
-import org.iplantc.de.diskResource.client.views.search.SearchViewImpl;
+import org.iplantc.de.diskResource.client.views.search.cells.DiskResourceQueryForm;
 import org.iplantc.de.diskResource.client.views.sharing.DataSharingViewImpl;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.DataSharingDialog;
 import org.iplantc.de.diskResource.client.views.toolbar.DiskResourceViewToolbarImpl;
@@ -162,7 +161,7 @@ public class DiskResourceGinModule extends AbstractGinModule {
         bind(MetadataTemplateView.class);
 
         //Search
-        bind(SearchView.class).to(SearchViewImpl.class);
+        bind(SearchView.class).to(DiskResourceQueryForm.class);
         bind(new TypeLiteral<Splittable>() {}).toProvider(DateIntervalProvider.class);
 
 

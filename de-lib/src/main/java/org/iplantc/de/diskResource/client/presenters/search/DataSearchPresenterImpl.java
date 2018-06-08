@@ -138,6 +138,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
      * performed.
      */
     @Override
+    @SuppressWarnings("unusable-by-js")
     public void onSaveSearch(Splittable splTemplate, String originalName) {
         // Assume that once the filter is saved, a search should be performed.
         DiskResourceQueryTemplate queryTemplate = AutoBeanCodex.decode(factory, DiskResourceQueryTemplate.class, splTemplate.getPayload()).as();
@@ -323,6 +324,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     }
 
     @Override
+    @SuppressWarnings("unusable-by-js")
     public void onSearchBtnClicked(Splittable query) {
         if (query != null) {
             GWT.log(query.getPayload());
@@ -371,7 +373,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     @Override
     public void edit(DiskResourceQueryTemplate template) {
         ReactSearchForm.SearchFormProps props = getCurrentProps();
-        props.initialValues = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(template));
+        props.initialValues = searchModelUtils.convertTemplateToSplittable(template);
 
         view.renderSearchForm(props);
 
@@ -383,19 +385,30 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
         view.show(parent, anchorAlignment, getCurrentProps());
     }
 
+    @Override
+    public void clearSearch() {
+        ReactSearchForm.SearchFormProps props = getCurrentProps();
+        currentProps = props;
+        view.renderSearchForm(props);
+    }
+
     ReactSearchForm.SearchFormProps getCurrentProps() {
         if (currentProps == null) {
-            ReactSearchForm.SearchFormProps props = new ReactSearchForm.SearchFormProps();
-            props.presenter = this;
-            props.id = DiskResourceModule.Ids.SEARCH_FORM;
-            props.dateIntervals = dateIntervalProvider.get();
-            props.suggestedTags = StringQuoter.createIndexed();
-            props.initialValues = searchModelUtils.createDefaultFilter();
-
-            currentProps = props;
+            currentProps = getDefaultProps();
         }
 
         return currentProps;
+    }
+
+    ReactSearchForm.SearchFormProps getDefaultProps() {
+        ReactSearchForm.SearchFormProps props = new ReactSearchForm.SearchFormProps();
+        props.presenter = this;
+        props.id = DiskResourceModule.Ids.SEARCH_FORM;
+        props.dateIntervals = dateIntervalProvider.get();
+        props.suggestedTags = StringQuoter.createIndexed();
+        props.initialValues = searchModelUtils.createDefaultFilter();
+
+        return props;
     }
 
     @Override

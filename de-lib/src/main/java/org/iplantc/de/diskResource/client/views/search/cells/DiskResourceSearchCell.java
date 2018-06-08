@@ -2,7 +2,6 @@ package org.iplantc.de.diskResource.client.views.search.cells;
 
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.diskResource.client.SearchView;
-import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.SubmitDiskResourceQueryEventHandler;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent;
@@ -129,6 +128,10 @@ public class DiskResourceSearchCell extends TriggerFieldCell<String> implements 
 
     public void edit(DiskResourceQueryTemplate template) {
         searchPresenter.edit(template);
+    }
+
+    public void clearSearch() {
+        searchPresenter.clearSearch();
     }
 
     public SearchView getSearchForm() {

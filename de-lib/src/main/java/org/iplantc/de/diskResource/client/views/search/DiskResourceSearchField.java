@@ -2,12 +2,12 @@ package org.iplantc.de.diskResource.client.views.search;
 
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
+import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.commons.client.events.SubmitTextSearchEvent;
 import org.iplantc.de.commons.client.events.SubmitTextSearchEvent.SubmitTextSearchEventHandler;
 import org.iplantc.de.commons.client.widgets.search.SearchFieldDecorator;
 import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
-import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent;
 import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.SubmitDiskResourceQueryEventHandler;
@@ -17,8 +17,6 @@ import org.iplantc.de.diskResource.client.views.search.cells.DiskResourceSearchC
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.widget.core.client.event.CollapseEvent.CollapseHandler;
@@ -59,8 +57,8 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
 
             DiskResourceQueryTemplate qt = factory.dataSearchFilter().as();
             qt.setFileQuery(text.toString());
-            Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(qt));
-            getCell().getSearchPresenter().onSearchBtnClicked(encode);
+            Splittable splTemplate = searchModelUtils.convertTemplateToSplittable(qt);
+            getCell().getSearchPresenter().onSearchBtnClicked(splTemplate);
             return text.toString();
         }
 
@@ -70,12 +68,16 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
         }
     }
 
+    private SearchModelUtils searchModelUtils;
+
     /**
      * Creates a new iPlant Search field.
      */
     @Inject
-    public DiskResourceSearchField(final DiskResourceSearchCell searchCell) {
+    public DiskResourceSearchField(final DiskResourceSearchCell searchCell,
+                                   SearchModelUtils searchModelUtils) {
         super(searchCell);
+        this.searchModelUtils = searchModelUtils;
 
         setPropertyEditor(new QueryStringPropertyEditor());
         getCell().addSubmitDiskResourceQueryEventHandler(this);
@@ -117,7 +119,7 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
 
     public void clearSearch() {
         // Forward clear call to searchForm
-        getCell().getSearchForm().clearSearch();
+        getCell().clearSearch();
         clearInvalid();
         clear();
     }

@@ -58,7 +58,6 @@ import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.data.shared.event.StoreDataChangeEvent;
 import com.sencha.gxt.data.shared.loader.BeforeLoadEvent;
-import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
 import com.sencha.gxt.data.shared.loader.TreeLoader;
 import com.sencha.gxt.fx.client.FxElement;
 import com.sencha.gxt.widget.core.client.Status;
@@ -267,18 +266,17 @@ public class NavigationPresenterImpl implements
         if (getSelectedFolder() == null) {
             return;
         }
+
         final Folder folderToBeLoaded = event.getLoadConfig().getFolder();
 
         /*
          * If the loaded contents are not the contents of the currently selected folder, then cancel the
          * load.
          */
-        if (!Strings.isNullOrEmpty(folderToBeLoaded.getId()) && !folderToBeLoaded.getId()
-                                                                                 .equals(getSelectedFolder()
-                                                                                                 .getId())) {
+        if (!Strings.isNullOrEmpty(folderToBeLoaded.getId())
+                && !folderToBeLoaded.getId().equals(getSelectedFolder().getId())) {
             event.setCancelled(true);
         }
-
     }
 
     @Override

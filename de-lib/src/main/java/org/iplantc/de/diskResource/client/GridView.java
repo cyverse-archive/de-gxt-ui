@@ -22,7 +22,6 @@ import org.iplantc.de.diskResource.client.events.selection.ManageCommentsSelecte
 import org.iplantc.de.diskResource.client.events.selection.ManageMetadataSelected.ManageMetadataSelectedEventHandler;
 import org.iplantc.de.diskResource.client.events.selection.ManageSharingSelected.ManageSharingSelectedEventHandler;
 import org.iplantc.de.diskResource.client.events.selection.Md5ValueClicked.Md5ValueClickedHandler;
-import org.iplantc.de.diskResource.client.events.selection.QueryDSLSearchBtnSelected;
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected.SaveMetadataSelectedEventHandler;
 import org.iplantc.de.diskResource.client.events.selection.SetInfoTypeSelected.SetInfoTypeSelectedHandler;
 import org.iplantc.de.diskResource.client.events.selection.ShareByDataLinkSelected.ShareByDataLinkSelectedEventHandler;
@@ -39,7 +38,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.sencha.gxt.data.shared.event.StoreUpdateEvent.HasStoreUpdateHandlers;
 import com.sencha.gxt.data.shared.loader.BeforeLoadEvent;
 import com.sencha.gxt.data.shared.loader.DataProxy;
-import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.container.HasLayout;
@@ -59,8 +57,7 @@ public interface GridView extends IsWidget,
                                   FolderSelectionEventHandler,
                                   HasDiskResourceNameSelectedEventHandlers,
                                   HasDiskResourceSelectionChangedEventHandlers,
-                                  SubmitDiskResourceQueryEventHandler,
-                                  QueryDSLSearchBtnSelected.QueryDSLSearchBtnSelectedHandler {
+                                  SubmitDiskResourceQueryEventHandler {
     interface Appearance {
 
         String actionsColumnLabel();

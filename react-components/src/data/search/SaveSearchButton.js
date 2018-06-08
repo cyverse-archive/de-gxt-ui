@@ -43,8 +43,12 @@ class SaveSearchButton extends Component {
     }
 
     render() {
-        let { value, onChange, parentId } = this.props;
-        let disabled = this.props.disabled;
+        let {
+            value,
+            onChange,
+            parentId,
+            disabled
+        } = this.props;
 
         return (
             <div>

@@ -1,4 +1,6 @@
-package org.iplantc.de.client.models.querydsl;
+package org.iplantc.de.client.models.search;
+
+import org.iplantc.de.client.models.search.Document;
 
 import java.util.List;
 
