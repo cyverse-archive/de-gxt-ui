@@ -1,7 +1,7 @@
 /**
- *  @author sriram
+ *  @author sriram, psarando
  * */
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Toolbar from "@material-ui/core/Toolbar";
 import ToolbarGroup from "@material-ui/core/Toolbar";
 import ToolbarSeparator from "@material-ui/core/Toolbar";
@@ -14,6 +14,8 @@ import TableFooter from "@material-ui/core/TableFooter";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableHead from "@material-ui/core/TableHead";
+import TableSortLabel from '@material-ui/core/TableSortLabel';
+import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from "@material-ui/core/IconButton";
 import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
@@ -25,7 +27,7 @@ import moment from "moment";
 import exStyles from "../style";
 import constants from "../../constants";
 import intlData from "../messages";
-import withI18N, {getMessage} from "../../util/I18NWrapper";
+import withI18N, { getMessage } from "../../util/I18NWrapper";
 import injectSheet from "react-jss";
 
 class TablePaginationActions extends React.Component {
@@ -96,6 +98,16 @@ const TablePaginationActionsWrapped = withI18N(injectSheet(exStyles, {withTheme:
 ), intlData);
 
 
+const columnData = [
+    { name: "appName",       numeric: false },
+    { name: "rating",        numeric: true },
+    { name: "total",         numeric: true },
+    { name: "completed",     numeric: true },
+    { name: "failed",        numeric: true },
+    { name: "lastCompleted", numeric: true },
+    { name: "lastUsed",      numeric: true },
+];
+
 class AppStats extends Component {
     constructor(props) {
         super(props);
@@ -109,6 +121,8 @@ class AppStats extends Component {
             filterDisabled: true,
             page: 0,
             rowsPerPage: 100,
+            orderBy: props.orderBy || "total",
+            order: props.order || "desc",
         };
         this.handleSearch = this.handleSearch.bind(this);
         this.fetchAppStats = this.fetchAppStats.bind(this);
@@ -158,13 +172,17 @@ class AppStats extends Component {
         this.setState({
             loading: true,
         });
-        let searchText = this.state.searchText;
-        let startDate = (this.state.startDate) ? (moment(this.state.startDate).format(constants.DATE_FORMAT)) : "";
-        let endDate = (this.state.endDate) ? (moment(this.state.endDate).format(constants.DATE_FORMAT)) : "";
+
+        const { searchText, order, orderBy } = this.state;
+        let { startDate, endDate } = this.state;
+
+        startDate = startDate ? moment(startDate).format(constants.DATE_FORMAT) : "";
+        endDate = endDate ? moment(endDate).format(constants.DATE_FORMAT) : "";
+
         this.props.presenter.searchApps(searchText, startDate, endDate, (appList) => {
             this.setState({
                 loading: false,
-                data: appList.apps,
+                data: this.sortRows(order, orderBy, appList.apps),
             })
             }, (errorCode, errorMessage) => {
                 this.setState({
@@ -178,9 +196,74 @@ class AppStats extends Component {
         this.fetchAppStats();
     }
 
+    handleRequestSort = (event, property) => {
+        const orderBy = property;
+        let order = "desc";
+
+        if (this.state.orderBy === property && this.state.order === order) {
+            order = "asc";
+        }
+
+        this.setState({
+            order,
+            orderBy,
+            data: this.sortRows(order, orderBy, this.state.data),
+        });
+    };
+
+    sortRows = (order, orderBy, data) => {
+        const comparator = (a, b) => (a < b ? -1 : 1);
+
+        return data.sort((a, b) => {
+            let aVal = this.extractRowValue(orderBy, a);
+            let bVal = this.extractRowValue(orderBy, b);
+
+            return (
+                order === "desc"
+                    ? comparator(bVal, aVal)
+                    : comparator(aVal, bVal)
+            );
+        });
+    };
+
+    extractRowValue = (colName, row) => {
+        const { name, rating, job_stats} = row;
+        const {
+            job_count,
+            job_count_completed,
+            job_count_failed,
+            job_last_completed,
+            last_used,
+        } = job_stats;
+
+        const numVal = (n) => n ? n : 0;
+
+        switch (colName) {
+            case "rating":
+                return numVal(rating.average);
+            case "total":
+                return numVal(job_count);
+            case "completed":
+                return numVal(job_count_completed);
+            case "failed":
+                return numVal(job_count_failed);
+            case "lastCompleted":
+                return numVal(job_last_completed);
+            case "lastUsed":
+                return numVal(last_used);
+            default:
+                return name;
+        }
+    };
+
+    createSortHandler = property => event => {
+        this.handleRequestSort(event, property);
+    };
+
     render() {
-        const classes = this.props.classes;
-        const {data, rowsPerPage, page} = this.state;
+        const { classes } = this.props;
+        const { data, rowsPerPage, page, order, orderBy } = this.state;
+
         return (
                 <div className={classes.statContainer}>
                     {this.state.loading &&
@@ -213,20 +296,27 @@ class AppStats extends Component {
                     <Table className={classes.statTable}>
                         <TableHead>
                             <TableRow hover>
-                                <TableCell
-                                    className={classes.statTableHead}>{getMessage("appName")}</TableCell>
-                                <TableCell className={classes.statTableHead}
-                                           numeric>{getMessage("rating")}</TableCell>
-                                <TableCell className={classes.statTableHead}
-                                           numeric>{getMessage("total")}</TableCell>
-                                <TableCell className={classes.statTableHead}
-                                           numeric>{getMessage("completed")}</TableCell>
-                                <TableCell className={classes.statTableHead}
-                                           numeric>{getMessage("failed")}</TableCell>
-                                <TableCell className={classes.statTableHead}
-                                           numeric>{getMessage("lastCompleted")}</TableCell>
-                                <TableCell className={classes.statTableHead}
-                                           numeric>{getMessage("lastUsed")}</TableCell>
+                                {columnData.map(column => (
+                                    <TableCell className={classes.statTableHead}
+                                               key={column.name}
+                                               numeric={column.numeric}
+                                               sortDirection={orderBy === column.name ? order : false}
+                                    >
+                                        <Tooltip
+                                            title={getMessage("sort")}
+                                            placement="bottom-start"
+                                            enterDelay={300}
+                                        >
+                                            <TableSortLabel
+                                                active={orderBy === column.name}
+                                                direction={order}
+                                                onClick={this.createSortHandler(column.name)}
+                                            >
+                                                {getMessage(column.name)}
+                                            </TableSortLabel>
+                                        </Tooltip>
+                                    </TableCell>
+                                ))}
                             </TableRow>
                         </TableHead>
                         <TableBody>
