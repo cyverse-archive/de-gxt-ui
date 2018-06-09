@@ -11,9 +11,11 @@ import TagPanelTest from "./data/details/TagPanel.stories";
 import AppStatsTest from "./apps/admin/AppStats.stories";
 import DEHyperLinkTest from "./util/hyperlink/DEHyperLink.stories";
 import EditTagDialogTest from './data/search/EditTagDialog.stories';
-import SaveSearchButtonTest from './data/search/SaveSearchButton.stories'
+import SaveSearchButtonTest from './data/search/SaveSearchButton.stories';
+import SearchFieldTest from './util/SearchField.stories';
 import SearchFormTest from "./data/search/SearchForm.stories";
 import SearchFormTagPanel from './data/search/SearchFormTagPanel.stories';
+import TriggerFieldTest from './util/TriggerField.stories';
 
 storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);
@@ -30,3 +32,5 @@ storiesOf('data/TagPanel', module).add('with test diskresource details', () => <
 
 storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
 storiesOf('util', module).add('DEHyperLink', () => <DEHyperLinkTest/>);
+storiesOf('util', module).add('SearchField', () => <SearchFieldTest logger={action}/>);
+storiesOf('util', module).add('TriggerSearchField', () => <TriggerFieldTest logger={action}/>);
