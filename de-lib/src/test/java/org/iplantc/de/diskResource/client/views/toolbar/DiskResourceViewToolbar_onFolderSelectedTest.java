@@ -73,7 +73,6 @@ public class DiskResourceViewToolbar_onFolderSelectedTest {
             mockRefreshButton,
             mockTrashMenu;
     @Mock DiskResourceSearchField searchFieldMock;
-    @Mock DiskResourceSearchFieldv2 searchFieldv2Mock;
     private final boolean isReadable = true;
     private boolean isSelectionInTrash = false;
     private final boolean isSelectionOwner = true;
@@ -84,7 +83,6 @@ public class DiskResourceViewToolbar_onFolderSelectedTest {
 
     @Before public void setup() {
         uut = new DiskResourceViewToolbarImpl(searchFieldMock,
-                                              searchFieldv2Mock,
                                               mock(UserInfo.class),
                                               mockAppearance){
             @Override

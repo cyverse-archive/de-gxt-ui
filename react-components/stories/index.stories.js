@@ -23,10 +23,10 @@ storiesOf('apps/details', module).add('ToolDetails', () => <ToolDetailsTest/>);
 
 storiesOf('data/BasicDetails', module).add('with test diskresource details', () => <BasicDetailsTest logger={action('details')}/>);
 storiesOf('data/InfoTypeSelectionList',module).add('with test diskresource details', () =>  <InfoTypeSelectionListTest logger={action('infoTypes')}/>);
-storiesOf('data/search', module).add('EditTagDialog', () => <EditTagDialogTest logger={action}/>);
+storiesOf('data/search', module).add('EditTagDialog', () => <EditTagDialogTest saveTagLogger={action('Save Updated Tag')} closeDlgLogger={action('Close Dialog')}/>);
 storiesOf('data/search', module).add('SaveSearchButton', () => <SaveSearchButtonTest logger={action('Save Search')}/>);
-storiesOf('data/search', module).add('SearchForm', () => <SearchFormTest logger={action}/>);
-storiesOf('data/search', module).add('SearchFormTagPanel', () => <SearchFormTagPanel logger={action}/>);
+storiesOf('data/search', module).add('SearchForm', () => <SearchFormTest searchLogger={action('Search Submitted')} editTagLogger={action('Edit Tag')} suggestionsLogger={action('Fetch Suggestions')} saveSearchLogger={action('Save Search')} addTagLogger={action('Add Tag')}/>);
+storiesOf('data/search', module).add('SearchFormTagPanel', () => <SearchFormTagPanel removeTagLogger={action('Remove Tag')} editTagLogger={action('Edit Tag')} suggestionsLogger={action('Fetch Suggestions')} appendTagLogger={action('Append Tag')} addTagLogger={action('Add Tag')}/>);
 storiesOf('data/Tag', module).add('with test diskresource details', () => <TagTest logger={action('tag')}/>);
 storiesOf('data/TagPanel', module).add('with test diskresource details', () => <TagPanelTest logger={action('tagpanel')}/>);
 

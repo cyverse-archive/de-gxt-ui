@@ -141,7 +141,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     @SuppressWarnings("unusable-by-js")
     public void onSaveSearch(Splittable splTemplate, String originalName) {
         // Assume that once the filter is saved, a search should be performed.
-        DiskResourceQueryTemplate queryTemplate = AutoBeanCodex.decode(factory, DiskResourceQueryTemplate.class, splTemplate.getPayload()).as();
+        DiskResourceQueryTemplate queryTemplate = searchModelUtils.convertSplittableToTemplate(splTemplate);
 
         if (Strings.isNullOrEmpty(queryTemplate.getName())) {
             // Given query template has no name, ripple error back to view

@@ -16,16 +16,20 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
+import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.client.services.SearchServiceFacade;
+import org.iplantc.de.client.services.TagsServiceFacade;
+import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.events.search.DeleteSavedSearchClickedEvent;
-import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent;
+import org.iplantc.de.tags.client.TagsView;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GxtMockitoTestRunner;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +53,12 @@ public class DataSearchPresenterImplTest {
     @Mock SearchServiceFacade searchService;
     @Mock IplantAnnouncer announcer;
     @Mock SearchView.SearchViewAppearance appearance;
+    @Mock SearchView viewMock;
+    @Mock TagsView.TagSuggestionProxy proxyMock;
+    @Mock TagsServiceFacade tagsServiceMock;
+    @Mock DateIntervalProvider dateIntervalProviderMock;
+    @Mock SearchAutoBeanFactory factoryMock;
+    @Mock SearchModelUtils searchModelUtilsMock;
 
     @Captor ArgumentCaptor<List<DiskResourceQueryTemplate>> drqtListCaptor;
     @Captor ArgumentCaptor<UpdateSavedSearchesEvent> updateSavedSearchesEventCaptor;
@@ -58,24 +68,32 @@ public class DataSearchPresenterImplTest {
     private DataSearchPresenterImpl dsPresenter;
 
     @Before public void setUp() {
-        dsPresenter = new DataSearchPresenterImpl(searchService, announcer, appearance);
+        dsPresenter = new DataSearchPresenterImpl(searchService,
+                                                  announcer,
+                                                  appearance,
+                                                  viewMock,
+                                                  proxyMock,
+                                                  tagsServiceMock,
+                                                  dateIntervalProviderMock,
+                                                  factoryMock,
+                                                  searchModelUtilsMock);
     }
 
     /**
      * Verifies that nothing will occur if a query template's name is null
      * 
-     * @see org.iplantc.de.diskResource.client.SearchView.Presenter#onSaveDiskResourceQueryClicked(org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent)
+     * @see org.iplantc.de.diskResource.client.SearchView.Presenter#onSaveSearch(Splittable, String)
      */
     @Test public void testDoSaveDiskResourceQueryTemplate_Case1() {
         DataSearchPresenterImpl spy = spy(dsPresenter);
-        SaveDiskResourceQueryClickedEvent mockEvent = mock(SaveDiskResourceQueryClickedEvent.class);
+        Splittable splTemplate = mock(Splittable.class);
+        String originalName = "originalName";
         DiskResourceQueryTemplate mockTemplate = mock(DiskResourceQueryTemplate.class);
         // This mock will return null for a call to getName() by default
-        when(mockEvent.getQueryTemplate()).thenReturn(mockTemplate);
-
-        spy.onSaveDiskResourceQueryClicked(mockEvent);
+        when(searchModelUtilsMock.convertSplittableToTemplate(splTemplate)).thenReturn(mockTemplate);
+        spy.onSaveSearch(splTemplate, originalName);
         // Perform verify for record keeping
-        verify(spy).onSaveDiskResourceQueryClicked(eq(mockEvent));
+        verify(spy).onSaveSearch(eq(splTemplate), eq(originalName));
 
         verifyZeroInteractions(searchService);
 
@@ -85,20 +103,20 @@ public class DataSearchPresenterImplTest {
     /**
      * Verifies that nothing will occur if a query template's name is an empty string.
      * 
-     * @see org.iplantc.de.diskResource.client.SearchView.Presenter#onSaveDiskResourceQueryClicked(org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent)
+     * @see org.iplantc.de.diskResource.client.SearchView.Presenter#onSaveSearch(Splittable, String)
      */
     @Test public void testDoSaveDiskResourceQueryTemplate_Case2() {
         DataSearchPresenterImpl spy = spy(dsPresenter);
-        SaveDiskResourceQueryClickedEvent mockEvent = mock(SaveDiskResourceQueryClickedEvent.class);
+        Splittable splTemplate = mock(Splittable.class);
+        String originalName = "originalName";
         DiskResourceQueryTemplate mockTemplate = mock(DiskResourceQueryTemplate.class);
-        when(mockEvent.getQueryTemplate()).thenReturn(mockTemplate);
+        when(searchModelUtilsMock.convertSplittableToTemplate(splTemplate)).thenReturn(mockTemplate);
 
         when(mockTemplate.getName()).thenReturn("");
-        when(mockEvent.getQueryTemplate()).thenReturn(mockTemplate);
 
-        spy.onSaveDiskResourceQueryClicked(mockEvent);
+        spy.onSaveSearch(splTemplate, originalName);
         // Perform verify for record keeping
-        verify(spy).onSaveDiskResourceQueryClicked(eq(mockEvent));
+        verify(spy).onSaveSearch(eq(splTemplate), eq(originalName));
 
         verifyZeroInteractions(searchService);
 
@@ -109,19 +127,20 @@ public class DataSearchPresenterImplTest {
      * Verifies that an existing query template will be replaced when a request to save a template of the
      * same name is received.
      * 
-     * @see org.iplantc.de.diskResource.client.SearchView.Presenter#onSaveDiskResourceQueryClicked(org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent)
+     * @see org.iplantc.de.diskResource.client.SearchView.Presenter#onSaveSearch(Splittable, String)
      */
     @Test public void testDoSaveDiskResourceQueryTemplate_Case3() {
         DataSearchPresenterImpl spy = spy(dsPresenter);
-        SaveDiskResourceQueryClickedEvent mockEvent = mock(SaveDiskResourceQueryClickedEvent.class);
+        Splittable splTemplate = mock(Splittable.class);
+        String originalName = "originalName";
 
         /* ================ Save first template =================== */
         DiskResourceQueryTemplate mockTemplate = mock(DiskResourceQueryTemplate.class);
         when(mockTemplate.getName()).thenReturn("firstMock");
-        when(mockEvent.getQueryTemplate()).thenReturn(mockTemplate);
+        when(searchModelUtilsMock.convertSplittableToTemplate(splTemplate)).thenReturn(mockTemplate);
 
         // Call method under test
-        spy.onSaveDiskResourceQueryClicked(mockEvent);
+        spy.onSaveSearch(splTemplate, originalName);
 
         /* Verify that the service was called to save the template, and only 1 template was saved */
         verify(searchService).saveQueryTemplates(drqtListCaptor.capture(), drqtListAsyncCaptor.capture());
@@ -134,10 +153,10 @@ public class DataSearchPresenterImplTest {
         /* ================ Save second template =================== */
         DiskResourceQueryTemplate mockTemplate_2 = mock(DiskResourceQueryTemplate.class);
         when(mockTemplate_2.getName()).thenReturn("secondMock");
-        when(mockEvent.getQueryTemplate()).thenReturn(mockTemplate_2);
+        when(searchModelUtilsMock.convertSplittableToTemplate(splTemplate)).thenReturn(mockTemplate_2);
 
         // Call method under test
-        spy.onSaveDiskResourceQueryClicked(mockEvent);
+        spy.onSaveSearch(splTemplate, originalName);
 
 
         /* Verify that the service was called to save the template, and only 2 templates were saved */
@@ -152,8 +171,8 @@ public class DataSearchPresenterImplTest {
         /* ================ Save third template =================== */
         DiskResourceQueryTemplate mockTemplate_3 = mock(DiskResourceQueryTemplate.class);
         when(mockTemplate_3.getName()).thenReturn("firstMock");
-        when(mockEvent.getQueryTemplate()).thenReturn(mockTemplate_3);
-        spy.onSaveDiskResourceQueryClicked(mockEvent);
+        when(searchModelUtilsMock.convertSplittableToTemplate(splTemplate)).thenReturn(mockTemplate_3);
+        spy.onSaveSearch(splTemplate, originalName);
 
 
         /* Verify that the service was called to save the template, and only 2 templates were saved but one of them was
@@ -169,16 +188,17 @@ public class DataSearchPresenterImplTest {
     /**
      * Verifies that a search of a given query will be requested after it is successfully persisted.
      * 
-     * @see org.iplantc.de.diskResource.client.SearchView.Presenter#onSaveDiskResourceQueryClicked(org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent)
+     * @see org.iplantc.de.diskResource.client.SearchView.Presenter#onSaveSearch(Splittable, String)
      */
     @Test public void testDoSaveDiskResourceQueryTemplateOnSuccess_Case1() {
         DataSearchPresenterImpl spy = spy(dsPresenter);
-        SaveDiskResourceQueryClickedEvent mockEvent = mock(SaveDiskResourceQueryClickedEvent.class);
         DiskResourceQueryTemplate mockTemplate = mock(DiskResourceQueryTemplate.class);
         when(mockTemplate.getName()).thenReturn("mock1");
-        when(mockEvent.getQueryTemplate()).thenReturn(mockTemplate);
+        Splittable splTemplate = mock(Splittable.class);
+        String originalName = "originalName";
+        when(searchModelUtilsMock.convertSplittableToTemplate(splTemplate)).thenReturn(mockTemplate);
 
-        spy.onSaveDiskResourceQueryClicked(mockEvent);
+        spy.onSaveSearch(splTemplate, originalName);
         verify(searchService).saveQueryTemplates(drqtListCaptor.capture(), drqtListAsyncCaptor.capture());
 
         assertEquals("Verify that the query has not been added to the presenter's list", 0, spy.getQueryTemplates().size());
@@ -202,17 +222,17 @@ public class DataSearchPresenterImplTest {
     @Test public void testDoSaveDiskResourceQueryTemplateOnSuccess_Case2() {
         final String originalName = "originalMockName";
         DataSearchPresenterImpl spy = spy(dsPresenter);
-        SaveDiskResourceQueryClickedEvent mockEvent = mock(SaveDiskResourceQueryClickedEvent.class);
         DiskResourceQueryTemplate mockTemplate = mock(DiskResourceQueryTemplate.class);
         DiskResourceQueryTemplate cleanMockTemplate = mock(DiskResourceQueryTemplate.class);
 
         when(mockTemplate.getName()).thenReturn("mock1");
         when(cleanMockTemplate.getName()).thenReturn(originalName);
-        when(mockEvent.getQueryTemplate()).thenReturn(mockTemplate);
-        when(mockEvent.getOriginalName()).thenReturn(originalName);
+
+        Splittable splTemplate = mock(Splittable.class);
+        when(searchModelUtilsMock.convertSplittableToTemplate(splTemplate)).thenReturn(mockTemplate);
 
         spy.cleanCopyQueryTemplates = Lists.newArrayList(cleanMockTemplate);
-        spy.onSaveDiskResourceQueryClicked(mockEvent);
+        spy.onSaveSearch(splTemplate, originalName);
         verify(searchService).saveQueryTemplates(drqtListCaptor.capture(), drqtListAsyncCaptor.capture());
         
         // Force service success
@@ -230,19 +250,21 @@ public class DataSearchPresenterImplTest {
     /**
      * Verifies that a search will not be requested after a failure to persist a query.
      *
-     * @see org.iplantc.de.diskResource.client.SearchView.Presenter#onSaveDiskResourceQueryClicked(org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent)
+     * @see org.iplantc.de.diskResource.client.SearchView.Presenter#onSaveSearch(Splittable, String)
      */
     @Test public void testDoSaveDiskResourceQueryTemplate_Case5() {
         DataSearchPresenterImpl spy = spy(dsPresenter);
-        SaveDiskResourceQueryClickedEvent mockEvent = mock(SaveDiskResourceQueryClickedEvent.class);
         DiskResourceQueryTemplate mockTemplate = mock(DiskResourceQueryTemplate.class);
         when(mockTemplate.getName()).thenReturn("mock1");
-        when(mockEvent.getQueryTemplate()).thenReturn(mockTemplate);
         when(appearance.saveQueryTemplateFail()).thenReturn("fail");
 
-        spy.onSaveDiskResourceQueryClicked(mockEvent);
+        Splittable splTemplate = mock(Splittable.class);
+        String originalName = "originalName";
+        when(searchModelUtilsMock.convertSplittableToTemplate(splTemplate)).thenReturn(mockTemplate);
+
+        spy.onSaveSearch(splTemplate, originalName);
         // Perform verify for record keeping
-        verify(spy).onSaveDiskResourceQueryClicked(eq(mockEvent));
+        verify(spy).onSaveSearch(eq(splTemplate), eq(originalName));
         verify(searchService).saveQueryTemplates(drqtListCaptor.capture(), drqtListAsyncCaptor.capture());
 
         assertEquals("Verify that the query has not been added to the presenter's list", 0, spy.getQueryTemplates().size());
@@ -263,11 +285,19 @@ public class DataSearchPresenterImplTest {
      * The list should be equivalent to what was returned by getQueryTemplates() prior to the method
      * call, but with the changed item in place of the non-changed item.
      * 
-     * @see org.iplantc.de.diskResource.client.SearchView.Presenter#onSaveDiskResourceQueryClicked(org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent)
+     * @see org.iplantc.de.diskResource.client.SearchView.Presenter#onSaveSearch(Splittable, String)
      */
     @Test public void testDoSaveDiskResourceQueryTemplate_Case6() {
         // Create presenter with overridden method to control test execution.
-        dsPresenter = new DataSearchPresenterImpl(searchService, announcer, appearance) {
+        dsPresenter = new DataSearchPresenterImpl(searchService,
+                                                  announcer,
+                                                  appearance,
+                                                  viewMock,
+                                                  proxyMock,
+                                                  tagsServiceMock,
+                                                  dateIntervalProviderMock,
+                                                  factoryMock,
+                                                  searchModelUtilsMock) {
             @Override
             boolean areTemplatesEqual(DiskResourceQueryTemplate lhs, DiskResourceQueryTemplate rhs) {
                 return !(lhs.getName().equals("qtMockId1") && rhs.getName().equals("qtMockId1"));
@@ -276,9 +306,10 @@ public class DataSearchPresenterImplTest {
         DataSearchPresenterImpl spy = spy(dsPresenter);
         DiskResourceQueryTemplate eventMockTemplate = mock(DiskResourceQueryTemplate.class);
         // Return empty string to indicate that the template is new
+        Splittable splTemplate = mock(Splittable.class);
+        when(searchModelUtilsMock.convertSplittableToTemplate(splTemplate)).thenReturn(eventMockTemplate);
         when(eventMockTemplate.getName()).thenReturn("qtMockId1");
-        SaveDiskResourceQueryClickedEvent mockEvent = mock(SaveDiskResourceQueryClickedEvent.class);
-        when(mockEvent.getQueryTemplate()).thenReturn(eventMockTemplate);
+        String originalName = "originalName";
 
         // Add an existing mock to the classes template list
         DiskResourceQueryTemplate existingMock1 = mock(DiskResourceQueryTemplate.class);
@@ -294,7 +325,7 @@ public class DataSearchPresenterImplTest {
         spy.setCleanCopyQueryTemplates(existingTemplates);
 
         // Call method under test
-        spy.onSaveDiskResourceQueryClicked(mockEvent);
+        spy.onSaveSearch(splTemplate, originalName);
         verify(searchService)
                 .saveQueryTemplates(drqtListCaptor.capture(), drqtListAsyncCaptor.capture());
 
@@ -356,7 +387,7 @@ public class DataSearchPresenterImplTest {
 
         verify(mockEvent).getSavedSearch();
 
-        verify(searchService).deleteQueryTemplates(eq(Lists.newArrayList(mockSavedSearch)),
+        verify(searchService).saveQueryTemplates(eq(Lists.newArrayList()),
                                                    drqtListAsyncCaptor.capture());
 
         verifyNoMoreInteractions(searchService);

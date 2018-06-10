@@ -122,4 +122,8 @@ public class SearchModelUtils {
     public Splittable convertTemplateToSplittable(DiskResourceQueryTemplate template) {
         return AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(template));
     }
+
+    public DiskResourceQueryTemplate convertSplittableToTemplate(Splittable splittable) {
+        return AutoBeanCodex.decode(factory, DiskResourceQueryTemplate.class, splittable.getPayload()).as();
+    }
 }

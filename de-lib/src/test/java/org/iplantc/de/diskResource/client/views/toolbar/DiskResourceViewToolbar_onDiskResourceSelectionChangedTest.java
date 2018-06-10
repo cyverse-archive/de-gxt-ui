@@ -84,7 +84,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
             mockRefreshButton,
             mockTrashMenu, mockMetadatMenu;
     @Mock DiskResourceSearchField searchFieldMock;
-    @Mock DiskResourceSearchFieldv2 searchField2Mock;
     @Mock DiskResourceUtil diskResourceUtilMock;
 
     private final boolean isReadable = true;
@@ -98,7 +97,6 @@ public class DiskResourceViewToolbar_onDiskResourceSelectionChangedTest {
 
     @Before public void setup() {
         uut = new DiskResourceViewToolbarImpl(searchFieldMock,
-                                              searchField2Mock,
                                               mock(UserInfo.class),
                                               mockAppearance){
             @Override

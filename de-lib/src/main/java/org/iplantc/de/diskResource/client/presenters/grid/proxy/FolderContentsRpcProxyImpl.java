@@ -205,7 +205,7 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FolderContentsLoadConfi
     private final IplantAnnouncer announcer;
     private final GridView.Presenter.Appearance appearance;
     private TYPE entityType = null;
-    private HasSafeHtml hasSafeHtml;
+    HasSafeHtml hasSafeHtml;
     private final List<InfoType> infoTypeFilterList;
 
     final Logger LOG = Logger.getLogger(FolderContentsRpcProxyImpl.class.getName());
