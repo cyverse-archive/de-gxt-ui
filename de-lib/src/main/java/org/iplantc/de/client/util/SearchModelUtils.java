@@ -44,6 +44,15 @@ public class SearchModelUtils {
 
         StringQuoter.create("/savedFilters/").assign(defFilter, "path");
 
+        Splittable fileSizeRange = StringQuoter.createSplittable();
+        Splittable maxUnit = StringQuoter.createSplittable();
+        Splittable minUnit = StringQuoter.createSplittable();
+        StringQuoter.create("KB").assign(maxUnit, "label");
+        StringQuoter.create("KB").assign(minUnit, "label");
+        maxUnit.assign(fileSizeRange, "maxUnit");
+        minUnit.assign(fileSizeRange, "minUnit");
+        fileSizeRange.assign(defFilter, "fileSizeRange");
+
         return defFilter;
     }
 

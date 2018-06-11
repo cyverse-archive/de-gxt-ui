@@ -108,6 +108,14 @@ class SearchFormTest extends React.Component {
         const template = {
             label: 'oldtemplate',
             fileQuery: 'testzzzz',
+            fileSizeRange: {
+                maxUnit: {
+                    label: 'KB'
+                },
+                minUnit: {
+                    label: 'KB'
+                }
+            },
             path: '/savedFilters/'
         };
 
