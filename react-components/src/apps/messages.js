@@ -1,4 +1,4 @@
-var intlData = {
+const intlData = {
     "locales": "en-US",
     "messages": {
         "appStats": "App Stats",
@@ -23,8 +23,8 @@ var intlData = {
         "descriptionLabel": "Description",
         "imageLabel" : "Image",
         "toolVersionLabel": "Version",
-        "toolAttributionLabel": "Attribution"
-
+        "toolAttributionLabel": "Attribution",
+        "sort": "Sort",
     }
 };
 
