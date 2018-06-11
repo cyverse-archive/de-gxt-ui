@@ -211,7 +211,7 @@ public class DataSearchQueryBuilder {
             Splittable users = listToSplittable(content);
             Splittable args = StringQuoter.createSplittable();
             assignKeyValue(args, SHARED_WITH, users);
-            if (template.getPermission() != null) {
+            if (template.getPermission() == null) {
                 template.setPermission(PermissionValue.read);
                 template.setPermissionRecurse(true);
             }
