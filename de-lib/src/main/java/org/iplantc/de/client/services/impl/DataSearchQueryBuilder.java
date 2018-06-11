@@ -105,6 +105,7 @@ public class DataSearchQueryBuilder {
                 .notFile()
                 .fileSizeRange()
                 .metadata()
+                .negatedPathPrefix()
                 .tags()
                 .includeTrash();
 
@@ -153,6 +154,19 @@ public class DataSearchQueryBuilder {
             Splittable args = StringQuoter.createSplittable();
             assignKeyValue(args, LABEL, content);
             appendArrayItem(noneList, createTypeClause(LABEL, args));
+        }
+        return this;
+    }
+
+    /**
+     * {"type": "path", "args": {"prefix": "/home/iplant/shared"}}
+     */
+    public DataSearchQueryBuilder negatedPathPrefix() {
+        String content = template.getNegatedPathPrefix();
+        if (!Strings.isNullOrEmpty(content)) {
+            Splittable args = StringQuoter.createSplittable();
+            assignKeyValue(args, PREFIX, content);
+            appendArrayItem(noneList, createTypeClause(PATH, args));
         }
         return this;
     }

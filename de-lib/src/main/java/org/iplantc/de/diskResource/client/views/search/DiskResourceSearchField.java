@@ -55,7 +55,7 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
                 return text.toString();
             }
 
-            DiskResourceQueryTemplate qt = factory.dataSearchFilter().as();
+            DiskResourceQueryTemplate qt = searchModelUtils.createDefaultSimpleSearch();
             qt.setFileQuery(text.toString());
             Splittable splTemplate = searchModelUtils.convertTemplateToSplittable(qt);
             getCell().getSearchPresenter().onSearchBtnClicked(splTemplate);

@@ -121,6 +121,9 @@ public interface DiskResourceQueryTemplate extends Folder {
     String getPathPrefix();
     void setPathPrefix(String pathPrefix);
 
+    String getNegatedPathPrefix();
+    void setNegatedPathPrefix(String pathPrefix);
+
     Boolean isPermissionRecurse();
     void setPermissionRecurse(Boolean permissionRecurse);
 }

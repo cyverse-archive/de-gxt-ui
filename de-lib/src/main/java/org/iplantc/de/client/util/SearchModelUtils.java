@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.search.FileSizeRange.FileSizeUnit;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -25,6 +26,7 @@ public class SearchModelUtils {
 
     private final List<String> fileSizeUnits = Lists.newArrayList("KB", "MB", "GB", "TB");
     private final SearchAutoBeanFactory factory = GWT.create(SearchAutoBeanFactory.class);
+    private final DEProperties properties = DEProperties.getInstance();
     private static SearchModelUtils INSTANCE;
     Logger LOG = Logger.getLogger(SearchModelUtils.class.getName());
 
@@ -54,6 +56,13 @@ public class SearchModelUtils {
         fileSizeRange.assign(defFilter, "fileSizeRange");
 
         return defFilter;
+    }
+
+    public DiskResourceQueryTemplate createDefaultSimpleSearch() {
+        DiskResourceQueryTemplate qt = factory.dataSearchFilter().as();
+        qt.setNegatedPathPrefix(properties.getCommunityDataPath());
+
+        return qt;
     }
 
     public Double convertFileSizeToBytes(Double size, FileSizeUnit unit) {
