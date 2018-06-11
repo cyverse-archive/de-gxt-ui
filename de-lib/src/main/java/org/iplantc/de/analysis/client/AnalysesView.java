@@ -13,9 +13,10 @@ import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
-import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
+import org.iplantc.de.client.models.AnalysisTypeFilter;
 import org.iplantc.de.client.models.analysis.Analysis;
+import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
 import org.iplantc.de.theme.base.client.analyses.AnalysesViewDefaultAppearance.AnalysisInfoStyle;
 
 import com.google.gwt.resources.client.ImageResource;
@@ -211,11 +212,13 @@ public interface AnalysesView extends IsWidget,
 
         void setViewDebugId(String baseId);
 
-        AnalysisPermissionFilter getCurrentFilter();
+        AnalysisPermissionFilter getCurrentPermFilter();
 
-        void loadAnalyses(AnalysisPermissionFilter filter);
+        AnalysisTypeFilter getCurrentTypeFilter();
 
-        void setFilterInView(AnalysisPermissionFilter filter);
+        void loadAnalyses(AnalysisPermissionFilter filter, AnalysisTypeFilter typeFilter);
+
+        void setFilterInView(AnalysisPermissionFilter permFilter, AnalysisTypeFilter typeFilter);
     }
 
     void filterByAnalysisId(String id, String name);
@@ -226,7 +229,7 @@ public interface AnalysesView extends IsWidget,
 
     void setSelectedAnalyses(List<Analysis> selectedAnalyses);
 
-    void setPermFilterInView(AnalysisPermissionFilter filter);
+    void setPermFilterInView(AnalysisPermissionFilter filter, AnalysisTypeFilter typeFilter);
 
     String getParentAnalysisId();
 

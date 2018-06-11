@@ -11,9 +11,10 @@ import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
-import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
+import org.iplantc.de.client.models.AnalysisTypeFilter;
 import org.iplantc.de.client.models.analysis.Analysis;
+import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
@@ -40,7 +41,7 @@ public interface AnalysisToolBarView extends IsWidget,
 
     void filterByParentAnalysisId(String id);
 
-    void setFilterInView(AnalysisPermissionFilter filter);
+    void setFilterInView(AnalysisPermissionFilter permFilter, AnalysisTypeFilter typeFilter);
 
     AnalysisSearchField getSearchField();
 }

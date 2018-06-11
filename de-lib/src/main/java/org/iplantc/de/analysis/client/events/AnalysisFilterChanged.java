@@ -1,5 +1,6 @@
 package org.iplantc.de.analysis.client.events;
 
+import org.iplantc.de.client.models.AnalysisTypeFilter;
 import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
 
 import com.google.gwt.event.shared.EventHandler;
@@ -19,10 +20,12 @@ public class AnalysisFilterChanged extends GwtEvent<AnalysisFilterChanged.Analys
         HandlerRegistration addAnalysisFilterChangedHandler(AnalysisFilterChangedHandler handler);
     }
     public static Type<AnalysisFilterChangedHandler> TYPE = new Type<AnalysisFilterChangedHandler>();
-    private AnalysisPermissionFilter filter;
+    private AnalysisPermissionFilter permFilter;
+    private AnalysisTypeFilter typeFilter;
 
-    public AnalysisFilterChanged(AnalysisPermissionFilter filter) {
-        this.filter = filter;
+    public AnalysisFilterChanged(AnalysisPermissionFilter permFilter, AnalysisTypeFilter typeFilter) {
+        this.permFilter = permFilter;
+        this.typeFilter = typeFilter;
     }
 
     public Type<AnalysisFilterChangedHandler> getAssociatedType() {
@@ -33,7 +36,11 @@ public class AnalysisFilterChanged extends GwtEvent<AnalysisFilterChanged.Analys
         handler.onAnalysisFilterChanged(this);
     }
 
-    public AnalysisPermissionFilter getFilter() {
-        return filter;
+    public AnalysisPermissionFilter getPermFilter() {
+        return permFilter;
+    }
+
+    public AnalysisTypeFilter getTypeFilter() {
+        return typeFilter;
     }
 }

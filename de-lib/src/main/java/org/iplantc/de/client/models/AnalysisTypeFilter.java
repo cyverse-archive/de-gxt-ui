@@ -4,7 +4,7 @@ package org.iplantc.de.client.models;
  * Created by sriram on 5/17/18.
  */
 public enum AnalysisTypeFilter {
-    DE("de"), AGAVE("agave"), OSG("osg"), INTERACTIVE("interactive");
+    ALL("All"), DE("DE"), AGAVE("Agave"), OSG("OSG"), INTERACTIVE("Interactive");
 
     private String filter;
 
