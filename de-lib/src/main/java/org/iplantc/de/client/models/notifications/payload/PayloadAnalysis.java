@@ -3,8 +3,9 @@
  */
 package org.iplantc.de.client.models.notifications.payload;
 
-import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 import org.iplantc.de.client.models.HasSettableId;
+
+import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 
 import java.util.Date;
 
@@ -79,4 +80,8 @@ public interface PayloadAnalysis extends HasSettableId {
     @PropertyName("status")
     void setStatus(String status);
 
+    @PropertyName("access_url")
+    String getAccessUrl();
+
 }
+
