@@ -10,11 +10,15 @@ export default (theme) => ({
     },
     statTable: {
         overflow: "auto",
+        height: "70%",
     },
     statTableHead: {
         backgroundColor: "#e2e2e2",
         position: "sticky",
         top: 0
+    },
+    statTablePager: {
+        flexShrink: 0,
     },
     toolDetailsLabel: {
         fontWeight: 'bold',
@@ -29,9 +33,9 @@ export default (theme) => ({
     },
     statContainer: {
         width: "100%",
+        height: "100%",
         marginTop: theme.spacing.unit * 3,
         overflow: "auto",
-        height: 480,
     },
     statSearchTextField: {
         marginLeft: theme.spacing.unit,
