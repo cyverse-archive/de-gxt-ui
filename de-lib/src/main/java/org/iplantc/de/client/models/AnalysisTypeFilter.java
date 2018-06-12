@@ -1,16 +1,15 @@
-package org.iplantc.de.client.models.analysis;
+package org.iplantc.de.client.models;
 
 /**
- * Created by sriram on 3/4/16.
+ * Created by sriram on 5/17/18.
  */
-public enum AnalysisFilter {
-
-    ALL("All"), SHARED_WITH_ME("Analyses shared with me"), MY_ANALYSES("Only my analyses");
+public enum AnalysisTypeFilter {
+    ALL("All"), DE("DE"), AGAVE("Agave"), OSG("OSG"), INTERACTIVE("Interactive");
 
     private String filter;
 
-    private AnalysisFilter(String label) {
-           this.filter = label;
+    private AnalysisTypeFilter(String label) {
+        this.filter = label;
     }
 
     public String getFilterString() {
@@ -22,11 +21,12 @@ public enum AnalysisFilter {
         return filter;
     }
 
-    public static AnalysisFilter fromTypeString(String typeString) {
+    public static AnalysisTypeFilter fromTypeString(String typeString) {
         if (typeString == null || typeString.isEmpty()) {
             return null;
         }
         String temp = typeString.replaceAll("\\s", "");
         return valueOf(temp.toUpperCase());
     }
+
 }

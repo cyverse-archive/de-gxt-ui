@@ -10,8 +10,12 @@ public interface AnalysisWindowConfig extends WindowConfig {
     
     void setSelectedAnalyses(List<Analysis> selectedAnalyses);
 
-    void setFilter(String filter);
+    void setPermFilter(String filter);
 
-    String getFilter();
+    String getPermFilter();
+
+    void setTypeFilter(String filter);
+
+    String getTypeFilter();
 
 }

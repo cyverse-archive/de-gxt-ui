@@ -22,7 +22,8 @@ import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
 import org.iplantc.de.analysis.client.gin.factory.AnalysesViewFactory;
-import org.iplantc.de.client.models.analysis.AnalysisFilter;
+import org.iplantc.de.client.models.AnalysisTypeFilter;
+import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
 import org.iplantc.de.analysis.client.presenter.proxy.AnalysisRpcProxy;
 import org.iplantc.de.analysis.client.views.AnalysisStepsView;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
@@ -100,7 +101,10 @@ public class AnalysesPresenterImplTest {
     @Mock AnalysisStepsView analysisStepsViewMock;
     @Mock AsyncProviderWrapper<AnalysisSharingDialog> aSharingDialogProviderMock;
     @Mock AnalysisSharingDialog analysisSharingDialogMock;
-    @Mock AnalysisFilter currentFilterMock;
+    @Mock
+    AnalysisPermissionFilter currentPermFilterMock;
+    @Mock
+    AnalysisTypeFilter currentTypeFilterMock;
     @Mock ListStore<Analysis> listStoreMock;
     @Mock AnalysesView viewMock;
     @Mock HasHandlers eventBusMock;
@@ -202,7 +206,8 @@ public class AnalysesPresenterImplTest {
             }
         };
 
-        uut.currentFilter = currentFilterMock;
+        uut.currentPermFilter = currentPermFilterMock;
+        uut.currentTypeFilter = currentTypeFilterMock;
         uut.analysisService = analysisServiceMock;
         uut.announcer = announcerMock;
         uut.appearance = appearanceMock;
@@ -242,7 +247,7 @@ public class AnalysesPresenterImplTest {
 
         stringCallbackCaptor.getValue().onSuccess("result");
         verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));
-        verify(spy).loadAnalyses(eq(currentFilterMock));
+        verify(spy).loadAnalyses(eq(currentPermFilterMock), eq(currentTypeFilterMock));
     }
 
     @Test
@@ -272,7 +277,7 @@ public class AnalysesPresenterImplTest {
         verify(analysisServiceMock).deleteAnalyses(eq(analysisListMock), stringCallbackCaptor.capture());
 
         stringCallbackCaptor.getValue().onSuccess("result");
-        verify(spy).loadAnalyses(currentFilterMock);
+        verify(spy).loadAnalyses(currentPermFilterMock, currentTypeFilterMock);
     }
 
     @Test
@@ -326,35 +331,37 @@ public class AnalysesPresenterImplTest {
 
         /** CALL METHOD UNDER TEST **/
         spy.go(containerMock, analysisListMock);
-        verify(spy).loadAnalyses(eq(AnalysisFilter.ALL));
+        verify(spy).loadAnalyses(eq(AnalysisPermissionFilter.ALL), eq(AnalysisTypeFilter.ALL));
         verify(containerMock).setWidget(eq(viewMock));
     }
 
     @Test
     public void loadAnalyses_search() {
-        AnalysisFilter filterMock = mock(AnalysisFilter.class);
+        AnalysisPermissionFilter filterMock = mock(AnalysisPermissionFilter.class);
+        AnalysisTypeFilter typeFilterMock = mock(AnalysisTypeFilter.class);
         when(analysisSearchFieldMock.getCurrentValue()).thenReturn("Value");
 
         /** CALL METHOD UNDER TEST **/
-        uut.loadAnalyses(filterMock);
+        uut.loadAnalyses(filterMock, typeFilterMock);
         verify(analysisSearchFieldMock).refreshSearch();
         verifyZeroInteractions(loaderMock);
     }
 
     @Test
     public void loadAnalyses() {
-        AnalysisFilter filterMock = mock(AnalysisFilter.class);
+        AnalysisPermissionFilter filterMock = mock(AnalysisPermissionFilter.class);
+        AnalysisTypeFilter typeFilterMock = mock(AnalysisTypeFilter.class);
         when(analysisSearchFieldMock.getCurrentValue()).thenReturn(null);
 
 
         /** CALL METHOD UNDER TEST **/
-        uut.loadAnalyses(filterMock);
+        uut.loadAnalyses(filterMock, typeFilterMock);
 
         verify(filterConfigsMock).clear();
-        verify(filterConfigBeanMock, times(2)).setField(anyString());
+        verify(filterConfigBeanMock, times(3)).setField(anyString());
         verify(filterConfigBeanMock, times(2)).setValue(anyString());
 
-        verify(filterConfigsMock, times(2)).add(filterConfigBeanMock);
+        verify(filterConfigsMock, times(3)).add(filterConfigBeanMock);
         verify(loadConfigMock).setLimit(anyInt());
         verify(loadConfigMock).setOffset(anyInt());
         verify(loaderMock).load(loadConfigMock);
@@ -364,23 +371,23 @@ public class AnalysesPresenterImplTest {
     public void setCurrentFilter_null() {
         AnalysesPresenterImpl spy = spy(uut);
         AnalysisFilterChanged eventMock = mock(AnalysisFilterChanged.class);
-        when(eventMock.getFilter()).thenReturn(null);
+        when(eventMock.getPermFilter()).thenReturn(null);
 
         /** CALL METHOD UNDER TEST **/
         spy.onAnalysisFilterChanged(eventMock);
-        verify(spy, times(0)).loadAnalyses(eq(currentFilterMock));
+        verify(spy, times(0)).loadAnalyses(eq(currentPermFilterMock), eq(currentTypeFilterMock));
     }
 
     @Test
     public void setCurrentFilter() {
         AnalysesPresenterImpl spy = spy(uut);
         AnalysisFilterChanged eventMock = mock(AnalysisFilterChanged.class);
-        when(eventMock.getFilter()).thenReturn(AnalysisFilter.MY_ANALYSES);
+        when(eventMock.getPermFilter()).thenReturn(AnalysisPermissionFilter.MY_ANALYSES);
 
         /** CALL METHOD UNDER TEST **/
         spy.onAnalysisFilterChanged(eventMock);
-        currentFilterMock = AnalysisFilter.MY_ANALYSES;
-        verify(spy, times(1)).loadAnalyses(eq(currentFilterMock));
+        currentPermFilterMock = AnalysisPermissionFilter.MY_ANALYSES;
+        verify(spy, times(1)).loadAnalyses(eq(currentPermFilterMock), eq(currentTypeFilterMock));
     }
 
     @Test
