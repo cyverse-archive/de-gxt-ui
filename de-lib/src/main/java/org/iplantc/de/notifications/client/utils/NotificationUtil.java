@@ -33,12 +33,14 @@ import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConf
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.notifications.client.events.NotificationClickedEvent;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
+import org.iplantc.de.notifications.client.views.NotificationView;
 import org.iplantc.de.notifications.client.views.dialogs.DenyJoinRequestDetailsDialog;
 import org.iplantc.de.notifications.client.views.dialogs.JoinTeamRequestDialog;
 import org.iplantc.de.notifications.client.views.dialogs.RequestHistoryDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.NotificationCallback;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -66,7 +68,10 @@ public class NotificationUtil {
     @Inject AsyncProviderWrapper<JoinTeamRequestDialog> joinRequestDlgProvider;
     @Inject AsyncProviderWrapper<DenyJoinRequestDetailsDialog> denyDetailsDlgProvider;
     @Inject DesktopView.Presenter.DesktopPresenterAppearance appearance;
-
+    //@Inject
+    //NotificationView.NotificationViewAppearance notificationViewAppearance;  This doesn't seem to work
+    NotificationView.NotificationViewAppearance notificationViewAppearance =
+            GWT.create(NotificationView.NotificationViewAppearance.class);
     @Inject
     public NotificationUtil() {
     }
@@ -107,12 +112,19 @@ public class NotificationUtil {
                 PayloadAnalysis analysisPayload =
                         AutoBeanCodex.decode(notFactory, PayloadAnalysis.class, payload).as();
                 String analysisAction = analysisPayload.getAction();
-
+                String url = analysisPayload.getAccessUrl();
                 if ("job_status_change".equals(analysisAction) || "share".equals(analysisAction)) {
                     msg.setContext(payload.getPayload());
                 } else {
                     GWT.log("Unhandled Analysis action type!!");
                 }
+
+                if (!Strings.isNullOrEmpty(url)) {
+                    msg.setMessage(
+                            msg.getMessage() + ". " + notificationViewAppearance.notificationUrlPrompt(
+                                    url));
+                }
+
                 break;
 
             case DATA:

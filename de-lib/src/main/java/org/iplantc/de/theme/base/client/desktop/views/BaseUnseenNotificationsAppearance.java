@@ -9,6 +9,7 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
 
 import com.sencha.gxt.cell.core.client.SimpleSafeHtmlCell;
@@ -65,10 +66,12 @@ public class BaseUnseenNotificationsAppearance implements UnseenNotificationsVie
         listViewCell = new SimpleSafeHtmlCell<>(new AbstractSafeHtmlRenderer<NotificationMessage>() {
             @Override
             public SafeHtml render(NotificationMessage object) {
+                SafeHtmlBuilder sb = new SafeHtmlBuilder();
+                sb.appendHtmlConstant(object.getMessage());
                 if(object.isSeen()){
-                    return templates.renderCell(style.cell(), object.getMessage());
+                    return templates.customLvRenderItem(style.cell(), sb.toSafeHtml());
                 }
-                return templates.renderCell(style.cellHighlight(), object.getMessage());
+                return templates.customLvRenderItem(style.cellHighlight(), sb.toSafeHtml());
             }
         });
     }

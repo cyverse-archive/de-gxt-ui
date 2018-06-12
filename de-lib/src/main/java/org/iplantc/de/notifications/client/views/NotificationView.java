@@ -50,6 +50,8 @@ public interface NotificationView extends IsWidget,
 
         int windowMinHeight();
 
+        String notificationUrlPrompt(String url);
+
     }
 
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {

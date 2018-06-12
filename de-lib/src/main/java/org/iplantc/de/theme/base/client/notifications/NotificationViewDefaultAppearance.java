@@ -99,4 +99,9 @@ public class NotificationViewDefaultAppearance implements NotificationView.Notif
     public int windowMinHeight() {
         return 300;
     }
+
+    @Override
+    public String notificationUrlPrompt(String url) {
+        return iplantDisplayStrings.notificationUrlPrompt(url);
+    }
 }
