@@ -109,7 +109,8 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
                 AnalysisPermissionFilter.SHARED_WITH_ME));
 
         filterTypeCombo = new SimpleComboBox<>(new StringLabelProvider<>());
-        filterTypeCombo.add(Arrays.asList(AnalysisTypeFilter.ALL, AnalysisTypeFilter.AGAVE,
+        filterTypeCombo.add(Arrays.asList(AnalysisTypeFilter.ALL,
+                                          AnalysisTypeFilter.AGAVE,
                                           AnalysisTypeFilter.DE,
                                           AnalysisTypeFilter.INTERACTIVE,
                                           AnalysisTypeFilter.OSG));
