@@ -73,6 +73,7 @@ class Notifications extends Component {
         this.handleNotificationsClick = this.handleNotificationsClick.bind(this);
         this.onMenuItemSelect = this.onMenuItemSelect.bind(this);
         this.getNotification = this.getNotification.bind(this);
+        this.getInteractiveAnalysisUrl = this.getInteractiveAnalysisUrl.bind(this);
         this.notificationBtn = React.createRef();
     }
 
@@ -104,6 +105,10 @@ class Notifications extends Component {
                               onClick={this.onMenuItemSelect}
                               style={{fontSize: 10,}}>
                         {notification.message.text}
+                        {notification.payload.access_url &&
+                            this.getInteractiveAnalysisUrl(notification)
+                        }
+
                     </MenuItem>
                     <Divider/>
                 </span>
@@ -115,12 +120,27 @@ class Notifications extends Component {
                               onClick={this.onMenuItemSelect}
                               style={{backgroundColor: '#e2e2e2', fontSize: 10,}}>
                         {notification.message.text}
+                        {notification.payload.access_url &&
+                             this.getInteractiveAnalysisUrl(notification)
+                        }
                     </MenuItem>
                     <Divider/>
                 </span>
             );
         }
 
+    }
+
+    getInteractiveAnalysisUrl(notification) {
+        return (
+            <span>
+                  {getMessage("interactiveAnalysisUrl")}
+                <a href={notification.payload.access_url}
+                   target="_blank">
+                    {getMessage("urlPrompt")}
+                </a>
+            </span>
+        );
     }
 
     render() {

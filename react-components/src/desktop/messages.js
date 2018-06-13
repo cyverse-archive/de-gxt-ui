@@ -15,6 +15,8 @@ var intlData = {
         "newNotifications": "New Notifications ({count})",
         "noNotifications": "No Notifications to display!",
         "notificationError": "Unable to fetch notifications!",
+        "interactiveAnalysisUrl": ". Access your running analysis ",
+        "urlPrompt": "here"
     }
 };
 
