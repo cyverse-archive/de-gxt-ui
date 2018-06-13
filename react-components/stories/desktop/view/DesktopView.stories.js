@@ -35,6 +35,7 @@ class DesktopViewTest extends  Component {
                 "email_template": "analysis_status_change",
                 "payload": {
                     "description": "",
+                    "access_url": "https://google.com",
                     "analysisresultsfolder": "/iplant/home/sriram/analyses/Word_Count_analysis1-2018-03-07-18-55-17.9",
                     "name": "Word_Count_analysis1",
                     "username": "sriram@iplantcollaborative.org",
@@ -73,6 +74,7 @@ class DesktopViewTest extends  Component {
                 "email_template": "analysis_status_change",
                 "payload": {
                     "description": "",
+                    "access_url": "https://google.com",
                     "analysisresultsfolder": "/iplant/home/sriram/analyses/Word_Count_analysis1-2018-03-07-18-55-17.9",
                     "name": "Word_Count_analysis1",
                     "can_share": false,
@@ -339,6 +341,7 @@ class DesktopViewTest extends  Component {
                 "email_template": "analysis_status_change",
                 "payload": {
                     "description": "",
+                    "access_url": "https://google.com",
                     "analysisresultsfolder": "/iplant/home/sriram/analyses/Word_Count_analysis1-2018-04-19-17-33-22.0",
                     "name": "Word_Count_analysis1",
                     "can_share": false,
