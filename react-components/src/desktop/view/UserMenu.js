@@ -1,7 +1,7 @@
 /**
  * @author sriram
  */
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Divider from "@material-ui/core/Divider";
@@ -9,11 +9,11 @@ import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
 import styles from "../style";
 import injectSheet from "react-jss";
 import ids from "../ids";
-import withI18N, {getMessage} from "../../util/I18NWrapper";
+import withI18N, { getMessage } from "../../util/I18NWrapper";
 import intlData from "../messages";
 import build from "../../util/DebugIDUtil";
 import tourStrings from "../NewUserTourStrings";
-import userImg from "../../images/user.png";
+import userImg from "../../resources/images/user.png";
 
 class UserMenu extends Component {
     constructor(props) {
@@ -23,6 +23,7 @@ class UserMenu extends Component {
         };
         this.onUserMenuClick = this.onUserMenuClick.bind(this);
         this.onMenuItemSelect = this.onMenuItemSelect.bind(this);
+        this.handleClose = this.handleClose.bind(this);
         this.userBtn = React.createRef();
     }
 
@@ -32,12 +33,11 @@ class UserMenu extends Component {
         this.userBtn.current.setAttribute("data-step", "5");
     }
 
-    handleClose = () => {
+    handleClose() {
         this.setState({anchorEl: null});
     };
 
     onUserMenuClick(event) {
-        console.log(event.currentTarget);
         this.setState({anchorEl: document.getElementById(this.props.anchor)});
     }
 
@@ -98,14 +98,17 @@ class UserMenu extends Component {
                               onClick={this.onMenuItemSelect}>
                         <DEHyperlink text={getMessage("documentation")}/>
                     </MenuItem>
-                    <MenuItem id={build(ids.DESKTOP, ids.INTRO_LINK)} onClick={this.props.doIntro}>
+                    <MenuItem id={build(ids.DESKTOP, ids.INTRO_LINK)}
+                              onClick={this.props.doIntro}>
                         <DEHyperlink text={getMessage("introduction")}/>
                     </MenuItem>
-                    <MenuItem id={build(ids.DESKTOP, ids.ABOUT_LINK)} onClick={this.onMenuItemSelect}>
+                    <MenuItem id={build(ids.DESKTOP, ids.ABOUT_LINK)}
+                              onClick={this.onMenuItemSelect}>
                         <DEHyperlink text={getMessage("about")}/>
                     </MenuItem>
                      <Divider />
-                    <MenuItem id={build(ids.DESKTOP, ids.LOGOUT_LINK)} onClick={this.onMenuItemSelect}>
+                    <MenuItem id={build(ids.DESKTOP, ids.LOGOUT_LINK)}
+                              onClick={this.onMenuItemSelect}>
                         <DEHyperlink text={getMessage("logout")}/>
                     </MenuItem>
                 </Menu>

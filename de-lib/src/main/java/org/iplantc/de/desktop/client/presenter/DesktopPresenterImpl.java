@@ -264,14 +264,6 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
         }
     }
 
-/*    public static native void doIntro() *//*-{
-		var introjs = $wnd.introJs();
-		introjs.setOption("showStepNumbers", false);
-		introjs.setOption("skipLabel", "Exit");
-		introjs.setOption("overlayOpacity",0);
-		introjs.start();
-    }-*//*;*/
-
    @Override
     public void doLogout(boolean sessionTimeout) {
        cleanUp();
@@ -474,6 +466,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
      * FIXME REFACTOR JDS Create notifications module and move this implementation there
      */
     @Override
+    @SuppressWarnings("unusuable-by-js")
     public void onNotificationSelected(Splittable notification,
                                        final NotificationMarkAsSeenCallback callback,
                                        final ErrorCallback errorCallback) {
@@ -532,6 +525,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
     }
 
     @Override
+    @SuppressWarnings("unusuable-by-js")
     public void onTaskButtonClicked(Splittable windowConfig) {
         WindowBase win = getWindowFromConfig(windowConfig);
         if (win != null) {

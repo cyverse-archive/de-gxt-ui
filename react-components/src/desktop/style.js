@@ -1,16 +1,18 @@
-import cyverseMini from "../images/whitelogo.png";
-import desktopBcg from "../images/background.png";
-import cyverseHeader from "../images/cyverse_icon_white.png";
+import cyverseMini from "../resources/images/whitelogo.png";
+import desktopBcg from "../resources/images/background.png";
+import cyverseHeader from "../resources/images/cyverse_icon_white.png";
 
 export default {
-    body: {
-        position: 'fixed',
-        top: 0,
-        bottom: 0,
-        right: 0,
-        left: 0,
-        fontFamily: "Texta",
-        src: "url('../Texta_Font/Texta-Black.otf'), url('../Texta_Font/Texta-Regular.otf')",
+    '@global': {
+        body: {
+            position: 'fixed',
+            top: 0,
+            bottom: 0,
+            right: 0,
+            left: 0,
+            fontFamily: "Texta",
+            src: "url('../Texta_Font/Texta-Black.otf'), url('../Texta_Font/Texta-Bold.otf'), url('../Texta_Font/Texta-Regular.otf'), url('../Texta_Font/Texta-Italic.otf') ",
+        }
     },
     desktop: {
         backgroundImage: `url(${desktopBcg})`,
@@ -93,8 +95,9 @@ export default {
         top: '50px',
         cursor: 'pointer',
         '&:hover': {
-            boxShadow: '0px 2px 3px #e2e2e2',
-        }, borderRadius: '10px',
+            boxShadow: '3px 3px #0971ab',
+        },
+        borderRadius: '10px',
 
     },
 
@@ -108,8 +111,9 @@ export default {
         top: '150px',
         cursor: 'pointer',
         '&:hover': {
-            boxShadow: '0px 2px 3px #e2e2e2',
-        }, borderRadius: '10px',
+            boxShadow: '3px 3px #0971ab',
+        },
+        borderRadius: '10px',
     },
 
     analyses: {
@@ -122,8 +126,9 @@ export default {
         top: '230px',
         cursor: 'pointer',
         '&:hover': {
-            boxShadow: '0px 2px 3px #e2e2e2',
-        }, borderRadius: '10px',
+            boxShadow: '3px 3px #0971ab',
+        },
+        borderRadius: '10px',
     },
 
     notificationMenuPosition: {

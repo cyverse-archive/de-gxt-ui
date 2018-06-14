@@ -1,22 +1,22 @@
 /**
  * @author sriram
  */
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
 import styles from "../style";
 import Divider from "@material-ui/core/Divider";
-import withI18N, {getMessage} from "../../util/I18NWrapper";
+import withI18N, { getMessage } from "../../util/I18NWrapper";
 import intlData from "../messages";
 import ids from "../ids";
 import build from "../../util/DebugIDUtil";
-import {withStyles} from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import tourStrings from "../NewUserTourStrings";
-import notificationImg from "../../images/notification.png";
+import notificationImg from "../../resources/images/notification.png";
 
 
 function ErrorComponent(props) {
@@ -44,13 +44,13 @@ function NotificationFooter(props) {
                 <div>
                      <span id={build(ids.DESKTOP, ids.NEW_NOTIFICATIONS)}>
                          <DEHyperlink
-                             onClick={this.props.viewNewNotification}
+                             onClick={props.viewNewNotification}
                              text={getMessage("newNotifications", {values: {count: props.unSeenCount}})}/>
                      </span>
                     <span style={{margin: '20px'}}> </span>
                     <span id={build(ids.DESKTOP, ids.MARK_ALL_SEEN)}>
                             <DEHyperlink
-                                onClick={this.props.markAllAsSeen}
+                                onClick={props.markAllAsSeen}
                                 text={getMessage("markAllRead")}/>
                     </span>
                 </div>
@@ -79,7 +79,6 @@ class Notifications extends Component {
     }
 
     handleNotificationsClick() {
-        console.log(document.getElementById(this.props.anchor));
         this.setState({anchorEl: document.getElementById(this.props.anchor)});
     }
 
@@ -88,7 +87,6 @@ class Notifications extends Component {
     };
 
     onMenuItemSelect(event) {
-        console.log("selected item =>" + event.currentTarget.id);
         this.props.notificationClicked(event.currentTarget.id);
     }
 
@@ -119,7 +117,7 @@ class Notifications extends Component {
                 <span key={notification.message.id} style={{outline: 'none'}}>
                     <MenuItem id={notification.message.id}
                               onClick={this.onMenuItemSelect}
-                              style={{backgroundColor: '#e2e2e2', fontSize: 10,}}>
+                              style={{backgroundColor: '#99d9ea', fontSize: 10, borderBottom: 1}}>
                         {notification.message.text}
                         {notification.payload.access_url &&
                              this.getInteractiveAnalysisUrl(notification)
@@ -194,9 +192,12 @@ class Notifications extends Component {
                                             </MenuItem>
                                         )))}
                     <NotificationFooter unSeenCount={unSeenCount}
-                                        viewAllNotification={this.props.viewAllNotification}/>
+                                        viewAllNotification={this.props.viewAllNotification}
+                                        markAllAsSeen={this.props.markAllAsSeen}
+                                        viewNewNotification={this.props.viewNewNotification}
+                                        />
                     </Menu>
-         </span>
+            </span>
         );
     }
 }

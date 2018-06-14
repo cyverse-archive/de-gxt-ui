@@ -1,24 +1,23 @@
 /**
  * @author sriram
  */
-import React, {Component} from "react";
+import React, { Component } from "react";
 import UserMenu from "./UserMenu";
 import Notifications from "./Notifications";
 import Help from "./Help";
 import Taskbar from "./Taskbar";
-import intlData from "../messages";
 import styles from "../style";
 import injectSheet from "react-jss";
 import ids from "../ids";
 import constants from "../../constants";
 import Sockette from "sockette";
-import withI18N from "../../util/I18NWrapper";
 import build from "../../util/DebugIDUtil";
 import tourStrings from "../NewUserTourStrings";
 import introJs from "intro.js";
-import dataImg from "../../images/data.png";
-import appsImg from "../../images/apps.png";
-import analysesImg from "../../images/analyses.png";
+import dataImg from "../../resources/images/data.png";
+import appsImg from "../../resources/images/apps.png";
+import analysesImg from "../../resources/images/analyses.png";
+
 
 class DesktopView extends Component {
 
@@ -119,14 +118,11 @@ class DesktopView extends Component {
     }
 
     onNotificationClicked(messageId) {
-        console.log(messageId);
         const {notifications} = this.state;
         if(notifications && notifications.messages){
             let found = notifications.messages.find(function (n) {
-               console.log(n.message.id + "<===>" + messageId);
                return n.message.id === messageId;
             });
-            console.log("found=>" + found);
             if(found) {
                 this.props.presenter.onNotificationSelected(found,(updatedUnSeenCount) => {
                     this.setState({
@@ -148,8 +144,6 @@ class DesktopView extends Component {
         } catch (e) {
             return;
         }
-        console.log("count-->" + msg.total);
-        console.log("msg-->" + msg.message);
         if (msg.total) {
             this.setState({unSeenCount: msg.total});
         }
@@ -180,7 +174,6 @@ class DesktopView extends Component {
         let host = location.hostname;
         let port = location.port;
         const notificationUrl = protocol + host + (port ? ':' + port : '') + constants.NOTIFICATION_WS;
-        console.log(notificationUrl);
         return notificationUrl;
     }
 
@@ -195,8 +188,12 @@ class DesktopView extends Component {
     onMarkAllAsSeenClicked() {
        this.props.presenter.doMarkAllSeen(true,(updatedUnSeenCount) => {
             this.setState({
-                unSeenCount:updatedUnSeenCount,
+                unSeenCount: updatedUnSeenCount + "",       //count is always string
             });
+           const {notifications} = this.state;
+           notifications.forEach(function (n) {
+               n.seen = true;
+           });
         }, (httpStatusCode, errMsg) => {
             // do nothing for now
         });
@@ -258,26 +255,32 @@ class DesktopView extends Component {
                         </span>
                     </div>
                 </div>
+                {/*getMessge wont work with title attribute*/}
                 <div id={this.props.desktopContainerId} className={classes.desktop}>
                     <img className={classes.data}
                          id={build(ids.DESKTOP, ids.DATA_BTN)}
-                         alt="data" onClick={this.handleDesktopClick}
+                         alt="data"
+                         onClick={this.handleDesktopClick}
                          src={dataImg}
-                         ref={this.dataBtn}>
+                         ref={this.dataBtn}
+                         title="Store, manage, and share your data here.">
                     </img>
                     <img className={classes.apps}
                          id={build(ids.DESKTOP, ids.APPS_BTN)}
                          alt="apps"
                          onClick={this.handleDesktopClick}
                          src={appsImg}
-                         ref={this.appsBtn}>
+                         ref={this.appsBtn}
+                         title="Discover, create, and use scientific apps for your data.">
+
                     </img>
                     <img className={classes.analyses}
                          id={build(ids.DESKTOP, ids.ANALYSES_BTN)}
                          onClick={this.handleDesktopClick}
                          alt="analyses"
                          src={analysesImg}
-                         ref={this.analysesBtn}>
+                         ref={this.analysesBtn}
+                         title="Find the status, parameters, and results of your executed apps.">
                     </img>
                 </div>
                 <div>
@@ -287,4 +290,4 @@ class DesktopView extends Component {
     }
 }
 
-export default injectSheet(styles)(withI18N(DesktopView, intlData));
+export default injectSheet(styles)(DesktopView);

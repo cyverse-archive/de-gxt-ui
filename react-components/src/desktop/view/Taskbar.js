@@ -1,11 +1,11 @@
 /**
  * @author sriram
  */
-import React, {Component} from "react";
+import React, { Component } from "react";
 import styles from "../style";
 import TaskButton from "./TaskButton";
 import Toolbar from "@material-ui/core/Toolbar";
-import {withStyles} from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 
 
 class Taskbar extends Component {

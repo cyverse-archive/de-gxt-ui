@@ -1,10 +1,10 @@
 /**
  * @author sriram
  */
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Button from "@material-ui/core/Button";
 import styles from "../style";
-import {withStyles} from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 
 class TaskButton extends Component {
     constructor(props) {
@@ -14,7 +14,7 @@ class TaskButton extends Component {
     }
 
     onClick(event) {
-       this.props.taskButtonClickHandler(this.props.windowConfig);
+        this.props.taskButtonClickHandler(this.props.windowConfig);
     }
 
     getButton() {
@@ -22,7 +22,7 @@ class TaskButton extends Component {
             return (<Button key={this.props.windowConfig.tag}
                             className={this.props.classes.taskbarButtonMinimized}
                             onClick={this.onClick}
-                            variant="raised" >
+                            variant="raised">
                     {this.props.windowConfig.windowTitle}
                 </Button>
             );
@@ -47,4 +47,4 @@ class TaskButton extends Component {
 }
 
 export default withStyles(styles)(TaskButton); //need to use withStyles here instead of injectSheet
-                                              // of react-jss to override default mui component styles.
+// of react-jss to override default mui component styles.

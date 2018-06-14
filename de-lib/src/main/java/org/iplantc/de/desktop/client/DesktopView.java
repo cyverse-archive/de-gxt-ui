@@ -50,34 +50,6 @@ public interface DesktopView extends IsWidget {
         String feedbackAlertValidationWarning();
 
         String completeRequiredFieldsError();
-
-        String notifications();
-
-        String preferences();
-
-        String collaboration();
-
-        String introduction();
-
-        String documentation();
-
-        String contactSupport();
-
-        String about();
-
-        String logout();
-
-        String iconHomepageDataTip();
-
-        String forum();
-
-        String faqs();
-
-        String feedback();
-
-        String iconHomepageAnalysesTip();
-
-        String iconHomepageAppsTip();
     }
 
     /**
@@ -98,7 +70,6 @@ public interface DesktopView extends IsWidget {
         @JsIgnore
         void setDesktopContainer(Element desktopContainer);
 
-        @JsType
         interface DesktopPresenterAppearance {
 
             String feedbackServiceFailure();
@@ -145,7 +116,6 @@ public interface DesktopView extends IsWidget {
 
             String sectionOne();
 
-            @JsIgnore
             SafeHtml webhookSaveError();
 
             /**
@@ -173,6 +143,7 @@ public interface DesktopView extends IsWidget {
 
         void onForumsBtnSelect();
 
+        @SuppressWarnings("unusuable-by-js")
         void onNotificationSelected(final Splittable notificationMessage,
                                     final NotificationMarkAsSeenCallback callback,
                                     final ErrorCallback errorCallback);
@@ -188,6 +159,7 @@ public interface DesktopView extends IsWidget {
         @JsIgnore
         void show(final WindowConfig config, final boolean updateExistingWindow);
 
+        @JsIgnore
         void submitUserFeedback(Splittable splittable, IsHideable isHideable);
 
         @JsIgnore
@@ -217,6 +189,7 @@ public interface DesktopView extends IsWidget {
         @JsIgnore
         void onJoinTeamRequestProcessed(NotificationMessage message);
 
+        @SuppressWarnings("unusuable-by-js")
         void onTaskButtonClicked(Splittable windowConfig);
     }
 

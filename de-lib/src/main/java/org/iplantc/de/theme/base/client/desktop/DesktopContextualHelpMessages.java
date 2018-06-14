@@ -11,15 +11,6 @@ public interface DesktopContextualHelpMessages extends Messages {
     @Key("defaultOutputFolderHelp")
     String defaultOutputFolderHelp();
 
-    @Key("iconHomepageAnalysesTip")
-    String iconHomepageAnalysesTip();
-
-    @Key("iconHomepageAppsTip")
-    String iconHomepageAppsTip();
-
-    @Key("iconHomepageDataTip")
-    String iconHomepageDataTip();
-
     @Key("notifyEmailHelp")
     String notifyEmailHelp();
 
