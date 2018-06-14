@@ -8,11 +8,9 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
-import Tooltip from '@material-ui/core/Tooltip';
 import ContentRemove from '@material-ui/icons/Delete';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import Button from '@material-ui/core/Button';
@@ -25,6 +23,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+
+import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
+import KeyboardArrowUp from "@material-ui/icons/KeyboardArrowUp";
 
 const styles = theme => ({
     metadataTemplateContainer: {
@@ -153,6 +154,16 @@ let AttributeGridToolbar = props => {
         <Toolbar
             className={classes.root}
         >
+            <div className={classes.actions}>
+                <Button variant="fab"
+                        mini
+                        color="primary"
+                        aria-label="edit template info"
+                        onClick={openTemplateInfoDialog}
+                >
+                    <ContentEdit />
+                </Button>
+            </div>
             <div className={classes.title}>
                 <Typography variant="title" id="tableTitle">
                     {templateName}
@@ -163,8 +174,27 @@ let AttributeGridToolbar = props => {
             </div>
             <div className={classes.spacer} />
             <div className={classes.actions}>
-                <Button variant="fab" mini color="primary" aria-label="edit" onClick={openTemplateInfoDialog}>
-                    <ContentEdit />
+                <Button variant="fab"
+                        mini
+                        color="primary"
+                        aria-label="move up"
+                        className={classes.button}
+                        disabled={props.moveUpDisabled}
+                        onClick={() => props.moveUp()}
+                >
+                    <KeyboardArrowUp />
+                </Button>
+            </div>
+            <div className={classes.actions}>
+                <Button variant="fab"
+                        mini
+                        color="primary"
+                        aria-label="move down"
+                        className={classes.button}
+                        disabled={props.moveDownDisabled}
+                        onClick={() => props.moveDown()}
+                >
+                    <KeyboardArrowDown />
                 </Button>
             </div>
             <div className={classes.actions}>
@@ -192,7 +222,6 @@ const headerStyles = theme => ({
 });
 
 const columnData = [
-    { id: "order", label: "#", numeric: true },
     {
         id: "name",
         label: "Attribute",
@@ -207,12 +236,8 @@ const columnData = [
 ];
 
 class AttributeGridHeader extends React.Component {
-    createSortHandler = property => event => {
-        this.props.onRequestSort(event, property);
-    };
-
     render() {
-        const { classes, order, orderBy } = this.props;
+        const { classes } = this.props;
 
         return (
             <TableHead className={classes.tableHead}>
@@ -225,21 +250,8 @@ class AttributeGridHeader extends React.Component {
                                 padding={column.padding ? column.padding : "default"}
                                 numeric={column.numeric}
                                 key={column.id}
-                                sortDirection={orderBy === column.id ? order : false}
                             >
-                                <Tooltip
-                                    title="Sort"
-                                    placement="bottom-start"
-                                    enterDelay={300}
-                                >
-                                    <TableSortLabel
-                                        active={orderBy === column.id}
-                                        direction={order}
-                                        onClick={this.createSortHandler(column.id)}
-                                    >
-                                        {column.label}
-                                    </TableSortLabel>
-                                </Tooltip>
+                                {column.label}
                             </TableCell>
                         );
                     }, this)}
@@ -261,17 +273,14 @@ class EditMetadataTemplate extends Component {
 
         const { name, description, deleted } = props.metadataTemplate;
 
-        let attributes = props.metadataTemplate.attributes.map((attr, index) => {
-            return {...attr, order: index + 1};
-        });
+        let attributes = [...props.metadataTemplate.attributes];
 
         this.state = {
             name: name,
             description: description,
             deleted: deleted,
             attributes: attributes,
-            orderBy: props.orderBy,
-            order: props.order || "asc",
+            selected: -1,
             templateInfoDialogOpen: false,
         };
     }
@@ -284,14 +293,11 @@ class EditMetadataTemplate extends Component {
             attributes,
         } = this.state;
 
-        let sortedAttrs = [...attributes];
-        sortedAttrs.sort((a, b) => (a.order < b.order ? -1 : 1));
-
         this.props.presenter.onSaveTemplate({
             name,
             description,
             deleted,
-            attributes: sortedAttrs,
+            attributes,
         });
     };
 
@@ -325,13 +331,13 @@ class EditMetadataTemplate extends Component {
         }
 
         this.setState({
+            selected: 0,
             attributes: [
                 {
                     name: name,
                     description: "",
                     type: "String",
                     required: false,
-                    order: attributes.length + 1,
                 },
                 ...attributes
             ],
@@ -339,19 +345,19 @@ class EditMetadataTemplate extends Component {
     };
 
     onAttributeRemoved = (index) => {
-        let attributes = [...this.state.attributes];
-        let removedPosition = attributes[index].order;
+        let { selected, attributes } = this.state;
 
+        attributes = [...attributes];
         attributes.splice(index, 1);
 
-        // reset ordering
-        attributes.forEach(attr => {
-            if (attr.order > removedPosition) {
-                attr.order--;
-            }
-        });
+        // fix selection
+        if (index === selected) {
+            selected = -1;
+        } else if (index < selected) {
+            selected--;
+        }
 
-        this.setState({attributes: attributes});
+        this.setState({selected, attributes});
     };
 
     onAttributeUpdated = (index, attr) => {
@@ -368,33 +374,34 @@ class EditMetadataTemplate extends Component {
         });
     };
 
-    handleRequestSort = (event, property) => {
-        const orderBy = property;
-        let order = 'asc';
+    handleSelect = (index) => {
+        const { selected } = this.state;
+        this.setState({ selected: selected === index ? -1 : index });
+    };
 
-        if (this.state.orderBy === property && this.state.order === order) {
-            order = 'desc';
-        }
+    moveUp = () => {
+        const { selected } = this.state;
+        let attributes = [...this.state.attributes];
 
-        const comparator = (a, b) => (a < b ? -1 : 1);
-        const attributes = this.state.attributes.sort((a, b) => {
-            let aVal = a[orderBy];
-            let bVal = b[orderBy];
+        let [attr] = attributes.splice(selected, 1);
+        attributes.splice(selected - 1, 0, attr);
 
-            if (orderBy === "attributes") {
-                aVal = aVal ? aVal.length : 0;
-                bVal = bVal ? bVal.length : 0;
-            }
+        this.setState({attributes: attributes, selected: selected - 1});
+    };
 
-            return order === 'desc' ? comparator(bVal, aVal) : comparator(aVal, bVal);
-        });
+    moveDown = () => {
+        const { selected } = this.state;
+        let attributes = [...this.state.attributes];
 
-        this.setState({ attributes, order, orderBy });
+        let [attr] = attributes.splice(selected, 1);
+        attributes.splice(selected + 1, 0, attr);
+
+        this.setState({attributes: attributes, selected: selected + 1});
     };
 
     render() {
         const { classes } = this.props;
-        const { name, description, attributes, order, orderBy, templateInfoDialogOpen } = this.state;
+        const { name, description, attributes, selected, templateInfoDialogOpen } = this.state;
 
         return (
             <div className={classes.metadataTemplateContainer}>
@@ -408,14 +415,18 @@ class EditMetadataTemplate extends Component {
                                       description={description}
                                       onAddAttribute={this.onAddAttribute}
                                       openTemplateInfoDialog={this.openTemplateInfoDialog}
+                                      moveUp={this.moveUp}
+                                      moveUpDisabled={selected <= 0}
+                                      moveDown={this.moveDown}
+                                      moveDownDisabled={selected < 0 || (attributes.length - 1) <= selected}
                 />
 
                 <div className={classes.tableWrapper}>
                     <Table aria-labelledby="tableTitle">
                         <TableBody>
                             {attributes && attributes.map((attribute, index) => {
+                                const isSelected = index === selected;
                                 const {
-                                    order,
                                     name,
                                     description,
                                     type,
@@ -428,8 +439,9 @@ class EditMetadataTemplate extends Component {
                                         hover
                                         tabIndex={-1}
                                         key={name}
+                                        selected={isSelected}
+                                        onClick={() => this.handleSelect(index)}
                                     >
-                                        <TableCell numeric>{order}</TableCell>
                                         <TableCell component="th" scope="row" padding="none">
                                             {name}
                                         </TableCell>
@@ -437,9 +449,12 @@ class EditMetadataTemplate extends Component {
                                         <TableCell>{type}</TableCell>
                                         <TableCell numeric>{attributes ? attributes.length : 0}</TableCell>
                                         <TableCell padding="checkbox">
-                                            <Checkbox checked={required} onChange={(event, checked) => {
-                                                this.onRequiredChecked(index, attribute, checked);
-                                            }} />
+                                            <Checkbox checked={required}
+                                                      onClick={event => event.stopPropagation()}
+                                                      onChange={(event, checked) => {
+                                                          this.onRequiredChecked(index, attribute, checked);
+                                                      }}
+                                            />
                                         </TableCell>
                                         <TableCell padding="none">
                                             <Button variant="fab"
@@ -447,6 +462,7 @@ class EditMetadataTemplate extends Component {
                                                     color="primary"
                                                     aria-label="edit"
                                                     className={classes.button}
+                                                    onClick={event => event.stopPropagation()}
                                             >
                                                 <ContentEdit />
                                             </Button>
@@ -457,7 +473,10 @@ class EditMetadataTemplate extends Component {
                                                     color="secondary"
                                                     aria-label="delete"
                                                     className={classes.button}
-                                                    onClick={() => this.onAttributeRemoved(index)}
+                                                    onClick={event => {
+                                                        event.stopPropagation();
+                                                        this.onAttributeRemoved(index);
+                                                    }}
                                             >
                                                 <ContentRemove />
                                             </Button>
@@ -466,12 +485,7 @@ class EditMetadataTemplate extends Component {
                                 );
                             })}
                         </TableBody>
-                        <AttributeGridHeader
-                            order={order}
-                            orderBy={orderBy}
-                            onRequestSort={this.handleRequestSort}
-                            rowCount={attributes.length}
-                        />
+                        <AttributeGridHeader/>
                     </Table>
                 </div>
 
