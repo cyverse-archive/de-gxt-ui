@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.search.DateInterval;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 
 import com.google.gwt.core.client.GWT;
+import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
@@ -19,7 +20,7 @@ import java.util.Date;
  */
 public class DateIntervalProvider implements Provider<Splittable> {
 
-    private SearchAutoBeanFactory factory = GWT.create(SearchAutoBeanFactory.class);
+    @Inject SearchAutoBeanFactory factory;
 
     @Override
     public Splittable get() {
