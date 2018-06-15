@@ -24,14 +24,14 @@ import java.util.logging.Logger;
  */
 public class SearchModelUtils {
 
-    private final List<String> fileSizeUnits = Lists.newArrayList("KB", "MB", "GB", "TB");
-    private final SearchAutoBeanFactory factory = GWT.create(SearchAutoBeanFactory.class);
-    private final DEProperties properties = DEProperties.getInstance();
+    private final SearchAutoBeanFactory factory;
+    private final DEProperties properties;
     private static SearchModelUtils INSTANCE;
     Logger LOG = Logger.getLogger(SearchModelUtils.class.getName());
 
     SearchModelUtils(){
-
+        properties = DEProperties.getInstance();
+        factory = GWT.create(SearchAutoBeanFactory.class);
     }
 
     public static SearchModelUtils getInstance(){
@@ -63,37 +63,6 @@ public class SearchModelUtils {
         qt.setNegatedPathPrefix(properties.getCommunityDataPath());
 
         return qt;
-    }
-
-    public Double convertFileSizeToBytes(Double size, FileSizeUnit unit) {
-        if (size != null && unit != null && unit.getUnit() > 0) {
-            return size * Math.pow(1024, unit.getUnit());
-        }
-
-        return size;
-    }
-
-    public List<FileSizeUnit> createFileSizeUnits() {
-        List<FileSizeUnit> ret = Lists.newArrayList();
-
-        int unit = 0;
-        for (String fsLabel : fileSizeUnits) {
-            unit++;
-            ret.add(createFileSizeUnit(unit, fsLabel));
-        }
-
-        return ret;
-    }
-
-    private FileSizeUnit createDefaultFileSizeUnit() {
-        return createFileSizeUnit(1, fileSizeUnits.get(0));
-    }
-
-    private FileSizeUnit createFileSizeUnit(int unit, String label) {
-        FileSizeUnit fsUnit = factory.fileSizeUnit().as();
-        fsUnit.setUnit(unit);
-        fsUnit.setLabel(label);
-        return fsUnit;
     }
 
     public DiskResourceQueryTemplate copyDiskResourceQueryTemplate(DiskResourceQueryTemplate src) {
