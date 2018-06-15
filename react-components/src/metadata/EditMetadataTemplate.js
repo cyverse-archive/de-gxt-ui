@@ -12,130 +12,81 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import ContentRemove from '@material-ui/icons/Delete';
-import { lighten } from '@material-ui/core/styles/colorManipulator';
 import Button from '@material-ui/core/Button';
 import ContentAdd from '@material-ui/icons/Add';
 import ContentEdit from '@material-ui/icons/Edit';
 import TextField from '@material-ui/core/TextField';
 
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+
+import Slide from '@material-ui/core/Slide';
+
+import Divider from '@material-ui/core/Divider';
+import AppBar from '@material-ui/core/AppBar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUp from "@material-ui/icons/KeyboardArrowUp";
 
+const AttributeTypes = [
+    "String",
+    "Timestamp",
+    "Boolean",
+    "Number",
+    "Integer",
+    "Multiline Text",
+    "URL/URI",
+    "Enum",
+    "OLS Ontology Term",
+    "UAT Ontology Term",
+];
+
+const AttributeTypeMenuItems = AttributeTypes.map((type, index) => (<MenuItem key={index} value={type}>{type}</MenuItem>));
+
+const Transition = (props) => {
+    return <Slide direction="up" {...props} />;
+};
+
 const styles = theme => ({
-    metadataTemplateContainer: {
+    attributeTableContainer: {
         width: "100%",
         height: "100%",
-        marginTop: theme.spacing.unit * 3,
     },
-    tableWrapper: {
-        overflow: 'auto',
-        height: "70%",
+    attributeTableWrapper: {
+        overflow: "auto",
+        height: "80%",
+    },
+    appBar: {
+        position: "relative",
+    },
+    flex: {
+        flex: 1,
+    },
+    tableHead: {
+        backgroundColor: "#e2e2e2",
+        position: "sticky",
+        top: 0
+    },
+    deleteIcon: {
+        "&:hover": {
+            backgroundColor: theme.palette.error.dark,
+        },
     },
 });
 
-class TemplateInfoDialog extends React.Component {
-    constructor(props) {
-        super(props);
-
-        const { open, name, description } = props;
-
-        this.state = {
-            open,
-            name,
-            description,
-        };
-    }
-
-    componentWillReceiveProps(newProps) {
-        const { open, name, description } = newProps;
-
-        this.setState({
-            open,
-            name,
-            description,
-        });
-    }
-
-    handleChange = key => event => {
-        this.setState({
-            [key]: event.target.value,
-        });
-    };
-
-
-    handleSave = () => {
-        const { onTemplateInfoDialogSave } = this.props;
-        const { name, description } = this.state;
-
-        onTemplateInfoDialogSave(name, description);
-    };
-
-    render() {
-        const { name, description, open } = this.state;
-
-        return (
-            <Dialog
-                open={open}
-                onClose={this.props.closeTemplateInfoDialog}
-                disableBackdropClick
-                disableEscapeKeyDown
-                aria-labelledby="form-dialog-title"
-            >
-                <DialogTitle id="form-dialog-title">Edit Template Info</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Edit Metadata Template name and description:
-                    </DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        label="Name"
-                        value={name}
-                        onChange={this.handleChange("name")}
-                        fullWidth
-                    />
-                    <TextField
-                        id="description"
-                        label="Description"
-                        value={description}
-                        onChange={this.handleChange("description")}
-                        fullWidth
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.props.closeTemplateInfoDialog} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={this.handleSave} color="primary">
-                        OK
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        );
-    }
-}
-
 const toolbarStyles = theme => ({
     root: {
+        paddingLeft: theme.spacing.unit,
         paddingRight: theme.spacing.unit,
     },
-    highlight:
-        theme.palette.type === 'light'
-            ? {
-                color: theme.palette.secondary.main,
-                backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-            }
-            : {
-                color: theme.palette.text.primary,
-                backgroundColor: theme.palette.secondary.dark,
-            },
     spacer: {
         flex: '1 1 100%',
     },
@@ -143,12 +94,13 @@ const toolbarStyles = theme => ({
         color: theme.palette.text.secondary,
     },
     title: {
+        paddingLeft: theme.spacing.unit,
         flex: '0 0 auto',
     },
 });
 
 let AttributeGridToolbar = props => {
-    const { templateName, description, onAddAttribute, openTemplateInfoDialog, classes } = props;
+    const { onAddAttribute, classes } = props;
 
     return (
         <Toolbar
@@ -158,25 +110,22 @@ let AttributeGridToolbar = props => {
                 <Button variant="fab"
                         mini
                         color="primary"
-                        aria-label="edit template info"
-                        onClick={openTemplateInfoDialog}
+                        aria-label="add attribute"
+                        onClick={onAddAttribute}
                 >
-                    <ContentEdit />
+                    <ContentAdd />
                 </Button>
             </div>
             <div className={classes.title}>
                 <Typography variant="title" id="tableTitle">
-                    {templateName}
-                </Typography>
-                <Typography color="inherit" variant="subheading">
-                    {description}
+                    Attributes
                 </Typography>
             </div>
             <div className={classes.spacer} />
             <div className={classes.actions}>
                 <Button variant="fab"
                         mini
-                        color="primary"
+                        color="secondary"
                         aria-label="move up"
                         className={classes.button}
                         disabled={props.moveUpDisabled}
@@ -188,7 +137,7 @@ let AttributeGridToolbar = props => {
             <div className={classes.actions}>
                 <Button variant="fab"
                         mini
-                        color="primary"
+                        color="secondary"
                         aria-label="move down"
                         className={classes.button}
                         disabled={props.moveDownDisabled}
@@ -197,29 +146,11 @@ let AttributeGridToolbar = props => {
                     <KeyboardArrowDown />
                 </Button>
             </div>
-            <div className={classes.actions}>
-                <Button variant="fab"
-                        mini
-                        color="primary"
-                        aria-label="add attribute"
-                        onClick={onAddAttribute}
-                >
-                    <ContentAdd />
-                </Button>
-            </div>
         </Toolbar>
     );
 };
 
 AttributeGridToolbar = withStyles(toolbarStyles)(AttributeGridToolbar);
-
-const headerStyles = theme => ({
-    tableHead: {
-        backgroundColor: "#e2e2e2",
-        position: "sticky",
-        top: 0
-    },
-});
 
 const columnData = [
     {
@@ -256,74 +187,28 @@ class AttributeGridHeader extends React.Component {
                         );
                     }, this)}
                     <TableCell padding="none" />
-                    <TableCell padding="none" />
                 </TableRow>
             </TableHead>
         );
     }
 }
 
-AttributeGridHeader = withStyles(headerStyles)(AttributeGridHeader);
+AttributeGridHeader = withStyles(styles)(AttributeGridHeader);
 
-class EditMetadataTemplate extends Component {
+class TemplateAttributeList extends Component {
     constructor(props) {
         super(props);
 
         this.newAttrCount = 1;
 
-        const { name, description, deleted } = props.metadataTemplate;
-
-        let attributes = [...props.metadataTemplate.attributes];
-
         this.state = {
-            name: name,
-            description: description,
-            deleted: deleted,
-            attributes: attributes,
             selected: -1,
-            templateInfoDialogOpen: false,
         };
     }
 
-    onSaveTemplate = () => {
-        const {
-            name,
-            description,
-            deleted,
-            attributes,
-        } = this.state;
-
-        this.props.presenter.onSaveTemplate({
-            name,
-            description,
-            deleted,
-            attributes,
-        });
-    };
-
-    onTemplateInfoDialogSave = (name, description) => {
-        this.setState({
-            name,
-            description,
-            templateInfoDialogOpen: false,
-        });
-    };
-
-    closeTemplateInfoDialog = () => {
-        this.setState({
-            templateInfoDialogOpen: false,
-        });
-    };
-
-    openTemplateInfoDialog = () => {
-        this.setState({
-            templateInfoDialogOpen: true,
-        });
-    };
-
     onAddAttribute = () => {
         let name = `New attribute ${this.newAttrCount++}`;
-        let attributes = this.state.attributes;
+        let attributes = this.props.attributes;
 
         const namesMatch = attr => (attr.name === name);
         while (attributes.findIndex(namesMatch) > -1) {
@@ -332,20 +217,22 @@ class EditMetadataTemplate extends Component {
 
         this.setState({
             selected: 0,
-            attributes: [
-                {
-                    name: name,
-                    description: "",
-                    type: "String",
-                    required: false,
-                },
-                ...attributes
-            ],
         });
+
+        this.props.onAttributesChanged([
+            {
+                name: name,
+                description: "",
+                type: "String",
+                required: false,
+            },
+            ...attributes
+        ]);
     };
 
     onAttributeRemoved = (index) => {
-        let { selected, attributes } = this.state;
+        let { attributes } = this.props;
+        let { selected } = this.state;
 
         attributes = [...attributes];
         attributes.splice(index, 1);
@@ -357,18 +244,12 @@ class EditMetadataTemplate extends Component {
             selected--;
         }
 
-        this.setState({selected, attributes});
-    };
-
-    onAttributeUpdated = (index, attr) => {
-        let attributes = [...this.state.attributes];
-        attributes.splice(index, 1, attr);
-
-        this.setState({attributes: attributes});
+        this.setState({selected});
+        this.props.onAttributesChanged(attributes);
     };
 
     onRequiredChecked = (index, attr, checked) => {
-        this.onAttributeUpdated(index, {
+        this.props.onAttributeUpdated(index, {
             ...attr,
             required: checked,
         });
@@ -381,47 +262,41 @@ class EditMetadataTemplate extends Component {
 
     moveUp = () => {
         const { selected } = this.state;
-        let attributes = [...this.state.attributes];
+        let attributes = [...this.props.attributes];
 
         let [attr] = attributes.splice(selected, 1);
         attributes.splice(selected - 1, 0, attr);
 
-        this.setState({attributes: attributes, selected: selected - 1});
+        this.setState({selected: selected - 1});
+        this.props.onAttributesChanged(attributes);
     };
 
     moveDown = () => {
         const { selected } = this.state;
-        let attributes = [...this.state.attributes];
+        let attributes = [...this.props.attributes];
 
         let [attr] = attributes.splice(selected, 1);
         attributes.splice(selected + 1, 0, attr);
 
-        this.setState({attributes: attributes, selected: selected + 1});
+        this.setState({selected: selected + 1});
+        this.props.onAttributesChanged(attributes);
     };
 
     render() {
-        const { classes } = this.props;
-        const { name, description, attributes, selected, templateInfoDialogOpen } = this.state;
+        const { classes, attributes } = this.props;
+        const { selected } = this.state;
 
         return (
-            <div className={classes.metadataTemplateContainer}>
-                <TemplateInfoDialog open={templateInfoDialogOpen}
-                                    name={name}
-                                    description={description}
-                                    onTemplateInfoDialogSave={this.onTemplateInfoDialogSave}
-                                    closeTemplateInfoDialog={this.closeTemplateInfoDialog}/>
+            <div className={classes.attributeTableContainer}>
 
-                <AttributeGridToolbar templateName={name}
-                                      description={description}
-                                      onAddAttribute={this.onAddAttribute}
-                                      openTemplateInfoDialog={this.openTemplateInfoDialog}
+                <AttributeGridToolbar onAddAttribute={this.onAddAttribute}
                                       moveUp={this.moveUp}
                                       moveUpDisabled={selected <= 0}
                                       moveDown={this.moveDown}
                                       moveDownDisabled={selected < 0 || (attributes.length - 1) <= selected}
                 />
 
-                <div className={classes.tableWrapper}>
+                <div className={classes.attributeTableWrapper}>
                     <Table aria-labelledby="tableTitle">
                         <TableBody>
                             {attributes && attributes.map((attribute, index) => {
@@ -449,7 +324,8 @@ class EditMetadataTemplate extends Component {
                                         <TableCell>{type}</TableCell>
                                         <TableCell numeric>{attributes ? attributes.length : 0}</TableCell>
                                         <TableCell padding="checkbox">
-                                            <Checkbox checked={required}
+                                            <Checkbox color="primary"
+                                                      checked={required}
                                                       onClick={event => event.stopPropagation()}
                                                       onChange={(event, checked) => {
                                                           this.onRequiredChecked(index, attribute, checked);
@@ -457,29 +333,24 @@ class EditMetadataTemplate extends Component {
                                             />
                                         </TableCell>
                                         <TableCell padding="none">
-                                            <Button variant="fab"
-                                                    mini
-                                                    color="primary"
-                                                    aria-label="edit"
-                                                    className={classes.button}
-                                                    onClick={event => event.stopPropagation()}
+                                            <IconButton aria-label="edit"
+                                                        className={classes.button}
+                                                        onClick={event => {
+                                                            event.stopPropagation();
+                                                            this.props.onEditAttr(index);
+                                                        }}
                                             >
                                                 <ContentEdit />
-                                            </Button>
-                                        </TableCell>
-                                        <TableCell padding="none">
-                                            <Button variant="fab"
-                                                    mini
-                                                    color="secondary"
-                                                    aria-label="delete"
-                                                    className={classes.button}
-                                                    onClick={event => {
-                                                        event.stopPropagation();
-                                                        this.onAttributeRemoved(index);
-                                                    }}
+                                            </IconButton>
+                                            <IconButton aria-label="delete"
+                                                        classes={{root: classes.deleteIcon}}
+                                                        onClick={event => {
+                                                            event.stopPropagation();
+                                                            this.onAttributeRemoved(index);
+                                                        }}
                                             >
                                                 <ContentRemove />
-                                            </Button>
+                                            </IconButton>
                                         </TableCell>
                                     </TableRow>
                                 );
@@ -488,11 +359,270 @@ class EditMetadataTemplate extends Component {
                         <AttributeGridHeader/>
                     </Table>
                 </div>
-
-                <Button variant="raised" onClick={this.onSaveTemplate} fullWidth={true}>{
-                    this.props.saveText
-                }</Button>
             </div>
+        );
+    }
+}
+
+TemplateAttributeList = withStyles(styles)(TemplateAttributeList);
+
+class EditAttribute extends Component {
+    constructor(props) {
+        super(props);
+
+        const { name, description, type, required, attributes } = props.attribute;
+        this.state = {
+            name,
+            description,
+            type,
+            required,
+            attributes: attributes || [],
+            editingAttrIndex: -1,
+        };
+
+        this.EditAttributeChild = withStyles(styles)(EditAttribute);
+    }
+
+    componentWillReceiveProps(newProps) {
+        const { attribute } = newProps;
+        const { name, description, type, required, attributes } = attribute;
+
+        this.setState({
+            name,
+            description,
+            type,
+            required,
+            attributes: attributes || [],
+        });
+    }
+
+    saveAttr = () => {
+        const { name, description, type, required, attributes } = this.state;
+        this.props.saveAttr({...this.props.attribute, name, description, type, required, attributes});
+    };
+
+    handleChange = key => event => {
+        this.setState({
+            [key]: event.target.value,
+        });
+    };
+
+    onAttributesChanged = (attributes) => {
+        this.setState({attributes});
+    };
+
+    onAttributeUpdated = (index, attr) => {
+        let attributes = [...this.state.attributes];
+        attributes.splice(index, 1, attr);
+
+        this.setState({attributes: attributes, editingAttrIndex: -1});
+    };
+
+    render() {
+        const { classes, open, parentName } = this.props;
+        const { name, description, type, required, attributes, editingAttrIndex } = this.state;
+        const editingAttr = editingAttrIndex >= 0 ? attributes[editingAttrIndex] : {};
+
+        const EditAttributeChild = this.EditAttributeChild;
+
+        return (
+            <Dialog
+                open={open}
+                onClose={this.props.closeAttrDialog}
+                fullScreen
+                disableBackdropClick
+                disableEscapeKeyDown
+                aria-labelledby="form-dialog-title"
+                TransitionComponent={Transition}
+            >
+                <AppBar className={classes.appBar}>
+                    <Toolbar>
+                        <IconButton color="inherit" onClick={this.props.closeAttrDialog} aria-label="Close">
+                            <CloseIcon />
+                        </IconButton>
+                        <Typography variant="title" color="inherit" className={classes.flex}>
+                            Edit Attribute for {parentName}
+                        </Typography>
+                        <Button color="inherit" onClick={this.saveAttr}>
+                            Save
+                        </Button>
+                    </Toolbar>
+                </AppBar>
+                <DialogContent>
+
+                    <TextField id="name"
+                               label="Name"
+                               value={name || ""}
+                               onChange={this.handleChange("name")}
+                               margin="dense"
+                               autoFocus
+                               fullWidth
+                    />
+                    <TextField id="description"
+                               label="Description"
+                               value={description || ""}
+                               onChange={this.handleChange("description")}
+                               fullWidth
+                    />
+
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="attr-type">Type</InputLabel>
+                        <Select
+                            value={type || ""}
+                            onChange={this.handleChange("type")}
+                            input={<Input id="attr-type" />}
+                        >
+                            {AttributeTypeMenuItems}
+                        </Select>
+                    </FormControl>
+
+                    <Checkbox id="required"
+                              color="primary"
+                              checked={!!required}
+                              onChange={(event, checked) => this.setState({required: checked})}
+                    />
+                    <InputLabel htmlFor="required">Required</InputLabel>
+
+                    <Divider />
+
+                    <TemplateAttributeList attributes={attributes}
+                                           onAttributesChanged={this.onAttributesChanged}
+                                           onAttributeUpdated={this.onAttributeUpdated}
+                                           onEditAttr={(index) => this.setState({editingAttrIndex: index})}
+                    />
+
+                    <EditAttributeChild attribute={editingAttr}
+                                        open={editingAttrIndex >= 0}
+                                        parentName={name}
+                                        saveAttr={(attr) => this.onAttributeUpdated(editingAttrIndex, attr)}
+                                        closeAttrDialog={() => this.setState({editingAttrIndex: -1})}
+                    />
+                </DialogContent>
+            </Dialog>
+        );
+    }
+}
+
+EditAttribute = withStyles(styles)(EditAttribute);
+
+class EditMetadataTemplate extends Component {
+    constructor(props) {
+        super(props);
+
+
+        const { name, description, deleted } = props.metadataTemplate;
+
+        let attributes = [...props.metadataTemplate.attributes];
+
+        this.state = {
+            name: name,
+            description: description,
+            deleted: deleted,
+            attributes: attributes,
+            editingAttrIndex: -1,
+        };
+    }
+
+    onSaveTemplate = () => {
+        const {
+            name,
+            description,
+            deleted,
+            attributes,
+        } = this.state;
+
+        this.props.presenter.onSaveTemplate({
+            name,
+            description,
+            deleted,
+            attributes,
+        });
+    };
+
+    handleChange = key => event => {
+        this.setState({
+            [key]: event.target.value,
+        });
+    };
+
+    onAttributesChanged = (attributes) => {
+        this.setState({attributes});
+    };
+
+    onAttributeUpdated = (index, attr) => {
+        let attributes = [...this.state.attributes];
+        attributes.splice(index, 1, attr);
+
+        this.setState({attributes: attributes, editingAttrIndex: -1});
+    };
+
+    render() {
+        const { classes, open } = this.props;
+        const { name, description, deleted, attributes, editingAttrIndex } = this.state;
+        const editingAttr = editingAttrIndex >= 0 ? attributes[editingAttrIndex] : {};
+
+        return (
+            <Dialog open={open}
+                    onClose={this.props.presenter.closeTemplateInfoDialog}
+                    fullScreen
+                    disableBackdropClick
+                    disableEscapeKeyDown
+                    aria-labelledby="form-dialog-title"
+                    TransitionComponent={Transition}
+            >
+                <AppBar className={classes.appBar}>
+                    <Toolbar>
+                        <IconButton color="inherit" onClick={this.props.presenter.closeTemplateInfoDialog} aria-label="Close">
+                            <CloseIcon />
+                        </IconButton>
+                        <Typography id="form-dialog-title" variant="title" color="inherit" className={classes.flex}>
+                            Edit Metadata Template
+                        </Typography>
+                        <Button onClick={this.onSaveTemplate} color="inherit">
+                            {this.props.saveText}
+                        </Button>
+                    </Toolbar>
+                </AppBar>
+
+                <DialogContent>
+                    <TextField autoFocus
+                               margin="dense"
+                               id="name"
+                               label="Name"
+                               value={name}
+                               onChange={this.handleChange("name")}
+                               fullWidth
+                    />
+                    <TextField id="description"
+                               label="Description"
+                               value={description}
+                               onChange={this.handleChange("description")}
+                               fullWidth
+                    />
+
+                    <Checkbox id="deleted"
+                              color="primary"
+                              checked={deleted}
+                              onChange={(event, checked) => this.setState({deleted: checked})}
+                    />
+                    <InputLabel htmlFor="deleted">Mark as Deleted?</InputLabel>
+
+                    <Divider />
+
+                    <TemplateAttributeList attributes={attributes}
+                                           onAttributesChanged={this.onAttributesChanged}
+                                           onAttributeUpdated={this.onAttributeUpdated}
+                                           onEditAttr={(index) => this.setState({editingAttrIndex: index})}
+                    />
+
+                    <EditAttribute attribute={editingAttr}
+                                   open={editingAttrIndex >= 0}
+                                   parentName={name}
+                                   saveAttr={(attr) => this.onAttributeUpdated(editingAttrIndex, attr)}
+                                   closeAttrDialog={() => this.setState({editingAttrIndex: -1})}
+                    />
+                </DialogContent>
+            </Dialog>
         );
     }
 }

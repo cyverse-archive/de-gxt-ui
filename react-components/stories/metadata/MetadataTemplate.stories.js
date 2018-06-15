@@ -124,11 +124,12 @@ class EditMetadataTemplateTest extends Component {
         });
 
         const presenter = {
-            onSaveTemplate: logger
+            onSaveTemplate: logger,
+            closeTemplateInfoDialog: () => logger("dialog closed."),
         };
 
         return (
-            <EditMetadataTemplate saveText="Save" presenter={presenter} metadataTemplate={metadataTemplate} />
+            <EditMetadataTemplate open saveText="Save" presenter={presenter} metadataTemplate={metadataTemplate} />
         );
     }
 }
