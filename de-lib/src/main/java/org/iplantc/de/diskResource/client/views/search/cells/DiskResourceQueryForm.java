@@ -7,14 +7,17 @@ import org.iplantc.de.diskResource.client.views.search.ReactSearchForm;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.core.client.dom.XElement;
 import com.sencha.gxt.core.client.util.BaseEventPreview;
-import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.HideEvent;
 import com.sencha.gxt.widget.core.client.event.ShowEvent;
@@ -22,16 +25,16 @@ import com.sencha.gxt.widget.core.client.event.ShowEvent;
 /**
  * A form the user can fill out to perform advanced searches in the Data window which utilize the search service
  */
-public class DiskResourceQueryForm extends Composite implements SearchView {
+public class DiskResourceQueryForm implements SearchView {
 
     private VerticalLayoutContainer con;
     private final BaseEventPreview eventPreview;
     private boolean showing = false;
+    HandlerManager handlerManager;
 
     @Inject
     public DiskResourceQueryForm() {
         this.con = new VerticalLayoutContainer();
-        initWidget(con);
         con.getElement().getStyle().setBackgroundColor("#fff");
         con.setWidth("500px");
 
@@ -61,7 +64,6 @@ public class DiskResourceQueryForm extends Composite implements SearchView {
         renderSearchForm(props);
 
         RootPanel.get().add(this);
-        onShow();
         getElement().updateZIndex(0);
 
         showing = true;
@@ -71,8 +73,12 @@ public class DiskResourceQueryForm extends Composite implements SearchView {
         getElement().show();
         eventPreview.add();
 
-        focus();
         fireEvent(new ShowEvent());
+    }
+
+    @Override
+    public XElement getElement() {
+        return con.getElement();
     }
 
     @Override
@@ -85,12 +91,17 @@ public class DiskResourceQueryForm extends Composite implements SearchView {
     @Override
     public void hide() {
         if (showing) {
-            onHide();
             RootPanel.get().remove(this);
             eventPreview.remove();
             showing = false;
-            hidden = true;
             fireEvent(new HideEvent());
+        }
+    }
+
+    @Override
+    public void fireEvent(GwtEvent<?> event) {
+        if (handlerManager != null) {
+            handlerManager.fireEvent(event);
         }
     }
 
@@ -123,5 +134,23 @@ public class DiskResourceQueryForm extends Composite implements SearchView {
                     hide();
                 }
         }
+    }
+
+    @Override
+    public Widget asWidget() {
+        return con;
+    }
+
+    @Override
+    public HandlerRegistration addHideHandler(HideEvent.HideHandler handler) {
+        return ensureHandlers().addHandler(HideEvent.getType(), handler);
+    }
+
+    HandlerManager createHandlerManager() {
+        return new HandlerManager(this);
+    }
+
+    HandlerManager ensureHandlers() {
+        return handlerManager == null ? handlerManager = createHandlerManager() : handlerManager;
     }
 }
