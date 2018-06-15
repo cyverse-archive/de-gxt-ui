@@ -1,10 +1,10 @@
-import EditTagDialog from './EditTagDialog';
-import messages from './messages';
-import TagPanel from '../details/TagPanel';
+import EditTagDialog from "./EditTagDialog";
+import messages from "./messages";
+import TagPanel from "../details/TagPanel";
 import withI18N from "../../util/I18NWrapper";
 
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import PropTypes from "prop-types";
+import React, { Component } from "react";
 
 /**
  * @author aramsey

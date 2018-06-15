@@ -1,11 +1,11 @@
-import styles from './style';
+import styles from "./style";
 
-import injectSheet from 'react-jss';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import Search from '@material-ui/icons/Search';
-import TextField from '@material-ui/core/TextField';
+import injectSheet from "react-jss";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
+import Search from "@material-ui/icons/Search";
+import TextField from "@material-ui/core/TextField";
 
 /**
  * @author aramsey

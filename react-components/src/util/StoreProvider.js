@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import store from "../store";
+
+import React, { Component } from "react";
 import { Provider } from "react-redux";
-import store from '../store';
 
 export default function withStoreProvider(WrappedComponent) {
     return class extends Component {

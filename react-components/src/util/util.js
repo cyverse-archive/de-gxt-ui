@@ -1,5 +1,5 @@
-import SearchField from './SearchField';
-import TriggerField from './TriggerField';
+import SearchField from "./SearchField";
+import TriggerField from "./TriggerField";
 
 export {
     SearchField,

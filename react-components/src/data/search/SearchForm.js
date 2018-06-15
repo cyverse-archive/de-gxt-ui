@@ -1,24 +1,24 @@
-import ids from './ids';
-import messages from './messages';
-import { SaveSearchButton } from '../search';
-import styles from './styles';
-import SearchFormTagPanel from './SearchFormTagPanel';
+import ids from "./ids";
+import messages from "./messages";
+import { SaveSearchButton } from "../search";
+import styles from "./styles";
+import SearchFormTagPanel from "./SearchFormTagPanel";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
 import withStoreProvider from "../../util/StoreProvider";
 
-import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
-import {Field, Fields, reduxForm} from 'redux-form';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { injectIntl } from 'react-intl';
-import injectSheet from 'react-jss';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
+import Button from "@material-ui/core/Button";
+import Checkbox from "@material-ui/core/Checkbox";
+import {Field, Fields, reduxForm} from "redux-form";
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { injectIntl } from "react-intl";
+import injectSheet from "react-jss";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
+import Select from "@material-ui/core/Select";
+import TextField from "@material-ui/core/TextField";
 
 class SearchForm extends Component {
 
