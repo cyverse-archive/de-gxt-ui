@@ -35,6 +35,9 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
+import com.sencha.gxt.data.shared.SortDir;
+import com.sencha.gxt.data.shared.SortInfoBean;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
@@ -280,40 +283,74 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
 
         int limit = loadConfig.getLimit();
         int offset = loadConfig.getOffset();
+        List<SortInfoBean> sortInfoList = loadConfig.getSortInfo();
+        Splittable sort = getSortSplittable(sortInfoList);
 
         StringQuoter.create(limit).assign(query, "size");
         StringQuoter.create(offset).assign(query, "from");
+        sort.assign(query, "sort");
 
         ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, query.getPayload());
         deServiceFacade.getServiceData(wrapper, new SubmitSearchCallbackConverter(queryResultsCallback, template, userInfo, searchAbFactory));
     }
 
-    String convertSortField(String sortField) {
+    Splittable convertSortField(String sortField, SortDir sortDir) {
+        String field = "";
         if ("id".equalsIgnoreCase(sortField)) {
-            return "entity.id";
+            field = "id";
         }
 
         if ("size".equalsIgnoreCase(sortField)) {
-            return "entity.fileSize";
+            field = "fileSize";
         }
 
         if ("dateCreated".equalsIgnoreCase(sortField)) {
-            return "entity.dateCreated";
+            field = "dateCreated";
         }
 
         if ("lastModified".equalsIgnoreCase(sortField)) {
-            return "entity.dateModified";
+            field = "dateModified";
         }
 
         if ("name".equalsIgnoreCase(sortField)) {
-            return "entity.label";
+            field = "label";
         }
 
         if ("path".equalsIgnoreCase(sortField)) {
-            return "entity.path";
+            field = "path";
         }
 
-        return sortField;
+        if ("creator".equalsIgnoreCase(sortField)) {
+            field = "creator";
+        }
+
+        String direction = sortDir == SortDir.ASC ? "ascending" : "descending";
+
+        Splittable sortObj = StringQuoter.createSplittable();
+        StringQuoter.create(field).assign(sortObj, "field");
+        StringQuoter.create(direction).assign(sortObj, "order");
+
+        return sortObj;
+    }
+
+    //"sort": [{"field": "path", "order": "descending"}, {"field": "fileSize", "order": "descending"}]
+    Splittable getSortSplittable(List<SortInfoBean> sortInfo) {
+        if (sortInfo == null || sortInfo.size() == 0) {
+            sortInfo = getDefaultSort();
+        }
+
+        Splittable indexed = StringQuoter.createIndexed();
+        sortInfo.forEach((bean) -> {
+            convertSortField(bean.getSortField(), bean.getSortDir()).assign(indexed, indexed.size());
+        });
+        return indexed;
+    }
+
+    List<SortInfoBean> getDefaultSort() {
+        SortInfoBean bean = new SortInfoBean();
+        bean.setSortField("name");
+        bean.setSortDir(SortDir.ASC);
+        return Lists.newArrayList(bean);
     }
 
     DiskResourceQueryTemplate freezeQueryTemplate(DiskResourceQueryTemplate qt) {
