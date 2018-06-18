@@ -1,6 +1,9 @@
 .trigger {
+  gwt-sprite: "triggerArrow";
+  background-position-y: 2px;
   height: 20px !important; 
-  border-bottom: 1px solid;  
+  border-bottom: 1px solid;
+  border-bottom-color: #b5b8c8;
   border-top: 1px solid;
   border-right: 1px solid;
   border-top-color: #b5b8c8;
@@ -8,16 +11,26 @@
 }
 
 .focus .trigger {
+  gwt-sprite: "triggerArrowFocus";
+  background-position-y: 2px;
   border-top-color: #7EADD9;
   border-right-color: #7EADD9;
 }
 
 .over .trigger {
+  gwt-sprite: "triggerArrowOver";
+  background-position-y: 2px;
   border-top-color: #7EADD9;
   border-right-color: #7EADD9;
 }
 
 .click .trigger {
+  gwt-sprite: "triggerArrowClick";
+  background-position-y: 2px;
   border-top-color: #7EADD9;
   border-right-color: #7EADD9;
+}
+
+.noedit {
+  cursor: pointer;
 }
