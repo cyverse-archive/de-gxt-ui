@@ -1,5 +1,6 @@
 package org.iplantc.de.client.services.impl;
 
+import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.search.DateInterval;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.FileSizeRange;
@@ -77,14 +78,16 @@ public class DataSearchQueryBuilder {
 
 
     private final DiskResourceQueryTemplate template;
+    private UserInfo userInfo;
     private final Splittable allList;
     private final Splittable anyList;
     private final Splittable noneList;
 
     Logger LOG = Logger.getLogger(DataSearchQueryBuilder.class.getName());
 
-    public DataSearchQueryBuilder(DiskResourceQueryTemplate template) {
+    public DataSearchQueryBuilder(DiskResourceQueryTemplate template, UserInfo userInfo) {
         this.template = template;
+        this.userInfo = userInfo;
         allList = StringQuoter.createIndexed();
         anyList = StringQuoter.createIndexed();
         noneList = StringQuoter.createIndexed();
@@ -225,8 +228,18 @@ public class DataSearchQueryBuilder {
             assignKeyValue(args, PERMISSION, template.getPermission());
             assignKeyValue(args, PERMISSION_RECURSE, template.isPermissionRecurse());
             appendArrayItem(allList, createTypeClause(PERMISSIONS, args));
+            appendArrayItem(allList, createTypeClause(PERMISSIONS, getOwnershipPermission()));
         }
         return this;
+    }
+
+    Splittable getOwnershipPermission() {
+        List<String> content = Lists.newArrayList(userInfo.getUsername());
+        Splittable users = listToSplittable(content);
+        Splittable args = StringQuoter.createSplittable();
+        assignKeyValue(args, SHARED_WITH, users);
+        assignKeyValue(args, PERMISSION, PermissionValue.own);
+        return args;
     }
 
     /**

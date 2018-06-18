@@ -275,7 +275,7 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
     public void submitSearchQuery(DiskResourceQueryTemplate template,
                                   FolderContentsLoadConfig loadConfig,
                                   FolderContentsRpcProxyImpl.SearchResultsCallback queryResultsCallback) {
-        DataSearchQueryBuilder builder = new DataSearchQueryBuilder(template);
+        DataSearchQueryBuilder builder = new DataSearchQueryBuilder(template, userInfo);
         String address = SEARCH;
 
         Splittable query = builder.getFullQuery();
