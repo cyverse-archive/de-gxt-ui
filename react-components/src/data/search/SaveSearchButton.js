@@ -54,7 +54,7 @@ class SaveSearchButton extends Component {
             <div>
                 <Button variant="raised"
                         id={build(parentId, ids.saveSearchBtn)}
-                        disabled={disabled ? disabled : false}
+                        disabled={!!disabled}
                         onClick={this.handleOpen}>
                     {getMessage('saveSearchBtn')}
                 </Button>

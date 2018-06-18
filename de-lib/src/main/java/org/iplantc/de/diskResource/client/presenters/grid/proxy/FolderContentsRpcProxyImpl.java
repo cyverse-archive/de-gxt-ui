@@ -253,8 +253,7 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FolderContentsLoadConfi
                                                                       appearance,
                                                                       hasSafeHtml,
                                                                       template));
-        }
-        else {
+        } else {
             drService.getFolderContents(folder,
                                         infoTypeFilterList,
                                         entityType,

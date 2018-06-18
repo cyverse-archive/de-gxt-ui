@@ -3,5 +3,5 @@ import * as search from './data/search';
 
 export {
     details,
-    search
+    search,
 };

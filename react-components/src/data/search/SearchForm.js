@@ -25,11 +25,6 @@ class SearchForm extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            openEditTagDlg: false,
-            selectedTag: null
-        };
-
         this.handleSubmitForm = this.handleSubmitForm.bind(this);
         this.handleSaveSearch = this.handleSaveSearch.bind(this);
     }
@@ -355,7 +350,7 @@ function renderCheckBox(props) {
         <FormControlLabel
             control={
                 <Checkbox
-                    checked={input.value ? true : false}
+                    checked={!!input.value}
                     onChange={input.onChange}
                     {...custom}
                 />

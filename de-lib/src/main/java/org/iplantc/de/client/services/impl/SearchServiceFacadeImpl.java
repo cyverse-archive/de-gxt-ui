@@ -115,11 +115,10 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
             if (metadataList == null || metadataList.isEmpty()) {
                 return;
             }
-            List<Metadata> fileTypes = metadataList
-                                             .stream()
-                                             .filter(metadata -> Metadata.FILETYPE_METADATA_KEY.equals(
-                                                     metadata.getAttribute()))
-                                             .collect(Collectors.toList());
+            List<Metadata> fileTypes = metadataList.stream()
+                                                   .filter(metadata -> Metadata.FILETYPE_METADATA_KEY.equals(
+                                                           metadata.getAttribute()))
+                                                   .collect(Collectors.toList());
             if (fileTypes != null && fileTypes.size() > 0) {
                 diskResource.setInfoType(fileTypes.get(0).getValue());
             }

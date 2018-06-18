@@ -90,24 +90,17 @@ public class DataSearchQueryBuilder {
         noneList = StringQuoter.createIndexed();
     }
 
-    public String buildFullQuery() {
-
-        LOG.fine("search query==>" + toString(getFullQuery()));
-        return toString();
-    }
-
     public Splittable getFullQuery() {
-        ownedBy()
-                .sharedWith()
-                .modifiedWithin()
-                .createdWithin()
-                .file()
-                .notFile()
-                .fileSizeRange()
-                .metadata()
-                .negatedPathPrefix()
-                .tags()
-                .includeTrash();
+        ownedBy().sharedWith()
+                 .modifiedWithin()
+                 .createdWithin()
+                 .file()
+                 .notFile()
+                 .fileSizeRange()
+                 .metadata()
+                 .negatedPathPrefix()
+                 .tags()
+                 .includeTrash();
 
         Splittable query = StringQuoter.createSplittable();
 

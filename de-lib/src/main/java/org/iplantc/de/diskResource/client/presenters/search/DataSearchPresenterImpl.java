@@ -387,7 +387,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
 
     @Override
     public void clearSearch() {
-        ReactSearchForm.SearchFormProps props = getCurrentProps();
+        ReactSearchForm.SearchFormProps props = getDefaultProps();
         currentProps = props;
         view.renderSearchForm(props);
     }

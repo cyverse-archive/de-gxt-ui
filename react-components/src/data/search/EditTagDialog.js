@@ -34,9 +34,9 @@ class EditTagDialog extends Component {
     }
 
     handleSave() {
-        let tag = this.props.tag;
-        tag.description = this.state.description;
-        this.props.handleSave(tag);
+        let {tag} = this.props;
+        let {description} = this.state;
+        this.props.handleSave({...tag, description});
     }
 
     handleClose() {
