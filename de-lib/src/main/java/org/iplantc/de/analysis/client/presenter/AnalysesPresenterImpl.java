@@ -706,6 +706,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         fields.setComment(comment);
         fields.setStatus(value.getStatus());
         fields.setEmail(userInfo.getEmail());
+        fields.setAnalysisId(value.getId());
 
         AnalysisSupportRequest req = supportFactory.analysisSupportRequest().as();
         req.setFrom(userInfo.getFullUsername());
