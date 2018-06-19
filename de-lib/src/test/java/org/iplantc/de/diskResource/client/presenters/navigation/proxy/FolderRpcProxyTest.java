@@ -18,6 +18,7 @@ import org.iplantc.de.client.models.diskResources.RootFolders;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.SearchServiceFacade;
+import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.NavigationView;
@@ -56,6 +57,7 @@ public class FolderRpcProxyTest {
     @Mock SearchView.Presenter searchPresenterMock;
     @Mock NavigationView.Presenter.Appearance appearanceMock;
     @Mock UserInfo userInfoMock;
+    @Mock SearchModelUtils searchModelUtilsMock;
 
     @Mock AsyncCallback<List<Folder>> folderCallbackMock;
     
@@ -72,6 +74,7 @@ public class FolderRpcProxyTest {
         proxyUnderTest.userInfo = userInfoMock;
         when(appearanceMock.savedFiltersRetrievalFailure()).thenReturn("sample");
         when(userInfoMock.hasDataInfoError()).thenReturn(false);
+        proxyUnderTest.searchModelUtils = searchModelUtilsMock;
     }
 
     /**

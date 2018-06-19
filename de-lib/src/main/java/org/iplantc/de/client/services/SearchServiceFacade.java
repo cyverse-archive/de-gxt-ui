@@ -1,14 +1,11 @@
 package org.iplantc.de.client.services;
 
-import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
-import org.iplantc.de.client.services.impl.DataSearchQueryBuilder;
+import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsLoadConfig;
+import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsRpcProxyImpl;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.AutoBean;
-
-import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
 
 import java.util.List;
 
@@ -19,6 +16,7 @@ import java.util.List;
  * 
  */
 public interface SearchServiceFacade {
+
     public enum SearchType {
         ANY("any"), FILE("file"), FOLDER("folder");
 
@@ -63,20 +61,20 @@ public interface SearchServiceFacade {
      */
     void saveQueryTemplates(List<DiskResourceQueryTemplate> queryTemplates, AsyncCallback<List<DiskResourceQueryTemplate>> callback);
 
-    void deleteQueryTemplates(List<DiskResourceQueryTemplate> queryTemplates,
-                              AsyncCallback<List<DiskResourceQueryTemplate>> callback);
     /**
      * Submits a search query build from the given filter.
      * 
      * Internally, this uses a {@link DataSearchQueryBuilder} to construct the query.
      * 
-     * @param queryTemplate the template used to construct the query string. The query string derived
+     * @param template the template used to construct the query string. The query string derived
      *            from this object will be URL encoded.
-     * @param loadConfig the load config which defines the offset and limit for the paged request
-     * @param callback executed when RPC call completes. The resulting list is in the same order as it is
+     * @param searchConfig the load config which defines the offset and limit for the paged request
+     * @param queryResultsCallback executed when RPC call completes. The resulting list is in the same order as it is
      *            returned from the endpoint.
      */
-    void submitSearchFromQueryTemplate(final DiskResourceQueryTemplate queryTemplate, final FilterPagingLoadConfigBean loadConfig, final TYPE searchType,
-            final AsyncCallback<List<DiskResource>> callback);
+
+    void submitSearchQuery(DiskResourceQueryTemplate template,
+                           FolderContentsLoadConfig searchConfig,
+                           FolderContentsRpcProxyImpl.SearchResultsCallback queryResultsCallback);
 
 }

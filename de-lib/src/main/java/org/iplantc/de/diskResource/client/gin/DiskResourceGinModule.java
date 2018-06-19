@@ -29,7 +29,6 @@ import org.iplantc.de.diskResource.client.gin.factory.GridViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewPresenterFactory;
 import org.iplantc.de.diskResource.client.gin.factory.NavigationViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.ShareResourcesLinkDialogFactory;
-import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewPresenterFactory;
 import org.iplantc.de.diskResource.client.presenters.DiskResourcePresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.dataLink.DataLinkPresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.details.DetailsViewPresenterImpl;
@@ -42,6 +41,7 @@ import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLook
 import org.iplantc.de.diskResource.client.presenters.navigation.NavigationPresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.navigation.proxy.FolderRpcProxyImpl;
 import org.iplantc.de.diskResource.client.presenters.search.DataSearchPresenterImpl;
+import org.iplantc.de.diskResource.client.presenters.search.DateIntervalProvider;
 import org.iplantc.de.diskResource.client.presenters.sharing.DataSharingPresenterImpl;
 import org.iplantc.de.diskResource.client.presenters.toolbar.ToolbarViewPresenterImpl;
 import org.iplantc.de.diskResource.client.views.DiskResourceViewImpl;
@@ -59,8 +59,8 @@ import org.iplantc.de.diskResource.client.views.metadata.dialogs.BulkMetadataDia
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.ManageMetadataDialog;
 import org.iplantc.de.diskResource.client.views.navigation.NavigationViewImpl;
 import org.iplantc.de.diskResource.client.views.search.DiskResourceSearchField;
-import org.iplantc.de.diskResource.client.views.search.cells.DiskResourceQueryForm;
 import org.iplantc.de.diskResource.client.views.search.cells.DiskResourceSearchCell;
+import org.iplantc.de.diskResource.client.views.search.cells.DiskResourceQueryForm;
 import org.iplantc.de.diskResource.client.views.sharing.DataSharingViewImpl;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.DataSharingDialog;
 import org.iplantc.de.diskResource.client.views.toolbar.DiskResourceViewToolbarImpl;
@@ -70,6 +70,7 @@ import org.iplantc.de.diskResource.client.views.toolbar.PathListAutomationViewIm
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.inject.TypeLiteral;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.TreeStore;
 
@@ -117,7 +118,6 @@ public class DiskResourceGinModule extends AbstractGinModule {
         // Disk Resource Selectors and Dialogs
         install(new GinFactoryModuleBuilder()
                     .build(DiskResourceSelectorFieldFactory.class));
-        bind(DiskResourceQueryForm.class);
         bind(DiskResourceSearchCell.class);
         bind(DiskResourceSearchField.class);
 
@@ -140,9 +140,7 @@ public class DiskResourceGinModule extends AbstractGinModule {
         // Toolbar
         bind(ToolbarView.class).to(DiskResourceViewToolbarImpl.class);
 
-        install(new GinFactoryModuleBuilder()
-                    .implement(ToolbarView.Presenter.class, ToolbarViewPresenterImpl.class)
-                    .build(ToolbarViewPresenterFactory.class));
+        bind(ToolbarView.Presenter.class).to(ToolbarViewPresenterImpl.class);
 
         // Details
         bind(DetailsView.Presenter.class).to(DetailsViewPresenterImpl.class);
@@ -161,6 +159,11 @@ public class DiskResourceGinModule extends AbstractGinModule {
         bind(MetadataView.class).to(DiskResourceMetadataViewImpl.class);
         bind(MetadataView.Presenter.class).to(MetadataPresenterImpl.class);
         bind(MetadataTemplateView.class);
+
+        //Search
+        bind(SearchView.class).to(DiskResourceQueryForm.class);
+        bind(new TypeLiteral<Splittable>() {}).toProvider(DateIntervalProvider.class);
+
 
         // Dialogs
         bind(InfoTypeEditorDialog.class);

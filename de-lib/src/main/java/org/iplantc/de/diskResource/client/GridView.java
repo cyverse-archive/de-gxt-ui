@@ -168,6 +168,8 @@ public interface GridView extends IsWidget,
 
             String searchDataResultsHeader(String searchText, int total, double executionTime_ms);
 
+            String searchDataResultsHeader(String searchText, int total);
+
             String searchFailure();
 
             String shareLinkDialogHeight();

@@ -10,6 +10,7 @@
     "@storybook/addons": "^3.3.13",
     "@storybook/react": "^3.3.13",
     "jest-junit-reporter": "^1.1.0",
+    "prop-types": "^15.6.1",
     "react-scripts": "^1.0.14"
   },
   "dependencies": {
@@ -50,8 +51,11 @@
     "react-dom": "^16.4.0",
     "react-intl": "^2.4.0",
     "react-jss": "^8.4.0",
+    "react-redux": "^5.0.7",
     "react-select": "^1.2.1",
     "react-tap-event-plugin": "^3.0.2",
+    "redux": "^4.0.0",
+    "redux-form": "^7.3.0",
     "style-loader": "0.18.2",
     "sw-precache-webpack-plugin": "0.11.4",
     "url-loader": "0.5.9",

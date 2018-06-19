@@ -5,7 +5,11 @@ import org.iplantc.de.theme.base.client.diskResource.search.SearchMessages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safecss.shared.SafeStyles;
+import com.google.gwt.safecss.shared.SafeStylesUtils;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
+import com.sencha.gxt.cell.core.client.form.FieldCell;
 import com.sencha.gxt.theme.base.client.field.DateCellDefaultAppearance;
 import com.sencha.gxt.theme.base.client.field.TriggerFieldDefaultAppearance;
 
@@ -20,18 +24,17 @@ public class DiskResourceSearchCellDefaultAppearance extends TriggerFieldDefault
     public interface DiskResourceSearchCellResources extends TriggerFieldResources {
 
         @Override
-        @Source({ "DiskResourceSearchField.gss",
-                  "com/sencha/gxt/theme/base/client/field/ValueBaseField.gss",
+        @Source({ "com/sencha/gxt/theme/base/client/field/ValueBaseField.gss",
                   "com/sencha/gxt/theme/base/client/field/TextField.gss",
-                  "com/sencha/gxt/theme/base/client/field/TriggerField.gss"})
+                  "DiskResourceSearchField.gss"})
         DiskResourceSearchCellStyle css();
         
         @Override
-        @Source("../../funnel-icon.png")
+        @Source("org/iplantc/de/resources/client/magnifier.png")
         ImageResource triggerArrow();
 
         @Override
-        @Source("../../funnel-icon.png")
+        @Source("org/iplantc/de/resources/client/magnifier.png")
         ImageResource triggerArrowOver();
 
         /*
@@ -43,11 +46,11 @@ public class DiskResourceSearchCellDefaultAppearance extends TriggerFieldDefault
 
         // TODO Override images
         @Override
-        @Source("../../funnel-icon.png")
+        @Source("org/iplantc/de/resources/client/magnifier.png")
         ImageResource triggerArrowClick();
 
         @Override
-        @Source("../../funnel-icon.png")
+        @Source("org/iplantc/de/resources/client/magnifier.png")
         ImageResource triggerArrowFocus();
 
     }

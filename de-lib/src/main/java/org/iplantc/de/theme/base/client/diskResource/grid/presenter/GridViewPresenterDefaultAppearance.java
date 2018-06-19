@@ -101,6 +101,11 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     }
 
     @Override
+    public String searchDataResultsHeader(String searchText, int total) {
+        return displayStrings.searchDataResultsHeaderNoExecTime(searchText, total);
+    }
+
+    @Override
     public String searchFailure() {
         return displayStrings.searchFailure();
     }

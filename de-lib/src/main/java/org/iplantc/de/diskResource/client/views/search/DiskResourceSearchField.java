@@ -2,20 +2,22 @@ package org.iplantc.de.diskResource.client.views.search;
 
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
+import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.commons.client.events.SubmitTextSearchEvent;
 import org.iplantc.de.commons.client.events.SubmitTextSearchEvent.SubmitTextSearchEventHandler;
 import org.iplantc.de.commons.client.widgets.search.SearchFieldDecorator;
+import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.events.FolderSelectionEvent;
-import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent;
 import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
-import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent.SubmitDiskResourceQueryEventHandler;
+import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent;
 import org.iplantc.de.diskResource.client.views.search.cells.DiskResourceSearchCell;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.widget.core.client.event.CollapseEvent.CollapseHandler;
 import com.sencha.gxt.widget.core.client.event.CollapseEvent.HasCollapseHandlers;
@@ -36,12 +38,12 @@ import java.text.ParseException;
  */
 public class DiskResourceSearchField extends TriggerField<String> implements HasExpandHandlers,
                                                                              HasCollapseHandlers,
-                                                                             SaveDiskResourceQueryClickedEvent.HasSaveDiskResourceQueryClickedEventHandlers,
                                                                              FolderSelectionEvent.FolderSelectionEventHandler,
-                                                                             HasSubmitDiskResourceQueryEventHandlers,
+                                                                             SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers,
                                                                              SubmitDiskResourceQueryEventHandler,
                                                                              SubmitTextSearchEventHandler,
-                                                                             SavedSearchDeletedEvent.SavedSearchDeletedEventHandler {
+                                                                             SavedSearchDeletedEvent.SavedSearchDeletedEventHandler,
+                                                                             UpdateSavedSearchesEvent.HasUpdateSavedSearchesEventHandlers {
 
     public final class QueryStringPropertyEditor extends PropertyEditor<String> {
         private final SearchAutoBeanFactory factory = GWT.create(SearchAutoBeanFactory.class);
@@ -53,9 +55,10 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
                 return text.toString();
             }
 
-            DiskResourceQueryTemplate qt = factory.dataSearchFilter().as();
+            DiskResourceQueryTemplate qt = searchModelUtils.createDefaultSimpleSearch();
             qt.setFileQuery(text.toString());
-            getCell().getSearchForm().fireEvent(new SubmitDiskResourceQueryEvent(qt));
+            Splittable splTemplate = searchModelUtils.convertTemplateToSplittable(qt);
+            getCell().getSearchPresenter().onSearchBtnClicked(splTemplate);
             return text.toString();
         }
 
@@ -65,12 +68,16 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
         }
     }
 
+    private SearchModelUtils searchModelUtils;
+
     /**
      * Creates a new iPlant Search field.
      */
     @Inject
-    public DiskResourceSearchField(final DiskResourceSearchCell searchCell) {
+    public DiskResourceSearchField(final DiskResourceSearchCell searchCell,
+                                   SearchModelUtils searchModelUtils) {
         super(searchCell);
+        this.searchModelUtils = searchModelUtils;
 
         setPropertyEditor(new QueryStringPropertyEditor());
         getCell().addSubmitDiskResourceQueryEventHandler(this);
@@ -87,11 +94,6 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
     @Override
     public HandlerRegistration addExpandHandler(ExpandHandler handler) {
         return getCell().addExpandHandler(handler);
-    }
-
-    @Override
-    public HandlerRegistration addSaveDiskResourceQueryClickedEventHandler(SaveDiskResourceQueryClickedEvent.SaveDiskResourceQueryClickedEventHandler handler) {
-        return getCell().addSaveDiskResourceQueryClickedEventHandler(handler);
     }
 
     @Override
@@ -117,14 +119,14 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
 
     public void clearSearch() {
         // Forward clear call to searchForm
-        getCell().getSearchForm().clearSearch();
+        getCell().clearSearch();
         clearInvalid();
         clear();
     }
 
     public void edit(DiskResourceQueryTemplate queryTemplate) {
         // Forward edit call to searchForm
-        getCell().getSearchForm().edit(queryTemplate);
+        getCell().edit(queryTemplate);
         clear();
     }
 
@@ -155,5 +157,14 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
         // Finish editing to fire search event.
         finishEditing();
         focus();
+    }
+
+    @Override
+    public HandlerRegistration addUpdateSavedSearchesEventHandler(UpdateSavedSearchesEvent.UpdateSavedSearchesHandler handler) {
+        return getCell().addUpdateSavedSearchesEventHandler(handler);
+    }
+
+    public SearchView.Presenter getSearchPresenter() {
+        return getCell().getSearchPresenter();
     }
 }

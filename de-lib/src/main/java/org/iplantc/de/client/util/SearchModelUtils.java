@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.search.FileSizeRange.FileSizeUnit;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -23,13 +24,14 @@ import java.util.logging.Logger;
  */
 public class SearchModelUtils {
 
-    private final List<String> fileSizeUnits = Lists.newArrayList("KB", "MB", "GB", "TB");
-    private final SearchAutoBeanFactory factory = GWT.create(SearchAutoBeanFactory.class);
+    private final SearchAutoBeanFactory factory;
+    private final DEProperties properties;
     private static SearchModelUtils INSTANCE;
     Logger LOG = Logger.getLogger(SearchModelUtils.class.getName());
 
     SearchModelUtils(){
-
+        properties = DEProperties.getInstance();
+        factory = GWT.create(SearchAutoBeanFactory.class);
     }
 
     public static SearchModelUtils getInstance(){
@@ -39,55 +41,28 @@ public class SearchModelUtils {
         return INSTANCE;
     }
 
-    public DiskResourceQueryTemplate createDefaultFilter() {
+    public Splittable createDefaultFilter() {
         Splittable defFilter = StringQuoter.createSplittable();
-        // Need to create full permissions by default in order to function as a "smart folder"
-        Splittable permissions = StringQuoter.createSplittable();
-        StringQuoter.create(true).assign(permissions, "own");
-        StringQuoter.create(true).assign(permissions, "read");
-        StringQuoter.create(true).assign(permissions, "write");
-        permissions.assign(defFilter, "permissions");
+
         StringQuoter.create("/savedFilters/").assign(defFilter, "path");
 
-        DiskResourceQueryTemplate dataSearchFilter = AutoBeanCodex.decode(factory, DiskResourceQueryTemplate.class, defFilter).as();
-        dataSearchFilter.setCreatedWithin(factory.dateInterval().as());
-        dataSearchFilter.setModifiedWithin(factory.dateInterval().as());
-        dataSearchFilter.setFileSizeRange(factory.fileSizeRange().as());
-        dataSearchFilter.getFileSizeRange().setMaxUnit(createDefaultFileSizeUnit());
-        dataSearchFilter.getFileSizeRange().setMinUnit(createDefaultFileSizeUnit());
+        Splittable fileSizeRange = StringQuoter.createSplittable();
+        Splittable maxUnit = StringQuoter.createSplittable();
+        Splittable minUnit = StringQuoter.createSplittable();
+        StringQuoter.create("KB").assign(maxUnit, "label");
+        StringQuoter.create("KB").assign(minUnit, "label");
+        maxUnit.assign(fileSizeRange, "maxUnit");
+        minUnit.assign(fileSizeRange, "minUnit");
+        fileSizeRange.assign(defFilter, "fileSizeRange");
 
-        return dataSearchFilter;
+        return defFilter;
     }
 
-    public Double convertFileSizeToBytes(Double size, FileSizeUnit unit) {
-        if (size != null && unit != null && unit.getUnit() > 0) {
-            return size * Math.pow(1024, unit.getUnit());
-        }
+    public DiskResourceQueryTemplate createDefaultSimpleSearch() {
+        DiskResourceQueryTemplate qt = factory.dataSearchFilter().as();
+        qt.setNegatedPathPrefix(properties.getCommunityDataPath());
 
-        return size;
-    }
-
-    public List<FileSizeUnit> createFileSizeUnits() {
-        List<FileSizeUnit> ret = Lists.newArrayList();
-
-        int unit = 0;
-        for (String fsLabel : fileSizeUnits) {
-            unit++;
-            ret.add(createFileSizeUnit(unit, fsLabel));
-        }
-
-        return ret;
-    }
-
-    private FileSizeUnit createDefaultFileSizeUnit() {
-        return createFileSizeUnit(1, fileSizeUnits.get(0));
-    }
-
-    private FileSizeUnit createFileSizeUnit(int unit, String label) {
-        FileSizeUnit fsUnit = factory.fileSizeUnit().as();
-        fsUnit.setUnit(unit);
-        fsUnit.setLabel(label);
-        return fsUnit;
+        return qt;
     }
 
     public DiskResourceQueryTemplate copyDiskResourceQueryTemplate(DiskResourceQueryTemplate src) {
@@ -129,5 +104,13 @@ public class SearchModelUtils {
             IplantAnnouncer.getInstance().schedule(new ErrorAnnouncementConfig("You must select at least one filter."));
         }
         return isEmpty;
+    }
+    
+    public Splittable convertTemplateToSplittable(DiskResourceQueryTemplate template) {
+        return AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(template));
+    }
+
+    public DiskResourceQueryTemplate convertSplittableToTemplate(Splittable splittable) {
+        return AutoBeanCodex.decode(factory, DiskResourceQueryTemplate.class, splittable.getPayload()).as();
     }
 }

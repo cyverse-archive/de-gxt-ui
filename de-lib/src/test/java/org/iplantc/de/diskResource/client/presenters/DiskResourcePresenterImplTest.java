@@ -47,7 +47,6 @@ import org.iplantc.de.diskResource.client.events.selection.SendToTreeViewerSelec
 import org.iplantc.de.diskResource.client.gin.factory.DiskResourceViewFactory;
 import org.iplantc.de.diskResource.client.gin.factory.FolderContentsRpcProxyFactory;
 import org.iplantc.de.diskResource.client.gin.factory.GridViewPresenterFactory;
-import org.iplantc.de.diskResource.client.gin.factory.ToolbarViewPresenterFactory;
 import org.iplantc.de.diskResource.client.presenters.callbacks.CreateFolderCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceDeleteCallback;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMoveCallback;
@@ -110,7 +109,6 @@ public class DiskResourcePresenterImplTest {
     @Mock GridViewPresenterFactory GridViewPresenterFactoryMock;
     @Mock GridView.Presenter gridViewPresenterMock;
     @Mock GridView gridViewMock;
-    @Mock ToolbarViewPresenterFactory toolbarPresenterFactoryMock;
     @Mock ToolbarView.Presenter toolbarPresenterMock;
     @Mock DetailsView.Presenter detailsPresenterMock;
     @Mock TYPE entityTypeMock;
@@ -151,8 +149,7 @@ public class DiskResourcePresenterImplTest {
                                             factoryMock,
                                             navigationPresenterMock,
                                             GridViewPresenterFactoryMock,
-                                            dataSearchPresenterMock,
-                                            toolbarPresenterFactoryMock,
+                                            toolbarPresenterMock,
                                             detailsPresenterMock,
                                             announcerMock,
                                             eventBusMock,
@@ -197,9 +194,9 @@ public class DiskResourcePresenterImplTest {
 
         // Toolbar
         verify(toolbarMock).getSearchField();
-        verify(searchFieldMock).addSaveDiskResourceQueryClickedEventHandler(eq(dataSearchPresenterMock));
-        verify(searchFieldMock).addSubmitDiskResourceQueryEventHandler(eq(gridViewMock));
-        verify(searchFieldMock).addSubmitDiskResourceQueryEventHandler(eq(gridViewPresenterMock));
+        verify(dataSearchPresenterMock).addSubmitDiskResourceQueryEventHandler(eq(gridViewMock));
+        verify(dataSearchPresenterMock).addSubmitDiskResourceQueryEventHandler(eq(gridViewPresenterMock));
+        verify(dataSearchPresenterMock, times(2)).addUpdateSavedSearchesEventHandler(eq(navigationPresenterMock));
         verify(toolbarMock).addDeleteSelectedDiskResourcesSelectedEventHandler(eq(uut));
         verify(toolbarMock).addDeleteSelectedDiskResourcesSelectedEventHandler(eq(uut));
         verify(toolbarMock).addEditInfoTypeSelectedEventHandler(eq(gridViewPresenterMock));
@@ -244,9 +241,10 @@ public class DiskResourcePresenterImplTest {
         verify(navigationPresenterMock).addRefreshFolderSelectedHandler(eq(uut));
 
         // Search
-        verify(dataSearchPresenterMock).addUpdateSavedSearchesEventHandler(eq(navigationPresenterMock));
+        verify(dataSearchPresenterMock, times(2)).addUpdateSavedSearchesEventHandler(eq(navigationPresenterMock));
         verify(dataSearchPresenterMock).addSavedSearchDeletedEventHandler(eq(searchFieldMock));
 
+        verify(detailsPresenterMock, times(3)).getView();
         verify(gridViewPresenterMock, times(9)).getView();
         verify(navigationPresenterMock, times(5)).getView();
         verify(toolbarPresenterMock, times(23)).getView();
@@ -268,10 +266,10 @@ public class DiskResourcePresenterImplTest {
                                                  anyList(),
                                                  any(TYPE.class))).thenReturn(gridViewPresenterMock);
         when(toolbarMock.getSearchField()).thenReturn(searchFieldMock);
+        when(searchFieldMock.getSearchPresenter()).thenReturn(dataSearchPresenterMock);
         when(navigationPresenterMock.getView()).thenReturn(navigationViewMock);
         when(gridViewPresenterMock.getView()).thenReturn(gridViewMock);
         when(detailsPresenterMock.getView()).thenReturn(detailsViewMock);
-        when(toolbarPresenterFactoryMock.create(any(DiskResourceView.Presenter.class))).thenReturn(toolbarPresenterMock);
         when(toolbarPresenterMock.getView()).thenReturn(toolbarMock);
         when(diskResourcesMock.iterator()).thenReturn(diskResourceIteratorMock);
         when(diskResourceIteratorMock.hasNext()).thenReturn(true, false);
@@ -335,8 +333,7 @@ public class DiskResourcePresenterImplTest {
                                             factoryMock,
                                             navigationPresenterMock,
                                             GridViewPresenterFactoryMock,
-                                            dataSearchPresenterMock,
-                                            toolbarPresenterFactoryMock,
+                                            toolbarPresenterMock,
                                             detailsPresenterMock,
                                             announcerMock,
                                             eventBusMock,

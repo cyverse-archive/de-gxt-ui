@@ -113,7 +113,7 @@ public class DiskResourcePresenterImpl implements
     @Inject UserInfo userInfo;
     @Inject CommonUiConstants commonUiConstants;
 
-    private final SearchView.Presenter dataSearchPresenter;
+    private SearchView.Presenter dataSearchPresenter;
     private final DetailsView.Presenter detailsViewPresenter;
     private final EventBus eventBus;
     private final GridView.Presenter gridViewPresenter;
@@ -125,8 +125,7 @@ public class DiskResourcePresenterImpl implements
                               final DiskResourceAutoBeanFactory drFactory,
                               final NavigationView.Presenter navigationPresenter,
                               final GridViewPresenterFactory gridViewPresenterFactory,
-                              final SearchView.Presenter dataSearchPresenter,
-                              final ToolbarViewPresenterFactory toolbarViewPresenterFactory,
+                              final ToolbarView.Presenter toolbarPresenter,
                               final DetailsView.Presenter detailsViewPresenter,
                               final IplantAnnouncer announcer,
                               final EventBus eventBus,
@@ -142,8 +141,7 @@ public class DiskResourcePresenterImpl implements
              drFactory,
              navigationPresenter,
              gridViewPresenterFactory,
-             dataSearchPresenter,
-             toolbarViewPresenterFactory,
+             toolbarPresenter,
              detailsViewPresenter,
              announcer,
              eventBus,
@@ -166,8 +164,7 @@ public class DiskResourcePresenterImpl implements
                               final DiskResourceAutoBeanFactory drFactory,
                               final NavigationView.Presenter navigationPresenter,
                               final GridViewPresenterFactory gridViewPresenterFactory,
-                              final SearchView.Presenter dataSearchPresenter,
-                              final ToolbarViewPresenterFactory toolbarViewPresenterFactory,
+                              final ToolbarView.Presenter toolbarPresenter,
                               final DetailsView.Presenter detailsViewPresenter,
                               final IplantAnnouncer announcer,
                               final EventBus eventBus,
@@ -182,8 +179,7 @@ public class DiskResourcePresenterImpl implements
              drFactory,
              navigationPresenter,
              gridViewPresenterFactory,
-             dataSearchPresenter,
-             toolbarViewPresenterFactory,
+             toolbarPresenter,
              detailsViewPresenter,
              announcer,
              eventBus,
@@ -206,8 +202,7 @@ public class DiskResourcePresenterImpl implements
                               final DiskResourceAutoBeanFactory drFactory,
                               final NavigationView.Presenter navigationPresenter,
                               final GridViewPresenterFactory gridViewPresenterFactory,
-                              final SearchView.Presenter dataSearchPresenter,
-                              final ToolbarViewPresenterFactory toolbarViewPresenterFactory,
+                              final ToolbarView.Presenter toolbarPresenter,
                               final DetailsView.Presenter detailsViewPresenter,
                               final IplantAnnouncer announcer,
                               final EventBus eventBus,
@@ -221,8 +216,7 @@ public class DiskResourcePresenterImpl implements
              drFactory,
              navigationPresenter,
              gridViewPresenterFactory,
-             dataSearchPresenter,
-             toolbarViewPresenterFactory,
+             toolbarPresenter,
              detailsViewPresenter,
              announcer,
              eventBus,
@@ -244,8 +238,7 @@ public class DiskResourcePresenterImpl implements
                               final DiskResourceAutoBeanFactory drFactory,
                               final NavigationView.Presenter navigationPresenter,
                               final GridViewPresenterFactory gridViewPresenterFactory,
-                              final SearchView.Presenter dataSearchPresenter,
-                              final ToolbarViewPresenterFactory toolbarViewPresenterFactory,
+                              final ToolbarView.Presenter toolbarPresenter,
                               final DetailsView.Presenter detailsViewPresenter,
                               final IplantAnnouncer announcer,
                               final EventBus eventBus,
@@ -259,8 +252,6 @@ public class DiskResourcePresenterImpl implements
                                                                  entityType);
         this.announcer = announcer;
         this.eventBus = eventBus;
-        this.dataSearchPresenter = dataSearchPresenter;
-        ToolbarView.Presenter toolbarPresenter = toolbarViewPresenterFactory.create(this);
         this.view = diskResourceViewFactory.create(navigationPresenter,
                                                    gridViewPresenter,
                                                    toolbarPresenter,
@@ -283,9 +274,10 @@ public class DiskResourcePresenterImpl implements
 
         // Toolbar Search Field
         DiskResourceSearchField searchField = toolbarPresenter.getView().getSearchField();
-        searchField.addSaveDiskResourceQueryClickedEventHandler(this.dataSearchPresenter);
-        searchField.addSubmitDiskResourceQueryEventHandler(this.gridViewPresenter.getView());
-        searchField.addSubmitDiskResourceQueryEventHandler(this.gridViewPresenter);
+        this.dataSearchPresenter = searchField.getSearchPresenter();
+        dataSearchPresenter.addSubmitDiskResourceQueryEventHandler(this.gridViewPresenter.getView());
+        dataSearchPresenter.addSubmitDiskResourceQueryEventHandler(this.gridViewPresenter);
+        dataSearchPresenter.addUpdateSavedSearchesEventHandler(this.navigationPresenter);
 
         // Grid Presenter
         this.gridViewPresenter.getView().addBeforeLoadHandler(this.navigationPresenter);

@@ -3,10 +3,9 @@ package org.iplantc.de.diskResource.client.presenters.grid.proxy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -28,7 +27,6 @@ import org.iplantc.de.diskResource.client.presenters.grid.proxy.FolderContentsRp
 
 import com.google.common.collect.Lists;
 import com.google.gwt.safehtml.client.HasSafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtmockito.GxtMockitoTestRunner;
 
@@ -79,6 +77,7 @@ public class FolderContentsRpcProxyTest {
                                                                 Collections.<InfoType>emptyList(),
                                                                 null);
         folderContentsRpcProxy.setHasSafeHtml(mockHasSafeHtml);
+        folderContentsRpcProxy.hasSafeHtml = mock(HasSafeHtml.class);
     }
 
     /**
@@ -143,12 +142,7 @@ public class FolderContentsRpcProxyTest {
         when(loadConfigMock.getFolder()).thenReturn(mockQueryTemplate);
         folderContentsRpcProxy.load(loadConfigMock, pagingAsyncMock);
 
-
-        ArgumentCaptor<FolderContentsRpcProxyImpl.SearchResultsCallback> callBackCaptor = ArgumentCaptor.forClass(FolderContentsRpcProxyImpl.SearchResultsCallback.class);
-        verify(searchServiceMock).submitSearchFromQueryTemplate(eq(mockQueryTemplate), eq(loadConfigMock), any(TYPE.class), callBackCaptor.capture());
-
-        assertEquals(loadConfigMock, callBackCaptor.getValue().getLoadConfig());
-        assertEquals(pagingAsyncMock, callBackCaptor.getValue().getCallback());
+        verify(searchServiceMock).submitSearchQuery(eq(mockQueryTemplate), eq(loadConfigMock), isA(FolderContentsRpcProxyImpl.SearchResultsCallback.class));
 
         verifyNoMoreInteractions(searchServiceMock, pagingAsyncMock);
         verifyZeroInteractions(diskResourceService);
@@ -180,7 +174,6 @@ public class FolderContentsRpcProxyTest {
         callBackCaptor.getValue().onSuccess(f);
         verify(mockFolder).setTotalFiltered(anyInt());
         verify(pagingAsyncMock).onSuccess(any(PagingLoadResultBean.class));
-        verify(mockHasSafeHtml).setHTML(SafeHtmlUtils.fromString((f.getName() != null) ? f.getName() : ""));
 
         verifyNoMoreInteractions(mockHasSafeHtml, diskResourceService, pagingAsyncMock);
         verifyZeroInteractions(searchServiceMock);
@@ -229,44 +222,4 @@ public class FolderContentsRpcProxyTest {
         callBackCaptor.getValue().onFailure(500, mock(Throwable.class));
         verify(pagingAsyncMock).onFailure(any(Throwable.class));
     }
-
-    /**
-     * Verifies functionality of the inner callback class onSuccess method when
-     * the result and given callback (the one which is accessed vi
-     * {@link FolderContentsCallback#getCallback()}) are not null. Additionally,
-     */
-    @Test public void testSearchResultsCallback_onSuccess_Case1() {
-
-        FolderContentsLoadConfig loadConfigMock = mock(FolderContentsLoadConfig.class);
-        DiskResourceQueryTemplate mockFolder = mock(DiskResourceQueryTemplate.class);
-        when(mockFolder.isFilter()).thenReturn(false);
-
-        final int totalResults = 55;
-        final long executionTime = 1234567456;
-        final String searchText = "test header string";
-        when(mockFolder.getTotal()).thenReturn(totalResults);
-        when(mockFolder.getExecutionTime()).thenReturn(executionTime);
-
-        when(loadConfigMock.getFolder()).thenReturn(mockFolder);
-
-        folderContentsRpcProxy.load(loadConfigMock, pagingAsyncMock);
-
-        ArgumentCaptor<FolderContentsRpcProxyImpl.SearchResultsCallback> callBackCaptor = ArgumentCaptor.forClass(FolderContentsRpcProxyImpl.SearchResultsCallback.class);
-        verify(searchServiceMock).submitSearchFromQueryTemplate(any(DiskResourceQueryTemplate.class), eq(loadConfigMock), any(TYPE.class), callBackCaptor.capture());
-        when(appearanceMock.searchDataResultsHeader(anyString(), anyInt(), anyDouble())).thenReturn(searchText);
-
-        // Call method under test
-        List<DiskResource> onSuccessList = Lists.newArrayList(mock(DiskResource.class), mock(DiskResource.class), mock(DiskResource.class), mock(DiskResource.class));
-        callBackCaptor.getValue().onSuccess(onSuccessList);
-
-        verify(pagingAsyncMock).onSuccess(pagingLoadResultArgumentCaptor.capture());
-        assertEquals("Verify that results list is passed to paging load results", onSuccessList, pagingLoadResultArgumentCaptor.getValue().getData());
-
-        verify(appearanceMock).searchDataResultsHeader(anyString(), eq(totalResults), eq(executionTime / 1000.0));
-        verify(mockHasSafeHtml).setHTML(SafeHtmlUtils.fromString(searchText));
-
-        verifyNoMoreInteractions(mockHasSafeHtml, searchServiceMock, pagingAsyncMock);
-        verifyZeroInteractions(diskResourceService);
-    }
-
 }

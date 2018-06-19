@@ -10,15 +10,27 @@ import TagTest from "./data/details/Tag.stories";
 import TagPanelTest from "./data/details/TagPanel.stories";
 import AppStatsTest from "./apps/admin/AppStats.stories";
 import DEHyperLinkTest from "./util/hyperlink/DEHyperLink.stories";
+import EditTagDialogTest from './data/search/EditTagDialog.stories';
+import SaveSearchButtonTest from './data/search/SaveSearchButton.stories';
+import SearchFieldTest from './util/SearchField.stories';
+import SearchFormTest from "./data/search/SearchForm.stories";
+import SearchFormTagPanel from './data/search/SearchFormTagPanel.stories';
+import TriggerFieldTest from './util/TriggerField.stories';
 
+storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);
 storiesOf('apps/details', module).add('ToolDetails', () => <ToolDetailsTest/>);
-storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 
 storiesOf('data/BasicDetails', module).add('with test diskresource details', () => <BasicDetailsTest logger={action('details')}/>);
 storiesOf('data/InfoTypeSelectionList',module).add('with test diskresource details', () =>  <InfoTypeSelectionListTest logger={action('infoTypes')}/>);
+storiesOf('data/search', module).add('EditTagDialog', () => <EditTagDialogTest saveTagLogger={action('Save Updated Tag')} closeDlgLogger={action('Close Dialog')}/>);
+storiesOf('data/search', module).add('SaveSearchButton', () => <SaveSearchButtonTest logger={action('Save Search')}/>);
+storiesOf('data/search', module).add('SearchForm', () => <SearchFormTest searchLogger={action('Search Submitted')} editTagLogger={action('Edit Tag')} suggestionsLogger={action('Fetch Suggestions')} saveSearchLogger={action('Save Search')} addTagLogger={action('Add Tag')}/>);
+storiesOf('data/search', module).add('SearchFormTagPanel', () => <SearchFormTagPanel removeTagLogger={action('Remove Tag')} editTagLogger={action('Edit Tag')} suggestionsLogger={action('Fetch Suggestions')} appendTagLogger={action('Append Tag')} addTagLogger={action('Add Tag')}/>);
 storiesOf('data/Tag', module).add('with test diskresource details', () => <TagTest logger={action('tag')}/>);
-storiesOf('data/TagPanel', module).add('witht test diskresource details', () => <TagPanelTest logger={action('tagpanel')}/>);
+storiesOf('data/TagPanel', module).add('with test diskresource details', () => <TagPanelTest logger={action('tagpanel')}/>);
 
 storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
 storiesOf('util', module).add('DEHyperLink', () => <DEHyperLinkTest/>);
+storiesOf('util', module).add('SearchField', () => <SearchFieldTest logger={action}/>);
+storiesOf('util', module).add('TriggerSearchField', () => <TriggerFieldTest logger={action}/>);

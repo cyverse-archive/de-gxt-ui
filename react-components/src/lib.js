@@ -1,8 +1,10 @@
 import * as apps from "./apps";
 import * as data from "./data";
+import * as util from './util/util';
+import palette from "./util/CyVersePalette";
 import React from "react";
 import ReactDOM from "react-dom";
-import {MuiThemeProvider, createMuiTheme} from "@material-ui/core/styles"; // v1.x
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles"; // v1.x
 
 
 // gwt-react needs React and ReactDOM on the global object
@@ -10,6 +12,21 @@ window.React = React;
 window.ReactDOM = ReactDOM;
 
 
-const getDefaultTheme = () => createMuiTheme({});
+const getDefaultTheme = () => createMuiTheme({
+    palette: {
+        primary: {
+            main: palette.blue,
+        },
+        secondary: {
+            main: palette.lightBlue
+        }
+    }
+});
 
-export {apps, data, getDefaultTheme, MuiThemeProvider};
+export {
+    apps,
+    data,
+    util,
+    getDefaultTheme,
+    MuiThemeProvider
+};

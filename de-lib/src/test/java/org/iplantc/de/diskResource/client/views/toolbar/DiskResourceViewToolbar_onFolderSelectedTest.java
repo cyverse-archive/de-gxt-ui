@@ -82,7 +82,9 @@ public class DiskResourceViewToolbar_onFolderSelectedTest {
     DiskResourceUtil mockDiskResourceUtil;
 
     @Before public void setup() {
-        uut = new DiskResourceViewToolbarImpl(searchFieldMock, mock(UserInfo.class), mockAppearance){
+        uut = new DiskResourceViewToolbarImpl(searchFieldMock,
+                                              mock(UserInfo.class),
+                                              mockAppearance){
             @Override
             boolean isOwnerList(List<DiskResource> selection) {
                 return isSelectionOwner;

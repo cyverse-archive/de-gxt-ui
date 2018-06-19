@@ -117,4 +117,13 @@ public interface DiskResourceQueryTemplate extends Folder {
     void setOwnedBy(String ownedBy);
 
     void setSharedWith(String sharedWith);
+
+    String getPathPrefix();
+    void setPathPrefix(String pathPrefix);
+
+    String getNegatedPathPrefix();
+    void setNegatedPathPrefix(String pathPrefix);
+
+    Boolean isPermissionRecurse();
+    void setPermissionRecurse(Boolean permissionRecurse);
 }

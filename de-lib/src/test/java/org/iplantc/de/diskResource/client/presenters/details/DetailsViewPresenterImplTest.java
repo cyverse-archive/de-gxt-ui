@@ -11,6 +11,7 @@ import org.iplantc.de.client.models.tags.IplantTagAutoBeanFactory;
 import org.iplantc.de.client.models.tags.IplantTagList;
 import org.iplantc.de.client.models.tags.Tag;
 import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
+import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.DetailsView;
 import org.iplantc.de.diskResource.client.events.selection.RemoveResourceTagSelected;
@@ -44,6 +45,7 @@ public class DetailsViewPresenterImplTest {
     IplantTagList tagListMock;
     @Mock
     IplantTagAutoBeanFactory tagAutoBeanFactory;
+    @Mock SearchModelUtils searchModelUtilsMock;
 
     @Captor ArgumentCaptor<AsyncCallback<Void>> voidCaptor;
 
@@ -57,7 +59,7 @@ public class DetailsViewPresenterImplTest {
 
     @Before
     public void setUp() {
-        uut = new DetailsViewPresenterImpl(viewMock, tagAutoBeanFactory) {
+        uut = new DetailsViewPresenterImpl(viewMock, tagAutoBeanFactory, searchModelUtilsMock) {
             @Override
             List<String> wrapInList(String tagId) {
                 return tagIdListMock;

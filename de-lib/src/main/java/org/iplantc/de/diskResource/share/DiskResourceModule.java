@@ -143,6 +143,7 @@ public interface DiskResourceModule {
         String FILE_SELECTOR_BROWSE_BTN = ".browseBtn";
         String FILE_SELECTOR_RESET_BTN = ".resetBtn";
         String FILE_SELECTOR_INPUT = ".inputField";
+        String SEARCH_FORM = "searchForm";
     }
 
     interface MetadataIds {

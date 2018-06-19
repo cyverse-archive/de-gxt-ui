@@ -1,16 +1,34 @@
 package org.iplantc.de.diskResource.client;
 
+import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
+import org.iplantc.de.client.models.tags.Tag;
 import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent.SavedSearchesRetrievedEventHandler;
 import org.iplantc.de.diskResource.client.events.search.DeleteSavedSearchClickedEvent.DeleteSavedSearchEventHandler;
-import org.iplantc.de.diskResource.client.events.search.SaveDiskResourceQueryClickedEvent.SaveDiskResourceQueryClickedEventHandler;
 import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent.HasSavedSearchDeletedEventHandlers;
+import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent.HasUpdateSavedSearchesEventHandlers;
+import org.iplantc.de.diskResource.client.presenters.callbacks.TagCreateCallback;
+import org.iplantc.de.diskResource.client.views.search.ReactSearchForm;
+
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.web.bindery.autobean.shared.Splittable;
+
+import com.sencha.gxt.core.client.Style;
+import com.sencha.gxt.core.client.dom.XElement;
+import com.sencha.gxt.widget.core.client.event.HideEvent;
+
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
 
 /**
  * Created by jstroot on 2/10/15.
- * @author jstroot
+ * @author jstroot, aramsey
  */
-public interface SearchView {
+@JsType
+public interface SearchView extends IsWidget,
+                                    HideEvent.HasHideHandlers {
 
     interface SearchViewAppearance {
 
@@ -58,11 +76,49 @@ public interface SearchView {
      * @author jstroot
      *
      */
-    interface Presenter extends SaveDiskResourceQueryClickedEventHandler,
-                                DeleteSavedSearchEventHandler,
+    @JsType
+    interface Presenter extends DeleteSavedSearchEventHandler,
                                 HasSavedSearchDeletedEventHandlers,
                                 SavedSearchesRetrievedEventHandler,
-                                HasUpdateSavedSearchesEventHandlers {
+                                HasUpdateSavedSearchesEventHandlers,
+                                SubmitDiskResourceQueryEvent.HasSubmitDiskResourceQueryEventHandlers {
+
+        @SuppressWarnings("unusable-by-js")
+        void onSaveSearch(Splittable splTemplate, String originalName);
+
+        void fetchTagSuggestions(String searchTerm);
+
+        @SuppressWarnings("unusable-by-js")
+        void onSearchBtnClicked(Splittable query);
+
+        @SuppressWarnings("unusable-by-js")
+        void onEditTagSelected(Splittable tag);
+
+        void onAddTagSelected(String tagValue, TagCreateCallback addTagCallback);
+
+        SearchView getSearchForm();
+
+        @JsIgnore
+        void edit(DiskResourceQueryTemplate template);
+
+        @JsIgnore
+        void show(XElement parent, Style.AnchorAlignment anchorAlignment);
+
+        void clearSearch();
     }
+
+    @JsIgnore
+    void show(Element parent, Style.AnchorAlignment anchorAlignment, ReactSearchForm.SearchFormProps props);
+
+    @JsIgnore
+    XElement getElement();
+
+    void renderSearchForm(ReactSearchForm.SearchFormProps props);
+
+    @JsIgnore
+    void hide();
+
+    @JsIgnore
+    void fireEvent(GwtEvent<?> event);
 }
 

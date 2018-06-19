@@ -17,11 +17,14 @@ import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.diskResources.TYPE;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorCode;
+import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
+import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
 import org.iplantc.de.client.util.DiskResourceUtil;
+import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.comments.view.dialogs.CommentsDialog;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -88,6 +91,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.data.shared.ListStore;
@@ -187,6 +192,8 @@ public class GridViewPresenterImpl implements Presenter,
     @Inject AsyncProviderWrapper<SaveAsDialog> saveAsDialogProvider;
     @Inject DiskResourceErrorAutoBeanFactory drErrorFactory;
     @Inject DiskResourceAutoBeanFactory factory;
+    @Inject SearchAutoBeanFactory searchFactory;
+    @Inject SearchModelUtils searchModelUtils;
     @Inject AsyncProviderWrapper<MetadataCopyDialog> copyMetadataDlgProvider;
     @Inject AsyncProviderWrapper<Md5DisplayDialog> md5DisplayDlgProvider;
     @Inject AsyncProviderWrapper<SelectMetadataTemplateDialog> selectMetaTemplateDlgProvider;
@@ -259,7 +266,10 @@ public class GridViewPresenterImpl implements Presenter,
     // <editor-fold desc="Event Handlers">
     @Override
     public void doSubmitDiskResourceQuery(SubmitDiskResourceQueryEvent event) {
-        doFolderSelected(event.getQueryTemplate());
+        Splittable splittable = event.getQueryTemplate();
+
+        DiskResourceQueryTemplate folder = searchModelUtils.convertSplittableToTemplate(splittable);
+        doFolderSelected(folder);
     }
 
     @Override
@@ -628,8 +638,9 @@ public class GridViewPresenterImpl implements Presenter,
     void doFolderSelected(final Folder selectedFolder) {
         final PagingLoader<FolderContentsLoadConfig, PagingLoadResult<DiskResource>> gridLoader =
                 view.getGridLoader();
-        gridLoader.getLastLoadConfig().setFolder(selectedFolder);
-        gridLoader.getLastLoadConfig().setOffset(0);
+        FolderContentsLoadConfig loadConfig = gridLoader.getLastLoadConfig();
+        loadConfig.setFolder(selectedFolder);
+        loadConfig.setOffset(0);
         gridLoader.load();
     }
 
