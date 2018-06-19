@@ -41,4 +41,8 @@ public interface AnalysisSupportRequestFields {
 
     void setUser(String user);
 
+    String getAnalysisId();
+
+    void setAnalysisId(String id);
+
 }
