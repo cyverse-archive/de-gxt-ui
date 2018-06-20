@@ -17,6 +17,9 @@ var intlData = {
         "notificationError": "Unable to fetch notifications!",
         "interactiveAnalysisUrl": ". Access your running analysis ",
         "urlPrompt": "here",
+        "dataToolTip": "Store, manage, and share your data here.",
+        "appsToolTip": "Discover, create, and use scientific apps for your data.",
+        "analysesTip": "Find the status, parameters, and results of your executed apps.",
     }
 };
 
