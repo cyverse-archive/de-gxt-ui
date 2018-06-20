@@ -17,6 +17,10 @@ import introJs from "intro.js";
 import dataImg from "../../resources/images/data.png";
 import appsImg from "../../resources/images/apps.png";
 import analysesImg from "../../resources/images/analyses.png";
+import { injectIntl } from "react-intl";
+import withI18N from "../../util/I18NWrapper";
+import messages from "../messages";
+import classnames from "classnames";
 
 
 class DesktopView extends Component {
@@ -221,6 +225,7 @@ class DesktopView extends Component {
     render() {
         const {windows, unSeenCount, notifications, notificationsError, notificationLoading}  = this.state;
         const classes = this.props.classes;
+        const intl = this.props.intl;
         this.updateApplicationTitle(unSeenCount);
         return (
             <div className={classes.body}>
@@ -256,14 +261,15 @@ class DesktopView extends Component {
                     </div>
                 </div>
                 {/*getMessge wont work with title attribute*/}
-                <div id={this.props.desktopContainerId} className={classes.desktop}>
+                <div id={this.props.desktopContainerId}
+                     className={classnames(classes.desktop)}>
                     <img className={classes.data}
                          id={build(ids.DESKTOP, ids.DATA_BTN)}
                          alt="data"
                          onClick={this.handleDesktopClick}
                          src={dataImg}
                          ref={this.dataBtn}
-                         title="Store, manage, and share your data here.">
+                         title={intl.formatMessage({id: "dataToolTip"})}>
                     </img>
                     <img className={classes.apps}
                          id={build(ids.DESKTOP, ids.APPS_BTN)}
@@ -271,7 +277,7 @@ class DesktopView extends Component {
                          onClick={this.handleDesktopClick}
                          src={appsImg}
                          ref={this.appsBtn}
-                         title="Discover, create, and use scientific apps for your data.">
+                         title={intl.formatMessage({id: "appsToolTip"})}>
 
                     </img>
                     <img className={classes.analyses}
@@ -280,7 +286,7 @@ class DesktopView extends Component {
                          alt="analyses"
                          src={analysesImg}
                          ref={this.analysesBtn}
-                         title="Find the status, parameters, and results of your executed apps.">
+                         title={intl.formatMessage({id: "analysesTip"})}>
                     </img>
                 </div>
                 <div>
@@ -290,4 +296,4 @@ class DesktopView extends Component {
     }
 }
 
-export default injectSheet(styles)(DesktopView);
+export default (injectSheet(styles)(withI18N(injectIntl(DesktopView), messages)));
