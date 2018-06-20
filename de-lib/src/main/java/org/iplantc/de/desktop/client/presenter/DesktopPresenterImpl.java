@@ -42,7 +42,6 @@ import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.desktop.client.events.WindowHeadingUpdatedEvent;
 import org.iplantc.de.desktop.client.presenter.callbacks.NotificationMarkAsSeenCallback;
 import org.iplantc.de.desktop.client.presenter.util.MessagePoller;
-import org.iplantc.de.desktop.client.presenter.util.NotificationWebSocketManager;
 import org.iplantc.de.desktop.client.presenter.util.WindowStateStorageWrapper;
 import org.iplantc.de.desktop.client.views.widgets.PreferencesDialog;
 import org.iplantc.de.desktop.client.views.windows.WindowBase;
@@ -164,7 +163,6 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
     private final SaveSessionPeriodic ssp;
     private SaveWindowStatesPeriodic swsp;
     private final DesktopView view;
-    private NotificationWebSocketManager notificationWebSocketManager;
     private boolean loggedOut;
     private final WindowManager windowManager;
     private Map<Splittable, WindowBase> windowConfigMap = new HashMap<>();
@@ -294,7 +292,6 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
     private void cleanUp() {
         loggedOut = true;
         messagePoller.stop();
-        notificationWebSocketManager.closeWebSocket();
     }
 
     @Override
