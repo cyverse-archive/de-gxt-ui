@@ -18,7 +18,9 @@ import ContentEdit from '@material-ui/icons/Edit';
 import TextField from '@material-ui/core/TextField';
 
 import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import Slide from '@material-ui/core/Slide';
 
@@ -35,6 +37,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUp from "@material-ui/icons/KeyboardArrowUp";
+
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const AttributeTypes = [
     "String",
@@ -99,8 +106,16 @@ const toolbarStyles = theme => ({
     },
 });
 
-let AttributeGridToolbar = props => {
-    const { onAddAttribute, classes } = props;
+let OrderedGridToolbar = props => {
+    const {
+        classes,
+        title,
+        onAddItem,
+        moveUp,
+        moveDown,
+        moveUpDisabled,
+        moveDownDisabled,
+    } = props;
 
     return (
         <Toolbar
@@ -110,15 +125,15 @@ let AttributeGridToolbar = props => {
                 <Button variant="fab"
                         mini
                         color="primary"
-                        aria-label="add attribute"
-                        onClick={onAddAttribute}
+                        aria-label="add row"
+                        onClick={onAddItem}
                 >
                     <ContentAdd />
                 </Button>
             </div>
             <div className={classes.title}>
                 <Typography variant="title" id="tableTitle">
-                    Attributes
+                    {title}
                 </Typography>
             </div>
             <div className={classes.spacer} />
@@ -128,8 +143,8 @@ let AttributeGridToolbar = props => {
                         color="secondary"
                         aria-label="move up"
                         className={classes.button}
-                        disabled={props.moveUpDisabled}
-                        onClick={() => props.moveUp()}
+                        disabled={moveUpDisabled}
+                        onClick={() => moveUp()}
                 >
                     <KeyboardArrowUp />
                 </Button>
@@ -140,8 +155,8 @@ let AttributeGridToolbar = props => {
                         color="secondary"
                         aria-label="move down"
                         className={classes.button}
-                        disabled={props.moveDownDisabled}
-                        onClick={() => props.moveDown()}
+                        disabled={moveDownDisabled}
+                        onClick={() => moveDown()}
                 >
                     <KeyboardArrowDown />
                 </Button>
@@ -150,7 +165,260 @@ let AttributeGridToolbar = props => {
     );
 };
 
-AttributeGridToolbar = withStyles(toolbarStyles)(AttributeGridToolbar);
+OrderedGridToolbar = withStyles(toolbarStyles)(OrderedGridToolbar);
+
+class AttributeEnumEditDialog extends React.Component {
+    constructor(props) {
+        super(props);
+
+        const { value, is_default } = props;
+
+        this.state = {
+            value,
+            is_default,
+        };
+    }
+
+    componentWillReceiveProps(newProps) {
+        const { value, is_default } = newProps;
+
+        this.setState({
+            value,
+            is_default,
+        });
+    }
+
+    render() {
+        const { open, onSave, onClose } = this.props;
+        const { value, is_default } = this.state;
+
+        return (
+            <Dialog
+                open={open}
+                disableBackdropClick
+                disableEscapeKeyDown
+                aria-labelledby="form-dialog-title"
+            >
+                <DialogTitle id="form-dialog-title">Edit Enum Selection</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="value"
+                        label="Value"
+                        value={value || ""}
+                        onChange={event => this.setState({value: event.target.value})}
+                        fullWidth
+                    />
+                    <Checkbox id="isDefault"
+                              color="primary"
+                              checked={!!is_default}
+                              onChange={(event, checked) => this.setState({is_default: checked})}
+                    />
+                    <InputLabel htmlFor="isDefault">Default Selection?</InputLabel>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={onClose} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={() => onSave(value, is_default)} color="primary">
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
+}
+
+class AttributeEnumEditGrid extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.newEnumCount = 1;
+
+        this.state = {
+            selected: -1,
+            editingEnumIndex: -1,
+        };
+    }
+
+    newEnumValue = () => `New value ${this.newEnumCount++}`;
+
+    onAddEnum = () => {
+        let value = this.newEnumValue();
+        let attributeEnums = this.props.values;
+
+        const valuesMatch = attrEnum => (attrEnum.value === value);
+        while (attributeEnums.findIndex(valuesMatch) > -1) {
+            value = this.newEnumValue();
+        }
+
+        this.setState({selected: 0});
+
+        this.props.onValuesChanged([
+            {
+                value,
+                is_default: false,
+            },
+            ...attributeEnums
+        ]);
+    };
+
+    onEnumRemoved = (index) => {
+        let values = [...this.props.values];
+        let { selected } = this.state;
+
+        values.splice(index, 1);
+
+        // fix selection
+        if (index === selected) {
+            selected = -1;
+        } else if (index < selected) {
+            selected--;
+        }
+
+        this.setState({selected});
+        this.props.onValuesChanged(values);
+    };
+
+    handleChange = (index, value, is_default) => {
+        let values = [...this.props.values];
+        const attrEnum = values[index];
+
+        if (is_default) {
+            let currentDefaultIndex = values.findIndex(value => value.is_default);
+
+            if (currentDefaultIndex >= 0) {
+                let currentDefault = values[currentDefaultIndex];
+                values.splice(currentDefaultIndex, 1, {...currentDefault, is_default: false});
+            }
+        }
+
+        values.splice(index, 1, {...attrEnum, value, is_default});
+
+        this.props.onValuesChanged(values);
+    };
+
+    handleSelect = (index) => {
+        const { selected } = this.state;
+        this.setState({ selected: selected === index ? -1 : index });
+    };
+
+    moveUp = () => {
+        this.moveSelectedEnum(-1);
+    };
+
+    moveDown = () => {
+        this.moveSelectedEnum(1);
+    };
+
+    moveSelectedEnum = (offset) => {
+        const { selected } = this.state;
+        let values = [...this.props.values];
+
+        let [attrEnum] = values.splice(selected, 1);
+        values.splice(selected + offset, 0, attrEnum);
+
+        this.setState({selected: selected + offset});
+        this.props.onValuesChanged(values);
+    };
+
+    render() {
+        const { classes, values } = this.props;
+        const { selected, editingEnumIndex } = this.state;
+        const editingEnum = editingEnumIndex >= 0 ? values[editingEnumIndex] : {};
+
+        return (
+            <div className={classes.attributeTableContainer}>
+
+                <OrderedGridToolbar title="Values"
+                                    onAddItem={this.onAddEnum}
+                                    moveUp={this.moveUp}
+                                    moveUpDisabled={selected <= 0}
+                                    moveDown={this.moveDown}
+                                    moveDownDisabled={selected < 0 || (values.length - 1) <= selected}
+                />
+
+                <div className={classes.attributeTableWrapper}>
+                    <Table aria-labelledby="tableTitle">
+                        <TableBody>
+                            {values && values.map((attrEnum, index) => {
+                                const isSelected = (index === selected);
+                                const {
+                                    value,
+                                    is_default,
+                                } = attrEnum;
+
+                                return (
+                                    <TableRow
+                                        hover
+                                        tabIndex={-1}
+                                        key={value}
+                                        selected={isSelected}
+                                        onClick={() => this.handleSelect(index)}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            {value}
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <Checkbox color="primary"
+                                                      checked={is_default}
+                                                      onChange={(event, checked) => {
+                                                          this.handleChange(index, value, checked);
+                                                      }}
+                                                      onClick={event => event.stopPropagation()}
+                                            />
+                                        </TableCell>
+                                        <TableCell padding="none">
+                                            <IconButton aria-label="edit"
+                                                        className={classes.button}
+                                                        onClick={event => {
+                                                            event.stopPropagation();
+                                                            this.setState({editingEnumIndex: index});
+                                                        }}
+                                            >
+                                                <ContentEdit />
+                                            </IconButton>
+                                            <IconButton aria-label="delete"
+                                                        classes={{root: classes.deleteIcon}}
+                                                        onClick={event => {
+                                                            event.stopPropagation();
+                                                            this.onEnumRemoved(index);
+                                                        }}
+                                            >
+                                                <ContentRemove />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                        <TableHead className={classes.tableHead}>
+                            <TableRow>
+                                <TableCell component="th" scope="row">Value</TableCell>
+                                <TableCell padding="checkbox">Default?</TableCell>
+                                <TableCell padding="none" />
+                            </TableRow>
+                        </TableHead>
+                    </Table>
+                </div>
+
+                <AttributeEnumEditDialog open={editingEnumIndex >= 0}
+                                         value={editingEnum.value}
+                                         is_default={editingEnum.is_default}
+                                         onClose={() => this.setState({editingEnumIndex: -1})}
+                                         onSave={(value, is_default) => {
+                                             this.setState({editingEnumIndex: -1});
+                                             this.handleChange(editingEnumIndex, value, is_default);
+                                         }}
+                />
+
+            </div>
+        );
+    }
+}
+
+AttributeEnumEditGrid = withStyles(styles)(AttributeEnumEditGrid);
 
 const columnData = [
     {
@@ -158,11 +426,10 @@ const columnData = [
         label: "Attribute",
         component: "th",
         scope: "row",
-        padding: "none",
     },
     { id: "description", label: "Description" },
-    { id: "type", label: "Type" },
-    { id: "attributes", label: "Child Attributes", numeric: true },
+    { id: "type", label: "Type", padding: "none" },
+    { id: "attributes", label: "Child Attributes", padding: "none", numeric: true },
     { id: "required", label: "Required", padding: "checkbox" },
 ];
 
@@ -289,11 +556,12 @@ class TemplateAttributeList extends Component {
         return (
             <div className={classes.attributeTableContainer}>
 
-                <AttributeGridToolbar onAddAttribute={this.onAddAttribute}
-                                      moveUp={this.moveUp}
-                                      moveUpDisabled={selected <= 0}
-                                      moveDown={this.moveDown}
-                                      moveDownDisabled={selected < 0 || (attributes.length - 1) <= selected}
+                <OrderedGridToolbar title="Attributes"
+                                    onAddItem={this.onAddAttribute}
+                                    moveUp={this.moveUp}
+                                    moveUpDisabled={selected <= 0}
+                                    moveDown={this.moveDown}
+                                    moveDownDisabled={selected < 0 || (attributes.length - 1) <= selected}
                 />
 
                 <div className={classes.attributeTableWrapper}>
@@ -317,12 +585,12 @@ class TemplateAttributeList extends Component {
                                         selected={isSelected}
                                         onClick={() => this.handleSelect(index)}
                                     >
-                                        <TableCell component="th" scope="row" padding="none">
+                                        <TableCell component="th" scope="row">
                                             {name}
                                         </TableCell>
                                         <TableCell>{description}</TableCell>
-                                        <TableCell>{type}</TableCell>
-                                        <TableCell numeric>{attributes ? attributes.length : 0}</TableCell>
+                                        <TableCell padding="none">{type}</TableCell>
+                                        <TableCell padding="none" numeric>{attributes ? attributes.length : 0}</TableCell>
                                         <TableCell padding="checkbox">
                                             <Checkbox color="primary"
                                                       checked={required}
@@ -370,12 +638,13 @@ class EditAttribute extends Component {
     constructor(props) {
         super(props);
 
-        const { name, description, type, required, attributes } = props.attribute;
+        const { name, description, type, required, values, attributes } = props.attribute;
         this.state = {
             name,
             description,
             type,
             required,
+            values: values || [],
             attributes: attributes || [],
             editingAttrIndex: -1,
         };
@@ -385,20 +654,37 @@ class EditAttribute extends Component {
 
     componentWillReceiveProps(newProps) {
         const { attribute } = newProps;
-        const { name, description, type, required, attributes } = attribute;
+        const { name, description, type, required, values, attributes } = attribute;
 
         this.setState({
             name,
             description,
             type,
             required,
+            values: values || [],
             attributes: attributes || [],
         });
     }
 
     saveAttr = () => {
-        const { name, description, type, required, attributes } = this.state;
-        this.props.saveAttr({...this.props.attribute, name, description, type, required, attributes});
+        const {
+            name,
+            description,
+            type,
+            required,
+            values,
+            attributes,
+        } = this.state;
+
+        this.props.saveAttr({
+            ...this.props.attribute,
+            name,
+            description,
+            type,
+            required,
+            values,
+            attributes,
+        });
     };
 
     handleChange = key => event => {
@@ -420,7 +706,7 @@ class EditAttribute extends Component {
 
     render() {
         const { classes, open, parentName } = this.props;
-        const { name, description, type, required, attributes, editingAttrIndex } = this.state;
+        const { name, description, type, required, attributes, values, editingAttrIndex } = this.state;
         const editingAttr = editingAttrIndex >= 0 ? attributes[editingAttrIndex] : {};
 
         const EditAttributeChild = this.EditAttributeChild;
@@ -485,11 +771,30 @@ class EditAttribute extends Component {
 
                     <Divider />
 
-                    <TemplateAttributeList attributes={attributes}
-                                           onAttributesChanged={this.onAttributesChanged}
-                                           onAttributeUpdated={this.onAttributeUpdated}
-                                           onEditAttr={(index) => this.setState({editingAttrIndex: index})}
-                    />
+                    {type === "Enum" &&
+                    <ExpansionPanel defaultExpanded>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                            <Typography className={classes.heading}>Enum Values</Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                            <AttributeEnumEditGrid values={values}
+                                                   onValuesChanged={(values) => this.setState({values})}/>
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                    }
+
+                    <ExpansionPanel defaultExpanded={attributes && attributes.length > 0}>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                            <Typography className={classes.heading}>Attributes</Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                            <TemplateAttributeList attributes={attributes}
+                                                   onAttributesChanged={this.onAttributesChanged}
+                                                   onAttributeUpdated={this.onAttributeUpdated}
+                                                   onEditAttr={(index) => this.setState({editingAttrIndex: index})}
+                            />
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
 
                     <EditAttributeChild attribute={editingAttr}
                                         open={editingAttrIndex >= 0}
