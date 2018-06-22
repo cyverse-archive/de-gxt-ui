@@ -168,6 +168,10 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
             case OSG:
                 applyFilter(filterPermCombo.getCurrentValue(), AnalysisTypeFilter.OSG);
                 break;
+            case ALL:
+            default:
+                applyFilter(filterPermCombo.getCurrentValue(), AnalysisTypeFilter.ALL);
+                break;
         }
     }
 
