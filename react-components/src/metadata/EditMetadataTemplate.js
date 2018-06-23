@@ -43,6 +43,8 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
+import Grid from '@material-ui/core/Grid';
+
 const AttributeTypes = [
     "String",
     "Timestamp",
@@ -57,6 +59,15 @@ const AttributeTypes = [
 ];
 
 const AttributeTypeMenuItems = AttributeTypes.map((type, index) => (<MenuItem key={index} value={type}>{type}</MenuItem>));
+
+const OLSEntityTypes = [
+    "CLASS",
+    "PROPERTY",
+    "INDIVIDUAL",
+    "ONTOLOGY",
+];
+
+const OLSEntityTypeMenuItems = OLSEntityTypes.map((type, index) => (<MenuItem key={index} value={type}>{type.toLowerCase()}</MenuItem>));
 
 const Transition = (props) => {
     return <Slide direction="up" {...props} />;
@@ -420,6 +431,286 @@ class AttributeEnumEditGrid extends React.Component {
 
 AttributeEnumEditGrid = withStyles(styles)(AttributeEnumEditGrid);
 
+class StringEditorDialog extends React.Component {
+    constructor(props) {
+        super(props);
+
+        const { value } = props;
+        this.state = { value };
+    }
+
+    componentWillReceiveProps(newProps) {
+        const { value } = newProps;
+
+        this.setState({ value });
+    }
+
+    render() {
+        const { open, title, valueLabel, onSave, onClose } = this.props;
+        const { value } = this.state;
+
+        return (
+            <Dialog
+                open={open}
+                disableBackdropClick
+                disableEscapeKeyDown
+                aria-labelledby="form-dialog-title"
+            >
+                <DialogTitle id="form-dialog-title">{title}</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="value"
+                        label={valueLabel || "Value"}
+                        value={value || ""}
+                        onChange={event => this.setState({value: event.target.value})}
+                        fullWidth
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={onClose} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={() => onSave(value)} color="primary">
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
+}
+
+class StringListEditor extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.newValueCount = 1;
+
+        this.state = {
+            selected: -1,
+            editingIndex: -1,
+        };
+    }
+
+    newValue = () => `New value ${this.newValueCount++}`;
+
+    onAddValue = () => {
+        let value = this.newValue();
+        let values = this.props.values;
+
+        const valuesMatch = v => (v === value);
+        while (values.findIndex(valuesMatch) > -1) {
+            value = this.newValue();
+        }
+
+        this.setState({selected: 0});
+
+        this.props.onValuesChanged([
+            value,
+            ...values
+        ]);
+    };
+
+    onValueRemoved = (index) => {
+        let values = [...this.props.values];
+        let { selected } = this.state;
+
+        values.splice(index, 1);
+
+        // fix selection
+        if (index === selected) {
+            selected = -1;
+        } else if (index < selected) {
+            selected--;
+        }
+
+        this.setState({selected});
+        this.props.onValuesChanged(values);
+    };
+
+    onUpdateValue = (index, value) => {
+        let values = [...this.props.values];
+
+        values.splice(index, 1, value);
+
+        this.props.onValuesChanged(values);
+    };
+
+    handleSelect = (index) => {
+        const { selected } = this.state;
+        this.setState({ selected: selected === index ? -1 : index });
+    };
+
+    moveUp = () => {
+        this.moveSelectedValue(-1);
+    };
+
+    moveDown = () => {
+        this.moveSelectedValue(1);
+    };
+
+    moveSelectedValue = (offset) => {
+        const { selected } = this.state;
+        let values = [...this.props.values];
+
+        let [value] = values.splice(selected, 1);
+        values.splice(selected + offset, 0, value);
+
+        this.setState({selected: selected + offset});
+        this.props.onValuesChanged(values);
+    };
+
+    render() {
+        const { classes, title, helpLabel, columnLabel, values } = this.props;
+        const { selected, editingIndex } = this.state;
+        const editingValue = editingIndex >= 0 ? values[editingIndex] : "";
+
+        return (
+            <fieldset>
+                <legend>{title}</legend>
+
+                <Typography variant="subheading">{helpLabel}</Typography>
+
+                <OrderedGridToolbar title={columnLabel}
+                                    onAddItem={this.onAddValue}
+                                    moveUp={this.moveUp}
+                                    moveUpDisabled={selected <= 0}
+                                    moveDown={this.moveDown}
+                                    moveDownDisabled={selected < 0 || (values.length - 1) <= selected}
+                />
+
+                <div className={classes.attributeTableWrapper}>
+                    <Table aria-labelledby="tableTitle">
+                        <TableBody>
+                            {values && values.map((value, index) => {
+                                const isSelected = (index === selected);
+
+                                return (
+                                    <TableRow
+                                        hover
+                                        tabIndex={-1}
+                                        key={value}
+                                        selected={isSelected}
+                                        onClick={() => this.handleSelect(index)}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            {value}
+                                        </TableCell>
+                                        <TableCell padding="none">
+                                            <IconButton aria-label="edit"
+                                                        className={classes.button}
+                                                        onClick={event => {
+                                                            event.stopPropagation();
+                                                            this.setState({editingIndex: index});
+                                                        }}
+                                            >
+                                                <ContentEdit />
+                                            </IconButton>
+                                            <IconButton aria-label="delete"
+                                                        classes={{root: classes.deleteIcon}}
+                                                        onClick={event => {
+                                                            event.stopPropagation();
+                                                            this.onValueRemoved(index);
+                                                        }}
+                                            >
+                                                <ContentRemove />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </div>
+
+                <StringEditorDialog open={editingIndex >= 0}
+                                    title={title}
+                                    valueLabel={columnLabel}
+                                    value={editingValue}
+                                    onClose={() => this.setState({editingIndex: -1})}
+                                    onSave={(value, is_default) => {
+                                        this.setState({editingIndex: -1});
+                                        this.onUpdateValue(editingIndex, value, is_default);
+                                    }}
+                />
+
+            </fieldset>
+        );
+    }
+}
+
+StringListEditor = withStyles(styles)(StringListEditor);
+
+class OLSSettings extends React.Component {
+    handleChange = (key, value) => {
+        this.props.onSettingsChanged({
+            ...this.props.settings,
+            [key]: value,
+        });
+    };
+
+    render() {
+        const { settings } = this.props;
+        const { type, ontology, childrenOf, allChildrenOf } = settings;
+
+        return (
+            <Grid container
+                  spacing={16}
+                  direction="column"
+                  justify="flex-start"
+                  alignItems="stretch"
+            >
+                <Grid item>
+                    <fieldset>
+                        <legend>Entity Type</legend>
+
+                        <FormControl fullWidth>
+                            <InputLabel htmlFor="entity-type">Restrict searches to an entity type:</InputLabel>
+                            <Select
+                                value={type || "CLASS"}
+                                onChange={event => this.handleChange("type", event.target.value)}
+                                input={<Input id="entity-type" />}
+                            >
+                                {OLSEntityTypeMenuItems}
+                            </Select>
+                        </FormControl>
+                    </fieldset>
+                </Grid>
+
+                <Grid item>
+                    <StringListEditor title="Ontologies"
+                                      helpLabel="Restrict searches to a set of ontologies:"
+                                      columnLabel="OLS Ontology ID"
+                                      values={ontology || []}
+                                      onValuesChanged={ontology => this.handleChange("ontology", ontology)}
+                    />
+                </Grid>
+
+                <Grid item>
+                    <StringListEditor title="Children"
+                                      helpLabel="Restrict searches to all children of a given term (subclassOf/is-a relation only):"
+                                      columnLabel="IRI"
+                                      values={childrenOf || []}
+                                      onValuesChanged={childrenOf => this.handleChange("childrenOf", childrenOf)}
+                    />
+                </Grid>
+
+                <Grid item>
+                    <StringListEditor title="All Children"
+                                      helpLabel="Restrict searches to all children of a given term (subclassOf/is-a plus any hierarchical/transitive properties):"
+                                      columnLabel="IRI"
+                                      values={allChildrenOf || []}
+                                      onValuesChanged={allChildrenOf => this.handleChange("allChildrenOf", allChildrenOf)}
+                    />
+                </Grid>
+            </Grid>
+        );
+    }
+}
+
+OLSSettings = withStyles(styles)(OLSSettings);
+
 const columnData = [
     {
         id: "name",
@@ -638,13 +929,14 @@ class EditAttribute extends Component {
     constructor(props) {
         super(props);
 
-        const { name, description, type, required, values, attributes } = props.attribute;
+        const { name, description, type, required, values, settings, attributes } = props.attribute;
         this.state = {
             name,
             description,
             type,
             required,
             values: values || [],
+            settings: settings || {},
             attributes: attributes || [],
             editingAttrIndex: -1,
         };
@@ -654,7 +946,7 @@ class EditAttribute extends Component {
 
     componentWillReceiveProps(newProps) {
         const { attribute } = newProps;
-        const { name, description, type, required, values, attributes } = attribute;
+        const { name, description, type, required, values, settings, attributes } = attribute;
 
         this.setState({
             name,
@@ -662,6 +954,7 @@ class EditAttribute extends Component {
             type,
             required,
             values: values || [],
+            settings: settings || {},
             attributes: attributes || [],
         });
     }
@@ -673,6 +966,7 @@ class EditAttribute extends Component {
             type,
             required,
             values,
+            settings,
             attributes,
         } = this.state;
 
@@ -683,6 +977,7 @@ class EditAttribute extends Component {
             type,
             required,
             values,
+            settings,
             attributes,
         });
     };
@@ -706,7 +1001,7 @@ class EditAttribute extends Component {
 
     render() {
         const { classes, open, parentName } = this.props;
-        const { name, description, type, required, attributes, values, editingAttrIndex } = this.state;
+        const { name, description, type, required, attributes, values, settings, editingAttrIndex } = this.state;
         const editingAttr = editingAttrIndex >= 0 ? attributes[editingAttrIndex] : {};
 
         const EditAttributeChild = this.EditAttributeChild;
@@ -779,6 +1074,18 @@ class EditAttribute extends Component {
                         <ExpansionPanelDetails>
                             <AttributeEnumEditGrid values={values}
                                                    onValuesChanged={(values) => this.setState({values})}/>
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                    }
+
+                    {type === "OLS Ontology Term" &&
+                    <ExpansionPanel defaultExpanded>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                            <Typography className={classes.heading}>Ontology Lookup Service Query Params</Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                            <OLSSettings settings={settings}
+                                         onSettingsChanged={(settings) => this.setState({settings})}/>
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
                     }
