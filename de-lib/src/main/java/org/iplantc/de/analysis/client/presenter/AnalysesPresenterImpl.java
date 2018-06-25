@@ -297,6 +297,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
         //Set default filter to ALL
         currentPermFilter = AnalysisPermissionFilter.ALL;
+        currentTypeFilter = AnalysisTypeFilter.ALL;
     }
 
     @Override
@@ -421,16 +422,23 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         FilterConfigBean typeFilterCb = getFilterConfigBean();
         typeFilterCb.setField("type");
 
-        if (typeFilter != null && !typeFilter.equals(AnalysisTypeFilter.ALL)) {
+        if (typeFilter != null) {
             switch (typeFilter) {
+                case DE:
+                    typeFilterCb.setValue("DE");
+                    break;
                 case OSG:
-                    typeFilterCb.setValue("Osg");
+                    typeFilterCb.setValue("OSG");
                     break;
                 case AGAVE:
                     typeFilterCb.setValue("Agave");
                     break;
                 case INTERACTIVE:
                     typeFilterCb.setValue("Interactive");
+                    break;
+                case ALL:
+                default:
+                    typeFilterCb.setValue(null);
                     break;
             }
             config.getFilters().add(typeFilterCb);
