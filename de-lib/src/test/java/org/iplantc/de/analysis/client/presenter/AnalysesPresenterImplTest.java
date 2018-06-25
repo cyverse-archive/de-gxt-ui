@@ -359,7 +359,7 @@ public class AnalysesPresenterImplTest {
 
         verify(filterConfigsMock).clear();
         verify(filterConfigBeanMock, times(3)).setField(anyString());
-        verify(filterConfigBeanMock, times(2)).setValue(anyString());
+        verify(filterConfigBeanMock, times(3)).setValue(anyString());
 
         verify(filterConfigsMock, times(3)).add(filterConfigBeanMock);
         verify(loadConfigMock).setLimit(anyInt());
