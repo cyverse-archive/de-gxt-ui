@@ -129,7 +129,7 @@ class EditMetadataTemplateTest extends Component {
         };
 
         return (
-            <EditMetadataTemplate open saveText="Save" presenter={presenter} metadataTemplate={metadataTemplate} />
+            <EditMetadataTemplate open saveText="Save" presenter={presenter} initialValues={metadataTemplate} />
         );
     }
 }

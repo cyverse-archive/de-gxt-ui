@@ -20,6 +20,7 @@ import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import IconButton from "@material-ui/core/IconButton";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -180,12 +181,16 @@ class EditAttribute extends Component {
                         </Select>
                     </FormControl>
 
-                    <Checkbox id="required"
-                              color="primary"
-                              checked={!!required}
-                              onChange={(event, checked) => this.setState({required: checked})}
+                    <FormControlLabel
+                        control={
+                            <Checkbox id="required"
+                                      color="primary"
+                                      checked={!!required}
+                                      onChange={(event, checked) => this.setState({required: checked})}
+                            />
+                        }
+                        label="Required?"
                     />
-                    <InputLabel htmlFor="required">Required</InputLabel>
 
                     <Divider />
 

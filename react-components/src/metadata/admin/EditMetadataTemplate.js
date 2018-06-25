@@ -2,9 +2,11 @@
  * @author psarando
  */
 import React, { Component } from "react";
+import { Field, reduxForm } from "redux-form";
+
+import withStoreProvider from "../../util/StoreProvider";
 
 import styles from "../style";
-
 import EditAttribute from "./EditAttribute";
 import SlideUpTransition from "./SlideUpTransition";
 import TemplateAttributeList from "./TemplateAttributeList";
@@ -15,8 +17,8 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import Divider from "@material-ui/core/Divider";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import IconButton from "@material-ui/core/IconButton";
-import InputLabel from "@material-ui/core/InputLabel";
 import TextField from "@material-ui/core/TextField";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -24,43 +26,54 @@ import { withStyles } from "@material-ui/core/styles";
 
 import CloseIcon from "@material-ui/icons/Close";
 
+const FormTextField = ({
+        input,
+        label,
+        meta: {touched, error},
+        ...custom
+    }) => (
+    <TextField
+        label={label}
+        error={touched && !!error}
+        helperText={error}
+        fullWidth
+        {...input}
+        {...custom}
+    />
+);
+
+const FormCheckbox = ({ input, label, ...custom }) => (
+    <FormControlLabel
+        control={
+            <Checkbox checked={!!input.value}
+                      onChange={input.onChange}
+                      {...custom}
+            />
+        }
+        label={label}
+    />
+);
+
 class EditMetadataTemplate extends Component {
     constructor(props) {
         super(props);
 
-
-        const { name, description, deleted } = props.metadataTemplate;
-
-        let attributes = [...props.metadataTemplate.attributes];
+        let attributes = [...props.initialValues.attributes];
 
         this.state = {
-            name: name,
-            description: description,
-            deleted: deleted,
             attributes: attributes,
             editingAttrIndex: -1,
         };
     }
 
-    onSaveTemplate = () => {
-        const {
-            name,
-            description,
-            deleted,
-            attributes,
-        } = this.state;
+    onSaveTemplate = ({ name, description, deleted }) => {
+        const { attributes } = this.state;
 
         this.props.presenter.onSaveTemplate({
             name,
             description,
             deleted,
             attributes,
-        });
-    };
-
-    handleChange = key => event => {
-        this.setState({
-            [key]: event.target.value,
         });
     };
 
@@ -76,8 +89,8 @@ class EditMetadataTemplate extends Component {
     };
 
     render() {
-        const { classes, open } = this.props;
-        const { name, description, deleted, attributes, editingAttrIndex } = this.state;
+        const { classes, open, handleSubmit, pristine, submitting, error, initialValues } = this.props;
+        const { attributes, editingAttrIndex } = this.state;
         const editingAttr = editingAttrIndex >= 0 ? attributes[editingAttrIndex] : {};
 
         return (
@@ -97,34 +110,36 @@ class EditMetadataTemplate extends Component {
                         <Typography id="form-dialog-title" variant="title" color="inherit" className={classes.flex}>
                             Edit Metadata Template
                         </Typography>
-                        <Button onClick={this.onSaveTemplate} color="inherit">
+                        <Button id="metadata-template-save"
+                                disabled={pristine || submitting || error}
+                                onClick={handleSubmit(this.onSaveTemplate)}
+                                color="inherit"
+                        >
                             {this.props.saveText}
                         </Button>
                     </Toolbar>
                 </AppBar>
 
                 <DialogContent>
-                    <TextField autoFocus
-                               margin="dense"
-                               id="name"
-                               label="Name"
-                               value={name}
-                               onChange={this.handleChange("name")}
-                               fullWidth
+                    <Field name="name"
+                           label="Name"
+                           id="templateName"
+                           autoFocus
+                           margin="dense"
+                           component={FormTextField}
                     />
-                    <TextField id="description"
-                               label="Description"
-                               value={description}
-                               onChange={this.handleChange("description")}
-                               fullWidth
+                    <Field name="description"
+                           label="Description"
+                           id="templateDescription"
+                           component={FormTextField}
                     />
 
-                    <Checkbox id="deleted"
-                              color="primary"
-                              checked={deleted}
-                              onChange={(event, checked) => this.setState({deleted: checked})}
+                    <Field name="deleted"
+                           label="Mark as Deleted?"
+                           id="templateDeleted"
+                           color="primary"
+                           component={FormCheckbox}
                     />
-                    <InputLabel htmlFor="deleted">Mark as Deleted?</InputLabel>
 
                     <Divider />
 
@@ -136,7 +151,7 @@ class EditMetadataTemplate extends Component {
 
                     <EditAttribute attribute={editingAttr}
                                    open={editingAttrIndex >= 0}
-                                   parentName={name}
+                                   parentName={initialValues.name}
                                    saveAttr={(attr) => this.onAttributeUpdated(editingAttrIndex, attr)}
                                    closeAttrDialog={() => this.setState({editingAttrIndex: -1})}
                     />
@@ -146,4 +161,22 @@ class EditMetadataTemplate extends Component {
     }
 }
 
-export default withStyles(styles)(EditMetadataTemplate);
+const validate = values => {
+    const errors = {};
+
+    if (!values.name) {
+        errors.name = "Required";
+        errors._error = true;
+    }
+
+    return errors;
+};
+
+export default withStoreProvider(
+    reduxForm(
+        {
+            form: 'adminMetadataTemplateForm',
+            enableReinitialize: true,
+            validate,
+        }
+    )(withStyles(styles)(EditMetadataTemplate)));

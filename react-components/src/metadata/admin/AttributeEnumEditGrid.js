@@ -12,8 +12,8 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import IconButton from "@material-ui/core/IconButton";
-import InputLabel from "@material-ui/core/InputLabel";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -68,12 +68,16 @@ class AttributeEnumEditDialog extends Component {
                         onChange={event => this.setState({value: event.target.value})}
                         fullWidth
                     />
-                    <Checkbox id="isDefault"
-                              color="primary"
-                              checked={!!is_default}
-                              onChange={(event, checked) => this.setState({is_default: checked})}
+                    <FormControlLabel
+                        control={
+                            <Checkbox id="isDefault"
+                                      color="primary"
+                                      checked={!!is_default}
+                                      onChange={(event, checked) => this.setState({is_default: checked})}
+                            />
+                        }
+                        label="Default Selection?"
                     />
-                    <InputLabel htmlFor="isDefault">Default Selection?</InputLabel>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose} color="primary">
