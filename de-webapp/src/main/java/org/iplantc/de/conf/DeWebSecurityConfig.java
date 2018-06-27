@@ -10,7 +10,7 @@ import org.iplantc.de.server.MDCFilter;
 import org.iplantc.de.server.auth.CasLogoutSuccessHandler;
 
 import org.jasig.cas.client.session.SingleSignOutFilter;
-import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
+import org.jasig.cas.client.validation.Cas30ServiceTicketValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,7 +76,7 @@ public class DeWebSecurityConfig extends WebSecurityConfigurerAdapter {
     public CasAuthenticationFilter deCasAuthenticationFilter() throws Exception {
         CasAuthenticationFilter casAuthenticationFilter = new CasAuthenticationFilter();
         casAuthenticationFilter.setAuthenticationManager(authenticationManager());
-        casAuthenticationFilter.setFilterProcessesUrl(validation);
+        casAuthenticationFilter.setFilterProcessesUrl("/**" + validation);
         casAuthenticationFilter.setSessionAuthenticationStrategy(deSessionStrategy());
         casAuthenticationFilter.setAuthenticationSuccessHandler(deCasAuthenticationSuccessHandler());
         return casAuthenticationFilter;
@@ -127,8 +127,8 @@ public class DeWebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public Cas20ServiceTicketValidator deServiceTicketValidator() {
-        return new Cas20ServiceTicketValidator(casServerUrlPrefix);
+    public Cas30ServiceTicketValidator deServiceTicketValidator() {
+        return new Cas30ServiceTicketValidator(casServerUrlPrefix);
     }
 
     @Bean
