@@ -61,10 +61,10 @@ project(':de-lib') {
         compile 'org.bouncycastle:bcprov-jdk15on:1.55'
         compile 'org.bouncycastle:bcpkix-jdk15on:1.52'
 
-        compile("org.springframework:spring-core:4.1.6.RELEASE")
-        compile("org.springframework:spring-web:4.1.6.RELEASE")
-        compile("org.springframework.security:spring-security-core:3.2.7.RELEASE")
-        compile("org.springframework.security:spring-security-cas:3.2.7.RELEASE")
+        compile("org.springframework:spring-core:4.3.18.RELEASE")
+        compile("org.springframework:spring-web:4.3.18.RELEASE")
+        compile("org.springframework.security:spring-security-core:4.2.7.RELEASE")
+        compile("org.springframework.security:spring-security-cas:4.2.7.RELEASE")
         compile('net.logstash.logback:logstash-logback-encoder:4.3')
 
         compile("com.github.gwtreact:gwt-react:0.3.0")

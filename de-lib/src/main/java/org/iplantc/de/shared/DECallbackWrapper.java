@@ -17,7 +17,7 @@ import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
-import org.apache.commons.httpclient.HttpStatus;
+import org.apache.http.HttpStatus;
 
 import java.util.HashMap;
 import java.util.logging.Level;

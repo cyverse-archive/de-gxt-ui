@@ -1,5 +1,7 @@
 package org.iplantc.de.conf;
 
+import static org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN;
+
 import org.iplantc.de.server.CacheControlFilter;
 import org.iplantc.de.server.DeCasAuthenticationEntryPoint;
 import org.iplantc.de.server.DeCasAuthenticationSuccessHandler;
@@ -8,9 +10,8 @@ import org.iplantc.de.server.MDCFilter;
 import org.iplantc.de.server.auth.CasGroupUserDetailsService;
 import org.iplantc.de.server.auth.CasLogoutSuccessHandler;
 
-import static org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN;
 import org.jasig.cas.client.session.SingleSignOutFilter;
-import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
+import org.jasig.cas.client.validation.Cas30ServiceTicketValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,9 +33,6 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 import org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Configuration for DE admin portal, 'Belphegor'.
@@ -80,7 +78,7 @@ public class AdminWebSecurityConfig extends WebSecurityConfigurerAdapter {
     public CasAuthenticationFilter adminCasAuthenticationFilter() throws Exception {
         CasAuthenticationFilter casAuthenticationFilter = new CasAuthenticationFilter();
         casAuthenticationFilter.setAuthenticationManager(authenticationManager());
-        casAuthenticationFilter.setFilterProcessesUrl(validation);
+        casAuthenticationFilter.setFilterProcessesUrl("/**" + validation);
         casAuthenticationFilter.setSessionAuthenticationStrategy(adminSessionStrategy());
         casAuthenticationFilter.setAuthenticationSuccessHandler(deCasAuthenticationSuccessHandler());
         return casAuthenticationFilter;
@@ -141,8 +139,8 @@ public class AdminWebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public Cas20ServiceTicketValidator adminTicketValidator() {
-        return new Cas20ServiceTicketValidator(casServerUrlPrefix);
+    public Cas30ServiceTicketValidator adminTicketValidator() {
+        return new Cas30ServiceTicketValidator(casServerUrlPrefix);
     }
 
     @Override
