@@ -54,6 +54,7 @@ public enum InfoType {
     TCSH("tcsh"),
     TSV("tsv"),
     VCF("vcf"),
+    VCFGZ("vcfgz"),
     ZIP("zip");
 
     private String info_type;
