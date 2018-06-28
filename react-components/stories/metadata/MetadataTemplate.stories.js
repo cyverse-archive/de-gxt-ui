@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import EditMetadataTemplate from "../../src/metadata/EditMetadataTemplate";
+import EditMetadataTemplate from "../../src/metadata/admin/EditMetadataTemplate";
 
 const metadataTemplate = {
     "id": "91334572-5e13-11e8-acc0-f64e9b87c109",
