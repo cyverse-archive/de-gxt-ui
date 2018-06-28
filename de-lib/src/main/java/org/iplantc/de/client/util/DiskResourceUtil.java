@@ -445,8 +445,9 @@ public class DiskResourceUtil {
 
     @JsIgnore
     public boolean isEnsemblInfoType(InfoType infoType) {
-        return InfoType.BAM.equals(infoType) || InfoType.VCF.equals(infoType) || InfoType.GFF.equals(
-                infoType) || InfoType.BED.equals(infoType) || InfoType.BIGBED.equals(infoType)
+        return InfoType.BAM.equals(infoType) || InfoType.VCF.equals(infoType)
+               || InfoType.VCFGZ.equals(infoType) || InfoType.GFF.equals(infoType)
+               || InfoType.BED.equals(infoType) || InfoType.BIGBED.equals(infoType)
                || InfoType.BIGWIG.equals(infoType);
     }
 
@@ -464,12 +465,13 @@ public class DiskResourceUtil {
 
 
     public boolean isEnsemblInfoType(String infoType) {
-        return InfoType.BAM.getTypeString().equals(infoType) || InfoType.VCF.getTypeString()
-                                                                            .equals(infoType)
-               || InfoType.GFF.getTypeString().equals(infoType) || InfoType.BED.getTypeString()
-                                                                               .equals(infoType)
-               || InfoType.BIGBED.getTypeString().equals(infoType) || InfoType.BIGWIG.getTypeString()
-                                                                                     .equals(infoType);
+        return InfoType.BAM.getTypeString().equals(infoType)
+               || InfoType.VCF.getTypeString().equals(infoType)
+               || InfoType.VCFGZ.getTypeString().equals(infoType)
+               || InfoType.GFF.getTypeString().equals(infoType)
+               || InfoType.BED.getTypeString().equals(infoType)
+               || InfoType.BIGBED.getTypeString().equals(infoType)
+               || InfoType.BIGWIG.getTypeString().equals(infoType);
     }
 
 
