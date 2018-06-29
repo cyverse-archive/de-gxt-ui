@@ -2,6 +2,7 @@
  * @author psarando
  */
 import React, { Component } from "react";
+import { Field } from "redux-form";
 
 import styles from "../style";
 import OrderedGridToolbar from "./OrderedGridToolbar";
@@ -17,6 +18,17 @@ import { withStyles } from "@material-ui/core/styles";
 
 import ContentRemove from "@material-ui/icons/Delete";
 import ContentEdit from "@material-ui/icons/Edit";
+
+const FormCheckboxTableCell = ({ input, ...custom }) => (
+    <TableCell padding="checkbox">
+        <Checkbox color="primary"
+                  checked={!!input.value}
+                  onClick={event => event.stopPropagation()}
+                  onChange={input.onChange}
+                  {...custom}
+        />
+    </TableCell>
+);
 
 const columnData = [
     {
@@ -72,8 +84,10 @@ class TemplateAttributeList extends Component {
     }
 
     onAddAttribute = () => {
+        const fields = this.props.fields;
+        const attributes = fields.getAll() || [];
+
         let name = `New attribute ${this.newAttrCount++}`;
-        let attributes = this.props.attributes;
 
         const namesMatch = attr => (attr.name === name);
         while (attributes.findIndex(namesMatch) > -1) {
@@ -84,23 +98,16 @@ class TemplateAttributeList extends Component {
             selected: 0,
         });
 
-        this.props.onAttributesChanged([
-            {
-                name: name,
-                description: "",
-                type: "String",
-                required: false,
-            },
-            ...attributes
-        ]);
+        fields.unshift({
+            name: name,
+            description: "",
+            type: "String",
+            required: false,
+        });
     };
 
     onAttributeRemoved = (index) => {
-        let { attributes } = this.props;
         let { selected } = this.state;
-
-        attributes = [...attributes];
-        attributes.splice(index, 1);
 
         // fix selection
         if (index === selected) {
@@ -110,14 +117,8 @@ class TemplateAttributeList extends Component {
         }
 
         this.setState({selected});
-        this.props.onAttributesChanged(attributes);
-    };
 
-    onRequiredChecked = (index, attr, checked) => {
-        this.props.onAttributeUpdated(index, {
-            ...attr,
-            required: checked,
-        });
+        this.props.fields.remove(index);
     };
 
     handleSelect = (index) => {
@@ -127,28 +128,22 @@ class TemplateAttributeList extends Component {
 
     moveUp = () => {
         const { selected } = this.state;
-        let attributes = [...this.props.attributes];
-
-        let [attr] = attributes.splice(selected, 1);
-        attributes.splice(selected - 1, 0, attr);
 
         this.setState({selected: selected - 1});
-        this.props.onAttributesChanged(attributes);
+
+        this.props.fields.move(selected, selected - 1);
     };
 
     moveDown = () => {
         const { selected } = this.state;
-        let attributes = [...this.props.attributes];
-
-        let [attr] = attributes.splice(selected, 1);
-        attributes.splice(selected + 1, 0, attr);
 
         this.setState({selected: selected + 1});
-        this.props.onAttributesChanged(attributes);
+
+        this.props.fields.move(selected, selected + 1);
     };
 
     render() {
-        const { classes, attributes } = this.props;
+        const { classes, fields } = this.props;
         const { selected } = this.state;
 
         return (
@@ -159,27 +154,26 @@ class TemplateAttributeList extends Component {
                                     moveUp={this.moveUp}
                                     moveUpDisabled={selected <= 0}
                                     moveDown={this.moveDown}
-                                    moveDownDisabled={selected < 0 || (attributes.length - 1) <= selected}
+                                    moveDownDisabled={selected < 0 || (fields.length - 1) <= selected}
                 />
 
                 <div className={classes.attributeTableWrapper}>
                     <Table aria-labelledby="tableTitle">
                         <TableBody>
-                            {attributes && attributes.map((attribute, index) => {
+                            {fields && fields.map((field, index) => {
                                 const isSelected = index === selected;
                                 const {
                                     name,
                                     description,
                                     type,
-                                    required,
                                     attributes,
-                                } = attribute;
+                                } = fields.get(index);
 
                                 return (
                                     <TableRow
                                         hover
                                         tabIndex={-1}
-                                        key={name}
+                                        key={field}
                                         selected={isSelected}
                                         onClick={() => this.handleSelect(index)}
                                     >
@@ -189,15 +183,9 @@ class TemplateAttributeList extends Component {
                                         <TableCell>{description}</TableCell>
                                         <TableCell padding="none">{type}</TableCell>
                                         <TableCell padding="none" numeric>{attributes ? attributes.length : 0}</TableCell>
-                                        <TableCell padding="checkbox">
-                                            <Checkbox color="primary"
-                                                      checked={required}
-                                                      onClick={event => event.stopPropagation()}
-                                                      onChange={(event, checked) => {
-                                                          this.onRequiredChecked(index, attribute, checked);
-                                                      }}
-                                            />
-                                        </TableCell>
+                                        <Field name={`${field}.required`}
+                                               component={FormCheckboxTableCell}
+                                        />
                                         <TableCell padding="none">
                                             <IconButton aria-label="edit"
                                                         className={classes.button}

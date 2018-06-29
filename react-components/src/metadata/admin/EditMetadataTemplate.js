@@ -2,7 +2,7 @@
  * @author psarando
  */
 import React, { Component } from "react";
-import { Field, reduxForm } from "redux-form";
+import { Field, FieldArray, reduxForm } from "redux-form";
 
 import withStoreProvider from "../../util/StoreProvider";
 
@@ -66,19 +66,14 @@ class EditMetadataTemplate extends Component {
         };
     }
 
-    onSaveTemplate = ({ name, description, deleted }) => {
-        const { attributes } = this.state;
-
+    onSaveTemplate = ({ name, description, deleted, attributes }) => {
         this.props.presenter.onSaveTemplate({
+            ...this.props.initialValues,
             name,
             description,
             deleted,
             attributes,
         });
-    };
-
-    onAttributesChanged = (attributes) => {
-        this.setState({attributes});
     };
 
     onAttributeUpdated = (index, attr) => {
@@ -143,10 +138,9 @@ class EditMetadataTemplate extends Component {
 
                     <Divider />
 
-                    <TemplateAttributeList attributes={attributes}
-                                           onAttributesChanged={this.onAttributesChanged}
-                                           onAttributeUpdated={this.onAttributeUpdated}
-                                           onEditAttr={(index) => this.setState({editingAttrIndex: index})}
+                    <FieldArray name="attributes"
+                                component={TemplateAttributeList}
+                                onEditAttr={(index) => this.setState({editingAttrIndex: index})}
                     />
 
                     <EditAttribute attribute={editingAttr}
@@ -161,12 +155,50 @@ class EditMetadataTemplate extends Component {
     }
 }
 
+const validateAttributes = attributes => {
+    const attributesArrayErrors = [];
+
+    attributes.forEach((attr, attrIndex) => {
+        const attrErrors = {};
+        const name = attr.name;
+
+        if (!name) {
+            attrErrors.name = "Required";
+            attributesArrayErrors[attrIndex] = attrErrors;
+        } else {
+            const namesMatch = attr => (attr.name === name);
+            if (attributes.slice(0, attrIndex).some(namesMatch) || attributes.slice(attrIndex + 1).some(namesMatch)) {
+                attrErrors.name = "Attribute name must be unique";
+                attributesArrayErrors[attrIndex] = attrErrors;
+            }
+        }
+
+        if (attr.attributes && attr.attributes.length > 0) {
+            const subAttrErros = validateAttributes(attr.attributes);
+            if (subAttrErros.length > 0) {
+                attrErrors.attributes = subAttrErros;
+                attributesArrayErrors[attrIndex] = attrErrors;
+            }
+        }
+    });
+
+    return attributesArrayErrors;
+};
+
 const validate = values => {
     const errors = {};
 
     if (!values.name) {
         errors.name = "Required";
         errors._error = true;
+    }
+
+    if (values.attributes && values.attributes.length > 0) {
+        const attributesArrayErrors = validateAttributes(values.attributes);
+        if (attributesArrayErrors.length > 0) {
+            errors.attributes = attributesArrayErrors;
+            errors._error = true;
+        }
     }
 
     return errors;
