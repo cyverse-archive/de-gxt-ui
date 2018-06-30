@@ -4,64 +4,31 @@
 import React, { Component } from "react";
 import { Field, FieldArray, reduxForm } from "redux-form";
 
+import { FormCheckbox, FormTextField } from "../../util/FormField";
 import withStoreProvider from "../../util/StoreProvider";
 
 import styles from "../style";
-import EditAttribute from "./EditAttribute";
+import FormDialogEditAttribute from "./EditAttribute";
 import SlideUpTransition from "./SlideUpTransition";
 import TemplateAttributeList from "./TemplateAttributeList";
 
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import Divider from "@material-ui/core/Divider";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import IconButton from "@material-ui/core/IconButton";
-import TextField from "@material-ui/core/TextField";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
 import CloseIcon from "@material-ui/icons/Close";
 
-const FormTextField = ({
-        input,
-        label,
-        meta: {touched, error},
-        ...custom
-    }) => (
-    <TextField
-        label={label}
-        error={touched && !!error}
-        helperText={error}
-        fullWidth
-        {...input}
-        {...custom}
-    />
-);
-
-const FormCheckbox = ({ input, label, ...custom }) => (
-    <FormControlLabel
-        control={
-            <Checkbox checked={!!input.value}
-                      onChange={input.onChange}
-                      {...custom}
-            />
-        }
-        label={label}
-    />
-);
-
 class EditMetadataTemplate extends Component {
     constructor(props) {
         super(props);
 
-        let attributes = [...props.initialValues.attributes];
-
         this.state = {
-            attributes: attributes,
             editingAttrIndex: -1,
         };
     }
@@ -76,17 +43,9 @@ class EditMetadataTemplate extends Component {
         });
     };
 
-    onAttributeUpdated = (index, attr) => {
-        let attributes = [...this.state.attributes];
-        attributes.splice(index, 1, attr);
-
-        this.setState({attributes: attributes, editingAttrIndex: -1});
-    };
-
     render() {
         const { classes, open, handleSubmit, pristine, submitting, error, initialValues } = this.props;
-        const { attributes, editingAttrIndex } = this.state;
-        const editingAttr = editingAttrIndex >= 0 ? attributes[editingAttrIndex] : {};
+        const { editingAttrIndex } = this.state;
 
         return (
             <Dialog open={open}
@@ -143,11 +102,11 @@ class EditMetadataTemplate extends Component {
                                 onEditAttr={(index) => this.setState({editingAttrIndex: index})}
                     />
 
-                    <EditAttribute attribute={editingAttr}
-                                   open={editingAttrIndex >= 0}
-                                   parentName={initialValues.name}
-                                   saveAttr={(attr) => this.onAttributeUpdated(editingAttrIndex, attr)}
-                                   closeAttrDialog={() => this.setState({editingAttrIndex: -1})}
+                    <FieldArray name="attributes"
+                                component={FormDialogEditAttribute}
+                                editingAttrIndex={editingAttrIndex}
+                                parentName={initialValues.name}
+                                closeAttrDialog={() => this.setState({editingAttrIndex: -1})}
                     />
                 </DialogContent>
             </Dialog>

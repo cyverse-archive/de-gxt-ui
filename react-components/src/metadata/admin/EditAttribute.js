@@ -1,37 +1,35 @@
 /**
  * @author psarando
  */
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
+import { Field, FieldArray } from "redux-form";
+
+import {
+    FormCheckbox,
+    FormSelectField,
+    FormTextField,
+} from "../../util/FormField";
 
 import styles from "../style";
-
 import AttributeEnumEditGrid from "./AttributeEnumEditGrid";
 import OntologyLookupServiceSettings from "./OntologyLookupServiceSettings";
 import SlideUpTransition from "./SlideUpTransition";
 import TemplateAttributeList from "./TemplateAttributeList";
 
 import AppBar from "@material-ui/core/AppBar";
-import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import Divider from "@material-ui/core/Divider";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import FormControl from "@material-ui/core/FormControl";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import IconButton from "@material-ui/core/IconButton";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import TextField from "@material-ui/core/TextField";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
-import CloseIcon from "@material-ui/icons/Close";
+import ArrowBack from "@material-ui/icons/ArrowBack";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const AttributeTypes = [
@@ -53,82 +51,28 @@ class EditAttribute extends Component {
     constructor(props) {
         super(props);
 
-        const { name, description, type, required, values, settings, attributes } = props.attribute;
+        const { values, settings } = props.attribute;
         this.state = {
-            name,
-            description,
-            type,
-            required,
             values: values || [],
             settings: settings || {},
-            attributes: attributes || [],
             editingAttrIndex: -1,
         };
-
-        this.EditAttributeChild = withStyles(styles)(EditAttribute);
     }
 
     componentWillReceiveProps(newProps) {
         const { attribute } = newProps;
-        const { name, description, type, required, values, settings, attributes } = attribute;
+        const { values, settings } = attribute;
 
         this.setState({
-            name,
-            description,
-            type,
-            required,
             values: values || [],
             settings: settings || {},
-            attributes: attributes || [],
         });
     }
 
-    saveAttr = () => {
-        const {
-            name,
-            description,
-            type,
-            required,
-            values,
-            settings,
-            attributes,
-        } = this.state;
-
-        this.props.saveAttr({
-            ...this.props.attribute,
-            name,
-            description,
-            type,
-            required,
-            values,
-            settings,
-            attributes,
-        });
-    };
-
-    handleChange = key => event => {
-        this.setState({
-            [key]: event.target.value,
-        });
-    };
-
-    onAttributesChanged = (attributes) => {
-        this.setState({attributes});
-    };
-
-    onAttributeUpdated = (index, attr) => {
-        let attributes = [...this.state.attributes];
-        attributes.splice(index, 1, attr);
-
-        this.setState({attributes: attributes, editingAttrIndex: -1});
-    };
-
     render() {
-        const { classes, open, parentName } = this.props;
-        const { name, description, type, required, attributes, values, settings, editingAttrIndex } = this.state;
-        const editingAttr = editingAttrIndex >= 0 ? attributes[editingAttrIndex] : {};
-
-        const EditAttributeChild = this.EditAttributeChild;
+        const { classes, field, attribute, open, parentName } = this.props;
+        const { name, type, attributes } = attribute;
+        const { values, settings, editingAttrIndex } = this.state;
 
         return (
             <Dialog
@@ -143,53 +87,41 @@ class EditAttribute extends Component {
                 <AppBar className={classes.appBar}>
                     <Toolbar>
                         <IconButton color="inherit" onClick={this.props.closeAttrDialog} aria-label="Close">
-                            <CloseIcon />
+                            <ArrowBack />
                         </IconButton>
                         <Typography variant="title" color="inherit" className={classes.flex}>
                             Edit Attribute for {parentName}
                         </Typography>
-                        <Button color="inherit" onClick={this.saveAttr}>
-                            Save
-                        </Button>
                     </Toolbar>
                 </AppBar>
                 <DialogContent>
 
-                    <TextField id="name"
-                               label="Name"
-                               value={name || ""}
-                               onChange={this.handleChange("name")}
-                               margin="dense"
-                               autoFocus
-                               fullWidth
+                    <Field name={`${field}.name`}
+                           label="Name"
+                           id="attrName"
+                           autoFocus
+                           margin="dense"
+                           component={FormTextField}
                     />
-                    <TextField id="description"
-                               label="Description"
-                               value={description || ""}
-                               onChange={this.handleChange("description")}
-                               fullWidth
+                    <Field name={`${field}.description`}
+                           label="Description"
+                           id="attrDescription"
+                           component={FormTextField}
                     />
 
-                    <FormControl fullWidth>
-                        <InputLabel htmlFor="attr-type">Type</InputLabel>
-                        <Select
-                            value={type || ""}
-                            onChange={this.handleChange("type")}
-                            input={<Input id="attr-type" />}
-                        >
-                            {AttributeTypeMenuItems}
-                        </Select>
-                    </FormControl>
+                    <Field name={`${field}.type`}
+                           label="Type"
+                           id="attrType"
+                           component={FormSelectField}
+                    >
+                        {AttributeTypeMenuItems}
+                    </Field>
 
-                    <FormControlLabel
-                        control={
-                            <Checkbox id="required"
-                                      color="primary"
-                                      checked={!!required}
-                                      onChange={(event, checked) => this.setState({required: checked})}
-                            />
-                        }
-                        label="Required?"
+                    <Field name={`${field}.required`}
+                           label="Required?"
+                           id="attrRequired"
+                           color="primary"
+                           component={FormCheckbox}
                     />
 
                     <Divider />
@@ -223,19 +155,19 @@ class EditAttribute extends Component {
                             <Typography className={classes.heading}>Attributes</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
-                            <TemplateAttributeList attributes={attributes}
-                                                   onAttributesChanged={this.onAttributesChanged}
-                                                   onAttributeUpdated={this.onAttributeUpdated}
-                                                   onEditAttr={(index) => this.setState({editingAttrIndex: index})}
+                            <FieldArray name={`${field}.attributes`}
+                                        component={TemplateAttributeList}
+                                        onEditAttr={(index) => this.setState({editingAttrIndex: index})}
                             />
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
 
-                    <EditAttributeChild attribute={editingAttr}
-                                        open={editingAttrIndex >= 0}
-                                        parentName={name}
-                                        saveAttr={(attr) => this.onAttributeUpdated(editingAttrIndex, attr)}
-                                        closeAttrDialog={() => this.setState({editingAttrIndex: -1})}
+
+                    <FieldArray name={`${field}.attributes`}
+                                component={FormDialogEditAttribute}
+                                editingAttrIndex={editingAttrIndex}
+                                parentName={name}
+                                closeAttrDialog={() => this.setState({editingAttrIndex: -1})}
                     />
                 </DialogContent>
             </Dialog>
@@ -243,4 +175,21 @@ class EditAttribute extends Component {
     }
 }
 
-export default withStyles(styles)(EditAttribute);
+EditAttribute = withStyles(styles)(EditAttribute);
+
+const FormDialogEditAttribute = ({ fields, editingAttrIndex, parentName, closeAttrDialog }) => (
+    <Fragment>
+        {fields.map((field, index) => (
+            <EditAttribute key={field}
+                           field={field}
+                           attribute={fields.get(index)}
+                           open={editingAttrIndex === index}
+                           parentName={parentName}
+                           closeAttrDialog={closeAttrDialog}
+            />
+        ))
+        }
+    </Fragment>
+);
+
+export default FormDialogEditAttribute;
