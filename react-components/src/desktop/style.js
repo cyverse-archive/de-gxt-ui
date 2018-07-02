@@ -211,7 +211,7 @@ export default {
     },
 
     errorRetryButton: {
-        backgroundColor: '#e2e2e2',
+        backgroundColor: '#db6619',
         position: 'relative',
         left: 50,
         '&:hover': {
