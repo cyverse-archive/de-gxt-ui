@@ -67,10 +67,12 @@ class Help extends Component {
                       alt="Help"
                       onClick={this.handleClick}
                       ref={this.helpBtn}></img>
-                 <Menu id='helpMenu' anchorEl={anchorEl}
+                 <Menu id={build(ids.DESKTOP, ids.HELP_MENU)}
+                       anchorEl={anchorEl}
                        open={Boolean(anchorEl)}
                        onClose={this.handleClose}>
-                     <MenuItem id={build(ids.DESKTOP, ids.FAQS_LINK)} onClick={this.onMenuItemSelect}>
+                     <MenuItem id={build(ids.DESKTOP, ids.FAQS_LINK)}
+                               onClick={this.onMenuItemSelect}>
                          <DEHyperlink text={getMessage("faqLink")}/>
                      </MenuItem>
                      <MenuItem id={build(ids.DESKTOP, ids.FORUMS_LINK)}

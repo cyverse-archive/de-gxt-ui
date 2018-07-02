@@ -82,7 +82,7 @@ class UserMenu extends Component {
                          onClick={this.onUserMenuClick}
                          ref={this.userBtn}>
                     </img>
-                <Menu id='userMenu' anchorEl={anchorEl}
+                <Menu id={build(ids.DESKTOP, ids.USER_PREF_MENU)} anchorEl={anchorEl}
                       open={Boolean(anchorEl)}
                       onClose={this.handleClose}>
                     <MenuItem id={build(ids.DESKTOP, ids.PREFERENCES_LINK)}
