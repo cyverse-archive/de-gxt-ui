@@ -130,7 +130,7 @@ class DesktopView extends Component {
             if(found) {
                 this.props.presenter.onNotificationSelected(found,(updatedUnSeenCount) => {
                     this.setState({
-                        unSeenCount:updatedUnSeenCount,
+                        unSeenCount:updatedUnSeenCount + "",
                     });
                     found.seen = true;
                 }, (httpStatusCode, errMsg) => {
