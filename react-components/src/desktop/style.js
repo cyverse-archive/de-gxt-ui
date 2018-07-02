@@ -1,6 +1,7 @@
 import cyverseMini from "../resources/images/whitelogo.png";
 import desktopBcg from "../resources/images/background.png";
 import cyverseHeader from "../resources/images/cyverse_icon_white.png";
+import color from "../util/CyVersePalette";
 
 export default {
     '@global': {
@@ -23,11 +24,11 @@ export default {
         backgroundPosition: 'top center',
         bottom: 30,
         backgroundSize: 'contain',
-        backgroundColor: '#8b9bb3',
+        backgroundColor: '#8b9bb3', // not in cyverse palette
         backgroundRepeat: 'no-repeat',
     },
     header: {
-        backgroundColor: '#0971ab',
+        backgroundColor: color.blue,
         borderBottom: '5px solid #57cbea',
         position: 'absolute',
         height: '51px',
@@ -150,7 +151,7 @@ export default {
     },
 
     unSeenCount: {
-        backgroundColor: '#db6619',
+        backgroundColor: color.orange,
         fontSize: '.625em',
         color: 'white',
         height: 8,
@@ -177,7 +178,7 @@ export default {
         textTransform: 'none',
         borderRadius: 4,
         '&:hover': {
-           backgroundColor: '#0971ab',
+           backgroundColor: color.blue,
            boxShadow: 'none',
         },
     },
@@ -185,7 +186,7 @@ export default {
     taskbarButtonMinimized: {
         backgroundImage: `url(${cyverseMini})`,
         backgroundSize: 20,
-        backgroundColor: '#525a68',
+        backgroundColor: color.darkGray,
         backgroundPosition: '5px 5px',
         backgroundRepeat: 'no-repeat',
         position: 'relative',
@@ -198,7 +199,7 @@ export default {
         borderRadius: 4,
         textTransform: 'none',
         '&:hover': {
-            backgroundColor: '#0971ab',
+            backgroundColor: color.blue,
         },
     },
 
@@ -207,15 +208,15 @@ export default {
         width: '100%',
         bottom: 0,
         minHeight: 30,
-        backgroundColor: '#e2e2e2',
+        backgroundColor: color.lightGray,
     },
 
     errorRetryButton: {
-        backgroundColor: '#db6619',
+        backgroundColor: color.orange,
         position: 'relative',
         left: 50,
         '&:hover': {
-            backgroundColor: '#0971ab',
+            backgroundColor: color.blue,
         },
     },
 
@@ -228,7 +229,7 @@ export default {
         outline: 'none',
         position: 'absolute',
         left: 50,
-        color: '#DB6619',
+        color: color.orange,
     },
 
 };
