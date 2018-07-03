@@ -2,6 +2,7 @@
  * @author psarando
  */
 import React, { Component } from "react";
+import { Field } from "redux-form";
 
 import styles from "../style";
 import OrderedGridToolbar from "./OrderedGridToolbar";
@@ -16,31 +17,17 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
-import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
 import ContentRemove from "@material-ui/icons/Delete";
 import ContentEdit from "@material-ui/icons/Edit";
+import { FormTextField } from "../../util/FormField";
 
 
 class StringEditorDialog extends Component {
-    constructor(props) {
-        super(props);
-
-        const { value } = props;
-        this.state = { value };
-    }
-
-    componentWillReceiveProps(newProps) {
-        const { value } = newProps;
-
-        this.setState({ value });
-    }
-
     render() {
-        const { open, title, valueLabel, onSave, onClose } = this.props;
-        const { value } = this.state;
+        const { open, title, valueLabel, field, onClose } = this.props;
 
         return (
             <Dialog
@@ -51,22 +38,17 @@ class StringEditorDialog extends Component {
             >
                 <DialogTitle id="form-dialog-title">{title}</DialogTitle>
                 <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="value"
-                        label={valueLabel || "Value"}
-                        value={value || ""}
-                        onChange={event => this.setState({value: event.target.value})}
-                        fullWidth
+                    <Field name={field}
+                           component={FormTextField}
+                           id="value"
+                           label={valueLabel || "Value"}
+                           margin="dense"
+                           autoFocus
                     />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={() => onSave(value)} color="primary">
-                        OK
+                        Done
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -90,7 +72,8 @@ class StringListEditor extends Component {
 
     onAddValue = () => {
         let value = this.newValue();
-        let values = this.props.values;
+        const fields = this.props.fields;
+        const values = fields.getAll() || [];
 
         const valuesMatch = v => (v === value);
         while (values.findIndex(valuesMatch) > -1) {
@@ -99,17 +82,11 @@ class StringListEditor extends Component {
 
         this.setState({selected: 0});
 
-        this.props.onValuesChanged([
-            value,
-            ...values
-        ]);
+        this.props.fields.unshift(value);
     };
 
     onValueRemoved = (index) => {
-        let values = [...this.props.values];
         let { selected } = this.state;
-
-        values.splice(index, 1);
 
         // fix selection
         if (index === selected) {
@@ -119,15 +96,8 @@ class StringListEditor extends Component {
         }
 
         this.setState({selected});
-        this.props.onValuesChanged(values);
-    };
 
-    onUpdateValue = (index, value) => {
-        let values = [...this.props.values];
-
-        values.splice(index, 1, value);
-
-        this.props.onValuesChanged(values);
+        this.props.fields.remove(index);
     };
 
     handleSelect = (index) => {
@@ -145,19 +115,15 @@ class StringListEditor extends Component {
 
     moveSelectedValue = (offset) => {
         const { selected } = this.state;
-        let values = [...this.props.values];
-
-        let [value] = values.splice(selected, 1);
-        values.splice(selected + offset, 0, value);
 
         this.setState({selected: selected + offset});
-        this.props.onValuesChanged(values);
+
+        this.props.fields.move(selected, selected + offset);
     };
 
     render() {
-        const { classes, title, helpLabel, columnLabel, values } = this.props;
+        const { classes, title, helpLabel, columnLabel, fields } = this.props;
         const { selected, editingIndex } = this.state;
-        const editingValue = editingIndex >= 0 ? values[editingIndex] : "";
 
         return (
             <fieldset>
@@ -170,20 +136,21 @@ class StringListEditor extends Component {
                                     moveUp={this.moveUp}
                                     moveUpDisabled={selected <= 0}
                                     moveDown={this.moveDown}
-                                    moveDownDisabled={selected < 0 || (values.length - 1) <= selected}
+                                    moveDownDisabled={selected < 0 || (fields.length - 1) <= selected}
                 />
 
                 <div className={classes.attributeTableWrapper}>
                     <Table aria-labelledby="tableTitle">
                         <TableBody>
-                            {values && values.map((value, index) => {
+                            {fields && fields.map((field, index) => {
                                 const isSelected = (index === selected);
+                                const value = fields.get(index);
 
                                 return (
                                     <TableRow
                                         hover
                                         tabIndex={-1}
-                                        key={value}
+                                        key={field}
                                         selected={isSelected}
                                         onClick={() => this.handleSelect(index)}
                                     >
@@ -217,16 +184,15 @@ class StringListEditor extends Component {
                     </Table>
                 </div>
 
-                <StringEditorDialog open={editingIndex >= 0}
-                                    title={title}
-                                    valueLabel={columnLabel}
-                                    value={editingValue}
-                                    onClose={() => this.setState({editingIndex: -1})}
-                                    onSave={(value, is_default) => {
-                                        this.setState({editingIndex: -1});
-                                        this.onUpdateValue(editingIndex, value, is_default);
-                                    }}
-                />
+                {fields && fields.map((field, index) =>
+                    <StringEditorDialog key={field}
+                                        open={editingIndex === index}
+                                        field={field}
+                                        title={title}
+                                        valueLabel={columnLabel}
+                                        onClose={() => this.setState({editingIndex: -1})}
+                    />
+                )}
 
             </fieldset>
         );

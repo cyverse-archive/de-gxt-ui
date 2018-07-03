@@ -2,7 +2,7 @@
  * @author psarando
  */
 import React, { Component, Fragment } from "react";
-import { Field, FieldArray } from "redux-form";
+import { Field, FieldArray, FormSection } from "redux-form";
 
 import {
     FormCheckbox,
@@ -51,26 +51,25 @@ class EditAttribute extends Component {
     constructor(props) {
         super(props);
 
-        const { settings } = props.attribute;
         this.state = {
-            settings: settings || {},
             editingAttrIndex: -1,
         };
     }
 
-    componentWillReceiveProps(newProps) {
-        const { attribute } = newProps;
-        const { settings } = attribute;
+    normalizeType = (type) => {
+        const { change, field, attribute: { settings } } = this.props;
 
-        this.setState({
-            settings: settings || {},
-        });
-    }
+        if (type === "OLS Ontology Term" && (!settings || !settings.type)) {
+            change(`${field}.settings`, {...settings, type: "CLASS"});
+        }
+
+        return type;
+    };
 
     render() {
         const { classes, change, field, attribute, open, parentName } = this.props;
         const { name, type, attributes } = attribute;
-        const { settings, editingAttrIndex } = this.state;
+        const { editingAttrIndex } = this.state;
 
         return (
             <Dialog
@@ -111,6 +110,7 @@ class EditAttribute extends Component {
                            label="Type"
                            id="attrType"
                            component={FormSelectField}
+                           normalize={this.normalizeType}
                     >
                         {AttributeTypeMenuItems}
                     </Field>
@@ -144,8 +144,9 @@ class EditAttribute extends Component {
                             <Typography className={classes.heading}>Ontology Lookup Service Query Params</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
-                            <OntologyLookupServiceSettings settings={settings}
-                                                           onSettingsChanged={(settings) => this.setState({settings})}/>
+                            <FormSection name={`${field}.settings`}
+                                         component={OntologyLookupServiceSettings}
+                            />
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
                     }
