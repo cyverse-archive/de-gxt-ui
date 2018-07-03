@@ -51,9 +51,8 @@ class EditAttribute extends Component {
     constructor(props) {
         super(props);
 
-        const { values, settings } = props.attribute;
+        const { settings } = props.attribute;
         this.state = {
-            values: values || [],
             settings: settings || {},
             editingAttrIndex: -1,
         };
@@ -61,18 +60,17 @@ class EditAttribute extends Component {
 
     componentWillReceiveProps(newProps) {
         const { attribute } = newProps;
-        const { values, settings } = attribute;
+        const { settings } = attribute;
 
         this.setState({
-            values: values || [],
             settings: settings || {},
         });
     }
 
     render() {
-        const { classes, field, attribute, open, parentName } = this.props;
+        const { classes, change, field, attribute, open, parentName } = this.props;
         const { name, type, attributes } = attribute;
-        const { values, settings, editingAttrIndex } = this.state;
+        const { settings, editingAttrIndex } = this.state;
 
         return (
             <Dialog
@@ -132,8 +130,10 @@ class EditAttribute extends Component {
                             <Typography className={classes.heading}>Enum Values</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
-                            <AttributeEnumEditGrid values={values}
-                                                   onValuesChanged={(values) => this.setState({values})}/>
+                            <FieldArray name={`${field}.values`}
+                                        component={AttributeEnumEditGrid}
+                                        change={change}
+                            />
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
                     }
@@ -177,11 +177,12 @@ class EditAttribute extends Component {
 
 EditAttribute = withStyles(styles)(EditAttribute);
 
-const FormDialogEditAttribute = ({ fields, editingAttrIndex, parentName, closeAttrDialog }) => (
+const FormDialogEditAttribute = ({ fields, change, editingAttrIndex, parentName, closeAttrDialog }) => (
     <Fragment>
         {fields.map((field, index) => (
             <EditAttribute key={field}
                            field={field}
+                           change={change}
                            attribute={fields.get(index)}
                            open={editingAttrIndex === index}
                            parentName={parentName}

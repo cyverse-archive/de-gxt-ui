@@ -40,6 +40,9 @@ const toolbarStyles = theme => ({
         paddingLeft: theme.spacing.unit,
         flex: '0 0 auto',
     },
+    errorSubTitle: {
+        color: theme.palette.error.dark,
+    },
 });
 
 export default styles;

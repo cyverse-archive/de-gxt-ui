@@ -4,10 +4,10 @@
 import React, { Component } from "react";
 import { Field } from "redux-form";
 
+import { FormCheckboxTableCell } from "../../util/FormField";
 import styles from "../style";
 import OrderedGridToolbar from "./OrderedGridToolbar";
 
-import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -18,17 +18,6 @@ import { withStyles } from "@material-ui/core/styles";
 
 import ContentRemove from "@material-ui/icons/Delete";
 import ContentEdit from "@material-ui/icons/Edit";
-
-const FormCheckboxTableCell = ({ input, ...custom }) => (
-    <TableCell padding="checkbox">
-        <Checkbox color="primary"
-                  checked={!!input.value}
-                  onClick={event => event.stopPropagation()}
-                  onChange={input.onChange}
-                  {...custom}
-        />
-    </TableCell>
-);
 
 const columnData = [
     {
@@ -127,19 +116,19 @@ class TemplateAttributeList extends Component {
     };
 
     moveUp = () => {
-        const { selected } = this.state;
-
-        this.setState({selected: selected - 1});
-
-        this.props.fields.move(selected, selected - 1);
+        this.moveSelectedAttr(-1);
     };
 
     moveDown = () => {
+        this.moveSelectedAttr(1);
+    };
+
+    moveSelectedAttr = (offset) => {
         const { selected } = this.state;
 
-        this.setState({selected: selected + 1});
+        this.setState({selected: selected + offset});
 
-        this.props.fields.move(selected, selected + 1);
+        this.props.fields.move(selected, selected + offset);
     };
 
     render() {

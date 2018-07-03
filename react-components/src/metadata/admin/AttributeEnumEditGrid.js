@@ -2,53 +2,49 @@
  * @author psarando
  */
 import React, { Component } from "react";
+import { Field } from "redux-form";
 
+import { FormCheckbox, FormCheckboxTableCell, FormTextField } from "../../util/FormField";
 import styles from "../style";
 import OrderedGridToolbar from "./OrderedGridToolbar";
 
 import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import IconButton from "@material-ui/core/IconButton";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 
 import ContentRemove from "@material-ui/icons/Delete";
 import ContentEdit from "@material-ui/icons/Edit";
 
-class AttributeEnumEditDialog extends Component {
-    constructor(props) {
-        super(props);
-
-        const { value, is_default } = props;
-
-        this.state = {
-            value,
-            is_default,
-        };
-    }
-
-    componentWillReceiveProps(newProps) {
-        const { value, is_default } = newProps;
-
-        this.setState({
-            value,
-            is_default,
+const normalizeDefault = (fields, change, is_default) => {
+    if (is_default) {
+        fields.forEach((field, index) => {
+            let attrEnum = fields.get(index);
+            if (attrEnum.is_default) {
+                change(field, {...attrEnum, is_default: false});
+            }
         });
     }
 
+    return is_default;
+};
+
+class AttributeEnumEditDialog extends Component {
+    normalizeDefaultField = (is_default) => {
+        const { fields, change } = this.props;
+        return normalizeDefault(fields, change, is_default);
+    };
+
     render() {
-        const { open, onSave, onClose } = this.props;
-        const { value, is_default } = this.state;
+        const { open, field, error, onClose } = this.props;
 
         return (
             <Dialog
@@ -59,32 +55,24 @@ class AttributeEnumEditDialog extends Component {
             >
                 <DialogTitle id="form-dialog-title">Edit Enum Selection</DialogTitle>
                 <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="value"
-                        label="Value"
-                        value={value || ""}
-                        onChange={event => this.setState({value: event.target.value})}
-                        fullWidth
+                    <Field name={`${field}.value`}
+                           label="Value"
+                           id="enumValue"
+                           autoFocus
+                           margin="dense"
+                           component={FormTextField}
                     />
-                    <FormControlLabel
-                        control={
-                            <Checkbox id="isDefault"
-                                      color="primary"
-                                      checked={!!is_default}
-                                      onChange={(event, checked) => this.setState({is_default: checked})}
-                            />
-                        }
-                        label="Default Selection?"
+                    <Field name={`${field}.is_default`}
+                           label="Default Selection?"
+                           id="enumIsDefault"
+                           color="primary"
+                           component={FormCheckbox}
+                           normalize={this.normalizeDefaultField}
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={onClose} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={() => onSave(value, is_default)} color="primary">
-                        OK
+                    <Button onClick={onClose} disabled={!!error} color="primary">
+                        Done
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -108,7 +96,8 @@ class AttributeEnumEditGrid extends Component {
 
     onAddEnum = () => {
         let value = this.newEnumValue();
-        let attributeEnums = this.props.values;
+        const fields = this.props.fields;
+        const attributeEnums = fields.getAll() || [];
 
         const valuesMatch = attrEnum => (attrEnum.value === value);
         while (attributeEnums.findIndex(valuesMatch) > -1) {
@@ -117,20 +106,14 @@ class AttributeEnumEditGrid extends Component {
 
         this.setState({selected: 0});
 
-        this.props.onValuesChanged([
-            {
-                value,
-                is_default: false,
-            },
-            ...attributeEnums
-        ]);
+        this.props.fields.unshift({
+            value,
+            is_default: false,
+        });
     };
 
     onEnumRemoved = (index) => {
-        let values = [...this.props.values];
         let { selected } = this.state;
-
-        values.splice(index, 1);
 
         // fix selection
         if (index === selected) {
@@ -140,25 +123,8 @@ class AttributeEnumEditGrid extends Component {
         }
 
         this.setState({selected});
-        this.props.onValuesChanged(values);
-    };
 
-    handleChange = (index, value, is_default) => {
-        let values = [...this.props.values];
-        const attrEnum = values[index];
-
-        if (is_default) {
-            let currentDefaultIndex = values.findIndex(value => value.is_default);
-
-            if (currentDefaultIndex >= 0) {
-                let currentDefault = values[currentDefaultIndex];
-                values.splice(currentDefaultIndex, 1, {...currentDefault, is_default: false});
-            }
-        }
-
-        values.splice(index, 1, {...attrEnum, value, is_default});
-
-        this.props.onValuesChanged(values);
+        this.props.fields.remove(index);
     };
 
     handleSelect = (index) => {
@@ -176,61 +142,57 @@ class AttributeEnumEditGrid extends Component {
 
     moveSelectedEnum = (offset) => {
         const { selected } = this.state;
-        let values = [...this.props.values];
-
-        let [attrEnum] = values.splice(selected, 1);
-        values.splice(selected + offset, 0, attrEnum);
 
         this.setState({selected: selected + offset});
-        this.props.onValuesChanged(values);
+
+        this.props.fields.move(selected, selected + offset);
+    };
+
+    normalizeDefaultField = (is_default) => {
+        const { fields, change } = this.props;
+        return normalizeDefault(fields, change, is_default);
     };
 
     render() {
-        const { classes, values } = this.props;
+        const { classes, fields, change, meta: { error } } = this.props;
         const { selected, editingEnumIndex } = this.state;
-        const editingEnum = editingEnumIndex >= 0 ? values[editingEnumIndex] : {};
 
         return (
             <div className={classes.attributeTableContainer}>
 
                 <OrderedGridToolbar title="Values"
+                                    error={error}
                                     onAddItem={this.onAddEnum}
                                     moveUp={this.moveUp}
                                     moveUpDisabled={selected <= 0}
                                     moveDown={this.moveDown}
-                                    moveDownDisabled={selected < 0 || (values.length - 1) <= selected}
+                                    moveDownDisabled={selected < 0 || (fields.length - 1) <= selected}
                 />
 
                 <div className={classes.attributeTableWrapper}>
                     <Table aria-labelledby="tableTitle">
                         <TableBody>
-                            {values && values.map((attrEnum, index) => {
+                            {fields && fields.map((field, index) => {
                                 const isSelected = (index === selected);
                                 const {
                                     value,
-                                    is_default,
-                                } = attrEnum;
+                                } = fields.get(index);
 
                                 return (
                                     <TableRow
                                         hover
                                         tabIndex={-1}
-                                        key={value}
+                                        key={field}
                                         selected={isSelected}
                                         onClick={() => this.handleSelect(index)}
                                     >
                                         <TableCell component="th" scope="row">
                                             {value}
                                         </TableCell>
-                                        <TableCell padding="checkbox">
-                                            <Checkbox color="primary"
-                                                      checked={is_default}
-                                                      onChange={(event, checked) => {
-                                                          this.handleChange(index, value, checked);
-                                                      }}
-                                                      onClick={event => event.stopPropagation()}
-                                            />
-                                        </TableCell>
+                                        <Field name={`${field}.is_default`}
+                                               component={FormCheckboxTableCell}
+                                               normalize={this.normalizeDefaultField}
+                                        />
                                         <TableCell padding="none">
                                             <IconButton aria-label="edit"
                                                         className={classes.button}
@@ -265,16 +227,17 @@ class AttributeEnumEditGrid extends Component {
                     </Table>
                 </div>
 
-                <AttributeEnumEditDialog open={editingEnumIndex >= 0}
-                                         value={editingEnum.value}
-                                         is_default={editingEnum.is_default}
-                                         onClose={() => this.setState({editingEnumIndex: -1})}
-                                         onSave={(value, is_default) => {
-                                             this.setState({editingEnumIndex: -1});
-                                             this.handleChange(editingEnumIndex, value, is_default);
-                                         }}
-                />
-
+                {fields && fields.map((field, index) =>
+                    <AttributeEnumEditDialog key={field}
+                                             open={editingEnumIndex === index}
+                                             change={change}
+                                             fields={fields}
+                                             field={field}
+                                             error={error}
+                                             onClose={() => this.setState({editingEnumIndex: -1})}
+                    />
+                )
+                }
             </div>
         );
     }

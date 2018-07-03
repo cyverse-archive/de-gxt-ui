@@ -44,7 +44,7 @@ class EditMetadataTemplate extends Component {
     };
 
     render() {
-        const { classes, open, handleSubmit, pristine, submitting, error, initialValues } = this.props;
+        const { classes, open, handleSubmit, pristine, submitting, error, change, initialValues } = this.props;
         const { editingAttrIndex } = this.state;
 
         return (
@@ -104,6 +104,7 @@ class EditMetadataTemplate extends Component {
 
                     <FieldArray name="attributes"
                                 component={FormDialogEditAttribute}
+                                change={change}
                                 editingAttrIndex={editingAttrIndex}
                                 parentName={initialValues.name}
                                 closeAttrDialog={() => this.setState({editingAttrIndex: -1})}
@@ -129,6 +130,28 @@ const validateAttributes = attributes => {
             if (attributes.slice(0, attrIndex).some(namesMatch) || attributes.slice(attrIndex + 1).some(namesMatch)) {
                 attrErrors.name = "Attribute name must be unique";
                 attributesArrayErrors[attrIndex] = attrErrors;
+            }
+        }
+
+        // Validate Enum values
+        if (attr.type === "Enum") {
+            if (!attr.values || attr.values.length < 1) {
+                // Setting an attrErrors.values["_error"] message allows the error to be displayed in the table header.
+                attrErrors.values = [];
+                attrErrors.values["_error"] = "Enum requires at least 1 value.";
+                attributesArrayErrors[attrIndex] = attrErrors;
+            } else {
+                const enumArrayErrors = [];
+                attr.values.forEach((enumOption, valIndex) => {
+                    if (!enumOption.value) {
+                        enumArrayErrors[valIndex] = {value: "Required"};
+                        // Setting an enumArrayErrors["_error"] message allows the error to be displayed in the table header,
+                        // and also allows the dialog close button to be disabled.
+                        enumArrayErrors["_error"] = "Enum Option Value Required";
+                        attrErrors.values = enumArrayErrors;
+                        attributesArrayErrors[attrIndex] = attrErrors;
+                    }
+                });
             }
         }
 

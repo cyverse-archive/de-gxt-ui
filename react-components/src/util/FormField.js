@@ -8,6 +8,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
+import TableCell from "@material-ui/core/TableCell";
 import TextField from "@material-ui/core/TextField";
 
 const FormTextField = ({
@@ -38,6 +39,17 @@ const FormCheckbox = ({ input, label, ...custom }) => (
     />
 );
 
+const FormCheckboxTableCell = ({ input, ...custom }) => (
+    <TableCell padding="checkbox">
+        <Checkbox color="primary"
+                  checked={!!input.value}
+                  onClick={event => event.stopPropagation()}
+                  onChange={input.onChange}
+                  {...custom}
+        />
+    </TableCell>
+);
+
 const FormSelectField = ({
     input,
     label,
@@ -59,6 +71,7 @@ const FormSelectField = ({
 
 export {
     FormCheckbox,
+    FormCheckboxTableCell,
     FormSelectField,
     FormTextField,
 };

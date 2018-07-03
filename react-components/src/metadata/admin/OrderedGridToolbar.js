@@ -18,6 +18,7 @@ let OrderedGridToolbar = props => {
     const {
         classes,
         title,
+        error,
         onAddItem,
         moveUp,
         moveDown,
@@ -42,6 +43,9 @@ let OrderedGridToolbar = props => {
             <div className={classes.title}>
                 <Typography variant="title" id="tableTitle">
                     {title}
+                </Typography>
+                <Typography variant="subheading" className={classes.errorSubTitle} id="tableErrorTitle">
+                    {error}
                 </Typography>
             </div>
             <div className={classes.spacer} />
