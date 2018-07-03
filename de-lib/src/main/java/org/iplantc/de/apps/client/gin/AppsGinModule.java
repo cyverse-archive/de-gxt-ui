@@ -32,6 +32,7 @@ import org.iplantc.de.apps.client.views.details.doc.AppDocEditViewImpl;
 import org.iplantc.de.apps.client.views.hierarchies.OntologyHierarchiesViewImpl;
 import org.iplantc.de.apps.client.views.list.AppsGridViewImpl;
 import org.iplantc.de.apps.client.views.list.AppsTileViewImpl;
+import org.iplantc.de.apps.client.views.list.widgets.AppTypeFilterCombo;
 import org.iplantc.de.apps.client.views.sharing.AppSharingView;
 import org.iplantc.de.apps.client.views.sharing.AppSharingViewImpl;
 import org.iplantc.de.apps.client.views.submit.SubmitAppForPublicUseViewImpl;
@@ -122,6 +123,7 @@ public class AppsGinModule extends AbstractGinModule {
         install(new GinFactoryModuleBuilder().implement(SharingPresenter.class,
                                                         AppSharingPresenter.class)
                                              .build(AppSharingPresenterFactory.class));
+        bind(AppTypeFilterCombo.class);
 
     }
 

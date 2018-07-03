@@ -13,6 +13,7 @@ import org.iplantc.de.apps.client.events.selection.AppRatingDeselected;
 import org.iplantc.de.apps.client.events.selection.AppRatingSelected;
 import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
+import org.iplantc.de.apps.client.views.list.widgets.AppTypeFilterCombo;
 import org.iplantc.de.apps.shared.AppsModule;
 import org.iplantc.de.client.models.apps.App;
 
@@ -54,6 +55,8 @@ public class AppsGridViewImpl extends ContentPanel implements AppsListView,
     @UiField ColumnModel cm;
     @UiField Grid<App> grid;
     @UiField GridView<App> gridView;
+    @UiField(provided = true)
+    AppTypeFilterCombo typeFilter;
     private final AppColumnModel acm; // Convenience class
 
     private final AppsListAppearance appearance;
@@ -61,9 +64,11 @@ public class AppsGridViewImpl extends ContentPanel implements AppsListView,
 
     @Inject
     AppsGridViewImpl(AppsListView.AppsListAppearance appearance,
-                     @Assisted final ListStore<App> listStore) {
+                     @Assisted final ListStore<App> listStore,
+                     AppTypeFilterCombo typeFilter) {
         this.appearance = appearance;
         this.listStore = listStore;
+        this.typeFilter = typeFilter;
 
         setWidget(ourUiBinder.createAndBindUi(this));
         this.acm = (AppColumnModel) cm;

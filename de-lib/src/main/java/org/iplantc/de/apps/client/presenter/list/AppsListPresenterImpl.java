@@ -3,6 +3,7 @@ package org.iplantc.de.apps.client.presenter.list;
 import org.iplantc.de.apps.client.AppsListView;
 import org.iplantc.de.apps.client.events.AppFavoritedEvent;
 import org.iplantc.de.apps.client.events.AppSearchResultLoadEvent;
+import org.iplantc.de.apps.client.events.AppTypeFilterChangedEvent;
 import org.iplantc.de.apps.client.events.AppUpdatedEvent;
 import org.iplantc.de.apps.client.events.BeforeAppSearchEvent;
 import org.iplantc.de.apps.client.events.RunAppEvent;
@@ -23,6 +24,7 @@ import org.iplantc.de.apps.client.presenter.callbacks.DeleteRatingCallback;
 import org.iplantc.de.apps.client.presenter.callbacks.RateAppCallback;
 import org.iplantc.de.apps.client.views.list.AppsTileViewImpl;
 import org.iplantc.de.client.events.EventBus;
+import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
@@ -74,7 +76,11 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
                                               AppFavoriteSelectedEvent.AppFavoriteSelectedEventHandler,
                                               AppUpdatedEvent.AppUpdatedEventHandler,
                                               AppSelectionChangedEvent.AppSelectionChangedEventHandler,
-                                              AppInfoSelectedEvent.AppInfoSelectedEventHandler {
+                                              AppInfoSelectedEvent.AppInfoSelectedEventHandler,
+                                              AppTypeFilterChangedEvent.AppTypeFilterChangedEventHandler {
+
+    private OntologyHierarchy selectedHierarchy;
+    private AppCategory appCategory;
 
     private class AppListCallback extends AppsCallback<List<App>> {
         @Override
@@ -124,6 +130,9 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     private App desiredSelectedApp;
     CardLayoutContainer cards;
 
+    AppTypeFilter filter;
+
+
     @Inject
     AppsListPresenterImpl(final AppsListViewFactory viewFactory,
                           final ListStore<App> listStore,
@@ -155,6 +164,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         activeView = tileView;
 
         eventBus.addHandler(AppUpdatedEvent.TYPE, this);
+        eventBus.addHandler(AppTypeFilterChangedEvent.TYPE, this);
     }
 
     @Override
@@ -298,8 +308,8 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         Preconditions.checkArgument(event.getAppCategorySelection().size() == 1);
         activeView.mask(appearance.getAppsLoadingMask());
 
-        final AppCategory appCategory = event.getAppCategorySelection().iterator().next();
-        appService.getApps(appCategory, new AppListCallback());
+        appCategory = event.getAppCategorySelection().iterator().next();
+        appService.getApps(appCategory, filter, new AppListCallback());
     }
 
     @Override
@@ -307,15 +317,20 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         tileView.onOntologyHierarchySelectionChanged(event);
         gridView.onOntologyHierarchySelectionChanged(event);
 
-        OntologyHierarchy selectedHierarchy = event.getSelectedHierarchy();
+        selectedHierarchy = event.getSelectedHierarchy();
+        getAppsWithSelectedHierarchy();
+    }
+
+    protected void getAppsWithSelectedHierarchy() {
         if (selectedHierarchy != null) {
             activeView.mask(appearance.getAppsLoadingMask());
             Avu avu = ontologyUtil.convertHierarchyToAvu(selectedHierarchy);
             String iri = selectedHierarchy.getIri();
             if (ontologyUtil.isUnclassified(selectedHierarchy)) {
-                ontologyService.getUnclassifiedAppsInCategory(ontologyUtil.getUnclassifiedParentIri(selectedHierarchy), avu, new AppListCallback());
+                ontologyService.getUnclassifiedAppsInCategory(ontologyUtil.getUnclassifiedParentIri(
+                        selectedHierarchy), avu, filter, new AppListCallback());
             } else {
-                ontologyService.getAppsInCategory(iri, avu, new AppListCallback());
+                ontologyService.getAppsInCategory(iri, avu, filter, new AppListCallback());
             }
         }
     }
@@ -466,4 +481,11 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     void postToErrorHandler(Throwable caught) {
         ErrorHandler.post(caught);
     }
+
+    @Override
+    public void onTypeFilterChanged(AppTypeFilterChangedEvent event) {
+        this.filter = event.getFilter();
+        getAppsWithSelectedHierarchy();
+    }
+
 }

@@ -5,6 +5,7 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PATCH;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
+import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
@@ -117,8 +118,13 @@ public class AppUserServiceFacadeImpl implements AppUserServiceFacade {
     }
 
     @Override
-    public void getApps(HasQualifiedId appCategory, DECallback<List<App>> callback) {
+    public void getApps(HasQualifiedId appCategory,
+                        AppTypeFilter filter,
+                        DECallback<List<App>> callback) {
         String address = CATEGORIES + "/" + appCategory.getSystemId() + "/" + appCategory.getId();
+        if(filter != null && (!filter.equals(AppTypeFilter.ALL))) {
+           address = address + "?app-type=" + filter.getFilterString();
+        }
         ServiceCallWrapper wrapper = new ServiceCallWrapper(address);
         deServiceFacade.getServiceData(wrapper, new DECallbackConverter<String, List<App>>(callback) {
             @Override

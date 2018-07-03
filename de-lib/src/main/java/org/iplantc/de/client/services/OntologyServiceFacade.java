@@ -1,5 +1,6 @@
 package org.iplantc.de.client.services;
 
+import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.ontologies.OntologyHierarchy;
@@ -18,9 +19,9 @@ public interface OntologyServiceFacade {
 
     void getFilteredHierarchies(String rootIri, Avu avu, DECallback<OntologyHierarchy> callback);
 
-    void getAppsInCategory(String iri, Avu avu, DECallback<List<App>> callback);
+    void getAppsInCategory(String iri, Avu avu, AppTypeFilter filter,DECallback<List<App>> callback);
 
-    void getUnclassifiedAppsInCategory(String iri, Avu avu, DECallback<List<App>> callback);
+    void getUnclassifiedAppsInCategory(String iri, Avu avu, AppTypeFilter filter, DECallback<List<App>> callback);
 
     void getAppAVUs(App app, AsyncCallback<List<Avu>> callback);
 }

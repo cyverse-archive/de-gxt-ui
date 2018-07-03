@@ -172,7 +172,7 @@ public class AdminAppsGridPresenterImpl implements AdminAppsGridView.Presenter,
         view.mask(appearance.getAppsLoadingMask());
 
         final AppCategory appCategory = event.getAppCategorySelection().iterator().next();
-        appService.getApps(appCategory, new AppsCallback<List<App>>() {
+        appService.getApps(appCategory, null, new AppsCallback<List<App>>() {
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(caught);

@@ -1,6 +1,7 @@
 package org.iplantc.de.client.services;
 
 
+import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasQualifiedId;
 import org.iplantc.de.client.models.apps.App;
@@ -34,9 +35,10 @@ public interface AppServiceFacade {
 
     /**
      * Retrieves list of templates in the given group.
-     *  @param appCategory unique identifier for the group to search in for apps.
+     * @param appCategory unique identifier for the group to search in for apps.
+     * @param filter filter to be used when getting apps.
      * @param callback called when the RPC call is complete.*/
-    void getApps(HasQualifiedId appCategory, DECallback<List<App>> callback);
+    void getApps(HasQualifiedId appCategory, AppTypeFilter filter, DECallback<List<App>> callback);
 
     /**
      * Retrieves a paged listing of templates in the given group.

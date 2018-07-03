@@ -29,7 +29,7 @@ import org.iplantc.de.analysis.client.views.dialogs.AnalysisUserSupportDialog;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.events.diskResources.OpenFolderEvent;
-import org.iplantc.de.client.models.AnalysisTypeFilter;
+import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
@@ -252,7 +252,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     private HandlerRegistration handlerFirstLoad;
     private final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader;
     AnalysisPermissionFilter currentPermFilter;
-    AnalysisTypeFilter currentTypeFilter;
+    AppTypeFilter currentTypeFilter;
 
 
     @Inject
@@ -297,7 +297,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
         //Set default filter to ALL
         currentPermFilter = AnalysisPermissionFilter.ALL;
-        currentTypeFilter = AnalysisTypeFilter.ALL;
+        currentTypeFilter = AppTypeFilter.ALL;
     }
 
     @Override
@@ -382,12 +382,12 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         if (selectedAnalyses != null && !selectedAnalyses.isEmpty()) {
             handlerFirstLoad = loader.addLoadHandler(new FirstLoadHandler(selectedAnalyses));
         }
-        loadAnalyses(AnalysisPermissionFilter.ALL, AnalysisTypeFilter.ALL);
+        loadAnalyses(AnalysisPermissionFilter.ALL, AppTypeFilter.ALL);
         container.setWidget(view);
     }
 
     @Override
-    public void loadAnalyses(AnalysisPermissionFilter permFilter, AnalysisTypeFilter typeFilter) {
+    public void loadAnalyses(AnalysisPermissionFilter permFilter, AppTypeFilter typeFilter) {
         if (!Strings.isNullOrEmpty(view.getSearchField().getCurrentValue())) {
             view.getSearchField().refreshSearch();
             return;
@@ -457,7 +457,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void setFilterInView(AnalysisPermissionFilter permFilter, AnalysisTypeFilter typeFilter) {
+    public void setFilterInView(AnalysisPermissionFilter permFilter, AppTypeFilter typeFilter) {
         view.setPermFilterInView(permFilter, typeFilter);
     }
 
@@ -476,7 +476,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     @Override
     public void onShowAllSelected() {
-        loadAnalyses(AnalysisPermissionFilter.ALL, AnalysisTypeFilter.ALL);
+        loadAnalyses(AnalysisPermissionFilter.ALL, AppTypeFilter.ALL);
     }
 
     @Override
@@ -498,7 +498,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Override
     public void onAnalysisFilterChanged(AnalysisFilterChanged event) {
         AnalysisPermissionFilter permFilter = event.getPermFilter();
-        AnalysisTypeFilter typeFilter = event.getTypeFilter();
+        AppTypeFilter typeFilter = event.getTypeFilter();
         boolean filterChanged = false;
 
         if (permFilter == null && typeFilter == null) {
@@ -526,7 +526,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public AnalysisTypeFilter getCurrentTypeFilter() {
+    public AppTypeFilter getCurrentTypeFilter() {
         return currentTypeFilter;
     }
 

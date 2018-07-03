@@ -1,5 +1,8 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:grid="urn:import:com.sencha.gxt.widget.core.client.grid">
+             xmlns:grid="urn:import:com.sencha.gxt.widget.core.client.grid"
+             xmlns:row="urn:import:com.sencha.gxt.widget.core.client.container"
+             xmlns:toolbar="urn:import:com.sencha.gxt.widget.core.client.toolbar"
+             xmlns:filter="urn:import:org.iplantc.de.apps.client.views.list.widgets">
 
     <ui:with field="listStore"
              type="com.sencha.gxt.data.shared.ListStore" />
@@ -10,9 +13,30 @@
         <ui:attributes forceFit="true"
                        autoFill="true"/>
     </ui:with>
-
+    <ui:with type="com.sencha.gxt.core.client.util.Margins" field="outerMargins">
+        <ui:attributes top="10" right="10" bottom="10" left="10"/>
+    </ui:with>
+    <ui:with
+            type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
+            field="topData">
+        <ui:attributes width="1" height="0.25" margins="{outerMargins}"/>
+    </ui:with>
+    <row:VerticalLayoutContainer>
+        <row:child>
+            <toolbar:ToolBar>
+                <toolbar:child>
+                    <toolbar:LabelToolItem label="Filter:"/>
+                </toolbar:child>
+                <toolbar:child>
+                    <filter:AppTypeFilterCombo ui:field="typeFilter"/>
+                </toolbar:child>
+            </toolbar:ToolBar>
+        </row:child>
+        <row:child>
     <grid:Grid ui:field="grid"
                store="{listStore}"
                cm="{cm}"
                view="{gridView}" />
+        </row:child>
+    </row:VerticalLayoutContainer>
 </ui:UiBinder>

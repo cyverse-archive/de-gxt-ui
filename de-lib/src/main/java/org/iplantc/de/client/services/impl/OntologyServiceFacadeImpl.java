@@ -2,6 +2,7 @@ package org.iplantc.de.client.services.impl;
 
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
 
+import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppList;
 import org.iplantc.de.client.models.avu.Avu;
@@ -54,9 +55,14 @@ public class OntologyServiceFacadeImpl implements OntologyServiceFacade {
     }
 
     @Override
-    public void getAppsInCategory(String iri, Avu avu, DECallback<List<App>> callback) {
+    public void getAppsInCategory(String iri,
+                                  Avu avu,
+                                  AppTypeFilter filter,
+                                  DECallback<List<App>> callback) {
         String address = APPS_HIERARCHIES + "/" + URL.encodeQueryString(iri) + "/apps?attr=" + URL.encodeQueryString(avu.getAttribute());
-
+        if (filter != null && (!filter.equals(AppTypeFilter.ALL))) {
+            address = address + "&app-type=" + filter.getFilterString();
+        }
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new DECallbackConverter<String, List<App>>(callback) {
             @Override
@@ -68,9 +74,14 @@ public class OntologyServiceFacadeImpl implements OntologyServiceFacade {
     }
 
     @Override
-    public void getUnclassifiedAppsInCategory(String iri, Avu avu, DECallback<List<App>> callback) {
+    public void getUnclassifiedAppsInCategory(String iri,
+                                              Avu avu,
+                                              AppTypeFilter filter,
+                                              DECallback<List<App>> callback) {
         String address = APPS_HIERARCHIES + "/" + URL.encodeQueryString(iri) + "/unclassified?attr=" + URL.encodeQueryString(avu.getAttribute());
-
+        if (filter != null && (!filter.equals(AppTypeFilter.ALL))) {
+            address = address + "&app-type=" + filter.getFilterString();
+        }
         ServiceCallWrapper wrapper = new ServiceCallWrapper(GET, address);
         deService.getServiceData(wrapper, new DECallbackConverter<String, List<App>>(callback) {
             @Override

@@ -3,7 +3,7 @@
              xmlns:toolbar="urn:import:com.sencha.gxt.widget.core.client.toolbar"
              xmlns:widget='urn:import:com.sencha.gxt.widget.core.client'
              xmlns:form='urn:import:com.sencha.gxt.widget.core.client.form'
->
+             xmlns:filter="urn:import:org.iplantc.de.apps.client.views.list.widgets">
 
     <ui:with field="layoutData"
              type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
@@ -21,6 +21,12 @@
                 </toolbar:child>
                 <toolbar:child>
                     <form:SimpleComboBox ui:field="sortBox" width="100" editable="false" triggerAction="ALL"/>
+                </toolbar:child>
+                <toolbar:child>
+                    <toolbar:LabelToolItem label="Filter:"/>
+                </toolbar:child>
+                <toolbar:child>
+                    <filter:AppTypeFilterCombo ui:field="typeFilter"/>
                 </toolbar:child>
             </toolbar:ToolBar>
         </container:child>

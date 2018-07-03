@@ -22,7 +22,7 @@ import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.analysis.shared.AnalysisModule;
-import org.iplantc.de.client.models.AnalysisTypeFilter;
+import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
@@ -87,7 +87,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     SimpleComboBox<AnalysisPermissionFilter> filterPermCombo;
 
     @UiField(provided = true)
-    SimpleComboBox<AnalysisTypeFilter> filterTypeCombo;
+    SimpleComboBox<AppTypeFilter> filterTypeCombo;
 
 
     @Inject
@@ -109,11 +109,11 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
                 AnalysisPermissionFilter.SHARED_WITH_ME));
 
         filterTypeCombo = new SimpleComboBox<>(new StringLabelProvider<>());
-        filterTypeCombo.add(Arrays.asList(AnalysisTypeFilter.ALL,
-                                          AnalysisTypeFilter.AGAVE,
-                                          AnalysisTypeFilter.DE,
-                                          AnalysisTypeFilter.INTERACTIVE,
-                                          AnalysisTypeFilter.OSG));
+        filterTypeCombo.add(Arrays.asList(AppTypeFilter.ALL,
+                                          AppTypeFilter.AGAVE,
+                                          AppTypeFilter.DE,
+                                          AppTypeFilter.INTERACTIVE,
+                                          AppTypeFilter.OSG));
 
         AnalysesToolbarUiBinder uiBinder = GWT.create(AnalysesToolbarUiBinder.class);
         initWidget(uiBinder.createAndBindUi(this));
@@ -128,7 +128,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
 
 
         filterTypeCombo.setEditable(false);
-        filterTypeCombo.setValue(AnalysisTypeFilter.ALL);
+        filterTypeCombo.setValue(AppTypeFilter.ALL);
         filterTypeCombo.addSelectionHandler(event -> {
             onTypeFilterChange(event.getSelectedItem());
             searchField.clear();
@@ -154,23 +154,23 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         }
     }
 
-    private void onTypeFilterChange(AnalysisTypeFilter af) {
+    private void onTypeFilterChange(AppTypeFilter af) {
         switch (af) {
             case AGAVE:
-                applyFilter(filterPermCombo.getCurrentValue(), AnalysisTypeFilter.AGAVE);
+                applyFilter(filterPermCombo.getCurrentValue(), AppTypeFilter.AGAVE);
                 break;
             case DE:
-                applyFilter(filterPermCombo.getCurrentValue(), AnalysisTypeFilter.DE);
+                applyFilter(filterPermCombo.getCurrentValue(), AppTypeFilter.DE);
                 break;
             case INTERACTIVE:
-                applyFilter(filterPermCombo.getCurrentValue(), AnalysisTypeFilter.INTERACTIVE);
+                applyFilter(filterPermCombo.getCurrentValue(), AppTypeFilter.INTERACTIVE);
                 break;
             case OSG:
-                applyFilter(filterPermCombo.getCurrentValue(), AnalysisTypeFilter.OSG);
+                applyFilter(filterPermCombo.getCurrentValue(), AppTypeFilter.OSG);
                 break;
             case ALL:
             default:
-                applyFilter(filterPermCombo.getCurrentValue(), AnalysisTypeFilter.ALL);
+                applyFilter(filterPermCombo.getCurrentValue(), AppTypeFilter.ALL);
                 break;
         }
     }
@@ -445,12 +445,12 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         fireEvent(new RefreshAnalysesSelected());
     }
 
-    void applyFilter(AnalysisPermissionFilter filter, AnalysisTypeFilter typeFilter) {
+    void applyFilter(AnalysisPermissionFilter filter, AppTypeFilter typeFilter) {
         fireEvent(new AnalysisFilterChanged(filter, typeFilter));
     }
 
     @Override
-    public void setFilterInView(AnalysisPermissionFilter permFilter, AnalysisTypeFilter typeFilter) {
+    public void setFilterInView(AnalysisPermissionFilter permFilter, AppTypeFilter typeFilter) {
         filterPermCombo.setValue(permFilter);
         filterTypeCombo.setValue(typeFilter);
     }

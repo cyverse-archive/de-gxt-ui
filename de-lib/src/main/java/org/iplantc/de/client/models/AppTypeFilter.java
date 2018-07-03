@@ -3,12 +3,12 @@ package org.iplantc.de.client.models;
 /**
  * Created by sriram on 5/17/18.
  */
-public enum AnalysisTypeFilter {
+public enum AppTypeFilter {
     ALL("All"), DE("DE"), AGAVE("Agave"), OSG("OSG"), INTERACTIVE("Interactive");
 
     private String filter;
 
-    private AnalysisTypeFilter(String label) {
+    private AppTypeFilter(String label) {
         this.filter = label;
     }
 
@@ -21,7 +21,7 @@ public enum AnalysisTypeFilter {
         return filter;
     }
 
-    public static AnalysisTypeFilter fromTypeString(String typeString) {
+    public static AppTypeFilter fromTypeString(String typeString) {
         if (typeString == null || typeString.isEmpty()) {
             return null;
         }
