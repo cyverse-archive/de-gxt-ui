@@ -3,12 +3,14 @@
  * @author sriram
  *
  */
-import React, {Component} from "react";
+import React, { Component } from "react";
 import DesktopView from "../../../src/desktop/view/DesktopView";
 
 class DesktopViewTest extends  Component {
     render() {
-        const logger = this.props.logger;
+        const logger = this.props.logger || ((msg) => {
+                console.log(msg);
+            });
         const windowConfigs = [{
             "tag": "0",
             "type": "DATA",
