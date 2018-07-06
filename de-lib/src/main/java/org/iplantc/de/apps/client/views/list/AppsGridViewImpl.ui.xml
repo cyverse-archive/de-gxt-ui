@@ -13,16 +13,19 @@
         <ui:attributes forceFit="true"
                        autoFill="true"/>
     </ui:with>
-    <ui:with type="com.sencha.gxt.core.client.util.Margins" field="outerMargins">
-        <ui:attributes top="10" right="10" bottom="10" left="10"/>
-    </ui:with>
     <ui:with
             type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
-            field="topData">
-        <ui:attributes width="1" height="0.25" margins="{outerMargins}"/>
+            field="toolBarLayoutData">
+        <ui:attributes width="1" height="-1"/>
+    </ui:with>
+
+    <ui:with
+            type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
+            field="gridLayoutData">
+        <ui:attributes width="1" height="1"/>
     </ui:with>
     <row:VerticalLayoutContainer>
-        <row:child>
+        <row:child layoutData="{toolBarLayoutData}">
             <toolbar:ToolBar>
                 <toolbar:child>
                     <toolbar:LabelToolItem label="Filter:"/>
@@ -32,11 +35,11 @@
                 </toolbar:child>
             </toolbar:ToolBar>
         </row:child>
-        <row:child>
-    <grid:Grid ui:field="grid"
-               store="{listStore}"
-               cm="{cm}"
-               view="{gridView}" />
+        <row:child layoutData="{gridLayoutData}">
+            <grid:Grid ui:field="grid"
+                       store="{listStore}"
+                       cm="{cm}"
+                       view="{gridView}"/>
         </row:child>
     </row:VerticalLayoutContainer>
 </ui:UiBinder>

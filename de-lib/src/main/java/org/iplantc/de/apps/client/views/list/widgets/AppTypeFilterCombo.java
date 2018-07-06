@@ -38,6 +38,9 @@ public class AppTypeFilterCombo implements IsWidget {
         filterTypeCombo.addSelectionHandler(event -> {
             onTypeFilterChange(event.getSelectedItem());
         });
+        filterTypeCombo.addValueChangeHandler(event -> {
+            onTypeFilterChange(event.getValue());
+        });
     }
 
 
@@ -52,5 +55,13 @@ public class AppTypeFilterCombo implements IsWidget {
 
     public void setFilter(AppTypeFilter filter) {
         filterTypeCombo.setValue(filter);
+    }
+
+    public void enable() {
+        filterTypeCombo.setEnabled(true);
+    }
+
+    public void disbale() {
+        filterTypeCombo.setEnabled(false);
     }
 }

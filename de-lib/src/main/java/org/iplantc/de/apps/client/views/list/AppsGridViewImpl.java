@@ -15,6 +15,7 @@ import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
 import org.iplantc.de.apps.client.views.list.widgets.AppTypeFilterCombo;
 import org.iplantc.de.apps.shared.AppsModule;
+import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.apps.App;
 
 import com.google.common.base.Joiner;
@@ -186,6 +187,11 @@ public class AppsGridViewImpl extends ContentPanel implements AppsListView,
     }
 
     @Override
+    public void setAppTypeFilter(AppTypeFilter filter) {
+        typeFilter.setFilter(filter);
+    }
+
+    @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
         grid.ensureDebugId(baseID + AppsModule.Ids.APP_GRID);
@@ -195,5 +201,14 @@ public class AppsGridViewImpl extends ContentPanel implements AppsListView,
     @UiFactory
     ColumnModel<App> createColumnModel() {
         return new AppColumnModel(appearance);
+    }
+
+    @Override
+    public void enableAppTypeFilter(boolean enabled) {
+        if(enabled) {
+            typeFilter.enable();
+        } else {
+            typeFilter.disbale();
+        }
     }
 }

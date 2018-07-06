@@ -17,6 +17,7 @@ import org.iplantc.de.apps.client.models.AppProperties;
 import org.iplantc.de.apps.client.views.list.cells.AppTileCell;
 import org.iplantc.de.apps.client.views.list.widgets.AppTypeFilterCombo;
 import org.iplantc.de.apps.shared.AppsModule;
+import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.theme.base.client.apps.list.TileListDefaultAppearance;
@@ -262,5 +263,19 @@ public class AppsTileViewImpl extends ContentPanel
     @Override
     public void setSearchPattern(String searchPattern) {
         appTileCell.setSearchRegexPattern(searchPattern);
+    }
+
+    @Override
+    public void setAppTypeFilter(AppTypeFilter filter) {
+        typeFilter.setFilter(filter);
+    }
+
+    @Override
+    public void enableAppTypeFilter(boolean enabled) {
+        if(enabled) {
+            typeFilter.enable();
+        } else {
+            typeFilter.disbale();
+        }
     }
 }

@@ -42,6 +42,7 @@ import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.views.dialogs.AgaveAuthPrompt;
 import org.iplantc.de.shared.AppsCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.exceptions.HttpRedirectException;
 
 import com.google.common.base.Preconditions;
@@ -79,6 +80,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
                                               AppInfoSelectedEvent.AppInfoSelectedEventHandler,
                                               AppTypeFilterChangedEvent.AppTypeFilterChangedEventHandler {
 
+    private final DEProperties deProperties;
     private OntologyHierarchy selectedHierarchy;
     private AppCategory appCategory;
 
@@ -137,11 +139,13 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     AppsListPresenterImpl(final AppsListViewFactory viewFactory,
                           final ListStore<App> listStore,
                           final EventBus eventBus,
-                          OntologyServiceFacade ontologyService) {
+                          OntologyServiceFacade ontologyService,
+                          final DEProperties deProperties) {
         this.listStore = listStore;
         this.eventBus = eventBus;
         this.ontologyService = ontologyService;
         this.ontologyUtil = OntologyUtil.getInstance();
+        this.deProperties = deProperties;
         this.gridView = viewFactory.createGridView(listStore);
         this.tileView = viewFactory.createTileView(listStore);
 
@@ -227,6 +231,14 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
         cards.setActiveWidget(activeView);
 
+        setTypeFilterPreferences();
+    }
+
+    private void setTypeFilterPreferences() {
+        filter = AppTypeFilter.ALL;
+        activeView.setAppTypeFilter(filter);
+        activeView.enableAppTypeFilter(true);
+        disableTypeFilterForHPC();
     }
 
     @Override
@@ -277,6 +289,9 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
     @Override
     public void onBeforeAppSearch(BeforeAppSearchEvent event) {
+        filter = AppTypeFilter.ALL;
+        activeView.setAppTypeFilter(filter);
+        activeView.enableAppTypeFilter(false);
         activeView.mask(appearance.beforeAppSearchLoadingMask());
     }
 
@@ -306,9 +321,27 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
             return;
         }
         Preconditions.checkArgument(event.getAppCategorySelection().size() == 1);
-        activeView.mask(appearance.getAppsLoadingMask());
-
         appCategory = event.getAppCategorySelection().iterator().next();
+
+        disableTypeFilterForHPC();
+        getAppsWithSelectedCategory();
+    }
+
+    protected void disableTypeFilterForHPC() {
+        if (appCategory != null && appCategory.getId().equals(deProperties.getDefaultHpcCategoryId())) {
+            filter = AppTypeFilter.AGAVE;
+            activeView.enableAppTypeFilter(false);
+        } else {
+            activeView.enableAppTypeFilter(true);
+            if(filter != null && filter.equals(AppTypeFilter.AGAVE)) {
+                filter = AppTypeFilter.ALL;
+            }
+        }
+        activeView.setAppTypeFilter(filter);
+    }
+
+    protected void getAppsWithSelectedCategory() {
+        activeView.mask(appearance.getAppsLoadingMask());
         appService.getApps(appCategory, filter, new AppListCallback());
     }
 
@@ -318,6 +351,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         gridView.onOntologyHierarchySelectionChanged(event);
 
         selectedHierarchy = event.getSelectedHierarchy();
+        activeView.enableAppTypeFilter(true);
         getAppsWithSelectedHierarchy();
     }
 
@@ -462,6 +496,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
             activeView = gridView;
         }
         cards.setActiveWidget(activeView);
+        setTypeFilterPreferences();
     }
 
     HandlerManager createHandlerManager() {
@@ -485,7 +520,14 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     @Override
     public void onTypeFilterChanged(AppTypeFilterChangedEvent event) {
         this.filter = event.getFilter();
-        getAppsWithSelectedHierarchy();
+        if (selectedHierarchy != null) {
+            getAppsWithSelectedHierarchy();
+            return;
+        }
+        if (appCategory != null) {
+            getAppsWithSelectedCategory();
+        }
+
     }
 
 }
