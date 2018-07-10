@@ -17,6 +17,7 @@ import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent;
 import org.iplantc.de.diskResource.client.presenters.callbacks.TagCreateCallback;
+import org.iplantc.de.diskResource.client.presenters.callbacks.TagsFetchCallback;
 import org.iplantc.de.diskResource.client.views.search.ReactSearchForm;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 import org.iplantc.de.tags.client.TagsView;
@@ -62,7 +63,6 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     private SearchView.SearchViewAppearance appearance;
     private TagsView.TagSuggestionProxy proxy;
     private TagsServiceFacade tagsService;
-    private DateIntervalProvider dateIntervalProvider;
     private SearchAutoBeanFactory factory;
     private SearchModelUtils searchModelUtils;
     private final SearchServiceFacade searchService;
@@ -78,7 +78,6 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
                             SearchView view,
                             TagsView.TagSuggestionProxy proxy,
                             TagsServiceFacade tagsService,
-                            DateIntervalProvider dateIntervalProvider,
                             SearchAutoBeanFactory factory,
                             SearchModelUtils searchModelUtils) {
         this.searchService = searchService;
@@ -87,7 +86,6 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
         this.view = view;
         this.proxy = proxy;
         this.tagsService = tagsService;
-        this.dateIntervalProvider = dateIntervalProvider;
         this.factory = factory;
         this.searchModelUtils = searchModelUtils;
 
@@ -296,7 +294,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     }
 
     @Override
-    public void fetchTagSuggestions(String searchTerm) {
+    public void fetchTagSuggestions(String searchTerm, TagsFetchCallback callback) {
         TagSuggestionLoadConfig config = new TagSuggestionLoadConfig();
         config.setQuery(searchTerm);
         proxy.load(config, new Callback<ListLoadResult<Tag>, Throwable>() {
@@ -313,12 +311,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
                     Splittable splTag = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tag));
                     splTag.assign(splittableTags, splittableTags.size());
                 });
-                ReactSearchForm.SearchFormProps props = getCurrentProps();
-                props.suggestedTags = splittableTags;
-
-                view.renderSearchForm(props);
-
-                currentProps = props;
+                callback.onTagsFetched(splittableTags);
             }
         });
     }
@@ -404,7 +397,6 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
         ReactSearchForm.SearchFormProps props = new ReactSearchForm.SearchFormProps();
         props.presenter = this;
         props.id = DiskResourceModule.Ids.SEARCH_FORM;
-        props.suggestedTags = StringQuoter.createIndexed();
         props.initialValues = searchModelUtils.createDefaultFilter();
 
         return props;

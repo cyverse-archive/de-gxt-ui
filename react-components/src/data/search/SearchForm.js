@@ -190,7 +190,6 @@ class SearchForm extends Component {
                             <Fields names={['taggedWith', 'tagQuery']}
                                     parentId={ids.form}
                                     placeholder={getMessage('taggedWith')}
-                                    dataSource={suggestedTags}
                                     array={array}
                                     presenter={presenter}
                                     component={renderTagSearchField}/>
@@ -290,14 +289,12 @@ function renderTagSearchField(props) {
         array,
         parentId,
         placeholder,
-        presenter,
-        dataSource
+        presenter
     } = props;
     return (
         <SearchFormTagPanel parentId={parentId}
                             placeholder={placeholder}
                             presenter={presenter}
-                            dataSource={dataSource}
                             array={array}
                             tagQuery={tagQuery}
                             taggedWith={taggedWith}/>

@@ -25,7 +25,7 @@ class QueryBuilderTest extends React.Component {
         const presenter = {
             onAddTagSelected: addTagLogger,
             onEditTagSelected: editTagLogger,
-            fetchTagSuggestions: suggestionsLogger,
+            fetchTagSuggestions: (term, callback) => callback(suggestedTags),
             onSaveSearch: saveSearchLogger,
             onSearchBtnClicked: searchLogger,
             searchCollaborators: (input, fn) => {
@@ -100,8 +100,7 @@ class QueryBuilderTest extends React.Component {
         ];
 
         return (
-            <QueryBuilder presenter={presenter}
-                          suggestedTags={suggestedTags}/>
+            <QueryBuilder presenter={presenter}/>
         )
     }
 }

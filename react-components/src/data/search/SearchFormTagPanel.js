@@ -17,7 +17,8 @@ class SearchFormTagPanel extends Component {
 
         this.state = {
             openEditTagDlg: false,
-            selectedTag: null
+            selectedTag: null,
+            dataSource: []
         };
 
         //Tags
@@ -41,7 +42,8 @@ class SearchFormTagPanel extends Component {
         this.props.presenter.onEditTagSelected(tag);
         this.setState({
             openEditTagDlg: false,
-            selectedTag: null
+            selectedTag: null,
+            dataSource: []
         });
     }
 
@@ -53,7 +55,7 @@ class SearchFormTagPanel extends Component {
     }
 
     fetchTagSuggestions(search) {
-        this.props.presenter.fetchTagSuggestions(search);
+        this.props.presenter.fetchTagSuggestions(search, (data) => this.setState({dataSource: data}));
     }
 
     onTagSelected(tag) {
@@ -84,11 +86,17 @@ class SearchFormTagPanel extends Component {
     render() {
         let {
             tagQuery,
+            taggedWith,
             placeholder,
-            parentId,
-            dataSource
+            parentId
         } = this.props;
-        let { selectedTag, openEditTagDlg } = this.state;
+
+        let {
+            selectedTag,
+            openEditTagDlg,
+            dataSource
+        } = this.state;
+
         return (
             <div>
                 <TagPanel baseID={parentId}
@@ -116,7 +124,6 @@ SearchFormTagPanel.propTypes = {
         fetchTagSuggestions: PropTypes.func.isRequired,
         onEditTagSelected: PropTypes.func.isRequired
     }),
-    dataSource: PropTypes.array.isRequired,
     array: PropTypes.object.isRequired,
     taggedWith: PropTypes.object.isRequired,
     tagQuery: PropTypes.object.isRequired
