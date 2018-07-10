@@ -39,6 +39,7 @@ import {
     MetadataTemplateReadOnlyViewTest,
     MetadataTemplateViewTest,
 } from "./metadata/MetadataTemplate.stories";
+import EditMetadataTest from "./metadata/EditMetadata.stories";
 
 import NotificationViewTest from "./notifications/view/NotificationView.stories";
 import JoinTeamRequestDialogTest from "./notifications/view/dialogs/JoinTeamRequestDialog.stories";
@@ -89,6 +90,7 @@ storiesOf('fileViewers', module).add("VideoViewer", () => <VideoViewerTest/>);
 storiesOf('metadata/admin/EditMetadataTemplate', module)
     .add('with nested attributes', () => <EditNestedAttrMetadataTemplateTest logger={action('template')} />)
     .add('with DataCite attributes', () => <EditDataCiteMetadataTemplateTest logger={action('template')} />);
+storiesOf('metadata/EditMetadata', module).add('with nested AVUs', () => <EditMetadataTest logger={action('metadata')} />);
 
 storiesOf('metadata/MetadataTemplateView', module)
     .add('with nested attributes', () => <MetadataTemplateViewTest logger={action('templateView')}/>)
