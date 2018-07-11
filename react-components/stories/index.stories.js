@@ -11,12 +11,9 @@ import TagPanelTest from "./data/details/TagPanel.stories";
 import QueryBuilderTest from './data/search/QueryBuilder.stories';
 import AppStatsTest from "./apps/admin/AppStats.stories";
 import DEHyperLinkTest from "./util/hyperlink/DEHyperLink.stories";
-import EditTagDialogTest from './data/search/EditTagDialog.stories';
-import SaveSearchButtonTest from './data/search/SaveSearchButton.stories';
-import SearchFieldTest from './util/SearchField.stories';
-import SearchFormTagPanel from './data/search/SearchFormTagPanel.stories';
-import SubjectSearchFieldTest from "./collaborators/SubjectSearchField.stories";
-import TriggerFieldTest from './util/TriggerField.stories';
+import EditTagDialogTest from "./data/search/EditTagDialog.stories";
+import SaveSearchButtonTest from "./data/search/SaveSearchButton.stories";
+import SearchFieldTest from "./util/SearchField.stories";
 import AutocompleteTest from "./util/Autocomplete.stories";
 import DesktopViewTest from "./desktop/view/DesktopView.stories";
 import TaskButtonTest from "./desktop/view/TaskButton.stories";
@@ -27,6 +24,9 @@ import {
     EditNestedAttrMetadataTemplateTest,
     EditDataCiteMetadataTemplateTest,
 } from "./metadata/MetadataTemplate.stories";
+import SearchFormTagPanel from "./data/search/SearchFormTagPanel.stories";
+import TriggerFieldTest from "./util/TriggerField.stories";
+import NotificationViewTest from "./notifications/view/NotificationView.stories";
 
 storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);
@@ -54,6 +54,8 @@ storiesOf('metadata/admin/EditMetadataTemplate', module)
     .add('with DataCite attributes', () => <EditDataCiteMetadataTemplateTest logger={action('template')} />);
 
 storiesOf('util', module).add('Autocomplete', () => <AutocompleteTest selectOptionLogger={action('Selected Option')}/>);
+storiesOf('notifications/view', module).add('with test notifications', () => <NotificationViewTest
+    logger={action('notification Window')}/>)
 storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
 storiesOf('util', module).add('DEHyperLink', () => <DEHyperLinkTest/>);
 storiesOf('util', module).add('SearchField', () => <SearchFieldTest logger={action('Search')}/>);

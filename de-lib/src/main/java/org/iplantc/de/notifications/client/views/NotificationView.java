@@ -14,6 +14,9 @@ import com.sencha.gxt.widget.core.client.button.TextButton;
 
 import java.util.List;
 
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
+@JsType
 public interface NotificationView extends IsWidget,
                                           NotificationGridRefreshEvent.HasNotificationGridRefreshEventHandlers,
                                           NotificationSelectionEvent.HasNotificationSelectionEventHandlers {
@@ -54,12 +57,14 @@ public interface NotificationView extends IsWidget,
 
     }
 
+    @JsType
     public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
         /**
          * Filters the list of notifications by a given Category.
          * 
          * @param category
          */
+        @JsIgnore
         public void filterBy(NotificationCategory category);
 
         /**
@@ -67,12 +72,16 @@ public interface NotificationView extends IsWidget,
          * 
          * @return default FilterPagingLoadConfig
          */
+        @JsIgnore
         public FilterPagingLoadConfig buildDefaultLoadConfig();
 
+        @JsIgnore
         void setRefreshButton(TextButton refreshBtn);
 
+        @JsIgnore
         NotificationCategory getCurrentCategory();
 
+        @JsIgnore
         public void markAsRead(NotificationMessage nm);
     }
 
@@ -81,6 +90,7 @@ public interface NotificationView extends IsWidget,
      * 
      * @return the current load config
      */
+    @JsIgnore
     public FilterPagingLoadConfig getCurrentLoadConfig();
 
     /**
@@ -88,6 +98,7 @@ public interface NotificationView extends IsWidget,
      * 
      * @return a list containing selected notification objects
      */
+    @JsIgnore
     public List<NotificationMessage> getSelectedItems();
 
     /**
@@ -95,18 +106,25 @@ public interface NotificationView extends IsWidget,
      * 
      * @param config FilterPagingLoadConfig
      */
+    @JsIgnore
     public void loadNotifications(FilterPagingLoadConfig config);
 
+    @JsIgnore
     public void setLoader(
             PagingLoader<FilterPagingLoadConfig, PagingLoadResult<NotificationMessage>> loader);
 
+    @JsIgnore
     void setNorthWidget(IsWidget widget);
 
+    @JsIgnore
     void mask();
 
+    @JsIgnore
     void unmask();
 
+    @JsIgnore
     public TextButton getRefreshButton();
 
+    @JsIgnore
     public void updateStore(NotificationMessage nm);
 }
