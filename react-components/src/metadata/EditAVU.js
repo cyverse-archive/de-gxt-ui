@@ -3,11 +3,14 @@
  */
 import React, { Component, Fragment } from "react";
 import { Field, FieldArray } from "redux-form";
+import { injectIntl } from "react-intl";
 
+import withI18N, { getMessage, formatMessage } from "../util/I18NWrapper";
 import { FormTextField } from "../util/FormField";
 
 import MetadataList from "./MetadataList";
 import SlideUpTransition from "./SlideUpTransition";
+import intlData from "./messages";
 import styles from "./style";
 
 import AppBar from "@material-ui/core/AppBar";
@@ -36,11 +39,13 @@ class EditAVU extends Component {
     }
 
     render() {
-        const { classes, field, error, avu, open, parentName } = this.props;
+        const { classes, intl, field, error, avu, open, parentName } = this.props;
         const { attr, avus } = avu;
         const { editingAttrIndex } = this.state;
 
-        const title = parentName ? `Edit AVU for ${parentName}` : "Edit AVU";
+        const title = parentName ?
+            getMessage("dialogTitleEditAVUFor", {values: { parentName }}) :
+            getMessage("dialogTitleEditAVU");
 
         return (
             <Dialog
@@ -54,13 +59,13 @@ class EditAVU extends Component {
             >
                 <AppBar className={classes.appBar}>
                     <Tooltip
-                        title={error ? "Please fix all errors." : ""}
+                        title={error ? getMessage("errAVUEditFormTooltip") : ""}
                         placement="bottom-start"
                         enterDelay={200}
                     >
                         <Toolbar>
                             <IconButton color="inherit"
-                                        aria-label="Close"
+                                        aria-label={formatMessage(intl, "close")}
                                         disabled={!!error}
                                         onClick={this.props.closeAttrDialog}
                             >
@@ -75,7 +80,7 @@ class EditAVU extends Component {
                 <DialogContent>
 
                     <Field name={`${field}.attr`}
-                           label="Attribute"
+                           label={getMessage("attribute")}
                            id="attribute"
                            required={true}
                            autoFocus
@@ -83,12 +88,12 @@ class EditAVU extends Component {
                            component={FormTextField}
                     />
                     <Field name={`${field}.value`}
-                           label="Value"
+                           label={getMessage("value")}
                            id="value"
                            component={FormTextField}
                     />
                     <Field name={`${field}.unit`}
-                           label="Unit"
+                           label={getMessage("metadataUnitLabel")}
                            id="unit"
                            component={FormTextField}
                     />
@@ -97,7 +102,7 @@ class EditAVU extends Component {
 
                     <ExpansionPanel defaultExpanded={avus && avus.length > 0}>
                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                            <Typography className={classes.heading}>Child Metadata</Typography>
+                            <Typography className={classes.heading}>{getMessage("metadataChildrenLabel")}</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
                             <FieldArray name={`${field}.avus`}
@@ -120,7 +125,7 @@ class EditAVU extends Component {
     }
 }
 
-EditAVU = withStyles(styles)(EditAVU);
+EditAVU = withStyles(styles)(withI18N(injectIntl(EditAVU), intlData));
 
 const FormDialogEditAVU = ({ fields, change, meta: { error }, editingAttrIndex, parentName, closeAttrDialog }) => (
     <Fragment>

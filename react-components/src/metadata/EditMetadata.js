@@ -3,12 +3,15 @@
  */
 import React, { Component } from "react";
 import { FieldArray, reduxForm } from "redux-form";
+import { injectIntl } from "react-intl";
 
+import withI18N, { getMessage, formatMessage } from "../util/I18NWrapper";
 import withStoreProvider from "../util/StoreProvider";
 
 import FormDialogEditAVU from "./EditAVU";
 import MetadataList from "./MetadataList";
 import SlideUpTransition from "./SlideUpTransition";
+import intlData from "./messages";
 import styles from "./style";
 
 import AppBar from "@material-ui/core/AppBar";
@@ -39,12 +42,19 @@ class EditMetadata extends Component {
     }
 
     render() {
-        const { classes, open, handleSubmit, pristine, submitting, error, change } = this.props;
+        const {
+            classes,
+            intl,
+            open,
+            presenter: { closeEditMetadataDialog },
+            // from redux-form
+            handleSubmit, pristine, submitting, error, change,
+        } = this.props;
         const { editingAttrIndex } = this.state;
 
         return (
             <Dialog open={open}
-                    onClose={this.props.presenter.closeEditMetadataDialog}
+                    onClose={closeEditMetadataDialog}
                     fullScreen
                     disableBackdropClick
                     disableEscapeKeyDown
@@ -53,18 +63,18 @@ class EditMetadata extends Component {
             >
                 <AppBar className={classes.appBar}>
                     <Toolbar>
-                        <IconButton color="inherit" onClick={this.props.presenter.closeEditMetadataDialog} aria-label="Close">
+                        <IconButton color="inherit" onClick={closeEditMetadataDialog} aria-label={formatMessage(intl, "close")}>
                             <CloseIcon />
                         </IconButton>
                         <Typography id="form-dialog-title" variant="title" color="inherit" className={classes.flex}>
-                            Edit Metadata
+                            {getMessage("dialogTitleEditMetadata")}
                         </Typography>
                         <Button id="metadata-template-save"
                                 disabled={pristine || submitting || error}
                                 onClick={handleSubmit(this.onSaveMetadata)}
                                 color="inherit"
                         >
-                            {this.props.saveText}
+                            {getMessage("save")}
                         </Button>
                     </Toolbar>
                 </AppBar>
@@ -100,7 +110,7 @@ const validateAVUs = avus => {
         const avuErrors = {};
 
         if (!avu.attr) {
-            avuErrors.attr = "Required";
+            avuErrors.attr = getMessage("required");
             avusArrayErrors[index] = avuErrors;
         }
 
@@ -142,4 +152,4 @@ export default withStoreProvider(
             enableReinitialize: true,
             validate,
         }
-    )(withStyles(styles)(EditMetadata)));
+    )(withStyles(styles)(withI18N(injectIntl(EditMetadata), intlData))));

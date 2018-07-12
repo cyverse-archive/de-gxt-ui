@@ -61,7 +61,7 @@ class EditMetadataTest extends Component {
         };
 
         return (
-            <EditMetadata saveText="Save" presenter={presenter} open={true} initialValues={metadata} />
+            <EditMetadata open presenter={presenter} initialValues={metadata}/>
         );
     }
 }

@@ -2,7 +2,10 @@
  * @author psarando
  */
 import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 
+import withI18N, { getMessage, formatMessage } from "../util/I18NWrapper";
+import intlData from "./messages";
 import styles from "./style";
 
 import Button from "@material-ui/core/Button";
@@ -23,7 +26,7 @@ import ContentRemove from "@material-ui/icons/Delete";
 import ContentEdit from "@material-ui/icons/Edit";
 
 let MetadataGridToolbar = props => {
-    const { classes, onAddAVU } = props;
+    const { classes, intl, onAddAVU } = props;
 
     return (
         <Toolbar
@@ -33,7 +36,7 @@ let MetadataGridToolbar = props => {
                 <Button variant="fab"
                         mini
                         color="primary"
-                        aria-label="add metadata"
+                        aria-label={formatMessage(intl, "addMetadata")}
                         onClick={onAddAVU}
                 >
                     <ContentAdd />
@@ -41,25 +44,25 @@ let MetadataGridToolbar = props => {
             </div>
             <div className={classes.title}>
                 <Typography variant="title" id="tableTitle">
-                    AVUs
+                    {getMessage("avus")}
                 </Typography>
             </div>
         </Toolbar>
     );
 };
 
-MetadataGridToolbar = withStyles(styles)(MetadataGridToolbar);
+MetadataGridToolbar = withStyles(styles)(withI18N(injectIntl(MetadataGridToolbar), intlData));
 
 const columnData = [
     {
         id: "attr",
-        label: "Attribute",
+        label: getMessage("attribute"),
         component: "th",
         scope: "row",
     },
-    { id: "value", label: "Value" },
-    { id: "unit", label: "Unit" },
-    { id: "avus", label: "Child Metadata", padding: "none", numeric: true },
+    { id: "value", label: getMessage("value") },
+    { id: "unit", label: getMessage("metadataUnitLabel") },
+    { id: "avus", label: getMessage("metadataChildrenLabel"), padding: "none", numeric: true },
 ];
 
 class MetadataGridHeader extends React.Component {
@@ -84,7 +87,7 @@ class MetadataGridHeader extends React.Component {
                                 sortDirection={orderBy === column.id ? order : false}
                             >
                                 <Tooltip
-                                    title="Sort"
+                                    title={getMessage("sort")}
                                     placement="bottom-start"
                                     enterDelay={300}
                                 >
@@ -170,7 +173,7 @@ class MetadataList extends Component {
     };
 
     render() {
-        const { classes, fields } = this.props;
+        const { classes, intl, fields } = this.props;
         const { order, orderBy } = this.state;
 
         return (
@@ -202,7 +205,7 @@ class MetadataList extends Component {
                                         <TableCell>{unit}</TableCell>
                                         <TableCell padding="none" numeric>{avus ? avus.length : 0}</TableCell>
                                         <TableCell padding="none">
-                                            <IconButton aria-label="edit"
+                                            <IconButton aria-label={formatMessage(intl, "edit")}
                                                         className={classes.button}
                                                         onClick={event => {
                                                             event.stopPropagation();
@@ -211,7 +214,7 @@ class MetadataList extends Component {
                                             >
                                                 <ContentEdit />
                                             </IconButton>
-                                            <IconButton aria-label="delete"
+                                            <IconButton aria-label={formatMessage(intl, "delete")}
                                                         classes={{root: classes.deleteIcon}}
                                                         onClick={event => {
                                                             event.stopPropagation();
@@ -238,4 +241,4 @@ class MetadataList extends Component {
     }
 }
 
-export default withStyles(styles)(MetadataList);
+export default withStyles(styles)(withI18N(injectIntl(MetadataList), intlData));
