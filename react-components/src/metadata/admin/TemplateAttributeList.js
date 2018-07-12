@@ -3,8 +3,11 @@
  */
 import React, { Component } from "react";
 import { Field } from "redux-form";
+import { injectIntl } from "react-intl";
 
+import withI18N, { getMessage, formatMessage } from "../../util/I18NWrapper";
 import { FormCheckboxTableCell } from "../../util/FormField";
+import intlData from "../messages";
 import styles from "../style";
 import OrderedGridToolbar from "./OrderedGridToolbar";
 
@@ -22,14 +25,14 @@ import ContentEdit from "@material-ui/icons/Edit";
 const columnData = [
     {
         id: "name",
-        label: "Attribute",
+        label: getMessage("attribute"),
         component: "th",
         scope: "row",
     },
-    { id: "description", label: "Description" },
-    { id: "type", label: "Type", padding: "none" },
-    { id: "attributes", label: "Child Attributes", padding: "none", numeric: true },
-    { id: "required", label: "Required", padding: "checkbox" },
+    { id: "description", label: getMessage("description") },
+    { id: "type", label: getMessage("attrTypeLabel"), padding: "none" },
+    { id: "attributes", label: getMessage("attrChildrenLabel"), padding: "none", numeric: true },
+    { id: "required", label: getMessage("required"), padding: "checkbox" },
 ];
 
 class AttributeGridHeader extends Component {
@@ -132,13 +135,13 @@ class TemplateAttributeList extends Component {
     };
 
     render() {
-        const { classes, fields } = this.props;
+        const { classes, intl, fields, meta: { error } } = this.props;
         const { selected } = this.state;
 
         return (
             <div className={classes.attributeTableContainer}>
 
-                <OrderedGridToolbar title="Attributes"
+                <OrderedGridToolbar title={getMessage("attributes")}
                                     onAddItem={this.onAddAttribute}
                                     moveUp={this.moveUp}
                                     moveUpDisabled={selected <= 0}
@@ -163,6 +166,7 @@ class TemplateAttributeList extends Component {
                                         hover
                                         tabIndex={-1}
                                         key={field}
+                                        className={error && error[index] ? classes.attributeTableRowError : null}
                                         selected={isSelected}
                                         onClick={() => this.handleSelect(index)}
                                     >
@@ -176,7 +180,7 @@ class TemplateAttributeList extends Component {
                                                component={FormCheckboxTableCell}
                                         />
                                         <TableCell padding="none">
-                                            <IconButton aria-label="edit"
+                                            <IconButton aria-label={formatMessage(intl, "edit")}
                                                         className={classes.button}
                                                         onClick={event => {
                                                             event.stopPropagation();
@@ -185,7 +189,7 @@ class TemplateAttributeList extends Component {
                                             >
                                                 <ContentEdit />
                                             </IconButton>
-                                            <IconButton aria-label="delete"
+                                            <IconButton aria-label={formatMessage(intl, "delete")}
                                                         classes={{root: classes.deleteIcon}}
                                                         onClick={event => {
                                                             event.stopPropagation();
@@ -207,4 +211,4 @@ class TemplateAttributeList extends Component {
     }
 }
 
-export default withStyles(styles)(TemplateAttributeList);
+export default withStyles(styles)(withI18N(injectIntl(TemplateAttributeList), intlData));

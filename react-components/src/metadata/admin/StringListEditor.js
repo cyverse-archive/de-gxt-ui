@@ -3,7 +3,10 @@
  */
 import React, { Component } from "react";
 import { Field } from "redux-form";
+import { injectIntl } from "react-intl";
 
+import withI18N, { getMessage, formatMessage } from "../../util/I18NWrapper";
+import intlData from "../messages";
 import styles from "../style";
 import OrderedGridToolbar from "./OrderedGridToolbar";
 
@@ -41,14 +44,14 @@ class StringEditorDialog extends Component {
                     <Field name={field}
                            component={FormTextField}
                            id="value"
-                           label={valueLabel || "Value"}
+                           label={valueLabel || getMessage("value")}
                            margin="dense"
                            autoFocus
                     />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose} color="primary">
-                        Done
+                        {getMessage("done")}
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -122,7 +125,7 @@ class StringListEditor extends Component {
     };
 
     render() {
-        const { classes, title, helpLabel, columnLabel, fields } = this.props;
+        const { classes, intl, title, helpLabel, columnLabel, fields } = this.props;
         const { selected, editingIndex } = this.state;
 
         return (
@@ -158,7 +161,7 @@ class StringListEditor extends Component {
                                             {value}
                                         </TableCell>
                                         <TableCell padding="none">
-                                            <IconButton aria-label="edit"
+                                            <IconButton aria-label={formatMessage(intl, "edit")}
                                                         className={classes.button}
                                                         onClick={event => {
                                                             event.stopPropagation();
@@ -167,7 +170,7 @@ class StringListEditor extends Component {
                                             >
                                                 <ContentEdit />
                                             </IconButton>
-                                            <IconButton aria-label="delete"
+                                            <IconButton aria-label={formatMessage(intl, "delete")}
                                                         classes={{root: classes.deleteIcon}}
                                                         onClick={event => {
                                                             event.stopPropagation();
@@ -199,4 +202,4 @@ class StringListEditor extends Component {
     }
 }
 
-export default withStyles(styles)(StringListEditor);
+export default withStyles(styles)(withI18N(injectIntl(StringListEditor), intlData));

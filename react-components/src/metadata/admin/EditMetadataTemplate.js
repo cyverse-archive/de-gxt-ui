@@ -3,10 +3,13 @@
  */
 import React, { Component } from "react";
 import { Field, FieldArray, reduxForm } from "redux-form";
+import { injectIntl } from "react-intl";
 
+import withI18N, { getMessage, formatMessage } from "../../util/I18NWrapper";
 import { FormCheckbox, FormTextField } from "../../util/FormField";
 import withStoreProvider from "../../util/StoreProvider";
 
+import intlData from "../messages";
 import styles from "../style";
 import FormDialogEditAttribute from "./EditAttribute";
 import SlideUpTransition from "./SlideUpTransition";
@@ -44,12 +47,19 @@ class EditMetadataTemplate extends Component {
     };
 
     render() {
-        const { classes, open, handleSubmit, pristine, submitting, error, change, initialValues } = this.props;
+        const {
+            classes,
+            intl,
+            open,
+            presenter: { closeTemplateInfoDialog },
+            // from redux-form
+            handleSubmit, pristine, submitting, error, change, initialValues,
+        } = this.props;
         const { editingAttrIndex } = this.state;
 
         return (
             <Dialog open={open}
-                    onClose={this.props.presenter.closeTemplateInfoDialog}
+                    onClose={closeTemplateInfoDialog}
                     fullScreen
                     disableBackdropClick
                     disableEscapeKeyDown
@@ -58,25 +68,25 @@ class EditMetadataTemplate extends Component {
             >
                 <AppBar className={classes.appBar}>
                     <Toolbar>
-                        <IconButton color="inherit" onClick={this.props.presenter.closeTemplateInfoDialog} aria-label="Close">
+                        <IconButton color="inherit" onClick={closeTemplateInfoDialog} aria-label={formatMessage(intl, "close")}>
                             <CloseIcon />
                         </IconButton>
                         <Typography id="form-dialog-title" variant="title" color="inherit" className={classes.flex}>
-                            Edit Metadata Template
+                            {getMessage("dialogTitleEditMetadataTemplate")}
                         </Typography>
                         <Button id="metadata-template-save"
                                 disabled={pristine || submitting || error}
                                 onClick={handleSubmit(this.onSaveTemplate)}
                                 color="inherit"
                         >
-                            {this.props.saveText}
+                            {getMessage("save")}
                         </Button>
                     </Toolbar>
                 </AppBar>
 
                 <DialogContent>
                     <Field name="name"
-                           label="Name"
+                           label={getMessage("templateNameLabel")}
                            id="templateName"
                            required={true}
                            autoFocus
@@ -84,13 +94,13 @@ class EditMetadataTemplate extends Component {
                            component={FormTextField}
                     />
                     <Field name="description"
-                           label="Description"
+                           label={getMessage("description")}
                            id="templateDescription"
                            component={FormTextField}
                     />
 
                     <Field name="deleted"
-                           label="Mark as Deleted?"
+                           label={getMessage("markAsDeleted")}
                            id="templateDeleted"
                            color="primary"
                            component={FormCheckbox}
@@ -124,12 +134,12 @@ const validateAttributes = attributes => {
         const name = attr.name;
 
         if (!name) {
-            attrErrors.name = "Required";
+            attrErrors.name = getMessage("required");
             attributesArrayErrors[attrIndex] = attrErrors;
         } else {
             const namesMatch = attr => (attr.name === name);
             if (attributes.slice(0, attrIndex).some(namesMatch) || attributes.slice(attrIndex + 1).some(namesMatch)) {
-                attrErrors.name = "Attribute name must be unique";
+                attrErrors.name = getMessage("errAttrNameMustBeUnique");
                 attributesArrayErrors[attrIndex] = attrErrors;
             }
         }
@@ -139,16 +149,16 @@ const validateAttributes = attributes => {
             if (!attr.values || attr.values.length < 1) {
                 // Setting an attrErrors.values["_error"] message allows the error to be displayed in the table header.
                 attrErrors.values = [];
-                attrErrors.values["_error"] = "Enum requires at least 1 value.";
+                attrErrors.values["_error"] = getMessage("errEnumValueRequired");
                 attributesArrayErrors[attrIndex] = attrErrors;
             } else {
                 const enumArrayErrors = [];
                 attr.values.forEach((enumOption, valIndex) => {
                     if (!enumOption.value) {
-                        enumArrayErrors[valIndex] = {value: "Required"};
+                        enumArrayErrors[valIndex] = {value: getMessage("required")};
                         // Setting an enumArrayErrors["_error"] message allows the error to be displayed in the table header,
                         // and also allows the dialog close button to be disabled.
-                        enumArrayErrors["_error"] = "Enum Option Value Required";
+                        enumArrayErrors["_error"] = getMessage("errEnumOptionValueRequired");
                         attrErrors.values = enumArrayErrors;
                         attributesArrayErrors[attrIndex] = attrErrors;
                     }
@@ -172,7 +182,7 @@ const validate = values => {
     const errors = {};
 
     if (!values.name) {
-        errors.name = "Required";
+        errors.name = getMessage("required");
         errors._error = true;
     }
 
@@ -194,4 +204,4 @@ export default withStoreProvider(
             enableReinitialize: true,
             validate,
         }
-    )(withStyles(styles)(EditMetadataTemplate)));
+    )(withStyles(styles)(withI18N(injectIntl(EditMetadataTemplate), intlData))));

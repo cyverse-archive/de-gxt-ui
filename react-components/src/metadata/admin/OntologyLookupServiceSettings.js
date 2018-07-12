@@ -5,6 +5,8 @@ import React, { Component } from "react";
 import { Field, FieldArray } from "redux-form";
 
 import { FormSelectField } from "../../util/FormField";
+import withI18N, { getMessage } from "../../util/I18NWrapper";
+import intlData from "../messages";
 import styles from "../style";
 import StringListEditor from "./StringListEditor";
 
@@ -33,11 +35,11 @@ class OntologyLookupServiceSettings extends Component {
             >
                 <Grid item>
                     <fieldset>
-                        <legend>Entity Type</legend>
+                        <legend>{getMessage("olsSettingTypeTitle")}</legend>
 
                         <Field name="type"
                                id="attrSettingsEntityType"
-                               label="Restrict searches to an entity type:"
+                               label={getMessage("olsSettingTypeLabel")}
                                component={FormSelectField}
                         >
                             {OLSEntityTypeMenuItems}
@@ -48,27 +50,27 @@ class OntologyLookupServiceSettings extends Component {
                 <Grid item>
                     <FieldArray name="ontology"
                                 component={StringListEditor}
-                                title="Ontologies"
-                                helpLabel="Restrict searches to a set of ontologies:"
-                                columnLabel="OLS Ontology ID"
+                                title={getMessage("olsSettingOntologyTitle")}
+                                helpLabel={getMessage("olsSettingOntologyHelpLabel")}
+                                columnLabel={getMessage("olsSettingOntologyColumnLabel")}
                     />
                 </Grid>
 
                 <Grid item>
                     <FieldArray name="childrenOf"
                                 component={StringListEditor}
-                                title="Children"
-                                helpLabel="Restrict searches to all children of a given term (subclassOf/is-a relation only):"
-                                columnLabel="IRI"
+                                title={getMessage("olsSettingChildrenOfTitle")}
+                                helpLabel={getMessage("olsSettingChildrenOfHelpLabel")}
+                                columnLabel={getMessage("olsSettingIRIColumnLabel")}
                     />
                 </Grid>
 
                 <Grid item>
                     <FieldArray name="allChildrenOf"
                                 component={StringListEditor}
-                                title="All Children"
-                                helpLabel="Restrict searches to all children of a given term (subclassOf/is-a plus any hierarchical/transitive properties):"
-                                columnLabel="IRI"
+                                title={getMessage("olsSettingAllChildrenOfTitle")}
+                                helpLabel={getMessage("olsSettingAllChildrenOfHelpLabel")}
+                                columnLabel={getMessage("olsSettingIRIColumnLabel")}
                     />
                 </Grid>
             </Grid>
@@ -76,4 +78,4 @@ class OntologyLookupServiceSettings extends Component {
     }
 }
 
-export default withStyles(styles)(OntologyLookupServiceSettings);
+export default withStyles(styles)(withI18N(OntologyLookupServiceSettings, intlData));

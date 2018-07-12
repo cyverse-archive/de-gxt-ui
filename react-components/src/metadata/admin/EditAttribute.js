@@ -3,13 +3,16 @@
  */
 import React, { Component, Fragment } from "react";
 import { Field, FieldArray, FormSection } from "redux-form";
+import { injectIntl } from "react-intl";
 
 import {
     FormCheckbox,
     FormSelectField,
     FormTextField,
 } from "../../util/FormField";
+import withI18N, { getMessage, formatMessage } from "../../util/I18NWrapper";
 
+import intlData from "../messages";
 import styles from "../style";
 import AttributeEnumEditGrid from "./AttributeEnumEditGrid";
 import OntologyLookupServiceSettings from "./OntologyLookupServiceSettings";
@@ -67,7 +70,7 @@ class EditAttribute extends Component {
     };
 
     render() {
-        const { classes, change, field, attribute, open, parentName } = this.props;
+        const { classes, intl, change, field, attribute, open, parentName } = this.props;
         const { name, type, attributes } = attribute;
         const { editingAttrIndex } = this.state;
 
@@ -83,18 +86,18 @@ class EditAttribute extends Component {
             >
                 <AppBar className={classes.appBar}>
                     <Toolbar>
-                        <IconButton color="inherit" onClick={this.props.closeAttrDialog} aria-label="Close">
+                        <IconButton color="inherit" onClick={this.props.closeAttrDialog} aria-label={formatMessage(intl, "back")}>
                             <ArrowBack />
                         </IconButton>
                         <Typography variant="title" color="inherit" className={classes.flex}>
-                            Edit Attribute for {parentName}
+                            {getMessage("dialogTitleEditAttributeFor", {values: { parentName }})}
                         </Typography>
                     </Toolbar>
                 </AppBar>
                 <DialogContent>
 
                     <Field name={`${field}.name`}
-                           label="Name"
+                           label={getMessage("attrNameLabel")}
                            id="attrName"
                            required={true}
                            autoFocus
@@ -102,13 +105,13 @@ class EditAttribute extends Component {
                            component={FormTextField}
                     />
                     <Field name={`${field}.description`}
-                           label="Description"
+                           label={getMessage("description")}
                            id="attrDescription"
                            component={FormTextField}
                     />
 
                     <Field name={`${field}.type`}
-                           label="Type"
+                           label={getMessage("attrTypeLabel")}
                            id="attrType"
                            component={FormSelectField}
                            normalize={this.normalizeType}
@@ -117,7 +120,7 @@ class EditAttribute extends Component {
                     </Field>
 
                     <Field name={`${field}.required`}
-                           label="Required?"
+                           label={getMessage("attrRequiredLabel")}
                            id="attrRequired"
                            color="primary"
                            component={FormCheckbox}
@@ -128,7 +131,7 @@ class EditAttribute extends Component {
                     {type === "Enum" &&
                     <ExpansionPanel defaultExpanded>
                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                            <Typography className={classes.heading}>Enum Values</Typography>
+                            <Typography className={classes.heading}>{getMessage("enumValues")}</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
                             <FieldArray name={`${field}.values`}
@@ -142,7 +145,7 @@ class EditAttribute extends Component {
                     {type === "OLS Ontology Term" &&
                     <ExpansionPanel defaultExpanded>
                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                            <Typography className={classes.heading}>Ontology Lookup Service Query Params</Typography>
+                            <Typography className={classes.heading}>{getMessage("olsQueryParams")}</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
                             <FormSection name={`${field}.settings`}
@@ -154,7 +157,7 @@ class EditAttribute extends Component {
 
                     <ExpansionPanel defaultExpanded={attributes && attributes.length > 0}>
                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                            <Typography className={classes.heading}>Attributes</Typography>
+                            <Typography className={classes.heading}>{getMessage("attributes")}</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
                             <FieldArray name={`${field}.attributes`}
@@ -177,7 +180,7 @@ class EditAttribute extends Component {
     }
 }
 
-EditAttribute = withStyles(styles)(EditAttribute);
+EditAttribute = withStyles(styles)(withI18N(injectIntl(EditAttribute), intlData));
 
 const FormDialogEditAttribute = ({ fields, change, editingAttrIndex, parentName, closeAttrDialog }) => (
     <Fragment>

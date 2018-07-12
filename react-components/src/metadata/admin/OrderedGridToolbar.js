@@ -2,7 +2,10 @@
  * @author psarando
  */
 import React from "react";
+import { injectIntl } from "react-intl";
 
+import withI18N, { formatMessage } from "../../util/I18NWrapper";
+import intlData from "../messages";
 import { toolbarStyles } from "../style";
 
 import Button from "@material-ui/core/Button";
@@ -17,6 +20,7 @@ import KeyboardArrowUp from "@material-ui/icons/KeyboardArrowUp";
 let OrderedGridToolbar = props => {
     const {
         classes,
+        intl,
         title,
         error,
         onAddItem,
@@ -34,7 +38,7 @@ let OrderedGridToolbar = props => {
                 <Button variant="fab"
                         mini
                         color="primary"
-                        aria-label="add row"
+                        aria-label={formatMessage(intl, "addRow")}
                         onClick={onAddItem}
                 >
                     <ContentAdd />
@@ -53,7 +57,7 @@ let OrderedGridToolbar = props => {
                 <Button variant="fab"
                         mini
                         color="secondary"
-                        aria-label="move up"
+                        aria-label={formatMessage(intl, "moveUp")}
                         className={classes.button}
                         disabled={moveUpDisabled}
                         onClick={() => moveUp()}
@@ -65,7 +69,7 @@ let OrderedGridToolbar = props => {
                 <Button variant="fab"
                         mini
                         color="secondary"
-                        aria-label="move down"
+                        aria-label={formatMessage(intl, "moveDown")}
                         className={classes.button}
                         disabled={moveDownDisabled}
                         onClick={() => moveDown()}
@@ -77,4 +81,4 @@ let OrderedGridToolbar = props => {
     );
 };
 
-export default withStyles(toolbarStyles)(OrderedGridToolbar);
+export default withStyles(toolbarStyles)(withI18N(injectIntl(OrderedGridToolbar), intlData));

@@ -3,8 +3,11 @@
  */
 import React, { Component } from "react";
 import { Field } from "redux-form";
+import { injectIntl } from "react-intl";
 
 import { FormCheckbox, FormCheckboxTableCell, FormTextField } from "../../util/FormField";
+import withI18N, { getMessage, formatMessage } from "../../util/I18NWrapper";
+import intlData from "../messages";
 import styles from "../style";
 import OrderedGridToolbar from "./OrderedGridToolbar";
 
@@ -44,7 +47,7 @@ class AttributeEnumEditDialog extends Component {
     };
 
     render() {
-        const { open, field, error, onClose } = this.props;
+        const { open, intl, field, error, onClose } = this.props;
 
         return (
             <Dialog
@@ -53,10 +56,10 @@ class AttributeEnumEditDialog extends Component {
                 disableEscapeKeyDown
                 aria-labelledby="form-dialog-title"
             >
-                <DialogTitle id="form-dialog-title">Edit Enum Selection</DialogTitle>
+                <DialogTitle id="form-dialog-title">{getMessage("dialogTitleEditEnumValue")}</DialogTitle>
                 <DialogContent>
                     <Field name={`${field}.value`}
-                           label="Value"
+                           label={formatMessage(intl, "value")}
                            id="enumValue"
                            required={true}
                            autoFocus
@@ -64,7 +67,7 @@ class AttributeEnumEditDialog extends Component {
                            component={FormTextField}
                     />
                     <Field name={`${field}.is_default`}
-                           label="Default Selection?"
+                           label={formatMessage(intl, "enumDefaultLabel")}
                            id="enumIsDefault"
                            color="primary"
                            component={FormCheckbox}
@@ -73,7 +76,7 @@ class AttributeEnumEditDialog extends Component {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose} disabled={!!error} color="primary">
-                        Done
+                        {getMessage("done")}
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -155,13 +158,13 @@ class AttributeEnumEditGrid extends Component {
     };
 
     render() {
-        const { classes, fields, change, meta: { error } } = this.props;
+        const { classes, intl, fields, change, meta: { error } } = this.props;
         const { selected, editingEnumIndex } = this.state;
 
         return (
             <div className={classes.attributeTableContainer}>
 
-                <OrderedGridToolbar title="Values"
+                <OrderedGridToolbar title={getMessage("enumValues")}
                                     error={error}
                                     onAddItem={this.onAddEnum}
                                     moveUp={this.moveUp}
@@ -195,7 +198,7 @@ class AttributeEnumEditGrid extends Component {
                                                normalize={this.normalizeDefaultField}
                                         />
                                         <TableCell padding="none">
-                                            <IconButton aria-label="edit"
+                                            <IconButton aria-label={formatMessage(intl, "edit")}
                                                         className={classes.button}
                                                         onClick={event => {
                                                             event.stopPropagation();
@@ -204,7 +207,7 @@ class AttributeEnumEditGrid extends Component {
                                             >
                                                 <ContentEdit />
                                             </IconButton>
-                                            <IconButton aria-label="delete"
+                                            <IconButton aria-label={formatMessage(intl, "delete")}
                                                         classes={{root: classes.deleteIcon}}
                                                         onClick={event => {
                                                             event.stopPropagation();
@@ -220,8 +223,8 @@ class AttributeEnumEditGrid extends Component {
                         </TableBody>
                         <TableHead className={classes.tableHead}>
                             <TableRow>
-                                <TableCell component="th" scope="row">Value</TableCell>
-                                <TableCell padding="checkbox">Default?</TableCell>
+                                <TableCell component="th" scope="row">{getMessage("value")}</TableCell>
+                                <TableCell padding="checkbox">{getMessage("default")}</TableCell>
                                 <TableCell padding="none" />
                             </TableRow>
                         </TableHead>
@@ -235,6 +238,7 @@ class AttributeEnumEditGrid extends Component {
                                              fields={fields}
                                              field={field}
                                              error={error}
+                                             intl={intl}
                                              onClose={() => this.setState({editingEnumIndex: -1})}
                     />
                 )
@@ -244,4 +248,4 @@ class AttributeEnumEditGrid extends Component {
     }
 }
 
-export default withStyles(styles)(AttributeEnumEditGrid);
+export default withStyles(styles)(withI18N(injectIntl(AttributeEnumEditGrid), intlData));
