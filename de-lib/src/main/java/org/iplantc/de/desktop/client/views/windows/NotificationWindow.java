@@ -31,6 +31,7 @@ public class NotificationWindow extends WindowBase {
 
         setMinHeight(appearance.windowMinHeight());
         setMinHeight(appearance.windowMinWidth());
+        setBodyStyle("background-color: white;");
     }
 
     @Override
@@ -40,7 +41,7 @@ public class NotificationWindow extends WindowBase {
         NotifyWindowConfig notifyWindowConfig = (NotifyWindowConfig) windowConfig;
         presenter.go(this);
         if (notifyWindowConfig != null) {
-            presenter.filterBy(NotificationCategory.fromTypeString(notifyWindowConfig.getFilter()));
+            //presenter.filterBy(NotificationCategory.fromTypeString(notifyWindowConfig.getFilter()));
         }
     }
 

@@ -3,10 +3,10 @@
  * @author Sriram
  *
  **/
-import React, {Component} from "react";
+import React, { Component } from "react";
 import TablePaginationActions from "../../util/table/TablePaginationActions";
 import injectSheet from "react-jss";
-import exStyles from "./style";
+import exStyles from "../style";
 import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -17,10 +17,20 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import moment from "moment";
 import Toolbar from "@material-ui/core/Toolbar";
 import ToolbarGroup from "@material-ui/core/Toolbar";
+import ToolbarSeparator from "@material-ui/core/Toolbar";
 import constants from "../../constants";
-import {getMessage} from "../../util/I18NWrapper";
+import intlData from "../messages";
+import withI18N, { getMessage } from "../../util/I18NWrapper";
 import Checkbox from "@material-ui/core/Checkbox";
-import EnhancedTableHead from "../../util/table/EnhancedTablehead";
+import EnhancedTableHead from "../../util/table/EnhancedTableHead";
+import Color from "../../util/CyVersePalette";
+import Select from "@material-ui/core/Select";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import RefreshIcon from "@material-ui/icons/Refresh";
+import DeleteIcon from "@material-ui/icons/Delete";
+import CheckIcon from "@material-ui/icons/Check";
 
 const columnData = [
     {name: "Category", numeric: false},
@@ -34,17 +44,41 @@ class NotificationView extends Component {
         this.state = {
             data: [],
             loading: true,
+            total: 0,
             page: 0,
             rowsPerPage: 100,
             selected: [],
             order: 'asc',
-            orderBy: 'Date'
+            orderBy: 'Date',
+            filter: 'All',
         }
+    }
+
+    componentDidMount() {
+        const {rowsPerPage, page}  = this.state;
+        this.props.presenter.getNotifications(rowsPerPage, page, (notifications, total) => {
+                this.setState({
+                    loading: false,
+                    data: notifications.messages,
+                    total: total,
+                })
+            }, (errorCode, errorMessage) => {
+                this.setState({
+                    loading: false,
+                });
+            },
+        )
     }
 
     handleChangePage = (event, page) => {
         this.setState({page});
     };
+
+    handleFilterChange = event => {
+        console.log("filter==>" + event.target.value);
+        this.setState({filter: event.target.value});
+    };
+
 
     handleChangeRowsPerPage = event => {
         this.setState({rowsPerPage: event.target.value});
@@ -73,7 +107,7 @@ class NotificationView extends Component {
 
     handleSelectAllClick = (event, checked) => {
         if (checked) {
-            this.setState(state => ({selected: state.data.map(n => n.id)}));
+            this.setState(state => ({selected: state.data.map(n => n.message.id)}));
             return;
         }
         this.setState({selected: []});
@@ -93,18 +127,54 @@ class NotificationView extends Component {
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
     render() {
-        const {classes, data} = this.props;
-        const {rowsPerPage, page, order, orderBy, selected} = this.state;
+        const {classes} = this.props;
+        const {data, rowsPerPage, page, order, orderBy, selected, total} = this.state;
 
         return (
             <div className={classes.container}>
                 {this.state.loading &&
                 <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
                 }
-
-                <Toolbar>
+                <Toolbar style={{
+                    backgroundColor: Color.lightGray,
+                    borderBottom: 'solid 2px',
+                    borderColor: Color.gray,
+                }}>
                     <ToolbarGroup>
-                        <Button variant="raised">Refresh</Button>
+                        <form autoComplete="off">
+                            <FormControl>
+                                <InputLabel htmlFor="filer-simple">Filter</InputLabel>
+                                <Select
+                                    value={this.state.filter}
+                                    onChange={this.handleFilterChange}
+                                    inputProps={{
+                                        name: 'filter',
+                                        id: 'filter-simple',
+                                    }}>
+                                    <MenuItem value="New">{getMessage("new")}</MenuItem>
+                                    <MenuItem value="All">{getMessage("all")}</MenuItem>
+                                    <MenuItem
+                                        value="Analysis">{getMessage("analysis")}</MenuItem>
+                                    <MenuItem value="Data">{getMessage("data")}</MenuItem>
+                                    <MenuItem value="Tool Request">{getMessage("tool")}</MenuItem>
+                                    <MenuItem value="Apps">{getMessage("apps")}</MenuItem>
+                                    <MenuItem
+                                        value="Permanent ID Request">{getMessage("permId")}</MenuItem>
+                                    <MenuItem value="Team">{getMessage("team")}</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </form>
+                        <ToolbarSeparator/>
+                        <Button variant="raised" size="small"
+                                style={{marginRight: 20}}><RefreshIcon />{getMessage("refresh")}
+                        </Button>
+                        <Button variant="raised" size="small"
+                                style={{marginRight: 20}}><CheckIcon />{getMessage("markSeen")}</Button>
+                        <ToolbarSeparator/>
+                        <Button variant="raised" size="small"
+                                style={{marginRight: 20}}><DeleteIcon />{getMessage("delete")}
+                        </Button>
+                        
                     </ToolbarGroup>
                 </Toolbar>
 
@@ -116,11 +186,11 @@ class NotificationView extends Component {
                             orderBy={orderBy}
                             onSelectAllClick={this.handleSelectAllClick}
                             onRequestSort={this.handleRequestSort}
-                            rowCount={data.length}
+                            rowCount={total}
                             columnData={columnData}
                         />
                         <TableBody>
-                            {data.messages.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(n => {
+                            {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(n => {
                                 const isSelected = this.isSelected(n.message.id);
                                 return (
                                     <TableRow onClick={event => this.handleClick(event, n.message.id)}
@@ -148,7 +218,7 @@ class NotificationView extends Component {
                 <TablePagination
                     component="div"
                     colSpan={3}
-                    count={data.messages.length}
+                    count={total}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={this.handleChangePage}
@@ -161,4 +231,4 @@ class NotificationView extends Component {
     }
 
 }
-export default injectSheet(exStyles)(NotificationView);
+export default injectSheet(exStyles)(withI18N(NotificationView, intlData));

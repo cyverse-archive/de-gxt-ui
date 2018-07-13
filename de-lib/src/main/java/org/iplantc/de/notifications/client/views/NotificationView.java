@@ -2,8 +2,10 @@ package org.iplantc.de.notifications.client.views;
 
 import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
+import org.iplantc.de.client.services.callbacks.ErrorCallback;
 import org.iplantc.de.notifications.client.events.NotificationGridRefreshEvent;
 import org.iplantc.de.notifications.client.events.NotificationSelectionEvent;
+import org.iplantc.de.notifications.client.presenter.NotificationsCallback;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
@@ -83,6 +85,12 @@ public interface NotificationView extends IsWidget,
 
         @JsIgnore
         public void markAsRead(NotificationMessage nm);
+
+
+        public void getNotifications(int limit,
+                                     int offset,
+                                     NotificationsCallback callback,
+                                     ErrorCallback errorCallback);
     }
 
     /**
@@ -127,4 +135,6 @@ public interface NotificationView extends IsWidget,
 
     @JsIgnore
     public void updateStore(NotificationMessage nm);
+
+    void setPresenter(NotificationView.Presenter presenter);
 }

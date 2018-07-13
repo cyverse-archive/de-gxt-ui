@@ -6,8 +6,10 @@ import org.iplantc.de.client.models.HasUUIDs;
 import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.notifications.NotificationAutoBeanFactory;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
+import org.iplantc.de.client.models.notifications.NotificationList;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.services.MessageServiceFacade;
+import org.iplantc.de.client.services.callbacks.ErrorCallback;
 import org.iplantc.de.client.services.callbacks.NotificationCallbackWrapper;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -23,16 +25,18 @@ import org.iplantc.de.notifications.client.events.NotificationToolbarDeleteAllCl
 import org.iplantc.de.notifications.client.events.NotificationToolbarDeleteClickedEvent;
 import org.iplantc.de.notifications.client.events.NotificationToolbarMarkAsSeenClickedEvent;
 import org.iplantc.de.notifications.client.events.NotificationToolbarSelectionEvent;
-import org.iplantc.de.notifications.client.gin.factory.NotificationViewFactory;
 import org.iplantc.de.notifications.client.model.NotificationMessageProperties;
 import org.iplantc.de.notifications.client.views.NotificationToolbarView;
 import org.iplantc.de.notifications.client.views.NotificationView;
 import org.iplantc.de.shared.NotificationCallback;
 
 import com.google.common.collect.Lists;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
@@ -117,15 +121,15 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
     @Inject IplantAnnouncer announcer;
 
     @Inject
-    public NotificationPresenterImpl(final NotificationViewFactory viewFactory,
-                                     NotificationView.NotificationViewAppearance appearance,
+    public NotificationPresenterImpl(NotificationView.NotificationViewAppearance appearance,
                                      NotificationToolbarView toolbar,
                                      NotificationMessageProperties messageProperties,
                                      NotificationAutoBeanFactory factory,
+                                     NotificationView view,
                                      EventBus eventBus) {
         this.appearance = appearance;
         this.listStore = createListStore(messageProperties);
-        this.view = viewFactory.create(listStore);
+        this.view = view;
         this.factory = factory;
         this.eventBus = eventBus;
         currentCategory = NotificationCategory.ALL;
@@ -219,7 +223,9 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
     @Override
     public void go(HasOneWidget container) {
         container.setWidget(view.asWidget());
-        view.setLoader(initProxyLoader());
+        //view.setLoader(initProxyLoader());
+        view.setPresenter(this);
+        view.loadNotifications(null);
     }
 
 
@@ -371,4 +377,48 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
         NotificationMessage notification = event.getMessage();
         deleteNotifications(Lists.newArrayList(notification));
     }
+
+    @Override
+    public void getNotifications(int limit,
+                                 int offset,
+                                 NotificationsCallback callback,
+                                 ErrorCallback errorCallback) {
+        messageServiceFacade.getNotifications(limit,
+                                              offset,
+                                              null,
+                                              "asc",
+                                              new NotificationCallbackWrapper() {
+
+                                                  @Override
+                                                  public void onFailure(Integer statusCode,
+                                                                        Throwable exception) {
+                                                      if (errorCallback != null) {
+                                                          errorCallback.onError(statusCode,
+                                                                                exception.getMessage());
+                                                      }
+                                                  }
+
+                                                  @Override
+                                                  public void onSuccess(String result) {
+                                                      Splittable splitResult = StringQuoter.split(result);
+                                                      int total = 0;
+
+                                                      if (splitResult.get("total") != null) {
+                                                          total = Integer.parseInt(splitResult.get("total").asString());
+                                                      }
+                                                      AutoBean<NotificationList> bean =
+                                                              AutoBeanCodex.decode(factory,
+                                                                                   NotificationList.class,
+                                                                                   result);
+
+                                                      Splittable sp = AutoBeanCodex.encode(bean);
+
+                                                      GWT.log("splittables ==>" + sp.getPayload());
+                                                      if (callback != null) {
+                                                          callback.onFetchNotifications(sp, total);
+                                                      }
+                                                  }
+                                              });
+    }
+
 }

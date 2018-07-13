@@ -5,13 +5,13 @@
  **/
 import React from "react";
 import PropTypes from "prop-types";
-import {withStyles} from "@material-ui/core/styles";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import Tooltip from '@material-ui/core/Tooltip';
+import Tooltip from "@material-ui/core/Tooltip";
+import Color from "../CyVersePalette";
 
 class EnhancedTableHead extends React.Component {
     createSortHandler = property => event => {
@@ -24,11 +24,13 @@ class EnhancedTableHead extends React.Component {
         return (
             <TableHead>
                 <TableRow>
-                    <TableCell padding="checkbox">
+                    <TableCell padding="checkbox"
+                               style={{backgroundColor: Color.lightGray, position: "sticky", top: 0}}>
                         <Checkbox
                             indeterminate={numSelected > 0 && numSelected < rowCount}
                             checked={numSelected === rowCount}
                             onChange={onSelectAllClick}
+                            style={{backgroundColor: Color.lightGray, position: "sticky", top: 0}}
                         />
                     </TableCell>
                     {columnData.map(column => {
@@ -38,6 +40,7 @@ class EnhancedTableHead extends React.Component {
                                 numeric={column.numeric}
                                 padding={column.disablePadding ? 'none' : 'default'}
                                 sortDirection={orderBy === column.name ? order : false}
+                                style={{backgroundColor: Color.lightGray, position: "sticky", top: 0}}
                             >
                                 <Tooltip
                                     title="Sort"

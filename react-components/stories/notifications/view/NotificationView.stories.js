@@ -401,8 +401,14 @@ class NotificationViewTest extends Component {
                 "deleted": false
             }]
         };
+        const presenter = {
+            getNotifications: (limit, offset, resultCallback, errorCallback) => {
+                resultCallback(notifications, 10)
+            },
+
+        };
         return (
-            <NotificationView data={notifications}/>
+            <NotificationView presenter={presenter} />
         );
     }
 }

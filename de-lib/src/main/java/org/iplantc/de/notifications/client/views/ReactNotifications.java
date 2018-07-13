@@ -1,5 +1,7 @@
 package org.iplantc.de.notifications.client.views;
 
+import gwt.react.client.components.ReactClass;
+import gwt.react.client.proptypes.BaseProps;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;

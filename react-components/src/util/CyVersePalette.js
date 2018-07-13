@@ -8,5 +8,6 @@ export default {
     lightBlue: '#99d9ea', // 153, 217, 234
     blue: '#0971ab', // 9, 113, 171
     darkBlue: '#004471', // 0, 68, 113
-    darkestBlue: '#142248' // 20, 34, 72
+    darkestBlue: '#142248', // 20, 34, 72
+    white: '#ffffff',
 }
