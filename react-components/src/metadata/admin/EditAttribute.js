@@ -96,6 +96,7 @@ class EditAttribute extends Component {
                     <Field name={`${field}.name`}
                            label="Name"
                            id="attrName"
+                           required={true}
                            autoFocus
                            margin="dense"
                            component={FormTextField}

@@ -58,6 +58,7 @@ class AttributeEnumEditDialog extends Component {
                     <Field name={`${field}.value`}
                            label="Value"
                            id="enumValue"
+                           required={true}
                            autoFocus
                            margin="dense"
                            component={FormTextField}

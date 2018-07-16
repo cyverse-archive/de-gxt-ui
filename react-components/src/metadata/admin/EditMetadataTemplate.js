@@ -78,6 +78,7 @@ class EditMetadataTemplate extends Component {
                     <Field name="name"
                            label="Name"
                            id="templateName"
+                           required={true}
                            autoFocus
                            margin="dense"
                            component={FormTextField}

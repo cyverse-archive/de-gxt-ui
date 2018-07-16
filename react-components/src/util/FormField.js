@@ -14,6 +14,7 @@ import TextField from "@material-ui/core/TextField";
 const FormTextField = ({
     input,
     label,
+    required,
     meta: {touched, error},
     ...custom
 }) => (
@@ -21,6 +22,7 @@ const FormTextField = ({
         label={label}
         error={touched && !!error}
         helperText={touched && error}
+        required={required}
         fullWidth
         {...input}
         {...custom}
