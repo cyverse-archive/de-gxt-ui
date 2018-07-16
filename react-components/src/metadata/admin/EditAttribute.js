@@ -5,15 +5,17 @@ import React, { Component, Fragment } from "react";
 import { Field, FieldArray, FormSection } from "redux-form";
 import { injectIntl } from "react-intl";
 
+import build from "../../util/DebugIDUtil";
+import withI18N, { getMessage, formatMessage } from "../../util/I18NWrapper";
+import intlData from "../messages";
+import styles from "../style";
+import ids from "./ids";
+
 import {
     FormCheckbox,
     FormSelectField,
     FormTextField,
 } from "../../util/FormField";
-import withI18N, { getMessage, formatMessage } from "../../util/I18NWrapper";
-
-import intlData from "../messages";
-import styles from "../style";
 import AttributeEnumEditGrid from "./AttributeEnumEditGrid";
 import OntologyLookupServiceSettings from "./OntologyLookupServiceSettings";
 import SlideUpTransition from "./SlideUpTransition";
@@ -74,6 +76,9 @@ class EditAttribute extends Component {
         const { name, type, attributes } = attribute;
         const { editingAttrIndex } = this.state;
 
+        const formID = build(ids.METADATA_TEMPLATE_FORM, field, ids.DIALOG);
+        const dialogTitleID = build(formID, ids.TITLE);
+
         return (
             <Dialog
                 open={open}
@@ -81,15 +86,19 @@ class EditAttribute extends Component {
                 fullScreen
                 disableBackdropClick
                 disableEscapeKeyDown
-                aria-labelledby="form-dialog-title"
+                aria-labelledby={dialogTitleID}
                 TransitionComponent={SlideUpTransition}
             >
                 <AppBar className={classes.appBar}>
                     <Toolbar>
-                        <IconButton color="inherit" onClick={this.props.closeAttrDialog} aria-label={formatMessage(intl, "back")}>
+                        <IconButton id={build(formID, ids.BUTTONS.CLOSE)}
+                                    aria-label={formatMessage(intl, "back")}
+                                    onClick={this.props.closeAttrDialog}
+                                    color="inherit"
+                        >
                             <ArrowBack />
                         </IconButton>
-                        <Typography variant="title" color="inherit" className={classes.flex}>
+                        <Typography id={dialogTitleID} variant="title" color="inherit" className={classes.flex}>
                             {getMessage("dialogTitleEditAttributeFor", {values: { parentName }})}
                         </Typography>
                     </Toolbar>
@@ -98,7 +107,7 @@ class EditAttribute extends Component {
 
                     <Field name={`${field}.name`}
                            label={getMessage("attrNameLabel")}
-                           id="attrName"
+                           id={build(formID, ids.ATTR_NAME)}
                            required={true}
                            autoFocus
                            margin="dense"
@@ -106,13 +115,13 @@ class EditAttribute extends Component {
                     />
                     <Field name={`${field}.description`}
                            label={getMessage("description")}
-                           id="attrDescription"
+                           id={build(formID, ids.ATTR_DESCRIPTION)}
                            component={FormTextField}
                     />
 
                     <Field name={`${field}.type`}
                            label={getMessage("attrTypeLabel")}
-                           id="attrType"
+                           id={build(formID, ids.ATTR_TYPE)}
                            component={FormSelectField}
                            normalize={this.normalizeType}
                     >
@@ -121,7 +130,7 @@ class EditAttribute extends Component {
 
                     <Field name={`${field}.required`}
                            label={getMessage("attrRequiredLabel")}
-                           id="attrRequired"
+                           id={build(formID, ids.ATTR_REQUIRED)}
                            color="primary"
                            component={FormCheckbox}
                     />
@@ -130,12 +139,13 @@ class EditAttribute extends Component {
 
                     {type === "Enum" &&
                     <ExpansionPanel defaultExpanded>
-                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon id={build(formID, ids.BUTTONS.EXPAND, ids.ENUM_VALUES_GRID)} />}>
                             <Typography className={classes.heading}>{getMessage("enumValues")}</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
                             <FieldArray name={`${field}.values`}
                                         component={AttributeEnumEditGrid}
+                                        parentID={formID}
                                         change={change}
                             />
                         </ExpansionPanelDetails>
@@ -144,24 +154,26 @@ class EditAttribute extends Component {
 
                     {type === "OLS Ontology Term" &&
                     <ExpansionPanel defaultExpanded>
-                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon id={build(formID, ids.BUTTONS.EXPAND, ids.OLS_PARAMS_EDIT_DIALOG)} />}>
                             <Typography className={classes.heading}>{getMessage("olsQueryParams")}</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
                             <FormSection name={`${field}.settings`}
                                          component={OntologyLookupServiceSettings}
+                                         parentID={formID}
                             />
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
                     }
 
                     <ExpansionPanel defaultExpanded={attributes && attributes.length > 0}>
-                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon id={build(formID, ids.BUTTONS.EXPAND, ids.ATTR_GRID)} />}>
                             <Typography className={classes.heading}>{getMessage("attributes")}</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
                             <FieldArray name={`${field}.attributes`}
                                         component={TemplateAttributeList}
+                                        parentID={formID}
                                         onEditAttr={(index) => this.setState({editingAttrIndex: index})}
                             />
                         </ExpansionPanelDetails>

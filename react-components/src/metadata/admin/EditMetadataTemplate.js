@@ -5,12 +5,14 @@ import React, { Component } from "react";
 import { Field, FieldArray, reduxForm } from "redux-form";
 import { injectIntl } from "react-intl";
 
+import build from "../../util/DebugIDUtil";
 import withI18N, { getMessage, formatMessage } from "../../util/I18NWrapper";
-import { FormCheckbox, FormTextField } from "../../util/FormField";
 import withStoreProvider from "../../util/StoreProvider";
-
 import intlData from "../messages";
 import styles from "../style";
+import ids from "./ids";
+
+import { FormCheckbox, FormTextField } from "../../util/FormField";
 import FormDialogEditAttribute from "./EditAttribute";
 import SlideUpTransition from "./SlideUpTransition";
 import TemplateAttributeList from "./TemplateAttributeList";
@@ -57,24 +59,30 @@ class EditMetadataTemplate extends Component {
         } = this.props;
         const { editingAttrIndex } = this.state;
 
+        const dialogTitleID = build(ids.METADATA_TEMPLATE_FORM, ids.TITLE);
+
         return (
             <Dialog open={open}
                     onClose={closeTemplateInfoDialog}
                     fullScreen
                     disableBackdropClick
                     disableEscapeKeyDown
-                    aria-labelledby="form-dialog-title"
+                    aria-labelledby={dialogTitleID}
                     TransitionComponent={SlideUpTransition}
             >
                 <AppBar className={classes.appBar}>
                     <Toolbar>
-                        <IconButton color="inherit" onClick={closeTemplateInfoDialog} aria-label={formatMessage(intl, "close")}>
+                        <IconButton id={build(ids.METADATA_TEMPLATE_FORM, ids.BUTTONS.CLOSE)}
+                                    aria-label={formatMessage(intl, "close")}
+                                    onClick={closeTemplateInfoDialog}
+                                    color="inherit"
+                        >
                             <CloseIcon />
                         </IconButton>
-                        <Typography id="form-dialog-title" variant="title" color="inherit" className={classes.flex}>
+                        <Typography id={dialogTitleID} variant="title" color="inherit" className={classes.flex}>
                             {getMessage("dialogTitleEditMetadataTemplate")}
                         </Typography>
-                        <Button id="metadata-template-save"
+                        <Button id={build(ids.METADATA_TEMPLATE_FORM, ids.BUTTONS.SAVE)}
                                 disabled={pristine || submitting || error}
                                 onClick={handleSubmit(this.onSaveTemplate)}
                                 color="inherit"
@@ -87,7 +95,7 @@ class EditMetadataTemplate extends Component {
                 <DialogContent>
                     <Field name="name"
                            label={getMessage("templateNameLabel")}
-                           id="templateName"
+                           id={build(ids.METADATA_TEMPLATE_FORM, ids.TEMPLATE_NAME)}
                            required={true}
                            autoFocus
                            margin="dense"
@@ -95,13 +103,13 @@ class EditMetadataTemplate extends Component {
                     />
                     <Field name="description"
                            label={getMessage("description")}
-                           id="templateDescription"
+                           id={build(ids.METADATA_TEMPLATE_FORM, ids.TEMPLATE_DESCRIPTION)}
                            component={FormTextField}
                     />
 
                     <Field name="deleted"
                            label={getMessage("markAsDeleted")}
-                           id="templateDeleted"
+                           id={build(ids.METADATA_TEMPLATE_FORM, ids.CHECK_DELETED)}
                            color="primary"
                            component={FormCheckbox}
                     />
@@ -110,6 +118,7 @@ class EditMetadataTemplate extends Component {
 
                     <FieldArray name="attributes"
                                 component={TemplateAttributeList}
+                                parentID={ids.METADATA_TEMPLATE_FORM}
                                 onEditAttr={(index) => this.setState({editingAttrIndex: index})}
                     />
 
@@ -200,7 +209,7 @@ const validate = values => {
 export default withStoreProvider(
     reduxForm(
         {
-            form: 'adminMetadataTemplateForm',
+            form: ids.METADATA_TEMPLATE_FORM,
             enableReinitialize: true,
             validate,
         }

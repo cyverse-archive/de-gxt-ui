@@ -4,9 +4,11 @@
 import React from "react";
 import { injectIntl } from "react-intl";
 
+import build from "../../util/DebugIDUtil";
 import withI18N, { formatMessage } from "../../util/I18NWrapper";
 import intlData from "../messages";
 import { toolbarStyles } from "../style";
+import ids from "./ids";
 
 import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -23,6 +25,7 @@ let OrderedGridToolbar = props => {
         intl,
         title,
         error,
+        parentID,
         onAddItem,
         moveUp,
         moveDown,
@@ -38,6 +41,7 @@ let OrderedGridToolbar = props => {
                 <Button variant="fab"
                         mini
                         color="primary"
+                        id={build(parentID, ids.BUTTONS.ADD)}
                         aria-label={formatMessage(intl, "addRow")}
                         onClick={onAddItem}
                 >
@@ -45,16 +49,17 @@ let OrderedGridToolbar = props => {
                 </Button>
             </div>
             <div className={classes.title}>
-                <Typography variant="title" id="tableTitle">
+                <Typography variant="title" id={build(parentID, ids.TITLE)}>
                     {title}
                 </Typography>
-                <Typography variant="subheading" className={classes.errorSubTitle} id="tableErrorTitle">
+                <Typography variant="subheading" className={classes.errorSubTitle} id={build(parentID, ids.TITLE_ERR)}>
                     {error}
                 </Typography>
             </div>
             <div className={classes.spacer} />
             <div className={classes.actions}>
-                <Button variant="fab"
+                <Button id={build(parentID, ids.BUTTONS.MOVE_UP)}
+                        variant="fab"
                         mini
                         color="secondary"
                         aria-label={formatMessage(intl, "moveUp")}
@@ -66,7 +71,8 @@ let OrderedGridToolbar = props => {
                 </Button>
             </div>
             <div className={classes.actions}>
-                <Button variant="fab"
+                <Button id={build(parentID, ids.BUTTONS.MOVE_DOWN)}
+                        variant="fab"
                         mini
                         color="secondary"
                         aria-label={formatMessage(intl, "moveDown")}

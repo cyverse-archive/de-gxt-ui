@@ -5,10 +5,13 @@ import React, { Component } from "react";
 import { Field } from "redux-form";
 import { injectIntl } from "react-intl";
 
+import build from "../../util/DebugIDUtil";
 import withI18N, { getMessage, formatMessage } from "../../util/I18NWrapper";
-import { FormCheckboxTableCell } from "../../util/FormField";
 import intlData from "../messages";
 import styles from "../style";
+import ids from "./ids";
+
+import { FormCheckboxTableCell } from "../../util/FormField";
 import OrderedGridToolbar from "./OrderedGridToolbar";
 
 import IconButton from "@material-ui/core/IconButton";
@@ -135,13 +138,16 @@ class TemplateAttributeList extends Component {
     };
 
     render() {
-        const { classes, intl, fields, meta: { error } } = this.props;
+        const { parentID, classes, intl, fields, meta: { error } } = this.props;
         const { selected } = this.state;
+
+        const tableID = build(parentID, ids.ATTR_GRID);
 
         return (
             <div className={classes.attributeTableContainer}>
 
                 <OrderedGridToolbar title={getMessage("attributes")}
+                                    parentID={tableID}
                                     onAddItem={this.onAddAttribute}
                                     moveUp={this.moveUp}
                                     moveUpDisabled={selected <= 0}
@@ -150,7 +156,7 @@ class TemplateAttributeList extends Component {
                 />
 
                 <div className={classes.attributeTableWrapper}>
-                    <Table aria-labelledby="tableTitle">
+                    <Table aria-labelledby={build(tableID, ids.TITLE)}>
                         <TableBody>
                             {fields && fields.map((field, index) => {
                                 const isSelected = index === selected;
@@ -160,6 +166,8 @@ class TemplateAttributeList extends Component {
                                     type,
                                     attributes,
                                 } = fields.get(index);
+
+                                const rowID = build(ids.METADATA_TEMPLATE_FORM, field);
 
                                 return (
                                     <TableRow
@@ -177,10 +185,12 @@ class TemplateAttributeList extends Component {
                                         <TableCell padding="none">{type}</TableCell>
                                         <TableCell padding="none" numeric>{attributes ? attributes.length : 0}</TableCell>
                                         <Field name={`${field}.required`}
+                                               id={build(rowID, ids.ATTR_REQUIRED)}
                                                component={FormCheckboxTableCell}
                                         />
                                         <TableCell padding="none">
-                                            <IconButton aria-label={formatMessage(intl, "edit")}
+                                            <IconButton id={build(rowID, ids.BUTTONS.EDIT)}
+                                                        aria-label={formatMessage(intl, "edit")}
                                                         className={classes.button}
                                                         onClick={event => {
                                                             event.stopPropagation();
@@ -189,7 +199,8 @@ class TemplateAttributeList extends Component {
                                             >
                                                 <ContentEdit />
                                             </IconButton>
-                                            <IconButton aria-label={formatMessage(intl, "delete")}
+                                            <IconButton id={build(rowID, ids.BUTTONS.DELETE)}
+                                                        aria-label={formatMessage(intl, "delete")}
                                                         classes={{root: classes.deleteIcon}}
                                                         onClick={event => {
                                                             event.stopPropagation();

@@ -5,10 +5,13 @@ import React, { Component } from "react";
 import { Field } from "redux-form";
 import { injectIntl } from "react-intl";
 
-import { FormCheckbox, FormCheckboxTableCell, FormTextField } from "../../util/FormField";
+import build from "../../util/DebugIDUtil";
 import withI18N, { getMessage, formatMessage } from "../../util/I18NWrapper";
 import intlData from "../messages";
 import styles from "../style";
+import ids from "./ids";
+
+import { FormCheckbox, FormCheckboxTableCell, FormTextField } from "../../util/FormField";
 import OrderedGridToolbar from "./OrderedGridToolbar";
 
 import Button from "@material-ui/core/Button";
@@ -49,18 +52,21 @@ class AttributeEnumEditDialog extends Component {
     render() {
         const { open, intl, field, error, onClose } = this.props;
 
+        const dialogID = build(ids.METADATA_TEMPLATE_FORM, field, ids.DIALOG);
+        const dialogTitleID = build(dialogID, ids.TITLE);
+
         return (
             <Dialog
                 open={open}
                 disableBackdropClick
                 disableEscapeKeyDown
-                aria-labelledby="form-dialog-title"
+                aria-labelledby={dialogTitleID}
             >
-                <DialogTitle id="form-dialog-title">{getMessage("dialogTitleEditEnumValue")}</DialogTitle>
+                <DialogTitle id={dialogTitleID}>{getMessage("dialogTitleEditEnumValue")}</DialogTitle>
                 <DialogContent>
                     <Field name={`${field}.value`}
                            label={formatMessage(intl, "value")}
-                           id="enumValue"
+                           id={build(dialogID, ids.ENUM_VALUE)}
                            required={true}
                            autoFocus
                            margin="dense"
@@ -68,14 +74,18 @@ class AttributeEnumEditDialog extends Component {
                     />
                     <Field name={`${field}.is_default`}
                            label={formatMessage(intl, "enumDefaultLabel")}
-                           id="enumIsDefault"
+                           id={build(dialogID, ids.ENUM_VALUE_DEFAULT)}
                            color="primary"
                            component={FormCheckbox}
                            normalize={this.normalizeDefaultField}
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={onClose} disabled={!!error} color="primary">
+                    <Button id={build(dialogID, ids.BUTTONS.CLOSE)}
+                            color="primary"
+                            disabled={!!error}
+                            onClick={onClose}
+                    >
                         {getMessage("done")}
                     </Button>
                 </DialogActions>
@@ -158,14 +168,17 @@ class AttributeEnumEditGrid extends Component {
     };
 
     render() {
-        const { classes, intl, fields, change, meta: { error } } = this.props;
+        const { classes, intl, parentID, fields, change, meta: { error } } = this.props;
         const { selected, editingEnumIndex } = this.state;
+
+        const tableID = build(parentID, ids.ENUM_VALUES_GRID);
 
         return (
             <div className={classes.attributeTableContainer}>
 
                 <OrderedGridToolbar title={getMessage("enumValues")}
                                     error={error}
+                                    parentID={tableID}
                                     onAddItem={this.onAddEnum}
                                     moveUp={this.moveUp}
                                     moveUpDisabled={selected <= 0}
@@ -174,13 +187,15 @@ class AttributeEnumEditGrid extends Component {
                 />
 
                 <div className={classes.attributeTableWrapper}>
-                    <Table aria-labelledby="tableTitle">
+                    <Table aria-labelledby={build(tableID, ids.TITLE)}>
                         <TableBody>
                             {fields && fields.map((field, index) => {
                                 const isSelected = (index === selected);
                                 const {
                                     value,
                                 } = fields.get(index);
+
+                                const rowID = build(ids.METADATA_TEMPLATE_FORM, field);
 
                                 return (
                                     <TableRow
@@ -194,11 +209,13 @@ class AttributeEnumEditGrid extends Component {
                                             {value}
                                         </TableCell>
                                         <Field name={`${field}.is_default`}
+                                               id={build(rowID, ids.ENUM_VALUE_DEFAULT)}
                                                component={FormCheckboxTableCell}
                                                normalize={this.normalizeDefaultField}
                                         />
                                         <TableCell padding="none">
-                                            <IconButton aria-label={formatMessage(intl, "edit")}
+                                            <IconButton id={build(rowID, ids.BUTTONS.EDIT)}
+                                                        aria-label={formatMessage(intl, "edit")}
                                                         className={classes.button}
                                                         onClick={event => {
                                                             event.stopPropagation();
@@ -207,7 +224,8 @@ class AttributeEnumEditGrid extends Component {
                                             >
                                                 <ContentEdit />
                                             </IconButton>
-                                            <IconButton aria-label={formatMessage(intl, "delete")}
+                                            <IconButton id={build(rowID, ids.BUTTONS.DELETE)}
+                                                        aria-label={formatMessage(intl, "delete")}
                                                         classes={{root: classes.deleteIcon}}
                                                         onClick={event => {
                                                             event.stopPropagation();

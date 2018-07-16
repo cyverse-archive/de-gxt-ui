@@ -5,9 +5,13 @@ import React, { Component } from "react";
 import { Field } from "redux-form";
 import { injectIntl } from "react-intl";
 
+import build from "../../util/DebugIDUtil";
 import withI18N, { getMessage, formatMessage } from "../../util/I18NWrapper";
 import intlData from "../messages";
 import styles from "../style";
+import ids from "./ids";
+
+import { FormTextField } from "../../util/FormField";
 import OrderedGridToolbar from "./OrderedGridToolbar";
 
 import Button from "@material-ui/core/Button";
@@ -25,32 +29,37 @@ import { withStyles } from "@material-ui/core/styles";
 
 import ContentRemove from "@material-ui/icons/Delete";
 import ContentEdit from "@material-ui/icons/Edit";
-import { FormTextField } from "../../util/FormField";
-
 
 class StringEditorDialog extends Component {
     render() {
-        const { open, title, valueLabel, field, onClose } = this.props;
+        const { open, parentID, title, valueLabel, field, onClose } = this.props;
+
+        const fieldID = build(parentID, field);
+        const dialogID = build(fieldID, ids.DIALOG);
+        const dialogTitleID = build(dialogID, ids.TITLE);
 
         return (
             <Dialog
                 open={open}
                 disableBackdropClick
                 disableEscapeKeyDown
-                aria-labelledby="form-dialog-title"
+                aria-labelledby={dialogTitleID}
             >
-                <DialogTitle id="form-dialog-title">{title}</DialogTitle>
+                <DialogTitle id={dialogTitleID}>{title}</DialogTitle>
                 <DialogContent>
                     <Field name={field}
                            component={FormTextField}
-                           id="value"
+                           id={fieldID}
                            label={valueLabel || getMessage("value")}
                            margin="dense"
                            autoFocus
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={onClose} color="primary">
+                    <Button id={build(dialogID, ids.BUTTONS.CLOSE)}
+                            color="primary"
+                            onClick={onClose}
+                    >
                         {getMessage("done")}
                     </Button>
                 </DialogActions>
@@ -125,7 +134,7 @@ class StringListEditor extends Component {
     };
 
     render() {
-        const { classes, intl, title, helpLabel, columnLabel, fields } = this.props;
+        const { classes, intl, parentID, title, helpLabel, columnLabel, fields } = this.props;
         const { selected, editingIndex } = this.state;
 
         return (
@@ -135,6 +144,7 @@ class StringListEditor extends Component {
                 <Typography variant="subheading">{helpLabel}</Typography>
 
                 <OrderedGridToolbar title={columnLabel}
+                                    parentID={parentID}
                                     onAddItem={this.onAddValue}
                                     moveUp={this.moveUp}
                                     moveUpDisabled={selected <= 0}
@@ -143,11 +153,13 @@ class StringListEditor extends Component {
                 />
 
                 <div className={classes.attributeTableWrapper}>
-                    <Table aria-labelledby="tableTitle">
+                    <Table aria-labelledby={build(parentID, ids.TITLE)}>
                         <TableBody>
                             {fields && fields.map((field, index) => {
                                 const isSelected = (index === selected);
                                 const value = fields.get(index);
+
+                                const rowID = build(parentID, field);
 
                                 return (
                                     <TableRow
@@ -161,7 +173,8 @@ class StringListEditor extends Component {
                                             {value}
                                         </TableCell>
                                         <TableCell padding="none">
-                                            <IconButton aria-label={formatMessage(intl, "edit")}
+                                            <IconButton id={build(rowID, ids.BUTTONS.EDIT)}
+                                                        aria-label={formatMessage(intl, "edit")}
                                                         className={classes.button}
                                                         onClick={event => {
                                                             event.stopPropagation();
@@ -170,7 +183,8 @@ class StringListEditor extends Component {
                                             >
                                                 <ContentEdit />
                                             </IconButton>
-                                            <IconButton aria-label={formatMessage(intl, "delete")}
+                                            <IconButton id={build(rowID, ids.BUTTONS.DELETE)}
+                                                        aria-label={formatMessage(intl, "delete")}
                                                         classes={{root: classes.deleteIcon}}
                                                         onClick={event => {
                                                             event.stopPropagation();
@@ -190,6 +204,7 @@ class StringListEditor extends Component {
                 {fields && fields.map((field, index) =>
                     <StringEditorDialog key={field}
                                         open={editingIndex === index}
+                                        parentID={parentID}
                                         field={field}
                                         title={title}
                                         valueLabel={columnLabel}
