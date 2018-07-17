@@ -25,12 +25,12 @@ class EnhancedTableHead extends React.Component {
             <TableHead>
                 <TableRow>
                     <TableCell padding="checkbox"
-                               style={{backgroundColor: Color.lightGray, position: "sticky", top: 0}}>
+                               style={{backgroundColor: Color.blue, position: "sticky", top: 0}}>
                         <Checkbox
                             indeterminate={numSelected > 0 && numSelected < rowCount}
                             checked={numSelected === rowCount}
                             onChange={onSelectAllClick}
-                            style={{backgroundColor: Color.lightGray, position: "sticky", top: 0}}
+                            style={{backgroundColor: Color.blue, position: "sticky", top: 0}}
                         />
                     </TableCell>
                     {columnData.map(column => {
@@ -40,7 +40,7 @@ class EnhancedTableHead extends React.Component {
                                 numeric={column.numeric}
                                 padding={column.disablePadding ? 'none' : 'default'}
                                 sortDirection={orderBy === column.name ? order : false}
-                                style={{backgroundColor: Color.lightGray, position: "sticky", top: 0}}
+                                style={{backgroundColor: Color.blue, position: "sticky", top: 0, color: 'black',}}
                             >
                                 <Tooltip
                                     title="Sort"
