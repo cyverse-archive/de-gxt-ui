@@ -5,14 +5,16 @@ import React, { Component } from "react";
 import { FieldArray, reduxForm } from "redux-form";
 import { injectIntl } from "react-intl";
 
+import build from "../util/DebugIDUtil";
 import withI18N, { getMessage, formatMessage } from "../util/I18NWrapper";
 import withStoreProvider from "../util/StoreProvider";
+import ids from "./ids";
+import intlData from "./messages";
+import styles from "./style";
 
 import FormDialogEditAVU from "./EditAVU";
 import MetadataList from "./MetadataList";
 import SlideUpTransition from "./SlideUpTransition";
-import intlData from "./messages";
-import styles from "./style";
 
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
@@ -50,7 +52,10 @@ class EditMetadata extends Component {
             // from redux-form
             handleSubmit, pristine, submitting, error, change,
         } = this.props;
+
         const { editingAttrIndex } = this.state;
+
+        const dialogTitleID = build(ids.EDIT_METADATA_FORM, ids.TITLE);
 
         return (
             <Dialog open={open}
@@ -58,18 +63,22 @@ class EditMetadata extends Component {
                     fullScreen
                     disableBackdropClick
                     disableEscapeKeyDown
-                    aria-labelledby="form-dialog-title"
+                    aria-labelledby={dialogTitleID}
                     TransitionComponent={SlideUpTransition}
             >
                 <AppBar className={classes.appBar}>
                     <Toolbar>
-                        <IconButton color="inherit" onClick={closeEditMetadataDialog} aria-label={formatMessage(intl, "close")}>
+                        <IconButton id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.CLOSE)}
+                                    onClick={closeEditMetadataDialog}
+                                    aria-label={formatMessage(intl, "close")}
+                                    color="inherit"
+                        >
                             <CloseIcon />
                         </IconButton>
-                        <Typography id="form-dialog-title" variant="title" color="inherit" className={classes.flex}>
+                        <Typography id={dialogTitleID} variant="title" color="inherit" className={classes.flex}>
                             {getMessage("dialogTitleEditMetadata")}
                         </Typography>
-                        <Button id="metadata-template-save"
+                        <Button id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.SAVE)}
                                 disabled={pristine || submitting || error}
                                 onClick={handleSubmit(this.onSaveMetadata)}
                                 color="inherit"
@@ -84,6 +93,7 @@ class EditMetadata extends Component {
                                 component={MetadataList}
                                 field="avus"
                                 change={change}
+                                parentID={ids.EDIT_METADATA_FORM}
                                 onEditAVU={(index) => this.setState({editingAttrIndex: index})}
                     />
 
@@ -148,7 +158,7 @@ const validate = values => {
 export default withStoreProvider(
     reduxForm(
         {
-            form: "EditMetadataForm",
+            form: ids.EDIT_METADATA_FORM,
             enableReinitialize: true,
             validate,
         }

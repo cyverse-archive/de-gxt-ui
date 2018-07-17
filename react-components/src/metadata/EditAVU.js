@@ -5,13 +5,15 @@ import React, { Component, Fragment } from "react";
 import { Field, FieldArray } from "redux-form";
 import { injectIntl } from "react-intl";
 
+import build from "../util/DebugIDUtil";
 import withI18N, { getMessage, formatMessage } from "../util/I18NWrapper";
-import { FormTextField } from "../util/FormField";
-
-import MetadataList from "./MetadataList";
-import SlideUpTransition from "./SlideUpTransition";
+import ids from "./ids";
 import intlData from "./messages";
 import styles from "./style";
+
+import { FormTextField } from "../util/FormField";
+import MetadataList from "./MetadataList";
+import SlideUpTransition from "./SlideUpTransition";
 
 import AppBar from "@material-ui/core/AppBar";
 import Dialog from "@material-ui/core/Dialog";
@@ -43,6 +45,9 @@ class EditAVU extends Component {
         const { attr, avus } = avu;
         const { editingAttrIndex } = this.state;
 
+        const formID = build(ids.EDIT_METADATA_FORM, field, ids.DIALOG);
+        const dialogTitleID = build(formID, ids.TITLE);
+
         const title = parentName ?
             getMessage("dialogTitleEditAVUFor", {values: { parentName }}) :
             getMessage("dialogTitleEditAVU");
@@ -54,7 +59,7 @@ class EditAVU extends Component {
                 fullScreen
                 disableBackdropClick
                 disableEscapeKeyDown
-                aria-labelledby="form-dialog-title"
+                aria-labelledby={dialogTitleID}
                 TransitionComponent={SlideUpTransition}
             >
                 <AppBar className={classes.appBar}>
@@ -64,14 +69,15 @@ class EditAVU extends Component {
                         enterDelay={200}
                     >
                         <Toolbar>
-                            <IconButton color="inherit"
+                            <IconButton id={build(formID, ids.BUTTONS.CLOSE)}
+                                        color="inherit"
                                         aria-label={formatMessage(intl, "close")}
                                         disabled={!!error}
                                         onClick={this.props.closeAttrDialog}
                             >
                                 <ArrowBack />
                             </IconButton>
-                            <Typography variant="title" color="inherit" className={classes.flex}>
+                            <Typography id={dialogTitleID} variant="title" color="inherit" className={classes.flex}>
                                 {title}
                             </Typography>
                         </Toolbar>
@@ -81,7 +87,7 @@ class EditAVU extends Component {
 
                     <Field name={`${field}.attr`}
                            label={getMessage("attribute")}
-                           id="attribute"
+                           id={build(formID, ids.AVU_ATTR)}
                            required={true}
                            autoFocus
                            margin="dense"
@@ -89,24 +95,25 @@ class EditAVU extends Component {
                     />
                     <Field name={`${field}.value`}
                            label={getMessage("value")}
-                           id="value"
+                           id={build(formID, ids.AVU_VALUE)}
                            component={FormTextField}
                     />
                     <Field name={`${field}.unit`}
                            label={getMessage("metadataUnitLabel")}
-                           id="unit"
+                           id={build(formID, ids.AVU_UNIT)}
                            component={FormTextField}
                     />
 
                     <Divider />
 
                     <ExpansionPanel defaultExpanded={avus && avus.length > 0}>
-                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon id={build(formID, ids.BUTTONS.EXPAND, ids.AVU_GRID)} />}>
                             <Typography className={classes.heading}>{getMessage("metadataChildrenLabel")}</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
                             <FieldArray name={`${field}.avus`}
                                         component={MetadataList}
+                                        parentID={formID}
                                         onEditAVU={(index) => this.setState({editingAttrIndex: index})}
                             />
                         </ExpansionPanelDetails>

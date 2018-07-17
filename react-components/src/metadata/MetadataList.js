@@ -4,7 +4,9 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 
+import build from "../util/DebugIDUtil";
 import withI18N, { getMessage, formatMessage } from "../util/I18NWrapper";
+import ids from "./ids";
 import intlData from "./messages";
 import styles from "./style";
 
@@ -26,14 +28,15 @@ import ContentRemove from "@material-ui/icons/Delete";
 import ContentEdit from "@material-ui/icons/Edit";
 
 let MetadataGridToolbar = props => {
-    const { classes, intl, onAddAVU } = props;
+    const { parentID, classes, intl, onAddAVU } = props;
 
     return (
         <Toolbar
             className={classes.root}
         >
             <div className={classes.actions}>
-                <Button variant="fab"
+                <Button id={build(parentID, ids.BUTTONS.ADD)}
+                        variant="fab"
                         mini
                         color="primary"
                         aria-label={formatMessage(intl, "addMetadata")}
@@ -43,7 +46,7 @@ let MetadataGridToolbar = props => {
                 </Button>
             </div>
             <div className={classes.title}>
-                <Typography variant="title" id="tableTitle">
+                <Typography id={build(parentID, ids.TITLE)} variant="title">
                     {getMessage("avus")}
                 </Typography>
             </div>
@@ -71,7 +74,7 @@ class MetadataGridHeader extends React.Component {
     };
 
     render() {
-        const { classes, order, orderBy } = this.props;
+        const { parentID, classes, order, orderBy } = this.props;
 
         return (
             <TableHead className={classes.tableHead}>
@@ -92,6 +95,7 @@ class MetadataGridHeader extends React.Component {
                                     enterDelay={300}
                                 >
                                     <TableSortLabel
+                                        id={build(parentID, ids.COL_HEADER, column.id)}
                                         active={orderBy === column.id}
                                         direction={order}
                                         onClick={this.createSortHandler(column.id)}
@@ -173,16 +177,18 @@ class MetadataList extends Component {
     };
 
     render() {
-        const { classes, intl, fields } = this.props;
+        const { parentID, classes, intl, fields } = this.props;
         const { order, orderBy } = this.state;
+
+        const tableID = build(parentID, ids.AVU_GRID);
 
         return (
             <div className={classes.metadataTemplateContainer}>
 
-                <MetadataGridToolbar onAddAVU={this.onAddAVU} />
+                <MetadataGridToolbar parentID={tableID} onAddAVU={this.onAddAVU} />
 
                 <div className={classes.tableWrapper}>
-                    <Table aria-labelledby="tableTitle">
+                    <Table aria-labelledby={build(tableID, ids.TITLE)}>
                         <TableBody>
                             {fields && fields.map((field, index) => {
                                 const {
@@ -191,6 +197,8 @@ class MetadataList extends Component {
                                     unit,
                                     avus,
                                 } = fields.get(index);
+
+                                const rowID = build(ids.EDIT_METADATA_FORM, field);
 
                                 return (
                                     <TableRow
@@ -205,7 +213,8 @@ class MetadataList extends Component {
                                         <TableCell>{unit}</TableCell>
                                         <TableCell padding="none" numeric>{avus ? avus.length : 0}</TableCell>
                                         <TableCell padding="none">
-                                            <IconButton aria-label={formatMessage(intl, "edit")}
+                                            <IconButton id={build(rowID, ids.BUTTONS.EDIT)}
+                                                        aria-label={formatMessage(intl, "edit")}
                                                         className={classes.button}
                                                         onClick={event => {
                                                             event.stopPropagation();
@@ -214,7 +223,8 @@ class MetadataList extends Component {
                                             >
                                                 <ContentEdit />
                                             </IconButton>
-                                            <IconButton aria-label={formatMessage(intl, "delete")}
+                                            <IconButton id={build(rowID, ids.BUTTONS.DELETE)}
+                                                        aria-label={formatMessage(intl, "delete")}
                                                         classes={{root: classes.deleteIcon}}
                                                         onClick={event => {
                                                             event.stopPropagation();
@@ -229,6 +239,7 @@ class MetadataList extends Component {
                             })}
                         </TableBody>
                         <MetadataGridHeader
+                            parentID={tableID}
                             order={order}
                             orderBy={orderBy}
                             onRequestSort={this.handleRequestSort}
