@@ -7,7 +7,7 @@ import { injectIntl } from "react-intl";
 import build from "../../util/DebugIDUtil";
 import withI18N, { formatMessage } from "../../util/I18NWrapper";
 import intlData from "../messages";
-import { toolbarStyles } from "../style";
+import styles from "../style";
 import ids from "./ids";
 
 import Button from "@material-ui/core/Button";
@@ -35,7 +35,7 @@ let OrderedGridToolbar = props => {
 
     return (
         <Toolbar
-            className={classes.root}
+            className={classes.toolbar}
         >
             <div className={classes.actions}>
                 <Button variant="fab"
@@ -87,4 +87,4 @@ let OrderedGridToolbar = props => {
     );
 };
 
-export default withStyles(toolbarStyles)(withI18N(injectIntl(OrderedGridToolbar), intlData));
+export default withStyles(styles)(withI18N(injectIntl(OrderedGridToolbar), intlData));

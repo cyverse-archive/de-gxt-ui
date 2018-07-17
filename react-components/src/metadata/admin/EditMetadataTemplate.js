@@ -13,9 +13,8 @@ import styles from "../style";
 import ids from "./ids";
 
 import { FormCheckbox, FormTextField } from "../../util/FormField";
-import FormDialogEditAttribute from "./EditAttribute";
+import EditAttributeFormList from "./EditAttributeFormList";
 import SlideUpTransition from "./SlideUpTransition";
-import TemplateAttributeList from "./TemplateAttributeList";
 
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
@@ -30,13 +29,6 @@ import { withStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 
 class EditMetadataTemplate extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            editingAttrIndex: -1,
-        };
-    }
 
     onSaveTemplate = ({ name, description, deleted, attributes }) => {
         this.props.presenter.onSaveTemplate({
@@ -55,9 +47,8 @@ class EditMetadataTemplate extends Component {
             open,
             presenter: { closeTemplateInfoDialog },
             // from redux-form
-            handleSubmit, pristine, submitting, error, change, initialValues,
+            handleSubmit, pristine, submitting, error, change,
         } = this.props;
-        const { editingAttrIndex } = this.state;
 
         const dialogTitleID = build(ids.METADATA_TEMPLATE_FORM, ids.TITLE);
 
@@ -117,17 +108,8 @@ class EditMetadataTemplate extends Component {
                     <Divider />
 
                     <FieldArray name="attributes"
-                                component={TemplateAttributeList}
-                                parentID={ids.METADATA_TEMPLATE_FORM}
-                                onEditAttr={(index) => this.setState({editingAttrIndex: index})}
-                    />
-
-                    <FieldArray name="attributes"
-                                component={FormDialogEditAttribute}
+                                component={EditAttributeFormList}
                                 change={change}
-                                editingAttrIndex={editingAttrIndex}
-                                parentName={initialValues.name}
-                                closeAttrDialog={() => this.setState({editingAttrIndex: -1})}
                     />
                 </DialogContent>
             </Dialog>

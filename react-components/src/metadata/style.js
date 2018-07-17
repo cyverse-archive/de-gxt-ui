@@ -23,10 +23,7 @@ const styles = theme => ({
             backgroundColor: theme.palette.error.dark,
         },
     },
-});
-
-const toolbarStyles = theme => ({
-    root: {
+    toolbar: {
         paddingLeft: theme.spacing.unit,
         paddingRight: theme.spacing.unit,
     },
@@ -46,4 +43,3 @@ const toolbarStyles = theme => ({
 });
 
 export default styles;
-export { toolbarStyles };

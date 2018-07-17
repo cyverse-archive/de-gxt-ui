@@ -10,7 +10,6 @@ export default {
         attrTypeLabel: "Type",
         back: "Back",
         close: "Close",
-        dialogTitleEditAttributeFor: "Edit Attribute for { parentName }",
         dialogTitleEditEnumValue: "Edit Enum Value",
         dialogTitleEditMetadataTemplate: "Edit Metadata Template",
         default: "Default",
