@@ -1,3 +1,4 @@
+import Color from "../util/CyVersePalette";
 export default (theme) => ({
     table: {
         overflow: "auto",
@@ -26,5 +27,14 @@ export default (theme) => ({
         height: "100%",
         marginTop: 0,
         overflow: "auto",
+    },
+    toolbarButton: {
+        marginRight: 20,
+        textTransform: 'none',
+    },
+    toolbar: {
+        backgroundColor: Color.lightGray,
+        borderBottom: 'solid 2px',
+        borderColor: Color.gray,
     },
 });

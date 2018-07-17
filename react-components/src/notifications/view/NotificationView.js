@@ -4,10 +4,8 @@
  *
  **/
 import React, { Component } from "react";
-import TablePaginationActions from "../../util/table/TablePaginationActions";
-import injectSheet from "react-jss";
 import exStyles from "../style";
-import Button from "@material-ui/core/Button";
+import { withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -15,28 +13,46 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import moment from "moment";
-import Toolbar from "@material-ui/core/Toolbar";
-import ToolbarGroup from "@material-ui/core/Toolbar";
-import ToolbarSeparator from "@material-ui/core/Toolbar";
+import NotificationToolbar from "./NotificationToolbar";
 import constants from "../../constants";
 import intlData from "../messages";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
 import Checkbox from "@material-ui/core/Checkbox";
 import EnhancedTableHead from "../../util/table/EnhancedTableHead";
 import Color from "../../util/CyVersePalette";
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import RefreshIcon from "@material-ui/icons/Refresh";
-import DeleteIcon from "@material-ui/icons/Delete";
-import CheckIcon from "@material-ui/icons/Check";
+
 
 const columnData = [
     {name: "Category", numeric: false},
     {name: "Message", numeric: false},
     {name: "Date", numeric: false},
 ];
+
+
+function Message(props) {
+    const {message, seen, presenter} = props;
+    if (seen) {
+        return (
+            <TableCell
+                style={{textDecoration: 'underline', cursor: 'pointer',}}>
+                <div
+                    onClick={(event) => presenter.onMessageClicked(message)}> {message.text}</div>
+            </TableCell>
+        );
+    } else {
+        return (
+            <TableCell
+                style={{
+                    textDecoration: 'underline',
+                    cursor: 'pointer',
+                    backgroundColor: Color.lightBlue
+                }}>
+                <div
+                    onClick={(event) => presenter.onMessageClicked(message)}> {message.text}</div>
+            </TableCell>
+        );
+    }
+}
 
 class NotificationView extends Component {
     constructor(props) {
@@ -45,18 +61,30 @@ class NotificationView extends Component {
             data: [],
             loading: true,
             total: 0,
+            offset: 0,
             page: 0,
-            rowsPerPage: 100,
+            rowsPerPage: 5,
             selected: [],
             order: 'asc',
             orderBy: 'Date',
             filter: 'All',
-        }
+        };
+        this.fetchNotifications = this.fetchNotifications.bind(this);
+        this.handleRefreshClicked = this.handleRefreshClicked.bind(this);
+        this.handleMarkSeenClick = this.handleMarkSeenClick.bind(this);
+        this.handleDeleteClick = this.handleDeleteClick.bind(this);
+        this.shouldDisableMarkSeen = this.shouldDisableMarkSeen.bind(this);
+        this.findNotification = this.findNotification.bind(this);
     }
 
     componentDidMount() {
-        const {rowsPerPage, page}  = this.state;
-        this.props.presenter.getNotifications(rowsPerPage, page, (notifications, total) => {
+        this.fetchNotifications();
+    }
+
+    fetchNotifications() {
+        const {rowsPerPage, offset}  = this.state;
+        this.setState({loading: true});
+        this.props.presenter.getNotifications(rowsPerPage, offset, (notifications, total) => {
                 this.setState({
                     loading: false,
                     data: notifications.messages,
@@ -70,8 +98,41 @@ class NotificationView extends Component {
         )
     }
 
+    handleRefreshClicked() {
+        this.fetchNotifications();
+    }
+
+    handleMarkSeenClick() {
+        this.setState({loading: true});
+        this.props.presenter.onNotificationToolbarMarkAsSeenClicked(this.state.selected, () => {
+            this.state.selected.map(id => this.findNotification(id).seen = true);
+            this.setState({loading: false});
+        }, (errorCode, errorMessage) => {
+            this.setState({
+                loading: false,
+            });
+        });
+    }
+
+    handleDeleteClick() {
+        const {rowsPerPage}  = this.state;
+        this.setState({loading: true});
+        this.props.presenter.deleteNotifications(this.state.selected, rowsPerPage, (notifications, total) => {
+            this.setState({
+                loading: false,
+                data: notifications.messages,
+                total: total,
+            })
+        }, (errorCode, errorMessage) => {
+            this.setState({
+                loading: false,
+            });
+        });
+    }
+
     handleChangePage = (event, page) => {
-        this.setState({page});
+        const {rowsPerPage} = this.state;
+        this.setState({page: page, offset: rowsPerPage * page}, () => this.fetchNotifications());
     };
 
     handleFilterChange = event => {
@@ -81,10 +142,10 @@ class NotificationView extends Component {
 
 
     handleChangeRowsPerPage = event => {
-        this.setState({rowsPerPage: event.target.value});
+        this.setState({rowsPerPage: event.target.value}, () => this.fetchNotifications());
     };
 
-    handleClick = (event, id) => {
+    handleRowClick = (event, id) => {
         const {selected} = this.state;
         const selectedIndex = selected.indexOf(id);
         let newSelected = [];
@@ -104,6 +165,23 @@ class NotificationView extends Component {
 
         this.setState({selected: newSelected});
     };
+
+    shouldDisableMarkSeen() {
+        let notifs = [];
+        this.state.selected.map(id => {
+            let n = this.findNotification(id);
+            if (n && (n.seen === false || n.seen == null)) {
+                notifs.push(n);
+            }
+        });
+        return notifs.length === 0;
+    }
+
+    findNotification(id) {
+        return this.state.data.find(function (n) {
+            return n.message.id === id;
+        });
+    }
 
     handleSelectAllClick = (event, checked) => {
         if (checked) {
@@ -135,49 +213,13 @@ class NotificationView extends Component {
                 {this.state.loading &&
                 <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
                 }
-                <Toolbar style={{
-                    backgroundColor: Color.lightGray,
-                    borderBottom: 'solid 2px',
-                    borderColor: Color.gray,
-                }}>
-                    <ToolbarGroup>
-                        <form autoComplete="off">
-                            <FormControl>
-                                <InputLabel htmlFor="filer-simple">Filter</InputLabel>
-                                <Select
-                                    value={this.state.filter}
-                                    onChange={this.handleFilterChange}
-                                    inputProps={{
-                                        name: 'filter',
-                                        id: 'filter-simple',
-                                    }}>
-                                    <MenuItem value="New">{getMessage("new")}</MenuItem>
-                                    <MenuItem value="All">{getMessage("all")}</MenuItem>
-                                    <MenuItem
-                                        value="Analysis">{getMessage("analysis")}</MenuItem>
-                                    <MenuItem value="Data">{getMessage("data")}</MenuItem>
-                                    <MenuItem value="Tool Request">{getMessage("tool")}</MenuItem>
-                                    <MenuItem value="Apps">{getMessage("apps")}</MenuItem>
-                                    <MenuItem
-                                        value="Permanent ID Request">{getMessage("permId")}</MenuItem>
-                                    <MenuItem value="Team">{getMessage("team")}</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </form>
-                        <ToolbarSeparator/>
-                        <Button variant="raised" size="small"
-                                style={{marginRight: 20}}><RefreshIcon />{getMessage("refresh")}
-                        </Button>
-                        <Button variant="raised" size="small"
-                                style={{marginRight: 20}}><CheckIcon />{getMessage("markSeen")}</Button>
-                        <ToolbarSeparator/>
-                        <Button variant="raised" size="small"
-                                style={{marginRight: 20}}><DeleteIcon />{getMessage("delete")}
-                        </Button>
-                        
-                    </ToolbarGroup>
-                </Toolbar>
-
+                <NotificationToolbar filter={this.state.filter}
+                                     onFilterChange={this.handleFilterChange}
+                                     onRefreshClicked={this.handleRefreshClicked}
+                                     markSeenDisabled={this.state.selected.length === 0 || this.shouldDisableMarkSeen()}
+                                     deleteDisabled={this.state.selected.length === 0}
+                                     onMarkSeenClicked={this.handleMarkSeenClick}
+                                     onDeleteClicked={this.handleDeleteClick}/>
                 <div className={classes.table}>
                     <Table>
                         <EnhancedTableHead
@@ -190,10 +232,10 @@ class NotificationView extends Component {
                             columnData={columnData}
                         />
                         <TableBody>
-                            {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(n => {
+                            {data.map(n => {
                                 const isSelected = this.isSelected(n.message.id);
                                 return (
-                                    <TableRow onClick={event => this.handleClick(event, n.message.id)}
+                                    <TableRow onClick={event => this.handleRowClick(event, n.message.id)}
                                               role="checkbox"
                                               aria-checked={isSelected}
                                               tabIndex={-1}
@@ -204,7 +246,8 @@ class NotificationView extends Component {
                                             <Checkbox checked={isSelected}/>
                                         </TableCell>
                                         <TableCell>{n.type}</TableCell>
-                                        <TableCell>{(n.message.text)}</TableCell>
+                                        <Message message={n.message} seen={n.seen}
+                                                 presenter={this.props.presenter}/>
                                         <TableCell>{(n.message.timestamp) ? moment(n.message.timestamp, "x").format(
                                                 constants.DATE_FORMAT) :
                                             getMessage("emptyValue")} </TableCell>
@@ -214,21 +257,19 @@ class NotificationView extends Component {
                         </TableBody>
                     </Table>
                 </div>
-
                 <TablePagination
                     component="div"
-                    colSpan={3}
                     count={total}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={this.handleChangePage}
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                    ActionsComponent={TablePaginationActions}
-                    rowsPerPageOptions={[100, 500, 1000]}
+                    rowsPerPageOptions={[5, 500, 1000]}
+                    style={{float: 'left'}}
                 />
             </div>
         )
     }
 
 }
-export default injectSheet(exStyles)(withI18N(NotificationView, intlData));
+export default withStyles(exStyles)(withI18N(NotificationView, intlData));

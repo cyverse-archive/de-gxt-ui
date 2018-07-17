@@ -1,7 +1,7 @@
 const intlData = {
     "locales": "en-US",
     "messages": {
-        "delete" : "delete",
+        "delete" : "Delete",
         "markSeen" : "Mark as Seen",
         "refresh" : "Refresh",
         "filter": "Filter",

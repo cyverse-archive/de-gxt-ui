@@ -1,16 +1,13 @@
 package org.iplantc.de.notifications.client.presenter;
 
 import org.iplantc.de.client.events.EventBus;
-import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasUUIDs;
-import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.notifications.NotificationAutoBeanFactory;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
-import org.iplantc.de.client.models.notifications.NotificationList;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.services.MessageServiceFacade;
-import org.iplantc.de.client.services.callbacks.NotificationCallbackWrapper;
 import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -26,21 +23,19 @@ import org.iplantc.de.notifications.client.events.NotificationToolbarDeleteClick
 import org.iplantc.de.notifications.client.events.NotificationToolbarMarkAsSeenClickedEvent;
 import org.iplantc.de.notifications.client.events.NotificationToolbarSelectionEvent;
 import org.iplantc.de.notifications.client.model.NotificationMessageProperties;
+import org.iplantc.de.notifications.client.utils.NotificationUtil;
 import org.iplantc.de.notifications.client.views.NotificationToolbarView;
 import org.iplantc.de.notifications.client.views.NotificationView;
 import org.iplantc.de.shared.NotificationCallback;
 
 import com.google.common.collect.Lists;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
-import com.sencha.gxt.data.client.loader.RpcProxy;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.SortDir;
 import com.sencha.gxt.data.shared.SortInfo;
@@ -49,14 +44,10 @@ import com.sencha.gxt.data.shared.loader.FilterConfig;
 import com.sencha.gxt.data.shared.loader.FilterConfigBean;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
-import com.sencha.gxt.data.shared.loader.LoadResultListStoreBinding;
-import com.sencha.gxt.data.shared.loader.PagingLoadConfig;
-import com.sencha.gxt.data.shared.loader.PagingLoadResult;
-import com.sencha.gxt.data.shared.loader.PagingLoadResultBean;
-import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,7 +65,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
                                                   NotificationToolbarMarkAsSeenClickedEvent.NotificationToolbarMarkAsSeenClickedEventHandler,
                                                   JoinTeamRequestProcessed.JoinTeamRequestProcessedHandler {
 
-    private final class NotificationsServiceCallback extends NotificationCallbackWrapper {
+/*    private final class NotificationsServiceCallback extends NotificationCallbackWrapper {
         private final AsyncCallback<PagingLoadResult<NotificationMessage>> callback;
         private final PagingLoadConfig loadConfig;
 
@@ -108,7 +99,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
                     new PagingLoadResultBean<>(messages, total, loadConfig.getOffset());
             callback.onSuccess(callbackResult);
        }
-    }
+    }*/
     private final ListStore<NotificationMessage> listStore;
     private final NotificationToolbarView toolbar;
     private final NotificationView view;
@@ -119,6 +110,8 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
     @Inject MessageServiceFacade messageServiceFacade;
     @Inject JsonUtil jsonUtil;
     @Inject IplantAnnouncer announcer;
+    @Inject
+    NotificationUtil notificationUtil;
 
     @Inject
     public NotificationPresenterImpl(NotificationView.NotificationViewAppearance appearance,
@@ -258,7 +251,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
     }
 
     void deleteNotifications(List<NotificationMessage> notifications) {
-        // do we have any notifications to delete?
+/*        // do we have any notifications to delete?
         if (notifications != null && !notifications.isEmpty()) {
             HasUUIDs hasUUIDs = factory.getHasUUIDs().as();
             List<String> uuids = convertNotificationsToIds(notifications);
@@ -277,6 +270,46 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
                     eventBus.fireEvent(event);
                 }
             });
+        }*/
+    }
+
+    private HasUUIDs getUUIDsFromIds(String[] ids) {
+        List<String> nids = Arrays.asList(ids);
+        HasUUIDs hasUUIDs = factory.getHasUUIDs().as();
+        hasUUIDs.setUUIDs(nids);
+        return hasUUIDs;
+    }
+
+    @Override
+    public void deleteNotifications(String[] ids,
+                                    int limit,
+                                    NotificationsCallback callback,
+                                    ReactErrorCallback errorCallback) {
+        if (ids != null && ids.length > 0) {
+            messageServiceFacade.deleteMessages(getUUIDsFromIds(ids),
+                                                new NotificationCallback<String>() {
+                                                    @Override
+                                                    public void onFailure(Integer statusCode,
+                                                                          Throwable caught) {
+                                                        ErrorHandler.post(appearance.notificationDeleteFail(),
+                                                                          caught);
+                                                        if (errorCallback != null) {
+                                                            errorCallback.onError(statusCode,
+                                                                                  caught.getMessage());
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onSuccess(String result) {
+                                                        if (callback != null) {
+                                                            getNotifications(limit,
+                                                                             0,
+                                                                             callback,
+                                                                             errorCallback);
+                                                        }
+                                                    }
+                                                });
+
         }
     }
 
@@ -286,7 +319,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
 
     @Override
     public void onNotificationToolbarMarkAsSeenClicked(NotificationToolbarMarkAsSeenClickedEvent event) {
-        final List<NotificationMessage> notifications = view.getSelectedItems();
+/*        final List<NotificationMessage> notifications = view.getSelectedItems();
         List<HasId> ids = new ArrayList<>();
         //StringQuoter.create("max").assign(hasChild, "score_mode");
         for (NotificationMessage n : notifications) {
@@ -311,7 +344,36 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
                 fireCountUpdateEvent(result);
 
             }
-        });
+        });*/
+    }
+
+    @Override
+    public void onNotificationToolbarMarkAsSeenClicked(String[] ids,
+                                                       ReactSuccessCallback callback,
+                                                       ReactErrorCallback errorCallback) {
+        if (ids != null && ids.length > 0) {
+            messageServiceFacade.markAsSeen(getUUIDsFromIds(ids), new NotificationCallback<String>() {
+                @Override
+                public void onFailure(Integer statusCode, Throwable caught) {
+                    announcer.schedule(new ErrorAnnouncementConfig(appearance.notificationMarkAsSeenFail()));
+                    if (errorCallback != null) {
+                        errorCallback.onError(statusCode, caught.getMessage());
+                    }
+                }
+
+                @Override
+                public void onSuccess(String result) {
+                    announcer.schedule(new SuccessAnnouncementConfig(appearance.notificationMarkAsSeenSuccess()));
+                    if (callback != null) {
+                        callback.onSuccess(StringQuoter.create(result));
+                    }
+
+                    fireCountUpdateEvent(result);
+
+                }
+            });
+        }
+
     }
 
      protected void fireCountUpdateEvent(String result) {
@@ -324,7 +386,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
                  count));
      }
 
-                                                     @Override
+    @Override
     public void onNotificationToolbarSelection(NotificationToolbarSelectionEvent event) {
         filterBy(event.getNotificationCategory());
     }
@@ -347,7 +409,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
         return currentCategory;
     }
 
-    private PagingLoader<FilterPagingLoadConfig, PagingLoadResult<NotificationMessage>> initProxyLoader() {
+/*    private PagingLoader<FilterPagingLoadConfig, PagingLoadResult<NotificationMessage>> initProxyLoader() {
      RpcProxy<FilterPagingLoadConfig, PagingLoadResult<NotificationMessage>> proxy = new RpcProxy<FilterPagingLoadConfig, PagingLoadResult<NotificationMessage>>() {
             @Override
             public void load(final FilterPagingLoadConfig loadConfig,
@@ -370,7 +432,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
                 listStore));
         loader.useLoadConfig(buildDefaultLoadConfig());
         return loader;
-    }
+    }*/
 
     @Override
     public void onJoinTeamRequestProcessed(JoinTeamRequestProcessed event) {
@@ -387,38 +449,54 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
                                               offset,
                                               null,
                                               "asc",
-                                              new NotificationCallbackWrapper() {
-
-                                                  @Override
-                                                  public void onFailure(Integer statusCode,
-                                                                        Throwable exception) {
-                                                      if (errorCallback != null) {
-                                                          errorCallback.onError(statusCode,
-                                                                                exception.getMessage());
-                                                      }
-                                                  }
-
-                                                  @Override
-                                                  public void onSuccess(String result) {
-                                                      Splittable splitResult = StringQuoter.split(result);
-                                                      int total = 0;
-
-                                                      if (splitResult.get("total") != null) {
-                                                          total = Integer.parseInt(splitResult.get("total").asString());
-                                                      }
-                                                      AutoBean<NotificationList> bean =
-                                                              AutoBeanCodex.decode(factory,
-                                                                                   NotificationList.class,
-                                                                                   result);
-
-                                                      Splittable sp = AutoBeanCodex.encode(bean);
-
-                                                      GWT.log("splittables ==>" + sp.getPayload());
-                                                      if (callback != null) {
-                                                          callback.onFetchNotifications(sp, total);
-                                                      }
-                                                  }
-                                              });
+                                              new NotificationCallbackWrapper(errorCallback, callback));
     }
 
+    @Override
+    public void onMessageClicked(Splittable notificationMessage) {
+        NotificationMessage nm = AutoBeanCodex.decode(factory, NotificationMessage.class, notificationMessage).as();
+        notificationUtil.onNotificationClick(nm);
+   }
+
+    private static class NotificationCallbackWrapper
+            extends org.iplantc.de.client.services.callbacks.NotificationCallbackWrapper {
+
+        private final ReactErrorCallback errorCallback;
+        private final NotificationsCallback callback;
+
+        public NotificationCallbackWrapper(ReactErrorCallback errorCallback,
+                                           NotificationsCallback callback) {
+            this.errorCallback = errorCallback;
+            this.callback = callback;
+        }
+
+        @Override
+        public void onFailure(Integer statusCode,
+                              Throwable exception) {
+            if (errorCallback != null) {
+                errorCallback.onError(statusCode,
+                                      exception.getMessage());
+            }
+        }
+
+        @Override
+        public void onSuccess(String result) {
+            super.onSuccess(result);
+            Splittable splitResult =
+                    StringQuoter.split(result);
+            int total = 0;
+
+            if (splitResult.get("total") != null) {
+                total = Integer.parseInt(splitResult.get(
+                        "total").asString());
+            }
+
+
+            Splittable sp = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(getNotifications()));
+
+            if (callback != null) {
+                callback.onFetchNotifications(sp, total);
+            }
+        }
+    }
 }

@@ -3,11 +3,13 @@ package org.iplantc.de.notifications.client.views;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.notifications.client.events.NotificationGridRefreshEvent;
 import org.iplantc.de.notifications.client.events.NotificationSelectionEvent;
 import org.iplantc.de.notifications.client.presenter.NotificationsCallback;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
@@ -91,6 +93,16 @@ public interface NotificationView extends IsWidget,
                                      int offset,
                                      NotificationsCallback callback,
                                      ReactErrorCallback errorCallback);
+        public void deleteNotifications(String[] ids,
+                                        int limit,
+                                        NotificationsCallback callback,
+                                        ReactErrorCallback errorCallback);
+
+        public void onNotificationToolbarMarkAsSeenClicked(String[] ids,
+                                                           ReactSuccessCallback callback,
+                                                           ReactErrorCallback errorCallback);
+
+        public void onMessageClicked(Splittable notificationMessage);
     }
 
     /**

@@ -26,9 +26,8 @@ import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
-import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -83,16 +82,18 @@ public class MessageServiceFacadeImpl implements MessageServiceFacade {
 
     @Override
     public void markAsSeen(HasId id, DECallback<String> callback) {
-        markAsSeen(Collections.singletonList(id), callback);
+        List<String> nids = Arrays.asList(id.getId());
+        HasUUIDs hasUUIDs = notesFactory.getHasUUIDs().as();
+        hasUUIDs.setUUIDs(nids);
+        markAsSeen(hasUUIDs, callback);
     }
 
     @Override
-    public void markAsSeen(final List<HasId> seenIds, DECallback<String> callback) {
+    public void markAsSeen(final HasUUIDs seenIds, DECallback<String> callback) {
         String address = NOTIFICATIONS + "/seen"; //$NON-NLS-1$
-        Splittable payload = StringQuoter.createSplittable();
-        diskResourceUtil.createStringIdListSplittable(seenIds).assign(payload, "uuids");
+        Splittable encode = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(seenIds));
 
-        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, payload.getPayload());
+        ServiceCallWrapper wrapper = new ServiceCallWrapper(POST, address, encode.getPayload());
 
         deServiceFacade.getServiceData(wrapper, callback);
     }
