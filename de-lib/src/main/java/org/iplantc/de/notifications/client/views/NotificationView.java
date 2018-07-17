@@ -2,7 +2,7 @@ package org.iplantc.de.notifications.client.views;
 
 import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
-import org.iplantc.de.client.services.callbacks.ErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.notifications.client.events.NotificationGridRefreshEvent;
 import org.iplantc.de.notifications.client.events.NotificationSelectionEvent;
 import org.iplantc.de.notifications.client.presenter.NotificationsCallback;
@@ -90,7 +90,7 @@ public interface NotificationView extends IsWidget,
         public void getNotifications(int limit,
                                      int offset,
                                      NotificationsCallback callback,
-                                     ErrorCallback errorCallback);
+                                     ReactErrorCallback errorCallback);
     }
 
     /**

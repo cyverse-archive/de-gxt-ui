@@ -9,8 +9,8 @@ import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.notifications.NotificationList;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.services.MessageServiceFacade;
-import org.iplantc.de.client.services.callbacks.ErrorCallback;
 import org.iplantc.de.client.services.callbacks.NotificationCallbackWrapper;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -382,7 +382,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
     public void getNotifications(int limit,
                                  int offset,
                                  NotificationsCallback callback,
-                                 ErrorCallback errorCallback) {
+                                 ReactErrorCallback errorCallback) {
         messageServiceFacade.getNotifications(limit,
                                               offset,
                                               null,

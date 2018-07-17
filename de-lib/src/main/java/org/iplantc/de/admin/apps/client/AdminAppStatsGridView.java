@@ -1,7 +1,7 @@
 package org.iplantc.de.admin.apps.client;
 
 import org.iplantc.de.admin.apps.client.presenter.callbacks.AppStatsSearchCallback;
-import org.iplantc.de.client.services.callbacks.ErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -31,7 +31,7 @@ public interface AdminAppStatsGridView extends IsWidget {
                         String startDate,
                         String endDate,
                         AppStatsSearchCallback callback,
-                        ErrorCallback errorCallback);
+                        ReactErrorCallback errorCallback);
     }
 
 }

@@ -2,7 +2,7 @@ package org.iplantc.de.diskResource.client;
 
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.viewer.InfoType;
-import org.iplantc.de.client.services.callbacks.ErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.diskResource.client.events.DiskResourceSelectionChangedEvent.DiskResourceSelectionChangedEventHandler;
 import org.iplantc.de.diskResource.client.events.FetchDetailsCompleted;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
@@ -82,26 +82,26 @@ public interface DetailsView extends IsWidget,
 
         void fetchTagsForResource(String diskResourceId,
                                   TagsFetchCallback callback,
-                                  ErrorCallback errorCallback);
+                                  ReactErrorCallback errorCallback);
 
-        void searchTags(String searchVal, TagsSearchCallback callback, ErrorCallback errorCallback);
+        void searchTags(String searchVal, TagsSearchCallback callback, ReactErrorCallback errorCallback);
 
         void attachTag(String tagId,
                        String tagValue,
                        String diskResourceId,
                        TagAttachCallback callback,
-                       ErrorCallback errorCallback);
+                       ReactErrorCallback errorCallback);
 
         void detachTag(String tagId,
                        String tagValue,
                        String diskResourceId,
                        TagDetachCallback callback,
-                       ErrorCallback errorCallback);
+                       ReactErrorCallback errorCallback);
 
         void createTag(String tagValue,
                        String diskResourceId,
                        TagAttachCallback callback,
-                       ErrorCallback errorCallback);
+                       ReactErrorCallback errorCallback);
 
         void onTagSelection(String tagId, String tagValue);
 

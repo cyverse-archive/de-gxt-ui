@@ -11,7 +11,7 @@ import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.MetadataTemplate;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
-import org.iplantc.de.client.services.callbacks.ErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -161,7 +161,7 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
 
     }
 
-    private void addTemplate(final String template, ReactSuccessCallback resolve, ErrorCallback reject) {
+    private void addTemplate(final String template, ReactSuccessCallback resolve, ReactErrorCallback reject) {
         final MetadataTemplatesPresenterImpl presenter = this;
 
         mdSvcFac.addTemplate(template, new AsyncCallback<String>() {
@@ -196,7 +196,7 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
     private void updateTemplate(final String templateId,
                                 final String template,
                                 ReactSuccessCallback resolve,
-                                ErrorCallback reject) {
+                                ReactErrorCallback reject) {
         final MetadataTemplatesPresenterImpl presenter = this;
 
         mdSvcFac.updateTemplate(templateId, template, new AsyncCallback<String>() {
@@ -240,7 +240,7 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
 
     @SuppressWarnings("unusable-by-js")
     @Override
-    public void onSaveTemplate(Splittable template, ReactSuccessCallback resolve, ErrorCallback reject) {
+    public void onSaveTemplate(Splittable template, ReactSuccessCallback resolve, ReactErrorCallback reject) {
         final MetadataTemplate metadataTemplate = AutoBeanCodex.decode(drFac, MetadataTemplate.class, template).as();
         final String templateId = metadataTemplate.getId();
 

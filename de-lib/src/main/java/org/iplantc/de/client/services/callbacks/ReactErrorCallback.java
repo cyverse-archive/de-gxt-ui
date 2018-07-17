@@ -9,7 +9,7 @@ import jsinterop.annotations.JsFunction;
  * Created by sriram on 3/13/18.
  */
 @JsFunction
-public interface ErrorCallback {
+public interface ReactErrorCallback {
    void onError(int httpStatusCode, String errorMessage);
 }
 

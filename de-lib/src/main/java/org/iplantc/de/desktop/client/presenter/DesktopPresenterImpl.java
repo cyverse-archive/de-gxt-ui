@@ -20,7 +20,7 @@ import org.iplantc.de.client.services.DEUserSupportServiceFacade;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.services.MessageServiceFacade;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
-import org.iplantc.de.client.services.callbacks.ErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.client.util.WebStorageUtil;
@@ -296,7 +296,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
     @Override
     public void doMarkAllSeen(final boolean announce,
                               final NotificationMarkAsSeenCallback callback,
-                              final ErrorCallback errorCallback) {
+                              final ReactErrorCallback errorCallback) {
        messageServiceFacade.markAllNotificationsSeen(new NotificationCallback<Void>() {
            @Override
            public void onFailure(Integer statusCode, Throwable caught) {
@@ -474,7 +474,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
     @SuppressWarnings("unusable-by-js")
     public void onNotificationSelected(Splittable notification,
                                        final NotificationMarkAsSeenCallback callback,
-                                       final ErrorCallback errorCallback) {
+                                       final ReactErrorCallback errorCallback) {
         GWT.log(notification.getPayload());
         Notification n = AutoBeanCodex.decode(notificationFactory, Notification.class, notification).as();
         NotificationMessage nm = notificationUtil.getMessage(n, notificationFactory);
@@ -484,7 +484,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
 
     public void markAsSeen(final NotificationMessage selectedItem,
                            final NotificationMarkAsSeenCallback callback,
-                           final ErrorCallback errorCallback) {
+                           final ReactErrorCallback errorCallback) {
         messageServiceFacade.markAsSeen(selectedItem, new NotificationCallback<String>() {
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
@@ -662,7 +662,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
     }
 
     @Override
-    public void getNotifications(NotificationsCallback callback, ErrorCallback errorCallback) {
+    public void getNotifications(NotificationsCallback callback, ReactErrorCallback errorCallback) {
         messageServiceFacade.getRecentMessages(new InitializationCallbacks.GetInitialNotificationsCallback(
                 view,
                 appearance,

@@ -1,6 +1,6 @@
 package org.iplantc.de.admin.desktop.client.metadata.view;
 
-import org.iplantc.de.client.services.callbacks.ErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 
 import com.google.gwt.user.client.ui.IsWidget;
@@ -13,7 +13,7 @@ public interface EditMetadataTemplateView extends IsWidget {
     @JsType
     interface Presenter {
         @SuppressWarnings("unusable-by-js")
-        void onSaveTemplate(Splittable metadataTemplate, ReactSuccessCallback resolve, ErrorCallback reject);
+        void onSaveTemplate(Splittable metadataTemplate, ReactSuccessCallback resolve, ReactErrorCallback reject);
         void closeTemplateInfoDialog();
     }
 

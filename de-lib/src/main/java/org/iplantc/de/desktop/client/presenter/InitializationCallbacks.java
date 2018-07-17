@@ -4,7 +4,7 @@ import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.notifications.NotificationList;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
-import org.iplantc.de.client.services.callbacks.ErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -123,13 +123,13 @@ class InitializationCallbacks {
         private final DesktopView.Presenter.DesktopPresenterAppearance appearance;
         private final IplantAnnouncer announcer;
         private final NotificationsCallback callback;
-        private final ErrorCallback errorCallback;
+        private final ReactErrorCallback errorCallback;
 
         public GetInitialNotificationsCallback(final DesktopView view,
                                                final DesktopView.Presenter.DesktopPresenterAppearance appearance,
                                                final IplantAnnouncer announcer,
                                                final NotificationsCallback callback,
-                                               final ErrorCallback errorCallback) {
+                                               final ReactErrorCallback errorCallback) {
             this.view = view;
             this.appearance = appearance;
             this.announcer = announcer;
