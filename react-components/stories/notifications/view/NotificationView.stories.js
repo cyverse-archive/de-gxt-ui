@@ -718,7 +718,7 @@ class NotificationViewTest extends Component {
             }]
         };
         const presenter = {
-            getNotifications: (limit, offset, resultCallback, errorCallback) => {
+            getNotifications: (limit, offset, filter, sortDir, resultCallback, errorCallback) => {
                 resultCallback(notifications, 10)
             },
             deleteNotifications: (selected, rowsPerPage, resultCallback, errorCallback) => {

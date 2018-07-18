@@ -4,7 +4,6 @@
  *
  **/
 import React, { Component } from "react";
-import exStyles from "../style";
 import { withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -15,17 +14,18 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import moment from "moment";
 import NotificationToolbar from "./NotificationToolbar";
 import constants from "../../constants";
-import intlData from "../messages";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
 import Checkbox from "@material-ui/core/Checkbox";
 import EnhancedTableHead from "../../util/table/EnhancedTableHead";
 import Color from "../../util/CyVersePalette";
-
+import TablePaginationActions from "../../util/table/TablePaginationActions";
+import exStyles from "../style";
+import intlData from "../messages";
 
 const columnData = [
-    {name: "Category", numeric: false},
-    {name: "Message", numeric: false},
-    {name: "Date", numeric: false},
+    {name: "Category", numeric: false, enableSorting: false},
+    {name: "Message", numeric: false, enableSorting: false},
+    {name: "Date", numeric: false, enableSorting: true},
 ];
 
 
@@ -63,9 +63,9 @@ class NotificationView extends Component {
             total: 0,
             offset: 0,
             page: 0,
-            rowsPerPage: 5,
+            rowsPerPage: 100,
             selected: [],
-            order: 'asc',
+            order: 'DESC',
             orderBy: 'Date',
             filter: 'All',
         };
@@ -82,9 +82,9 @@ class NotificationView extends Component {
     }
 
     fetchNotifications() {
-        const {rowsPerPage, offset}  = this.state;
+        const {rowsPerPage, offset, filter, order}  = this.state;
         this.setState({loading: true});
-        this.props.presenter.getNotifications(rowsPerPage, offset, (notifications, total) => {
+        this.props.presenter.getNotifications(rowsPerPage, offset, filter,order, (notifications, total) => {
                 this.setState({
                     loading: false,
                     data: notifications.messages,
@@ -117,12 +117,11 @@ class NotificationView extends Component {
     handleDeleteClick() {
         const {rowsPerPage}  = this.state;
         this.setState({loading: true});
-        this.props.presenter.deleteNotifications(this.state.selected, rowsPerPage, (notifications, total) => {
+        this.props.presenter.deleteNotifications(this.state.selected, () => {
             this.setState({
                 loading: false,
-                data: notifications.messages,
-                total: total,
-            })
+            });
+            this.fetchNotifications();
         }, (errorCode, errorMessage) => {
             this.setState({
                 loading: false,
@@ -136,8 +135,7 @@ class NotificationView extends Component {
     };
 
     handleFilterChange = event => {
-        console.log("filter==>" + event.target.value);
-        this.setState({filter: event.target.value});
+        this.setState({filter: event.target.value}, () => this.fetchNotifications());
     };
 
 
@@ -193,13 +191,13 @@ class NotificationView extends Component {
 
     handleRequestSort = (event, property) => {
         const orderBy = property;
-        let order = 'desc';
+        let order = 'DESC';
 
-        if (this.state.orderBy === property && this.state.order === 'desc') {
-            order = 'asc';
+        if (this.state.orderBy === property && this.state.order === 'DESC') {
+            order = 'ASC';
         }
 
-        this.setState({order, orderBy});
+        this.setState({order, orderBy,}, () => this.fetchNotifications());
     };
 
     isSelected = id => this.state.selected.indexOf(id) !== -1;
@@ -207,7 +205,6 @@ class NotificationView extends Component {
     render() {
         const {classes} = this.props;
         const {data, rowsPerPage, page, order, orderBy, selected, total} = this.state;
-
         return (
             <div className={classes.container}>
                 {this.state.loading &&
@@ -258,14 +255,15 @@ class NotificationView extends Component {
                     </Table>
                 </div>
                 <TablePagination
+                    colSpan={3}
                     component="div"
                     count={total}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={this.handleChangePage}
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                    rowsPerPageOptions={[5, 500, 1000]}
-                    style={{float: 'left'}}
+                    ActionsComponent={TablePaginationActions}
+                    rowsPerPageOptions={[100, 500, 1000]}
                 />
             </div>
         )

@@ -91,11 +91,12 @@ public interface NotificationView extends IsWidget,
 
         public void getNotifications(int limit,
                                      int offset,
+                                     String filter,
+                                     String sortDir,
                                      NotificationsCallback callback,
                                      ReactErrorCallback errorCallback);
         public void deleteNotifications(String[] ids,
-                                        int limit,
-                                        NotificationsCallback callback,
+                                        ReactSuccessCallback callback,
                                         ReactErrorCallback errorCallback);
 
         public void onNotificationToolbarMarkAsSeenClicked(String[] ids,

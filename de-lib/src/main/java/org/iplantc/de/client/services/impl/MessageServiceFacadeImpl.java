@@ -20,6 +20,7 @@ import org.iplantc.de.shared.DECallback;
 import org.iplantc.de.shared.services.DiscEnvApiService;
 import org.iplantc.de.shared.services.ServiceCallWrapper;
 
+import com.google.common.base.Strings;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -59,7 +60,7 @@ public class MessageServiceFacadeImpl implements MessageServiceFacade {
 
         StringBuilder builder = new StringBuilder("/messages?limit=" + limit + "&offset="
                                                       + offset);
-        if (filter != null && !filter.isEmpty()) {
+        if (!Strings.isNullOrEmpty(filter) && !filter.equals("All")) {
             builder.append("&filter=").append(URL.encodeQueryString(filter));
         }
 

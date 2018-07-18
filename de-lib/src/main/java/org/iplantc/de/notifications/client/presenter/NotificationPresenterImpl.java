@@ -65,41 +65,6 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
                                                   NotificationToolbarMarkAsSeenClickedEvent.NotificationToolbarMarkAsSeenClickedEventHandler,
                                                   JoinTeamRequestProcessed.JoinTeamRequestProcessedHandler {
 
-/*    private final class NotificationsServiceCallback extends NotificationCallbackWrapper {
-        private final AsyncCallback<PagingLoadResult<NotificationMessage>> callback;
-        private final PagingLoadConfig loadConfig;
-
-        private NotificationsServiceCallback(PagingLoadConfig loadConfig,
-                                             AsyncCallback<PagingLoadResult<NotificationMessage>> callback) {
-            this.loadConfig = loadConfig;
-            this.callback = callback;
-        }
-
-        @Override
-        public void onFailure(Integer statusCode, Throwable caught) {
-            ErrorHandler.post(caught);
-        }
-
-        @Override
-        public void onSuccess(String result) {
-            super.onSuccess(result);
-            Splittable splitResult = StringQuoter.split(result);
-            int total = 0;
-
-            if (splitResult.get("total") != null) {
-                total = Integer.parseInt(splitResult.get("total").asString());
-            }
-
-            List<NotificationMessage> messages = Lists.newArrayList();
-            for (Notification n : this.getNotifications()) {
-                messages.add(n.getMessage());
-            }
-
-            PagingLoadResult<NotificationMessage> callbackResult =
-                    new PagingLoadResultBean<>(messages, total, loadConfig.getOffset());
-            callback.onSuccess(callbackResult);
-       }
-    }*/
     private final ListStore<NotificationMessage> listStore;
     private final NotificationToolbarView toolbar;
     private final NotificationView view;
@@ -243,35 +208,6 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
         });
     }
 
-    @Override
-    public void onNotificationToolbarDeleteClicked(NotificationToolbarDeleteClickedEvent event) {
-        final List<NotificationMessage> notifications = view.getSelectedItems();
-
-        deleteNotifications(notifications);
-    }
-
-    void deleteNotifications(List<NotificationMessage> notifications) {
-/*        // do we have any notifications to delete?
-        if (notifications != null && !notifications.isEmpty()) {
-            HasUUIDs hasUUIDs = factory.getHasUUIDs().as();
-            List<String> uuids = convertNotificationsToIds(notifications);
-            hasUUIDs.setUUIDs(uuids);
-
-            messageServiceFacade.deleteMessages(hasUUIDs, new NotificationCallback<String>() {
-                @Override
-                public void onFailure(Integer statusCode, Throwable caught) {
-                    ErrorHandler.post(appearance.notificationDeleteFail(), caught);
-                }
-
-                @Override
-                public void onSuccess(String result) {
-                    view.loadNotifications(view.getCurrentLoadConfig());
-                    DeleteNotificationsUpdateEvent event = new DeleteNotificationsUpdateEvent(notifications);
-                    eventBus.fireEvent(event);
-                }
-            });
-        }*/
-    }
 
     private HasUUIDs getUUIDsFromIds(String[] ids) {
         List<String> nids = Arrays.asList(ids);
@@ -281,9 +217,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
     }
 
     @Override
-    public void deleteNotifications(String[] ids,
-                                    int limit,
-                                    NotificationsCallback callback,
+    public void deleteNotifications(String[] ids, ReactSuccessCallback callback,
                                     ReactErrorCallback errorCallback) {
         if (ids != null && ids.length > 0) {
             messageServiceFacade.deleteMessages(getUUIDsFromIds(ids),
@@ -302,10 +236,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
                                                     @Override
                                                     public void onSuccess(String result) {
                                                         if (callback != null) {
-                                                            getNotifications(limit,
-                                                                             0,
-                                                                             callback,
-                                                                             errorCallback);
+                                                            callback.onSuccess(StringQuoter.create(result));
                                                         }
                                                     }
                                                 });
@@ -315,36 +246,6 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
 
     List<String> convertNotificationsToIds(List<NotificationMessage> notifications) {
         return notifications.stream().map(NotificationMessage::getId).collect(Collectors.toList());
-    }
-
-    @Override
-    public void onNotificationToolbarMarkAsSeenClicked(NotificationToolbarMarkAsSeenClickedEvent event) {
-/*        final List<NotificationMessage> notifications = view.getSelectedItems();
-        List<HasId> ids = new ArrayList<>();
-        //StringQuoter.create("max").assign(hasChild, "score_mode");
-        for (NotificationMessage n : notifications) {
-            ids.add(n);
-        }
-
-        messageServiceFacade.markAsSeen(ids, new NotificationCallback<String>() {
-            @Override
-            public void onFailure(Integer statusCode, Throwable caught) {
-               announcer.schedule(new ErrorAnnouncementConfig(
-                                       appearance.notificationMarkAsSeenFail()));
-            }
-
-            @Override
-            public void onSuccess(String result) {
-               announcer.schedule(new SuccessAnnouncementConfig(appearance.notificationMarkAsSeenSuccess()));
-                for (NotificationMessage nm : notifications) {
-                    nm.setSeen(true);
-                    view.updateStore(nm);
-                }
-
-                fireCountUpdateEvent(result);
-
-            }
-        });*/
     }
 
     @Override
@@ -409,31 +310,6 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
         return currentCategory;
     }
 
-/*    private PagingLoader<FilterPagingLoadConfig, PagingLoadResult<NotificationMessage>> initProxyLoader() {
-     RpcProxy<FilterPagingLoadConfig, PagingLoadResult<NotificationMessage>> proxy = new RpcProxy<FilterPagingLoadConfig, PagingLoadResult<NotificationMessage>>() {
-            @Override
-            public void load(final FilterPagingLoadConfig loadConfig,
-                             final AsyncCallback<PagingLoadResult<NotificationMessage>> callback) {
-        messageServiceFacade.getNotifications(loadConfig.getLimit(),
-                                              loadConfig.getOffset(),
-                                              (loadConfig.getFilters().get(0).getField()) == null ?
-                                              "" :
-                                              loadConfig.getFilters().get(0).getField().toLowerCase(),
-                                              loadConfig.getSortInfo().get(0).getSortDir().toString(),
-                                              new NotificationsServiceCallback(loadConfig, callback));
-            }
-
-     };
-
-        final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<NotificationMessage>> loader =
-                new PagingLoader<>(proxy);
-        loader.setRemoteSort(true);
-        loader.addLoadHandler(new LoadResultListStoreBinding<FilterPagingLoadConfig, NotificationMessage, PagingLoadResult<NotificationMessage>>(
-                listStore));
-        loader.useLoadConfig(buildDefaultLoadConfig());
-        return loader;
-    }*/
-
     @Override
     public void onJoinTeamRequestProcessed(JoinTeamRequestProcessed event) {
         NotificationMessage notification = event.getMessage();
@@ -443,12 +319,14 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
     @Override
     public void getNotifications(int limit,
                                  int offset,
+                                 String filter,
+                                 String sortDir,
                                  NotificationsCallback callback,
                                  ReactErrorCallback errorCallback) {
         messageServiceFacade.getNotifications(limit,
                                               offset,
-                                              null,
-                                              "asc",
+                                              filter,
+                                              sortDir,
                                               new NotificationCallbackWrapper(errorCallback, callback));
     }
 
