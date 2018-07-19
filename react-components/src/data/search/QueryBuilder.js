@@ -31,17 +31,21 @@ class QueryBuilder extends Component {
     }
 
     render() {
-        let {handleSubmit, classes, initialValues} = this.props;
+        let {
+            handleSubmit,
+            classes,
+            initialValues
+        } = this.props;
         let originalName = initialValues ? initialValues : null;
 
         return (
             <div>
                 <Condition root={true} helperProps={this.props}/>
-                <Field name='label'
-                       originalName={originalName}
-                       handleSave={handleSubmit(this.handleSaveSearch)}
-                       component={renderSaveSearchBtn}/>
-                <div className={classes.searchButton}>
+                <div className={classes.buttonBar}>
+                    <Field name='label'
+                           originalName={originalName}
+                           handleSave={handleSubmit(this.handleSaveSearch)}
+                           component={renderSaveSearchBtn}/>
                     <Button variant="raised"
                             className={classes.searchButton}
                             onClick={handleSubmit(this.handleSubmitForm)}>

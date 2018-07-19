@@ -5,6 +5,7 @@ import ReduxTextField from "./ReduxTextField";
 import SelectOperator from "./SelectOperator";
 
 import { Field } from "redux-form";
+import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
 import React, { Component, Fragment } from "react";
 import Select from "@material-ui/core/Select";
@@ -17,7 +18,7 @@ class FileSize extends Component {
         ];
 
         let {
-            helperProps : {
+            helperProps: {
                 messages
             }
         } = this.props;
@@ -68,11 +69,13 @@ function renderDropDown(props) {
         id
     } = props;
     return (
-        <Select value={input.value ? input.value : ''}
-                onChange={(event) => input.onChange(event.target.value)}
-                id={id}>
-            {children}
-        </Select>
+        <Grid item>
+            <Select value={input.value ? input.value : ''}
+                    onChange={(event) => input.onChange(event.target.value)}
+                    id={id}>
+                {children}
+            </Select>
+        </Grid>
     )
 }
 

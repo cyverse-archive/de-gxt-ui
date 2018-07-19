@@ -3,9 +3,9 @@ import DeleteBtn from "./DeleteBtn";
 import Group from "./Group";
 
 import { FieldArray, Fields, FormSection } from 'redux-form';
-import Input from "@material-ui/core/Input";
+import Grid from "@material-ui/core/Grid";
 import MenuItem from '@material-ui/core/MenuItem';
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import Select from '@material-ui/core/Select';
 
 class Condition extends Component {
@@ -44,8 +44,7 @@ function renderCondition(props) {
         selectOptions,
         onRemove,
         helperProps,
-        helperProps : {
-            classes,
+        helperProps: {
             resetSection
         }
     } = props;
@@ -57,33 +56,42 @@ function renderCondition(props) {
 
     let selection = fieldType.input.value;
 
-    return (
-        <Fragment>
-            <div className={isGroup(selection) ? classes.group : classes.condition}>
-                <Select input={<Input className={classes.selectField}/>}
-                        value={selection}
-                        onChange={(event) => handleUpdateCondition(fieldType, fieldArgs, event, resetSection)}>
-                    {selectOptions && selectOptions.map((item, index) => {
-                        return <MenuItem key={index} value={item.value}>{item.label}</MenuItem>
-                    })}
-                </Select>
-                {isGroup(selection)
-                    ? <FieldArray name={fieldArgs}
-                                  root={root}
-                                  onRemove={onRemove}
-                                  selectOptions={selectOptions}
-                                  helperProps={helperProps}
-                                  component={Group}/>
-                    : <Fragment>
-                        <FormSection name={fieldArgs}
-                                     helperProps={helperProps}
-                                     component={ConditionComponent(selection)}/>
-                        {!root && <DeleteBtn onClick={onRemove}/>}
-                    </Fragment>
-                }
-            </div>
-        </Fragment>
-    )
+    let ConditionSelector = () => (
+        <Select value={selection}
+                onChange={(event) => handleUpdateCondition(fieldType, fieldArgs, event, resetSection)}>
+            {selectOptions && selectOptions.map((item, index) => {
+                return <MenuItem key={index} value={item.value}>{item.label}</MenuItem>
+            })}
+        </Select>
+    );
+
+    if (isGroup(selection)) {
+        return (
+            <fieldset>
+                <ConditionSelector/>
+                <FieldArray name={fieldArgs}
+                            root={root}
+                            onRemove={onRemove}
+                            selectOptions={selectOptions}
+                            helperProps={helperProps}
+                            component={Group}/>
+            </fieldset>
+        )
+    } else {
+        return (
+            <Grid container spacing={8}>
+                <Grid item>
+                    <ConditionSelector/>
+                </Grid>
+                <FormSection name={fieldArgs}
+                             helperProps={helperProps}
+                             component={ConditionComponent(selection)}/>
+                <Grid item>
+                    {!root && <DeleteBtn onClick={onRemove}/>}
+                </Grid>
+            </Grid>
+        )
+    }
 }
 
 function handleUpdateCondition(fieldType, fieldArgs, event, resetSection) {
@@ -97,8 +105,13 @@ function handleUpdateCondition(fieldType, fieldArgs, event, resetSection) {
     fieldType.input.onChange(newCondition);
 }
 
-// target will be something like 'args[0].type' - props[args[0].type] doesn't work
-// This converts to props[args][0][type]
+/**
+ * target will be something like 'args[0].type' - props[args[0].type] doesn't work
+ * This converts to props[args][0][type] and returns the obj there
+ * @param propsObj
+ * @param target
+ * @returns {*}
+ */
 function getTargetProp(propsObj, target) {
     let obj = Object.assign('{}', propsObj);
     let targets = target.split(/[[\].]+/);

@@ -1,9 +1,7 @@
 import { operatorMap } from "./Operators";
-import styles from "../styles";
 
 import { Fields } from "redux-form";
-import injectSheet from "react-jss";
-import Input from "@material-ui/core/Input";
+import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
 import React, { Component } from 'react';
 import Select from '@material-ui/core/Select';
@@ -19,10 +17,12 @@ class SelectOperator extends Component {
         } = this.props;
 
         return (
-            <Fields names={['opLabel', 'exact', 'negated', 'permission_recurse']}
-                    classes={classes}
-                    operators={operators}
-                    component={renderSelect}/>
+            <Grid item>
+                <Fields names={['opLabel', 'exact', 'negated', 'permission_recurse']}
+                        classes={classes}
+                        operators={operators}
+                        component={renderSelect}/>
+            </Grid>
         )
     }
 }
@@ -34,12 +34,10 @@ function renderSelect(props) {
         negated,
         permission_recurse,
         operators,
-        classes
     } = props;
 
     return (
-        <Select input={<Input className={classes.selectField}/>}
-                value={opLabel.input.value}
+        <Select value={opLabel.input.value}
                 onChange={(event) => handleChange(event, opLabel, exact, negated, permission_recurse)}>
             {operators && operators.map((operator, index) => {
                 return <MenuItem key={index} value={operator.value}>{operator.label}</MenuItem>
@@ -56,4 +54,4 @@ function handleChange(event, opLabel, exact, negated, permission_recurse) {
     if (permission_recurse) permission_recurse.input.onChange(operatorMap[operator].permission_recurse);
 }
 
-export default injectSheet(styles)(SelectOperator);
+export default SelectOperator;

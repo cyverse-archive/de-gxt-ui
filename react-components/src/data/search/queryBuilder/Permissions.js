@@ -7,6 +7,7 @@ import SubjectSearchField from "../../../collaborators/SubjectSearchField";
 import withI18N, { getMessage } from "../../../util/I18NWrapper";
 
 import { Field, FieldArray } from "redux-form";
+import Grid from "@material-ui/core/Grid";
 import injectSheet from "react-jss";
 import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -43,7 +44,7 @@ class Permissions extends Component {
         ];
 
         let {
-            helperProps : {
+            helperProps: {
                 presenter,
                 classes
             }
@@ -54,7 +55,6 @@ class Permissions extends Component {
                 <SelectOperator operators={operators}/>
                 <Field name='permission'
                        permissions={permissions}
-                       classes={classes}
                        component={renderSelect}/>
                 <FieldArray name='users'
                             presenter={presenter}
@@ -68,8 +68,7 @@ class Permissions extends Component {
 function renderSelect(props) {
     let {
         input,
-        permissions,
-        classes
+        permissions
     } = props;
 
     if (input.value === "") {
@@ -77,13 +76,14 @@ function renderSelect(props) {
     }
 
     return (
-        <Select input={<Input className={classes.selectField}/>}
-                value={input.value}
-                onChange={(event) => input.onChange(event.target.value)}>
-            {permissions && permissions.map((permission, index) => {
-                return <MenuItem key={index} value={permission.value}>{permission.label}</MenuItem>
-            })}
-        </Select>
+        <Grid item>
+            <Select value={input.value}
+                    onChange={(event) => input.onChange(event.target.value)}>
+                {permissions && permissions.map((permission, index) => {
+                    return <MenuItem key={index} value={permission.value}>{permission.label}</MenuItem>
+                })}
+            </Select>
+        </Grid>
     )
 }
 
@@ -95,12 +95,12 @@ function renderSubjectSearch(props) {
     } = props;
 
     return (
-        <div>
+        <Grid item>
             <SubjectSearchField presenter={presenter}
                                 onSelect={(collaborator) => fields.push(collaborator)}/>
             <CollaboratorTable classes={classes}
                                fields={fields}/>
-        </div>
+        </Grid>
     )
 }
 

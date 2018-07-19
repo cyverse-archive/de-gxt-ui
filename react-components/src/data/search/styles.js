@@ -6,6 +6,12 @@ export default {
         flexDirection: 'row-reverse',
     },
 
+    buttonBar: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+
     fullWidth: {
         width: '100%'
     },
@@ -20,7 +26,8 @@ export default {
         padding: '10px',
         borderStyle: 'solid',
         borderWidth: '1px',
-        borderColor: cyverse.gray
+        borderColor: cyverse.gray,
+        paddingLeft: '10px'
     },
 
     condition: {
@@ -29,10 +36,6 @@ export default {
         gridColumnGap: '5px',
         gridRowGap: '5px',
         padding: '5px 10px 5px 10px',
-    },
-
-    selectField: {
-        display: 'inline-table'
     },
 
     collabTableHead: {
