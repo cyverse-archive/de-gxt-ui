@@ -15,8 +15,10 @@ class Tags extends Component {
         ];
 
         let {
-            array,
-            presenter
+            helperProps: {
+                array,
+                presenter
+            }
         } = this.props;
 
         return (

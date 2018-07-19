@@ -14,12 +14,8 @@ class Condition extends Component {
         let {
             field,
             root,
-            array,
             onRemove,
-            classes,
-            messages,
-            resetSection,
-            presenter
+            helperProps
         } = this.props;
 
         let selectOptions = root ? Conditions.labels.filter((item) => {
@@ -32,14 +28,10 @@ class Condition extends Component {
         return (
             <Fields names={[fieldType, fieldArgs]}
                     field={field}
-                    array={array}
-                    classes={classes}
                     root={root}
-                    onRemove={onRemove}
-                    messages={messages}
-                    resetSection={resetSection}
                     selectOptions={selectOptions}
-                    presenter={presenter}
+                    onRemove={onRemove}
+                    helperProps={helperProps}
                     component={renderCondition}/>
         )
     }
@@ -48,14 +40,14 @@ class Condition extends Component {
 function renderCondition(props) {
     let {
         field,
-        array,
         root,
         selectOptions,
         onRemove,
-        classes,
-        messages,
-        resetSection,
-        presenter
+        helperProps,
+        helperProps : {
+            classes,
+            resetSection
+        }
     } = props;
 
     let fieldTypeVal = root ? 'type' : `${field}.type`;
@@ -77,21 +69,14 @@ function renderCondition(props) {
                 </Select>
                 {isGroup(selection)
                     ? <FieldArray name={fieldArgs}
-                                  array={array}
                                   root={root}
-                                  classes={classes}
                                   onRemove={onRemove}
                                   selectOptions={selectOptions}
-                                  messages={messages}
-                                  resetSection={resetSection}
-                                  presenter={presenter}
+                                  helperProps={helperProps}
                                   component={Group}/>
                     : <Fragment>
                         <FormSection name={fieldArgs}
-                                     array={array}
-                                     classes={classes}
-                                     messages={messages}
-                                     presenter={presenter}
+                                     helperProps={helperProps}
                                      component={ConditionComponent(selection)}/>
                         {!root && <DeleteBtn onClick={onRemove}/>}
                     </Fragment>

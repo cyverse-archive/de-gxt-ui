@@ -17,7 +17,9 @@ class FileSize extends Component {
         ];
 
         let {
-            messages
+            helperProps : {
+                messages
+            }
         } = this.props;
 
         let sizesList = messages.fileSizes;

@@ -36,7 +36,7 @@ class QueryBuilder extends Component {
 
         return (
             <div>
-                <Condition root={true} {...this.props}/>
+                <Condition root={true} helperProps={this.props}/>
                 <Field name='label'
                        originalName={originalName}
                        handleSave={handleSubmit(this.handleSaveSearch)}

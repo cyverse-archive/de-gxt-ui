@@ -8,9 +8,8 @@ function Group(props) {
     let {
         root,
         fields,
-        classes,
         onRemove,
-        ...custom
+        helperProps
     } = props;
 
     return (
@@ -20,9 +19,8 @@ function Group(props) {
             {fields.map((field, index) => (
                 <div key={index}>
                     <Condition field={field}
-                               classes={classes}
                                onRemove={() =>fields.remove(index)}
-                               {...custom}/>
+                               helperProps={helperProps}/>
                 </div>
             ))}
         </Fragment>

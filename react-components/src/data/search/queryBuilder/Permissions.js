@@ -43,8 +43,10 @@ class Permissions extends Component {
         ];
 
         let {
-            presenter,
-            classes
+            helperProps : {
+                presenter,
+                classes
+            }
         } = this.props;
 
         return (
