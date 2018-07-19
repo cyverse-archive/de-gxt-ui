@@ -34,5 +34,5 @@ storiesOf('data/TagPanel', module).add('with test diskresource details', () => <
 storiesOf('util', module).add('Autocomplete', () => <AutocompleteTest selectOptionLogger={action('Selected Option')}/>);
 storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
 storiesOf('util', module).add('DEHyperLink', () => <DEHyperLinkTest/>);
-storiesOf('util', module).add('SearchField', () => <SearchFieldTest logger={action}/>);
-storiesOf('util', module).add('TriggerSearchField', () => <TriggerFieldTest logger={action}/>);
+storiesOf('util', module).add('SearchField', () => <SearchFieldTest logger={action('Search')}/>);
+storiesOf('util', module).add('TriggerSearchField', () => <TriggerFieldTest logger={action('Search')}/>);
