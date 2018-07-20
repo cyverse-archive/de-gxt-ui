@@ -732,7 +732,7 @@ public class OntologiesPresenterImplTest {
         final QualifiedId qualifiedId = new QualifiedId(systemId, id);
 
         verify(viewMock).maskGrid(eq(OntologiesView.ViewType.EDITOR));
-        verify(appServiceMock).getApps(eq(qualifiedId), deAppListCaptor.capture());
+        verify(appServiceMock).getApps(eq(qualifiedId),eq(null), deAppListCaptor.capture());
 
         deAppListCaptor.getValue().onSuccess(appListMock);
         verify(editorGridViewMock).clearAndAdd(eq(appListMock));

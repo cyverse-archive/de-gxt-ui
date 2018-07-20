@@ -59,32 +59,52 @@ import java.util.List;
 @RunWith(GwtMockitoTestRunner.class)
 public class AdminAppsListPresenterImplTest {
 
-    @Mock AdminAppsGridViewFactory viewFactoryMock;
+    @Mock
+    AdminAppsGridViewFactory viewFactoryMock;
     @Mock
     AppAutoBeanFactory autoBeanFactory;
-    @Mock AppAdminServiceFacade adminAppServiceMock;
-    @Mock AdminAppsGridView viewMock;
-    @Mock AppServiceFacade appServiceMock;
-    @Mock ListStore<App> listStoreMock;
-    @Mock AdminAppsGridView.Presenter.Appearance appearanceMock;
-    @Mock StoreRemoveEvent.StoreRemoveHandler<App> storeRemoveHandlerMock;
-    @Mock Grid<App> gridMock;
-    @Mock GridSelectionModel<App> selectionModelMock;
-    @Mock IplantAnnouncer announcerMock;
-    @Mock OntologyUtil ontologyUtilMock;
-    @Mock AvuList avuListMock;
-    @Mock List<Avu> listAvuMock;
-    @Mock App appMock;
-    @Mock OntologyServiceFacade ontologyServiceFacadeMock;
+    @Mock
+    AppAdminServiceFacade adminAppServiceMock;
+    @Mock
+    AdminAppsGridView viewMock;
+    @Mock
+    AppServiceFacade appServiceMock;
+    @Mock
+    ListStore<App> listStoreMock;
+    @Mock
+    AdminAppsGridView.Presenter.Appearance appearanceMock;
+    @Mock
+    StoreRemoveEvent.StoreRemoveHandler<App> storeRemoveHandlerMock;
+    @Mock
+    Grid<App> gridMock;
+    @Mock
+    GridSelectionModel<App> selectionModelMock;
+    @Mock
+    IplantAnnouncer announcerMock;
+    @Mock
+    OntologyUtil ontologyUtilMock;
+    @Mock
+    AvuList avuListMock;
+    @Mock
+    List<Avu> listAvuMock;
+    @Mock
+    App appMock;
+    @Mock
+    OntologyServiceFacade ontologyServiceFacadeMock;
 
-    @Captor ArgumentCaptor<DECallback<List<App>>> appListCallbackCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<App>> appCallbackCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
-    @Captor ArgumentCaptor<AsyncCallback<List<Avu>>> avuListCallbackCaptor;
+    @Captor
+    ArgumentCaptor<DECallback<List<App>>> appListCallbackCaptor;
+    @Captor
+    ArgumentCaptor<AsyncCallback<App>> appCallbackCaptor;
+    @Captor
+    ArgumentCaptor<AsyncCallback<Void>> voidCallbackCaptor;
+    @Captor
+    ArgumentCaptor<AsyncCallback<List<Avu>>> avuListCallbackCaptor;
 
     private AdminAppsGridPresenterImpl uut;
 
-    @Before public void setUp() {
+    @Before
+    public void setUp() {
         when(viewFactoryMock.create(Matchers.<ListStore<App>>any())).thenReturn(viewMock);
         when(viewMock.getGrid()).thenReturn(gridMock);
         when(gridMock.getSelectionModel()).thenReturn(selectionModelMock);
@@ -102,24 +122,26 @@ public class AdminAppsListPresenterImplTest {
         uut.ontologyServiceFacade = ontologyServiceFacadeMock;
     }
 
-    @Test public void verifyForwardedEventHandlerRegistration() {
+    @Test
+    public void verifyForwardedEventHandlerRegistration() {
         /*** CALL METHOD UNDER TEST ***/
         uut.addStoreRemoveHandler(storeRemoveHandlerMock);
 
         verify(listStoreMock).addStoreRemoveHandler(eq(storeRemoveHandlerMock));
         verifyNoMoreInteractions(listStoreMock);
-        verifyZeroInteractions(appServiceMock,
-                               adminAppServiceMock);
+        verifyZeroInteractions(appServiceMock, adminAppServiceMock);
     }
 
-    @Test public void verifyCorrectView_getView() {
+    @Test
+    public void verifyCorrectView_getView() {
         /*** CALL METHOD UNDER TEST ***/
         final AdminAppsGridView uutView = uut.getView();
 
         assertEquals(viewMock, uutView);
     }
 
-    @Test public void verifyAppServiceCalled_onAppCategorySelectionChanged() {
+    @Test
+    public void verifyAppServiceCalled_onAppCategorySelectionChanged() {
         AppCategorySelectionChangedEvent eventMock = mock(AppCategorySelectionChangedEvent.class);
         final AppCategory appCategoryMock = mock(AppCategory.class);
         when(appCategoryMock.getId()).thenReturn("mock category id");
@@ -133,7 +155,7 @@ public class AdminAppsListPresenterImplTest {
 
         verify(viewMock).mask(anyString());
         verify(appearanceMock).getAppsLoadingMask();
-        verify(appServiceMock).getApps(eq(appCategoryMock), appListCallbackCaptor.capture());
+        verify(appServiceMock).getApps(eq(appCategoryMock), eq(null), appListCallbackCaptor.capture());
 
         List<App> resultList = Lists.newArrayList(mock(App.class));
 
@@ -144,12 +166,11 @@ public class AdminAppsListPresenterImplTest {
         verify(listStoreMock).addAll(eq(resultList));
         verify(viewMock).unmask();
 
-        verifyNoMoreInteractions(appServiceMock,
-                                 appearanceMock,
-                                 listStoreMock);
+        verifyNoMoreInteractions(appServiceMock, appearanceMock, listStoreMock);
     }
 
-    @Test public void verifyServiceCalled_onAppInfoSelected() {
+    @Test
+    public void verifyServiceCalled_onAppInfoSelected() {
         // Record keeping
         verify(viewMock).addAppInfoSelectedEventHandler(Matchers.<AppInfoSelectedEvent.AppInfoSelectedEventHandler>any());
 
@@ -163,15 +184,13 @@ public class AdminAppsListPresenterImplTest {
 
         verify(adminAppServiceMock).getAppDoc(eq(appMock), Matchers.<AsyncCallback<AppDoc>>any());
 
-        verifyZeroInteractions(viewMock,
-                               appServiceMock,
-                               listStoreMock);
+        verifyZeroInteractions(viewMock, appServiceMock, listStoreMock);
     }
 
-    @Test public void verifyListStoreUpdated_onAppSearchResultLoad() {
+    @Test
+    public void verifyListStoreUpdated_onAppSearchResultLoad() {
         AppSearchResultLoadEvent eventMock = mock(AppSearchResultLoadEvent.class);
-        final ArrayList<App> resultsMock = Lists.newArrayList(mock(App.class),
-                                                    mock(App.class));
+        final ArrayList<App> resultsMock = Lists.newArrayList(mock(App.class), mock(App.class));
         when(eventMock.getResults()).thenReturn(resultsMock);
 
         /*** CALL METHOD UNDER TEST ***/
@@ -181,11 +200,11 @@ public class AdminAppsListPresenterImplTest {
         verify(listStoreMock).addAll(eq(resultsMock));
 
         verifyNoMoreInteractions(listStoreMock);
-        verifyZeroInteractions(adminAppServiceMock,
-                               appServiceMock);
+        verifyZeroInteractions(adminAppServiceMock, appServiceMock);
     }
 
-    @Test public void verifyAppServiceCalled_onDeleteAppsSelected() {
+    @Test
+    public void verifyAppServiceCalled_onDeleteAppsSelected() {
         // Record keeping
         verify(viewMock).addAppInfoSelectedEventHandler(Matchers.<AppInfoSelectedEvent.AppInfoSelectedEventHandler>any());
 
@@ -209,16 +228,13 @@ public class AdminAppsListPresenterImplTest {
         verify(selectionModelMock).deselectAll();
         verify(listStoreMock).remove(eq(appMock));
 
-        verifyNoMoreInteractions(viewMock,
-                                 adminAppServiceMock,
-                                 listStoreMock,
-                                 gridMock,
-                                 viewMock);
+        verifyNoMoreInteractions(viewMock, adminAppServiceMock, listStoreMock, gridMock, viewMock);
 
         verifyZeroInteractions(appServiceMock);
     }
 
-    @Test public void verifyServiceCalled_onRestoreAppSelected() {
+    @Test
+    public void verifyServiceCalled_onRestoreAppSelected() {
         // Record keeping
         verify(viewMock).addAppInfoSelectedEventHandler(Matchers.<AppInfoSelectedEvent.AppInfoSelectedEventHandler>any());
 
@@ -232,8 +248,7 @@ public class AdminAppsListPresenterImplTest {
         uut.onRestoreAppSelected(eventMock);
 
         verify(viewMock).mask(anyString());
-        verify(adminAppServiceMock).restoreApp(eq(appMock),
-                                               appCallbackCaptor.capture());
+        verify(adminAppServiceMock).restoreApp(eq(appMock), appCallbackCaptor.capture());
 
         App resultMock = mock(App.class);
         /*** CALL METHOD UNDER TEST ***/
@@ -244,7 +259,8 @@ public class AdminAppsListPresenterImplTest {
         verifyNoMoreInteractions(viewMock);
     }
 
-    @Test public void verifyDocSaved_onSaveAppSelected() {
+    @Test
+    public void verifyDocSaved_onSaveAppSelected() {
         // Record keeping
         verify(viewMock).addAppInfoSelectedEventHandler(Matchers.<AppInfoSelectedEvent.AppInfoSelectedEventHandler>any());
 
@@ -269,15 +285,13 @@ public class AdminAppsListPresenterImplTest {
                                                eq(docMock),
                                                Matchers.<AsyncCallback<AppDoc>>any());
 
-        verifyNoMoreInteractions(viewMock,
-                                 adminAppServiceMock,
-                                 appMock,
-                                 docMock);
+        verifyNoMoreInteractions(viewMock, adminAppServiceMock, appMock, docMock);
         verifyZeroInteractions(appServiceMock);
     }
 
 
-    @Test public void verifyDocUpdated_onSaveAppSelected() {
+    @Test
+    public void verifyDocUpdated_onSaveAppSelected() {
         // Record keeping
         verify(viewMock).addAppInfoSelectedEventHandler(Matchers.<AppInfoSelectedEvent.AppInfoSelectedEventHandler>any());
 
@@ -302,10 +316,7 @@ public class AdminAppsListPresenterImplTest {
                                                  eq(docMock),
                                                  Matchers.<AsyncCallback<AppDoc>>any());
 
-        verifyNoMoreInteractions(viewMock,
-                                 adminAppServiceMock,
-                                 appMock,
-                                 docMock);
+        verifyNoMoreInteractions(viewMock, adminAppServiceMock, appMock, docMock);
         verifyZeroInteractions(appServiceMock);
     }
 
@@ -317,7 +328,9 @@ public class AdminAppsListPresenterImplTest {
         uut.updateBetaStatus(appMock);
 
         verify(ontologyUtilMock).getBetaAvuList();
-        verify(ontologyServiceFacadeMock).addAVUsToApp(eq(appMock), eq(avuListMock), avuListCallbackCaptor.capture());
+        verify(ontologyServiceFacadeMock).addAVUsToApp(eq(appMock),
+                                                       eq(avuListMock),
+                                                       avuListCallbackCaptor.capture());
 
         avuListCallbackCaptor.getValue().onSuccess(listAvuMock);
         verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));
@@ -336,7 +349,9 @@ public class AdminAppsListPresenterImplTest {
 
         avuListCallbackCaptor.getValue().onSuccess(listAvuMock);
         verify(ontologyUtilMock).removeBetaAvu(listAvuMock);
-        verify(ontologyServiceFacadeMock).setAppAVUs(eq(appMock), eq(avuListMock), avuListCallbackCaptor.capture());
+        verify(ontologyServiceFacadeMock).setAppAVUs(eq(appMock),
+                                                     eq(avuListMock),
+                                                     avuListCallbackCaptor.capture());
 
         avuListCallbackCaptor.getValue().onSuccess(listAvuMock);
         verify(appMock).setBeta(anyBoolean());

@@ -80,60 +80,32 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
                                               AppInfoSelectedEvent.AppInfoSelectedEventHandler,
                                               AppTypeFilterChangedEvent.AppTypeFilterChangedEventHandler {
 
-    private final DEProperties deProperties;
-    private OntologyHierarchy selectedHierarchy;
-    private AppCategory appCategory;
-
-    private class AppListCallback extends AppsCallback<List<App>> {
-        @Override
-        public void onFailure(Integer statusCode, Throwable caught) {
-            if (caught instanceof HttpRedirectException) {
-                final String uri = ((HttpRedirectException)caught).getLocation();
-                AgaveAuthPrompt prompt = new AgaveAuthPrompt(uri);
-                prompt.show();
-                prompt.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
-                    @Override
-                    public void onDialogHide(DialogHideEvent event) {
-                        if (event.getHideButton() == Dialog.PredefinedButton.NO) {
-                            listStore.clear();
-                            gridView.setHeading(appearance.agaveAuthRequiredTitle());
-                            tileView.setHeading(appearance.agaveAuthRequiredTitle());
-                        }
-                    }
-                });
-            } else {
-                postToErrorHandler(caught);
-                listStore.clear();
-                gridView.setHeading(appearance.appLoadError());
-                tileView.setHeading(appearance.appLoadError());
-            }
-            activeView.unmask();
-        }
-
-        @Override
-        public void onSuccess(final List<App> apps) {
-            loadApps(apps);
-        }
-    }
-
     final ListStore<App> listStore;
-    @Inject IplantAnnouncer announcer;
-    @Inject AppServiceFacade appService;
-    @Inject AppUserServiceFacade appUserService;
-    @Inject AppsListView.AppsListAppearance appearance;
-    @Inject AsyncProviderWrapper<CommentsDialog> commentsDialogProvider;
-    @Inject AppMetadataServiceFacade metadataFacade;
-    @Inject UserInfo userInfo;
+    private final DEProperties deProperties;
+    private final EventBus eventBus;
+    @Inject
+    IplantAnnouncer announcer;
+    @Inject
+    AppServiceFacade appService;
+    @Inject
+    AppUserServiceFacade appUserService;
+    @Inject
+    AppsListView.AppsListAppearance appearance;
+    @Inject
+    AsyncProviderWrapper<CommentsDialog> commentsDialogProvider;
+    @Inject
+    AppMetadataServiceFacade metadataFacade;
+    @Inject
+    UserInfo userInfo;
     OntologyServiceFacade ontologyService;
     OntologyUtil ontologyUtil;
     HandlerManager handlerManager;
-    private final EventBus eventBus;
     AppsListView gridView, tileView, activeView;
-    private App desiredSelectedApp;
     CardLayoutContainer cards;
-
     AppTypeFilter filter;
-
+    private OntologyHierarchy selectedHierarchy;
+    private AppCategory appCategory;
+    private App desiredSelectedApp;
 
     @Inject
     AppsListPresenterImpl(final AppsListViewFactory viewFactory,
@@ -299,6 +271,10 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         return desiredSelectedApp;
     }
 
+    public void setDesiredSelectedApp(final App desiredSelectedApp) {
+        this.desiredSelectedApp = desiredSelectedApp;
+    }
+
     @Override
     public App getSelectedApp() {
         return activeView.getSelectedItem();
@@ -333,7 +309,7 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
             activeView.enableAppTypeFilter(false);
         } else {
             activeView.enableAppTypeFilter(true);
-            if(filter != null && filter.equals(AppTypeFilter.AGAVE)) {
+            if (filter != null && filter.equals(AppTypeFilter.AGAVE)) {
                 filter = AppTypeFilter.ALL;
             }
         }
@@ -378,14 +354,13 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
         commentsDialogProvider.get(new AsyncCallback<CommentsDialog>() {
             @Override
             public void onFailure(Throwable caught) {
-                announcer.schedule(new ErrorAnnouncementConfig("Something happened while trying to manage comments. Please try again or contact support for help."));
+                announcer.schedule(new ErrorAnnouncementConfig(
+                        "Something happened while trying to manage comments. Please try again or contact support for help."));
             }
 
             @Override
             public void onSuccess(CommentsDialog result) {
-                result.show(app,
-                            app.getIntegratorEmail().equals(userInfo.getEmail()),
-                            metadataFacade);
+                result.show(app, app.getIntegratorEmail().equals(userInfo.getEmail()), metadataFacade);
             }
         });
     }
@@ -419,17 +394,13 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
     @Override
     public void onAppRatingDeselected(final AppRatingDeselected event) {
         final App appToUnRate = event.getApp();
-        appUserService.deleteRating(appToUnRate, new DeleteRatingCallback(appToUnRate,
-                                                                          eventBus));
+        appUserService.deleteRating(appToUnRate, new DeleteRatingCallback(appToUnRate, eventBus));
     }
 
     @Override
     public void onAppRatingSelected(final AppRatingSelected event) {
         final App appToRate = event.getApp();
-        appUserService.rateApp(appToRate,
-                               event.getScore(),
-                               new RateAppCallback(appToRate,
-                                                   eventBus));
+        appUserService.rateApp(appToRate, event.getScore(), new RateAppCallback(appToRate, eventBus));
     }
 
     @Override
@@ -452,29 +423,24 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
 
     @Override
     public void onDeleteAppsSelected(final DeleteAppsSelected event) {
-        appUserService.deleteAppsFromWorkspace(event.getAppsToBeDeleted(),
-                                               new AppsCallback<Void>() {
-                                                   @Override
-                                                   public void onFailure(Integer statusCode, Throwable caught) {
-                                                       ErrorHandler.post(appearance.appRemoveFailure(), caught);
-                                                   }
+        appUserService.deleteAppsFromWorkspace(event.getAppsToBeDeleted(), new AppsCallback<Void>() {
+            @Override
+            public void onFailure(Integer statusCode, Throwable caught) {
+                ErrorHandler.post(appearance.appRemoveFailure(), caught);
+            }
 
-                                                   @Override
-                                                   public void onSuccess(Void result) {
-                                                       for (App app : event.getAppsToBeDeleted()) {
-                                                           listStore.remove(app);
-                                                       }
-                                                   }
-                                               });
+            @Override
+            public void onSuccess(Void result) {
+                for (App app : event.getAppsToBeDeleted()) {
+                    listStore.remove(app);
+                }
+            }
+        });
     }
 
     @Override
     public void onRunAppSelected(RunAppSelected event) {
         doRunApp(event.getApp());
-    }
-
-    public void setDesiredSelectedApp(final App desiredSelectedApp) {
-        this.desiredSelectedApp = desiredSelectedApp;
     }
 
     void doRunApp(final App app) {
@@ -528,6 +494,38 @@ public class AppsListPresenterImpl implements AppsListView.Presenter,
             getAppsWithSelectedCategory();
         }
 
+    }
+
+    private class AppListCallback extends AppsCallback<List<App>> {
+        @Override
+        public void onFailure(Integer statusCode, Throwable caught) {
+            if (caught instanceof HttpRedirectException) {
+                final String uri = ((HttpRedirectException)caught).getLocation();
+                AgaveAuthPrompt prompt = new AgaveAuthPrompt(uri);
+                prompt.show();
+                prompt.addDialogHideHandler(new DialogHideEvent.DialogHideHandler() {
+                    @Override
+                    public void onDialogHide(DialogHideEvent event) {
+                        if (event.getHideButton() == Dialog.PredefinedButton.NO) {
+                            listStore.clear();
+                            gridView.setHeading(appearance.agaveAuthRequiredTitle());
+                            tileView.setHeading(appearance.agaveAuthRequiredTitle());
+                        }
+                    }
+                });
+            } else {
+                postToErrorHandler(caught);
+                listStore.clear();
+                gridView.setHeading(appearance.appLoadError());
+                tileView.setHeading(appearance.appLoadError());
+            }
+            activeView.unmask();
+        }
+
+        @Override
+        public void onSuccess(final List<App> apps) {
+            loadApps(apps);
+        }
     }
 
 }
