@@ -2,6 +2,7 @@ package org.iplantc.de.apps.client.presenter.list;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -37,6 +38,7 @@ import org.iplantc.de.client.services.OntologyServiceFacade;
 import org.iplantc.de.commons.client.comments.view.dialogs.CommentsDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DECallback;
+import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.event.shared.GwtEvent;
@@ -69,35 +71,59 @@ import java.util.List;
 @RunWith(GwtMockitoTestRunner.class)
 public class AppsListPresenterImplTest {
 
-    @Mock AppsListViewFactory viewFactoryMock;
-    @Mock AppsListView gridViewMock, tileViewMock, activeViewMock;
+    @Mock
+    AppsListViewFactory viewFactoryMock;
+    @Mock
+    AppsListView gridViewMock, tileViewMock, activeViewMock;
 
-    @Mock ListStore<App> listStoreMock;
-    @Mock StoreAddEvent.StoreAddHandler<App> storeAddHandlerMock;
-    @Mock StoreRemoveEvent.StoreRemoveHandler<App> storeRemoveHandlerMock;
-    @Mock StoreUpdateEvent.StoreUpdateHandler<App> storeUpdateHandlerMock;
-    @Mock StoreClearEvent.StoreClearHandler<App> storeClearHandlerMock;
-    @Mock Grid<App> gridMock;
-    @Mock GridSelectionModel<App> selectionModelMock;
-    @Mock AppUserServiceFacade appServiceMock;
-    @Mock AppsListView.AppsListAppearance appearanceMock;
-    @Mock UserInfo userInfoMock;
-    @Mock AppUserServiceFacade appUserServiceMock;
-    @Mock OntologyServiceFacade ontologyServiceMock;
-    @Mock CardLayoutContainer cardsMock;
+    @Mock
+    ListStore<App> listStoreMock;
+    @Mock
+    StoreAddEvent.StoreAddHandler<App> storeAddHandlerMock;
+    @Mock
+    StoreRemoveEvent.StoreRemoveHandler<App> storeRemoveHandlerMock;
+    @Mock
+    StoreUpdateEvent.StoreUpdateHandler<App> storeUpdateHandlerMock;
+    @Mock
+    StoreClearEvent.StoreClearHandler<App> storeClearHandlerMock;
+    @Mock
+    Grid<App> gridMock;
+    @Mock
+    GridSelectionModel<App> selectionModelMock;
+    @Mock
+    AppUserServiceFacade appServiceMock;
+    @Mock
+    AppsListView.AppsListAppearance appearanceMock;
+    @Mock
+    UserInfo userInfoMock;
+    @Mock
+    AppUserServiceFacade appUserServiceMock;
+    @Mock
+    OntologyServiceFacade ontologyServiceMock;
+    @Mock
+    CardLayoutContainer cardsMock;
+    @Mock
+    DEProperties dePropertiesMock;
 
-    @Mock AsyncProviderWrapper<CommentsDialog> commentsProviderMock;
-    @Captor ArgumentCaptor<AsyncCallback<CommentsDialog>> commentsDlgCaptor;
+    @Mock
+    AsyncProviderWrapper<CommentsDialog> commentsProviderMock;
+    @Captor
+    ArgumentCaptor<AsyncCallback<CommentsDialog>> commentsDlgCaptor;
 
-    @Captor ArgumentCaptor<DECallback<String>> stringCallbackCaptor;
-    @Captor ArgumentCaptor<DECallback<Void>> voidCallbackCaptor;
-    @Captor ArgumentCaptor<DECallback<List<App>>> appListCallbackCaptor;
-    @Mock EventBus eventBusMock;
+    @Captor
+    ArgumentCaptor<DECallback<String>> stringCallbackCaptor;
+    @Captor
+    ArgumentCaptor<DECallback<Void>> voidCallbackCaptor;
+    @Captor
+    ArgumentCaptor<DECallback<List<App>>> appListCallbackCaptor;
+    @Mock
+    EventBus eventBusMock;
 
 
     private AppsListPresenterImpl uut;
 
-    @Before public void setUp() {
+    @Before
+    public void setUp() {
         when(viewFactoryMock.createGridView(Matchers.<ListStore<App>>any())).thenReturn(gridViewMock);
         when(viewFactoryMock.createTileView(Matchers.<ListStore<App>>any())).thenReturn(tileViewMock);
         when(gridMock.getSelectionModel()).thenReturn(selectionModelMock);
@@ -105,7 +131,8 @@ public class AppsListPresenterImplTest {
         uut = new AppsListPresenterImpl(viewFactoryMock,
                                         listStoreMock,
                                         eventBusMock,
-                                        ontologyServiceMock) {
+                                        ontologyServiceMock,
+                                        dePropertiesMock) {
             @Override
             void postToErrorHandler(Throwable caught) {
                 return;
@@ -122,7 +149,8 @@ public class AppsListPresenterImplTest {
         uut.cards = cardsMock;
     }
 
-    @Test public void testConstructorEventHandlerWiring() {
+    @Test
+    public void testConstructorEventHandlerWiring() {
         verifyConstructor();
 
         verifyNoMoreInteractions(viewFactoryMock, gridViewMock);
@@ -141,7 +169,8 @@ public class AppsListPresenterImplTest {
     /**
      * Verifies that any handler registration methods are appropriately forwarded.
      */
-    @Test public void verifyForwardedEventRegistration() {
+    @Test
+    public void verifyForwardedEventRegistration() {
         /*** CALL METHOD UNDER TEST ***/
         uut.addStoreAddHandler(storeAddHandlerMock);
         verify(listStoreMock).addStoreAddHandler(eq(storeAddHandlerMock));
@@ -160,7 +189,8 @@ public class AppsListPresenterImplTest {
     }
 
 
-    @Test public void verifyGetSelectedApp() {
+    @Test
+    public void verifyGetSelectedApp() {
         /*** CALL METHOD UNDER TEST ***/
         uut.getSelectedApp();
 
@@ -169,7 +199,8 @@ public class AppsListPresenterImplTest {
         verifyNoMoreInteractions(activeViewMock);
     }
 
-    @Test public void verifyAppServiceCalled_onAppCategorySelected() {
+    @Test
+    public void verifyAppServiceCalled_onAppCategorySelected() {
 
         AppCategorySelectionChangedEvent eventMock = mock(AppCategorySelectionChangedEvent.class);
         final AppCategory appCategoryMock = mock(AppCategory.class);
@@ -187,7 +218,7 @@ public class AppsListPresenterImplTest {
 
         verify(activeViewMock).mask(anyString());
         verify(appearanceMock).getAppsLoadingMask();
-        verify(appServiceMock).getApps(eq(appCategoryMock), appListCallbackCaptor.capture());
+        verify(appServiceMock).getApps(eq(appCategoryMock), eq(null), appListCallbackCaptor.capture());
 
         List<App> resultList = Lists.newArrayList(mock(App.class));
 
@@ -198,11 +229,11 @@ public class AppsListPresenterImplTest {
         verify(listStoreMock).addAll(eq(resultList));
         verify(activeViewMock).unmask();
 
-        verifyNoMoreInteractions(appServiceMock,
-                                 appearanceMock);
+        verifyNoMoreInteractions(appServiceMock, appearanceMock);
     }
 
-    @Test public void verifyAppServiceCalled_onAppCategorySelected_Fail() {
+    @Test
+    public void verifyAppServiceCalled_onAppCategorySelected_Fail() {
         Throwable throwableMock = mock(Throwable.class);
         AppCategorySelectionChangedEvent eventMock = mock(AppCategorySelectionChangedEvent.class);
         final AppCategory appCategoryMock = mock(AppCategory.class);
@@ -220,7 +251,7 @@ public class AppsListPresenterImplTest {
 
         verify(activeViewMock).mask(anyString());
         verify(appearanceMock).getAppsLoadingMask();
-        verify(appServiceMock).getApps(eq(appCategoryMock), appListCallbackCaptor.capture());
+        verify(appServiceMock).getApps(eq(appCategoryMock), eq(null), appListCallbackCaptor.capture());
 
         List<App> resultList = Lists.newArrayList(mock(App.class));
 
@@ -235,7 +266,8 @@ public class AppsListPresenterImplTest {
         verifyNoMoreInteractions(appServiceMock);
     }
 
-    @Test public void doNothingIfSelectionIsEmpty_onAppCategorySelected() {
+    @Test
+    public void doNothingIfSelectionIsEmpty_onAppCategorySelected() {
 
         AppCategorySelectionChangedEvent eventMock = mock(AppCategorySelectionChangedEvent.class);
         List<AppCategory> selection = Lists.newArrayList();
@@ -244,16 +276,15 @@ public class AppsListPresenterImplTest {
         /*** CALL METHOD UNDER TEST ***/
         uut.onAppCategorySelectionChanged(eventMock);
 
-        verifyZeroInteractions(appearanceMock,
-                               appServiceMock,
-                               activeViewMock);
+        verifyZeroInteractions(appearanceMock, appServiceMock, activeViewMock);
     }
 
     /**
      * Verifies that the dlg provider is called, and the proper dlg show(..) method
      * is called.
      */
-    @Test public void commentsDlgShown_onAppCommentSelectedEvent(){
+    @Test
+    public void commentsDlgShown_onAppCommentSelectedEvent() {
         AppCommentSelectedEvent eventMock = mock(AppCommentSelectedEvent.class);
         App appMock = mock(App.class);
         when(appMock.getIntegratorEmail()).thenReturn("blah@doo.com");
@@ -271,18 +302,18 @@ public class AppsListPresenterImplTest {
         CommentsDialog dlgMock = mock(CommentsDialog.class);
         commentsDlgCaptor.getValue().onSuccess(dlgMock);
 
-        verify(dlgMock).show(eq(appMock),
-                             eq(false),
-                             any(AppMetadataServiceFacade.class));
+        verify(dlgMock).show(eq(appMock), eq(false), any(AppMetadataServiceFacade.class));
     }
 
     /**
      * Verify that the service is called, and appropriate actions are taken
      * on success.
      */
-    @Test public void verifyAppServiceCalled_onAppFavoriteSelected(){
+    @Test
+    public void verifyAppServiceCalled_onAppFavoriteSelected() {
         // Book-keeping for constructor
-        verify(eventBusMock).addHandler(Matchers.<GwtEvent.Type<AppsListPresenterImpl>>any(), eq(uut));
+        verify(eventBusMock, atLeast(1)).addHandler(Matchers.<GwtEvent.Type<AppsListPresenterImpl>>any(),
+                                                    eq(uut));
         AppFavoriteSelectedEvent eventMock = mock(AppFavoriteSelectedEvent.class);
         App appMock = mock(App.class);
         final String mockId = "mock id";
@@ -297,9 +328,7 @@ public class AppsListPresenterImplTest {
         /*** CALL METHOD UNDER TEST ***/
         uut.onAppFavoriteSelected(eventMock);
 
-        verify(appUserServiceMock).favoriteApp(eq(appMock),
-                                               eq(false),
-                                               voidCallbackCaptor.capture());
+        verify(appUserServiceMock).favoriteApp(eq(appMock), eq(false), voidCallbackCaptor.capture());
 
         verify(eventMock).getApp();
 
@@ -310,13 +339,14 @@ public class AppsListPresenterImplTest {
         verify(eventBusMock, times(2)).fireEvent(any(AppFavoritedEvent.class));
         verify(eventBusMock, times(2)).fireEvent(any(AppUpdatedEvent.class));
 
-        verifyNoMoreInteractions(appServiceMock,
-                                 listStoreMock);
+        verifyNoMoreInteractions(appServiceMock, listStoreMock);
     }
 
-    @Test public void runAppEventFired_onAppNameSelected() {
+    @Test
+    public void runAppEventFired_onAppNameSelected() {
         // Book-keeping for constructor
-        verify(eventBusMock).addHandler(Matchers.<GwtEvent.Type<AppsListPresenterImpl>>any(), eq(uut));
+        verify(eventBusMock, atLeast(1)).addHandler(Matchers.<GwtEvent.Type<AppsListPresenterImpl>>any(),
+                                                    eq(uut));
         AppNameSelectedEvent eventMock = mock(AppNameSelectedEvent.class);
         App appMock = mock(App.class);
         when(eventMock.getSelectedApp()).thenReturn(appMock);
@@ -334,9 +364,11 @@ public class AppsListPresenterImplTest {
         verifyZeroInteractions(appServiceMock);
     }
 
-    @Test public void runAppEventFired_onRunAppSelected() {
+    @Test
+    public void runAppEventFired_onRunAppSelected() {
         // Book-keeping for constructor
-        verify(eventBusMock).addHandler(Matchers.<GwtEvent.Type<AppsListPresenterImpl>>any(), eq(uut));
+        verify(eventBusMock, atLeast(1)).addHandler(Matchers.<GwtEvent.Type<AppsListPresenterImpl>>any(),
+                                                    eq(uut));
         RunAppSelected eventMock = mock(RunAppSelected.class);
         App appMock = mock(App.class);
         when(eventMock.getApp()).thenReturn(appMock);
@@ -354,7 +386,8 @@ public class AppsListPresenterImplTest {
         verifyZeroInteractions(appServiceMock);
     }
 
-    @Test public void verifyAppServiceCalled_onAppRatingDeselected() {
+    @Test
+    public void verifyAppServiceCalled_onAppRatingDeselected() {
         AppRatingDeselected eventMock = mock(AppRatingDeselected.class);
         App appMock = mock(App.class);
         when(eventMock.getApp()).thenReturn(appMock);
@@ -362,14 +395,13 @@ public class AppsListPresenterImplTest {
         /*** CALL METHOD UNDER TEST ***/
         uut.onAppRatingDeselected(eventMock);
 
-        verify(appUserServiceMock).deleteRating(eq(appMock),
-                                                any(DeleteRatingCallback.class));
-        verifyNoMoreInteractions(appServiceMock,
-                                 appMock);
+        verify(appUserServiceMock).deleteRating(eq(appMock), any(DeleteRatingCallback.class));
+        verifyNoMoreInteractions(appServiceMock, appMock);
     }
 
-    @Test public void verifyAppServiceCalled_onAppRatingSelected() {
-         AppRatingSelected eventMock = mock(AppRatingSelected.class);
+    @Test
+    public void verifyAppServiceCalled_onAppRatingSelected() {
+        AppRatingSelected eventMock = mock(AppRatingSelected.class);
         App appMock = mock(App.class);
         when(eventMock.getApp()).thenReturn(appMock);
         int mockScore = 3;
@@ -378,14 +410,12 @@ public class AppsListPresenterImplTest {
         /*** CALL METHOD UNDER TEST ***/
         uut.onAppRatingSelected(eventMock);
 
-        verify(appUserServiceMock).rateApp(eq(appMock),
-                                           eq(mockScore),
-                                           any(RateAppCallback.class));
-        verifyNoMoreInteractions(appServiceMock,
-                                 appMock);
+        verify(appUserServiceMock).rateApp(eq(appMock), eq(mockScore), any(RateAppCallback.class));
+        verifyNoMoreInteractions(appServiceMock, appMock);
     }
 
-    @Test public void verifyStoreClearedAndResultsAdded_onAppSearchResultLoad() {
+    @Test
+    public void verifyStoreClearedAndResultsAdded_onAppSearchResultLoad() {
         // Record keeping
         verifyConstructor();
         AppSearchResultLoadEvent eventMock = mock(AppSearchResultLoadEvent.class);
@@ -407,20 +437,20 @@ public class AppsListPresenterImplTest {
 
         verifyNoMoreInteractions(listStoreMock, gridViewMock);
 
-        verifyZeroInteractions(appServiceMock,
-                               appUserServiceMock);
+        verifyZeroInteractions(appServiceMock, appUserServiceMock);
     }
 
-    @Test public void verifyAppServiceCalled_onDeleteAppsSelected() {
+    @Test
+    public void verifyAppServiceCalled_onDeleteAppsSelected() {
         // Book-keeping for constructor
-        verify(eventBusMock).addHandler(Matchers.<GwtEvent.Type<AppsListPresenterImpl>>any(), eq(uut));
+        verify(eventBusMock, atLeast(1)).addHandler(Matchers.<GwtEvent.Type<AppsListPresenterImpl>>any(),
+                                                    eq(uut));
         DeleteAppsSelected eventMock = mock(DeleteAppsSelected.class);
         App mock1 = mock(App.class);
         App mock2 = mock(App.class);
         when(mock1.getId()).thenReturn("mock id 1");
         when(mock2.getId()).thenReturn("mock id 2");
-        List<App> appsToBeDeleted = Lists.newArrayList(mock1,
-                                                       mock2);
+        List<App> appsToBeDeleted = Lists.newArrayList(mock1, mock2);
         when(eventMock.getAppsToBeDeleted()).thenReturn(appsToBeDeleted);
 
         String mockUserName = "mock user name";
@@ -435,12 +465,7 @@ public class AppsListPresenterImplTest {
 
         verify(appUserServiceMock).deleteAppsFromWorkspace(eq(appsToBeDeleted),
                                                            Matchers.<DECallback<Void>>any());
-        verifyNoMoreInteractions(appServiceMock,
-                                 eventMock,
-                                 eventBusMock,
-                                 userInfoMock,
-                                 mock1,
-                                 mock2);
+        verifyNoMoreInteractions(appServiceMock, eventMock, eventBusMock, userInfoMock, mock1, mock2);
     }
 
     @Test
@@ -480,7 +505,6 @@ public class AppsListPresenterImplTest {
         verify(tileViewMock).addAppSelectionChangedEventHandler(eq(uut));
         verify(tileViewMock).addAppInfoSelectedEventHandler(eq(uut));
     }
-
 
 
 }
