@@ -51,7 +51,13 @@ public class SearchModelUtils {
 
     public DiskResourceQueryTemplate convertSplittableToTemplate(Splittable splittable) {
         DiskResourceQueryTemplate template = factory.getQueryTemplate().as();
+        Splittable label = splittable.get("label");
+        String name = null;
+        if (label != null) {
+            name = label.asString();
+        }
         template.setTemplate(splittable);
+        template.setName(name);
         return template;
     }
 

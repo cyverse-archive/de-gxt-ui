@@ -366,7 +366,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     @Override
     public void edit(DiskResourceQueryTemplate template) {
         ReactSearchForm.SearchFormProps props = getCurrentProps();
-        props.initialValues = searchModelUtils.convertTemplateToSplittable(template);
+        props.initialValues = template.getTemplate();
 
         view.renderSearchForm(props);
 
