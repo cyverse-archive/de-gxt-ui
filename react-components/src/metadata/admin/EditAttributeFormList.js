@@ -79,9 +79,9 @@ class EditAttribute extends Component {
             moveDown,
             moveUpDisabled,
             moveDownDisabled,
-            attribute: { name, type },
+            attribute: { name, description, type },
             // from redux-form
-            change, field,
+            change, field, error,
         } = this.props;
 
         const formID = build(ids.METADATA_TEMPLATE_FORM, field, ids.DIALOG);
@@ -103,6 +103,12 @@ class EditAttribute extends Component {
                     <div className={classes.title}>
                         <Typography id={dialogTitleID} variant="title" color="inherit" >
                             {name}
+                        </Typography>
+                        <Typography id={build(formID, error ? ids.TITLE_ERR : ids.TITLE_SUB)}
+                                    variant="subheading"
+                                    className={error ? classes.errorSubTitle : null}
+                        >
+                            {error || description}
                         </Typography>
                     </div>
                     <div className={classes.spacer} />
@@ -279,7 +285,7 @@ class EditAttributeFormList extends Component {
     };
 
     render () {
-        const { classes, intl, fields, change } = this.props;
+        const { classes, intl, fields, change, meta: { error } } = this.props;
 
         return (
             <ExpansionPanel defaultExpanded={fields && fields.length > 0}>
@@ -311,6 +317,7 @@ class EditAttributeFormList extends Component {
                             <Grid item key={field}>
                                 <EditAttribute field={field}
                                                change={change}
+                                               error={error && error[index]}
                                                attribute={fields.get(index)}
                                                onAddAttribute={this.onAddAttribute}
                                                onAttributeRemoved={() => this.onAttributeRemoved(index)}

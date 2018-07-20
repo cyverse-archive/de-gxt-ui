@@ -30,4 +30,5 @@ export default {
     TEMPLATE_DESCRIPTION: "description",
     TITLE: "title",
     TITLE_ERR: "errTitle",
+    TITLE_SUB: "subTitle",
 };

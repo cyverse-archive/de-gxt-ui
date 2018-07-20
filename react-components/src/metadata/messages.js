@@ -19,6 +19,7 @@ export default {
         edit: "Edit",
         enumDefaultLabel: "Default Selection?",
         enumValues: "Enum Values",
+        errAttrHasErrors: "Attribute (or a child attribute) has 1 or more errors.",
         errAttrNameMustBeUnique: "Attribute name must be unique",
         errEnumValueRequired: "Enum requires at least 1 value.",
         errEnumOptionValueRequired: "Enum Option Value Required",

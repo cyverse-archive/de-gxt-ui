@@ -119,6 +119,7 @@ class EditMetadataTemplate extends Component {
 
 const validateAttributes = attributes => {
     const attributesArrayErrors = [];
+    const _error = [];
 
     attributes.forEach((attr, attrIndex) => {
         const attrErrors = {};
@@ -163,6 +164,11 @@ const validateAttributes = attributes => {
                 attrErrors.attributes = subAttrErros;
                 attributesArrayErrors[attrIndex] = attrErrors;
             }
+        }
+
+        if (attributesArrayErrors[attrIndex]) {
+            _error[attrIndex] = getMessage("errAttrHasErrors");
+            attributesArrayErrors["_error"] = _error;
         }
     });
 
