@@ -1,25 +1,15 @@
 package org.iplantc.de.client.services.impl;
 
-import org.iplantc.de.client.models.UserInfo;
-import org.iplantc.de.client.models.search.DateInterval;
-import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
-import org.iplantc.de.client.models.search.FileSizeRange;
 import org.iplantc.de.client.models.sharing.PermissionValue;
-import org.iplantc.de.client.models.tags.Tag;
-import org.iplantc.de.shared.DEProperties;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
- *
  * This class uses a builder pattern to construct a search query from a given query template.
  *
  * If a field in the given query template is null or empty, the corresponding search term will be omitted
@@ -71,257 +61,125 @@ public class DataSearchQueryBuilder {
     public static final String SIZE = "size";
     public static final String FROM = "from";
     public static final String TO = "to";
+
+
     //Modified within
     public static final String MODIFIED = "modified";
     //Created within
     public static final String CREATED = "created";
 
+    // Values only used in Query Builder UI
+    public static final String OPLABEL = "opLabel";
+    public static final String NEGATED = "negated";
 
-    private final DiskResourceQueryTemplate template;
-    private UserInfo userInfo;
-    private final Splittable allList;
-    private final Splittable anyList;
-    private final Splittable noneList;
+
+    private final Splittable template;
+    private final Splittable query;
 
     Logger LOG = Logger.getLogger(DataSearchQueryBuilder.class.getName());
 
-    public DataSearchQueryBuilder(DiskResourceQueryTemplate template, UserInfo userInfo) {
-        this.template = template;
-        this.userInfo = userInfo;
-        allList = StringQuoter.createIndexed();
-        anyList = StringQuoter.createIndexed();
-        noneList = StringQuoter.createIndexed();
+    public DataSearchQueryBuilder(Splittable template) {
+        this.template = template.deepCopy();
+        this.query = StringQuoter.createSplittable();
     }
 
-    public Splittable getFullQuery() {
-        ownedBy().sharedWith()
-                 .modifiedWithin()
-                 .createdWithin()
-                 .file()
-                 .notFile()
-                 .fileSizeRange()
-                 .metadata()
-                 .negatedPathPrefix()
-                 .tags()
-                 .includeTrash();
-
-        Splittable query = StringQuoter.createSplittable();
-
-        Splittable operators = StringQuoter.createSplittable();
-        assignKeyValue(operators, NONE, noneList);
-        assignKeyValue(operators, ALL, allList);
-        assignKeyValue(operators, ANY, anyList);
-
-        assignKeyValue(query, QUERY, operators);
-
+    public Splittable buildQuery() {
+        buildQuery(query, template);
         return query;
     }
 
-    /**
-     * {"type": "owner", "args": {"owner": "ipcdev"}}
-     */
-    public DataSearchQueryBuilder ownedBy() {
-        String queryContent = template.getOwnedBy();
-        if (!Strings.isNullOrEmpty(queryContent)) {
-            appendArrayItem(allList, createTypeClause(OWNER, OWNER, queryContent));
+    public void buildQuery(Splittable parent, Splittable child) {
+        Splittable noneList = StringQuoter.createIndexed();
+        if (isGroup(child)) {
+            String type = getTypeValue(child);
+            Splittable group = StringQuoter.createSplittable();
+            Splittable arrayArgs = getArgs(child);
+            if (arrayArgs != null) {
+                Splittable newArrayArgs = StringQuoter.createIndexed();
+                assignKeyValue(group, type, newArrayArgs);
+                for (int i = 0; i < arrayArgs.size(); i++) {
+                    Splittable arg = arrayArgs.get(i);
+                    buildQuery(newArrayArgs, arg);
+                }
+                child = group;
+                if (parent.isIndexed()) {
+                    appendArrayItem(parent, child);
+                } else {
+                    assignKeyValue(parent, QUERY, child);
+                }
+            }
+        } else {
+            String type = getTypeValue(child);
+            if (type == null) {
+                return;
+            }
+            switch (type) {
+                case SIZE:
+                    fileSizeRange(child);
+                    break;
+                case TAG:
+                    tags(child);
+                    break;
+            }
+            boolean negated = isNegated(getArgs(child));
+            if (negated) {
+                Splittable noneNamed = StringQuoter.createSplittable();
+                assignKeyValue(noneNamed, NONE, noneList);
+                appendArrayItem(noneList, child);
+                appendArrayItem(parent, noneNamed);
+            } else {
+                appendArrayItem(parent, child);
+            }
         }
-        return this;
     }
 
-    /**
-     * {"type": "label", "args": {"label": "some_random_file_name", "exact": true}}
-     */
-    public DataSearchQueryBuilder file() {
-        String content = template.getFileQuery();
-        if (!Strings.isNullOrEmpty(content)) {
-            Splittable args = StringQuoter.createSplittable();
-            assignKeyValue(args, LABEL, content);
-            appendArrayItem(allList, createTypeClause(LABEL, args));
-        }
-        return this;
-    }
-
-    /**
-     * {"type": "label", "args": {"label": "some_random_file_name", "exact": true}}
-     */
-    public DataSearchQueryBuilder notFile() {
-        String content = template.getNegatedFileQuery();
-        if (!Strings.isNullOrEmpty(content)) {
-            Splittable args = StringQuoter.createSplittable();
-            assignKeyValue(args, LABEL, content);
-            appendArrayItem(noneList, createTypeClause(LABEL, args));
-        }
-        return this;
-    }
-
-    /**
-     * {"type": "path", "args": {"prefix": "/home/iplant/shared"}}
-     */
-    public DataSearchQueryBuilder negatedPathPrefix() {
-        String content = template.getNegatedPathPrefix();
-        if (!Strings.isNullOrEmpty(content)) {
-            Splittable args = StringQuoter.createSplittable();
-            assignKeyValue(args, PREFIX, content);
-            appendArrayItem(noneList, createTypeClause(PATH, args));
-        }
-        return this;
+    private boolean isNegated(Splittable arg) {
+        Splittable negated = arg.get(NEGATED);
+        return negated != null && negated.asBoolean();
     }
 
     /**
      * {"type": "size", "args": {"from": "1KB", "to": "2KB"}}
      */
-    public DataSearchQueryBuilder fileSizeRange() {
-        FileSizeRange fileSizeRange = template.getFileSizeRange();
-        if (fileSizeRange != null) {
-            Double min = fileSizeRange.getMin();
-            Double max = fileSizeRange.getMax();
-            if (min != null || max != null) {
-                Splittable args = StringQuoter.createSplittable();
-                String from, to;
-                if (min != null) {
-                    from = min + fileSizeRange.getMinUnit().getLabel();
-                    assignKeyValue(args, FROM, from);
-                }
-                if (max != null) {
-                    to = max + fileSizeRange.getMaxUnit().getLabel();
-                    assignKeyValue(args, TO, to);
-                }
-                appendArrayItem(allList, createTypeClause(SIZE, args));
+    public void fileSizeRange(Splittable child) {
+        Splittable fileSizes = getArgs(child);
+        if (fileSizes != null && (!fileSizes.isNull(FROM) || !fileSizes.isNull(TO))) {
+            Splittable from = fileSizes.get(FROM);
+            Splittable to = fileSizes.get(TO);
+            if (from != null && !from.isNull("value") && !from.isNull("unit")) {
+                assignKeyValue(fileSizes, FROM, from.get("value").asNumber() + from.get("unit").asString());
+            } else {
+                assignKeyValue(fileSizes, FROM, "");
+            }
+            if (to != null && !to.isNull("value") && !to.isNull("unit")) {
+                assignKeyValue(fileSizes, TO, to.get("value").asNumber() + to.get("unit").asString());
+            } else {
+                assignKeyValue(fileSizes, TO, "");
             }
         }
-        return this;
     }
 
     /**
-     * {"type": "path", "args": {"prefix": "/iplant/home"}}
+     * {"type": "tag", "args": {"tags": ["UUID_1","UUID_2","UUID_3"]}
      */
-    public DataSearchQueryBuilder includeTrash() {
-        boolean include = template.isIncludeTrashItems();
-        DEProperties props = DEProperties.getInstance();
-
-        Splittable args = StringQuoter.createSplittable();
-
-        if (include) {
-            assignKeyValue(args, PREFIX, props.getBaseTrashPath());
-            appendArrayItem(anyList, createTypeClause(PATH, args));
-        } else {
-            assignKeyValue(args, PREFIX, props.getIrodsHomePath());
-            appendArrayItem(allList, createTypeClause(PATH, args));
+    public void tags(Splittable child) {
+        Splittable args = getArgs(child);
+        if (args != null && !args.isNull(TAGS)) {
+            Splittable tags = args.get(TAGS);
+            Splittable tagIds = tagToString(tags);
+            assignKeyValue(args, TAGS, tagIds);
         }
-        return this;
     }
 
-    /**
-     * {"type": "permissions", "args": {"users": ["ipcdev","aramsey"], "permission": "write"}}
-     */
-    public DataSearchQueryBuilder sharedWith() {
-        String sharedWith = template.getSharedWith();
-        List<String> content = Lists.newArrayList(sharedWith);
-        if (!Strings.isNullOrEmpty(sharedWith)) {
-            Splittable users = listToSplittable(content);
-            Splittable args = StringQuoter.createSplittable();
-            assignKeyValue(args, SHARED_WITH, users);
-            if (template.getPermission() == null) {
-                template.setPermission(PermissionValue.read);
-                template.setPermissionRecurse(true);
+    private Splittable tagToString(Splittable tags) {
+        Splittable tagIds = StringQuoter.createIndexed();
+        if (tags.isIndexed()) {
+            for (int i = 0; i < tags.size(); i++) {
+                Splittable tag = tags.get(i);
+                appendArrayItem(tagIds, tag.get("id"));
             }
-            assignKeyValue(args, PERMISSION, template.getPermission());
-            assignKeyValue(args, PERMISSION_RECURSE, template.isPermissionRecurse());
-            appendArrayItem(allList, createTypeClause(PERMISSIONS, args));
-            appendArrayItem(allList, createTypeClause(PERMISSIONS, getOwnershipPermission()));
         }
-        return this;
-    }
-
-    Splittable getOwnershipPermission() {
-        List<String> content = Lists.newArrayList(userInfo.getUsername());
-        Splittable users = listToSplittable(content);
-        Splittable args = StringQuoter.createSplittable();
-        assignKeyValue(args, SHARED_WITH, users);
-        assignKeyValue(args, PERMISSION, PermissionValue.own);
-        return args;
-    }
-
-    /**
-     * {"type": "tag", "args": {"tags": ["all","my","tags"]}
-     */
-    public DataSearchQueryBuilder tags() {
-        Set<Tag> content = template.getTagQuery();
-        if (content != null && !content.isEmpty()) {
-
-            Splittable tags = tagsToSplittable(content);
-            Splittable args = StringQuoter.createSplittable();
-            assignKeyValue(args, TAGS, tags);
-            appendArrayItem(allList, createTypeClause(TAG, args));
-        }
-        return this;
-    }
-
-    private Splittable tagsToSplittable(Set<Tag> tags) {
-        List<String> tagValues = tags.stream().map(Tag::getId).collect(Collectors.toList());
-
-        return listToSplittable(tagValues);
-    }
-
-    /**
-     * {"type": "metadata", "args": {"attribute": "some_random_attribute_value", "value": "some_random_value"}}
-     */
-    public DataSearchQueryBuilder metadata() {
-        String attributeContent = template.getMetadataAttributeQuery();
-        String valueContent = template.getMetadataValueQuery();
-        boolean hasAttributeSearch = !Strings.isNullOrEmpty(attributeContent);
-        boolean hasValueSearch = !Strings.isNullOrEmpty(valueContent);
-
-        if (hasAttributeSearch || hasValueSearch) {
-            Splittable args = StringQuoter.createSplittable();
-
-            if (hasAttributeSearch) {
-                assignKeyValue(args, ATTRIBUTE, attributeContent);
-            }
-            if (hasValueSearch) {
-                assignKeyValue(args, VALUE, valueContent);
-            }
-            appendArrayItem(allList, createTypeClause(METADATA, args));
-        }
-
-        return this;
-    }
-
-    /**
-     * {"type": "created", "args": {"from": "some_date", "to": "some_other_date"}}
-     */
-    public DataSearchQueryBuilder createdWithin() {
-        DateInterval content = template.getCreatedWithin();
-
-        return dateInterval(content, CREATED);
-    }
-
-    /**
-     * {"type": "modified", "args": {"from": "some_date", "to": "some_other_date"}}
-     */
-    public DataSearchQueryBuilder modifiedWithin() {
-        DateInterval content = template.getModifiedWithin();
-
-        return dateInterval(content, MODIFIED);
-    }
-
-    /**
-     * {"type": "typeClause", "args": {"from": "some_date", "to": "some_other_date"}}
-     */
-    DataSearchQueryBuilder dateInterval(DateInterval content, String typeClause) {
-        if (content != null && !Strings.isNullOrEmpty(content.getLabel())) {
-            String from = String.valueOf(content.getFrom().getTime());
-            String to = String.valueOf(content.getTo().getTime());
-
-            Splittable args = StringQuoter.createSplittable();
-
-            assignKeyValue(args, FROM, from);
-            assignKeyValue(args, TO, to);
-
-            appendArrayItem(allList, createTypeClause(typeClause, args));
-        }
-
-        return this;
+        return tagIds;
     }
 
     /**
@@ -361,16 +219,6 @@ public class DataSearchQueryBuilder {
         assignKeyValue(type, ARGS, args);
 
         return type;
-    }
-
-    private Splittable listToSplittable(List<String> list) {
-        Splittable splittable = StringQuoter.createIndexed();
-        list.forEach(value -> StringQuoter.create(value).assign(splittable, splittable.size()));
-        return splittable;
-    }
-
-    private void assignKeyValue(Splittable keySplittable, String key, PermissionValue value) {
-        StringQuoter.create(value.toString()).assign(keySplittable, key);
     }
 
     /**
@@ -413,6 +261,34 @@ public class DataSearchQueryBuilder {
      */
     private void appendArrayItem(Splittable array, Splittable item) {
         item.assign(array, array.size());
+    }
+
+    private boolean isGroup(Splittable spl) {
+        String type = getTypeValue(spl);
+        return groups().contains(type);
+    }
+
+
+    private String getTypeValue(Splittable spl) {
+        Splittable type = spl.get(TYPE);
+        if (type != null) {
+            return type.asString();
+        }
+        return null;
+    }
+
+    // Retrieves either the array of {type, arg} objects expected with a group
+    // or the args object expected with a condition
+    private Splittable getArgs(Splittable spl) {
+        Splittable args = spl.get(ARGS);
+        if (args != null) {
+            return args;
+        }
+        return null;
+    }
+
+    private List<String> groups() {
+        return Lists.newArrayList(ALL, ANY, NONE);
     }
 
     /**

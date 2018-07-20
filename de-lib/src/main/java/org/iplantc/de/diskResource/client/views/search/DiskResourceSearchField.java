@@ -1,7 +1,6 @@
 package org.iplantc.de.diskResource.client.views.search;
 
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
-import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.commons.client.events.SubmitTextSearchEvent;
 import org.iplantc.de.commons.client.events.SubmitTextSearchEvent.SubmitTextSearchEventHandler;
@@ -14,7 +13,6 @@ import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryE
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent;
 import org.iplantc.de.diskResource.client.views.search.cells.DiskResourceSearchCell;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.Splittable;
@@ -46,7 +44,6 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
                                                                              UpdateSavedSearchesEvent.HasUpdateSavedSearchesEventHandlers {
 
     public final class QueryStringPropertyEditor extends PropertyEditor<String> {
-        private final SearchAutoBeanFactory factory = GWT.create(SearchAutoBeanFactory.class);
         @Override
         public String parse(CharSequence text) throws ParseException {
             clearInvalid();
@@ -55,10 +52,8 @@ public class DiskResourceSearchField extends TriggerField<String> implements Has
                 return text.toString();
             }
 
-            DiskResourceQueryTemplate qt = searchModelUtils.createDefaultSimpleSearch();
-            qt.setFileQuery(text.toString());
-            Splittable splTemplate = searchModelUtils.convertTemplateToSplittable(qt);
-            getCell().getSearchPresenter().onSearchBtnClicked(splTemplate);
+            Splittable qt = searchModelUtils.createDefaultSimpleSearch(text.toString());
+            getCell().getSearchPresenter().onSearchBtnClicked(qt);
             return text.toString();
         }
 

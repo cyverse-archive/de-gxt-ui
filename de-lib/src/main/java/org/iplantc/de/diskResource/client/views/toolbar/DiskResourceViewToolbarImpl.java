@@ -885,11 +885,11 @@ public class DiskResourceViewToolbarImpl extends Composite implements ToolbarVie
 
         String trashPath = userInfo.getTrashPath();
         for (DiskResource dr : selection) {
-            if (dr.getPath().equals(trashPath)) {
+            if (trashPath.equals(dr.getPath())) {
                 return false;
             }
 
-            if (!dr.getPath().startsWith(trashPath)) {
+            if (dr.getPath() == null || !dr.getPath().startsWith(trashPath)) {
                 return false;
             }
         }
