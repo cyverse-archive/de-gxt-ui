@@ -5,14 +5,17 @@ import React, { Component } from 'react';
 
 class TriggerFieldTest extends Component {
     render() {
-        const handleSearch = this.props.logger('Search') || ((selection) => {
+        const handleSearch = this.props.logger || ((selection) => {
             console.log(selection);
         });
 
         return (
-            <TriggerField handleSearch={handleSearch}>
-                <Button>Test Success!</Button>
-            </TriggerField>
+            <div>
+                <label>Type at least 3 characters, then wait a second</label>
+                <TriggerField handleSearch={handleSearch}>
+                    <Button>Test Success!</Button>
+                </TriggerField>
+            </div>
         )
     }
 }

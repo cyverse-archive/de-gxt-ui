@@ -1,6 +1,6 @@
 import React from "react";
-import {storiesOf} from "@storybook/react";
-import {action} from "@storybook/addon-actions";
+import { storiesOf } from "@storybook/react";
+import { action } from "@storybook/addon-actions";
 import ToolDetailsTest from "./apps/details/ToolDetails.stories";
 import CategoryTreeTest from "./apps/details/CategoryTree.stories";
 import CopyTextAreaTest from "./util/CopyTextArea.stories";
@@ -16,6 +16,7 @@ import SearchFieldTest from './util/SearchField.stories';
 import SearchFormTest from "./data/search/SearchForm.stories";
 import SearchFormTagPanel from './data/search/SearchFormTagPanel.stories';
 import TriggerFieldTest from './util/TriggerField.stories';
+import AutocompleteTest from "./util/Autocomplete.stories";
 
 storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);
@@ -30,7 +31,8 @@ storiesOf('data/search', module).add('SearchFormTagPanel', () => <SearchFormTagP
 storiesOf('data/Tag', module).add('with test diskresource details', () => <TagTest logger={action('tag')}/>);
 storiesOf('data/TagPanel', module).add('with test diskresource details', () => <TagPanelTest logger={action('tagpanel')}/>);
 
+storiesOf('util', module).add('Autocomplete', () => <AutocompleteTest selectOptionLogger={action('Selected Option')}/>);
 storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
 storiesOf('util', module).add('DEHyperLink', () => <DEHyperLinkTest/>);
-storiesOf('util', module).add('SearchField', () => <SearchFieldTest logger={action}/>);
-storiesOf('util', module).add('TriggerSearchField', () => <TriggerFieldTest logger={action}/>);
+storiesOf('util', module).add('SearchField', () => <SearchFieldTest logger={action('Search')}/>);
+storiesOf('util', module).add('TriggerSearchField', () => <TriggerFieldTest logger={action('Search')}/>);
