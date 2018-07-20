@@ -12,7 +12,7 @@ import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
-import org.iplantc.de.client.models.AnalysisTypeFilter;
+import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
 
@@ -41,7 +41,7 @@ public interface AnalysisToolBarView extends IsWidget,
 
     void filterByParentAnalysisId(String id);
 
-    void setFilterInView(AnalysisPermissionFilter permFilter, AnalysisTypeFilter typeFilter);
+    void setFilterInView(AnalysisPermissionFilter permFilter, AppTypeFilter typeFilter);
 
     AnalysisSearchField getSearchField();
 }

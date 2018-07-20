@@ -19,7 +19,7 @@ import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelecte
 import org.iplantc.de.analysis.client.gin.factory.AnalysisToolBarFactory;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.analysis.shared.AnalysisModule;
-import org.iplantc.de.client.models.AnalysisTypeFilter;
+import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
 
@@ -195,7 +195,7 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     }
 
     @Override
-    public void setPermFilterInView(AnalysisPermissionFilter permFilter, AnalysisTypeFilter typeFilter) {
+    public void setPermFilterInView(AnalysisPermissionFilter permFilter, AppTypeFilter typeFilter) {
         toolBar.setFilterInView(permFilter, typeFilter);
     }
 

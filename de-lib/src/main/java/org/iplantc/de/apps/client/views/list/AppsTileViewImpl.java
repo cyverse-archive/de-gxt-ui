@@ -15,7 +15,9 @@ import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
 import org.iplantc.de.apps.client.models.AppProperties;
 import org.iplantc.de.apps.client.views.list.cells.AppTileCell;
+import org.iplantc.de.apps.client.views.list.widgets.AppTypeFilterCombo;
 import org.iplantc.de.apps.shared.AppsModule;
+import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.theme.base.client.apps.list.TileListDefaultAppearance;
@@ -82,6 +84,8 @@ public class AppsTileViewImpl extends ContentPanel
     @UiField ListView<App, App> listView;
     @UiField SimpleComboBox<SortChoice> sortBox;
     @UiField(provided = true) AppsListView.AppsListAppearance appearance;
+    @UiField(provided = true)
+    AppTypeFilterCombo typeFilter;
     private TileListDefaultAppearance<App> listAppearance;
     private AppTileCell appTileCell;
     private AppProperties properties;
@@ -92,13 +96,15 @@ public class AppsTileViewImpl extends ContentPanel
                      @Assisted final ListStore<App> listStore,
                      TileListDefaultAppearance<App> listAppearance,
                      AppTileCell appTileCell,
-                     AppProperties properties) {
+                     AppProperties properties,
+                     AppTypeFilterCombo typeFilter) {
         this.appearance = appearance;
         this.listStore = listStore;
         this.listAppearance = listAppearance;
         this.appTileCell = appTileCell;
         this.properties = properties;
         this.deProperties = DEProperties.getInstance();
+        this.typeFilter = typeFilter;
 
         appTileCell.setHasHandlers(this);
         appTileCell.setCardUrl(deProperties.getAppsCardUrl(), deProperties.getAppsCardUrlOptions());
@@ -257,5 +263,19 @@ public class AppsTileViewImpl extends ContentPanel
     @Override
     public void setSearchPattern(String searchPattern) {
         appTileCell.setSearchRegexPattern(searchPattern);
+    }
+
+    @Override
+    public void setAppTypeFilter(AppTypeFilter filter) {
+        typeFilter.setFilter(filter);
+    }
+
+    @Override
+    public void enableAppTypeFilter(boolean enabled) {
+        if(enabled) {
+            typeFilter.enable();
+        } else {
+            typeFilter.disbale();
+        }
     }
 }

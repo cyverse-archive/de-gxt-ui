@@ -22,7 +22,7 @@ import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
 import org.iplantc.de.analysis.client.gin.factory.AnalysesViewFactory;
-import org.iplantc.de.client.models.AnalysisTypeFilter;
+import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
 import org.iplantc.de.analysis.client.presenter.proxy.AnalysisRpcProxy;
 import org.iplantc.de.analysis.client.views.AnalysisStepsView;
@@ -104,7 +104,7 @@ public class AnalysesPresenterImplTest {
     @Mock
     AnalysisPermissionFilter currentPermFilterMock;
     @Mock
-    AnalysisTypeFilter currentTypeFilterMock;
+    AppTypeFilter currentTypeFilterMock;
     @Mock ListStore<Analysis> listStoreMock;
     @Mock AnalysesView viewMock;
     @Mock HasHandlers eventBusMock;
@@ -331,14 +331,14 @@ public class AnalysesPresenterImplTest {
 
         /** CALL METHOD UNDER TEST **/
         spy.go(containerMock, analysisListMock);
-        verify(spy).loadAnalyses(eq(AnalysisPermissionFilter.ALL), eq(AnalysisTypeFilter.ALL));
+        verify(spy).loadAnalyses(eq(AnalysisPermissionFilter.ALL), eq(AppTypeFilter.ALL));
         verify(containerMock).setWidget(eq(viewMock));
     }
 
     @Test
     public void loadAnalyses_search() {
         AnalysisPermissionFilter filterMock = mock(AnalysisPermissionFilter.class);
-        AnalysisTypeFilter typeFilterMock = mock(AnalysisTypeFilter.class);
+        AppTypeFilter typeFilterMock = mock(AppTypeFilter.class);
         when(analysisSearchFieldMock.getCurrentValue()).thenReturn("Value");
 
         /** CALL METHOD UNDER TEST **/
@@ -350,7 +350,7 @@ public class AnalysesPresenterImplTest {
     @Test
     public void loadAnalyses() {
         AnalysisPermissionFilter filterMock = mock(AnalysisPermissionFilter.class);
-        AnalysisTypeFilter typeFilterMock = mock(AnalysisTypeFilter.class);
+        AppTypeFilter typeFilterMock = mock(AppTypeFilter.class);
         when(analysisSearchFieldMock.getCurrentValue()).thenReturn(null);
 
 

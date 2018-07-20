@@ -2,7 +2,7 @@ package org.iplantc.de.desktop.client.views.windows;
 
 import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.shared.AnalysisModule;
-import org.iplantc.de.client.models.AnalysisTypeFilter;
+import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.WindowType;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
@@ -71,7 +71,7 @@ public class MyAnalysesWindow extends WindowBase {
         selectedAnalyses.addAll(presenter.getSelectedAnalyses());
         config.setSelectedAnalyses(selectedAnalyses);
         AnalysisPermissionFilter currentPermFilter = presenter.getCurrentPermFilter();
-        AnalysisTypeFilter currentTypeFilter = presenter.getCurrentTypeFilter();
+        AppTypeFilter currentTypeFilter = presenter.getCurrentTypeFilter();
         if (currentPermFilter != null) {
             config.setPermFilter(currentPermFilter.getFilterString());
         }
@@ -89,7 +89,7 @@ public class MyAnalysesWindow extends WindowBase {
             AnalysisWindowConfig analysisWindowConfig = (AnalysisWindowConfig) config;
             presenter.setSelectedAnalyses(analysisWindowConfig.getSelectedAnalyses());
             presenter.setFilterInView(AnalysisPermissionFilter.ALL.fromTypeString(analysisWindowConfig.getPermFilter()),
-                                      AnalysisTypeFilter.ALL.fromTypeString(analysisWindowConfig.getTypeFilter()));
+                                      AppTypeFilter.ALL.fromTypeString(analysisWindowConfig.getTypeFilter()));
         }
     }
 

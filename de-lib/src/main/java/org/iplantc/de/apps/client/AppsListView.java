@@ -15,6 +15,7 @@ import org.iplantc.de.apps.client.events.selection.AppSelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.DeleteAppsSelected;
 import org.iplantc.de.apps.client.events.selection.OntologyHierarchySelectionChangedEvent;
 import org.iplantc.de.apps.client.events.selection.RunAppSelected;
+import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.IsMaskable;
 import org.iplantc.de.client.models.apps.App;
 import org.iplantc.de.client.models.apps.AppCategory;
@@ -134,4 +135,8 @@ public interface AppsListView extends IsWidget,
     void setSearchPattern(String searchPattern);
 
     void setHeading(String text);
+
+    void setAppTypeFilter(AppTypeFilter filter);
+
+    void enableAppTypeFilter(boolean enabled);
 }
