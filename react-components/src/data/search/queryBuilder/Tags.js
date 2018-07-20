@@ -3,7 +3,7 @@ import { options } from "./Operators";
 import SearchFormTagPanel from "../SearchFormTagPanel";
 import SelectOperator from "./SelectOperator";
 
-import { Fields } from "redux-form";
+import { Field } from "redux-form";
 import React, { Component, Fragment } from "react";
 
 
@@ -22,12 +22,12 @@ class Tags extends Component {
         return (
             <Fragment>
                 <SelectOperator operators={operators}/>
-                <Fields names={['taggedWith', 'tags']}
-                        parentId={ids.form}
-                        placeholder={''}
-                        array={array}
-                        presenter={presenter}
-                        component={renderTagSearchField}/>
+                <Field name='tags'
+                       parentId={ids.form}
+                       placeholder={''}
+                       array={array}
+                       presenter={presenter}
+                       component={renderTagSearchField}/>
             </Fragment>
 
         )
@@ -36,8 +36,7 @@ class Tags extends Component {
 
 function renderTagSearchField(props) {
     let {
-        taggedWith,
-        tags,
+        input,
         array,
         parentId,
         placeholder,
@@ -48,8 +47,7 @@ function renderTagSearchField(props) {
                             placeholder={placeholder}
                             presenter={presenter}
                             array={array}
-                            tagQuery={tags}
-                            taggedWith={taggedWith}/>
+                            tagQuery={input}/>
     )
 }
 

@@ -79,12 +79,6 @@ class SearchFormTagPanelTest extends Component {
             }
         };
 
-        const taggedWith = {
-            input: {
-                onChange: () => {}
-            }
-        };
-
         const parentId = 'searchForm';
 
         const placeholder = 'Tagged With';
@@ -92,17 +86,15 @@ class SearchFormTagPanelTest extends Component {
         const presenter = {
             onAddTagSelected: addTagLogger,
             onEditTagSelected: editTagLogger,
-            fetchTagSuggestions: suggestionsLogger,
+            fetchTagSuggestions: (data, fn) => fn(dataSource),
         };
 
         return (
             <SearchFormTagPanel parentId={parentId}
                                 placeholder={placeholder}
                                 presenter={presenter}
-                                dataSource={dataSource}
                                 array={array}
-                                tagQuery={tagQuery}
-                                taggedWith={taggedWith}/>
+                                tagQuery={tagQuery}/>
         )
     }
 }

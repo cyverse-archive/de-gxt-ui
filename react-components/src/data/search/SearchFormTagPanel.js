@@ -60,33 +60,29 @@ class SearchFormTagPanel extends Component {
 
     onTagSelected(tag) {
         let {
-            array,
-            taggedWith,
             presenter
         } = this.props;
 
         if (tag.id !== tag.value) {
-            this.appendTag(tag, array, taggedWith);
+            this.appendTag(tag);
         } else {
-            presenter.onAddTagSelected(tag.value, (newTag) => this.appendTag(newTag, array, taggedWith));
+            presenter.onAddTagSelected(tag.value, (newTag) => this.appendTag(newTag));
         }
     }
 
     appendTag(tag) {
-        let { array, taggedWith, tagQuery } = this.props;
-        array.insert(tagQuery.input.name, 0, tag);
-        taggedWith.input.onChange('');
+        let { array, tagQuery } = this.props;
+        array.insert(tagQuery.name, 0, tag);
     }
 
     removeTag(tag, index) {
         let { array, tagQuery } = this.props;
-        array.remove(tagQuery.input.name, index)
+        array.remove(tagQuery.name, index)
     }
 
     render() {
         let {
             tagQuery,
-            taggedWith,
             placeholder,
             parentId
         } = this.props;
@@ -106,7 +102,7 @@ class SearchFormTagPanel extends Component {
                           dataSource={dataSource}
                           handleRemoveClick={this.removeTag}
                           handleTagSelect={this.onTagSelected}
-                          tags={tagQuery.input.value ? tagQuery.input.value : []}/>
+                          tags={tagQuery.value ? tagQuery.value : []}/>
                 <EditTagDialog open={openEditTagDlg}
                                tag={selectedTag}
                                handleSave={this.saveTagDescription}
@@ -125,7 +121,6 @@ SearchFormTagPanel.propTypes = {
         onEditTagSelected: PropTypes.func.isRequired
     }),
     array: PropTypes.object.isRequired,
-    taggedWith: PropTypes.object.isRequired,
     tagQuery: PropTypes.object.isRequired
 };
 

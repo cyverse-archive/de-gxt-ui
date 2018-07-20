@@ -187,12 +187,12 @@ class SearchForm extends Component {
 
                     <tr>
                         <td>
-                            <Fields names={['taggedWith', 'tagQuery']}
-                                    parentId={ids.form}
-                                    placeholder={getMessage('taggedWith')}
-                                    array={array}
-                                    presenter={presenter}
-                                    component={renderTagSearchField}/>
+                            <Field name='tagQuery'
+                                   parentId={ids.form}
+                                   placeholder={getMessage('taggedWith')}
+                                   array={array}
+                                   presenter={presenter}
+                                   component={renderTagSearchField}/>
                         </td>
                         <td>
                             <Field name='includeTrashItems'
@@ -284,8 +284,7 @@ function renderSaveSearchBtn(props) {
 
 function renderTagSearchField(props) {
     let {
-        taggedWith,
-        tagQuery,
+        input,
         array,
         parentId,
         placeholder,
@@ -296,8 +295,7 @@ function renderTagSearchField(props) {
                             placeholder={placeholder}
                             presenter={presenter}
                             array={array}
-                            tagQuery={tagQuery}
-                            taggedWith={taggedWith}/>
+                            tagQuery={input}/>
     )
 }
 
