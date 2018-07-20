@@ -19,7 +19,7 @@ import java.util.Arrays;
  */
 public class AppTypeFilterCombo implements IsWidget {
 
-    private SimpleComboBox<org.iplantc.de.client.models.AppTypeFilter> filterTypeCombo;
+    private SimpleComboBox<AppTypeFilter> filterTypeCombo;
 
     private EventBus eventBus;
 
