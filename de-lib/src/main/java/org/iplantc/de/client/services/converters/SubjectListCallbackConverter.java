@@ -3,12 +3,14 @@ package org.iplantc.de.client.services.converters;
 import org.iplantc.de.client.models.collaborators.CollaboratorAutoBeanFactory;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.collaborators.SubjectList;
+import org.iplantc.de.client.models.groups.Group;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author aramsey
@@ -25,6 +27,18 @@ public class SubjectListCallbackConverter extends AsyncCallbackConverter<String,
     @Override
     protected List<Subject> convertFrom(String object) {
         AutoBean<SubjectList> decode = AutoBeanCodex.decode(factory, SubjectList.class, object);
-        return decode.as().getSubjects();
+        List<Subject> subjects = decode.as().getSubjects();
+        return getFilteredResults(subjects);
+    }
+
+    /**
+     * Filter the results so that the user never sees the "default" collaborator list in their search results
+     * @param result
+     * @return
+     */
+    List<Subject> getFilteredResults(List<Subject> result) {
+        return result.stream()
+                     .filter(subject -> !Group.DEFAULT_GROUP.equals(subject.getName()))
+                     .collect(Collectors.toList());
     }
 }

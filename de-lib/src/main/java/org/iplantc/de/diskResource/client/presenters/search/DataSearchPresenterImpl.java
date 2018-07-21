@@ -1,10 +1,14 @@
 package org.iplantc.de.diskResource.client.presenters.search;
 
+import org.iplantc.de.client.models.collaborators.Subject;
+import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.client.models.tags.Tag;
+import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.client.services.TagsServiceFacade;
+import org.iplantc.de.client.services.callbacks.ReactCallback;
 import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
@@ -51,6 +55,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * @author jstroot
@@ -59,6 +64,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
 
     final List<DiskResourceQueryTemplate> queryTemplates = Lists.newArrayList();
     List<DiskResourceQueryTemplate> cleanCopyQueryTemplates = Lists.newArrayList();
+    private CollaboratorsServiceFacade collaboratorsServiceFacade;
     private final IplantAnnouncer announcer;
     private SearchView.SearchViewAppearance appearance;
     private TagsView.TagSuggestionProxy proxy;
@@ -73,6 +79,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
 
     @Inject
     DataSearchPresenterImpl(final SearchServiceFacade searchService,
+                            final CollaboratorsServiceFacade collaboratorsServiceFacade,
                             final IplantAnnouncer announcer,
                             SearchView.SearchViewAppearance appearance,
                             SearchView view,
@@ -81,6 +88,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
                             SearchAutoBeanFactory factory,
                             SearchModelUtils searchModelUtils) {
         this.searchService = searchService;
+        this.collaboratorsServiceFacade = collaboratorsServiceFacade;
         this.announcer = announcer;
         this.appearance = appearance;
         this.view = view;
@@ -357,6 +365,33 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
         });
     }
 
+    @Override
+    public void searchCollaborators(String searchTerm, ReactCallback collaboratorCallback) {
+        collaboratorsServiceFacade.searchCollaborators(searchTerm, new AsyncCallback<List<Subject>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(List<Subject> result) {
+                if (collaboratorCallback != null) {
+                    Splittable data = listToSplittable(result);
+                    collaboratorCallback.onSuccess(data);
+                }
+            }
+        });
+    }
+
+    Splittable listToSplittable(List<Subject> subjects) {
+        Splittable splSubjects = StringQuoter.createIndexed();
+        subjects.forEach(subject -> {
+            Splittable splSubject = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(subject));
+            splSubject.assign(splSubjects, splSubjects.size());
+        });
+
+        return splSubjects;
+    }
 
     @Override
     public SearchView getSearchForm() {
