@@ -26,13 +26,13 @@ import injectSheet from "react-jss";
 import TablePaginationActions from "../../util/table/TablePaginationActions";
 
 const columnData = [
-    {name: "appName", numeric: false, enableSorting: true},
-    {name: "rating", numeric: true, enableSorting: true},
-    {name: "total", numeric: true, enableSorting: true},
-    {name: "completed", numeric: true, enableSorting: true},
-    {name: "failed", numeric: true, enableSorting: true},
-    {name: "lastCompleted", numeric: true, enableSorting: true},
-    {name: "lastUsed", numeric: true, enableSorting: true},
+    {name: "appName", numeric: false},
+    {name: "rating", numeric: true},
+    {name: "total", numeric: true},
+    {name: "completed", numeric: true},
+    {name: "failed", numeric: true},
+    {name: "lastCompleted", numeric: true},
+    {name: "lastUsed", numeric: true},
 ];
 
 class AppStats extends Component {
