@@ -1,15 +1,16 @@
 import Autocomplete from "../util/Autocomplete";
+import Highlighter from "../util/Highlighter";
 import messages from "./messages";
 import styles from "./styles";
 import withI18N, { getMessage } from "../util/I18NWrapper";
 
 import Divider from "@material-ui/core/Divider";
-import Highlight from "react-highlighter";
 import Paper from "@material-ui/core/Paper";
 import PropTypes from "prop-types";
 import React, { Component, Fragment } from 'react';
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from '@material-ui/core/styles';
+import validRegex from "../util/validRegex";
 
 /**
  * A component that allows users to search for Collaborators (individuals, teams, collaboration
@@ -78,10 +79,7 @@ class Option extends React.Component {
                        onClick={this.handleClick}
                        component="div"
                        elevation={1}>
-                    <Typography variant='headline' component='h3'>
-                        <Highlight search={inputValue}>{option.name}</Highlight>
-                    </Typography>
-                    {getSecondaryText(inputValue, option)}
+                    {getOptionBody(inputValue, option)}
                 </Paper>
                 <Divider/>
             </Fragment>
@@ -89,36 +87,91 @@ class Option extends React.Component {
     }
 }
 
-function getSecondaryText(inputValue, option) {
+function getOptionBody(searchTerm, option) {
+    let {trimmedSearch, pattern, regex} = getRegexSearchTerm(searchTerm);
     return (
         <Fragment>
             <Typography component="p">
+                <b>
+                    <Highlighter search={regex}>{option.name}</Highlighter>
+                </b>
+            </Typography>
+
+            <Typography component="p">
                 <i>
-                    <Highlight search={inputValue}>
+                    <Highlighter search={regex}>
                         {option.institution ? option.institution : option.description}
-                    </Highlight>
+                    </Highlighter>
                 </i>
             </Typography>
             {
-                option.id.search(inputValue) > -1 &&
+                option.id.search(regex) > -1 &&
                 <Typography component="p">
                     Username:{' '}
-                    <Highlight search={inputValue}>
-                        {option.id}
-                    </Highlight>
+                    <Highlighter search={regex}>
+                        {censorUsername(trimmedSearch)}
+                    </Highlighter>
                 </Typography>
             }
             {
-                option.email && option.email.search(inputValue) > -1 &&
+                option.email && option.email.search(regex) > -1 &&
                 <Typography component="p">
                     Email:{' '}
-                    <Highlight search={inputValue}>
-                        {option.email}
-                    </Highlight>
+                    <Highlighter search={regex}>
+                        {censorEmail(option.email, pattern, regex)}
+                    </Highlighter>
                 </Typography>
             }
         </Fragment>
     );
+}
+
+function getRegexSearchTerm(searchTerm) {
+    //remove starting or ending * and duplicated *s
+    let trimmedSearch = searchTerm.replace(/^\*+|\*+$/g, '').replace(/\*+/, '*');
+    let searchGroups = trimmedSearch.split('*');
+    let groupedRegexStr = '(' + searchGroups.join(')(.*?)(') + ')';
+    let regex = validRegex(groupedRegexStr, 'i');
+
+    return {
+        trimmedSearch: trimmedSearch,
+        pattern: groupedRegexStr,
+        regex: regex
+    };
+}
+
+function censorUsername(searchTerm) {
+    let array = searchTerm.split("*");
+    return "***" + array.join("***") + "***";
+}
+
+function censorEmail(email, pattern) {
+    let domainIndex = email.search(/@(?!.*@)/);
+    let groupedRegex = validRegex('(.*?)' + pattern, 'ig');
+    let matches = groupedRegex.exec(email);
+
+    let newEmail = '';
+    let startPos = 0;
+    let endPos = 0;
+    for (let i = 1; i < matches.length; i++) {
+        let match = matches[i];
+        startPos = endPos;
+        endPos += match.length;
+        if (startPos > domainIndex || endPos > domainIndex) {
+            newEmail += isSecret(i) ? '***' + email.slice(domainIndex) : email.slice(startPos);
+            break;
+        } else {
+            newEmail += isSecret(i) ? '***' : match;
+        }
+    }
+    if (endPos <= domainIndex) {
+        newEmail += '***' + email.slice(domainIndex);
+    }
+    return newEmail;
+}
+
+function isSecret(index) {
+    return index % 2;
 }
 
 SubjectSearchField.propTypes = {
