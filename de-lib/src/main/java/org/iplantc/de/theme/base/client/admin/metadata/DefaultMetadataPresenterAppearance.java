@@ -37,11 +37,6 @@ public class DefaultMetadataPresenterAppearance implements MetadataPresenterAppe
     }
 
     @Override
-    public String enumError() {
-        return displayStrings.enumError();
-    }
-
-    @Override
     public String addTemplateError() {
         return displayStrings.addTemplateError();
     }

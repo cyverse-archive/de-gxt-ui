@@ -12,16 +12,15 @@ import org.iplantc.de.client.models.diskResources.MetadataTemplate;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.commons.client.ErrorHandler;
-import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
-import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Strings;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
@@ -30,14 +29,12 @@ import com.sencha.gxt.widget.core.client.Dialog.PredefinedButton;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent.DialogHideHandler;
-import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MetadataTemplatesPresenterImpl implements TemplateListingView.Presenter,
+                                                       EditMetadataTemplateView.Presenter,
                                                        EditMetadataSelectedEvent.EditMetadataSelectedEventHandler,
                                                        AddMetadataSelectedEvent.AddMetadataSelectedEventHandler,
                                                        DeleteMetadataSelectedEvent.DeleteMetadataSelectedEventHandler {
@@ -146,36 +143,9 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
 
                 @Override
                 public void onSuccess(MetadataTemplate result) {
-                    final IPlantDialog id = createEditDialog();
-                    editView.edit(result);
-                    id.addOkButtonSelectHandler(new SelectHandler() {
+                    final Splittable metadataTemplate = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(result));
 
-                        @Override
-                        public void onSelect(SelectEvent event) {
-                            if (editView.validate()) {
-                                MetadataTemplate template = editView.getTemplate();
-                                Splittable sp = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(template));
-                                LOG.log(Level.INFO, sp.getPayload());
-                                doAddOrUpdate(id, template.getId(), sp.getPayload());
-                            } else {
-                                IplantAnnouncer.getInstance()
-                                               .schedule(new ErrorAnnouncementConfig(appearance.enumError()));
-                            }
-
-                        }
-                    });
-
-                    id.addCancelButtonSelectHandler(new SelectHandler() {
-
-                        @Override
-                        public void onSelect(SelectEvent event) {
-                            id.hide();
-
-                        }
-                    });
-                    id.show();
-                    setDialogDebugIds(id);
-
+                    editView.edit(MetadataTemplatesPresenterImpl.this, metadataTemplate);
                 }
 
                 @Override
@@ -183,101 +153,84 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
                     ErrorHandler.post(appearance.templateRetrieveError(), caught);
                 }
               });
-	    }
+            }
         });
 
     }
 
-    private void doAddOrUpdate(final IPlantDialog d, final String templateid, final String template) {
-        if (Strings.isNullOrEmpty(templateid)) {
+    private void addTemplate(final String template) {
+        final MetadataTemplatesPresenterImpl presenter = this;
 
         mdSvcFac.addTemplate(template, new AsyncCallback<String>() {
 
             @Override
             public void onFailure(Throwable caught) {
-                d.hide();
-                    ErrorHandler.post(appearance.addTemplateError(), caught);
-
+                presenter.closeTemplateInfoDialog();
+                ErrorHandler.post(appearance.addTemplateError(), caught);
             }
 
             @Override
             public void onSuccess(String result) {
-                    IplantAnnouncer.getInstance()
-                                   .schedule(new SuccessAnnouncementConfig(appearance.addTemplateSuccess()));
-                d.hide();
-                    loadTemplates();
+                IplantAnnouncer.getInstance().schedule(new SuccessAnnouncementConfig(appearance.addTemplateSuccess()));
+
+                presenter.closeTemplateInfoDialog();
+                loadTemplates();
             }
         });
-        } else {
-            mdSvcFac.updateTemplate(templateid, template, new AsyncCallback<String>() {
+    }
 
-                @Override
-                public void onFailure(Throwable caught) {
-                    d.hide();
-                    ErrorHandler.post(appearance.updateTemplateError(), caught);
+    private void updateTemplate(final String templateId, final String template) {
+        final MetadataTemplatesPresenterImpl presenter = this;
 
-                }
+        mdSvcFac.updateTemplate(templateId, template, new AsyncCallback<String>() {
 
-                @Override
-                public void onSuccess(String result) {
-                    IplantAnnouncer.getInstance()
-                                   .schedule(new SuccessAnnouncementConfig(appearance.updateTemplateSuccess()));
-                    d.hide();
-                    loadTemplates();
-                }
-            });
-        }
+            @Override
+            public void onFailure(Throwable caught) {
+                presenter.closeTemplateInfoDialog();
+                ErrorHandler.post(appearance.updateTemplateError(), caught);
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                IplantAnnouncer.getInstance()
+                               .schedule(new SuccessAnnouncementConfig(appearance.updateTemplateSuccess()));
+
+                presenter.closeTemplateInfoDialog();
+                loadTemplates();
+            }
+        });
     }
 
     @Override
     public void onAddMetadataSelected(AddMetadataSelectedEvent event) {
-        final IPlantDialog d = createEditDialog();
-        d.addOkButtonSelectHandler(new SelectHandler() {
+        final AutoBean<MetadataTemplate> templateAutoBean = drFac.getTemplate();
+        templateAutoBean.as().setName("");
+        templateAutoBean.as().setDescription("");
 
-            @Override
-            public void onSelect(SelectEvent event) {
-                if (editView.validate()) {
-                    MetadataTemplate template = editView.getTemplate();
-                    Splittable sp = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(template));
-                    LOG.log(Level.SEVERE, sp.getPayload());
-                    doAddOrUpdate(d, null, sp.getPayload());
-                } else {
-                    IplantAnnouncer.getInstance()
-                                   .schedule(new ErrorAnnouncementConfig(appearance.enumError()));
-                }
-            }
-        });
-        d.addCancelButtonSelectHandler(new SelectHandler() {
+        editView.edit(this, AutoBeanCodex.encode(templateAutoBean));
+    }
 
-            @Override
-            public void onSelect(SelectEvent event) {
-                d.hide();
+    @Override
+    public void onSaveTemplate(Splittable template) {
+        final MetadataTemplate metadataTemplate = AutoBeanCodex.decode(drFac, MetadataTemplate.class, template).as();
+        final String templateId = metadataTemplate.getId();
 
-            }
-        });
-        d.show();
-        setDialogDebugIds(d);
+        final String payload = template.getPayload();
 
+        if (Strings.isNullOrEmpty(templateId)) {
+            addTemplate(payload);
+        } else {
+            updateTemplate(templateId, payload);
+        }
+    }
+
+    @Override
+    public void closeTemplateInfoDialog() {
+        editView.closeDialog();
     }
 
     @Override
     public void setViewDebugId(String baseId) {
         view.asWidget().ensureDebugId(baseId + Belphegor.MetadataIds.VIEW);
     }
-
-    private void setDialogDebugIds(IPlantDialog dialog) {
-        dialog.ensureDebugId(Belphegor.MetadataIds.EDIT_DIALOG);
-        dialog.getOkButton().ensureDebugId(Belphegor.MetadataIds.EDIT_DIALOG + Belphegor.MetadataIds.OK);
-    }
-
-    private IPlantDialog createEditDialog() {
-        final IPlantDialog d = new IPlantDialog();
-        d.setHeading(appearance.templateAttributeEditorHeading());
-        editView.reset();
-        d.add(editView.asWidget());
-        d.setSize("800px", "600px");
-        d.setHideOnButtonClick(false);
-        return d;
-    }
-
 }

@@ -37,8 +37,10 @@ class EditMetadataTemplate extends Component {
     }
 
     onSaveTemplate = ({ name, description, deleted, attributes }) => {
+        const { id } = this.props.initialValues;
+
         this.props.presenter.onSaveTemplate({
-            ...this.props.initialValues,
+            id,
             name,
             description,
             deleted,
@@ -55,7 +57,6 @@ class EditMetadataTemplate extends Component {
             classes,
             intl,
             open,
-            presenter: { closeTemplateInfoDialog },
             // from redux-form
             handleSubmit, pristine, submitting, error, change,
         } = this.props;
@@ -64,7 +65,8 @@ class EditMetadataTemplate extends Component {
 
         return (
             <Dialog open={open}
-                    fullScreen
+                    fullWidth={true}
+                    maxWidth="md"
                     disableBackdropClick
                     disableEscapeKeyDown
                     aria-labelledby={dialogTitleID}
@@ -76,7 +78,7 @@ class EditMetadataTemplate extends Component {
                                     aria-label={formatMessage(intl, "close")}
                                     onClick={() => (
                                         pristine ?
-                                            closeTemplateInfoDialog() :
+                                            this.props.presenter.closeTemplateInfoDialog() :
                                             this.setState({showConfirmationDialog: true})
                                     )}
                                     color="inherit"

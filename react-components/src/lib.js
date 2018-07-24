@@ -1,8 +1,9 @@
 import * as apps from "./apps";
 import * as collaborators from "./collaborators";
 import * as data from "./data";
-import * as util from "./util/util";
 import * as desktop from "./desktop";
+import * as metadata from "./metadata";
+import * as util from "./util/util";
 import palette from "./util/CyVersePalette";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -30,8 +31,9 @@ export {
     apps,
     collaborators,
     data,
-    util,
     desktop,
+    metadata,
+    util,
     getDefaultTheme,
     MuiThemeProvider
 };

@@ -59,8 +59,6 @@ public interface TemplateListingView extends IsWidget, IsMaskable,
             String deleteTemplateError();
             
             String deleteTemplateSuccess();
-            
-            String enumError();
 
             String addTemplateError();
 
