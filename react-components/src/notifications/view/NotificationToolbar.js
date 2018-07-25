@@ -26,7 +26,7 @@ class NotificationToolbar extends Component {
                 <ToolbarGroup>
                     <form autoComplete="off">
                         <FormControl>
-                            <InputLabel htmlFor="filer-simple">Filter</InputLabel>
+                            <InputLabel htmlFor="filter-simple">Filter</InputLabel>
                             <Select
                                 value={this.props.filter}
                                 onChange={this.props.onFilterChange}
