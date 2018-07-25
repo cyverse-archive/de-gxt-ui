@@ -10,9 +10,12 @@ import org.iplantc.de.notifications.client.events.JoinTeamDenied;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
+import jsinterop.annotations.JsType;
+
 /**
  * A view interface for team admins to accept or reject join request from team non-members
  */
+@JsType
 public interface JoinTeamRequestView extends IsWidget,
                                              IsMaskable,
                                              JoinTeamApproved.HasJoinTeamApprovedHandlers,
@@ -75,6 +78,7 @@ public interface JoinTeamRequestView extends IsWidget,
     /**
      * This presenter is responsible for managing all the events from the JoinTeamRequestView
      */
+    @JsType
     interface Presenter {
 
         /**
