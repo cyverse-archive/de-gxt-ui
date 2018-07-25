@@ -220,6 +220,7 @@ class NotificationView extends Component {
                 <div className={classes.table}>
                     <Table>
                         <EnhancedTableHead
+                            selectable={true}
                             numSelected={selected.length}
                             order={order}
                             orderBy={orderBy}
