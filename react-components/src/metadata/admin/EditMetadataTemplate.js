@@ -12,6 +12,7 @@ import intlData from "../messages";
 import styles from "../style";
 import ids from "./ids";
 
+import ConfirmCloseDialog from "../../util/ConfirmCloseDialog";
 import { FormCheckbox, FormTextField } from "../../util/FormField";
 import EditAttributeFormList from "./EditAttributeFormList";
 import SlideUpTransition from "./SlideUpTransition";
@@ -29,6 +30,11 @@ import { withStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 
 class EditMetadataTemplate extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = { showConfirmationDialog: false };
+    }
 
     onSaveTemplate = ({ name, description, deleted, attributes }) => {
         this.props.presenter.onSaveTemplate({
@@ -38,7 +44,11 @@ class EditMetadataTemplate extends Component {
             deleted,
             attributes,
         });
+
+        this.closeConfirmationDialog();
     };
+
+    closeConfirmationDialog = () => this.setState({ showConfirmationDialog: false });
 
     render() {
         const {
@@ -54,7 +64,6 @@ class EditMetadataTemplate extends Component {
 
         return (
             <Dialog open={open}
-                    onClose={closeTemplateInfoDialog}
                     fullScreen
                     disableBackdropClick
                     disableEscapeKeyDown
@@ -65,7 +74,11 @@ class EditMetadataTemplate extends Component {
                     <Toolbar>
                         <IconButton id={build(ids.METADATA_TEMPLATE_FORM, ids.BUTTONS.CLOSE)}
                                     aria-label={formatMessage(intl, "close")}
-                                    onClick={closeTemplateInfoDialog}
+                                    onClick={() => (
+                                        pristine ?
+                                            closeTemplateInfoDialog() :
+                                            this.setState({showConfirmationDialog: true})
+                                    )}
                                     color="inherit"
                         >
                             <CloseIcon />
@@ -112,6 +125,21 @@ class EditMetadataTemplate extends Component {
                                 change={change}
                     />
                 </DialogContent>
+
+                <ConfirmCloseDialog open={this.state.showConfirmationDialog}
+                                    parentId={ids.METADATA_TEMPLATE_FORM}
+                                    onConfirm={handleSubmit(this.onSaveTemplate)}
+                                    onClose={() => {
+                                        this.closeConfirmationDialog();
+                                        this.props.presenter.closeTemplateInfoDialog();
+                                    }}
+                                    onCancel={this.closeConfirmationDialog}
+                                    title={getMessage("save")}
+                                    dialogContent={getMessage("confirmCloseUnsavedChanges")}
+                                    confirmLabel={getMessage("yes")}
+                                    closeLabel={getMessage("no")}
+                                    cancelLabel={getMessage("cancel")}
+                />
             </Dialog>
         );
     }

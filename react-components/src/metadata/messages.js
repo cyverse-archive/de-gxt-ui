@@ -9,7 +9,9 @@ export default {
         attrRequiredLabel: "Required?",
         attrTypeLabel: "Type",
         back: "Back",
+        cancel: "Cancel",
         close: "Close",
+        confirmCloseUnsavedChanges: "You have unsaved changes. Save now?",
         dialogTitleEditEnumValue: "Edit Enum Value",
         dialogTitleEditMetadataTemplate: "Edit Metadata Template",
         default: "Default",
@@ -26,6 +28,7 @@ export default {
         markAsDeleted: "Mark as Deleted?",
         moveDown: "Move Down",
         moveUp: "Move Up",
+        no: "No",
         olsQueryParams: "Ontology Lookup Service Query Params",
         olsSettingAllChildrenOfHelpLabel: "Restrict searches to all children of a given term (subclassOf/is-a plus any hierarchical/transitive properties):",
         olsSettingAllChildrenOfTitle: "All Children",
@@ -41,5 +44,6 @@ export default {
         save: "Save",
         templateNameLabel: "Name",
         value: "Value",
+        yes: "Yes",
     }
 };
