@@ -4,26 +4,18 @@ import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
-import org.iplantc.de.notifications.client.events.NotificationGridRefreshEvent;
-import org.iplantc.de.notifications.client.events.NotificationSelectionEvent;
 import org.iplantc.de.notifications.client.presenter.NotificationsCallback;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
-import com.sencha.gxt.data.shared.loader.PagingLoadResult;
-import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.button.TextButton;
-
-import java.util.List;
 
 import jsinterop.annotations.JsIgnore;
 import jsinterop.annotations.JsType;
 @JsType
-public interface NotificationView extends IsWidget,
-                                          NotificationGridRefreshEvent.HasNotificationGridRefreshEventHandlers,
-                                          NotificationSelectionEvent.HasNotificationSelectionEventHandlers {
+public interface NotificationView extends IsWidget {
 
     interface NotificationViewAppearance {
 
@@ -88,66 +80,24 @@ public interface NotificationView extends IsWidget,
         @JsIgnore
         public void markAsRead(NotificationMessage nm);
 
+        void getNotifications(int limit,
+                              int offset,
+                              String filter,
+                              String sortDir,
+                              NotificationsCallback callback,
+                              ReactErrorCallback errorCallback);
 
-        public void getNotifications(int limit,
-                                     int offset,
-                                     String filter,
-                                     String sortDir,
-                                     NotificationsCallback callback,
-                                     ReactErrorCallback errorCallback);
-        public void deleteNotifications(String[] ids,
-                                        ReactSuccessCallback callback,
-                                        ReactErrorCallback errorCallback);
+        void deleteNotifications(String[] ids,
+                                 ReactSuccessCallback callback,
+                                 ReactErrorCallback errorCallback);
 
-        public void onNotificationToolbarMarkAsSeenClicked(String[] ids,
-                                                           ReactSuccessCallback callback,
-                                                           ReactErrorCallback errorCallback);
+        void onNotificationToolbarMarkAsSeenClicked(String[] ids,
+                                                    ReactSuccessCallback callback,
+                                                    ReactErrorCallback errorCallback);
 
-        public void onMessageClicked(Splittable notificationMessage);
+        void onMessageClicked(Splittable notificationMessage);
     }
-
-    /**
-     * get current loader config
-     * 
-     * @return the current load config
-     */
-    @JsIgnore
-    public FilterPagingLoadConfig getCurrentLoadConfig();
-
-    /**
-     * Get list of selected notification
-     * 
-     * @return a list containing selected notification objects
-     */
-    @JsIgnore
-    public List<NotificationMessage> getSelectedItems();
-
-    /**
-     * loads notifications using given laod conig
-     * 
-     * @param config FilterPagingLoadConfig
-     */
-    @JsIgnore
-    public void loadNotifications(FilterPagingLoadConfig config);
-
-    @JsIgnore
-    public void setLoader(
-            PagingLoader<FilterPagingLoadConfig, PagingLoadResult<NotificationMessage>> loader);
-
-    @JsIgnore
-    void setNorthWidget(IsWidget widget);
-
-    @JsIgnore
-    void mask();
-
-    @JsIgnore
-    void unmask();
-
-    @JsIgnore
-    public TextButton getRefreshButton();
-
-    @JsIgnore
-    public void updateStore(NotificationMessage nm);
-
     void setPresenter(NotificationView.Presenter presenter);
+
+    void loadNotifications();
 }
