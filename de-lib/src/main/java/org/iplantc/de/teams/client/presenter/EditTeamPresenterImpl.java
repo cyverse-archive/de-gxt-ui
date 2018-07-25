@@ -647,7 +647,14 @@ public class EditTeamPresenterImpl implements EditTeamView.Presenter,
             return null;
         }
         PrivilegeType privilege = publicUserList.get(0).getPrivilegeType();
-        return Lists.newArrayList(privilege);
+        List<PrivilegeType> publicPrivs = Lists.newArrayList();
+        if (PrivilegeType.readOptin.equals(privilege)) {
+            publicPrivs.add(PrivilegeType.read);
+            publicPrivs.add(PrivilegeType.optin);
+        } else {
+            publicPrivs.add(privilege);
+        }
+        return publicPrivs;
     }
 
     List<Privilege> getPublicUserPrivilege(List<Privilege> privileges) {
