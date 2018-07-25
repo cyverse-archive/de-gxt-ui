@@ -19,20 +19,28 @@ class EnhancedTableHead extends React.Component {
     };
 
     render() {
-        const {onSelectAllClick, order, orderBy, numSelected, rowCount, columnData} = this.props;
+        const {onSelectAllClick, order, orderBy, numSelected, rowCount, columnData, selectable} = this.props;
 
         return (
             <TableHead>
                 <TableRow>
-                    <TableCell padding="checkbox"
-                               style={{backgroundColor: Color.blue, position: "sticky", top: 0}}>
-                        <Checkbox
-                            indeterminate={numSelected > 0 && numSelected < rowCount}
-                            checked={numSelected === rowCount}
-                            onChange={onSelectAllClick}
-                            style={{backgroundColor: Color.blue, position: "sticky", top: 0, color: Color.white,}}
-                        />
-                    </TableCell>
+                    {selectable && (
+                        <TableCell padding="checkbox"
+                                   style={{backgroundColor: Color.blue, position: "sticky", top: 0}}>
+                            <Checkbox
+                                indeterminate={numSelected > 0 && numSelected < rowCount}
+                                checked={numSelected === rowCount}
+                                onChange={onSelectAllClick}
+                                style={{
+                                    backgroundColor: Color.blue,
+                                    position: "sticky",
+                                    top: 0,
+                                    color: Color.white,
+                                }}
+                            />
+                        </TableCell>
+                    )
+                    }
                     {columnData.map(column => {
                         return (
                             <TableCell
@@ -75,6 +83,7 @@ class EnhancedTableHead extends React.Component {
 }
 
 EnhancedTableHead.propTypes = {
+    selectable: PropTypes.bool.isRequired,
     numSelected: PropTypes.number.isRequired,
     onRequestSort: PropTypes.func.isRequired,
     onSelectAllClick: PropTypes.func.isRequired,
