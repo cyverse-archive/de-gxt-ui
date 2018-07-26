@@ -6,13 +6,11 @@ import org.iplantc.de.notifications.client.views.JoinTeamRequestView;
 import org.iplantc.de.notifications.shared.Notifications;
 
 import com.google.common.collect.Lists;
-import com.google.gwt.user.client.ui.Label;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.box.MessageBox;
-import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.form.SimpleComboBox;
 
 import java.util.List;
@@ -27,16 +25,17 @@ public class ApproveJoinRequestDialog extends MessageBox implements IsHideable {
 
     @Inject
     public ApproveJoinRequestDialog(JoinTeamRequestView.JoinTeamRequestAppearance appearance) {
-        super(appearance.setPrivilegesHeading());
+        super("test");
+        /* super(appearance.setPrivilegesHeading());
         this.appearance = appearance;
 
         setWidth(appearance.privilegeDlgWidth());
         setPredefinedButtons(PredefinedButton.OK, PredefinedButton.CANCEL);
-        privilegeCombo = new SimpleComboBox<>(createPrivilegeComboBox());
+        privilegeCombo = new SimpleComboBox<>(createPrivilegeComboBox());*/
     }
 
     public void show(String requesterName, String teamName) {
-        VerticalLayoutContainer container = new VerticalLayoutContainer();
+      /*  VerticalLayoutContainer container = new VerticalLayoutContainer();
         container.add(new Label(appearance.setPrivilegesText(requesterName, teamName)));
         container.add(privilegeCombo);
         privilegeCombo.setValue(PrivilegeType.read);
@@ -45,7 +44,7 @@ public class ApproveJoinRequestDialog extends MessageBox implements IsHideable {
         add(container);
 
         super.show();
-        ensureDebugId(Notifications.JoinRequestIds.SET_PRIVILEGE_DLG);
+        ensureDebugId(Notifications.JoinRequestIds.SET_PRIVILEGE_DLG);*/
     }
 
     public PrivilegeType getPrivilegeType() {

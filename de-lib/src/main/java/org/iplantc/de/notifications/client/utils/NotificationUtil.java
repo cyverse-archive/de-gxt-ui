@@ -33,6 +33,7 @@ import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConf
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.notifications.client.events.NotificationClickedEvent;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
+import org.iplantc.de.notifications.client.views.JoinTeamRequestView;
 import org.iplantc.de.notifications.client.views.dialogs.DenyJoinRequestDetailsDialog;
 import org.iplantc.de.notifications.client.views.dialogs.JoinTeamRequestDialog;
 import org.iplantc.de.notifications.client.views.dialogs.RequestHistoryDialog;
@@ -67,6 +68,9 @@ public class NotificationUtil {
     @Inject AsyncProviderWrapper<DenyJoinRequestDetailsDialog> denyDetailsDlgProvider;
     @Inject DesktopView.Presenter.DesktopPresenterAppearance appearance;
 
+    @Inject
+    JoinTeamRequestView.Presenter presenter;
+    ;
     @Inject
     public NotificationUtil() {
     }
@@ -251,16 +255,7 @@ public class NotificationUtil {
                     PayloadTeam payloadTeam = AutoBeanCodex.decode(notificationFactory, PayloadTeam.class, context1).as();
 
                     if (payloadTeam.getAction().equals(PayloadTeam.ACTION_JOIN)) {
-                        joinRequestDlgProvider.get(new AsyncCallback<JoinTeamRequestDialog>() {
-                            @Override
-                            public void onFailure(Throwable caught) {
-                            }
-
-                            @Override
-                            public void onSuccess(JoinTeamRequestDialog dialog) {
-                                dialog.show(message, payloadTeam);
-                            }
-                        });
+                        presenter.go(message, payloadTeam);
                     } else if (payloadTeam.getAction().equals(PayloadTeam.ACTION_DENY)) {
                         denyDetailsDlgProvider.get(new AsyncCallback<DenyJoinRequestDetailsDialog>() {
                             @Override

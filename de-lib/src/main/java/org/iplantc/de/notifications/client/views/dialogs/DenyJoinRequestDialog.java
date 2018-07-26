@@ -4,11 +4,8 @@ import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.notifications.client.views.JoinTeamRequestView;
 import org.iplantc.de.notifications.shared.Notifications;
 
-import com.google.gwt.user.client.ui.Label;
 import com.google.inject.Inject;
 
-import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
-import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.TextArea;
 
 /**
@@ -21,15 +18,15 @@ public class DenyJoinRequestDialog extends IPlantDialog {
 
     @Inject
     public DenyJoinRequestDialog(JoinTeamRequestView.JoinTeamRequestAppearance appearance) {
-        this.appearance = appearance;
+        /*this.appearance = appearance;
 
         setHeading(appearance.denyRequestHeader());
         setWidth(appearance.privilegeDlgWidth());
-        setPredefinedButtons(PredefinedButton.OK, PredefinedButton.CANCEL);
+        setPredefinedButtons(PredefinedButton.OK, PredefinedButton.CANCEL);*/
     }
 
     public void show(String requesterName, String teamName) {
-        VerticalLayoutContainer container = new VerticalLayoutContainer();
+        /*VerticalLayoutContainer container = new VerticalLayoutContainer();
         VerticalLayoutContainer.VerticalLayoutData layout = new VerticalLayoutContainer.VerticalLayoutData(1, 1);
         FieldLabel denyFieldLabel = new FieldLabel();
         Label denyText = new Label(appearance.denyRequestMessage(requesterName, teamName));
@@ -43,7 +40,7 @@ public class DenyJoinRequestDialog extends IPlantDialog {
         add(container);
 
         super.show();
-        ensureDebugId(Notifications.JoinRequestIds.DENY_REQUEST_DLG);
+        ensureDebugId(Notifications.JoinRequestIds.DENY_REQUEST_DLG);*/
     }
 
     public String getDenyMessage() {

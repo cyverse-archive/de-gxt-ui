@@ -18,35 +18,29 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
-import org.iplantc.de.notifications.client.events.JoinTeamApproved;
-import org.iplantc.de.notifications.client.events.JoinTeamDenied;
-import org.iplantc.de.notifications.client.events.JoinTeamRequestProcessed;
 import org.iplantc.de.notifications.client.views.JoinTeamRequestView;
-import org.iplantc.de.notifications.client.views.dialogs.DenyJoinRequestDialog;
 import org.iplantc.de.notifications.client.views.dialogs.ApproveJoinRequestDialog;
-import org.iplantc.de.notifications.shared.Notifications;
+import org.iplantc.de.notifications.client.views.dialogs.DenyJoinRequestDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
-
-import com.sencha.gxt.widget.core.client.Dialog;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
 
-public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
-                                                 JoinTeamApproved.JoinTeamApprovedHandler,
-                                                 JoinTeamDenied.JoinTeamDeniedHandler {
+public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter {
 
     private GroupServiceFacade serviceFacade;
     private GroupAutoBeanFactory factory;
-    private JoinTeamRequestView.JoinTeamRequestAppearance appearance;
     private JoinTeamRequestView view;
     IsHideable requestDlg;
     PayloadTeam payloadTeam;
     NotificationMessage notificationMessage;
+    JoinTeamRequestView.JoinTeamRequestAppearance appearance;
 
     @Inject AsyncProviderWrapper<ApproveJoinRequestDialog> approveRequestDlgProvider;
     @Inject AsyncProviderWrapper<DenyJoinRequestDialog> denyRequestDlgProvider;
@@ -55,34 +49,29 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
 
     @Inject
     public JoinTeamRequestPresenter(JoinTeamRequestView view,
+                                    JoinTeamRequestView.JoinTeamRequestAppearance appearance,
                                     GroupServiceFacade serviceFacade,
-                                    GroupAutoBeanFactory factory,
-                                    JoinTeamRequestView.JoinTeamRequestAppearance appearance) {
+                                    GroupAutoBeanFactory factory) {
         this.view = view;
+        this.appearance = appearance;
         this.serviceFacade = serviceFacade;
         this.factory = factory;
-        this.appearance = appearance;
-
-        view.addJoinTeamApprovedHandler(this);
-        view.addJoinTeamDeniedHandler(this);
     }
 
     @Override
-    public void go(HasOneWidget container, IsHideable requestDlg, NotificationMessage notificationMessage, PayloadTeam payloadTeam) {
-        this.requestDlg = requestDlg;
+    public void go(NotificationMessage notificationMessage, PayloadTeam payloadTeam) {
         this.notificationMessage = notificationMessage;
         this.payloadTeam = payloadTeam;
-
-        container.setWidget(view);
-        view.edit(payloadTeam);
+        Splittable sp = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(payloadTeam));
+        view.edit(this, sp);
     }
 
     @Override
     public void setViewDebugId(String baseID) {
-        view.asWidget().ensureDebugId(baseID + Notifications.JoinRequestIds.JOIN_REQUEST_VIEW);
+        // view.asWidget().ensureDebugId(baseID + Notifications.JoinRequestIds.JOIN_REQUEST_VIEW);
     }
 
-    @Override
+/*    @Override
     public void onJoinTeamApproved(JoinTeamApproved event) {
         approveRequestDlgProvider.get(new AsyncCallback<ApproveJoinRequestDialog>() {
             @Override
@@ -98,7 +87,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
                 });
             }
         });
-    }
+    }*/
 
     void addMemberWithPrivilege(PrivilegeType privilegeType, IsHideable approveDlg) {
         Group team = factory.getGroup().as();
@@ -138,7 +127,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
                 announcer.schedule(new IplantAnnouncementConfig(appearance.joinTeamSuccess(payloadTeam.getRequesterName(), payloadTeam.getTeamName())));
                 requestDlg.hide();
                 approveDlg.hide();
-                eventBus.fireEvent(new JoinTeamRequestProcessed(notificationMessage));
+               // eventBus.fireEvent(new JoinTeamRequestProcessed(notificationMessage));
             }
         });
     }
@@ -163,7 +152,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
         return requestList;
     }
 
-    @Override
+/*    @Override
     public void onJoinTeamDenied(JoinTeamDenied event) {
         denyRequestDlgProvider.get(new AsyncCallback<DenyJoinRequestDialog>() {
             @Override
@@ -177,7 +166,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
                 });
             }
         });
-    }
+    }*/
 
     void denyRequest(String denyMessage, IsHideable denyDlg) {
         Group team = factory.getGroup().as();
@@ -197,7 +186,7 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter,
                 announcer.schedule(new IplantAnnouncementConfig(appearance.denyRequestSuccess(payloadTeam.getRequesterName(), payloadTeam.getTeamName())));
                 requestDlg.hide();
                 denyDlg.hide();
-                eventBus.fireEvent(new JoinTeamRequestProcessed(notificationMessage));
+             //   eventBus.fireEvent(new JoinTeamRequestProcessed(notificationMessage));
             }
         });
     }

@@ -1,27 +1,26 @@
 package org.iplantc.de.notifications.client.views;
 
+import com.google.web.bindery.autobean.shared.Splittable;
+
 import gwt.react.client.components.ReactClass;
 import gwt.react.client.proptypes.BaseProps;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
 
-/**
- * Created by sriram on 7/10/18.
- */
 @JsType(isNative = true,
         namespace = "CyVerseReactComponents.notifications.notifications",
-        name = "NotificationView")
-public class ReactNotifications {
+        name = "JoinTeamRequestDialog")
+class ReactJoinTeamRequest {
 
     @JsProperty(namespace = "CyVerseReactComponents.notifications.notifications",
-                name = "NotificationView")
-    public static ReactClass<NotificationsProps> notifiProps;
+                name = "JoinTeamRequestDialog")
+    public static ReactClass<JoinTeamProps> joinTeamProps;
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
-    static class NotificationsProps extends BaseProps {
-        NotificationView.Presenter presenter;
-
+    static class JoinTeamProps extends BaseProps {
+        JoinTeamRequestView.Presenter presenter;
+        Splittable request;
+        boolean dialogOpen;
     }
 }
-

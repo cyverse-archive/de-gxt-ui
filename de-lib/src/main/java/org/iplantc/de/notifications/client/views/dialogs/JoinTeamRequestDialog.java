@@ -19,7 +19,7 @@ public class JoinTeamRequestDialog extends IPlantDialog {
     @Inject
     public JoinTeamRequestDialog(JoinTeamRequestView.Presenter presenter,
                                  JoinTeamRequestView.JoinTeamRequestAppearance appearance) {
-        this.presenter = presenter;
+     /*   this.presenter = presenter;
         this.appearance = appearance;
 
         setHeading(appearance.joinTeamRequestHeader());
@@ -27,7 +27,7 @@ public class JoinTeamRequestDialog extends IPlantDialog {
         setHeight(appearance.joinTeamRequestHeight());
         setPredefinedButtons(PredefinedButton.CANCEL);
 
-        ensureDebugId(Notifications.JoinRequestIds.JOIN_REQUEST_DLG);
+        ensureDebugId(Notifications.JoinRequestIds.JOIN_REQUEST_DLG);*/
     }
 
     @Override
@@ -39,7 +39,7 @@ public class JoinTeamRequestDialog extends IPlantDialog {
     }
 
     public void show(NotificationMessage message, PayloadTeam payloadTeam) {
-        presenter.go(this, this, message, payloadTeam);
-        super.show();
+     /*   presenter.go(this, this, message, payloadTeam);
+        super.show();*/
     }
 }

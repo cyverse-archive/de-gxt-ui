@@ -4,11 +4,7 @@ import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.notifications.client.views.JoinTeamRequestView;
 import org.iplantc.de.notifications.shared.Notifications;
 
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.inject.Inject;
-
-import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 
 /**
  * A dialog that shows a user the details to the denial of their request to join a team
@@ -21,12 +17,12 @@ public class DenyJoinRequestDetailsDialog extends IPlantDialog {
     public DenyJoinRequestDetailsDialog(JoinTeamRequestView.JoinTeamRequestAppearance appearance) {
         this.appearance = appearance;
 
-        setWidth(appearance.privilegeDlgWidth());
-        setPredefinedButtons(PredefinedButton.OK);
+      //  setWidth(appearance.privilegeDlgWidth());
+      //  setPredefinedButtons(PredefinedButton.OK);
     }
 
     public void show(String teamName, String adminMessage) {
-        setHeading(appearance.denyDetailsHeader());
+       /* setHeading(appearance.denyDetailsHeader());
 
         VerticalLayoutContainer container = new VerticalLayoutContainer();
         HTML denyMessage = new HTML(appearance.denyDetailsMessage(teamName));
@@ -40,7 +36,7 @@ public class DenyJoinRequestDetailsDialog extends IPlantDialog {
         add(container);
 
         super.show();
-        ensureDebugId(Notifications.JoinRequestIds.DENY_DETAILS_DLG);
+        ensureDebugId(Notifications.JoinRequestIds.DENY_DETAILS_DLG);*/
     }
 
     @Override
