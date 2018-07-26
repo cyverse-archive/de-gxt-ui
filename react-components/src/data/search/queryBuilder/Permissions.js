@@ -1,4 +1,3 @@
-import DeleteBtn from "./DeleteBtn";
 import messages from "../messages";
 import { options } from "./Operators";
 import SelectOperator from "./SelectOperator";
@@ -6,18 +5,15 @@ import styles from "../styles";
 import SubjectSearchField from "../../../collaborators/SubjectSearchField";
 import withI18N, { getMessage } from "../../../util/I18NWrapper";
 
+import Chip from "@material-ui/core/Chip";
 import { Field, FieldArray } from "redux-form";
 import Grid from "@material-ui/core/Grid";
 import injectSheet from "react-jss";
-import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
+import Paper from "@material-ui/core/Paper";
 import React, { Component, Fragment } from "react";
 import Select from "@material-ui/core/Select";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
+import Tooltip from "@material-ui/core/Tooltip";
 
 class Permissions extends Component {
     render() {
@@ -98,54 +94,33 @@ function renderSubjectSearch(props) {
         <Grid item>
             <SubjectSearchField presenter={presenter}
                                 onSelect={(collaborator) => fields.push(collaborator)}/>
-            <CollaboratorTable classes={classes}
-                               fields={fields}/>
+            {fields.getAll() && <UserPanel classes={classes}
+                                           fields={fields}
+                                           onDelete={fields.remove}/>}
         </Grid>
     )
 }
 
-function CollaboratorTable(props) {
-
-    let columnData = [
-        {name: 'name',          numeric: false, label: getMessage('name')},
-        {name: 'description',   numeric: false, label: getMessage('collabDescription')},
-        {name: 'delete',        numeric: false, label: null}
-    ];
-
+function UserPanel(props) {
     let {
-        classes,
-        fields
+        fields,
+        onDelete,
+        classes
     } = props;
-
-    let data = fields.getAll();
+    let users = fields.getAll();
+    let chips = users && users.map((user, index) =>
+        <Tooltip title={user.institution ? user.institution : user.description}>
+            <Chip key={user.id}
+                  className={classes.userChip}
+                  onDelete={() => onDelete(index)}
+                  label={user.name}/>
+        </Tooltip>
+    );
 
     return (
-        <div className={classes.collabTable}>
-            <Table>
-                <TableHead>
-                    <TableRow hover>
-                        {columnData.map(column => (
-                            <TableCell className={classes.collabTableHead}
-                                       key={column.name}
-                                       numeric={column.numeric}>
-                                {column.label}
-                            </TableCell>
-                        ))}
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {data && data.map((n, index) => {
-                        return (
-                            <TableRow hover key={n.id}>
-                                <TableCell className={classes.collabCell}>{n.name}</TableCell>
-                                <TableCell className={classes.collabCell}>{n.institution ? n.institution : n.description}</TableCell>
-                                <TableCell className={classes.collabCell}><DeleteBtn onClick={() => fields.remove(index)}/></TableCell>
-                            </TableRow>
-                        );
-                    })}
-                </TableBody>
-            </Table>
-        </div>
+        <Paper className={classes.permissionUsers}>
+            {chips}
+        </Paper>
     )
 }
 
