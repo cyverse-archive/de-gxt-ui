@@ -28,8 +28,6 @@ import SearchFormTagPanel from "./data/search/SearchFormTagPanel.stories";
 import TriggerFieldTest from "./util/TriggerField.stories";
 import NotificationViewTest from "./notifications/view/NotificationView.stories";
 import JoinTeamRequestDialogTest from "./notifications/view/dialogs/JoinTeamRequestDialog.stories";
-import ApproveJoinRequestDialogTest from "./notifications/view/dialogs/ApproveJoinRequestDialog.stories";
-import DenyJoinRequestDialogTest from "./notifications/view/dialogs/DenyJoinRequestDialog.stories";
 import DenyJoinRequestDetailsDialogTest from "./notifications/view/dialogs/DenyJoinRequestDetailsDialog.stories";
 import RequestHistoryDialogTest from "./notifications/view/dialogs/RequestHistoryDialog.stories";
 
@@ -63,10 +61,6 @@ storiesOf('notifications/view', module).add('with test notifications', () => <No
     logger={action('notification Window')}/>);
 storiesOf('notifications/view/dialogs', module).add('with test JoinTeamRequestDialog', () =>
     <JoinTeamRequestDialogTest logger={action('notification window')}/>);
-storiesOf('notifications/view/dialogs', module).add('with test ApproveJoinRequestDialog', () =>
-    <ApproveJoinRequestDialogTest logger={action('notification window')}/>);
-storiesOf('notifications/view/dialogs', module).add('with test DenyJoinRequestDialog', () =>
-    <DenyJoinRequestDialogTest logger={action('notification window')}/>);
 storiesOf('notifications/view/dialogs', module).add('with test DenyJoinRequestDetailsDialog', () =>
     <DenyJoinRequestDetailsDialogTest logger={action('notification window')}/>);
 storiesOf('notifications/view/dialogs', module).add('with test RequestHistoryDialogTest', () =>

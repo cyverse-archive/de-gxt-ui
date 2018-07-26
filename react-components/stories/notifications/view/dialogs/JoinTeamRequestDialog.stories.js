@@ -11,13 +11,20 @@ class JoinTeamRequestDialogTest extends Component {
         const logger = this.props.logger || ((Notification) => {
                 console.log(Notification);
             });
+        const request = {
+            action: "team_join_request",
+            email_address: "sriram@iplantcollaborative.org",
+            requester_email: "core-sw@iplantcollaborative.org",
+            requester_id: "ipcdev",
+            requester_message: "I would like join...",
+            requester_name: "Ipc Dev",
+            team_name: "sriram:sriram-test",
+        }
         return (
-            <JoinTeamRequestDialog open={true}
+            <JoinTeamRequestDialog dialogOpen={true}
                                    handleJoinTeamRequestDialogClose={() => logger("dialog closed")}
-                                   team="test team"
-                                   name="sriram"
-                                   email="sriram@email.arizona.edu"
-                                   message="I want in...I want in...I want in...I want in...I want in...I want in...I want in...I want in...I want in...I want in...I want in...I want in..."/>
+                                   request={request}
+                                   />
         );
     }
 }
