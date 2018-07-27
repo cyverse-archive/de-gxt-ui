@@ -41,7 +41,8 @@ class TagPanel extends Component {
         let { placeholder } = this.props;
         return (
             <div id={build(this.props.baseID, ids.DETAILS_TAGS_PANEL)}>
-                <Autocomplete labelKey="value"
+                <Autocomplete variant='creatable'
+                              labelKey="value"
                               valueKey="id"
                               multi={false}
                               options={this.props.dataSource}
