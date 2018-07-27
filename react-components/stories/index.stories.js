@@ -22,7 +22,10 @@ import DesktopViewTest from "./desktop/view/DesktopView.stories";
 import TaskButtonTest from "./desktop/view/TaskButton.stories";
 import TaskbarTest from "./desktop/view/Taskbar.stories";
 
-import MetadataTemplateTest from "./metadata/MetadataTemplate.stories";
+import {
+    EditNestedAttrMetadataTemplateTest,
+    EditDataCiteMetadataTemplateTest,
+} from "./metadata/MetadataTemplate.stories";
 
 storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);
@@ -43,7 +46,9 @@ storiesOf('desktop/view', module).add("with test desktop view", () => <DesktopVi
 storiesOf('desktop/view', module).add("with test desktop taskbutton", () => <TaskButtonTest/>);
 storiesOf('desktop/view', module).add("with test desktop taskbar", () => <TaskbarTest/>);
 
-storiesOf('metadata/admin/EditMetadataTemplate', module).add('with nested attributes', () => <MetadataTemplateTest logger={action('template')} />);
+storiesOf('metadata/admin/EditMetadataTemplate', module)
+    .add('with nested attributes', () => <EditNestedAttrMetadataTemplateTest logger={action('template')} />)
+    .add('with DataCite attributes', () => <EditDataCiteMetadataTemplateTest logger={action('template')} />);
 
 storiesOf('util', module).add('Autocomplete', () => <AutocompleteTest selectOptionLogger={action('Selected Option')}/>);
 storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);

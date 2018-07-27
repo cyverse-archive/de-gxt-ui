@@ -36,6 +36,7 @@ const styles = theme => ({
     title: {
         paddingLeft: theme.spacing.unit,
         flex: '0 0 auto',
+        maxWidth: "25rem",
     },
     errorSubTitle: {
         color: theme.palette.error.dark,

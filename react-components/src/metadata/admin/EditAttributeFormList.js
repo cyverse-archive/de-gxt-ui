@@ -106,6 +106,7 @@ class EditAttribute extends Component {
                         </Typography>
                         <Typography id={build(formID, error ? ids.TITLE_ERR : ids.TITLE_SUB)}
                                     variant="subheading"
+                                    noWrap
                                     className={error ? classes.errorSubTitle : null}
                         >
                             {error || description}
