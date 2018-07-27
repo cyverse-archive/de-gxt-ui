@@ -12,9 +12,9 @@ class DenyJoinRequestDetailsDialogTest extends Component {
                 console.log(Notification);
             });
         return (
-            <DenyJoinRequestDetailsDialog open={true}
-                                          team="test"
-                                          message="Nope. You are not cool."/>
+            <DenyJoinRequestDetailsDialog dialogOpen={true}
+                                          teamName="test"
+                                          adminMessage="Nope. You are not cool."/>
         );
     }
 }

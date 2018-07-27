@@ -26,7 +26,7 @@ import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.notifications.client.events.JoinTeamApproved;
 import org.iplantc.de.notifications.client.events.JoinTeamDenied;
-import org.iplantc.de.notifications.client.events.JoinTeamRequestProcessed;
+import org.iplantc.de.notifications.client.events.JoinTeamRequest;
 import org.iplantc.de.notifications.client.views.JoinTeamRequestView;
 import org.iplantc.de.notifications.client.views.dialogs.ApproveJoinRequestDialog;
 import org.iplantc.de.notifications.client.views.dialogs.DenyJoinRequestDialog;
@@ -198,7 +198,7 @@ public class JoinTeamRequestPresenterTest {
         verify(announcerMock).schedule(isA(IplantAnnouncementConfig.class));
         verify(requestDlgMock).hide();
         verify(hideableMock).hide();
-        verify(eventBusMock).fireEvent(isA(JoinTeamRequestProcessed.class));
+        verify(eventBusMock).fireEvent(isA(JoinTeamRequest.class));
     }
 
     @Test
@@ -237,7 +237,7 @@ public class JoinTeamRequestPresenterTest {
         verify(announcerMock).schedule(isA(IplantAnnouncementConfig.class));
         verify(requestDlgMock).hide();
         verify(hideableMock).hide();
-        verify(eventBusMock).fireEvent(isA(JoinTeamRequestProcessed.class));
+        verify(eventBusMock).fireEvent(isA(JoinTeamRequest.class));
     }
 
 }

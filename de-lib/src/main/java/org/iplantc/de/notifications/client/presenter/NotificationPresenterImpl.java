@@ -13,7 +13,7 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
-import org.iplantc.de.notifications.client.events.JoinTeamRequestProcessed;
+import org.iplantc.de.notifications.client.events.JoinTeamRequest;
 import org.iplantc.de.notifications.client.events.NotificationCountUpdateEvent;
 import org.iplantc.de.notifications.client.model.NotificationMessageProperties;
 import org.iplantc.de.notifications.client.utils.NotificationUtil;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  * @author sriram
  */
 public class NotificationPresenterImpl implements NotificationView.Presenter,
-                                                  JoinTeamRequestProcessed.JoinTeamRequestProcessedHandler {
+                                                  JoinTeamRequest.JoinTeamRequestHandler {
 
     private final ListStore<NotificationMessage> listStore;
     private final NotificationView view;
@@ -69,7 +69,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
     }
 
     private void addEventHandlers() {
-        eventBus.addHandler(JoinTeamRequestProcessed.TYPE, this);
+        eventBus.addHandler(JoinTeamRequest.TYPE, this);
     }
 
     ListStore<NotificationMessage> createListStore(NotificationMessageProperties messageProperties) {
@@ -163,7 +163,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
      }
 
     @Override
-    public void onJoinTeamRequestProcessed(JoinTeamRequestProcessed event) {
+    public void onJoinTeamRequestProcessed(JoinTeamRequest event) {
       //  NotificationMessage notification = event.getMessage();
  //       deleteNotifications(Lists.newArrayList(notification));
     }

@@ -14,6 +14,8 @@ import org.iplantc.de.client.models.groups.UpdatePrivilegeRequestList;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.models.notifications.payload.PayloadTeam;
 import org.iplantc.de.client.services.GroupServiceFacade;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
@@ -24,6 +26,7 @@ import org.iplantc.de.notifications.client.views.dialogs.DenyJoinRequestDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.collect.Lists;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
@@ -71,25 +74,10 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter {
         // view.asWidget().ensureDebugId(baseID + Notifications.JoinRequestIds.JOIN_REQUEST_VIEW);
     }
 
-/*    @Override
-    public void onJoinTeamApproved(JoinTeamApproved event) {
-        approveRequestDlgProvider.get(new AsyncCallback<ApproveJoinRequestDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {}
-
-            @Override
-            public void onSuccess(ApproveJoinRequestDialog dialog) {
-                dialog.show(payloadTeam.getRequesterName(), payloadTeam.getTeamName());
-                dialog.addDialogHideHandler(event -> {
-                    if (event.getHideButton().equals(Dialog.PredefinedButton.OK) && dialog.getPrivilegeType() != null) {
-                        addMemberWithPrivilege(dialog.getPrivilegeType(), dialog);
-                    }
-                });
-            }
-        });
-    }*/
-
-    void addMemberWithPrivilege(PrivilegeType privilegeType, IsHideable approveDlg) {
+    @Override
+    public void addMemberWithPrivilege(String privilegeType,
+                                       ReactSuccessCallback callback,
+                                       ReactErrorCallback errorCallback) {
         Group team = factory.getGroup().as();
         team.setName(payloadTeam.getTeamName());
 
@@ -100,12 +88,18 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
+                if (errorCallback != null) {
+                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+                }
             }
 
             @Override
             public void onSuccess(List<UpdateMemberResult> result) {
                 if (result != null && !result.isEmpty() && result.get(0).isSuccess()) {
-                    addPrivilege(team, privilegeType, approveDlg);
+                    addPrivilege(team,
+                                 PrivilegeType.fromTypeString(privilegeType),
+                                 callback,
+                                 errorCallback);
                 } else {
                     announcer.schedule(new ErrorAnnouncementConfig(appearance.addMemberFail(payloadTeam.getRequesterName(), payloadTeam.getTeamName())));
                 }
@@ -113,21 +107,27 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter {
         });
     }
 
-    void addPrivilege(Group team, PrivilegeType privilegeType, IsHideable approveDlg) {
+    void addPrivilege(Group team,
+                      PrivilegeType privilegeType,
+                      ReactSuccessCallback callback,
+                      ReactErrorCallback errorCallback) {
         UpdatePrivilegeRequestList requestList = getUpdatePrivilegeRequestList(privilegeType);
 
         serviceFacade.updateTeamPrivileges(team, requestList, new AsyncCallback<List<Privilege>>() {
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(caught);
+                if (errorCallback != null) {
+                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+                }
             }
 
             @Override
             public void onSuccess(List<Privilege> result) {
+                if (callback != null) {
+                    callback.onSuccess(null);
+                }
                 announcer.schedule(new IplantAnnouncementConfig(appearance.joinTeamSuccess(payloadTeam.getRequesterName(), payloadTeam.getTeamName())));
-                requestDlg.hide();
-                approveDlg.hide();
-               // eventBus.fireEvent(new JoinTeamRequestProcessed(notificationMessage));
             }
         });
     }
@@ -152,23 +152,10 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter {
         return requestList;
     }
 
-/*    @Override
-    public void onJoinTeamDenied(JoinTeamDenied event) {
-        denyRequestDlgProvider.get(new AsyncCallback<DenyJoinRequestDialog>() {
-            @Override
-            public void onFailure(Throwable throwable) {}
-
-            @Override
-            public void onSuccess(DenyJoinRequestDialog dialog) {
-                dialog.show(payloadTeam.getRequesterName(), payloadTeam.getTeamName());
-                dialog.addOkButtonSelectHandler(event -> {
-                    denyRequest(dialog.getDenyMessage(), dialog);
-                });
-            }
-        });
-    }*/
-
-    void denyRequest(String denyMessage, IsHideable denyDlg) {
+    @Override
+    public void denyRequest(String denyMessage,
+                            ReactSuccessCallback callback,
+                            ReactErrorCallback errorCallback) {
         Group team = factory.getGroup().as();
         team.setName(payloadTeam.getTeamName());
 
@@ -179,14 +166,17 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter {
             @Override
             public void onFailure(Throwable throwable) {
                 ErrorHandler.post(throwable);
+                if (errorCallback != null) {
+                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, throwable.getMessage());
+                }
             }
 
             @Override
             public void onSuccess(Void aVoid) {
                 announcer.schedule(new IplantAnnouncementConfig(appearance.denyRequestSuccess(payloadTeam.getRequesterName(), payloadTeam.getTeamName())));
-                requestDlg.hide();
-                denyDlg.hide();
-             //   eventBus.fireEvent(new JoinTeamRequestProcessed(notificationMessage));
+                if (callback != null) {
+                    callback.onSuccess(null);
+                }
             }
         });
     }
@@ -195,3 +185,4 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter {
         return Lists.newArrayList(member);
     }
 }
+

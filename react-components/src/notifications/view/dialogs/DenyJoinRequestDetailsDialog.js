@@ -20,13 +20,15 @@ import TextField from "@material-ui/core/TextField";
 class DenyJoinRequestDetailsDialog extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            dialogOpen: props.dialogOpen,
+        };
     }
 
     render() {
         return (
             <Dialog
-                open={this.props.open}
-                onClose={this.props.handleDenyJoinRequestClose}
+                open={this.state.dialogOpen}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
@@ -39,7 +41,7 @@ class DenyJoinRequestDetailsDialog extends Component {
                     <DialogContentText id="alert-dialog-description">
                         {getMessage("denyDetailsMessage", {
                             values: {
-                                team: this.props.team
+                                team: this.props.teamName
                             }
                         })}
                         <div style={{marginTop: 10}}>
@@ -51,14 +53,14 @@ class DenyJoinRequestDetailsDialog extends Component {
                                 }}
                                 fullWidth
                                 margin="normal"
-                                value={this.props.message}
+                                value={this.props.adminMessage}
                                 disabled={true}
                             />
                         </div>
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.handleClose} color="primary">
+                    <Button onClick={() => {this.setState({dialogOpen: false})}} color="primary">
                         {getMessage("okBtnText")}
                     </Button>
                 </DialogActions>

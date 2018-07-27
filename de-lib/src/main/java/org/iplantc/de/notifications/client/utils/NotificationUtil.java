@@ -25,6 +25,7 @@ import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.collaborators.client.CollaborationView;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import org.iplantc.de.commons.client.views.window.configs.AnalysisWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.CollaborationWindowConfig;
@@ -42,7 +43,8 @@ import org.iplantc.de.shared.NotificationCallback;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
@@ -52,9 +54,50 @@ import com.google.web.bindery.autobean.shared.Splittable;
 import java.util.ArrayList;
 import java.util.List;
 
+import gwt.react.client.components.ReactClass;
+import gwt.react.client.proptypes.BaseProps;
+import jsinterop.annotations.JsPackage;
+import jsinterop.annotations.JsProperty;
+import jsinterop.annotations.JsType;
+
 /**
  * Created by sriram on 6/16/16.
  */
+
+@JsType(isNative = true,
+        namespace = "CyVerseReactComponents.notifications.notifications",
+        name = "DenyJoinRequestDetailsDialog")
+class ReactDenyJoinTeamDetails {
+
+    @JsProperty(namespace = "CyVerseReactComponents.notifications.notifications",
+                name = "DenyJoinRequestDetailsDialog")
+    public static ReactClass<DenyTeamProps> denyTeamProps;
+
+    @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
+    static class DenyTeamProps extends BaseProps {
+        String teamName;
+        String adminMessage;
+        boolean dialogOpen;
+    }
+}
+
+@JsType(isNative = true,
+        namespace = "CyVerseReactComponents.notifications.notifications",
+        name = "RequestHistoryDialog")
+class ReactToolRequestHistory {
+
+    @JsProperty(namespace = "CyVerseReactComponents.notifications.notifications",
+                name = "RequestHistoryDialog")
+    public static ReactClass<HistoryProps> historyProps;
+
+    @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
+    static class HistoryProps extends BaseProps {
+        Splittable[] history;
+        boolean dialogOpen;
+        String toolName;
+    }
+}
+
 public class NotificationUtil {
 
     @Inject NotificationAutoBeanFactory notificationFactory;
@@ -241,14 +284,24 @@ public class NotificationUtil {
                 case TOOLREQUEST:
                     PayloadRequest toolRequest =
                             AutoBeanCodex.decode(notificationFactory, PayloadRequest.class, context1)
+
                                          .as();
-
-                    List<RequestHistory> history =
-                            toolRequest.getHistory();
-
-                    RequestHistoryDialog dlg =
-                            new RequestHistoryDialog(toolRequest.getName(), history);
-                    dlg.show();
+                    if (toolRequest.getHistory() != null && toolRequest.getHistory().size() > 0) {
+                        Splittable[] history = new Splittable[toolRequest.getHistory().size()];
+                        for (int i = 0; i < toolRequest.getHistory().size(); i++) {
+                            history[i] =
+                                    AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(toolRequest.getHistory()
+                                                                                              .get(i)));
+                        }
+                        ReactToolRequestHistory.HistoryProps props =
+                                new ReactToolRequestHistory.HistoryProps();
+                        props.toolName = toolRequest.getName();
+                        props.dialogOpen = true;
+                        props.history = history;
+                        CyVerseReactComponents.render(ReactToolRequestHistory.historyProps,
+                                                      props,
+                                                      new HTMLPanel("<div></div>").getElement());
+                    }
 
                     break;
                 case TEAM:
@@ -257,14 +310,15 @@ public class NotificationUtil {
                     if (payloadTeam.getAction().equals(PayloadTeam.ACTION_JOIN)) {
                         presenter.go(message, payloadTeam);
                     } else if (payloadTeam.getAction().equals(PayloadTeam.ACTION_DENY)) {
-                        denyDetailsDlgProvider.get(new AsyncCallback<DenyJoinRequestDetailsDialog>() {
-                            @Override
-                            public void onFailure(Throwable throwable) { }
-
-                            @Override
-                            public void onSuccess(DenyJoinRequestDetailsDialog dialog) {
-                                dialog.show(payloadTeam.getTeamName(), payloadTeam.getAdminMessage());
-                            }
+                        Scheduler.get().scheduleFinally(() -> {
+                            ReactDenyJoinTeamDetails.DenyTeamProps denyTeamProps =
+                                    new ReactDenyJoinTeamDetails.DenyTeamProps();
+                            denyTeamProps.adminMessage = payloadTeam.getAdminMessage();
+                            denyTeamProps.teamName = payloadTeam.getTeamName();
+                            denyTeamProps.dialogOpen = true;
+                            CyVerseReactComponents.render(ReactDenyJoinTeamDetails.denyTeamProps,
+                                                          denyTeamProps,
+                                                          new HTMLPanel("<div></div>").getElement());
                         });
                     } else {
                         CollaborationWindowConfig window = ConfigFactory.collaborationWindowConfig();

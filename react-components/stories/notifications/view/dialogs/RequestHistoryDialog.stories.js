@@ -11,7 +11,7 @@ class RequestHistoryDialogTest extends Component {
         const logger = this.props.logger || ((Notification) => {
                 console.log(Notification);
             });
-        const data =  [{
+        const history =  [{
             "status": "Submitted",
             "status_date": 1532546191001,
             "updated_by": "sriram@iplantcollaborative.org",
@@ -28,9 +28,9 @@ class RequestHistoryDialogTest extends Component {
             "comments": "evaluation done..."
         }];
         return (
-            <RequestHistoryDialog open={true}
-                                  handleRequestHistoryClose={() => logger("dialog closed")}
-                                  data={data}
+            <RequestHistoryDialog dialogOpen={true}
+                                  toolName = "Test"
+                                  history={history}
                              />
         );
     }

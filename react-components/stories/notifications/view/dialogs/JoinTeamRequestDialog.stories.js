@@ -19,10 +19,22 @@ class JoinTeamRequestDialogTest extends Component {
             requester_message: "I would like join...",
             requester_name: "Ipc Dev",
             team_name: "sriram:sriram-test",
-        }
+        };
+
+        const presenter =  {
+            addMemberWithPrivilege: (privilegeType, callback, errorCallback) => {
+                logger("Add member with Privilege: " + privilegeType);
+            },
+
+            denyRequest: (msg, callback, errorCallbck) => {
+               logger("Request Denied: " + msg);
+            },
+
+        };
         return (
             <JoinTeamRequestDialog dialogOpen={true}
                                    handleJoinTeamRequestDialogClose={() => logger("dialog closed")}
+                                   presenter = {presenter}
                                    request={request}
                                    />
         );

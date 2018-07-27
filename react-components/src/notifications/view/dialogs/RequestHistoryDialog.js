@@ -34,20 +34,17 @@ class RequestHistoryDialog extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [],
-            loading: true,
             order: 'DESC',
             orderBy: 'Date',
-
+            dialogOpen: props.dialogOpen,
         };
     }
 
     render() {
-        const {data} = this.props;
+        const {history} = this.props;
         return (
             <Dialog
-                open={this.props.open}
-                onClose={this.props.handleRequestHistoryClose}
+                open={this.state.dialogOpen}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
@@ -65,7 +62,7 @@ class RequestHistoryDialog extends Component {
                             orderBy={this.state.orderBy}
                         />
                         <TableBody>
-                            {data.map(n => {
+                            {history.map(n => {
                                 return (
                                     <TableRow>
                                         <TableCell>{n.status}</TableCell>
@@ -80,7 +77,7 @@ class RequestHistoryDialog extends Component {
                     </Table>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.handleClose} color="primary">
+                    <Button onClick={() => {this.setState({dialogOpen: false})}} color="primary">
                         {getMessage("okBtnText")}
                     </Button>
                 </DialogActions>

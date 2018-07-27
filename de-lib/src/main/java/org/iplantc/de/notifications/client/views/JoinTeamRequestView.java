@@ -2,6 +2,8 @@ package org.iplantc.de.notifications.client.views;
 
 import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.models.notifications.payload.PayloadTeam;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 
 import com.google.web.bindery.autobean.shared.Splittable;
 
@@ -42,6 +44,28 @@ public interface JoinTeamRequestView {
          * @param baseID
          */
         void setViewDebugId(String baseID);
+
+        /**
+         * Approve and Add member with specified privilege
+         *
+         * @param privilegeType
+         * @param callback
+         * @param errorCallback
+         */
+        void addMemberWithPrivilege(String privilegeType,
+                                    ReactSuccessCallback callback,
+                                    ReactErrorCallback errorCallback);
+
+        /**
+         * Deny member to join a team. Send Optional msg.
+         *
+         * @param denyMessage
+         * @param callback
+         * @param errorCallback
+         */
+        void denyRequest(String denyMessage,
+                         ReactSuccessCallback callback,
+                         ReactErrorCallback errorCallback);
     }
 
     /**

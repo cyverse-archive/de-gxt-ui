@@ -28,6 +28,7 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import CardHeader from "@material-ui/core/CardHeader";
 import TextField from "@material-ui/core/TextField";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const styles = theme => ({
     paper: {
@@ -54,21 +55,39 @@ class JoinTeamRequestDialog extends Component {
             dialogOpen: props.dialogOpen,
             action: APPROVE,
             privilege:"read",
+            message: "",
+            loading: false,
         };
+        this.handleCancelClick = this.handleCancelClick.bind(this);
+        this.handleOkClick = this.handleOkClick.bind(this);
     }
 
     handleCancelClick() {
         this.setState({dialogOpen: false});
     }
 
-    handleActionChange = event => {
-        this.setState({action: event.target.value});
-    };
-
-    handlePrivilegeChange = event => {
-        this.setState({privilege: event.target.value});
+    handleOkClick() {
+        this.setState({loading: true});
+        if (this.state.action === APPROVE) {
+            this.props.presenter.addMemberWithPrivilege(this.state.privilege, (result) => {
+                this.setState({dialogOpen: false});
+            }, (errorCode, errorMessage) => {
+                this.setState({
+                    dialogOpen: false,
+                    loading: false
+                });
+            });
+        } else {
+            this.props.presenter.denyRequest(this.state.message, (result) => {
+                this.setState({dialogOpen: false});
+            }, (errorCode, errorMessage) => {
+                this.setState({
+                    dialogOpen: false,
+                    loading: false
+                });
+            });
+        }
     }
-
     render() {
         const classes = this.props.classes;
         const {requester_name, team_name, requester_email, requester_message} = this.props.request;
@@ -89,6 +108,9 @@ class JoinTeamRequestDialog extends Component {
                             <Typography paragraph>
                                 {getMessage("joinRequestIntro")}
                             </Typography>
+                            {this.state.loading &&
+                            <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
+                            }
                             <div className={classes.root}>
                                 <Grid container spacing={12}>
                                     <Grid item xs={12}>
@@ -116,7 +138,9 @@ class JoinTeamRequestDialog extends Component {
                                 name="action"
                                 className={classes.group}
                                 value={this.state.action}
-                                onChange={this.handleActionChange}
+                                onChange={(e) => {
+                                    this.setState({action: e.target.value})
+                                }}
                             >
                                 <FormControlLabel value={APPROVE} control={<Radio />}
                                                   label={getMessage("approveBtnText")}/>
@@ -142,7 +166,9 @@ class JoinTeamRequestDialog extends Component {
                                         <FormControl className={classes.formControl}>
                                             <Select
                                                 value={this.state.privilege}
-                                                onChange={this.handlePrivilegeChange}
+                                                onChange={(e) => {
+                                                    this.setState({privilege: e.target.value})
+                                                }}
                                                 inputProps={{
                                                     name: 'privilege',
                                                     id: 'privilege-simple',
@@ -180,13 +206,16 @@ class JoinTeamRequestDialog extends Component {
                                         placeholder="Message"
                                         fullWidth
                                         margin="normal"
+                                        onChange={(e) => {
+                                            this.setState({message: e.target.value})
+                                        }}
                                     />
                                 </CardActions>
                             </Card>
                         </div>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleCancelClick} color="primary" autoFocus>
+                        <Button onClick={this.handleOkClick} color="primary" autoFocus>
                             {getMessage("okBtnText")}
                         </Button>
                         <Button onClick={this.handleCancelClick} color="primary" autoFocus>
