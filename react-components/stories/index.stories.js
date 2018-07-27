@@ -16,6 +16,7 @@ import SaveSearchButtonTest from './data/search/SaveSearchButton.stories';
 import SearchFieldTest from './util/SearchField.stories';
 import SearchFormTest from "./data/search/SearchForm.stories";
 import SearchFormTagPanel from './data/search/SearchFormTagPanel.stories';
+import SubjectSearchFieldTest from "./collaborators/SubjectSearchField.stories";
 import TriggerFieldTest from './util/TriggerField.stories';
 import AutocompleteTest from "./util/Autocomplete.stories";
 import DesktopViewTest from "./desktop/view/DesktopView.stories";
@@ -25,6 +26,8 @@ import TaskbarTest from "./desktop/view/Taskbar.stories";
 storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);
 storiesOf('apps/details', module).add('ToolDetails', () => <ToolDetailsTest/>);
+
+storiesOf('collaborators', module).add('Subject Search Field', () => <SubjectSearchFieldTest logger={action('Selected Subject')}/>);
 
 storiesOf('data/BasicDetails', module).add('with test diskresource details', () => <BasicDetailsTest logger={action('details')}/>);
 storiesOf('data/InfoTypeSelectionList',module).add('with test diskresource details', () =>  <InfoTypeSelectionListTest logger={action('infoTypes')}/>);
