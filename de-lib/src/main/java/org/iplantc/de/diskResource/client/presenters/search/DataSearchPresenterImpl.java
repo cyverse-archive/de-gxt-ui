@@ -404,7 +404,6 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
         ReactSearchForm.SearchFormProps props = new ReactSearchForm.SearchFormProps();
         props.presenter = this;
         props.id = DiskResourceModule.Ids.SEARCH_FORM;
-        props.dateIntervals = dateIntervalProvider.get();
         props.suggestedTags = StringQuoter.createIndexed();
         props.initialValues = searchModelUtils.createDefaultFilter();
 

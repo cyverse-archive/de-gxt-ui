@@ -71,14 +71,14 @@ class SearchFormTagPanel extends Component {
     }
 
     appendTag(tag) {
-        let { array, taggedWith } = this.props;
-        array.insert('tagQuery', 0, tag);
+        let { array, taggedWith, tagQuery } = this.props;
+        array.insert(tagQuery.input.name, 0, tag);
         taggedWith.input.onChange('');
     }
 
     removeTag(tag, index) {
-        let { array } = this.props;
-        array.remove('tagQuery', index)
+        let { array, tagQuery } = this.props;
+        array.remove(tagQuery.input.name, index)
     }
 
     render() {
