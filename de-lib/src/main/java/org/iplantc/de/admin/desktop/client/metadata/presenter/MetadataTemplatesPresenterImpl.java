@@ -3,6 +3,8 @@ package org.iplantc.de.admin.desktop.client.metadata.presenter;
 import org.iplantc.de.admin.desktop.client.metadata.events.AddMetadataSelectedEvent;
 import org.iplantc.de.admin.desktop.client.metadata.events.DeleteMetadataSelectedEvent;
 import org.iplantc.de.admin.desktop.client.metadata.events.EditMetadataSelectedEvent;
+import org.iplantc.de.admin.desktop.client.metadata.presenter.callbacks.SaveTemplateError;
+import org.iplantc.de.admin.desktop.client.metadata.presenter.callbacks.SaveTemplateSuccess;
 import org.iplantc.de.admin.desktop.client.metadata.service.MetadataTemplateAdminServiceFacade;
 import org.iplantc.de.admin.desktop.client.metadata.view.EditMetadataTemplateView;
 import org.iplantc.de.admin.desktop.client.metadata.view.TemplateListingView;
@@ -158,36 +160,39 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
 
     }
 
-    private void addTemplate(final String template) {
+    private void addTemplate(final String template, SaveTemplateSuccess resolve, SaveTemplateError reject) {
         final MetadataTemplatesPresenterImpl presenter = this;
 
         mdSvcFac.addTemplate(template, new AsyncCallback<String>() {
 
             @Override
             public void onFailure(Throwable caught) {
-                presenter.closeTemplateInfoDialog();
                 ErrorHandler.post(appearance.addTemplateError(), caught);
+                reject.reject(caught.getMessage());
+                presenter.closeTemplateInfoDialog();
             }
 
             @Override
             public void onSuccess(String result) {
                 IplantAnnouncer.getInstance().schedule(new SuccessAnnouncementConfig(appearance.addTemplateSuccess()));
 
+                resolve.resolve(AutoBeanCodex.encode(AutoBeanCodex.decode(drFac, MetadataTemplate.class, result)));
                 presenter.closeTemplateInfoDialog();
                 loadTemplates();
             }
         });
     }
 
-    private void updateTemplate(final String templateId, final String template) {
+    private void updateTemplate(final String templateId, final String template, SaveTemplateSuccess resolve, SaveTemplateError reject) {
         final MetadataTemplatesPresenterImpl presenter = this;
 
         mdSvcFac.updateTemplate(templateId, template, new AsyncCallback<String>() {
 
             @Override
             public void onFailure(Throwable caught) {
-                presenter.closeTemplateInfoDialog();
                 ErrorHandler.post(appearance.updateTemplateError(), caught);
+                reject.reject(caught.getMessage());
+                presenter.closeTemplateInfoDialog();
             }
 
             @Override
@@ -195,6 +200,7 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
                 IplantAnnouncer.getInstance()
                                .schedule(new SuccessAnnouncementConfig(appearance.updateTemplateSuccess()));
 
+                resolve.resolve(AutoBeanCodex.encode(AutoBeanCodex.decode(drFac, MetadataTemplate.class, result)));
                 presenter.closeTemplateInfoDialog();
                 loadTemplates();
             }
@@ -211,16 +217,16 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
     }
 
     @Override
-    public void onSaveTemplate(Splittable template) {
+    public void onSaveTemplate(Splittable template, SaveTemplateSuccess resolve, SaveTemplateError reject) {
         final MetadataTemplate metadataTemplate = AutoBeanCodex.decode(drFac, MetadataTemplate.class, template).as();
         final String templateId = metadataTemplate.getId();
 
         final String payload = template.getPayload();
 
         if (Strings.isNullOrEmpty(templateId)) {
-            addTemplate(payload);
+            addTemplate(payload, resolve, reject);
         } else {
-            updateTemplate(templateId, payload);
+            updateTemplate(templateId, payload, resolve, reject);
         }
     }
 

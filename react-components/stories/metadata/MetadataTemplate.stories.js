@@ -2,6 +2,18 @@ import React, { Component } from "react";
 
 import EditMetadataTemplate from "../../src/metadata/admin/EditMetadataTemplate";
 
+const presenter = (logger) => ({
+    onSaveTemplate: (template, resolve, reject) => {
+        setTimeout(() => {
+                logger(template);
+                resolve(template);
+            },
+            1500
+        );
+    },
+    closeTemplateInfoDialog: () => logger("dialog closed."),
+});
+
 const nestedAttrMetadataTemplate = {
     "id": "91334572-5e13-11e8-acc0-f64e9b87c109",
     "name": "Test Metadata Template",
@@ -123,13 +135,8 @@ class EditNestedAttrMetadataTemplateTest extends Component {
             console.log(template);
         });
 
-        const presenter = {
-            onSaveTemplate: logger,
-            closeTemplateInfoDialog: () => logger("dialog closed."),
-        };
-
         return (
-            <EditMetadataTemplate open presenter={presenter} initialValues={nestedAttrMetadataTemplate} />
+            <EditMetadataTemplate open presenter={presenter(logger)} initialValues={nestedAttrMetadataTemplate} />
         );
     }
 }
@@ -705,13 +712,8 @@ class EditDataCiteMetadataTemplateTest extends Component {
             console.log(template);
         });
 
-        const presenter = {
-            onSaveTemplate: logger,
-            closeTemplateInfoDialog: () => logger("dialog closed."),
-        };
-
         return (
-            <EditMetadataTemplate open presenter={presenter} initialValues={dataciteMetadataTemplate} />
+            <EditMetadataTemplate open presenter={presenter(logger)} initialValues={dataciteMetadataTemplate} />
         );
     }
 }

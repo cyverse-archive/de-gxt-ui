@@ -37,17 +37,23 @@ class EditMetadataTemplate extends Component {
     }
 
     onSaveTemplate = ({ name, description, deleted, attributes }) => {
-        const { id } = this.props.initialValues;
-
-        this.props.presenter.onSaveTemplate({
-            id,
-            name,
-            description,
-            deleted,
-            attributes,
-        });
-
         this.closeConfirmationDialog();
+
+        return new Promise((resolve, reject) => {
+            const { id } = this.props.initialValues;
+
+            this.props.presenter.onSaveTemplate(
+                {
+                    id,
+                    name,
+                    description,
+                    deleted,
+                    attributes,
+                },
+                resolve,
+                reject
+            );
+        });
     };
 
     closeConfirmationDialog = () => this.setState({ showConfirmationDialog: false });
