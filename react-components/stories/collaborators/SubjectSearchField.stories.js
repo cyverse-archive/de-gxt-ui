@@ -57,8 +57,11 @@ class SubjectSearchFieldTest extends Component {
             }
         ];
 
+        const parentId = 'someParentId';
+
         return (
             <SubjectSearchField presenter={presenter}
+                                parentId={parentId}
                                 onSelect={handleSearch}/>
         )
     }

@@ -19,7 +19,7 @@ public class ReactSearchForm {
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class SearchFormProps extends BaseProps {
         public SearchView.Presenter presenter;
-        public String id;
+        public String parentId;
         public Splittable initialValues;
     }
 }

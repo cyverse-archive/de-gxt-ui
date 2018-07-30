@@ -1,6 +1,8 @@
+import build from "../../../util/DebugIDUtil";
 import AddBtn from "./AddBtn";
-import DeleteBtn from "./DeleteBtn";
 import Condition from "./Condition";
+import DeleteBtn from "./DeleteBtn";
+import ids from "../ids";
 
 import React, { Fragment } from 'react';
 
@@ -13,17 +15,25 @@ function Group(props) {
         root,
         fields,
         onRemove,
-        helperProps
+        helperProps,
+        helperProps: {
+            parentId
+        }
     } = props;
+
+    let baseId = build(parentId, fields.name);
 
     return (
         <Fragment>
-            <AddBtn onClick={() => fields.push({})}/>
-            {!root && <DeleteBtn onClick={onRemove}/>}
+            <AddBtn onClick={() => fields.push({})}
+                    id={build(baseId, ids.addConditionBtn)}/>
+            {!root && <DeleteBtn onClick={onRemove}
+                                 id={build(parentId, ids.deleteConditionBtn)}/>}
             {fields.map((field, index) => (
                 <div key={index}>
                     <Condition field={field}
-                               onRemove={() =>fields.remove(index)}
+                               parentId={baseId}
+                               onRemove={() => fields.remove(index)}
                                helperProps={helperProps}/>
                 </div>
             ))}

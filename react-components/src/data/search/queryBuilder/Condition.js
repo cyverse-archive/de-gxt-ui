@@ -1,6 +1,8 @@
+import build from "../../../util/DebugIDUtil";
 import Conditions from "./Conditions";
 import DeleteBtn from "./DeleteBtn";
 import Group from "./Group";
+import ids from "../ids";
 
 import { FieldArray, Fields, FormSection } from 'redux-form';
 import Grid from "@material-ui/core/Grid";
@@ -50,18 +52,21 @@ function renderCondition(props) {
         onRemove,
         helperProps,
         helperProps: {
-            resetSection
+            resetSection,
+            parentId
         }
     } = props;
 
     let fieldType = root ? 'type' : `${field}.type`;
     let fieldArgs = root ? 'args' : `${field}.args`;
-
     let fieldTypeObj = getTargetProp(props, fieldType);
+
     let selection = fieldTypeObj.input.value;
+    let baseId = build(parentId, field);
 
     let ConditionSelector = () => (
         <Select value={selection}
+                id={build(baseId, ids.conditionSelector)}
                 onChange={(event) => handleUpdateCondition(fieldTypeObj, fieldArgs, event, resetSection)}>
             {selectOptions && selectOptions.map((item, index) => {
                 return <MenuItem key={index} value={item.value}>{item.label}</MenuItem>
@@ -76,6 +81,7 @@ function renderCondition(props) {
                 <FieldArray name={fieldArgs}
                             root={root}
                             onRemove={onRemove}
+                            parentId={parentId}
                             selectOptions={selectOptions}
                             helperProps={helperProps}
                             component={Group}/>
@@ -88,10 +94,12 @@ function renderCondition(props) {
                     <ConditionSelector/>
                 </Grid>
                 <FormSection name={fieldArgs}
+                             parentId={baseId}
                              helperProps={helperProps}
                              component={ConditionComponent(selection)}/>
                 <Grid item>
-                    {!root && <DeleteBtn onClick={onRemove}/>}
+                    {!root && <DeleteBtn onClick={onRemove}
+                                         id={build(baseId, ids.deleteConditionBtn)}/>}
                 </Grid>
             </Grid>
         )

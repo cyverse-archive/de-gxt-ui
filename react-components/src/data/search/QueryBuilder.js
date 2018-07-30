@@ -1,3 +1,5 @@
+import build from "../../util/DebugIDUtil";
+import Condition from "./queryBuilder/Condition";
 import ids from "./ids";
 import messages from './messages';
 import SaveSearchButton from "./SaveSearchButton";
@@ -6,10 +8,10 @@ import withI18N, { getMessage } from "../../util/I18NWrapper";
 import withStoreProvider from "../../util/StoreProvider";
 
 import Button from '@material-ui/core/Button';
-import injectSheet from "react-jss";
+import PropTypes from "prop-types";
 import React, { Component } from 'react';
 import { reduxForm, Field } from "redux-form";
-import Condition from "./queryBuilder/Condition";
+import { withStyles } from "@material-ui/core/styles";
 
 /**
  * A form which allows users to build their own custom data search queries
@@ -36,19 +38,24 @@ class QueryBuilder extends Component {
         let {
             handleSubmit,
             classes,
-            initialValues
+            initialValues,
+            parentId
         } = this.props;
         let originalName = initialValues ? initialValues : null;
 
         return (
             <div>
-                <Condition root={true} helperProps={this.props}/>
+                <Condition root={true}
+                           parentId={build(parentId, ids.form)}
+                           helperProps={this.props}/>
                 <div className={classes.buttonBar}>
                     <Field name='label'
                            originalName={originalName}
+                           id={ids.saveBtn}
                            handleSave={handleSubmit(this.handleSaveSearch)}
                            component={renderSaveSearchBtn}/>
                     <Button variant="raised"
+                            id={build(parentId, ids.searchBtn)}
                             className={classes.searchButton}
                             onClick={handleSubmit(this.handleSubmitForm)}>
                         {getMessage('searchBtn')}
@@ -58,6 +65,18 @@ class QueryBuilder extends Component {
         );
     }
 }
+
+QueryBuilder.propTypes = {
+    presenter: PropTypes.shape({
+        onAddTagSelected: PropTypes.func.isRequired,
+        onEditTagSelected: PropTypes.func.isRequired,
+        fetchTagSuggestions: PropTypes.func.isRequired,
+        onSaveSearch: PropTypes.func.isRequired,
+        onSearchBtnClicked: PropTypes.func.isRequired,
+        searchCollaborators: PropTypes.func.isRequired,
+    }),
+    parentId: PropTypes.string.isRequired,
+};
 
 function renderSaveSearchBtn(props) {
     let {
@@ -79,4 +98,4 @@ export default withStoreProvider(
             form: 'dataQueryBuilder',
             enableReinitialize: true
         }
-    )(injectSheet(styles)(withI18N(QueryBuilder, messages))));
+    )(withStyles(styles)(withI18N(QueryBuilder, messages))));

@@ -1,3 +1,5 @@
+import build from "../../../util/DebugIDUtil";
+import ids from "../ids";
 import { operatorMap } from "./Operators";
 
 import { Fields } from "redux-form";
@@ -12,13 +14,15 @@ import Select from '@material-ui/core/Select';
 function SelectOperator(props) {
     let {
         operators,
-        classes
+        classes,
+        parentId
     } = props;
 
     return (
         <Grid item>
             <Fields names={['opLabel', 'exact', 'negated', 'permission_recurse']}
                     classes={classes}
+                    parentId={parentId}
                     operators={operators}
                     component={renderSelect}/>
         </Grid>
@@ -32,10 +36,12 @@ function renderSelect(props) {
         negated,
         permission_recurse,
         operators,
+        parentId
     } = props;
 
     return (
         <Select value={opLabel.input.value}
+                id={build(parentId, ids.selectOperator)}
                 onChange={(event) => handleChange(event, opLabel, exact, negated, permission_recurse)}>
             {operators && operators.map((operator, index) => {
                 return <MenuItem key={index} value={operator.value}>{operator.label}</MenuItem>

@@ -429,7 +429,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     ReactSearchForm.SearchFormProps getDefaultProps() {
         ReactSearchForm.SearchFormProps props = new ReactSearchForm.SearchFormProps();
         props.presenter = this;
-        props.id = DiskResourceModule.Ids.SEARCH_FORM;
+        props.parentId = DiskResourceModule.Ids.SEARCH_FORM;
         props.initialValues = searchModelUtils.createDefaultFilter();
 
         return props;

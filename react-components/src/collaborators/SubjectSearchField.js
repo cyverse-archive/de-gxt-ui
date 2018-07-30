@@ -1,5 +1,7 @@
 import Autocomplete from "../util/Autocomplete";
+import build from "../util/DebugIDUtil";
 import getRegExp from "../util/getRegExp";
+import ids from "./ids";
 import Highlighter from "../util/Highlighter";
 import messages from "./messages";
 import styles from "./styles";
@@ -38,21 +40,24 @@ class SubjectSearchField extends Component {
 
     render() {
         let {
-            onSelect
+            onSelect,
+            parentId
         } = this.props;
 
         let CustomOption = withStyles(styles)(Option);
 
         return (
-            <Autocomplete variant='async'
-                          optionComponent={CustomOption}
-                          placeholder={getMessage("searchHelpText")}
-                          filterOptions={(options) => {
-                              // Do no filtering, just return all options
-                              return options;
-                          }}
-                          loadOptions={this.getSubjects}
-                          onChange={onSelect}/>
+            <div id={build(parentId, ids.subjectSearchField)}>
+                <Autocomplete variant='async'
+                              optionComponent={CustomOption}
+                              placeholder={getMessage("searchHelpText")}
+                              filterOptions={(options) => {
+                                  // Do no filtering, just return all options
+                                  return options;
+                              }}
+                              loadOptions={this.getSubjects}
+                              onChange={onSelect}/>
+            </div>
         )
     }
 }
@@ -175,6 +180,7 @@ function isSecret(index) {
 }
 
 SubjectSearchField.propTypes = {
+    parentId: PropTypes.string.isRequired,
     onSelect: PropTypes.func.isRequired,
     presenter: PropTypes.shape({
         searchCollaborators: PropTypes.func.isRequired

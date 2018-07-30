@@ -1,4 +1,3 @@
-import ids from "../ids";
 import { options } from "./Operators";
 import SearchFormTagPanel from "../SearchFormTagPanel";
 import SelectOperator from "./SelectOperator";
@@ -17,6 +16,7 @@ function Tags(props) {
     ];
 
     let {
+        parentId,
         helperProps: {
             array,
             presenter
@@ -27,7 +27,7 @@ function Tags(props) {
         <Fragment>
             <SelectOperator operators={operators}/>
             <Field name='tags'
-                   parentId={ids.form}
+                   parentId={parentId}
                    placeholder={''}
                    array={array}
                    presenter={presenter}

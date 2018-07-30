@@ -1,3 +1,4 @@
+import build from "../../../util/DebugIDUtil";
 import { getMessage } from "../../../util/I18NWrapper";
 import ids from "../ids";
 import { options } from "./Operators";
@@ -20,6 +21,7 @@ function FileSize(props) {
     ];
 
     let {
+        parentId,
         helperProps: {
             messages
         }
@@ -32,15 +34,17 @@ function FileSize(props) {
 
     return (
         <Fragment>
-            <SelectOperator operators={operators}/>
+            <SelectOperator operators={operators}
+                            parentId={parentId}/>
             <Field name='from.value'
                    type='number'
                    parse={value => value ? Number(value) : null}
                    min='0'
                    label={getMessage('fileSizeGreater')}
+                   id={build(parentId, ids.fileSizeGreaterVal)}
                    component={ReduxTextField}/>
             <Field name='from.unit'
-                   id={ids.fileSizeLessThanUnit}
+                   id={build(parentId, ids.fileSizeGreaterUnit)}
                    label=' '
                    component={renderDropDown}>
                 {sizesListChildren}
@@ -50,9 +54,10 @@ function FileSize(props) {
                    parse={value => value ? Number(value) : null}
                    min='0'
                    label={getMessage('fileSizeLessThan')}
+                   id={build(parentId, ids.fileSizeLessThanVal)}
                    component={ReduxTextField}/>
             <Field name='to.unit'
-                   id={ids.fileSizeLessThanUnit}
+                   id={build(parentId, ids.fileSizeLessThanUnit)}
                    label=' '
                    component={renderDropDown}>
                 {sizesListChildren}

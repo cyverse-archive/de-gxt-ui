@@ -1,3 +1,5 @@
+import build from "../../../util/DebugIDUtil";
+import ids from "../ids";
 import { options } from "./Operators";
 import ReduxTextField from "./ReduxTextField";
 import SelectOperator from "./SelectOperator";
@@ -9,7 +11,7 @@ import React, { Fragment } from 'react';
  * A component which allows users to specify an owner in QueryBuilder
  */
 
-function Owner() {
+function Owner(props) {
     let operators = [
         options.Is,
         options.IsNot,
@@ -17,11 +19,15 @@ function Owner() {
         options.ContainsNot
     ];
 
+    let {parentId} = props;
+
     return (
         <Fragment>
-            <SelectOperator operators={operators}/>
+            <SelectOperator operators={operators}
+                            parentId={parentId}/>
             <Field name='owner'
                    operators={operators}
+                   id={build(parentId, ids.owner)}
                    component={ReduxTextField}/>
         </Fragment>
     )

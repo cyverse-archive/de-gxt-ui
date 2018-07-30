@@ -99,8 +99,11 @@ class QueryBuilderTest extends React.Component {
             }
         ];
 
+        const parentId = 'gwt-debug-diskResourceWindow.0';
+
         return (
-            <QueryBuilder presenter={presenter}/>
+            <QueryBuilder presenter={presenter}
+                          parentId={parentId}/>
         )
     }
 }

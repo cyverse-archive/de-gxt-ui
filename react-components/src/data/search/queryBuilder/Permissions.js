@@ -1,3 +1,5 @@
+import build from "../../../util/DebugIDUtil";
+import ids from "../ids";
 import messages from "../messages";
 import { options } from "./Operators";
 import SelectOperator from "./SelectOperator";
@@ -43,6 +45,7 @@ function Permissions(props) {
     ];
 
     let {
+        parentId,
         helperProps: {
             presenter,
             classes
@@ -51,13 +54,16 @@ function Permissions(props) {
 
     return (
         <Fragment>
-            <SelectOperator operators={operators}/>
+            <SelectOperator operators={operators}
+                            parentId={parentId}/>
             <Field name='permission'
                    permissions={permissions}
+                   id={build(parentId, ids.permissionList)}
                    component={renderSelect}/>
             <FieldArray name='users'
                         presenter={presenter}
                         classes={classes}
+                        parentId={parentId}
                         component={renderSubjectSearch}/>
         </Fragment>
     )
@@ -66,7 +72,8 @@ function Permissions(props) {
 function renderSelect(props) {
     let {
         input,
-        permissions
+        permissions,
+        id
     } = props;
 
     if (input.value === "") {
@@ -76,6 +83,7 @@ function renderSelect(props) {
     return (
         <Grid item>
             <Select value={input.value}
+                    id={id}
                     onChange={(event) => input.onChange(event.target.value)}>
                 {permissions && permissions.map((permission, index) => {
                     return <MenuItem key={index} value={permission.value}>{permission.label}</MenuItem>
@@ -89,15 +97,18 @@ function renderSubjectSearch(props) {
     let {
         presenter,
         classes,
-        fields
+        fields,
+        parentId
     } = props;
 
     return (
         <Grid item>
             <SubjectSearchField presenter={presenter}
+                                parentId={parentId}
                                 onSelect={(collaborator) => fields.push(collaborator)}/>
             {fields.getAll() && <UserPanel classes={classes}
                                            fields={fields}
+                                           id={build(parentId, ids.userList)}
                                            onDelete={fields.remove}/>}
         </Grid>
     )
@@ -107,13 +118,15 @@ function UserPanel(props) {
     let {
         fields,
         onDelete,
-        classes
+        classes,
+        id
     } = props;
     let users = fields.getAll();
     let chips = users && users.map((user, index) =>
         <Tooltip key={user.id}
                  title={user.institution ? user.institution : user.description}>
             <Chip key={user.id}
+                  id={user.id}
                   className={classes.userChip}
                   onDelete={() => onDelete(index)}
                   label={user.name}/>
@@ -121,7 +134,8 @@ function UserPanel(props) {
     );
 
     return (
-        <Paper className={classes.permissionUsers}>
+        <Paper className={classes.permissionUsers}
+               id={id}>
             {chips}
         </Paper>
     )
