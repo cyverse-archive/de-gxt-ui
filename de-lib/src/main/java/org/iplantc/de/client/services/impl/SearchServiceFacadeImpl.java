@@ -276,11 +276,11 @@ public class SearchServiceFacadeImpl implements SearchServiceFacade {
                                   FolderContentsLoadConfig loadConfig,
                                   FolderContentsRpcProxyImpl.SearchResultsCallback queryResultsCallback) {
 
-        Splittable realTemplate = template.getTemplate();
-        DataSearchQueryBuilder builder = new DataSearchQueryBuilder(realTemplate);
+        Splittable originalQuery = template.getQuery();
+        DataSearchQueryBuilder builder = new DataSearchQueryBuilder(originalQuery);
         String address = SEARCH;
 
-        Splittable query = builder.buildQuery();
+        Splittable query = builder.getSearchQuery();
 
         int limit = loadConfig.getLimit();
         int offset = loadConfig.getOffset();

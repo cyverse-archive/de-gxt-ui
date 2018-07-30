@@ -1,5 +1,13 @@
 import { getMessage } from "../../../util/I18NWrapper";
 
+/**
+ * An Operator is part of a Condition and allows the user to specify whether the condition
+ * should be true or false, fuzzy or exact, etc.
+ *
+ * The options object is used to populate the dropdown menu(s) for each Condition
+ *
+ * The operatorMap object is used to map each option to different flags
+ */
 const options = {
     Is: {
         value: 'Is',

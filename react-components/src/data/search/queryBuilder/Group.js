@@ -2,8 +2,12 @@ import AddBtn from "./AddBtn";
 import DeleteBtn from "./DeleteBtn";
 import Condition from "./Condition";
 
-import React, {Fragment} from 'react';
+import React, { Fragment } from 'react';
 
+/**
+ * A component which allows users to create different groupings in QueryBuilder
+ * such as Any and All
+ */
 function Group(props) {
     let {
         root,

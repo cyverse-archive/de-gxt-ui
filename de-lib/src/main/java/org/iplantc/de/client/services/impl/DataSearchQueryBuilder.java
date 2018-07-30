@@ -83,7 +83,7 @@ public class DataSearchQueryBuilder {
         this.query = StringQuoter.createSplittable();
     }
 
-    public Splittable buildQuery() {
+    public Splittable getSearchQuery() {
         buildQuery(query, template);
         return query;
     }

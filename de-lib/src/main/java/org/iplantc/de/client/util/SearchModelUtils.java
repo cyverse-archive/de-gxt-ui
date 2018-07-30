@@ -56,7 +56,7 @@ public class SearchModelUtils {
         if (label != null) {
             name = label.asString();
         }
-        template.setTemplate(splittable);
+        template.setQuery(splittable);
         template.setName(name);
         return template;
     }

@@ -1,13 +1,22 @@
-import Created from "./Created";
+import Date from "./Date";
+import FileSize from "./FileSize";
 import { getMessage } from "../../../util/I18NWrapper";
 import Group from "./Group";
 import Label from "./Label";
+import Metadata from "./Metadata";
 import Owner from "./Owner";
 import Path from "./Path";
-import Tags from "./Tags";
-import FileSize from "./FileSize";
-import Metadata from "./Metadata";
 import Permissions from "./Permissions";
+import Tags from "./Tags";
+
+/**
+ * All of the conditions available to the user for the QueryBuilder
+ *
+ * The labels array is used to populate the dropdown menu in Condition
+ *
+ * The componentMap object is used to map a dropdown menu selection to which
+ * component should be rendered
+ */
 
 const labels = [
     {
@@ -71,11 +80,11 @@ let componentMap = {
     },
     created: {
         isGroup: false,
-        component: Created
+        component: Date
     },
     modified: {
         isGroup: false,
-        component: Created
+        component: Date
     },
     tag: {
         isGroup: false,

@@ -1,12 +1,9 @@
 package org.iplantc.de.client.models.search;
 
 import org.iplantc.de.client.models.diskResources.Folder;
-import org.iplantc.de.client.models.tags.Tag;
 
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 import com.google.web.bindery.autobean.shared.Splittable;
-
-import java.util.Set;
 
 /**
  * This object is used to collect the information required to build a search request for the endpoints
@@ -19,11 +16,8 @@ import java.util.Set;
  */
 public interface DiskResourceQueryTemplate extends Folder {
 
-    String getFileQuery();
-    void setFileQuery(String query);
-
-    Splittable getTemplate();
-    void setTemplate(Splittable template);
+    Splittable getQuery();
+    void setQuery(Splittable query);
 
     /**
      * Overrides the default property name binding of "id" to "label"

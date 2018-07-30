@@ -8,57 +8,59 @@ import withI18N, { getMessage } from "../../../util/I18NWrapper";
 import Chip from "@material-ui/core/Chip";
 import { Field, FieldArray } from "redux-form";
 import Grid from "@material-ui/core/Grid";
-import injectSheet from "react-jss";
 import MenuItem from "@material-ui/core/MenuItem";
 import Paper from "@material-ui/core/Paper";
-import React, { Component, Fragment } from "react";
+import React, { Fragment } from "react";
 import Select from "@material-ui/core/Select";
 import Tooltip from "@material-ui/core/Tooltip";
+import { withStyles } from "@material-ui/core/styles";
 
-class Permissions extends Component {
-    render() {
-        let operators = [
-            options.Are,
-            options.AreNot,
-            options.AreAtLeast,
-            options.AreNotAtLeast
-        ];
+/**
+ * A component which allows users to specify a list of users which must have certain
+ * permissions in QueryBuilder
+ */
+function Permissions(props) {
+    let operators = [
+        options.Are,
+        options.AreNot,
+        options.AreAtLeast,
+        options.AreNotAtLeast
+    ];
 
-        let permissions = [
-            {
-                value: 'read',
-                label: getMessage('read')
-            },
-            {
-                value: 'write',
-                label: getMessage('write')
-            },
-            {
-                value: 'own',
-                label: getMessage('own')
-            }
-        ];
+    let permissions = [
+        {
+            value: 'read',
+            label: getMessage('read')
+        },
+        {
+            value: 'write',
+            label: getMessage('write')
+        },
+        {
+            value: 'own',
+            label: getMessage('own')
+        }
+    ];
 
-        let {
-            helperProps: {
-                presenter,
-                classes
-            }
-        } = this.props;
+    let {
+        helperProps: {
+            presenter,
+            classes
+        }
+    } = props;
 
-        return (
-            <Fragment>
-                <SelectOperator operators={operators}/>
-                <Field name='permission'
-                       permissions={permissions}
-                       component={renderSelect}/>
-                <FieldArray name='users'
-                            presenter={presenter}
-                            classes={classes}
-                            component={renderSubjectSearch}/>
-            </Fragment>
-        )
-    }
+    return (
+        <Fragment>
+            <SelectOperator operators={operators}/>
+            <Field name='permission'
+                   permissions={permissions}
+                   component={renderSelect}/>
+            <FieldArray name='users'
+                        presenter={presenter}
+                        classes={classes}
+                        component={renderSubjectSearch}/>
+        </Fragment>
+    )
 }
 
 function renderSelect(props) {
@@ -109,7 +111,8 @@ function UserPanel(props) {
     } = props;
     let users = fields.getAll();
     let chips = users && users.map((user, index) =>
-        <Tooltip title={user.institution ? user.institution : user.description}>
+        <Tooltip key={user.id}
+                 title={user.institution ? user.institution : user.description}>
             <Chip key={user.id}
                   className={classes.userChip}
                   onDelete={() => onDelete(index)}
@@ -124,4 +127,4 @@ function UserPanel(props) {
     )
 }
 
-export default injectSheet(styles)(withI18N(Permissions, messages));
+export default withStyles(styles)(withI18N(Permissions, messages));

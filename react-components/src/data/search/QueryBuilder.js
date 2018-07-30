@@ -11,7 +11,9 @@ import React, { Component } from 'react';
 import { reduxForm, Field } from "redux-form";
 import Condition from "./queryBuilder/Condition";
 
-
+/**
+ * A form which allows users to build their own custom data search queries
+ */
 class QueryBuilder extends Component {
     constructor(props) {
         super(props);

@@ -1,7 +1,6 @@
 package org.iplantc.de.diskResource.client.presenters.search;
 
 import org.iplantc.de.client.models.collaborators.Subject;
-import org.iplantc.de.client.models.groups.Group;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.client.models.tags.Tag;
@@ -55,7 +54,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * @author jstroot
@@ -401,7 +399,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     @Override
     public void edit(DiskResourceQueryTemplate template) {
         ReactSearchForm.SearchFormProps props = getCurrentProps();
-        props.initialValues = template.getTemplate();
+        props.initialValues = template.getQuery();
 
         view.renderSearchForm(props);
 

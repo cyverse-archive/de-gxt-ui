@@ -1,4 +1,5 @@
 import Autocomplete from "../util/Autocomplete";
+import getRegExp from "../util/getRegExp";
 import Highlighter from "../util/Highlighter";
 import messages from "./messages";
 import styles from "./styles";
@@ -10,7 +11,6 @@ import PropTypes from "prop-types";
 import React, { Component, Fragment } from 'react';
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from '@material-ui/core/styles';
-import validRegex from "../util/validRegex";
 
 /**
  * A component that allows users to search for Collaborators (individuals, teams, collaboration
@@ -131,7 +131,7 @@ function getRegexSearchTerm(searchTerm) {
     let trimmedSearch = searchTerm.replace(/^\*+|\*+$/g, '').replace(/\*+/, '*');
     let searchGroups = trimmedSearch.split('*');
     let groupedRegexStr = '(' + searchGroups.join(')(.*?)(') + ')';
-    let regex = validRegex(groupedRegexStr, 'i');
+    let regex = getRegExp(groupedRegexStr, 'i');
 
     return {
         trimmedSearch: trimmedSearch,
@@ -147,7 +147,7 @@ function censorUsername(searchTerm) {
 
 function censorEmail(email, pattern) {
     let domainIndex = email.search(/@(?!.*@)/);
-    let groupedRegex = validRegex('(.*?)' + pattern, 'ig');
+    let groupedRegex = getRegExp('(.*?)' + pattern, 'ig');
     let matches = groupedRegex.exec(email);
 
     let newEmail = '';

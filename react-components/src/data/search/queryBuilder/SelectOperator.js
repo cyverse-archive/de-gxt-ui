@@ -3,28 +3,26 @@ import { operatorMap } from "./Operators";
 import { Fields } from "redux-form";
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
-import React, { Component } from 'react';
+import React from 'react';
 import Select from '@material-ui/core/Select';
 
 /**
  * A Select which prompts the user to choose between different Operators
  */
-class SelectOperator extends Component {
-    render() {
-        let {
-            operators,
-            classes
-        } = this.props;
+function SelectOperator(props) {
+    let {
+        operators,
+        classes
+    } = props;
 
-        return (
-            <Grid item>
-                <Fields names={['opLabel', 'exact', 'negated', 'permission_recurse']}
-                        classes={classes}
-                        operators={operators}
-                        component={renderSelect}/>
-            </Grid>
-        )
-    }
+    return (
+        <Grid item>
+            <Fields names={['opLabel', 'exact', 'negated', 'permission_recurse']}
+                    classes={classes}
+                    operators={operators}
+                    component={renderSelect}/>
+        </Grid>
+    )
 }
 
 function renderSelect(props) {

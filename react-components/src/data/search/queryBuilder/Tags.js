@@ -5,35 +5,35 @@ import SelectOperator from "./SelectOperator";
 
 import { Field } from "redux-form";
 import Grid from "@material-ui/core/Grid";
-import React, { Component, Fragment } from "react";
+import React, { Fragment } from "react";
 
-class Tags extends Component {
-    render() {
-        let operators = [
-            options.Are,
-            options.AreNot
-        ];
+/**
+ * A component which allows users to specify tags in QueryBuilder
+ */
+function Tags(props) {
+    let operators = [
+        options.Are,
+        options.AreNot
+    ];
 
-        let {
-            helperProps: {
-                array,
-                presenter
-            }
-        } = this.props;
+    let {
+        helperProps: {
+            array,
+            presenter
+        }
+    } = props;
 
-        return (
-            <Fragment>
-                <SelectOperator operators={operators}/>
-                <Field name='tags'
-                       parentId={ids.form}
-                       placeholder={''}
-                       array={array}
-                       presenter={presenter}
-                       component={renderTagSearchField}/>
-            </Fragment>
-
-        )
-    }
+    return (
+        <Fragment>
+            <SelectOperator operators={operators}/>
+            <Field name='tags'
+                   parentId={ids.form}
+                   placeholder={''}
+                   array={array}
+                   presenter={presenter}
+                   component={renderTagSearchField}/>
+        </Fragment>
+    )
 }
 
 function renderTagSearchField(props) {

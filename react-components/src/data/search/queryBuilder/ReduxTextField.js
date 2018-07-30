@@ -2,6 +2,9 @@ import Grid from "@material-ui/core/Grid";
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 
+/**
+ * A general material-ui TextField that can be used with redux-form
+ */
 function ReduxTextField(props) {
     let {
         input,
@@ -9,6 +12,7 @@ function ReduxTextField(props) {
         meta: {error},
         ...custom
     } = props;
+
     return (
         <Grid item>
             <TextField

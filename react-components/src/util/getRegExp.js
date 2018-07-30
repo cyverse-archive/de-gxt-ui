@@ -7,14 +7,14 @@
  * regular expression, or the same but with any regex characters as string literals
  */
 
-function validRegex(pattern, options) {
+function getRegExp(pattern, options) {
     let regex = null;
     try {
         regex = new RegExp(pattern, options);
     } catch (e) {
-        regex = new RegExp(pattern.replace(/[^\w\s]/g, "\\$&"));
+        regex = new RegExp(pattern.replace(/[^\w\s]/g, "\\$&"), options);
     }
     return regex;
 }
 
-export default validRegex;
+export default getRegExp;

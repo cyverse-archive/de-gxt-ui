@@ -8,10 +8,6 @@ class SearchFormTagPanelTest extends Component {
             console.log(selection);
         });
 
-        const suggestionsLogger = this.props.suggestionsLogger || ((selection) => {
-            console.log(selection);
-        });
-
         const addTagLogger = this.props.addTagLogger || ((selection) => {
             console.log(selection);
         });

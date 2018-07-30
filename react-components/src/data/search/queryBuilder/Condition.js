@@ -5,36 +5,41 @@ import Group from "./Group";
 import { FieldArray, Fields, FormSection } from 'redux-form';
 import Grid from "@material-ui/core/Grid";
 import MenuItem from '@material-ui/core/MenuItem';
-import React, { Component } from 'react';
+import React from 'react';
 import Select from '@material-ui/core/Select';
 
-class Condition extends Component {
+/**
+ * A condition is a rule that can be constructed to help build a query in the QueryBuilder
+ * A condition visually is any row within the QueryBuilder and consists of a dropdown menu
+ * where the user can select which type of condition they're adding.  The list of conditions
+ * are in the Conditions file.
+ * Once a selection has been made, then the row populates with the rest of the values needed to
+ * fully fill out that condition.
+ */
+function Condition(props) {
+    let {
+        field,
+        root,
+        onRemove,
+        helperProps
+    } = props;
 
-    render() {
-        let {
-            field,
-            root,
-            onRemove,
-            helperProps
-        } = this.props;
+    let selectOptions = root ? Conditions.labels.filter((item) => {
+        return isGroup(item.value);
+    }) : Conditions.labels;
 
-        let selectOptions = root ? Conditions.labels.filter((item) => {
-            return isGroup(item.value);
-        }) : Conditions.labels;
+    let fieldType = root ? 'type' : `${field}.type`;
+    let fieldArgs = root ? 'args' : `${field}.args`;
 
-        let fieldType = root ? 'type' : `${field}.type`;
-        let fieldArgs = root ? 'args' : `${field}.args`;
-
-        return (
-            <Fields names={[fieldType, fieldArgs]}
-                    field={field}
-                    root={root}
-                    selectOptions={selectOptions}
-                    onRemove={onRemove}
-                    helperProps={helperProps}
-                    component={renderCondition}/>
-        )
-    }
+    return (
+        <Fields names={[fieldType, fieldArgs]}
+                field={field}
+                root={root}
+                selectOptions={selectOptions}
+                onRemove={onRemove}
+                helperProps={helperProps}
+                component={renderCondition}/>
+    )
 }
 
 function renderCondition(props) {
@@ -49,16 +54,15 @@ function renderCondition(props) {
         }
     } = props;
 
-    let fieldTypeVal = root ? 'type' : `${field}.type`;
-
-    let fieldType = root ? props['type'] : getTargetProp(props, fieldTypeVal);
+    let fieldType = root ? 'type' : `${field}.type`;
     let fieldArgs = root ? 'args' : `${field}.args`;
 
-    let selection = fieldType.input.value;
+    let fieldTypeObj = getTargetProp(props, fieldType);
+    let selection = fieldTypeObj.input.value;
 
     let ConditionSelector = () => (
         <Select value={selection}
-                onChange={(event) => handleUpdateCondition(fieldType, fieldArgs, event, resetSection)}>
+                onChange={(event) => handleUpdateCondition(fieldTypeObj, fieldArgs, event, resetSection)}>
             {selectOptions && selectOptions.map((item, index) => {
                 return <MenuItem key={index} value={item.value}>{item.label}</MenuItem>
             })}
