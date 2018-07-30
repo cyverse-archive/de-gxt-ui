@@ -7,11 +7,9 @@ import org.iplantc.de.client.models.identifiers.PermanentIdRequestStatus;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestUpdate;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.commons.client.widgets.IPlantAnchor;
-import org.iplantc.de.notifications.client.views.dialogs.RequestHistoryDialog;
+import org.iplantc.de.notifications.client.utils.NotificationUtil;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -55,15 +53,9 @@ public class UpdatePermanentIdRequestDialog extends IPlantDialog {
         this.factory = factory;
         add(uiBinder.createAndBindUi(this));
         currentStatusLabel.setText(curr_status);
-        currentStatusLabel.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                RequestHistoryDialog dlg = new RequestHistoryDialog(
-                        details.getRequestor().getUsername() + "-" + details.getType(),
-                        details.getHistory());
-                dlg.show();
-            }
-        });
+        currentStatusLabel.addClickHandler(event -> NotificationUtil.displayRequestHistory(
+                details.getRequestor().getUsername() + "-" + details.getType(),
+                details.getHistory()));
         if(details.getRequestor()!= null ){
             userEmail.setText(details.getRequestor().getEmail());
         }

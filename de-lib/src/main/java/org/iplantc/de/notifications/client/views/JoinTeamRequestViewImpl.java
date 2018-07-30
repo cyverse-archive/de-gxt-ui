@@ -33,24 +33,4 @@ public class JoinTeamRequestViewImpl implements JoinTeamRequestView {
                                           new HTMLPanel("<div></div>").getElement());
         });
     }
-
-/*
-    @UiHandler("approveBtn")
-    public void onApproveBtnSelected(SelectEvent event) {
-        fireEvent(new JoinTeamApproved());
-    }
-
-    @UiHandler("denyBtn")
-    public void onRejectBtnSelected(SelectEvent event) {
-        fireEvent(new JoinTeamDenied());
-    }
-*/
-
-/*    @Override
-    protected void onEnsureDebugId(String baseID) {
-        super.onEnsureDebugId(baseID);
-
-        approveBtn.ensureDebugId(baseID + Notifications.JoinRequestIds.APPROVE_BTN);
-        denyBtn.ensureDebugId(baseID + Notifications.JoinRequestIds.DENY_BTN);
-    }*/
 }

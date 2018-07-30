@@ -16,7 +16,6 @@ import Color from "../../../util/CyVersePalette";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 
-
 class DenyJoinRequestDetailsDialog extends Component {
     constructor(props) {
         super(props);

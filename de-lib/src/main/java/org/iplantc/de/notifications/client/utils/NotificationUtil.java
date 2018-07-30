@@ -35,10 +35,6 @@ import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.notifications.client.events.NotificationClickedEvent;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
 import org.iplantc.de.notifications.client.views.JoinTeamRequestView;
-import org.iplantc.de.notifications.client.views.dialogs.DenyJoinRequestDetailsDialog;
-import org.iplantc.de.notifications.client.views.dialogs.JoinTeamRequestDialog;
-import org.iplantc.de.notifications.client.views.dialogs.RequestHistoryDialog;
-import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.NotificationCallback;
 
 import com.google.common.collect.Lists;
@@ -107,8 +103,6 @@ public class NotificationUtil {
     @Inject EventBus eventBus;
     @Inject IplantAnnouncer announcer;
     @Inject MessageServiceFacade messageServiceFacade;
-    @Inject AsyncProviderWrapper<JoinTeamRequestDialog> joinRequestDlgProvider;
-    @Inject AsyncProviderWrapper<DenyJoinRequestDetailsDialog> denyDetailsDlgProvider;
     @Inject DesktopView.Presenter.DesktopPresenterAppearance appearance;
 
     @Inject
@@ -287,20 +281,7 @@ public class NotificationUtil {
 
                                          .as();
                     if (toolRequest.getHistory() != null && toolRequest.getHistory().size() > 0) {
-                        Splittable[] history = new Splittable[toolRequest.getHistory().size()];
-                        for (int i = 0; i < toolRequest.getHistory().size(); i++) {
-                            history[i] =
-                                    AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(toolRequest.getHistory()
-                                                                                              .get(i)));
-                        }
-                        ReactToolRequestHistory.HistoryProps props =
-                                new ReactToolRequestHistory.HistoryProps();
-                        props.toolName = toolRequest.getName();
-                        props.dialogOpen = true;
-                        props.history = history;
-                        CyVerseReactComponents.render(ReactToolRequestHistory.historyProps,
-                                                      props,
-                                                      new HTMLPanel("<div></div>").getElement());
+                        displayRequestHistory(toolRequest.getName(), toolRequest.getHistory());
                     }
 
                     break;
@@ -333,6 +314,20 @@ public class NotificationUtil {
         }
     }
 
+    public static void displayRequestHistory(String name, List<RequestHistory> requestHistoryList) {
+        Splittable[] history = new Splittable[requestHistoryList.size()];
+        for (int i = 0; i < requestHistoryList.size(); i++) {
+            history[i] = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(requestHistoryList.get(i)));
+        }
+        ReactToolRequestHistory.HistoryProps props = new ReactToolRequestHistory.HistoryProps();
+        props.toolName = name;
+        props.dialogOpen = true;
+        props.history = history;
+        CyVerseReactComponents.render(ReactToolRequestHistory.historyProps,
+                                      props,
+                                      new HTMLPanel("<div></div>").getElement());
+    }
+
     //TODO Refactor this service call out of the util class
     void getRequestStatusHistory(String id, NotificationCategory cat) {
         if (cat.equals(NotificationCategory.PERMANENTIDREQUEST)) {
@@ -345,16 +340,10 @@ public class NotificationUtil {
 
                 @Override
                 public void onSuccess(String result) {
-                    PayloadRequest toolRequest = AutoBeanCodex.decode(notificationFactory,
-                                                                      PayloadRequest.class,
-                                                                      result).as();
+                    PayloadRequest request =
+                            AutoBeanCodex.decode(notificationFactory, PayloadRequest.class, result).as();
 
-                    List<RequestHistory> history = toolRequest.getHistory();
-
-                    RequestHistoryDialog dlg = new RequestHistoryDialog(NotificationCategory.PERMANENTIDREQUEST.toString(),
-                                                                        history);
-                    dlg.show();
-
+                    displayRequestHistory(request.getName(), request.getHistory());
                 }
             });
         }

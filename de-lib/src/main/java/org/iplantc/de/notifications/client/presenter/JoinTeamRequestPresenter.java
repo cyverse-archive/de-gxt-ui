@@ -21,9 +21,6 @@ import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.notifications.client.views.JoinTeamRequestView;
-import org.iplantc.de.notifications.client.views.dialogs.ApproveJoinRequestDialog;
-import org.iplantc.de.notifications.client.views.dialogs.DenyJoinRequestDialog;
-import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.http.client.Response;
@@ -45,8 +42,6 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter {
     NotificationMessage notificationMessage;
     JoinTeamRequestView.JoinTeamRequestAppearance appearance;
 
-    @Inject AsyncProviderWrapper<ApproveJoinRequestDialog> approveRequestDlgProvider;
-    @Inject AsyncProviderWrapper<DenyJoinRequestDialog> denyRequestDlgProvider;
     @Inject IplantAnnouncer announcer;
     @Inject EventBus eventBus;
 

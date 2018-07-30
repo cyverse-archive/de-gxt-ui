@@ -8,7 +8,6 @@ import org.iplantc.de.commons.client.events.LastSelectedPathChangedEvent;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.diskResource.client.events.DefaultUploadCompleteHandler;
 import org.iplantc.de.diskResource.client.events.FileUploadedEvent;
-import org.iplantc.de.notifications.client.events.JoinTeamRequest;
 import org.iplantc.de.notifications.client.events.NotificationClickedEvent;
 import org.iplantc.de.notifications.client.events.NotificationCountUpdateEvent;
 import org.iplantc.de.shared.events.ServiceDown;
@@ -35,8 +34,7 @@ public class DesktopPresenterEventHandler implements LastSelectedPathChangedEven
                                                      UserLoggedOutEvent.UserLoggedOutEventHandler,
                                                      NotificationClickedEvent.NotificationClickedEventHandler,
                                                      ServiceDown.ServiceDownHandler,
-                                                     ServiceRestored.ServiceRestoredHandler,
-                                                     JoinTeamRequest.JoinTeamRequestHandler {
+                                                     ServiceRestored.ServiceRestoredHandler {
 
     @Inject EventBus eventBus;
     @Inject UserSessionServiceFacade userSessionService;
@@ -95,8 +93,6 @@ public class DesktopPresenterEventHandler implements LastSelectedPathChangedEven
         handlerRegistrations.add(handlerRegistration);
         handlerRegistration = eventBus.addHandler(ServiceRestored.TYPE, this);
         handlerRegistrations.add(handlerRegistration);
-        handlerRegistration = eventBus.addHandler(JoinTeamRequest.TYPE, this);
-        handlerRegistrations.add(handlerRegistration);
     }
 
     @Override
@@ -120,9 +116,5 @@ public class DesktopPresenterEventHandler implements LastSelectedPathChangedEven
     public void onServiceRestored(ServiceRestored event) {
         presenter.serviceUp(event);
     }
-
-    @Override
-    public void onJoinTeamRequestProcessed(JoinTeamRequest event) {
-        presenter.onJoinTeamRequestProcessed(event.getMessage());
-    }
 }
+

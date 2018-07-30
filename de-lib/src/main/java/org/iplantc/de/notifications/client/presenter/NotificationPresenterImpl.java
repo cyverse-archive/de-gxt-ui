@@ -13,9 +13,7 @@ import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
-import org.iplantc.de.notifications.client.events.JoinTeamRequest;
 import org.iplantc.de.notifications.client.events.NotificationCountUpdateEvent;
-import org.iplantc.de.notifications.client.model.NotificationMessageProperties;
 import org.iplantc.de.notifications.client.utils.NotificationUtil;
 import org.iplantc.de.notifications.client.views.NotificationView;
 import org.iplantc.de.shared.NotificationCallback;
@@ -27,21 +25,16 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
-import com.sencha.gxt.data.shared.ListStore;
-
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * A presenter for notification window
  *
  * @author sriram
  */
-public class NotificationPresenterImpl implements NotificationView.Presenter,
-                                                  JoinTeamRequest.JoinTeamRequestHandler {
+public class NotificationPresenterImpl implements NotificationView.Presenter {
 
-    private final ListStore<NotificationMessage> listStore;
     private final NotificationView view;
     private NotificationAutoBeanFactory factory;
     private EventBus eventBus;
@@ -55,27 +48,15 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
 
     @Inject
     public NotificationPresenterImpl(NotificationView.NotificationViewAppearance appearance,
-                                     NotificationMessageProperties messageProperties,
                                      NotificationAutoBeanFactory factory,
                                      NotificationView view,
                                      EventBus eventBus) {
         this.appearance = appearance;
-        this.listStore = createListStore(messageProperties);
         this.view = view;
         this.factory = factory;
         this.eventBus = eventBus;
         currentCategory = NotificationCategory.ALL;
-        addEventHandlers();
     }
-
-    private void addEventHandlers() {
-        eventBus.addHandler(JoinTeamRequest.TYPE, this);
-    }
-
-    ListStore<NotificationMessage> createListStore(NotificationMessageProperties messageProperties) {
-        return new ListStore<>(messageProperties.id());
-    }
-
     @Override
     public void go(HasOneWidget container) {
         container.setWidget(view.asWidget());
@@ -119,10 +100,6 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
         }
     }
 
-    List<String> convertNotificationsToIds(List<NotificationMessage> notifications) {
-        return notifications.stream().map(NotificationMessage::getId).collect(Collectors.toList());
-    }
-
     @Override
     public void onNotificationToolbarMarkAsSeenClicked(String[] ids,
                                                        ReactSuccessCallback callback,
@@ -161,12 +138,6 @@ public class NotificationPresenterImpl implements NotificationView.Presenter,
          eventBus.fireEvent(new NotificationCountUpdateEvent(
                  count));
      }
-
-    @Override
-    public void onJoinTeamRequestProcessed(JoinTeamRequest event) {
-      //  NotificationMessage notification = event.getMessage();
- //       deleteNotifications(Lists.newArrayList(notification));
-    }
 
     @Override
     public void getNotifications(int limit,
