@@ -44,7 +44,7 @@ public interface GridViewDisplayStrings extends Messages {
 
     String searchDataResultsHeader(String searchText, int total, double executionTime_ms);
 
-    String searchDataResultsHeaderNoExecTime(String searchText, int total);
+    String searchDataResultsHeaderNoExecTime(int total);
 
     String searchFailure();
 

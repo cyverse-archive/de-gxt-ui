@@ -101,8 +101,8 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     }
 
     @Override
-    public String searchDataResultsHeader(String searchText, int total) {
-        return displayStrings.searchDataResultsHeaderNoExecTime(searchText, total);
+    public String searchDataResultsHeader(int total) {
+        return displayStrings.searchDataResultsHeaderNoExecTime(total);
     }
 
     @Override
