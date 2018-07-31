@@ -1,4 +1,5 @@
 import Color from "../util/CyVersePalette";
+
 export default (theme) => ({
     table: {
         overflow: "auto",
@@ -9,13 +10,6 @@ export default (theme) => ({
         position: "sticky",
         top: 0
     },
-    container: {
-        width: "100%",
-        height: "100%",
-        marginTop: theme.spacing.unit * 3,
-        overflow: "auto",
-    },
-
     loadingStyle: {
         position: 'absolute',
         top: 200,

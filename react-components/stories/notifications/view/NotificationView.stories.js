@@ -16,6 +16,54 @@ class NotificationViewTest extends Component {
             "total": "20",
             "unseen_total": "0",
             "messages": [{
+                "type": "permanent id request",
+                "user": "sriram",
+                "subject": "DOI Request Submitted for Cut_Columns_analysis1-2018-03-28-22-16-03.5",
+                "email": true,
+                "email_template": "blank",
+                "payload": {
+                    "email_address": "sriram@iplantcollaborative.org",
+                    "contents": null,
+                    "uuid": "caef4bba-943e-11e8-a6c7-f64e9b87c109"
+                },
+                "message": {
+                    "id": "567DBB14-508D-47B2-A8B2-3E1415582908",
+                    "timestamp": "1532985820327",
+                    "text": "DOI Request Submitted for Cut_Columns_analysis1-2018-03-28-22-16-03.5"
+                },
+                "seen": true,
+                "deleted": false
+            }, {
+                "type": "Data",
+                "user": "sriram",
+                "subject": "Natalie.docx uploaded successfully.",
+                "email": false,
+                "email_template": null,
+                "payload": {
+                    "action": "UPLOAD_COMPLETE",
+                    "data": {
+                        "infoType": "",
+                        "path": "/iplant/home/sriram/Natalie.docx",
+                        "parentFolderId": "/iplant/home/sriram",
+                        "date-created": "1532554866000",
+                        "md5": "eeae49c6972c58b08e4d14a35607739c",
+                        "permission": "own",
+                        "date-modified": "1532554866000",
+                        "file-size": "161293",
+                        "label": "Natalie.docx",
+                        "id": "7028e978-9053-11e8-a13e-1a5a300ff36f",
+                        "content-type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        "sourceUrl": "C:fakepathNatalie.docx"
+                    }
+                },
+                "message": {
+                    "id": "3AFCB203-B63D-4D83-AF72-E4824463E721",
+                    "timestamp": "1532554869656",
+                    "text": "Natalie.docx uploaded successfully."
+                },
+                "seen": true,
+                "deleted": false
+            }, {
                 "type": "team",
                 "user": "sriram",
                 "subject": "Ipc Dev has requested to join team \"sriram: testsriram \"",
@@ -203,7 +251,7 @@ class NotificationViewTest extends Component {
                     "timestamp": "1531869252102",
                     "text": "Word_Count_analysis1 failed"
                 },
-                "seen": true,
+                "seen": false,
                 "deleted": false
             }, {
                 "type": "analysis",
@@ -282,7 +330,7 @@ class NotificationViewTest extends Component {
                     "timestamp": "1531869212006",
                     "text": "Word_Count_analysis1 submitted"
                 },
-                "seen": true,
+                "seen": false,
                 "deleted": false
             }, {
                 "type": "analysis",

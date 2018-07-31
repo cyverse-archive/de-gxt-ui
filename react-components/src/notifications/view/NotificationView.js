@@ -21,6 +21,7 @@ import Color from "../../util/CyVersePalette";
 import TablePaginationActions from "../../util/table/TablePaginationActions";
 import exStyles from "../style";
 import intlData from "../messages";
+import notificationCategory from "../model/notificationCategory";
 
 const columnData = [
     {name: "Category", numeric: false, enableSorting: false},
@@ -65,7 +66,7 @@ class NotificationView extends Component {
             page: 0,
             rowsPerPage: 100,
             selected: [],
-            order: 'DESC',
+            order: 'desc',
             orderBy: 'Date',
             filter: 'All',
         };
@@ -115,7 +116,6 @@ class NotificationView extends Component {
     }
 
     handleDeleteClick() {
-        const {rowsPerPage}  = this.state;
         this.setState({loading: true});
         this.props.presenter.deleteNotifications(this.state.selected, () => {
             this.setState({
@@ -165,14 +165,14 @@ class NotificationView extends Component {
     };
 
     shouldDisableMarkSeen() {
-        let notifs = [];
+        let notifications = [];
         this.state.selected.map(id => {
             let n = this.findNotification(id);
             if (n && (n.seen === false || n.seen == null)) {
-                notifs.push(n);
+                notifications.push(n);
             }
         });
-        return notifs.length === 0;
+        return notifications.length === 0;
     }
 
     findNotification(id) {
@@ -191,10 +191,10 @@ class NotificationView extends Component {
 
     handleRequestSort = (event, property) => {
         const orderBy = property;
-        let order = 'DESC';
+        let order = 'desc';
 
-        if (this.state.orderBy === property && this.state.order === 'DESC') {
-            order = 'ASC';
+        if (this.state.orderBy === property && this.state.order === 'desc') {
+            order = 'asc';
         }
 
         this.setState({order, orderBy,}, () => this.fetchNotifications());
@@ -243,7 +243,7 @@ class NotificationView extends Component {
                                         <TableCell padding="checkbox">
                                             <Checkbox checked={isSelected}/>
                                         </TableCell>
-                                        <TableCell>{n.type}</TableCell>
+                                        <TableCell>{notificationCategory[n.type.replace(/\s/g, "_").toLowerCase()]}</TableCell>
                                         <Message message={n.message} seen={n.seen}
                                                  presenter={this.props.presenter}/>
                                         <TableCell>{(n.message.timestamp) ? moment(n.message.timestamp, "x").format(

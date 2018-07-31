@@ -4,7 +4,6 @@
  *
  **/
 import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -21,7 +20,9 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-
+import toolStatusHelpMapping from "../../model/toolStatusHelpMapping";
+import permIdStatusHelpMapping from "../../model/permIdStatusHelpMapping";
+import notificationCategory from "../../model/notificationCategory";
 
 const columnData = [
     {name: "Status", numeric: false, enableSorting: false},
@@ -41,17 +42,13 @@ class RequestHistoryDialog extends Component {
     }
 
     render() {
-        const {history} = this.props;
+        const {history, category, name} = this.props;
+        const helpMap = category === notificationCategory.tool_request ? toolStatusHelpMapping : permIdStatusHelpMapping;
         return (
-            <Dialog
-                open={this.state.dialogOpen}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle style={{backgroundColor: Color.blue}}
-                             id="alert-dialog-title">
+            <Dialog open={this.state.dialogOpen}>
+                <DialogTitle style={{backgroundColor: Color.blue}}>
                     <Typography
-                        style={{color: Color.white}}> {getMessage("denyRequestHeader")}</Typography>
+                        style={{color: Color.white}}> {name}</Typography>
                 </DialogTitle>
                 <DialogContent>
                     <Table>
@@ -64,8 +61,9 @@ class RequestHistoryDialog extends Component {
                         <TableBody>
                             {history.map(n => {
                                 return (
-                                    <TableRow>
-                                        <TableCell>{n.status}</TableCell>
+                                    <TableRow key={n.status}>
+                                        <TableCell><span
+                                            title={intlData.messages[helpMap[n.status]]}>{n.status}</span></TableCell>
                                         <TableCell>{(n.status_date) ? moment(n.status_date, "x").format(
                                                 constants.DATE_FORMAT) :
                                             getMessage("emptyValue")} </TableCell>

@@ -5,12 +5,10 @@
  */
 import React, { Component } from "react";
 import RequestHistoryDialog from "../../../../src/notifications/view/dialogs/RequestHistoryDialog";
+import notificationCategory from "../../../../src/notifications/model/notificationCategory";
 
 class RequestHistoryDialogTest extends Component {
     render() {
-        const logger = this.props.logger || ((Notification) => {
-                console.log(Notification);
-            });
         const history =  [{
             "status": "Submitted",
             "status_date": 1532546191001,
@@ -29,9 +27,10 @@ class RequestHistoryDialogTest extends Component {
         }];
         return (
             <RequestHistoryDialog dialogOpen={true}
-                                  toolName = "Test"
+                                  name="Test"
                                   history={history}
-                             />
+                                  category={notificationCategory.permanent_id_request}
+            />
         );
     }
 }

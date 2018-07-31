@@ -65,7 +65,7 @@ public class MessageServiceFacadeImpl implements MessageServiceFacade {
         }
 
         if (sortDir != null && !sortDir.isEmpty() && !sortDir.equalsIgnoreCase("NONE")) {
-            builder.append("&sortDir=").append(URL.encodeQueryString(sortDir));
+            builder.append("&sortDir=").append(URL.encodeQueryString(sortDir.toUpperCase()));
         }
 
         address = address + builder.toString();

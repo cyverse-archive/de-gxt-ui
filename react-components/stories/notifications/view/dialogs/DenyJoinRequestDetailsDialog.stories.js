@@ -8,9 +8,6 @@ import DenyJoinRequestDetailsDialog from "../../../../src/notifications/view/dia
 
 class DenyJoinRequestDetailsDialogTest extends Component {
     render() {
-        const logger = this.props.logger || ((Notification) => {
-                console.log(Notification);
-            });
         return (
             <DenyJoinRequestDetailsDialog dialogOpen={true}
                                           teamName="test"

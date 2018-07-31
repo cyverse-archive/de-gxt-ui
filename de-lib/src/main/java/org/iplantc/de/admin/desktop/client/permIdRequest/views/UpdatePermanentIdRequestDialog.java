@@ -5,6 +5,7 @@ import org.iplantc.de.client.models.identifiers.PermanentIdRequestAutoBeanFactor
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestDetails;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestStatus;
 import org.iplantc.de.client.models.identifiers.PermanentIdRequestUpdate;
+import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.commons.client.views.dialogs.IPlantDialog;
 import org.iplantc.de.commons.client.widgets.IPlantAnchor;
 import org.iplantc.de.notifications.client.utils.NotificationUtil;
@@ -55,7 +56,7 @@ public class UpdatePermanentIdRequestDialog extends IPlantDialog {
         currentStatusLabel.setText(curr_status);
         currentStatusLabel.addClickHandler(event -> NotificationUtil.displayRequestHistory(
                 details.getRequestor().getUsername() + "-" + details.getType(),
-                details.getHistory()));
+                details.getHistory(), NotificationCategory.PERMANENTIDREQUEST.toString()));
         if(details.getRequestor()!= null ){
             userEmail.setText(details.getRequestor().getEmail());
         }

@@ -29,6 +29,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import CardHeader from "@material-ui/core/CardHeader";
 import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import privilegeType from "../../model/privilegeType";
 
 const styles = theme => ({
     paper: {
@@ -97,14 +98,12 @@ class JoinTeamRequestDialog extends Component {
                 <Dialog
                     open={dialogOpen}
                     onClose={this.props.handleJoinTeamRequestDialogClose}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
                 >
-                    <DialogTitle style={{backgroundColor: Color.blue}}
-                                 id="alert-dialog-title"><Typography
+                    <DialogTitle style={{backgroundColor: Color.blue}}>
+                        <Typography
                         style={{color: Color.white}}> {getMessage("joinTeamRequestHeader")}</Typography></DialogTitle>
                     <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
+                        <DialogContentText>
                             <Typography paragraph>
                                 {getMessage("joinRequestIntro")}
                             </Typography>
@@ -115,7 +114,7 @@ class JoinTeamRequestDialog extends Component {
                                 <Grid container spacing={12}>
                                     <Grid item xs={12}>
                                         <Paper
-                                            className={classes.paper}>{getMessage("team")}: {team_name}</Paper>
+                                            className={classes.paper}>{getMessage("teamLabel")}: {team_name}</Paper>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Paper
@@ -174,10 +173,10 @@ class JoinTeamRequestDialog extends Component {
                                                     id: 'privilege-simple',
                                                 }}
                                             >
-                                                <MenuItem value="admin">{getMessage("admin")}</MenuItem>
+                                                <MenuItem value="admin">{privilegeType.admin}</MenuItem>
                                                 <MenuItem
-                                                    value="readOptin">{getMessage("readOptin")}</MenuItem>
-                                                <MenuItem value="read">{getMessage("read")}</MenuItem>
+                                                    value="readOptin">{privilegeType.readOptin}</MenuItem>
+                                                <MenuItem value="read">{privilegeType.read}</MenuItem>
                                             </Select>
                                         </FormControl>
                                     </form>

@@ -25,25 +25,23 @@ class DenyJoinRequestDetailsDialog extends Component {
     }
 
     render() {
+        const {teamName, adminMessage} = this.props;
         return (
             <Dialog
                 open={this.state.dialogOpen}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
             >
-                <DialogTitle style={{backgroundColor: Color.blue}}
-                             id="alert-dialog-title">
+                <DialogTitle style={{backgroundColor: Color.blue}}>
                     <Typography
                         style={{color: Color.white}}> {getMessage("denyDetailsHeader")}</Typography>
                 </DialogTitle>
                 <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
+                    <DialogContentText>
                         {getMessage("denyDetailsMessage", {
                             values: {
-                                team: this.props.teamName
+                                team: teamName
                             }
                         })}
-                        <div style={{marginTop: 10}}>
+                        <p style={{marginTop: 10}}>
                             <Typography subheading>{getMessage("denyAdminLabel")}</Typography>
                             <TextField
                                 id="full-width"
@@ -52,10 +50,10 @@ class DenyJoinRequestDetailsDialog extends Component {
                                 }}
                                 fullWidth
                                 margin="normal"
-                                value={this.props.adminMessage}
+                                value={adminMessage}
                                 disabled={true}
                             />
-                        </div>
+                        </p>
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

@@ -21,25 +21,11 @@ public interface NotificationView extends IsWidget {
 
         String notifications();
 
-        String refresh();
-
         String notificationDeleteFail();
 
         String notificationMarkAsSeenFail();
 
         String notificationMarkAsSeenSuccess();
-
-        String category();
-
-        int categoryColumnWidth();
-
-        String messagesGridHeader();
-
-        int messagesColumnWidth();
-
-        String createdDateGridHeader();
-
-        int createdDateColumnWidth();
 
         String windowWidth();
 

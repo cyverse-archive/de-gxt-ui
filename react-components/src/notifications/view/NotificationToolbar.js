@@ -17,6 +17,7 @@ import withI18N, { getMessage } from "../../util/I18NWrapper";
 import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
 import exStyles from "../style";
+import notificationCategory from "../model/notificationCategory";
 
 class NotificationToolbar extends Component {
     render() {
@@ -34,16 +35,22 @@ class NotificationToolbar extends Component {
                                     name: 'filter',
                                     id: 'filter-simple',
                                 }}>
-                                <MenuItem value="New">{getMessage("new")}</MenuItem>
-                                <MenuItem value="All">{getMessage("all")}</MenuItem>
                                 <MenuItem
-                                    value="Analysis">{getMessage("analysis")}</MenuItem>
-                                <MenuItem value="Data">{getMessage("data")}</MenuItem>
-                                <MenuItem value="Tool Request">{getMessage("tool")}</MenuItem>
-                                <MenuItem value="Apps">{getMessage("apps")}</MenuItem>
+                                    value={notificationCategory.new}>{notificationCategory.new}</MenuItem>
                                 <MenuItem
-                                    value="Permanent ID Request">{getMessage("permId")}</MenuItem>
-                                <MenuItem value="Team">{getMessage("team")}</MenuItem>
+                                    value={notificationCategory.all}>{notificationCategory.all}</MenuItem>
+                                <MenuItem
+                                    value={notificationCategory.analysis}>{notificationCategory.analysis}</MenuItem>
+                                <MenuItem
+                                    value={notificationCategory.data}>{notificationCategory.data}</MenuItem>
+                                <MenuItem
+                                    value={notificationCategory.tool_request}>{notificationCategory.tool_request}</MenuItem>
+                                <MenuItem
+                                    value={notificationCategory.apps}>{notificationCategory.apps}</MenuItem>
+                                <MenuItem
+                                    value={notificationCategory.permanent_id_request}>{notificationCategory.permanent_id_request}</MenuItem>
+                                <MenuItem
+                                    value={notificationCategory.team}>{notificationCategory.team}</MenuItem>
                             </Select>
                         </FormControl>
                     </form>

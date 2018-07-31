@@ -8,6 +8,8 @@ import org.iplantc.de.client.models.analysis.AnalysesAutoBeanFactory;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.File;
+import org.iplantc.de.client.models.identifiers.PermanentIdRequestAutoBeanFactory;
+import org.iplantc.de.client.models.identifiers.PermanentIdRequestDetails;
 import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.notifications.NotificationAutoBeanFactory;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
@@ -90,7 +92,8 @@ class ReactToolRequestHistory {
     static class HistoryProps extends BaseProps {
         Splittable[] history;
         boolean dialogOpen;
-        String toolName;
+        String name;
+        String category;
     }
 }
 
@@ -104,6 +107,8 @@ public class NotificationUtil {
     @Inject IplantAnnouncer announcer;
     @Inject MessageServiceFacade messageServiceFacade;
     @Inject DesktopView.Presenter.DesktopPresenterAppearance appearance;
+    @Inject
+    PermanentIdRequestAutoBeanFactory permFactory;
 
     @Inject
     JoinTeamRequestView.Presenter presenter;
@@ -281,7 +286,9 @@ public class NotificationUtil {
 
                                          .as();
                     if (toolRequest.getHistory() != null && toolRequest.getHistory().size() > 0) {
-                        displayRequestHistory(toolRequest.getName(), toolRequest.getHistory());
+                        displayRequestHistory(toolRequest.getName(),
+                                              toolRequest.getHistory(),
+                                              category.toString());
                     }
 
                     break;
@@ -314,15 +321,18 @@ public class NotificationUtil {
         }
     }
 
-    public static void displayRequestHistory(String name, List<RequestHistory> requestHistoryList) {
+    public static void displayRequestHistory(String name,
+                                             List<RequestHistory> requestHistoryList,
+                                             String category) {
         Splittable[] history = new Splittable[requestHistoryList.size()];
         for (int i = 0; i < requestHistoryList.size(); i++) {
             history[i] = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(requestHistoryList.get(i)));
         }
         ReactToolRequestHistory.HistoryProps props = new ReactToolRequestHistory.HistoryProps();
-        props.toolName = name;
+        props.name = name;
         props.dialogOpen = true;
         props.history = history;
+        props.category = category;
         CyVerseReactComponents.render(ReactToolRequestHistory.historyProps,
                                       props,
                                       new HTMLPanel("<div></div>").getElement());
@@ -340,10 +350,12 @@ public class NotificationUtil {
 
                 @Override
                 public void onSuccess(String result) {
-                    PayloadRequest request =
-                            AutoBeanCodex.decode(notificationFactory, PayloadRequest.class, result).as();
-
-                    displayRequestHistory(request.getName(), request.getHistory());
+                    PermanentIdRequestDetails request =
+                            AutoBeanCodex.decode(permFactory, PermanentIdRequestDetails.class,
+                                                 result).as();
+                    displayRequestHistory(request.getRequestor().getUsername() + "-" + request.getType(),
+                                          request.getHistory(),
+                                          cat.toString());
                 }
             });
         }
