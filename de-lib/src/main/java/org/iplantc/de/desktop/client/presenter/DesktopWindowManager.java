@@ -12,6 +12,7 @@ import org.iplantc.de.shared.events.ServiceDown;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
@@ -201,29 +202,33 @@ public class DesktopWindowManager {
     }
 
     private void resizeOversizeWindow(WindowInterface window) {
-        int desktopWidth = desktopContainer.getClientWidth();
-        int desktopHeight = desktopContainer.getClientHeight();
-        int windowWidth = window.asWindow().getOffsetWidth();
-        int windowHeight = window.asWindow().getOffsetHeight();
-        if (windowWidth > desktopWidth) {
-            window.asWindow().setWidth(desktopWidth);
-        }
-        if (windowHeight > desktopHeight) {
-            window.asWindow().setHeight(desktopHeight);
-        }
+        Scheduler.get().scheduleFinally(()-> {  //wait for react to render DOM
+            int desktopWidth = desktopContainer.getClientWidth();
+            int desktopHeight = desktopContainer.getClientHeight();
+            int windowWidth = window.asWindow().getOffsetWidth();
+            int windowHeight = window.asWindow().getOffsetHeight();
+            if (windowWidth > desktopWidth) {
+                window.asWindow().setWidth(desktopWidth);
+            }
+            if (windowHeight > desktopHeight) {
+                window.asWindow().setHeight(desktopHeight);
+            }
+        });
     }
 
     private void moveOutOfBoundsWindow(WindowInterface window) {
-        final int desktopContainerBottom = desktopContainer.getAbsoluteBottom();
-        final int desktopContainerRight = desktopContainer.getAbsoluteRight();
-        final int windowRight = window.asWindow().getElement().getAbsoluteRight();
-        final int windowBottom = window.asWindow().getElement().getAbsoluteBottom();
-        if (windowRight > desktopContainerRight) {
-            window.setPagePosition(0, window.asWindow().getAbsoluteTop());
-        }
-        if (windowBottom > desktopContainerBottom) {
-            window.setPagePosition(window.asWindow().getAbsoluteLeft(), 0);
-        }
+        Scheduler.get().scheduleFinally(()-> {  //wait for react to render DOM
+            final int desktopContainerBottom = desktopContainer.getAbsoluteBottom();
+            final int desktopContainerRight = desktopContainer.getAbsoluteRight();
+            final int windowRight = window.asWindow().getElement().getAbsoluteRight();
+            final int windowBottom = window.asWindow().getElement().getAbsoluteBottom();
+            if (windowRight > desktopContainerRight) {
+                window.setPagePosition(0, window.asWindow().getAbsoluteTop());
+            }
+            if (windowBottom > desktopContainerBottom) {
+                window.setPagePosition(window.asWindow().getAbsoluteLeft(), 0);
+            }
+        });
     }
 
     String constructWindowId(WindowConfig config) {

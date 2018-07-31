@@ -2,10 +2,9 @@ package org.iplantc.de.desktop.client.presenter;
 
 import org.iplantc.de.client.models.UserInfo;
 import org.iplantc.de.client.models.UserSettings;
-import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.notifications.NotificationList;
-import org.iplantc.de.client.models.notifications.NotificationMessage;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
+import org.iplantc.de.client.services.callbacks.ErrorCallback;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -15,13 +14,15 @@ import org.iplantc.de.intercom.client.IntercomFacade;
 import org.iplantc.de.shared.DEProperties;
 import org.iplantc.de.shared.exceptions.HttpException;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.inject.Provider;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.shared.Splittable;
 
-import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent.DialogHideHandler;
@@ -121,13 +122,19 @@ class InitializationCallbacks {
         private final DesktopView view;
         private final DesktopView.Presenter.DesktopPresenterAppearance appearance;
         private final IplantAnnouncer announcer;
+        private final NotificationsCallback callback;
+        private final ErrorCallback errorCallback;
 
         public GetInitialNotificationsCallback(final DesktopView view,
                                                final DesktopView.Presenter.DesktopPresenterAppearance appearance,
-                                               final IplantAnnouncer announcer) {
+                                               final IplantAnnouncer announcer,
+                                               final NotificationsCallback callback,
+                                               final ErrorCallback errorCallback) {
             this.view = view;
             this.appearance = appearance;
             this.announcer = announcer;
+            this.callback = callback;
+            this.errorCallback = errorCallback;
         }
 
         @Override
@@ -135,22 +142,19 @@ class InitializationCallbacks {
             announcer.schedule(new ErrorAnnouncementConfig(appearance.fetchNotificationsError(),
                                                            true,
                                                            5000));
-            view.setNotificationConnection(false);
+             if(errorCallback != null) {
+                 errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+             }
         }
 
         @Override
         public void onSuccess(NotificationList result) {
-            view.setNotificationConnection(true);
-            if(result != null) {
-                GWT.log("unseen count ^^^^^^" + result.getUnseenTotal());
-                view.setUnseenNotificationCount(Integer.parseInt(result.getUnseenTotal()));
-
-                ListStore<NotificationMessage> store = view.getNotificationStore();
-                for (Notification n : result.getNotifications()) {
-                    store.add(n.getMessage());
-                }
+            Splittable sp = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(result));
+            if(callback != null) {
+                callback.onFetchNotifications(sp);
             }
         }
+
     }
 
     static class PropertyServiceCallback implements AsyncCallback<HashMap<String, String>> {

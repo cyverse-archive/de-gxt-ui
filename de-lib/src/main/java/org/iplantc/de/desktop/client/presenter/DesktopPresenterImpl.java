@@ -3,7 +3,6 @@ package org.iplantc.de.desktop.client.presenter;
 import org.iplantc.de.client.DEClientConstants;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasPath;
-import org.iplantc.de.client.models.HasUUIDs;
 import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.QualifiedId;
 import org.iplantc.de.client.models.UserInfo;
@@ -17,14 +16,13 @@ import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.notifications.NotificationAutoBeanFactory;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
-import org.iplantc.de.client.models.notifications.payload.PayloadAnalysis;
 import org.iplantc.de.client.services.DEUserSupportServiceFacade;
 import org.iplantc.de.client.services.FileEditorServiceFacade;
 import org.iplantc.de.client.services.MessageServiceFacade;
 import org.iplantc.de.client.services.UserSessionServiceFacade;
+import org.iplantc.de.client.services.callbacks.ErrorCallback;
 import org.iplantc.de.client.util.CommonModelUtils;
 import org.iplantc.de.client.util.DiskResourceUtil;
-import org.iplantc.de.client.util.JsonUtil;
 import org.iplantc.de.client.util.WebStorageUtil;
 import org.iplantc.de.commons.client.CommonUiConstants;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -41,12 +39,13 @@ import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConf
 import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
+import org.iplantc.de.desktop.client.events.WindowHeadingUpdatedEvent;
+import org.iplantc.de.desktop.client.presenter.callbacks.NotificationMarkAsSeenCallback;
 import org.iplantc.de.desktop.client.presenter.util.MessagePoller;
-import org.iplantc.de.desktop.client.presenter.util.NotificationWebSocketManager;
 import org.iplantc.de.desktop.client.presenter.util.WindowStateStorageWrapper;
 import org.iplantc.de.desktop.client.views.widgets.PreferencesDialog;
+import org.iplantc.de.desktop.client.views.windows.WindowBase;
 import org.iplantc.de.desktop.client.views.windows.WindowInterface;
-import org.iplantc.de.desktop.shared.DeModule;
 import org.iplantc.de.fileViewers.client.callbacks.LoadGenomeInCoGeCallback;
 import org.iplantc.de.intercom.client.IntercomFacade;
 import org.iplantc.de.notifications.client.utils.NotificationUtil;
@@ -63,13 +62,13 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.debug.client.DebugInfo;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.Window;
@@ -85,15 +84,16 @@ import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import com.sencha.gxt.core.client.util.KeyNav;
-import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.WindowManager;
 import com.sencha.gxt.widget.core.client.box.AutoProgressMessageBox;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
-
-import com.sksamuel.gwt.websockets.WebsocketListener;
+import com.sencha.gxt.widget.core.client.event.RegisterEvent;
+import com.sencha.gxt.widget.core.client.event.UnregisterEvent;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -101,7 +101,9 @@ import java.util.logging.Logger;
 /**
  * @author jstroot
  */
-public class DesktopPresenterImpl implements DesktopView.Presenter {
+public class DesktopPresenterImpl implements DesktopView.Presenter,
+                                             UnregisterEvent.UnregisterHandler<Widget>,
+                                             RegisterEvent.RegisterHandler<Widget> {
 
 	interface AuthErrors {
         String API_NAME = "api_name";
@@ -121,6 +123,15 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     public interface TypeQueryValues {
         String APPS = "apps";
         String DATA = "data";
+    }
+
+    private class HeadingUpdatedEventHandler
+            implements WindowHeadingUpdatedEvent.WindowHeadingUpdatedEventHandler {
+        @Override
+        public void onWindowHeadingUpdated(WindowHeadingUpdatedEvent event) {
+            DesktopPresenterImpl.this.buildWindowConfigList();
+            DesktopPresenterImpl.this.view.renderView(windowConfigMap);
+        }
     }
 
     final DesktopWindowManager desktopWindowManager;
@@ -152,9 +163,10 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     private final SaveSessionPeriodic ssp;
     private SaveWindowStatesPeriodic swsp;
     private final DesktopView view;
-    private final WindowManager windowManager;
-    private NotificationWebSocketManager notificationWebSocketManager;
     private boolean loggedOut;
+    private final WindowManager windowManager;
+    private Map<Splittable, WindowBase> windowConfigMap = new HashMap<>();
+
     Logger LOG = Logger.getLogger(DesktopPresenterImpl.class.getName());
 
     public static final int NEW_NOTIFICATION_LIMIT = 10;
@@ -173,105 +185,82 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         this.windowManager = windowManager;
         this.messagePoller = messagePoller;
         this.desktopWindowManager = desktopWindowManager;
-        this.desktopWindowManager.setDesktopContainer(view.getDesktopContainer());
         this.appearance = appearance;
         this.ssp = new SaveSessionPeriodic(this, appearance, 8);
         this.loggedOut = false;
         this.view.setPresenter(this);
+        this.view.renderView(windowConfigMap);
         globalEventHandler.setPresenter(this, this.view);
         windowEventHandler.setPresenter(this, desktopWindowManager);
-        if (DebugInfo.isDebugIdEnabled()) {
-            this.view.ensureDebugId(DeModule.Ids.DESKTOP);
+        windowManager.addRegisterHandler(this);
+        windowManager.addUnregisterHandler(this);
+    }
+
+    @Override
+    public void onRegister(RegisterEvent<Widget> event) {
+        if (event.getItem() instanceof WindowInterface) {
+            WindowBase wb = (WindowBase)event.getItem();
+            wb.asWidget().addHandler(new HeadingUpdatedEventHandler(), WindowHeadingUpdatedEvent.TYPE);
+            buildWindowConfigList();
+            view.renderView(windowConfigMap);
         }
 
-        initNotificationWebSocket();
     }
 
-    private void initNotificationWebSocket() {
-        notificationWebSocketManager = NotificationWebSocketManager.getInstance();
-        notificationWebSocketManager.openWebSocket(new WebsocketListener() {
-
-            @Override
-            public void onClose() {
-                GWT.log("WebSocket onClose()");
-                //if websocket connection closed unexpectedly, retry connection!
-                if(!loggedOut) {
-                    GWT.log("reconnecting...");
-                    notificationWebSocketManager.openWebSocket(this);
-                }
-            }
-
-            @Override
-            public void onMessage(String msg) {
-                GWT.log("onMessage(): " + msg);
-                processNotification(msg);
-            }
-
-            @Override
-            public void onOpen() {
-                GWT.log("websocket onOpen()");
-            }
-        });
+    @Override
+    public void onUnregister(UnregisterEvent<Widget> event) {
+        if (event.getItem() instanceof WindowInterface) {
+            buildWindowConfigList();
+            view.renderView(windowConfigMap);
+        }
     }
 
-    private void processNotification(String msg) {
-        if (msg.equals("X")) {
+    private void buildWindowConfigList() {
+        List<Widget> widgets = windowManager.getWindows();
+        windowConfigMap.clear();
+        if (widgets.size() == 0) {
             return;
         }
-        JSONObject obj = null;
-        try {
-             obj = JSONParser.parseStrict(msg).isObject();
-        } catch (Exception e) {
-            //ignore error and message as it not in json format
-            return;
-        }
-        Number num = JsonUtil.getInstance().getNumber(obj, "total");
-        view.setUnseenNotificationCount(num.intValue());
-        GWT.log("count -->" + num.intValue());
-        JSONObject notifi = JsonUtil.getInstance().getObject(obj, "message");
-        GWT.log("notifi-->" + notifi.toString());
-        Notification n =
-                AutoBeanCodex.decode(notificationFactory, Notification.class, notifi.toString()).as();
-        if (n != null) {
-            loadMessageInView(n);
-        }
-
-    }
-
-    private void loadMessageInView(Notification n) {
-        NotificationMessage newMessage = notificationUtil.getMessage(n, notificationFactory);
-        ListStore<NotificationMessage> nmStore = view.getNotificationStore();
-        final NotificationMessage modelWithKey =
-                nmStore.findModelWithKey(Long.toString(newMessage.getTimestamp()));
-        if (modelWithKey == null) {
-            nmStore.add(newMessage);
-            displayNotificationPopup(newMessage);
+        for (Widget w : widgets) {
+            if (w instanceof WindowInterface) {
+                WindowBase cyverseWin = (WindowBase)w;
+                windowConfigMap.put(getConfigAsSplittable(cyverseWin), cyverseWin);
+            }
         }
     }
 
+    private Splittable getConfigAsSplittable(WindowBase win) {
+        WindowConfig config = win.getWindowConfig();
+        config.setMinimized(win.isMinimized());
+        config.setWindowTitle(win.getHeading().asString());
+        Splittable sp = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config));
+        return sp;
+    }
 
-    void displayNotificationPopup(NotificationMessage nm) {
-        if (NotificationCategory.ANALYSIS.equals(nm.getCategory()) && nm.getContext() != null) {
-            PayloadAnalysis analysisPayload =
-                    AutoBeanCodex.decode(notificationFactory, PayloadAnalysis.class, nm.getContext())
-                                 .as();
-            if ("Failed".equals(analysisPayload.getStatus())) { //$NON-NLS-1$
-                notifyInfo.displayWarning(nm.getMessage());
+    private WindowBase getWindowFromConfig(Splittable config) {
+        Iterator it = windowConfigMap.keySet().iterator();
+        while (it.hasNext()) {
+            Splittable sp = (Splittable)it.next();
+            if (sp.get("tag") != null && sp.get("tag").asString().equals(config.get("tag").asString())) {
+                return windowConfigMap.get(sp);
+            }
+        }
+        return null;
+    }
+
+
+    @Override
+    public void displayNotificationPopup(String message, String category, String analysisStatus) {
+        if (NotificationCategory.ANALYSIS.equals(NotificationCategory.fromTypeString(category))) {
+            if ("Failed".equals(analysisStatus)) { //$NON-NLS-1$
+                notifyInfo.displayWarning(message);
             } else {
-                notifyInfo.display(nm.getMessage());
+                notifyInfo.display(message);
             }
         } else {
-            notifyInfo.display(nm.getMessage());
+            notifyInfo.display(message);
         }
     }
-
-    public static native void doIntro() /*-{
-		var introjs = $wnd.introJs();
-		introjs.setOption("showStepNumbers", false);
-		introjs.setOption("skipLabel", "Exit");
-		introjs.setOption("overlayOpacity",0);
-		introjs.start();
-    }-*/;
 
    @Override
     public void doLogout(boolean sessionTimeout) {
@@ -303,26 +292,25 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     private void cleanUp() {
         loggedOut = true;
         messagePoller.stop();
-        notificationWebSocketManager.closeWebSocket();
     }
 
     @Override
-    public void doMarkAllSeen(final boolean announce) {
+    public void doMarkAllSeen(final boolean announce,
+                              final NotificationMarkAsSeenCallback callback,
+                              final ErrorCallback errorCallback) {
        messageServiceFacade.markAllNotificationsSeen(new NotificationCallback<Void>() {
            @Override
            public void onFailure(Integer statusCode, Throwable caught) {
                errorHandlerProvider.get().post(caught);
+               if (errorCallback != null) {
+                   errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+               }
            }
 
            @Override
            public void onSuccess(Void result) {
-               for(NotificationMessage nm : view.getNotificationStore().getAll()){
-                   nm.setSeen(true);
-                   view.getNotificationStore().update(nm);
-               }
-               view.setUnseenNotificationCount(0);
-               if(!announce){
-                   return;
+               if (callback != null) {
+                   callback.onMarkSeen(0);
                }
                announcer.schedule(new SuccessAnnouncementConfig(appearance.markAllAsSeenSuccess(), true, 3000));
            }
@@ -332,13 +320,11 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     @Override
     public void doSeeAllNotifications() {
         show(ConfigFactory.notifyWindowConfig(NotificationCategory.ALL), true);
-        view.hideNotificationMenu();
     }
 
     @Override
     public void doSeeNewNotifications() {
         show(ConfigFactory.notifyWindowConfig(NotificationCategory.NEW), true);
-        view.hideNotificationMenu();
     }
 
     public void doViewGenomes(final File file) {
@@ -357,6 +343,11 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                 result.loadGenomesInCoge(obj, new LoadGenomeInCoGeCallback(null));
             }
         });
+    }
+
+    @Override
+    public void setDesktopContainer(Element desktopContainer) {
+        desktopWindowManager.setDesktopContainer(desktopContainer);
     }
 
     @Override
@@ -472,37 +463,48 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
      * FIXME REFACTOR JDS Create notifications module and move this implementation there
      */
     @Override
-    public void onNotificationSelected(final NotificationMessage selectedItem) {
-        notificationUtil.onNotificationClick(selectedItem);
-        markAsSeen(selectedItem);
+    @SuppressWarnings("unusuable-by-js")
+    public void onNotificationSelected(Splittable notification,
+                                       final NotificationMarkAsSeenCallback callback,
+                                       final ErrorCallback errorCallback) {
+        GWT.log(notification.getPayload());
+        Notification n = AutoBeanCodex.decode(notificationFactory, Notification.class, notification).as();
+        NotificationMessage nm = notificationUtil.getMessage(n, notificationFactory);
+        notificationUtil.onNotificationClick(nm);
+        markAsSeen(nm, callback, errorCallback);
     }
 
-    public void markAsSeen(final NotificationMessage selectedItem) {
+    public void markAsSeen(final NotificationMessage selectedItem,
+                           final NotificationMarkAsSeenCallback callback,
+                           final ErrorCallback errorCallback) {
         messageServiceFacade.markAsSeen(selectedItem, new NotificationCallback<String>() {
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
                 errorHandlerProvider.get().post(caught);
+                if (errorCallback != null) {
+                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+                }
             }
 
             @Override
             public void onSuccess(String result) {
-                selectedItem.setSeen(true);
-                ListStore<NotificationMessage> notificationStore = view.getNotificationStore();
-                if(notificationStore.findModel(selectedItem)!=null) {
-                    notificationStore.update(selectedItem);
+                if (callback != null) {
+                    final String asString = StringQuoter.split(result).get("count").asString();
+                    final int count = Integer.parseInt(asString);
+                    callback.onMarkSeen(count);
                 }
-                final String asString = StringQuoter.split(result).get("count").asString();
-                final int count = Integer.parseInt(asString);
-                view.setUnseenNotificationCount(count);
+
             }
         });
     }
 
+    //TODO: SS Port this over to React Desktop. For now the Join Team Notification will remain in
+    // Notifications List. I confirmed with Sarah that Join team operation is idempotent.
     @Override
     public void onJoinTeamRequestProcessed(NotificationMessage message) {
-        view.getNotificationStore().remove(message);
+    /*   view.getNotificationStore().remove(message);
         //If the notifications window is open, the NotificationPresenter will handle this
-        if (!desktopWindowManager.isOpen(WindowType.NOTIFICATIONS)) {
+         if (!desktopWindowManager.isOpen(WindowType.NOTIFICATIONS)) {
             HasUUIDs hasUUIDs = notificationFactory.getHasUUIDs().as();
             hasUUIDs.setUUIDs(Lists.newArrayList(message.getId()));
             messageServiceFacade.deleteMessages(hasUUIDs, new NotificationCallback<String>() {
@@ -516,12 +518,27 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
                     //do nothing intentionally
                 }
             });
+        }*/
+    }
+
+    @Override
+    @SuppressWarnings("unusuable-by-js")
+    public void onTaskButtonClicked(Splittable windowConfig) {
+        WindowBase win = getWindowFromConfig(windowConfig);
+        if (win != null) {
+            if (win.isMinimized()) {
+                win.show();
+            } else {
+                win.toFront();
+            }
         }
+        buildWindowConfigList();
+        view.renderView(windowConfigMap);
     }
 
     @Override
     public void onIntroClick() {
-        doIntro();
+      view.renderView(true, windowConfigMap);
     }
 
     @Override
@@ -626,13 +643,17 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
         initKBShortCuts();
         panel.add(view);
         processQueryStrings();
-        getNotifications();
         doPeriodicWindowStateSave();
     }
 
     @Override
-    public void getNotifications() {
-        messageServiceFacade.getRecentMessages(new InitializationCallbacks.GetInitialNotificationsCallback(view, appearance, announcer));
+    public void getNotifications(NotificationsCallback callback, ErrorCallback errorCallback) {
+        messageServiceFacade.getRecentMessages(new InitializationCallbacks.GetInitialNotificationsCallback(
+                view,
+                appearance,
+                announcer,
+                callback,
+                errorCallback));
     }
 
     @Override
@@ -783,4 +804,6 @@ public class DesktopPresenterImpl implements DesktopView.Presenter {
     public void setUserSessionConnection(boolean connected) {
         userSettings.setUserSessionConnection(connected);
     }
+
 }
+

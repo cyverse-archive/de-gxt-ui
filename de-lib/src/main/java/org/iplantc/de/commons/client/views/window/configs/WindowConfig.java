@@ -8,4 +8,12 @@ public interface WindowConfig {
     
     WindowType getWindowType();
 
+    String getWindowTitle();
+
+    void setWindowTitle(String title);
+
+    boolean isMinimized();
+
+    void setMinimized(boolean minimized);
+
 }

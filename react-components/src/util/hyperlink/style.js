@@ -5,7 +5,7 @@ export default {
         textAlign: 'left',
         fontSize: '11px',
         margin: 2,
-        ':hover': {
+        '&:hover': {
             textDecoration: 'underline',
             backgroundColor: '#ededed',
         },

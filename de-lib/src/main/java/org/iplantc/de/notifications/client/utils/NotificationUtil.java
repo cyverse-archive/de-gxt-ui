@@ -68,10 +68,7 @@ public class NotificationUtil {
     @Inject AsyncProviderWrapper<JoinTeamRequestDialog> joinRequestDlgProvider;
     @Inject AsyncProviderWrapper<DenyJoinRequestDetailsDialog> denyDetailsDlgProvider;
     @Inject DesktopView.Presenter.DesktopPresenterAppearance appearance;
-    //@Inject
-    //NotificationView.NotificationViewAppearance notificationViewAppearance;  This doesn't seem to work
-    NotificationView.NotificationViewAppearance notificationViewAppearance =
-            GWT.create(NotificationView.NotificationViewAppearance.class);
+
     @Inject
     public NotificationUtil() {
     }
@@ -112,19 +109,12 @@ public class NotificationUtil {
                 PayloadAnalysis analysisPayload =
                         AutoBeanCodex.decode(notFactory, PayloadAnalysis.class, payload).as();
                 String analysisAction = analysisPayload.getAction();
-                String url = analysisPayload.getAccessUrl();
+
                 if ("job_status_change".equals(analysisAction) || "share".equals(analysisAction)) {
                     msg.setContext(payload.getPayload());
                 } else {
                     GWT.log("Unhandled Analysis action type!!");
                 }
-
-                if (!Strings.isNullOrEmpty(url)) {
-                    msg.setMessage(
-                            msg.getMessage() + ". " + notificationViewAppearance.notificationUrlPrompt(
-                                    url));
-                }
-
                 break;
 
             case DATA:

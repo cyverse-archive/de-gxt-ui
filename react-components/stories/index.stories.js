@@ -17,6 +17,9 @@ import SearchFormTest from "./data/search/SearchForm.stories";
 import SearchFormTagPanel from './data/search/SearchFormTagPanel.stories';
 import TriggerFieldTest from './util/TriggerField.stories';
 import AutocompleteTest from "./util/Autocomplete.stories";
+import DesktopViewTest from "./desktop/view/DesktopView.stories";
+import TaskButtonTest from "./desktop/view/TaskButton.stories";
+import TaskbarTest from "./desktop/view/Taskbar.stories";
 
 storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);
@@ -31,8 +34,13 @@ storiesOf('data/search', module).add('SearchFormTagPanel', () => <SearchFormTagP
 storiesOf('data/Tag', module).add('with test diskresource details', () => <TagTest logger={action('tag')}/>);
 storiesOf('data/TagPanel', module).add('with test diskresource details', () => <TagPanelTest logger={action('tagpanel')}/>);
 
+storiesOf('desktop/view', module).add("with test desktop view", () => <DesktopViewTest logger={action('desktop')}/>);
+storiesOf('desktop/view', module).add("with test desktop taskbutton", () => <TaskButtonTest/>);
+storiesOf('desktop/view', module).add("with test desktop taskbar", () => <TaskbarTest/>);
+
 storiesOf('util', module).add('Autocomplete', () => <AutocompleteTest selectOptionLogger={action('Selected Option')}/>);
 storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
 storiesOf('util', module).add('DEHyperLink', () => <DEHyperLinkTest/>);
 storiesOf('util', module).add('SearchField', () => <SearchFieldTest logger={action('Search')}/>);
 storiesOf('util', module).add('TriggerSearchField', () => <TriggerFieldTest logger={action('Search')}/>);
+

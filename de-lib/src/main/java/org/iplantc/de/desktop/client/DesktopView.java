@@ -4,22 +4,27 @@ import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
+import org.iplantc.de.client.services.callbacks.ErrorCallback;
 import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
+import org.iplantc.de.desktop.client.presenter.NotificationsCallback;
+import org.iplantc.de.desktop.client.presenter.callbacks.NotificationMarkAsSeenCallback;
+import org.iplantc.de.desktop.client.views.windows.WindowBase;
 import org.iplantc.de.desktop.client.views.windows.WindowInterface;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.web.bindery.autobean.shared.Splittable;
 
-import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Window;
-import com.sencha.gxt.widget.core.client.button.IconButton;
 
 import java.util.List;
+import java.util.Map;
+
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
 
 /**
  * TODO JDS Change initial display time for user menu tooltips
@@ -36,97 +41,15 @@ import java.util.List;
  *
  * @author jstroot
  */
+@JsType
 public interface DesktopView extends IsWidget {
 
+    @JsType
     interface DesktopAppearance {
-
-        interface DesktopStyles extends CssResource {
-            String analyses();
-
-            String apps();
-
-            String data();
-
-            String deBody();
-
-            String desktopBackground();
-
-            String iplantHeader();
-
-            String logo();
-
-            String logoContainer();
-
-            String notification();
-
-            String help();
-
-            String notificationCount();
-
-            String taskBarLayout();
-
-            String userMenuContainer();
-
-            String userPrefs();
-
-            String windowBtnNav();
-
-            String desktopBackgroundRepeat();
-
-            String logoText();
-
-            String userContextMenu();
-        }
-
-        IconButton.IconConfig analysisConfig();
-
-        IconButton.IconConfig appsConfig();
-
-        IconButton.IconConfig dataConfig();
 
         String feedbackAlertValidationWarning();
 
-        IconButton.IconConfig notificationsConfig();
-
-        IconButton.IconConfig helpConfig();
-
         String completeRequiredFieldsError();
-
-        String rootApplicationTitle(int count);
-
-        String rootApplicationTitle();
-
-        DesktopStyles styles();
-
-        IconButton.IconConfig userPrefsConfig();
-
-        String notifications();
-
-        String preferences();
-
-        String collaboration();
-
-        String introduction();
-
-        String documentation();
-
-        String contactSupport();
-
-        String about();
-
-        String logout();
-
-        String iconHomepageDataTip();
-
-        String forum();
-
-        String faqs();
-
-        String feedback();
-
-        String iconHomepageAnalysesTip();
-
-        String iconHomepageAppsTip();
     }
 
     /**
@@ -135,13 +58,17 @@ public interface DesktopView extends IsWidget {
      * -- Desktop window management.
      * -- Maintaining user session saving
      * -- Handling user desktop events for the desktop icons and user settings menu
-     *
-     *
+     * <p>
+     * <p>
      * TODO JDS Eventually, certain injected parameters will be injected via an AsyncProvider
-     *           This will provide us with split points through injection. Only items which are not
-     *           immediately necessary should be provided this way.
+     * This will provide us with split points through injection. Only items which are not
+     * immediately necessary should be provided this way.
      */
-    interface Presenter extends UserSettingsMenuPresenter, UnseenNotificationsPresenter{
+    @JsType
+    interface Presenter extends UserSettingsMenuPresenter, UnseenNotificationsPresenter {
+
+        @JsIgnore
+        void setDesktopContainer(Element desktopContainer);
 
         interface DesktopPresenterAppearance {
 
@@ -193,15 +120,19 @@ public interface DesktopView extends IsWidget {
 
             /**
              * Error announcement text when user tries to edit a second app
+             *
              * @return
              */
             String cannotEditTwoApps();
         }
 
+        @JsIgnore
         List<SavedWindowConfig> getOrderedWindowConfigs();
 
+        @JsIgnore
         List<WindowState> getWindowStates();
 
+        @JsIgnore
         void go(Panel panel);
 
         void onAnalysesWinBtnSelect();
@@ -212,24 +143,38 @@ public interface DesktopView extends IsWidget {
 
         void onForumsBtnSelect();
 
-        void onNotificationSelected(NotificationMessage selectedItem);
+        @SuppressWarnings("unusuable-by-js")
+        void onNotificationSelected(final Splittable notificationMessage,
+                                    final NotificationMarkAsSeenCallback callback,
+                                    final ErrorCallback errorCallback);
 
+        void displayNotificationPopup(String message, String category, String analysisStatus);
+
+        @JsIgnore
         void saveUserSettings(UserSettings value, boolean updateSilently);
 
+        @JsIgnore
         void show(final WindowConfig config);
 
+        @JsIgnore
         void show(final WindowConfig config, final boolean updateExistingWindow);
 
+        @JsIgnore
         void submitUserFeedback(Splittable splittable, IsHideable isHideable);
 
+        @JsIgnore
         void stickWindowToTop(Window window);
 
+        @JsIgnore
         void doPeriodicSessionSave();
 
+        @JsIgnore
         void doPeriodicWindowStateSave();
 
+        @JsIgnore
         void restoreWindows(List<SavedWindowConfig> savedWindowConfigs);
 
+        @JsIgnore
         void setUserSessionConnection(boolean connected);
 
         void onFaqSelect();
@@ -238,12 +183,17 @@ public interface DesktopView extends IsWidget {
          * This method is called once a user has either approved or denied a request to join
          * a team the user manages.  This method will delete the join notification so the request
          * cannot accidentally be processed again.
+         *
          * @param message
          */
+        @JsIgnore
         void onJoinTeamRequestProcessed(NotificationMessage message);
 
+        @SuppressWarnings("unusuable-by-js")
+        void onTaskButtonClicked(Splittable windowConfig);
     }
 
+    @JsType
     interface UserSettingsMenuPresenter {
 
         void onAboutClick();
@@ -261,33 +211,35 @@ public interface DesktopView extends IsWidget {
         void doLogout(boolean sessionTimeout);
     }
 
+    @JsType
     interface UnseenNotificationsPresenter {
 
-        void doMarkAllSeen(boolean announce);
+        void doMarkAllSeen(boolean announce,
+                           final NotificationMarkAsSeenCallback callback,
+                           final ErrorCallback errorCallback);
 
         void doSeeAllNotifications();
 
         void doSeeNewNotifications();
 
-        void getNotifications();
+        void getNotifications(NotificationsCallback callback, ErrorCallback errorCallback);
     }
 
-    void ensureDebugId(String baseID);
 
     /**
      * @return the desktop container element used to constrain {@link WindowInterface} classes
      */
+    @JsIgnore
     Element getDesktopContainer();
 
-    ListStore<NotificationMessage> getNotificationStore();
-
-    int getUnseenNotificationCount();
-
+    @JsIgnore
     void setPresenter(Presenter presenter);
 
-    void setUnseenNotificationCount(int count);
+    @JsIgnore
+    void renderView(Map<Splittable, WindowBase> windowConfigMap);
 
-    void hideNotificationMenu();
-
-    void setNotificationConnection(boolean visible);
+    @JsIgnore
+    void renderView(boolean newUser, Map<Splittable, WindowBase> windowConfigMap);
 }
+
+
