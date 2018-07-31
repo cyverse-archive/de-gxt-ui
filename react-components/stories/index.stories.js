@@ -34,13 +34,13 @@ storiesOf('data/search', module).add('SearchFormTagPanel', () => <SearchFormTagP
 storiesOf('data/Tag', module).add('with test diskresource details', () => <TagTest logger={action('tag')}/>);
 storiesOf('data/TagPanel', module).add('with test diskresource details', () => <TagPanelTest logger={action('tagpanel')}/>);
 
-storiesOf('util', module).add('Autocomplete', () => <AutocompleteTest selectOptionLogger={action('Selected Option')}/>);
-storiesOf('desktop/view', module).add("with test desktop view", () => <DesktopViewTest/>);
 storiesOf('desktop/view', module).add("with test desktop view", () => <DesktopViewTest logger={action('desktop')}/>);
 storiesOf('desktop/view', module).add("with test desktop taskbutton", () => <TaskButtonTest/>);
 storiesOf('desktop/view', module).add("with test desktop taskbar", () => <TaskbarTest/>);
 
+storiesOf('util', module).add('Autocomplete', () => <AutocompleteTest selectOptionLogger={action('Selected Option')}/>);
 storiesOf('util', module).add('CopyTextArea', () => <CopyTextAreaTest/>);
 storiesOf('util', module).add('DEHyperLink', () => <DEHyperLinkTest/>);
 storiesOf('util', module).add('SearchField', () => <SearchFieldTest logger={action('Search')}/>);
 storiesOf('util', module).add('TriggerSearchField', () => <TriggerFieldTest logger={action('Search')}/>);
+
