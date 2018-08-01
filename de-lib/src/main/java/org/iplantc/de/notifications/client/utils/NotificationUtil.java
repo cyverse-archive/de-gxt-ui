@@ -33,14 +33,12 @@ import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConf
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.notifications.client.events.NotificationClickedEvent;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
-import org.iplantc.de.notifications.client.views.NotificationView;
 import org.iplantc.de.notifications.client.views.dialogs.DenyJoinRequestDetailsDialog;
 import org.iplantc.de.notifications.client.views.dialogs.JoinTeamRequestDialog;
 import org.iplantc.de.notifications.client.views.dialogs.RequestHistoryDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.NotificationCallback;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -161,7 +159,7 @@ public class NotificationUtil {
                 PayloadTeam payloadTeam = AutoBeanCodex.decode(notFactory, PayloadTeam.class, payload).as();
                 String action = notification.getEmailTemplate();
                 payloadTeam.setAction(action);
-                if (action.equals(PayloadTeam.ACTION_ADD)) {
+                if (action.equals(PayloadTeam.ACTION_ADD) && (!msg.getMessage().contains(payloadTeam.getTeamName()))) {
                     msg.setMessage(msg.getMessage() + " " + payloadTeam.getTeamName());
                 }
                 msg.setContext(payload.getPayload());

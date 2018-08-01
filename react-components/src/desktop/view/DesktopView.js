@@ -7,12 +7,12 @@ import Notifications from "./Notifications";
 import Help from "./Help";
 import Taskbar from "./Taskbar";
 import styles from "../style";
-import injectSheet from "react-jss";
+import { withStyles } from "@material-ui/core/styles";
 import ids from "../ids";
 import constants from "../../constants";
 import Sockette from "sockette";
 import build from "../../util/DebugIDUtil";
-import tourStrings from "../NewUserTourStrings";
+import tour from "../NewUserTourSteps";
 import introJs from "intro.js";
 import dataImg from "../../resources/images/data.png";
 import appsImg from "../../resources/images/apps.png";
@@ -20,7 +20,6 @@ import analysesImg from "../../resources/images/analyses.png";
 import { injectIntl } from "react-intl";
 import withI18N from "../../util/I18NWrapper";
 import messages from "../messages";
-import classnames from "classnames";
 
 
 class DesktopView extends Component {
@@ -36,7 +35,7 @@ class DesktopView extends Component {
         };
         this.handleDesktopClick = this.handleDesktopClick.bind(this);
         this.onNotificationClicked = this.onNotificationClicked.bind(this);
-        this.getWSUrl = this.getWSUrl.bind(this);
+        this.getWebSocketUrl = this.getWebSocketUrl.bind(this);
         this.handleMessage = this.handleMessage.bind(this);
         this.displayNotification = this.displayNotification.bind(this);
         this.onMarkAllAsSeenClicked = this.onMarkAllAsSeenClicked.bind(this);
@@ -54,9 +53,9 @@ class DesktopView extends Component {
 
     componentDidMount() {
         this.getNotifications();
-        new Sockette(this.getWSUrl(), {
+        new Sockette(this.getWebSocketUrl(), {
             maxAttempts: 10,
-            onmessage: e => this.handleMessage(e),
+            onmessage: this.handleMessage,
             onreconnect: e => console.log('Reconnecting...', e),
             onmaximum: e => console.log('Stop Attempting!', e),
             onerror: e => console.log('Error:', e)
@@ -66,15 +65,15 @@ class DesktopView extends Component {
     }
 
     initIntro() {
-        this.dataBtn.current.setAttribute("data-intro", tourStrings.introDataWindow);
-        this.dataBtn.current.setAttribute("data-position", "right");
-        this.dataBtn.current.setAttribute("data-step", "1");
-        this.appsBtn.current.setAttribute("data-intro", tourStrings.introAppsWindow);
-        this.appsBtn.current.setAttribute("data-position", "right");
-        this.appsBtn.current.setAttribute("data-step", "2");
-        this.analysesBtn.current.setAttribute("data-intro", tourStrings.introAnalysesWindow);
-        this.analysesBtn.current.setAttribute("data-position", "right");
-        this.analysesBtn.current.setAttribute("data-step", "3");
+        this.dataBtn.current.setAttribute("data-intro", tour.DataWindow.message);
+        this.dataBtn.current.setAttribute("data-position", tour.DataWindow.position);
+        this.dataBtn.current.setAttribute("data-step", tour.DataWindow.step);
+        this.appsBtn.current.setAttribute("data-intro", tour.AppsWindow.message);
+        this.appsBtn.current.setAttribute("data-position", tour.AppsWindow.position);
+        this.appsBtn.current.setAttribute("data-step", tour.AppsWindow.step);
+        this.analysesBtn.current.setAttribute("data-intro", tour.AnalysesWindow.message);
+        this.analysesBtn.current.setAttribute("data-position", tour.AnalysesWindow.position);
+        this.analysesBtn.current.setAttribute("data-step", tour.AnalysesWindow.step);
     }
 
     getNotifications() {
@@ -142,37 +141,38 @@ class DesktopView extends Component {
 
     handleMessage(event) {
         console.log(event.data);
-        let msg = null;
+        let push_msg = null;
         try {
-            msg = JSON.parse(event.data);
+            push_msg = JSON.parse(event.data);
         } catch (e) {
             return;
         }
-        if (msg.total) {
-            this.setState({unSeenCount: msg.total});
+        if (push_msg.total) {
+            this.setState({unSeenCount: push_msg.total});
         }
-        if (msg.message) {
+        let message = push_msg.message;
+        if (message) {
             let notifyQueue = this.state.notifications;
             if(notifyQueue.messages) {
-                notifyQueue.messages.push(msg.message);
+                notifyQueue.messages.push(message);
             } else {
                 notifyQueue.messages = [];
-                notifyQueue.messages.push(msg.message)
+                notifyQueue.messages.push(message)
             }
             this.setState({notifications: notifyQueue});
-            this.displayNotification(msg.message);
+            this.displayNotification(message);
         }
     }
 
-    displayNotification(message) {
-        let displayText = message.message.text;
-        let category = message.type;
-        let analysisStatus = (message.type==="analysis")? message.payload.status : "";
+    displayNotification(notification) {
+        let displayText = notification.message.text;
+        let category = notification.type;
+        let analysisStatus = (notification.type==="analysis")? notification.payload.status : "";
         this.props.presenter.displayNotificationPopup(displayText, category, analysisStatus);
     }
 
 
-    getWSUrl() {
+    getWebSocketUrl() {
         let location = window.location;
         let protocol = (location.protocol.toLowerCase() === "https:") ? constants.WSS_PROTOCOL : constants.WS_PROTOCOL;
         let host = location.hostname;
@@ -189,13 +189,13 @@ class DesktopView extends Component {
        this.props.presenter.doSeeAllNotifications();
     }
 
-    onMarkAllAsSeenClicked() {
-       this.props.presenter.doMarkAllSeen(true,(updatedUnSeenCount) => {
+    onMarkAllAsSeenClicked(shouldNotifyUser) {
+        this.props.presenter.doMarkAllSeen(shouldNotifyUser, (updatedUnSeenCount) => {
             this.setState({
                 unSeenCount: updatedUnSeenCount + "",       //count is always string
             });
            const {notifications} = this.state;
-           notifications.forEach(function (n) {
+            notifications.messages.forEach(function (n) {
                n.seen = true;
            });
         }, (httpStatusCode, errMsg) => {
@@ -209,7 +209,7 @@ class DesktopView extends Component {
 
     updateApplicationTitle(count) {
         if (count > 0) {
-            document.title = constants.DE + " (" + count + ")";
+            document.title = `(${count}) ${constants.DE}`;
         } else {
             document.title = constants.DE;
         }
@@ -224,8 +224,7 @@ class DesktopView extends Component {
 
     render() {
         const {windows, unSeenCount, notifications, notificationsError, notificationLoading}  = this.state;
-        const classes = this.props.classes;
-        const intl = this.props.intl;
+        const {classes, intl} = this.props;
         this.updateApplicationTitle(unSeenCount);
         return (
             <div className={classes.body}>
@@ -262,7 +261,7 @@ class DesktopView extends Component {
                 </div>
                 {/*getMessge wont work with title attribute*/}
                 <div id={this.props.desktopContainerId}
-                     className={classnames(classes.desktop)}>
+                     className={classes.desktop}>
                     <img className={classes.data}
                          id={build(ids.DESKTOP, ids.DATA_BTN)}
                          alt="data"
@@ -296,4 +295,4 @@ class DesktopView extends Component {
     }
 }
 
-export default (injectSheet(styles)(withI18N(injectIntl(DesktopView), messages)));
+export default (withStyles(styles)(withI18N(injectIntl(DesktopView), messages)));

@@ -14,10 +14,10 @@ import jsinterop.annotations.JsType;
 /**
  * Created by sriram on 4/27/18.
  */
-@JsType(isNative = true, namespace = "CyVerseReactComponents.desktop.desktop", name = "DesktopView")
+@JsType(isNative = true, namespace = "CyVerseReactComponents.desktop", name = "DesktopView")
 public class ReactDesktop {
 
-    @JsProperty(namespace = "CyVerseReactComponents.desktop.desktop", name = "DesktopView")
+    @JsProperty(namespace = "CyVerseReactComponents.desktop", name = "DesktopView")
     public static ReactClass<DesktopProps> desktopProps;
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")

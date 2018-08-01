@@ -7,7 +7,6 @@ import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.desktop.client.views.widgets.DEFeedbackDialog;
 import org.iplantc.de.desktop.client.views.windows.WindowBase;
-import org.iplantc.de.resources.client.messages.IplantNewUserTourStrings;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.core.client.Scheduler;
@@ -45,8 +44,7 @@ public class DesktopViewImpl implements DesktopView {
     private final WindowManager windowManager;
 
     @Inject
-    DesktopViewImpl(final IplantNewUserTourStrings tourStrings,
-                    final WindowManager windowManager,
+    DesktopViewImpl(final WindowManager windowManager,
                     DesktopView.DesktopAppearance appearance) {
         this.windowManager = windowManager;
         this.appearance = appearance;
@@ -91,7 +89,8 @@ public class DesktopViewImpl implements DesktopView {
         });
     }
 
-    void onFeedbackBtnSelect() {
+    @Override
+    public void onFeedbackBtnSelect() {
         deFeedbackDialogProvider.get(new AsyncCallback<DEFeedbackDialog>() {
             @Override
             public void onFailure(Throwable caught) {

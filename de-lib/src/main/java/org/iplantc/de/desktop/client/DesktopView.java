@@ -143,6 +143,8 @@ public interface DesktopView extends IsWidget {
 
         void onForumsBtnSelect();
 
+        void onFeedbackSelect();
+
         @SuppressWarnings("unusuable-by-js")
         void onNotificationSelected(final Splittable notificationMessage,
                                     final NotificationMarkAsSeenCallback callback,
@@ -240,6 +242,8 @@ public interface DesktopView extends IsWidget {
 
     @JsIgnore
     void renderView(boolean newUser, Map<Splittable, WindowBase> windowConfigMap);
+
+    void onFeedbackBtnSelect();
 }
 
 

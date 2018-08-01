@@ -1,7 +1,6 @@
 package org.iplantc.de.theme.base.client.desktop.presenter;
 
 import org.iplantc.de.desktop.client.DesktopView;
-import org.iplantc.de.resources.client.messages.IplantNewUserTourStrings;
 import org.iplantc.de.theme.base.client.desktop.DesktopErrorMessages;
 import org.iplantc.de.theme.base.client.desktop.DesktopMessages;
 
@@ -14,19 +13,15 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 public class DesktopPresenterDefaultAppearance implements DesktopView.Presenter.DesktopPresenterAppearance {
     private final DesktopMessages desktopMessages;
     private final DesktopErrorMessages desktopErrorMessages;
-    private final IplantNewUserTourStrings tourStrings;
 
     public DesktopPresenterDefaultAppearance() {
         this(GWT.<DesktopMessages> create(DesktopMessages.class),
-             GWT.<DesktopErrorMessages> create(DesktopErrorMessages.class),
-             GWT.<IplantNewUserTourStrings> create(IplantNewUserTourStrings.class));
+             GWT.<DesktopErrorMessages> create(DesktopErrorMessages.class));
     }
     DesktopPresenterDefaultAppearance(DesktopMessages desktopMessages,
-                                      DesktopErrorMessages desktopErrorMessages,
-                                      IplantNewUserTourStrings tourStrings) {
+                                      DesktopErrorMessages desktopErrorMessages) {
         this.desktopMessages = desktopMessages;
         this.desktopErrorMessages = desktopErrorMessages;
-        this.tourStrings = tourStrings;
     }
 
     @Override
@@ -46,7 +41,7 @@ public class DesktopPresenterDefaultAppearance implements DesktopView.Presenter.
 
     @Override
     public String introWelcome() {
-        return tourStrings.introWelcome();
+        return desktopMessages.introWelcome();
     }
 
     @Override

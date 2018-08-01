@@ -10,37 +10,24 @@ class TaskButton extends Component {
     constructor(props) {
         super(props);
         this.onClick = this.onClick.bind(this);
-        this.getButton = this.getButton.bind(this);
     }
 
     onClick(event) {
         this.props.taskButtonClickHandler(this.props.windowConfig);
     }
 
-    getButton() {
-        if (this.props.windowConfig.minimized === true) {
-            return (<Button key={this.props.windowConfig.tag}
-                            className={this.props.classes.taskbarButtonMinimized}
-                            onClick={this.onClick}
-                            variant="raised">
-                    {this.props.windowConfig.windowTitle}
-                </Button>
-            );
-        } else {
-            return (
-                <Button key={this.props.windowConfig.tag}
-                        className={this.props.classes.taskbarButton}
-                        onClick={this.onClick}
-                        variant="contained">
-                    {this.props.windowConfig.windowTitle}
-                </Button>
-            );
-        }
-    }
-
     render() {
+        const {classes, windowConfig: {minimized, windowTitle}} = this.props;
+        const variant = minimized ? "raised" : "contained";
+        const className = minimized ? classes.taskbarButtonMinimized : classes.taskbarButton;
+
         return (
-            this.getButton()
+            <Button variant={variant}
+                    className={className}
+                    onClick={this.onClick}
+            >
+                {windowTitle}
+            </Button>
         );
     }
 

@@ -18,13 +18,13 @@ class DesktopViewTest extends  Component {
             "minimized": false,
 
         },
-            {
-                "tag": "",
-                "type": "APPS",
-                "windowTitle": "Apps",
-                "minimized": true,
+        {
+            "tag": "",
+            "type": "APPS",
+            "windowTitle": "Apps",
+            "minimized": true,
 
-            }];
+        }];
         
         const notifications = {
             "total": "30",

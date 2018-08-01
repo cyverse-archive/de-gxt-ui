@@ -232,4 +232,10 @@ export default {
         color: color.orange,
     },
 
+    notificationMenu: {
+        width: '100%',
+        zIndex: 888888,
+        maxHeight: 600
+    }
+
 };

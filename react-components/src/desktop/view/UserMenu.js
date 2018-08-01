@@ -7,13 +7,13 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Divider from "@material-ui/core/Divider";
 import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
 import styles from "../style";
-import injectSheet from "react-jss";
 import ids from "../ids";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
 import intlData from "../messages";
 import build from "../../util/DebugIDUtil";
-import tourStrings from "../NewUserTourStrings";
+import tour from "../NewUserTourSteps";
 import userImg from "../../resources/images/user.png";
+import { withStyles } from "@material-ui/core/styles";
 
 class UserMenu extends Component {
     constructor(props) {
@@ -28,9 +28,9 @@ class UserMenu extends Component {
     }
 
     componentDidMount() {
-        this.userBtn.current.setAttribute("data-intro", tourStrings.introSettings);
-        this.userBtn.current.setAttribute("data-position", "left");
-        this.userBtn.current.setAttribute("data-step", "5");
+        this.userBtn.current.setAttribute("data-intro", tour.SettingsMenu.message);
+        this.userBtn.current.setAttribute("data-position", tour.SettingsMenu.position);
+        this.userBtn.current.setAttribute("data-step", tour.SettingsMenu.step);
     }
 
     handleClose() {
@@ -82,34 +82,41 @@ class UserMenu extends Component {
                          onClick={this.onUserMenuClick}
                          ref={this.userBtn}>
                     </img>
-                <Menu id={build(ids.DESKTOP, ids.USER_PREF_MENU)} anchorEl={anchorEl}
+                <Menu id={build(ids.DESKTOP, ids.USER_PREF_MENU)}
+                      anchorEl={anchorEl}
                       open={Boolean(anchorEl)}
                       onClose={this.handleClose}>
                     <MenuItem id={build(ids.DESKTOP, ids.PREFERENCES_LINK)}
                               onClick={this.onMenuItemSelect}>
-                        <DEHyperlink text={getMessage("preferences")}/>
+                        <DEHyperlink text={getMessage("preferences")}
+                                     onClick={this.handleClose}/>
                     </MenuItem>
                     <MenuItem id={build(ids.DESKTOP, ids.COLLABORATORS_LINK)}
                               onClick={this.onMenuItemSelect}>
-                        <DEHyperlink text={getMessage("collaboration")}/>
+                        <DEHyperlink text={getMessage("collaboration")}
+                                     onClick={this.handleClose}/>
                     </MenuItem>
                       <Divider />
                     <MenuItem id={build(ids.DESKTOP, ids.USER_MANUAL_LINK)}
                               onClick={this.onMenuItemSelect}>
-                        <DEHyperlink text={getMessage("documentation")}/>
+                        <DEHyperlink text={getMessage("documentation")}
+                                     onClick={this.handleClose}/>
                     </MenuItem>
                     <MenuItem id={build(ids.DESKTOP, ids.INTRO_LINK)}
                               onClick={this.props.doIntro}>
-                        <DEHyperlink text={getMessage("introduction")}/>
+                        <DEHyperlink text={getMessage("introduction")}
+                                     onClick={this.handleClose}/>
                     </MenuItem>
                     <MenuItem id={build(ids.DESKTOP, ids.ABOUT_LINK)}
                               onClick={this.onMenuItemSelect}>
-                        <DEHyperlink text={getMessage("about")}/>
+                        <DEHyperlink text={getMessage("about")}
+                                     onClick={this.handleClose}/>
                     </MenuItem>
                      <Divider />
                     <MenuItem id={build(ids.DESKTOP, ids.LOGOUT_LINK)}
                               onClick={this.onMenuItemSelect}>
-                        <DEHyperlink text={getMessage("logout")}/>
+                        <DEHyperlink text={getMessage("logout")}
+                                     onClick={this.handleClose}/>
                     </MenuItem>
                 </Menu>
             </span>
@@ -117,4 +124,4 @@ class UserMenu extends Component {
     }
 }
 
-export default injectSheet(styles)(withI18N(UserMenu, intlData));
+export default withStyles(styles)(withI18N(UserMenu, intlData));
