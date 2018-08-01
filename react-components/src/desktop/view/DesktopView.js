@@ -174,7 +174,7 @@ class DesktopView extends Component {
 
     getWSUrl() {
         let location = window.location;
-        let protocol = (location.protocol === "HTTPS") ? constants.WSS_PROTOCOL : constants.WS_PROTOCOL;
+        let protocol = (location.protocol.toLowerCase() === "https") ? constants.WSS_PROTOCOL : constants.WS_PROTOCOL;
         let host = location.hostname;
         let port = location.port;
         const notificationUrl = protocol + host + (port ? ':' + port : '') + constants.NOTIFICATION_WS;
