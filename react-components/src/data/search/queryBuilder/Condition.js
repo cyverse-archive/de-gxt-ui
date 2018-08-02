@@ -7,7 +7,7 @@ import ids from "../ids";
 import { FieldArray, Fields, FormSection } from 'redux-form';
 import Grid from "@material-ui/core/Grid";
 import MenuItem from '@material-ui/core/MenuItem';
-import React from 'react';
+import React, { Fragment } from 'react';
 import Select from '@material-ui/core/Select';
 
 /**
@@ -80,7 +80,7 @@ function renderCondition(props) {
 
     if (isGroup(selection)) {
         return (
-            <fieldset>
+            <Fragment>
                 <ConditionSelector/>
                 <FieldArray name={fieldArgs}
                             root={root}
@@ -89,7 +89,7 @@ function renderCondition(props) {
                             selectOptions={selectOptions}
                             helperProps={helperProps}
                             component={Group}/>
-            </fieldset>
+            </Fragment>
         )
     } else {
         return (

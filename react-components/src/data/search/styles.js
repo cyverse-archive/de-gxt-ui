@@ -4,34 +4,28 @@ export default {
     searchButton: {
         display: 'flex',
         flexDirection: 'row-reverse',
+        margin: '5px',
     },
 
     buttonBar: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-
-    fullWidth: {
-        width: '100%'
+        justifyContent: 'flex-end'
     },
 
     form: {
-        width: '100%',
-        padding: '0 10px 10px 10px',
-        tableLayout: 'fixed'
-    },
-
-    group: {
-        padding: '10px',
+        padding: '10px 5px 10px 15px',
         borderStyle: 'solid',
         borderWidth: '1px',
         borderColor: cyverse.gray,
-        paddingLeft: '10px'
+        minWidth: '500px',
+        minHeight: '300px',
+        maxHeight: '300px',
+        overflow: 'scroll'
     },
 
     condition: {
-        paddingLeft: '8px',
+        paddingLeft: '20px',
     },
 
     permissionUsers: {

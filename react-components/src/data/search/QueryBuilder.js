@@ -44,7 +44,7 @@ class QueryBuilder extends Component {
         let originalName = initialValues ? initialValues : null;
 
         return (
-            <div>
+            <div className={classes.form}>
                 <Condition root={true}
                            parentId={build(parentId, ids.form)}
                            helperProps={this.props}/>
