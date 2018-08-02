@@ -6,6 +6,7 @@ import {getDefaultTheme, MuiThemeProvider} from "../lib";
 import BasicDetailsTest from '../../stories/data/details/BasicDetails.stories';
 import EditTagDialogTest from '../../stories/data/search/EditTagDialog.stories';
 import InfoTypeSelectionListTest from '../../stories/data/details/InfoTypeSelectionList.stories';
+import QueryBuilderTest from "../../stories/data/search/QueryBuilder.stories";
 import SaveSearchButtonTest from '../../stories/data/search/SaveSearchButton.stories';
 import SearchFormTagPanelTest from '../../stories/data/search/SearchFormTagPanel.stories';
 import TagPanelTest from '../../stories/data/details/TagPanel.stories';
@@ -26,6 +27,12 @@ it('renders EditTagDialog without crashing', () => {
 it('renders InfoTypeSelectionListTest without crashing', () => {
     const div = document.createElement('div');
     ReactDOM.render(<MuiThemeProvider theme={getDefaultTheme()}><InfoTypeSelectionListTest /></MuiThemeProvider>, div);
+    ReactDOM.unmountComponentAtNode(div);
+});
+
+it('renders QueryBuilder without crashing', () => {
+    const div = document.createElement('div');
+    ReactDOM.render(<MuiThemeProvider theme={getDefaultTheme()}><QueryBuilderTest /></MuiThemeProvider>, div);
     ReactDOM.unmountComponentAtNode(div);
 });
 
