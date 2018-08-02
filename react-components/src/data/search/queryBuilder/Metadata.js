@@ -24,12 +24,12 @@ function Metadata(props) {
             <SelectOperator operators={operators}
                             parentId={parentId}/>
             <Field name='attribute'
-                   label={getMessage('attribute')}
+                   helperText={getMessage('attribute')}
                    operators={operators}
                    id={build(parentId, ids.metadataAttr)}
                    component={ReduxTextField}/>
             <Field name='value'
-                   label={getMessage('value')}
+                   helperText={getMessage('value')}
                    operators={operators}
                    id={build(parentId, ids.metadataVal)}
                    component={ReduxTextField}/>

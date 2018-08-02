@@ -56,7 +56,7 @@ class SaveSearchButton extends Component {
                         id={build(parentId, ids.saveSearchBtn)}
                         disabled={!!disabled}
                         onClick={this.handleOpen}>
-                    {getMessage('saveSearchBtn')}
+                    {getMessage('saveBtn')}
                 </Button>
                 <Dialog open={this.state.open}
                         onClose={this.handleClose}>

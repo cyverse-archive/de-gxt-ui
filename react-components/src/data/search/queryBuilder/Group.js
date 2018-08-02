@@ -17,7 +17,8 @@ function Group(props) {
         onRemove,
         helperProps,
         helperProps: {
-            parentId
+            parentId,
+            classes
         }
     } = props;
 
@@ -30,7 +31,7 @@ function Group(props) {
             {!root && <DeleteBtn onClick={onRemove}
                                  id={build(parentId, ids.deleteConditionBtn)}/>}
             {fields.map((field, index) => (
-                <div key={index}>
+                <div key={index} className={classes.condition}>
                     <Condition field={field}
                                parentId={baseId}
                                onRemove={() => fields.remove(index)}

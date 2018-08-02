@@ -40,7 +40,7 @@ function FileSize(props) {
                    type='number'
                    parse={value => value ? Number(value) : null}
                    min='0'
-                   label={getMessage('fileSizeGreater')}
+                   helperText={getMessage('fileSizeGreater')}
                    id={build(parentId, ids.fileSizeGreaterVal)}
                    component={ReduxTextField}/>
             <Field name='from.unit'
@@ -53,7 +53,7 @@ function FileSize(props) {
                    type='number'
                    parse={value => value ? Number(value) : null}
                    min='0'
-                   label={getMessage('fileSizeLessThan')}
+                   helperText={getMessage('fileSizeLessThan')}
                    id={build(parentId, ids.fileSizeLessThanVal)}
                    component={ReduxTextField}/>
             <Field name='to.unit'

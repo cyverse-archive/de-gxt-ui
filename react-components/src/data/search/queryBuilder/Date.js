@@ -1,4 +1,5 @@
 import build from "../../../util/DebugIDUtil";
+import { getMessage } from "../../../util/I18NWrapper";
 import ids from "../ids";
 import { options } from "./Operators";
 import ReduxTextField from "./ReduxTextField";
@@ -25,10 +26,12 @@ function Date(props) {
                             parentId={parentId}/>
             <Field name='from'
                    type='date'
+                   helperText={getMessage('startDate')}
                    id={build(parentId, ids.fromDate)}
                    component={ReduxTextField}/>
             <Field name='to'
                    type='date'
+                   helperText={getMessage('endDate')}
                    id={build(parentId, ids.toDate)}
                    component={ReduxTextField}/>
         </Fragment>
