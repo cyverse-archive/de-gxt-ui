@@ -12,10 +12,10 @@ import React, { Fragment } from "react";
  */
 function Label(props) {
     let operators = [
-        options.Is,
-        options.IsNot,
         options.Contains,
-        options.ContainsNot
+        options.Is,
+        options.ContainsNot,
+        options.IsNot,
     ];
 
     let {parentId} = props;

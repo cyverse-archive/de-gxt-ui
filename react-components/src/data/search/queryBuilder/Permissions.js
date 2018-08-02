@@ -23,10 +23,10 @@ import { withStyles } from "@material-ui/core/styles";
  */
 function Permissions(props) {
     let operators = [
-        options.Are,
-        options.AreNot,
         options.AreAtLeast,
-        options.AreNotAtLeast
+        options.Are,
+        options.AreNotAtLeast,
+        options.AreNot,
     ];
 
     let permissions = [
