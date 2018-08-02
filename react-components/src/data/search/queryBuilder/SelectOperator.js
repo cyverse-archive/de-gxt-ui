@@ -39,6 +39,10 @@ function renderSelect(props) {
         parentId
     } = props;
 
+    if (opLabel.input.value === "") {
+        opLabel.input.onChange(operators[0].value)
+    }
+
     return (
         <Select value={opLabel.input.value}
                 id={build(parentId, ids.selectOperator)}

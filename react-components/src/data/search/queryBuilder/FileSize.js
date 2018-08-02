@@ -28,9 +28,6 @@ function FileSize(props) {
     } = props;
 
     let sizesList = messages.fileSizes;
-    let sizesListChildren = sizesList.map(function (item, index) {
-        return <MenuItem key={index} value={item}>{item}</MenuItem>
-    });
 
     return (
         <Fragment>
@@ -47,7 +44,7 @@ function FileSize(props) {
                    id={build(parentId, ids.fileSizeGreaterUnit)}
                    label=' '
                    component={renderDropDown}>
-                {sizesListChildren}
+                {sizesList}
             </Field>
             <Field name='to.value'
                    type='number'
@@ -60,7 +57,7 @@ function FileSize(props) {
                    id={build(parentId, ids.fileSizeLessThanUnit)}
                    label=' '
                    component={renderDropDown}>
-                {sizesListChildren}
+                {sizesList}
             </Field>
         </Fragment>
     )
@@ -72,12 +69,19 @@ function renderDropDown(props) {
         children,
         id
     } = props;
+
+    if (input.value === "") {
+        input.onChange(children[0])
+    }
+
     return (
         <Grid item>
-            <Select value={input.value ? input.value : ''}
+            <Select value={input.value}
                     onChange={(event) => input.onChange(event.target.value)}
                     id={id}>
-                {children}
+                {children.map(function (item, index) {
+                    return <MenuItem key={index} value={item}>{item}</MenuItem>
+                })}
             </Select>
         </Grid>
     )

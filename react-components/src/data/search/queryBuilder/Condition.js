@@ -61,8 +61,12 @@ function renderCondition(props) {
     let fieldArgs = root ? 'args' : `${field}.args`;
     let fieldTypeObj = getTargetProp(props, fieldType);
 
-    let selection = fieldTypeObj.input.value;
+    if (fieldTypeObj.input.value === "") {
+        let defaultIndex = root ? 0 : 2;
+        fieldTypeObj.input.onChange(Conditions.labels[defaultIndex].value);
+    }
     let baseId = build(parentId, field);
+    let selection = fieldTypeObj.input.value;
 
     let ConditionSelector = () => (
         <Select value={selection}
