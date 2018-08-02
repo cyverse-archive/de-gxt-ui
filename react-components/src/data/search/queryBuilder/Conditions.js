@@ -33,7 +33,7 @@ const labels = [
     },
     {
         value: 'owner',
-        label: getMessage('ownedBy'),
+        label: getMessage('owner'),
     },
     {
         value: 'path',

@@ -5,16 +5,14 @@ import { options } from "./Operators";
 import SelectOperator from "./SelectOperator";
 import styles from "../styles";
 import SubjectSearchField from "../../../collaborators/SubjectSearchField";
+import UserPanel from "./UserPanel";
 import withI18N, { getMessage } from "../../../util/I18NWrapper";
 
-import Chip from "@material-ui/core/Chip";
 import { Field, FieldArray } from "redux-form";
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
-import Paper from "@material-ui/core/Paper";
 import React, { Fragment } from "react";
 import Select from "@material-ui/core/Select";
-import Tooltip from "@material-ui/core/Tooltip";
 import { withStyles } from "@material-ui/core/styles";
 
 /**
@@ -47,8 +45,7 @@ function Permissions(props) {
     let {
         parentId,
         helperProps: {
-            presenter,
-            classes
+            presenter
         }
     } = props;
 
@@ -62,7 +59,6 @@ function Permissions(props) {
                    component={renderSelect}/>
             <FieldArray name='users'
                         presenter={presenter}
-                        classes={classes}
                         parentId={parentId}
                         component={renderSubjectSearch}/>
         </Fragment>
@@ -96,7 +92,6 @@ function renderSelect(props) {
 function renderSubjectSearch(props) {
     let {
         presenter,
-        classes,
         fields,
         parentId
     } = props;
@@ -106,38 +101,10 @@ function renderSubjectSearch(props) {
             <SubjectSearchField presenter={presenter}
                                 parentId={parentId}
                                 onSelect={(collaborator) => fields.push(collaborator)}/>
-            {fields.getAll() && <UserPanel classes={classes}
-                                           fields={fields}
+            {fields.getAll() && <UserPanel users={fields.getAll()}
                                            id={build(parentId, ids.userList)}
                                            onDelete={fields.remove}/>}
         </Grid>
-    )
-}
-
-function UserPanel(props) {
-    let {
-        fields,
-        onDelete,
-        classes,
-        id
-    } = props;
-    let users = fields.getAll();
-    let chips = users && users.map((user, index) =>
-        <Tooltip key={user.id}
-                 title={user.institution ? user.institution : user.description}>
-            <Chip key={user.id}
-                  id={user.id}
-                  className={classes.userChip}
-                  onDelete={() => onDelete(index)}
-                  label={user.name}/>
-        </Tooltip>
-    );
-
-    return (
-        <Paper className={classes.permissionUsers}
-               id={id}>
-            {chips}
-        </Paper>
     )
 }
 

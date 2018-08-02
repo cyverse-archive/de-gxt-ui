@@ -1,11 +1,13 @@
 import build from "../../../util/DebugIDUtil";
 import ids from "../ids";
 import { options } from "./Operators";
-import ReduxTextField from "./ReduxTextField";
 import SelectOperator from "./SelectOperator";
+import SubjectSearchField from "../../../collaborators/SubjectSearchField";
 
 import { Field } from 'redux-form';
 import React, { Fragment } from 'react';
+import Grid from "@material-ui/core/Grid";
+import UserPanel from "./UserPanel";
 
 /**
  * A component which allows users to specify an owner in QueryBuilder
@@ -14,12 +16,15 @@ import React, { Fragment } from 'react';
 function Owner(props) {
     let operators = [
         options.Is,
-        options.IsNot,
-        options.Contains,
-        options.ContainsNot
+        options.IsNot
     ];
 
-    let {parentId} = props;
+    let {
+        parentId,
+        helperProps: {
+            presenter
+        }
+    } = props;
 
     return (
         <Fragment>
@@ -27,9 +32,31 @@ function Owner(props) {
                             parentId={parentId}/>
             <Field name='owner'
                    operators={operators}
-                   id={build(parentId, ids.owner)}
-                   component={ReduxTextField}/>
+                   presenter={presenter}
+                   parentId={parentId}
+                   component={renderSubjectSearch}/>
         </Fragment>
+    )
+}
+
+function renderSubjectSearch(props) {
+    let {
+        presenter,
+        input,
+        parentId
+    } = props;
+
+    let collaborator = input.value;
+
+    return (
+        <Grid item>
+            <SubjectSearchField presenter={presenter}
+                                parentId={parentId}
+                                onSelect={(collaborator) => input.onChange(collaborator)}/>
+            {collaborator && <UserPanel users={collaborator ? [collaborator] : null}
+                                        id={build(parentId, ids.userList)}
+                                        onDelete={() => input.onChange(null)}/>}
+        </Grid>
     )
 }
 

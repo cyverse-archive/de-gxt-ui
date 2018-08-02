@@ -44,7 +44,7 @@ public class DataSearchQueryBuilder {
     public static final String PERMISSIONS = "permissions";
     public static final String PERMISSION = "permission";
     public static final String PERMISSION_RECURSE = "permission_recurse";
-    public static final String SHARED_WITH = "users";
+    public static final String USERS = "users";
     //Tag
     public static final String TAG = "tag";
     public static final String TAGS = "tags";
@@ -120,6 +120,12 @@ public class DataSearchQueryBuilder {
                 case TAG:
                     tags(child);
                     break;
+                case OWNER:
+                    owner(child);
+                    break;
+                case PERMISSIONS:
+                    permissions(child);
+                    break;
             }
             boolean negated = isNegated(getArgs(child));
             if (negated) {
@@ -169,6 +175,40 @@ public class DataSearchQueryBuilder {
             Splittable tagIds = tagToString(tags);
             assignKeyValue(args, TAGS, tagIds);
         }
+    }
+
+    /**
+     * {"type": "owner", "args": {"owner": "some_user_name"]}
+     */
+    public void owner(Splittable child) {
+        Splittable args = getArgs(child);
+        if (args != null && !args.isNull(OWNER)) {
+            Splittable owner = args.get(OWNER);
+            Splittable userName = owner.get("id");
+            assignKeyValue(args, OWNER, userName);
+        }
+    }
+
+    /**
+     * {"type": "permissions", "args": {"users": ["userName1", "username2"]]}
+     */
+    public void permissions(Splittable child) {
+        Splittable args = getArgs(child);
+        if (args != null && !args.isNull(USERS)) {
+            Splittable users = args.get(USERS);
+            Splittable ids = subjectListToIdList(users);
+            assignKeyValue(args, USERS, ids);
+        }
+    }
+
+    private Splittable subjectListToIdList(Splittable subjects) {
+        Splittable ids = StringQuoter.createIndexed();
+        for (int i = 0 ; i < subjects.size() ; i++) {
+            Splittable id = subjects.get(i).get("id");
+            id.assign(ids, ids.size());
+        }
+
+        return ids;
     }
 
     private Splittable tagToString(Splittable tags) {
