@@ -5,6 +5,10 @@ const style = theme => ({
             background: theme.palette.action.hover,
             cursor: 'pointer'
         }
+    },
+
+    searchIcon: {
+        margin: '0px 2px 0px 2px',
     }
 });
 

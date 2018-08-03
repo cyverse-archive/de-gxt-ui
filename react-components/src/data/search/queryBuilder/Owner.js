@@ -62,6 +62,7 @@ function renderSubjectSearch(props) {
                                 onSelect={(collaborator) => input.onChange(collaborator)}/>
             {collaborator && <UserPanel users={collaborator ? [collaborator] : null}
                                         id={build(parentId, ids.userList)}
+                                        collaboratorsUtil={collaboratorsUtil}
                                         onDelete={() => input.onChange(null)}/>}
         </Grid>
     )

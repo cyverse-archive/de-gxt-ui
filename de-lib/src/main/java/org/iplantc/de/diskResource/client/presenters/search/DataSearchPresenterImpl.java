@@ -9,6 +9,7 @@ import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.client.services.TagsServiceFacade;
 import org.iplantc.de.client.services.callbacks.ReactCallback;
 import org.iplantc.de.client.util.SearchModelUtils;
+import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -63,6 +64,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     final List<DiskResourceQueryTemplate> queryTemplates = Lists.newArrayList();
     List<DiskResourceQueryTemplate> cleanCopyQueryTemplates = Lists.newArrayList();
     private CollaboratorsServiceFacade collaboratorsServiceFacade;
+    private CollaboratorsUtil collaboratorsUtil;
     private final IplantAnnouncer announcer;
     private SearchView.SearchViewAppearance appearance;
     private TagsView.TagSuggestionProxy proxy;
@@ -78,6 +80,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     @Inject
     DataSearchPresenterImpl(final SearchServiceFacade searchService,
                             final CollaboratorsServiceFacade collaboratorsServiceFacade,
+                            CollaboratorsUtil collaboratorsUtil,
                             final IplantAnnouncer announcer,
                             SearchView.SearchViewAppearance appearance,
                             SearchView view,
@@ -87,6 +90,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
                             SearchModelUtils searchModelUtils) {
         this.searchService = searchService;
         this.collaboratorsServiceFacade = collaboratorsServiceFacade;
+        this.collaboratorsUtil = collaboratorsUtil;
         this.announcer = announcer;
         this.appearance = appearance;
         this.view = view;
@@ -374,21 +378,15 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
             @Override
             public void onSuccess(List<Subject> result) {
                 if (collaboratorCallback != null) {
-                    Splittable data = listToSplittable(result);
+                    Splittable data = StringQuoter.createIndexed();
+                    result.forEach(subject -> {
+                        Splittable splSubject = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(subject));
+                        splSubject.assign(data, data.size());
+                    });
                     collaboratorCallback.onSuccess(data);
                 }
             }
         });
-    }
-
-    Splittable listToSplittable(List<Subject> subjects) {
-        Splittable splSubjects = StringQuoter.createIndexed();
-        subjects.forEach(subject -> {
-            Splittable splSubject = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(subject));
-            splSubject.assign(splSubjects, splSubjects.size());
-        });
-
-        return splSubjects;
     }
 
     @Override
@@ -431,6 +429,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
         props.presenter = this;
         props.parentId = DiskResourceModule.Ids.SEARCH_FORM;
         props.initialValues = searchModelUtils.createDefaultFilter();
+        props.collaboratorsUtil = collaboratorsUtil;
 
         return props;
     }

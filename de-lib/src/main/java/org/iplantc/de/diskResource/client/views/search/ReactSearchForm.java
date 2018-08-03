@@ -1,5 +1,6 @@
 package org.iplantc.de.diskResource.client.views.search;
 
+import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.diskResource.client.SearchView;
 
 import com.google.web.bindery.autobean.shared.Splittable;
@@ -21,5 +22,6 @@ public class ReactSearchForm {
         public SearchView.Presenter presenter;
         public String parentId;
         public Splittable initialValues;
+        public CollaboratorsUtil collaboratorsUtil;
     }
 }

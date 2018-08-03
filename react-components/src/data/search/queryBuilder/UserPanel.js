@@ -17,6 +17,7 @@ function UserPanel(props) {
         users,
         onDelete,
         classes,
+        collaboratorsUtil,
         id
     } = props;
     let chips = users && users.map((user, index) =>
@@ -26,7 +27,7 @@ function UserPanel(props) {
                   id={user.id}
                   className={classes.userChip}
                   onDelete={() => onDelete(index)}
-                  label={user.name}/>
+                  label={collaboratorsUtil.getSubjectDisplayName(user)}/>
         </Tooltip>
     );
 
@@ -42,6 +43,11 @@ UserPanel.propTypes = {
     users: PropTypes.array.isRequired,
     onDelete: PropTypes.func.isRequired,
     id: PropTypes.string.isRequired,
+    collaboratorsUtil: PropTypes.shape({
+        isTeam: PropTypes.func,
+        isCollaboratorList: PropTypes.func,
+        getSubjectDisplayName: PropTypes.func
+    })
 };
 
 export default withStyles(styles)(UserPanel);

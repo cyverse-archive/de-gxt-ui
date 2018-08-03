@@ -76,6 +76,11 @@ QueryBuilder.propTypes = {
         searchCollaborators: PropTypes.func.isRequired,
     }),
     parentId: PropTypes.string.isRequired,
+    collaboratorsUtil: PropTypes.shape({
+        isTeam: PropTypes.func,
+        isCollaboratorList: PropTypes.func,
+        getSubjectDisplayName: PropTypes.func
+    })
 };
 
 function renderSaveSearchBtn(props) {

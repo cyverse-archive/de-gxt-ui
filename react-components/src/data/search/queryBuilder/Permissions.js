@@ -46,7 +46,8 @@ function Permissions(props) {
         parentId,
         classes,
         helperProps: {
-            presenter
+            presenter,
+            collaboratorsUtil
         }
     } = props;
 
@@ -95,6 +96,7 @@ function renderSelect(props) {
 function renderSubjectSearch(props) {
     let {
         presenter,
+        collaboratorsUtil,
         fields,
         parentId,
         classes
@@ -105,10 +107,12 @@ function renderSubjectSearch(props) {
     return (
         <Grid item className={classes.autocompleteField}>
             <SubjectSearchField presenter={presenter}
+                                collaboratorsUtil={collaboratorsUtil}
                                 parentId={parentId}
                                 onSelect={(collaborator) => fields.push(collaborator)}/>
             {users && users.length > 0 && <UserPanel users={users}
                                            id={build(parentId, ids.userList)}
+                                           collaboratorsUtil={collaboratorsUtil}
                                            onDelete={fields.remove}/>}
         </Grid>
     )
