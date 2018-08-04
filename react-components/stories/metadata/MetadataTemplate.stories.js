@@ -596,9 +596,9 @@ const dataciteMetadataTemplate = {
         },
         {
             "name": "geoLocation",
-            "description": "The spatial limits of a place. Only sub-attribute values are used.",
+            "description": "The spatial limits or description of a geographic location.",
             "required": false,
-            "type": "String",
+            "type": "Grouping",
             "attributes": [
                 {
                     "id": "9089c956-741c-11e8-ad87-008cfa5ae621",
@@ -608,42 +608,56 @@ const dataciteMetadataTemplate = {
                     "type": "String"
                 },
                 {
-                    "id": "2a26dcd2-741a-11e8-ad87-008cfa5ae621",
-                    "name": "pointLongitude",
-                    "description": "A longitude point location in space.",
-                    "required": false,
-                    "type": "Number"
+                    "name": "geoLocationPoint",
+                    "description": "A point location in space. A point contains a single latitude-longitude pair.",
+                    "type": "Grouping",
+                    "attributes": [
+                        {
+                            "id": "2a26dcd2-741a-11e8-ad87-008cfa5ae621",
+                            "name": "pointLongitude",
+                            "description": "A longitude point location in space.",
+                            "required": false,
+                            "type": "Number"
+                        },
+                        {
+                            "name": "pointLatitude",
+                            "description": "A latitude point location in space.",
+                            "required": false,
+                            "type": "Number"
+                        }
+                    ]
                 },
                 {
-                    "name": "pointLatitude",
-                    "description": "A latitude point location in space.",
-                    "required": false,
-                    "type": "Number"
-                },
-                {
-                    "id": "b289d436-7419-11e8-ad87-008cfa5ae621",
-                    "name": "northBoundLatitude",
-                    "description": "The north bound of a spatial limit of a place.",
-                    "required": false,
-                    "type": "Number"
-                },
-                {
-                    "name": "southBoundLatitude",
-                    "description": "The south bound of a spatial limit of a place.",
-                    "required": false,
-                    "type": "Number"
-                },
-                {
-                    "name": "eastBoundLongitude",
-                    "description": "The east bound of a spatial limit of a place.",
-                    "required": false,
-                    "type": "Number"
-                },
-                {
-                    "name": "westBoundLongitude",
-                    "description": "The west bound of a spatial limit of a place.",
-                    "required": false,
-                    "type": "Number"
+                    "name": "geoLocationBox",
+                    "description": "The spatial limits of a place. A box contains two latitude-longitude pairs (opposite corners of the box).",
+                    "type": "Grouping",
+                    "attributes": [
+                        {
+                            "id": "b289d436-7419-11e8-ad87-008cfa5ae621",
+                            "name": "northBoundLatitude",
+                            "description": "The north bound of a spatial limit of a place.",
+                            "required": false,
+                            "type": "Number"
+                        },
+                        {
+                            "name": "southBoundLatitude",
+                            "description": "The south bound of a spatial limit of a place.",
+                            "required": false,
+                            "type": "Number"
+                        },
+                        {
+                            "name": "eastBoundLongitude",
+                            "description": "The east bound of a spatial limit of a place.",
+                            "required": false,
+                            "type": "Number"
+                        },
+                        {
+                            "name": "westBoundLongitude",
+                            "description": "The west bound of a spatial limit of a place.",
+                            "required": false,
+                            "type": "Number"
+                        }
+                    ]
                 }
             ]
         },

@@ -47,6 +47,7 @@ const AttributeTypes = [
     "Enum",
     "OLS Ontology Term",
     "UAT Ontology Term",
+    "Grouping",
 ];
 
 const AttributeTypeMenuItems = AttributeTypes.map((type, index) => (<MenuItem key={index} value={type}>{type}</MenuItem>));
