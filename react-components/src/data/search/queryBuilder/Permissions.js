@@ -44,6 +44,7 @@ function Permissions(props) {
 
     let {
         parentId,
+        classes,
         helperProps: {
             presenter
         }
@@ -59,6 +60,8 @@ function Permissions(props) {
                    component={renderSelect}/>
             <FieldArray name='users'
                         presenter={presenter}
+                        classes={classes}
+                        collaboratorsUtil={collaboratorsUtil}
                         parentId={parentId}
                         component={renderSubjectSearch}/>
         </Fragment>
@@ -93,15 +96,18 @@ function renderSubjectSearch(props) {
     let {
         presenter,
         fields,
-        parentId
+        parentId,
+        classes
     } = props;
 
+    let users = fields.getAll();
+
     return (
-        <Grid item>
+        <Grid item className={classes.autocompleteField}>
             <SubjectSearchField presenter={presenter}
                                 parentId={parentId}
                                 onSelect={(collaborator) => fields.push(collaborator)}/>
-            {fields.getAll() && <UserPanel users={fields.getAll()}
+            {users && users.length > 0 && <UserPanel users={users}
                                            id={build(parentId, ids.userList)}
                                            onDelete={fields.remove}/>}
         </Grid>

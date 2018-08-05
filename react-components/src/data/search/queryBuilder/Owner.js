@@ -3,11 +3,11 @@ import ids from "../ids";
 import { options } from "./Operators";
 import SelectOperator from "./SelectOperator";
 import SubjectSearchField from "../../../collaborators/SubjectSearchField";
+import UserPanel from "./UserPanel";
 
 import { Field } from 'redux-form';
 import React, { Fragment } from 'react';
 import Grid from "@material-ui/core/Grid";
-import UserPanel from "./UserPanel";
 
 /**
  * A component which allows users to specify an owner in QueryBuilder
@@ -22,7 +22,9 @@ function Owner(props) {
     let {
         parentId,
         helperProps: {
-            presenter
+            presenter,
+            collaboratorsUtil,
+            classes
         }
     } = props;
 
@@ -33,6 +35,8 @@ function Owner(props) {
             <Field name='owner'
                    operators={operators}
                    presenter={presenter}
+                   collaboratorsUtil={collaboratorsUtil}
+                   classes={classes}
                    parentId={parentId}
                    component={renderSubjectSearch}/>
         </Fragment>
@@ -42,15 +46,18 @@ function Owner(props) {
 function renderSubjectSearch(props) {
     let {
         presenter,
+        collaboratorsUtil,
         input,
-        parentId
+        parentId,
+        classes
     } = props;
 
     let collaborator = input.value;
 
     return (
-        <Grid item>
+        <Grid item className={classes.autocompleteField}>
             <SubjectSearchField presenter={presenter}
+                                collaboratorsUtil={collaboratorsUtil}
                                 parentId={parentId}
                                 onSelect={(collaborator) => input.onChange(collaborator)}/>
             {collaborator && <UserPanel users={collaborator ? [collaborator] : null}

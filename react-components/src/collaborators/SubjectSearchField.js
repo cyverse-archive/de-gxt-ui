@@ -31,10 +31,9 @@ class SubjectSearchField extends Component {
     getSubjects(input, callback) {
         if (input.length > 2) {
             this.props.presenter.searchCollaborators(input, (data) => {
-                callback(null, {options: data})
+                callback(data);
             });
-        } else {
-            callback(null, null);
+            callback(null);
         }
     }
 
@@ -53,7 +52,7 @@ class SubjectSearchField extends Component {
                               placeholder={getMessage("searchHelpText")}
                               filterOptions={(options) => {
                                   // Do no filtering, just return all options
-                                  return options;
+                                  return true;
                               }}
                               loadOptions={this.getSubjects}
                               onChange={onSelect}/>
@@ -62,34 +61,34 @@ class SubjectSearchField extends Component {
     }
 }
 
-class Option extends React.Component {
-    handleClick = event => {
-        this.props.onSelect(this.props.option, event);
-    };
-
-    render() {
-        let {
-            option,
-            isFocused,
-            onFocus,
-            inputValue,
-            classes
-        } = this.props;
-
-        return (
-            <Fragment>
-                <Paper className={classes.searchField}
-                       onFocus={onFocus}
-                       selected={isFocused}
-                       onClick={this.handleClick}
-                       component="div"
-                       elevation={1}>
-                    {getOptionBody(inputValue, option)}
-                </Paper>
-                <Divider/>
-            </Fragment>
-        );
-    }
+function Option(props) {
+    let {
+        data,
+        isFocused,
+        innerProps,
+        innerRef,
+        onFocus,
+        selectProps: {
+            inputValue
+        },
+        classes,
+        collaboratorsUtil
+    } = props;
+    
+    return (
+        <Fragment>
+            <Paper className={classes.searchField}
+                   innerRef={innerRef}
+                   onFocus={onFocus}
+                   selected={isFocused}
+                   component="div"
+                   elevation={1}
+                   {...innerProps}>
+                {getOptionBody(collaboratorsUtil, inputValue, data)}
+            </Paper>
+            <Divider/>
+        </Fragment>
+    );
 }
 
 function getOptionBody(searchTerm, option) {

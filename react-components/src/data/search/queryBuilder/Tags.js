@@ -19,7 +19,8 @@ function Tags(props) {
         parentId,
         helperProps: {
             array,
-            presenter
+            presenter,
+            classes
         }
     } = props;
 
@@ -30,6 +31,7 @@ function Tags(props) {
                    parentId={parentId}
                    placeholder={''}
                    array={array}
+                   classes={classes}
                    presenter={presenter}
                    component={renderTagSearchField}/>
         </Fragment>
@@ -42,10 +44,11 @@ function renderTagSearchField(props) {
         array,
         parentId,
         placeholder,
-        presenter
+        presenter,
+        classes
     } = props;
     return (
-        <Grid item>
+        <Grid item className={classes.autocompleteField}>
             <SearchFormTagPanel parentId={parentId}
                                 placeholder={placeholder}
                                 presenter={presenter}

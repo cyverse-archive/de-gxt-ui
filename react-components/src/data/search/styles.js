@@ -36,4 +36,13 @@ export default {
     userChip: {
         margin: '2px',
     },
+
+    autocompleteField: {
+        flexGrow: 1,
+        flexBasis: '200px'
+    },
+
+    errorField: {
+        color: 'red'
+    }
 };
