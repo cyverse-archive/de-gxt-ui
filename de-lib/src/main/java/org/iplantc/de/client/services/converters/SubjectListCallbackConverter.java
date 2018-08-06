@@ -4,6 +4,7 @@ import org.iplantc.de.client.models.collaborators.CollaboratorAutoBeanFactory;
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.collaborators.SubjectList;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.collaborators.client.SubjectSortComparator;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -28,6 +29,7 @@ public class SubjectListCallbackConverter extends AsyncCallbackConverter<String,
     protected List<Subject> convertFrom(String object) {
         AutoBean<SubjectList> decode = AutoBeanCodex.decode(factory, SubjectList.class, object);
         List<Subject> subjects = decode.as().getSubjects();
+        subjects.sort(new SubjectSortComparator());
         return getFilteredResults(subjects);
     }
 
