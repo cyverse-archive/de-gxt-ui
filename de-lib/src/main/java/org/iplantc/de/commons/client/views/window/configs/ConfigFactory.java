@@ -28,19 +28,19 @@ public class ConfigFactory {
 
     public static AboutWindowConfig aboutWindowConfig() {
         AutoBean<AboutWindowConfig> awc = applyWindowType(WindowType.ABOUT, factory.aboutWindowConfig());
-        applyTag("About-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),awc);
+        applyTag("About", awc);
         return awc.as();
     }
 
     public static AnalysisWindowConfig analysisWindowConfig() {
         AutoBean<AnalysisWindowConfig> awc = applyWindowType(WindowType.ANALYSES, factory.analysisWindowConfig());
-        applyTag("Analysis-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),awc);
+        applyTag("Analysis", awc);
         return awc.as();
     }
 
     public static CollaborationWindowConfig collaborationWindowConfig() {
         AutoBean<CollaborationWindowConfig> collabWindowConfig = applyWindowType(WindowType.COLLABORATION, factory.collaborationWindowConfig());
-        applyTag("Collab-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),collabWindowConfig);
+        applyTag("Collab", collabWindowConfig);
         return collabWindowConfig.as();
     }
 
@@ -65,7 +65,7 @@ public class ConfigFactory {
 
     public static AppsWindowConfig appsWindowConfig() {
         AutoBean<AppsWindowConfig> awc = applyWindowType(WindowType.APPS, factory.appsWindowConfig());
-        applyTag("Apps-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),awc);
+        applyTag("Apps", awc);
         return awc.as();
     }
 
@@ -288,7 +288,7 @@ public class ConfigFactory {
     public static ManageToolsWindowConfig manageToolsWindowConfig() {
         AutoBean<ManageToolsWindowConfig> mtwc =
                 applyWindowType(WindowType.MANAGETOOLS, factory.manageToolsWindowConfig());
-        applyTag("manageTools-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),
+        applyTag("manageTools",
                  mtwc);
         return mtwc.as();
     }
