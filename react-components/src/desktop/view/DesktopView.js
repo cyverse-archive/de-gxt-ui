@@ -150,7 +150,12 @@ class DesktopView extends Component {
         if (push_msg.total) {
             this.setState({unSeenCount: push_msg.total});
         }
+
         let message = push_msg.message;
+        let category = message.type;
+        if (category === "team") {
+            message.message.text = message.message.text + message.payload.team_name;  // attach team name to team notifications.
+        }
         if (message) {
             let notifyQueue = this.state.notifications;
             if(notifyQueue.messages) {
@@ -160,13 +165,12 @@ class DesktopView extends Component {
                 notifyQueue.messages.push(message)
             }
             this.setState({notifications: notifyQueue});
-            this.displayNotification(message);
+            this.displayNotification(message, category);
         }
     }
 
-    displayNotification(notification) {
+    displayNotification(notification, category) {
         let displayText = notification.message.text;
-        let category = notification.type;
         let analysisStatus = (notification.type==="analysis")? notification.payload.status : "";
         this.props.presenter.displayNotificationPopup(displayText, category, analysisStatus);
     }
