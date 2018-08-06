@@ -4,16 +4,12 @@ import cyverseHeader from "../resources/images/cyverse_icon_white.png";
 import color from "../util/CyVersePalette";
 
 export default {
-    '@global': {
-        body: {
-            position: 'fixed',
-            top: 0,
-            bottom: 0,
-            right: 0,
-            left: 0,
-            fontFamily: "Texta",
-            src: "url('../Texta_Font/Texta-Black.otf'), url('../Texta_Font/Texta-Bold.otf'), url('../Texta_Font/Texta-Regular.otf'), url('../Texta_Font/Texta-Italic.otf') ",
-        }
+    '@global body': {
+        position: 'fixed',
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
     },
     desktop: {
         backgroundImage: `url(${desktopBcg})`,
