@@ -3,6 +3,7 @@ import ids from "../ids";
 import { options } from "./Operators";
 import ReduxTextField from "./ReduxTextField";
 import SelectOperator from "./SelectOperator";
+import Validations from "./Validations";
 
 import { Field } from "redux-form";
 import React, { Fragment } from "react";
@@ -25,6 +26,7 @@ function Path(props) {
             <Field name='prefix'
                    operators={operators}
                    id={build(parentId, ids.path)}
+                   validate={Validations.nonEmptyField}
                    component={ReduxTextField}/>
         </Fragment>
     )

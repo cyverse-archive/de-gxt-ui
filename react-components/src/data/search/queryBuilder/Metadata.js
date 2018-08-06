@@ -27,11 +27,13 @@ function Metadata(props) {
                    helperText={getMessage('attribute')}
                    operators={operators}
                    id={build(parentId, ids.metadataAttr)}
+                   validate={[]}
                    component={ReduxTextField}/>
             <Field name='value'
                    helperText={getMessage('value')}
                    operators={operators}
                    id={build(parentId, ids.metadataVal)}
+                   validate={[]}
                    component={ReduxTextField}/>
         </Fragment>
     )

@@ -38,6 +38,7 @@ function Owner(props) {
                    collaboratorsUtil={collaboratorsUtil}
                    classes={classes}
                    parentId={parentId}
+                   validate={[]}
                    component={renderSubjectSearch}/>
         </Fragment>
     )
@@ -49,7 +50,8 @@ function renderSubjectSearch(props) {
         collaboratorsUtil,
         input,
         parentId,
-        classes
+        classes,
+        meta
     } = props;
 
     let collaborator = input.value;

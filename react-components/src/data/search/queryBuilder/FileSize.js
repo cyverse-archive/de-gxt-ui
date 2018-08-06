@@ -4,6 +4,7 @@ import ids from "../ids";
 import { options } from "./Operators";
 import ReduxTextField from "./ReduxTextField";
 import SelectOperator from "./SelectOperator";
+import Validations from "./Validations";
 
 import { Field } from "redux-form";
 import Grid from "@material-ui/core/Grid";
@@ -39,6 +40,7 @@ function FileSize(props) {
                    min='0'
                    helperText={getMessage('fileSizeGreater')}
                    id={build(parentId, ids.fileSizeGreaterVal)}
+                   validate={Validations.minValue}
                    component={ReduxTextField}/>
             <Field name='from.unit'
                    id={build(parentId, ids.fileSizeGreaterUnit)}
@@ -52,6 +54,7 @@ function FileSize(props) {
                    min='0'
                    helperText={getMessage('fileSizeLessThan')}
                    id={build(parentId, ids.fileSizeLessThanVal)}
+                   validate={Validations.minValue}
                    component={ReduxTextField}/>
             <Field name='to.unit'
                    id={build(parentId, ids.fileSizeLessThanUnit)}

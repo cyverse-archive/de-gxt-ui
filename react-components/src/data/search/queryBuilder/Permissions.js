@@ -64,6 +64,7 @@ function Permissions(props) {
                         classes={classes}
                         collaboratorsUtil={collaboratorsUtil}
                         parentId={parentId}
+                        validate={[]}
                         component={renderSubjectSearch}/>
         </Fragment>
     )

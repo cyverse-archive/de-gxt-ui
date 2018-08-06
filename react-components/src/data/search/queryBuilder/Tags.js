@@ -33,6 +33,7 @@ function Tags(props) {
                    array={array}
                    classes={classes}
                    presenter={presenter}
+                   validate={[]}
                    component={renderTagSearchField}/>
         </Fragment>
     )

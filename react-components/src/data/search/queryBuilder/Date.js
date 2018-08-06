@@ -28,11 +28,13 @@ function Date(props) {
                    type='date'
                    helperText={getMessage('startDate')}
                    id={build(parentId, ids.fromDate)}
+                   validate={[]}
                    component={ReduxTextField}/>
             <Field name='to'
                    type='date'
                    helperText={getMessage('endDate')}
                    id={build(parentId, ids.toDate)}
+                   validate={[]}
                    component={ReduxTextField}/>
         </Fragment>
     )

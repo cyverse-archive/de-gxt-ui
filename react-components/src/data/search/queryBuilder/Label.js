@@ -3,6 +3,7 @@ import ids from "../ids";
 import { options } from "./Operators";
 import ReduxTextField from "./ReduxTextField";
 import SelectOperator from "./SelectOperator";
+import Validations from "./Validations";
 
 import { Field } from "redux-form";
 import React, { Fragment } from "react";
@@ -26,6 +27,7 @@ function Label(props) {
                             parentId={parentId}/>
             <Field name='label'
                    id={build(parentId, ids.fileName)}
+                   validate={Validations.nonEmptyField}
                    operators={operators}
                    component={ReduxTextField}/>
         </Fragment>

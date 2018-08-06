@@ -1,3 +1,5 @@
+import Validations from "./Validations";
+
 import Grid from "@material-ui/core/Grid";
 import React from "react";
 import TextField from "@material-ui/core/TextField";
@@ -9,18 +11,19 @@ function ReduxTextField(props) {
     let {
         input,
         label,
-        meta: {error},
+        meta,
         ...custom
     } = props;
 
     return (
         <Grid item>
             <TextField
-                label={error ? error : label}
+                label={label}
                 fullWidth={true}
                 {...input}
                 {...custom}
             />
+            <Validations.errorField {...meta}/>
         </Grid>
     )
 }
