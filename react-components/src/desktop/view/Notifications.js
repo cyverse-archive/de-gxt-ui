@@ -78,10 +78,11 @@ function Notification(props) {
     }
 
     return (
-        <span key={notification.message.id} style={{outline: 'none'}}>
-                    <MenuItem id={notification.message.id}
-                              onClick={onClick}
-                              style={notificationStyle}>
+        <span style={{outline: 'none'}}>
+                    <MenuItem
+                        id={notification.message.id}
+                        onClick={onClick}
+                        style={notificationStyle}>
                         {notification.message.text}
                         {notification.payload.access_url &&
                         <InteractiveAnalysisUrl notification={notification}/>
@@ -181,7 +182,8 @@ class Notifications extends Component {
                                     (messages.length > 0) ?
                                         messages.map(n => {
                                             return (
-                                                <Notification notification={n}
+                                                <Notification key={n.message.id}
+                                                              notification={n}
                                                               onClick={this.onMenuItemSelect}/>
                                             )
                                         }).reverse() : (

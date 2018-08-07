@@ -428,6 +428,7 @@ class DesktopViewTest extends  Component {
             doMarkAllSeen: () => logger("Mark all as seen"),
             onTaskButtonClicked: () => logger("Task Button Clicked"),
             onNotificationSelected: () => logger("Notification Selected"),
+            onPreferencesClick: () => logger("Preferences Clicked"),
         };
         return (
             <DesktopView presenter={presenter} windowConfigList={windowConfigs}/>

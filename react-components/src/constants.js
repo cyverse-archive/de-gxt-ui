@@ -5,5 +5,6 @@ export default ({
     WSS_PROTOCOL: "wss://",
     CYVERSE_DE: "CyVerse Discovery Environment",
     DE: "Discovery Environment",
+    NEW_NOTIFICATIONS_LIMIT: 10,
 });
 

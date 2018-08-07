@@ -22,7 +22,6 @@ class UserMenu extends Component {
             anchorEl: null,
         };
         this.onUserMenuClick = this.onUserMenuClick.bind(this);
-        this.onMenuItemSelect = this.onMenuItemSelect.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.userBtn = React.createRef();
     }
@@ -41,80 +40,51 @@ class UserMenu extends Component {
         this.setState({anchorEl: document.getElementById(this.props.anchor)});
     }
 
-    onMenuItemSelect(event) {
-        let id = event.currentTarget.id;
-        let presenter = this.props.presenter;
-        switch (id) {
-            case build(ids.DESKTOP, ids.PREFERENCES_LINK):
-                presenter.onPreferencesClick();
-                break;
-            case build(ids.DESKTOP, ids.COLLABORATORS_LINK):
-                presenter.onCollaboratorsClick();
-                break;
-
-            case build(ids.DESKTOP, ids.USER_MANUAL_LINK):
-                presenter.onDocumentationClick();
-                break;
-
-            case build(ids.DESKTOP, ids.INTRO_LINK):
-                this.doIntro();
-                break;
-            case build(ids.DESKTOP, ids.ABOUT_LINK):
-                presenter.onAboutClick();
-                break;
-
-            case build(ids.DESKTOP, ids.LOGOUT_LINK):
-                presenter.doLogout(false);
-                break;
-            default:
-                break; //do nothing
-        }
-    }
-
     render() {
         const {anchorEl} = this.state;
-        const classes = this.props.classes;
+        const {classes, presenter, doIntro} = this.props;
         return (
             <span>
-                    <img className={classes.menuIcon}
-                         src={userImg}
-                         alt="User Menu"
-                         onClick={this.onUserMenuClick}
-                         ref={this.userBtn}>
-                    </img>
+                <img className={classes.menuIcon}
+                     src={userImg}
+                     alt="User Menu"
+                     onClick={this.onUserMenuClick}
+                     ref={this.userBtn}>
+                </img>
                 <Menu id={build(ids.DESKTOP, ids.USER_PREF_MENU)}
                       anchorEl={anchorEl}
                       open={Boolean(anchorEl)}
                       onClose={this.handleClose}>
                     <MenuItem id={build(ids.DESKTOP, ids.PREFERENCES_LINK)}
-                              onClick={this.onMenuItemSelect}>
+                              onClick={() => presenter.onPreferencesClick()}>
                         <DEHyperlink text={getMessage("preferences")}
                                      onClick={this.handleClose}/>
                     </MenuItem>
                     <MenuItem id={build(ids.DESKTOP, ids.COLLABORATORS_LINK)}
-                              onClick={this.onMenuItemSelect}>
+                              onClick={() => presenter.onCollaboratorsClick()}>
                         <DEHyperlink text={getMessage("collaboration")}
                                      onClick={this.handleClose}/>
                     </MenuItem>
                       <Divider />
                     <MenuItem id={build(ids.DESKTOP, ids.USER_MANUAL_LINK)}
-                              onClick={this.onMenuItemSelect}>
+                              onClick={() => presenter.onDocumentationClick()}>
                         <DEHyperlink text={getMessage("documentation")}
                                      onClick={this.handleClose}/>
                     </MenuItem>
-                    <MenuItem id={build(ids.DESKTOP, ids.INTRO_LINK)}
-                              onClick={this.props.doIntro}>
+                     <MenuItem id={build(ids.DESKTOP, ids.INTRO_LINK)}
+                               onClick={doIntro}>
                         <DEHyperlink text={getMessage("introduction")}
-                                     onClick={this.handleClose}/>
-                    </MenuItem>
+                                     onClick={this.handleClose}
+                        />
+                     </MenuItem>
                     <MenuItem id={build(ids.DESKTOP, ids.ABOUT_LINK)}
-                              onClick={this.onMenuItemSelect}>
+                              onClick={() => presenter.onAboutClick()}>
                         <DEHyperlink text={getMessage("about")}
                                      onClick={this.handleClose}/>
                     </MenuItem>
                      <Divider />
                     <MenuItem id={build(ids.DESKTOP, ids.LOGOUT_LINK)}
-                              onClick={this.onMenuItemSelect}>
+                              onClick={() => presenter.doLogout(false)}>
                         <DEHyperlink text={getMessage("logout")}
                                      onClick={this.handleClose}/>
                     </MenuItem>
