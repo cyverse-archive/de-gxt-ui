@@ -10,6 +10,7 @@ export default {
         bottom: 0,
         right: 0,
         left: 0,
+        overflow: 'hidden',
     },
     desktop: {
         backgroundImage: `url(${desktopBcg})`,
