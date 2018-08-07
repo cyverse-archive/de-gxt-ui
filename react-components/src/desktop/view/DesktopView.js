@@ -166,7 +166,11 @@ class DesktopView extends Component {
             }
             this.setState({notifications: notifyQueue});
             this.displayNotification(message, category);
+            if (notifyQueue.messages.length > constants.NEW_NOTIFICATIONS_LIMIT) { //max 10 notifications in notifications menu
+                notifyQueue.messages.shift();
+            }
         }
+
     }
 
     displayNotification(notification, category) {
