@@ -159,7 +159,7 @@ class Notifications extends Component {
                          alt="Notifications"
                          onClick={this.handleNotificationsClick}
                          ref={this.notificationBtn}></img>
-                {unSeenCount !== "0" &&
+                {unSeenCount !== 0 &&
                 <span id='notifyCount'
                       className={classes.unSeenCount}>
                         {unSeenCount}

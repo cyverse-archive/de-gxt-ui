@@ -28,7 +28,7 @@ class DesktopView extends Component {
         super(props);
         this.state = {
             windows: this.props.windowConfigList,
-            unSeenCount: "0",
+            unSeenCount: 0,
             notifications: {},
             notificationsError: false,
             notificationLoading: false,
@@ -80,7 +80,7 @@ class DesktopView extends Component {
         this.setState({notificationLoading: true});
         this.props.presenter.getNotifications((notifications) => {
             this.setState({
-                unSeenCount: notifications.unseen_total,
+                unSeenCount: parseInt(notifications.unseen_total, 10),
                 notifications: notifications,
                 notificationsError: false,
                 notificationLoading: false,
@@ -88,7 +88,7 @@ class DesktopView extends Component {
         }, (httpStatusCode, errMsg) => {
             this.setState({
                 notifications: {},
-                unSeenCount: "0",
+                unSeenCount: 0,
                 notificationsError: true,
                 notificationLoading: false
             });
@@ -97,6 +97,9 @@ class DesktopView extends Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({windows: nextProps.windowConfigList});
+        if (nextProps.unseen_count > -1 && nextProps.unseen_count !== this.state.unSeenCount) {
+            this.setState({unSeenCount: nextProps.unseen_count}); //if -1, do not update count;
+        }
         if(nextProps.isNewUser) {
             this.doIntro();
         }
@@ -129,7 +132,7 @@ class DesktopView extends Component {
             if(found) {
                 this.props.presenter.onNotificationSelected(found,(updatedUnSeenCount) => {
                     this.setState({
-                        unSeenCount:updatedUnSeenCount + "",
+                        unSeenCount: updatedUnSeenCount,
                     });
                     found.seen = true;
                 }, (httpStatusCode, errMsg) => {
@@ -200,7 +203,7 @@ class DesktopView extends Component {
     onMarkAllAsSeenClicked(shouldNotifyUser) {
         this.props.presenter.doMarkAllSeen(shouldNotifyUser, (updatedUnSeenCount) => {
             this.setState({
-                unSeenCount: updatedUnSeenCount + "",       //count is always string
+                unSeenCount: updatedUnSeenCount,
             });
            const {notifications} = this.state;
             notifications.messages.forEach(function (n) {

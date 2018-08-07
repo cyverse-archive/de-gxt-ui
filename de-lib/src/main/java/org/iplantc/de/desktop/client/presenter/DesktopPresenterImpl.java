@@ -189,7 +189,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
         this.loggedOut = false;
         this.view.setPresenter(this);
         this.view.renderView(windowConfigMap);
-        globalEventHandler.setPresenter(this, this.view);
+        globalEventHandler.setPresenter(this);
         windowEventHandler.setPresenter(this, desktopWindowManager);
         windowManager.addRegisterHandler(this);
         windowManager.addUnregisterHandler(this);
@@ -547,8 +547,13 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
     }
 
     @Override
+    public void updateNotificationCount(int unseeen_count) {
+      view.renderView(unseeen_count, windowConfigMap);
+    }
+
+    @Override
     public void onIntroClick() {
-        view.renderView(true, windowConfigMap);
+        view.renderView(true, -1, windowConfigMap);
     }
 
     @Override

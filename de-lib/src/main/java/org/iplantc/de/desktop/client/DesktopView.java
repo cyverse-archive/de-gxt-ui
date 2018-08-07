@@ -193,6 +193,9 @@ public interface DesktopView extends IsWidget {
 
         @SuppressWarnings("unusuable-by-js")
         void onTaskButtonClicked(Splittable windowConfig);
+
+        @JsIgnore
+        void updateNotificationCount(int count);
     }
 
     @JsType
@@ -241,7 +244,10 @@ public interface DesktopView extends IsWidget {
     void renderView(Map<Splittable, WindowBase> windowConfigMap);
 
     @JsIgnore
-    void renderView(boolean newUser, Map<Splittable, WindowBase> windowConfigMap);
+    void renderView(boolean newUser, int unseen_count, Map<Splittable, WindowBase> windowConfigMap);
+
+    @JsIgnore
+    public void renderView(int unseen_count, Map<Splittable, WindowBase> windowConfigMap);
 
     void onFeedbackBtnSelect();
 }

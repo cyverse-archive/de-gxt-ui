@@ -27,6 +27,7 @@ public class ReactDesktop {
         Splittable[] windowConfigList;
         String desktopContainerId;
         boolean isNewUser;
+        int unseen_count;
     }
 
 }
