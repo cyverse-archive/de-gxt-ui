@@ -134,6 +134,7 @@ class Notifications extends Component {
 
     onMenuItemSelect(event) {
         this.props.notificationClicked(event.currentTarget.id);
+        this.handleClose();
     }
 
     componentDidMount() {
