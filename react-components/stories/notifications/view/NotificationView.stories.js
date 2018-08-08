@@ -1004,7 +1004,7 @@ class NotificationViewTest extends Component {
 
         };
         return (
-            <NotificationView presenter={presenter} />
+            <NotificationView presenter={presenter} baseDebugId="notificationWindow"/>
         );
     }
 }

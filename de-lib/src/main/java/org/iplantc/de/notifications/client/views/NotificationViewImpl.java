@@ -24,14 +24,17 @@ public class NotificationViewImpl implements NotificationView {
 
     NotificationView.Presenter presenter;
 
+    String baseDebugId;
+
     @Inject
     public NotificationViewImpl() {
         panel = new HTMLPanel("<div></div>");
     }
 
     @Override
-    public void setPresenter(NotificationView.Presenter presenter) {
+    public void setPresenter(NotificationView.Presenter presenter, String baseDebugId) {
         this.presenter = presenter;
+        this.baseDebugId = baseDebugId;
     }
 
 
@@ -52,6 +55,7 @@ public class NotificationViewImpl implements NotificationView {
         Scheduler.get().scheduleFinally(() -> {
             ReactNotifications.NotificationsProps props = new ReactNotifications.NotificationsProps();
             props.presenter = presenter;
+            props.baseDebugId = baseDebugId;
             CyVerseReactComponents.render(ReactNotifications.notifiProps, props, panel.getElement());
 
         });

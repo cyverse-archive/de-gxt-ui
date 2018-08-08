@@ -39,7 +39,7 @@ public class NotificationWindow extends WindowBase {
                                               boolean isMaximizable) {
         super.show(windowConfig, tag, isMaximizable);
         NotifyWindowConfig notifyWindowConfig = (NotifyWindowConfig) windowConfig;
-        presenter.go(this);
+        presenter.go(this, DeModule.WindowIds.NOTIFICATION);
 /*        if (notifyWindowConfig != null) {
             presenter.filterBy(NotificationCategory.fromTypeString(notifyWindowConfig.getFilter()));
         }*/
@@ -82,5 +82,4 @@ public class NotificationWindow extends WindowBase {
                     height);
         }
     }
-
 }

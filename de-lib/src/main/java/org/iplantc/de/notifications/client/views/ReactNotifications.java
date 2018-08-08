@@ -21,7 +21,8 @@ public class ReactNotifications {
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     static class NotificationsProps extends BaseProps {
         NotificationView.Presenter presenter;
-
+        String baseDebugId;
     }
 }
+
 

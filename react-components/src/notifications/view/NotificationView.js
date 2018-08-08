@@ -22,9 +22,10 @@ import TablePaginationActions from "../../util/table/TablePaginationActions";
 import exStyles from "../style";
 import intlData from "../messages";
 import notificationCategory from "../model/notificationCategory";
+import ids from "../ids";
 
 const columnData = [
-    {name: "Category", numeric: false, enableSorting: false},
+    {name: "Category", numeric: false, enableSorting: false,},
     {name: "Message", numeric: false, enableSorting: false},
     {name: "Date", numeric: false, enableSorting: true},
 ];
@@ -203,14 +204,16 @@ class NotificationView extends Component {
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
     render() {
-        const {classes} = this.props;
+        const {classes, baseDebugId} = this.props;
         const {data, rowsPerPage, page, order, orderBy, selected, total} = this.state;
+        const baseId = baseDebugId + ids.NOTIFICATION_VIEW;
         return (
             <div className={classes.container}>
                 {this.state.loading &&
                 <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
                 }
-                <NotificationToolbar filter={this.state.filter}
+                <NotificationToolbar baseDebugId={baseDebugId}
+                                     filter={this.state.filter}
                                      onFilterChange={this.handleFilterChange}
                                      onRefreshClicked={this.handleRefreshClicked}
                                      markSeenDisabled={this.state.selected.length === 0 || this.shouldDisableMarkSeen()}
@@ -228,6 +231,8 @@ class NotificationView extends Component {
                             onRequestSort={this.handleRequestSort}
                             rowCount={total}
                             columnData={columnData}
+                            baseId={baseId}
+                            ids={ids}
                         />
                         <TableBody>
                             {data.map(n => {

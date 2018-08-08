@@ -18,10 +18,13 @@ import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
 import exStyles from "../style";
 import notificationCategory from "../model/notificationCategory";
+import build from "../../util/DebugIDUtil";
+import ids from "../ids";
 
 class NotificationToolbar extends Component {
     render() {
-        const {classes} = this.props;
+        const {classes, baseDebugId} = this.props;
+        const baseId = baseDebugId + ids.TOOLBAR;
         return (
             <Toolbar className={classes.toolbar}>
                 <ToolbarGroup>
@@ -33,7 +36,7 @@ class NotificationToolbar extends Component {
                                 onChange={this.props.onFilterChange}
                                 inputProps={{
                                     name: 'filter',
-                                    id: 'filter-simple',
+                                    id: build(baseId, ids.FILTER),
                                 }}>
                                 <MenuItem
                                     value={notificationCategory.new}>{notificationCategory.new}</MenuItem>
@@ -55,18 +58,21 @@ class NotificationToolbar extends Component {
                         </FormControl>
                     </form>
                     <ToolbarSeparator/>
-                    <Button variant="raised"
+                    <Button id={build(baseId, ids.REFRESH_BTN)}
+                            variant="raised"
                             size="small"
                             className={classes.toolbarButton}
                             onClick={this.props.onRefreshClicked}><RefreshIcon />{getMessage("refresh")}
                     </Button>
-                    <Button variant="raised"
+                    <Button id={build(baseId, ids.MARK_ALL_SEEN_BTN)}
+                            variant="raised"
                             size="small"
                             disabled={this.props.markSeenDisabled}
                             className={classes.toolbarButton}
                             onClick={this.props.onMarkSeenClicked}><CheckIcon />{getMessage("markSeen")}
                     </Button>
-                    <Button variant="raised"
+                    <Button id={build(baseId, ids.DELETE_BTN)}
+                            variant="raised"
                             size="small"
                             disabled={this.props.deleteDisabled}
                             onClick={this.props.onDeleteClicked}

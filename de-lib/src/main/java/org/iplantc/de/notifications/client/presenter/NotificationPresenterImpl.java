@@ -58,9 +58,9 @@ public class NotificationPresenterImpl implements NotificationView.Presenter {
         currentCategory = NotificationCategory.ALL;
     }
     @Override
-    public void go(HasOneWidget container) {
+    public void go(HasOneWidget container, String baseDebugId) {
         container.setWidget(view.asWidget());
-        view.setPresenter(this);
+        view.setPresenter(this, baseDebugId);
         view.loadNotifications();
     }
 

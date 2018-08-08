@@ -30,6 +30,8 @@ import CardHeader from "@material-ui/core/CardHeader";
 import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import privilegeType from "../../model/privilegeType";
+import build from "../../../util/DebugIDUtil";
+import ids from "../../ids";
 
 const styles = theme => ({
     paper: {
@@ -96,6 +98,7 @@ class JoinTeamRequestDialog extends Component {
         return (
             <React.Fragment>
                 <Dialog
+                    id={ids.JOIN_REQUEST_DLG}
                     open={dialogOpen}
                     onClose={this.props.handleJoinTeamRequestDialogClose}
                 >
@@ -141,9 +144,11 @@ class JoinTeamRequestDialog extends Component {
                                     this.setState({action: e.target.value})
                                 }}
                             >
-                                <FormControlLabel value={APPROVE} control={<Radio />}
+                                <FormControlLabel id={build(ids.JOIN_REQUEST_DLG, ids.APPROVE_BTN)}
+                                                  value={APPROVE} control={<Radio/>}
                                                   label={getMessage("approveBtnText")}/>
-                                <FormControlLabel value={DENY} control={<Radio />}
+                                <FormControlLabel id={build(ids.JOIN_REQUEST_DLG, ids.DENY_BTN)}
+                                                  value={DENY} control={<Radio/>}
                                                   label={getMessage("denyBtnText")}/>
                             </RadioGroup>
                         </FormControl>
@@ -214,10 +219,12 @@ class JoinTeamRequestDialog extends Component {
                         </div>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleOkClick} color="primary" autoFocus>
+                        <Button id={build(ids.JOIN_REQUEST_DLG, ids.OK_BTN)} onClick={this.handleOkClick}
+                                color="primary" autoFocus>
                             {getMessage("okBtnText")}
                         </Button>
-                        <Button onClick={this.handleCancelClick} color="primary" autoFocus>
+                        <Button id={build(ids.JOIN_REQUEST_DLG, ids.CANCEL_BTN)}
+                                onClick={this.handleCancelClick} color="primary" autoFocus>
                             {getMessage("cancelBtnText")}
                         </Button>
                     </DialogActions>
