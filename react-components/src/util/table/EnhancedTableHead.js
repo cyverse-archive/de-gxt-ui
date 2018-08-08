@@ -12,6 +12,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Tooltip from "@material-ui/core/Tooltip";
 import Color from "../CyVersePalette";
 import PropTypes from "prop-types";
+import build from "../../util/DebugIDUtil";
 
 class EnhancedTableHead extends React.Component {
     createSortHandler = property => event => {
@@ -54,6 +55,7 @@ class EnhancedTableHead extends React.Component {
                                     top: 0,
                                     color: Color.white,
                                 }}
+                                id={build(this.props.baseId, this.props.ids[column.name.toUpperCase()])}
                             >
                                 {column.enableSorting ? (
                                         <Tooltip
@@ -83,13 +85,18 @@ class EnhancedTableHead extends React.Component {
 }
 
 EnhancedTableHead.propTypes = {
-    selectable: PropTypes.bool.isRequired,
-    numSelected: PropTypes.number.isRequired,
-    onRequestSort: PropTypes.func.isRequired,
-    onSelectAllClick: PropTypes.func.isRequired,
-    order: PropTypes.string.isRequired,
-    orderBy: PropTypes.string.isRequired,
-    rowCount: PropTypes.number.isRequired,
+    selectable: PropTypes.bool,
+    numSelected: PropTypes.number,
+    onRequestSort: PropTypes.func,
+    onSelectAllClick: PropTypes.func,
+    order: PropTypes.string,
+    orderBy: PropTypes.string,
+    rowCount: PropTypes.number,
+    baseId: PropTypes.string.isRequired,
+    ids:  PropTypes.object.isRequired,
 };
 
+EnhancedTableHead.defaultProps = {
+    selectable: false,
+};
 export default EnhancedTableHead;
