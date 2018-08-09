@@ -28,6 +28,8 @@ export default {
         markAsDeleted: "Mark as Deleted?",
         moveDown: "Move Down",
         moveUp: "Move Up",
+        newAttrName: "New attribute { count }",
+        newValue: "New value { count }",
         no: "No",
         olsQueryParams: "Ontology Lookup Service Query Params",
         olsSettingAllChildrenOfHelpLabel: "Restrict searches to all children of a given term (subclassOf/is-a plus any hierarchical/transitive properties):",

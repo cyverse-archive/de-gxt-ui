@@ -6,7 +6,7 @@ import { Field, FieldArray, reduxForm } from "redux-form";
 import { injectIntl } from "react-intl";
 
 import build from "../../util/DebugIDUtil";
-import withI18N, { getMessage, formatMessage } from "../../util/I18NWrapper";
+import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 import withStoreProvider from "../../util/StoreProvider";
 import intlData from "../messages";
 import styles from "../style";

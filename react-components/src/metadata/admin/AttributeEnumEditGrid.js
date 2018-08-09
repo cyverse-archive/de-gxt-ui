@@ -6,7 +6,7 @@ import { Field } from "redux-form";
 import { injectIntl } from "react-intl";
 
 import build from "../../util/DebugIDUtil";
-import withI18N, { getMessage, formatMessage } from "../../util/I18NWrapper";
+import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 import intlData from "../messages";
 import styles from "../style";
 import ids from "./ids";
@@ -106,7 +106,7 @@ class AttributeEnumEditGrid extends Component {
         };
     }
 
-    newEnumValue = () => `New value ${this.newEnumCount++}`;
+    newEnumValue = () => formatMessage(this.props.intl, "newValue", {count: this.newEnumCount++});
 
     onAddEnum = () => {
         let value = this.newEnumValue();

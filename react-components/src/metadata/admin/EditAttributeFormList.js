@@ -6,16 +6,12 @@ import { Field, FieldArray, FormSection } from "redux-form";
 import { injectIntl } from "react-intl";
 
 import build from "../../util/DebugIDUtil";
-import withI18N, { getMessage, formatMessage } from "../../util/I18NWrapper";
+import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 import intlData from "../messages";
 import styles from "../style";
 import ids from "./ids";
 
-import {
-    FormCheckbox,
-    FormSelectField,
-    FormTextField,
-} from "../../util/FormField";
+import { FormCheckbox, FormSelectField, FormTextField } from "../../util/FormField";
 import AttributeEnumEditGrid from "./AttributeEnumEditGrid";
 import OntologyLookupServiceSettings from "./OntologyLookupServiceSettings";
 
@@ -251,15 +247,17 @@ class EditAttributeFormList extends Component {
         this.newAttrCount = 1;
     }
 
+    newAttrName = () => formatMessage(this.props.intl, "newAttrName", {count: this.newAttrCount++});
+
     onAddAttribute = () => {
         const fields = this.props.fields;
         const attributes = fields.getAll() || [];
 
-        let name = `New attribute ${this.newAttrCount++}`;
+        let name = this.newAttrName();
 
         const namesMatch = attr => (attr.name === name);
         while (attributes.findIndex(namesMatch) > -1) {
-            name = `New attribute ${this.newAttrCount++}`;
+            name = this.newAttrName();
         }
 
         fields.unshift({

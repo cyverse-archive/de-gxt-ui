@@ -6,7 +6,7 @@ import { Field } from "redux-form";
 import { injectIntl } from "react-intl";
 
 import build from "../../util/DebugIDUtil";
-import withI18N, { getMessage, formatMessage } from "../../util/I18NWrapper";
+import withI18N, { formatMessage, getMessage } from "../../util/I18NWrapper";
 import intlData from "../messages";
 import styles from "../style";
 import ids from "./ids";
@@ -80,7 +80,7 @@ class StringListEditor extends Component {
         };
     }
 
-    newValue = () => `New value ${this.newValueCount++}`;
+    newValue = () => formatMessage(this.props.intl, "newValue", {count: this.newValueCount++});
 
     onAddValue = () => {
         let value = this.newValue();
