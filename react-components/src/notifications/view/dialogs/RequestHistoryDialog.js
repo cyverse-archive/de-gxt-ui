@@ -23,6 +23,8 @@ import Button from "@material-ui/core/Button";
 import toolStatusHelpMapping from "../../model/toolStatusHelpMapping";
 import permIdStatusHelpMapping from "../../model/permIdStatusHelpMapping";
 import notificationCategory from "../../model/notificationCategory";
+import build from "../../../util/DebugIDUtil";
+import ids from "../../ids";
 
 const columnData = [
     {name: "Status", numeric: false, enableSorting: false},
@@ -35,7 +37,7 @@ class RequestHistoryDialog extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            order: 'DESC',
+            order: 'desc',
             orderBy: 'Date',
             dialogOpen: props.dialogOpen,
         };
@@ -44,8 +46,10 @@ class RequestHistoryDialog extends Component {
     render() {
         const {history, category, name} = this.props;
         const helpMap = category === notificationCategory.tool_request ? toolStatusHelpMapping : permIdStatusHelpMapping;
+        const baseId = ids.REQUEST_HISTORY_DLG;
         return (
-            <Dialog open={this.state.dialogOpen}>
+            <Dialog id={baseId}
+                    open={this.state.dialogOpen}>
                 <DialogTitle style={{backgroundColor: Color.blue}}>
                     <Typography
                         style={{color: Color.white}}> {name}</Typography>
@@ -57,6 +61,8 @@ class RequestHistoryDialog extends Component {
                             selectable={false}
                             order={this.state.order}
                             orderBy={this.state.orderBy}
+                            ids={ids}
+                            baseId={baseId}
                         />
                         <TableBody>
                             {history.map(n => {
@@ -75,7 +81,12 @@ class RequestHistoryDialog extends Component {
                     </Table>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => {this.setState({dialogOpen: false})}} color="primary">
+                    <Button
+                        id={build(baseId, ids.OK_BTN)}
+                        onClick={() => {
+                            this.setState({dialogOpen: false})
+                        }}
+                        color="primary">
                         {getMessage("okBtnText")}
                     </Button>
                 </DialogActions>

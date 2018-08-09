@@ -15,6 +15,8 @@ import intlData from "../../messages";
 import Color from "../../../util/CyVersePalette";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
+import build from "../../../util/DebugIDUtil";
+import ids from "../../ids";
 
 class DenyJoinRequestDetailsDialog extends Component {
     constructor(props) {
@@ -26,8 +28,10 @@ class DenyJoinRequestDetailsDialog extends Component {
 
     render() {
         const {teamName, adminMessage} = this.props;
+        const baseId = ids.DENY_REQUEST_DLG;
         return (
             <Dialog
+                id={baseId}
                 open={this.state.dialogOpen}
             >
                 <DialogTitle style={{backgroundColor: Color.blue}}>
@@ -57,7 +61,12 @@ class DenyJoinRequestDetailsDialog extends Component {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => {this.setState({dialogOpen: false})}} color="primary">
+                    <Button
+                        id={build(baseId, ids.OK_BTN)}
+                        onClick={() => {
+                            this.setState({dialogOpen: false})
+                        }}
+                        color="primary">
                         {getMessage("okBtnText")}
                     </Button>
                 </DialogActions>

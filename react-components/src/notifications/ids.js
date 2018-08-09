@@ -14,5 +14,10 @@ export default ({
     NOTIFICATION_VIEW: ".notificationView",
     CATEGORY: "categoryColumn",
     MESSAGE: "messageColumn",
-    DATE: "dateColumn"
+    DATE: "dateColumn",
+    REQUEST_HISTORY_DLG: "requestHistoryDlg",
+    DENY_REQUEST_DLG: "denyRequestDlg",
+    STATUS: "requestStatusColumn",
+    COMMENT: "commentColumn",
+
 });
