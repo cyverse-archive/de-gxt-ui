@@ -9,11 +9,11 @@ import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
 
 @JsType(isNative = true,
-        namespace = "CyVerseReactComponents.notifications.notifications",
+        namespace = "CyVerseReactComponents.notifications",
         name = "JoinTeamRequestDialog")
 class ReactJoinTeamRequest {
 
-    @JsProperty(namespace = "CyVerseReactComponents.notifications.notifications",
+    @JsProperty(namespace = "CyVerseReactComponents.notifications",
                 name = "JoinTeamRequestDialog")
     public static ReactClass<JoinTeamProps> joinTeamProps;
 

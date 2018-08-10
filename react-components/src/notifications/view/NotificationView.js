@@ -205,7 +205,15 @@ class NotificationView extends Component {
 
     render() {
         const {classes, baseDebugId} = this.props;
-        const {data, rowsPerPage, page, order, orderBy, selected, total} = this.state;
+        const {
+            data,
+            rowsPerPage,
+            page,
+            order,
+            orderBy,
+            selected,
+            total
+        } = this.state;
         const baseId = baseDebugId + ids.NOTIFICATION_VIEW;
         return (
             <div className={classes.container}>

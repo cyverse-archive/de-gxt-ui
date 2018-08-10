@@ -51,6 +51,133 @@ const APPROVE = "approve";
 const DENY = "deny";
 
 
+function TeamDetails(props) {
+    const {
+        requester_name,
+        team_name,
+        requester_email,
+        requester_message,
+    } = props.request;
+    const classes = props.classes;
+    return (
+        <div className={classes.root}>
+            <Grid container spacing={12}>
+                <Grid item xs={12}>
+                    <Paper
+                        className={classes.paper}>{getMessage("teamLabel")}: {team_name}</Paper>
+                </Grid>
+                <Grid item xs={12}>
+                    <Paper
+                        className={classes.paper}>{getMessage("name")}: {requester_name}</Paper>
+                </Grid>
+                <Grid item xs={12}>
+                    <Paper
+                        className={classes.paper}>{getMessage("email")}: {requester_email}</Paper>
+                </Grid>
+                <Grid item xs={12}>
+                    <Paper
+                        className={classes.paper}>{getMessage("message")}: {requester_message}</Paper>
+                </Grid>
+            </Grid>
+        </div>
+    );
+}
+
+function RequestOptions(props) {
+    const {classes, action, onChange} = props;
+    return (
+        <FormControl component="fieldset" required className={classes.formControl}>
+            <RadioGroup
+                aria-label="action"
+                name="action"
+                className={classes.group}
+                value={action}
+                onChange={onChange}
+            >
+                <FormControlLabel id={build(ids.JOIN_REQUEST_DLG, ids.APPROVE_BTN)}
+                                  value={APPROVE} control={<Radio/>}
+                                  label={getMessage("approveBtnText")}/>
+                <FormControlLabel id={build(ids.JOIN_REQUEST_DLG, ids.DENY_BTN)}
+                                  value={DENY} control={<Radio/>}
+                                  label={getMessage("denyBtnText")}/>
+            </RadioGroup>
+        </FormControl>
+    );
+
+}
+
+function ApproveRequest(props) {
+    const {classes, action, onChange, requester_name, team_name, privilege} = props;
+    return (
+        <div style={{display: action === APPROVE ? "block" : "none"}}>
+            <Card className={classes.card} raised={true}>
+                <CardHeader title={getMessage("setPrivilegesHeading")}/>
+                <CardContent>
+                    <Typography paragraph>
+                        {getMessage("setPrivilegesText", {
+                            values: {
+                                name: requester_name,
+                                team: team_name
+                            }
+                        })}
+                    </Typography>
+                </CardContent>
+                <CardActions>
+                    <form className={classes.container}>
+                        <FormControl className={classes.formControl}>
+                            <Select
+                                value={privilege}
+                                onChange={onChange}
+                                inputProps={{
+                                    name: 'privilege',
+                                    id: 'privilege-simple',
+                                }}
+                            >
+                                <MenuItem value="admin">{privilegeType.admin}</MenuItem>
+                                <MenuItem
+                                    value="readOptin">{privilegeType.readOptin}</MenuItem>
+                                <MenuItem value="read">{privilegeType.read}</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </form>
+                </CardActions>
+            </Card>
+        </div>
+    );
+}
+
+function DenyRequest(props) {
+    const {classes, action, onChange, requester_name, team_name} = props;
+    return (
+        <div style={{display: action === DENY ? "block" : "none"}}>
+            <Card className={classes.card} raised={true}>
+                <CardHeader title={getMessage("denyRequestHeader")}/>
+                <CardContent>
+                    <Typography paragraph>
+                        {getMessage("denyRequestMessage", {
+                            values: {
+                                name: requester_name,
+                                team: team_name
+                            }
+                        })}
+                    </Typography>
+                </CardContent>
+                <CardActions>
+                    <TextField
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        placeholder="Message"
+                        fullWidth
+                        margin="normal"
+                        onChange={onChange}
+                    />
+                </CardActions>
+            </Card>
+        </div>
+    );
+}
+
 class JoinTeamRequestDialog extends Component {
     constructor(props) {
         super(props);
@@ -93,7 +220,12 @@ class JoinTeamRequestDialog extends Component {
     }
     render() {
         const classes = this.props.classes;
-        const {requester_name, team_name, requester_email, requester_message} = this.props.request;
+        const {
+            requester_name,
+            team_name,
+            requester_email,
+            requester_message
+        } = this.props.request;
         const {dialogOpen} = this.state;
         return (
             <React.Fragment>
@@ -104,119 +236,42 @@ class JoinTeamRequestDialog extends Component {
                 >
                     <DialogTitle style={{backgroundColor: Color.blue}}>
                         <Typography
-                        style={{color: Color.white}}> {getMessage("joinTeamRequestHeader")}</Typography></DialogTitle>
+                            style={{color: Color.white}}>{getMessage("joinTeamRequestHeader")}
+                        </Typography>
+                    </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                             <Typography paragraph>
                                 {getMessage("joinRequestIntro")}
                             </Typography>
                             {this.state.loading &&
-                            <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
+                            <CircularProgress
+                                size={30}
+                                className={classes.loadingStyle}
+                                thickness={7}/>
                             }
-                            <div className={classes.root}>
-                                <Grid container spacing={12}>
-                                    <Grid item xs={12}>
-                                        <Paper
-                                            className={classes.paper}>{getMessage("teamLabel")}: {team_name}</Paper>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Paper
-                                            className={classes.paper}>{getMessage("name")}: {requester_name}</Paper>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Paper
-                                            className={classes.paper}>{getMessage("email")}: {requester_email}</Paper>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Paper
-                                            className={classes.paper}>{getMessage("message")}: {requester_message}</Paper>
-                                    </Grid>
-                                </Grid>
-                            </div>
+                            <TeamDetails {...this.props}/>
                         </DialogContentText>
-                        <FormControl component="fieldset" required className={classes.formControl}>
-                            <RadioGroup
-                                aria-label="action"
-                                name="action"
-                                className={classes.group}
-                                value={this.state.action}
-                                onChange={(e) => {
-                                    this.setState({action: e.target.value})
-                                }}
-                            >
-                                <FormControlLabel id={build(ids.JOIN_REQUEST_DLG, ids.APPROVE_BTN)}
-                                                  value={APPROVE} control={<Radio/>}
-                                                  label={getMessage("approveBtnText")}/>
-                                <FormControlLabel id={build(ids.JOIN_REQUEST_DLG, ids.DENY_BTN)}
-                                                  value={DENY} control={<Radio/>}
-                                                  label={getMessage("denyBtnText")}/>
-                            </RadioGroup>
-                        </FormControl>
-                        <div style={{display: this.state.action === APPROVE ? "block" : "none"}}>
-                            <Card className={classes.card} raised={true}>
-                                <CardHeader title={getMessage("setPrivilegesHeading")}/>
-                                <CardContent>
-                                    <Typography paragraph>
-                                        {getMessage("setPrivilegesText", {
-                                            values: {
-                                                name: requester_name,
-                                                team: team_name
-                                            }
-                                        })}
-                                    </Typography>
-                                </CardContent>
-                                <CardActions>
-                                    <form className={classes.container}>
-                                        <FormControl className={classes.formControl}>
-                                            <Select
-                                                value={this.state.privilege}
-                                                onChange={(e) => {
-                                                    this.setState({privilege: e.target.value})
-                                                }}
-                                                inputProps={{
-                                                    name: 'privilege',
-                                                    id: 'privilege-simple',
-                                                }}
-                                            >
-                                                <MenuItem value="admin">{privilegeType.admin}</MenuItem>
-                                                <MenuItem
-                                                    value="readOptin">{privilegeType.readOptin}</MenuItem>
-                                                <MenuItem value="read">{privilegeType.read}</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </form>
-                                </CardActions>
-                            </Card>
-                        </div>
-                        <div style={{display: this.state.action === DENY ? "block" : "none"}}>
-                            <Card className={classes.card} raised={true}>
-                                <CardHeader title={getMessage("denyRequestHeader")}/>
-                                <CardContent>
-                                    <Typography paragraph>
-                                        {getMessage("denyRequestMessage", {
-                                            values: {
-                                                name: requester_name,
-                                                team: team_name
-                                            }
-                                        })}
-                                    </Typography>
-                                </CardContent>
-                                <CardActions>
-                                    <TextField
-                                        id="full-width"
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                        placeholder="Message"
-                                        fullWidth
-                                        margin="normal"
+                        <RequestOptions classes={classes}
+                                        action={this.state.action}
                                         onChange={(e) => {
-                                            this.setState({message: e.target.value})
-                                        }}
-                                    />
-                                </CardActions>
-                            </Card>
-                        </div>
+                                            this.setState({action: e.target.value})
+                                        }}/>
+                        <ApproveRequest classes={classes}
+                                        action={this.state.action}
+                                        requester_name={requester_name}
+                                        team_name={team_name}
+                                        privilege={this.state.privilege}
+                                        onChange={(e) => {
+                                            this.setState({privilege: e.target.value})
+                                        }}/>
+                        <DenyRequest classes={classes}
+                                     action={this.state.action}
+                                     requester_name={requester_name}
+                                     team_name={team_name}
+                                     onChange={(e) => {
+                                         this.setState({message: e.target.value})
+                                     }}/>
                     </DialogContent>
                     <DialogActions>
                         <Button id={build(ids.JOIN_REQUEST_DLG, ids.OK_BTN)} onClick={this.handleOkClick}

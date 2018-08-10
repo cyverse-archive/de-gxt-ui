@@ -63,11 +63,11 @@ import jsinterop.annotations.JsType;
  */
 
 @JsType(isNative = true,
-        namespace = "CyVerseReactComponents.notifications.notifications",
+        namespace = "CyVerseReactComponents.notifications",
         name = "DenyJoinRequestDetailsDialog")
 class ReactDenyJoinTeamDetails {
 
-    @JsProperty(namespace = "CyVerseReactComponents.notifications.notifications",
+    @JsProperty(namespace = "CyVerseReactComponents.notifications",
                 name = "DenyJoinRequestDetailsDialog")
     public static ReactClass<DenyTeamProps> denyTeamProps;
 
@@ -80,11 +80,11 @@ class ReactDenyJoinTeamDetails {
 }
 
 @JsType(isNative = true,
-        namespace = "CyVerseReactComponents.notifications.notifications",
+        namespace = "CyVerseReactComponents.notifications",
         name = "RequestHistoryDialog")
 class ReactToolRequestHistory {
 
-    @JsProperty(namespace = "CyVerseReactComponents.notifications.notifications",
+    @JsProperty(namespace = "CyVerseReactComponents.notifications",
                 name = "RequestHistoryDialog")
     public static ReactClass<HistoryProps> historyProps;
 

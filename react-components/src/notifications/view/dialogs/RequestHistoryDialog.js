@@ -44,7 +44,11 @@ class RequestHistoryDialog extends Component {
     }
 
     render() {
-        const {history, category, name} = this.props;
+        const {
+            history,
+            category,
+            name
+        } = this.props;
         const helpMap = category === notificationCategory.tool_request ? toolStatusHelpMapping : permIdStatusHelpMapping;
         const baseId = ids.REQUEST_HISTORY_DLG;
         return (

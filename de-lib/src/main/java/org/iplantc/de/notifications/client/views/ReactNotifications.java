@@ -10,11 +10,11 @@ import jsinterop.annotations.JsType;
  * Created by sriram on 7/10/18.
  */
 @JsType(isNative = true,
-        namespace = "CyVerseReactComponents.notifications.notifications",
+        namespace = "CyVerseReactComponents.notifications",
         name = "NotificationView")
 public class ReactNotifications {
 
-    @JsProperty(namespace = "CyVerseReactComponents.notifications.notifications",
+    @JsProperty(namespace = "CyVerseReactComponents.notifications",
                 name = "NotificationView")
     public static ReactClass<NotificationsProps> notifiProps;
 
