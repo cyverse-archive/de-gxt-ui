@@ -58,7 +58,7 @@ class NotificationView extends Component {
             selected: [],
             order: 'desc',
             orderBy: 'Date',
-            filter: notificationCategory.all,
+            filter: (props.category) ? props.category : notificationCategory.all,
         };
         this.fetchNotifications = this.fetchNotifications.bind(this);
         this.handleRefreshClicked = this.handleRefreshClicked.bind(this);

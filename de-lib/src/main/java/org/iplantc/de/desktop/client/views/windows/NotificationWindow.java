@@ -39,25 +39,28 @@ public class NotificationWindow extends WindowBase {
                                               boolean isMaximizable) {
         super.show(windowConfig, tag, isMaximizable);
         NotifyWindowConfig notifyWindowConfig = (NotifyWindowConfig) windowConfig;
-        presenter.go(this, DeModule.WindowIds.NOTIFICATION);
-/*        if (notifyWindowConfig != null) {
-            presenter.filterBy(NotificationCategory.fromTypeString(notifyWindowConfig.getFilter()));
-        }*/
+        filterByCategory(notifyWindowConfig);
     }
 
     @Override
     public <C extends WindowConfig> void update(C config) {
-/*        NotifyWindowConfig notifyWindowConfig = (NotifyWindowConfig) config;
-*//*        if (notifyWindowConfig != null) {
-            presenter.filterBy(NotificationCategory.fromTypeString(notifyWindowConfig.getFilter()));
-        }*//*
-        presenter.go(this);*/
+        NotifyWindowConfig notifyWindowConfig = (NotifyWindowConfig)config;
+        filterByCategory(notifyWindowConfig);
+    }
+
+    protected void filterByCategory(NotifyWindowConfig notifyWindowConfig) {
+        if (notifyWindowConfig != null) {
+            presenter.go(this,
+                         DeModule.WindowIds.NOTIFICATION,
+                         NotificationCategory.fromTypeString(notifyWindowConfig.getFilter()));
+        } else {
+            presenter.go(this, DeModule.WindowIds.NOTIFICATION, NotificationCategory.ALL);
+        }
     }
 
     @Override
     public WindowConfig getWindowConfig() {
-        //TODO: FIX this to get category from presenter.
-        return ConfigFactory.notifyWindowConfig(NotificationCategory.ALL);
+        return ConfigFactory.notifyWindowConfig(presenter.getCurrentCategory());
     }
 
     @Override

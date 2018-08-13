@@ -3,6 +3,7 @@
  */
 package org.iplantc.de.notifications.client.views;
 
+import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 
 import com.google.gwt.core.client.Scheduler;
@@ -51,11 +52,12 @@ public class NotificationViewImpl implements NotificationView {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void loadNotifications() {
+    public void loadNotifications(NotificationCategory category) {
         Scheduler.get().scheduleFinally(() -> {
             ReactNotifications.NotificationsProps props = new ReactNotifications.NotificationsProps();
             props.presenter = presenter;
             props.baseDebugId = baseDebugId;
+            props.category = category.toString();
             CyVerseReactComponents.render(ReactNotifications.notifiProps, props, panel.getElement());
 
         });

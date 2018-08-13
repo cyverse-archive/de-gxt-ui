@@ -1,5 +1,6 @@
 package org.iplantc.de.notifications.client.views;
 
+import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.notifications.client.presenter.NotificationsCallback;
@@ -37,7 +38,7 @@ public interface NotificationView extends IsWidget {
     @JsType
     public interface Presenter {
 
-        void go(final HasOneWidget container, String baseDebugId);
+        void go(final HasOneWidget container, String baseDebugId, NotificationCategory category);
 
         void getNotifications(int limit,
                               int offset,
@@ -55,9 +56,11 @@ public interface NotificationView extends IsWidget {
                                                     ReactErrorCallback errorCallback);
 
         void onMessageClicked(Splittable notificationMessage);
+
+        NotificationCategory getCurrentCategory();
     }
 
     void setPresenter(NotificationView.Presenter presenter, String baseDebugId);
 
-    void loadNotifications();
+    void loadNotifications(NotificationCategory category);
 }

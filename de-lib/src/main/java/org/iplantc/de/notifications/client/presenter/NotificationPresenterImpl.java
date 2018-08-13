@@ -45,6 +45,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter {
     @Inject IplantAnnouncer announcer;
     @Inject
     NotificationUtil notificationUtil;
+    NotificationCategory category;
 
     @Inject
     public NotificationPresenterImpl(NotificationView.NotificationViewAppearance appearance,
@@ -58,10 +59,11 @@ public class NotificationPresenterImpl implements NotificationView.Presenter {
         currentCategory = NotificationCategory.ALL;
     }
     @Override
-    public void go(HasOneWidget container, String baseDebugId) {
+    public void go(HasOneWidget container, String baseDebugId, NotificationCategory category) {
         container.setWidget(view.asWidget());
+        this.category = category;
         view.setPresenter(this, baseDebugId);
-        view.loadNotifications();
+        view.loadNotifications(category);
     }
 
 
@@ -146,6 +148,7 @@ public class NotificationPresenterImpl implements NotificationView.Presenter {
                                  String sortDir,
                                  NotificationsCallback callback,
                                  ReactErrorCallback errorCallback) {
+        this.category = NotificationCategory.fromTypeString(filter);
         messageServiceFacade.getNotifications(limit,
                                               offset,
                                               filter,
@@ -157,6 +160,11 @@ public class NotificationPresenterImpl implements NotificationView.Presenter {
     public void onMessageClicked(Splittable notificationMessage) {
         NotificationMessage nm = AutoBeanCodex.decode(factory, NotificationMessage.class, notificationMessage).as();
         notificationUtil.onNotificationClick(nm);
+   }
+
+   @Override
+   public NotificationCategory getCurrentCategory() {
+        return category != null ? category : NotificationCategory.ALL;
    }
 
     private static class NotificationCallbackWrapper

@@ -22,6 +22,7 @@ public class ReactNotifications {
     static class NotificationsProps extends BaseProps {
         NotificationView.Presenter presenter;
         String baseDebugId;
+        String category;
     }
 }
 
