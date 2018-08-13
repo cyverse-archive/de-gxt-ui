@@ -1,4 +1,6 @@
 /**
+ * Toolbar for notification window.
+ *
  *  @author sriram
  * */
 import React, { Component } from "react";
@@ -7,7 +9,6 @@ import ToolbarGroup from "@material-ui/core/Toolbar";
 import ToolbarSeparator from "@material-ui/core/Toolbar";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -32,28 +33,29 @@ class NotificationToolbar extends Component {
                         <FormControl>
                             <InputLabel htmlFor="filter-simple">Filter</InputLabel>
                             <Select
+                                native
                                 value={this.props.filter}
                                 onChange={this.props.onFilterChange}
                                 inputProps={{
                                     name: 'filter',
                                     id: build(baseId, ids.FILTER),
                                 }}>
-                                <MenuItem
-                                    value={notificationCategory.new}>{notificationCategory.new}</MenuItem>
-                                <MenuItem
-                                    value={notificationCategory.all}>{notificationCategory.all}</MenuItem>
-                                <MenuItem
-                                    value={notificationCategory.analysis}>{notificationCategory.analysis}</MenuItem>
-                                <MenuItem
-                                    value={notificationCategory.data}>{notificationCategory.data}</MenuItem>
-                                <MenuItem
-                                    value={notificationCategory.tool_request}>{notificationCategory.tool_request}</MenuItem>
-                                <MenuItem
-                                    value={notificationCategory.apps}>{notificationCategory.apps}</MenuItem>
-                                <MenuItem
-                                    value={notificationCategory.permanent_id_request}>{notificationCategory.permanent_id_request}</MenuItem>
-                                <MenuItem
-                                    value={notificationCategory.team}>{notificationCategory.team}</MenuItem>
+                                <option
+                                    value={notificationCategory.new}>{notificationCategory.new}</option>
+                                <option
+                                    value={notificationCategory.all}>{notificationCategory.all}</option>
+                                <option
+                                    value={notificationCategory.analysis}>{notificationCategory.analysis}</option>
+                                <option
+                                    value={notificationCategory.data}>{notificationCategory.data}</option>
+                                <option
+                                    value={notificationCategory.tool_request}>{notificationCategory.tool_request}</option>
+                                <option
+                                    value={notificationCategory.apps}>{notificationCategory.apps}</option>
+                                <option
+                                    value={notificationCategory.permanent_id_request}>{notificationCategory.permanent_id_request}</option>
+                                <option
+                                    value={notificationCategory.team}>{notificationCategory.team}</option>
                             </Select>
                         </FormControl>
                     </form>

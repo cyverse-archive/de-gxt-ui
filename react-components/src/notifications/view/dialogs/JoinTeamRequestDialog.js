@@ -1,4 +1,5 @@
 /**
+ * A dialog that shows request details for joining a team with option to approve / deny request.
  *
  * @author Sriram
  *
@@ -107,7 +108,14 @@ function RequestOptions(props) {
 }
 
 function ApproveRequest(props) {
-    const {classes, action, onChange, requester_name, team_name, privilege} = props;
+    const {
+        classes,
+        action,
+        onChange,
+        requester_name,
+        team_name,
+        privilege
+    } = props;
     return (
         <div style={{display: action === APPROVE ? "block" : "none"}}>
             <Card className={classes.card} raised={true}>
@@ -147,7 +155,13 @@ function ApproveRequest(props) {
 }
 
 function DenyRequest(props) {
-    const {classes, action, onChange, requester_name, team_name} = props;
+    const {
+        classes,
+        action,
+        onChange,
+        requester_name,
+        team_name
+    } = props;
     return (
         <div style={{display: action === DENY ? "block" : "none"}}>
             <Card className={classes.card} raised={true}>
@@ -223,8 +237,6 @@ class JoinTeamRequestDialog extends Component {
         const {
             requester_name,
             team_name,
-            requester_email,
-            requester_message
         } = this.props.request;
         const {dialogOpen} = this.state;
         return (

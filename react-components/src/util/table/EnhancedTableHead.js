@@ -94,7 +94,12 @@ EnhancedTableHead.propTypes = {
     rowCount: PropTypes.number,
     baseId: PropTypes.string.isRequired,
     ids:  PropTypes.object.isRequired,
-    columnData: PropTypes.array.isRequired,
+    columnData: PropTypes.arrayOf(
+        PropTypes.shape({
+            name: PropTypes.string,
+            numeric: PropTypes.bool,
+            enableSorting: PropTypes.bool,
+        })),
 };
 
 EnhancedTableHead.defaultProps = {

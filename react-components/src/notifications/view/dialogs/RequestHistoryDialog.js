@@ -1,4 +1,5 @@
 /**
+ * A dialog to show the history of tool request or perm id request.
  *
  * @author Sriram
  *

@@ -1,4 +1,5 @@
 /**
+ * A view to display a paginated list of notifications in DE notification window.
  *
  * @author Sriram
  *
@@ -17,12 +18,12 @@ import constants from "../../constants";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
 import Checkbox from "@material-ui/core/Checkbox";
 import EnhancedTableHead from "../../util/table/EnhancedTableHead";
-import Color from "../../util/CyVersePalette";
 import TablePaginationActions from "../../util/table/TablePaginationActions";
 import exStyles from "../style";
 import intlData from "../messages";
 import notificationCategory from "../model/notificationCategory";
 import ids from "../ids";
+import classnames from "classnames";
 
 const columnData = [
     {name: "Category", numeric: false, enableSorting: false,},
@@ -32,29 +33,17 @@ const columnData = [
 
 
 function Message(props) {
-    const {message, seen, presenter} = props;
-    if (seen) {
-        return (
-            <TableCell
-                style={{textDecoration: 'underline', cursor: 'pointer',}}>
-                <div
-                    onClick={(event) => presenter.onMessageClicked(message)}> {message.text}</div>
-            </TableCell>
-        );
-    } else {
-        return (
-            <TableCell
-                style={{
-                    textDecoration: 'underline',
-                    cursor: 'pointer',
-                    backgroundColor: Color.lightBlue
-                }}>
-                <div
-                    onClick={(event) => presenter.onMessageClicked(message)}> {message.text}</div>
-            </TableCell>
-        );
-    }
+    const {message, seen, presenter, classes} = props;
+    let className = (seen) ? classes.notification : classnames(classes.notification, classes.unSeenNotificationBackground);
+    return (
+        <TableCell
+            className={className}>
+            <div
+                onClick={(event) => presenter.onMessageClicked(message)}> {message.text}</div>
+        </TableCell>
+    );
 }
+
 
 class NotificationView extends Component {
     constructor(props) {
@@ -69,7 +58,7 @@ class NotificationView extends Component {
             selected: [],
             order: 'desc',
             orderBy: 'Date',
-            filter: 'All',
+            filter: notificationCategory.all,
         };
         this.fetchNotifications = this.fetchNotifications.bind(this);
         this.handleRefreshClicked = this.handleRefreshClicked.bind(this);
@@ -77,6 +66,13 @@ class NotificationView extends Component {
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
         this.shouldDisableMarkSeen = this.shouldDisableMarkSeen.bind(this);
         this.findNotification = this.findNotification.bind(this);
+        this.handleChangePage = this.handleChangePage.bind(this);
+        this.handleFilterChange = this.handleFilterChange.bind(this);
+        this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
+        this.handleRowClick = this.handleRowClick.bind(this);
+        this.isSelected = this.isSelected.bind(this);
+        this.handleSelectAllClick = this.handleSelectAllClick.bind(this);
+        this.handleRequestSort = this.handleRequestSort.bind(this);
     }
 
     componentDidMount() {
@@ -130,21 +126,21 @@ class NotificationView extends Component {
         });
     }
 
-    handleChangePage = (event, page) => {
+    handleChangePage(event, page) {
         const {rowsPerPage} = this.state;
         this.setState({page: page, offset: rowsPerPage * page}, () => this.fetchNotifications());
     };
 
-    handleFilterChange = event => {
+    handleFilterChange(event) {
         this.setState({filter: event.target.value}, () => this.fetchNotifications());
     };
 
 
-    handleChangeRowsPerPage = event => {
+    handleChangeRowsPerPage(event) {
         this.setState({rowsPerPage: event.target.value}, () => this.fetchNotifications());
     };
 
-    handleRowClick = (event, id) => {
+    handleRowClick(event, id) {
         const {selected} = this.state;
         const selectedIndex = selected.indexOf(id);
         let newSelected = [];
@@ -169,7 +165,7 @@ class NotificationView extends Component {
         let notifications = [];
         this.state.selected.map(id => {
             let n = this.findNotification(id);
-            if (n && (n.seen === false || n.seen == null)) {
+            if (n && !(n.seen)) {
                 notifications.push(n);
             }
         });
@@ -182,7 +178,7 @@ class NotificationView extends Component {
         });
     }
 
-    handleSelectAllClick = (event, checked) => {
+    handleSelectAllClick(event, checked) {
         if (checked) {
             this.setState(state => ({selected: state.data.map(n => n.message.id)}));
             return;
@@ -190,7 +186,7 @@ class NotificationView extends Component {
         this.setState({selected: []});
     };
 
-    handleRequestSort = (event, property) => {
+    handleRequestSort(event, property) {
         const orderBy = property;
         let order = 'desc';
 
@@ -199,9 +195,12 @@ class NotificationView extends Component {
         }
 
         this.setState({order, orderBy,}, () => this.fetchNotifications());
-    };
+    }
 
-    isSelected = id => this.state.selected.indexOf(id) !== -1;
+    isSelected(id) {
+        return this.state.selected.indexOf(id) !== -1
+
+    }
 
     render() {
         const {classes, baseDebugId} = this.props;
@@ -257,8 +256,10 @@ class NotificationView extends Component {
                                             <Checkbox checked={isSelected}/>
                                         </TableCell>
                                         <TableCell>{notificationCategory[n.type.replace(/\s/g, "_").toLowerCase()]}</TableCell>
-                                        <Message message={n.message} seen={n.seen}
-                                                 presenter={this.props.presenter}/>
+                                        <Message message={n.message}
+                                                 seen={n.seen}
+                                                 presenter={this.props.presenter}
+                                                 classes={classes}/>
                                         <TableCell>{(n.message.timestamp) ? moment(n.message.timestamp, "x").format(
                                                 constants.DATE_FORMAT) :
                                             getMessage("emptyValue")} </TableCell>

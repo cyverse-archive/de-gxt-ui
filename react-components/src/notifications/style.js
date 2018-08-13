@@ -31,4 +31,11 @@ export default (theme) => ({
         borderBottom: 'solid 2px',
         borderColor: Color.gray,
     },
+    notification: {
+        textDecoration: 'underline',
+        cursor: 'pointer',
+    },
+    unSeenNotificationBackground: {
+        backgroundColor: Color.lightBlue,
+    }
 });

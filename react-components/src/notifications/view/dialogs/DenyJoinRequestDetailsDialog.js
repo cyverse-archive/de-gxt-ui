@@ -1,4 +1,5 @@
 /**
+ * A dialog that shows details of denying a request to join a team
  *
  * @author Sriram
  *
@@ -48,7 +49,6 @@ class DenyJoinRequestDetailsDialog extends Component {
                         <p style={{marginTop: 10}}>
                             <Typography subheading>{getMessage("denyAdminLabel")}</Typography>
                             <TextField
-                                id="full-width"
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
