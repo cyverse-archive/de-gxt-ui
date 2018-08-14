@@ -4,16 +4,13 @@ import cyverseHeader from "../resources/images/cyverse_icon_white.png";
 import color from "../util/CyVersePalette";
 
 export default {
-    '@global': {
-        body: {
-            position: 'fixed',
-            top: 0,
-            bottom: 0,
-            right: 0,
-            left: 0,
-            fontFamily: "Texta",
-            src: "url('../Texta_Font/Texta-Black.otf'), url('../Texta_Font/Texta-Bold.otf'), url('../Texta_Font/Texta-Regular.otf'), url('../Texta_Font/Texta-Italic.otf') ",
-        }
+    '@global body': {
+        position: 'fixed',
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+        overflow: 'hidden',
     },
     desktop: {
         backgroundImage: `url(${desktopBcg})`,
@@ -47,6 +44,7 @@ export default {
         opacity: '.8',
         right: '30px',
         backgroundSize: 'contain',
+        color: '#ffffff',
         position: 'relative',
         marginBottom: '8px',
         marginRight: '8px',
@@ -231,5 +229,19 @@ export default {
         left: 50,
         color: color.orange,
     },
+
+    notificationMenu: {
+        width: 400,
+        zIndex: 888888,
+        maxHeight: 650,
+
+    },
+    notification: {
+        fontSize: 10,
+    },
+    unSeenNotificationBackground: {
+        backgroundColor: color.lightBlue,
+        borderBottom: 1,
+    }
 
 };

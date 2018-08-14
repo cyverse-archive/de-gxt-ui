@@ -182,4 +182,6 @@ public interface DesktopMessages extends Messages {
     String cannotEditTwoApps();
 
     String enableHPCPrompt();
+
+    String introWelcome();
 }

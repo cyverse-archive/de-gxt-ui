@@ -6,13 +6,13 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
 import styles from "../style";
-import injectSheet from "react-jss";
+import { withStyles } from "@material-ui/core/styles";
 import ids from "../ids";
 import intlData from "../messages";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
 import build from "../../util/DebugIDUtil";
-import tourStrings from "../NewUserTourStrings";
-import helpImg from "../../resources/images/help.png";
+import tour from "../NewUserTourSteps";
+import HelpIcon from "@material-ui/icons/Help";
 
 class Help extends Component {
     constructor(props) {
@@ -20,16 +20,15 @@ class Help extends Component {
         this.state = {
             anchorEl: null,
         };
-        this.onMenuItemSelect = this.onMenuItemSelect.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.helpBtn = React.createRef();
     }
 
     componentDidMount() {
-        this.helpBtn.current.setAttribute("data-intro", tourStrings.introHelp);
-        this.helpBtn.current.setAttribute("data-position", "left");
-        this.helpBtn.current.setAttribute("data-step", "6");
+        document.getElementById(ids.HELP_ICON).setAttribute("data-intro", tour.HelpMenu.message);
+        document.getElementById(ids.HELP_ICON).setAttribute("data-position", tour.HelpMenu.position);
+        document.getElementById(ids.HELP_ICON).setAttribute("data-step", tour.HelpMenu.step);
     }
 
     handleClick(event) {
@@ -40,53 +39,37 @@ class Help extends Component {
         this.setState({anchorEl: null});
     };
 
-    onMenuItemSelect(event) {
-        let id = event.currentTarget.id;
-        let presenter = this.props.presenter;
-        switch (id) {
-            case build(ids.DESKTOP, ids.FAQS_LINK):
-                presenter.onFaqSelect();
-                break;
-            case build(ids.DESKTOP, ids.FORUMS_LINK):
-                presenter.onForumsBtnSelect();
-                break;
-            case build(ids.DESKTOP, ids.FEEDBACK_LINK):
-                break;
-            default:
-                break; //do nothing
-        }
-    }
-
     render() {
         const {anchorEl} = this.state;
-        const classes = this.props.classes;
+        const {classes, presenter} = this.props;
         return (
             <span>
-                 <img className={classes.menuIcon}
-                      src={helpImg}
-                      alt="Help"
-                      onClick={this.handleClick}
-                      ref={this.helpBtn}></img>
+                   <HelpIcon
+                       id={ids.HELP_ICON}
+                       className={classes.menuIcon}
+                       onClick={this.handleClick}
+                   />
                  <Menu id={build(ids.DESKTOP, ids.HELP_MENU)}
                        anchorEl={anchorEl}
                        open={Boolean(anchorEl)}
-                       onClose={this.handleClose}>
-                     <MenuItem id={build(ids.DESKTOP, ids.FAQS_LINK)}
-                               onClick={this.onMenuItemSelect}>
-                         <DEHyperlink text={getMessage("faqLink")}/>
-                     </MenuItem>
-                     <MenuItem id={build(ids.DESKTOP, ids.FORUMS_LINK)}
-                               onClick={this.onMenuItemSelect}>
-                         <DEHyperlink text={getMessage("forumsLink")}/>
-                     </MenuItem>
-                     <MenuItem id={build(ids.DESKTOP, ids.FEEDBACK_LINK)}
-                               onClick={this.onMenuItemSelect}>
-                         <DEHyperlink text={getMessage("feedbackLink")}/>
-                     </MenuItem>
-                 </Menu>
+                       onClose={this.handleClose}
+                 >
+                 <MenuItem id={build(ids.DESKTOP, ids.FAQS_LINK)}
+                           onClick={() => presenter.onFaqSelect()}>
+                     <DEHyperlink text={getMessage("faqLink")} onClick={this.handleClose}/>
+                 </MenuItem>
+                 <MenuItem id={build(ids.DESKTOP, ids.FORUMS_LINK)}
+                           onClick={() => presenter.onForumsBtnSelect()}>
+                     <DEHyperlink text={getMessage("forumsLink")} onClick={this.handleClose}/>
+                 </MenuItem>
+                 <MenuItem id={build(ids.DESKTOP, ids.FEEDBACK_LINK)}
+                           onClick={() => presenter.onFeedbackSelect()}>
+                     <DEHyperlink text={getMessage("feedbackLink")} onClick={this.handleClose}/>
+                 </MenuItem>
+             </Menu>
             </span>
         );
     }
 }
 
-export default injectSheet(styles)(withI18N(Help, intlData));
+export default withStyles(styles)(withI18N(Help, intlData));

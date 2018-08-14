@@ -15,7 +15,8 @@ class Taskbar extends Component {
             <Toolbar className={classes.taskbar}>
                 {windows.map(n => {
                     return (
-                        <TaskButton windowConfig={n}
+                        <TaskButton key={n.tag}
+                                    windowConfig={n}
                                     taskButtonClickHandler={this.props.taskButtonClickHandler}/>
                     );
                 })}

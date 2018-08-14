@@ -65,7 +65,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -190,7 +189,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
         this.loggedOut = false;
         this.view.setPresenter(this);
         this.view.renderView(windowConfigMap);
-        globalEventHandler.setPresenter(this, this.view);
+        globalEventHandler.setPresenter(this);
         windowEventHandler.setPresenter(this, desktopWindowManager);
         windowManager.addRegisterHandler(this);
         windowManager.addUnregisterHandler(this);
@@ -216,7 +215,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
     }
 
     private void buildWindowConfigList() {
-        List<Widget> widgets = windowManager.getWindows();
+        List<Widget> widgets = windowManager.getStack();
         windowConfigMap.clear();
         if (widgets.size() == 0) {
             return;
@@ -303,7 +302,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
            public void onFailure(Integer statusCode, Throwable caught) {
                errorHandlerProvider.get().post(caught);
                if (errorCallback != null) {
-                   errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+                   errorCallback.onError(statusCode, caught.getMessage());
                }
            }
 
@@ -312,7 +311,11 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
                if (callback != null) {
                    callback.onMarkSeen(0);
                }
-               announcer.schedule(new SuccessAnnouncementConfig(appearance.markAllAsSeenSuccess(), true, 3000));
+               if (announce) {
+                   announcer.schedule(new SuccessAnnouncementConfig(appearance.markAllAsSeenSuccess(),
+                                                                    true,
+                                                                    3000));
+               }
            }
        });
     }
@@ -459,6 +462,11 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
         WindowUtil.open(commonUiConstants.forumsUrl());
     }
 
+    @Override
+    public void onFeedbackSelect() {
+        view.onFeedbackBtnSelect();
+    }
+
     /**
      * FIXME REFACTOR JDS Create notifications module and move this implementation there
      */
@@ -482,7 +490,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
             public void onFailure(Integer statusCode, Throwable caught) {
                 errorHandlerProvider.get().post(caught);
                 if (errorCallback != null) {
-                    errorCallback.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
+                    errorCallback.onError(statusCode, caught.getMessage());
                 }
             }
 
@@ -528,6 +536,8 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
         if (win != null) {
             if (win.isMinimized()) {
                 win.show();
+            } else if (((com.sencha.gxt.widget.core.client.Window)windowManager.getActive()).equals(win.asWindow())) {
+                win.minimize();
             } else {
                 win.toFront();
             }
@@ -537,8 +547,13 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
     }
 
     @Override
+    public void updateNotificationCount(int unseeen_count) {
+      view.renderView(unseeen_count, windowConfigMap);
+    }
+
+    @Override
     public void onIntroClick() {
-      view.renderView(true, windowConfigMap);
+        view.renderView(true, -1, windowConfigMap);
     }
 
     @Override

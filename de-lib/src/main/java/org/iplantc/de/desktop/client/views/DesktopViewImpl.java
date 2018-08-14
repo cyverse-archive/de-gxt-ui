@@ -7,7 +7,6 @@ import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import org.iplantc.de.desktop.client.DesktopView;
 import org.iplantc.de.desktop.client.views.widgets.DEFeedbackDialog;
 import org.iplantc.de.desktop.client.views.windows.WindowBase;
-import org.iplantc.de.resources.client.messages.IplantNewUserTourStrings;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.core.client.Scheduler;
@@ -45,8 +44,7 @@ public class DesktopViewImpl implements DesktopView {
     private final WindowManager windowManager;
 
     @Inject
-    DesktopViewImpl(final IplantNewUserTourStrings tourStrings,
-                    final WindowManager windowManager,
+    DesktopViewImpl(final WindowManager windowManager,
                     DesktopView.DesktopAppearance appearance) {
         this.windowManager = windowManager;
         this.appearance = appearance;
@@ -66,11 +64,13 @@ public class DesktopViewImpl implements DesktopView {
 
     @Override
     public void renderView(Map<Splittable, WindowBase> windowConfigMap) {
-         renderView(false, windowConfigMap);
+         renderView(false, -1, windowConfigMap);
     }
 
     @Override
-    public void renderView(boolean newUser, Map<Splittable, WindowBase> windowConfigMap) {
+    public void renderView(boolean newUser,
+                           int unseen_count,
+                           Map<Splittable, WindowBase> windowConfigMap) {
         Scheduler.get().scheduleFinally(()-> {
             Splittable[] sp = new Splittable[windowConfigMap.size()];
             Iterator it = windowConfigMap.keySet().iterator();
@@ -85,13 +85,19 @@ public class DesktopViewImpl implements DesktopView {
             props.windowConfigList = sp;
             props.desktopContainerId = DESKTOP_CONTAINER;
             props.isNewUser = newUser;
-
+            props.unseen_count = unseen_count;
             CyVerseReactComponents.render(ReactDesktop.desktopProps, props, panel.getElement());
             presenter.setDesktopContainer(getDesktopContainer());
         });
     }
 
-    void onFeedbackBtnSelect() {
+    @Override
+    public void renderView(int unseen_count, Map<Splittable, WindowBase> windowConfigMap) {
+        renderView(false, unseen_count, windowConfigMap);
+    }
+
+    @Override
+    public void onFeedbackBtnSelect() {
         deFeedbackDialogProvider.get(new AsyncCallback<DEFeedbackDialog>() {
             @Override
             public void onFailure(Throwable caught) {

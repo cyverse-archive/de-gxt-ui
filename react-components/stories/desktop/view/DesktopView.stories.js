@@ -18,17 +18,17 @@ class DesktopViewTest extends  Component {
             "minimized": false,
 
         },
-            {
-                "tag": "",
-                "type": "APPS",
-                "windowTitle": "Apps",
-                "minimized": true,
+        {
+            "tag": "",
+            "type": "APPS",
+            "windowTitle": "Apps",
+            "minimized": true,
 
-            }];
+        }];
         
         const notifications = {
             "total": "30",
-            "unseen_total": "10",
+            "unseen_total": "0",
             "messages": [{
                 "type": "analysis",
                 "user": "sriram",
@@ -428,6 +428,7 @@ class DesktopViewTest extends  Component {
             doMarkAllSeen: () => logger("Mark all as seen"),
             onTaskButtonClicked: () => logger("Task Button Clicked"),
             onNotificationSelected: () => logger("Notification Selected"),
+            onPreferencesClick: () => logger("Preferences Clicked"),
         };
         return (
             <DesktopView presenter={presenter} windowConfigList={windowConfigs}/>

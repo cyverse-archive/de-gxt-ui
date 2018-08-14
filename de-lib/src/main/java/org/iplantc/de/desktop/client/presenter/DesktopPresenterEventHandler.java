@@ -53,7 +53,7 @@ public class DesktopPresenterEventHandler implements LastSelectedPathChangedEven
 
     @Override
     public void onCountUpdate(NotificationCountUpdateEvent ncue) {
-        //view.setUnseenNotificationCount(ncue.getTotal());
+        presenter.updateNotificationCount(ncue.getTotal());
     }
 
     @Override
@@ -74,9 +74,8 @@ public class DesktopPresenterEventHandler implements LastSelectedPathChangedEven
         presenter.saveUserSettings(userSettings, usue.isUpdateSilently());
     }
 
-    public void setPresenter(DesktopPresenterImpl presenter, DesktopView view) {
+    public void setPresenter(DesktopPresenterImpl presenter) {
         this.presenter = presenter;
-        this.view = view;
         init(eventBus);
     }
 

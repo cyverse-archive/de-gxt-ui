@@ -2,21 +2,22 @@
  * @author sriram
  */
 import React, { Component } from "react";
-import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
-import styles from "../style";
-import Divider from "@material-ui/core/Divider";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
-import intlData from "../messages";
 import ids from "../ids";
 import build from "../../util/DebugIDUtil";
-import { withStyles } from "@material-ui/core/styles";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import tourStrings from "../NewUserTourStrings";
-import notificationImg from "../../resources/images/notification.png";
+import { withStyles } from "@material-ui/core/styles";
+import styles from "../style";
+import Menu from "@material-ui/core/Menu";
+import Divider from "@material-ui/core/Divider";
+import intlData from "../messages";
+import classnames from "classnames";
+import NotificationIcon from "@material-ui/icons/Notifications";
+import tour from "../NewUserTourSteps";
 
 
 function ErrorComponent(props) {
@@ -39,7 +40,7 @@ function ErrorComponent(props) {
 
 function NotificationFooter(props) {
     return (
-        <MenuItem>
+        <MenuItem onClick={props.onClick}>
             {(props.unSeenCount > 10) ?
                 <div>
                      <span id={build(ids.DESKTOP, ids.NEW_NOTIFICATIONS)}>
@@ -50,7 +51,9 @@ function NotificationFooter(props) {
                     <span style={{margin: '20px'}}> </span>
                     <span id={build(ids.DESKTOP, ids.MARK_ALL_SEEN)}>
                             <DEHyperlink
-                                onClick={props.markAllAsSeen}
+                                onClick={() => {
+                                    props.markAllAsSeen(true)
+                                }}
                                 text={getMessage("markAllRead")}/>
                     </span>
                 </div>
@@ -62,7 +65,44 @@ function NotificationFooter(props) {
                 </span>
             }
         </MenuItem>
-    )
+    );
+}
+
+function Notification(props) {
+    const {notification, onClick, classes} = props;
+    let className = classes.notification;
+    if (!notification.seen) {
+        className = classnames(classes.notification, classes.unSeenNotificationBackground);
+    }
+
+    return (
+        <span style={{outline: 'none'}}>
+                    <MenuItem
+                        id={notification.message.id}
+                        onClick={onClick}
+                        className={className}>
+                        {notification.message.text}
+                        {notification.payload.access_url &&
+                        <InteractiveAnalysisUrl notification={notification}/>
+                        }
+                    </MenuItem>
+                    <Divider/>
+        </span>
+    );
+
+}
+
+function InteractiveAnalysisUrl(props) {
+    return (
+        <span>
+            {getMessage("dot")}
+            <a href={props.notification.payload.access_url}
+               target="_blank">
+                {getMessage("interactiveAnalysisUrl")}
+            </a>
+        </span>
+    );
+
 }
 
 class Notifications extends Component {
@@ -73,13 +113,17 @@ class Notifications extends Component {
         };
         this.handleNotificationsClick = this.handleNotificationsClick.bind(this);
         this.onMenuItemSelect = this.onMenuItemSelect.bind(this);
-        this.getNotification = this.getNotification.bind(this);
-        this.getInteractiveAnalysisUrl = this.getInteractiveAnalysisUrl.bind(this);
         this.notificationBtn = React.createRef();
     }
 
     handleNotificationsClick() {
         this.setState({anchorEl: document.getElementById(this.props.anchor)});
+        const {unSeenCount, markAllAsSeen} = this.props;
+        //if unseencount < 10, mark them as read
+        if (unSeenCount > 0 && unSeenCount < 10) {
+            markAllAsSeen(false);
+        }
+
     }
 
     handleClose = () => {
@@ -88,58 +132,13 @@ class Notifications extends Component {
 
     onMenuItemSelect(event) {
         this.props.notificationClicked(event.currentTarget.id);
+        this.handleClose();
     }
 
     componentDidMount() {
-        this.notificationBtn.current.setAttribute("data-intro", tourStrings.introNotifications);
-        this.notificationBtn.current.setAttribute("data-position", "left");
-        this.notificationBtn.current.setAttribute("data-step", "4");
-    }
-
-    getNotification(notification) {
-        if (notification.seen) {
-            return (
-                <span key={notification.message.id} style={{outline: 'none'}}>
-                    <MenuItem id={notification.message.id}
-                              onClick={this.onMenuItemSelect}
-                              style={{fontSize: 10,}}>
-                        {notification.message.text}
-                        {notification.payload.access_url &&
-                            this.getInteractiveAnalysisUrl(notification)
-                        }
-
-                    </MenuItem>
-                    <Divider/>
-                </span>
-            );
-        } else {
-            return (
-                <span key={notification.message.id} style={{outline: 'none'}}>
-                    <MenuItem id={notification.message.id}
-                              onClick={this.onMenuItemSelect}
-                              style={{backgroundColor: '#99d9ea', fontSize: 10, borderBottom: 1}}>
-                        {notification.message.text}
-                        {notification.payload.access_url &&
-                             this.getInteractiveAnalysisUrl(notification)
-                        }
-                    </MenuItem>
-                    <Divider/>
-                </span>
-            );
-        }
-
-    }
-
-    getInteractiveAnalysisUrl(notification) {
-        return (
-            <span>
-                  {getMessage("interactiveAnalysisUrl")}
-                <a href={notification.payload.access_url}
-                   target="_blank">
-                    {getMessage("urlPrompt")}
-                </a>
-            </span>
-        );
+        document.getElementById(ids.NOTIFICATION_ICON).setAttribute("data-intro", tour.NotificationWindow.message);
+        document.getElementById(ids.NOTIFICATION_ICON).setAttribute("data-position", tour.NotificationWindow.position);
+        document.getElementById(ids.NOTIFICATION_ICON).setAttribute("data-step", tour.NotificationWindow.step);
     }
 
     render() {
@@ -152,13 +151,13 @@ class Notifications extends Component {
 
 
         return (
-            <span>
-                    <img className={classes.menuIcon}
-                         src={notificationImg}
-                         alt="Notifications"
-                         onClick={this.handleNotificationsClick}
-                         ref={this.notificationBtn}></img>
-                {unSeenCount !== "0" &&
+            <React.Fragment>
+                <NotificationIcon
+                    id={ids.NOTIFICATION_ICON}
+                    className={classes.menuIcon}
+                    onClick={this.handleNotificationsClick}
+                />
+                {unSeenCount !== 0 &&
                 <span id='notifyCount'
                       className={classes.unSeenCount}>
                         {unSeenCount}
@@ -168,7 +167,8 @@ class Notifications extends Component {
                       anchorEl={anchorEl}
                       open={Boolean(anchorEl)}
                       onClose={this.handleClose}
-                      style={{width: '100%'}}>
+                      className={classes.notificationMenu}
+                >
                         {notificationLoading ? (
                                 <CircularProgress size={30}
                                                   className={classes.loadingStyle}
@@ -181,7 +181,10 @@ class Notifications extends Component {
                                     (messages.length > 0) ?
                                         messages.map(n => {
                                             return (
-                                                this.getNotification(n)
+                                                <Notification key={n.message.id}
+                                                              notification={n}
+                                                              onClick={this.onMenuItemSelect}
+                                                              classes={classes}/>
                                             )
                                         }).reverse() : (
                                             <MenuItem id={build(ids.DESKTOP, ids.EMPTY_NOTIFICATION)}
@@ -195,9 +198,10 @@ class Notifications extends Component {
                                         viewAllNotification={this.props.viewAllNotification}
                                         markAllAsSeen={this.props.markAllAsSeen}
                                         viewNewNotification={this.props.viewNewNotification}
+                                        onClick={this.handleClose}
                                         />
                     </Menu>
-            </span>
+            </React.Fragment>
         );
     }
 }
