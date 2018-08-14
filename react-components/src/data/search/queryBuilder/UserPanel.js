@@ -13,7 +13,7 @@ import { withStyles } from "@material-ui/core/styles";
  * with either the collaborator's institution or group description
  */
 function UserPanel(props) {
-    let {
+    const {
         users,
         onDelete,
         classes,
@@ -23,8 +23,7 @@ function UserPanel(props) {
     let chips = users && users.map((user, index) =>
         <Tooltip key={user.id}
                  title={user.institution ? user.institution : user.description}>
-            <Chip key={user.id}
-                  id={user.id}
+            <Chip id={user.id}
                   className={classes.userChip}
                   onDelete={() => onDelete(index)}
                   label={collaboratorsUtil.getSubjectDisplayName(user)}/>

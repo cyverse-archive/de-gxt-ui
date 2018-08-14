@@ -12,12 +12,12 @@ import React, { Fragment } from "react";
  * A component which allows users to specify metadata attribute and values in QueryBuilder
  */
 function Metadata(props) {
-    let operators = [
+    const operators = [
         options.Is,
         options.IsNot
     ];
 
-    let{parentId} = props;
+    const {parentId} = props;
 
     return (
         <Fragment>

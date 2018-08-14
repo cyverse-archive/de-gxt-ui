@@ -26,6 +26,7 @@ export default {
 
     condition: {
         paddingLeft: '20px',
+        marginTop: '5px',
     },
 
     permissionUsers: {

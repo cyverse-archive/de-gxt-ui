@@ -13,12 +13,12 @@ import React, { Fragment } from "react";
  * to choose either a Creation date range or Modified date range
  */
 function Date(props) {
-    let operators = [
+    const operators = [
         options.Between,
         options.BetweenNot,
     ];
 
-    let {parentId} = props;
+    const {parentId} = props;
 
     return (
         <Fragment>

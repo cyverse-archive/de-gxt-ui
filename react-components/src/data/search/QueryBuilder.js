@@ -22,6 +22,7 @@ class QueryBuilder extends Component {
 
         this.handleSubmitForm = this.handleSubmitForm.bind(this);
         this.handleSaveSearch = this.handleSaveSearch.bind(this);
+        this.getOriginalName = this.getOriginalName.bind(this);
     }
 
     handleSubmitForm(values) {
@@ -29,19 +30,21 @@ class QueryBuilder extends Component {
     }
 
     handleSaveSearch(values) {
-        let initialValues = this.props.initialValues;
-        let originalName = initialValues ? initialValues.label : null;
+        let originalName = this.getOriginalName();
         this.props.presenter.onSaveSearch(values, originalName);
     }
 
+    getOriginalName() {
+        let {initialValues} = this.props;
+        return initialValues ? initialValues.label : null;
+    }
+
     render() {
-        let {
+        const {
             handleSubmit,
             classes,
-            initialValues,
             parentId
         } = this.props;
-        let originalName = initialValues ? initialValues : null;
 
         return (
             <div className={classes.form}>
@@ -50,7 +53,7 @@ class QueryBuilder extends Component {
                            helperProps={this.props}/>
                 <div className={classes.buttonBar}>
                     <Field name='label'
-                           originalName={originalName}
+                           originalName={this.getOriginalName()}
                            id={ids.saveBtn}
                            handleSave={handleSubmit(this.handleSaveSearch)}
                            component={renderSaveSearchBtn}/>
@@ -84,7 +87,7 @@ QueryBuilder.propTypes = {
 };
 
 function renderSaveSearchBtn(props) {
-    let {
+    const {
         input,
         disabled,
         ...custom

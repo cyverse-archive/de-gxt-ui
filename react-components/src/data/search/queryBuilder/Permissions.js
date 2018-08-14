@@ -20,14 +20,14 @@ import { withStyles } from "@material-ui/core/styles";
  * permissions in QueryBuilder
  */
 function Permissions(props) {
-    let operators = [
+    const operators = [
         options.AreAtLeast,
         options.Are,
         options.AreNotAtLeast,
         options.AreNot,
     ];
 
-    let permissions = [
+    const permissions = [
         {
             value: 'read',
             label: getMessage('read')
@@ -42,7 +42,7 @@ function Permissions(props) {
         }
     ];
 
-    let {
+    const {
         parentId,
         classes,
         helperProps: {
@@ -71,7 +71,7 @@ function Permissions(props) {
 }
 
 function renderSelect(props) {
-    let {
+    const {
         input,
         permissions,
         id
@@ -95,7 +95,7 @@ function renderSelect(props) {
 }
 
 function renderSubjectSearch(props) {
-    let {
+    const {
         presenter,
         collaboratorsUtil,
         fields,
@@ -103,7 +103,7 @@ function renderSubjectSearch(props) {
         classes
     } = props;
 
-    let users = fields.getAll();
+    const users = fields.getAll();
 
     return (
         <Grid item className={classes.autocompleteField}>

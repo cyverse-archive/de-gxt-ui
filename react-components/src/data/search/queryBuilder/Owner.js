@@ -5,8 +5,8 @@ import SelectOperator from "./SelectOperator";
 import SubjectSearchField from "../../../collaborators/SubjectSearchField";
 import UserPanel from "./UserPanel";
 
-import { Field } from 'redux-form';
-import React, { Fragment } from 'react';
+import { Field } from "redux-form";
+import React, { Fragment } from "react";
 import Grid from "@material-ui/core/Grid";
 
 /**
@@ -14,12 +14,12 @@ import Grid from "@material-ui/core/Grid";
  */
 
 function Owner(props) {
-    let operators = [
+    const operators = [
         options.Is,
         options.IsNot
     ];
 
-    let {
+    const {
         parentId,
         helperProps: {
             presenter,
@@ -45,13 +45,12 @@ function Owner(props) {
 }
 
 function renderSubjectSearch(props) {
-    let {
+    const {
         presenter,
         collaboratorsUtil,
         input,
         parentId,
-        classes,
-        meta
+        classes
     } = props;
 
     let collaborator = input.value;

@@ -12,14 +12,14 @@ import React, { Fragment } from "react";
  * A component which allows users to specify file names in QueryBuilder
  */
 function Label(props) {
-    let operators = [
+    const operators = [
         options.Contains,
         options.Is,
         options.ContainsNot,
         options.IsNot,
     ];
 
-    let {parentId} = props;
+    const {parentId} = props;
 
     return (
         <Fragment>

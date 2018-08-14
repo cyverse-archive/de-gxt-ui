@@ -15,7 +15,7 @@ import { withStyles } from '@material-ui/core/styles';
  */
 class SubjectSearchMenuItem extends Component {
     render() {
-        let {
+        const {
             data,
             innerProps,
             innerRef,
@@ -33,7 +33,9 @@ class SubjectSearchMenuItem extends Component {
                        component="div"
                        elevation={1}
                        {...innerProps}>
-                    {getOptionBody(collaboratorsUtil, inputValue, data)}
+                    <OptionBody collaboratorsUtil={collaboratorsUtil}
+                                searchTerm={inputValue}
+                                option={data}/>
                 </Paper>
                 <Divider/>
             </Fragment>
@@ -41,7 +43,12 @@ class SubjectSearchMenuItem extends Component {
     }
 }
 
-function getOptionBody(collaboratorsUtil, searchTerm, option) {
+function OptionBody(props) {
+    const {
+        collaboratorsUtil,
+        searchTerm,
+        option
+    } = props;
     let name = collaboratorsUtil.getSubjectDisplayName(option);
     let {trimmedSearch, pattern, regex} = getRegexSearchTerm(searchTerm);
     return (

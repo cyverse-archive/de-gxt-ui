@@ -13,7 +13,7 @@ import { withStyles } from "@material-ui/core/styles";
  * An icon used to visually indicate a Team, also uses a tooltip
  */
 function TeamIcon(props) {
-    let {classes} = props;
+    const {classes} = props;
     return (
         <ToolTip title={getMessage('teamToolTip')}>
             <Group className={classes.searchIcon}/>

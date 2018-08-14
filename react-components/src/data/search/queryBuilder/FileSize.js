@@ -16,19 +16,19 @@ import Select from "@material-ui/core/Select";
  * A component which allows users to specify a file size range in QueryBuilder
  */
 function FileSize(props) {
-    let operators = [
+    const operators = [
         options.Between,
         options.BetweenNot
     ];
 
-    let {
+    const {
         parentId,
         helperProps: {
             messages
         }
     } = props;
 
-    let sizesList = messages.fileSizes;
+    const sizesList = messages.fileSizes;
 
     return (
         <Fragment>
@@ -67,7 +67,7 @@ function FileSize(props) {
 }
 
 function renderDropDown(props) {
-    let {
+    const {
         input,
         children,
         id

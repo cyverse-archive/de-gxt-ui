@@ -12,12 +12,12 @@ import React, { Fragment } from "react";
  * A component which allows users to specify a path prefix in QueryBuilder
  */
 function Path(props) {
-    let operators = [
+    const operators = [
         options.Begins,
         options.BeginsNot,
     ];
 
-    let {parentId} = props;
+    const {parentId} = props;
 
     return (
         <Fragment>

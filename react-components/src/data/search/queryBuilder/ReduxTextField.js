@@ -8,7 +8,7 @@ import TextField from "@material-ui/core/TextField";
  * A general material-ui TextField that can be used with redux-form
  */
 function ReduxTextField(props) {
-    let {
+    const {
         input,
         label,
         meta,

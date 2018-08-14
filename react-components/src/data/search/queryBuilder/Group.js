@@ -4,14 +4,14 @@ import Condition from "./Condition";
 import DeleteBtn from "./DeleteBtn";
 import ids from "../ids";
 
-import React, { Fragment } from 'react';
+import React, { Fragment } from "react";
 
 /**
  * A component which allows users to create different groupings in QueryBuilder
  * such as Any and All
  */
 function Group(props) {
-    let {
+    const {
         root,
         fields,
         onRemove,

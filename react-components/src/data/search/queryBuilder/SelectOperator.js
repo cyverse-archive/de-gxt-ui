@@ -5,14 +5,14 @@ import { operatorMap } from "./Operators";
 import { Fields } from "redux-form";
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
-import React from 'react';
-import Select from '@material-ui/core/Select';
+import React from "react";
+import Select from "@material-ui/core/Select";
 
 /**
  * A Select which prompts the user to choose between different Operators
  */
 function SelectOperator(props) {
-    let {
+    const {
         operators,
         classes,
         parentId
@@ -30,7 +30,7 @@ function SelectOperator(props) {
 }
 
 function renderSelect(props) {
-    let {
+    const {
         opLabel,
         exact,
         negated,

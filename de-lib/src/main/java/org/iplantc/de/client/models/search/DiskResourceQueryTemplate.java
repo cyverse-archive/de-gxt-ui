@@ -17,6 +17,7 @@ import com.google.web.bindery.autobean.shared.Splittable;
 public interface DiskResourceQueryTemplate extends Folder {
 
     Splittable getQuery();
+
     void setQuery(Splittable query);
 
     /**

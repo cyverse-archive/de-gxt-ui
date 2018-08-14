@@ -4,11 +4,11 @@ import DeleteBtn from "./DeleteBtn";
 import Group from "./Group";
 import ids from "../ids";
 
-import { FieldArray, Fields, FormSection } from 'redux-form';
+import { FieldArray, Fields, FormSection } from "redux-form";
 import Grid from "@material-ui/core/Grid";
-import MenuItem from '@material-ui/core/MenuItem';
-import React, { Fragment } from 'react';
-import Select from '@material-ui/core/Select';
+import MenuItem from "@material-ui/core/MenuItem";
+import React, { Fragment } from "react";
+import Select from "@material-ui/core/Select";
 
 /**
  * A condition is a rule that can be constructed to help build a query in the QueryBuilder
@@ -19,7 +19,7 @@ import Select from '@material-ui/core/Select';
  * fully fill out that condition.
  */
 function Condition(props) {
-    let {
+    const {
         field,
         root,
         onRemove,
@@ -45,7 +45,7 @@ function Condition(props) {
 }
 
 function renderCondition(props) {
-    let {
+    const {
         field,
         root,
         selectOptions,
@@ -61,7 +61,7 @@ function renderCondition(props) {
     let fieldArgs = root ? 'args' : `${field}.args`;
     let fieldTypeObj = getTargetProp(props, fieldType);
 
-    if (fieldTypeObj.input.value === "") {
+    if (!fieldTypeObj.input.value) {
         let defaultIndex = root ? 0 : 2;
         fieldTypeObj.input.onChange(Conditions.labels[defaultIndex].value);
     }
@@ -93,7 +93,7 @@ function renderCondition(props) {
         )
     } else {
         return (
-            <Grid container spacing={8}>
+            <Grid container spacing={16}>
                 <Grid item>
                     <ConditionSelector/>
                 </Grid>
@@ -141,8 +141,7 @@ function getTargetProp(propsObj, target) {
 }
 
 function isGroup(condition) {
-    if (condition === "") return false;
-    return Conditions.componentMap[condition].isGroup
+    return condition ? Conditions.componentMap[condition].isGroup : false;
 }
 
 function ConditionComponent(condition) {

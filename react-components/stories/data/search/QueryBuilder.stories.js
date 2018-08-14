@@ -112,11 +112,16 @@ class QueryBuilderTest extends React.Component {
             isCollaboratorList: (subject) => subject.display_name.includes('collaborator-lists')
         };
 
+        const initialValues = {
+            label: 'OLDNAME',
+        };
+
         const parentId = 'gwt-debug-diskResourceWindow.0';
 
         return (
             <QueryBuilder presenter={presenter}
                           parentId={parentId}
+                          initialValues={initialValues}
                           collaboratorsUtil={collaboratorsUtil}/>
         )
     }

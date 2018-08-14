@@ -126,6 +126,8 @@ public class DataSearchQueryBuilder {
                 case PERMISSIONS:
                     permissions(child);
                     break;
+                default:
+                    break;
             }
             boolean negated = isNegated(getArgs(child));
             if (negated) {

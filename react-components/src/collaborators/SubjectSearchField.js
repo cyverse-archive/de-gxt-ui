@@ -36,7 +36,7 @@ class SubjectSearchField extends Component {
     }
 
     render() {
-        let {
+        const {
             onSelect,
             parentId,
             collaboratorsUtil

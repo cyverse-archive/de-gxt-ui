@@ -10,12 +10,12 @@ import React, { Fragment } from "react";
  * A component which allows users to specify tags in QueryBuilder
  */
 function Tags(props) {
-    let operators = [
+    const operators = [
         options.Are,
         options.AreNot
     ];
 
-    let {
+    const {
         parentId,
         helperProps: {
             array,
@@ -40,7 +40,7 @@ function Tags(props) {
 }
 
 function renderTagSearchField(props) {
-    let {
+    const {
         input,
         array,
         parentId,
