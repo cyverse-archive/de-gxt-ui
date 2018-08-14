@@ -72,7 +72,7 @@ public class GenomeBrowserUtil {
                 indexFilePath = path + ".bai";
             } else if (InfoType.VCF.toString().equals(infoType)) {
                 indexFilePath = path + ".idx";
-            } else if (InfoType.VCFGZ.toString().equals(infoType)) {
+            } else if (InfoType.VCFGZ.toString().equals(infoType) || InfoType.BEDGZ.toString().equals(infoType)) {
                 indexFilePath = path + ".tbi";
             }
 
