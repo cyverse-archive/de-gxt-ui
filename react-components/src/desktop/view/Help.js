@@ -12,7 +12,7 @@ import intlData from "../messages";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
 import build from "../../util/DebugIDUtil";
 import tour from "../NewUserTourSteps";
-import helpImg from "../../resources/images/help.png";
+import HelpIcon from "@material-ui/icons/Help";
 
 class Help extends Component {
     constructor(props) {
@@ -26,9 +26,9 @@ class Help extends Component {
     }
 
     componentDidMount() {
-        this.helpBtn.current.setAttribute("data-intro", tour.HelpMenu.message);
-        this.helpBtn.current.setAttribute("data-position", tour.HelpMenu.position);
-        this.helpBtn.current.setAttribute("data-step", tour.HelpMenu.step);
+        document.getElementById(ids.HELP_ICON).setAttribute("data-intro", tour.HelpMenu.message);
+        document.getElementById(ids.HELP_ICON).setAttribute("data-position", tour.HelpMenu.position);
+        document.getElementById(ids.HELP_ICON).setAttribute("data-step", tour.HelpMenu.step);
     }
 
     handleClick(event) {
@@ -44,11 +44,11 @@ class Help extends Component {
         const {classes, presenter} = this.props;
         return (
             <span>
-                 <img className={classes.menuIcon}
-                      src={helpImg}
-                      alt="Help"
-                      onClick={this.handleClick}
-                      ref={this.helpBtn}></img>
+                   <HelpIcon
+                       id={ids.HELP_ICON}
+                       className={classes.menuIcon}
+                       onClick={this.handleClick}
+                   />
                  <Menu id={build(ids.DESKTOP, ids.HELP_MENU)}
                        anchorEl={anchorEl}
                        open={Boolean(anchorEl)}

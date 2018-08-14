@@ -44,6 +44,7 @@ export default {
         opacity: '.8',
         right: '30px',
         backgroundSize: 'contain',
+        color: '#ffffff',
         position: 'relative',
         marginBottom: '8px',
         marginRight: '8px',
@@ -230,9 +231,17 @@ export default {
     },
 
     notificationMenu: {
-        width: '100%',
+        width: 400,
         zIndex: 888888,
-        maxHeight: 650
+        maxHeight: 650,
+
+    },
+    notification: {
+        fontSize: 10,
+    },
+    unSeenNotificationBackground: {
+        backgroundColor: color.lightBlue,
+        borderBottom: 1,
     }
 
 };

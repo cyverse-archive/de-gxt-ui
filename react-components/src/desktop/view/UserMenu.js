@@ -12,8 +12,8 @@ import withI18N, { getMessage } from "../../util/I18NWrapper";
 import intlData from "../messages";
 import build from "../../util/DebugIDUtil";
 import tour from "../NewUserTourSteps";
-import userImg from "../../resources/images/user.png";
 import { withStyles } from "@material-ui/core/styles";
+import PersonIcon from "@material-ui/icons/Person";
 
 class UserMenu extends Component {
     constructor(props) {
@@ -27,9 +27,9 @@ class UserMenu extends Component {
     }
 
     componentDidMount() {
-        this.userBtn.current.setAttribute("data-intro", tour.SettingsMenu.message);
-        this.userBtn.current.setAttribute("data-position", tour.SettingsMenu.position);
-        this.userBtn.current.setAttribute("data-step", tour.SettingsMenu.step);
+        document.getElementById(ids.USER_ICON).setAttribute("data-intro", tour.SettingsMenu.message);
+        document.getElementById(ids.USER_ICON).setAttribute("data-position", tour.SettingsMenu.position);
+        document.getElementById(ids.USER_ICON).setAttribute("data-step", tour.SettingsMenu.step);
     }
 
     handleClose() {
@@ -45,12 +45,10 @@ class UserMenu extends Component {
         const {classes, presenter, doIntro} = this.props;
         return (
             <span>
-                <img className={classes.menuIcon}
-                     src={userImg}
-                     alt="User Menu"
-                     onClick={this.onUserMenuClick}
-                     ref={this.userBtn}>
-                </img>
+                <PersonIcon id={ids.USER_ICON}
+                            className={classes.menuIcon}
+                            onClick={this.onUserMenuClick}
+                />
                 <Menu id={build(ids.DESKTOP, ids.USER_PREF_MENU)}
                       anchorEl={anchorEl}
                       open={Boolean(anchorEl)}

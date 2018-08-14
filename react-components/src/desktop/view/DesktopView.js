@@ -155,11 +155,12 @@ class DesktopView extends Component {
         }
 
         let message = push_msg.message;
-        let category = message.type;
-        if (category === "team") {
-            message.message.text = message.message.text + message.payload.team_name;  // attach team name to team notifications.
-        }
         if (message) {
+            let category = message.type;
+            if (category === "team") {
+                message.message.text = message.message.text + message.payload.team_name;  // attach team name to team notifications.
+            }
+
             let notifyQueue = this.state.notifications;
             if(notifyQueue.messages) {
                 notifyQueue.messages.push(message);
@@ -206,7 +207,7 @@ class DesktopView extends Component {
                 unSeenCount: updatedUnSeenCount,
             });
            const {notifications} = this.state;
-            notifications.messages.forEach(function (n) {
+           notifications.messages.forEach(function (n) {
                n.seen = true;
            });
         }, (httpStatusCode, errMsg) => {
