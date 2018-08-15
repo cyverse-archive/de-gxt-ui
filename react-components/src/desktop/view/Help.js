@@ -14,6 +14,7 @@ import build from "../../util/DebugIDUtil";
 import tour from "../NewUserTourSteps";
 import HelpIcon from "@material-ui/icons/Help";
 import ReactDOM from "react-dom";
+import NotificationIcon from "../../../node_modules/@material-ui/icons/Notifications";
 
 class Help extends Component {
     constructor(props) {
@@ -47,7 +48,7 @@ class Help extends Component {
         return (
             <span>
                    <HelpIcon
-                       id={ids.HELP_ICON}
+                       id={build(ids.DESKTOP, ids.HELP_MENU)}
                        className={classes.menuIcon}
                        onClick={this.handleClick}
                        ref={this.helpBtn}

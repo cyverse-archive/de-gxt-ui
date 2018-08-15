@@ -15,6 +15,7 @@ import tour from "../NewUserTourSteps";
 import { withStyles } from "@material-ui/core/styles";
 import PersonIcon from "@material-ui/icons/Person";
 import ReactDOM from "react-dom";
+import NotificationIcon from "../../../node_modules/@material-ui/icons/Notifications";
 
 class UserMenu extends Component {
     constructor(props) {
@@ -47,7 +48,7 @@ class UserMenu extends Component {
         const {classes, presenter, doIntro} = this.props;
         return (
             <span>
-                <PersonIcon id={ids.USER_ICON}
+                <PersonIcon  id={build(ids.DESKTOP, ids.USER_PREF_MENU)}
                             className={classes.menuIcon}
                             onClick={this.onUserMenuClick}
                             ref={this.userBtn}
