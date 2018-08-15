@@ -68,7 +68,7 @@ public class PipelineEditorWindow extends WindowBase {
     public <C extends WindowConfig> void show(C windowConfig, String tag,
                                               boolean isMaximizable) {
 
-        super.show(windowConfig, tag, isMaximizable);
+
         this.view = new PipelineViewImpl();
         presenter = new PipelineViewPresenter(view, new PublishCallbackCommand(), appsViewPresenter);
 
@@ -92,6 +92,7 @@ public class PipelineEditorWindow extends WindowBase {
         presenter.go(this);
         close_after_save = false;
         ensureDebugId(DeModule.WindowIds.WORKFLOW_EDITOR);
+        super.show(windowConfig, tag, isMaximizable);
     }
 
     @Override
