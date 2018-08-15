@@ -14,7 +14,6 @@ import build from "../../util/DebugIDUtil";
 import tour from "../NewUserTourSteps";
 import HelpIcon from "@material-ui/icons/Help";
 import ReactDOM from "react-dom";
-import NotificationIcon from "../../../node_modules/@material-ui/icons/Notifications";
 
 class Help extends Component {
     constructor(props) {
