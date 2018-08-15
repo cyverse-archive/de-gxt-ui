@@ -155,7 +155,7 @@ class Notifications extends Component {
         return (
             <React.Fragment>
                 <NotificationIcon
-                    id={ids.NOTIFICATION_ICON}
+                    id={build(ids.DESKTOP, ids.NOTIFICATION_BUTTON)}
                     className={classes.menuIcon}
                     onClick={this.handleNotificationsClick}
                     ref={this.notificationBtn}
