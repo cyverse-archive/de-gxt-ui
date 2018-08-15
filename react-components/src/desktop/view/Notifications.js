@@ -2,6 +2,7 @@
  * @author sriram
  */
 import React, { Component } from "react";
+import ReactDOM from 'react-dom';
 import MenuItem from "@material-ui/core/MenuItem";
 import DEHyperlink from "../../../src/util/hyperlink/DEHyperLink";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
@@ -136,9 +137,10 @@ class Notifications extends Component {
     }
 
     componentDidMount() {
-        document.getElementById(ids.NOTIFICATION_ICON).setAttribute("data-intro", tour.NotificationWindow.message);
-        document.getElementById(ids.NOTIFICATION_ICON).setAttribute("data-position", tour.NotificationWindow.position);
-        document.getElementById(ids.NOTIFICATION_ICON).setAttribute("data-step", tour.NotificationWindow.step);
+        let ele = ReactDOM.findDOMNode(this.notificationBtn.current);
+        ele.setAttribute("data-intro", tour.NotificationWindow.message);
+        ele.setAttribute("data-position", tour.NotificationWindow.position);
+        ele.setAttribute("data-step", tour.NotificationWindow.step);
     }
 
     render() {
@@ -156,6 +158,7 @@ class Notifications extends Component {
                     id={ids.NOTIFICATION_ICON}
                     className={classes.menuIcon}
                     onClick={this.handleNotificationsClick}
+                    ref={this.notificationBtn}
                 />
                 {unSeenCount !== 0 &&
                 <span id='notifyCount'

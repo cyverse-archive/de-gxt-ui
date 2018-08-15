@@ -13,6 +13,7 @@ import withI18N, { getMessage } from "../../util/I18NWrapper";
 import build from "../../util/DebugIDUtil";
 import tour from "../NewUserTourSteps";
 import HelpIcon from "@material-ui/icons/Help";
+import ReactDOM from "react-dom";
 
 class Help extends Component {
     constructor(props) {
@@ -26,9 +27,10 @@ class Help extends Component {
     }
 
     componentDidMount() {
-        document.getElementById(ids.HELP_ICON).setAttribute("data-intro", tour.HelpMenu.message);
-        document.getElementById(ids.HELP_ICON).setAttribute("data-position", tour.HelpMenu.position);
-        document.getElementById(ids.HELP_ICON).setAttribute("data-step", tour.HelpMenu.step);
+        let ele = ReactDOM.findDOMNode(this.helpBtn.current);
+        ele.setAttribute("data-intro", tour.HelpMenu.message);
+        ele.setAttribute("data-position", tour.HelpMenu.position);
+        ele.setAttribute("data-step", tour.HelpMenu.step);
     }
 
     handleClick(event) {
@@ -48,6 +50,7 @@ class Help extends Component {
                        id={ids.HELP_ICON}
                        className={classes.menuIcon}
                        onClick={this.handleClick}
+                       ref={this.helpBtn}
                    />
                  <Menu id={build(ids.DESKTOP, ids.HELP_MENU)}
                        anchorEl={anchorEl}

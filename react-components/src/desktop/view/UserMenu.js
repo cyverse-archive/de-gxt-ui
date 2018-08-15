@@ -14,6 +14,7 @@ import build from "../../util/DebugIDUtil";
 import tour from "../NewUserTourSteps";
 import { withStyles } from "@material-ui/core/styles";
 import PersonIcon from "@material-ui/icons/Person";
+import ReactDOM from "react-dom";
 
 class UserMenu extends Component {
     constructor(props) {
@@ -27,9 +28,10 @@ class UserMenu extends Component {
     }
 
     componentDidMount() {
-        document.getElementById(ids.USER_ICON).setAttribute("data-intro", tour.SettingsMenu.message);
-        document.getElementById(ids.USER_ICON).setAttribute("data-position", tour.SettingsMenu.position);
-        document.getElementById(ids.USER_ICON).setAttribute("data-step", tour.SettingsMenu.step);
+        let ele = ReactDOM.findDOMNode(this.userBtn.current);
+        ele.setAttribute("data-intro", tour.SettingsMenu.message);
+        ele.setAttribute("data-position", tour.SettingsMenu.position);
+        ele.setAttribute("data-step", tour.SettingsMenu.step);
     }
 
     handleClose() {
@@ -48,6 +50,7 @@ class UserMenu extends Component {
                 <PersonIcon id={ids.USER_ICON}
                             className={classes.menuIcon}
                             onClick={this.onUserMenuClick}
+                            ref={this.userBtn}
                 />
                 <Menu id={build(ids.DESKTOP, ids.USER_PREF_MENU)}
                       anchorEl={anchorEl}
