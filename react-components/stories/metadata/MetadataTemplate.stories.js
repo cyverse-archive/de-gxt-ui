@@ -263,6 +263,12 @@ const dataciteMetadataTemplate = {
             "type": "String",
             "attributes": [
                 {
+                    "name": "affiliation",
+                    "description": "The organizational or institutional affiliation of the contributor.",
+                    "required": false,
+                    "type": "String"
+                },
+                {
                     "id": "d783f6b6-7416-11e8-a7d5-008cfa5ae621",
                     "name": "contributorType",
                     "description": "Select a role for the contributor.",
@@ -691,10 +697,16 @@ const dataciteMetadataTemplate = {
         },
         {
             "id": "52cdad72-74b1-11e8-b2bf-008cfa5ae621",
-            "name": "Language",
-            "description": "Test",
+            "name": "language",
+            "description": "Primary language of the resource.",
             "required": false,
-            "type": "String"
+            "type": "Enum",
+            "values": [
+                {
+                    "value": "en-us",
+                    "is_default": true
+                }
+            ]
         },
         {
             "id": "52cec45a-74b1-11e8-b2bf-008cfa5ae621",
