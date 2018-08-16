@@ -13,13 +13,8 @@ import TableCell from "@material-ui/core/TableCell";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableHead from "@material-ui/core/TableHead";
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from "@material-ui/core/IconButton";
-import FirstPageIcon from "@material-ui/icons/FirstPage";
-import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
-import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
-import LastPageIcon from "@material-ui/icons/LastPage";
+import TableSortLabel from "@material-ui/core/TableSortLabel";
+import Tooltip from "@material-ui/core/Tooltip";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -28,83 +23,16 @@ import constants from "../../constants";
 import intlData from "../messages";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
 import injectSheet from "react-jss";
-
-class TablePaginationActions extends React.Component {
-    handleFirstPageButtonClick = event => {
-        this.props.onChangePage(event, 0);
-    };
-
-    handleBackButtonClick = event => {
-        this.props.onChangePage(event, this.props.page - 1);
-    };
-
-    handleNextButtonClick = event => {
-        this.props.onChangePage(event, this.props.page + 1);
-    };
-
-    handleLastPageButtonClick = event => {
-        this.props.onChangePage(
-            event,
-            Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1),
-        );
-    };
-
-    render() {
-        const { classes, count, page, rowsPerPage, theme } = this.props;
-
-        return (
-                <div className={classes.statTablePager}>
-                    <IconButton
-                        onClick={this.handleFirstPageButtonClick}
-                        disabled={page === 0}
-                        aria-label={getMessage("firstPage")}>
-                        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
-                    </IconButton>
-                    <IconButton
-                        onClick={this.handleBackButtonClick}
-                        disabled={page === 0}
-                        aria-label={getMessage("prevPage")}>
-                        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-                    </IconButton>
-                    <IconButton
-                        onClick={this.handleNextButtonClick}
-                        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                        aria-label={getMessage("nextPage")}>
-                        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-                    </IconButton>
-                    <IconButton
-                        onClick={this.handleLastPageButtonClick}
-                        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                        aria-label={getMessage("lastPage")}>
-                        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
-                    </IconButton>
-                </div>
-        );
-    }
-}
-
-TablePaginationActions.propTypes = {
-    classes: PropTypes.object.isRequired,
-    count: PropTypes.number.isRequired,
-    onChangePage: PropTypes.func.isRequired,
-    page: PropTypes.number.isRequired,
-    rowsPerPage: PropTypes.number.isRequired,
-    theme: PropTypes.object.isRequired,
-};
-
-const TablePaginationActionsWrapped = withI18N(injectSheet(exStyles, {withTheme: true})(
-    TablePaginationActions,
-), intlData);
-
+import TablePaginationActions from "../../util/table/TablePaginationActions";
 
 const columnData = [
-    { name: "appName",       numeric: false },
-    { name: "rating",        numeric: true },
-    { name: "total",         numeric: true },
-    { name: "completed",     numeric: true },
-    { name: "failed",        numeric: true },
-    { name: "lastCompleted", numeric: true },
-    { name: "lastUsed",      numeric: true },
+    {name: "appName", numeric: false},
+    {name: "rating", numeric: true},
+    {name: "total", numeric: true},
+    {name: "completed", numeric: true},
+    {name: "failed", numeric: true},
+    {name: "lastCompleted", numeric: true},
+    {name: "lastUsed", numeric: true},
 ];
 
 class AppStats extends Component {
@@ -353,7 +281,7 @@ class AppStats extends Component {
                         page={page}
                         onChangePage={this.handleChangePage}
                         onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                        ActionsComponent={TablePaginationActionsWrapped}
+                        ActionsComponent={TablePaginationActions}
                         rowsPerPageOptions={[100, 500, 1000]}
                     />
                 </div>
@@ -365,4 +293,4 @@ AppStats.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default injectSheet(exStyles)(withI18N(AppStats, intlData), TablePaginationActionsWrapped);
+export default injectSheet(exStyles)(withI18N(AppStats, intlData));
