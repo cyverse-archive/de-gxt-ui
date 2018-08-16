@@ -45,5 +45,9 @@ export default {
 
     errorField: {
         color: 'red'
+    },
+
+    conditionButton: {
+        margin: '0px 5px 0px 5px',
     }
 };

@@ -94,6 +94,8 @@ function renderCondition(props) {
     } else {
         return (
             <Grid container spacing={16}>
+                {!root && <DeleteBtn onClick={onRemove}
+                                     id={build(baseId, ids.deleteConditionBtn)}/>}
                 <Grid item>
                     <ConditionSelector/>
                 </Grid>
@@ -101,10 +103,6 @@ function renderCondition(props) {
                              parentId={baseId}
                              helperProps={helperProps}
                              component={ConditionComponent(selection)}/>
-                <Grid item>
-                    {!root && <DeleteBtn onClick={onRemove}
-                                         id={build(baseId, ids.deleteConditionBtn)}/>}
-                </Grid>
             </Grid>
         )
     }
