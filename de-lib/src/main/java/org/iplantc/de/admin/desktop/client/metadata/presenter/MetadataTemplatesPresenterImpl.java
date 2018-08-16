@@ -168,7 +168,11 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(appearance.addTemplateError(), caught);
-                reject.reject(caught.getMessage());
+
+                if (reject != null) {
+                    reject.reject(caught.getMessage());
+                }
+
                 presenter.closeTemplateInfoDialog();
             }
 
@@ -176,7 +180,10 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
             public void onSuccess(String result) {
                 IplantAnnouncer.getInstance().schedule(new SuccessAnnouncementConfig(appearance.addTemplateSuccess()));
 
-                resolve.resolve(AutoBeanCodex.encode(AutoBeanCodex.decode(drFac, MetadataTemplate.class, result)));
+                if (resolve != null) {
+                    resolve.resolve(AutoBeanCodex.encode(AutoBeanCodex.decode(drFac, MetadataTemplate.class, result)));
+                }
+
                 presenter.closeTemplateInfoDialog();
                 loadTemplates();
             }
@@ -191,7 +198,11 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
             @Override
             public void onFailure(Throwable caught) {
                 ErrorHandler.post(appearance.updateTemplateError(), caught);
-                reject.reject(caught.getMessage());
+
+                if (reject != null) {
+                    reject.reject(caught.getMessage());
+                }
+
                 presenter.closeTemplateInfoDialog();
             }
 
@@ -200,7 +211,10 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
                 IplantAnnouncer.getInstance()
                                .schedule(new SuccessAnnouncementConfig(appearance.updateTemplateSuccess()));
 
-                resolve.resolve(AutoBeanCodex.encode(AutoBeanCodex.decode(drFac, MetadataTemplate.class, result)));
+                if (resolve != null) {
+                    resolve.resolve(AutoBeanCodex.encode(AutoBeanCodex.decode(drFac, MetadataTemplate.class, result)));
+                }
+
                 presenter.closeTemplateInfoDialog();
                 loadTemplates();
             }
