@@ -6,5 +6,6 @@ import jsinterop.annotations.JsFunction;
 
 @JsFunction
 public interface SaveTemplateSuccess {
+    @SuppressWarnings("unusable-by-js")
     void resolve(Splittable result);
 }

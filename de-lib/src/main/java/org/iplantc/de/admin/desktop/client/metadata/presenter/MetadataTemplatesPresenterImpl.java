@@ -216,6 +216,7 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
         editView.edit(this, AutoBeanCodex.encode(templateAutoBean));
     }
 
+    @SuppressWarnings("unusable-by-js")
     @Override
     public void onSaveTemplate(Splittable template, SaveTemplateSuccess resolve, SaveTemplateError reject) {
         final MetadataTemplate metadataTemplate = AutoBeanCodex.decode(drFac, MetadataTemplate.class, template).as();
