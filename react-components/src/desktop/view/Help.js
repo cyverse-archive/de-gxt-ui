@@ -53,6 +53,7 @@ class Help extends Component {
                        ref={this.helpBtn}
                    />
                  <Menu id={build(ids.DESKTOP, ids.HELP_MENU)}
+                       style={{zIndex: 888888,}}
                        anchorEl={anchorEl}
                        open={Boolean(anchorEl)}
                        onClose={this.handleClose}
