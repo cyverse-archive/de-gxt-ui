@@ -58,37 +58,48 @@ class UserMenu extends Component {
                       open={Boolean(anchorEl)}
                       onClose={this.handleClose}>
                     <MenuItem id={build(ids.DESKTOP, ids.PREFERENCES_LINK)}
-                              onClick={() => presenter.onPreferencesClick()}>
-                        <DEHyperlink text={getMessage("preferences")}
-                                     onClick={this.handleClose}/>
+                              onClick={() => {
+                                  presenter.onPreferencesClick();
+                                  this.handleClose();
+                              }}>
+                        <DEHyperlink text={getMessage("preferences")}/>
                     </MenuItem>
                     <MenuItem id={build(ids.DESKTOP, ids.COLLABORATORS_LINK)}
-                              onClick={() => presenter.onCollaboratorsClick()}>
-                        <DEHyperlink text={getMessage("collaboration")}
-                                     onClick={this.handleClose}/>
+                              onClick={() => {
+                                  presenter.onCollaboratorsClick();
+                                  this.handleClose();
+                              }}>
+                        <DEHyperlink text={getMessage("collaboration")}/>
                     </MenuItem>
                       <Divider />
                     <MenuItem id={build(ids.DESKTOP, ids.USER_MANUAL_LINK)}
-                              onClick={() => presenter.onDocumentationClick()}>
-                        <DEHyperlink text={getMessage("documentation")}
-                                     onClick={this.handleClose}/>
+                              onClick={() => {
+                                  presenter.onDocumentationClick();
+                                  this.handleClose();
+                              }}>
+                        <DEHyperlink text={getMessage("documentation")}/>
                     </MenuItem>
                      <MenuItem id={build(ids.DESKTOP, ids.INTRO_LINK)}
-                               onClick={doIntro}>
-                        <DEHyperlink text={getMessage("introduction")}
-                                     onClick={this.handleClose}
-                        />
+                               onClick={() => {
+                                   doIntro();
+                                   this.handleClose();
+                               }}>
+                        <DEHyperlink text={getMessage("introduction")}/>
                      </MenuItem>
                     <MenuItem id={build(ids.DESKTOP, ids.ABOUT_LINK)}
-                              onClick={() => presenter.onAboutClick()}>
-                        <DEHyperlink text={getMessage("about")}
-                                     onClick={this.handleClose}/>
+                              onClick={() => {
+                                  presenter.onAboutClick();
+                                  this.handleClose();
+                              }}>
+                        <DEHyperlink text={getMessage("about")}/>
                     </MenuItem>
                      <Divider />
                     <MenuItem id={build(ids.DESKTOP, ids.LOGOUT_LINK)}
-                              onClick={() => presenter.doLogout(false)}>
-                        <DEHyperlink text={getMessage("logout")}
-                                     onClick={this.handleClose}/>
+                              onClick={() => {
+                                  presenter.doLogout(false);
+                                  this.handleClose();
+                              }}>
+                        <DEHyperlink text={getMessage("logout")}/>
                     </MenuItem>
                 </Menu>
             </span>
