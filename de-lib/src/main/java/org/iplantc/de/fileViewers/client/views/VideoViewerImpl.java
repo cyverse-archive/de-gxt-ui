@@ -1,41 +1,38 @@
 package org.iplantc.de.fileViewers.client.views;
 
 import org.iplantc.de.client.models.diskResources.File;
+import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.media.client.Video;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-
-import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 
 /**
  * @author aramsey
  */
 public class VideoViewerImpl extends AbstractFileViewer {
 
-    interface VideoViewerUiBinder extends UiBinder<Widget, VideoViewerImpl> { }
-
-    @UiField VerticalLayoutContainer con;
-    @UiField(provided = true) Video video;
-
-    private static VideoViewerUiBinder uiBinder = GWT.create(VideoViewerUiBinder.class);
+    private HTMLPanel panel;
 
     public VideoViewerImpl(final File file,
                            final String videoUrl) {
         super(file, null);
-        video = Video.createIfSupported();
-        video.setSrc(videoUrl);
-        video.setAutoplay(true);
-        video.setControls(true);
-        initWidget(uiBinder.createAndBindUi(this));
+        panel = new HTMLPanel("<div></div>");
+
+        showVideo(videoUrl);
     }
 
     @Override
-    public void fireEvent(GwtEvent<?> event) {
-        con.fireEvent(event);
+    public Widget asWidget() {
+        return panel;
+    }
+
+    private void showVideo(String url) {
+        ReactVideoViewer.VideoViewerProps props = new ReactVideoViewer.VideoViewerProps();
+        props.url = url;
+
+        CyVerseReactComponents.render(ReactVideoViewer.VideoViewer,
+                                      props,
+                                      panel.getElement());
     }
 
     @Override

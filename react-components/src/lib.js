@@ -2,6 +2,7 @@ import * as apps from "./apps";
 import * as collaborators from "./collaborators";
 import * as data from "./data";
 import * as desktop from "./desktop";
+import * as fileViewers from "./fileViewers";
 import * as metadata from "./metadata";
 import * as util from "./util/util";
 import palette from "./util/CyVersePalette";
@@ -32,6 +33,7 @@ export {
     collaborators,
     data,
     desktop,
+    fileViewers,
     metadata,
     util,
     getDefaultTheme,
