@@ -84,11 +84,19 @@ class StringListEditor extends Component {
             selected: -1,
             editingIndex: -1,
         };
+
+        [
+            "onAddValue",
+            "moveUp",
+            "moveDown",
+        ].forEach(methodName => (this[methodName] = this[methodName].bind(this)));
     }
 
-    newValue = () => formatMessage(this.props.intl, "newValue", {count: this.newValueCount++});
+    newValue() {
+        return formatMessage(this.props.intl, "newValue", {count: this.newValueCount++});
+    }
 
-    onAddValue = () => {
+    onAddValue() {
         let value = this.newValue();
         const fields = this.props.fields;
         const values = fields.getAll() || [];
@@ -101,9 +109,9 @@ class StringListEditor extends Component {
         this.setState({selected: 0});
 
         this.props.fields.unshift(value);
-    };
+    }
 
-    onValueRemoved = (index) => {
+    onValueRemoved(index) {
         let { selected } = this.state;
 
         // fix selection
@@ -116,28 +124,28 @@ class StringListEditor extends Component {
         this.setState({selected});
 
         this.props.fields.remove(index);
-    };
+    }
 
-    handleSelect = (index) => {
+    handleSelect(index) {
         const { selected } = this.state;
         this.setState({ selected: selected === index ? -1 : index });
-    };
+    }
 
-    moveUp = () => {
+    moveUp() {
         this.moveSelectedValue(-1);
-    };
+    }
 
-    moveDown = () => {
+    moveDown() {
         this.moveSelectedValue(1);
-    };
+    }
 
-    moveSelectedValue = (offset) => {
+    moveSelectedValue(offset) {
         const { selected } = this.state;
 
         this.setState({selected: selected + offset});
 
         this.props.fields.move(selected, selected + offset);
-    };
+    }
 
     render() {
         const { classes, intl, parentID, title, helpLabel, columnLabel, fields } = this.props;

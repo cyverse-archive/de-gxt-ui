@@ -45,14 +45,22 @@ const normalizeDefault = (fields, change, is_default) => {
 };
 
 class AttributeEnumEditDialog extends Component {
+    constructor(props) {
+        super(props);
+
+        [
+            "normalizeDefaultField",
+        ].forEach(methodName => (this[methodName] = this[methodName].bind(this)));
+    }
+
     static propTypes = {
         onClose: PropTypes.func.isRequired,
     };
 
-    normalizeDefaultField = (is_default) => {
+    normalizeDefaultField(is_default) {
         const { fields, change } = this.props;
         return normalizeDefault(fields, change, is_default);
-    };
+    }
 
     render() {
         const { open, intl, field, error, onClose } = this.props;
@@ -109,11 +117,20 @@ class AttributeEnumEditGrid extends Component {
             selected: -1,
             editingEnumIndex: -1,
         };
+
+        [
+            "onAddEnum",
+            "moveUp",
+            "moveDown",
+            "normalizeDefaultField",
+        ].forEach(methodName => (this[methodName] = this[methodName].bind(this)));
     }
 
-    newEnumValue = () => formatMessage(this.props.intl, "newValue", {count: this.newEnumCount++});
+    newEnumValue() {
+        return formatMessage(this.props.intl, "newValue", {count: this.newEnumCount++});
+    }
 
-    onAddEnum = () => {
+    onAddEnum() {
         let value = this.newEnumValue();
         const fields = this.props.fields;
         const attributeEnums = fields.getAll() || [];
@@ -129,9 +146,9 @@ class AttributeEnumEditGrid extends Component {
             value,
             is_default: false,
         });
-    };
+    }
 
-    onEnumRemoved = (index) => {
+    onEnumRemoved(index) {
         let { selected } = this.state;
 
         // fix selection
@@ -144,33 +161,33 @@ class AttributeEnumEditGrid extends Component {
         this.setState({selected});
 
         this.props.fields.remove(index);
-    };
+    }
 
-    handleSelect = (index) => {
+    handleSelect(index) {
         const { selected } = this.state;
         this.setState({ selected: selected === index ? -1 : index });
-    };
+    }
 
-    moveUp = () => {
+    moveUp() {
         this.moveSelectedEnum(-1);
-    };
+    }
 
-    moveDown = () => {
+    moveDown() {
         this.moveSelectedEnum(1);
-    };
+    }
 
-    moveSelectedEnum = (offset) => {
+    moveSelectedEnum(offset) {
         const { selected } = this.state;
 
         this.setState({selected: selected + offset});
 
         this.props.fields.move(selected, selected + offset);
-    };
+    }
 
-    normalizeDefaultField = (is_default) => {
+    normalizeDefaultField(is_default) {
         const { fields, change } = this.props;
         return normalizeDefault(fields, change, is_default);
-    };
+    }
 
     render() {
         const { classes, intl, parentID, fields, change, meta: { error } } = this.props;

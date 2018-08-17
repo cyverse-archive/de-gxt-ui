@@ -36,6 +36,12 @@ class EditMetadataTemplate extends Component {
         super(props);
 
         this.state = { showConfirmationDialog: false };
+
+        [
+            "onSaveTemplate",
+            "closeTemplateInfoDialog",
+            "closeConfirmationDialog",
+        ].forEach(methodName => (this[methodName] = this[methodName].bind(this)));
     }
 
     static propTypes = {
@@ -45,7 +51,7 @@ class EditMetadataTemplate extends Component {
         }),
     };
 
-    onSaveTemplate = ({ name, description, deleted, attributes }) => {
+    onSaveTemplate({name, description, deleted, attributes}) {
         this.closeConfirmationDialog();
 
         return new Promise((resolve, reject) => {
@@ -65,7 +71,14 @@ class EditMetadataTemplate extends Component {
         });
     };
 
-    closeConfirmationDialog = () => this.setState({ showConfirmationDialog: false });
+    closeTemplateInfoDialog() {
+        this.closeConfirmationDialog();
+        this.props.presenter.closeTemplateInfoDialog();
+    }
+
+    closeConfirmationDialog() {
+        this.setState({showConfirmationDialog: false});
+    }
 
     render() {
         const {
@@ -146,10 +159,7 @@ class EditMetadataTemplate extends Component {
                 <ConfirmCloseDialog open={this.state.showConfirmationDialog}
                                     parentId={ids.METADATA_TEMPLATE_FORM}
                                     onConfirm={handleSubmit(this.onSaveTemplate)}
-                                    onClose={() => {
-                                        this.closeConfirmationDialog();
-                                        this.props.presenter.closeTemplateInfoDialog();
-                                    }}
+                                    onClose={this.closeTemplateInfoDialog}
                                     onCancel={this.closeConfirmationDialog}
                                     title={getMessage("save")}
                                     dialogContent={getMessage("confirmCloseUnsavedChanges")}

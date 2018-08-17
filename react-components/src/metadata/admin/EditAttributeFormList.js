@@ -57,6 +57,10 @@ class EditAttribute extends Component {
         this.state = {
             editingAttrIndex: -1,
         };
+
+        [
+            "normalizeType",
+        ].forEach(methodName => (this[methodName] = this[methodName].bind(this)));
     }
 
     static propTypes = {
@@ -76,7 +80,7 @@ class EditAttribute extends Component {
         }).isRequired,
     };
 
-    normalizeType = (type) => {
+    normalizeType(type) {
         const { change, field, attribute: { settings } } = this.props;
 
         if (type === "OLS Ontology Term" && (!settings || !settings.type)) {
@@ -84,7 +88,7 @@ class EditAttribute extends Component {
         }
 
         return type;
-    };
+    }
 
     render() {
         const {
@@ -264,11 +268,17 @@ class EditAttributeFormList extends Component {
         super(props);
 
         this.newAttrCount = 1;
+
+        [
+            "onAddAttribute",
+        ].forEach(methodName => (this[methodName] = this[methodName].bind(this)));
     }
 
-    newAttrName = () => formatMessage(this.props.intl, "newAttrName", {count: this.newAttrCount++});
+    newAttrName() {
+        return formatMessage(this.props.intl, "newAttrName", {count: this.newAttrCount++});
+    }
 
-    onAddAttribute = () => {
+    onAddAttribute() {
         const fields = this.props.fields;
         const attributes = fields.getAll() || [];
 
@@ -285,23 +295,23 @@ class EditAttributeFormList extends Component {
             type: "String",
             required: false,
         });
-    };
+    }
 
-    onAttributeRemoved = (index) => {
+    onAttributeRemoved(index) {
         this.props.fields.remove(index);
-    };
+    }
 
-    moveUp = (index) => {
+    moveUp(index) {
         this.moveSelectedAttr(index, -1);
-    };
+    }
 
-    moveDown = (index) => {
+    moveDown(index) {
         this.moveSelectedAttr(index, 1);
-    };
+    }
 
-    moveSelectedAttr = (index, offset) => {
+    moveSelectedAttr(index, offset) {
         this.props.fields.move(index, index + offset);
-    };
+    }
 
     render () {
         const { classes, intl, fields, change, meta: { error } } = this.props;
