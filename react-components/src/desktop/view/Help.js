@@ -59,16 +59,25 @@ class Help extends Component {
                        onClose={this.handleClose}
                  >
                  <MenuItem id={build(ids.DESKTOP, ids.FAQS_LINK)}
-                           onClick={() => presenter.onFaqSelect()}>
-                     <DEHyperlink text={getMessage("faqLink")} onClick={this.handleClose}/>
+                           onClick={() => {
+                               presenter.onFaqSelect();
+                               this.handleClose();
+                           }}>
+                     <DEHyperlink text={getMessage("faqLink")}/>
                  </MenuItem>
                  <MenuItem id={build(ids.DESKTOP, ids.FORUMS_LINK)}
-                           onClick={() => presenter.onForumsBtnSelect()}>
-                     <DEHyperlink text={getMessage("forumsLink")} onClick={this.handleClose}/>
+                           onClick={() => {
+                               presenter.onForumsBtnSelect();
+                               this.handleClose();
+                           }}>
+                     <DEHyperlink text={getMessage("forumsLink")}/>
                  </MenuItem>
                  <MenuItem id={build(ids.DESKTOP, ids.FEEDBACK_LINK)}
-                           onClick={() => presenter.onFeedbackSelect()}>
-                     <DEHyperlink text={getMessage("feedbackLink")} onClick={this.handleClose}/>
+                           onClick={() => {
+                               presenter.onFeedbackSelect();
+                               this.handleClose();
+                           }}>
+                     <DEHyperlink text={getMessage("feedbackLink")}/>
                  </MenuItem>
              </Menu>
             </span>
