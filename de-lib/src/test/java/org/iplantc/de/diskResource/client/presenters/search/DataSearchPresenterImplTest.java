@@ -21,7 +21,7 @@ import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.client.services.TagsServiceFacade;
-import org.iplantc.de.client.services.callbacks.ReactCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -64,7 +64,7 @@ public class DataSearchPresenterImplTest {
     @Mock SearchModelUtils searchModelUtilsMock;
     @Mock CollaboratorsServiceFacade collaboratorsServiceFacade;
     @Mock CollaboratorsUtil collaboratorsUtilMock;
-    @Mock ReactCallback reactCallbackMock;
+    @Mock ReactSuccessCallback reactCallbackMock;
     @Mock List<Subject> subjectListMock;
     @Mock Splittable subjectSplittable;
 

@@ -9,6 +9,6 @@ import jsinterop.annotations.JsFunction;
  */
 @JsFunction
 @SuppressWarnings("unusable-by-js")
-public interface ReactCallback {
+public interface ReactSuccessCallback {
     void onSuccess(Splittable data);
 }

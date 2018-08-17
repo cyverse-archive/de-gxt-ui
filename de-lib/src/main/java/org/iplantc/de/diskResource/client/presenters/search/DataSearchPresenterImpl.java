@@ -7,7 +7,7 @@ import org.iplantc.de.client.models.tags.Tag;
 import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.client.services.TagsServiceFacade;
-import org.iplantc.de.client.services.callbacks.ReactCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -368,7 +368,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     }
 
     @Override
-    public void searchCollaborators(String searchTerm, ReactCallback collaboratorCallback) {
+    public void searchCollaborators(String searchTerm, ReactSuccessCallback collaboratorCallback) {
         collaboratorsServiceFacade.searchCollaborators(searchTerm, new AsyncCallback<List<Subject>>() {
             @Override
             public void onFailure(Throwable caught) {
