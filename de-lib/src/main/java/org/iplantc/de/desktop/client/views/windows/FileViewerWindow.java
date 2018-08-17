@@ -68,8 +68,6 @@ public class FileViewerWindow extends WindowBase
     public <C extends org.iplantc.de.commons.client.views.window.configs.WindowConfig> void show(C windowConfig,
                                                                                                  String tag,
                                                                                                  boolean isMaximizable) {
-
-        super.show(windowConfig, tag, isMaximizable);
         final FileViewerWindowConfig fileViewerWindowConfig = (FileViewerWindowConfig) windowConfig;
         this.configAB = fileViewerWindowConfig;
         this.file = configAB.getFile();
@@ -103,6 +101,7 @@ public class FileViewerWindow extends WindowBase
         }
         final String uniqueWindowTag = (windowConfig.getTag() == null) ? "" : "." + windowConfig.getTag();
         ensureDebugId(DeModule.WindowIds.FILE_VIEWER + uniqueWindowTag);
+        super.show(windowConfig, tag, isMaximizable);
     }
 
     @Override
