@@ -2,6 +2,8 @@
  * @author psarando
  */
 import React, { Component } from "react";
+
+import PropTypes from "prop-types";
 import { Field, FieldArray, reduxForm } from "redux-form";
 import { injectIntl } from "react-intl";
 
@@ -35,6 +37,13 @@ class EditMetadataTemplate extends Component {
 
         this.state = { showConfirmationDialog: false };
     }
+
+    static propTypes = {
+        presenter: PropTypes.shape({
+            onSaveTemplate: PropTypes.func.isRequired,
+            closeTemplateInfoDialog: PropTypes.func.isRequired,
+        }),
+    };
 
     onSaveTemplate = ({ name, description, deleted, attributes }) => {
         this.closeConfirmationDialog();

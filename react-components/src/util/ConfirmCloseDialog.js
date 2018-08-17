@@ -2,6 +2,7 @@
  * @author psarando
  */
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -12,6 +13,12 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import build from "./DebugIDUtil";
 
 class ConfirmCloseDialog extends Component {
+    static propTypes = {
+        onConfirm: PropTypes.func.isRequired,
+        onClose: PropTypes.func.isRequired,
+        onCancel: PropTypes.func.isRequired,
+    };
+
     render() {
         const {
             open,

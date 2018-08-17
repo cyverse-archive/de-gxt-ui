@@ -2,6 +2,8 @@
  * @author psarando
  */
 import React, { Component } from "react";
+
+import PropTypes from "prop-types";
 import { Field, FieldArray, FormSection } from "redux-form";
 import { injectIntl } from "react-intl";
 
@@ -56,6 +58,23 @@ class EditAttribute extends Component {
             editingAttrIndex: -1,
         };
     }
+
+    static propTypes = {
+        onAttributeRemoved: PropTypes.func.isRequired,
+        moveUp: PropTypes.func.isRequired,
+        moveDown: PropTypes.func.isRequired,
+        moveUpDisabled: PropTypes.bool,
+        moveDownDisabled: PropTypes.bool,
+        attribute: PropTypes.shape({
+            name: PropTypes.string.isRequired,
+            description: PropTypes.string.isRequired,
+            type: PropTypes.string.isRequired,
+            required: PropTypes.bool,
+            settings: PropTypes.shape({
+                type: PropTypes.string,
+            }),
+        }).isRequired,
+    };
 
     normalizeType = (type) => {
         const { change, field, attribute: { settings } } = this.props;

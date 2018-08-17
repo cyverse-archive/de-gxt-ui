@@ -2,6 +2,8 @@
  * @author psarando
  */
 import React, { Component } from "react";
+
+import PropTypes from "prop-types";
 import { Field } from "redux-form";
 import { injectIntl } from "react-intl";
 
@@ -31,6 +33,10 @@ import ContentRemove from "@material-ui/icons/Delete";
 import ContentEdit from "@material-ui/icons/Edit";
 
 class StringEditorDialog extends Component {
+    static propTypes = {
+        onClose: PropTypes.func.isRequired,
+    };
+
     render() {
         const { open, parentID, title, valueLabel, field, onClose } = this.props;
 

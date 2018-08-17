@@ -29,6 +29,7 @@ import { withStyles } from "@material-ui/core/styles";
 
 import ContentRemove from "@material-ui/icons/Delete";
 import ContentEdit from "@material-ui/icons/Edit";
+import PropTypes from "prop-types";
 
 const normalizeDefault = (fields, change, is_default) => {
     if (is_default) {
@@ -44,6 +45,10 @@ const normalizeDefault = (fields, change, is_default) => {
 };
 
 class AttributeEnumEditDialog extends Component {
+    static propTypes = {
+        onClose: PropTypes.func.isRequired,
+    };
+
     normalizeDefaultField = (is_default) => {
         const { fields, change } = this.props;
         return normalizeDefault(fields, change, is_default);
