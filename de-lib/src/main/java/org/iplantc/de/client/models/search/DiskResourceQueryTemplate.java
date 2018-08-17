@@ -1,11 +1,9 @@
 package org.iplantc.de.client.models.search;
 
 import org.iplantc.de.client.models.diskResources.Folder;
-import org.iplantc.de.client.models.tags.Tag;
 
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
-
-import java.util.Set;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 /**
  * This object is used to collect the information required to build a search request for the endpoints
@@ -18,19 +16,9 @@ import java.util.Set;
  */
 public interface DiskResourceQueryTemplate extends Folder {
 
-    @PropertyName("execution-time")
-    void setExecutionTime(long execution_time);
+    Splittable getQuery();
 
-    @PropertyName("execution-time")
-    long getExecutionTime();
-
-    DateInterval getCreatedWithin();
-
-    String getFileQuery();
-
-    FileSizeRange getFileSizeRange();
-
-    Set<Tag> getTagQuery();
+    void setQuery(Splittable query);
 
     /**
      * Overrides the default property name binding of "id" to "label"
@@ -40,29 +28,6 @@ public interface DiskResourceQueryTemplate extends Folder {
     @Override
     @PropertyName("label")
     String getId();
-
-    String getMetadataAttributeQuery();
-
-    String getMetadataValueQuery();
-
-    DateInterval getModifiedWithin();
-
-    String getNegatedFileQuery();
-
-    /**
-     * creator.username:(here is the content)
-     * 
-     * @return
-     */
-    String getOwnedBy();
-
-    String getSharedWith();
-
-    /**
-     * @return true if the results of this query should include items from users' Trash, false otherwise.
-     */
-    boolean isIncludeTrashItems();
-
     /**
      * @return true if this template has unsaved changes, false otherwise.
      */
@@ -73,20 +38,12 @@ public interface DiskResourceQueryTemplate extends Folder {
      */
     boolean isSaved();
 
-    void setCreatedWithin(DateInterval createdWithin);
-
     /**
      * Sets the templates dirty state.
      * 
      * @param dirty true if the template has unsaved changes.
      */
     void setDirty(boolean dirty);
-
-    void setFileQuery(String fileQuery);
-
-    void setFileSizeRange(FileSizeRange fileSizeRange);
-
-    void setTagQuery(Set<Tag> tagQuery);
 
     /**
      * Overrides the default property name binding of "id" to "label"
@@ -97,33 +54,5 @@ public interface DiskResourceQueryTemplate extends Folder {
     @PropertyName("label")
     void setId(String id);
 
-    /**
-     * Sets whether the results of this query should include items from any users' Trash.
-     * 
-     * @param include
-     */
-    void setIncludeTrashItems(boolean include);
 
-    void setMetadataAttributeQuery(String attributeValues);
-
-    void setMetadataQuery(String metadataQuery);
-
-    void setMetadataValueQuery(String metadataValueValues);
-
-    void setModifiedWithin(DateInterval modifiedWithin);
-
-    void setNegatedFileQuery(String negatedFileQuery);
-
-    void setOwnedBy(String ownedBy);
-
-    void setSharedWith(String sharedWith);
-
-    String getPathPrefix();
-    void setPathPrefix(String pathPrefix);
-
-    String getNegatedPathPrefix();
-    void setNegatedPathPrefix(String pathPrefix);
-
-    Boolean isPermissionRecurse();
-    void setPermissionRecurse(Boolean permissionRecurse);
 }

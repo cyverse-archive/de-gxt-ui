@@ -1,7 +1,6 @@
 package org.iplantc.de.diskResource.client.presenters.details;
 
 import org.iplantc.de.client.models.diskResources.DiskResource;
-import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.client.models.tags.IplantTagAutoBeanFactory;
 import org.iplantc.de.client.models.tags.IplantTagList;
@@ -33,7 +32,6 @@ import org.iplantc.de.diskResource.client.presenters.callbacks.TagsSearchCallbac
 import org.iplantc.de.resources.client.messages.I18N;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.Response;
@@ -287,9 +285,8 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
         Tag tag = factory.getTag().as();
         tag.setId(tagId);
         tag.setValue(tagValue);
-        DiskResourceQueryTemplate queryTemplate = sabFactory.dataSearchFilter().as();
-        queryTemplate.setTagQuery(Sets.newHashSet(tag));
-        ensureHandlers().fireEvent(new SubmitDiskResourceQueryEvent(searchModelUtils.convertTemplateToSplittable(queryTemplate)));
+        Splittable tagQuery = searchModelUtils.getTagQuery(tag);
+        ensureHandlers().fireEvent(new SubmitDiskResourceQueryEvent(tagQuery));
     }
 
     @Override

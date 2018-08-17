@@ -1,4 +1,5 @@
 import * as apps from "./apps";
+import * as collaborators from "./collaborators";
 import * as data from "./data";
 import * as util from "./util/util";
 import * as desktop from "./desktop";
@@ -27,6 +28,7 @@ const getDefaultTheme = () => createMuiTheme({
 
 export {
     apps,
+    collaborators,
     data,
     util,
     desktop,

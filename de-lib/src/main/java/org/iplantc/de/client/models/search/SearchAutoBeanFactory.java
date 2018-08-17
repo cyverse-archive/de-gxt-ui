@@ -15,8 +15,6 @@ public interface SearchAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<DiskResourceQueryTemplate> dataSearchFilter();
 
-    AutoBean<DateInterval> dateInterval();
-
     AutoBean<FileSizeRange> fileSizeRange();
 
     AutoBean<FileSizeUnit> fileSizeUnit();

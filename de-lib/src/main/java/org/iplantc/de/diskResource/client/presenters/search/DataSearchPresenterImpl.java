@@ -1,11 +1,15 @@
 package org.iplantc.de.diskResource.client.presenters.search;
 
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.client.models.tags.Tag;
+import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.client.services.TagsServiceFacade;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.client.util.SearchModelUtils;
+import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -17,6 +21,7 @@ import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent;
 import org.iplantc.de.diskResource.client.presenters.callbacks.TagCreateCallback;
+import org.iplantc.de.diskResource.client.presenters.callbacks.TagsFetchCallback;
 import org.iplantc.de.diskResource.client.views.search.ReactSearchForm;
 import org.iplantc.de.diskResource.share.DiskResourceModule;
 import org.iplantc.de.tags.client.TagsView;
@@ -58,11 +63,12 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
 
     final List<DiskResourceQueryTemplate> queryTemplates = Lists.newArrayList();
     List<DiskResourceQueryTemplate> cleanCopyQueryTemplates = Lists.newArrayList();
+    private CollaboratorsServiceFacade collaboratorsServiceFacade;
+    private CollaboratorsUtil collaboratorsUtil;
     private final IplantAnnouncer announcer;
     private SearchView.SearchViewAppearance appearance;
     private TagsView.TagSuggestionProxy proxy;
     private TagsServiceFacade tagsService;
-    private DateIntervalProvider dateIntervalProvider;
     private SearchAutoBeanFactory factory;
     private SearchModelUtils searchModelUtils;
     private final SearchServiceFacade searchService;
@@ -73,21 +79,23 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
 
     @Inject
     DataSearchPresenterImpl(final SearchServiceFacade searchService,
+                            final CollaboratorsServiceFacade collaboratorsServiceFacade,
+                            CollaboratorsUtil collaboratorsUtil,
                             final IplantAnnouncer announcer,
                             SearchView.SearchViewAppearance appearance,
                             SearchView view,
                             TagsView.TagSuggestionProxy proxy,
                             TagsServiceFacade tagsService,
-                            DateIntervalProvider dateIntervalProvider,
                             SearchAutoBeanFactory factory,
                             SearchModelUtils searchModelUtils) {
         this.searchService = searchService;
+        this.collaboratorsServiceFacade = collaboratorsServiceFacade;
+        this.collaboratorsUtil = collaboratorsUtil;
         this.announcer = announcer;
         this.appearance = appearance;
         this.view = view;
         this.proxy = proxy;
         this.tagsService = tagsService;
-        this.dateIntervalProvider = dateIntervalProvider;
         this.factory = factory;
         this.searchModelUtils = searchModelUtils;
 
@@ -296,7 +304,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     }
 
     @Override
-    public void fetchTagSuggestions(String searchTerm) {
+    public void fetchTagSuggestions(String searchTerm, TagsFetchCallback callback) {
         TagSuggestionLoadConfig config = new TagSuggestionLoadConfig();
         config.setQuery(searchTerm);
         proxy.load(config, new Callback<ListLoadResult<Tag>, Throwable>() {
@@ -313,12 +321,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
                     Splittable splTag = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(tag));
                     splTag.assign(splittableTags, splittableTags.size());
                 });
-                ReactSearchForm.SearchFormProps props = getCurrentProps();
-                props.suggestedTags = splittableTags;
-
-                view.renderSearchForm(props);
-
-                currentProps = props;
+                callback.onTagsFetched(splittableTags);
             }
         });
     }
@@ -364,6 +367,27 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
         });
     }
 
+    @Override
+    public void searchCollaborators(String searchTerm, ReactSuccessCallback collaboratorCallback) {
+        collaboratorsServiceFacade.searchCollaborators(searchTerm, new AsyncCallback<List<Subject>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ErrorHandler.post(caught);
+            }
+
+            @Override
+            public void onSuccess(List<Subject> result) {
+                if (collaboratorCallback != null) {
+                    Splittable data = StringQuoter.createIndexed();
+                    result.forEach(subject -> {
+                        Splittable splSubject = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(subject));
+                        splSubject.assign(data, data.size());
+                    });
+                    collaboratorCallback.onSuccess(data);
+                }
+            }
+        });
+    }
 
     @Override
     public SearchView getSearchForm() {
@@ -373,7 +397,7 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     @Override
     public void edit(DiskResourceQueryTemplate template) {
         ReactSearchForm.SearchFormProps props = getCurrentProps();
-        props.initialValues = searchModelUtils.convertTemplateToSplittable(template);
+        props.initialValues = template.getQuery();
 
         view.renderSearchForm(props);
 
@@ -403,10 +427,9 @@ public class DataSearchPresenterImpl implements SearchView.Presenter {
     ReactSearchForm.SearchFormProps getDefaultProps() {
         ReactSearchForm.SearchFormProps props = new ReactSearchForm.SearchFormProps();
         props.presenter = this;
-        props.id = DiskResourceModule.Ids.SEARCH_FORM;
-        props.dateIntervals = dateIntervalProvider.get();
-        props.suggestedTags = StringQuoter.createIndexed();
+        props.parentId = DiskResourceModule.Ids.SEARCH_FORM;
         props.initialValues = searchModelUtils.createDefaultFilter();
+        props.collaboratorsUtil = collaboratorsUtil;
 
         return props;
     }

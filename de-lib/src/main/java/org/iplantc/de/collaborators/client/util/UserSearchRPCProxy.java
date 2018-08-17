@@ -50,8 +50,7 @@ public class UserSearchRPCProxy extends RpcProxy<UsersLoadConfig, PagingLoadResu
         serviceFacade.searchCollaborators(lastQueryText, new AsyncCallback<List<Subject>>() {
             @Override
             public void onSuccess(List<Subject> result) {
-                List<Subject> filteredResults = getFilteredResults(result);
-                callback.onSuccess(new PagingLoadResultBean<>(filteredResults, filteredResults.size(), 0));
+                callback.onSuccess(new PagingLoadResultBean<>(result, result.size(), 0));
             }
 
             @Override
@@ -62,16 +61,4 @@ public class UserSearchRPCProxy extends RpcProxy<UsersLoadConfig, PagingLoadResu
         });
 
     }
-
-    /**
-     * Filter the results so that the user never sees the "default" collaborator list in their search results
-     * @param result
-     * @return
-     */
-    List<Subject> getFilteredResults(List<Subject> result) {
-        return result.stream()
-                     .filter(subject -> !Group.DEFAULT_GROUP.equals(subject.getName()))
-                     .collect(Collectors.toList());
-    }
-
 }

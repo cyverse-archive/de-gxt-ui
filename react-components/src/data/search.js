@@ -1,7 +1,5 @@
-import SearchForm from "./search/SearchForm";
-import SaveSearchButton from "./search/SaveSearchButton";
+import QueryBuilder from "./search/QueryBuilder";
 
 export {
-    SearchForm,
-    SaveSearchButton
+    QueryBuilder
 };

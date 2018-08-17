@@ -6,8 +6,8 @@ import {getDefaultTheme, MuiThemeProvider} from "../lib";
 import BasicDetailsTest from '../../stories/data/details/BasicDetails.stories';
 import EditTagDialogTest from '../../stories/data/search/EditTagDialog.stories';
 import InfoTypeSelectionListTest from '../../stories/data/details/InfoTypeSelectionList.stories';
+import QueryBuilderTest from "../../stories/data/search/QueryBuilder.stories";
 import SaveSearchButtonTest from '../../stories/data/search/SaveSearchButton.stories';
-import SearchFormTest from '../../stories/data/search/SearchForm.stories';
 import SearchFormTagPanelTest from '../../stories/data/search/SearchFormTagPanel.stories';
 import TagPanelTest from '../../stories/data/details/TagPanel.stories';
 import TagTest from '../../stories/data/details/Tag.stories';
@@ -30,15 +30,15 @@ it('renders InfoTypeSelectionListTest without crashing', () => {
     ReactDOM.unmountComponentAtNode(div);
 });
 
-it('renders SaveSearchButton without crashing', () => {
+it('renders QueryBuilder without crashing', () => {
     const div = document.createElement('div');
-    ReactDOM.render(<MuiThemeProvider theme={getDefaultTheme()}><SaveSearchButtonTest /></MuiThemeProvider>, div);
+    ReactDOM.render(<MuiThemeProvider theme={getDefaultTheme()}><QueryBuilderTest /></MuiThemeProvider>, div);
     ReactDOM.unmountComponentAtNode(div);
 });
 
-it('renders SearchForm without crashing', () => {
+it('renders SaveSearchButton without crashing', () => {
     const div = document.createElement('div');
-    ReactDOM.render(<MuiThemeProvider theme={getDefaultTheme()}><SearchFormTest /></MuiThemeProvider>, div);
+    ReactDOM.render(<MuiThemeProvider theme={getDefaultTheme()}><SaveSearchButtonTest /></MuiThemeProvider>, div);
     ReactDOM.unmountComponentAtNode(div);
 });
 

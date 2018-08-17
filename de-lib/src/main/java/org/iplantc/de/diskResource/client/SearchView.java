@@ -1,13 +1,14 @@
 package org.iplantc.de.diskResource.client;
 
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
-import org.iplantc.de.client.models.tags.Tag;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.diskResource.client.events.SavedSearchesRetrievedEvent.SavedSearchesRetrievedEventHandler;
 import org.iplantc.de.diskResource.client.events.search.DeleteSavedSearchClickedEvent.DeleteSavedSearchEventHandler;
 import org.iplantc.de.diskResource.client.events.search.SavedSearchDeletedEvent.HasSavedSearchDeletedEventHandlers;
 import org.iplantc.de.diskResource.client.events.search.SubmitDiskResourceQueryEvent;
 import org.iplantc.de.diskResource.client.events.search.UpdateSavedSearchesEvent.HasUpdateSavedSearchesEventHandlers;
 import org.iplantc.de.diskResource.client.presenters.callbacks.TagCreateCallback;
+import org.iplantc.de.diskResource.client.presenters.callbacks.TagsFetchCallback;
 import org.iplantc.de.diskResource.client.views.search.ReactSearchForm;
 
 import com.google.gwt.dom.client.Element;
@@ -86,7 +87,7 @@ public interface SearchView extends IsWidget,
         @SuppressWarnings("unusable-by-js")
         void onSaveSearch(Splittable splTemplate, String originalName);
 
-        void fetchTagSuggestions(String searchTerm);
+        void fetchTagSuggestions(String searchTerm, TagsFetchCallback fetchTagsCallback);
 
         @SuppressWarnings("unusable-by-js")
         void onSearchBtnClicked(Splittable query);
@@ -95,6 +96,8 @@ public interface SearchView extends IsWidget,
         void onEditTagSelected(Splittable tag);
 
         void onAddTagSelected(String tagValue, TagCreateCallback addTagCallback);
+
+        void searchCollaborators(String searchTerm, ReactSuccessCallback collaboratorCallback);
 
         SearchView getSearchForm();
 

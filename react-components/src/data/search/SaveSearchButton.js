@@ -1,6 +1,7 @@
 import build from "../../util/DebugIDUtil";
 import ids from "./ids";
 import messages from "./messages";
+import styles from "./styles";
 import withI18N, { getMessage } from "../../util/I18NWrapper";
 
 import Button from "@material-ui/core/Button";
@@ -9,8 +10,9 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import PropTypes from "prop-types";
-import React, {Component} from "react";
+import React, { Component, Fragment } from "react";
 import TextField from "@material-ui/core/TextField";
+import { withStyles } from "@material-ui/core/styles";
 
 /**
  * @author aramsey
@@ -47,16 +49,18 @@ class SaveSearchButton extends Component {
             value,
             onChange,
             parentId,
-            disabled
+            disabled,
+            classes
         } = this.props;
 
         return (
-            <div>
+            <Fragment>
                 <Button variant="raised"
+                        className={classes.searchButton}
                         id={build(parentId, ids.saveSearchBtn)}
                         disabled={!!disabled}
                         onClick={this.handleOpen}>
-                    {getMessage('saveSearchBtn')}
+                    {getMessage('saveBtn')}
                 </Button>
                 <Dialog open={this.state.open}
                         onClose={this.handleClose}>
@@ -85,7 +89,7 @@ class SaveSearchButton extends Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
-            </div>
+            </Fragment>
         )
     }
 }
@@ -98,4 +102,4 @@ SaveSearchButton.propTypes = {
     onChange: PropTypes.func.isRequired
 };
 
-export default withI18N(SaveSearchButton, messages);
+export default withStyles(styles)(withI18N(SaveSearchButton, messages));

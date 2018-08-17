@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 
 import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.groups.Group;
+import org.iplantc.de.collaborators.client.SubjectSortComparator;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 
@@ -21,7 +22,7 @@ public class SubjectSortComparatorTest {
     @Mock Subject s1;
     @Mock Subject s2;
 
-    UserSearchField.SubjectSortComparator uut;
+    SubjectSortComparator uut;
 
     @Before
     public void setUp() {
@@ -29,7 +30,7 @@ public class SubjectSortComparatorTest {
         when(g2.getSourceId()).thenReturn(Group.GROUP_IDENTIFIER);
         when(s1.getSourceId()).thenReturn("notGroup");
         when(s2.getSourceId()).thenReturn("notGroup");
-        uut = new UserSearchField.SubjectSortComparator();
+        uut = new SubjectSortComparator();
     }
 
     @Test

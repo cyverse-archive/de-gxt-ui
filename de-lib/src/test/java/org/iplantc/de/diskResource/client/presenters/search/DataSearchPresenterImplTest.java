@@ -15,11 +15,15 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import org.iplantc.de.client.models.collaborators.Subject;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
 import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
+import org.iplantc.de.client.services.CollaboratorsServiceFacade;
 import org.iplantc.de.client.services.SearchServiceFacade;
 import org.iplantc.de.client.services.TagsServiceFacade;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.client.util.SearchModelUtils;
+import org.iplantc.de.collaborators.client.util.CollaboratorsUtil;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.diskResource.client.SearchView;
 import org.iplantc.de.diskResource.client.events.search.DeleteSavedSearchClickedEvent;
@@ -56,25 +60,31 @@ public class DataSearchPresenterImplTest {
     @Mock SearchView viewMock;
     @Mock TagsView.TagSuggestionProxy proxyMock;
     @Mock TagsServiceFacade tagsServiceMock;
-    @Mock DateIntervalProvider dateIntervalProviderMock;
     @Mock SearchAutoBeanFactory factoryMock;
     @Mock SearchModelUtils searchModelUtilsMock;
+    @Mock CollaboratorsServiceFacade collaboratorsServiceFacade;
+    @Mock CollaboratorsUtil collaboratorsUtilMock;
+    @Mock ReactSuccessCallback reactCallbackMock;
+    @Mock List<Subject> subjectListMock;
+    @Mock Splittable subjectSplittable;
 
     @Captor ArgumentCaptor<List<DiskResourceQueryTemplate>> drqtListCaptor;
     @Captor ArgumentCaptor<UpdateSavedSearchesEvent> updateSavedSearchesEventCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<DiskResourceQueryTemplate>>> stringAsyncCbCaptor;
     @Captor ArgumentCaptor<AsyncCallback<List<DiskResourceQueryTemplate>>> drqtListAsyncCaptor;
+    @Captor ArgumentCaptor<AsyncCallback<List<Subject>>> subjectListCaptor;
 
     private DataSearchPresenterImpl dsPresenter;
 
     @Before public void setUp() {
         dsPresenter = new DataSearchPresenterImpl(searchService,
+                                                  collaboratorsServiceFacade,
+                                                  collaboratorsUtilMock,
                                                   announcer,
                                                   appearance,
                                                   viewMock,
                                                   proxyMock,
                                                   tagsServiceMock,
-                                                  dateIntervalProviderMock,
                                                   factoryMock,
                                                   searchModelUtilsMock);
     }
@@ -290,12 +300,13 @@ public class DataSearchPresenterImplTest {
     @Test public void testDoSaveDiskResourceQueryTemplate_Case6() {
         // Create presenter with overridden method to control test execution.
         dsPresenter = new DataSearchPresenterImpl(searchService,
+                                                  collaboratorsServiceFacade,
+                                                  collaboratorsUtilMock,
                                                   announcer,
                                                   appearance,
                                                   viewMock,
                                                   proxyMock,
                                                   tagsServiceMock,
-                                                  dateIntervalProviderMock,
                                                   factoryMock,
                                                   searchModelUtilsMock) {
             @Override
@@ -391,5 +402,18 @@ public class DataSearchPresenterImplTest {
                                                    drqtListAsyncCaptor.capture());
 
         verifyNoMoreInteractions(searchService);
+    }
+
+    @Test
+    public void testSearchCollaborators() {
+        String searchTerm = "search";
+
+        dsPresenter.searchCollaborators(searchTerm, reactCallbackMock);
+
+        verify(collaboratorsServiceFacade).searchCollaborators(eq(searchTerm),
+                                                               subjectListCaptor.capture());
+
+        subjectListCaptor.getValue().onSuccess(subjectListMock);
+        verify(reactCallbackMock).onSuccess(any(Splittable.class));
     }
 }

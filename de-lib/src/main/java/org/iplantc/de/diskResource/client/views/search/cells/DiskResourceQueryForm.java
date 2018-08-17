@@ -36,7 +36,6 @@ public class DiskResourceQueryForm implements SearchView {
     public DiskResourceQueryForm() {
         this.con = new VerticalLayoutContainer();
         con.getElement().getStyle().setBackgroundColor("#fff");
-        con.setWidth("500px");
 
         eventPreview = new BaseEventPreview() {
 

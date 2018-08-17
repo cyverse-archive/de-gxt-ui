@@ -74,22 +74,10 @@ public class FolderContentsRpcProxyImpl extends RpcProxy<FolderContentsLoadConfi
             }
             callback.onSuccess(new PagingLoadResultBean<>(results, template.getTotal(), loadConfig.getOffset()));
 
-            String searchText = setSearchText(template.getFileQuery());
-
             final String searchResultsHeader =
-                    appearance.searchDataResultsHeader(searchText, template.getTotal());
+                    appearance.searchDataResultsHeader(template.getTotal());
             hasSafeHtml1.setHTML(SafeHtmlUtils.fromString(searchResultsHeader));
 
-        }
-
-        private String setSearchText(String fileQuery) {
-            String retString;
-            if (Strings.isNullOrEmpty(fileQuery)) {
-                retString = "Advanced Search";
-            } else {
-                retString = "\"" + fileQuery + "\"";
-            }
-            return retString;
         }
 
         @Override
