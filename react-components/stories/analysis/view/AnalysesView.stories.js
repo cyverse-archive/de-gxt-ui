@@ -3,7 +3,7 @@ import AnalysesView from "../../../src/analysis/view/AnalysesView";
 
 class AnalysesViewTest extends Component {
     render() {
-        const analyses = {
+        const analysesList = {
             "analyses": [{
                 "description": "",
                 "name": "test8",
@@ -97,7 +97,7 @@ class AnalysesViewTest extends Component {
             }], "timestamp": "1534532276450", "total": 5
         };
         return (
-                <AnalysesView analyses={analyses}/>
+                <AnalysesView analyses={analysesList.analyses}/>
         );
     }
 }
