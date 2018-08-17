@@ -37,6 +37,9 @@ import JoinTeamRequestDialogTest from "./notifications/view/dialogs/JoinTeamRequ
 import DenyJoinRequestDetailsDialogTest
     from "./notifications/view/dialogs/DenyJoinRequestDetailsDialog.stories";
 import RequestHistoryDialogTest from "./notifications/view/dialogs/RequestHistoryDialog.stories";
+import AnalysesViewTest from "./analysis/view/AnalysesView.stories";
+
+storiesOf('analysis/view', module).add('with test analyses', () => <AnalysesViewTest/>);
 
 import SearchFieldTest from "./util/SearchField.stories";
 import AutocompleteTest from "./util/Autocomplete.stories";
