@@ -53,6 +53,7 @@ class UserMenu extends Component {
                             ref={this.userBtn}
                 />
                 <Menu id={build(ids.DESKTOP, ids.USER_PREF_MENU)}
+                      style={{zIndex: 888888,}}
                       anchorEl={anchorEl}
                       open={Boolean(anchorEl)}
                       onClose={this.handleClose}>
