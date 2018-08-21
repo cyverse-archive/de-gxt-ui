@@ -2,11 +2,12 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
 
+import AnalysesViewTest from "./analysis/view/AnalysesView.stories";
+import AnalysisInfoDialogTest from "./analysis/view/dialogs/AnalysisInfoDialog.stories";
+
 import ToolDetailsTest from "./apps/details/ToolDetails.stories";
 import CategoryTreeTest from "./apps/details/CategoryTree.stories";
 import AppStatsTest from "./apps/admin/AppStats.stories";
-
-import AnalysesViewTest from "./analysis/view/AnalysesView.stories";
 
 import SubjectSearchFieldTest from "./collaborators/SubjectSearchField.stories";
 
@@ -46,8 +47,9 @@ import DEHyperLinkTest from "./util/hyperlink/DEHyperLink.stories";
 import ErrorHandlerTest from "./util/ErrorHandler.stories";
 import TriggerFieldTest from "./util/TriggerField.stories";
 
-
 storiesOf('analysis/view', module).add('with test analyses', () => <AnalysesViewTest/>);
+storiesOf('analysis/view/dialogs', module).add('with test analysis info', () =>
+    <AnalysisInfoDialogTest/>);
 
 storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);

@@ -13,7 +13,8 @@ var intlData = {
         "updateComments": "Update Comments...",
         "analyses": "Analyses",
         "refresh": "Refresh",
-
+        "analysisInfoTitle": "Analysis Info",
+        "okBtnText": "OK",
     }
 };
 
