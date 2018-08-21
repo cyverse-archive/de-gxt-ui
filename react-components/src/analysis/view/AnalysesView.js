@@ -16,6 +16,14 @@ import Checkbox from "@material-ui/core/Checkbox";
 import moment from "moment";
 import constants from "../../constants";
 import ids from "../ids";
+import { withStyles } from "@material-ui/core/styles";
+import exStyles from "../style";
+import intlData from "../messages";
+import AnalysesToolbar from "./AnalysesToolbar";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import DEHyperLink from "../../util/hyperlink/DEHyperLink";
+import DotMenu from "./DotMenu";
+import analysisStatus from "../model/analysisStatus";
 
 const columnData = [
     {name: "Name", numeric: false, enableSorting: true},
@@ -24,15 +32,16 @@ const columnData = [
     {name: "Start Date", numeric: false, enableSorting: true},
     {name: "End Date", numeric: false, enableSorting: true},
     {name: "Status", numeric: false, enableSorting: true},
+    {name: "", numeric: false, enableSorting: false},
 ];
 
 class AnalysesView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [],
+            data: this.props.analysesList ? this.props.analysesList.analyses : [],
             loading: true,
-            total: 0,
+            total: this.props.analysesList ? this.props.analysesList.total : 0,
             offset: 0,
             page: 0,
             rowsPerPage: 100,
@@ -44,6 +53,18 @@ class AnalysesView extends Component {
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
         this.handleSelectAllClick = this.handleSelectAllClick.bind(this);
         this.isSelected = this.isSelected.bind(this);
+        this.handleGoToOutputFolder = this.handleGoToOutputFolder.bind(this);
+        this.handleViewParams = this.handleViewParams.bind(this);
+        this.handleRelaunch = this.handleRelaunch.bind(this);
+        this.handleViewInfo = this.handleViewInfo.bind(this);
+        this.handleShare = this.handleShare.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        this.handleRename = this.handleRename.bind(this);
+        this.handleUpdateComments = this.handleUpdateComments.bind(this);
+        this.shouldDisableCancel = this.shouldDisableCancel.bind(this);
+        this.isOwner = this.isOwner.bind(this);
+        this.isSharable = this.isSharable.bind(this);
     }
 
     handleChangePage(event, page) {
@@ -68,18 +89,177 @@ class AnalysesView extends Component {
         return this.state.selected.indexOf(id) !== -1
     }
 
+    statusClick(analysis) {
+
+    }
+
+    handleRowClick(event, id) {
+        const {selected} = this.state;
+        const selectedIndex = selected.indexOf(id);
+        let newSelected = [];
+
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selected, id);
+            this.setState({selected: newSelected});
+        }
+    }
+
+    handleCheckBoxClick(event, id) {
+        this.setState((prevState, props) => {
+            const {selected} = prevState;
+            const selectedIndex = selected.indexOf(id);
+            let newSelected = [];
+
+            if (selectedIndex === -1) {
+                newSelected = newSelected.concat(selected, id);
+                this.setState({selected: newSelected});
+            } else if (selectedIndex === 0) {
+                newSelected = newSelected.concat(selected.slice(1));
+            } else if (selectedIndex === selected.length - 1) {
+                newSelected = newSelected.concat(selected.slice(0, -1));
+            } else if (selectedIndex > 0) {
+                newSelected = newSelected.concat(
+                    selected.slice(0, selectedIndex),
+                    selected.slice(selectedIndex + 1),
+                );
+            }
+            return {selected: newSelected};
+        });
+
+
+    }
+
+    handleGoToOutputFolder() {
+
+    }
+
+    handleViewParams() {
+
+    }
+
+    handleRelaunch() {
+
+    }
+
+    handleViewInfo() {
+
+    }
+
+    handleShare() {
+
+    }
+
+    handleCancel() {
+
+    }
+
+    handleDelete() {
+
+    }
+
+    handleRename() {
+
+    }
+
+    handleUpdateComments() {
+
+    }
+
+
+    multiSelect = (selection) => selection && (selection.length > 1) ? true : false;
+
+    disabled = (selection) => selection && (selection.length > 0) ? false : true;
+
+    isOwner(selection) {
+        if (selection && selection.length) {
+            for (let i = 0; i < selection.length; i++) {
+                let found = this.findAnalysis(selection[i]);
+                if (!found) {
+                    return false;
+                }
+                if (found.username !== this.props.username) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    isSharable(selection) {
+        if (selection && selection.length) {
+            for (let i = 0; i < selection.length; i++) {
+                let found = this.findAnalysis(selection[i]);
+                if (!found) {
+                    return false;
+                }
+                if (!found.can_share) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+
+    shouldDisableCancel(selection) {
+        if (this.disabled(selection)) {
+            return true;
+        }
+        for (let i = 0; i < selection.length; i++) {
+            let found = this.findAnalysis(selection[i]);
+            if (found) {
+                if (found.status === analysisStatus.RUNNING ||
+                    found.status === analysisStatus.IDLE ||
+                    found.status === analysisStatus.SUBMITTED) {
+                    return false;
+                }
+                if (found.batch && (found.batch_status.running > 0 || found.batch_status.submitted > 0)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    findAnalysis(id) {
+        return this.state.data.find(function (n) {
+            return n.id === id;
+        });
+    }
+
     render() {
-        const {classes, analyses} = this.props;
+        const {classes} = this.props;
         const {
             rowsPerPage,
             page,
             order,
             orderBy,
             selected,
-            total
+            total,
+            data,
         } = this.state;
             return (
-            <div>
+                <div className={classes.container}>
+                    {this.state.loading &&
+                    <CircularProgress size={30} className={classes.loadingStyle} thickness={7}/>
+                    }
+                    <AnalysesToolbar selected={selected}
+                                     handleGoToOutputFolder={this.handleGoToOutputFolder}
+                                     handleViewParams={this.handleViewParams}
+                                     handleRelaunch={this.handleRelaunch}
+                                     handleViewInfo={this.handleViewInfo}
+                                     handleShare={this.handleShare}
+                                     handleCancel={this.handleCancel}
+                                     handleDelete={this.handleDelete}
+                                     handleRename={this.handleRename}
+                                     handleUpdateComments={this.handleUpdateComments}
+                                     disabled={this.disabled}
+                                     multiSelect={this.multiSelect}
+                                     shouldDisableCancel={this.shouldDisableCancel}
+                                     isOwner={this.isOwner}
+                                     isSharable={this.isSharable}/>
                 <div className={classes.table}>
                     <Table>
                         <EnhancedTableHead
@@ -95,18 +275,21 @@ class AnalysesView extends Component {
                             ids={ids}
                         />
                         <TableBody>
-                            {analyses.map(n => {
-                                const isSelected = this.isSelected(n.message.id);
+                            {data.map(n => {
+                                const id = n.id;
+                                const isSelected = this.isSelected(id);
                                 return (
-                                    <TableRow onClick={event => this.handleRowClick(event, n.message.id)}
+                                    <TableRow onClick={event => this.handleRowClick(event, id)}
                                               role="checkbox"
                                               aria-checked={isSelected}
                                               tabIndex={-1}
                                               selected={isSelected}
                                               hover
-                                              key={n.message.id}>
+                                              key={id}>
                                         <TableCell padding="checkbox">
-                                            <Checkbox checked={isSelected}/>
+                                            <Checkbox
+                                                onClick={(event, n) => this.handleCheckBoxClick(event, id)}
+                                                checked={isSelected}/>
                                         </TableCell>
                                         <TableCell>{n.name} </TableCell>
                                         <TableCell>{n.username} </TableCell>
@@ -117,7 +300,27 @@ class AnalysesView extends Component {
                                         <TableCell>{parseInt(n.enddate, 10) ? moment(parseInt(n.enddate, 10), "x").format(
                                             constants.DATE_FORMAT) :
                                             getMessage("emptyValue")}</TableCell>
-                                        <TableCell>{n.status} </TableCell>
+                                        <TableCell><DEHyperLink onClick={(n) => this.statusClick(n)}
+                                                                text={n.status}/></TableCell>
+                                        <TableCell>
+                                            <DotMenu
+                                                selected={selected}
+                                                handleGoToOutputFolder={this.handleGoToOutputFolder}
+                                                handleViewParams={this.handleViewParams}
+                                                handleRelaunch={this.handleRelaunch}
+                                                handleViewInfo={this.handleViewInfo}
+                                                handleShare={this.handleShare}
+                                                handleCancel={this.handleCancel}
+                                                handleDelete={this.handleDelete}
+                                                handleRename={this.handleRename}
+                                                handleUpdateComments={this.handleUpdateComments}
+                                                disabled={this.disabled}
+                                                multiSelect={this.multiSelect}
+                                                shouldDisableCancel={this.shouldDisableCancel}
+                                                isOwner={this.isOwner}
+                                                isSharable={this.isSharable}
+                                            />
+                                        </TableCell>
                                     </TableRow>
                                 );
                             })}
@@ -144,4 +347,4 @@ class AnalysesView extends Component {
 
 AnalysesView.propTypes = {};
 
-export default AnalysesView;
+export default withStyles(exStyles)(withI18N(AnalysesView, intlData));

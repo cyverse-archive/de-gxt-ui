@@ -1,8 +1,9 @@
 export default ({
-    NAME: "Name",
-    OWNER: "Owner",
-    APP: "App",
-    START_DATE: "Start Date",
-    END_DATE: "End Date",
-    STATUS: "Status",
+    NAME: "name",
+    OWNER: "owner",
+    APP: "app",
+    START_DATE: "start_date",
+    END_DATE: "end_date",
+    STATUS: "status",
+    TOOLBAR: "toolbar",
 });

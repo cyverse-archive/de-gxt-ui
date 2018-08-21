@@ -6,6 +6,8 @@ import ToolDetailsTest from "./apps/details/ToolDetails.stories";
 import CategoryTreeTest from "./apps/details/CategoryTree.stories";
 import AppStatsTest from "./apps/admin/AppStats.stories";
 
+import AnalysesViewTest from "./analysis/view/AnalysesView.stories";
+
 import SubjectSearchFieldTest from "./collaborators/SubjectSearchField.stories";
 
 import BasicDetailsTest from "./data/details/BasicDetails.stories";
@@ -15,8 +17,7 @@ import TagPanelTest from "./data/details/TagPanel.stories";
 import QueryBuilderTest from './data/search/QueryBuilder.stories';
 import EditTagDialogTest from "./data/search/EditTagDialog.stories";
 import SaveSearchButtonTest from "./data/search/SaveSearchButton.stories";
-import SearchFormTagPanel from "./data/search/SearchFormTagPanel.stories";
-
+import SearchFormTagPanel from './data/search/SearchFormTagPanel.stories';
 import DesktopViewTest from "./desktop/view/DesktopView.stories";
 import TaskButtonTest from "./desktop/view/TaskButton.stories";
 import TaskbarTest from "./desktop/view/Taskbar.stories";
@@ -37,9 +38,6 @@ import JoinTeamRequestDialogTest from "./notifications/view/dialogs/JoinTeamRequ
 import DenyJoinRequestDetailsDialogTest
     from "./notifications/view/dialogs/DenyJoinRequestDetailsDialog.stories";
 import RequestHistoryDialogTest from "./notifications/view/dialogs/RequestHistoryDialog.stories";
-import AnalysesViewTest from "./analysis/view/AnalysesView.stories";
-
-storiesOf('analysis/view', module).add('with test analyses', () => <AnalysesViewTest/>);
 
 import SearchFieldTest from "./util/SearchField.stories";
 import AutocompleteTest from "./util/Autocomplete.stories";
@@ -47,6 +45,9 @@ import CopyTextAreaTest from "./util/CopyTextArea.stories";
 import DEHyperLinkTest from "./util/hyperlink/DEHyperLink.stories";
 import ErrorHandlerTest from "./util/ErrorHandler.stories";
 import TriggerFieldTest from "./util/TriggerField.stories";
+
+
+storiesOf('analysis/view', module).add('with test analyses', () => <AnalysesViewTest/>);
 
 storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);
