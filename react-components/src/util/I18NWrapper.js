@@ -2,9 +2,9 @@
  @author sriram
  */
 import React from "react";
-import {FormattedMessage, IntlProvider} from "react-intl";
+import { FormattedMessage, IntlProvider } from "react-intl";
 
-export default function withI18N(WrappedComponent, intlData) {
+const withI18N = (WrappedComponent, intlData) => {
     return class extends React.Component {
         render() {
             return (
@@ -14,9 +14,9 @@ export default function withI18N(WrappedComponent, intlData) {
             );
         }
     }
-}
+};
 
-export function getMessage(id, options) {
+const getMessage = (id, options) => {
     if (options && options.values) {
         return (
             <FormattedMessage id={id} values={options.values}/>
@@ -25,5 +25,15 @@ export function getMessage(id, options) {
     return (
         <FormattedMessage id={id}/>
     );
-}
+};
 
+const formatMessage = (intl, id, values) => {
+    return intl.formatMessage({id}, values);
+};
+
+export default withI18N;
+
+export {
+    getMessage,
+    formatMessage,
+};

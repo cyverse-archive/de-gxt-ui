@@ -4,10 +4,6 @@ import com.google.gwt.i18n.client.Messages;
 
 public interface MetadataDisplayStrings extends Messages {
 
-    public String valColumn();
-
-    public String defColumn();
-
     public String templateRetrieveError();
 
     public String deleteTemplateConfirm();
@@ -40,31 +36,5 @@ public interface MetadataDisplayStrings extends Messages {
 
     public String nameColumn();
 
-    public String enumError();
-
-    String enumValueOrValues();
-
     String descriptionColumn();
-
-    String editOLSQueryParamsDialogHeader();
-
-    String allChildrenFieldLabel();
-
-    String allChildrenHelpLabel();
-
-    String childrenFieldLabel();
-
-    String childrenHelpLabel();
-
-    String entityTypeHelpLabel();
-
-    String iriColumnLabel();
-
-    String ontologiesColumnHeader();
-
-    String ontologiesFieldLabel();
-
-    String ontologiesHelpLabel();
-
-    String querySettings();
 }

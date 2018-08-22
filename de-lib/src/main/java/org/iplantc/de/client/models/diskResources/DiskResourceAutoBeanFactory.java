@@ -41,8 +41,6 @@ public interface DiskResourceAutoBeanFactory extends AutoBeanFactory {
 
     AutoBean<DiskResourceRename> diskResourceRename();
 
-    AutoBean<Folder> folderContents();
-
     AutoBean<MetadataTemplateInfoList> getTemplateListing();
 
     AutoBean<MetadataTemplate> getTemplate();
@@ -54,8 +52,6 @@ public interface DiskResourceAutoBeanFactory extends AutoBeanFactory {
     AutoBean<MetadataTemplateAttribute> metadataTemplateAttribute();
 
     AutoBean<TemplateAttributeSelectionItem> templateAttributeSelectionItem();
-
-    AutoBean<MetadataTemplate> metadataTemplate();
 
     AutoBean<Avu> avu();
 

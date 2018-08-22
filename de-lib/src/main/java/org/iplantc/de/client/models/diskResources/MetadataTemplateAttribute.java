@@ -39,4 +39,15 @@ public interface MetadataTemplateAttribute extends HasId, HasName, HasDescriptio
      * @param settings Arbitrary JSON settings.
      */
     void setSettings(Splittable settings);
+
+
+    /**
+     * @return Nested Metadata Template Attributes grouped under or associated with this Attribute.
+     */
+    List<MetadataTemplateAttribute> getAttributes();
+
+    /**
+     * @param attributes Nested Metadata Template Attributes grouped under or associated with this Attribute.
+     */
+    void setAttributes(List<MetadataTemplateAttribute> attributes);
 }

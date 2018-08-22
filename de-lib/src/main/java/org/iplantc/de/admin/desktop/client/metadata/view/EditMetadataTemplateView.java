@@ -1,68 +1,23 @@
 package org.iplantc.de.admin.desktop.client.metadata.view;
 
-import org.iplantc.de.client.models.IsMaskable;
-import org.iplantc.de.client.models.diskResources.MetadataTemplate;
+import org.iplantc.de.client.services.callbacks.ErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.web.bindery.autobean.shared.Splittable;
 
-public interface EditMetadataTemplateView extends IsWidget, IsMaskable {
+import jsinterop.annotations.JsType;
 
-    public interface EditMetadataTemplateViewAppearance {
+public interface EditMetadataTemplateView extends IsWidget {
 
-        ImageResource addIcon();
-
-        ImageResource deleteIcon();
-
-        String valColumn();
-
-        String defColumn();
-
-        String addBtn();
-
-        String delBtn();
-
-        String enumError();
-
-        String enumValueOrValues();
-
-        String editOLSQueryParamsDialogHeader();
-
-        String editOLSQueryParamsDialogHeight();
-
-        String editOLSQueryParamsDialogWidth();
-
-        String allChildrenFieldLabel();
-
-        String allChildrenHelpLabel();
-
-        String childrenFieldLabel();
-
-        String childrenHelpLabel();
-
-        String entityTypeHelpLabel();
-
-        String iriColumnLabel();
-
-        String ontologiesColumnHeader();
-
-        String ontologiesFieldLabel();
-
-        String ontologiesHelpLabel();
-
-        String querySettings();
-
-        String valueOrValues();
-
-        int tempNameMaxLength();
+    @JsType
+    interface Presenter {
+        @SuppressWarnings("unusable-by-js")
+        void onSaveTemplate(Splittable metadataTemplate, ReactSuccessCallback resolve, ErrorCallback reject);
+        void closeTemplateInfoDialog();
     }
 
-    MetadataTemplate getTemplate();
+    void edit(Presenter presenter, Splittable metadataTemplate);
 
-    boolean validate();
-
-    void edit(MetadataTemplate result);
-
-    void reset();
-
+    void closeDialog();
 }

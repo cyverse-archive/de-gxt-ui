@@ -1,7 +1,8 @@
 /**
- @author sriram
+ @author sriram, psarando
  */
-export default function build(baseID, id) {
+export default function build(...ids) {
     const DOT = ".";
-    return baseID ? baseID + DOT + id : id;
+
+    return ids.join(DOT);
 }
