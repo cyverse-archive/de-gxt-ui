@@ -66,7 +66,7 @@ class EditMetadataTemplate extends Component {
                     attributes,
                 },
                 resolve,
-                reject
+                (httpStatusCode, errorMessage) => reject(errorMessage),
             );
         });
     };

@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import EditMetadataTemplate from "../../src/metadata/admin/EditMetadataTemplate";
 
 const presenter = (logger) => ({
-    onSaveTemplate: (template, resolve, reject) => {
+    onSaveTemplate: (template, resolve, errorCallback) => {
         setTimeout(() => {
                 logger(template);
                 resolve(template);

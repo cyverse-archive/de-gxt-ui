@@ -3,8 +3,6 @@ package org.iplantc.de.admin.desktop.client.metadata.presenter;
 import org.iplantc.de.admin.desktop.client.metadata.events.AddMetadataSelectedEvent;
 import org.iplantc.de.admin.desktop.client.metadata.events.DeleteMetadataSelectedEvent;
 import org.iplantc.de.admin.desktop.client.metadata.events.EditMetadataSelectedEvent;
-import org.iplantc.de.admin.desktop.client.metadata.presenter.callbacks.SaveTemplateError;
-import org.iplantc.de.admin.desktop.client.metadata.presenter.callbacks.SaveTemplateSuccess;
 import org.iplantc.de.admin.desktop.client.metadata.service.MetadataTemplateAdminServiceFacade;
 import org.iplantc.de.admin.desktop.client.metadata.view.EditMetadataTemplateView;
 import org.iplantc.de.admin.desktop.client.metadata.view.TemplateListingView;
@@ -13,12 +11,15 @@ import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.MetadataTemplate;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
+import org.iplantc.de.client.services.callbacks.ErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
 import org.iplantc.de.commons.client.info.SuccessAnnouncementConfig;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.common.base.Strings;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
@@ -160,7 +161,7 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
 
     }
 
-    private void addTemplate(final String template, SaveTemplateSuccess resolve, SaveTemplateError reject) {
+    private void addTemplate(final String template, ReactSuccessCallback resolve, ErrorCallback reject) {
         final MetadataTemplatesPresenterImpl presenter = this;
 
         mdSvcFac.addTemplate(template, new AsyncCallback<String>() {
@@ -170,7 +171,7 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
                 ErrorHandler.post(appearance.addTemplateError(), caught);
 
                 if (reject != null) {
-                    reject.reject(caught.getMessage());
+                    reject.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
                 }
 
                 presenter.closeTemplateInfoDialog();
@@ -181,7 +182,9 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
                 IplantAnnouncer.getInstance().schedule(new SuccessAnnouncementConfig(appearance.addTemplateSuccess()));
 
                 if (resolve != null) {
-                    resolve.resolve(AutoBeanCodex.encode(AutoBeanCodex.decode(drFac, MetadataTemplate.class, result)));
+                    resolve.onSuccess(AutoBeanCodex.encode(AutoBeanCodex.decode(drFac,
+                                                                                MetadataTemplate.class,
+                                                                                result)));
                 }
 
                 presenter.closeTemplateInfoDialog();
@@ -190,7 +193,10 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
         });
     }
 
-    private void updateTemplate(final String templateId, final String template, SaveTemplateSuccess resolve, SaveTemplateError reject) {
+    private void updateTemplate(final String templateId,
+                                final String template,
+                                ReactSuccessCallback resolve,
+                                ErrorCallback reject) {
         final MetadataTemplatesPresenterImpl presenter = this;
 
         mdSvcFac.updateTemplate(templateId, template, new AsyncCallback<String>() {
@@ -200,7 +206,7 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
                 ErrorHandler.post(appearance.updateTemplateError(), caught);
 
                 if (reject != null) {
-                    reject.reject(caught.getMessage());
+                    reject.onError(Response.SC_INTERNAL_SERVER_ERROR, caught.getMessage());
                 }
 
                 presenter.closeTemplateInfoDialog();
@@ -212,7 +218,9 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
                                .schedule(new SuccessAnnouncementConfig(appearance.updateTemplateSuccess()));
 
                 if (resolve != null) {
-                    resolve.resolve(AutoBeanCodex.encode(AutoBeanCodex.decode(drFac, MetadataTemplate.class, result)));
+                    resolve.onSuccess(AutoBeanCodex.encode(AutoBeanCodex.decode(drFac,
+                                                                                MetadataTemplate.class,
+                                                                                result)));
                 }
 
                 presenter.closeTemplateInfoDialog();
@@ -232,7 +240,7 @@ public class MetadataTemplatesPresenterImpl implements TemplateListingView.Prese
 
     @SuppressWarnings("unusable-by-js")
     @Override
-    public void onSaveTemplate(Splittable template, SaveTemplateSuccess resolve, SaveTemplateError reject) {
+    public void onSaveTemplate(Splittable template, ReactSuccessCallback resolve, ErrorCallback reject) {
         final MetadataTemplate metadataTemplate = AutoBeanCodex.decode(drFac, MetadataTemplate.class, template).as();
         final String templateId = metadataTemplate.getId();
 
