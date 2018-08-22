@@ -20,7 +20,8 @@ const actionsStyles = theme => ({
         marginLeft: theme.spacing.unit * 2.5,
     },
 });
-class TablePaginationActions extends React.Component {
+
+class TablePaginationActions extends Component {
     handleFirstPageButtonClick = event => {
         this.props.onChangePage(event, 0);
     };
@@ -41,7 +42,7 @@ class TablePaginationActions extends React.Component {
     };
 
     render() {
-        const {classes, count, page, rowsPerPage, theme} = this.props;
+        const {count, page, rowsPerPage, theme} = this.props;
 
         return (
             <div style={{flexShrink: 0,}}>

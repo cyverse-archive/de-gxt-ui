@@ -1,4 +1,4 @@
-const intlData = {
+export default {
     "locales": "en-US",
     "messages": {
         "firstPage": "First Page",
@@ -6,4 +6,4 @@ const intlData = {
         "nextPage": "Next Page",
         "prevPage": "Previous Page",
     }
-}
+};
