@@ -145,7 +145,7 @@ public interface DesktopView extends IsWidget {
 
         void onFeedbackSelect();
 
-        @SuppressWarnings("unusuable-by-js")
+        @SuppressWarnings("unusable-by-js")
         void onNotificationSelected(final Splittable notificationMessage,
                                     final NotificationMarkAsSeenCallback callback,
                                     final ErrorCallback errorCallback);
@@ -191,7 +191,7 @@ public interface DesktopView extends IsWidget {
         @JsIgnore
         void onJoinTeamRequestProcessed(NotificationMessage message);
 
-        @SuppressWarnings("unusuable-by-js")
+        @SuppressWarnings("unusable-by-js")
         void onTaskButtonClicked(Splittable windowConfig);
 
         @JsIgnore
