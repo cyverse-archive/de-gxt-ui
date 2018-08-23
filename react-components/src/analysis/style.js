@@ -2,8 +2,8 @@ import Color from "../util/CyVersePalette";
 
 export default (theme) => ({
     table: {
-        overflow: "auto",
         height: "70%",
+        width: "80%",
     },
     tableHead: {
         backgroundColor: "#e2e2e2",
@@ -35,5 +35,11 @@ export default (theme) => ({
     toolbarMargins: {
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
-    }
+    },
+    dialogCloseButton: {
+        position: 'absolute',
+        right: 0,
+        top: 10,
+        color: Color.white,
+    },
 });

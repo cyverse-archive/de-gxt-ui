@@ -15,6 +15,9 @@ var intlData = {
         "refresh": "Refresh",
         "analysisInfoTitle": "Analysis Info",
         "okBtnText": "OK",
+        "cancelBtnText": "Cancel",
+        "comments": "Comments",
+        "analysisParamTitle" : "Viewing parameters for {name}" ,
     }
 };
 

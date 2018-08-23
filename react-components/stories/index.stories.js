@@ -4,6 +4,8 @@ import { action } from "@storybook/addon-actions";
 
 import AnalysesViewTest from "./analysis/view/AnalysesView.stories";
 import AnalysisInfoDialogTest from "./analysis/view/dialogs/AnalysisInfoDialog.stories";
+import AnalysisCommentsDialogTest from "./analysis/view/dialogs/AnalysisCommentsDialog.stories";
+import AnalysisParametersDialogTest from "./analysis/view/dialogs/AnalysisParametersDialog.stories";
 
 import ToolDetailsTest from "./apps/details/ToolDetails.stories";
 import CategoryTreeTest from "./apps/details/CategoryTree.stories";
@@ -50,6 +52,10 @@ import TriggerFieldTest from "./util/TriggerField.stories";
 storiesOf('analysis/view', module).add('with test analyses', () => <AnalysesViewTest/>);
 storiesOf('analysis/view/dialogs', module).add('with test analysis info', () =>
     <AnalysisInfoDialogTest/>);
+storiesOf('analysis/view/dialogs', module).add('with test analysis comments', () =>
+    <AnalysisCommentsDialogTest/>);
+storiesOf('analysis/view/dialogs', module).add('with test analysis parameters', () =>
+    <AnalysisParametersDialogTest/>);
 
 storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);

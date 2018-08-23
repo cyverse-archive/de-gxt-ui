@@ -15,6 +15,10 @@ import TableCell from "@material-ui/core/TableCell";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Color from "../../../util/CyVersePalette";
+import { withStyles } from "@material-ui/core/styles";
+import exStyles from "../../style";
+import Typography from "@material-ui/core/Typography";
+
 
 const columnData = [
     {name: "Job Id", numeric: false, enableSorting: false},
@@ -30,16 +34,18 @@ class AnalysisInfoDialog extends Component {
     }
 
     render() {
-        const {info} = this.props;
+        const {info, classes} = this.props;
         return (
             <Dialog open={this.state.dialogOpen}>
-                <DialogTitle style={{backgroundColor: Color.blue}}>
-                    {getMessage("analysisInfoTitle")}
+                <DialogTitle style={{backgroundColor: Color.darkBlue}}>
+                    <Typography style={{color: Color.white}}>
+                        {getMessage("analysisInfo")}
+                    </Typography>
                     <IconButton
                         aria-label="More"
                         aria-haspopup="true"
                         onClick={this.handleDotMenuClick}
-                        style={{position: 'absolute', top: 10, left: 375}}
+                        className={classes.dialogCloseButton}
                     >
                         <CloseIcon/>
                     </IconButton>
@@ -77,4 +83,4 @@ class AnalysisInfoDialog extends Component {
     }
 }
 
-export default withI18N(AnalysisInfoDialog, intlData);
+export default withStyles(exStyles)(withI18N(AnalysisInfoDialog, intlData));

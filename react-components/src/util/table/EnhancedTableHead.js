@@ -56,7 +56,8 @@ class EnhancedTableHead extends React.Component {
                                 padding={column.disablePadding ? 'none' : 'default'}
                                 sortDirection={orderBy === column.name ? order : false}
                                 className={classes.column_heading}
-                                id={build(this.props.baseId, this.props.ids[column.name.toUpperCase()])}
+                                id={build(this.props.baseId,
+                                    this.props.ids[column.name.replace(/\s/g, "_").toUpperCase()])}
                             >
                                 {column.enableSorting ? (
                                         <Tooltip
