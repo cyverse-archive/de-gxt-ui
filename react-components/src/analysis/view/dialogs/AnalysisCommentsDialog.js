@@ -5,19 +5,15 @@
  */
 import React, { Component } from 'react';
 import Dialog from "@material-ui/core/Dialog";
-import Color from "../../../util/CyVersePalette";
 import withI18N, { getMessage } from "../../../util/I18NWrapper";
-import CloseIcon from "../../../../node_modules/@material-ui/icons/Close";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
-import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
-import IconButton from "@material-ui/core/IconButton/IconButton";
 import TextField from "@material-ui/core/TextField/TextField";
 import Button from "@material-ui/core/Button/Button";
 import intlData from "../../messages";
 import exStyles from "../../style";
 import { withStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
 
 class AnalysisCommentsDialog extends Component {
 
@@ -32,17 +28,11 @@ class AnalysisCommentsDialog extends Component {
     render() {
         return (
             <Dialog open={this.state.dialogOpen}>
-                <DialogTitle style={{backgroundColor: Color.darkBlue}}>
-                    <Typography style={{color: Color.white}}>{getMessage("comments")}</Typography>
-                    <IconButton
-                        aria-label="More"
-                        aria-haspopup="true"
-                        onClick={this.handleDotMenuClick}
-                        className={this.props.classes.dialogCloseButton}
-                    >
-                        <CloseIcon/>
-                    </IconButton>
-                </DialogTitle>
+                <DEDialogHeader
+                    heading={getMessage("comments")}
+                    onClose={() => {
+                        this.setState({dialogOpen: false})
+                    }}/>
                 <DialogContent>
                     <TextField
                         id="multiline-static"

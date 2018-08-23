@@ -1,24 +1,19 @@
 import React, { Component } from 'react';
 import Dialog from "@material-ui/core/Dialog";
-import Color from "../../../util/CyVersePalette";
 import withI18N, { getMessage } from "../../../util/I18NWrapper";
-import CloseIcon from "../../../../node_modules/@material-ui/icons/Close";
 import DialogContent from "@material-ui/core/DialogContent";
 import EnhancedTableHead from "../../../util/table/EnhancedTableHead";
 import ids from "../../ids";
 import TableBody from "@material-ui/core/TableBody";
 import DialogActions from "@material-ui/core/DialogActions";
-import DEHyperLink from "../../../util/hyperlink/DEHyperLink";
 import TableCell from "@material-ui/core/TableCell";
-import IconButton from "@material-ui/core/IconButton";
-import DialogTitle from '@material-ui/core/DialogTitle';
 import TableRow from "@material-ui/core/TableRow";
 import Table from "@material-ui/core/Table";
 import Button from '@material-ui/core/Button';
 import { withStyles } from "@material-ui/core/styles";
 import exStyles from "../../style";
 import intlData from "../../messages";
-import Typography from "@material-ui/core/Typography";
+import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
 
 const ArgumentType = {
     Input: "Input",
@@ -97,19 +92,11 @@ class AnalysisParametersDialog extends Component {
         const {order, orderBy} = this.state;
         return (
             <Dialog open={this.state.dialogOpen}>
-                <DialogTitle style={{backgroundColor: Color.darkBlue}}>
-                    <Typography
-                        style={{color: Color.white}}>{getMessage("analysisParamTitle", {values: {name: analysisName}})}
-                    </Typography>
-                    <IconButton
-                        aria-label="More"
-                        aria-haspopup="true"
-                        onClick={this.handleDotMenuClick}
-                        className={classes.dialogCloseButton}
-                    >
-                        <CloseIcon/>
-                    </IconButton>
-                </DialogTitle>
+                <DEDialogHeader
+                    heading={getMessage("analysisParamTitle", {values: {name: analysisName}})}
+                    onClose={() => {
+                        this.setState({dialogOpen: false})
+                    }}/>
                 <DialogContent>
                     <Table className={classes.table}>
                         <EnhancedTableHead

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
@@ -12,12 +11,9 @@ import TableRow from "@material-ui/core/TableRow";
 import intlData from "../../messages"
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import Color from "../../../util/CyVersePalette";
 import { withStyles } from "@material-ui/core/styles";
 import exStyles from "../../style";
-import Typography from "@material-ui/core/Typography";
+import DEDialogHeader from "../../../util/dialog/DEDialogHeader";
 
 
 const columnData = [
@@ -37,19 +33,11 @@ class AnalysisInfoDialog extends Component {
         const {info, classes} = this.props;
         return (
             <Dialog open={this.state.dialogOpen}>
-                <DialogTitle style={{backgroundColor: Color.darkBlue}}>
-                    <Typography style={{color: Color.white}}>
-                        {getMessage("analysisInfo")}
-                    </Typography>
-                    <IconButton
-                        aria-label="More"
-                        aria-haspopup="true"
-                        onClick={this.handleDotMenuClick}
-                        className={classes.dialogCloseButton}
-                    >
-                        <CloseIcon/>
-                    </IconButton>
-                </DialogTitle>
+                <DEDialogHeader
+                    heading={getMessage("analysisInfo")}
+                    onClose={() => {
+                        this.setState({dialogOpen: false})
+                    }}/>
                 <DialogContent>
                     <Table>
                         <EnhancedTableHead
