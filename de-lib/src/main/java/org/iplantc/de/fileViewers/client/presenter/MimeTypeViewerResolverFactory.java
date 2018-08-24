@@ -30,6 +30,7 @@ import org.iplantc.de.fileViewers.client.views.ImageViewerImpl;
 import org.iplantc.de.fileViewers.client.views.PathListViewer;
 import org.iplantc.de.fileViewers.client.views.StructuredTextViewer;
 import org.iplantc.de.fileViewers.client.views.TextViewerImpl;
+import org.iplantc.de.fileViewers.client.views.VideoViewerImpl;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -95,7 +96,17 @@ public class MimeTypeViewerResolverFactory {
                     viewers.add(imgViewer);
                 }
                 break;
+            case MP4:
+            case OGG:
+            case WEBM:
+                if((file != null) && !file.getPath().isEmpty()){
+                    String videoUrl = fileEditorService.getServletDownloadUrl(file.getPath());
 
+                    LOG.fine("Video viewer url: " + videoUrl);
+                    VideoViewerImpl videoViewer = new VideoViewerImpl(file, videoUrl);
+                    viewers.add(videoViewer);
+                }
+                break;
             case PDF:
                 if(editing) {
                     announcer.schedule(new ErrorAnnouncementConfig("Editing is not supported for this type of file."));

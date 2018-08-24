@@ -15,6 +15,12 @@ public enum MimeType {
 
     JPEG("jpeg"),
 
+    MP4("mp4"),
+
+    OGG("ogg"),
+
+    WEBM("webm"),
+
     PDF("pdf"),
 
     PLAIN("plain"),

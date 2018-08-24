@@ -21,6 +21,7 @@ import AutocompleteTest from "./util/Autocomplete.stories";
 import DesktopViewTest from "./desktop/view/DesktopView.stories";
 import TaskButtonTest from "./desktop/view/TaskButton.stories";
 import TaskbarTest from "./desktop/view/Taskbar.stories";
+import VideoViewerTest from "./fileViewers/VideoViewer.stories";
 
 import {
     EditNestedAttrMetadataTemplateTest,
@@ -45,6 +46,8 @@ storiesOf('data/TagPanel', module).add('with test diskresource details', () => <
 storiesOf('desktop/view', module).add("with test desktop view", () => <DesktopViewTest logger={action('desktop')}/>);
 storiesOf('desktop/view', module).add("with test desktop taskbutton", () => <TaskButtonTest/>);
 storiesOf('desktop/view', module).add("with test desktop taskbar", () => <TaskbarTest/>);
+
+storiesOf('fileViewers', module).add("VideoViewer", () => <VideoViewerTest/>);
 
 storiesOf('metadata/admin/EditMetadataTemplate', module)
     .add('with nested attributes', () => <EditNestedAttrMetadataTemplateTest logger={action('template')} />)
