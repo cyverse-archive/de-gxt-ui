@@ -2,16 +2,16 @@ import React, { Component } from "react";
 
 import EditMetadata from "../../src/metadata/EditMetadata"
 
+const presenter = (logger) => ({
+    onSaveMetadata: logger,
+    closeEditMetadataDialog: () => logger("dialog closed."),
+});
+
 class EditMetadataTest extends Component {
     render () {
         const logger = this.props.logger || ((metadata) => {
             console.log(metadata);
         });
-
-        const presenter = {
-            onSaveMetadata: logger,
-            closeEditMetadataDialog: () => logger("dialog closed."),
-        };
 
         const metadata = {
             "avus": [
@@ -61,9 +61,276 @@ class EditMetadataTest extends Component {
         };
 
         return (
-            <EditMetadata open presenter={presenter} initialValues={metadata}/>
+            <EditMetadata open presenter={presenter(logger)} initialValues={metadata}/>
         );
     }
 }
 
-export default EditMetadataTest;
+class EditDataCiteMetadataTest extends Component {
+    render() {
+        const logger = this.props.logger || ((metadata) => {
+            console.log(metadata);
+        });
+
+        const metadata = {
+            "avus": [
+                {
+                    "attr": "title",
+                    "value": "My test title",
+                    "unit": "",
+                    "avus": [
+                        {
+                            "attr": "titleType",
+                            "value": "TranslatedTitle",
+                            "unit": ""
+                        },
+                        {
+                            "attr": "xml:lang",
+                            "value": "en-us",
+                            "unit": ""
+                        }
+                    ]
+                },
+                {
+                    "attr": "creator",
+                    "value": "Paul",
+                    "unit": "",
+                    "avus": [
+                        {
+                            "attr": "affiliation",
+                            "value": "CyVerse",
+                            "unit": ""
+                        },
+                        {
+                            "attr": "nameIdentifier",
+                            "value": "0000000134596520",
+                            "unit": "",
+                            "avus": [
+                                {
+                                    "attr": "nameIdentifierScheme",
+                                    "value": "ISNI",
+                                    "unit": ""
+                                },
+                                {
+                                    "attr": "schemeURI",
+                                    "value": "http://isni.org/isni/",
+                                    "unit": ""
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "attr": "contributor",
+                    "value": "Sriram",
+                    "unit": "",
+                    "avus": [
+                        {
+                            "attr": "affiliation",
+                            "value": "CyVerse",
+                            "unit": ""
+                        },
+                        {
+                            "attr": "contributorType",
+                            "value": "DataCollector",
+                            "unit": ""
+                        },
+                        {
+                            "attr": "nameIdentifier",
+                            "value": "0000-0001-5432-1234",
+                            "unit": "",
+                            "avus": [
+                                {
+                                    "attr": "nameIdentifierScheme",
+                                    "value": "ORCID",
+                                    "unit": ""
+                                },
+                                {
+                                    "attr": "schemeURI",
+                                    "value": "http://orcid.org/",
+                                    "unit": ""
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "attr": "publisher",
+                    "value": "CyVerse Data Commons",
+                    "unit": ""
+                },
+                {
+                    "attr": "publicationYear",
+                    "value": "2017",
+                    "unit": ""
+                },
+                {
+                    "attr": "resourceType",
+                    "value": "Dataset",
+                    "unit": "",
+                    "avus": [
+                        {
+                            "attr": "resourceTypeGeneral",
+                            "value": "Software",
+                            "unit": ""
+                        }
+                    ]
+                },
+                {
+                    "attr": "description",
+                    "value": "My test description",
+                    "unit": "",
+                    "avus": [
+                        {
+                            "attr": "descriptionType",
+                            "value": "Abstract",
+                            "unit": ""
+                        },
+                        {
+                            "attr": "xml:lang",
+                            "value": "en-us",
+                            "unit": ""
+                        }
+                    ]
+                },
+                {
+                    "attr": "subject",
+                    "value": "000 computer science",
+                    "unit": "",
+                    "avus": [
+                        {
+                            "attr": "schemeURI",
+                            "value": "http://dewey.info/",
+                            "unit": ""
+                        },
+                        {
+                            "attr": "subjectScheme",
+                            "value": "dewey",
+                            "unit": ""
+                        },
+                        {
+                            "attr": "xml:lang",
+                            "value": "en-us",
+                            "unit": ""
+                        }
+                    ]
+                },
+                {
+                    "attr": "identifier",
+                    "value": "10.5072/example-full",
+                    "unit": "",
+                    "avus": [
+                        {
+                            "attr": "identifierType",
+                            "value": "DOI",
+                            "unit": ""
+                        }
+                    ]
+                },
+                {
+                    "attr": "alternateIdentifier",
+                    "value": "http://schema.datacite.org/schema/meta/kernel-3.1/example/datacite-example-full-v3.1.xml",
+                    "unit": "",
+                    "avus": [
+                        {
+                            "attr": "alternateIdentifierType",
+                            "value": "URL",
+                            "unit": ""
+                        }
+                    ]
+                },
+                {
+                    "attr": "relatedIdentifier",
+                    "value": "arXiv:0706.0001",
+                    "unit": "",
+                    "avus": [
+                        {
+                            "attr": "relatedIdentifierType",
+                            "value": "arXiv",
+                            "unit": ""
+                        },
+                        {
+                            "attr": "relationType",
+                            "value": "IsReviewedBy",
+                            "unit": ""
+                        }
+                    ]
+                },
+                {
+                    "attr": "rights",
+                    "value": "CC0",
+                    "unit": "",
+                    "avus": [
+                        {
+                            "attr": "rightsURI",
+                            "value": "http://creativecommons.org/publicdomain/zero/1.0/",
+                            "unit": ""
+                        }
+                    ]
+                },
+                {
+                    "attr": "geoLocation",
+                    "value": "",
+                    "unit": "",
+                    "avus": [
+                        {
+                            "attr": "geoLocationPlace",
+                            "value": "Atlantic Ocean",
+                            "unit": ""
+                        },
+                        {
+                            "attr": "geoLocationPoint",
+                            "value": "",
+                            "unit": "",
+                            "avus": [
+                                {
+                                    "attr": "pointLongitude",
+                                    "value": "-67.302",
+                                    "unit": ""
+                                },
+                                {
+                                    "attr": "pointLatitude",
+                                    "value": "31.233",
+                                    "unit": ""
+                                }
+                            ]
+                        },
+                        {
+                            "attr": "geoLocationBox",
+                            "value": "",
+                            "unit": "",
+                            "avus": [
+                                {
+                                    "attr": "westBoundLongitude",
+                                    "value": "-71.032",
+                                    "unit": ""
+                                },
+                                {
+                                    "attr": "eastBoundLongitude",
+                                    "value": "-68.211",
+                                    "unit": ""
+                                },
+                                {
+                                    "attr": "southBoundLatitude",
+                                    "value": "41.090",
+                                    "unit": ""
+                                },
+                                {
+                                    "attr": "northBoundLatitude",
+                                    "value": "42.893",
+                                    "unit": ""
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+
+        return (
+            <EditMetadata open presenter={presenter(logger)} initialValues={metadata}/>
+        );
+    }
+}
+
+export { EditMetadataTest, EditDataCiteMetadataTest };
