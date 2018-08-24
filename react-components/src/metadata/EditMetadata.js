@@ -37,7 +37,9 @@ class EditMetadata extends Component {
             editingAttrIndex: -1,
         };
 
-        this.onSaveMetadata = this.onSaveMetadata.bind(this);
+        [
+            "onSaveMetadata",
+        ].forEach(methodName => (this[methodName] = this[methodName].bind(this)));
     }
 
     static propTypes = {

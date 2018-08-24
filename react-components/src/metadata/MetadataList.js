@@ -137,11 +137,18 @@ class MetadataList extends Component {
             orderBy: props.orderBy,
             order: props.order || "asc",
         };
+
+        [
+            "onAddAVU",
+            "handleRequestSort",
+        ].forEach(methodName => (this[methodName] = this[methodName].bind(this)));
     }
 
-    newAttrName = () => `New attribute ${this.newAttrCount++}`;
+    newAttrName() {
+        return `New attribute ${this.newAttrCount++}`;
+    }
 
-    onAddAVU = () => {
+    onAddAVU() {
         const fields = this.props.fields;
         const avus = fields.getAll() || [];
 
@@ -157,9 +164,9 @@ class MetadataList extends Component {
             value: "",
             unit: "",
         });
-    };
+    }
 
-    handleRequestSort = (event, property) => {
+    handleRequestSort(event, property) {
         const orderBy = property;
         let order = 'asc';
 
@@ -186,7 +193,7 @@ class MetadataList extends Component {
         this.setState({ order, orderBy });
 
         this.props.change(fields.name, avus);
-    };
+    }
 
     render() {
         const { parentID, classes, intl, fields } = this.props;
