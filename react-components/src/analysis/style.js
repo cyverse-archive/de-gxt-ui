@@ -3,7 +3,7 @@ import Color from "../util/CyVersePalette";
 export default (theme) => ({
     table: {
         height: "70%",
-        width: "80%",
+        width: "100%",
     },
     tableHead: {
         backgroundColor: "#e2e2e2",
@@ -31,6 +31,7 @@ export default (theme) => ({
         borderBottom: 'solid 2px',
         borderColor: Color.gray,
         paddingRight: 1,
+        width: '100%',
     },
     toolbarMargins: {
         marginLeft: theme.spacing.unit,
@@ -42,4 +43,10 @@ export default (theme) => ({
         top: 10,
         color: Color.white,
     },
+    analysisName: {
+        '&:hover': {
+            textDecoration: 'underline',
+            cursor: 'pointer',
+        },
+    }
 });

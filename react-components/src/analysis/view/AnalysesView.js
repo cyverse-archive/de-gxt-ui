@@ -24,6 +24,27 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import DEHyperLink from "../../util/hyperlink/DEHyperLink";
 import DotMenu from "./DotMenu";
 import analysisStatus from "../model/analysisStatus";
+import ListAltIcon from "@material-ui/icons/ListAlt";
+import Color from "../../util/CyVersePalette";
+
+function AnalysisName(props) {
+    let name = props.analysis.name;
+    let isBatch = props.analysis.batch;
+    let className = props.classes.analysisName;
+
+    if (isBatch) {
+        return (
+            <span className={className}>
+                <ListAltIcon style={{color: Color.darkGreen}}/><sup>{name}</sup>
+            </span>);
+    } else {
+        return (
+            <span className={className}>
+                {name}
+            </span>
+        );
+    }
+}
 
 const columnData = [
     {name: "Name", numeric: false, enableSorting: true},
@@ -34,6 +55,8 @@ const columnData = [
     {name: "Status", numeric: false, enableSorting: true},
     {name: "", numeric: false, enableSorting: false},
 ];
+
+const IPLANT = "iplantcollaborative";
 
 class AnalysesView extends Component {
     constructor(props) {
@@ -261,7 +284,7 @@ class AnalysesView extends Component {
                                      isOwner={this.isOwner}
                                      isSharable={this.isSharable}/>
                 <div className={classes.table}>
-                    <Table>
+                    <Table style={{padding: 0}}>
                         <EnhancedTableHead
                             selectable={true}
                             numSelected={selected.length}
@@ -278,6 +301,7 @@ class AnalysesView extends Component {
                             {data.map(n => {
                                 const id = n.id;
                                 const isSelected = this.isSelected(id);
+                                const username = n.username.includes(IPLANT) ? n.username.split('@')[0] : n.username;
                                 return (
                                     <TableRow onClick={event => this.handleRowClick(event, id)}
                                               role="checkbox"
@@ -285,24 +309,32 @@ class AnalysesView extends Component {
                                               tabIndex={-1}
                                               selected={isSelected}
                                               hover
-                                              key={id}>
-                                        <TableCell padding="checkbox">
+                                              key={id}
+                                    >
+                                        <TableCell padding="none">
                                             <Checkbox
                                                 onClick={(event, n) => this.handleCheckBoxClick(event, id)}
                                                 checked={isSelected}/>
                                         </TableCell>
-                                        <TableCell>{n.name} </TableCell>
-                                        <TableCell>{n.username} </TableCell>
-                                        <TableCell>{n.app_name} </TableCell>
-                                        <TableCell>{parseInt(n.startdate, 10) ? moment(parseInt(n.startdate, 10), "x").format(
-                                            constants.DATE_FORMAT) :
-                                            getMessage("emptyValue")} </TableCell>
-                                        <TableCell>{parseInt(n.enddate, 10) ? moment(parseInt(n.enddate, 10), "x").format(
-                                            constants.DATE_FORMAT) :
-                                            getMessage("emptyValue")}</TableCell>
-                                        <TableCell><DEHyperLink onClick={(n) => this.statusClick(n)}
-                                                                text={n.status}/></TableCell>
-                                        <TableCell>
+                                        <TableCell padding="none">
+                                            <AnalysisName classes={classes} analysis={n}/>
+                                        </TableCell>
+                                        <TableCell padding="default">{username}</TableCell>
+                                        <TableCell padding="none">{n.app_name} </TableCell>
+                                        <TableCell padding="none">
+                                            {parseInt(n.startdate, 10) ? moment(parseInt(n.startdate, 10), "x").format(
+                                                constants.LONG_DATE_FORMAT) :
+                                                getMessage("emptyValue")}
+                                        </TableCell>
+                                        <TableCell padding="none">
+                                            {parseInt(n.enddate, 10) ? moment(parseInt(n.enddate, 10), "x").format(
+                                                constants.LONG_DATE_FORMAT) :
+                                                getMessage("emptyValue")}
+                                        </TableCell>
+                                        <TableCell padding="default"><DEHyperLink
+                                            onClick={(n) => this.statusClick(n)}
+                                            text={n.status}/></TableCell>
+                                        <TableCell padding="none">
                                             <DotMenu
                                                 selected={selected}
                                                 handleGoToOutputFolder={this.handleGoToOutputFolder}

@@ -49,8 +49,7 @@ class DotMenu extends Component {
                         },
                     }}
                 >
-                    <AnalysesMenu {...this.props}
-                    />
+                    <AnalysesMenu {...this.props} />
                 </Menu>
             </div>
         );

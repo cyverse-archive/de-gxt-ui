@@ -1,6 +1,7 @@
 /**
  *  @author sriram
  *
+ * Rewrite IPlantPromptDialog in react.
  **/
 
 import React, { Component } from 'react';
