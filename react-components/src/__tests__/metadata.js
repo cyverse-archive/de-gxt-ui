@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 import { getDefaultTheme, MuiThemeProvider } from "../lib";
 
+import EditMetadataTest from "../../stories/metadata/EditMetadata.stories";
 import {
     DataCiteMetadataTemplateViewNoValuesTest,
     DataCiteMetadataTemplateViewTest,
@@ -11,6 +12,17 @@ import {
     MetadataTemplateReadOnlyViewTest,
     MetadataTemplateViewTest,
 } from "../../stories/metadata/MetadataTemplate.stories";
+
+it('renders EditMetadataTest without crashing', () => {
+    const div = document.createElement('div');
+    ReactDOM.render(
+        <MuiThemeProvider theme={getDefaultTheme()}>
+            <EditMetadataTest/>
+        </MuiThemeProvider>,
+        div,
+    );
+    ReactDOM.unmountComponentAtNode(div);
+});
 
 it('renders EditNestedAttrMetadataTemplateTest without crashing', () => {
     const div = document.createElement('div');
