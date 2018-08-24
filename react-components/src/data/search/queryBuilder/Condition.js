@@ -5,6 +5,7 @@ import Group from "./Group";
 import ids from "../ids";
 
 import { FieldArray, Fields, FormSection } from "redux-form";
+import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
 import React, { Fragment } from "react";
@@ -65,17 +66,19 @@ function renderCondition(props) {
         let defaultIndex = root ? 0 : 2;
         fieldTypeObj.input.onChange(Conditions.labels[defaultIndex].value);
     }
-    let baseId = build(parentId, field);
+    let baseId = field ? build(parentId, field) : parentId;
     let selection = fieldTypeObj.input.value;
 
     let ConditionSelector = () => (
-        <Select value={selection}
-                id={build(baseId, ids.conditionSelector)}
-                onChange={(event) => handleUpdateCondition(fieldTypeObj, fieldArgs, event, resetSection)}>
-            {selectOptions && selectOptions.map((item, index) => {
-                return <MenuItem key={index} value={item.value}>{item.label}</MenuItem>
-            })}
-        </Select>
+        <FormControl id={build(baseId, ids.conditionSelector)}>
+            <Select value={selection}
+                    id={build(baseId, ids.conditionSelector, ids.inputField)}
+                    onChange={(event) => handleUpdateCondition(fieldTypeObj, fieldArgs, event, resetSection)}>
+                {selectOptions && selectOptions.map((item, index) => {
+                    return <MenuItem key={index} value={item.value} id={item.id}>{item.label}</MenuItem>
+                })}
+            </Select>
+        </FormControl>
     );
 
     if (isGroup(selection)) {

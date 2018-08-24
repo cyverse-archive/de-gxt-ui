@@ -116,7 +116,7 @@ class QueryBuilderTest extends React.Component {
             label: 'OLDNAME',
         };
 
-        const parentId = 'gwt-debug-diskResourceWindow.0';
+        const parentId = 'searchForm';
 
         return (
             <QueryBuilder presenter={presenter}

@@ -3,6 +3,7 @@ import ids from "../ids";
 import { operatorMap } from "./Operators";
 
 import { Fields } from "redux-form";
+import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
 import React from "react";
@@ -44,13 +45,15 @@ function renderSelect(props) {
     }
 
     return (
-        <Select value={opLabel.input.value}
-                id={build(parentId, ids.selectOperator)}
-                onChange={(event) => handleChange(event, opLabel, exact, negated, permission_recurse)}>
-            {operators && operators.map((operator, index) => {
-                return <MenuItem key={index} value={operator.value}>{operator.label}</MenuItem>
-            })}
-        </Select>
+        <FormControl id={build(parentId, ids.selectOperator)}>
+            <Select value={opLabel.input.value}
+                    id={build(parentId, ids.selectOperator, ids.inputField)}
+                    onChange={(event) => handleChange(event, opLabel, exact, negated, permission_recurse)}>
+                {operators && operators.map((operator, index) => {
+                    return <MenuItem key={index} value={operator.value}>{operator.label}</MenuItem>
+                })}
+            </Select>
+        </FormControl>
     )
 }
 

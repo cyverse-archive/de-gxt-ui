@@ -29,7 +29,7 @@ function Group(props) {
             <AddBtn onClick={() => fields.push({})}
                     id={build(baseId, ids.addConditionBtn)}/>
             {!root && <DeleteBtn onClick={onRemove}
-                                 id={build(parentId, ids.deleteConditionBtn)}/>}
+                                 id={build(baseId, ids.deleteConditionBtn)}/>}
             {fields.map((field, index) => (
                 <div key={index} className={classes.condition}>
                     <Condition field={field}

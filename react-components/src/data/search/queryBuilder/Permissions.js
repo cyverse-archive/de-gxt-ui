@@ -9,6 +9,7 @@ import UserPanel from "./UserPanel";
 import withI18N, { getMessage } from "../../../util/I18NWrapper";
 
 import { Field, FieldArray } from "redux-form";
+import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
 import React, { Fragment } from "react";
@@ -83,13 +84,15 @@ function renderSelect(props) {
 
     return (
         <Grid item>
-            <Select value={input.value}
-                    id={id}
-                    onChange={(event) => input.onChange(event.target.value)}>
-                {permissions && permissions.map((permission, index) => {
-                    return <MenuItem key={index} value={permission.value}>{permission.label}</MenuItem>
-                })}
-            </Select>
+            <FormControl id={id}>
+                <Select value={input.value}
+                        id={build(id, ids.inputField)}
+                        onChange={(event) => input.onChange(event.target.value)}>
+                    {permissions && permissions.map((permission, index) => {
+                        return <MenuItem key={index} value={permission.value}>{permission.label}</MenuItem>
+                    })}
+                </Select>
+            </FormControl>
         </Grid>
     )
 }
@@ -112,9 +115,9 @@ function renderSubjectSearch(props) {
                                 parentId={parentId}
                                 onSelect={(collaborator) => fields.push(collaborator)}/>
             {users && users.length > 0 && <UserPanel users={users}
-                                           id={build(parentId, ids.userList)}
-                                           collaboratorsUtil={collaboratorsUtil}
-                                           onDelete={fields.remove}/>}
+                                                     id={build(parentId, ids.userList)}
+                                                     collaboratorsUtil={collaboratorsUtil}
+                                                     onDelete={fields.remove}/>}
         </Grid>
     )
 }

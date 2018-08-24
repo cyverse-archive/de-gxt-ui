@@ -49,12 +49,12 @@ class QueryBuilder extends Component {
         return (
             <div className={classes.form}>
                 <Condition root={true}
-                           parentId={build(parentId, ids.form)}
+                           parentId={parentId}
                            helperProps={this.props}/>
                 <div className={classes.buttonBar}>
                     <Field name='label'
                            originalName={this.getOriginalName()}
-                           id={ids.saveBtn}
+                           parentId={parentId}
                            handleSave={handleSubmit(this.handleSaveSearch)}
                            component={renderSaveSearchBtn}/>
                     <Button variant="raised"

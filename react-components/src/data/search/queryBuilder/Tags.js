@@ -26,7 +26,8 @@ function Tags(props) {
 
     return (
         <Fragment>
-            <SelectOperator operators={operators}/>
+            <SelectOperator operators={operators}
+                            parentId={parentId}/>
             <Field name='tags'
                    parentId={parentId}
                    placeholder={''}
