@@ -2,11 +2,13 @@
  * @author psarando
  */
 import React, { Component } from "react";
+
+import PropTypes from "prop-types";
 import { FieldArray, reduxForm } from "redux-form";
 import { injectIntl } from "react-intl";
 
 import build from "../util/DebugIDUtil";
-import withI18N, { getMessage, formatMessage } from "../util/I18NWrapper";
+import withI18N, { formatMessage, getMessage } from "../util/I18NWrapper";
 import withStoreProvider from "../util/StoreProvider";
 import ids from "./ids";
 import intlData from "./messages";
@@ -38,6 +40,13 @@ class EditMetadata extends Component {
         this.onSaveMetadata = this.onSaveMetadata.bind(this);
     }
 
+    static propTypes = {
+        presenter: PropTypes.shape({
+            onSaveMetadata: PropTypes.func.isRequired,
+            closeEditMetadataDialog: PropTypes.func.isRequired,
+        }).isRequired,
+    };
+
     onSaveMetadata ({ avus }) {
         let metadata = {...this.props.initialValues, avus: avus};
         this.props.presenter.onSaveMetadata(metadata);
@@ -60,7 +69,8 @@ class EditMetadata extends Component {
         return (
             <Dialog open={open}
                     onClose={closeEditMetadataDialog}
-                    fullScreen
+                    fullWidth={true}
+                    maxWidth="md"
                     disableBackdropClick
                     disableEscapeKeyDown
                     aria-labelledby={dialogTitleID}

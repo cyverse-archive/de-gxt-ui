@@ -2,11 +2,13 @@
  * @author psarando
  */
 import React, { Component, Fragment } from "react";
+
+import PropTypes from "prop-types";
 import { Field, FieldArray } from "redux-form";
 import { injectIntl } from "react-intl";
 
 import build from "../util/DebugIDUtil";
-import withI18N, { getMessage, formatMessage } from "../util/I18NWrapper";
+import withI18N, { formatMessage, getMessage } from "../util/I18NWrapper";
 import ids from "./ids";
 import intlData from "./messages";
 import styles from "./style";
@@ -40,6 +42,13 @@ class EditAVU extends Component {
         };
     }
 
+    static propTypes = {
+        closeAttrDialog: PropTypes.func.isRequired,
+        avu: PropTypes.shape({
+            attr: PropTypes.string.isRequired,
+        }).isRequired,
+    };
+
     render() {
         const { classes, intl, field, error, avu, open, parentName } = this.props;
         const { attr, avus } = avu;
@@ -56,7 +65,8 @@ class EditAVU extends Component {
             <Dialog
                 open={open}
                 onClose={this.props.closeAttrDialog}
-                fullScreen
+                fullWidth={true}
+                maxWidth="md"
                 disableBackdropClick
                 disableEscapeKeyDown
                 aria-labelledby={dialogTitleID}

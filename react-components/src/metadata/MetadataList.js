@@ -2,10 +2,12 @@
  * @author psarando
  */
 import React, { Component } from "react";
+
+import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 
 import build from "../util/DebugIDUtil";
-import withI18N, { getMessage, formatMessage } from "../util/I18NWrapper";
+import withI18N, { formatMessage, getMessage } from "../util/I18NWrapper";
 import ids from "./ids";
 import intlData from "./messages";
 import styles from "./style";
@@ -27,32 +29,38 @@ import ContentAdd from "@material-ui/icons/Add";
 import ContentRemove from "@material-ui/icons/Delete";
 import ContentEdit from "@material-ui/icons/Edit";
 
-let MetadataGridToolbar = props => {
-    const { parentID, classes, intl, onAddAVU } = props;
+class MetadataGridToolbar extends Component {
+    static propTypes = {
+        onAddAVU: PropTypes.func.isRequired,
+    };
 
-    return (
-        <Toolbar
-            className={classes.root}
-        >
-            <div className={classes.actions}>
-                <Button id={build(parentID, ids.BUTTONS.ADD)}
-                        variant="fab"
-                        mini
-                        color="primary"
-                        aria-label={formatMessage(intl, "addMetadata")}
-                        onClick={onAddAVU}
-                >
-                    <ContentAdd />
-                </Button>
-            </div>
-            <div className={classes.title}>
-                <Typography id={build(parentID, ids.TITLE)} variant="title">
-                    {getMessage("avus")}
-                </Typography>
-            </div>
-        </Toolbar>
-    );
-};
+    render() {
+        const { parentID, classes, intl, onAddAVU } = this.props;
+
+        return (
+            <Toolbar
+                className={classes.root}
+            >
+                <div className={classes.actions}>
+                    <Button id={build(parentID, ids.BUTTONS.ADD)}
+                            variant="fab"
+                            mini
+                            color="primary"
+                            aria-label={formatMessage(intl, "addMetadata")}
+                            onClick={onAddAVU}
+                    >
+                        <ContentAdd/>
+                    </Button>
+                </div>
+                <div className={classes.title}>
+                    <Typography id={build(parentID, ids.TITLE)} variant="title">
+                        {getMessage("avus")}
+                    </Typography>
+                </div>
+            </Toolbar>
+        );
+    }
+}
 
 MetadataGridToolbar = withStyles(styles)(withI18N(injectIntl(MetadataGridToolbar), intlData));
 
@@ -69,6 +77,10 @@ const columnData = [
 ];
 
 class MetadataGridHeader extends React.Component {
+    static propTypes = {
+        onRequestSort: PropTypes.func.isRequired,
+    };
+
     createSortHandler = property => event => {
         this.props.onRequestSort(event, property);
     };
