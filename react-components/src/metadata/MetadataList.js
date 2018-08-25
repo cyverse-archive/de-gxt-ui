@@ -28,6 +28,7 @@ import { withStyles } from "@material-ui/core/styles";
 import ContentAdd from "@material-ui/icons/Add";
 import ContentRemove from "@material-ui/icons/Delete";
 import ContentEdit from "@material-ui/icons/Edit";
+import ContentView from "@material-ui/icons/List";
 
 class MetadataGridToolbar extends Component {
     static propTypes = {
@@ -35,12 +36,13 @@ class MetadataGridToolbar extends Component {
     };
 
     render() {
-        const { parentID, classes, intl, onAddAVU } = this.props;
+        const { parentID, editable, classes, intl, onAddAVU } = this.props;
 
         return (
             <Toolbar
                 className={classes.root}
             >
+                {editable &&
                 <div className={classes.actions}>
                     <Button id={build(parentID, ids.BUTTONS.ADD)}
                             variant="fab"
@@ -51,7 +53,7 @@ class MetadataGridToolbar extends Component {
                     >
                         <ContentAdd/>
                     </Button>
-                </div>
+                </div>}
                 <div className={classes.title}>
                     <Typography id={build(parentID, ids.TITLE)} variant="title">
                         {getMessage("avus")}
@@ -196,7 +198,7 @@ class MetadataList extends Component {
     }
 
     render() {
-        const { parentID, classes, intl, fields } = this.props;
+        const { parentID, editable, classes, intl, fields } = this.props;
         const { order, orderBy } = this.state;
 
         const tableID = build(parentID, ids.AVU_GRID);
@@ -204,7 +206,10 @@ class MetadataList extends Component {
         return (
             <div className={classes.metadataTemplateContainer}>
 
-                <MetadataGridToolbar parentID={tableID} onAddAVU={this.onAddAVU} />
+                <MetadataGridToolbar parentID={tableID}
+                                     editable={editable}
+                                     onAddAVU={this.onAddAVU}
+                />
 
                 <div className={classes.tableWrapper}>
                     <Table aria-labelledby={build(tableID, ids.TITLE)}>
@@ -240,18 +245,19 @@ class MetadataList extends Component {
                                                             this.props.onEditAVU(index);
                                                         }}
                                             >
-                                                <ContentEdit />
+                                                {editable ? <ContentEdit/> : <ContentView/>}
                                             </IconButton>
+                                            {editable &&
                                             <IconButton id={build(rowID, ids.BUTTONS.DELETE)}
                                                         aria-label={formatMessage(intl, "delete")}
-                                                        classes={{root: classes.deleteIcon}}
+                                                        classes={{ root: classes.deleteIcon }}
                                                         onClick={event => {
                                                             event.stopPropagation();
                                                             this.props.fields.remove(index);
                                                         }}
                                             >
-                                                <ContentRemove />
-                                            </IconButton>
+                                                <ContentRemove/>
+                                            </IconButton>}
                                         </TableCell>
                                     </TableRow>
                                 );

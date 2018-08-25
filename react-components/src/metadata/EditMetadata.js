@@ -59,6 +59,7 @@ class EditMetadata extends Component {
             classes,
             intl,
             open,
+            editable,
             presenter: { closeEditMetadataDialog },
             // from redux-form
             handleSubmit, pristine, submitting, error, change,
@@ -88,15 +89,18 @@ class EditMetadata extends Component {
                             <CloseIcon />
                         </IconButton>
                         <Typography id={dialogTitleID} variant="title" color="inherit" className={classes.flex}>
-                            {getMessage("dialogTitleEditMetadata")}
+                            {editable ?
+                                getMessage("dialogTitleEditMetadata") :
+                                getMessage("dialogTitleViewMetadata")}
                         </Typography>
+                        {editable &&
                         <Button id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.SAVE)}
                                 disabled={pristine || submitting || error}
                                 onClick={handleSubmit(this.onSaveMetadata)}
                                 color="inherit"
                         >
                             {getMessage("save")}
-                        </Button>
+                        </Button>}
                     </Toolbar>
                 </AppBar>
 
@@ -105,6 +109,7 @@ class EditMetadata extends Component {
                                 component={MetadataList}
                                 field="avus"
                                 change={change}
+                                editable={editable}
                                 parentID={ids.EDIT_METADATA_FORM}
                                 onEditAVU={(index) => this.setState({editingAttrIndex: index})}
                     />
@@ -112,6 +117,7 @@ class EditMetadata extends Component {
                     <FieldArray name="avus"
                                 component={FormDialogEditAVU}
                                 change={change}
+                                editable={editable}
                                 editingAttrIndex={editingAttrIndex}
                                 closeAttrDialog={() => this.setState({editingAttrIndex: -1})}
                     />
