@@ -145,8 +145,7 @@ public class ConfigFactory {
 
     public static NotifyWindowConfig notifyWindowConfig(NotificationCategory category) {
         AutoBean<NotifyWindowConfig> nwc = applyWindowType(WindowType.NOTIFICATIONS, factory.notifyWindowConfig());
-        applyTag("Notify-" + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL).format(new Date()),
-                 nwc);
+        applyTag("Notify", nwc);
         nwc.as().setFilter(category.toString());
         return nwc.as();
     }
