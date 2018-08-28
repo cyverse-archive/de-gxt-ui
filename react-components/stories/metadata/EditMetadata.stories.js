@@ -61,7 +61,11 @@ class EditMetadataTest extends Component {
         };
 
         return (
-            <EditMetadata open editable presenter={presenter(logger)} initialValues={metadata}/>
+            <EditMetadata open
+                          editable
+                          presenter={presenter(logger)}
+                          targetName="Test Resource"
+                          initialValues={metadata}/>
         );
     }
 }
@@ -120,7 +124,11 @@ class ViewMetadataTest extends Component {
         };
 
         return (
-            <EditMetadata open editable={false} presenter={presenter(logger)} initialValues={metadata}/>
+            <EditMetadata open
+                          editable={false}
+                          targetName="Read-Only Resource"
+                          presenter={presenter(logger)}
+                          initialValues={metadata}/>
         );
     }
 }
@@ -387,7 +395,11 @@ class EditDataCiteMetadataTest extends Component {
         };
 
         return (
-            <EditMetadata open editable presenter={presenter(logger)} initialValues={metadata}/>
+            <EditMetadata open
+                          editable
+                          targetName="DataCite Resource"
+                          presenter={presenter(logger)}
+                          initialValues={metadata}/>
         );
     }
 }

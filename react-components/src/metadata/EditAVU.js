@@ -43,6 +43,7 @@ class EditAVU extends Component {
     }
 
     static propTypes = {
+        targetName: PropTypes.string,
         closeAttrDialog: PropTypes.func.isRequired,
         avu: PropTypes.shape({
             attr: PropTypes.string.isRequired,
@@ -50,16 +51,17 @@ class EditAVU extends Component {
     };
 
     render() {
-        const { classes, intl, field, error, avu, open, editable, parentName } = this.props;
+        const { classes, intl, field, error, avu, open, editable, targetName } = this.props;
         const { attr, avus } = avu;
         const { editingAttrIndex } = this.state;
 
         const formID = build(ids.EDIT_METADATA_FORM, field, ids.DIALOG);
         const dialogTitleID = build(formID, ids.TITLE);
 
-        const title = parentName ?
-            getMessage(editable ? "dialogTitleEditAVUFor" : "dialogTitleViewAVUFor", { values: { parentName } }) :
-            getMessage(editable ? "dialogTitleEditAVU" : "dialogTitleViewAVU");
+        const title = getMessage(
+            editable ? "dialogTitleEditMetadataFor" : "dialogTitleViewMetadataFor",
+            { values: { targetName } }
+        );
 
         const hasChildren = avus && avus.length > 0;
 
@@ -144,7 +146,7 @@ class EditAVU extends Component {
                                     component={FormDialogEditAVU}
                                     editingAttrIndex={editingAttrIndex}
                                     editable={editable}
-                                    parentName={attr}
+                                    targetName={attr}
                                     closeAttrDialog={() => this.setState({ editingAttrIndex: -1 })}
                         />
                     </Fragment>}
@@ -156,7 +158,7 @@ class EditAVU extends Component {
 
 EditAVU = withStyles(styles)(withI18N(injectIntl(EditAVU), intlData));
 
-const FormDialogEditAVU = ({ fields, change, meta: { error }, editingAttrIndex, editable, parentName, closeAttrDialog }) => (
+const FormDialogEditAVU = ({ fields, change, meta: { error }, editingAttrIndex, editable, targetName, closeAttrDialog }) => (
     <Fragment>
         {fields.map((field, index) => (
             <EditAVU key={field}
@@ -166,7 +168,7 @@ const FormDialogEditAVU = ({ fields, change, meta: { error }, editingAttrIndex, 
                      avu={fields.get(index)}
                      open={editingAttrIndex === index}
                      editable={editable}
-                     parentName={parentName}
+                     targetName={targetName}
                      closeAttrDialog={closeAttrDialog}
             />
         ))

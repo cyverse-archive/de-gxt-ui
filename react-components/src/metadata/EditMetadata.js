@@ -43,6 +43,7 @@ class EditMetadata extends Component {
     }
 
     static propTypes = {
+        targetName: PropTypes.string,
         presenter: PropTypes.shape({
             onSaveMetadata: PropTypes.func.isRequired,
             closeEditMetadataDialog: PropTypes.func.isRequired,
@@ -61,6 +62,7 @@ class EditMetadata extends Component {
             open,
             editable,
             presenter: { closeEditMetadataDialog },
+            targetName,
             // from redux-form
             handleSubmit, pristine, submitting, error, change,
         } = this.props;
@@ -89,9 +91,10 @@ class EditMetadata extends Component {
                             <CloseIcon />
                         </IconButton>
                         <Typography id={dialogTitleID} variant="title" color="inherit" className={classes.flex}>
-                            {editable ?
-                                getMessage("dialogTitleEditMetadata") :
-                                getMessage("dialogTitleViewMetadata")}
+                            {getMessage(
+                                editable ? "dialogTitleEditMetadataFor" : "dialogTitleViewMetadataFor",
+                                { values: { targetName } }
+                            )}
                         </Typography>
                         {editable &&
                         <Button id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.SAVE)}
@@ -118,6 +121,7 @@ class EditMetadata extends Component {
                                 component={FormDialogEditAVU}
                                 change={change}
                                 editable={editable}
+                                targetName={targetName}
                                 editingAttrIndex={editingAttrIndex}
                                 closeAttrDialog={() => this.setState({editingAttrIndex: -1})}
                     />
