@@ -15,7 +15,7 @@
     "react-scripts": "^1.0.14"
   },
   "dependencies": {
-    "@material-ui/core": "^1.4.2",
+    "@material-ui/core": "^3.0.1",
     "@material-ui/icons": "^2.0.0",
     "autoprefixer": "7.1.2",
     "babel-core": "^6.26.0",
@@ -58,7 +58,6 @@
     "react-select": "^2.0.0",
     "react-dom": "^16.4.1",
     "react-jss": "^8.6.1",
-    "react-redux": "^5.0.7",
     "react-tap-event-plugin": "^3.0.2",
     "redux": "^4.0.0",
     "sockette": "^2.0.0",

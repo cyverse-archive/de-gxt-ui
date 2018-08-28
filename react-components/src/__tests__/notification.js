@@ -9,7 +9,7 @@ import JoinTeamRequestDialogTest
 import RequestHistoryDialogTest
     from "../../stories/notifications/view/dialogs/RequestHistoryDialog.stories";
 
-it('renders NotificationViewYest without crashing', () => {
+it('renders NotificationViewTest without crashing', () => {
     const div = document.createElement('div');
     ReactDOM.render(<MuiThemeProvider
         theme={getDefaultTheme()}><NotificationViewTest/></MuiThemeProvider>, div);

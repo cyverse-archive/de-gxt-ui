@@ -75,7 +75,8 @@ public class NotificationPresenterImpl implements NotificationView.Presenter {
     }
 
     @Override
-    public void deleteNotifications(String[] ids, ReactSuccessCallback callback,
+    public void deleteNotifications(String[] ids,
+                                    ReactSuccessCallback callback,
                                     ReactErrorCallback errorCallback) {
         if (ids != null && ids.length > 0) {
             messageServiceFacade.deleteMessages(getUUIDsFromIds(ids),
@@ -191,20 +192,10 @@ public class NotificationPresenterImpl implements NotificationView.Presenter {
         @Override
         public void onSuccess(String result) {
             super.onSuccess(result);
-            Splittable splitResult =
-                    StringQuoter.split(result);
-            int total = 0;
-
-            if (splitResult.get("total") != null) {
-                total = Integer.parseInt(splitResult.get(
-                        "total").asString());
-            }
-
-
             Splittable sp = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(getNotifications()));
 
             if (callback != null) {
-                callback.onFetchNotifications(sp, total);
+                callback.onFetchNotifications(sp, getTotal());
             }
         }
     }

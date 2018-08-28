@@ -21,6 +21,7 @@ import exStyles from "../style";
 import notificationCategory from "../model/notificationCategory";
 import build from "../../util/DebugIDUtil";
 import ids from "../ids";
+import Color from "../../util/CyVersePalette";
 
 class NotificationToolbar extends Component {
     render() {
@@ -64,21 +65,21 @@ class NotificationToolbar extends Component {
                             variant="raised"
                             size="small"
                             className={classes.toolbarButton}
-                            onClick={this.props.onRefreshClicked}><RefreshIcon />{getMessage("refresh")}
+                            onClick={this.props.onRefreshClicked}><RefreshIcon style={{color: Color.darkBlue}}/>{getMessage("refresh")}
                     </Button>
                     <Button id={build(baseId, ids.MARK_ALL_SEEN_BTN)}
                             variant="raised"
                             size="small"
                             disabled={this.props.markSeenDisabled}
                             className={classes.toolbarButton}
-                            onClick={this.props.onMarkSeenClicked}><CheckIcon />{getMessage("markSeen")}
+                            onClick={this.props.onMarkSeenClicked}><CheckIcon style={{color: Color.darkBlue}}/>{getMessage("markSeen")}
                     </Button>
                     <Button id={build(baseId, ids.DELETE_BTN)}
                             variant="raised"
                             size="small"
                             disabled={this.props.deleteDisabled}
                             onClick={this.props.onDeleteClicked}
-                            className={classes.toolbarButton}><DeleteIcon />{getMessage("delete")}
+                            className={classes.toolbarButton}><DeleteIcon style={{color: Color.darkBlue}}/>{getMessage("delete")}
                     </Button>
 
                 </ToolbarGroup>

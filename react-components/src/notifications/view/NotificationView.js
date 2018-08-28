@@ -36,7 +36,7 @@ function Message(props) {
     const {message, seen, presenter, classes} = props;
     let className = (seen) ? classes.notification : classnames(classes.notification, classes.unSeenNotificationBackground);
     return (
-        <TableCell
+        <TableCell padding="none"
             className={className}>
             <div
                 onClick={(event) => presenter.onMessageClicked(message)}> {message.text}</div>
@@ -82,18 +82,20 @@ class NotificationView extends Component {
     fetchNotifications() {
         const {rowsPerPage, offset, filter, order}  = this.state;
         this.setState({loading: true});
-        this.props.presenter.getNotifications(rowsPerPage, offset, filter,order, (notifications, total) => {
+        this.props.presenter.getNotifications(rowsPerPage, offset, filter, order,
+            (notifications, total) => {
                 this.setState({
                     loading: false,
                     data: notifications.messages,
                     total: total,
                 })
-            }, (errorCode, errorMessage) => {
+            },
+            (errorCode, errorMessage) => {
                 this.setState({
                     loading: false,
                 });
             },
-        )
+        );
     }
 
     handleRefreshClicked() {
@@ -128,16 +130,16 @@ class NotificationView extends Component {
 
     handleChangePage(event, page) {
         const {rowsPerPage} = this.state;
-        this.setState({page: page, offset: rowsPerPage * page}, () => this.fetchNotifications());
+        this.setState({page: page, offset: rowsPerPage * page}, this.fetchNotifications);
     };
 
     handleFilterChange(event) {
-        this.setState({filter: event.target.value}, () => this.fetchNotifications());
+        this.setState({filter: event.target.value}, this.fetchNotifications);
     };
 
 
     handleChangeRowsPerPage(event) {
-        this.setState({rowsPerPage: event.target.value}, () => this.fetchNotifications());
+        this.setState({rowsPerPage: event.target.value}, this.fetchNotifications);
     };
 
     handleRowClick(event, id) {
@@ -162,14 +164,13 @@ class NotificationView extends Component {
     };
 
     shouldDisableMarkSeen() {
-        let notifications = [];
-        this.state.selected.map(id => {
+        const result = this.state.selected.filter(id => {
             let n = this.findNotification(id);
             if (n && !(n.seen)) {
-                notifications.push(n);
+               return n;
             }
         });
-        return notifications.length === 0;
+        return result.length === 0;
     }
 
     findNotification(id) {
@@ -260,7 +261,7 @@ class NotificationView extends Component {
                                                  seen={n.seen}
                                                  presenter={this.props.presenter}
                                                  classes={classes}/>
-                                        <TableCell>{(n.message.timestamp) ? moment(n.message.timestamp, "x").format(
+                                        <TableCell padding="none">{(n.message.timestamp) ? moment(n.message.timestamp, "x").format(
                                                 constants.DATE_FORMAT) :
                                             getMessage("emptyValue")} </TableCell>
                                     </TableRow>

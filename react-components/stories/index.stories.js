@@ -1,35 +1,44 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
+
 import ToolDetailsTest from "./apps/details/ToolDetails.stories";
 import CategoryTreeTest from "./apps/details/CategoryTree.stories";
-import CopyTextAreaTest from "./util/CopyTextArea.stories";
+import AppStatsTest from "./apps/admin/AppStats.stories";
+
+import SubjectSearchFieldTest from "./collaborators/SubjectSearchField.stories";
+
 import BasicDetailsTest from "./data/details/BasicDetails.stories";
 import InfoTypeSelectionListTest from "./data/details/InfoTypeSelectionList.stories";
 import TagTest from "./data/details/Tag.stories";
 import TagPanelTest from "./data/details/TagPanel.stories";
 import QueryBuilderTest from './data/search/QueryBuilder.stories';
-import AppStatsTest from "./apps/admin/AppStats.stories";
-import DEHyperLinkTest from "./util/hyperlink/DEHyperLink.stories";
 import EditTagDialogTest from "./data/search/EditTagDialog.stories";
 import SaveSearchButtonTest from "./data/search/SaveSearchButton.stories";
-import SearchFieldTest from "./util/SearchField.stories";
-import AutocompleteTest from "./util/Autocomplete.stories";
+import SearchFormTagPanel from "./data/search/SearchFormTagPanel.stories";
+
 import DesktopViewTest from "./desktop/view/DesktopView.stories";
 import TaskButtonTest from "./desktop/view/TaskButton.stories";
 import TaskbarTest from "./desktop/view/Taskbar.stories";
+
 import VideoViewerTest from "./fileViewers/VideoViewer.stories";
 
 import {
-    EditNestedAttrMetadataTemplateTest,
     EditDataCiteMetadataTemplateTest,
+    EditNestedAttrMetadataTemplateTest,
 } from "./metadata/MetadataTemplate.stories";
-import SearchFormTagPanel from "./data/search/SearchFormTagPanel.stories";
-import TriggerFieldTest from "./util/TriggerField.stories";
+
 import NotificationViewTest from "./notifications/view/NotificationView.stories";
 import JoinTeamRequestDialogTest from "./notifications/view/dialogs/JoinTeamRequestDialog.stories";
-import DenyJoinRequestDetailsDialogTest from "./notifications/view/dialogs/DenyJoinRequestDetailsDialog.stories";
+import DenyJoinRequestDetailsDialogTest
+    from "./notifications/view/dialogs/DenyJoinRequestDetailsDialog.stories";
 import RequestHistoryDialogTest from "./notifications/view/dialogs/RequestHistoryDialog.stories";
+
+import SearchFieldTest from "./util/SearchField.stories";
+import AutocompleteTest from "./util/Autocomplete.stories";
+import CopyTextAreaTest from "./util/CopyTextArea.stories";
+import DEHyperLinkTest from "./util/hyperlink/DEHyperLink.stories";
+import TriggerFieldTest from "./util/TriggerField.stories";
 
 storiesOf('apps/admin/AppStats', module).add('with test stats', () => <AppStatsTest/>);
 storiesOf('apps/details', module).add('CategoryTree', () => <CategoryTreeTest logger={action('hierarchy')} />);

@@ -30,7 +30,7 @@ public class NotificationWindow extends WindowBase {
         ensureDebugId(DeModule.WindowIds.NOTIFICATION);
 
         setMinHeight(appearance.windowMinHeight());
-        setMinHeight(appearance.windowMinWidth());
+        setMinWidth(appearance.windowMinWidth());
         setBodyStyle("background-color: white;");
     }
 
@@ -79,9 +79,10 @@ public class NotificationWindow extends WindowBase {
             super.restoreWindowState();
             String width = ws.getWidth();
             String height = ws.getHeight();
-            setSize((Strings.isNullOrEmpty(width)) ? notificationViewAppearance.windowWidth() : width,
-                    (Strings.isNullOrEmpty(height)) ?
-                    notificationViewAppearance.windowHeight() :
+            setSize((Strings.isNullOrEmpty(width)) ?
+                    notificationViewAppearance.windowMinWidth() + "" :
+                    width,
+                    (Strings.isNullOrEmpty(height)) ? notificationViewAppearance.windowMinHeight() + "" :
                     height);
         }
     }

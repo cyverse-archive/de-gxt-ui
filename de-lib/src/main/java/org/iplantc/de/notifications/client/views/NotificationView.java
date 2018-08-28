@@ -23,10 +23,6 @@ public interface NotificationView extends IsWidget {
 
         String notificationMarkAsSeenSuccess();
 
-        String windowWidth();
-
-        String windowHeight();
-
         int windowMinWidth();
 
         int windowMinHeight();

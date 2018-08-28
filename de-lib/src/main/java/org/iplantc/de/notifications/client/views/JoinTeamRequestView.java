@@ -40,12 +40,6 @@ public interface JoinTeamRequestView {
         void go(NotificationMessage message, PayloadTeam payloadTeam);
 
         /**
-         * Sets the JoinTeamRequestView debug ID
-         * @param baseID
-         */
-        void setViewDebugId(String baseID);
-
-        /**
          * Approve and Add member with specified privilege
          *
          * @param privilegeType

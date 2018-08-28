@@ -13,6 +13,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Color from "../CyVersePalette";
 import PropTypes from "prop-types";
 import build from "../../util/DebugIDUtil";
+import { withStyles } from "@material-ui/core/styles";
+import exStyles from "./style";
 
 class EnhancedTableHead extends React.Component {
     createSortHandler = property => event => {
@@ -20,24 +22,28 @@ class EnhancedTableHead extends React.Component {
     };
 
     render() {
-        const {onSelectAllClick, order, orderBy, numSelected, rowCount, columnData, selectable} = this.props;
+        const {
+            onSelectAllClick,
+            order,
+            orderBy,
+            numSelected,
+            rowCount,
+            columnData,
+            selectable,
+            classes
+        } = this.props;
 
         return (
             <TableHead>
                 <TableRow>
                     {selectable && (
                         <TableCell padding="checkbox"
-                                   style={{backgroundColor: Color.blue, position: "sticky", top: 0}}>
+                                   className={classes.checkbox_cell}>
                             <Checkbox
                                 indeterminate={numSelected > 0 && numSelected < rowCount}
                                 checked={numSelected === rowCount}
                                 onChange={onSelectAllClick}
-                                style={{
-                                    backgroundColor: Color.blue,
-                                    position: "sticky",
-                                    top: 0,
-                                    color: Color.white,
-                                }}
+                                className={classes.column_heading}
                             />
                         </TableCell>
                     )
@@ -49,12 +55,7 @@ class EnhancedTableHead extends React.Component {
                                 numeric={column.numeric}
                                 padding={column.disablePadding ? 'none' : 'default'}
                                 sortDirection={orderBy === column.name ? order : false}
-                                style={{
-                                    backgroundColor: Color.blue,
-                                    position: "sticky",
-                                    top: 0,
-                                    color: Color.white,
-                                }}
+                                className={classes.column_heading}
                                 id={build(this.props.baseId, this.props.ids[column.name.toUpperCase()])}
                             >
                                 {column.enableSorting ? (
@@ -105,4 +106,4 @@ EnhancedTableHead.propTypes = {
 EnhancedTableHead.defaultProps = {
     selectable: false,
 };
-export default EnhancedTableHead;
+export default withStyles(exStyles)(EnhancedTableHead);

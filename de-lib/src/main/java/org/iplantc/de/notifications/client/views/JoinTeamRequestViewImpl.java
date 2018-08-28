@@ -3,7 +3,10 @@
  */
 package org.iplantc.de.notifications.client.views;
 
+import static org.iplantc.de.notifications.client.ReactNotifications.JoinTeamRequestDialog;
+
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
+import org.iplantc.de.notifications.client.ReactNotifications;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -24,11 +27,11 @@ public class JoinTeamRequestViewImpl implements JoinTeamRequestView {
 
     public void edit(Presenter presenter, Splittable payloadTeam) {
         Scheduler.get().scheduleFinally(() -> {
-            ReactJoinTeamRequest.JoinTeamProps props = new ReactJoinTeamRequest.JoinTeamProps();
+            ReactNotifications.JoinTeamProps props = new ReactNotifications.JoinTeamProps();
             props.presenter = presenter;
             props.request = payloadTeam;
             props.dialogOpen = true;
-            CyVerseReactComponents.render(ReactJoinTeamRequest.joinTeamProps,
+            CyVerseReactComponents.render(JoinTeamRequestDialog,
                                           props,
                                           new HTMLPanel("<div></div>").getElement());
         });

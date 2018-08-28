@@ -9,6 +9,8 @@ import org.iplantc.de.shared.NotificationCallback;
 import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.Splittable;
+import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 /**
  * @author jstroot
@@ -19,6 +21,7 @@ public abstract class NotificationCallbackWrapper extends NotificationCallback<S
     private final NotificationAutoBeanFactory notFactory = GWT.create(NotificationAutoBeanFactory.class);
     private NotificationUtil notificationUtil = GWT.create(NotificationUtil.class);
     private NotificationList notifications;
+    private int total;
 
     @Override
     public void onSuccess(String result) {
@@ -29,6 +32,10 @@ public abstract class NotificationCallbackWrapper extends NotificationCallback<S
         }
 
         setNotifications(notifications);
+        Splittable splitResult = StringQuoter.split(result);
+        if (splitResult.get("total") != null) {
+            total = Integer.parseInt(splitResult.get("total").asString());
+        }
     }
 
     private void setNotifications(NotificationList notifications) {
@@ -37,6 +44,10 @@ public abstract class NotificationCallbackWrapper extends NotificationCallback<S
 
     protected NotificationList getNotifications() {
         return notifications;
+    }
+
+    protected int getTotal() {
+        return total;
     }
 
 

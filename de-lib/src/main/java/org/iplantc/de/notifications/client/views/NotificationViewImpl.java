@@ -5,6 +5,7 @@ package org.iplantc.de.notifications.client.views;
 
 import org.iplantc.de.client.models.notifications.NotificationCategory;
 import org.iplantc.de.commons.client.util.CyVerseReactComponents;
+import org.iplantc.de.notifications.client.ReactNotifications;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -58,7 +59,9 @@ public class NotificationViewImpl implements NotificationView {
             props.presenter = presenter;
             props.baseDebugId = baseDebugId;
             props.category = category.toString();
-            CyVerseReactComponents.render(ReactNotifications.notifiProps, props, panel.getElement());
+            CyVerseReactComponents.render(ReactNotifications.NotificationView,
+                                          props,
+                                          panel.getElement());
 
         });
     }

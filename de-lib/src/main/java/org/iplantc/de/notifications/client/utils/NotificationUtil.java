@@ -1,5 +1,8 @@
 package org.iplantc.de.notifications.client.utils;
 
+import static org.iplantc.de.notifications.client.ReactNotifications.DenyJoinRequestDetailsDialog;
+import static org.iplantc.de.notifications.client.ReactNotifications.RequestHistoryDialog;
+
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasPath;
@@ -34,6 +37,8 @@ import org.iplantc.de.commons.client.views.window.configs.CollaborationWindowCon
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
+import org.iplantc.de.notifications.client.ReactNotifications.DenyTeamProps;
+import org.iplantc.de.notifications.client.ReactNotifications.HistoryProps;
 import org.iplantc.de.notifications.client.events.NotificationClickedEvent;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
 import org.iplantc.de.notifications.client.views.JoinTeamRequestView;
@@ -52,51 +57,9 @@ import com.google.web.bindery.autobean.shared.Splittable;
 import java.util.ArrayList;
 import java.util.List;
 
-import gwt.react.client.components.ReactClass;
-import gwt.react.client.proptypes.BaseProps;
-import jsinterop.annotations.JsPackage;
-import jsinterop.annotations.JsProperty;
-import jsinterop.annotations.JsType;
-
 /**
  * Created by sriram on 6/16/16.
  */
-
-@JsType(isNative = true,
-        namespace = "CyVerseReactComponents.notifications",
-        name = "DenyJoinRequestDetailsDialog")
-class ReactDenyJoinTeamDetails {
-
-    @JsProperty(namespace = "CyVerseReactComponents.notifications",
-                name = "DenyJoinRequestDetailsDialog")
-    public static ReactClass<DenyTeamProps> denyTeamProps;
-
-    @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
-    static class DenyTeamProps extends BaseProps {
-        String teamName;
-        String adminMessage;
-        boolean dialogOpen;
-    }
-}
-
-@JsType(isNative = true,
-        namespace = "CyVerseReactComponents.notifications",
-        name = "RequestHistoryDialog")
-class ReactToolRequestHistory {
-
-    @JsProperty(namespace = "CyVerseReactComponents.notifications",
-                name = "RequestHistoryDialog")
-    public static ReactClass<HistoryProps> historyProps;
-
-    @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
-    static class HistoryProps extends BaseProps {
-        Splittable[] history;
-        boolean dialogOpen;
-        String name;
-        String category;
-    }
-}
-
 public class NotificationUtil {
 
     @Inject NotificationAutoBeanFactory notificationFactory;
@@ -112,7 +75,7 @@ public class NotificationUtil {
 
     @Inject
     JoinTeamRequestView.Presenter presenter;
-    ;
+
     @Inject
     public NotificationUtil() {
     }
@@ -299,13 +262,11 @@ public class NotificationUtil {
                         presenter.go(message, payloadTeam);
                     } else if (payloadTeam.getAction().equals(PayloadTeam.ACTION_DENY)) {
                         Scheduler.get().scheduleFinally(() -> {
-                            ReactDenyJoinTeamDetails.DenyTeamProps denyTeamProps =
-                                    new ReactDenyJoinTeamDetails.DenyTeamProps();
-                            denyTeamProps.adminMessage = payloadTeam.getAdminMessage();
-                            denyTeamProps.teamName = payloadTeam.getTeamName();
-                            denyTeamProps.dialogOpen = true;
-                            CyVerseReactComponents.render(ReactDenyJoinTeamDetails.denyTeamProps,
-                                                          denyTeamProps,
+                            DenyTeamProps props = new DenyTeamProps();
+                            props.adminMessage = payloadTeam.getAdminMessage();
+                            props.teamName = payloadTeam.getTeamName();
+                            props.dialogOpen = true;
+                            CyVerseReactComponents.render(DenyJoinRequestDetailsDialog, props,
                                                           new HTMLPanel("<div></div>").getElement());
                         });
                     } else {
@@ -328,12 +289,12 @@ public class NotificationUtil {
         for (int i = 0; i < requestHistoryList.size(); i++) {
             history[i] = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(requestHistoryList.get(i)));
         }
-        ReactToolRequestHistory.HistoryProps props = new ReactToolRequestHistory.HistoryProps();
+        HistoryProps props = new HistoryProps();
         props.name = name;
         props.dialogOpen = true;
         props.history = history;
         props.category = category;
-        CyVerseReactComponents.render(ReactToolRequestHistory.historyProps,
+        CyVerseReactComponents.render(RequestHistoryDialog,
                                       props,
                                       new HTMLPanel("<div></div>").getElement());
     }

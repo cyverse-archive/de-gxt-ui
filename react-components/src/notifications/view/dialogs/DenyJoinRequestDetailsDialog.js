@@ -41,21 +41,21 @@ class DenyJoinRequestDetailsDialog extends Component {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        {getMessage("denyDetailsMessage", {
+                        <Typography>{getMessage("denyDetailsMessage", {
                             values: {
                                 team: teamName
                             }
-                        })}
+                        })}</Typography>
                         <p style={{marginTop: 10}}>
-                            <Typography subheading>{getMessage("denyAdminLabel")}</Typography>
+                            {getMessage("denyAdminLabel")}
                             <TextField
                                 InputLabelProps={{
                                     shrink: true,
+                                    readOnly: true
                                 }}
                                 fullWidth
                                 margin="normal"
                                 value={adminMessage}
-                                disabled={true}
                             />
                         </p>
                     </DialogContentText>

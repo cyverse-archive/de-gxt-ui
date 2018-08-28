@@ -181,7 +181,7 @@ function DenyRequest(props) {
                         InputLabelProps={{
                             shrink: true,
                         }}
-                        placeholder="Message"
+                        placeholder={getMessage("message")}
                         fullWidth
                         margin="normal"
                         onChange={onChange}

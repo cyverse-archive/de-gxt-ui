@@ -65,11 +65,6 @@ public class JoinTeamRequestPresenter implements JoinTeamRequestView.Presenter {
     }
 
     @Override
-    public void setViewDebugId(String baseID) {
-        // view.asWidget().ensureDebugId(baseID + Notifications.JoinRequestIds.JOIN_REQUEST_VIEW);
-    }
-
-    @Override
     public void addMemberWithPrivilege(String privilegeType,
                                        ReactSuccessCallback callback,
                                        ReactErrorCallback errorCallback) {
