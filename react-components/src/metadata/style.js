@@ -1,4 +1,12 @@
+import palette from "../util/CyVersePalette";
+
 const styles = theme => ({
+    loadingStyle: {
+        color: palette.orange,
+        position: "relative",
+        top: "50%",
+        left: "50%",
+    },
     attributeTableContainer: {
         width: "100%",
         height: "100%",

@@ -1,7 +1,7 @@
 /**
  * @author psarando
  */
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 
 import PropTypes from "prop-types";
 import { FieldArray, reduxForm } from "redux-form";
@@ -20,6 +20,7 @@ import SlideUpTransition from "./SlideUpTransition";
 
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import IconButton from "@material-ui/core/IconButton";
@@ -51,8 +52,15 @@ class EditMetadata extends Component {
     };
 
     onSaveMetadata ({ avus }) {
-        let metadata = {...this.props.initialValues, avus: avus};
-        this.props.presenter.onSaveMetadata(metadata);
+        return new Promise((resolve, reject) => {
+            let metadata = { ...this.props.initialValues, avus: avus };
+
+            this.props.presenter.onSaveMetadata(
+                metadata,
+                resolve,
+                (httpStatusCode, errorMessage) => reject(errorMessage),
+            );
+        });
     }
 
     render() {
@@ -61,7 +69,7 @@ class EditMetadata extends Component {
             intl,
             open,
             editable,
-            presenter: { closeEditMetadataDialog },
+            loading,
             targetName,
             // from redux-form
             handleSubmit, pristine, submitting, error, change,
@@ -73,7 +81,6 @@ class EditMetadata extends Component {
 
         return (
             <Dialog open={open}
-                    onClose={closeEditMetadataDialog}
                     fullWidth={true}
                     maxWidth="md"
                     disableBackdropClick
@@ -84,7 +91,7 @@ class EditMetadata extends Component {
                 <AppBar className={classes.appBar}>
                     <Toolbar>
                         <IconButton id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.CLOSE)}
-                                    onClick={closeEditMetadataDialog}
+                                    onClick={() => this.props.presenter.closeEditMetadataDialog()}
                                     aria-label={formatMessage(intl, "close")}
                                     color="inherit"
                         >
@@ -98,7 +105,7 @@ class EditMetadata extends Component {
                         </Typography>
                         {editable &&
                         <Button id={build(ids.EDIT_METADATA_FORM, ids.BUTTONS.SAVE)}
-                                disabled={pristine || submitting || error}
+                                disabled={loading || pristine || submitting || error}
                                 onClick={handleSubmit(this.onSaveMetadata)}
                                 color="inherit"
                         >
@@ -108,23 +115,29 @@ class EditMetadata extends Component {
                 </AppBar>
 
                 <DialogContent>
-                    <FieldArray name="avus"
-                                component={MetadataList}
-                                field="avus"
-                                change={change}
-                                editable={editable}
-                                parentID={ids.EDIT_METADATA_FORM}
-                                onEditAVU={(index) => this.setState({editingAttrIndex: index})}
-                    />
+                    {loading ?
+                        <CircularProgress className={classes.loadingStyle} size={50} thickness={4}/>
+                        :
+                        <Fragment>
+                            <FieldArray name="avus"
+                                        component={MetadataList}
+                                        field="avus"
+                                        change={change}
+                                        editable={editable}
+                                        parentID={ids.EDIT_METADATA_FORM}
+                                        onEditAVU={(index) => this.setState({ editingAttrIndex: index })}
+                            />
 
-                    <FieldArray name="avus"
-                                component={FormDialogEditAVU}
-                                change={change}
-                                editable={editable}
-                                targetName={targetName}
-                                editingAttrIndex={editingAttrIndex}
-                                closeAttrDialog={() => this.setState({editingAttrIndex: -1})}
-                    />
+                            <FieldArray name="avus"
+                                        component={FormDialogEditAVU}
+                                        change={change}
+                                        editable={editable}
+                                        targetName={targetName}
+                                        editingAttrIndex={editingAttrIndex}
+                                        closeAttrDialog={() => this.setState({ editingAttrIndex: -1 })}
+                            />
+                        </Fragment>
+                    }
                 </DialogContent>
             </Dialog>
         );

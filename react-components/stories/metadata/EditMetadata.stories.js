@@ -3,11 +3,26 @@ import React, { Component } from "react";
 import EditMetadata from "../../src/metadata/EditMetadata"
 
 const presenter = (logger) => ({
-    onSaveMetadata: logger,
+    onSaveMetadata: (metadata, resolve, errorCallback) => {
+        setTimeout(() => {
+                logger(metadata);
+                resolve(metadata);
+            },
+            1500
+        );
+    },
     closeEditMetadataDialog: () => logger("dialog closed."),
 });
 
 class EditMetadataTest extends Component {
+    state = {
+        loading: true,
+    };
+
+    componentDidMount() {
+        setTimeout(() => this.setState({ loading: false }), 1500);
+    }
+
     render () {
         const logger = this.props.logger || ((metadata) => {
             console.log(metadata);
@@ -63,9 +78,10 @@ class EditMetadataTest extends Component {
         return (
             <EditMetadata open
                           editable
+                          loading={this.state.loading}
                           presenter={presenter(logger)}
                           targetName="Test Resource"
-                          initialValues={metadata}/>
+                          initialValues={this.state.loading ? null : metadata}/>
         );
     }
 }
