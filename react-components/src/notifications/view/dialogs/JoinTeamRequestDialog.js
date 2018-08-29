@@ -286,12 +286,15 @@ class JoinTeamRequestDialog extends Component {
                                      }}/>
                     </DialogContent>
                     <DialogActions>
-                        <Button id={build(ids.JOIN_REQUEST_DLG, ids.OK_BTN)} onClick={this.handleOkClick}
-                                color="primary" autoFocus>
+                        <Button id={build(ids.JOIN_REQUEST_DLG, ids.OK_BTN)}
+                                onClick={this.handleOkClick}
+                                color="primary">
                             {getMessage("okBtnText")}
                         </Button>
                         <Button id={build(ids.JOIN_REQUEST_DLG, ids.CANCEL_BTN)}
-                                onClick={this.handleCancelClick} color="primary" autoFocus>
+                                onClick={this.handleCancelClick}
+                                color="primary"
+                                autoFocus>
                             {getMessage("cancelBtnText")}
                         </Button>
                     </DialogActions>
