@@ -231,7 +231,7 @@ public class DesktopPresenterImpl implements DesktopView.Presenter,
     private Splittable getConfigAsSplittable(WindowBase win) {
         WindowConfig config = win.getWindowConfig();
         config.setMinimized(win.isMinimized());
-        config.setWindowTitle(win.getHeading().asString());
+        config.setWindowTitle(win.getHeader().getSafeHtml().asString());
         Splittable sp = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(config));
         return sp;
     }

@@ -19,7 +19,7 @@ public class AbstractFileViewerDefaultAppearance implements AbstractFileViewer.A
     }
 
     @Override
-    public String defaultViewName(double defaultName) {
+    public String defaultViewName(String defaultName) {
         return fileViewerStrings.defaultViewName(defaultName);
     }
 }
