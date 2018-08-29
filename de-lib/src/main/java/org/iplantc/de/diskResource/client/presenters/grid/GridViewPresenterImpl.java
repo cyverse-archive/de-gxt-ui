@@ -7,7 +7,6 @@ import org.iplantc.de.client.events.diskResources.OpenFolderEvent;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasPath;
 import org.iplantc.de.client.models.dataLink.DataLink;
-import org.iplantc.de.client.models.dataLink.DataLinkFactory;
 import org.iplantc.de.client.models.diskResources.DiskResource;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.File;
@@ -15,10 +14,8 @@ import org.iplantc.de.client.models.diskResources.Folder;
 import org.iplantc.de.client.models.diskResources.MetadataCopyRequest;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.models.diskResources.TYPE;
-import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorAutoBeanFactory;
 import org.iplantc.de.client.models.errors.diskResources.DiskResourceErrorCode;
 import org.iplantc.de.client.models.search.DiskResourceQueryTemplate;
-import org.iplantc.de.client.models.search.SearchAutoBeanFactory;
 import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
@@ -72,7 +69,6 @@ import org.iplantc.de.diskResource.client.views.dialogs.MetadataCopyDialog;
 import org.iplantc.de.diskResource.client.views.dialogs.SaveAsDialog;
 import org.iplantc.de.diskResource.client.views.grid.DiskResourceColumnModel;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.BulkMetadataDialog;
-import org.iplantc.de.diskResource.client.views.metadata.dialogs.ManageMetadataDialog;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.MetadataTemplateDescDlg;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.SelectMetadataTemplateDialog;
 import org.iplantc.de.diskResource.client.views.sharing.dialogs.DataSharingDialog;
@@ -104,7 +100,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * @author jstroot
@@ -186,12 +181,9 @@ public class GridViewPresenterImpl implements Presenter,
     @Inject FileSystemMetadataServiceFacade metadataService;
     @Inject AsyncProviderWrapper<InfoTypeEditorDialog> infoTypeDialogProvider;
     @Inject AsyncProviderWrapper<CommentsDialog> commentDialogProvider;
-    @Inject AsyncProviderWrapper<ManageMetadataDialog> metadataDialogProvider;
     @Inject AsyncProviderWrapper<DataSharingDialog> dataSharingDialogProvider;
     @Inject AsyncProviderWrapper<SaveAsDialog> saveAsDialogProvider;
-    @Inject DiskResourceErrorAutoBeanFactory drErrorFactory;
     @Inject DiskResourceAutoBeanFactory factory;
-    @Inject SearchAutoBeanFactory searchFactory;
     @Inject SearchModelUtils searchModelUtils;
     @Inject AsyncProviderWrapper<MetadataCopyDialog> copyMetadataDlgProvider;
     @Inject AsyncProviderWrapper<Md5DisplayDialog> md5DisplayDlgProvider;
@@ -199,12 +191,11 @@ public class GridViewPresenterImpl implements Presenter,
     @Inject AsyncProviderWrapper<BulkMetadataDialog> bulkMetadataDlgProvider;
     @Inject AsyncProviderWrapper<MetadataTemplateDescDlg> metadataTemplateDescDlgProvider;
 
+    @Inject MetadataView.Presenter metadataPresenter;
     @Inject MetadataView.Presenter.Appearance metadataAppearance;
 
-    @Inject DataLinkFactory dlFactory;
     @Inject
     ShareResourcesLinkDialogFactory srldFactory;
-    final Logger LOG = Logger.getLogger(GridViewPresenterImpl.class.getName());
 
     EventBus eventBus;
     private final Appearance appearance;
@@ -399,18 +390,7 @@ public class GridViewPresenterImpl implements Presenter,
     @Override
     public void onRequestManageMetadataSelected(ManageMetadataSelected event) {
         final DiskResource selected = event.getDiskResource();
-
-        metadataDialogProvider.get(new AsyncCallback<ManageMetadataDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                announcer.schedule(new ErrorAnnouncementConfig(appearance.metadataManageFailure()));
-            }
-
-            @Override
-            public void onSuccess(ManageMetadataDialog result) {
-                result.show(selected);
-            }
-        });
+        metadataPresenter.go(selected);
     }
 
     @Override

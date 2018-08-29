@@ -54,7 +54,7 @@ class EditMetadata extends Component {
         };
 
         [
-            "closeEditMetadataDialog",
+            "closeMetadataDialog",
             "closeDiscardChangesDialog",
             "handleTabChange",
             "handleSelectAVU",
@@ -64,18 +64,42 @@ class EditMetadata extends Component {
     }
 
     static propTypes = {
-        targetName: PropTypes.string,
+        targetResource: PropTypes.shape({ label: PropTypes.string }),
         presenter: PropTypes.shape({
-            onSaveMetadata: PropTypes.func.isRequired,
-            closeEditMetadataDialog: PropTypes.func.isRequired,
+            setDiskResourceMetadata: PropTypes.func.isRequired,
+            closeMetadataDialog: PropTypes.func.isRequired,
             onSelectTemplateBtnSelected: PropTypes.func.isRequired,
             onSaveMetadataToFileBtnSelected: PropTypes.func.isRequired,
         }).isRequired,
     };
 
-    closeEditMetadataDialog() {
+    componentDidUpdate(prevProps) {
+        if (prevProps.targetResource !== this.props.targetResource) {
+            // The presenter wants to load metadata for a different target,
+            // usually after already closing this dialog,
+            // so reset the view to default settings.
+            this.setState({
+                tabIndex: 0,
+                irodsAVUsSelected: [],
+            });
+
+            this.props.resetForm();
+        } else if (prevProps.metadata !== this.props.metadata) {
+            // The presenter wants to load metadata for the same target,
+            // usually from a metadata template,
+            // so reset the view to default settings.
+            this.setState({
+                tabIndex: 0,
+                irodsAVUsSelected: [],
+            });
+
+            this.props.setValues(this.props.metadata);
+        }
+    }
+
+    closeMetadataDialog() {
         this.closeDiscardChangesDialog();
-        this.props.presenter.closeEditMetadataDialog();
+        this.props.presenter.closeMetadataDialog();
     }
 
     closeDiscardChangesDialog() {
@@ -126,6 +150,7 @@ class EditMetadata extends Component {
 
         this.setState({
             showImportConfirmationDialog: false,
+            tabIndex: 0,
             irodsAVUsSelected: [],
         });
     }
@@ -137,7 +162,7 @@ class EditMetadata extends Component {
             open,
             editable,
             loading,
-            targetName,
+            targetResource: { label: targetName },
             // from formik
             handleSubmit, dirty, isSubmitting, errors, values,
         } = this.props;
@@ -151,6 +176,7 @@ class EditMetadata extends Component {
             helpTextAnchor,
         } = this.state;
 
+        const irodsAVUs = values["irods-avus"];
         const dialogTitleID = build(ids.EDIT_METADATA_FORM, ids.TITLE);
 
         return (
@@ -168,7 +194,7 @@ class EditMetadata extends Component {
                                     onClick={() =>
                                         dirty ?
                                             this.setState({showDiscardChangesDialog: true}) :
-                                            this.props.presenter.closeEditMetadataDialog()
+                                            this.props.presenter.closeMetadataDialog()
                                     }
                                     aria-label={formatMessage(intl, "close")}
                                     color="inherit"
@@ -271,7 +297,7 @@ class EditMetadata extends Component {
                         <CircularProgress className={classes.loadingStyle} size={50} thickness={4}/>
                         :
                         <Fragment>
-                            {values["irods-avus"] &&
+                            {(irodsAVUs && !!irodsAVUs.length) &&
                             <AppBar position="static" color="default">
                                 <Tabs value={tabIndex}
                                       onChange={this.handleTabChange}
@@ -322,7 +348,7 @@ class EditMetadata extends Component {
                                                               onSelectAVU={this.handleSelectAVU}
                                                               onSelectAllClick={this.handleSelectAllAVUs}
                                                               avusSelected={irodsAVUsSelected}
-                                                              rowsInPage={values["irods-avus"].length}
+                                                              rowsInPage={irodsAVUs.length}
                                                 />
                                             )}
                                 />
@@ -345,7 +371,7 @@ class EditMetadata extends Component {
                                     debugId={ids.EDIT_METADATA_FORM}
                                     heading={getMessage("confirmDiscardChangesDialogHeader")}
                                     message={getMessage("confirmDiscardChangesDialogMsg")}
-                                    onOkBtnClick={this.closeEditMetadataDialog}
+                                    onOkBtnClick={this.closeMetadataDialog}
                                     onCancelBtnClick={this.closeDiscardChangesDialog}
                 />
 
@@ -412,7 +438,7 @@ const handleSubmit = ({ avus, "irods-avus": irodsAVUs }, { props, setSubmitting,
 
     const metadata = { ...props.metadata, avus, "irods-avus": irodsAVUs };
 
-    props.presenter.onSaveMetadata(
+    props.presenter.setDiskResourceMetadata(
         metadata,
         resolve,
         errorCallback,
@@ -421,7 +447,6 @@ const handleSubmit = ({ avus, "irods-avus": irodsAVUs }, { props, setSubmitting,
 
 export default withFormik(
     {
-        enableReinitialize: true,
         mapPropsToValues: ({ metadata }) => ({...metadata}),
         validate,
         handleSubmit,

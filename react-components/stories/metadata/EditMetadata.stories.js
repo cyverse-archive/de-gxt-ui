@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import EditMetadata from "../../src/metadata/EditMetadata"
 
 const presenter = (logger) => ({
-    onSaveMetadata: (metadata, resolve, errorCallback) => {
+    setDiskResourceMetadata: (metadata, resolve, errorCallback) => {
         setTimeout(() => {
                 logger("save metadata", metadata);
                 resolve(metadata);
@@ -11,7 +11,7 @@ const presenter = (logger) => ({
             1500
         );
     },
-    closeEditMetadataDialog: () => logger("dialog closed."),
+    closeMetadataDialog: () => logger("dialog closed."),
     onSelectTemplateBtnSelected: (metadata) => {
         logger("view in templates", metadata);
     },
@@ -104,7 +104,7 @@ class EditMetadataTest extends Component {
                           editable
                           loading={this.state.loading}
                           presenter={presenter(logger)}
-                          targetName="Test Resource"
+                          targetResource={{label: "Test Resource"}}
                           metadata={this.state.loading ? null : metadata}/>
         );
     }
@@ -166,7 +166,7 @@ class ViewMetadataTest extends Component {
         return (
             <EditMetadata open
                           editable={false}
-                          targetName="Read-Only Resource"
+                          targetResource={{label: "Read-Only Resource"}}
                           presenter={presenter(logger)}
                           metadata={metadata}/>
         );
@@ -437,11 +437,25 @@ class EditDataCiteMetadataTest extends Component {
         return (
             <EditMetadata open
                           editable
-                          targetName="DataCite Resource"
+                          targetResource={{label: "DataCite Resource"}}
                           presenter={presenter(logger)}
                           metadata={metadata}/>
         );
     }
 }
 
-export { EditDataCiteMetadataTest, EditMetadataTest, ViewMetadataTest };
+const EmptyMetadataTest = (props) => {
+    const logger = props.logger || ((metadata) => {
+        console.log(metadata);
+    });
+
+    return (
+        <EditMetadata open
+                      editable
+                      targetResource={{label: "Empty Metadata"}}
+                      presenter={presenter(logger)}
+                      metadata={{}}/>
+    );
+};
+
+export { EditDataCiteMetadataTest, EditMetadataTest, EmptyMetadataTest, ViewMetadataTest };

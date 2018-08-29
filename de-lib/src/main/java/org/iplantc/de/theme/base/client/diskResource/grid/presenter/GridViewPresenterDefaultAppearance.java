@@ -61,31 +61,6 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     }
 
     @Override
-    public String metadata() {
-        return displayStrings.metadata();
-    }
-
-    @Override
-    public String metadataDialogHeight() {
-        return "600";
-    }
-
-    @Override
-    public String metadataDialogWidth() {
-        return "800";
-    }
-
-    @Override
-    public String metadataFormInvalid() {
-        return displayStrings.metadataFormInvalid();
-    }
-
-    @Override
-    public String metadataHelp() {
-        return displayStrings.metadataHelp();
-    }
-
-    @Override
     public String removeFavoriteError() {
         return displayStrings.removeFavoriteError();
     }
@@ -146,11 +121,6 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     }
 
     @Override
-    public String metadataManageFailure() {
-        return displayStrings.metadataManageFailure();
-    }
-
-    @Override
     public String commentsManageFailure() {
         return displayStrings.commentsManageFailure();
     }
@@ -178,15 +148,6 @@ public class GridViewPresenterDefaultAppearance implements GridView.Presenter.Ap
     @Override
     public String checksum() {
         return displayStrings.checksum();
-    }
-
-    @Override
-    public String metadataSaveError() {
-        return displayStrings.metadataSaveError();
-    }
-
-    public String error() {
-        return iplantDisplayStrings.error();
     }
 
     public String copyMetadataPrompt() {

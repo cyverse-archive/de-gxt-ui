@@ -69,7 +69,7 @@ public class PermanentIdRequestPresenter implements Presenter {
 
 	        @Override
 		public void onSuccess(DiskResourceServiceFacade drsvc) {
-                    view.fetchMetadata(selectedFolder, appearance);
+                    view.fetchMetadata(selectedFolder);
 	        }
 	    });
         } else {

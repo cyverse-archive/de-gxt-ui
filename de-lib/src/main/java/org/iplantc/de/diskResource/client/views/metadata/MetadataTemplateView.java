@@ -21,14 +21,10 @@ public class MetadataTemplateView implements IsWidget {
     private final HTMLPanel widget;
     private final ReactMetadataViews.MetadataTemplateViewProps props;
 
-    MetadataView.Appearance appearance;
-
     @Inject
-    public MetadataTemplateView(MetadataView.Appearance appearance) {
+    public MetadataTemplateView() {
         widget = new HTMLPanel("<div></div>");
         props = new ReactMetadataViews.MetadataTemplateViewProps();
-
-        this.appearance = appearance;
     }
 
     @Override

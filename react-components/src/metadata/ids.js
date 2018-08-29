@@ -1,5 +1,5 @@
 export default {
-    EDIT_METADATA_FORM: "EditMetadataForm",
+    EDIT_METADATA_FORM: "editMetadataDialog",
     METADATA_TEMPLATE_VIEW: "metadataTemplate",
 
     AVU_GRID: "avuGrid",

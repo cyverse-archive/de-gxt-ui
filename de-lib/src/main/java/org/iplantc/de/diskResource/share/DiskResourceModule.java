@@ -147,25 +147,10 @@ public interface DiskResourceModule {
     }
 
     interface MetadataIds {
-
-        String METADATA_WINDOW = "metadataWindow";
-        String METADATA_VIEW = ".metadataView";
-        String ADD_METADATA = ".addMetadata";
-        String DELETE_METADATA = ".deleteMetadata";
-        String TEMPLATES = ".templates";
-
-        String USER_METADATA = ".userMetadata";
-        String USER_METADATA_COLLAPSE = ".collapseBtn";
-        String METADATA_TEMPLATE = ".metadataTemplate";
-        String METADATA_TEMPLATE_COLLAPSE = ".collapseBtn";
-        String EDIT_METADATA = ".editMetadata";
-
         String SELECT_TEMPLATE_DLG = "selectMetadataTemplate";
         String SELECT_TEMPLATE_OK_BTN_ID =".okBtn";
-        String SELECT_TEMPLATE_CLOSE_BTN_ID =".closeBtn";
 
         String DOWNLOAD_TEMPLATE_CELL = ".downloadTemplate";
         String TEMPLATE_INFO_CELL = ".templateInfo";
-        String SAVE_METADATA_TO_FILE = ".saveMetadataToFile";
     }
 }

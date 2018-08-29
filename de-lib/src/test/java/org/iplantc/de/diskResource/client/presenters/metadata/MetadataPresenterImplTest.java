@@ -6,25 +6,24 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.iplantc.de.client.models.avu.Avu;
 import org.iplantc.de.client.models.diskResources.DiskResource;
+import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.DiskResourceMetadataList;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.diskResource.client.MetadataView;
-import org.iplantc.de.diskResource.client.events.selection.SelectTemplateBtnSelected;
-import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetadataUpdateCallback;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.SelectMetadataTemplateDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.event.DialogHideEvent;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -33,7 +32,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,7 +42,7 @@ public class MetadataPresenterImplTest {
 
     @Mock MetadataView view;
     @Mock DiskResourceServiceFacade drService;
-    @Mock List<Avu> userMdList;
+    @Mock DiskResourceAutoBeanFactory diskResourceFactoryMock;
     @Mock MetadataView.Presenter.Appearance appearanceMock;
     @Mock List<MetadataTemplateInfo> templatesMock;
     @Mock AsyncProviderWrapper<SelectMetadataTemplateDialog> selectMetaTemplateDlgProviderMock;
@@ -62,73 +60,25 @@ public class MetadataPresenterImplTest {
 
     @Before
     public void setUp() {
-        uut = new MetadataPresenterImpl(view,
-                                              drService);
+        final DiskResourceMetadataList metadataMock = mock(DiskResourceMetadataList.class);
+
+        uut = new MetadataPresenterImpl(view, drService) {
+            @Override
+            DiskResourceMetadataList decodeMetadata(Splittable formValues) {
+                return metadataMock;
+            }
+        };
         uut.selectMetaTemplateDlgProvider = selectMetaTemplateDlgProviderMock;
+        uut.autoBeanFactory = diskResourceFactoryMock;
         uut.appearance = appearanceMock;
 
         spy = spy(uut);
     }
 
     @Test
-    public void testIsDirtyOnEmpty(){
-        List<Avu> userMetadata = new ArrayList<>();
-        when(view.getUserMetadata()).thenReturn(userMetadata);
-        when(userMdList.size()).thenReturn(0);
-        when(view.isDirty()).thenReturn(false);
-        Assert.assertEquals(false, uut.isDirty());
-    }
-
-    @Test
-    public void testIsDirtyNonEmpty() {
-        List<Avu> userMetadata = new ArrayList<>();
-        Avu md1 = mock(Avu.class);
-        Avu md2 = mock(Avu.class);
-        userMetadata.add(md1);
-        userMetadata.add(md2);
-        when(view.getUserMetadata()).thenReturn(userMetadata);
-        when(userMdList.size()).thenReturn(0);
-        when(view.isDirty()).thenReturn(false);
-        Assert.assertEquals(false, uut.isDirty());
-  }
-
-    @Test
-    public void testIsDirtyEdited() {
-        List<Avu> userMetadata = new ArrayList<>();
-        Avu md1 = mock(Avu.class);
-        Avu md2 = mock(Avu.class);
-        userMetadata.add(md1);
-        userMetadata.add(md2);
-        when(view.getUserMetadata()).thenReturn(userMetadata);
-        when(userMdList.size()).thenReturn(1);
-        when(view.isDirty()).thenReturn(true);
-        Assert.assertEquals(true, uut.isDirty());
-    }
-
-    @Test
-    public void testOnImportNull() {
-        view.addToUserMetadata(null);
-        Assert.assertEquals(view.getUserMetadata().size(), 0);
-    }
-
-    @Test
-    public void testOnImportFromIrodsAvu() {
-        List<Avu> irodsAvu = new ArrayList<>();
-        Avu md1 = mock(Avu.class);
-        Avu md2 = mock(Avu.class);
-        irodsAvu.add(md1);
-        irodsAvu.add(md2);
-        view.addToUserMetadata(irodsAvu);
-        when(view.getUserMetadata()).thenReturn(irodsAvu);
-        Assert.assertEquals(view.getUserMetadata().size(),2);
-    }
-
-    @Test
     public void testGo() {
-        HasOneWidget containerMock = mock(HasOneWidget.class);
-
         /** CALL METHOD UNDER TEST **/
-        spy.go(containerMock, diskResourceMock);
+        spy.go(diskResourceMock);
 
         verify(drService).getMetadataTemplateListing(templateInfosCaptor.capture());
         templateInfosCaptor.getValue().onSuccess(templatesMock);
@@ -138,30 +88,32 @@ public class MetadataPresenterImplTest {
     @Ignore
     @Test
     public void testSetDiskResourceMetadata() {
-        DiskResourceMetadataUpdateCallback callbackMock = mock(DiskResourceMetadataUpdateCallback.class);
+        ReactSuccessCallback callbackMock = mock(ReactSuccessCallback.class);
+        ReactErrorCallback errCallbackMock = mock(ReactErrorCallback.class);
         DiskResourceMetadataList umdMock = mock(DiskResourceMetadataList.class);
 
         /** CALL METHOD UNDER TEST **/
-        uut.setDiskResourceMetadata(callbackMock);
+        final Splittable metadata = mock(Splittable.class);
+        uut.setDiskResourceMetadata(metadata, callbackMock, errCallbackMock);
 
         verify(drService).setDiskResourceMetaData(eq(diskResourceMock),
                                                   eq(umdMock),
                                                   stringCallbackCaptor.capture());
 
         stringCallbackCaptor.getValue().onSuccess("result");
-        verify(callbackMock).onSuccess(eq("result"));
+        verify(callbackMock).onSuccess(metadata);
     }
 
     @Test
     public void testOnSelectTemplate() {
-        SelectTemplateBtnSelected eventMock = mock(SelectTemplateBtnSelected.class);
         MetadataTemplateInfo templateInfoMock = mock(MetadataTemplateInfo.class);
         when(templateInfoMock.getId()).thenReturn("id");
         when(hideEventMock.getHideButton()).thenReturn(Dialog.PredefinedButton.OK);
         when(selectMetaTemplateDlgMock.getSelectedTemplate()).thenReturn(templateInfoMock);
 
         /** CALL METHOD UNDER TEST **/
-        spy.onSelectTemplateBtnSelected(eventMock);
+        final Splittable metadata = mock(Splittable.class);
+        spy.onSelectTemplateBtnSelected(metadata);
         spy.templates = templatesMock;
 
         verify(selectMetaTemplateDlgProviderMock).get(selectMetaTemplateDlgCaptor.capture());

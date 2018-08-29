@@ -18,15 +18,6 @@ public interface GridViewDisplayStrings extends Messages {
     @Key("markFavoriteError")
     String markFavoriteError();
 
-    @Key("metadata")
-    String metadata();
-
-    @Key("metadataFormInvalid")
-    String metadataFormInvalid();
-
-    @Key("metadataHelp")
-    String metadataHelp();
-
     @Key("noItemsToDisplay")
     String noItemsToDisplay();
 
@@ -63,8 +54,6 @@ public interface GridViewDisplayStrings extends Messages {
 
     String metadataOverwriteWarning(String drName);
 
-    String metadataManageFailure();
-
     String commentsManageFailure();
 
     String copyMetadata(String path);
@@ -76,8 +65,6 @@ public interface GridViewDisplayStrings extends Messages {
     String md5Checksum();
 
     String checksum();
-
-    String metadataSaveError();
 
     String dataLinkTitle();
 

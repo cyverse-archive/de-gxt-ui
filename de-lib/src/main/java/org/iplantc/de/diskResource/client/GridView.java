@@ -153,16 +153,6 @@ public interface GridView extends IsWidget,
 
             String markFavoriteError();
 
-            String metadata();
-
-            String metadataDialogHeight();
-
-            String metadataDialogWidth();
-
-            String metadataFormInvalid();
-
-            String metadataHelp();
-
             String removeFavoriteError();
 
             String retrieveStatFailed();
@@ -187,8 +177,6 @@ public interface GridView extends IsWidget,
 
             String metadataOverwriteWarning(String drName);
 
-            String metadataManageFailure();
-
             String commentsManageFailure();
 
             String copyMetadata(String path);
@@ -200,10 +188,6 @@ public interface GridView extends IsWidget,
             String md5Checksum();
 
             String checksum();
-
-            String metadataSaveError();
-
-            String error();
 
             String copyMetadataPrompt();
 

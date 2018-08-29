@@ -31,7 +31,7 @@ import TaskbarTest from "./desktop/view/Taskbar.stories";
 
 import VideoViewerTest from "./fileViewers/VideoViewer.stories";
 
-import { EditDataCiteMetadataTest, EditMetadataTest, ViewMetadataTest } from "./metadata/EditMetadata.stories";
+import { EditDataCiteMetadataTest, EditMetadataTest, EmptyMetadataTest, ViewMetadataTest } from "./metadata/EditMetadata.stories";
 import {
     DataCiteMetadataTemplateViewNoValuesTest,
     DataCiteMetadataTemplateViewTest,
@@ -93,6 +93,7 @@ storiesOf('metadata/admin/EditMetadataTemplate', module)
 storiesOf('metadata/EditMetadata', module)
     .add('with nested AVUs', () => <EditMetadataTest logger={action('metadata')}/>)
     .add('with read-only metadata', () => <ViewMetadataTest logger={action('metadata')}/>)
+    .add('with empty metadata', () => <EmptyMetadataTest logger={action('metadata')}/>)
     .add('with DateCite nested AVUs', () => <EditDataCiteMetadataTest logger={action('metadata')}/>);
 
 storiesOf('metadata/MetadataTemplateView', module)

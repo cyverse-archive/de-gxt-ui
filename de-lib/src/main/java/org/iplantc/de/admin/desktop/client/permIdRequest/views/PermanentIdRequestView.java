@@ -28,10 +28,9 @@ public interface PermanentIdRequestView extends IsWidget, IsMaskable {
 
     void update(PermanentIdRequest request);
 
-    void fetchMetadata(Folder selectedFolder,
-                       PermanentIdRequestPresenterAppearance appearance);
+    void fetchMetadata(Folder selectedFolder);
 
-    public interface PermanentIdRequestViewAppearance {
+    interface PermanentIdRequestViewAppearance {
         String dateSubmittedColumnLabel();
 
         int dateSubmittedColumnWidth();
@@ -77,7 +76,7 @@ public interface PermanentIdRequestView extends IsWidget, IsMaskable {
         String folderNotFound();
     }
 
-    public interface Presenter {
+    interface Presenter {
 
         void fetchMetadata();
 
@@ -100,14 +99,12 @@ public interface PermanentIdRequestView extends IsWidget, IsMaskable {
         void setViewDebugId(String baseId);
     }
 
-    public interface PermanentIdRequestPresenterAppearance {
+    interface PermanentIdRequestPresenterAppearance {
         String createPermIdSucess();
 
         String createPermIdFailure();
 
         String folderNotFound(String path);
-
-        String metadataSaveError();
 
         String requestLoadFailure();
 
