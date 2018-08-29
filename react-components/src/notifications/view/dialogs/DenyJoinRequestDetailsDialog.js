@@ -50,7 +50,9 @@ class DenyJoinRequestDetailsDialog extends Component {
                             {getMessage("denyAdminLabel")}
                             <TextField
                                 InputLabelProps={{
-                                    shrink: true,
+                                    shrink: true
+                                }}
+                                InputProps={{
                                     readOnly: true
                                 }}
                                 fullWidth

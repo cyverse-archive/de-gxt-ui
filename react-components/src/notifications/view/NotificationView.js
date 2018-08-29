@@ -59,12 +59,12 @@ class NotificationView extends Component {
             order: 'desc',
             orderBy: 'Date',
             filter: (props.category) ? props.category : notificationCategory.all,
+            markAsSeenDisabled: true,
         };
         this.fetchNotifications = this.fetchNotifications.bind(this);
         this.handleRefreshClicked = this.handleRefreshClicked.bind(this);
         this.handleMarkSeenClick = this.handleMarkSeenClick.bind(this);
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
-        this.shouldDisableMarkSeen = this.shouldDisableMarkSeen.bind(this);
         this.findNotification = this.findNotification.bind(this);
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleFilterChange = this.handleFilterChange.bind(this);
@@ -159,19 +159,15 @@ class NotificationView extends Component {
                 selected.slice(selectedIndex + 1),
             );
         }
-
-        this.setState({selected: newSelected});
-    };
-
-    shouldDisableMarkSeen() {
-        const result = this.state.selected.filter(id => {
+        const filter = newSelected.filter(id => {
             let n = this.findNotification(id);
             if (n && !(n.seen)) {
-               return n;
+                return n;
             }
         });
-        return result.length === 0;
-    }
+
+        this.setState({selected: newSelected, markAsSeenDisabled: filter.length === 0});
+    };
 
     findNotification(id) {
         return this.state.data.find(function (n) {
@@ -212,7 +208,8 @@ class NotificationView extends Component {
             order,
             orderBy,
             selected,
-            total
+            total,
+            markAsSeenDisabled,
         } = this.state;
         const baseId = baseDebugId + ids.NOTIFICATION_VIEW;
         return (
@@ -224,7 +221,7 @@ class NotificationView extends Component {
                                      filter={this.state.filter}
                                      onFilterChange={this.handleFilterChange}
                                      onRefreshClicked={this.handleRefreshClicked}
-                                     markSeenDisabled={this.state.selected.length === 0 || this.shouldDisableMarkSeen()}
+                                     markSeenDisabled={this.state.selected.length === 0 || markAsSeenDisabled}
                                      deleteDisabled={this.state.selected.length === 0}
                                      onMarkSeenClicked={this.handleMarkSeenClick}
                                      onDeleteClicked={this.handleDeleteClick}/>
