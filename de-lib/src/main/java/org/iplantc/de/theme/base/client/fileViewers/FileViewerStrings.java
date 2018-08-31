@@ -15,7 +15,7 @@ public interface FileViewerStrings extends Messages {
     String cogeResponse(String url);
 
     @Key("defaultViewName")
-    String defaultViewName(double defaultName);
+    String defaultViewName(String defaultName);
 
     @Key("deleteSelectedPathsButtonTooltip")
     String deleteSelectedPathsButtonTooltip();

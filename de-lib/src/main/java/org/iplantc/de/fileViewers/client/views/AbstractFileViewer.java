@@ -4,6 +4,7 @@
 package org.iplantc.de.fileViewers.client.views;
 
 import static org.iplantc.de.client.events.FileSavedEvent.FileSavedEventHandler;
+
 import org.iplantc.de.client.models.diskResources.File;
 import org.iplantc.de.fileViewers.client.FileViewer;
 
@@ -18,7 +19,7 @@ import com.sencha.gxt.widget.core.client.Composite;
 public abstract class AbstractFileViewer extends Composite implements FileViewer {
 
     public interface AbstractFileViewerAppearance {
-        String defaultViewName(double defaultName);
+        String defaultViewName(String defaultName);
     }
 
 
@@ -43,7 +44,8 @@ public abstract class AbstractFileViewer extends Composite implements FileViewer
         if (fileName != null) {
             return fileName;
         } else {
-            return appearance.defaultViewName(Math.random());
+            String viewName = (Math.random() + "").substring(0,4).replace(".","");
+            return appearance.defaultViewName(viewName);
         }
     }
 
