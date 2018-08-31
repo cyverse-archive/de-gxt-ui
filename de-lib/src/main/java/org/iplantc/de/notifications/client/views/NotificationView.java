@@ -1,50 +1,27 @@
 package org.iplantc.de.notifications.client.views;
 
 import org.iplantc.de.client.models.notifications.NotificationCategory;
-import org.iplantc.de.client.models.notifications.NotificationMessage;
-import org.iplantc.de.notifications.client.events.NotificationGridRefreshEvent;
-import org.iplantc.de.notifications.client.events.NotificationSelectionEvent;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
+import org.iplantc.de.notifications.client.presenter.NotificationsCallback;
 
+import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.web.bindery.autobean.shared.Splittable;
 
-import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
-import com.sencha.gxt.data.shared.loader.PagingLoadResult;
-import com.sencha.gxt.data.shared.loader.PagingLoader;
-import com.sencha.gxt.widget.core.client.button.TextButton;
-
-import java.util.List;
-
-public interface NotificationView extends IsWidget,
-                                          NotificationGridRefreshEvent.HasNotificationGridRefreshEventHandlers,
-                                          NotificationSelectionEvent.HasNotificationSelectionEventHandlers {
+import jsinterop.annotations.JsType;
+@JsType
+public interface NotificationView extends IsWidget {
 
     interface NotificationViewAppearance {
 
         String notifications();
-
-        String refresh();
 
         String notificationDeleteFail();
 
         String notificationMarkAsSeenFail();
 
         String notificationMarkAsSeenSuccess();
-
-        String category();
-
-        int categoryColumnWidth();
-
-        String messagesGridHeader();
-
-        int messagesColumnWidth();
-
-        String createdDateGridHeader();
-
-        int createdDateColumnWidth();
-
-        String windowWidth();
-
-        String windowHeight();
 
         int windowMinWidth();
 
@@ -54,59 +31,32 @@ public interface NotificationView extends IsWidget,
 
     }
 
-    public interface Presenter extends org.iplantc.de.commons.client.presenter.Presenter {
-        /**
-         * Filters the list of notifications by a given Category.
-         * 
-         * @param category
-         */
-        public void filterBy(NotificationCategory category);
+    @JsType
+    public interface Presenter {
 
-        /**
-         * get default paging config
-         * 
-         * @return default FilterPagingLoadConfig
-         */
-        public FilterPagingLoadConfig buildDefaultLoadConfig();
+        void go(final HasOneWidget container, String baseDebugId, NotificationCategory category);
 
-        void setRefreshButton(TextButton refreshBtn);
+        void getNotifications(int limit,
+                              int offset,
+                              String filter,
+                              String sortDir,
+                              NotificationsCallback callback,
+                              ReactErrorCallback errorCallback);
+
+        void deleteNotifications(String[] ids,
+                                 ReactSuccessCallback callback,
+                                 ReactErrorCallback errorCallback);
+
+        void onNotificationToolbarMarkAsSeenClicked(String[] ids,
+                                                    ReactSuccessCallback callback,
+                                                    ReactErrorCallback errorCallback);
+
+        void onMessageClicked(Splittable notificationMessage);
 
         NotificationCategory getCurrentCategory();
-
-        public void markAsRead(NotificationMessage nm);
     }
 
-    /**
-     * get current loader config
-     * 
-     * @return the current load config
-     */
-    public FilterPagingLoadConfig getCurrentLoadConfig();
+    void setPresenter(NotificationView.Presenter presenter, String baseDebugId);
 
-    /**
-     * Get list of selected notification
-     * 
-     * @return a list containing selected notification objects
-     */
-    public List<NotificationMessage> getSelectedItems();
-
-    /**
-     * loads notifications using given laod conig
-     * 
-     * @param config FilterPagingLoadConfig
-     */
-    public void loadNotifications(FilterPagingLoadConfig config);
-
-    public void setLoader(
-            PagingLoader<FilterPagingLoadConfig, PagingLoadResult<NotificationMessage>> loader);
-
-    void setNorthWidget(IsWidget widget);
-
-    void mask();
-
-    void unmask();
-
-    public TextButton getRefreshButton();
-
-    public void updateStore(NotificationMessage nm);
+    void loadNotifications(NotificationCategory category);
 }

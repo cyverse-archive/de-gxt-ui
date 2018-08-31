@@ -28,7 +28,7 @@ public interface MessageServiceFacade {
      */
     void getRecentMessages(AsyncCallback<NotificationList> callback);
 
-    void markAsSeen(List<HasId> seenIds, DECallback<String> callback);
+    void markAsSeen(HasUUIDs seenIds, DECallback<String> callback);
 
     void markAsSeen(HasId id, DECallback<String> callback);
 

@@ -25,6 +25,7 @@ import withI18N, { getMessage } from "../../util/I18NWrapper";
 import injectSheet from "react-jss";
 import TablePaginationActions from "../../util/table/TablePaginationActions";
 
+
 const columnData = [
     {name: "appName", numeric: false},
     {name: "rating", numeric: true},

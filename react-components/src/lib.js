@@ -5,6 +5,7 @@ import * as desktop from "./desktop";
 import * as fileViewers from "./fileViewers";
 import * as metadata from "./metadata";
 import * as util from "./util/util";
+import * as notifications from "./notifications";
 import palette from "./util/CyVersePalette";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -35,6 +36,7 @@ export {
     desktop,
     fileViewers,
     metadata,
+    notifications,
     util,
     getDefaultTheme,
     MuiThemeProvider

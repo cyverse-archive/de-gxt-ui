@@ -1,5 +1,8 @@
 package org.iplantc.de.notifications.client.utils;
 
+import static org.iplantc.de.notifications.client.ReactNotifications.DenyJoinRequestDetailsDialog;
+import static org.iplantc.de.notifications.client.ReactNotifications.RequestHistoryDialog;
+
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.models.HasId;
 import org.iplantc.de.client.models.HasPath;
@@ -8,6 +11,8 @@ import org.iplantc.de.client.models.analysis.AnalysesAutoBeanFactory;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.diskResources.DiskResourceAutoBeanFactory;
 import org.iplantc.de.client.models.diskResources.File;
+import org.iplantc.de.client.models.identifiers.PermanentIdRequestAutoBeanFactory;
+import org.iplantc.de.client.models.identifiers.PermanentIdRequestDetails;
 import org.iplantc.de.client.models.notifications.Notification;
 import org.iplantc.de.client.models.notifications.NotificationAutoBeanFactory;
 import org.iplantc.de.client.models.notifications.NotificationCategory;
@@ -25,23 +30,24 @@ import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.collaborators.client.CollaborationView;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
+import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 import org.iplantc.de.commons.client.views.window.configs.AnalysisWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.AppsWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.CollaborationWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.ConfigFactory;
 import org.iplantc.de.commons.client.views.window.configs.DiskResourceWindowConfig;
 import org.iplantc.de.desktop.client.DesktopView;
+import org.iplantc.de.notifications.client.ReactNotifications.DenyTeamProps;
+import org.iplantc.de.notifications.client.ReactNotifications.HistoryProps;
 import org.iplantc.de.notifications.client.events.NotificationClickedEvent;
 import org.iplantc.de.notifications.client.events.WindowShowRequestEvent;
-import org.iplantc.de.notifications.client.views.dialogs.DenyJoinRequestDetailsDialog;
-import org.iplantc.de.notifications.client.views.dialogs.JoinTeamRequestDialog;
-import org.iplantc.de.notifications.client.views.dialogs.RequestHistoryDialog;
-import org.iplantc.de.shared.AsyncProviderWrapper;
+import org.iplantc.de.notifications.client.views.JoinTeamRequestView;
 import org.iplantc.de.shared.NotificationCallback;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
@@ -63,9 +69,12 @@ public class NotificationUtil {
     @Inject EventBus eventBus;
     @Inject IplantAnnouncer announcer;
     @Inject MessageServiceFacade messageServiceFacade;
-    @Inject AsyncProviderWrapper<JoinTeamRequestDialog> joinRequestDlgProvider;
-    @Inject AsyncProviderWrapper<DenyJoinRequestDetailsDialog> denyDetailsDlgProvider;
     @Inject DesktopView.Presenter.DesktopPresenterAppearance appearance;
+    @Inject
+    PermanentIdRequestAutoBeanFactory permFactory;
+
+    @Inject
+    JoinTeamRequestView.Presenter presenter;
 
     @Inject
     public NotificationUtil() {
@@ -237,39 +246,28 @@ public class NotificationUtil {
                 case TOOLREQUEST:
                     PayloadRequest toolRequest =
                             AutoBeanCodex.decode(notificationFactory, PayloadRequest.class, context1)
+
                                          .as();
-
-                    List<RequestHistory> history =
-                            toolRequest.getHistory();
-
-                    RequestHistoryDialog dlg =
-                            new RequestHistoryDialog(toolRequest.getName(), history);
-                    dlg.show();
+                    if (toolRequest.getHistory() != null && toolRequest.getHistory().size() > 0) {
+                        displayRequestHistory(toolRequest.getName(),
+                                              toolRequest.getHistory(),
+                                              category.toString());
+                    }
 
                     break;
                 case TEAM:
                     PayloadTeam payloadTeam = AutoBeanCodex.decode(notificationFactory, PayloadTeam.class, context1).as();
 
                     if (payloadTeam.getAction().equals(PayloadTeam.ACTION_JOIN)) {
-                        joinRequestDlgProvider.get(new AsyncCallback<JoinTeamRequestDialog>() {
-                            @Override
-                            public void onFailure(Throwable caught) {
-                            }
-
-                            @Override
-                            public void onSuccess(JoinTeamRequestDialog dialog) {
-                                dialog.show(message, payloadTeam);
-                            }
-                        });
+                        presenter.go(message, payloadTeam);
                     } else if (payloadTeam.getAction().equals(PayloadTeam.ACTION_DENY)) {
-                        denyDetailsDlgProvider.get(new AsyncCallback<DenyJoinRequestDetailsDialog>() {
-                            @Override
-                            public void onFailure(Throwable throwable) { }
-
-                            @Override
-                            public void onSuccess(DenyJoinRequestDetailsDialog dialog) {
-                                dialog.show(payloadTeam.getTeamName(), payloadTeam.getAdminMessage());
-                            }
+                        Scheduler.get().scheduleFinally(() -> {
+                            DenyTeamProps props = new DenyTeamProps();
+                            props.adminMessage = payloadTeam.getAdminMessage();
+                            props.teamName = payloadTeam.getTeamName();
+                            props.dialogOpen = true;
+                            CyVerseReactComponents.render(DenyJoinRequestDetailsDialog, props,
+                                                          new HTMLPanel("<div></div>").getElement());
                         });
                     } else {
                         CollaborationWindowConfig window = ConfigFactory.collaborationWindowConfig();
@@ -284,6 +282,23 @@ public class NotificationUtil {
         }
     }
 
+    public static void displayRequestHistory(String name,
+                                             List<RequestHistory> requestHistoryList,
+                                             String category) {
+        Splittable[] history = new Splittable[requestHistoryList.size()];
+        for (int i = 0; i < requestHistoryList.size(); i++) {
+            history[i] = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(requestHistoryList.get(i)));
+        }
+        HistoryProps props = new HistoryProps();
+        props.name = name;
+        props.dialogOpen = true;
+        props.history = history;
+        props.category = category;
+        CyVerseReactComponents.render(RequestHistoryDialog,
+                                      props,
+                                      new HTMLPanel("<div></div>").getElement());
+    }
+
     //TODO Refactor this service call out of the util class
     void getRequestStatusHistory(String id, NotificationCategory cat) {
         if (cat.equals(NotificationCategory.PERMANENTIDREQUEST)) {
@@ -296,16 +311,12 @@ public class NotificationUtil {
 
                 @Override
                 public void onSuccess(String result) {
-                    PayloadRequest toolRequest = AutoBeanCodex.decode(notificationFactory,
-                                                                      PayloadRequest.class,
-                                                                      result).as();
-
-                    List<RequestHistory> history = toolRequest.getHistory();
-
-                    RequestHistoryDialog dlg = new RequestHistoryDialog(NotificationCategory.PERMANENTIDREQUEST.toString(),
-                                                                        history);
-                    dlg.show();
-
+                    PermanentIdRequestDetails request =
+                            AutoBeanCodex.decode(permFactory, PermanentIdRequestDetails.class,
+                                                 result).as();
+                    displayRequestHistory(request.getRequestor().getUsername() + "-" + request.getType(),
+                                          request.getHistory(),
+                                          cat.toString());
                 }
             });
         }

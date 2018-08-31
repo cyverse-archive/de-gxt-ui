@@ -9,7 +9,7 @@ import org.iplantc.de.client.models.viewer.InfoType;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
 import org.iplantc.de.client.services.FileSystemMetadataServiceFacade;
 import org.iplantc.de.client.services.TagsServiceFacade;
-import org.iplantc.de.client.services.callbacks.ErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.util.DiskResourceUtil;
 import org.iplantc.de.client.util.SearchModelUtils;
 import org.iplantc.de.commons.client.ErrorHandler;
@@ -144,7 +144,7 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
     @Override
     public void fetchTagsForResource(String diskResourceId,
                                      final TagsFetchCallback callback,
-                                     final ErrorCallback errorCallback) {
+                                     final ReactErrorCallback errorCallback) {
         tags.clear();
         metadataService.getTags(diskResourceId, new AsyncCallback<List<Tag>>() {
             @Override
@@ -168,7 +168,7 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
     @Override
     public void searchTags(String searchVal,
                            final TagsSearchCallback callback,
-                           final ErrorCallback errorCallback) {
+                           final ReactErrorCallback errorCallback) {
         tagsService.suggestTag(searchVal, 10, new AsyncCallback<String>() {
 
             @Override
@@ -195,7 +195,7 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
                           String tagValue,
                           String diskResourceId,
                           final TagAttachCallback callback,
-                          final ErrorCallback errorCallback) {
+                          final ReactErrorCallback errorCallback) {
         metadataService.attachTags(wrapInList(tagId), diskResourceId, new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -228,7 +228,7 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
                           String tagValue,
                           String diskResourceId,
                           final TagDetachCallback callback,
-                          final ErrorCallback errorCallback) {
+                          final ReactErrorCallback errorCallback) {
         metadataService.detachTags(wrapInList(tagId), diskResourceId, new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -258,7 +258,7 @@ public class DetailsViewPresenterImpl implements DetailsView.Presenter,
     public void createTag(String tagValue,
                           String diskResourceId,
                           final TagAttachCallback callback,
-                          final ErrorCallback errorCallback) {
+                          final ReactErrorCallback errorCallback) {
         tagsService.createTag(tagValue.trim(), new AsyncCallback<Tag>() {
             @Override
             public void onFailure(Throwable caught) {

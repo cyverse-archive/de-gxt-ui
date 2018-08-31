@@ -47,7 +47,7 @@ class AppStatsTest extends Component {
                 },
                 {
                     "integration_date": "2014-04-10T20:02:05Z",
-                    "description": "Takes any fasta file for a reference, builds the index and then maps reads to the index. The index is saved in tar.gz form. Colorspace mapping is not available in this version, but this version maps much longer read sequences. ",
+                    "description": "Takes any fasta file for a reference, builds the index and then maps reads to the index. The index is saved in tar.gz form. Colorspace toolStatusHelpMapping is not available in this version, but this version maps much longer read sequences. ",
                     "deleted": false,
                     "pipeline_eligibility": {
                         "is_valid": true,
@@ -115,7 +115,7 @@ class AppStatsTest extends Component {
                 },
                 {
                     "integration_date": "2013-10-03T09:04:52Z",
-                    "description": "TopHat 2.0.9 (for single-end reads) is a fast splice junction mapper for RNA-Seq reads. It aligns RNA-Seq reads to mammalian-sized genomes using the short read aligner Bowtie and analyzes the mapping results to identify splice junctions between exons. ",
+                    "description": "TopHat 2.0.9 (for single-end reads) is a fast splice junction mapper for RNA-Seq reads. It aligns RNA-Seq reads to mammalian-sized genomes using the short read aligner Bowtie and analyzes the toolStatusHelpMapping results to identify splice junctions between exons. ",
                     "deleted": false,
                     "pipeline_eligibility": {
                         "is_valid": true,

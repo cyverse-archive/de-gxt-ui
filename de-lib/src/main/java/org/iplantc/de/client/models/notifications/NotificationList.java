@@ -17,4 +17,9 @@ public interface NotificationList {
 
     @PropertyName("unseen_total")
     String getUnseenTotal();
+
+    void setNotifications(List<Notification> notifications);
+
+    @PropertyName("total")
+    String getTotal();
 }

@@ -19,4 +19,15 @@ public enum PrivilegeType {
     public String getLabel() {
         return label;
     }
+
+    public static PrivilegeType fromTypeString(String typeString) {
+        if (typeString == null || typeString.isEmpty()) {
+            return null;
+        }
+        try {
+            return valueOf(typeString);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

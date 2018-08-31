@@ -4,7 +4,7 @@ import org.iplantc.de.client.models.IsHideable;
 import org.iplantc.de.client.models.UserSettings;
 import org.iplantc.de.client.models.WindowState;
 import org.iplantc.de.client.models.notifications.NotificationMessage;
-import org.iplantc.de.client.services.callbacks.ErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.commons.client.views.window.configs.SavedWindowConfig;
 import org.iplantc.de.commons.client.views.window.configs.WindowConfig;
 import org.iplantc.de.desktop.client.presenter.NotificationsCallback;
@@ -148,7 +148,7 @@ public interface DesktopView extends IsWidget {
         @SuppressWarnings("unusable-by-js")
         void onNotificationSelected(final Splittable notificationMessage,
                                     final NotificationMarkAsSeenCallback callback,
-                                    final ErrorCallback errorCallback);
+                                    final ReactErrorCallback errorCallback);
 
         void displayNotificationPopup(String message, String category, String analysisStatus);
 
@@ -221,13 +221,13 @@ public interface DesktopView extends IsWidget {
 
         void doMarkAllSeen(boolean announce,
                            final NotificationMarkAsSeenCallback callback,
-                           final ErrorCallback errorCallback);
+                           final ReactErrorCallback errorCallback);
 
         void doSeeAllNotifications();
 
         void doSeeNewNotifications();
 
-        void getNotifications(NotificationsCallback callback, ErrorCallback errorCallback);
+        void getNotifications(NotificationsCallback callback, ReactErrorCallback errorCallback);
     }
 
 

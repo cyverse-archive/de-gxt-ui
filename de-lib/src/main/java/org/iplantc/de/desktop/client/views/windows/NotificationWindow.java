@@ -30,7 +30,8 @@ public class NotificationWindow extends WindowBase {
         ensureDebugId(DeModule.WindowIds.NOTIFICATION);
 
         setMinHeight(appearance.windowMinHeight());
-        setMinHeight(appearance.windowMinWidth());
+        setMinWidth(appearance.windowMinWidth());
+        setBodyStyle("background-color: white;");
     }
 
     @Override
@@ -38,17 +39,22 @@ public class NotificationWindow extends WindowBase {
                                               boolean isMaximizable) {
         super.show(windowConfig, tag, isMaximizable);
         NotifyWindowConfig notifyWindowConfig = (NotifyWindowConfig) windowConfig;
-        presenter.go(this);
-        if (notifyWindowConfig != null) {
-            presenter.filterBy(NotificationCategory.fromTypeString(notifyWindowConfig.getFilter()));
-        }
+        filterByCategory(notifyWindowConfig);
     }
 
     @Override
     public <C extends WindowConfig> void update(C config) {
-        NotifyWindowConfig notifyWindowConfig = (NotifyWindowConfig) config;
+        NotifyWindowConfig notifyWindowConfig = (NotifyWindowConfig)config;
+        filterByCategory(notifyWindowConfig);
+    }
+
+    protected void filterByCategory(NotifyWindowConfig notifyWindowConfig) {
         if (notifyWindowConfig != null) {
-            presenter.filterBy(NotificationCategory.fromTypeString(notifyWindowConfig.getFilter()));
+            presenter.go(this,
+                         DeModule.WindowIds.NOTIFICATION,
+                         NotificationCategory.fromTypeString(notifyWindowConfig.getFilter()));
+        } else {
+            presenter.go(this, DeModule.WindowIds.NOTIFICATION, NotificationCategory.ALL);
         }
     }
 
@@ -73,11 +79,11 @@ public class NotificationWindow extends WindowBase {
             super.restoreWindowState();
             String width = ws.getWidth();
             String height = ws.getHeight();
-            setSize((Strings.isNullOrEmpty(width)) ? notificationViewAppearance.windowWidth() : width,
-                    (Strings.isNullOrEmpty(height)) ?
-                    notificationViewAppearance.windowHeight() :
+            setSize((Strings.isNullOrEmpty(width)) ?
+                    notificationViewAppearance.windowMinWidth() + "" :
+                    width,
+                    (Strings.isNullOrEmpty(height)) ? notificationViewAppearance.windowMinHeight() + "" :
                     height);
         }
     }
-
 }

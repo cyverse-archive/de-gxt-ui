@@ -25,14 +25,10 @@ public class NotificationViewDefaultAppearance implements NotificationView.Notif
         this.iplantErrorStrings = iplantErrorStrings;
     }
 
+
     @Override
     public String notifications() {
         return iplantDisplayStrings.notifications();
-    }
-
-    @Override
-    public String refresh() {
-        return iplantDisplayStrings.refresh();
     }
 
     @Override
@@ -50,54 +46,15 @@ public class NotificationViewDefaultAppearance implements NotificationView.Notif
         return iplantDisplayStrings.markAsSeenSuccess();
     }
 
-    @Override
-    public String category() {
-        return iplantDisplayStrings.category();
-    }
-
-    @Override
-    public int categoryColumnWidth() {
-        return 100;
-    }
-
-    @Override
-    public String messagesGridHeader() {
-        return iplantDisplayStrings.messagesGridHeader();
-    }
-
-    @Override
-    public int messagesColumnWidth() {
-        return 420;
-    }
-
-    @Override
-    public String createdDateGridHeader() {
-        return iplantDisplayStrings.createdDateGridHeader();
-    }
-
-    @Override
-    public int createdDateColumnWidth() {
-        return 170;
-    }
-
-    @Override
-    public String windowWidth() {
-        return "600";
-    }
-
-    @Override
-    public String windowHeight() {
-        return "375";
-    }
 
     @Override
     public int windowMinWidth() {
-        return 500;
+        return 700;
     }
 
     @Override
     public int windowMinHeight() {
-        return 300;
+        return 500;
     }
 
     @Override

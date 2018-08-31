@@ -12,7 +12,7 @@ import org.iplantc.de.admin.desktop.client.services.AppAdminServiceFacade;
 import org.iplantc.de.admin.desktop.shared.Belphegor;
 import org.iplantc.de.client.models.apps.AppAutoBeanFactory;
 import org.iplantc.de.client.models.apps.proxy.AppListLoadResult;
-import org.iplantc.de.client.services.callbacks.ErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.shared.AppsCallback;
 import com.google.gwt.http.client.Response;
@@ -44,7 +44,7 @@ public class AdminAppsStatsGridPresenterImpl implements AdminAppStatsGridView.Pr
     public void searchApps(String searchString,
                            String startDate, String endDate,
                            AppStatsSearchCallback callback,
-                           ErrorCallback errorCallback) {
+                           ReactErrorCallback errorCallback) {
         appService.searchApp(searchString, startDate, endDate, new AppsCallback<AppListLoadResult>() {
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {

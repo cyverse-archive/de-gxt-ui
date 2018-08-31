@@ -2,7 +2,7 @@
  *  @author sriram
  *
  * */
-import React, { Component } from "react";
+import React from "react";
 import IconButton from "@material-ui/core/IconButton";
 import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
@@ -21,7 +21,7 @@ const actionsStyles = theme => ({
     },
 });
 
-class TablePaginationActions extends Component {
+class TablePaginationActions extends React.Component {
     handleFirstPageButtonClick = event => {
         this.props.onChangePage(event, 0);
     };
@@ -76,7 +76,6 @@ class TablePaginationActions extends Component {
 }
 
 TablePaginationActions.propTypes = {
-    classes: PropTypes.object.isRequired,
     count: PropTypes.number.isRequired,
     onChangePage: PropTypes.func.isRequired,
     page: PropTypes.number.isRequired,
