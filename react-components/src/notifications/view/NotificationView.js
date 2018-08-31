@@ -28,7 +28,7 @@ import classnames from "classnames";
 const columnData = [
     {name: "Category", numeric: false, enableSorting: false,},
     {name: "Message", numeric: false, enableSorting: false},
-    {name: "Date", numeric: false, enableSorting: true},
+    {name: "Created Date", numeric: false, enableSorting: true},
 ];
 
 
@@ -258,7 +258,7 @@ class NotificationView extends Component {
                                                  seen={n.seen}
                                                  presenter={this.props.presenter}
                                                  classes={classes}/>
-                                        <TableCell padding="none">{(n.message.timestamp) ? moment(n.message.timestamp, "x").format(
+                                        <TableCell>{(n.message.timestamp) ? moment(n.message.timestamp, "x").format(
                                                 constants.DATE_FORMAT) :
                                             getMessage("emptyValue")} </TableCell>
                                     </TableRow>

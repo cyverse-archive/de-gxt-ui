@@ -38,7 +38,7 @@ class NotificationToolbar extends Component {
                                 value={this.props.filter}
                                 onChange={this.props.onFilterChange}
                                 inputProps={{
-                                    name: 'filter',
+                                    name: getMessage("filter"),
                                     id: build(baseId, ids.FILTER),
                                 }}>
                                 <option
@@ -65,21 +65,27 @@ class NotificationToolbar extends Component {
                             variant="raised"
                             size="small"
                             className={classes.toolbarButton}
-                            onClick={this.props.onRefreshClicked}><RefreshIcon style={{color: Color.darkBlue}}/>{getMessage("refresh")}
+                            onClick={this.props.onRefreshClicked}>
+                        <RefreshIcon style={{color: Color.darkBlue}}/>
+                        {getMessage("refresh")}
                     </Button>
                     <Button id={build(baseId, ids.MARK_ALL_SEEN_BTN)}
                             variant="raised"
                             size="small"
                             disabled={this.props.markSeenDisabled}
                             className={classes.toolbarButton}
-                            onClick={this.props.onMarkSeenClicked}><CheckIcon style={{color: Color.darkBlue}}/>{getMessage("markSeen")}
+                            onClick={this.props.onMarkSeenClicked}>
+                        <CheckIcon style={{color: Color.darkBlue}}/>
+                        {getMessage("markSeen")}
                     </Button>
                     <Button id={build(baseId, ids.DELETE_BTN)}
                             variant="raised"
                             size="small"
                             disabled={this.props.deleteDisabled}
                             onClick={this.props.onDeleteClicked}
-                            className={classes.toolbarButton}><DeleteIcon style={{color: Color.darkBlue}}/>{getMessage("delete")}
+                            className={classes.toolbarButton}>
+                        <DeleteIcon style={{color: Color.darkBlue}}/>
+                        {getMessage("delete")}
                     </Button>
 
                 </ToolbarGroup>
