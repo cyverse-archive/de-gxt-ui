@@ -3,6 +3,8 @@
  */
 import React from "react";
 
+import { getIn } from 'formik';
+
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -10,6 +12,31 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TableCell from "@material-ui/core/TableCell";
 import TextField from "@material-ui/core/TextField";
+
+const getFormikErrorMessage = (name, touched, errors) => {
+    const error = getIn(errors, name);
+    const touch = getIn(touched, name);
+
+    return touch && error ? error : null;
+};
+
+const FormikTextField = ({
+    field,
+    label,
+    required,
+    form: {touched, errors},
+    ...custom
+}) => (
+    <TextField
+        label={label}
+        error={!!getFormikErrorMessage(field.name, touched, errors)}
+        helperText={getFormikErrorMessage(field.name, touched, errors)}
+        required={required}
+        fullWidth
+        {...field}
+        {...custom}
+    />
+);
 
 const FormTextField = ({
     input,
@@ -76,4 +103,5 @@ export {
     FormCheckboxTableCell,
     FormSelectField,
     FormTextField,
+    FormikTextField,
 };

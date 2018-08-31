@@ -26,6 +26,7 @@ import VideoViewerTest from "./fileViewers/VideoViewer.stories";
 import {
     EditDataCiteMetadataTemplateTest,
     EditNestedAttrMetadataTemplateTest,
+    MetadataTemplateViewTest,
 } from "./metadata/MetadataTemplate.stories";
 
 import NotificationViewTest from "./notifications/view/NotificationView.stories";
@@ -64,6 +65,9 @@ storiesOf('fileViewers', module).add("VideoViewer", () => <VideoViewerTest/>);
 storiesOf('metadata/admin/EditMetadataTemplate', module)
     .add('with nested attributes', () => <EditNestedAttrMetadataTemplateTest logger={action('template')} />)
     .add('with DataCite attributes', () => <EditDataCiteMetadataTemplateTest logger={action('template')} />);
+
+storiesOf('metadata/MetadataTemplateView', module)
+    .add('with nested attributes', () => <MetadataTemplateViewTest logger={action('templateView')}/>);
 
 storiesOf('util', module).add('Autocomplete', () => <AutocompleteTest selectOptionLogger={action('Selected Option')}/>);
 storiesOf('notifications/view', module).add('with test notifications', () => <NotificationViewTest

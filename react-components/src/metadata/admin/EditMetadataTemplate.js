@@ -17,7 +17,7 @@ import ids from "./ids";
 import ConfirmCloseDialog from "../../util/ConfirmCloseDialog";
 import { FormCheckbox, FormTextField } from "../../util/FormField";
 import EditAttributeFormList from "./EditAttributeFormList";
-import SlideUpTransition from "./SlideUpTransition";
+import SlideUpTransition from "../SlideUpTransition";
 
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";

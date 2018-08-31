@@ -1,4 +1,10 @@
+import metadata_ids from "../ids";
+
+const { BUTTONS } = metadata_ids;
+
 export default {
+    ...metadata_ids,
+
     METADATA_TEMPLATE_FORM: "metadataTemplateDialog",
 
     ATTR_GRID: "attrGrid",
@@ -7,17 +13,11 @@ export default {
     ATTR_TYPE: "type",
     ATTR_REQUIRED: "required",
     BUTTONS: {
-        ADD: "addBtn",
-        CLOSE: "closeBtn",
-        DELETE: "deleteBtn",
-        EDIT: "editBtn",
-        EXPAND: "expand",
+        ...BUTTONS,
         MOVE_DOWN: "moveDownBtn",
         MOVE_UP: "moveUpBtn",
-        SAVE: "saveBtn",
     },
     CHECK_DELETED: "checkDeleted",
-    DIALOG: "dialog",
     ENUM_VALUES_GRID: "enumValuesGrid",
     ENUM_VALUE: "value",
     ENUM_VALUE_DEFAULT: "is_default",
@@ -28,7 +28,6 @@ export default {
     ONTOLOGY_ENTITY_TYPE: "entityType",
     TEMPLATE_NAME: "templateName",
     TEMPLATE_DESCRIPTION: "description",
-    TITLE: "title",
     TITLE_ERR: "errTitle",
     TITLE_SUB: "subTitle",
 };

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 
+import MetadataTemplateView from "../../src/metadata/MetadataTemplateView";
 import EditMetadataTemplate from "../../src/metadata/admin/EditMetadataTemplate";
 
 const presenter = (logger) => ({
@@ -12,6 +13,14 @@ const presenter = (logger) => ({
         );
     },
     closeTemplateInfoDialog: () => logger("dialog closed."),
+    onSaveMetadata: (metadata, resolve, errorCallback) => {
+        setTimeout(() => {
+                logger(metadata);
+                resolve(metadata);
+            },
+            1500
+        );
+    },
 });
 
 const nestedAttrMetadataTemplate = {
@@ -73,6 +82,22 @@ const nestedAttrMetadataTemplate = {
             "description": "Integer Description",
             "type": "Integer",
             "required": true,
+            "attributes": [
+                {
+                    "name": "Int Sub-Attr",
+                    "description": "Int Description",
+                    "type": "String",
+                    "required": false,
+                    "attributes": [
+                        {
+                            "name": "Int Sub-Sub-Attr",
+                            "description": "Int Description",
+                            "type": "Integer",
+                            "required": false,
+                        },
+                    ],
+                },
+            ],
         },
         {
             "name": "Multiline Text Attr",
@@ -744,7 +769,79 @@ class EditDataCiteMetadataTemplateTest extends Component {
     }
 }
 
+const metadata = {
+    "avus": [
+        {
+            "id": "1",
+            "attr": "Integer Attr",
+            "value": "",
+            "unit": "unit1",
+            "avus": [
+                {
+                    "id": "3",
+                    "attr": "attr3",
+                    "value": "value3",
+                    "unit": "unit3",
+                    "avus": [
+                        {
+                            "id": "5",
+                            "attr": "attr5",
+                            "value": "value5",
+                            "unit": "unit5",
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            "id": "2",
+            "attr": "String Attr",
+            "value": "value2",
+            "unit": "unit2",
+            "avus": [
+                {
+                    "id": "4",
+                    "attr": "String Sub-Attr",
+                    "value": "value4",
+                    "unit": "unit4",
+                    "avus": [
+                        {
+                            "id": "6",
+                            "attr": "Sub-String Sub-Attr",
+                            "value": "value6",
+                            "unit": "unit6",
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            "id": "7",
+            "attr": "String Attr",
+            "value": "",
+            "unit": "",
+        },
+    ]
+};
+
+class MetadataTemplateViewTest extends Component {
+    render() {
+        const logger = this.props.logger || ((template) => {
+            console.log(template);
+        });
+
+        return (
+            <MetadataTemplateView open
+                                  presenter={presenter(logger)}
+                                  template={nestedAttrMetadataTemplate}
+                                  metadata={metadata}
+            />
+        );
+    }
+}
+
 export {
     EditNestedAttrMetadataTemplateTest,
     EditDataCiteMetadataTemplateTest,
+    MetadataTemplateViewTest,
 };
