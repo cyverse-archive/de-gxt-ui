@@ -13,7 +13,7 @@ import intlData from "./messages";
 import styles from "./style";
 
 import ConfirmCloseDialog from "../util/ConfirmCloseDialog";
-import { FormikTextField } from "../util/FormField";
+import { FormikIntegerField, FormikTextField } from "../util/FormField";
 import SlideUpTransition from "./SlideUpTransition";
 
 import { withStyles } from '@material-ui/core/styles';
@@ -71,6 +71,16 @@ class MetadataTemplateAttributeView extends Component {
                                 const attrFieldId = build(ids.METADATA_TEMPLATE_VIEW, field, attribute.name);
                                 let canRemove = !attribute.required;
 
+                                let FieldComponent;
+                                switch (attribute.type) {
+                                    case "Integer":
+                                        FieldComponent = FormikIntegerField;
+                                        break;
+                                    default:
+                                        FieldComponent = FormikTextField;
+                                        break;
+                                }
+
                                 let avuFields = avus && avus.map((avu, index) => {
                                     if (avu.attr !== attribute.name) {
                                         return null;
@@ -88,7 +98,7 @@ class MetadataTemplateAttributeView extends Component {
                                             >
                                                 <Grid item xs>
                                                     <Field name={`${avuFieldName}.value`}
-                                                           component={FormikTextField}
+                                                           component={FieldComponent}
                                                            label={attribute.name}
                                                            required={attribute.required}
                                                     />
@@ -286,7 +296,6 @@ const mapPropsToValues = props => {
     return { template, attributeMap, metadata };
 };
 
-const restrictedChars = ":@/\\|^#;[]{}<>";
 const validateAVUs = (avus, attributeMap) => {
     const avuArrayErrors = [];
 
@@ -299,16 +308,22 @@ const validateAVUs = (avus, attributeMap) => {
             return;
         }
 
-        if (attrTemplate.required && !value) {
+        if (attrTemplate.required && value === "") {
             avuErrors.value = getMessage("required");
             avuArrayErrors[avuIndex] = avuErrors;
         } else if (value) {
-            restrictedChars.split("").forEach((char) => {
-                if (value.indexOf(char) >= 0) {
-                    avuErrors.value = "This character is not allowed: " + char;
-                    avuArrayErrors[avuIndex] = avuErrors;
-                }
-            });
+            switch (attrTemplate.type) {
+                case "Integer":
+                    let intVal = parseInt(value, 10);
+                    if (isNaN(intVal)) {
+                        avuErrors.value = "Please enter an integer";
+                        avuArrayErrors[avuIndex] = avuErrors;
+                    }
+
+                    break;
+                default:
+                    break;
+            }
         }
 
         if (attrTemplate.attributes) {
