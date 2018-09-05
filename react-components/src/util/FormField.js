@@ -38,6 +38,14 @@ const FormikTextField = ({
     />
 );
 
+const onNumberChange = onChange => (event) => {
+    const newValue = event.target.value;
+    let intVal = Number(newValue);
+    if (!isNaN(intVal)) {
+        onChange(event);
+    }
+};
+
 const onIntegerChange = onChange => (event) => {
     const newValue = event.target.value;
     let intVal = Number(newValue);
@@ -45,6 +53,18 @@ const onIntegerChange = onChange => (event) => {
         onChange(event);
     }
 };
+
+const FormikNumberField = ({
+    field: {onChange, ...field},
+    ...props
+}) => (
+    <FormikTextField type="number"
+                     step="any"
+                     onChange={onNumberChange(onChange)}
+                     field={field}
+                     {...props}
+    />
+);
 
 const FormikIntegerField = ({
     field: {onChange, ...field},
@@ -124,5 +144,6 @@ export {
     FormSelectField,
     FormTextField,
     FormikTextField,
+    FormikNumberField,
     FormikIntegerField,
 };

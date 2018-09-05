@@ -45,6 +45,7 @@ export default {
         required: "Required",
         save: "Save",
         templateNameLabel: "Name",
+        templateValidationErrMsgNumber: "Please enter a valid number.",
         value: "Value",
         yes: "Yes",
     }

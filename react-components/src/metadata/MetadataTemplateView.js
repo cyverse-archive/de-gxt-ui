@@ -13,7 +13,7 @@ import intlData from "./messages";
 import styles from "./style";
 
 import ConfirmCloseDialog from "../util/ConfirmCloseDialog";
-import { FormikIntegerField, FormikTextField } from "../util/FormField";
+import { FormikIntegerField, FormikNumberField, FormikTextField } from "../util/FormField";
 import SlideUpTransition from "./SlideUpTransition";
 
 import { withStyles } from '@material-ui/core/styles';
@@ -73,6 +73,9 @@ class MetadataTemplateAttributeView extends Component {
 
                                 let FieldComponent;
                                 switch (attribute.type) {
+                                    case "Number":
+                                        FieldComponent = FormikNumberField;
+                                        break;
                                     case "Integer":
                                         FieldComponent = FormikIntegerField;
                                         break;
@@ -313,10 +316,11 @@ const validateAVUs = (avus, attributeMap) => {
             avuArrayErrors[avuIndex] = avuErrors;
         } else if (value) {
             switch (attrTemplate.type) {
+                case "Number":
                 case "Integer":
-                    let intVal = parseInt(value, 10);
-                    if (isNaN(intVal)) {
-                        avuErrors.value = "Please enter an integer";
+                    let numVal = Number(value);
+                    if (isNaN(numVal)) {
+                        avuErrors.value = getMessage("templateValidationErrMsgNumber");
                         avuArrayErrors[avuIndex] = avuErrors;
                     }
 
