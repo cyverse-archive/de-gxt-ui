@@ -122,7 +122,7 @@ class AnalysesView extends Component {
         let newSelected = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, id);
+            newSelected.push(id);
             this.setState({selected: newSelected});
         }
     }
@@ -135,7 +135,6 @@ class AnalysesView extends Component {
 
             if (selectedIndex === -1) {
                 newSelected = newSelected.concat(selected, id);
-                this.setState({selected: newSelected});
             } else if (selectedIndex === 0) {
                 newSelected = newSelected.concat(selected.slice(1));
             } else if (selectedIndex === selected.length - 1) {
@@ -148,8 +147,6 @@ class AnalysesView extends Component {
             }
             return {selected: newSelected};
         });
-
-
     }
 
     handleGoToOutputFolder() {
