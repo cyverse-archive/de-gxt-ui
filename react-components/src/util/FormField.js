@@ -38,6 +38,22 @@ const FormikTextField = ({
     />
 );
 
+const FormikCheckbox = ({
+    field: {value, ...field},
+    label,
+    ...custom
+}) => (
+    <FormControlLabel
+        control={
+            <Checkbox checked={!!value}
+                      {...field}
+                      {...custom}
+            />
+        }
+        label={label}
+    />
+);
+
 const onNumberChange = onChange => (event) => {
     const newValue = event.target.value;
     let intVal = Number(newValue);
@@ -143,6 +159,7 @@ export {
     FormCheckboxTableCell,
     FormSelectField,
     FormTextField,
+    FormikCheckbox,
     FormikTextField,
     FormikNumberField,
     FormikIntegerField,

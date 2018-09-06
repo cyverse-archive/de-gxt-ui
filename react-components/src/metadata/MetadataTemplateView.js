@@ -13,7 +13,7 @@ import intlData from "./messages";
 import styles from "./style";
 
 import ConfirmCloseDialog from "../util/ConfirmCloseDialog";
-import { FormikIntegerField, FormikNumberField, FormikTextField } from "../util/FormField";
+import { FormikCheckbox, FormikIntegerField, FormikNumberField, FormikTextField } from "../util/FormField";
 import SlideUpTransition from "./SlideUpTransition";
 
 import { withStyles } from '@material-ui/core/styles';
@@ -73,6 +73,9 @@ class MetadataTemplateAttributeView extends Component {
 
                                 let FieldComponent;
                                 switch (attribute.type) {
+                                    case "Boolean":
+                                        FieldComponent = FormikCheckbox;
+                                        break;
                                     case "Number":
                                         FieldComponent = FormikNumberField;
                                         break;
@@ -324,6 +327,8 @@ const validateAVUs = (avus, attributeMap) => {
                         avuArrayErrors[avuIndex] = avuErrors;
                     }
 
+                    break;
+                case "Boolean":
                     break;
                 default:
                     break;
