@@ -8,6 +8,7 @@ import { getIn } from 'formik';
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TableCell from "@material-ui/core/TableCell";
@@ -26,17 +27,20 @@ const FormikTextField = ({
     required,
     form: {touched, errors},
     ...custom
-}) => (
-    <TextField
-        label={label}
-        error={!!getFormikErrorMessage(field.name, touched, errors)}
-        helperText={getFormikErrorMessage(field.name, touched, errors)}
-        required={required}
-        fullWidth
-        {...field}
-        {...custom}
-    />
-);
+}) => {
+    const errorMsg = getFormikErrorMessage(field.name, touched, errors);
+    return (
+        <TextField
+            label={label}
+            error={!!errorMsg}
+            helperText={errorMsg}
+            required={required}
+            fullWidth
+            {...field}
+            {...custom}
+        />
+    )
+};
 
 const FormikCheckbox = ({
     field: {value, ...field},
@@ -100,6 +104,35 @@ const FormMultilineTextField = (props) => (
                      {...props}
     />
 );
+
+const FormikSelectField = ({
+    id,
+    field: {value, ...field},
+    label,
+    required,
+    form: {touched, errors},
+    children,
+    ...custom,
+}) => {
+    const errorMsg = getFormikErrorMessage(field.name, touched, errors);
+    return (
+        <FormControl fullWidth error={!!errorMsg}>
+            <InputLabel htmlFor={id}
+                        required={required}
+            >
+                {label}
+            </InputLabel>
+            <Select id={id}
+                    value={value || ""}
+                    {...field}
+                    {...custom}
+            >
+                {children}
+            </Select>
+            <FormHelperText>{errorMsg}</FormHelperText>
+        </FormControl>
+    )
+};
 
 const FormTextField = ({
     input,
@@ -170,5 +203,6 @@ export {
     FormikIntegerField,
     FormMultilineTextField,
     FormikNumberField,
+    FormikSelectField,
     FormikTextField,
 };

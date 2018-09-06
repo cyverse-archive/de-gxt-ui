@@ -18,6 +18,7 @@ import {
     FormikCheckbox,
     FormikIntegerField,
     FormikNumberField,
+    FormikSelectField,
     FormikTextField,
     FormMultilineTextField
 } from "../util/FormField";
@@ -30,7 +31,8 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import Grid from '@material-ui/core/Grid';
-import IconButton from "@material-ui/core/IconButton/IconButton";
+import IconButton from "@material-ui/core/IconButton";
+import MenuItem from "@material-ui/core/MenuItem";
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
@@ -38,13 +40,25 @@ import ContentAdd from '@material-ui/icons/Add';
 import CloseIcon from "@material-ui/icons/Close";
 import ContentRemove from '@material-ui/icons/Delete';
 
+const newAVU = attrTemplate => {
+    const attr = attrTemplate.name, unit = "";
+
+    let value = "";
+    if (attrTemplate.type === "Enum") {
+        value = attrTemplate.values && attrTemplate.values.find(enumVal => enumVal.is_default);
+        value = value ? value.value : "";
+    }
+
+    return {
+        attr,
+        value,
+        unit,
+    };
+};
+
 class MetadataTemplateAttributeView extends Component {
     onAddAVU(arrayHelpers, attribute) {
-        const avu = {
-            attr: attribute.name,
-            value: "",
-            unit: "",
-        };
+        const avu = newAVU(attribute);
 
         this.addSubAVUs(attribute, avu);
 
@@ -56,11 +70,7 @@ class MetadataTemplateAttributeView extends Component {
 
         if (requiredAttrs && requiredAttrs.length > 0) {
             avu.avus = requiredAttrs.map(subAttr => {
-                const subAVU = {
-                    attr: subAttr.name,
-                    value: "",
-                    unit: "",
-                };
+                const subAVU = newAVU(subAttr);
 
                 this.addSubAVUs(subAttr, subAVU);
 
@@ -78,7 +88,7 @@ class MetadataTemplateAttributeView extends Component {
                                 const attrFieldId = build(ids.METADATA_TEMPLATE_VIEW, field, attribute.name);
                                 let canRemove = !attribute.required;
 
-                                let FieldComponent;
+                                let FieldComponent, FieldChildren;
                                 switch (attribute.type) {
                                     case "Boolean":
                                         FieldComponent = FormikCheckbox;
@@ -91,6 +101,11 @@ class MetadataTemplateAttributeView extends Component {
                                         break;
                                     case "Multiline Text":
                                         FieldComponent = FormMultilineTextField;
+                                        break;
+                                    case "Enum":
+                                        FieldComponent = FormikSelectField;
+                                        FieldChildren = attribute.values && attribute.values.map((enumVal, index) =>
+                                            (<MenuItem key={index} value={enumVal.value}>{enumVal.value}</MenuItem>));
                                         break;
                                     default:
                                         FieldComponent = FormikTextField;
@@ -113,11 +128,14 @@ class MetadataTemplateAttributeView extends Component {
                                                   alignItems="center"
                                             >
                                                 <Grid item xs>
-                                                    <Field name={`${avuFieldName}.value`}
+                                                    <Field id={rowID}
+                                                           name={`${avuFieldName}.value`}
                                                            component={FieldComponent}
                                                            label={attribute.name}
                                                            required={attribute.required}
-                                                    />
+                                                    >
+                                                        {FieldChildren}
+                                                    </Field>
                                                 </Grid>
                                                 {canRemove &&
                                                 <Grid item xs={1}>
@@ -287,7 +305,7 @@ const mapPropsToValues = props => {
 
         attributes.filter((attribute) => attribute.required).forEach((attribute) => {
             if (avus.filter((avu) => avu.attr === attribute.name).length < 1) {
-                avus.push({ attr: attribute.name, value: "", unit: "" });
+                avus.push(newAVU(attribute));
             }
 
             const { attributes } = attribute;
@@ -355,7 +373,7 @@ const validateAVUs = (avus, attributeMap) => {
             }
         }
 
-        if (attrTemplate.attributes) {
+        if (attrTemplate.attributes && avu.avus && avu.avus.length > 0) {
             const subAttrErros = validateAVUs(avu.avus, attrTemplate.attributes);
             if (subAttrErros.length > 0) {
                 avuErrors.avus = subAttrErros;

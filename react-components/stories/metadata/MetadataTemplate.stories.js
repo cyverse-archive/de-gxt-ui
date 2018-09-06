@@ -130,6 +130,20 @@ const nestedAttrMetadataTemplate = {
                     "is_default": false,
                 },
             ],
+            "attributes": [
+                {
+                    "name": "Required Enum",
+                    "description": "A required enum with only 1 option creates a pre-filled, uneditable value.",
+                    "type": "Enum",
+                    "required": true,
+                    "values": [
+                        {
+                            "value": "Forced Selection",
+                            "is_default": true,
+                        },
+                    ],
+                },
+            ]
         },
         {
             "name": "OLS Ontology Term Attr",
@@ -770,6 +784,12 @@ class EditDataCiteMetadataTemplateTest extends Component {
 }
 
 const metadata = {
+    "irods-avus": [{
+        "id": "0",
+        "attr": "attrX",
+        "value": "valueX",
+        "unit": "unitX",
+    }],
     "avus": [
         {
             "id": "1",
