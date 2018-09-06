@@ -6,5 +6,6 @@ export default ({
     CYVERSE_DE: "CyVerse Discovery Environment",
     DE: "Discovery Environment",
     NEW_NOTIFICATIONS_LIMIT: 10,
+    URL_REGEX: /^(?:ftp|FTP|HTTPS?|https?):\/\/[^/]+\.[^/]+.*/i,
 });
 

@@ -6,6 +6,7 @@ import React, { Component, Fragment } from 'react';
 import { Field, FieldArray, withFormik } from 'formik';
 import { injectIntl } from "react-intl";
 
+import constants from "../constants";
 import withI18N, { formatMessage, getMessage } from "../util/I18NWrapper";
 import build from "../util/DebugIDUtil";
 import ids from "./ids";
@@ -337,8 +338,18 @@ const validateAVUs = (avus, attributeMap) => {
                     }
 
                     break;
+
                 case "Boolean":
                     break;
+
+                case "URL/URI":
+                    if (!constants.URL_REGEX.test(value)) {
+                        avuErrors.value = getMessage("templateValidationErrMsgURL");
+                        avuArrayErrors[avuIndex] = avuErrors;
+                    }
+
+                    break;
+
                 default:
                     break;
             }
