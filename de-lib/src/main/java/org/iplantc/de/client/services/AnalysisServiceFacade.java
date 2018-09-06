@@ -7,22 +7,17 @@ import org.iplantc.de.client.models.analysis.sharing.AnalysisSharingRequestList;
 import org.iplantc.de.client.models.analysis.sharing.AnalysisUnsharingRequestList;
 import org.iplantc.de.shared.DECallback;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
-import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
-import com.sencha.gxt.data.shared.loader.PagingLoadResultBean;
-
 import java.util.List;
+import java.util.Map;
 
 public interface AnalysisServiceFacade {
 
-    /**
-     * Get all the analyses for the current user's workspace
-     *
-     * @param loadConfig optional remote paging and sorting configs.
-     * @param callback executed when RPC call completes.
-     */
-    void getAnalyses(FilterPagingLoadConfig loadConfig, DECallback<PagingLoadResultBean<Analysis>> callback);
+    void getAnalyses(int limit,
+                     int offSet,
+                     Map<String, String> filters,
+                     String sortField,
+                     String sortDir,
+                     DECallback<String> callback);
 
     /**
      * Delete an analysis execution
@@ -44,7 +39,7 @@ public interface AnalysisServiceFacade {
     /**
      * Stop a currently running analysis
      * 
-     * @param analysisId the analysis to be stopped.
+     * @param analysis the analysis to be stopped.
      * @param callback executed when RPC call completes.
      */
     void stopAnalysis(Analysis analysis, DECallback<String> callback, String status);

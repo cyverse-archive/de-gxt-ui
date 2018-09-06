@@ -3,13 +3,11 @@ package org.iplantc.de.analysis.client.gin;
 import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.client.AnalysisParametersView;
 import org.iplantc.de.analysis.client.AnalysisToolBarView;
-import org.iplantc.de.analysis.client.gin.factory.AnalysesViewFactory;
 import org.iplantc.de.analysis.client.gin.factory.AnalysisParamViewFactory;
 import org.iplantc.de.analysis.client.gin.factory.AnalysisSharingPresenterFactory;
 import org.iplantc.de.analysis.client.gin.factory.AnalysisToolBarFactory;
 import org.iplantc.de.analysis.client.presenter.AnalysesPresenterImpl;
 import org.iplantc.de.analysis.client.presenter.parameters.AnalysisParametersPresenterImpl;
-import org.iplantc.de.analysis.client.presenter.proxy.AnalysisRpcProxy;
 import org.iplantc.de.analysis.client.presenter.sharing.AnalysisSharingPresenter;
 import org.iplantc.de.analysis.client.views.AnalysesToolBarImpl;
 import org.iplantc.de.analysis.client.views.AnalysesViewImpl;
@@ -37,12 +35,9 @@ public class AnalysisGinModule extends AbstractGinModule {
         bind(AnalysisParamViewColumnModel.class);
         bind(AnalysesView.Presenter.class).to(AnalysesPresenterImpl.class);
         bind(AnalysisParametersView.Presenter.class).to(AnalysisParametersPresenterImpl.class);
-        bind(AnalysisRpcProxy.class);
         bind(AnalysisStepsView.class);
+        bind(AnalysesView.class).to(AnalysesViewImpl.class);
 
-        install(new GinFactoryModuleBuilder()
-                    .implement(AnalysesView.class, AnalysesViewImpl.class)
-                    .build(AnalysesViewFactory.class));
         install(new GinFactoryModuleBuilder()
                     .implement(AnalysisToolBarView.class, AnalysesToolBarImpl.class)
                     .build(AnalysisToolBarFactory.class));

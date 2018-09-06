@@ -1,7 +1,6 @@
 package org.iplantc.de.analysis.client.presenter;
 
 import org.iplantc.de.analysis.client.AnalysesView;
-import org.iplantc.de.analysis.client.AnalysisToolBarView;
 import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
@@ -20,15 +19,14 @@ import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
-import org.iplantc.de.analysis.client.gin.factory.AnalysesViewFactory;
-import org.iplantc.de.analysis.client.presenter.proxy.AnalysisRpcProxy;
+import org.iplantc.de.analysis.client.models.FilterAutoBeanFactory;
+import org.iplantc.de.analysis.client.models.FilterBeanList;
 import org.iplantc.de.analysis.client.views.AnalysisStepsView;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisCommentsDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisParametersDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisSharingDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisStepsInfoDialog;
 import org.iplantc.de.analysis.client.views.dialogs.AnalysisUserSupportDialog;
-import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
 import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.events.diskResources.OpenFolderEvent;
 import org.iplantc.de.client.models.AppTypeFilter;
@@ -57,8 +55,8 @@ import org.iplantc.de.shared.AnalysisCallback;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -67,6 +65,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
@@ -74,11 +73,9 @@ import com.google.web.bindery.autobean.shared.Splittable;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.loader.FilterConfigBean;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
-import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
 import com.sencha.gxt.data.shared.loader.LoadEvent;
 import com.sencha.gxt.data.shared.loader.LoadHandler;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
-import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -273,31 +270,24 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Inject
     UserInfo userInfo;
 
-    private final ListStore<Analysis> listStore;
-    private final AnalysesView view;
+    @Inject
+    AnalysesView view;
+    @Inject
+    FilterAutoBeanFactory filterAutoBeanFactory;
+
     private final HasHandlers eventBus;
     private HandlerRegistration handlerFirstLoad;
-    private final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader;
     AnalysisPermissionFilter currentPermFilter;
     AppTypeFilter currentTypeFilter;
 
 
     @Inject
-    AnalysesPresenterImpl(final AnalysesViewFactory viewFactory,
-                          final AnalysisRpcProxy proxy,
-                          final ListStore<Analysis> listStore,
-                          final EventBus eventBus) {
-        this.listStore = listStore;
+    AnalysesPresenterImpl(final EventBus eventBus) {
         this.eventBus = eventBus;
-        loader = getPagingLoader(proxy);
-        loader.useLoadConfig(new FilterPagingLoadConfigBean());
-        loader.setRemoteSort(true);
-        loader.setReuseLoadConfig(true);
 
-        this.view = viewFactory.create(listStore, loader);
-        AnalysisToolBarView toolBarView = view.getToolBarView();
+/*      AnalysisToolBarView toolBarView = view.getToolBarView();
 
-        this.view.addAnalysisNameSelectedEventHandler(this);
+       this.view.addAnalysisNameSelectedEventHandler(this);
         this.view.addAnalysisAppSelectedEventHandler(this);
         this.view.addHTAnalysisExpandEventHandler(this);
         this.view.addAnalysisUserSupportRequestedEventHandler(this);
@@ -324,6 +314,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         toolBarView.addCancelAnalysisSelectedHandler(this);
         toolBarView.addCompleteAnalysisSelectedHandler(this);
         toolBarView.addViewAnalysisParamsSelectedHandler(this);
+        toolBarView.addViewAnalysisParamsSelectedHandler(this);*/
 
         //Set default filter to ALL
         currentPermFilter = AnalysisPermissionFilter.ALL;
@@ -331,12 +322,34 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void onShareSupportSelected(List<Analysis> currentSelection, boolean shareWithInput) {
+    public void getAnalyses(int limit,
+                            int offset,
+                            Splittable filters,
+                            String sortField,
+                            String sortDir) {
+        AutoBean<FilterBeanList> filterList =
+                AutoBeanCodex.decode(filterAutoBeanFactory, FilterBeanList.class, filters.getPayload());
 
+        GWT.log("filters=>" + filterList.as().getFilters().size());
+
+/*        analysisService.getAnalyses(limit, offset, filters, sortField, sortDir, new AnalysisCallback<String>() {
+
+            @Override
+            public void onFailure(Integer statusCode,
+                                  Throwable exception) {
+
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                    
+            }
+        });*/
     }
 
-    PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> getPagingLoader(AnalysisRpcProxy proxy) {
-        return new PagingLoader<>(proxy);
+    @Override
+    public void onShareSupportSelected(List<Analysis> currentSelection, boolean shareWithInput) {
+
     }
 
     @Override
@@ -386,12 +399,13 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     @Override
     public List<Analysis> getSelectedAnalyses() {
-        return view.getSelectedAnalyses();
+        //return view.getSelectedAnalyses();
+        return null;
     }
 
     @Override
     public void setSelectedAnalyses(final List<Analysis> selectedAnalyses) {
-        if (selectedAnalyses == null || selectedAnalyses.isEmpty()) {
+/*        if (selectedAnalyses == null || selectedAnalyses.isEmpty()) {
             return;
         }
 
@@ -402,14 +416,14 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
             if (storeModel != null) {
                 selectNow.add(storeModel);
             }
-        }
+        }*/
 
-        if (selectNow.isEmpty()) {
+/*        if (selectNow.isEmpty()) {
             Analysis first = selectedAnalyses.get(0);
             view.filterByAnalysisId(first.getId(), first.getName());
         } else {
             view.setSelectedAnalyses(selectNow);
-        }
+        }*/
     }
 
     ArrayList<Analysis> getNewAnalysisList() {
@@ -418,16 +432,16 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     @Override
     public void go(final HasOneWidget container, final List<Analysis> selectedAnalyses) {
-        if (selectedAnalyses != null && !selectedAnalyses.isEmpty()) {
+/*        if (selectedAnalyses != null && !selectedAnalyses.isEmpty()) {
             handlerFirstLoad = loader.addLoadHandler(new FirstLoadHandler(selectedAnalyses));
         }
-        loadAnalyses(AnalysisPermissionFilter.ALL, AppTypeFilter.ALL);
+        loadAnalyses(AnalysisPermissionFilter.ALL, AppTypeFilter.ALL);*/
         container.setWidget(view);
     }
 
     @Override
     public void loadAnalyses(AnalysisPermissionFilter permFilter, AppTypeFilter typeFilter) {
-        if (!Strings.isNullOrEmpty(view.getSearchField().getCurrentValue())) {
+       /* if (!Strings.isNullOrEmpty(view.getSearchField().getCurrentValue())) {
             view.getSearchField().refreshSearch();
             return;
         }
@@ -489,6 +503,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         config.setLimit(200);
         config.setOffset(0);
         loader.load(config);
+        */
     }
 
     FilterConfigBean getFilterConfigBean() {
@@ -497,7 +512,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     @Override
     public void setFilterInView(AnalysisPermissionFilter permFilter, AppTypeFilter typeFilter) {
-        view.setPermFilterInView(permFilter, typeFilter);
+        //  view.setPermFilterInView(permFilter, typeFilter);
     }
 
     @Override
@@ -604,9 +619,9 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     void renameAnalysis(Analysis selectedAnalysis, String newName) {
-        analysisService.renameAnalysis(selectedAnalysis,
+        /*analysisService.renameAnalysis(selectedAnalysis,
                                        newName,
-                                       new RenameAnalysisCallback(selectedAnalysis, newName, listStore));
+                                       new RenameAnalysisCallback(selectedAnalysis, newName, listStore));*/
     }
 
     @Override
@@ -638,14 +653,14 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     void updateAnalysisComments(Analysis selectedAnalysis, String comment) {
-        analysisService.updateAnalysisComments(selectedAnalysis,
+/*        analysisService.updateAnalysisComments(selectedAnalysis,
                                                comment,
-                                               new UpdateCommentsCallback(selectedAnalysis, comment, listStore));
+                                               new UpdateCommentsCallback(selectedAnalysis, comment, listStore));*/
     }
 
     @Override
     public void onHTAnalysisExpanded(HTAnalysisExpandEvent event) {
-        view.filterByParentAnalysisId(event.getValue().getId());
+        //view.filterByParentAnalysisId(event.getValue().getId());
     }
 
     @Override

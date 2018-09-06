@@ -1,73 +1,25 @@
 package org.iplantc.de.analysis.client.views;
 
 import org.iplantc.de.analysis.client.AnalysesView;
-import org.iplantc.de.analysis.client.AnalysisToolBarView;
-import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
-import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent.HTAnalysisExpandEventHandler;
-import org.iplantc.de.analysis.client.events.InteractiveIconClicked;
-import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
-import org.iplantc.de.analysis.client.events.selection.AnalysisCommentSelectedEvent;
-import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
-import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
-import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
-import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.CompleteAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
-import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
-import org.iplantc.de.analysis.client.gin.factory.AnalysisToolBarFactory;
+import org.iplantc.de.analysis.client.ReactAnalyses;
 import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
-import org.iplantc.de.analysis.shared.AnalysisModule;
-import org.iplantc.de.client.models.AppTypeFilter;
-import org.iplantc.de.client.models.analysis.Analysis;
-import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
+import org.iplantc.de.client.models.UserInfo;
+import org.iplantc.de.commons.client.util.CyVerseReactComponents;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiFactory;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-
-import com.sencha.gxt.core.client.IdentityValueProvider;
-import com.sencha.gxt.core.client.Style;
-import com.sencha.gxt.data.shared.ListStore;
-import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
-import com.sencha.gxt.data.shared.loader.PagingLoadResult;
-import com.sencha.gxt.data.shared.loader.PagingLoader;
-import com.sencha.gxt.widget.core.client.Composite;
-import com.sencha.gxt.widget.core.client.Status;
-import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
-import com.sencha.gxt.widget.core.client.grid.CheckBoxSelectionModel;
-import com.sencha.gxt.widget.core.client.grid.ColumnModel;
-import com.sencha.gxt.widget.core.client.grid.Grid;
-import com.sencha.gxt.widget.core.client.grid.LiveGridView;
-import com.sencha.gxt.widget.core.client.grid.LiveToolItem;
-import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
-import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent.SelectionChangedHandler;
-import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
-
-import java.util.List;
 
 /**
  * @author sriram, jstroot
  */
-public class AnalysesViewImpl extends Composite implements AnalysesView,
-                                                           AnalysisCommentSelectedEvent.AnalysisCommentSelectedEventHandler,
-                                                           SelectionChangedHandler<Analysis> {
+public class AnalysesViewImpl implements AnalysesView/*,
+                                         AnalysisCommentSelectedEvent.AnalysisCommentSelectedEventHandler,
+                                         SelectionChangedHandler<Analysis> */ {
 
     private String parentAnalysisId;
 
-    @UiTemplate("AnalysesViewImpl.ui.xml")
-    interface MyUiBinder extends UiBinder<BorderLayoutContainer, AnalysesViewImpl> {
-    }
-
-    @UiField ColumnModel<Analysis> cm;
+/*    @UiField ColumnModel<Analysis> cm;
     @UiField(provided = true) final ListStore<Analysis> listStore;
     @UiField(provided = true) final AnalysisToolBarView toolBar;
     @UiField Appearance appearance;
@@ -76,21 +28,21 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     @UiField ToolBar pagingToolBar;
     @UiField Status selectionStatus;
     CheckBoxSelectionModel<Analysis> checkBoxModel;
-    private AnalysisColumnModel acm;
+    private AnalysisColumnModel acm;*/
 
     AnalysisSearchField searchField;
+    HTMLPanel panel;
+    Presenter presenter;
 
     @Inject
-    AnalysesViewImpl(final AnalysisToolBarFactory toolBarFactory,
+    AnalysesViewImpl(/*final AnalysisToolBarFactory toolBarFactory,
                      @Assisted final ListStore<Analysis> listStore,
-                     @Assisted final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader) {
-        this.listStore = listStore;
+                     @Assisted final PagingLoader<FilterPagingLoadConfig, PagingLoadResult<Analysis>> loader*/) {
+        panel = new HTMLPanel("<div></div>");
+/*        this.listStore = listStore;
         this.toolBar = toolBarFactory.create(loader);
         checkBoxModel = new CheckBoxSelectionModel<>(new IdentityValueProvider<Analysis>());
         
-        MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
-        initWidget(uiBinder.createAndBindUi(this));
-
         this.acm = (AnalysisColumnModel) cm;
 
         pagingToolBar.addStyleName(appearance.pagingToolbarStyle());
@@ -107,13 +59,31 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
         setSelectionCount(0);
 
         // Wire up eventHandlers
-        grid.getSelectionModel().addSelectionChangedHandler(this);
+     //   grid.getSelectionModel().addSelectionChangedHandler(this);
         grid.getSelectionModel().addSelectionChangedHandler(toolBar);
-        this.searchField = toolBar.getSearchField();
+        this.searchField = toolBar.getSearchField();*/
 
     }
 
-    @UiFactory
+    @Override
+    public Widget asWidget() {
+        return panel;
+    }
+
+    @Override
+    public void setPresenter(Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public void load() {
+        ReactAnalyses.AnalysesProps props = new ReactAnalyses.AnalysesProps();
+        props.presenter = this.presenter;
+        props.username = UserInfo.getInstance().getFullUsername();
+        CyVerseReactComponents.render(ReactAnalyses.AnalysesView, props, panel.getElement());
+    }
+
+/*    @UiFactory
     LiveGridView<Analysis> createLiveGridView() {
         LiveGridView<Analysis> liveGridView = new LiveGridView<Analysis>(){
             @Override
@@ -128,9 +98,11 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
         liveGridView.setForceFit(true);
 
         return liveGridView;
-    }
+    }*/
 
-    //<editor-fold desc="Handler Registrations">
+
+
+/*    //<editor-fold desc="Handler Registrations">
     @Override
     public HandlerRegistration addAnalysisAppSelectedEventHandler(AnalysisAppSelectedEvent.AnalysisAppSelectedEventHandler handler) {
         return ((AnalysisColumnModel) cm).addAnalysisAppSelectedEventHandler(handler);
@@ -150,16 +122,18 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     public HandlerRegistration addHTAnalysisExpandEventHandler(HTAnalysisExpandEventHandler handler) {
         return ((AnalysisColumnModel) cm).addHTAnalysisExpandEventHandler(handler);
     }
-    //</editor-fold>
+    //</editor-fold>*/
 
+/*
     @UiFactory
     ColumnModel<Analysis> createColumnModel() {
         AnalysisColumnModel columnModel = new AnalysisColumnModel(checkBoxModel);
-        columnModel.addAnalysisCommentSelectedEventHandler(this);
+    //    columnModel.addAnalysisCommentSelectedEventHandler(this);
         return columnModel;
     }
+*/
 
-    @Override
+/*    @Override
     public void filterByAnalysisId(String analysisId, String name) {
         toolBar.filterByAnalysisId(analysisId, name);
     }
@@ -168,14 +142,14 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     public void filterByParentAnalysisId(String id) {
         this.parentAnalysisId = id;
         toolBar.filterByParentAnalysisId(id);
-    }
+    }*/
 
-    @Override
+/*    @Override
     public List<Analysis> getSelectedAnalyses() {
         return grid.getSelectionModel().getSelectedItems();
-    }
+    }*/
 
-    @Override
+   /* @Override
     public void onAnalysisCommentSelected(final AnalysisCommentSelectedEvent event) {
         fireEvent(new AnalysisCommentUpdate(event.getValue()));
     }
@@ -183,9 +157,9 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     @Override
     public void onSelectionChanged(SelectionChangedEvent<Analysis> event) {
         setSelectionCount(event.getSelection().size());
-    }
+    }*/
 
-    @Override
+/*    @Override
     public void setSelectedAnalyses(List<Analysis> selectedAnalyses) {
         if (selectedAnalyses != null) {
             grid.getSelectionModel().setSelection(selectedAnalyses);
@@ -199,37 +173,37 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     @Override
     public void setPermFilterInView(AnalysisPermissionFilter permFilter, AppTypeFilter typeFilter) {
         toolBar.setFilterInView(permFilter, typeFilter);
-    }
+    }*/
 
-    @Override
+/*    @Override
     public String getParentAnalysisId() {
         return parentAnalysisId;
-    }
+    }*/
 
-    @Override
+   /* @Override
     public AnalysisSearchField getSearchField() {
         return searchField;
     }
+*/
 
-
-    @Override
+   /* @Override
     protected void onEnsureDebugId(String baseID) {
         super.onEnsureDebugId(baseID);
         toolBar.asWidget().ensureDebugId(baseID + AnalysisModule.Ids.MENUBAR);
         grid.ensureDebugId(baseID + AnalysisModule.Ids.GRID);
         acm.ensureDebugId(baseID + AnalysisModule.Ids.GRID);
-    }
+    }*/
 
-    private void setSelectionCount(int count) {
+/*    private void setSelectionCount(int count) {
         selectionStatus.setText(appearance.selectionCount(count));
-    }
+    }*/
 
-    @Override
+/*    @Override
     public AnalysisToolBarView getToolBarView() {
         return toolBar;
-    }
+    }*/
 
-    @Override
+    /* @Override
     public HandlerRegistration addAnalysisCommentUpdateHandler(AnalysisCommentUpdate.AnalysisCommentUpdateHandler handler) {
         return addHandler(handler, AnalysisCommentUpdate.TYPE);
     }
@@ -277,10 +251,12 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     @Override
     public HandlerRegistration addViewAnalysisParamsSelectedHandler(ViewAnalysisParamsSelected.ViewAnalysisParamsSelectedHandler handler) {
         return acm.addViewAnalysisParamsSelectedHandler(handler);
+
     }
 
     @Override
     public HandlerRegistration addInteractiveIconClickedHandler(InteractiveIconClicked.InteractiveIconClickedHandler handler) {
         return acm.addInteractiveIconClickedHandler(handler);
     }
+    }*/
 }

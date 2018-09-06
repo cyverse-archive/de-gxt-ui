@@ -1,21 +1,6 @@
 package org.iplantc.de.analysis.client;
 
-import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
-import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
-import org.iplantc.de.analysis.client.events.InteractiveIconClicked;
-import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
-import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
-import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
-import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
-import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.CompleteAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
-import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
-import org.iplantc.de.analysis.client.views.widget.AnalysisSearchField;
+
 import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
@@ -25,13 +10,18 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import java.util.List;
+
+import jsinterop.annotations.JsIgnore;
+import jsinterop.annotations.JsType;
 
 /**
  * @author sriram, jstroot
  */
-public interface AnalysesView extends IsWidget,
+@JsType
+public interface AnalysesView extends IsWidget/*,
                                       AnalysisAppSelectedEvent.HasAnalysisAppSelectedEventHandlers,
                                       AnalysisNameSelectedEvent.HasAnalysisNameSelectedEventHandlers,
                                       HTAnalysisExpandEvent.HasHTAnalysisExpandEventHandlers,
@@ -47,7 +37,7 @@ public interface AnalysesView extends IsWidget,
                                       ViewAnalysisParamsSelected.HasViewAnalysisParamsSelectedHandlers,
                                       AnalysisJobInfoSelected.HasAnalysisJobInfoSelectedHandlers,
                                       InteractiveIconClicked.HasInteractiveIconClickedHandlers {
-
+                                      AnalysisJobInfoSelected.HasAnalysisJobInfoSelectedHandlers */ {
     interface Appearance {
 
         String appName();
@@ -167,8 +157,10 @@ public interface AnalysesView extends IsWidget,
         int liveGridRowHeight();
     }
 
+    @JsType
     interface Presenter {
 
+        @JsIgnore
         void onShareSupportSelected(List<Analysis> currentSelection, boolean shareInputs);
 
         interface Appearance {
@@ -210,38 +202,55 @@ public interface AnalysesView extends IsWidget,
             String renameAnalysis();
         }
 
+        @JsIgnore
         List<Analysis> getSelectedAnalyses();
 
+        @JsIgnore
         void go(final HasOneWidget container, List<Analysis> selectedAnalyses);
 
         void onShowAllSelected();
 
+        @JsIgnore
         void setSelectedAnalyses(List<Analysis> selectedAnalyses);
 
         void setViewDebugId(String baseId);
 
+        @JsIgnore
         AnalysisPermissionFilter getCurrentPermFilter();
 
+        @JsIgnore
         AppTypeFilter getCurrentTypeFilter();
 
+        @JsIgnore
         void loadAnalyses(AnalysisPermissionFilter filter, AppTypeFilter typeFilter);
 
+        @JsIgnore
         void setFilterInView(AnalysisPermissionFilter permFilter, AppTypeFilter typeFilter);
+
+        void getAnalyses(int limit,
+                         int offset,
+                         Splittable filters,
+                         String sortField,
+                         String sortDir);
     }
 
-    void filterByAnalysisId(String id, String name);
+//    void filterByAnalysisId(String id, String name);
+//
+//    void filterByParentAnalysisId(String id);
+//
+//    List<Analysis> getSelectedAnalyses();
+//
+//    void setSelectedAnalyses(List<Analysis> selectedAnalyses);
+//
+//    void setPermFilterInView(AnalysisPermissionFilter filter, AppTypeFilter typeFilter);
+//
+//    String getParentAnalysisId();
 
-    void filterByParentAnalysisId(String id);
+//    AnalysisSearchField getSearchField();
 
-    List<Analysis> getSelectedAnalyses();
+//    AnalysisToolBarView getToolBarView();
 
-    void setSelectedAnalyses(List<Analysis> selectedAnalyses);
+    void setPresenter(Presenter presenter);
 
-    void setPermFilterInView(AnalysisPermissionFilter filter, AppTypeFilter typeFilter);
-
-    String getParentAnalysisId();
-
-    AnalysisSearchField getSearchField();
-
-    AnalysisToolBarView getToolBarView();
+    void load();
 }
