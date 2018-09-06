@@ -28,6 +28,8 @@ public interface AnalysesMessages extends Messages {
 
     String cancelAnalysis();
 
+    String completeAndSaveAnalysis();
+
     String deleteAnalysisError();
 
     String endDate();
