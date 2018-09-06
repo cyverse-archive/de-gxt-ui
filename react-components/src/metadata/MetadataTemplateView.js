@@ -13,7 +13,13 @@ import intlData from "./messages";
 import styles from "./style";
 
 import ConfirmCloseDialog from "../util/ConfirmCloseDialog";
-import { FormikCheckbox, FormikIntegerField, FormikNumberField, FormikTextField } from "../util/FormField";
+import {
+    FormikCheckbox,
+    FormikIntegerField,
+    FormikNumberField,
+    FormikTextField,
+    FormMultilineTextField
+} from "../util/FormField";
 import SlideUpTransition from "./SlideUpTransition";
 
 import { withStyles } from '@material-ui/core/styles';
@@ -81,6 +87,9 @@ class MetadataTemplateAttributeView extends Component {
                                         break;
                                     case "Integer":
                                         FieldComponent = FormikIntegerField;
+                                        break;
+                                    case "Multiline Text":
+                                        FieldComponent = FormMultilineTextField;
                                         break;
                                     default:
                                         FieldComponent = FormikTextField;

@@ -94,6 +94,13 @@ const FormikIntegerField = ({
     />
 );
 
+const FormMultilineTextField = (props) => (
+    <FormikTextField multiline
+                     rows={3}
+                     {...props}
+    />
+);
+
 const FormTextField = ({
     input,
     label,
@@ -160,7 +167,8 @@ export {
     FormSelectField,
     FormTextField,
     FormikCheckbox,
-    FormikTextField,
-    FormikNumberField,
     FormikIntegerField,
+    FormMultilineTextField,
+    FormikNumberField,
+    FormikTextField,
 };
