@@ -1,5 +1,6 @@
 package org.iplantc.de.client.services;
 
+import org.iplantc.de.analysis.client.models.FilterBeanList;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisParameter;
 import org.iplantc.de.client.models.analysis.AnalysisStepsInfo;
@@ -14,7 +15,7 @@ public interface AnalysisServiceFacade {
 
     void getAnalyses(int limit,
                      int offSet,
-                     Map<String, String> filters,
+                     FilterBeanList filters,
                      String sortField,
                      String sortDir,
                      DECallback<String> callback);

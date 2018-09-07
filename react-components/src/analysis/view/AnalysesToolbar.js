@@ -89,7 +89,7 @@ class AnalysesToolbar extends Component {
                                 <option
                                     value={permission.mine}>{permission.mine}</option>
                                 <option
-                                    value={permission.yours}>{permission.yours}</option>
+                                    value={permission.theirs}>{permission.yours}</option>
                             </Select>
                         </FormControl>
                         <FormControl className={classes.toolbarMargins}>

@@ -31,6 +31,8 @@ import org.iplantc.de.client.events.EventBus;
 import org.iplantc.de.client.events.diskResources.OpenFolderEvent;
 import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.UserInfo;
+import org.iplantc.de.client.models.analysis.AnalysesAutoBeanFactory;
+import org.iplantc.de.client.models.analysis.AnalysesList;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
 import org.iplantc.de.client.models.analysis.AnalysisStepsInfo;
@@ -45,6 +47,8 @@ import org.iplantc.de.client.models.sharing.PermissionValue;
 import org.iplantc.de.client.models.sharing.SharingSubject;
 import org.iplantc.de.client.services.AnalysisServiceFacade;
 import org.iplantc.de.client.services.DEUserSupportServiceFacade;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.commons.client.ErrorHandler;
 import org.iplantc.de.commons.client.info.ErrorAnnouncementConfig;
 import org.iplantc.de.commons.client.info.IplantAnnouncer;
@@ -280,6 +284,9 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     AnalysisPermissionFilter currentPermFilter;
     AppTypeFilter currentTypeFilter;
 
+    @Inject
+    AnalysesAutoBeanFactory factory;
+
 
     @Inject
     AnalysesPresenterImpl(final EventBus eventBus) {
@@ -326,25 +333,36 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                             int offset,
                             Splittable filters,
                             String sortField,
-                            String sortDir) {
+                            String sortDir,
+                            ReactSuccessCallback callback,
+                            ReactErrorCallback errorCallback) {
         AutoBean<FilterBeanList> filterList =
                 AutoBeanCodex.decode(filterAutoBeanFactory, FilterBeanList.class, filters.getPayload());
 
-        GWT.log("filters=>" + filterList.as().getFilters().size());
-
-/*        analysisService.getAnalyses(limit, offset, filters, sortField, sortDir, new AnalysisCallback<String>() {
+        analysisService.getAnalyses(limit,
+                                    offset,
+                                    filterList.as(),
+                                    sortField,
+                                    sortDir,
+                                    new AnalysisCallback<String>() {
 
             @Override
             public void onFailure(Integer statusCode,
                                   Throwable exception) {
-
+                ErrorHandler.post(exception.getMessage());
+                if (errorCallback != null) {
+                    errorCallback.onError(statusCode, exception.getMessage());
+                }
             }
 
             @Override
             public void onSuccess(String result) {
-                    
+                AutoBean<AnalysesList> ret = AutoBeanCodex.decode(factory, AnalysesList.class, result);
+                if (callback != null) {
+                    callback.onSuccess(AutoBeanCodex.encode(ret));
+                }
             }
-        });*/
+        });
     }
 
     @Override
@@ -400,7 +418,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Override
     public List<Analysis> getSelectedAnalyses() {
         //return view.getSelectedAnalyses();
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -436,7 +454,9 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
             handlerFirstLoad = loader.addLoadHandler(new FirstLoadHandler(selectedAnalyses));
         }
         loadAnalyses(AnalysisPermissionFilter.ALL, AppTypeFilter.ALL);*/
+        view.setPresenter(this);
         container.setWidget(view);
+        view.load();
     }
 
     @Override

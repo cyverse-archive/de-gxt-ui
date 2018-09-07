@@ -4,6 +4,8 @@ import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.GET;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.PATCH;
 import static org.iplantc.de.shared.services.BaseServiceCallWrapper.Type.POST;
 
+import org.iplantc.de.analysis.client.models.FilterBean;
+import org.iplantc.de.analysis.client.models.FilterBeanList;
 import org.iplantc.de.client.models.analysis.AnalysesAutoBeanFactory;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisParameter;
@@ -41,7 +43,6 @@ import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -162,7 +163,7 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
     @Override
     public void getAnalyses(int limit,
                             int offSet,
-                            Map<String, String> filters,
+                            FilterBeanList filters,
                             String sortField,
                             String sortDir,
                             DECallback<String> callback) {
@@ -180,18 +181,21 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
             address.append(sortDir);
         }
 
-        if (filters != null && filters.size() > 0) {
+        if (filters != null && filters.getFilters().size() > 0) {
             int filterIndex = 0;
             JSONArray jsonFilters = new JSONArray();
-            for (String field : filters.keySet()) {
-                String value = filters.get(field);
-                if (!Strings.isNullOrEmpty(field) && value != null) {
-                    JSONObject jsonFilter = new JSONObject();
+            for (FilterBean fb : filters.getFilters()) {
+                if (fb != null) {
+                    String field = fb.getField();
+                    String value = fb.getValue();
+                    if (!Strings.isNullOrEmpty(field) && value != null) {
+                        JSONObject jsonFilter = new JSONObject();
 
-                    jsonFilter.put("field", new JSONString(field)); //$NON-NLS-1$
-                    jsonFilter.put("value", new JSONString(value)); //$NON-NLS-1$
+                        jsonFilter.put("field", new JSONString(field)); //$NON-NLS-1$
+                        jsonFilter.put("value", new JSONString(value)); //$NON-NLS-1$
 
-                    jsonFilters.set(filterIndex++, jsonFilter);
+                        jsonFilters.set(filterIndex++, jsonFilter);
+                    }
                 }
             }
             if (jsonFilters.size() > 0) {

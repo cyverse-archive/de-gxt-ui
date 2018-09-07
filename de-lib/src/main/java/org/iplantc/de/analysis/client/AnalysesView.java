@@ -4,6 +4,8 @@ package org.iplantc.de.analysis.client;
 import org.iplantc.de.client.models.AppTypeFilter;
 import org.iplantc.de.client.models.analysis.Analysis;
 import org.iplantc.de.client.models.analysis.AnalysisPermissionFilter;
+import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
+import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.theme.base.client.analyses.AnalysesViewDefaultAppearance.AnalysisInfoStyle;
 
 import com.google.gwt.resources.client.ImageResource;
@@ -231,7 +233,9 @@ public interface AnalysesView extends IsWidget/*,
                          int offset,
                          Splittable filters,
                          String sortField,
-                         String sortDir);
+                         String sortDir,
+                         ReactSuccessCallback callback,
+                         ReactErrorCallback errorCallback);
     }
 
 //    void filterByAnalysisId(String id, String name);

@@ -46,6 +46,7 @@ public class MyAnalysesWindow extends WindowBase {
 
         setMinWidth(appearance.windowMinWidth());
         setMinHeight(appearance.windowMinHeight());
+        setBodyStyle("background-color: white;");
     }
 
     @Override

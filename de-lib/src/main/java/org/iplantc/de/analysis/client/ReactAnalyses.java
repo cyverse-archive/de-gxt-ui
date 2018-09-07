@@ -10,7 +10,7 @@ import jsinterop.annotations.JsType;
 /**
  * Created by sriram on 08/27/18.
  */
-@JsType(isNative = true, namespace = "CyVerseReactComponents.analysis", name = "AnalysesView")
+@JsType(isNative = true, namespace = "CyVerseReactComponents", name = "analysis")
 public class ReactAnalyses {
 
     @JsProperty

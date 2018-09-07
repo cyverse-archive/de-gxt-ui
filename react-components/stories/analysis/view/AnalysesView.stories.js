@@ -188,8 +188,22 @@ class AnalysesViewTest extends Component {
             "timestamp": "1534875863833",
             "total": 10
         };
+        const presenter = {
+            getAnalyses: (rowsPerPage,
+                          offset,
+                          filter,
+                          orderBy,
+                          order,
+                          resultCallback,
+                          errorCallback) => {
+                resultCallback(analysesList);
+            }
+        };
+
         return (
-            <AnalysesView analysesList={analysesList} username="sriram@iplantcollaborative.org"/>
+            <AnalysesView analysesList={analysesList}
+                          username="sriram@iplantcollaborative.org"
+                          presenter={presenter}/>
         );
     }
 }

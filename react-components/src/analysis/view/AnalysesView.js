@@ -26,6 +26,8 @@ import DotMenu from "./DotMenu";
 import analysisStatus from "../model/analysisStatus";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import Color from "../../util/CyVersePalette";
+import appType from "../model/appType";
+import permission from "../model/permission";
 
 function AnalysisName(props) {
     let name = props.analysis.name;
@@ -58,6 +60,21 @@ const columnData = [
 
 const IPLANT = "iplantcollaborative";
 
+const filter = {
+    field: "",
+    value: "",
+};
+
+const filterList = {
+    filters: []
+};
+
+const ALL = "all";
+
+const MINE = "mine";
+
+const THEIRS = "theirs";
+
 class AnalysesView extends Component {
     constructor(props) {
         super(props);
@@ -70,7 +87,10 @@ class AnalysesView extends Component {
             rowsPerPage: 100,
             selected: [],
             order: 'desc',
-            orderBy: 'End Date',
+            orderBy: 'enddate',
+            permFilter: permission.all,
+            typeFilter: appType.all,
+            parentId: "",
         };
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
@@ -88,7 +108,96 @@ class AnalysesView extends Component {
         this.shouldDisableCancel = this.shouldDisableCancel.bind(this);
         this.isOwner = this.isOwner.bind(this);
         this.isSharable = this.isSharable.bind(this);
+        this.fetchAnalyses = this.fetchAnalyses.bind(this);
+        this.getParentIdFilter = this.getParentIdFilter.bind(this);
+        this.getTypeFilter = this.getTypeFilter.bind(this);
+        this.getPermissionFilter = this.getPermissionFilter.bind(this);
     }
+
+    componentDidMount() {
+        this.fetchAnalyses();
+    }
+
+    fetchAnalyses() {
+        const {rowsPerPage, offset, filter, order, orderBy} = this.state;
+        this.setState({loading: true});
+
+        const parentFilter = this.getParentIdFilter();
+        const typeFilter = this.getTypeFilter();
+        const permFilter = this.getPermissionFilter();
+
+        if (permFilter && permFilter.value) {
+            parentFilter.value = "";
+        }
+
+        const filtersObj = Object.create(filterList);
+        filtersObj.filters = [parentFilter, typeFilter, permFilter];
+
+        this.props.presenter.getAnalyses(rowsPerPage, offset, filtersObj, orderBy, order.toUpperCase(),
+            (analysesList) => {
+                this.setState({
+                    loading: false,
+                    data: analysesList.analyses,
+                    total: analysesList.total,
+                })
+            },
+            (errorCode, errorMessage) => {
+                this.setState({
+                    loading: false,
+                });
+            },
+        );
+    }
+
+
+    getParentIdFilter() {
+        const idParentFilter = Object.create(filter);
+        idParentFilter.field = "parent_id";
+        idParentFilter.value = this.state.parentId;
+        return idParentFilter;
+    }
+
+    getTypeFilter() {
+        const typeFilter1 = this.state.typeFilter;
+
+        if (!typeFilter1 || typeFilter1 === appType.all) {
+            return null;
+        }
+
+        const typeFilter = Object.create(filter);
+        typeFilter.field = "type";
+        typeFilter.value = typeFilter1;
+        return typeFilter;
+    }
+
+    getPermissionFilter() {
+        const permFilter1 = this.state.permFilter;
+        let val = "";
+
+        if (!permFilter1) {
+            return null;
+        }
+
+        switch (permFilter1) {
+            case permission.all :
+                val = ALL;
+                break;
+            case permission.mine :
+                val = MINE;
+                break;
+            case permission.theirs:
+                val = THEIRS;
+                break;
+            default:
+                val = ALL;
+        }
+
+        const permFilter = Object.create(filter);
+        permFilter.field = "ownership";
+        permFilter.value = val;
+        return permFilter;
+    }
+    
 
     handleChangePage(event, page) {
         const {rowsPerPage} = this.state;
