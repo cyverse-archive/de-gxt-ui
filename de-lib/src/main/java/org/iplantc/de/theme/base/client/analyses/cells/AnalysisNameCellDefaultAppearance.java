@@ -2,6 +2,7 @@ package org.iplantc.de.theme.base.client.analyses.cells;
 
 import org.iplantc.de.analysis.client.views.cells.AnalysisNameCell;
 import org.iplantc.de.client.models.analysis.Analysis;
+import org.iplantc.de.client.models.analysis.AnalysisExecutionStatus;
 import org.iplantc.de.client.models.analysis.BatchStatus;
 import org.iplantc.de.theme.base.client.analyses.AnalysesMessages;
 
@@ -18,6 +19,8 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 
+import java.util.List;
+
 /**
  * @author jstroot
  */
@@ -25,6 +28,8 @@ public class AnalysisNameCellDefaultAppearance implements AnalysisNameCell.Analy
 
     public interface AnalysisNameCellStyle extends CssResource {
         String htList();
+
+        String interactive();
 
         String hasResultFolder();
 
@@ -37,6 +42,9 @@ public class AnalysisNameCellDefaultAppearance implements AnalysisNameCell.Analy
 
         @Source("htlist.png")
         ImageResource htList();
+
+        @Source("org/iplantc/de/resources/client/external-link.png")
+        ImageResource externalLink();
     }
 
     interface Templates extends SafeHtmlTemplates {
@@ -52,6 +60,16 @@ public class AnalysisNameCellDefaultAppearance implements AnalysisNameCell.Analy
                             String htElementName,
                             String batch_Status,
                             String debugId);
+
+        @SafeHtmlTemplates.Template("<span name='{5}' id='{7}' title='{6}' class=\"{4}\"></span>&nbsp;<span name=\"{0}\" title=\" {3}\" class=\"{1}\">{2}</span> ")
+        SafeHtml interactive(String elementName,
+                             String className,
+                             SafeHtml analysisName,
+                             String tooltip,
+                             String interactiveIcon,
+                             String interactiveElementName,
+                             String interactiveUrlTooltip,
+                             String debugId);
     }
 
     private final AnalysisNameCellResources resources;
@@ -71,6 +89,10 @@ public class AnalysisNameCellDefaultAppearance implements AnalysisNameCell.Analy
         this.template = template;
         this.analysesMessages = analysesMessages;
         resources.getAnalysisNameStyleCss().ensureInjected();
+    }
+
+    String getInteractiveAnalysisTooltip() {
+        return analysesMessages.interactiveAnalysisTooltip();
     }
 
     @Override
@@ -98,6 +120,7 @@ public class AnalysisNameCellDefaultAppearance implements AnalysisNameCell.Analy
         String style = Strings.isNullOrEmpty(model.getResultFolderId()) ? nameStyles.noResultFolder()
                                : nameStyles.hasResultFolder();
         String tooltip = analysesMessages.goToOutputFolder() + " of " + model.getName();
+        List<String> interactiveUrls = model.getInteractiveUrls();
         if(model.isBatch()) {
             BatchStatus bs = model.getBatchStatus();
             StringBuilder httooltipSB = new StringBuilder("Click to see individual analysis status.");
@@ -116,7 +139,19 @@ public class AnalysisNameCellDefaultAppearance implements AnalysisNameCell.Analy
                                           HT_ELEMENT_NAME,
                                           httooltipSB.toString(),
                                           debugId));
-        } else {
+        } else if (interactiveUrls != null && !interactiveUrls.isEmpty() &&
+                   AnalysisExecutionStatus.RUNNING.toString().equals(model.getStatus())) {
+
+            sb.append(template.interactive(ELEMENT_NAME,
+                                           style,
+                                           SafeHtmlUtils.fromString(model.getName()),
+                                           tooltip,
+                                           nameStyles.interactive(),
+                                           INTERACTIVE_ELEMENT_NAME,
+                                           getInteractiveAnalysisTooltip(),
+                                           debugId));
+        }
+        else {
             sb.append(template.analysis(ELEMENT_NAME, style, SafeHtmlUtils.fromString(model.getName()), tooltip, debugId));
         }
 

@@ -2,10 +2,18 @@
     gwt-sprite: "htList";
     cursor: pointer;
     float: left;
- }
- .hasResultFolder {
+}
+
+.interactive {
+    gwt-sprite: "externalLink";
+    cursor: pointer;
+    float: left;
+}
+
+.hasResultFolder {
     cursor: pointer;
 }
+
 .noResultFolder {
     cursor: default;
 }

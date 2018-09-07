@@ -5,6 +5,7 @@ import static com.google.gwt.dom.client.BrowserEvents.MOUSEOUT;
 import static com.google.gwt.dom.client.BrowserEvents.MOUSEOVER;
 
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
+import org.iplantc.de.analysis.client.events.InteractiveIconClicked;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.shared.AnalysisModule;
 import org.iplantc.de.client.models.analysis.Analysis;
@@ -29,6 +30,7 @@ public class AnalysisNameCell extends AbstractCell<Analysis> {
     public interface AnalysisNameCellAppearance {
         String ELEMENT_NAME = "analysisName";
         String HT_ELEMENT_NAME = "htanalysis";
+        String INTERACTIVE_ELEMENT_NAME = "interactiveUrl";
 
         void doOnMouseOut(Element eventTarget, Analysis value);
 
@@ -100,6 +102,10 @@ public class AnalysisNameCell extends AbstractCell<Analysis> {
                               .equalsIgnoreCase(AnalysisNameCellAppearance.HT_ELEMENT_NAME)) {
             if (hasHandlers != null) {
                 hasHandlers.fireEvent(new HTAnalysisExpandEvent(value));
+            }
+        } else if (eventTarget.getAttribute("name").equalsIgnoreCase(AnalysisNameCellAppearance.INTERACTIVE_ELEMENT_NAME)) {
+            if (hasHandlers != null) {
+                hasHandlers.fireEvent(new InteractiveIconClicked(value));
             }
         }
     }
