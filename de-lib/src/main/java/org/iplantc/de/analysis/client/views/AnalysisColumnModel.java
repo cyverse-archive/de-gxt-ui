@@ -2,6 +2,7 @@ package org.iplantc.de.analysis.client.views;
 
 import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
+import org.iplantc.de.analysis.client.events.InteractiveIconClicked;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisCommentSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
@@ -51,7 +52,8 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
                                                               DeleteAnalysisSelected.HasDeleteAnalysisSelectedHandlers,
                                                               CancelAnalysisSelected.HasCancelAnalysisSelectedHandlers,
                                                               ViewAnalysisParamsSelected.HasViewAnalysisParamsSelectedHandlers,
-                                                              AnalysisJobInfoSelected.HasAnalysisJobInfoSelectedHandlers {
+                                                              AnalysisJobInfoSelected.HasAnalysisJobInfoSelectedHandlers,
+                                                              InteractiveIconClicked.HasInteractiveIconClickedHandlers {
 
     AnalysisColumnModel(final CheckBoxSelectionModel<Analysis> checkBoxSelectionModel) {
         this(checkBoxSelectionModel,
@@ -220,6 +222,11 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
     @Override
     public HandlerRegistration addViewAnalysisParamsSelectedHandler(ViewAnalysisParamsSelected.ViewAnalysisParamsSelectedHandler handler) {
         return ensureHandlers().addHandler(ViewAnalysisParamsSelected.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addInteractiveIconClickedHandler(InteractiveIconClicked.InteractiveIconClickedHandler handler) {
+        return ensureHandlers().addHandler(InteractiveIconClicked.TYPE, handler);
     }
 
     public void ensureDebugId(String baseID) {

@@ -5,6 +5,7 @@ import org.iplantc.de.analysis.client.AnalysisToolBarView;
 import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
+import org.iplantc.de.analysis.client.events.InteractiveIconClicked;
 import org.iplantc.de.analysis.client.events.OpenAppForRelaunchEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
@@ -61,6 +62,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.inject.Inject;
@@ -105,7 +107,8 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               GoToAnalysisFolderSelected.GoToAnalysisFolderSelectedHandler,
                                               DeleteAnalysisSelected.DeleteAnalysisSelectedHandler,
                                               CancelAnalysisSelected.CancelAnalysisSelectedHandler,
-                                              ViewAnalysisParamsSelected.ViewAnalysisParamsSelectedHandler {
+                                              ViewAnalysisParamsSelected.ViewAnalysisParamsSelectedHandler,
+                                              InteractiveIconClicked.InteractiveIconClickedHandler {
 
     private final class CancelAnalysisServiceCallback extends AnalysisCallback<String> {
         private final Analysis ae;
@@ -283,6 +286,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         this.view.addDeleteAnalysisSelectedHandler(this);
         this.view.addCancelAnalysisSelectedHandler(this);
         this.view.addViewAnalysisParamsSelectedHandler(this);
+        this.view.addInteractiveIconClickedHandler(this);
         toolBarView.addAnalysisJobInfoSelectedHandler(this);
         toolBarView.addAnalysisCommentUpdateHandler(this);
         toolBarView.addShareAnalysisSelectedHandler(this);
@@ -773,5 +777,17 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     IPlantPromptDialog getRenameAnalysisDlg(String name) {
         return new IPlantPromptDialog(appearance.rename(), -1, name, new DiskResourceNameValidator());
+    }
+
+    @Override
+    public void onInteractiveIconClicked(InteractiveIconClicked event) {
+        Analysis analysis = event.getAnalysis();
+        List<String> interactiveUrls = analysis.getInteractiveUrls();
+
+        if (interactiveUrls != null && !interactiveUrls.isEmpty()) {
+            //For now, assume only one URL is returned since we don't currently
+            //allow batch jobs or workflows with VICE apps
+            Window.open(interactiveUrls.get(0), "", "_blank");
+        }
     }
 }

@@ -2,6 +2,7 @@ package org.iplantc.de.analysis.client;
 
 import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
+import org.iplantc.de.analysis.client.events.InteractiveIconClicked;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
@@ -42,7 +43,8 @@ public interface AnalysesView extends IsWidget,
                                       DeleteAnalysisSelected.HasDeleteAnalysisSelectedHandlers,
                                       CancelAnalysisSelected.HasCancelAnalysisSelectedHandlers,
                                       ViewAnalysisParamsSelected.HasViewAnalysisParamsSelectedHandlers,
-                                      AnalysisJobInfoSelected.HasAnalysisJobInfoSelectedHandlers {
+                                      AnalysisJobInfoSelected.HasAnalysisJobInfoSelectedHandlers,
+                                      InteractiveIconClicked.HasInteractiveIconClickedHandlers {
 
     interface Appearance {
 

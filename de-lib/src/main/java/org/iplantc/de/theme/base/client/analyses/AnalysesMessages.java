@@ -115,4 +115,6 @@ public interface AnalysesMessages extends Messages {
     String requestProcessing();
 
     String stepInfoDialogHeader();
+
+    String interactiveAnalysisTooltip();
 }

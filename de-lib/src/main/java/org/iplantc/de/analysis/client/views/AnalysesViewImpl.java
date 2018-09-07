@@ -4,6 +4,7 @@ import org.iplantc.de.analysis.client.AnalysesView;
 import org.iplantc.de.analysis.client.AnalysisToolBarView;
 import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent.HTAnalysisExpandEventHandler;
+import org.iplantc.de.analysis.client.events.InteractiveIconClicked;
 import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisCommentSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
@@ -270,5 +271,10 @@ public class AnalysesViewImpl extends Composite implements AnalysesView,
     @Override
     public HandlerRegistration addViewAnalysisParamsSelectedHandler(ViewAnalysisParamsSelected.ViewAnalysisParamsSelectedHandler handler) {
         return acm.addViewAnalysisParamsSelectedHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addInteractiveIconClickedHandler(InteractiveIconClicked.InteractiveIconClickedHandler handler) {
+        return acm.addInteractiveIconClickedHandler(handler);
     }
 }
