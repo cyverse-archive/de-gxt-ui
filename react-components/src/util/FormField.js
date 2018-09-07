@@ -4,6 +4,9 @@
 import React from "react";
 
 import { getIn } from 'formik';
+import moment from "moment";
+
+import build from "./DebugIDUtil";
 
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControl from "@material-ui/core/FormControl";
@@ -105,6 +108,59 @@ const FormMultilineTextField = (props) => (
     />
 );
 
+const onDateChange = (prevDate, fieldName, setFieldValue) => (event) => {
+    const newValue = event.target.value;
+    const date = prevDate ? prevDate : new Date();
+    const time = moment(date).format("HH:mm:ss");
+
+    setFieldValue(fieldName, `${newValue} ${time}`);
+};
+
+const onTimeChange = (prevDate, fieldName, setFieldValue) => (event) => {
+    const newValue = event.target.value;
+    const date = prevDate ? prevDate : new Date();
+    const dateStr = moment(date).format("YYYY-MM-DD");
+
+    setFieldValue(fieldName, `${dateStr} ${newValue}`);
+};
+
+const FormTimestampField = ({
+    id,
+    label,
+    required,
+    field: {value, onChange, ...field},
+    form: {touched, errors, setFieldValue},
+    ...custom
+}) => {
+    const errorMsg = getFormikErrorMessage(field.name, touched, errors);
+    const date = value && Date.parse(value);
+
+    return (
+        <FormControl error={!!errorMsg}>
+            <TextField id={build(id, "date")}
+                       type="date"
+                       label={label}
+                       error={!!errorMsg}
+                       required={required}
+                       value={date ? moment(date).format("YYYY-MM-DD") : ""}
+                       onChange={onDateChange(date, field.name, setFieldValue)}
+                       {...field}
+                       {...custom}
+            />
+            <TextField id={build(id, "time")}
+                       type="time"
+                       error={!!errorMsg}
+                       required={required}
+                       value={date ? moment(date).format("HH:mm:ss") : ""}
+                       onChange={onTimeChange(date, field.name, setFieldValue)}
+                       {...field}
+                       {...custom}
+            />
+            <FormHelperText>{errorMsg}</FormHelperText>
+        </FormControl>
+    )
+};
+
 const FormikSelectField = ({
     id,
     field: {value, ...field},
@@ -205,4 +261,5 @@ export {
     FormikNumberField,
     FormikSelectField,
     FormikTextField,
+    FormTimestampField,
 };

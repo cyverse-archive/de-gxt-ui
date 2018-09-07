@@ -841,6 +841,12 @@ const metadata = {
             "value": "",
             "unit": "",
         },
+        {
+            "id": "8",
+            "attr": "Timestamp Attr",
+            "value": "2016-09-22 18:20",
+            "unit": "",
+        },
     ]
 };
 

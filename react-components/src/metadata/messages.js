@@ -46,6 +46,7 @@ export default {
         save: "Save",
         templateNameLabel: "Name",
         templateValidationErrMsgNumber: "Please enter a valid number.",
+        templateValidationErrMsgTimestamp: "Please enter a valid date/time.",
         templateValidationErrMsgURL: "A valid URL must begin with either ftp or http or https.",
         value: "Value",
         yes: "Yes",

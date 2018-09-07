@@ -4,6 +4,7 @@
 import React, { Component, Fragment } from 'react';
 
 import { Field, FieldArray, withFormik } from 'formik';
+import moment from "moment";
 import { injectIntl } from "react-intl";
 
 import constants from "../constants";
@@ -20,7 +21,8 @@ import {
     FormikNumberField,
     FormikSelectField,
     FormikTextField,
-    FormMultilineTextField
+    FormMultilineTextField,
+    FormTimestampField,
 } from "../util/FormField";
 import SlideUpTransition from "./SlideUpTransition";
 
@@ -43,10 +45,20 @@ import ContentRemove from '@material-ui/icons/Delete';
 const newAVU = attrTemplate => {
     const attr = attrTemplate.name, unit = "";
 
-    let value = "";
-    if (attrTemplate.type === "Enum") {
-        value = attrTemplate.values && attrTemplate.values.find(enumVal => enumVal.is_default);
-        value = value ? value.value : "";
+    let value;
+    switch (attrTemplate.type) {
+        case "Timestamp":
+            value = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
+            break;
+
+        case "Enum":
+            value = attrTemplate.values && attrTemplate.values.find(enumVal => enumVal.is_default);
+            value = value ? value.value : "";
+            break;
+
+        default:
+            value = "";
+            break;
     }
 
     return {
@@ -101,6 +113,9 @@ class MetadataTemplateAttributeView extends Component {
                                         break;
                                     case "Multiline Text":
                                         FieldComponent = FormMultilineTextField;
+                                        break;
+                                    case "Timestamp":
+                                        FieldComponent = FormTimestampField;
                                         break;
                                     case "Enum":
                                         FieldComponent = FormikSelectField;
@@ -358,6 +373,14 @@ const validateAVUs = (avus, attributeMap) => {
                     break;
 
                 case "Boolean":
+                    break;
+
+                case "Timestamp":
+                    if (!Date.parse(value)) {
+                        avuErrors.value = getMessage("templateValidationErrMsgTimestamp");
+                        avuArrayErrors[avuIndex] = avuErrors;
+                    }
+
                     break;
 
                 case "URL/URI":
