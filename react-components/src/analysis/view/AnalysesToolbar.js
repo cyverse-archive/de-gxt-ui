@@ -49,7 +49,7 @@ class AnalysesToolbar extends Component {
 
         return (
             <Toolbar className={classes.toolbar}>
-                <ToolbarGroup>
+                <ToolbarGroup style={{paddingLeft: 0}}>
                     <Button
                         aria-owns={anchorEl ? 'simple-menu' : null}
                         aria-haspopup="true"
@@ -89,7 +89,7 @@ class AnalysesToolbar extends Component {
                                 <option
                                     value={permission.mine}>{permission.mine}</option>
                                 <option
-                                    value={permission.theirs}>{permission.yours}</option>
+                                    value={permission.theirs}>{permission.theirs}</option>
                             </Select>
                         </FormControl>
                         <FormControl className={classes.toolbarMargins}>

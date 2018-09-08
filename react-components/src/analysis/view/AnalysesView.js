@@ -390,7 +390,7 @@ class AnalysesView extends Component {
                                      isOwner={this.isOwner}
                                      isSharable={this.isSharable}/>
                 <div className={classes.table}>
-                    <Table style={{padding: 0}}>
+                    <Table>
                         <EnhancedTableHead
                             selectable={true}
                             numSelected={selected.length}
@@ -402,6 +402,7 @@ class AnalysesView extends Component {
                             columnData={columnData}
                             baseId="analysis"
                             ids={ids}
+                            padding="none"
                         />
                         <TableBody>
                             {data.map(n => {
@@ -425,19 +426,21 @@ class AnalysesView extends Component {
                                         <TableCell padding="none">
                                             <AnalysisName classes={classes} analysis={n}/>
                                         </TableCell>
-                                        <TableCell padding="default">{username}</TableCell>
-                                        <TableCell padding="none">{n.app_name} </TableCell>
-                                        <TableCell padding="none">
+                                        <TableCell className={classes.cellText}
+                                                   padding="none">{username}</TableCell>
+                                        <TableCell className={classes.cellText}
+                                                   padding="none">{n.app_name} </TableCell>
+                                        <TableCell className={classes.cellText} padding="none">
                                             {parseInt(n.startdate, 10) ? moment(parseInt(n.startdate, 10), "x").format(
                                                 constants.LONG_DATE_FORMAT) :
                                                 getMessage("emptyValue")}
                                         </TableCell>
-                                        <TableCell padding="none">
+                                        <TableCell className={classes.cellText} padding="none">
                                             {parseInt(n.enddate, 10) ? moment(parseInt(n.enddate, 10), "x").format(
                                                 constants.LONG_DATE_FORMAT) :
                                                 getMessage("emptyValue")}
                                         </TableCell>
-                                        <TableCell padding="default"><DEHyperLink
+                                        <TableCell padding="none"><DEHyperLink
                                             onClick={(n) => this.statusClick(n)}
                                             text={n.status}/></TableCell>
                                         <TableCell padding="none">

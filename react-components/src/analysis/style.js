@@ -25,6 +25,7 @@ export default (theme) => ({
     toolbarButton: {
         marginRight: 20,
         textTransform: 'none',
+        fontSize: 10,
     },
     toolbar: {
         backgroundColor: Color.lightGray,
@@ -44,9 +45,17 @@ export default (theme) => ({
         color: Color.white,
     },
     analysisName: {
+        fontSize: 12,
         '&:hover': {
             textDecoration: 'underline',
             cursor: 'pointer',
         },
-    }
+    },
+    menuItem: {
+        fontSize: 10,
+        padding:5,
+    },
+    cellText: {
+        fontSize: 12,
+    },
 });
