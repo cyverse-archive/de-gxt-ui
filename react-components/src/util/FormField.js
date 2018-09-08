@@ -7,6 +7,7 @@ import { getIn } from 'formik';
 import moment from "moment";
 
 import build from "./DebugIDUtil";
+import Autocomplete from "./Autocomplete";
 
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControl from "@material-ui/core/FormControl";
@@ -43,6 +44,38 @@ const FormikTextField = ({
             {...custom}
         />
     )
+};
+
+const FormikSearchField = ({
+    field: {value, onBlur, onChange, ...field},
+    label,
+    required,
+    form: {touched, errors, setFieldTouched, setFieldValue},
+    ...props
+}) => {
+    const errorMsg = getFormikErrorMessage(field.name, touched, errors);
+    const onOptionSelected = option => {
+        setFieldValue(field.name, option ? option[props.valueKey] : "");
+    };
+    const onSearchBlur = event => {
+        setFieldTouched(field.name, true);
+    };
+
+    return (
+        <FormControl fullWidth error={!!errorMsg}>
+            <Autocomplete label={label}
+                          controlShouldRenderValue
+                          isClearable={!required}
+                          cacheOptions
+                          defaultInputValue={value}
+                          onChange={onOptionSelected}
+                          onBlur={onSearchBlur}
+                          {...field}
+                          {...props}
+            />
+            <FormHelperText>{errorMsg}</FormHelperText>
+        </FormControl>
+    );
 };
 
 const FormikCheckbox = ({
@@ -259,6 +292,7 @@ export {
     FormikIntegerField,
     FormMultilineTextField,
     FormikNumberField,
+    FormikSearchField,
     FormikSelectField,
     FormikTextField,
     FormTimestampField,

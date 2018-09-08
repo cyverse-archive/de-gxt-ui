@@ -21,6 +21,25 @@ const presenter = (logger) => ({
             1500
         );
     },
+    searchAstroThesaurusTerms: (inputValue, callback) => {
+        setTimeout(() => {
+                callback([
+                    {
+                        iri: "http://astrothesaurus.org/uat/1512",
+                        label: "Solar neutrons",
+                    },
+                    {
+                        iri: "http://astrothesaurus.org/uat/1107",
+                        label: "Neutron star cores",
+                    },
+                    {
+                        iri: "http://astrothesaurus.org/uat/1108",
+                        label: "Neutron stars",
+                    },
+                ]);
+            },
+            1500);
+    },
 });
 
 const nestedAttrMetadataTemplate = {
@@ -845,6 +864,12 @@ const metadata = {
             "id": "8",
             "attr": "Timestamp Attr",
             "value": "2016-09-22 18:20",
+            "unit": "",
+        },
+        {
+            "id": "9",
+            "attr": "UAT Ontology Term Attr",
+            "value": "Neutron star",
             "unit": "",
         },
     ]

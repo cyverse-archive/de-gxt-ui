@@ -25,6 +25,7 @@ export default {
         errAttrNameMustBeUnique: "Attribute name must be unique",
         errEnumValueRequired: "Enum requires at least 1 value.",
         errEnumOptionValueRequired: "Enum Option Value Required",
+        formatMetadataTermFreeTextOption: `Use "{ inputValue }"`,
         markAsDeleted: "Mark as Deleted?",
         moveDown: "Move Down",
         moveUp: "Move Up",

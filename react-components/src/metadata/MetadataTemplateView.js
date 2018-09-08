@@ -24,6 +24,8 @@ import {
     FormMultilineTextField,
     FormTimestampField,
 } from "../util/FormField";
+
+import AstroThesaurusSearchField from "./AstroThesaurusSearchField";
 import SlideUpTransition from "./SlideUpTransition";
 
 import { withStyles } from '@material-ui/core/styles';
@@ -92,7 +94,7 @@ class MetadataTemplateAttributeView extends Component {
     }
 
     render() {
-        const { classes, intl, field, attributes, avus, errors } = this.props;
+        const { classes, intl, field, errors, attributes, avus, presenter } = this.props;
         return (
             <FieldArray name={`${field}.avus`}
                         render={(arrayHelpers) => {
@@ -121,6 +123,13 @@ class MetadataTemplateAttributeView extends Component {
                                         FieldComponent = FormikSelectField;
                                         FieldChildren = attribute.values && attribute.values.map((enumVal, index) =>
                                             (<MenuItem key={index} value={enumVal.value}>{enumVal.value}</MenuItem>));
+                                        break;
+                                    case "UAT Ontology Term":
+                                        FieldComponent = (props) => (
+                                            <AstroThesaurusSearchField
+                                                presenter={presenter}
+                                                {...props}
+                                            />);
                                         break;
                                     default:
                                         FieldComponent = FormikTextField;
@@ -167,6 +176,7 @@ class MetadataTemplateAttributeView extends Component {
                                             {attribute.attributes && attribute.attributes.length > 0 &&
                                             <MetadataTemplateAttributeForm field={avuFieldName}
                                                                            errors={errors && errors.avus}
+                                                                           presenter={this.props.presenter}
                                                                            attributes={attribute.attributes}
                                                                            avus={avu.avus}
                                             />}
@@ -272,6 +282,7 @@ class MetadataTemplateView extends Component {
                 <DialogContent>
                     <MetadataTemplateAttributeForm field="metadata"
                                                    errors={errors && errors.metadata && errors.metadata.avus}
+                                                   presenter={this.props.presenter}
                                                    attributes={values.template.attributes}
                                                    avus={values.metadata.avus}
                     />
