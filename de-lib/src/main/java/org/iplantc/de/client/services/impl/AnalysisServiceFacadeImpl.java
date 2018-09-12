@@ -264,6 +264,7 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
         });
     }
 
+    // TODO: Change status to use AnalysisExecutionStatus instead of a string
     @Override
     public void stopAnalysis(Analysis analysis, DECallback<String> callback, String status) {
         String address = ANALYSES + "/" + analysis.getId() + "/stop?job_status=" + status;
