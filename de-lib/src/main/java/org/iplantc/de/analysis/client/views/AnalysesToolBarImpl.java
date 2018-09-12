@@ -72,6 +72,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     @UiField
     MenuItem viewJobInfoMI;
     @UiField MenuItem relaunchMI;
+    @UiField MenuItem completeMI;
     @UiField MenuItem cancelMI;
     @UiField MenuItem deleteMI;
     @UiField TextButton analysesTb;
@@ -251,6 +252,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         viewParamsMI.setEnabled(viewParamsEnabled);
         viewJobInfoMI.setEnabled(viewParamsEnabled);
         relaunchMI.setEnabled(relaunchEnabled);
+        completeMI.setEnabled(cancelEnabled);
         cancelMI.setEnabled(cancelEnabled);
         deleteMI.setEnabled(deleteEnabled);
         shareCollabMI.setEnabled(shareEnabled);
@@ -292,6 +294,8 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
                 + AnalysisModule.Ids.MENUITEM_VIEW_ANALYSES_INFO);
         relaunchMI.ensureDebugId(baseID + AnalysisModule.Ids.MENUITEM_ANALYSES
                 + AnalysisModule.Ids.MENUITEM_RELAUNCH);
+        completeMI.ensureDebugId(baseID + AnalysisModule.Ids.MENUITEM_ANALYSES
+                + AnalysisModule.Ids.MENUITEM_COMPLETE);
         cancelMI.ensureDebugId(baseID + AnalysisModule.Ids.MENUITEM_ANALYSES
                 + AnalysisModule.Ids.MENUITEM_CANCEL);
         deleteMI.ensureDebugId(baseID + AnalysisModule.Ids.MENUITEM_ANALYSES
@@ -373,6 +377,15 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         }
     }
 
+
+    // TODO: should set status completed, not canceled
+    @UiHandler("completeMI")
+    void onCompleteSelected(SelectionEvent<Item> event) {
+        Preconditions.checkNotNull(currentSelection);
+        Preconditions.checkState(!currentSelection.isEmpty());
+
+        fireEvent(new CancelAnalysisSelected(currentSelection));
+    }
 
     @UiHandler("cancelMI")
     void onCancelSelected(SelectionEvent<Item> event) {

@@ -96,6 +96,8 @@ public interface AnalysesView extends IsWidget,
 
         String delete();
 
+        ImageResource completeIcon();
+
         ImageResource cancelIcon();
 
         String analysesMenuLbl();

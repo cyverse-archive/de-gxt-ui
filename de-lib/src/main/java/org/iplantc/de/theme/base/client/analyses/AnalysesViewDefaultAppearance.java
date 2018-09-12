@@ -180,6 +180,11 @@ public class AnalysesViewDefaultAppearance implements AnalysesView.Appearance {
     }
 
     @Override
+    public ImageResource completeIcon() {
+        return iplantResources.save();
+    }
+
+    @Override
     public ImageResource cancelIcon() {
         return iplantResources.cancel();
     }

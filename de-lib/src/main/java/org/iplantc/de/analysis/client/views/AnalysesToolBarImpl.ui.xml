@@ -39,6 +39,10 @@
                         <menu:MenuItem ui:field="shareCollabMI" enabled="false"
                                        text="{appearance.shareCollab}"
                                        icon="{appearance.shareIcon}"/>
+                        <menu:MenuItem ui:field="completeMI"
+                                       text="{appearance.completeAndSaveAnalysis}"
+                                       icon="{appearance.completeIcon}"
+                                       enabled="false"/>
                         <menu:MenuItem ui:field="cancelMI"
                                        text="{appearance.cancelAnalysis}"
                                        icon="{appearance.deleteIcon}"

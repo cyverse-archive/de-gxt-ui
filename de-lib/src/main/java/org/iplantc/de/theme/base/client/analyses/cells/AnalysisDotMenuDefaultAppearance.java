@@ -98,6 +98,16 @@ public class AnalysisDotMenuDefaultAppearance implements AnalysisDotMenuCell.Ana
     }
 
     @Override
+    public String completeText() {
+        return analysisAppearance.completeAndSaveAnalysis();
+    }
+
+    @Override
+    public ImageResource completeIcon() {
+        return analysisAppearance.completeIcon();
+    }
+
+    @Override
     public String cancelText() {
         return analysisAppearance.cancelAnalysis();
     }
