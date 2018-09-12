@@ -10,6 +10,7 @@ import static org.iplantc.de.client.models.analysis.AnalysisExecutionStatus.SUBM
 import org.iplantc.de.analysis.client.events.selection.AnalysisCommentSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.CompleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
 import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
@@ -38,6 +39,7 @@ public class AnalysisDotMenu extends Menu {
     private MenuItem parametersBtn;
     private MenuItem relaunchBtn;
     private MenuItem infoBtn;
+    private MenuItem completeBtn;
     private MenuItem cancelBtn;
     private MenuItem deleteBtn;
     private MenuItem renameBtn;
@@ -61,6 +63,7 @@ public class AnalysisDotMenu extends Menu {
             outputFolderBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new GoToAnalysisFolderSelected(analysis)));
             parametersBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new ViewAnalysisParamsSelected(analysis)));
             infoBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new AnalysisJobInfoSelected(analysis)));
+            completeBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new CompleteAnalysisSelected(Lists.newArrayList(analysis))));
             cancelBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new CancelAnalysisSelected(Lists.newArrayList(analysis))));
             deleteBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new DeleteAnalysisSelected(Lists.newArrayList(analysis))));
             relaunchBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new RelaunchAnalysisSelected(analysis)));
@@ -74,6 +77,7 @@ public class AnalysisDotMenu extends Menu {
         outputFolderBtn = new MenuItem(appearance.outputFolderText(), appearance.outputFolderIcon());
         parametersBtn = new MenuItem(appearance.parametersText(), appearance.parametersIcon());
         infoBtn = new MenuItem(appearance.infoText(), appearance.infoIcon());
+        completeBtn = new MenuItem(appearance.completeText(), appearance.completeIcon());
         cancelBtn = new MenuItem(appearance.cancelText(), appearance.cancelIcon());
         deleteBtn = new MenuItem(appearance.deleteText(), appearance.deleteIcon());
         renameBtn = new MenuItem(appearance.renameText(), appearance.renameIcon());
@@ -85,6 +89,7 @@ public class AnalysisDotMenu extends Menu {
         add(parametersBtn);
         add(relaunchBtn);
         add(infoBtn);
+        add(completeBtn);
         add(cancelBtn);
         add(deleteBtn);
         add(renameBtn);
@@ -93,6 +98,7 @@ public class AnalysisDotMenu extends Menu {
     }
 
     void checkButtonStatus(Analysis analysis) {
+        completeBtn.setEnabled(canCancel(analysis) && isOwner(analysis));
         cancelBtn.setEnabled(canCancel(analysis) && isOwner(analysis));
         deleteBtn.setEnabled(canDelete(analysis) && isOwner(analysis));
         shareBtn.setEnabled(canShare(analysis) && isOwner(analysis));
@@ -129,6 +135,7 @@ public class AnalysisDotMenu extends Menu {
         outputFolderBtn.setId(baseID + AnalysisModule.Ids.MENUITEM_GO_TO_FOLDER);
         parametersBtn.setId(baseID + AnalysisModule.Ids.MENUITEM_VIEW_PARAMS);
         infoBtn.setId(baseID + AnalysisModule.Ids.MENUITEM_VIEW_ANALYSES_INFO);
+        completeBtn.setId(baseID + AnalysisModule.Ids.MENUITEM_COMPLETE);
         cancelBtn.setId(baseID + AnalysisModule.Ids.MENUITEM_CANCEL);
         deleteBtn.setId(baseID + AnalysisModule.Ids.MENUITEM_DELETE);
         renameBtn.setId(baseID + AnalysisModule.Ids.MENUITEM_RENAME);

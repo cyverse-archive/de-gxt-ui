@@ -16,6 +16,7 @@ public interface AnalysisModule {
         String MENUITEM_RELAUNCH = ".relaunch";
         String MENUITEM_DELETE = ".delete";
         String MENUITEM_CANCEL = ".cancel";
+        String MENUITEM_COMPLETE = ".complete";
 
         String MENUITEM_EDIT = ".edit";
         String MENUITEM_RENAME = ".rename";

@@ -53,6 +53,10 @@ public class AnalysisDotMenuCell extends AbstractCell<Analysis> implements HasCe
 
         ImageResource infoIcon();
 
+        String completeText();
+
+        ImageResource completeIcon();
+
         String cancelText();
 
         ImageResource cancelIcon();

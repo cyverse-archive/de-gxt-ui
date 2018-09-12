@@ -165,6 +165,11 @@ public class AnalysesViewDefaultAppearance implements AnalysesView.Appearance {
     }
 
     @Override
+    public String completeAndSaveAnalysis() {
+        return analysesMessages.completeAndSaveAnalysis();
+    }
+
+    @Override
     public ImageResource deleteIcon() {
         return iplantResources.deleteIcon();
     }
@@ -172,6 +177,11 @@ public class AnalysesViewDefaultAppearance implements AnalysesView.Appearance {
     @Override
     public String delete() {
         return iplantDisplayStrings.delete();
+    }
+
+    @Override
+    public ImageResource completeIcon() {
+        return iplantResources.save();
     }
 
     @Override

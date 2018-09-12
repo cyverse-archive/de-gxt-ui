@@ -9,6 +9,7 @@ import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
 import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.CompleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
 import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
@@ -51,6 +52,7 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
                                                               GoToAnalysisFolderSelected.HasGoToAnalysisFolderSelectedHandlers,
                                                               DeleteAnalysisSelected.HasDeleteAnalysisSelectedHandlers,
                                                               CancelAnalysisSelected.HasCancelAnalysisSelectedHandlers,
+                                                              CompleteAnalysisSelected.HasCompleteAnalysisSelectedHandlers,
                                                               ViewAnalysisParamsSelected.HasViewAnalysisParamsSelectedHandlers,
                                                               AnalysisJobInfoSelected.HasAnalysisJobInfoSelectedHandlers,
                                                               InteractiveIconClicked.HasInteractiveIconClickedHandlers {
@@ -202,6 +204,11 @@ public class AnalysisColumnModel extends ColumnModel<Analysis> implements
     @Override
     public HandlerRegistration addCancelAnalysisSelectedHandler(CancelAnalysisSelected.CancelAnalysisSelectedHandler handler) {
         return ensureHandlers().addHandler(CancelAnalysisSelected.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addCompleteAnalysisSelectedHandler(CompleteAnalysisSelected.CompleteAnalysisSelectedHandler handler) {
+        return ensureHandlers().addHandler(CompleteAnalysisSelected.TYPE, handler);
     }
 
     @Override

@@ -18,6 +18,7 @@ import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.CompleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
@@ -243,7 +244,27 @@ public class AnalysesPresenterImplTest {
         spy.onCancelAnalysisSelected(eventMock);
 
         verify(analysisServiceMock, times(1)).stopAnalysis(eq(analysisMock),
-                                                           stringCallbackCaptor.capture());
+                                                           stringCallbackCaptor.capture(),
+                                                           eq("Canceled"));
+
+        stringCallbackCaptor.getValue().onSuccess("result");
+        verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));
+        verify(spy).loadAnalyses(eq(currentPermFilterMock), eq(currentTypeFilterMock));
+    }
+
+    @Test
+    public void completeSelectedAnalyses() {
+        CompleteAnalysisSelected eventMock = mock(CompleteAnalysisSelected.class);
+        when(eventMock.getAnalysisList()).thenReturn(analysisListMock);
+        AnalysesPresenterImpl spy = spy(uut);
+        when(appearanceMock.analysisStopSuccess(anyString())).thenReturn("success");
+
+        /** CALL METHOD UNDER TEST **/
+        spy.onCompleteAnalysisSelected(eventMock);
+
+        verify(analysisServiceMock, times(1)).stopAnalysis(eq(analysisMock),
+                                                           stringCallbackCaptor.capture(),
+                                                           eq("Completed"));
 
         stringCallbackCaptor.getValue().onSuccess("result");
         verify(announcerMock).schedule(isA(SuccessAnnouncementConfig.class));

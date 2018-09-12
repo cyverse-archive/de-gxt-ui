@@ -8,6 +8,7 @@ import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
 import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.CompleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
 import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
@@ -42,6 +43,7 @@ public interface AnalysesView extends IsWidget,
                                       GoToAnalysisFolderSelected.HasGoToAnalysisFolderSelectedHandlers,
                                       DeleteAnalysisSelected.HasDeleteAnalysisSelectedHandlers,
                                       CancelAnalysisSelected.HasCancelAnalysisSelectedHandlers,
+                                      CompleteAnalysisSelected.HasCompleteAnalysisSelectedHandlers,
                                       ViewAnalysisParamsSelected.HasViewAnalysisParamsSelectedHandlers,
                                       AnalysisJobInfoSelected.HasAnalysisJobInfoSelectedHandlers,
                                       InteractiveIconClicked.HasInteractiveIconClickedHandlers {
@@ -90,9 +92,13 @@ public interface AnalysesView extends IsWidget,
 
         String cancelAnalysis();
 
+        String completeAndSaveAnalysis();
+
         ImageResource deleteIcon();
 
         String delete();
+
+        ImageResource completeIcon();
 
         ImageResource cancelIcon();
 

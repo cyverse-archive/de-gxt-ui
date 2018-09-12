@@ -13,6 +13,7 @@ import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.CompleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
 import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
@@ -72,6 +73,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     @UiField
     MenuItem viewJobInfoMI;
     @UiField MenuItem relaunchMI;
+    @UiField MenuItem completeMI;
     @UiField MenuItem cancelMI;
     @UiField MenuItem deleteMI;
     @UiField TextButton analysesTb;
@@ -251,6 +253,7 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         viewParamsMI.setEnabled(viewParamsEnabled);
         viewJobInfoMI.setEnabled(viewParamsEnabled);
         relaunchMI.setEnabled(relaunchEnabled);
+        completeMI.setEnabled(cancelEnabled);
         cancelMI.setEnabled(cancelEnabled);
         deleteMI.setEnabled(deleteEnabled);
         shareCollabMI.setEnabled(shareEnabled);
@@ -292,6 +295,8 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
                 + AnalysisModule.Ids.MENUITEM_VIEW_ANALYSES_INFO);
         relaunchMI.ensureDebugId(baseID + AnalysisModule.Ids.MENUITEM_ANALYSES
                 + AnalysisModule.Ids.MENUITEM_RELAUNCH);
+        completeMI.ensureDebugId(baseID + AnalysisModule.Ids.MENUITEM_ANALYSES
+                + AnalysisModule.Ids.MENUITEM_COMPLETE);
         cancelMI.ensureDebugId(baseID + AnalysisModule.Ids.MENUITEM_ANALYSES
                 + AnalysisModule.Ids.MENUITEM_CANCEL);
         deleteMI.ensureDebugId(baseID + AnalysisModule.Ids.MENUITEM_ANALYSES
@@ -373,6 +378,14 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
         }
     }
 
+
+    @UiHandler("completeMI")
+    void onCompleteSelected(SelectionEvent<Item> event) {
+        Preconditions.checkNotNull(currentSelection);
+        Preconditions.checkState(!currentSelection.isEmpty());
+
+        fireEvent(new CompleteAnalysisSelected(currentSelection));
+    }
 
     @UiHandler("cancelMI")
     void onCancelSelected(SelectionEvent<Item> event) {
@@ -513,6 +526,11 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     @Override
     public HandlerRegistration addCancelAnalysisSelectedHandler(CancelAnalysisSelected.CancelAnalysisSelectedHandler handler) {
         return addHandler(handler, CancelAnalysisSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addCompleteAnalysisSelectedHandler(CompleteAnalysisSelected.CompleteAnalysisSelectedHandler handler) {
+        return addHandler(handler, CompleteAnalysisSelected.TYPE);
     }
 
     @Override
