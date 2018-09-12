@@ -787,7 +787,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         if (interactiveUrls != null && !interactiveUrls.isEmpty()) {
             //For now, assume only one URL is returned since we don't currently
             //allow batch jobs or workflows with VICE apps
-            Window.open(interactiveUrls.get(0), "", "_blank");
+            Window.open(interactiveUrls.get(0), "_blank", "");
         }
     }
 }
