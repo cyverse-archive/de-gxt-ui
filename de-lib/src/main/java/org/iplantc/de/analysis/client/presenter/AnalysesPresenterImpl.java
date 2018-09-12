@@ -12,6 +12,7 @@ import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
 import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.CompleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
 import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
@@ -107,6 +108,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               GoToAnalysisFolderSelected.GoToAnalysisFolderSelectedHandler,
                                               DeleteAnalysisSelected.DeleteAnalysisSelectedHandler,
                                               CancelAnalysisSelected.CancelAnalysisSelectedHandler,
+                                              CompleteAnalysisSelected.CompleteAnalysisSelectedHandler,
                                               ViewAnalysisParamsSelected.ViewAnalysisParamsSelectedHandler,
                                               InteractiveIconClicked.InteractiveIconClickedHandler {
 
@@ -123,6 +125,28 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
              * JDS Send generic error message. In the future, the "error_code" string should be parsed
              * from the JSON to provide more detailed user feedback.
              */
+            SafeHtml msg = SafeHtmlUtils.fromString(appearance.stopAnalysisError(ae.getName()));
+            announcer.schedule(new ErrorAnnouncementConfig(msg, true, 3000));
+        }
+
+        @Override
+        public void onSuccess(String result) {
+            SafeHtml msg = SafeHtmlUtils.fromString(appearance.analysisStopSuccess(ae.getName()));
+            announcer.schedule(new SuccessAnnouncementConfig(msg, true, 3000));
+            loadAnalyses(currentPermFilter, currentTypeFilter);
+        }
+
+    }
+
+    private final class CompleteAnalysisServiceCallback extends AnalysisCallback<String> {
+        private final Analysis ae;
+
+        public CompleteAnalysisServiceCallback(final Analysis ae) {
+            this.ae = ae;
+        }
+
+        @Override
+        public void onFailure(Integer statusCode, Throwable caught) {
             SafeHtml msg = SafeHtmlUtils.fromString(appearance.stopAnalysisError(ae.getName()));
             announcer.schedule(new ErrorAnnouncementConfig(msg, true, 3000));
         }
@@ -285,6 +309,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         this.view.addGoToAnalysisFolderSelectedHandler(this);
         this.view.addDeleteAnalysisSelectedHandler(this);
         this.view.addCancelAnalysisSelectedHandler(this);
+        this.view.addCompleteAnalysisSelectedHandler(this);
         this.view.addViewAnalysisParamsSelectedHandler(this);
         this.view.addInteractiveIconClickedHandler(this);
         toolBarView.addAnalysisJobInfoSelectedHandler(this);
@@ -297,6 +322,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         toolBarView.addGoToAnalysisFolderSelectedHandler(this);
         toolBarView.addDeleteAnalysisSelectedHandler(this);
         toolBarView.addCancelAnalysisSelectedHandler(this);
+        toolBarView.addCompleteAnalysisSelectedHandler(this);
         toolBarView.addViewAnalysisParamsSelectedHandler(this);
 
         //Set default filter to ALL
@@ -318,7 +344,16 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         List<Analysis> analysesToCancel = event.getAnalysisList();
 
         for (Analysis analysis : analysesToCancel) {
-            analysisService.stopAnalysis(analysis, new CancelAnalysisServiceCallback(analysis));
+            analysisService.stopAnalysis(analysis, new CancelAnalysisServiceCallback(analysis), "Canceled");
+        }
+    }
+
+    @Override
+    public void onCompleteAnalysisSelected(CompleteAnalysisSelected event) {
+        List<Analysis> analysesToComplete = event.getAnalysisList();
+
+        for (Analysis analysis : analysesToComplete) {
+            analysisService.stopAnalysis(analysis, new CompleteAnalysisServiceCallback(analysis), "Completed");
         }
     }
 

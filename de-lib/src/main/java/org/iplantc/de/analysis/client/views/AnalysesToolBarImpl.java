@@ -13,6 +13,7 @@ import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.CompleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
 import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
@@ -378,13 +379,12 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     }
 
 
-    // TODO: should set status completed, not canceled
     @UiHandler("completeMI")
     void onCompleteSelected(SelectionEvent<Item> event) {
         Preconditions.checkNotNull(currentSelection);
         Preconditions.checkState(!currentSelection.isEmpty());
 
-        fireEvent(new CancelAnalysisSelected(currentSelection));
+        fireEvent(new CompleteAnalysisSelected(currentSelection));
     }
 
     @UiHandler("cancelMI")
@@ -526,6 +526,11 @@ public class AnalysesToolBarImpl extends Composite implements AnalysisToolBarVie
     @Override
     public HandlerRegistration addCancelAnalysisSelectedHandler(CancelAnalysisSelected.CancelAnalysisSelectedHandler handler) {
         return addHandler(handler, CancelAnalysisSelected.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addCompleteAnalysisSelectedHandler(CompleteAnalysisSelected.CompleteAnalysisSelectedHandler handler) {
+        return addHandler(handler, CompleteAnalysisSelected.TYPE);
     }
 
     @Override

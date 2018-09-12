@@ -10,6 +10,7 @@ import static org.iplantc.de.client.models.analysis.AnalysisExecutionStatus.SUBM
 import org.iplantc.de.analysis.client.events.selection.AnalysisCommentSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
+import org.iplantc.de.analysis.client.events.selection.CompleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
 import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
@@ -62,8 +63,7 @@ public class AnalysisDotMenu extends Menu {
             outputFolderBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new GoToAnalysisFolderSelected(analysis)));
             parametersBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new ViewAnalysisParamsSelected(analysis)));
             infoBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new AnalysisJobInfoSelected(analysis)));
-            // TODO: Should set status completed, not canceled
-            completeBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new CancelAnalysisSelected(Lists.newArrayList(analysis))));
+            completeBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new CompleteAnalysisSelected(Lists.newArrayList(analysis))));
             cancelBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new CancelAnalysisSelected(Lists.newArrayList(analysis))));
             deleteBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new DeleteAnalysisSelected(Lists.newArrayList(analysis))));
             relaunchBtn.addSelectionHandler(event -> hasHandlers.fireEvent(new RelaunchAnalysisSelected(analysis)));

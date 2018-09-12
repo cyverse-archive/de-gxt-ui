@@ -47,7 +47,7 @@ public interface AnalysisServiceFacade {
      * @param analysisId the analysis to be stopped.
      * @param callback executed when RPC call completes.
      */
-    void stopAnalysis(Analysis analysis, DECallback<String> callback);
+    void stopAnalysis(Analysis analysis, DECallback<String> callback, String status);
 
     void getAnalysisParams(Analysis analysis, DECallback<List<AnalysisParameter>> callback);
 
