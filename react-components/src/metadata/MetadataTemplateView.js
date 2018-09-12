@@ -26,6 +26,7 @@ import {
 } from "../util/FormField";
 
 import AstroThesaurusSearchField from "./AstroThesaurusSearchField";
+import OntologyLookupServiceSearchField from "./OntologyLookupServiceSearchField";
 import SlideUpTransition from "./SlideUpTransition";
 
 import { withStyles } from '@material-ui/core/styles';
@@ -128,6 +129,14 @@ class MetadataTemplateAttributeView extends Component {
                                         FieldComponent = (props) => (
                                             <AstroThesaurusSearchField
                                                 presenter={presenter}
+                                                {...props}
+                                            />);
+                                        break;
+                                    case "OLS Ontology Term":
+                                        FieldComponent = (props) => (
+                                            <OntologyLookupServiceSearchField
+                                                presenter={presenter}
+                                                attribute={attribute}
                                                 {...props}
                                             />);
                                         break;

@@ -21,6 +21,28 @@ const presenter = (logger) => ({
             1500
         );
     },
+    searchOLSTerms: (inputValue, loaderSettings, callback) => {
+        setTimeout(() => {
+                callback([
+                    {
+                        iri: "http://edamontology.org/data_0006",
+                        label: "Data",
+                        ontology_prefix: "EDAM",
+                    },
+                    {
+                        iri: "http://edamontology.org/operation_2422",
+                        label: "Data retrieval",
+                        ontology_prefix: "EDAM",
+                    },
+                    {
+                        iri: "http://edamontology.org/topic_3077",
+                        label: "Data acquisition",
+                        ontology_prefix: "EDAM",
+                    },
+                ]);
+            },
+            1000);
+    },
     searchAstroThesaurusTerms: (inputValue, callback) => {
         setTimeout(() => {
                 callback([
@@ -38,7 +60,7 @@ const presenter = (logger) => ({
                     },
                 ]);
             },
-            1500);
+            1000);
     },
 });
 
@@ -870,6 +892,12 @@ const metadata = {
             "id": "9",
             "attr": "UAT Ontology Term Attr",
             "value": "Neutron star",
+            "unit": "",
+        },
+        {
+            "id": "10",
+            "attr": "OLS Ontology Term Attr",
+            "value": "Computational biology",
             "unit": "",
         },
     ]
