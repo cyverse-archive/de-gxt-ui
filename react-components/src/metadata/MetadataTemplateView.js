@@ -336,7 +336,7 @@ const mapPropsToValues = props => {
 
     const mapAttributesToAVUs = (attributes, propsAVUs) => {
 
-        let avus = [...propsAVUs];
+        let avus = propsAVUs ? [...propsAVUs] : [];
 
         attributes.filter((attribute) => attribute.required).forEach((attribute) => {
             if (avus.filter((avu) => avu.attr === attribute.name).length < 1) {
@@ -349,7 +349,7 @@ const mapPropsToValues = props => {
                     let avu = { ...propsAVU };
 
                     if (avu.attr === attribute.name) {
-                        avu.avus = mapAttributesToAVUs(attributes, (avu.avus || []));
+                        avu.avus = mapAttributesToAVUs(attributes, avu.avus);
                     }
 
                     return avu;

@@ -235,18 +235,21 @@ const dataciteMetadataTemplate = {
             "type": "String",
             "attributes": [
                 {
+                    "id": "f8043aec-b884-11e8-a32c-f64e9b87c109",
                     "name": "titleType",
                     "description": "",
                     "required": false,
                     "type": "String"
                 },
                 {
+                    "id": "f808ce18-b884-11e8-a32c-f64e9b87c109",
                     "name": "xml:lang",
                     "description": "",
                     "required": false,
                     "type": "Enum",
                     "values": [
                         {
+                            "id": "f80b4c6a-b884-11e8-a32c-f64e9b87c109",
                             "value": "en-us",
                             "is_default": true
                         }
@@ -290,6 +293,7 @@ const dataciteMetadataTemplate = {
                             ]
                         },
                         {
+                            "id": "f82ee9a4-b884-11e8-a32c-f64e9b87c109",
                             "name": "schemeURI",
                             "description": "",
                             "required": false,
@@ -328,6 +332,7 @@ const dataciteMetadataTemplate = {
             "type": "String",
             "attributes": [
                 {
+                    "id": "f83f1bc6-b884-11e8-a32c-f64e9b87c109",
                     "name": "resourceTypeGeneral",
                     "description": "",
                     "required": false,
@@ -343,6 +348,7 @@ const dataciteMetadataTemplate = {
             "type": "String",
             "attributes": [
                 {
+                    "id": "f84604ae-b884-11e8-a32c-f64e9b87c109",
                     "name": "affiliation",
                     "description": "The organizational or institutional affiliation of the contributor.",
                     "required": false,
@@ -357,135 +363,117 @@ const dataciteMetadataTemplate = {
                     "values": [
                         {
                             "id": "d785092a-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "ContactPerson"
                         },
                         {
                             "id": "d7855d26-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "DataCollector"
                         },
                         {
                             "id": "d785b032-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "DataCurator"
                         },
                         {
                             "id": "d7860190-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "DataManager"
                         },
                         {
                             "id": "d78652b2-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "Distributor"
                         },
                         {
                             "id": "d786a334-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "Editor"
                         },
                         {
                             "id": "d786ef06-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "Funder"
                         },
                         {
                             "id": "d7873b46-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "HostingInstitution"
                         },
                         {
                             "id": "d7879532-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "Producer"
                         },
                         {
                             "id": "d787eed8-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "ProjectLeader"
                         },
                         {
                             "id": "d7883eba-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "ProjectManager"
                         },
                         {
                             "id": "d78888a2-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "ProjectMember"
                         },
                         {
                             "id": "d788d3d4-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "RegistrationAgency"
                         },
                         {
                             "id": "d7892140-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "RegistrationAuthority"
                         },
                         {
                             "id": "d7896eca-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "RelatedPerson"
                         },
                         {
                             "id": "d789c370-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "Researcher"
                         },
                         {
                             "id": "d78a17f8-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "ResearchGroup"
                         },
                         {
                             "id": "d78a671c-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "RightsHolder"
                         },
                         {
                             "id": "d78ab32a-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "Sponsor"
                         },
                         {
                             "id": "d78b0460-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": " Supervisor"
                         },
                         {
                             "id": "d78b547e-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "WorkPackageLeader"
                         },
                         {
                             "id": "d78ba208-7416-11e8-a7d5-008cfa5ae621",
-                            "is_default": false,
                             "value": "Other"
                         }
                     ]
                 },
                 {
+                    "id": "f8584e48-b884-11e8-a32c-f64e9b87c109",
                     "name": "nameIdentifier",
                     "description": "ORCID of Contributor, if known. ORCID provides a persistent digital identifier that distinguishes the contributor from every other researcher. See DOI FAQ page.",
                     "required": false,
                     "type": "String",
                     "attributes": [
                         {
+                            "id": "f85afc10-b884-11e8-a32c-f64e9b87c109",
                             "name": "nameIdentifierScheme",
                             "description": "",
                             "required": false,
                             "type": "Enum",
                             "values": [
                                 {
+                                    "id": "f85ca632-b884-11e8-a32c-f64e9b87c109",
                                     "is_default": true,
                                     "value": "ORCID"
                                 }
                             ]
                         },
                         {
+                            "id": "f85e5608-b884-11e8-a32c-f64e9b87c109",
                             "name": "schemeURI",
                             "description": "",
                             "required": false,
@@ -517,14 +505,16 @@ const dataciteMetadataTemplate = {
                     ]
                 },
                 {
+                    "id": "f8694464-b884-11e8-a32c-f64e9b87c109",
                     "name": "xml:lang",
                     "description": "",
                     "required": false,
                     "type": "Enum",
                     "values": [
                         {
-                            "value": "en-us",
-                            "is_default": true
+                            "id": "f86adaae-b884-11e8-a32c-f64e9b87c109",
+                            "is_default": true,
+                            "value": "en-us"
                         }
                     ]
                 }
@@ -538,26 +528,30 @@ const dataciteMetadataTemplate = {
             "type": "String",
             "attributes": [
                 {
+                    "id": "f8712bc0-b884-11e8-a32c-f64e9b87c109",
                     "name": "schemeURI",
                     "description": "",
                     "required": false,
                     "type": "URL/URI"
                 },
                 {
+                    "id": "f874d46e-b884-11e8-a32c-f64e9b87c109",
                     "name": "subjectScheme",
                     "description": "",
                     "required": false,
                     "type": "String"
                 },
                 {
+                    "id": "f878b318-b884-11e8-a32c-f64e9b87c109",
                     "name": "xml:lang",
                     "description": "",
                     "required": false,
                     "type": "Enum",
                     "values": [
                         {
-                            "value": "en-us",
-                            "is_default": true
+                            "id": "f87af984-b884-11e8-a32c-f64e9b87c109",
+                            "is_default": true,
+                            "value": "en-us"
                         }
                     ]
                 }
@@ -602,7 +596,6 @@ const dataciteMetadataTemplate = {
             "values": [
                 {
                     "id": "907ea31e-741c-11e8-ad87-008cfa5ae621",
-                    "is_default": false,
                     "value": "CC0"
                 },
                 {
@@ -613,6 +606,7 @@ const dataciteMetadataTemplate = {
             ],
             "attributes": [
                 {
+                    "id": "f894afb4-b884-11e8-a32c-f64e9b87c109",
                     "name": "rightsURI",
                     "description": "",
                     "required": false,
@@ -659,7 +653,6 @@ const dataciteMetadataTemplate = {
                     "values": [
                         {
                             "id": "9085f33a-741c-11e8-ad87-008cfa5ae621",
-                            "is_default": false,
                             "value": "arXiv"
                         }
                     ]
@@ -673,7 +666,6 @@ const dataciteMetadataTemplate = {
                     "values": [
                         {
                             "id": "9087c098-741c-11e8-ad87-008cfa5ae621",
-                            "is_default": false,
                             "value": "IsReviewedBy"
                         }
                     ]
@@ -681,6 +673,7 @@ const dataciteMetadataTemplate = {
             ]
         },
         {
+            "id": "f8bc36c4-b884-11e8-a32c-f64e9b87c109",
             "name": "geoLocation",
             "description": "The spatial limits or description of a geographic location.",
             "required": false,
@@ -694,8 +687,10 @@ const dataciteMetadataTemplate = {
                     "type": "String"
                 },
                 {
+                    "id": "f8c5ed18-b884-11e8-a32c-f64e9b87c109",
                     "name": "geoLocationPoint",
                     "description": "A point location in space. A point contains a single latitude-longitude pair.",
+                    "required": false,
                     "type": "Grouping",
                     "attributes": [
                         {
@@ -706,6 +701,7 @@ const dataciteMetadataTemplate = {
                             "type": "Number"
                         },
                         {
+                            "id": "f8ceb560-b884-11e8-a32c-f64e9b87c109",
                             "name": "pointLatitude",
                             "description": "A latitude point location in space.",
                             "required": false,
@@ -714,8 +710,10 @@ const dataciteMetadataTemplate = {
                     ]
                 },
                 {
+                    "id": "f8d26d2c-b884-11e8-a32c-f64e9b87c109",
                     "name": "geoLocationBox",
                     "description": "The spatial limits of a place. A box contains two latitude-longitude pairs (opposite corners of the box).",
+                    "required": false,
                     "type": "Grouping",
                     "attributes": [
                         {
@@ -726,18 +724,21 @@ const dataciteMetadataTemplate = {
                             "type": "Number"
                         },
                         {
+                            "id": "f8db195e-b884-11e8-a32c-f64e9b87c109",
                             "name": "southBoundLatitude",
                             "description": "The south bound of a spatial limit of a place.",
                             "required": false,
                             "type": "Number"
                         },
                         {
+                            "id": "f8de20b8-b884-11e8-a32c-f64e9b87c109",
                             "name": "eastBoundLongitude",
                             "description": "The east bound of a spatial limit of a place.",
                             "required": false,
                             "type": "Number"
                         },
                         {
+                            "id": "f8e0eb90-b884-11e8-a32c-f64e9b87c109",
                             "name": "westBoundLongitude",
                             "description": "The west bound of a spatial limit of a place.",
                             "required": false,
@@ -783,8 +784,9 @@ const dataciteMetadataTemplate = {
             "type": "Enum",
             "values": [
                 {
-                    "value": "en-us",
-                    "is_default": true
+                    "id": "f8f81838-b884-11e8-a32c-f64e9b87c109",
+                    "is_default": true,
+                    "value": "en-us"
                 }
             ]
         },
@@ -919,7 +921,296 @@ class MetadataTemplateViewTest extends Component {
     }
 }
 
+const dataciteMetadata = {
+    "avus": [
+        {
+            "attr": "title",
+            "value": "My test title",
+            "unit": "",
+            "avus": [
+                {
+                    "attr": "titleType",
+                    "value": "TranslatedTitle",
+                    "unit": ""
+                },
+                {
+                    "attr": "xml:lang",
+                    "value": "en-us",
+                    "unit": ""
+                }
+            ]
+        },
+        {
+            "attr": "creator",
+            "value": "Paul",
+            "unit": "",
+            "avus": [
+                {
+                    "attr": "affiliation",
+                    "value": "CyVerse",
+                    "unit": ""
+                },
+                {
+                    "attr": "nameIdentifier",
+                    "value": "0000000134596520",
+                    "unit": "",
+                    "avus": [
+                        {
+                            "attr": "nameIdentifierScheme",
+                            "value": "ISNI",
+                            "unit": ""
+                        },
+                        {
+                            "attr": "schemeURI",
+                            "value": "http://isni.org/isni/",
+                            "unit": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "attr": "contributor",
+            "value": "Sriram",
+            "unit": "",
+            "avus": [
+                {
+                    "attr": "affiliation",
+                    "value": "CyVerse",
+                    "unit": ""
+                },
+                {
+                    "attr": "contributorType",
+                    "value": "DataCollector",
+                    "unit": ""
+                },
+                {
+                    "attr": "nameIdentifier",
+                    "value": "0000-0001-5432-1234",
+                    "unit": "",
+                    "avus": [
+                        {
+                            "attr": "nameIdentifierScheme",
+                            "value": "ORCID",
+                            "unit": ""
+                        },
+                        {
+                            "attr": "schemeURI",
+                            "value": "http://orcid.org/",
+                            "unit": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "attr": "publisher",
+            "value": "CyVerse Data Commons",
+            "unit": ""
+        },
+        {
+            "attr": "publicationYear",
+            "value": "2017",
+            "unit": ""
+        },
+        {
+            "attr": "resourceType",
+            "value": "Dataset",
+            "unit": "",
+            "avus": [
+                {
+                    "attr": "resourceTypeGeneral",
+                    "value": "Software",
+                    "unit": ""
+                }
+            ]
+        },
+        {
+            "attr": "description",
+            "value": "My test description",
+            "unit": "",
+            "avus": [
+                {
+                    "attr": "descriptionType",
+                    "value": "Abstract",
+                    "unit": ""
+                },
+                {
+                    "attr": "xml:lang",
+                    "value": "en-us",
+                    "unit": ""
+                }
+            ]
+        },
+        {
+            "attr": "subject",
+            "value": "000 computer science",
+            "unit": "",
+            "avus": [
+                {
+                    "attr": "schemeURI",
+                    "value": "http://dewey.info/",
+                    "unit": ""
+                },
+                {
+                    "attr": "subjectScheme",
+                    "value": "dewey",
+                    "unit": ""
+                },
+                {
+                    "attr": "xml:lang",
+                    "value": "en-us",
+                    "unit": ""
+                }
+            ]
+        },
+        {
+            "attr": "identifier",
+            "value": "10.5072/example-full",
+            "unit": "",
+            "avus": [
+                {
+                    "attr": "identifierType",
+                    "value": "DOI",
+                    "unit": ""
+                }
+            ]
+        },
+        {
+            "attr": "alternateIdentifier",
+            "value": "http://schema.datacite.org/schema/meta/kernel-3.1/example/datacite-example-full-v3.1.xml",
+            "unit": "",
+            "avus": [
+                {
+                    "attr": "alternateIdentifierType",
+                    "value": "URL",
+                    "unit": ""
+                }
+            ]
+        },
+        {
+            "attr": "relatedIdentifier",
+            "value": "arXiv:0706.0001",
+            "unit": "",
+            "avus": [
+                {
+                    "attr": "relatedIdentifierType",
+                    "value": "arXiv",
+                    "unit": ""
+                },
+                {
+                    "attr": "relationType",
+                    "value": "IsReviewedBy",
+                    "unit": ""
+                }
+            ]
+        },
+        {
+            "attr": "rights",
+            "value": "CC0",
+            "unit": "",
+            "avus": [
+                {
+                    "attr": "rightsURI",
+                    "value": "http://creativecommons.org/publicdomain/zero/1.0/",
+                    "unit": ""
+                }
+            ]
+        },
+        {
+            "attr": "geoLocation",
+            "value": "",
+            "unit": "",
+            "avus": [
+                {
+                    "attr": "geoLocationPlace",
+                    "value": "Atlantic Ocean",
+                    "unit": ""
+                },
+                {
+                    "attr": "geoLocationPoint",
+                    "value": "",
+                    "unit": "",
+                    "avus": [
+                        {
+                            "attr": "pointLongitude",
+                            "value": "-67.302",
+                            "unit": ""
+                        },
+                        {
+                            "attr": "pointLatitude",
+                            "value": "31.233",
+                            "unit": ""
+                        }
+                    ]
+                },
+                {
+                    "attr": "geoLocationBox",
+                    "value": "",
+                    "unit": "",
+                    "avus": [
+                        {
+                            "attr": "westBoundLongitude",
+                            "value": "-71.032",
+                            "unit": ""
+                        },
+                        {
+                            "attr": "eastBoundLongitude",
+                            "value": "-68.211",
+                            "unit": ""
+                        },
+                        {
+                            "attr": "southBoundLatitude",
+                            "value": "41.090",
+                            "unit": ""
+                        },
+                        {
+                            "attr": "northBoundLatitude",
+                            "value": "42.893",
+                            "unit": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+};
+
+class DataCiteMetadataTemplateViewTest extends Component {
+    render() {
+        const logger = this.props.logger || ((template) => {
+            console.log(template);
+        });
+
+        return (
+            <MetadataTemplateView open
+                                  presenter={presenter(logger)}
+                                  template={dataciteMetadataTemplate}
+                                  metadata={dataciteMetadata}
+            />
+        );
+    }
+}
+
+class DataCiteMetadataTemplateViewNoValuesTest extends Component {
+    render() {
+        const logger = this.props.logger || ((template) => {
+            console.log(template);
+        });
+
+        return (
+            <MetadataTemplateView open
+                                  presenter={presenter(logger)}
+                                  template={dataciteMetadataTemplate}
+                                  metadata={{}}
+            />
+        );
+    }
+}
+
 export {
+    DataCiteMetadataTemplateViewNoValuesTest,
+    DataCiteMetadataTemplateViewTest,
     EditNestedAttrMetadataTemplateTest,
     EditDataCiteMetadataTemplateTest,
     MetadataTemplateViewTest,

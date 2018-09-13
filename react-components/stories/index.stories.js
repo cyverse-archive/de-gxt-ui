@@ -24,6 +24,8 @@ import TaskbarTest from "./desktop/view/Taskbar.stories";
 import VideoViewerTest from "./fileViewers/VideoViewer.stories";
 
 import {
+    DataCiteMetadataTemplateViewNoValuesTest,
+    DataCiteMetadataTemplateViewTest,
     EditDataCiteMetadataTemplateTest,
     EditNestedAttrMetadataTemplateTest,
     MetadataTemplateViewTest,
@@ -67,7 +69,9 @@ storiesOf('metadata/admin/EditMetadataTemplate', module)
     .add('with DataCite attributes', () => <EditDataCiteMetadataTemplateTest logger={action('template')} />);
 
 storiesOf('metadata/MetadataTemplateView', module)
-    .add('with nested attributes', () => <MetadataTemplateViewTest logger={action('templateView')}/>);
+    .add('with nested attributes', () => <MetadataTemplateViewTest logger={action('templateView')}/>)
+    .add('with DataCite metadata', () => <DataCiteMetadataTemplateViewTest logger={action('templateView')}/>)
+    .add('with DataCite Template, no metadata', () => <DataCiteMetadataTemplateViewNoValuesTest logger={action('templateView')}/>);
 
 storiesOf('util', module).add('Autocomplete', () => <AutocompleteTest selectOptionLogger={action('Selected Option')}/>);
 storiesOf('notifications/view', module).add('with test notifications', () => <NotificationViewTest
