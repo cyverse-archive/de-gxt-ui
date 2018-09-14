@@ -78,14 +78,21 @@ const FormikSearchField = ({
     );
 };
 
+// Apparently only necessary for FastField, but maybe more correct for "vanilla" Field as well.
+const onCheckboxChange = (setFieldValue, fieldName) => (event, checked) => {
+    setFieldValue(fieldName, checked);
+};
+
 const FormikCheckbox = ({
-    field: {value, ...field},
     label,
+    field: { value, onChange, ...field },
+    form: { setFieldValue },
     ...custom
 }) => (
     <FormControlLabel
         control={
             <Checkbox checked={!!value}
+                      onChange={onCheckboxChange(setFieldValue, field.name)}
                       {...field}
                       {...custom}
             />

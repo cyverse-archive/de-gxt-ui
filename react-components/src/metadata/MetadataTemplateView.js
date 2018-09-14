@@ -3,7 +3,7 @@
  */
 import React, { Component, Fragment } from 'react';
 
-import { Field, FieldArray, withFormik } from 'formik';
+import { FastField, FieldArray, withFormik } from 'formik';
 import moment from "moment";
 import { injectIntl } from "react-intl";
 
@@ -161,14 +161,14 @@ class MetadataTemplateAttributeView extends Component {
                                                   alignItems="center"
                                             >
                                                 <Grid item xs>
-                                                    <Field id={rowID}
-                                                           name={`${avuFieldName}.value`}
-                                                           component={FieldComponent}
-                                                           label={attribute.name}
-                                                           required={attribute.required}
+                                                    <FastField id={rowID}
+                                                               name={`${avuFieldName}.value`}
+                                                               component={FieldComponent}
+                                                               label={attribute.name}
+                                                               required={attribute.required}
                                                     >
                                                         {FieldChildren}
-                                                    </Field>
+                                                    </FastField>
                                                 </Grid>
                                                 {canRemove &&
                                                 <Grid item xs={1}>
