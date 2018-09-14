@@ -35,6 +35,9 @@ import AppBar from "@material-ui/core/AppBar/AppBar";
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Grid from '@material-ui/core/Grid';
 import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -44,6 +47,7 @@ import Typography from '@material-ui/core/Typography';
 import ContentAdd from '@material-ui/icons/Add';
 import CloseIcon from "@material-ui/icons/Close";
 import ContentRemove from '@material-ui/icons/Delete';
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const newAVU = attrTemplate => {
     const attr = attrTemplate.name, unit = "";
@@ -155,7 +159,8 @@ class MetadataTemplateAttributeView extends Component {
 
                                     let avuField = (
                                         <Fragment key={avuFieldName}>
-                                            <Grid container
+                                            <Grid item
+                                                  container
                                                   spacing={16}
                                                   justify="flex-start"
                                                   alignItems="center"
@@ -183,12 +188,14 @@ class MetadataTemplateAttributeView extends Component {
                                                 }
                                             </Grid>
                                             {attribute.attributes && attribute.attributes.length > 0 &&
-                                            <MetadataTemplateAttributeForm field={avuFieldName}
-                                                                           errors={errors && errors.avus}
-                                                                           presenter={this.props.presenter}
-                                                                           attributes={attribute.attributes}
-                                                                           avus={avu.avus}
-                                            />}
+                                            <Grid item>
+                                                <MetadataTemplateAttributeForm field={avuFieldName}
+                                                                               errors={errors && errors.avus}
+                                                                               presenter={this.props.presenter}
+                                                                               attributes={attribute.attributes}
+                                                                               avus={avu.avus}
+                                                />
+                                            </Grid>}
                                         </Fragment>
                                     );
 
@@ -198,19 +205,42 @@ class MetadataTemplateAttributeView extends Component {
                                 });
 
                                 return (
-                                    <fieldset key={attribute.name}>
-                                        <legend>{attribute.name}</legend>
-                                        <Button id={build(attrFieldId, ids.BUTTONS.ADD)}
-                                                variant="fab"
-                                                mini
-                                                color="primary"
-                                                aria-label={formatMessage(intl, "addRow")}
-                                                onClick={() => this.onAddAVU(arrayHelpers, attribute)}
-                                        >
-                                            <ContentAdd/>
-                                        </Button>
-                                        {avuFields}
-                                    </fieldset>
+                                    <ExpansionPanel key={attribute.name} defaultExpanded={avuFields && avuFields.filter(avuField => avuField).length > 0}>
+                                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon id={build(attrFieldId, ids.BUTTONS.EXPAND)} />}>
+                                            <Button id={build(attrFieldId, ids.BUTTONS.ADD)}
+                                                    variant="fab"
+                                                    mini
+                                                    color="primary"
+                                                    aria-label={formatMessage(intl, "addRow")}
+                                                    onClick={event => {
+                                                        event.stopPropagation();
+                                                        this.onAddAVU(arrayHelpers, attribute);
+                                                    }}
+                                            >
+                                                <ContentAdd/>
+                                            </Button>
+                                            <div className={classes.title}>
+                                                <Typography variant="title" color="inherit" >
+                                                    {attribute.name}
+                                                </Typography>
+                                            </div>
+                                        </ExpansionPanelSummary>
+                                        <ExpansionPanelDetails>
+                                            <Grid container
+                                                  spacing={16}
+                                                  direction="column"
+                                                  justify="flex-start"
+                                                  alignItems="stretch"
+                                            >
+                                                <Grid item xs>
+                                                    <Typography variant="subheading">
+                                                        {attribute.description}
+                                                    </Typography>
+                                                </Grid>
+                                                {avuFields}
+                                            </Grid>
+                                        </ExpansionPanelDetails>
+                                    </ExpansionPanel>
                                 );
                             });
                         }}
