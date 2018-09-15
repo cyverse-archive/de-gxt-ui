@@ -12,7 +12,11 @@ const presenter = (logger) => ({
             1500
         );
     },
-    closeTemplateInfoDialog: () => logger("dialog closed."),
+    closeMetadataTemplateDialog: () => logger("dialog closed."),
+    updateMetadataFromTemplateView: (metadata, resolve, errorCallback) => {
+        logger(metadata);
+        resolve(metadata);
+    },
     onSaveMetadata: (metadata, resolve, errorCallback) => {
         setTimeout(() => {
                 logger(metadata);

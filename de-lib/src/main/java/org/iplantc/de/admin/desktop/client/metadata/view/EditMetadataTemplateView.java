@@ -14,7 +14,7 @@ public interface EditMetadataTemplateView extends IsWidget {
     interface Presenter {
         @SuppressWarnings("unusable-by-js")
         void onSaveTemplate(Splittable metadataTemplate, ReactSuccessCallback resolve, ReactErrorCallback reject);
-        void closeTemplateInfoDialog();
+        void closeMetadataTemplateDialog();
     }
 
     void edit(Presenter presenter, Splittable metadataTemplate);

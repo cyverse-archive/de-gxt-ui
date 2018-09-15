@@ -10,12 +10,6 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 public interface MetadataDisplayStrings extends Messages{
     String attribute();
 
-    String metadataTemplateConfirmRemove();
-
-    String metadataTemplateRemove();
-
-    String metadataTemplateSelect();
-
     String newAttribute();
 
     String newValue();
@@ -27,8 +21,6 @@ public interface MetadataDisplayStrings extends Messages{
 	SafeHtml importMd();
 
     String userMetadata();
-
-    String metadataTermGuide();
 
 	String templateListingError();
 
@@ -54,13 +46,7 @@ public interface MetadataDisplayStrings extends Messages{
 
 	String readMore();
 
-	String urlGhostText();
-
 	String requiredGhostText();
 
     String importUMdBtnText();
-
-    String addBtnText();
-
-	String removeBtnText();
 }

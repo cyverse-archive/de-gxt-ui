@@ -259,13 +259,13 @@ class MetadataTemplateView extends Component {
             showConfirmationDialog: false,
         };
 
-        this.closeTemplateInfoDialog = this.closeTemplateInfoDialog.bind(this);
+        this.closeMetadataTemplateDialog = this.closeMetadataTemplateDialog.bind(this);
         this.closeConfirmationDialog = this.closeConfirmationDialog.bind(this);
     }
 
-    closeTemplateInfoDialog() {
+    closeMetadataTemplateDialog() {
         this.closeConfirmationDialog();
-        this.props.presenter.closeTemplateInfoDialog();
+        this.props.presenter.closeMetadataTemplateDialog();
     }
 
     closeConfirmationDialog() {
@@ -299,7 +299,7 @@ class MetadataTemplateView extends Component {
                                     onClick={() => (
                                         dirty ?
                                             this.setState({showConfirmationDialog: true}) :
-                                            this.props.presenter.closeTemplateInfoDialog()
+                                            this.props.presenter.closeMetadataTemplateDialog()
                                     )}
                                     color="inherit"
                         >
@@ -333,7 +333,7 @@ class MetadataTemplateView extends Component {
                                         this.closeConfirmationDialog();
                                         handleSubmit();
                                     }}
-                                    onClose={this.closeTemplateInfoDialog}
+                                    onClose={this.closeMetadataTemplateDialog}
                                     onCancel={this.closeConfirmationDialog}
                                     title={getMessage("save")}
                                     dialogContent={getMessage("confirmCloseUnsavedChanges")}
@@ -483,7 +483,7 @@ const handleSubmit = ({ metadata }, { props, setSubmitting, setStatus }) => {
         setStatus("error");
     };
 
-    props.presenter.onSaveMetadata(
+    props.presenter.updateMetadataFromTemplateView(
         metadata,
         resolve,
         errorCallback,

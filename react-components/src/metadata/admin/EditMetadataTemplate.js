@@ -39,7 +39,7 @@ class EditMetadataTemplate extends Component {
 
         [
             "onSaveTemplate",
-            "closeTemplateInfoDialog",
+            "closeMetadataTemplateDialog",
             "closeConfirmationDialog",
         ].forEach(methodName => (this[methodName] = this[methodName].bind(this)));
     }
@@ -47,7 +47,7 @@ class EditMetadataTemplate extends Component {
     static propTypes = {
         presenter: PropTypes.shape({
             onSaveTemplate: PropTypes.func.isRequired,
-            closeTemplateInfoDialog: PropTypes.func.isRequired,
+            closeMetadataTemplateDialog: PropTypes.func.isRequired,
         }),
     };
 
@@ -71,9 +71,9 @@ class EditMetadataTemplate extends Component {
         });
     };
 
-    closeTemplateInfoDialog() {
+    closeMetadataTemplateDialog() {
         this.closeConfirmationDialog();
-        this.props.presenter.closeTemplateInfoDialog();
+        this.props.presenter.closeMetadataTemplateDialog();
     }
 
     closeConfirmationDialog() {
@@ -106,7 +106,7 @@ class EditMetadataTemplate extends Component {
                                     aria-label={formatMessage(intl, "close")}
                                     onClick={() => (
                                         pristine ?
-                                            this.props.presenter.closeTemplateInfoDialog() :
+                                            this.props.presenter.closeMetadataTemplateDialog() :
                                             this.setState({showConfirmationDialog: true})
                                     )}
                                     color="inherit"
@@ -159,7 +159,7 @@ class EditMetadataTemplate extends Component {
                 <ConfirmCloseDialog open={this.state.showConfirmationDialog}
                                     parentId={ids.METADATA_TEMPLATE_FORM}
                                     onConfirm={handleSubmit(this.onSaveTemplate)}
-                                    onClose={this.closeTemplateInfoDialog}
+                                    onClose={this.closeMetadataTemplateDialog}
                                     onCancel={this.closeConfirmationDialog}
                                     title={getMessage("save")}
                                     dialogContent={getMessage("confirmCloseUnsavedChanges")}
