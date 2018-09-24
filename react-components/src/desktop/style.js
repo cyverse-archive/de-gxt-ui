@@ -20,7 +20,7 @@ export default {
         top: 51,
         backgroundPosition: 'top center',
         bottom: 30,
-        backgroundSize: 'contain',
+        backgroundSize: 'cover',
         backgroundColor: '#8b9bb3', // not in cyverse palette
         backgroundRepeat: 'no-repeat',
     },
