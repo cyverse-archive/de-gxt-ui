@@ -8,7 +8,13 @@ import org.iplantc.de.client.models.diskResources.DiskResourceMetadataList;
 import org.iplantc.de.client.models.diskResources.MetadataTemplate;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateAttribute;
 import org.iplantc.de.client.models.diskResources.MetadataTemplateInfo;
+import org.iplantc.de.client.models.ontologies.AstroThesaurusResponse;
+import org.iplantc.de.client.models.ontologies.AstroThesaurusResult;
+import org.iplantc.de.client.models.ontologies.OntologyAutoBeanFactory;
+import org.iplantc.de.client.models.ontologies.OntologyLookupServiceQueryParams;
+import org.iplantc.de.client.models.ontologies.OntologyLookupServiceResponse;
 import org.iplantc.de.client.services.DiskResourceServiceFacade;
+import org.iplantc.de.client.services.OntologyLookupServiceFacade;
 import org.iplantc.de.client.services.callbacks.ReactErrorCallback;
 import org.iplantc.de.client.services.callbacks.ReactSuccessCallback;
 import org.iplantc.de.client.util.DiskResourceUtil;
@@ -21,11 +27,15 @@ import org.iplantc.de.diskResource.client.events.selection.SaveMetadataSelected;
 import org.iplantc.de.diskResource.client.events.selection.SaveMetadataToFileBtnSelected;
 import org.iplantc.de.diskResource.client.events.selection.SelectTemplateBtnSelected;
 import org.iplantc.de.diskResource.client.presenters.callbacks.DiskResourceMetadataUpdateCallback;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.AstroThesaurusLoadConfig;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.AstroThesaurusProxy;
+import org.iplantc.de.diskResource.client.presenters.metadata.proxy.OntologyLookupServiceLoadConfig;
 import org.iplantc.de.diskResource.client.views.metadata.MetadataTemplateView;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.MetadataTemplateDescDlg;
 import org.iplantc.de.diskResource.client.views.metadata.dialogs.SelectMetadataTemplateDialog;
 import org.iplantc.de.shared.AsyncProviderWrapper;
 
+import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasOneWidget;
@@ -62,12 +72,15 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
 
     private static DiskResourceAutoBeanFactory autoBeanFactory =
             GWT.create(DiskResourceAutoBeanFactory.class);
+    @Inject OntologyAutoBeanFactory ontologyAutoBeanFactory;
+
     @Inject MetadataView.Presenter.Appearance appearance;
 
     @Inject AsyncProviderWrapper<SelectMetadataTemplateDialog> selectMetaTemplateDlgProvider;
     @Inject AsyncProviderWrapper<MetadataTemplateDescDlg> metadataTemplateDescDlgProvider;
     @Inject MetadataTemplateView templateViewDialog;
     @Inject MetadataUtil metadataUtil;
+    @Inject OntologyLookupServiceFacade svcFacade;
     @Inject EventBus eventBus;
 
     @Inject
@@ -228,6 +241,62 @@ public class MetadataPresenterImpl implements MetadataView.Presenter,
     @Override
     public void closeMetadataTemplateDialog() {
         templateViewDialog.closeDialog();
+    }
+
+    @Override
+    @SuppressWarnings("unusable-by-js")
+    public void searchOLSTerms(String inputValue,
+                               Splittable loaderSettings,
+                               ReactSuccessCallback callback) {
+        if (Strings.isNullOrEmpty(inputValue)) {
+            callback.onSuccess(null);
+            return;
+        }
+
+        OntologyLookupServiceQueryParams olsQueryParams =
+                AutoBeanCodex.decode(ontologyAutoBeanFactory, OntologyLookupServiceQueryParams.class, loaderSettings)
+                             .as();
+
+        OntologyLookupServiceLoadConfig loadConfig = new OntologyLookupServiceLoadConfig(olsQueryParams);
+        loadConfig.setQuery(inputValue);
+
+        svcFacade.searchOntologyLookupService(loadConfig, new AsyncCallback<OntologyLookupServiceResponse>() {
+            @Override
+            public void onSuccess(OntologyLookupServiceResponse result) {
+                callback.onSuccess(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(result.getResults())));
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onSuccess(null);
+            }
+        });
+    }
+
+    @Override
+    public void searchAstroThesaurusTerms(String inputValue, ReactSuccessCallback callback) {
+        if (Strings.isNullOrEmpty(inputValue)) {
+            callback.onSuccess(null);
+            return;
+        }
+
+        AstroThesaurusLoadConfig uatLoadConfig = new AstroThesaurusLoadConfig();
+        uatLoadConfig.setQuery(inputValue);
+
+        svcFacade.searchUnifiedAstronomyThesaurus(uatLoadConfig, new AsyncCallback<AstroThesaurusResponse>() {
+            @Override
+            public void onSuccess(AstroThesaurusResponse response) {
+                final AstroThesaurusResult result = response.getResult();
+                result.setItems(AstroThesaurusProxy.normalizeAstroThesaurusResults(result.getItems()));
+
+                callback.onSuccess(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(result)));
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onSuccess(null);
+            }
+        });
     }
 
     @Override

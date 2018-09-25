@@ -22,4 +22,9 @@ public interface AstroThesaurusResult {
      * @return The list of UAT search result items.
      */
     List<AstroThesaurusDoc> getItems();
+
+    /**
+     * @param items The list of UAT search result items.
+     */
+    void setItems(List<AstroThesaurusDoc> items);
 }

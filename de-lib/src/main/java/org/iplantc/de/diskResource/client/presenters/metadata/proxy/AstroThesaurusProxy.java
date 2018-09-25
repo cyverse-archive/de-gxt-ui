@@ -47,21 +47,7 @@ public class AstroThesaurusProxy extends MetadataTermSearchProxy {
         svcFacade.searchUnifiedAstronomyThesaurus(uatLoadConfig, new AsyncCallback<AstroThesaurusResponse>() {
             @Override
             public void onSuccess(AstroThesaurusResponse result) {
-                List<AstroThesaurusDoc> astroTerms = result.getResult().getItems();
-
-                // The UAT service may return duplicates in the results.
-                FastMap<AstroThesaurusDoc> filteredResults = new FastMap<>();
-
-                astroTerms.forEach(item -> {
-                    if (!Strings.isNullOrEmpty(item.getId())) {
-                        filteredResults.put(item.getId(), item);
-
-                        // flatten label
-                        item.setLabel(item.getPrefLabel().getValue());
-                    }
-                });
-
-                List<MetadataTermSearchResult> results = Lists.newArrayList(filteredResults.values());
+                List<MetadataTermSearchResult> results = Lists.newArrayList(normalizeAstroThesaurusResults(result.getResult().getItems()));
 
                 // UAT responses do not include a 'total' number of results,
                 // so we can't properly support paging.
@@ -73,5 +59,23 @@ public class AstroThesaurusProxy extends MetadataTermSearchProxy {
                 callback.onFailure(caught);
             }
         });
+    }
+
+    public static List<AstroThesaurusDoc> normalizeAstroThesaurusResults(List<AstroThesaurusDoc> astroTerms) {
+        // The UAT service may return duplicates in the results.
+        FastMap<AstroThesaurusDoc> filteredResults = new FastMap<>();
+
+        if (astroTerms != null) {
+            astroTerms.forEach(item -> {
+                if (!Strings.isNullOrEmpty(item.getId())) {
+                    filteredResults.put(item.getId(), item);
+
+                    // flatten label
+                    item.setLabel(item.getPrefLabel().getValue());
+                }
+            });
+        }
+
+        return Lists.newArrayList(filteredResults.values());
     }
 }

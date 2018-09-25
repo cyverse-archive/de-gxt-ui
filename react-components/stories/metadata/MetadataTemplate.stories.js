@@ -27,42 +27,50 @@ const presenter = (logger) => ({
     },
     searchOLSTerms: (inputValue, loaderSettings, callback) => {
         setTimeout(() => {
-                callback([
-                    {
-                        iri: "http://edamontology.org/data_0006",
-                        label: "Data",
-                        ontology_prefix: "EDAM",
-                    },
-                    {
-                        iri: "http://edamontology.org/operation_2422",
-                        label: "Data retrieval",
-                        ontology_prefix: "EDAM",
-                    },
-                    {
-                        iri: "http://edamontology.org/topic_3077",
-                        label: "Data acquisition",
-                        ontology_prefix: "EDAM",
-                    },
-                ]);
+                callback({
+                    docs: [
+                        {
+                            iri: "http://edamontology.org/data_0006",
+                            label: "Data",
+                            ontology_prefix: "EDAM",
+                        },
+                        {
+                            iri: "http://edamontology.org/operation_2422",
+                            label:
+                                "Data retrieval",
+                            ontology_prefix:
+                                "EDAM",
+                        },
+                        {
+                            iri: "http://edamontology.org/topic_3077",
+                            label:
+                                "Data acquisition",
+                            ontology_prefix:
+                                "EDAM",
+                        },
+                    ]
+                });
             },
             1000);
     },
     searchAstroThesaurusTerms: (inputValue, callback) => {
         setTimeout(() => {
-                callback([
-                    {
-                        iri: "http://astrothesaurus.org/uat/1512",
-                        label: "Solar neutrons",
-                    },
-                    {
-                        iri: "http://astrothesaurus.org/uat/1107",
-                        label: "Neutron star cores",
-                    },
-                    {
-                        iri: "http://astrothesaurus.org/uat/1108",
-                        label: "Neutron stars",
-                    },
-                ]);
+                callback({
+                    items: [
+                        {
+                            iri: "http://astrothesaurus.org/uat/1512",
+                            label: "Solar neutrons",
+                        },
+                        {
+                            iri: "http://astrothesaurus.org/uat/1107",
+                            label: "Neutron star cores",
+                        },
+                        {
+                            iri: "http://astrothesaurus.org/uat/1108",
+                            label: "Neutron stars",
+                        },
+                    ]
+                });
             },
             1000);
     },

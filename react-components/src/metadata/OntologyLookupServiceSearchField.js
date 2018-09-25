@@ -47,7 +47,7 @@ class OntologyLookupServiceSearchField extends Component {
     loadOptions(inputValue, callback) {
         const { attribute, presenter } = this.props;
 
-        presenter.searchOLSTerms(inputValue, attribute.settings, callback);
+        presenter.searchOLSTerms(inputValue, attribute.settings, (results) => callback(results && results.docs));
     }
 
     formatCreateLabel(inputValue) {

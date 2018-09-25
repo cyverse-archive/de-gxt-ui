@@ -40,7 +40,7 @@ class AstroThesaurusSearchField extends Component {
     }
 
     loadOptions(inputValue, callback) {
-        this.props.presenter.searchAstroThesaurusTerms(inputValue, callback);
+        this.props.presenter.searchAstroThesaurusTerms(inputValue, (results) => callback(results && results.items));
     }
 
     formatCreateLabel(inputValue) {

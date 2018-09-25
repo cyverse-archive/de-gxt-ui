@@ -167,6 +167,11 @@ public interface MetadataView extends IsWidget,
 
         void closeMetadataTemplateDialog();
 
+        @SuppressWarnings("unusable-by-js")
+        void searchOLSTerms(String inputValue, Splittable loaderSettings, ReactSuccessCallback callback);
+
+        void searchAstroThesaurusTerms(String inputValue, ReactSuccessCallback callback);
+
         void downloadTemplate(String templateId);
 
         @JsIgnore
