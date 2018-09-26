@@ -105,9 +105,15 @@ class MetadataTemplateAttributeView extends Component {
                         render={(arrayHelpers) => {
                             return attributes.map((attribute) => {
                                 const attrFieldId = build(ids.METADATA_TEMPLATE_VIEW, field, attribute.name);
-                                let canRemove = !attribute.required;
 
-                                let FieldComponent, FieldChildren;
+                                let canRemove = !attribute.required,
+                                    FieldComponent,
+                                    fieldProps = {
+                                        label: attribute.name,
+                                        required: attribute.required && writable,
+                                        inputProps: { readOnly: !writable }
+                                    };
+
                                 switch (attribute.type) {
                                     case "Boolean":
                                         FieldComponent = FormikCheckbox;
@@ -124,28 +130,43 @@ class MetadataTemplateAttributeView extends Component {
                                     case "Timestamp":
                                         FieldComponent = FormTimestampField;
                                         break;
+
                                     case "Enum":
                                         FieldComponent = FormikSelectField;
-                                        FieldChildren = attribute.values && attribute.values.map((enumVal, index) =>
-                                            (<MenuItem key={index} value={enumVal.value}>{enumVal.value}</MenuItem>));
+                                        fieldProps = {
+                                            ...fieldProps,
+                                            children: attribute.values &&
+                                                attribute.values.map((enumVal, index) =>
+                                                    (<MenuItem key={index} value={enumVal.value}>
+                                                        {enumVal.value}
+                                                    </MenuItem>)),
+                                        };
                                         break;
+
                                     case "UAT Ontology Term":
-                                        FieldComponent = (props) => (
-                                            <AstroThesaurusSearchField
-                                                presenter={presenter}
-                                                isDisabled={!writable}
-                                                {...props}
-                                            />);
+                                        FieldComponent = AstroThesaurusSearchField;
+                                        fieldProps = {
+                                            ...fieldProps,
+                                            presenter,
+                                            isDisabled: !writable,
+                                        };
                                         break;
+
                                     case "OLS Ontology Term":
-                                        FieldComponent = (props) => (
-                                            <OntologyLookupServiceSearchField
-                                                presenter={presenter}
-                                                attribute={attribute}
-                                                isDisabled={!writable}
-                                                {...props}
-                                            />);
+                                        FieldComponent = OntologyLookupServiceSearchField;
+                                        fieldProps = {
+                                            ...fieldProps,
+                                            presenter,
+                                            attribute,
+                                            isDisabled: !writable,
+                                        };
                                         break;
+
+                                    case "Grouping":
+                                        FieldComponent = "span";
+                                        fieldProps = {};
+                                        break;
+
                                     default:
                                         FieldComponent = FormikTextField;
                                         break;
@@ -171,12 +192,8 @@ class MetadataTemplateAttributeView extends Component {
                                                     <FastField id={rowID}
                                                                name={`${avuFieldName}.value`}
                                                                component={FieldComponent}
-                                                               label={attribute.name}
-                                                               required={attribute.required && writable}
-                                                               inputProps={{ readOnly: !writable }}
-                                                    >
-                                                        {FieldChildren}
-                                                    </FastField>
+                                                               {...fieldProps}
+                                                    />
                                                 </Grid>
                                                 {canRemove && writable &&
                                                 <Grid item xs={1}>
