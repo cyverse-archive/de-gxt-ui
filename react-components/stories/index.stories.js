@@ -28,6 +28,7 @@ import {
     DataCiteMetadataTemplateViewTest,
     EditDataCiteMetadataTemplateTest,
     EditNestedAttrMetadataTemplateTest,
+    MetadataTemplateReadOnlyViewTest,
     MetadataTemplateViewTest,
 } from "./metadata/MetadataTemplate.stories";
 
@@ -70,6 +71,7 @@ storiesOf('metadata/admin/EditMetadataTemplate', module)
 
 storiesOf('metadata/MetadataTemplateView', module)
     .add('with nested attributes', () => <MetadataTemplateViewTest logger={action('templateView')}/>)
+    .add('with read-only nested attributes', () => <MetadataTemplateReadOnlyViewTest logger={action('templateView')}/>)
     .add('with DataCite metadata', () => <DataCiteMetadataTemplateViewTest logger={action('templateView')}/>)
     .add('with DataCite Template, no metadata', () => <DataCiteMetadataTemplateViewNoValuesTest logger={action('templateView')}/>);
 

@@ -925,9 +925,39 @@ class MetadataTemplateViewTest extends Component {
 
         return (
             <MetadataTemplateView open
+                                  writable
                                   presenter={presenter(logger)}
                                   template={nestedAttrMetadataTemplate}
                                   metadata={metadata}
+            />
+        );
+    }
+}
+
+class MetadataTemplateReadOnlyViewTest extends Component {
+    render() {
+        const logger = this.props.logger || ((template) => {
+            console.log(template);
+        });
+
+        const avus = [
+            ...metadata.avus,
+            {
+                "id": "11",
+                "attr": "Enum Attr",
+                "value": "choice 3",
+                "unit": "",
+            },
+        ];
+
+        return (
+            <MetadataTemplateView open
+                                  presenter={presenter(logger)}
+                                  template={nestedAttrMetadataTemplate}
+                                  metadata={{
+                                      ...metadata,
+                                      avus,
+                                  }}
             />
         );
     }
@@ -1196,6 +1226,7 @@ class DataCiteMetadataTemplateViewTest extends Component {
 
         return (
             <MetadataTemplateView open
+                                  writable
                                   presenter={presenter(logger)}
                                   template={dataciteMetadataTemplate}
                                   metadata={dataciteMetadata}
@@ -1212,6 +1243,7 @@ class DataCiteMetadataTemplateViewNoValuesTest extends Component {
 
         return (
             <MetadataTemplateView open
+                                  writable
                                   presenter={presenter(logger)}
                                   template={dataciteMetadataTemplate}
                                   metadata={{}}
@@ -1225,5 +1257,6 @@ export {
     DataCiteMetadataTemplateViewTest,
     EditNestedAttrMetadataTemplateTest,
     EditDataCiteMetadataTemplateTest,
+    MetadataTemplateReadOnlyViewTest,
     MetadataTemplateViewTest,
 };

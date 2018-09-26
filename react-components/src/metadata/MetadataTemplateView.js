@@ -99,7 +99,7 @@ class MetadataTemplateAttributeView extends Component {
     }
 
     render() {
-        const { classes, intl, field, errors, attributes, avus, presenter } = this.props;
+        const { classes, intl, field, errors, attributes, avus, presenter, writable } = this.props;
         return (
             <FieldArray name={`${field}.avus`}
                         render={(arrayHelpers) => {
@@ -133,6 +133,7 @@ class MetadataTemplateAttributeView extends Component {
                                         FieldComponent = (props) => (
                                             <AstroThesaurusSearchField
                                                 presenter={presenter}
+                                                isDisabled={!writable}
                                                 {...props}
                                             />);
                                         break;
@@ -141,6 +142,7 @@ class MetadataTemplateAttributeView extends Component {
                                             <OntologyLookupServiceSearchField
                                                 presenter={presenter}
                                                 attribute={attribute}
+                                                isDisabled={!writable}
                                                 {...props}
                                             />);
                                         break;
@@ -170,12 +172,13 @@ class MetadataTemplateAttributeView extends Component {
                                                                name={`${avuFieldName}.value`}
                                                                component={FieldComponent}
                                                                label={attribute.name}
-                                                               required={attribute.required}
+                                                               required={attribute.required && writable}
+                                                               inputProps={{ readOnly: !writable }}
                                                     >
                                                         {FieldChildren}
                                                     </FastField>
                                                 </Grid>
-                                                {canRemove &&
+                                                {canRemove && writable &&
                                                 <Grid item xs={1}>
                                                     <IconButton id={build(rowID, ids.BUTTONS.DELETE)}
                                                                 aria-label={formatMessage(intl, "delete")}
@@ -194,6 +197,7 @@ class MetadataTemplateAttributeView extends Component {
                                                                                presenter={this.props.presenter}
                                                                                attributes={attribute.attributes}
                                                                                avus={avu.avus}
+                                                                               writable={writable}
                                                 />
                                             </Grid>}
                                         </Fragment>
@@ -204,9 +208,12 @@ class MetadataTemplateAttributeView extends Component {
                                     return avuField;
                                 });
 
-                                return (
-                                    <ExpansionPanel key={attribute.name} defaultExpanded={avuFields && avuFields.filter(avuField => avuField).length > 0}>
+
+                                const hasAVUs = avuFields && avuFields.filter(avuField => avuField).length > 0;
+                                return ((writable || hasAVUs) &&
+                                    <ExpansionPanel key={attribute.name} defaultExpanded={hasAVUs}>
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon id={build(attrFieldId, ids.BUTTONS.EXPAND)} />}>
+                                            {writable &&
                                             <Button id={build(attrFieldId, ids.BUTTONS.ADD)}
                                                     variant="fab"
                                                     mini
@@ -219,6 +226,7 @@ class MetadataTemplateAttributeView extends Component {
                                             >
                                                 <ContentAdd/>
                                             </Button>
+                                            }
                                             <div className={classes.title}>
                                                 <Typography variant="title" color="inherit" >
                                                     {attribute.name}
@@ -277,6 +285,7 @@ class MetadataTemplateView extends Component {
             classes,
             intl,
             open,
+            writable,
             // from formik
             values, handleSubmit, dirty, isSubmitting, errors,
         } = this.props;
@@ -297,7 +306,7 @@ class MetadataTemplateView extends Component {
                         <IconButton id={build(ids.METADATA_TEMPLATE_VIEW, ids.BUTTONS.CLOSE)}
                                     aria-label={formatMessage(intl, "close")}
                                     onClick={() => (
-                                        dirty ?
+                                        (dirty && writable) ?
                                             this.setState({showConfirmationDialog: true}) :
                                             this.props.presenter.closeMetadataTemplateDialog()
                                     )}
@@ -306,10 +315,10 @@ class MetadataTemplateView extends Component {
                             <CloseIcon />
                         </IconButton>
                         <Typography id={dialogTitleID} variant="title" color="inherit" className={classes.flex}>
-                            {getMessage("dialogTitleEditMetadataTemplate")}
+                            {values.template.name}
                         </Typography>
                         <Button id={build(ids.METADATA_TEMPLATE_VIEW, ids.BUTTONS.SAVE)}
-                                disabled={isSubmitting || errors.error}
+                                disabled={!writable || isSubmitting || errors.error}
                                 onClick={handleSubmit}
                                 color="inherit"
                         >
@@ -324,6 +333,7 @@ class MetadataTemplateView extends Component {
                                                    presenter={this.props.presenter}
                                                    attributes={values.template.attributes}
                                                    avus={values.metadata.avus}
+                                                   writable={writable}
                     />
                 </DialogContent>
 
