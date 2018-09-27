@@ -60,7 +60,6 @@ import org.iplantc.de.shared.AsyncProviderWrapper;
 import org.iplantc.de.shared.DEProperties;
 
 import com.google.common.collect.Lists;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -95,8 +94,6 @@ import java.util.List;
  * @author sriram, jstroot
  */
 public class AnalysesPresenterImpl implements AnalysesView.Presenter,
-                                              AnalysisNameSelectedEvent.AnalysisNameSelectedEventHandler,
-                                              AnalysisAppSelectedEvent.AnalysisAppSelectedEventHandler,
                                               HTAnalysisExpandEvent.HTAnalysisExpandEventHandler,
                                               AnalysisUserSupportRequestedEvent.AnalysisUserSupportRequestedEventHandler,
                                               AnalysisJobInfoSelected.AnalysisJobInfoSelectedHandler,
@@ -104,7 +101,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               ShareAnalysisSelected.ShareAnalysisSelectedHandler,
                                               AnalysisFilterChanged.AnalysisFilterChangedHandler,
                                               RefreshAnalysesSelected.RefreshAnalysesSelectedHandler,
-                                              RenameAnalysisSelected.RenameAnalysisSelectedHandler,
                                               RelaunchAnalysisSelected.RelaunchAnalysisSelectedHandler,
                                               GoToAnalysisFolderSelected.GoToAnalysisFolderSelectedHandler,
                                               DeleteAnalysisSelected.DeleteAnalysisSelectedHandler,
@@ -185,63 +181,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         public void onLoad(LoadEvent<FilterPagingLoadConfig, PagingLoadResult<Analysis>> event) {
             handlerFirstLoad.removeHandler();
             setSelectedAnalyses(selectedAnalyses);
-        }
-    }
-
-    private class RenameAnalysisCallback extends AnalysisCallback<Void> {
-
-        private final Analysis selectedAnalysis;
-        private final String newName;
-        private final ListStore<Analysis> listStore;
-
-        public RenameAnalysisCallback(Analysis selectedAnalysis,
-                                      String newName,
-                                      ListStore<Analysis> listStore) {
-            this.selectedAnalysis = selectedAnalysis;
-            this.newName = newName;
-            this.listStore = listStore;
-        }
-
-        @Override
-        public void onFailure(Integer statusCode, Throwable caught) {
-            final SafeHtml message = appearance.analysisRenameFailed();
-            announcer.schedule(new ErrorAnnouncementConfig(message, true, 5000));
-        }
-
-        @Override
-        public void onSuccess(Void result) {
-            selectedAnalysis.setName(newName);
-            listStore.update(selectedAnalysis);
-            SafeHtml message = appearance.analysisRenameSuccess();
-            announcer.schedule(new SuccessAnnouncementConfig(message, true, 5000));
-        }
-    }
-
-    private class UpdateCommentsCallback extends AnalysisCallback<Void> {
-        private final Analysis selectedAnalysis;
-        private final String newComment;
-        private final ListStore<Analysis> listStore;
-
-        public UpdateCommentsCallback(Analysis selectedAnalysis,
-                                      String newComment,
-                                      ListStore<Analysis> listStore) {
-            this.selectedAnalysis = selectedAnalysis;
-            this.newComment = newComment;
-            this.listStore = listStore;
-        }
-
-        @Override
-        public void onFailure(Integer statusCode, Throwable caught) {
-            SafeHtml message = appearance.analysisCommentUpdateFailed();
-            announcer.schedule(new ErrorAnnouncementConfig(message, true, 5000));
-        }
-
-        @Override
-        public void onSuccess(Void result) {
-            selectedAnalysis.setComments(newComment);
-            listStore.update(selectedAnalysis);
-            SafeHtml message = appearance.analysisCommentUpdateSuccess();
-            announcer.schedule(new SuccessAnnouncementConfig(message, true, 5000));
         }
     }
 
@@ -605,14 +544,15 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void onAnalysisAppSelected(AnalysisAppSelectedEvent event) {
-        eventBus.fireEvent(new OpenAppForRelaunchEvent(event.getAnalysis()));
+    public void onAnalysisAppSelected(Splittable analysis) {
+        Analysis relaunchAnalysis = AutoBeanCodex.decode(factory,Analysis.class,analysis).as();
+        eventBus.fireEvent(new OpenAppForRelaunchEvent(relaunchAnalysis));
     }
 
     @Override
-    public void onAnalysisNameSelected(AnalysisNameSelectedEvent event) {
+    public void onAnalysisNameSelected(String resultFolderId) {
         // Request disk resource window
-        eventBus.fireEvent(new OpenFolderEvent(event.getValue().getResultFolderId(), true));
+        eventBus.fireEvent(new OpenFolderEvent(resultFolderId, true));
     }
 
     @Override
@@ -625,23 +565,34 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void onRenameAnalysisSelected(RenameAnalysisSelected event) {
-        Analysis selectedAnalysis = event.getAnalysis();
-        final String name = selectedAnalysis.getName();
-        final IPlantPromptDialog dlg = getRenameAnalysisDlg(name);
-        dlg.setHeading(appearance.renameAnalysis());
-        dlg.addOkButtonSelectHandler(okSelect -> {
-            if (!selectedAnalysis.getName().equals(dlg.getFieldText())) {
-                renameAnalysis(selectedAnalysis, dlg.getFieldText());
+    public void renameAnalysis(String analysisId,
+                               String newName,
+                               ReactSuccessCallback callback,
+                               ReactErrorCallback errorCallback) {
+        analysisService.renameAnalysis(analysisId, newName, new AnalysisCallback() {
+
+            @Override
+            public void onFailure(Integer statusCode,
+                                  Throwable exception) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.analysisRenameFailed(),
+                                                               true,
+                                                               5000));
+                if (errorCallback != null) {
+                    errorCallback.onError(statusCode, exception.getMessage());
+                }
+
+            }
+
+            @Override
+            public void onSuccess(Object result) {
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.analysisRenameSuccess(),
+                                                                 true,
+                                                                 5000));
+                if (callback != null) {
+                    callback.onSuccess(null);
+                }
             }
         });
-        dlg.show();
-    }
-
-    void renameAnalysis(Analysis selectedAnalysis, String newName) {
-        /*analysisService.renameAnalysis(selectedAnalysis,
-                                       newName,
-                                       new RenameAnalysisCallback(selectedAnalysis, newName, listStore));*/
     }
 
     @Override
@@ -651,31 +602,39 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
 
     @Override
     public void onAnalysisCommentUpdate(AnalysisCommentUpdate event) {
-        Analysis selectedAnalysis = event.getAnalysis();
 
-        analysisCommentsDlgProvider.get(new AsyncCallback<AnalysisCommentsDialog>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                ErrorHandler.post(caught);
-            }
-
-            @Override
-            public void onSuccess(AnalysisCommentsDialog result) {
-                result.addDialogHideHandler(hideEvent -> {
-                    if (Dialog.PredefinedButton.OK.equals(hideEvent.getHideButton())
-                        && result.isCommentChanged()) {
-                        updateAnalysisComments(selectedAnalysis, result.getComment());
-                    }
-                });
-                result.show(selectedAnalysis);
-            }
-        });
     }
 
-    void updateAnalysisComments(Analysis selectedAnalysis, String comment) {
-/*        analysisService.updateAnalysisComments(selectedAnalysis,
-                                               comment,
-                                               new UpdateCommentsCallback(selectedAnalysis, comment, listStore));*/
+
+    @Override
+    public void updateAnalysisComments(String id,
+                                       String comment,
+                                       ReactSuccessCallback callback,
+                                       ReactErrorCallback errorCallback) {
+        analysisService.updateAnalysisComments(id, comment, new AnalysisCallback() {
+
+            @Override
+            public void onFailure(Integer statusCode,
+                                  Throwable exception) {
+                announcer.schedule(new ErrorAnnouncementConfig(appearance.analysisCommentUpdateFailed(),
+                                                               true,
+                                                               5000));
+                if (errorCallback != null) {
+                    errorCallback.onError(statusCode, exception.getMessage());
+                }
+
+            }
+
+            @Override
+            public void onSuccess(Object result) {
+                announcer.schedule(new SuccessAnnouncementConfig(appearance.analysisCommentUpdateSuccess(),
+                                                                 true,
+                                                                 5000));
+                if (callback != null) {
+                    callback.onSuccess(null);
+                }
+            }
+        });
     }
 
     @Override

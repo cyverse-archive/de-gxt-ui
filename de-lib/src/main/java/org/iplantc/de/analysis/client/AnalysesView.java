@@ -236,6 +236,21 @@ public interface AnalysesView extends IsWidget/*,
                          String sortDir,
                          ReactSuccessCallback callback,
                          ReactErrorCallback errorCallback);
+
+        void renameAnalysis(String analysisId,
+                            String newName,
+                            ReactSuccessCallback callback,
+                            ReactErrorCallback errorCallback);
+
+        void updateAnalysisComments(String id,
+                                    String comment,
+                                    ReactSuccessCallback callback,
+                                    ReactErrorCallback errorCallback);
+
+        void onAnalysisNameSelected(String resultFolderId);
+
+        void onAnalysisAppSelected(Splittable analysis);
+
     }
 
 //    void filterByAnalysisId(String id, String name);

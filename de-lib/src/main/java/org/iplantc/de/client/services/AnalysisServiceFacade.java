@@ -31,11 +31,11 @@ public interface AnalysisServiceFacade {
     /**
      * Renames an analysis.
      *
-     * @param analysis the analysis which will be renamed
+     * @param id the analysis id which will be renamed
      * @param newName the new analysis name
      * @param callback executed when RPC call completes.
      */
-    void renameAnalysis(Analysis analysis, String newName, DECallback<Void> callback);
+    void renameAnalysis(String id, String newName, DECallback<Void> callback);
 
     /**
      * Stop a currently running analysis
@@ -47,7 +47,7 @@ public interface AnalysisServiceFacade {
 
     void getAnalysisParams(Analysis analysis, DECallback<List<AnalysisParameter>> callback);
 
-    void updateAnalysisComments(Analysis analysis, String newComment, DECallback<Void> callback);
+    void updateAnalysisComments(String id, String newComment, DECallback<Void> callback);
 
     /**
      * 

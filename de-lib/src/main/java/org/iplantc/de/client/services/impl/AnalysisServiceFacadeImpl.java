@@ -220,8 +220,8 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
     }
 
     @Override
-    public void renameAnalysis(Analysis analysis, String newName, DECallback<Void> callback) {
-        String address = ANALYSES + "/" + analysis.getId();
+    public void renameAnalysis(String id, String newName, DECallback<Void> callback) {
+        String address = ANALYSES + "/" + id;
         Splittable body = StringQuoter.createSplittable();
         StringQuoter.create(newName).assign(body, "name");
 
@@ -253,8 +253,8 @@ public class AnalysisServiceFacadeImpl implements AnalysisServiceFacade {
     }
 
     @Override
-    public void updateAnalysisComments(final Analysis analysis, final String newComment, DECallback<Void> callback) {
-        String address = ANALYSES + "/" + analysis.getId();
+    public void updateAnalysisComments(final String id, final String newComment, DECallback<Void> callback) {
+        String address = ANALYSES + "/" + id;
         Splittable body = StringQuoter.createSplittable();
         StringQuoter.create(newComment).assign(body, "description");
 
