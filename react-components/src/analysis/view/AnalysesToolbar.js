@@ -13,8 +13,8 @@ import exStyles from "../style";
 import ids from "../ids";
 import { withStyles } from "@material-ui/core/styles";
 import intlData from "../messages";
-import Color from "../../util/CyVersePalette";
-import RefreshIcon from "../../../node_modules/@material-ui/icons/Refresh";
+import RefreshIcon from "@material-ui/icons/Refresh";
+import MenuIcon from "@material-ui/icons/Menu";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import permission from "../model/permission";
@@ -56,6 +56,7 @@ class AnalysesToolbar extends Component {
                         onClick={this.handleClick}
                         className={classes.toolbarButton}
                         variant="outlined">
+                        <MenuIcon className={classes.toolbarItemColor}/>
                         {getMessage("analyses")}
                     </Button>
                     <Menu
@@ -63,13 +64,14 @@ class AnalysesToolbar extends Component {
                         anchorEl={anchorEl}
                         open={Boolean(anchorEl)}
                         onClose={this.handleClose}>
-                        <AnalysesMenu {...this.props}/>
+                        <AnalysesMenu handleClose={this.handleClose}
+                                      {...this.props}/>
                     </Menu>
                     <Button variant="raised"
                             size="small"
                             className={classes.toolbarButton}
-                            onClick={this.props.onRefreshClicked}>
-                        <RefreshIcon style={{color: Color.darkBlue}}/>
+                            onClick={this.props.handleRefersh}>
+                        <RefreshIcon className={classes.toolbarItemColor}/>
                         {getMessage("refresh")}
                     </Button>
                     <form autoComplete="off">

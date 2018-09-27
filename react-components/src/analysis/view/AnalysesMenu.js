@@ -1,76 +1,101 @@
 import React, { Component } from 'react';
 import MenuItem from "@material-ui/core/MenuItem";
-import FolderIcon from "../../../node_modules/@material-ui/icons/FolderOpen";
+import FolderIcon from "@material-ui/icons/FolderOpen";
 import Color from "../../util/CyVersePalette";
 import { getMessage } from "../../util/I18NWrapper";
-import LaunchIcon from "../../../node_modules/@material-ui/icons/Launch";
-import InfoIcon from "../../../node_modules/@material-ui/icons/Info";
-import ShareIcon from "../../../node_modules/@material-ui/icons/Share";
-import CancelIcon from "../../../node_modules/@material-ui/icons/Cancel";
-import DeleteIcon from "../../../node_modules/@material-ui/icons/Delete";
-import EditIcon from "../../../node_modules/@material-ui/icons/Edit";
-import CommentIcon from "../../../node_modules/@material-ui/icons/Comment";
-import exStyles from "../style";
+import InfoIcon from "@material-ui/icons/Info";
+import ShareIcon from "@material-ui/icons/Share";
+import CancelIcon from "@material-ui/icons/Cancel";
+import DeleteIcon from "@material-ui/icons/Delete";
+import RepeatIcon from "@material-ui/icons/Repeat";
+import EditIcon from "@material-ui/icons/Edit";
+import CommentIcon from "@material-ui/icons/Comment";
 import { withStyles } from "@material-ui/core/styles";
+import exStyles from "../style";
+
 
 class AnalysesMenu extends Component {
     render() {
-        const {onClick, selected, disabled, multiSelect, shouldDisableCancel, isOwner, classes} = this.props;
+        const {
+            onClick,
+            disabled,
+            multiSelect,
+            shouldDisableCancel,
+            isOwner,
+            classes,
+            handleRename,
+            handleClose,
+            handleUpdateComments,
+            handleGoToOutputFolder,
+            handleRelaunch,
+        } = this.props;
         return (
             <React.Fragment>
-                <MenuItem disabled={disabled(selected) || multiSelect(selected)}
-                          onClick={onClick}
+                <MenuItem disabled={disabled() || multiSelect()}
+                          onClick={() => {
+                              handleClose();
+                              handleGoToOutputFolder();
+                          }}
                           className={classes.menuItem}>
                     <FolderIcon style={{color: Color.darkBlue}}/>
                     {getMessage("outputFolder")}
                 </MenuItem>
-                <MenuItem disabled={disabled(selected) || multiSelect(selected)}
+                <MenuItem disabled={disabled() || multiSelect()}
                           onClick={onClick}
                           className={classes.menuItem}>
-                    <FolderIcon style={{color: Color.darkBlue}}/>
+                    <FolderIcon className={classes.toolbarItemColor}/>
                     {getMessage("viewParam")}
                 </MenuItem>
-                <MenuItem disabled={disabled(selected) || multiSelect(selected)}
-                          onClick={onClick}
+                <MenuItem disabled={disabled() || multiSelect()}
+                          onClick={() => {
+                              handleClose();
+                              handleRelaunch();
+                          }}
                           className={classes.menuItem}>
-                    <LaunchIcon style={{color: Color.darkBlue}}/>
+                    <RepeatIcon className={classes.toolbarItemColor}/>
                     {getMessage("relaunch")}
                 </MenuItem>
-                <MenuItem disabled={disabled(selected) || multiSelect(selected)}
+                <MenuItem disabled={disabled() || multiSelect()}
                           onClick={onClick}
                           className={classes.menuItem}>
-                    <InfoIcon style={{color: Color.darkBlue}}/>
+                    <InfoIcon className={classes.toolbarItemColor}/>
                     {getMessage("analysisInfo")}
                 </MenuItem>
-                <MenuItem disabled={disabled(selected) || !isOwner(selected)}
+                <MenuItem disabled={disabled() || !isOwner()}
                           onClick={onClick}
                           className={classes.menuItem}>
-                    <ShareIcon style={{color: Color.darkBlue}}/>
+                    <ShareIcon className={classes.toolbarItemColor}/>
                     {getMessage("share")}
                 </MenuItem>
-                <MenuItem disabled={shouldDisableCancel(selected) || !isOwner(selected)}
+                <MenuItem disabled={shouldDisableCancel() || !isOwner()}
                           onClick={onClick}
                           className={classes.menuItem}>
-                    <CancelIcon style={{color: Color.darkBlue}}/>
+                    <CancelIcon className={classes.toolbarItemColor}/>
                     {getMessage("cancel")}
                 </MenuItem>
-                <MenuItem disabled={disabled(selected) || !isOwner(selected)}
+                <MenuItem disabled={disabled() || !isOwner()}
                           onClick={onClick}
                           className={classes.menuItem}>
-                    <DeleteIcon style={{color: Color.darkBlue}}
+                    <DeleteIcon className={classes.toolbarItemColor}
                     />
                     {getMessage("delete")}
                 </MenuItem>
-                <MenuItem disabled={disabled(selected) || multiSelect(selected) || !isOwner(selected)}
-                          onClick={onClick}
+                <MenuItem disabled={disabled() || multiSelect() || !isOwner()}
+                          onClick={() => {
+                              handleClose();
+                              handleRename();
+                          }}
                           className={classes.menuItem}>
-                    <EditIcon style={{color: Color.darkBlue}}/>
+                    <EditIcon className={classes.toolbarItemColor}/>
                     {getMessage("rename")}
                 </MenuItem>
-                <MenuItem disabled={disabled(selected) || multiSelect(selected) || !isOwner(selected)}
-                          onClick={onClick}
+                <MenuItem disabled={disabled() || multiSelect() || !isOwner()}
+                          onClick={() => {
+                              handleClose();
+                              handleUpdateComments();
+                          }}
                           className={classes.menuItem}>
-                    <CommentIcon style={{color: Color.darkBlue}}/>
+                    <CommentIcon className={classes.toolbarItemColor}/>
                     {getMessage("updateComments")}
                 </MenuItem>
             </React.Fragment>

@@ -58,4 +58,7 @@ export default (theme) => ({
     cellText: {
         fontSize: 12,
     },
+    toolbarItemColor: {
+        color: Color.darkBlue,
+    },
 });

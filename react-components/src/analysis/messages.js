@@ -18,6 +18,10 @@ var intlData = {
         "cancelBtnText": "Cancel",
         "comments": "Comments",
         "analysisParamTitle" : "Viewing parameters for {name}" ,
+        "renameDlgHeader": "Rename Analysis",
+        "renamePrompt": "Rename",
+        "commentsDlgHeader": "Comments",
+        "commentsPrompt": "Comments...",
     }
 };
 

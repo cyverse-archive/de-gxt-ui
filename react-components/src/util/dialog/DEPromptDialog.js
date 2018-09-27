@@ -44,12 +44,15 @@ class DEPromptDialog extends Component {
                 <DEDialogHeader
                     heading={heading}
                     onClose={() => {
-                        this.setState({dialogOpen: false})
+                        this.setState({dialogOpen: false});
+                        if (onCancelBtnClick) {
+                            onCancelBtnClick();
+                        }
                     }}/>
                 <DialogContent>
                     <TextField
                         id="multiline-static"
-                        label={prompt}
+                        helperText={prompt}
                         multiline={multiline ? multiline : false}
                         rows={multiline? 4 : 1}
                         margin="normal"
@@ -88,6 +91,7 @@ class DEPromptDialog extends Component {
 }
 
 DEPromptDialog.propTypes = {
+    dialogOpen: PropTypes.bool.isRequired,
     heading: PropTypes.string.isRequired,
     prompt: PropTypes.string.isRequired,
     multiline: PropTypes.bool,
@@ -95,7 +99,7 @@ DEPromptDialog.propTypes = {
     isRequired: PropTypes.bool.isRequired,
     onOkBtnClick: PropTypes.func.isRequired,
     onCancelBtnClick: PropTypes.func,
-    dialogOpen: PropTypes.bool.required,
 };
+
 
 export default withI18N(DEPromptDialog, intlData);

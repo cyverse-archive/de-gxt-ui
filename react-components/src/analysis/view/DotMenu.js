@@ -49,7 +49,8 @@ class DotMenu extends Component {
                         },
                     }}
                 >
-                    <AnalysesMenu {...this.props} />
+                    <AnalysesMenu handleClose={this.handleDotMenuClose}
+                                  {...this.props} />
                 </Menu>
             </div>
         );
