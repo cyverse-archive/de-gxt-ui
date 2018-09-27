@@ -23,7 +23,7 @@ class AnalysesViewTest extends Component {
                 "resultfolderid": "/iplant/home/sriram/analyses/Word_Count_analysis1-2018-08-21-18-23-56.5",
                 "app_name": "Word Count"
             }, {
-                "description": "",
+                "description": "testing comments",
                 "name": "test8",
                 "can_share": true,
                 "username": "sriram@iplantcollaborative.org",
@@ -197,7 +197,19 @@ class AnalysesViewTest extends Component {
                           resultCallback,
                           errorCallback) => {
                 resultCallback(analysesList);
-            }
+            },
+            renameAnalysis: () => {
+                console.log("Rename called!");
+            },
+            updateAnalysisComments: () => {
+                console.log("Update Comments called!");
+            },
+            onAnalysisNameSelected: () => {
+                console.log("Analysis name selected!");
+            },
+            onAnalysisAppSelected: () => {
+                console.log("Analysis app name selected!");
+            },
         };
 
         return (

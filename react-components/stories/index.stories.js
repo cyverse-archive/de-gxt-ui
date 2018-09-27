@@ -48,7 +48,6 @@ import CopyTextAreaTest from "./util/CopyTextArea.stories";
 import DEHyperLinkTest from "./util/hyperlink/DEHyperLink.stories";
 import ErrorHandlerTest from "./util/ErrorHandler.stories";
 import TriggerFieldTest from "./util/TriggerField.stories";
-import DEPromptDialog from "../src/util/dialog/DEPromptDialog";
 import DEPromptDialogTest from "./util/dialog/DEPromptDialog.stories";
 
 storiesOf('analysis/view', module).add('with test analyses', () => <AnalysesViewTest/>);
