@@ -4,8 +4,12 @@ import ReactDOM from 'react-dom';
 import { getDefaultTheme, MuiThemeProvider } from "../lib";
 
 import {
+    DataCiteMetadataTemplateViewNoValuesTest,
+    DataCiteMetadataTemplateViewTest,
     EditDataCiteMetadataTemplateTest,
     EditNestedAttrMetadataTemplateTest,
+    MetadataTemplateReadOnlyViewTest,
+    MetadataTemplateViewTest,
 } from "../../stories/metadata/MetadataTemplate.stories";
 
 it('renders EditNestedAttrMetadataTemplateTest without crashing', () => {
@@ -24,6 +28,50 @@ it('renders EditDataCiteMetadataTemplateTest without crashing', () => {
     ReactDOM.render(
         <MuiThemeProvider theme={getDefaultTheme()}>
             <EditDataCiteMetadataTemplateTest/>
+        </MuiThemeProvider>,
+        div,
+    );
+    ReactDOM.unmountComponentAtNode(div);
+});
+
+it('renders MetadataTemplateViewTest without crashing', () => {
+    const div = document.createElement('div');
+    ReactDOM.render(
+        <MuiThemeProvider theme={getDefaultTheme()}>
+            <MetadataTemplateViewTest/>
+        </MuiThemeProvider>,
+        div,
+    );
+    ReactDOM.unmountComponentAtNode(div);
+});
+
+it('renders MetadataTemplateReadOnlyViewTest without crashing', () => {
+    const div = document.createElement('div');
+    ReactDOM.render(
+        <MuiThemeProvider theme={getDefaultTheme()}>
+            <MetadataTemplateReadOnlyViewTest/>
+        </MuiThemeProvider>,
+        div,
+    );
+    ReactDOM.unmountComponentAtNode(div);
+});
+
+it('renders DataCiteMetadataTemplateViewNoValuesTest without crashing', () => {
+    const div = document.createElement('div');
+    ReactDOM.render(
+        <MuiThemeProvider theme={getDefaultTheme()}>
+            <DataCiteMetadataTemplateViewNoValuesTest/>
+        </MuiThemeProvider>,
+        div,
+    );
+    ReactDOM.unmountComponentAtNode(div);
+});
+
+it('renders DataCiteMetadataTemplateViewTest without crashing', () => {
+    const div = document.createElement('div');
+    ReactDOM.render(
+        <MuiThemeProvider theme={getDefaultTheme()}>
+            <DataCiteMetadataTemplateViewTest/>
         </MuiThemeProvider>,
         div,
     );
