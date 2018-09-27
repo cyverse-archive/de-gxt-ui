@@ -355,7 +355,7 @@ class AnalysesView extends Component {
     }
 
     handleCancel() {
-
+         this.props.presenter.onCancelAnalysisSelected(this.state.selected, )
     }
 
     handleDelete() {

@@ -1,22 +1,14 @@
 package org.iplantc.de.analysis.client.presenter;
 
 import org.iplantc.de.analysis.client.AnalysesView;
-import org.iplantc.de.analysis.client.events.AnalysisCommentUpdate;
 import org.iplantc.de.analysis.client.events.AnalysisFilterChanged;
 import org.iplantc.de.analysis.client.events.HTAnalysisExpandEvent;
 import org.iplantc.de.analysis.client.events.InteractiveIconClicked;
 import org.iplantc.de.analysis.client.events.OpenAppForRelaunchEvent;
-import org.iplantc.de.analysis.client.events.selection.AnalysisAppSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
-import org.iplantc.de.analysis.client.events.selection.AnalysisNameSelectedEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
-import org.iplantc.de.analysis.client.events.selection.CancelAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.CompleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.GoToAnalysisFolderSelected;
-import org.iplantc.de.analysis.client.events.selection.RefreshAnalysesSelected;
-import org.iplantc.de.analysis.client.events.selection.RelaunchAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.RenameAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ShareAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
 import org.iplantc.de.analysis.client.models.FilterAutoBeanFactory;
@@ -73,7 +65,6 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 
-import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.loader.FilterConfigBean;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.LoadEvent;
@@ -97,14 +88,9 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               HTAnalysisExpandEvent.HTAnalysisExpandEventHandler,
                                               AnalysisUserSupportRequestedEvent.AnalysisUserSupportRequestedEventHandler,
                                               AnalysisJobInfoSelected.AnalysisJobInfoSelectedHandler,
-                                              AnalysisCommentUpdate.AnalysisCommentUpdateHandler,
                                               ShareAnalysisSelected.ShareAnalysisSelectedHandler,
                                               AnalysisFilterChanged.AnalysisFilterChangedHandler,
-                                              RefreshAnalysesSelected.RefreshAnalysesSelectedHandler,
-                                              RelaunchAnalysisSelected.RelaunchAnalysisSelectedHandler,
-                                              GoToAnalysisFolderSelected.GoToAnalysisFolderSelectedHandler,
                                               DeleteAnalysisSelected.DeleteAnalysisSelectedHandler,
-                                              CancelAnalysisSelected.CancelAnalysisSelectedHandler,
                                               CompleteAnalysisSelected.CompleteAnalysisSelectedHandler,
                                               ViewAnalysisParamsSelected.ViewAnalysisParamsSelectedHandler,
                                               InteractiveIconClicked.InteractiveIconClickedHandler {
@@ -310,11 +296,13 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void onCancelAnalysisSelected(CancelAnalysisSelected event) {
-        List<Analysis> analysesToCancel = event.getAnalysisList();
+    public void onCancelAnalysisSelected(String[] ids,
+                                         ReactSuccessCallback callback,
+                                         ReactErrorCallback errorCallback) {
 
-        for (Analysis analysis : analysesToCancel) {
-            analysisService.stopAnalysis(analysis, new CancelAnalysisServiceCallback(analysis), "Canceled");
+
+        for (String id : ids) {
+            analysisService.stopAnalysis(id, new CancelAnalysisServiceCallback(analysis), "Canceled");
         }
     }
 
@@ -474,7 +462,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         //  view.setPermFilterInView(permFilter, typeFilter);
     }
 
-    @Override
+/*    @Override
     public void onGoToAnalysisFolderSelected(GoToAnalysisFolderSelected event) {
         Analysis selectedAnalysis = event.getAnalysis();
         // Request disk resource window
@@ -485,7 +473,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     @Override
     public void onRefreshAnalysesSelected(RefreshAnalysesSelected event) {
         loadAnalyses(currentPermFilter, currentTypeFilter);
-    }
+    }*/
 
     @Override
     public void onShowAllSelected() {
@@ -554,7 +542,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
         // Request disk resource window
         eventBus.fireEvent(new OpenFolderEvent(resultFolderId, true));
     }
-
+/*
     @Override
     public void onRelaunchAnalysisSelected(RelaunchAnalysisSelected event) {
         Analysis selectedAnalysis = event.getAnalysis();
@@ -562,7 +550,7 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
             return;
         }
         eventBus.fireEvent(new OpenAppForRelaunchEvent(selectedAnalysis));
-    }
+    }*/
 
     @Override
     public void renameAnalysis(String analysisId,
@@ -599,12 +587,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     public void setViewDebugId(String baseId) {
         view.asWidget().ensureDebugId(baseId);
     }
-
-    @Override
-    public void onAnalysisCommentUpdate(AnalysisCommentUpdate event) {
-
-    }
-
 
     @Override
     public void updateAnalysisComments(String id,
