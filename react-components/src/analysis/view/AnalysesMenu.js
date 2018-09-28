@@ -28,6 +28,8 @@ class AnalysesMenu extends Component {
             handleUpdateComments,
             handleGoToOutputFolder,
             handleRelaunch,
+            handleCancel,
+            handleShare,
         } = this.props;
         return (
             <React.Fragment>
@@ -62,13 +64,19 @@ class AnalysesMenu extends Component {
                     {getMessage("analysisInfo")}
                 </MenuItem>
                 <MenuItem disabled={disabled() || !isOwner()}
-                          onClick={onClick}
+                          onClick={()=> {
+                              handleClose();
+                              handleShare();
+                          }}
                           className={classes.menuItem}>
                     <ShareIcon className={classes.toolbarItemColor}/>
                     {getMessage("share")}
                 </MenuItem>
                 <MenuItem disabled={shouldDisableCancel() || !isOwner()}
-                          onClick={onClick}
+                          onClick={()=> {
+                              handleClose();
+                              handleCancel();
+                          }}
                           className={classes.menuItem}>
                     <CancelIcon className={classes.toolbarItemColor}/>
                     {getMessage("cancel")}

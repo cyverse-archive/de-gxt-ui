@@ -351,11 +351,24 @@ class AnalysesView extends Component {
     }
 
     handleShare() {
-
+        const selectedAnalyses = this.state.selected.map(id => this.findAnalysis(id));
+        this.props.presenter.onShareAnalysisSelected(selectedAnalyses);
     }
 
     handleCancel() {
-         this.props.presenter.onCancelAnalysisSelected(this.state.selected, )
+        this.setState({loading: true});
+        const selectedAnalyses = this.state.selected.map(id => this.findAnalysis(id));
+        this.props.presenter.onCancelAnalysisSelected(selectedAnalyses, () => {
+                this.setState({
+                    loading: false,
+                });
+                this.fetchAnalyses();
+            },
+            (errorCode, errorMessage) => {
+                this.setState({
+                    loading: false,
+                });
+            });
     }
 
     handleDelete() {
@@ -620,26 +633,6 @@ class AnalysesView extends Component {
                             />
                         </div>
                     </div>
-{/*                    <DEPromptDialog multiline={false}
-                                    initialValue={selected && selected.length > 0 ?
-                                        this.findAnalysis(selected[0]).name :
-                                        ""}
-                                    isRequired={true}
-                                    heading={formatMessage(intl, "renameDlgHeader")}
-                                    prompt={formatMessage(intl, "renamePrompt")}
-                                    onOkBtnClick={this.doRename}
-                                    onCancelBtnClick={() => this.setState({renameDialogOpen: false})}
-                                    dialogOpen={this.state.renameDialogOpen}/>
-                    <DEPromptDialog multiline={true}
-                                    initialValue={selected && selected.length > 0 ?
-                                        this.findAnalysis(selected[0]).description :
-                                        ""}
-                                    isRequired={true}
-                                    heading={formatMessage(intl, "commentsDlgHeader")}
-                                    prompt={formatMessage(intl, "commentsPrompt")}
-                                    onOkBtnClick={this.doComments}
-                                    onCancelBtnClick={() => this.setState({commentsDialogOpen: false})}
-                                    dialogOpen={this.state.commentsDialogOpen}/>*/}
                     <Prompt analysis={this.findAnalysis(selected[0])}
                             intl={intl}
                             renameDialogOpen={this.state.renameDialogOpen}

@@ -210,6 +210,12 @@ class AnalysesViewTest extends Component {
             onAnalysisAppSelected: () => {
                 console.log("Analysis app name selected!");
             },
+            onCancelAnalysisSelected: () => {
+              console.log("Analysis cancel selected!");
+            },
+            onShareAnalysisSelected: ()=> {
+                console.log("Analysis sharing selected!");
+            }
         };
 
         return (
