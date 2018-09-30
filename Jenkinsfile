@@ -21,7 +21,7 @@ timestamps {
 
           stage "Create Build Image"
           dockerRepoBuild = "build-${repo}-${env.BUILD_TAG}"
-          sh "docker build --rm -f Dockerfile-build -t ${dockerRepoBuild} ."
+          sh "docker build --pull --rm -f Dockerfile-build -t ${dockerRepoBuild} ."
 
           dockerCacher = "precache-${repo}-${env.BUILD_TAG}"
           dockerTestRunner = "test-${repo}-${env.BUILD_TAG}"
