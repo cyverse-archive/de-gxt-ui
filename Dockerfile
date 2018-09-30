@@ -1,4 +1,4 @@
-FROM openjdk:alpine
+FROM openjdk:8-alpine
 
 # Include CA certs so the UI server-side can make https calls to 3rd party services.
 RUN apk add --no-cache git ca-certificates java-cacerts
