@@ -22,6 +22,7 @@ var intlData = {
         "renamePrompt": "Rename",
         "commentsDlgHeader": "Comments",
         "commentsPrompt": "Comments...",
+        "search": "Search...",
     }
 };
 

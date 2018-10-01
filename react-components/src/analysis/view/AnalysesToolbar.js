@@ -119,7 +119,7 @@ class AnalysesToolbar extends Component {
                         <FormControl>
                             <TextField
                                 id="search"
-                                label="Search field"
+                                label={getMessage("search")}
                                 type="search"
                                 className={classes.textField}
                                 margin="normal"

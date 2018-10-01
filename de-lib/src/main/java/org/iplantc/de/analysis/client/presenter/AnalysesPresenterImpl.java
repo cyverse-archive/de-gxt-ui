@@ -8,7 +8,6 @@ import org.iplantc.de.analysis.client.events.OpenAppForRelaunchEvent;
 import org.iplantc.de.analysis.client.events.selection.AnalysisJobInfoSelected;
 import org.iplantc.de.analysis.client.events.selection.AnalysisUserSupportRequestedEvent;
 import org.iplantc.de.analysis.client.events.selection.CompleteAnalysisSelected;
-import org.iplantc.de.analysis.client.events.selection.DeleteAnalysisSelected;
 import org.iplantc.de.analysis.client.events.selection.ViewAnalysisParamsSelected;
 import org.iplantc.de.analysis.client.models.FilterAutoBeanFactory;
 import org.iplantc.de.analysis.client.models.FilterBeanList;
@@ -69,7 +68,6 @@ import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.LoadEvent;
 import com.sencha.gxt.data.shared.loader.LoadHandler;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
-import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
@@ -88,7 +86,6 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
                                               AnalysisUserSupportRequestedEvent.AnalysisUserSupportRequestedEventHandler,
                                               AnalysisJobInfoSelected.AnalysisJobInfoSelectedHandler,
                                               AnalysisFilterChanged.AnalysisFilterChangedHandler,
-                                              DeleteAnalysisSelected.DeleteAnalysisSelectedHandler,
                                               CompleteAnalysisSelected.CompleteAnalysisSelectedHandler,
                                               ViewAnalysisParamsSelected.ViewAnalysisParamsSelectedHandler,
                                               InteractiveIconClicked.InteractiveIconClickedHandler {
@@ -313,28 +310,29 @@ public class AnalysesPresenterImpl implements AnalysesView.Presenter,
     }
 
     @Override
-    public void onDeleteAnalysisSelected(DeleteAnalysisSelected event) {
-        ConfirmMessageBox cmb = getDeleteAnalysisDlg();
-        cmb.setPredefinedButtons(Dialog.PredefinedButton.OK, Dialog.PredefinedButton.CANCEL);
-        cmb.addDialogHideHandler(hideEvent -> {
-            if (Dialog.PredefinedButton.OK.equals(hideEvent.getHideButton())) {
-               deleteAnalyses(event.getAnalyses());
-            }
-        });
-        cmb.show();
-    }
-
-    void deleteAnalyses(List<Analysis> analysesToDelete) {
-        analysisService.deleteAnalyses(analysesToDelete, new AnalysisCallback<String>() {
+    public void deleteAnalyses(Splittable[] analysesToDelete,
+                               ReactSuccessCallback callback,
+                               ReactErrorCallback errorCallback) {
+        ArrayList<Analysis> selected = new ArrayList<>();
+        for (Splittable sp : analysesToDelete) {
+            Analysis analysis = AutoBeanCodex.decode(factory, Analysis.class, sp).as();
+            selected.add(analysis);
+        }
+        analysisService.deleteAnalyses(selected, new AnalysisCallback<String>() {
 
             @Override
             public void onFailure(Integer statusCode, Throwable caught) {
                 ErrorHandler.post(appearance.deleteAnalysisError(), caught);
+                if(errorCallback != null) {
+                    errorCallback.onError(statusCode, caught.getMessage());
+                }
             }
 
             @Override
             public void onSuccess(String arg0) {
-                loadAnalyses(currentPermFilter, currentTypeFilter);
+                if(callback != null) {
+                  callback.onSuccess(null);
+                }
             }
         });
     }

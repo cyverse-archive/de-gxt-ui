@@ -215,7 +215,10 @@ class AnalysesViewTest extends Component {
             },
             onShareAnalysisSelected: ()=> {
                 console.log("Analysis sharing selected!");
-            }
+            },
+            deleteAnalyses: ()=> {
+              console.log("Deleted Analysis selected!");
+            },
         };
 
         return (

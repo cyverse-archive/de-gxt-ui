@@ -257,6 +257,10 @@ public interface AnalysesView extends IsWidget/*,
 
         void onShareAnalysisSelected(Splittable[] analysisList);
 
+        void deleteAnalyses(Splittable[] analysesToDelete,
+                            ReactSuccessCallback callback,
+                            ReactErrorCallback errorCallback);
+
     }
 
 //    void filterByAnalysisId(String id, String name);

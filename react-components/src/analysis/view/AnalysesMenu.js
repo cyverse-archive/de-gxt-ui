@@ -30,6 +30,7 @@ class AnalysesMenu extends Component {
             handleRelaunch,
             handleCancel,
             handleShare,
+            handleDelete,
         } = this.props;
         return (
             <React.Fragment>
@@ -82,10 +83,12 @@ class AnalysesMenu extends Component {
                     {getMessage("cancel")}
                 </MenuItem>
                 <MenuItem disabled={disabled() || !isOwner()}
-                          onClick={onClick}
+                          onClick={() => {
+                              handleClose();
+                              handleDelete();
+                          }}
                           className={classes.menuItem}>
-                    <DeleteIcon className={classes.toolbarItemColor}
-                    />
+                    <DeleteIcon className={classes.toolbarItemColor}/>
                     {getMessage("delete")}
                 </MenuItem>
                 <MenuItem disabled={disabled() || multiSelect() || !isOwner()}

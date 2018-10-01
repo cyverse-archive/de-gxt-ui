@@ -372,7 +372,19 @@ class AnalysesView extends Component {
     }
 
     handleDelete() {
-
+        this.setState({loading: true});
+        const selectedAnalyses = this.state.selected.map(id => this.findAnalysis(id));
+        this.props.presenter.deleteAnalyses(selectedAnalyses, () => {
+                this.setState({
+                    loading: false,
+                });
+                this.fetchAnalyses();
+            },
+            (errorCode, errorMessage) => {
+                this.setState({
+                    loading: false,
+                });
+            });
     }
 
     handleRename() {
