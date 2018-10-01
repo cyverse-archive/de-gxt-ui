@@ -20,8 +20,10 @@ timestamps {
           }
 
           stage "Create Build Image"
+          milestone 20
           dockerRepoBuild = "build-${repo}-${env.BUILD_TAG}"
           sh "docker build --pull --rm -f Dockerfile-build -t ${dockerRepoBuild} ."
+          milestone 21
 
           dockerCacher = "precache-${repo}-${env.BUILD_TAG}"
           dockerTestRunner = "test-${repo}-${env.BUILD_TAG}"
@@ -32,19 +34,25 @@ timestamps {
           dockerSrcRootDir = "/usr/src/app"
           dockerCacheVolumes = """-v /tmp:/tmp -v "\$(pwd)/.gradle/caches:/root/.gradle/caches\" -v "\$(pwd)/node_modules:${dockerSrcRootDir}/react-components/node_modules\""""
 
+          milestone 30
           sh "docker run ${dockerCacheVolumes} --name ${dockerCacher} --rm ${dockerRepoBuild} ./gradlew clean classes testClasses npmInstall"
+          milestone 31
 
           try {
               stage "Test"
+              milestone 40
               sh returnStatus: true, script: "rm -rf jenkins_tests"
               sh "docker run ${dockerCacheVolumes} --name ${dockerTestRunner} ${dockerRepoBuild} ./gradlew test"
               sh "docker run ${dockerCacheVolumes} --name ${dockerNpmTestRunner} ${dockerRepoBuild} ./gradlew npmTest"
               sh "docker cp ${dockerTestRunner}:${dockerSrcRootDir}/de-lib/build/test-results jenkins_tests"
               junit "jenkins_tests/*.xml"
+              milestone 41
 
               stage "Build WAR"
+              milestone 50
               sh "mkdir -p target/"
               sh """docker run ${dockerCacheVolumes} --name ${dockerWarBuilder} --rm -e BRANCH_NAME -e BUILD_TAG -e BUILD_ID -e BUILD_NUMBER ${dockerRepoBuild} > target/de-copy.war"""
+              milestone 51
 
               fingerprint 'target/de-copy.war'
 
@@ -55,6 +63,7 @@ timestamps {
               lock("docker-push-${dockerRepo}") {
                 milestone 101
                 sh "docker build --rm --build-arg git_commit=${git_commit} --build-arg descriptive_version=${descriptive_version} -t ${dockerRepo} ."
+                milestone 102
 
                 image_sha = sh(returnStdout: true, script: "docker inspect -f '{{ .Config.Image }}' ${dockerRepo}").trim()
                 echo image_sha
@@ -83,6 +92,9 @@ timestamps {
 
               sh returnStatus: true, script: "docker kill ${dockerTestRunner}"
               sh returnStatus: true, script: "docker rm ${dockerTestRunner}"
+
+              sh returnStatus: true, script: "docker kill ${dockerNpmTestRunner}"
+              sh returnStatus: true, script: "docker rm ${dockerNpmTestRunner}"
 
               sh returnStatus: true, script: "docker kill ${dockerWarBuilder}"
               sh returnStatus: true, script: "docker rm ${dockerWarBuilder}"
