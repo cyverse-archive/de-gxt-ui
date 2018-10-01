@@ -20,6 +20,10 @@ timestamps {
           }
 
           stage "Create Build Image"
+
+          sgp = sh(returnStdout: true, script: 'du -hs sencha_gradle.properties').trim()
+          echo sgp
+
           milestone 20
           dockerRepoBuild = "build-${repo}-${env.BUILD_TAG}"
           sh "docker build --pull --rm -f Dockerfile-build -t ${dockerRepoBuild} ."
